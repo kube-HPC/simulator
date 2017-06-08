@@ -1,0 +1,48 @@
+{
+  "extends": ["airbnb"],
+  "parser": "babel-eslint",
+  "globals": {
+    "window": true,
+    "autobind": true,
+    "document": true,
+    "React": true,
+    "$_ENVIRONMENT": true,
+    "__REDUX_DEVTOOLS_EXTENSION_COMPOSE__": true,
+    "localStorage": true
+  },
+  "settings": {
+    "import/resolver": "webpack"
+  },
+  "rules" : {
+    "arrow-parens": ["error", "always"],
+    "comma-dangle": ["error", "never"],
+    "no-unused-expressions": ["error", { "allowTernary": true }],
+    "radix": ["error", "as-needed"],
+    "no-trailing-spaces": 0,
+    "import/prefer-default-export": 0,
+    "react/jsx-closing-bracket-location": [2, { "location": "after-props" }],
+    "no-multi-spaces": 0,
+    "object-curly-spacing": ["error", "always"],
+    "react/jsx-curly-spacing": [0, "always"],
+    "react/jsx-first-prop-new-line": 0,
+    "react/jsx-indent": [2, 2],
+    "react/jsx-indent-props": 0,
+    "global-require": 0,
+    "import/no-named-as-default": 0,
+    "react/jsx-filename-extension": 0,
+    "react/no-did-mount-set-state": 0,
+    "react/forbid-prop-types": 0,
+    "no-confusing-arrow": 0,
+    "linebreak-style": 0,
+    "class-methods-use-this": 0,
+    "jsx-a11y/no-static-element-interactions": 0,
+    "import/no-unresolved": [2, { "caseSensitive": false }],
+    "jsx-a11y/anchor-has-content": 2,
+    "react/jsx-space-before-closing": [2, "never"]
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  }
+}

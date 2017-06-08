@@ -1,0 +1,45 @@
+@import "colors";
+
+#BreadCrumbs{
+  width: 100%;
+  padding: 5px;
+  padding-left: 10px;
+  border-top: 1px solid darken($light-gray, 5%);
+  border-bottom: 5px solid black;
+  box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.15);
+  &::after {
+    content:"";
+    display:block;
+    clear:both;
+  }
+}
+
+.Crumbs{
+  background: $light-gray;
+  border: 1px solid darken($light-gray, 5%);
+  border-radius: 5px;
+  cursor: default;
+  margin-right: 10px;
+  padding-left: 5px;
+  &:hover{
+    .Crumb-X{
+      color: $medium-gray;
+      &:hover{
+        color: $dark-gray;
+      }
+    }
+  }
+}
+.Crumb-X{
+  color: $light-gray;
+  border: 0px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  cursor: pointer;
+  padding: 2px 4px;
+  margin-left: 5px;
+  transition: All 200ms ease-in-out;
+  &:active{
+    background: white;
+  }
+}

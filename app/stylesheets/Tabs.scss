@@ -1,0 +1,40 @@
+@import 'colors';
+#Tabs{
+  display: flex;
+  padding-left: 5px;
+  background-color: lighten(#3cf, 30%);
+}
+.tab{
+  transition: All 200ms ease-in-out;
+  height:100%;
+  border-radius-right-top: 5px;
+  border-radius-left-top: 5px;
+  cursor: default;
+  padding: 10px;
+  &-active{
+    background-color: #fff;
+  }
+  &-plus{
+    transition: All 200ms ease-in-out;
+    margin-left: auto;
+    &:hover{
+      background-color: white;
+    }
+  }
+  &:hover{
+    .tab-x{
+      color: $medium-gray;
+      &:hover{
+        color: $dark-gray;
+      }
+    }
+  }
+  &-x{
+    transition: All 200ms ease-in-out;
+    color: white;
+    padding-left: 10px;
+    border: 0px;
+    border-top-right-radius: 5px;
+    cursor: pointer;
+  }
+}

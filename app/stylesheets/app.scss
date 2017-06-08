@@ -1,0 +1,57 @@
+@import "colors";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  font-family: Roboto, sans-serif;
+  height: 100%;
+  overflow: hidden;
+}
+
+.GraphsPanel{
+  // transform: translateY(0px);
+  padding-top: 20px;
+  height:220px;
+  // transition: All 300ms ease-in-out;
+  justify-content: center;
+}
+.hidden { transform: translateY(-220px); }
+
+#hideGraph{
+  width:200px;
+}
+
+#CesiumMap{
+  flex:1;
+  line-height: 80vh;
+  height:100vh;
+  background: #eee;
+  text-align: center;
+}
+
+#SideBar{
+  // transform: translateX(-40px);
+  transition: All 200ms ease-in-out;
+  width:50px;
+  height:100%;
+  position: absolute;
+  flex-direction: row;
+  background: $medium-gray;
+  &:hover{
+    // transform: translateX(0px);
+  }
+}
+
+.SideBar-icon{
+  // margin-left: 4px;
+  // background: $medium-gray;
+  // padding: 15px;
+  // &:hover{
+  //   background:$light-gray;
+  // }
+}

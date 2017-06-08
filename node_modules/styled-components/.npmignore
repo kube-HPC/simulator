@@ -1,0 +1,9 @@
+.github
+.travis.yml
+appveyor.yml
+rollup.config.js
+.flowconfig
+.eslintrc
+.eslintignore
+.babelrc
+example/

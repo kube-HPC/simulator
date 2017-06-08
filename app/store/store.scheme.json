@@ -1,0 +1,27 @@
+{
+    "layers": [{
+        "layer": "string",
+        "charts": [{
+            "id": "number",
+            "type": "string",
+            "values": []
+        }]
+    }],
+
+    "map": {
+        "kml": "kml"
+    },
+    "planning": {
+        "mode": "statistical / ML",
+        "date": "Date",
+        "district": "string"
+    },
+    "crumbs": [{
+        "layer": "string",
+        "value": "string"
+    }],
+    "ui": {
+        "hidden": "bool",
+        "selectLayer": "string"
+    }
+}
