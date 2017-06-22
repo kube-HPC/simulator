@@ -7,7 +7,8 @@ import {
   terminalConnect,
   terminalDisconnect,
   clearClientTerminal,
-  closeTerminalClient
+  closeTerminalClient,
+  emitResize
 } from '../actions/terminal.action';
 import { connect } from 'react-redux';
 import TOPICS from '../constants/topics';
@@ -79,11 +80,10 @@ class Terminal extends Component {
     return false;
   }
 
-  _onTerminalResize(col, row) {
+  //_onTerminalResize(col, row) {
     // this._sendString( { col: col, row: row });
-    this.props.commandsActions.resize({ col, row });
     //  socket.emit('resize', { col: col, row: row });
-  }
+  //}
 
   runHterm() {
     // var self = this;
@@ -105,7 +105,7 @@ class Terminal extends Component {
       this.term.prefs_.set('cursor-color', 'white');
       this.term.prefs_.set('cursor-blink', true);
       this.term.onTerminalReady = () => {
-        this.props.emit({ data: 'Mmhy6hy6' + '\u000D' });
+        //this.props.emit({ data: 'Mmhy6hy6' + '\u000D' });
         //this.props.emit({ data: `${this.props.modal.command}\u000D` });
         this.props.emit({ data: `${this.props.inlineCommand}\u000D` });
 
@@ -132,6 +132,8 @@ class Terminal extends Component {
 
         io.onTerminalResize = (columns, rows) => {
           console.log(`onTerminalResize - ${columns} x ${rows} `);
+          this.props.emitResize({ columns, rows });
+          
         };
       };
     });
@@ -170,5 +172,6 @@ export default connect(mapStateToProps, {
   terminalDisconnect,
   terminalConnect,
   clearClientTerminal,
-  closeTerminalClient
+  closeTerminalClient,
+  emitResize
 })(Terminal);

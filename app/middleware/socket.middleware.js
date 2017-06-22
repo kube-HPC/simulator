@@ -41,8 +41,8 @@ export const socketioMiddleware = ({ dispatch }) => (next) => (action) => {
       socket.close();
     }
     
-    
-    socket = io(action.payload.currentSelection, { transports: ['websocket'] });
+    socket = io(action.payload.currentSelection.url,{path:action.payload.currentSelection.path,transports: ['websocket']})
+    ///socket = io(action.payload.currentSelection.url, { transports: ['websocket'] });
     socket.on('connect', () => {
       console.log(`connected...${socket.id}`);
       connected = true;

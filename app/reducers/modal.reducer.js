@@ -6,23 +6,16 @@ import actions from '../constants/actions';
 
 
 
-const initState = {
-
-  visible: false,
-  data: null,
-  component: null
-
-  // columns
-};
+const initState = { modalType: null, visible: false, data: null, command: null, sshInitData: null };
 
 
 const inititalState = Immutable.from(initState);
 
 export default handleActions({
-  [actions.OPEN_MODAL](state, {type, payload, meta, error}) {
+  [actions.OPEN_MODAL](state, { type, payload, meta, error }) {
     return state.merge(payload);
   },
-  [actions.CLOSE_MODAL](state, {type, payload, meta, error}) {
+  [actions.CLOSE_MODAL](state, { type, payload, meta, error }) {
     return state.merge(payload);
   }
 }, inititalState);
@@ -32,17 +25,3 @@ export default handleActions({
 //   return state;
 // }
 
-// WEBPACK FOOTER //
-// ./reducers/modal.reducer.js
-
-
-// WEBPACK FOOTER //
-// ./reducers/modal.reducer.js
-
-
-// WEBPACK FOOTER //
-// ./reducers/modal.reducer.js
-
-
-// WEBPACK FOOTER //
-// ./reducers/modal.reducer.js

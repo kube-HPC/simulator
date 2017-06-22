@@ -14,6 +14,11 @@ export const emit = ({ data }) => ({
   payload: { topic: topics.SEND_TERMINAL_TO_SERVER, data }
 });
 
+
+export const emitResize = (data)=>({
+  type: actions.SEND_TERMINAL_INPUT,
+  payload: { topic: topics.RESIZE, data }
+})
 export const terminalDisconnect = () => ({
   type: actions.SEND_TERMINAL_INPUT,
   payload: { topic: topics.CLOSE_TERMINAL, data: '' }

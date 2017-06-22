@@ -12,7 +12,10 @@ import { createSelector } from 'reselect';
 import { Row, Col } from 'antd';
 import React, { PropTypes, Component } from 'react';
 import { withState } from 'recompose';
-
+const ModalType = {
+  BASH: "bash",
+  SSH: "ssh",
+}
 
 class ContainerTable extends Component {
   // constructor(props) {
@@ -66,7 +69,7 @@ class ContainerTable extends Component {
         render: (text, record) => (
           <Row type="flex" justify="left" align="middle">
             <Col span={3}>
-              <Button onClick={() => this.props.openModal(record, { raw: '' }, {
+              <Button onClick={() => this.props.openModal(ModalType.SSH, record, { raw: '' }, {
                 type: 'ssh',
                 sshuser: 'matyz',
                 sshport: 22,
@@ -80,7 +83,7 @@ class ContainerTable extends Component {
               <span className="ant-divider" />
             </Col>
             <Col span={3}>
-              <Button onClick={() => this.props.openModal(record, { path: '~/dev/vod/rms/scripts', execution: `exec`, args: record.podName })}>
+              <Button onClick={() => this.props.openModal(ModalType.BASH, record, { path: this.props.scriptsPath, execution: `exec`, args: record.podName })}>
                 Pod
             </Button>
             </Col>
@@ -88,7 +91,7 @@ class ContainerTable extends Component {
               <span className="ant-divider" />
             </Col>
             <Col span={3}>
-              <Button onClick={() => this.props.openModal(record, { path: '~/dev/vod/rms/scripts', execution: `logs`, args: `-f ${record.podName}` })}>
+              <Button onClick={() => this.props.openModal(ModalType.BASH, record, { path: this.props.scriptsPath, execution: `logs`, args: `-f ${record.podName}` })}>
                 Log
             </Button>
             </Col>
@@ -96,7 +99,7 @@ class ContainerTable extends Component {
               <span className="ant-divider" />
             </Col>
             <Col span={3}>
-              <Button onClick={() => this.props.openModal(record, { path: '~/dev/vod/rms/scripts', execution: `describe`, args: record.podName })}>
+              <Button onClick={() => this.props.openModal(ModalType.BASH,record, { path: this.props.scriptsPath , execution: `describe`, args: record.podName })}>
                 Describe
             </Button>
             </Col>
@@ -106,7 +109,7 @@ class ContainerTable extends Component {
               <PopoverConfirmOperation
                 isVisible={this.props.isVisible}
                 onConfirm={() => {
-                  this.props.openModal(record, { raw: `kubectl delete po ${record.podName}` });
+                  this.props.openModal(ModalType.BASH,record, { raw: `kubectl delete po ${record.podName}` });
                   callPopOverWorkAround(false);
                 }}
                 onCancel={() => {
@@ -174,7 +177,8 @@ ContainerTable.propTypes = {
 
 const mapStateToProps = (state) => ({
   // columns: state.containerTable.columns,
-  dataSource: tableDataSelector(state)
+  dataSource: tableDataSelector(state),
+  scriptsPath:state.serverSelection.currentSelection.scriptsPath
 });
 
 export default connect(mapStateToProps, { openModal, init })(

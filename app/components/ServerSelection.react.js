@@ -41,8 +41,8 @@ class ServerSelection extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-       this.serverSelection = nextProps.serverSelection.urls;
-       let selectionKeys = Object.keys(nextProps.serverSelection.urls);
+       this.serverSelection = nextProps.serverSelection.location;
+       let selectionKeys = Object.keys(nextProps.serverSelection.location);
         //init at first time
     if(this.currentSelection==''&& selectionKeys.length!=0){
         this.currentSelection = selectionKeys[0];
@@ -68,7 +68,7 @@ class ServerSelection extends React.Component {
        updateConnectionServer
        
     } = this.props;
-    let selectionKeys = Object.keys(serverSelection.urls);
+    let selectionKeys = Object.keys(serverSelection.location);
     if(selectionKeys.length!=0){
           this.menuItems = selectionKeys.map(key=>
       <Menu.Item key={key}> {key}</Menu.Item> )

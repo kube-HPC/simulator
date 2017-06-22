@@ -116,7 +116,7 @@ const config = {
         })
       },
       // LESS
-            {
+      {
         test: /\.(less)$/,
         loader: ExtractTextPlugin.extract({
           fallbackLoader: 'style-loader',
@@ -167,18 +167,21 @@ const config = {
       app.get('/config', (req, res) => {
         if (process.env.NODE_ENV == null || process.env.NODE_ENV == 'dev') {
           res.json({
-            Local: "http://localhost:8091",
-            RMS_50: "http://101.150.4.150:8080/",
-            RMS_100: "http://101.150.4.160:8080/",
-            SufaT: "http://sufa-dev-vdo66:8080/"
+            location: {
+              Local: {url:"http://localhost:8091",path:'',scriptsPath:'~/dev/vod/rms/scripts'},
+              LocalK8s:{url:'http://101.150.4.70:8080', path:'/api/v1/proxy/namespaces/default/services/worker-statistics-server/socket.io',scriptsPath:'../rms/scripts/'},
+              RMS_50: {url:"http://101.150.4.150:8080/",path:'',scriptsPath:'../rms/scripts/'},
+              RMS_100: {url:"http://101.150.4.160:8080/",path:'',scriptsPath:'../rms/scripts/'},
+              SufaT: {url:"http://sufa-dev-vdo66:8080/",path:'',scriptsPath:'../rms/scripts/'}
+            },
+            
           })
         }
-        else{
-          res.json({code:"error"})
+        else {
+          res.json({ code: "error" })
         }
 
-      }
-      )
+      })
 
     },
     proxy: {
