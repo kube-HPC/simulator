@@ -88,7 +88,7 @@ class ServerSelection extends React.Component {
         overlay={menu}
         onVisibleChange={flag=>handleVisibleChange(flag)}
         visible= {isVisible}>
-        <div style={{color:'white',fontSize:'20px'}}>server : {this.currentSelection}</div> 
+        <div style={{color:'white',fontSize:'15px'}}><Button>{this.currentSelection}</Button></div> 
         </Dropdown>
    
     );

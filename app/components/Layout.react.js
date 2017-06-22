@@ -11,7 +11,7 @@ import { Row, Col } from 'antd';
 import { compose, withState } from 'recompose';
 import { openTerminalClient, closeTerminalClient, terminalDisconnect } from '../actions/terminal.action';
 import { menuKeyToCommands, commandFormater } from '../helpers/menuToCommands';
-import ServerSelection  from './ServerSelection.react';
+import ServerSelection from './ServerSelection.react';
 const { Header, Sider, Content } = Layout;
 const MenuItemGroup = Menu.ItemGroup;
 const SubMenu = Menu.SubMenu;
@@ -57,10 +57,12 @@ let LayoutInner = (props) => (
         zIndex: '2 '
       }}>
       <Row type="flex" justify="start" align="middle">
-        <Col span={10} offset={8}>
+        <Col span={2} style={{color:'white',fontSize:'18px'}} > RMS monitor</Col>
+        <Col span={10} offset={6}>
           <TableAutoComplete />
         </Col>
-        <Col span={4} offset={2}>
+        <Col span={4} ></Col>
+        <Col span={2} >
           <ServerSelection></ServerSelection>
         </Col>
       </Row>
@@ -102,8 +104,8 @@ let LayoutInner = (props) => (
               <PopoverConfirmOperation
                 isVisible={props.isVodDownVisible}
                 onConfirm={() => {
-                  menuSelection({key:'vodDown'},props)
-                 // commandFormater(menuKeyToCommands["vodDown"])
+                  menuSelection({ key: 'vodDown' }, props)
+                  // commandFormater(menuKeyToCommands["vodDown"])
                   props.onVodDownPopoverClickVisible(false)
                 }}
                 onCancel={() => {
@@ -119,8 +121,8 @@ let LayoutInner = (props) => (
               <PopoverConfirmOperation
                 isVisible={props.isVodUpVisible}
                 onConfirm={() => {
-               //   commandFormater(menuKeyToCommands["vodUp"])
-               menuSelection({key:'vodUp'},props)
+                  //   commandFormater(menuKeyToCommands["vodUp"])
+                  menuSelection({ key: 'vodUp' }, props)
                   props.onVodUpPopoverClickVisible(false)
                 }}
                 onCancel={() => {
