@@ -17,11 +17,11 @@ export const menuKeyToCommands = {
   
 }
 
-export const commandFormater = (command) => {
+export const commandFormater = (scriptsPath,command) => {
   if (!command) {
     return
   }
-  let path = command.path ? `cd ${command.path}` : '';
+  let path = scriptsPath ? `cd ${scriptsPath}` : '';
   let execution = command.execution ? `./${command.execution}` : '';
   let args = command.args ? `${command.args}` : '';
   return `${path};${execution} ${args}`;

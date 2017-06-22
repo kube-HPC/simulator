@@ -181,7 +181,7 @@ let LayoutInner = (props) => (
           <ContainerTable /> :
           <Terminal
             // isClose={props.isTableVIsible.visible}
-            inlineCommand={commandFormater(menuKeyToCommands[props.isTableVIsible.menuItem.key])}
+            inlineCommand={commandFormater(props.scriptsPath,menuKeyToCommands[props.isTableVIsible.menuItem.key])}
             customStyle={{ display: 'block', position: 'relative', width: '85vw', height: '85vh', opacity: 0.8 }}
           />
         }
@@ -197,8 +197,14 @@ let LayoutInner = (props) => (
       <ContainerTable />
     </div>*/
 
+const mapStateToProps = (state) => ({
+ 
+  scriptsPath:state.serverSelection.currentSelection.scriptsPath
+});
 
-export default compose(connect(null, { openTerminalClient, closeTerminalClient, terminalDisconnect }),
+
+
+export default compose(connect(mapStateToProps, { openTerminalClient, closeTerminalClient, terminalDisconnect }),
   withState('isTableVIsible', 'onMenuSelected', { visible: true, menuItem: {} }),
   withState('isVodUpVisible', 'onVodUpPopoverClickVisible', false),
   withState('isVodDownVisible', 'onVodDownPopoverClickVisible', false)

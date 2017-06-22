@@ -170,7 +170,7 @@ const config = {
             location: {
               Local: {url:"http://localhost:8091",path:'',scriptsPath:'~/dev/vod/rms/scripts'},
               LocalK8s:{url:'http://101.150.4.70:8080', path:'/api/v1/proxy/namespaces/default/services/worker-statistics-server/socket.io',scriptsPath:'../rms/scripts/'},
-              RMS_50: {url:"http://101.150.4.150:8080/",path:'',scriptsPath:'../rms/scripts/'},
+              RMS_50: {url:"http://101.150.4.150:8080",path:'/api/v1/proxy/namespaces/default/services/worker-statistics-server/socket.io',scriptsPath:'../rms/scripts/'},
               RMS_100: {url:"http://101.150.4.160:8080/",path:'',scriptsPath:'../rms/scripts/'},
               SufaT: {url:"http://sufa-dev-vdo66:8080/",path:'',scriptsPath:'../rms/scripts/'}
             },
