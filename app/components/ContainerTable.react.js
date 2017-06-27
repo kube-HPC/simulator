@@ -71,7 +71,7 @@ class ContainerTable extends Component {
             <Col span={3}>
               <Button onClick={() => this.props.openModal(ModalType.SSH, record, { raw: '' }, {
                 type: 'ssh',
-                sshuser: 'matyz',
+                sshuser: this.props.user,
                 sshport: 22,
                 sshhost: record.hostIp,
                 sshauth: 'password'
@@ -178,7 +178,8 @@ ContainerTable.propTypes = {
 const mapStateToProps = (state) => ({
   // columns: state.containerTable.columns,
   dataSource: tableDataSelector(state),
-  scriptsPath:state.serverSelection.currentSelection.scriptsPath
+  scriptsPath:state.serverSelection.currentSelection.scriptsPath,
+  sshUser:state.serverSelection.currentSelection.user,
 });
 
 export default connect(mapStateToProps, { openModal, init })(
