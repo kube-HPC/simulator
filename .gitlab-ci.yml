@@ -37,4 +37,4 @@ build:
   artifacts:
     paths:
       - ./*-rc.yml
-   environment: staging
+  environment: staging
