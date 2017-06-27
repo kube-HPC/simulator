@@ -1,0 +1,40 @@
+stages:
+  - version
+  - build
+  - deploy
+version:
+  stage: version
+  only:
+    - master
+  except:
+    - tags
+    - triggers
+  script:
+    - export CI_PUSH_REPO=`echo $CI_BUILD_REPO | perl -pe 's#.*@(.+?(\:\d+)?)/#git@\1:#' | perl -pe 's/:gitlab\//:\//'`
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$CI_KEY")
+    - export TMP_BRANCH_NAME=ci_processing_$CI_BUILD_ID
+    - git checkout -b $TMP_BRANCH_NAME
+    - git remote set-url --push origin "$CI_PUSH_REPO"
+    - npm version patch -m "$(git log -1 --pretty=%B) .... bump version [skip ci]"
+    - git push origin $TMP_BRANCH_NAME:${CI_BUILD_REF_NAME} --follow-tags
+    - curl -X POST -F "token=32ac76fc75557c511cb8cd5337bac0" -F "ref=$(git describe --abbrev=0 --tags)" "http://gitlab.rms/gitlab/api/v3/projects/$CI_PROJECT_ID/trigger/builds"
+deploy:
+  stage: deploy
+  only:
+    - triggers
+  script:
+    - VERSION=$(git describe --abbrev=0 --tags);VERSION=${VERSION%.*}
+    - MESSAGE="Triggered by ${CI_PROJECT_NAME:-Unknown}. $(git log -1 --pretty=%B)"
+    - curl -X POST -H "PRIVATE-TOKEN:MXgU_4aWxXLfzWQPHv9M" -F tag_name="${VERSION}.$(date +%s)" -F release_description="Version ${VERSION} $(date)" -F message="${MESSAGE}" -F ref=master http://gitlab.rms/gitlab/api/v3/projects/47/repository/tags
+build:
+  stage: build
+  only:
+    - triggers
+  script:
+    - npm --registry=http://cir-srv01:4873 install
+    - npm run build
+  artifacts:
+    paths:
+      - ./*-rc.yml
+   environment: staging
