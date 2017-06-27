@@ -60,8 +60,8 @@ const TableAutoComplete = (props) => (
 //   ];
 
 const tableDataToAutoCompleteData = (data) => {
-  if(data[0]==null){
-     return [];
+  if (data[0] == null) {
+    return [];
   }
   const table = Object.keys(data[0]).filter(obj => typeof (data[0][obj]) != 'object').map(o => ({ title: o, children: [] }))
 
@@ -76,6 +76,19 @@ const tableDataToAutoCompleteData = (data) => {
       count: mapTypeToCountObj[key]
     }));
   });
+  //vid 
+
+  let lastvidArr = [];
+  data.forEach(o => {
+    if (o.additional.worker.lastVid != null) {
+      lastvidArr.push({
+        title: o.additional.worker.lastVid,
+        count: 1
+      })
+    }
+  })
+  table.push({ title: 'lastVid', children: lastvidArr })
+
   return table;
 };
 

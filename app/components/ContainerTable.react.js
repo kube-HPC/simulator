@@ -163,7 +163,8 @@ const tableDataSelector = createSelector(
     let returnData = containerTable;
     if (autoCompleteFilter != '') {
       returnData = containerTable.filter((row) =>
-        Object.values(row).find((f) => f.toString().includes(autoCompleteFilter))
+        Object.values(row).find((f) => f.toString().includes(autoCompleteFilter))||
+        (row.additional.worker.lastVid?row.additional.worker.lastVid.includes(autoCompleteFilter):false)
       );
     }
     return returnData;
