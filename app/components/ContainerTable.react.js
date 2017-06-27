@@ -71,7 +71,7 @@ class ContainerTable extends Component {
             <Col span={3}>
               <Button onClick={() => this.props.openModal(ModalType.SSH, record, { raw: '' }, {
                 type: 'ssh',
-                sshuser: this.props.user,
+                sshuser: this.props.sshUser,
                 sshport: 22,
                 sshhost: record.hostIp,
                 sshauth: 'password'
@@ -107,16 +107,16 @@ class ContainerTable extends Component {
             </Col>
             <Col span={2}>
               <PopoverConfirmOperation
-                isVisible={this.props.isVisible}
+                isVisible={(this.props.isVisible.podName==record.podName&&this.props.isVisible.visible)?true:false}
                 onConfirm={() => {
                   this.props.openModal(ModalType.BASH,record, { raw: `kubectl delete po ${record.podName}` });
-                  callPopOverWorkAround(false);
+                  callPopOverWorkAround({ visible:false,podName:''});
                 }}
                 onCancel={() => {
-                  callPopOverWorkAround(false);
+                  callPopOverWorkAround({ visible:false,podName:''});
                 }}
               >
-                <Button type="danger" onClick={() => { callPopOverWorkAround(true) }}>
+                <Button type="danger" onClick={() => { callPopOverWorkAround({visible:true,podName:record.podName}) }}>
                   X
                 </Button>
               </PopoverConfirmOperation>
@@ -183,5 +183,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, { openModal, init })(
-  withState('isVisible', 'onPopoverClickVisible', false)(ContainerTable)
+  withState('isVisible', 'onPopoverClickVisible', { visible:false,podName:''})(ContainerTable)
 );
