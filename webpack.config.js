@@ -166,7 +166,7 @@ const config = {
     historyApiFallback: true,
     setup: (app) => {
       app.get('/config', (req, res) => {
-        if (process.env.NODE_ENV == null || process.env.NODE_ENV == 'dev') {
+        // if (process.env.NODE_ENV != null ) {
           res.json({
             location: {
               Local: {
@@ -202,10 +202,10 @@ const config = {
             },
 
           })
-        }
-        else {
-          res.json({ code: "error" })
-        }
+        // }
+        // else {
+        //   res.json({ code: "error" })
+        // }
 
       })
 
