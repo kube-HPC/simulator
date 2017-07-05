@@ -40,7 +40,7 @@ export const restConfigMiddleware = ({ dispatch }) => (next) => (action) => {
 
   if (action.type === AT.REST_REQ) {
     pending(dispatch, 'pending', action)
-    fetch(`/${location.pathname}/${action.payload.url}`).then((res) => {
+    fetch(`${location.href}${action.payload.url}`).then((res) => {
       res.json().then((data) => {
         console.log(data);
         success(dispatch, data, action)
