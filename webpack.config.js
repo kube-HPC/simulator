@@ -166,7 +166,7 @@ const config = {
     historyApiFallback: true,
     setup: (app) => {
       app.get('/config', (req, res) => {
-        // if (process.env.NODE_ENV != null ) {
+        if (process.env.NODE_ENV == null || process.env.NODE_ENV == 'dev') {
           res.json({
             location: {
               Local: {
@@ -202,10 +202,21 @@ const config = {
             },
 
           })
-        // }
-        // else {
-        //   res.json({ code: "error" })
-        // }
+        }
+        else if(process.env.NODE_ENV == 'lab'){
+          res.json({
+            location: {
+              Local: {
+                url: `http://${process.env.BASE_URL_HOST}/`,
+                path: '/api/v1/proxy/namespaces/default/services/worker-statistics-server/socket.io',
+                scriptsPath: '~/dev/vod/rms/scripts',
+                user: ''
+              }
+            })
+        }
+        else {
+          res.json({ code: "error" })
+        }
 
       })
 
