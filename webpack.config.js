@@ -162,6 +162,7 @@ const config = {
     contentBase: appPath,
     noInfo: true,
     port: 9050,
+    host:'0.0.0.0',
     historyApiFallback: true,
     setup: (app) => {
       app.get('/config', (req, res) => {
