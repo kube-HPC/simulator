@@ -212,7 +212,7 @@ const config = {
                 scriptsPath: '~/dev/vod/rms/scripts',
                 user: ''
               }
-            })
+            }})
         }
         else {
           res.json({ code: "error" })
