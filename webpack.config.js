@@ -209,7 +209,7 @@ const config = {
               Local: {
                 url: `http://${process.env.BASE_URL_HOST}:8080/`,
                 path: '/api/v1/proxy/namespaces/default/services/worker-statistics-server/socket.io',
-                scriptsPath: '~/dev/vod/rms/scripts',
+                scriptsPath: '../rms/scripts/',
                 user: ''
               }
             }})
