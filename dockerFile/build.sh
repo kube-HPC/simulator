@@ -30,7 +30,7 @@ fi
 WORKSPACE=$HOME/dev/vod/$REPONAME
 GIT_COMMIT=$(git log -1 --pretty=%H 2> /dev/null)
 GIT_USER="$(git log -1 --pretty=%aN 2> /dev/null)"
-VERSION=${npm_package_version}
+VERSION=v${npm_package_version}
 CURRENTTAG="$REPONAME:$VERSION"
 LATESTTAG=$REPONAME":latest"
 REMOTECURRENTTAG="$REGISTRYNAME:$VERSION"
