@@ -27,6 +27,8 @@ class ContainerTable extends Component {
   //   }
   // }
 
+   
+
   componentWillMount() {
     this.props.init()
     const callPopOverWorkAround = (isVisible) => {
@@ -39,7 +41,15 @@ class ContainerTable extends Component {
         dataIndex: 'additional.worker.lastVid',
         key: 'data.additional.worker.lastVid',
         onFilter: (value, record) => record.additional.worker.lastVid.includes(value),
-        sorter: (a, b) => a.additional.worker.lastVid.length - b.additional.worker.lastVid.length
+        sorter: (a, b) =>  {
+          let tempA = null;
+           let tempB = null;
+      //   console.log(b.additional.worker.lastVid);
+        tempA = a.additional.worker.lastVid ?  a.additional.worker.lastVid : "";
+        tempB = b.additional.worker.lastVid ?  b.additional.worker.lastVid : "";
+         return tempA.localeCompare(tempB)
+         }
+
       },
       { title: 'hostName', dataIndex: 'hostName', key: 'hostName' },
       { title: 'podName', dataIndex: 'podName', key: 'podName' },

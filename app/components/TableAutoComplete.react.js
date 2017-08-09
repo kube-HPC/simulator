@@ -82,6 +82,8 @@ const tableDataToAutoCompleteData = (data) => {
   data.forEach(o => {
     if (o.additional.worker.lastVid != null) {
       lastvidArr.push({
+        key: o.additional.worker.lastVid + o.serviceName,
+        
         title: o.additional.worker.lastVid,
         count: 1
       })

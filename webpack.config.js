@@ -189,13 +189,13 @@ const config = {
               },
               RMS_100: {
                 url: "http://101.150.4.160:8080/",
-                path: '',
+                path: '/api/v1/proxy/namespaces/kube-system/services/worker-statistics-server/socket.io',
                 scriptsPath: '../rms/scripts/',
                 user:'user'
               },
               SufaT: {
                 url: "http://sufa-dev-vdo66:8080/",
-                path: '',
+                path: '/api/v1/proxy/namespaces/kube-system/services/worker-statistics-server/socket.io',
                 scriptsPath: '../rms/scripts/',
                 user:'uvadmin'
               }
