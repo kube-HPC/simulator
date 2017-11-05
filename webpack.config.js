@@ -192,12 +192,6 @@ const config = {
                 path: '/api/v1/proxy/namespaces/kube-system/services/worker-statistics-server/socket.io',
                 scriptsPath: '../rms/scripts/',
                 user:'user'
-              },
-              SufaT: {
-                url: "http://sufa-dev-vdo66:8080/",
-                path: '/api/v1/proxy/namespaces/kube-system/services/worker-statistics-server/socket.io',
-                scriptsPath: '../rms/scripts/',
-                user:'uvadmin'
               }
             },
 

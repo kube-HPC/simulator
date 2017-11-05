@@ -51,7 +51,7 @@ let dataSource = [
         }
       }
     },
-    hostName: "matyz-pc"
+    hostName: "xxx"
   }]
 
 const tmp = { dataSource };
