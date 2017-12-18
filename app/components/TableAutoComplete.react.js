@@ -44,11 +44,11 @@ const TableAutoComplete = (props) => (
       placeholder="input here"
       onSelect={props.updateFilter}
       onChange={(val) => {
-        props.updateFilter(val)
+        props.updateFilter(val);
       }}
       optionLabelProp="value">
       <Input style={{ border: '0px' }}
-        suffix={<Icon type="search" className="certain-category-icon" />} />
+        suffix={<Icon type="search" className="certain-category-icon"/>}/>
     </AutoComplete>
   </div>
 );
@@ -63,10 +63,10 @@ const tableDataToAutoCompleteData = (data) => {
   if (data[0] == null) {
     return [];
   }
-  const table = Object.keys(data[0]).filter(obj => typeof (data[0][obj]) != 'object').map(o => ({ title: o, children: [] }))
+  const table = Object.keys(data[0]).filter((obj) => typeof (data[0][obj]) !== 'object').map((o) => ({ title: o, children: [] }));
 
   table.forEach((obj) => {
-    let mapTypeToCountObj = data.map((o) => o[obj.title]).reduce((prev, item) => {
+    const mapTypeToCountObj = data.map((o) => o[obj.title]).reduce((prev, item) => {
       if (item in prev) prev[item]++;
       else prev[item] = 1;
       return prev;
@@ -76,20 +76,20 @@ const tableDataToAutoCompleteData = (data) => {
       count: mapTypeToCountObj[key]
     }));
   });
-  //vid 
+  // vid 
 
-  let lastvidArr = [];
-  data.forEach(o => {
-    if (o.additional.worker.lastVid != null) {
-      lastvidArr.push({
-        key: o.additional.worker.lastVid + o.serviceName,
-        
-        title: o.additional.worker.lastVid,
-        count: 1
-      })
-    }
-  })
-  table.push({ title: 'lastVid', children: lastvidArr })
+  const lastvidArr = [];
+  // data.forEach(o => {
+  //   if (o.additional.worker.lastVid != null) {
+  //     lastvidArr.push({
+  //       key: o.additional.worker.lastVid + o.serviceName,
+
+  //       title: o.additional.worker.lastVid,
+  //       count: 1
+  //     })
+  //   }
+  // })
+  table.push({ title: 'lastVid', children: lastvidArr });
 
   return table;
 };

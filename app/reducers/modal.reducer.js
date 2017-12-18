@@ -2,10 +2,6 @@ import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
 import actions from '../constants/actions';
 
-
-
-
-
 const initState = { modalType: null, visible: false, data: null, command: null, sshInitData: null };
 
 

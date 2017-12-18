@@ -19,36 +19,36 @@ const SubMenu = Menu.SubMenu;
 //react/prefer-stateless-function
 
 let collapsedState = false;
-let toggle = () => {
+const toggle = () => {
   collapsedState = !collapsedState;
 };
 
-let isVisible = false;
+const isVisible = false;
 let prevKey = 1;
-let menuSelection = (i, props) => {
+const menuSelection = (i, props) => {
   if (prevKey != 1) {
     props.terminalDisconnect();
     props.closeTerminalClient();
   }
   if (i.key == 1) {
-    props.onMenuSelected({ visible: true, menuItem: i })
+    props.onMenuSelected({ visible: true, menuItem: i });
   }
   if (i.key == 'vodDownMenu') {
-    props.onVodDownPopoverClickVisible(true)
+    props.onVodDownPopoverClickVisible(true);
   }
   if (i.key == 'vodUpMenu') {
-    props.onVodUpPopoverClickVisible(true)
+    props.onVodUpPopoverClickVisible(true);
   }
   if (i.key != 1) {
     setTimeout(() => {
       props.openTerminalClient();
-    }, 100)
-    props.onMenuSelected({ visible: false, menuItem: i })
+    }, 100);
+    props.onMenuSelected({ visible: false, menuItem: i });
   }
   prevKey = i.key;
   // console.log(`i ${i
-}
-let LayoutInner = (props) => (
+};
+const LayoutInner = (props) => (
   <Layout>
     <Header
       style={{
@@ -57,13 +57,13 @@ let LayoutInner = (props) => (
         zIndex: '2 '
       }}>
       <Row type="flex" justify="start" align="middle">
-        <Col span={2} style={{color:'white',fontSize:'18px'}} > RMS monitor</Col>
+        <Col span={2} style={{ color: 'white', fontSize: '18px' }} > HKUBE</Col>
         <Col span={10} offset={6}>
-          <TableAutoComplete />
+          <TableAutoComplete/>
         </Col>
-        <Col span={4} ></Col>
+        <Col span={4}/>
         <Col span={2} >
-          <ServerSelection></ServerSelection>
+          <ServerSelection/>
         </Col>
       </Row>
     </Header>
@@ -82,12 +82,12 @@ let LayoutInner = (props) => (
             // console.log(`i ${i} k ${k} s ${s} `)
           }}
           defaultSelectedKeys={['1']}>
-          <Menu.Item key="1" style={{ paddingLeft: '0px', }}>
-            <span className="nav-text">contaniers</span>
+          <Menu.Item key="1" style={{ paddingLeft: '0px' }}>
+            <span className="nav-text">monitor</span>
           </Menu.Item>
-          {/*<SubMenu key="sub1" style={{ backgroundColor: '#ececec' }}  title={<span>contaniers</span>}>*/}
-          <span className="ant-divider" />
-          <MenuItemGroup style={{ backgroundColor: '#ececec' }} title="RMS operations">
+          {/* <SubMenu key="sub1" style={{ backgroundColor: '#ececec' }}  title={<span>contaniers</span>}>*/}
+          <span className="ant-divider"/>
+          {/* <MenuItemGroup style={{ backgroundColor: '#ececec' }} title="RMS operations">
             <Menu.Item key="versions">
               <span className="nav-text"> rms microservices versions </span>
             </Menu.Item>
@@ -104,12 +104,12 @@ let LayoutInner = (props) => (
               <PopoverConfirmOperation
                 isVisible={props.isVodDownVisible}
                 onConfirm={() => {
-                  menuSelection({ key: 'vodDown' }, props)
+                  menuSelection({ key: 'vodDown' }, props);
                   // commandFormater(menuKeyToCommands["vodDown"])
-                  props.onVodDownPopoverClickVisible(false)
+                  props.onVodDownPopoverClickVisible(false);
                 }}
                 onCancel={() => {
-                  props.onVodDownPopoverClickVisible(false)
+                  props.onVodDownPopoverClickVisible(false);
                 }}
                 position="right" >
                 <div style={{ width: '120%' }}>
@@ -122,11 +122,11 @@ let LayoutInner = (props) => (
                 isVisible={props.isVodUpVisible}
                 onConfirm={() => {
                   //   commandFormater(menuKeyToCommands["vodUp"])
-                  menuSelection({ key: 'vodUp' }, props)
-                  props.onVodUpPopoverClickVisible(false)
+                  menuSelection({ key: 'vodUp' }, props);
+                  props.onVodUpPopoverClickVisible(false);
                 }}
                 onCancel={() => {
-                  props.onVodUpPopoverClickVisible(false)
+                  props.onVodUpPopoverClickVisible(false);
                 }}
                 position="right">
                 <div style={{ width: '120%' }}>
@@ -163,8 +163,8 @@ let LayoutInner = (props) => (
             <Menu.Item key="events">
               <span className="nav-text"> k8s events </span>
             </Menu.Item>
-          </MenuItemGroup>
-          {/*</SubMenu>*/}
+          </MenuItemGroup> */}
+          {/* </SubMenu>*/}
         </Menu>
       </Sider>
       <Content
@@ -175,18 +175,17 @@ let LayoutInner = (props) => (
           background: '#fff',
           minHeight: '89vh'
         }}>
-        <BackTop />
-        {/*<ContainerTable />*/}
+        <BackTop/>
+        {/* <ContainerTable />*/}
         {props.isTableVIsible.visible ?
-          <ContainerTable /> :
+          <ContainerTable/> :
           <Terminal
             // isClose={props.isTableVIsible.visible}
-            inlineCommand={commandFormater(props.scriptsPath,menuKeyToCommands[props.isTableVIsible.menuItem.key])}
-            customStyle={{ display: 'block', position: 'relative', width: '85vw', height: '85vh', opacity: 0.8 }}
-          />
+            inlineCommand={commandFormater(props.scriptsPath, menuKeyToCommands[props.isTableVIsible.menuItem.key])}
+            customStyle={{ display: 'block', position: 'relative', width: '85vw', height: '85vh', opacity: 0.8 }}/>
         }
-        {/*<Terminal isClose={false}/>*/}
-        <TerminalModal />
+        {/* <Terminal isClose={false}/>*/}
+        <TerminalModal/>
       </Content>
     </Layout>
   </Layout>
@@ -198,15 +197,14 @@ let LayoutInner = (props) => (
     </div>*/
 
 const mapStateToProps = (state) => ({
- 
-  scriptsPath:state.serverSelection.currentSelection.scriptsPath
-});
 
+  scriptsPath: state.serverSelection.currentSelection.scriptsPath
+});
 
 
 export default compose(connect(mapStateToProps, { openTerminalClient, closeTerminalClient, terminalDisconnect }),
   withState('isTableVIsible', 'onMenuSelected', { visible: true, menuItem: {} }),
   withState('isVodUpVisible', 'onVodUpPopoverClickVisible', false),
   withState('isVodDownVisible', 'onVodDownPopoverClickVisible', false)
-)(LayoutInner)
+)(LayoutInner);
 

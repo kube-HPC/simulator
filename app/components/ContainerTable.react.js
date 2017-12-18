@@ -3,19 +3,20 @@
 import 'antd/dist/antd.css';
 import { connect } from 'react-redux';
 import Immutable from 'seamless-immutable';
-import { Table, Card, Icon, Tag, Button } from 'antd';
+import { Table, Card, Icon, Tag, Button, Row, Col, Progress, Pagination } from 'antd';
 import ReactJson from 'react-json-view';
 import { openModal } from '../actions/modal.action';
 import { init } from '../actions/containerTable.action';
 import PopoverConfirmOperation from './PopoverConfirmOperation.react';
 import { createSelector } from 'reselect';
-import { Row, Col } from 'antd';
 import React, { PropTypes, Component } from 'react';
 import { withState } from 'recompose';
-const ModalType = {
-  BASH: "bash",
-  SSH: "ssh",
-}
+const RECORD_STATUS = {
+  active: '#2db7f5',
+  completed: '#87d068',
+  failed: '#f50',
+  stopped: '#ec8c16'
+};
 
 class ContainerTable extends Component {
   // constructor(props) {
@@ -27,121 +28,76 @@ class ContainerTable extends Component {
   //   }
   // }
 
-   
 
   componentWillMount() {
-    this.props.init()
+    this.props.init();
     const callPopOverWorkAround = (isVisible) => {
       console.log('blaaaaa');
-      this.props.onPopoverClickVisible(isVisible)
-    }
+      this.props.onPopoverClickVisible(isVisible);
+    };
+
+    const sorter = (a, b) => {
+      let tempA = null;
+      let tempB = null;
+      //   console.log(b.additional.worker.lastVid);
+      tempA = a || '';
+      tempB = b || '';
+      return tempA.localeCompare(tempB);
+    };
     this.columns = [
       {
-        title: 'vid',
-        dataIndex: 'additional.worker.lastVid',
-        key: 'data.additional.worker.lastVid',
-        onFilter: (value, record) => record.additional.worker.lastVid.includes(value),
-        sorter: (a, b) =>  {
-          let tempA = null;
-           let tempB = null;
-      //   console.log(b.additional.worker.lastVid);
-        tempA = a.additional.worker.lastVid ?  a.additional.worker.lastVid : "";
-        tempB = b.additional.worker.lastVid ?  b.additional.worker.lastVid : "";
-         return tempA.localeCompare(tempB)
-         }
-
-      },
-      { title: 'hostName', dataIndex: 'hostName', key: 'hostName' },
-      { title: 'podName', dataIndex: 'podName', key: 'podName' },
-      { title: 'hostIp', dataIndex: 'hostIp', key: 'hostIp' },
-      {
-        title: 'ServiceName',
-        dataIndex: 'serviceName',
-        key: 'serviceName',
-        onFilter: (value, record) => record.serviceName.includes(value),
-        sorter: (a, b) => a.serviceName.length - b.serviceName.length
+        title: 'pipeline name',
+        dataIndex: 'execution_id',
+        key: 'execution_id',
+        width: '20%',
+        onFilter: (value, record) => record.execution_id.includes(value),
+        sorter: (a, b) => sorter(a.execution_id, b.execution_id)
       },
       {
         title: 'Status',
-        dataIndex: 'Status',
-        key: 'x',
-        render: (text, record) => (
-          <span>
-            <Tag color="green">{record.additional.worker.lastStatus}</Tag>
-          </span>
-        )
+        dataIndex: 'stat',
+        width: '5%',
+        key: 'data.status',
+        render: (text, record) => (<span>
+          <Tag color={RECORD_STATUS[record.data.status]}>{record.data.status}</Tag>
+        </span>
+        ),
+        sorter: (a, b) => sorter(a.data.status, b.data.status)
       },
       {
-        title: 'Terminal',
-        dataIndex: '',
-        rowSpan: 2,
+        title: 'time',
+        dataIndex: 'timestamp',
+        key: 'timestamp',
+        width: '10%',
+        sorter: (a, b) => sorter(a.timestamp, b.timestamp)
+      },
+      { title: 'Algorithm name', dataIndex: 'execution_id1', key: 'execution_id1', width: '10%' },
+      { title: 'Node name', dataIndex: 'execution_id2', key: 'execution_id2', width: '10%' },
+      { title: 'Description', dataIndex: 'data.details', key: 'details', width: '20%' },
+      {
+        title: 'Progress',
+        dataIndex: 'Status',
+        width: '45%',
         key: 'y',
-        render: (text, record) => (
-          <Row type="flex" justify="left" align="middle">
-            <Col span={3}>
-              <Button onClick={() => this.props.openModal(ModalType.SSH, record, { raw: '' }, {
-                type: 'ssh',
-                sshuser: this.props.sshUser,
-                sshport: 22,
-                sshhost: record.hostIp,
-                sshauth: 'password'
-              })}>
-                Host
-            </Button>
-            </Col>
-            <Col span={1}>
-              <span className="ant-divider" />
-            </Col>
-            <Col span={3}>
-              <Button onClick={() => this.props.openModal(ModalType.BASH, record, { path: this.props.scriptsPath, execution: `exec`, args: record.podName })}>
-                Pod
-            </Button>
-            </Col>
-            <Col span={1}>
-              <span className="ant-divider" />
-            </Col>
-            <Col span={3}>
-              <Button onClick={() => this.props.openModal(ModalType.BASH, record, { path: this.props.scriptsPath, execution: `logs`, args: `-f ${record.podName}` })}>
-                Log
-            </Button>
-            </Col>
-            <Col span={1}>
-              <span className="ant-divider" />
-            </Col>
-            <Col span={3}>
-              <Button onClick={() => this.props.openModal(ModalType.BASH,record, { path: this.props.scriptsPath , execution: `describe`, args: record.podName })}>
-                Describe
-            </Button>
-            </Col>
-            <Col span={2}>
-            </Col>
-            <Col span={2}>
-              <PopoverConfirmOperation
-                isVisible={(this.props.isVisible.podName==record.podName&&this.props.isVisible.visible)?true:false}
-                onConfirm={() => {
-                  this.props.openModal(ModalType.BASH,record, { raw: `kubectl delete po ${record.podName}` });
-                  callPopOverWorkAround({ visible:false,podName:''});
-                }}
-                onCancel={() => {
-                  callPopOverWorkAround({ visible:false,podName:''});
-                }}
-              >
-                <Button type="danger" onClick={() => { callPopOverWorkAround({visible:true,podName:record.podName}) }}>
-                  X
-                </Button>
-              </PopoverConfirmOperation>
-            </Col>
-            <Col span={1} />
-            {/* <Tag color="green">{record.podName}</Tag>*/}
+        render: (text, record) => {
+          if (record.data.progress === '100%') {
+            return (<span>
+              <Progress percent={record.data.progress} status="active"/>
+            </span>);
+          }
+          return (<span>
+            <Progress percent={record.data.progress}/>
+          </span>);
+        },
 
-          </Row >
-        )
+        sorter: (a, b) => sorter(a.data.progress, b.data.progress)
       }
-    ]
+
+    ];
   }
 
   renderColumns() {
-    return
+
   }
 
   render() {
@@ -151,11 +107,15 @@ class ContainerTable extends Component {
         <Table
           columns={this.columns}
           dataSource={dataSource.asMutable()}
+          pagination={{
+            defaultCurrent: 1, pageSize: 15
+          }}
           expandedRowRender={(record) => (
             <Card title="Full details">
-              <ReactJson src={record} />
+              <ReactJson src={record}/>
             </Card>
-          )} />
+
+          )}/>
       </div>
     );
   }
@@ -173,8 +133,8 @@ const tableDataSelector = createSelector(
     let returnData = containerTable;
     if (autoCompleteFilter != '') {
       returnData = containerTable.filter((row) =>
-        Object.values(row).find((f) => f.toString().includes(autoCompleteFilter))||
-        (row.additional.worker.lastVid?row.additional.worker.lastVid.includes(autoCompleteFilter):false)
+        Object.values(row).find((f) => f.toString().includes(autoCompleteFilter)) ||
+        (row.additional.worker.lastVid ? row.additional.worker.lastVid.includes(autoCompleteFilter) : false)
       );
     }
     return returnData;
@@ -189,10 +149,10 @@ ContainerTable.propTypes = {
 const mapStateToProps = (state) => ({
   // columns: state.containerTable.columns,
   dataSource: tableDataSelector(state),
-  scriptsPath:state.serverSelection.currentSelection.scriptsPath,
-  sshUser:state.serverSelection.currentSelection.user,
+  scriptsPath: state.serverSelection.currentSelection.scriptsPath,
+  sshUser: state.serverSelection.currentSelection.user
 });
 
 export default connect(mapStateToProps, { openModal, init })(
-  withState('isVisible', 'onPopoverClickVisible', { visible:false,podName:''})(ContainerTable)
+  withState('isVisible', 'onPopoverClickVisible', { visible: false, podName: '' })(ContainerTable)
 );

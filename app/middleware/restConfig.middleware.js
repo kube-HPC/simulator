@@ -24,13 +24,13 @@ const pending = (dispatch, payload, action) => {
 };
 
 const success = (dispatch, payload, action) => {
-   setTimeout(()=>{
-     dispatch({
+  setTimeout(() => {
+    dispatch({
       type: action.payload.actionType + '_SUCCESS',
       meta: action.meta,
       payload
     });
-   },100) 
+  }, 100)
 };
 
 export const restConfigMiddleware = ({ dispatch }) => (next) => (action) => {
@@ -50,7 +50,7 @@ export const restConfigMiddleware = ({ dispatch }) => (next) => (action) => {
       console.error('get config error')
     })
   } else {
-   // console.warn(`rest middlware: trying to register topic ${action.payload.topic} twice `)
+    // console.warn(`rest middlware: trying to register topic ${action.payload.topic} twice `)
   }
   return next(action);
 }

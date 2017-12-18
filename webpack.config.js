@@ -162,7 +162,7 @@ const config = {
     contentBase: appPath,
     noInfo: true,
     port: 9050,
-    host:'0.0.0.0',
+    host: '0.0.0.0',
     historyApiFallback: true,
     setup: (app) => {
       app.get('/config', (req, res) => {
@@ -170,34 +170,34 @@ const config = {
           res.json({
             location: {
               Local: {
-                url: "http://localhost:8091",
+                url: "http://localhost:3002",
                 path: '',
                 scriptsPath: '~/dev/vod/rms/scripts',
                 user: ''
               },
-              LocalK8s: {
-                url: 'http://101.150.4.70:8080',
-                path: '/api/v1/proxy/namespaces/kube-system/services/worker-statistics-server/socket.io',
-                scriptsPath: '../rms/scripts/',
-                user: ''
-              },
-              RMS_50: {
-                url: "http://101.150.4.150:8080",
-                path: '/api/v1/proxy/namespaces/kube-system/services/worker-statistics-server/socket.io',
-                scriptsPath: '../rms/scripts/',
-                user:'user'
-              },
-              RMS_100: {
-                url: "http://101.150.4.160:8080/",
-                path: '/api/v1/proxy/namespaces/kube-system/services/worker-statistics-server/socket.io',
-                scriptsPath: '../rms/scripts/',
-                user:'user'
-              }
+              // LocalK8s: {
+              //   url: 'http://101.150.4.70:8080',
+              //   path: '/api/v1/proxy/namespaces/kube-system/services/worker-statistics-server/socket.io',
+              //   scriptsPath: '../rms/scripts/',
+              //   user: ''
+              // },
+              // RMS_50: {
+              //   url: "http://101.150.4.150:8080",
+              //   path: '/api/v1/proxy/namespaces/kube-system/services/worker-statistics-server/socket.io',
+              //   scriptsPath: '../rms/scripts/',
+              //   user:'user'
+              // },
+              // RMS_100: {
+              //   url: "http://101.150.4.160:8080/",
+              //   path: '/api/v1/proxy/namespaces/kube-system/services/worker-statistics-server/socket.io',
+              //   scriptsPath: '../rms/scripts/',
+              //   user:'user'
+              // }
             },
 
           })
         }
-        else if(process.env.NODE_ENV == 'lab'){
+        else if (process.env.NODE_ENV == 'lab') {
           res.json({
             location: {
               Local: {
@@ -206,7 +206,8 @@ const config = {
                 scriptsPath: '../rms/scripts/',
                 user: 'user'
               }
-            }})
+            }
+          })
         }
         else {
           res.json({ code: "error" })
