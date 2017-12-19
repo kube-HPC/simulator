@@ -1,6 +1,7 @@
 // import { FlexRows, FlexColumns, AutoSize } from 'components/common/Flex.react';
 import { connect } from 'react-redux';
 import ContainerTable from './ContainerTable.react';
+import WorkerTable from './WorkerTable.react';
 import TerminalModal from './TerminalModal.react';
 import PopoverConfirmOperation from './PopoverConfirmOperation.react';
 import Terminal from './Terminal';
@@ -26,25 +27,27 @@ const toggle = () => {
 const isVisible = false;
 let prevKey = 1;
 const menuSelection = (i, props) => {
-  if (prevKey != 1) {
-    props.terminalDisconnect();
-    props.closeTerminalClient();
-  }
+  // if (prevKey != 1) {
+  //   props.terminalDisconnect();
+  //   props.closeTerminalClient();
+  // }
   if (i.key == 1) {
     props.onMenuSelected({ visible: true, menuItem: i });
-  }
-  if (i.key == 'vodDownMenu') {
-    props.onVodDownPopoverClickVisible(true);
-  }
-  if (i.key == 'vodUpMenu') {
-    props.onVodUpPopoverClickVisible(true);
-  }
-  if (i.key != 1) {
-    setTimeout(() => {
-      props.openTerminalClient();
-    }, 100);
+  } else {
     props.onMenuSelected({ visible: false, menuItem: i });
   }
+  // if (i.key == 'vodDownMenu') {
+  //   props.onVodDownPopoverClickVisible(true);
+  // }
+  // if (i.key == 'vodUpMenu') {
+  //   props.onVodUpPopoverClickVisible(true);
+  // }
+  // if (i.key != 1) {
+  //   setTimeout(() => {
+  //     props.openTerminalClient();
+  //   }, 100);
+  //   props.onMenuSelected({ visible: false, menuItem: i });
+  // }
   prevKey = i.key;
   // console.log(`i ${i
 };
@@ -84,6 +87,9 @@ const LayoutInner = (props) => (
           defaultSelectedKeys={['1']}>
           <Menu.Item key="1" style={{ paddingLeft: '0px' }}>
             <span className="nav-text">monitor</span>
+          </Menu.Item>
+          <Menu.Item key="2" style={{ paddingLeft: '0px' }}>
+            <span className="nav-text">worker</span>
           </Menu.Item>
           {/* <SubMenu key="sub1" style={{ backgroundColor: '#ececec' }}  title={<span>contaniers</span>}>*/}
           <span className="ant-divider"/>
@@ -178,11 +184,11 @@ const LayoutInner = (props) => (
         <BackTop/>
         {/* <ContainerTable />*/}
         {props.isTableVIsible.visible ?
-          <ContainerTable/> :
-          <Terminal
-            // isClose={props.isTableVIsible.visible}
-            inlineCommand={commandFormater(props.scriptsPath, menuKeyToCommands[props.isTableVIsible.menuItem.key])}
-            customStyle={{ display: 'block', position: 'relative', width: '85vw', height: '85vh', opacity: 0.8 }}/>
+          <ContainerTable/> : <WorkerTable/>
+          // <Terminal
+          //   // isClose={props.isTableVIsible.visible}
+          //   inlineCommand={commandFormater(props.scriptsPath, menuKeyToCommands[props.isTableVIsible.menuItem.key])}
+          //   customStyle={{ display: 'block', position: 'relative', width: '85vw', height: '85vh', opacity: 0.8 }}/>
         }
         {/* <Terminal isClose={false}/>*/}
         <TerminalModal/>

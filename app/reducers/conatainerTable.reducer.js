@@ -69,7 +69,7 @@ const inititalState = Immutable.from(tmp);
 export default handleActions({
   [actions.UPDATE_ROW_DATA_TABLE](state, { type, payload, meta, error }) {
     const data = payload || [];
-    const timedData = data.map((d) => {
+    const timedData = data.jobs.map((d) => {
       d.timestamp = dateformat(d.timestamp, 'd/mm/yy, HH:MM:ss');
       return d;
     });
