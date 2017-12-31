@@ -1,6 +1,6 @@
-import { Modal, Button,Menu,Dropdown } from 'antd';
+import { Modal, Button, Menu, Dropdown } from 'antd';
 import { connect } from 'react-redux';
-import { init ,updateConnectionServer } from '../actions/serverSelection.action';
+import { init, updateConnectionServer } from '../actions/serverSelection.action';
 import { withState } from 'recompose';
 
 const terminalStyle = {
@@ -8,22 +8,22 @@ const terminalStyle = {
   position: 'relative',
   width: '90vw',
   height: '98vh',
-  top:'20px',
-  opacity:0.7
+  top: '20px',
+  opacity: 0.7
 
 };
 
 class ServerSelection extends React.Component {
-  componentWillMount(){
-   
-    this.props.init();
+  componentWillMount() {
+    // this.props.init();
+    this.props.updateConnectionServer();
     this.currentSelection = '';
-    this.menuItems= '';
+    this.menuItems = '';
     this.serverSelection = '';
   }
 
-  
-  //state = { visible: false };
+
+  // state = { visible: false };
   showModal = () => {
     this.setState({
       visible: true
@@ -41,56 +41,54 @@ class ServerSelection extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-       this.serverSelection = nextProps.serverSelection.location;
-       let selectionKeys = Object.keys(nextProps.serverSelection.location);
-        //init at first time
-    if(this.currentSelection==''&& selectionKeys.length!=0){
-        this.currentSelection = selectionKeys[0];
-        this.props.updateConnectionServer(this.serverSelection[this.currentSelection])
-      }
-     // this.currentSelection=this.currentSelection==''?selectionKeys[0]:this.currentSelection;
-   }
-    // if (this.props.modal.visible != modal.visible) {
-    //   if (modal.visible) {
-    //   //  this.props.onModalStateChange(!this.props.isClose);
-    //  this.props.openTerminalClient();
-    //   }
+    // this.serverSelection = nextProps.serverSelection.location;
+    // const selectionKeys = Object.keys(nextProps.serverSelection.location);
+    // init at first time
+    // if (this.currentSelection == '' && selectionKeys.length != 0) {
+    //   this.currentSelection = selectionKeys[0];
+      
     // }
+    // this.currentSelection=this.currentSelection==''?selectionKeys[0]:this.currentSelection;
+  }
+  // if (this.props.modal.visible != modal.visible) {
+  //   if (modal.visible) {
+  //   //  this.props.onModalStateChange(!this.props.isClose);
+  //  this.props.openTerminalClient();
+  //   }
+  // }
 
-   componentDidUpdate(){
+  componentDidUpdate() {
 
-   }
+  }
   render() {
-    let {
+    const {
        serverSelection,
-       handleVisibleChange,
-       isVisible,
-       updateConnectionServer
-       
+      handleVisibleChange,
+      isVisible,
+      updateConnectionServer
+
     } = this.props;
-    let selectionKeys = Object.keys(serverSelection.location);
-    if(selectionKeys.length!=0){
-          this.menuItems = selectionKeys.map(key=>
-      <Menu.Item key={key}> {key}</Menu.Item> )
-    
-     
+    const selectionKeys = Object.keys(serverSelection.location);
+    if (selectionKeys.length != 0) {
+      this.menuItems = selectionKeys.map((key) =>
+        <Menu.Item key={key}> {key}</Menu.Item>);
     }
-    let menu =  
-    <Menu onClick={(e)=>{
-      console.log(e.key)
-      this.currentSelection=e.key;
-      updateConnectionServer(this.serverSelection[this.currentSelection])
+    const menu =
+      (<Menu onClick={(e) => {
+        console.log(e.key);
+        this.currentSelection = e.key;
+        updateConnectionServer(this.serverSelection[this.currentSelection]);
       }}>
-           {this.menuItems}
-    </Menu> 
+        {this.menuItems}
+      </Menu>);
     return (
-        <Dropdown 
+      <Dropdown
         overlay={menu}
-        onVisibleChange={flag=>handleVisibleChange(flag)}
-        visible= {isVisible}>
-        <div style={{color:'white',fontSize:'15px'}}><Button>{this.currentSelection}</Button></div> 
-        </Dropdown>
-   
+        onVisibleChange={(flag) => handleVisibleChange(flag)}
+        visible={isVisible}>
+        <div style={{ color: 'white', fontSize: '15px' }}><Button>{this.currentSelection}</Button></div>
+      </Dropdown>
+
     );
   }
 }
@@ -104,7 +102,7 @@ const mapStateToProps = (state) => ({
   serverSelection: state.serverSelection
 });
 
-export default connect(mapStateToProps, { init,updateConnectionServer })(
+export default connect(mapStateToProps, { init, updateConnectionServer })(
   withState('isVisible', 'handleVisibleChange', false)(ServerSelection)
 );
 

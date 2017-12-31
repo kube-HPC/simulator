@@ -1,7 +1,7 @@
 import { Modal, Button } from 'antd';
 import { connect } from 'react-redux';
 import { closeModal } from '../actions/modal.action';
-import { openTerminalClient,closeTerminalClient, terminalDisconnect } from '../actions/terminal.action';
+import { openTerminalClient, closeTerminalClient, terminalDisconnect } from '../actions/terminal.action';
 import { withState } from 'recompose';
 import Terminal from '../components/Terminal';
 const terminalStyle = {
@@ -9,8 +9,8 @@ const terminalStyle = {
   position: 'relative',
   width: '90vw',
   height: '98vh',
-  top:'20px',
-  opacity:0.7
+  top: '20px',
+  opacity: 0.7
 
 };
 
@@ -32,16 +32,16 @@ class TerminalModal extends React.Component {
     });
   };
 
-  componentWillReceiveProps({modal}) {
+  componentWillReceiveProps({ modal }) {
     if (this.props.modal.visible != modal.visible) {
       if (modal.visible) {
       //  this.props.onModalStateChange(!this.props.isClose);
-     this.props.openTerminalClient();
+        this.props.openTerminalClient();
       }
     }
   }
   render() {
-    let {
+    const {
       modal,
       closeModal,
       terminalDisconnect,
@@ -80,7 +80,7 @@ const mapStateToProps = (state) => ({
   modal: state.modal
 });
 
-export default connect(mapStateToProps, { closeModal,openTerminalClient,closeTerminalClient, terminalDisconnect })(
+export default connect(mapStateToProps, { closeModal, openTerminalClient, closeTerminalClient, terminalDisconnect })(
   withState('isClose', 'onModalStateChange', true)(TerminalModal)
 );
 

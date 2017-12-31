@@ -5,16 +5,16 @@ import { generateMessage, isEquivalent } from './common';
 import { createStore } from 'redux';
 
 generateMessage.info('started filters test');
-function initialize(){
+function initialize() {
   console.log('test - initialize started');
   const store = createStore(reducer);
-	const expectedState = [];
-	expect(store.getState().length).toEqual(0);
-	expect(store.getState()).toEqual(expectedState);
+  const expectedState = [];
+  expect(store.getState().length).toEqual(0);
+  expect(store.getState()).toEqual(expectedState);
   console.log('test - initialize passed');
 }
 
-function addFilter(){
+function addFilter() {
   console.log('test - addFilter started');
   const store = createStore(reducer);
 
@@ -23,26 +23,26 @@ function addFilter(){
   );
   expect(store.getState().length).toEqual(1);
 
-  const expectedState = [{id: 8, selection: 'someDecision'}];
+  const expectedState = [{ id: 8, selection: 'someDecision' }];
 
   expect(store.getState()).toEqual(expectedState);
   console.log('test - addFilter passed');
 }
-function removeFilter(){
+function removeFilter() {
   console.log('test - removefilter started');
 
   const store = createStore(reducer);
   expect(store.getState().length).toEqual(0);
 
-  store.dispatch( filters.addFilter(8, 'someDecision') );
+  store.dispatch(filters.addFilter(8, 'someDecision'));
   expect(store.getState().length).toEqual(1);
 
-  store.dispatch( filters.removeFilter(12) );
-  expect( store.getState().length ).toEqual(1);
+  store.dispatch(filters.removeFilter(12));
+  expect(store.getState().length).toEqual(1);
 
-  store.dispatch( filters.removeFilter(8) );
+  store.dispatch(filters.removeFilter(8));
 
-  expect( store.getState().length ).toEqual(0);
+  expect(store.getState().length).toEqual(0);
 
   console.log('test - removeFilter passed');
 }

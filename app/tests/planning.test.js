@@ -6,24 +6,24 @@ import { createStore } from 'redux';
 
 generateMessage.info('started planning test');
 
-function setMode(){
+function setMode() {
   console.log('test - setMode started');
   const store = createStore(reducer);
 
-  store.dispatch( planning.setMode('someDecision') );
+  store.dispatch(planning.setMode('someDecision'));
   expect(store.getState().mode).toEqual('someDecision');
 
   console.log('test - setMode passed');
 }
 
 
-function setDate(){
+function setDate() {
   console.log('test - setDate started');
   const store = createStore(reducer);
 
   const date = new Date();
 
-  store.dispatch( planning.setDate(date) );
+  store.dispatch(planning.setDate(date));
   expect(store.getState().date).toEqual(date);
 
   console.log('test - setDate passed');
@@ -37,14 +37,13 @@ function setDate(){
   };
   expect(store.getState()).toEqual(expectedState);
   console.log(' test- complete state inside setDate function passed');
-
 }
 
-function setDistrict(){
+function setDistrict() {
   console.log('test - setDate started');
   const store = createStore(reducer);
 
-  store.dispatch( planning.setDistrict('CA') );
+  store.dispatch(planning.setDistrict('CA'));
   expect(store.getState().district).toEqual('CA');
 
   console.log('test - setDate passed');

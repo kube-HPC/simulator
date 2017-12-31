@@ -15,7 +15,7 @@ const composeEnhancers = process.env.NODE_ENV !== "production" &&
   ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
   : compose;
 /* eslint-enable */
-const middleware = [socketioMiddleware,restConfigMiddleware];
+const middleware = [socketioMiddleware, restConfigMiddleware];
 if ($_ENVIRONMENT === 'development') {
   middleware.unshift(createLogger({ collapsed: true }));
 }

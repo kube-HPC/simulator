@@ -174,37 +174,16 @@ const config = {
                 path: '',
                 scriptsPath: '~/dev/vod/rms/scripts',
                 user: ''
-              },
-              // LocalK8s: {
-              //   url: 'http://101.150.4.70:8080',
-              //   path: '/api/v1/proxy/namespaces/kube-system/services/worker-statistics-server/socket.io',
-              //   scriptsPath: '../rms/scripts/',
-              //   user: ''
-              // },
-              // RMS_50: {
-              //   url: "http://101.150.4.150:8080",
-              //   path: '/api/v1/proxy/namespaces/kube-system/services/worker-statistics-server/socket.io',
-              //   scriptsPath: '../rms/scripts/',
-              //   user:'user'
-              // },
-              // RMS_100: {
-              //   url: "http://101.150.4.160:8080/",
-              //   path: '/api/v1/proxy/namespaces/kube-system/services/worker-statistics-server/socket.io',
-              //   scriptsPath: '../rms/scripts/',
-              //   user:'user'
-              // }
-            },
-
+              }
+            }
           })
         }
         else if (process.env.NODE_ENV == 'lab') {
           res.json({
             location: {
               Local: {
-                url: `http://${process.env.BASE_URL_HOST}:8080/`,
-                path: '/api/v1/proxy/namespaces/kube-system/services/worker-statistics-server/socket.io',
-                scriptsPath: '../rms/scripts/',
-                user: 'user'
+                url: `http://${process.env.BASE_URL_HOST}:30009/`,
+                path: ''
               }
             }
           })

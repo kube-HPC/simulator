@@ -3,23 +3,23 @@ import { chunk } from 'lodash';
 import { FlexColumns } from './Flex.react';
 import './../../stylesheets/Carousel.scss';
 
-export default class Carousel extends React.Component{
-  constructor(){
+export default class Carousel extends React.Component {
+  constructor() {
     super();
     this.state = { position: 0 };
   }
 
-  setPosition = position => {
-    this.setState( {position} );
+  setPosition = (position) => {
+    this.setState({ position });
   }
 
   render() {
     const chunks = chunk(this.props.children, parseInt(this.props.amount));
     return (
       <div id="Carousel">
-          <FlexColumns className="carouselSlide">
-            {chunks[this.state.position]}
-          </FlexColumns>
+        <FlexColumns className="carouselSlide">
+          {chunks[this.state.position]}
+        </FlexColumns>
         <div id="carouselDots">
           {
             chunks.map((c, i) => <i

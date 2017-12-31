@@ -1,23 +1,22 @@
 import actions from '../constants/actions';
 
-export const openModal = (modalType,data, commands,sshInitData) => {
+export const openModal = (modalType, data, commands, sshInitData) => {
   commands.raw = commands.raw || null;
-  let path = commands.path ? `cd ${commands.path}` : '';
-  let execution = commands.execution ? `./${commands.execution}` : '';
-  let args = commands.args ? `${commands.args}` : '';
+  const path = commands.path ? `cd ${commands.path}` : '';
+  const execution = commands.execution ? `./${commands.execution}` : '';
+  const args = commands.args ? `${commands.args}` : '';
 
-  let command = commands.raw?commands.raw:`${path};${execution} ${args}`;
+  const command = commands.raw ? commands.raw : `${path};${execution} ${args}`;
   return {
     type: actions.OPEN_MODAL,
-    payload: { modalType,data, visible: true, command,sshInitData }
+    payload: { modalType, data, visible: true, command, sshInitData }
   };
-}
-
+};
 
 
 export const closeModal = () => ({
   type: actions.CLOSE_MODAL,
-  payload: { modalType:null,visible: false, data: null, command: null,sshInitData:null }
+  payload: { modalType: null, visible: false, data: null, command: null, sshInitData: null }
 });
 
 // WEBPACK FOOTER //

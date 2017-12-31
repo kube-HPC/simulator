@@ -2,8 +2,7 @@ const restHelper = (action) => {
   actionType[`${action}_PENDING`] = `${action}_PENDING`;
   actionType[`${action}_SUCCESS`] = `${action}_SUCCESS`;
   actionType[`${action}_REJECT`] = `${action}_REJECT`;
-
-}
+};
 let actionType = {
   SET_CHARTS: 'SET_CHARTS',
   ADD_LAYER: 'ADD_LAYER',
@@ -27,8 +26,8 @@ let actionType = {
   UPDATE_ROW_DATA_TABLE: 'UPDATE_ROW_DATA_TABLE',
   GET_CONFIG: 'GET_CONFIG',
   REST_REQ: 'REST_REQ',
-  UPDATE_SERVER_CONNECTION: 'UPDATE_SERVER_CONNECTION',
-}
+  UPDATE_SERVER_CONNECTION: 'UPDATE_SERVER_CONNECTION'
+};
 restHelper(actionType.GET_CONFIG);
 
 

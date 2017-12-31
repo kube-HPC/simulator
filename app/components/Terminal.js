@@ -35,25 +35,24 @@ class Terminal extends Component {
   constructor(props, context) {
     super(props, context);
     this.term = null;
-     this.prevCloseState= this.props.terminal.isClose;
+    this.prevCloseState = this.props.terminal.isClose;
     if (!this.prevCloseState) {
       this.runHterm();
       this.props.terminalConnect(this.props.initTermnialConnection);
     }
   
     this.props.init();
-    this.terminalStyle = props.customStyle?props.customStyle:terminalDefaultStyle
+    this.terminalStyle = props.customStyle ? props.customStyle : terminalDefaultStyle;
   }
 
   componentDidMount() { }
 
-  shouldComponentUpdate({ terminal, isClose,initTermnialConnection }, nextState) {
+  shouldComponentUpdate({ terminal, isClose, initTermnialConnection }, nextState) {
     if (terminal.data) {
-      if(this.term){
+      if (this.term) {
           // console.log(`new data arrived from server: ${terminal}`);
-      this.term.io.print(terminal.data);
+        this.term.io.print(terminal.data);
       }
-    
     }
     if (this.prevCloseState !== terminal.isClose) {
       if (!this.prevCloseState) {
@@ -64,11 +63,9 @@ class Terminal extends Component {
         this.runHterm();
         this.props.terminalConnect(initTermnialConnection);
       }
-       this.prevCloseState = terminal.isClose;
-       console.log(`is component close = ${this.prevCloseState}`);
+      this.prevCloseState = terminal.isClose;
+      console.log(`is component close = ${this.prevCloseState}`);
     }
-   
-    
     
 
     // if (nextProps.commands.incommingCommand != {}) {
@@ -80,10 +77,10 @@ class Terminal extends Component {
     return false;
   }
 
-  //_onTerminalResize(col, row) {
+  // _onTerminalResize(col, row) {
     // this._sendString( { col: col, row: row });
     //  socket.emit('resize', { col: col, row: row });
-  //}
+  // }
 
   runHterm() {
     // var self = this;
@@ -105,15 +102,15 @@ class Terminal extends Component {
       this.term.prefs_.set('cursor-color', 'white');
       this.term.prefs_.set('cursor-blink', true);
       this.term.onTerminalReady = () => {
-        //this.props.emit({ data: 'Mmhy6hy6' + '\u000D' });
-        //this.props.emit({ data: `${this.props.modal.command}\u000D` });
+        // this.props.emit({ data: 'Mmhy6hy6' + '\u000D' });
+        // this.props.emit({ data: `${this.props.modal.command}\u000D` });
         this.props.emit({ data: `${this.props.inlineCommand}\u000D` });
 
-        var io = this.term.io.push();
+        const io = this.term.io.push();
         this.term.installKeyboard();
         //  this.term.io.println('Print a string without a newline');
         //  this.term.io.println('Print a string and add CRLF');
-        let tempStr = '';
+        const tempStr = '';
         io.onVTKeystroke = (str) => {
           if (str == '\u000D') {
             //     this.term.io.println('');
@@ -133,7 +130,6 @@ class Terminal extends Component {
         io.onTerminalResize = (columns, rows) => {
           console.log(`onTerminalResize - ${columns} x ${rows} `);
           this.props.emitResize({ columns, rows });
-          
         };
       };
     });
@@ -144,13 +140,13 @@ class Terminal extends Component {
   }
 
   render() {
-    return <div id="terminal" style={this.terminalStyle} />;
+    return <div id="terminal" style={this.terminalStyle}/>;
   }
   componentWillUnmount() {
     this.props.terminalDisconnect();
     this.props.closeTerminalClient();
     this.term = null;
-    console.log('terminal component is unmount')
+    console.log('terminal component is unmount');
   }
 }
 
@@ -160,10 +156,10 @@ const mapStateToProps = (state, ownedProps) => ({
   terminal: state.terminal,
   modal: state.modal,
   isClose: ownedProps.isClose,
-  inlineCommand:ownedProps.inlineCommand,
-  customStyle:ownedProps.customStyle,
-  forceRestart:ownedProps.forceRestart,
-  initTermnialConnection:ownedProps.initTermnialConnection,
+  inlineCommand: ownedProps.inlineCommand,
+  customStyle: ownedProps.customStyle,
+  forceRestart: ownedProps.forceRestart,
+  initTermnialConnection: ownedProps.initTermnialConnection
 });
 
 export default connect(mapStateToProps, {

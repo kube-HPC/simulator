@@ -41,7 +41,7 @@ export const socketioMiddleware = ({ dispatch }) => (next) => (action) => {
     if (socket) {
       socket.close();
     }
-
+    
     socket = io(action.payload.currentSelection.url, { path: action.payload.currentSelection.path, transports: ['websocket'] });
     // /socket = io(action.payload.currentSelection.url, { transports: ['websocket'] });
     socket.on('connect', () => {

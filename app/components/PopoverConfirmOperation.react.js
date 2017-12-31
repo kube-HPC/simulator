@@ -4,11 +4,9 @@ import { closeModal } from '../actions/modal.action';
 import { withState } from 'recompose';
 
 
-
-
 const PopoverConfirmOperation = (props) => {
-  const {children, onConfirm, onCancel,isVisible,position} = props;
-  /*const popoverContent = (
+  const { children, onConfirm, onCancel, isVisible, position } = props;
+  /* const popoverContent = (
     <Button onCllick=popoverConfirm> Confirm </Button>
       <Button onCllick=popoverConfirm> Cancel </Button>
       )*/
@@ -23,15 +21,13 @@ const PopoverConfirmOperation = (props) => {
       title="Are you sure ?"
       trigger="click"
       placement={position}
-      visible={isVisible}
-    >
+      visible={isVisible}>
       {children}
 
     </Popover>
 
-  )
-
-}
+  );
+};
 
 export default PopoverConfirmOperation;
 // const mapStateToProps = (state) => ({

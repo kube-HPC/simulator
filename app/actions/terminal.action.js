@@ -15,16 +15,16 @@ export const emit = ({ data }) => ({
 });
 
 
-export const emitResize = (data)=>({
+export const emitResize = (data) => ({
   type: actions.SEND_TERMINAL_INPUT,
   payload: { topic: topics.RESIZE, data }
-})
+});
 export const terminalDisconnect = () => ({
   type: actions.SEND_TERMINAL_INPUT,
   payload: { topic: topics.CLOSE_TERMINAL, data: '' }
 });
 export const terminalConnect = (sshInit) => {
-  const sshInitData = sshInit ? sshInit : {type:'bash'}
+  const sshInitData = sshInit || { type: 'bash' };
   // {
   //   sshuser: 'matyz',
   //   sshport: 22,
@@ -37,8 +37,8 @@ export const terminalConnect = (sshInit) => {
     payload: {
       topic: topics.OPEN_TERMINAL, data: sshInitData
     } 
-  }
-}
+  };
+};
 export const clearClientTerminal = () => ({
   type: actions.CLEAR_CLIENT_TERMINAL,
   payload: { data: '' }

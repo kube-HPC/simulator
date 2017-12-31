@@ -15,8 +15,8 @@ if ($_ENVIRONMENT === 'development') {
 }
 render((
   // <IntlProvider locale="en-US" messages={ messages }>
-    <Provider store={ store }>
-        <LayoutInner />
-    </ Provider>
+  <Provider store={ store }>
+    <LayoutInner/>
+  </ Provider>
   // </IntlProvider>
 ), document.getElementById('root'));
