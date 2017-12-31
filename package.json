@@ -1,6 +1,6 @@
 {
   "name": "simulaor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "builder": "cross-env NODE_ENV=production webpack -p --progress",
     "test": " babel-node ./app/tests/main.test.js --presets latest",
     "lint": "eslint app",
-    "test-travis":"echo \"No test specified\"",
+    "test-travis": "echo \"No test specified\"",
     "build": "./dockerfile/build.sh simulator"
   },
   "theme": "./antd-theme.js",
