@@ -9,8 +9,10 @@
     "builder": "cross-env NODE_ENV=production webpack -p --progress",
     "test": " babel-node ./app/tests/main.test.js --presets latest",
     "lint": "eslint app",
-    "test-travis":"echo \"No test specified\"",
-    "build": "./dockerfile/build.sh simulator"
+    "test-travis": "echo \"No test specified\"",
+    "build": "./dockerfile/build.sh simulator",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "theme": "./antd-theme.js",
   "repository": {
@@ -86,8 +88,10 @@
     "redux-logger": "^2.7.4",
     "reselect": "^2.5.4",
     "seamless-immutable": "^7.0.1",
-    "socket.io-client": "^1.7.4",
+    "socket.io-client": "2.0.2",
     "styled-components": "^1.3.0",
-    "uuid": "^3.1.0"
-  }
+    "uuid": "^3.1.0",
+    "snyk": "^1.63.0"
+  },
+  "snyk": true
 }
