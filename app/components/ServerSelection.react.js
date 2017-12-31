@@ -60,37 +60,31 @@ class ServerSelection extends React.Component {
   componentDidUpdate() {
 
   }
-  render() {
-    const {
-       serverSelection,
-      handleVisibleChange,
-      isVisible,
-      updateConnectionServer
+   render() {
+    return null;
+   }
+  //   const {
+  //      serverSelection,
+  //     handleVisibleChange,
+  //     isVisible,
+  //     updateConnectionServer
 
-    } = this.props;
-    const selectionKeys = Object.keys(serverSelection.location);
-    if (selectionKeys.length != 0) {
-      this.menuItems = selectionKeys.map((key) =>
-        <Menu.Item key={key}> {key}</Menu.Item>);
-    }
-    const menu =
-      (<Menu onClick={(e) => {
-        console.log(e.key);
-        this.currentSelection = e.key;
-        updateConnectionServer(this.serverSelection[this.currentSelection]);
-      }}>
-        {this.menuItems}
-      </Menu>);
-    return (
-      <Dropdown
-        overlay={menu}
-        onVisibleChange={(flag) => handleVisibleChange(flag)}
-        visible={isVisible}>
-        <div style={{ color: 'white', fontSize: '15px' }}><Button>{this.currentSelection}</Button></div>
-      </Dropdown>
-
-    );
-  }
+  //   } = this.props;
+  //   const selectionKeys = Object.keys(serverSelection.location);
+  //   if (selectionKeys.length != 0) {
+  //     this.menuItems = selectionKeys.map((key) =>
+  //       <Menu.Item key={key}> {key}</Menu.Item>);
+  //   }
+  //   const menu =
+  //     (<Menu onClick={(e) => {
+  //       console.log(e.key);
+  //       this.currentSelection = e.key;
+  //       updateConnectionServer(this.serverSelection[this.currentSelection]);
+  //     }}>
+  //       {this.menuItems}
+  //     </Menu>);
+  //   return 
+  // }
 }
 
 ServerSelection.propTypes = {
