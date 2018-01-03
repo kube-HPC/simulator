@@ -4,7 +4,7 @@ if [ -v PRIVATE_REGISTRY ]
 then
   IMAGE_NAME=${PRIVATE_REGISTRY}/${REPO_NAME}
 else
-  IMAGE_NAME=sound/${REPO_NAME}
+  IMAGE_NAME=hkube/${REPO_NAME}
 fi
 
 VERSION="v${npm_package_version}"
