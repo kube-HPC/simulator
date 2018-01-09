@@ -47,11 +47,11 @@ class ContainerTable extends Component {
     this.columns = [
       {
         title: 'pipeline name',
-        dataIndex: 'execution_id',
-        key: 'execution_id',
+        dataIndex: 'key',
+        key: 'key',
         width: '20%',
-        onFilter: (value, record) => record.execution_id.includes(value),
-        sorter: (a, b) => sorter(a.execution_id, b.execution_id)
+        onFilter: (value, record) => record.key.includes(value),
+        sorter: (a, b) => sorter(a.key, b.key)
       },
       {
         title: 'Status',
@@ -71,8 +71,8 @@ class ContainerTable extends Component {
         width: '10%',
         sorter: (a, b) => sorter(a.timestamp, b.timestamp)
       },
-      { title: 'Algorithm name', dataIndex: 'execution_id1', key: 'execution_id1', width: '10%' },
-      { title: 'Node name', dataIndex: 'execution_id2', key: 'execution_id2', width: '10%' },
+      { title: 'Algorithm name', dataIndex: 'key1', key: 'key1', width: '10%' },
+      { title: 'Node name', dataIndex: 'key2', key: 'key2', width: '10%' },
       { title: 'Description', dataIndex: 'data.details', key: 'details', width: '20%' },
       {
         title: 'Progress',
