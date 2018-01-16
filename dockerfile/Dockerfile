@@ -6,4 +6,4 @@ RUN mkdir /hkube
 COPY . /hkube/simulator
 RUN cd /hkube/simulator && npm rebuild
 WORKDIR /hkube/simulator
-CMD ["npm", "start"]
+CMD ["npm", "run", "start:server"]

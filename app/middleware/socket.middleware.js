@@ -21,57 +21,57 @@ let connected = false;
 let socket = null;
 const currentTopicRegisterd = {};
 
-// function _init() {
-
-// }
-
 const success = (dispatch, payload, action) => {
-  dispatch({
-    type: action.payload.actionType,
-    meta: action.meta,
-    payload
-  });
+    dispatch({
+        type: action.payload.actionType,
+        meta: action.meta,
+        payload
+    });
 };
 
 export const socketioMiddleware = ({ dispatch }) => (next) => (action) => {
-  if (![AT.SEND_TERMINAL_INPUT, AT.SOCKET_INIT, AT.UPDATE_SERVER_CONNECTION].includes(action.type)) {
-    return next(action);
-  }
-  if (action.type === AT.UPDATE_SERVER_CONNECTION) {
-    if (socket) {
-      socket.close();
+    if (![AT.SEND_TERMINAL_INPUT, AT.SOCKET_INIT, `${AT.GET_CONFIG}_SUCCESS`].includes(action.type)) {
+        return next(action);
     }
-    
-    socket = io(action.payload.currentSelection.url, { path: action.payload.currentSelection.path, transports: ['websocket'] });
-    // /socket = io(action.payload.currentSelection.url, { transports: ['websocket'] });
-    socket.on('connect', () => {
-      console.log(`connected...${socket.id}`);
-      connected = true;
-    });
+    if (action.type === `${AT.GET_CONFIG}_SUCCESS`) {
+        if (socket) {
+            socket.close();
+        }
+        const { monitorBackend } = action.payload.config;
+        const url = `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}`;
+        // const url = `${location.protocol}//${location.hostname}:30010`;
+        socket = io(url, { path: monitorBackend.path, transports: ['websocket'] });
 
-    Object.keys(currentTopicRegisterd).forEach((act) => {
-      socket.on(currentTopicRegisterd[act].payload.topic, (data) => {
-        success(dispatch, data, currentTopicRegisterd[act]);
-      });
-    });
-  }
-  if (action.type === AT.SOCKET_INIT) {
-    // verify if topic is already  registerd inorder to prevent duplicate registretion
-    if (!Object.keys(currentTopicRegisterd).includes(action.payload.topic)) {
-      // socket.emit(topics.OPEN_TERMINAL, { id: socket.id });
-      if (socket != null) {
-        socket.on(action.payload.topic, (data) => {
-          success(dispatch, data, action);
+        // socket = io(action.payload.currentSelection.url, { path: action.payload.currentSelection.path, transports: ['websocket'] });
+    // /socket = io(action.payload.currentSelection.url, { transports: ['websocket'] });
+        socket.on('connect', () => {
+            console.log(`connected...${socket.id}`);
+            connected = true;
         });
-      }
-      currentTopicRegisterd[action.payload.topic] = action;
-    } else {
-      console.warn(`socket middlware: trying to register topic ${action.payload.topic} twice `);
+
+        Object.keys(currentTopicRegisterd).forEach((act) => {
+            socket.on(currentTopicRegisterd[act].payload.topic, (data) => {
+                success(dispatch, data, currentTopicRegisterd[act]);
+            });
+        });
     }
-  } else {
-    setTimeout(() => {
-      socket.emit(action.payload.topic, action.payload.data);
-    }, 300);
-  }
-  return next(action);
+    if (action.type === AT.SOCKET_INIT) {
+    // verify if topic is already  registerd inorder to prevent duplicate registretion
+        if (!Object.keys(currentTopicRegisterd).includes(action.payload.topic)) {
+      // socket.emit(topics.OPEN_TERMINAL, { id: socket.id });
+            if (socket != null) {
+                socket.on(action.payload.topic, (data) => {
+                    success(dispatch, data, action);
+                });
+            }
+            currentTopicRegisterd[action.payload.topic] = action;
+        } else {
+            console.warn(`socket middlware: trying to register topic ${action.payload.topic} twice `);
+        }
+    } else {
+        setTimeout(() => {
+            socket.emit(action.payload.topic, action.payload.data);
+        }, 300);
+    }
+    return next(action);
 };

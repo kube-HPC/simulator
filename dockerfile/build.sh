@@ -10,7 +10,7 @@ fi
 VERSION="v${npm_package_version}"
 TAG_VER="${IMAGE_NAME}:${VERSION}"
 TAG_CUR="${IMAGE_NAME}:latest"
-
+npm run builder
 docker build -t ${TAG_VER} -t ${TAG_CUR} -f ./dockerfile/Dockerfile .
 if [ -v PRIVATE_REGISTRY ]
 then

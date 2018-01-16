@@ -3,17 +3,16 @@ import Immutable from 'seamless-immutable';
 import actions from '../constants/actions';
 
 const initState = {
-    location: {},
-    currentSelection: ''
+    config: {}
 };
 
 const inititalState = Immutable.from(initState);
 
 export default handleActions(
     {
-        [actions.UPDATE_SERVER_CONNECTION](state, { type, payload, meta, error }) {
+        [actions.GET_CONFIG_SUCCESS](state, { payload }) {
             return state.merge(payload);
         }
     },
-  inititalState
+    inititalState
 );
