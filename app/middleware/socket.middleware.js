@@ -38,7 +38,12 @@ export const socketioMiddleware = ({ dispatch }) => (next) => (action) => {
             socket.close();
         }
         const { monitorBackend } = action.payload.config;
-        const url = `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}`;
+        let url;
+        if (monitorBackend.useLocation) {
+            url = location.origin;
+        } else {
+            url = `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}`;
+        }
         // const url = `${location.protocol}//${location.hostname}:30010`;
         socket = io(url, { path: monitorBackend.path, transports: ['websocket'] });
 

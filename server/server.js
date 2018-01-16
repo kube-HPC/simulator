@@ -14,6 +14,7 @@ app.get('/config', (req, res) => {
     res.json({
         config: {
             monitorBackend: {
+                useLocation: process.env.MONITOR_BACKEND_USE_LOCATION || 'true',
                 host: process.env.MONITOR_BACKEND_HOST || 'localhost',
                 port: process.env.MONITOR_BACKEND_PORT || '30010',
                 path: process.env.MONITOR_BACKEND_PATH || '',
