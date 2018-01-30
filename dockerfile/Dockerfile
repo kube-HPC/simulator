@@ -1,9 +1,7 @@
-FROM node:8-alpine
+FROM hkube/base-node:v1.0.0
 LABEL maintainer="yehiyam@gmail.com"
-RUN apk --update add nano && \
-    rm -rf /var/cache/apk/*
 RUN mkdir /hkube
 COPY . /hkube/simulator
-RUN cd /hkube/simulator && npm rebuild
+RUN cd /hkube/simulator 
 WORKDIR /hkube/simulator
-CMD ["npm", "start"]
+CMD ["npm", "run", "start:server"]

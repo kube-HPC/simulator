@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { IntlProvider } from 'react-intl';
 import { store } from 'store/index';
-import LayoutInner from 'components/Layout.react';
+import LayoutInner from './components/Layout.react';
 import './stylesheets/app.scss';
 
 if ($_ENVIRONMENT === 'development') {

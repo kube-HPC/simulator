@@ -28,7 +28,6 @@ class ContainerTable extends Component {
     const sorter = (a, b) => {
       let tempA = null;
       let tempB = null;
-      //   console.log(b.additional.worker.lastVid);
       tempA = a || '';
       tempB = b || '';
       return tempA.localeCompare(tempB);

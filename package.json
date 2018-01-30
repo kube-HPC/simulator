@@ -1,12 +1,12 @@
 {
   "name": "simulaor",
-  "version": "1.0.4",
+  "version": "1.0.8",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --progress",
-    "server": "node ./server/app.js",
-    "builder": "cross-env NODE_ENV=production webpack -p --progress",
+    "start:server": "node ./server/server.js",
+    "builder": "cross-env NODE_ENV=production webpack --progress",
     "test": " babel-node ./app/tests/main.test.js --presets latest",
     "lint": "eslint app",
     "test-travis": "echo \"No test specified\"",
@@ -64,6 +64,7 @@
     "chart.js": "^2.7.1",
     "classnames": "^2.2.5",
     "dateformat": "^3.0.2",
+    "express": "^4.16.2",
     "hterm-umdjs": "^1.2.0",
     "lodash": "^4.17.4",
     "moment": "^2.20.1",

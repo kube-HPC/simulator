@@ -17,12 +17,12 @@ const composeEnhancers = process.env.NODE_ENV !== "production" &&
 /* eslint-enable */
 const middleware = [socketioMiddleware, restConfigMiddleware];
 if ($_ENVIRONMENT === 'development') {
-  middleware.unshift(createLogger({ collapsed: true }));
+    middleware.unshift(createLogger({ collapsed: true }));
 }
 const enhancer = composeEnhancers(applyMiddleware(...middleware));
 export const store = createStore(rootReducer, enhancer);
 if ($_ENVIRONMENT === 'development') {
-  window.store = store;
+    window.store = store;
 }
 export default store;
 
