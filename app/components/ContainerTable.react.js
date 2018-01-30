@@ -19,20 +19,9 @@ const RECORD_STATUS = {
 };
 
 class ContainerTable extends Component {
-  // constructor(props) {
-  //   super(props);
-
-  //   this.props.init();
-  //   this.bla =()=>{
-  //     this.props.onPopoverClickVisible(true)
-  //   }
-  // }
-
-
   componentWillMount() {
     this.props.init();
     const callPopOverWorkAround = (isVisible) => {
-      console.log('blaaaaa');
       this.props.onPopoverClickVisible(isVisible);
     };
 
@@ -46,51 +35,62 @@ class ContainerTable extends Component {
     };
     this.columns = [
       {
-        title: 'pipeline name',
+        title: 'Job ID',
         dataIndex: 'key',
         key: 'key',
         width: '20%',
+        sorter: (a, b) => sorter(a.key, b.key)
+      },
+      {
+        title: 'Pipeline Name',
+        dataIndex: 'status.pipeline',
+        key: 'pipeline',
+        width: '10%',
         onFilter: (value, record) => record.key.includes(value),
         sorter: (a, b) => sorter(a.key, b.key)
       },
       {
         title: 'Status',
-        dataIndex: 'stat',
+        dataIndex: 'status.data.status',
         width: '5%',
-        key: 'data.status',
+        key: 'status',
         render: (text, record) => (<span>
-          <Tag color={RECORD_STATUS[record.data.status]}>{record.data.status}</Tag>
+          <Tag color={RECORD_STATUS[record.status.data.status]}>{record.status.data.status}</Tag>
         </span>
         ),
-        sorter: (a, b) => sorter(a.data.status, b.data.status)
+        sorter: (a, b) => sorter(a.status.data.status, b.status.data.status)
       },
       {
         title: 'time',
-        dataIndex: 'timestamp',
+        dataIndex: 'status.timestamp',
         key: 'timestamp',
-        width: '10%',
+        width: '15%',
         sorter: (a, b) => sorter(a.timestamp, b.timestamp)
       },
-      { title: 'Algorithm name', dataIndex: 'key1', key: 'key1', width: '10%' },
-      { title: 'Node name', dataIndex: 'key2', key: 'key2', width: '10%' },
-      { title: 'Description', dataIndex: 'data.details', key: 'details', width: '20%' },
+      {
+        title: 'Description',
+        dataIndex: 'status.data.details',
+        key: 'details',
+        width: '25%'
+      },
       {
         title: 'Progress',
-        dataIndex: 'Status',
-        width: '45%',
+        dataIndex: 'Progress',
+        width: '30%',
         key: 'y',
         render: (text, record) => {
-          if (record.data.progress === '100%') {
+          let progress = record.status.data.progress || 0;
+          progress = parseInt(progress, 10);
+          if (progress === 100) {
             return (<span>
-              <Progress percent={record.data.progress} status="active"/>
+              <Progress percent={progress} />
             </span>);
           }
           return (<span>
-            <Progress percent={record.data.progress}/>
+            <Progress percent={progress} status="active" />
           </span>);
         },
-
-        sorter: (a, b) => sorter(a.data.progress, b.data.progress)
+        sorter: (a, b) => sorter(a.status.data.progress, b.status.data.progress)
       }
 
     ];
@@ -112,10 +112,10 @@ class ContainerTable extends Component {
           }}
           expandedRowRender={(record) => (
             <Card title="Full details">
-              <ReactJson src={record}/>
+              <ReactJson src={record} />
             </Card>
 
-          )}/>
+          )} />
       </div>
     );
   }
