@@ -15,7 +15,7 @@ const excludeThirdParty = /thirdParty/;
 const dependencies = packageConfig.dependencies;
 delete dependencies.express;
 const config = {
-  // The base directory for resolving `entry` (must be absolute path)
+    // The base directory for resolving `entry` (must be absolute path)
     context: appPath,
     entry: {
         app: 'app.js',
@@ -26,25 +26,25 @@ const config = {
         extensions: ['.js', '.jsx']
     },
     output: {
-    // The bundling output directory (must be absolute path)
+        // The bundling output directory (must be absolute path)
         path: distPath,
-    // Set proper base URL for serving resources
-        publicPath: './',
-    // The output filename of the entry chunk, relative to `path`
-    // [name] - Will be set per each key name in `entry`
+        // Set proper base URL for serving resources
+        publicPath: appEnv === 'production' ? './' : '/',
+        // The output filename of the entry chunk, relative to `path`
+        // [name] - Will be set per each key name in `entry`
         filename: 'bundle.[chunkhash].js'
     },
     plugins: [
-    // Generate index.html with included script tags
+        // Generate index.html with included script tags
         new HtmlWebpackPlugin({
             inject: 'body',
             template: 'index.html'
         }),
-    // Pass environment variable to frontend scipts
+        // Pass environment variable to frontend scipts
         new webpack.DefinePlugin({
             $_ENVIRONMENT: JSON.stringify(appEnv),
-      // We must envify CommonJS builds:
-      // https://github.com/reactjs/redux/issues/1029
+            // We must envify CommonJS builds:
+            // https://github.com/reactjs/redux/issues/1029
             'process.env.NODE_ENV': JSON.stringify(appEnv)
         }),
         new webpack.LoaderOptionsPlugin({
@@ -62,12 +62,12 @@ const config = {
                 ]
             }
         }),
-    // new CopyWebpackPlugin([
-    //   {
-    //     from: 'assets/images/icons/',
-    //     to: 'assets/images/icons/'
-    //   }
-    // ]),
+        // new CopyWebpackPlugin([
+        //   {
+        //     from: 'assets/images/icons/',
+        //     to: 'assets/images/icons/'
+        //   }
+        // ]),
         new ExtractTextPlugin('app.css')
     ],
     module: {
@@ -79,13 +79,13 @@ const config = {
                 exclude
 
             },
-      // Expose React as global object
+            // Expose React as global object
             {
                 test: require.resolve('react'),
                 loader: 'expose-loader',
                 query: 'React'
             },
-      // Transpile ES6 and enable Hot Reload
+            // Transpile ES6 and enable Hot Reload
             {
                 test: /\.js$/,
                 loaders: [
@@ -96,7 +96,7 @@ const config = {
                 ],
                 exclude
             },
-      // SCSS
+            // SCSS
             {
                 test: /\.(css|scss)$/,
                 loader: ExtractTextPlugin.extract({
@@ -106,8 +106,8 @@ const config = {
                             loader: 'css-loader',
                             query: { root: encodeURIComponent(appPath) }
                         },
-            { loader: 'postcss-loader' },
-            { loader: 'resolve-url-loader' },
+                        { loader: 'postcss-loader' },
+                        { loader: 'resolve-url-loader' },
                         {
                             loader: 'sass-loader',
                             query: {
@@ -117,7 +117,7 @@ const config = {
                     ]
                 })
             },
-      // LESS
+            // LESS
             {
                 test: /\.(less)$/,
                 loader: ExtractTextPlugin.extract({
@@ -127,8 +127,8 @@ const config = {
                             loader: 'css-loader',
                             query: { root: encodeURIComponent(appPath) }
                         },
-            { loader: 'postcss-loader' },
-            { loader: 'resolve-url-loader' },
+                        { loader: 'postcss-loader' },
+                        { loader: 'resolve-url-loader' },
                         {
                             loader: 'less-loader',
                             query: {
@@ -138,8 +138,8 @@ const config = {
                     ]
                 })
             },
-      // Allow `require`ing image/font files (also when included in CSS)
-      // Inline assets under 5kb as Base64 data URI, otherwise uses `file-loader`
+            // Allow `require`ing image/font files (also when included in CSS)
+            // Inline assets under 5kb as Base64 data URI, otherwise uses `file-loader`
             {
                 test: /\.(eot|woff2?|ttf|otf)(\?.*)?$/i,
                 loader: 'url-loader',
@@ -158,8 +158,8 @@ const config = {
             }
         ]
     },
-  // Settings for webpack-dev-server
-  // `--hot` and `--progress` must be set using CLI
+    // Settings for webpack-dev-server
+    // `--hot` and `--progress` must be set using CLI
     devServer: {
         contentBase: appPath,
         noInfo: true,
@@ -196,35 +196,35 @@ if (appEnv === 'development') {
 }
 if (appEnv !== 'test') {
     config.plugins.push(
-    new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor',
-        filename: 'vendor.[chunkhash].js',
-        minChunks: Infinity
-    })
-  );
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'vendor',
+            filename: 'vendor.[chunkhash].js',
+            minChunks: Infinity
+        })
+    );
 }
 if (appEnv === 'production') {
     config.plugins.push(
-    // Remove build related folders
-    new CleanPlugin(['dist']),
-    new CompressionPlugin({
-        asset: '[path].gz[query]',
-        algorithm: 'gzip',
-        test: /\.js$|\.html$/,
-        threshold: 10240,
-        minRatio: 0.8
-    }),
-    new webpack.LoaderOptionsPlugin({
-        minimize: true,
-        debug: false,
-        options: {
-            eslint: {
-                emitWarning: true
+        // Remove build related folders
+        new CleanPlugin(['dist']),
+        new CompressionPlugin({
+            asset: '[path].gz[query]',
+            algorithm: 'gzip',
+            test: /\.js$|\.html$/,
+            threshold: 10240,
+            minRatio: 0.8
+        }),
+        new webpack.LoaderOptionsPlugin({
+            minimize: true,
+            debug: false,
+            options: {
+                eslint: {
+                    emitWarning: true
+                }
             }
-        }
-    }),
-    // Do not output to dist if there are errors
-    new webpack.NoErrorsPlugin()
-  );
+        }),
+        // Do not output to dist if there are errors
+        new webpack.NoErrorsPlugin()
+    );
 }
 module.exports = config;
