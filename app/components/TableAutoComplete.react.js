@@ -48,16 +48,10 @@ const TableAutoComplete = (props) => (
       }}
       optionLabelProp="value">
       <Input style={{ border: '0px' }}
-        suffix={<Icon type="search" className="certain-category-icon"/>}/>
+        suffix={<Icon type="search" className="certain-category-icon" />} />
     </AutoComplete>
   </div>
 );
-
-// const dataSource = [
-//     { key: 1, podName: 'John Brown', age: 32, address: 'New York No. 1 Lake Park', description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.' },
-//     { key: 2, podName: 'Jim Green', age: 42, address: 'London No. 1 Lake Park', description: 'My name is Jim Green, I am 42 years old, living in London No. 1 Lake Park.' },
-//     { key: 3, podName: 'Joe Black', age: 32, address: 'Sidney No. 1 Lake Park', description: 'My name is Joe Black, I am 32 years old, living in Sidney No. 1 Lake Park.' },
-//   ];
 
 const tableDataToAutoCompleteData = (data) => {
   if (data[0] == null) {
@@ -76,19 +70,8 @@ const tableDataToAutoCompleteData = (data) => {
       count: mapTypeToCountObj[key]
     }));
   });
-  // vid 
 
   const lastvidArr = [];
-  // data.forEach(o => {
-  //   if (o.additional.worker.lastVid != null) {
-  //     lastvidArr.push({
-  //       key: o.additional.worker.lastVid + o.serviceName,
-
-  //       title: o.additional.worker.lastVid,
-  //       count: 1
-  //     })
-  //   }
-  // })
   table.push({ title: 'lastVid', children: lastvidArr });
 
   return table;

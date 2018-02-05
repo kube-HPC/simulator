@@ -16,8 +16,8 @@ export default handleActions({
     const timedData = payload.jobs.map((d) => {
       if (d.status) {
         d.status.timestamp = dateformat(d.status.timestamp, 'd/mm/yy, HH:MM:ss');
-        return d;
       }
+      return d;
     });
     return state.merge({ dataSource: timedData });
   }
