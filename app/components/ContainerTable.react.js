@@ -50,14 +50,14 @@ class ContainerTable extends Component {
       },
       {
         title: 'Status',
-        dataIndex: 'status.data.status',
+        dataIndex: 'status.status',
         width: '5%',
         key: 'status',
         render: (text, record) => (<span>
-          <Tag color={RECORD_STATUS[record.status && record.status.data.status]}>{record.status && record.status.data.status}</Tag>
+          <Tag color={RECORD_STATUS[record.status && record.status.status]}>{record.status && record.status.status}</Tag>
         </span>
         ),
-        sorter: (a, b) => sorter(a.status.data.status, b.status.data.status)
+        sorter: (a, b) => sorter(a.status.status, b.status.status)
       },
       {
         title: 'time',
