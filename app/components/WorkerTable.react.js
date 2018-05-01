@@ -106,6 +106,17 @@ class WorkerTable extends Component {
         </span>
         ),
         sorter: (a, b) => sorter(a.data.jobStatus, b.data.jobStatus)
+      },
+      {
+        title: 'Paused',
+        dataIndex: 'data.workerPaused',
+        width: '10%',
+        key: 'workerPaused',
+        render: (text, record) => (<span>
+          <Tag color={record.data.workerPaused?'red':'green'} > {record.data.workerPaused?'paused':'ready'}</Tag>
+        </span>
+        ),
+        sorter: (a, b) => sorter(a.data.workerPaused, b.data.workerPaused)
       }
     ];
   }
