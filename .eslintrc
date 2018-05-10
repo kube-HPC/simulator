@@ -14,7 +14,7 @@
     "import/resolver": "webpack"
   },
   "rules" : {
-    "indent":["error",4],
+    "indent": ["warn", 2, { "SwitchCase": 1 }],
     "max-len":"off",
     "arrow-parens": ["error", "always"],
     "comma-dangle": ["error", "never"],

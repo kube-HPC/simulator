@@ -78,7 +78,7 @@ class ContainerTable extends Component {
         width: '30%',
         key: 'y',
         render: (text, record) => {
-          let progress = (record.status && record.status.data.progress) || 0;
+          let progress = (record.status && record.status.data && record.status.data.progress) || 0;
           progress = parseInt(progress, 10);
           if (progress === 100) {
             return (<span>
