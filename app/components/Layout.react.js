@@ -2,6 +2,7 @@
 import { connect } from 'react-redux';
 import ContainerTable from './ContainerTable.react';
 import WorkerTable from './WorkerTable.react';
+import AlgorithmTable from './AlgorithmsTable.react';
 import TerminalModal from './TerminalModal.react';
 import PopoverConfirmOperation from './PopoverConfirmOperation.react';
 import Terminal from './Terminal';
@@ -53,6 +54,20 @@ const menuSelection = (i, props) => {
   prevKey = i.key;
   // console.log(`i ${i
 };
+
+const selectTable = (props) => {
+  switch (props.isTableVIsible.menuItem.key) {
+    case '1':
+      return <ContainerTable />
+    case '2':
+      return <WorkerTable />
+    case '3':
+      return <AlgorithmTable />
+    default:
+      return <ContainerTable />
+  }
+};
+
 const LayoutInner = class extends React.Component {
   constructor(props) {
     super(props);
@@ -102,6 +117,9 @@ const LayoutInner = class extends React.Component {
               <Menu.Item key="2" style={{ paddingLeft: '0px' }}>
                 <span className="nav-text">worker</span>
               </Menu.Item>
+              <Menu.Item key="3" style={{ paddingLeft: '0px' }}>
+                <span className="nav-text">algorithms</span>
+              </Menu.Item>
               <span className="ant-divider" />
             </Menu>
           </Sider>
@@ -115,14 +133,11 @@ const LayoutInner = class extends React.Component {
             }}>
             <BackTop />
             {/* <ContainerTable />*/}
-            {props.isTableVIsible.visible ?
+            {selectTable(props)}
+            {/* {props.isTableVIsible.visible ?
               <ContainerTable /> : <WorkerTable />
-              // <Terminal
-              //   // isClose={props.isTableVIsible.visible}
-              //   inlineCommand={commandFormater(props.scriptsPath, menuKeyToCommands[props.isTableVIsible.menuItem.key])}
-              //   customStyle={{ display: 'block', position: 'relative', width: '85vw', height: '85vh', opacity: 0.8 }}/>
-            }
-            {/* <Terminal isClose={false}/>*/}
+              
+            } */}
             <TerminalModal />
           </Content>
         </Layout>
