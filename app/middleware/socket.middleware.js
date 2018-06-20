@@ -1,23 +1,6 @@
 import AT from '../constants/actions';
 import io from 'socket.io-client';
-import topics from '../constants/topics';
-// const API_URL = `${window.location.origin}/api`;
-const API_URL = 'http://localhost:8091/';
-// const API_URL = 'http://101.150.4.70:8080';
 
-
-let connected = false;
-
-// let socket = io(API_URL,{path:'/api/v1/proxy/namespaces/default/services/worker-statistics-server/socket.io'});
-// fetch('/config').then((res)=>{
-//   res.json().then((data)=>{
-//     console.log(data)
-//   })
-
-// }).catch(()=>{
-//   console.error('ddd')
-// })
-// let socket = io(API_URL, { transports: ['websocket'] });
 let socket = null;
 const currentTopicRegisterd = {};
 
@@ -48,10 +31,9 @@ export const socketioMiddleware = ({ dispatch }) => (next) => (action) => {
         socket = io(url, { path: monitorBackend.path, transports: ['websocket'] });
 
         // socket = io(action.payload.currentSelection.url, { path: action.payload.currentSelection.path, transports: ['websocket'] });
-    // /socket = io(action.payload.currentSelection.url, { transports: ['websocket'] });
+        // /socket = io(action.payload.currentSelection.url, { transports: ['websocket'] });
         socket.on('connect', () => {
             console.log(`connected...${socket.id}`);
-            connected = true;
         });
 
         Object.keys(currentTopicRegisterd).forEach((act) => {
@@ -61,9 +43,8 @@ export const socketioMiddleware = ({ dispatch }) => (next) => (action) => {
         });
     }
     if (action.type === AT.SOCKET_INIT) {
-    // verify if topic is already  registerd inorder to prevent duplicate registretion
+        // verify if topic is already  registerd inorder to prevent duplicate registretion
         if (!Object.keys(currentTopicRegisterd).includes(action.payload.topic)) {
-      // socket.emit(topics.OPEN_TERMINAL, { id: socket.id });
             if (socket != null) {
                 socket.on(action.payload.topic, (data) => {
                     success(dispatch, data, action);

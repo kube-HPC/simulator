@@ -78,7 +78,6 @@ const tableDataToAutoCompleteData = (data) => {
 };
 
 const mapStateToProps = (state) => ({
-  // columns: state.containerTable.columns,
   dataSource: tableDataToAutoCompleteData(state.containerTable.dataSource)
 });
 

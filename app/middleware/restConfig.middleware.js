@@ -1,11 +1,4 @@
 import AT from '../constants/actions';
-import topics from '../constants/topics';
-
-// const API_URL = 'http://101.150.4.70:8080';
-
-
-// let socket = io(API_URL,{path:'/api/v1/proxy/namespaces/default/services/worker-statistics-server/socket.io'});
-
 
 const reject = (dispatch, payload, action) => {
   dispatch({

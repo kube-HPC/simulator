@@ -1,15 +1,11 @@
-// libs
-
 import 'antd/dist/antd.css';
 import { connect } from 'react-redux';
-import Immutable from 'seamless-immutable';
-import { Table, Card, Icon, Tag, Button, Row, Col, Progress, Pagination } from 'antd';
+import { Table, Card, Tag } from 'antd';
 import ReactJson from 'react-json-view';
 import { openModal } from '../actions/modal.action';
 import { init } from '../actions/workerTable.action';
-import PopoverConfirmOperation from './PopoverConfirmOperation.react';
 import { createSelector } from 'reselect';
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
 import { withState } from 'recompose';
 
 const RECORD_STATUS = {
@@ -37,7 +33,6 @@ class WorkerTable extends Component {
     const sorter = (a, b) => {
       let tempA = null;
       let tempB = null;
-      //   console.log(b.additional.worker.lastVid);
       tempA = a || '';
       tempB = b || '';
       return tempA.localeCompare(tempB);
@@ -113,7 +108,7 @@ class WorkerTable extends Component {
         width: '10%',
         key: 'workerPaused',
         render: (text, record) => (<span>
-          <Tag color={record.data.workerPaused?'red':'green'} > {record.data.workerPaused?'paused':'ready'}</Tag>
+          <Tag color={record.data.workerPaused ? 'red' : 'green'} > {record.data.workerPaused ? 'paused' : 'ready'}</Tag>
         </span>
         ),
         sorter: (a, b) => sorter(a.data.workerPaused, b.data.workerPaused)
@@ -144,9 +139,7 @@ class WorkerTable extends Component {
       </div>
     );
   }
-
 }
-
 
 const workerTable = (state) => state.workerTable.dataSource;
 const autoCompleteFilter = (state) => state.autoCompleteFilter.filter;
@@ -155,24 +148,15 @@ const tableDataSelector = createSelector(
   workerTable,
   autoCompleteFilter,
   (workerTable, autoCompleteFilter) => {
-    let returnData = workerTable;
-    if (autoCompleteFilter != '') {
-      returnData = workerTable.filter((row) =>
-        Object.values(row).find((f) => f.toString().includes(autoCompleteFilter)) ||
-        (row.additional.worker.lastVid ? row.additional.worker.lastVid.includes(autoCompleteFilter) : false)
-      );
-    }
-    return returnData;
+    return workerTable;
   }
 );
 
 WorkerTable.propTypes = {
-  // columns: React.PropTypes.array.isRequired,
   dataSource: React.PropTypes.array.isRequired
 };
 
 const mapStateToProps = (state) => ({
-  // columns: state.containerTable.columns,
   dataSource: tableDataSelector(state),
   scriptsPath: state.serverSelection.currentSelection.scriptsPath,
   sshUser: state.serverSelection.currentSelection.user

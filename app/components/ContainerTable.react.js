@@ -2,15 +2,14 @@
 
 import 'antd/dist/antd.css';
 import { connect } from 'react-redux';
-import Immutable from 'seamless-immutable';
-import { Table, Card, Icon, Tag, Button, Row, Col, Progress, Pagination } from 'antd';
+import { Table, Card, Tag, Progress } from 'antd';
 import ReactJson from 'react-json-view';
 import { openModal } from '../actions/modal.action';
 import { init } from '../actions/containerTable.action';
-import PopoverConfirmOperation from './PopoverConfirmOperation.react';
 import { createSelector } from 'reselect';
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
 import { withState } from 'recompose';
+
 const RECORD_STATUS = {
   active: '#2db7f5',
   completed: '#87d068',
@@ -21,6 +20,7 @@ const RECORD_STATUS = {
 class ContainerTable extends Component {
   componentWillMount() {
     this.props.init();
+
     const callPopOverWorkAround = (isVisible) => {
       this.props.onPopoverClickVisible(isVisible);
     };
@@ -129,24 +129,15 @@ const tableDataSelector = createSelector(
   containerTable,
   autoCompleteFilter,
   (containerTable, autoCompleteFilter) => {
-    let returnData = containerTable;
-    if (autoCompleteFilter != '') {
-      returnData = containerTable.filter((row) =>
-        Object.values(row).find((f) => f.toString().includes(autoCompleteFilter)) ||
-        (row.additional.worker.lastVid ? row.additional.worker.lastVid.includes(autoCompleteFilter) : false)
-      );
-    }
-    return returnData;
+    return containerTable;
   }
 );
 
 ContainerTable.propTypes = {
-  // columns: React.PropTypes.array.isRequired,
   dataSource: React.PropTypes.array.isRequired
 };
 
 const mapStateToProps = (state) => ({
-  // columns: state.containerTable.columns,
   dataSource: tableDataSelector(state),
   scriptsPath: state.serverSelection.currentSelection.scriptsPath,
   sshUser: state.serverSelection.currentSelection.user

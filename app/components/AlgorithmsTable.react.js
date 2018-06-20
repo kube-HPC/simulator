@@ -2,14 +2,12 @@
 
 import 'antd/dist/antd.css';
 import { connect } from 'react-redux';
-import Immutable from 'seamless-immutable';
-import { Table, Card, Icon, Tag, Button, Row, Col, Progress, Pagination } from 'antd';
+import { Table, Card } from 'antd';
 import ReactJson from 'react-json-view';
 import { openModal } from '../actions/modal.action';
 import { init } from '../actions/algorithmTable.action';
-import PopoverConfirmOperation from './PopoverConfirmOperation.react';
 import { createSelector } from 'reselect';
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
 import { withState } from 'recompose';
 
 const RECORD_STATUS = {
@@ -20,7 +18,6 @@ const RECORD_STATUS = {
   shutdown: '#87d068',
   error: '#87d068',
   stop: '#87d068'
-
 };
 
 class AlgorithmTable extends Component {
@@ -37,7 +34,6 @@ class AlgorithmTable extends Component {
     const sorter = (a, b) => {
       let tempA = null;
       let tempB = null;
-      //   console.log(b.additional.worker.lastVid);
       tempA = a || '';
       tempB = b || '';
       return tempA.localeCompare(tempB);
@@ -77,13 +73,12 @@ class AlgorithmTable extends Component {
         key: 'workerImage',
         width: '20%',
         sorter: (a, b) => sorter(a.data.workerImage, b.data.workerImage)
-      
+
       }
     ];
   }
 
   renderColumns() {
-
   }
 
   render() {
@@ -105,9 +100,7 @@ class AlgorithmTable extends Component {
       </div>
     );
   }
-
 }
-
 
 const algorithmTable = (state) => state.algorithmTable.dataSource;
 const autoCompleteFilter = (state) => state.autoCompleteFilter.filter;
@@ -116,24 +109,15 @@ const tableDataSelector = createSelector(
   algorithmTable,
   autoCompleteFilter,
   (algorithmTable, autoCompleteFilter) => {
-    let returnData = algorithmTable;
-    if (autoCompleteFilter != '') {
-      returnData = algorithmTable.filter((row) =>
-        Object.values(row).find((f) => f.toString().includes(autoCompleteFilter)) ||
-        (row.additional.worker.lastVid ? row.additional.worker.lastVid.includes(autoCompleteFilter) : false)
-      );
-    }
-    return returnData;
+    return algorithmTable;
   }
 );
 
 AlgorithmTable.propTypes = {
-  // columns: React.PropTypes.array.isRequired,
   dataSource: React.PropTypes.array.isRequired
 };
 
 const mapStateToProps = (state) => ({
-  // columns: state.containerTable.columns,
   dataSource: tableDataSelector(state),
   scriptsPath: state.serverSelection.currentSelection.scriptsPath,
   sshUser: state.serverSelection.currentSelection.user

@@ -4,14 +4,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanPlugin = require('clean-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const packageConfig = require('./package.json');
 const appEnv = process.env.NODE_ENV || 'development';
 const appPath = path.join(__dirname, 'app');
 const distPath = path.join(__dirname, 'dist');
 const exclude = [/node_modules/, /thirdParty/];
-const excludeThirdParty = /thirdParty/;
 const dependencies = packageConfig.dependencies;
 delete dependencies.express;
 const config = {

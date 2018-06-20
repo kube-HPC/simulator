@@ -1,58 +1,26 @@
-// import { FlexRows, FlexColumns, AutoSize } from 'components/common/Flex.react';
 import { connect } from 'react-redux';
 import ContainerTable from './ContainerTable.react';
 import WorkerTable from './WorkerTable.react';
 import AlgorithmTable from './AlgorithmsTable.react';
-import TerminalModal from './TerminalModal.react';
-import PopoverConfirmOperation from './PopoverConfirmOperation.react';
-import Terminal from './Terminal';
+import { BackTop, Row, Col, Layout, Menu } from 'antd';
 import TableAutoComplete from './TableAutoComplete.react';
-import { BackTop } from 'antd';
-import { Layout, Menu, Icon, Button } from 'antd';
-import { Row, Col } from 'antd';
 import { compose, withState } from 'recompose';
-import { openTerminalClient, closeTerminalClient, terminalDisconnect } from '../actions/terminal.action';
-import { menuKeyToCommands, commandFormater } from '../helpers/menuToCommands';
 import ServerSelection from './ServerSelection.react';
 import { init } from '../actions/config.action.js';
 
 const { Header, Sider, Content } = Layout;
-const MenuItemGroup = Menu.ItemGroup;
-const SubMenu = Menu.SubMenu;
-// eslint-disable-next-line
-//react/prefer-stateless-function
 
 let collapsedState = false;
 const toggle = () => {
   collapsedState = !collapsedState;
 };
 
-const isVisible = false;
-let prevKey = 1;
 const menuSelection = (i, props) => {
-  // if (prevKey != 1) {
-  //   props.terminalDisconnect();
-  //   props.closeTerminalClient();
-  // }
   if (i.key == 1) {
     props.onMenuSelected({ visible: true, menuItem: i });
   } else {
     props.onMenuSelected({ visible: false, menuItem: i });
   }
-  // if (i.key == 'vodDownMenu') {
-  //   props.onVodDownPopoverClickVisible(true);
-  // }
-  // if (i.key == 'vodUpMenu') {
-  //   props.onVodUpPopoverClickVisible(true);
-  // }
-  // if (i.key != 1) {
-  //   setTimeout(() => {
-  //     props.openTerminalClient();
-  //   }, 100);
-  //   props.onMenuSelected({ visible: false, menuItem: i });
-  // }
-  prevKey = i.key;
-  // console.log(`i ${i
 };
 
 const selectTable = (props) => {
@@ -112,10 +80,10 @@ const LayoutInner = class extends React.Component {
               }}
               defaultSelectedKeys={['1']}>
               <Menu.Item key="1" style={{ paddingLeft: '0px' }}>
-                <span className="nav-text">monitor</span>
+                <span className="nav-text">jobs</span>
               </Menu.Item>
               <Menu.Item key="2" style={{ paddingLeft: '0px' }}>
-                <span className="nav-text">worker</span>
+                <span className="nav-text">workers</span>
               </Menu.Item>
               <Menu.Item key="3" style={{ paddingLeft: '0px' }}>
                 <span className="nav-text">algorithms</span>
@@ -138,7 +106,6 @@ const LayoutInner = class extends React.Component {
               <ContainerTable /> : <WorkerTable />
               
             } */}
-            <TerminalModal />
           </Content>
         </Layout>
       </Layout>
@@ -152,7 +119,7 @@ const mapStateToProps = (state) => ({
 });
 
 
-export default compose(connect(mapStateToProps, { init, openTerminalClient, closeTerminalClient, terminalDisconnect }),
+export default compose(connect(mapStateToProps, { init }),
   withState('isTableVIsible', 'onMenuSelected', { visible: true, menuItem: {} }),
   withState('isVodUpVisible', 'onVodUpPopoverClickVisible', false),
   withState('isVodDownVisible', 'onVodDownPopoverClickVisible', false)

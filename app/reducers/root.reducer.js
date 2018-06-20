@@ -5,7 +5,6 @@ import workerTable from './workerTable.reducer';
 import algorithmTable from './algorithmTable.reducer';
 import modal from './modal.reducer';
 import ui from './ui.reducer';
-import terminal from './terminal.reducer';
 import autoCompleteFilter from './autoCompleteFilter.reducer';
 import serverSelection from './serverSelection.reducer';
 
@@ -16,7 +15,6 @@ const rootReducer = combineReducers({
   workerTable,
   algorithmTable,
   modal,
-  terminal,
   autoCompleteFilter,
   serverSelection
 });
