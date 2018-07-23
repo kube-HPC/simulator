@@ -76,6 +76,7 @@
     "react-dnd": "^2.5.4",
     "react-dnd-html5-backend": "^2.5.4",
     "react-dom": "^15.6.2",
+    "react-graph-vis": "^1.0.2",
     "react-intl": "^2.4.0",
     "react-json-view": "^1.15.2",
     "react-rating": "^0.6.5",
