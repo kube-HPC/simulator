@@ -2,7 +2,9 @@ import { Component } from 'react';
 import Graph from 'react-graph-vis';
 
 const options = {
-  animation: false,
+  physics: {
+    stabilization: true
+  },
   layout: {
     hierarchical: {
       enabled: true,
@@ -49,40 +51,46 @@ const options = {
 };
 
 
-const JobGraph = ({ graph }) => {
-  const network = null;
-  const events = {
-    select: (event) => {
-      const { nodes, edges } = event;
-    },
-    afterDrawing: (e) => {
-      console.log(e);
-    }
-  };
-    
-  const initNetworkInstance = (network) => {
-    network.once('afterDrawing', (e) => {
-      network.fit({
-        animation: {
-          duration: 1,
-          easingFunction: 'linear'
-        }
-      });
-    });
-  };
-  const adaptedGraph = {
-    edges: [],
-    nodes: []
+class JobGraph extends Component {
 
-  };
-  graph.nodes.forEach((n) => adaptedGraph.nodes.push({ ...n, label: n.extra.batch ? `${n.label} - ${n.extra.batch}` : n.label }));
-  graph.edges.forEach((e) => adaptedGraph.edges.push({ ...e, dashes: e.group === 'waitAny' }));
+  constructor() {
+    super();
+    this.network = null;
+    this.events = {
+      select: (event) => {
+        const { nodes, edges } = event;
+      },
+      afterDrawing: (e) => {
+        this.network.fit({
+          animation: {
+            duration: 400,
+            easingFunction: 'linear'
+          }
+        });
+      }
+    };
+    this._initNetworkInstance = this.initNetworkInstance.bind(this);
+  }
 
-  return (<div style={{ height: '600px' }}>
-    <Graph graph={adaptedGraph} options={options} events={events} getNetwork={initNetworkInstance}/>
-  </div>)
-        ;
-};
+
+  initNetworkInstance(network) {
+    this.network = network;
+  }
+  render() {
+    const { nodes, edges } = this.props.graph;
+    const adaptedGraph = {
+      edges: [],
+      nodes: []
+
+    };
+    nodes.forEach((n) => adaptedGraph.nodes.push({ ...n, label: n.extra.batch ? `${n.label} - ${n.extra.batch}` : n.label }));
+    edges.forEach((e) => adaptedGraph.edges.push({ ...e, dashes: e.group === 'waitAny' }));
+
+    return (<div style={{ height: '600px' }}>
+      <Graph graph={adaptedGraph} options={options} events={this.events} getNetwork={this._initNetworkInstance}/>
+    </div>);
+  }
+}
 
 
 export default JobGraph;
