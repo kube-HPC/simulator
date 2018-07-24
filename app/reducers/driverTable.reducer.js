@@ -10,7 +10,7 @@ const inititalState = Immutable.from(tmp);
 
 export default handleActions({
   [actions.UPDATE_ROW_DATA_TABLE](state, { type, payload, meta, error }) {
-    return state.merge({ dataSource: payload.discovery.workers });
+    return state.merge({ dataSource: payload.discovery['pipeline-driver'] || [] });
   }
 
 }, inititalState);

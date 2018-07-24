@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import ContainerTable from './ContainerTable.react';
 import WorkerTable from './WorkerTable.react';
+import DriverTable from './DriverTable.react';
 import AlgorithmTable from './AlgorithmsTable.react';
 import { BackTop, Row, Col, Layout, Menu } from 'antd';
 import TableAutoComplete from './TableAutoComplete.react';
@@ -30,6 +31,8 @@ const selectTable = (props) => {
     case '2':
       return <WorkerTable />
     case '3':
+      return <DriverTable />
+    case '4':
       return <AlgorithmTable />
     default:
       return <ContainerTable />
@@ -86,6 +89,9 @@ const LayoutInner = class extends React.Component {
                 <span className="nav-text">workers</span>
               </Menu.Item>
               <Menu.Item key="3" style={{ paddingLeft: '0px' }}>
+                <span className="nav-text">drivers</span>
+              </Menu.Item>
+              <Menu.Item key="4" style={{ paddingLeft: '0px' }}>
                 <span className="nav-text">algorithms</span>
               </Menu.Item>
               <span className="ant-divider" />
