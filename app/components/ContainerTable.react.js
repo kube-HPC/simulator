@@ -9,6 +9,8 @@ import { init } from '../actions/containerTable.action';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import { withState } from 'recompose';
+import TabSwitcher from "./TabSwitcher";
+
 
 const RECORD_STATUS = {
   active: '#2db7f5',
@@ -110,10 +112,7 @@ class ContainerTable extends Component {
             defaultCurrent: 1, pageSize: 15
           }}
           expandedRowRender={(record) => (
-            <Card title="Full details">
-              <ReactJson src={record} />
-            </Card>
-
+            <TabSwitcher record={record} />
           )} />
       </div>
     );
