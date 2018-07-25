@@ -77,6 +77,11 @@ class JobGraph extends Component {
     this.network = network;
   }
   render() {
+    if (!this.props.graph) {
+      return (<div style={{ height: '600px' }}>
+        <div>Graph is not available</div>
+      </div>);
+    }
     const { nodes, edges } = this.props.graph;
     const adaptedGraph = {
       edges: [],
@@ -87,7 +92,7 @@ class JobGraph extends Component {
     edges.forEach((e) => adaptedGraph.edges.push({ ...e, dashes: e.group === 'waitAny' }));
 
     return (<div style={{ height: '600px' }}>
-      <Graph graph={adaptedGraph} options={options} events={this.events} getNetwork={this._initNetworkInstance}/>
+      <Graph graph={adaptedGraph} options={options} events={this.events} getNetwork={this._initNetworkInstance} />
     </div>);
   }
 }
