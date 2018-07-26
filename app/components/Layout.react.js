@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import ContainerTable from './ContainerTable.react';
 import WorkerTable from './WorkerTable.react';
+import DebugTable from './DebugTable.react';
 import DriverTable from './DriverTable.react';
 import AlgorithmTable from './AlgorithmsTable.react';
 import { BackTop, Row, Col, Layout, Menu } from 'antd';
@@ -27,15 +28,17 @@ const menuSelection = (i, props) => {
 const selectTable = (props) => {
   switch (props.isTableVIsible.menuItem.key) {
     case '1':
-      return <ContainerTable />
+      return <ContainerTable/>;
     case '2':
-      return <WorkerTable />
+      return <WorkerTable/>;
     case '3':
-      return <DriverTable />
+      return <DriverTable/>;
     case '4':
-      return <AlgorithmTable />
+      return <AlgorithmTable/>;
+    case '5':
+      return <DebugTable/>;
     default:
-      return <ContainerTable />
+      return <ContainerTable/>;
   }
 };
 
@@ -59,11 +62,11 @@ const LayoutInner = class extends React.Component {
           <Row type="flex" justify="start" align="middle">
             <Col span={2} style={{ color: 'white', fontSize: '18px' }} > HKUBE</Col>
             <Col span={10} offset={6}>
-              <TableAutoComplete />
+              <TableAutoComplete/>
             </Col>
-            <Col span={4} />
+            <Col span={4}/>
             <Col span={2} >
-              <ServerSelection />
+              <ServerSelection/>
             </Col>
           </Row>
         </Header>
@@ -94,7 +97,10 @@ const LayoutInner = class extends React.Component {
               <Menu.Item key="4" style={{ paddingLeft: '0px' }}>
                 <span className="nav-text">algorithms</span>
               </Menu.Item>
-              <span className="ant-divider" />
+              <Menu.Item key="5" style={{ paddingLeft: '0px' }}>
+                <span className="nav-text">Debug</span>
+              </Menu.Item>
+              <span className="ant-divider"/>
             </Menu>
           </Sider>
           <Content
@@ -105,7 +111,7 @@ const LayoutInner = class extends React.Component {
               background: '#fff',
               minHeight: '89vh'
             }}>
-            <BackTop />
+            <BackTop/>
             {/* <ContainerTable />*/}
             {selectTable(props)}
             {/* {props.isTableVIsible.visible ?
