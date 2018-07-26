@@ -2,7 +2,7 @@
 
 import 'antd/dist/antd.css';
 import { connect } from 'react-redux';
-import { Table, Card, Button } from 'antd';
+import { Table, Card, Button, Icon } from 'antd';
 import ReactJson from 'react-json-view';
 import { openModal } from '../actions/modal.action';
 import { init } from '../actions/debugTable.action';
@@ -93,7 +93,10 @@ class DebugTable extends Component {
             </Card>
 
           )}/>
-        <Button type="primary" shape="circle" icon="plus" size="500px" style={{ position: 'absolute', top: '92%', right: '2%' }}/>
+        <Button type="primary" shape="circle" size="500px" style={{
+          position: 'absolute', width: '60px', height: '60px', top: '90%', right: '2%' }}>
+          <Icon type="plus" style={{ fontSize: 40 }}/>
+        </Button>
       </div >
     );
   }
