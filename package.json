@@ -76,7 +76,7 @@
     "react-day-picker": "^3.1.1",
     "react-dnd": "^2.6.0",
     "react-dnd-html5-backend": "^2.6.0",
-    "react-dom": "^15.6.2",
+    "react-dom": "^16.0.1",
     "react-intl": "^2.4.0",
     "react-json-view": "^1.19.0",
     "react-rating": "^0.6.5",
