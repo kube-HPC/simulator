@@ -2,14 +2,17 @@
 
 import 'antd/dist/antd.css';
 import { connect } from 'react-redux';
-import { Table, Card, Button, Icon } from 'antd';
+import { Table, Card, Button, Icon, Form, Input, Tag,message,notification } from 'antd';
 import ReactJson from 'react-json-view';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { openModal } from '../actions/modal.action';
-import { init } from '../actions/debugTable.action';
+import { init, addAlgorithm,deleteAlgorithm} from '../actions/debugTable.action';
+import DebugForm from './DebugForm.react';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
-import { withState } from 'recompose';
-
+import { withState, withStateHandlers, compose } from 'recompose';
+import PopOver from './PopoverConfirmOperation.react'
+const FormItem = Form.Item;
 const RECORD_STATUS = {
   bootstrap: '#2db7f5',
   ready: '#87d068',
@@ -27,10 +30,10 @@ class DebugTable extends Component {
 
   componentWillMount() {
     this.props.init();
-    const callPopOverWorkAround = (isVisible) => {
-      this.props.onPopoverClickVisible(isVisible);
-    };
-
+    // const callPopOverWorkAround = (isVisible) => {
+    //   this.props.onPopoverClickVisible(isVisible);
+    // };
+    this.state = { isVisable: false }
     const sorter = (a, b) => {
       let tempA = null;
       let tempB = null;
@@ -63,20 +66,57 @@ class DebugTable extends Component {
         sorter: (a, b) => sorter(a.data.mem, b.data.mem)
       },
       {
-        title: 'Worker Image',
-        dataIndex: 'data.workerImage',
-        key: 'workerImage',
-        width: '20%',
-        sorter: (a, b) => sorter(a.data.workerImage, b.data.workerImage)
-
+        title: 'path',
+        dataIndex: 'data.path',
+        key: 'path',
+        width: '30%',
+        sorter: (a, b) => sorter(a.data.path, b.data.path),
+        render: (text, record) =>
+          <CopyToClipboard text={record.data.path} onCopy={() => notification.success({
+            message:'Copied to clipboard',
+           description:`` 
+          })}>
+            <Tag color="#399114">
+              <div>
+                <Icon type="right" style={{ color: 'rgba(255,255,255,.75)', marginRight: '10px' }} />
+                {record.data.path}
+              </div>
+            </Tag>
+          </CopyToClipboard>
+      },
+      {
+        title: 'stop',
+        dataIndex: '',
+        key: 'stop',
+        width: '10%',
+        render: (text, record) =>
+         <Button type="danger" shape="circle" icon="close" onClick ={ ()=>this.onDelete(record.key) }/>
       }
     ];
   }
 
   renderColumns() {
   }
-
+  onVisible = () => this.setState({ isVisable: !this.state.isVisable })
+  onFormDataChange = (e) => {
+    this.setState({ formdata: e.target.value })
+  }
+  onPopOverConfirm = () => {
+    this.props.addAlgorithm(this.state.formdata);
+    this.onVisible()
+  }
+  onDelete = (algorithmName)=>{
+    this.props.deleteAlgorithm(algorithmName)
+  }
+  onPopOverCancel = () => {
+    this.onVisible()
+  }
   render() {
+    const AlgorithmInput = <div style={{ height: "200px", width: "400px" }}>
+      <Input onChange={this.onFormDataChange}
+        prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Algorithm" />
+    </div>
+
     const { dataSource } = this.props;
     return (
       <div>
@@ -87,16 +127,21 @@ class DebugTable extends Component {
           pagination={{
             defaultCurrent: 1, pageSize: 15
           }}
+          locale={{ emptyText: 'no data' }}
           expandedRowRender={(record) => (
             <Card title="Full details">
-              <ReactJson src={record}/>
+              <ReactJson src={record} />
             </Card>
 
-          )}/>
-        <Button type="primary" shape="circle" size="500px" style={{
-          position: 'absolute', width: '60px', height: '60px', top: '90%', right: '2%' }}>
-          <Icon type="plus" style={{ fontSize: 40 }}/>
-        </Button>
+          )} />
+        <PopOver isVisible={this.state.isVisable} position="topRight" content={AlgorithmInput}
+          onConfirm={this.onPopOverConfirm} onCancel={this.onPopOverCancel}>
+          <Button type="primary" shape="circle" size="500px" style={{
+            position: 'absolute', width: '60px', height: '60px', top: '90%', right: '3%'
+          }} onClick={this.onVisible}>
+            <Icon type="plus" style={{ fontSize: 40 }} />
+          </Button>
+        </PopOver>
       </div >
     );
   }
@@ -121,6 +166,5 @@ const mapStateToProps = (state) => ({
   sshUser: state.serverSelection.currentSelection.user
 });
 
-export default connect(mapStateToProps, { openModal, init })(
-  withState('isVisible', 'onPopoverClickVisible', { visible: false, podName: '' })(DebugTable)
-);
+export default connect(mapStateToProps, { openModal, init, addAlgorithm,deleteAlgorithm })(DebugTable);
+

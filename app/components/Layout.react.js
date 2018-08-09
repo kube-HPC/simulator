@@ -4,12 +4,13 @@ import WorkerTable from './WorkerTable.react';
 import DebugTable from './DebugTable.react';
 import DriverTable from './DriverTable.react';
 import AlgorithmTable from './AlgorithmsTable.react';
-import { BackTop, Row, Col, Layout, Menu } from 'antd';
+import { BackTop, Row, Col, Layout, Menu ,Button } from 'antd';
 import TableAutoComplete from './TableAutoComplete.react';
 import { compose, withState } from 'recompose';
 import ServerSelection from './ServerSelection.react';
-import { init } from '../actions/config.action.js';
 
+import { init } from '../actions/config.action.js';
+<ServerSelection/>
 const { Header, Sider, Content } = Layout;
 
 let collapsedState = false;
@@ -38,7 +39,7 @@ const selectTable = (props) => {
     case '5':
       return <DebugTable/>;
     default:
-      return <ContainerTable/>;
+      return <DebugTable/>;
   }
 };
 
@@ -66,7 +67,7 @@ const LayoutInner = class extends React.Component {
             </Col>
             <Col span={4}/>
             <Col span={2} >
-              <ServerSelection/>
+        
             </Col>
           </Row>
         </Header>
@@ -84,7 +85,7 @@ const LayoutInner = class extends React.Component {
                 menuSelection(i, props);
                 // console.log(`i ${i} k ${k} s ${s} `)
               }}
-              defaultSelectedKeys={['1']}>
+              defaultSelectedKeys={['5']}>
               <Menu.Item key="1" style={{ paddingLeft: '0px' }}>
                 <span className="nav-text">jobs</span>
               </Menu.Item>

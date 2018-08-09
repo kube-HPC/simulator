@@ -111,6 +111,7 @@ class ContainerTable extends Component {
           pagination={{
             defaultCurrent: 1, pageSize: 15
           }}
+          locale={{ emptyText: 'no data' }}
           expandedRowRender={(record) => (
             <TabSwitcher record={record} />
           )} />
