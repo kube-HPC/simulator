@@ -77,6 +77,15 @@ const config = {
                 exclude
 
             },
+            {
+                test: /\.(png|jpg|gif)$/,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {}
+                    }
+                ]
+            },
             // Expose React as global object
             {
                 test: require.resolve('react'),

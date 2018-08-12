@@ -4,21 +4,22 @@ import { closeModal } from '../actions/modal.action';
 import { withState } from 'recompose';
 
 
+
 const PopoverConfirmOperation = (props) => {
-  const { children, onConfirm, onCancel, isVisible, position } = props;
-  /* const popoverContent = (
-    <Button onCllick=popoverConfirm> Confirm </Button>
-      <Button onCllick=popoverConfirm> Cancel </Button>
-      )*/
+  const { children, onConfirm, onCancel, isVisible, position ,content } = props;
   return (
+    
     <Popover
       content={
-        <div>
-          <Button onClick={onConfirm}> Confirm </Button>
-          <Button onClick={onCancel}> Cancel </Button>
+        <div >
+          {content}
+          <Button type="primary" onClick={onConfirm}> Confirm </Button>
+          <Button style={{left:'65%'}} onClick={onCancel}> Cancel </Button>
         </div>
+
       }
-      title="Are you sure ?"
+
+      title="Select Algorithm for debugging"
       trigger="click"
       placement={position}
       visible={isVisible}>

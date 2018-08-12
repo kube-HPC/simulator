@@ -91,6 +91,8 @@ class AlgorithmTable extends Component {
           pagination={{
             defaultCurrent: 1, pageSize: 15
           }}
+          locale={{ emptyText: 'no data' }}
+
           expandedRowRender={(record) => (
             <Card title="Full details">
               <ReactJson src={record} />
