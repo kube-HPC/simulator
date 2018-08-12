@@ -10,7 +10,7 @@ import { compose, withState } from 'recompose';
 import ServerSelection from './ServerSelection.react';
 import { init } from '../actions/config.action.js';
 //import img from '../../images/logo.png'
-<ServerSelection />
+
 const { Header, Sider, Content } = Layout;
 
 let collapsedState = false;
@@ -39,7 +39,7 @@ const selectTable = (props) => {
     case '5':
       return <DebugTable />;
     default:
-      return <DebugTable />;
+      return <ContainerTable />;
   }
 };
 
@@ -68,7 +68,7 @@ const LayoutInner = class extends React.Component {
           </Col>
           <Col span={4} />
           <Col span={2} >
-
+          <ServerSelection />
           </Col>
           </Row>
         </Header>
@@ -86,7 +86,7 @@ const LayoutInner = class extends React.Component {
               menuSelection(i, props);
               // console.log(`i ${i} k ${k} s ${s} `)
             }}
-            defaultSelectedKeys={['5']}>
+            defaultSelectedKeys={['1']}>
             <Menu.Item key="1" style={{ paddingLeft: '0px' }}>
               <span className="nav-text">jobs</span>
             </Menu.Item>

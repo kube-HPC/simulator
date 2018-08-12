@@ -7,7 +7,6 @@ import ReactJson from 'react-json-view';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { openModal } from '../actions/modal.action';
 import { init, addAlgorithm,deleteAlgorithm} from '../actions/debugTable.action';
-import DebugForm from './DebugForm.react';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import { withState, withStateHandlers, compose } from 'recompose';
@@ -46,30 +45,30 @@ class DebugTable extends Component {
         title: 'Algorithm Name',
         dataIndex: 'data.name',
         key: 'name',
-        width: '20%',
+        width: '40%',
         sorter: (a, b) => sorter(a.data.name, b.data.name)
       },
-      {
-        title: 'Algorithm Image',
-        dataIndex: 'data.algorithmImage',
-        key: 'algorithmImage',
-        width: '20%',
-        onFilter: (value, record) => record.data.algorithmImage.includes(value),
-        sorter: (a, b) => sorter(a.data.algorithmImage, b.data.algorithmImage)
-      },
+      // {
+      //   title: 'Algorithm Image',
+      //   dataIndex: 'data.algorithmImage',
+      //   key: 'algorithmImage',
+      //   width: '20%',
+      //   onFilter: (value, record) => record.data.algorithmImage.includes(value),
+      //   sorter: (a, b) => sorter(a.data.algorithmImage, b.data.algorithmImage)
+      // },
 
-      {
-        title: 'mem',
-        dataIndex: 'data.mem',
-        key: 'mem',
-        width: '20%',
-        sorter: (a, b) => sorter(a.data.mem, b.data.mem)
-      },
+      // {
+      //   title: 'mem',
+      //   dataIndex: 'data.mem',
+      //   key: 'mem',
+      //   width: '20%',
+      //   sorter: (a, b) => sorter(a.data.mem, b.data.mem)
+      // },
       {
         title: 'path',
         dataIndex: 'data.path',
         key: 'path',
-        width: '30%',
+        width: '40%',
         sorter: (a, b) => sorter(a.data.path, b.data.path),
         render: (text, record) =>
           <CopyToClipboard text={record.data.path} onCopy={() => notification.success({
@@ -88,7 +87,7 @@ class DebugTable extends Component {
         title: 'stop',
         dataIndex: '',
         key: 'stop',
-        width: '10%',
+        width: '20%',
         render: (text, record) =>
          <Button type="danger" shape="circle" icon="close" onClick ={ ()=>this.onDelete(record.key) }/>
       }
