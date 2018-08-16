@@ -1,49 +1,19 @@
-[
-  {
-    "name": "1",
-    "nodes": [
-      {
-        "nodeName": "nodeName1",
-        "algorithmName": "algorithmName1",
-        "input": ["input1"]
-      }
-    ],
-    "flowInput": {
-      "files": {
-        "link": "link1"
-      }
-    },
-    "webhooks": {
-      "progress": "progress1",
-      "result": "result1"
-    },
-    "priority": 1,
-    "options": {
-      "progressVerbosityLevel": "debug1"
+{
+  "name": "",
+  "nodes": [
+    {
+      "nodeName": "",
+      "algorithmName": "",
+      "input": []
     }
+  ],
+  "flowInput": {
+    "files": {}
   },
-  {
-    "name": "2",
-    "nodes": [
-      {
-        "nodeName": "nodeName2",
-        "algorithmName": "algorithmName2",
-        "input": ["input2"]
-      }
-    ],
-    "flowInput": {
-      "files": {
-        "link": "link2"
-      }
-    },
-    "webhooks": {
-      "progress": "progress2",
-      "result": "result2"
-    },
-    "priority": 2,
-    "options": {
-      "progressVerbosityLevel": "debug2"
-    }
-  }
-]
-
+  "webhooks": {
+    "progress": "",
+    "result": ""
+  },
+  "priority": 1,
+  "options": {}
+}

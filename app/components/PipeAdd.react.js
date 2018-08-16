@@ -1,15 +1,7 @@
 import React, { Component } from 'react';
 import { Icon, Modal, Button } from 'antd';
 
-import 'brace/mode/json';
-import 'brace/theme/textmate';
-
-import ReactMarkdown from 'react-markdown';
 import JsonEditor from './JsonEditor.react';
-
-// TODO: parse from file
-const mdNotes =
-  'For auto-complete use `Ctrl+Enter`.\n\nType `nodeadd` for node-adding snippet.\n';
 
 class PipeAdd extends Component {
   state = {
@@ -22,7 +14,7 @@ class PipeAdd extends Component {
     });
   };
 
-  handleOK = () => {
+  handleOk = () => {
     this.setState({
       visible: false
     });
@@ -60,7 +52,7 @@ class PipeAdd extends Component {
           | PIPE
         </Button>
         <Modal
-          title="Add Pipeline"
+          title="Add-Pipeline"
           visible={this.state.visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
@@ -68,7 +60,12 @@ class PipeAdd extends Component {
           okText="Add Pipe"
           cancelText="Cancel">
           <JsonEditor/>
-          <ReactMarkdown source={mdNotes}/>
+          <p/>
+          <p>
+            Use <code>addn</code> <strong>snippet</strong> for adding{' '}
+            <strong>pipe-node</strong>. Use <code>Ctrl+Space</code> for{' '}
+            <strong>auto-completion</strong>.
+          </p>
         </Modal>
       </div>
     );
