@@ -9,7 +9,8 @@ import TableAutoComplete from './TableAutoComplete.react';
 import { compose, withState } from 'recompose';
 import ServerSelection from './ServerSelection.react';
 import { init } from '../actions/config.action.js';
-//import img from '../../images/logo.png'
+import PipeAdd from './PipeAdd.react';
+// import img from '../../images/logo.png'
 
 const { Header, Sider, Content } = Layout;
 
@@ -29,17 +30,17 @@ const menuSelection = (i, props) => {
 const selectTable = (props) => {
   switch (props.isTableVIsible.menuItem.key) {
     case '1':
-      return <ContainerTable />;
+      return <ContainerTable/>;
     case '2':
-      return <WorkerTable />;
+      return <WorkerTable/>;
     case '3':
-      return <DriverTable />;
+      return <DriverTable/>;
     case '4':
-      return <AlgorithmTable />;
+      return <AlgorithmTable/>;
     case '5':
-      return <DebugTable />;
+      return <DebugTable/>;
     default:
-      return <ContainerTable />;
+      return <ContainerTable/>;
   }
 };
 
@@ -61,81 +62,96 @@ const LayoutInner = class extends React.Component {
             zIndex: '2 '
           }}>
           <Row type="flex" justify="start" align="middle">
-            <Col span={2}
-             style={{ color: 'white', fontSize: '22px', fontWeight: 'bold', fontFamily: 'monospace',letterSpacing: '1px' }} > HKUBE</Col>
-          <Col span={10} offset={6}>
-            <TableAutoComplete />
-          </Col>
-          <Col span={4} />
-          <Col span={2} >
-          <ServerSelection />
-          </Col>
+            <Col
+              span={2}
+              style={{
+                color: 'white',
+                fontSize: '22px',
+                fontWeight: 'bold',
+                fontFamily: 'monospace',
+                letterSpacing: '1px'
+              }}>
+              {' '}
+              HKUBE
+            </Col>
+            <Col span={10} offset={6}>
+              <TableAutoComplete/>
+            </Col>
+            <Col span={2}>
+              <ServerSelection/>
+            </Col>
+            <Col span={4}>
+              <PipeAdd/>
+            </Col>
           </Row>
         </Header>
-      <Layout>
-        <Sider
-          style={{ background: '#ececec' }}
-          trigger={null}
-          collapsible
-          collapsed={collapsedState}>
-
-          <Menu
-            style={{ background: '#ececec', marginTop: '25px' }}
-            mode="inline"
-            onSelect={(i, k, s) => {
-              menuSelection(i, props);
-              // console.log(`i ${i} k ${k} s ${s} `)
-            }}
-            defaultSelectedKeys={['1']}>
-            <Menu.Item key="1" style={{ paddingLeft: '0px' }}>
-              <span className="nav-text">jobs</span>
-            </Menu.Item>
-            <Menu.Item key="2" style={{ paddingLeft: '0px' }}>
-              <span className="nav-text">workers</span>
-            </Menu.Item>
-            <Menu.Item key="3" style={{ paddingLeft: '0px' }}>
-              <span className="nav-text">drivers</span>
-            </Menu.Item>
-            <Menu.Item key="4" style={{ paddingLeft: '0px' }}>
-              <span className="nav-text">algorithms</span>
-            </Menu.Item>
-            <Menu.Item key="5" style={{ paddingLeft: '0px' }}>
-              <span className="nav-text">Debug</span>
-            </Menu.Item>
-            <span className="ant-divider" />
-          </Menu>
-        </Sider>
-        <Content
-          style={{
-            boxShadow: '0px 0px 5px 0 rgba(0,0,0, 0.15)',
-            margin: '24px 16px',
-            padding: 24,
-            background: '#fff',
-            minHeight: '89vh'
-          }}>
-          <BackTop />
-          {/* <ContainerTable />*/}
-          {selectTable(props)}
-          {/* {props.isTableVIsible.visible ?
+        <Layout>
+          <Sider
+            style={{ background: '#ececec' }}
+            trigger={null}
+            collapsible
+            collapsed={collapsedState}>
+            <Menu
+              style={{ background: '#ececec', marginTop: '25px' }}
+              mode="inline"
+              onSelect={(i, k, s) => {
+                menuSelection(i, props);
+                // console.log(`i ${i} k ${k} s ${s} `)
+              }}
+              defaultSelectedKeys={['1']}>
+              <Menu.Item key="1" style={{ paddingLeft: '0px' }}>
+                <span className="nav-text">jobs</span>
+              </Menu.Item>
+              <Menu.Item key="2" style={{ paddingLeft: '0px' }}>
+                <span className="nav-text">workers</span>
+              </Menu.Item>
+              <Menu.Item key="3" style={{ paddingLeft: '0px' }}>
+                <span className="nav-text">drivers</span>
+              </Menu.Item>
+              <Menu.Item key="4" style={{ paddingLeft: '0px' }}>
+                <span className="nav-text">algorithms</span>
+              </Menu.Item>
+              <Menu.Item key="5" style={{ paddingLeft: '0px' }}>
+                <span className="nav-text">Debug</span>
+              </Menu.Item>
+              <span className="ant-divider"/>
+            </Menu>
+          </Sider>
+          <Content
+            style={{
+              boxShadow: '0px 0px 5px 0 rgba(0,0,0, 0.15)',
+              margin: '24px 16px',
+              padding: 24,
+              background: '#fff',
+              minHeight: '89vh'
+            }}>
+            <BackTop/>
+            {/* <ContainerTable />*/}
+            {selectTable(props)}
+            {/* {props.isTableVIsible.visible ?
               <ContainerTable /> : <WorkerTable />
               
             } */}
-        </Content>
+          </Content>
+        </Layout>
       </Layout>
-      </Layout >
     );
   }
 };
 
 const mapStateToProps = (state) => ({
-
   scriptsPath: state.serverSelection.currentSelection.scriptsPath
 });
 
-
-export default compose(connect(mapStateToProps, { init }),
-  withState('isTableVIsible', 'onMenuSelected', { visible: true, menuItem: {} }),
+export default compose(
+  connect(
+    mapStateToProps,
+    { init }
+  ),
+  withState('isTableVIsible', 'onMenuSelected', {
+    visible: true,
+    menuItem: {}
+  }),
   withState('isVodUpVisible', 'onVodUpPopoverClickVisible', false),
   withState('isVodDownVisible', 'onVodDownPopoverClickVisible', false)
 )(LayoutInner);
-
