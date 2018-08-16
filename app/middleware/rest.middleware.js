@@ -30,7 +30,7 @@ const success = (dispatch, payload, action) => {
 const setPath = ({ monitorBackend }) => {
   let _url;
   if (monitorBackend.useLocation) {
-    _url = location.origin;
+    _url = `${location.origin}${monitorBackend.path}`;
   } else {
     _url = `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}`;
   }
