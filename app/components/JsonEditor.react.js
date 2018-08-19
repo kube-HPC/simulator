@@ -7,16 +7,16 @@ import 'brace/theme/dreamweaver';
 import 'brace/snippets/json';
 import 'brace/ext/language_tools';
 
-import jsonTemplate from './lib/json-object.json';
 import snippet from './lib/json-snippet';
 
 // SUPER HACK FOR ADDING SNIPPETS
+// eslint-disable-next-line
 ace.define('ace/snippets/json', ['require', 'exports', 'module'], (e, t, n) => {
   // eslint-disable-next-line
   (t.snippetText = snippet), (t.scope = 'json');
 });
 
-const JsonEditor = () => (
+const JsonEditor = ({ pipe, jsonTemplate }) => (
   <div>
     <AceEditor
       mode="json"
@@ -27,7 +27,7 @@ const JsonEditor = () => (
       showPrintMargin
       showGutter
       highlightActiveLine
-      value={JSON.stringify(jsonTemplate, null, 2)}
+      value={jsonTemplate}
       setOptions={{
         enableBasicAutocompletion: true,
         enableLiveAutocompletion: true,
@@ -35,7 +35,8 @@ const JsonEditor = () => (
         showLineNumbers: true,
         tabSize: 2
       }}
-      editorProps={{ $blockScrolling: true }}/>
+      editorProps={{ $blockScrolling: true }}
+      onChange={(newPipe) => pipe(newPipe)}/>
   </div>
 );
 

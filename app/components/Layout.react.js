@@ -1,4 +1,6 @@
 import { connect } from 'react-redux';
+import { compose, withState } from 'recompose';
+
 import ContainerTable from './ContainerTable.react';
 import WorkerTable from './WorkerTable.react';
 import DebugTable from './DebugTable.react';
@@ -6,10 +8,9 @@ import DriverTable from './DriverTable.react';
 import AlgorithmTable from './AlgorithmsTable.react';
 import { BackTop, Row, Col, Layout, Menu, Button } from 'antd';
 import TableAutoComplete from './TableAutoComplete.react';
-import { compose, withState } from 'recompose';
 import ServerSelection from './ServerSelection.react';
 import { init } from '../actions/config.action.js';
-import PipeAdd from './PipeAdd.react';
+import AddPipe from './AddPipe.react';
 // import img from '../../images/logo.png'
 
 const { Header, Sider, Content } = Layout;
@@ -81,7 +82,7 @@ const LayoutInner = class extends React.Component {
               <ServerSelection/>
             </Col>
             <Col span={4}>
-              <PipeAdd/>
+              <AddPipe/>
             </Col>
           </Row>
         </Header>

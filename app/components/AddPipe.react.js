@@ -1,9 +1,20 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Icon, Modal, Button } from 'antd';
 
+import { addPipe } from '../actions/addpipe.action';
+
 import JsonEditor from './JsonEditor.react';
+import template from './lib/json-object.json';
+
+const jsonTemplate = JSON.stringify(template, null, 2);
 
 class PipeAdd extends Component {
+  constructor() {
+    super();
+    this.pipe = jsonTemplate;
+    this.saved = this.pipe;
+  }
   state = {
     visible: false
   };
@@ -14,15 +25,37 @@ class PipeAdd extends Component {
     });
   };
 
-  handleOk = () => {
+  handleAddPipe = () => {
+    addPipe(this.pipe);
+    this.saved = this.pipe;
+    this.setState({
+      visible: false
+    });
+    // add post call
+  };
+
+  handleCancel = () => {
+    this.saved = this.pipe;
     this.setState({
       visible: false
     });
   };
 
-  handleCancel = () => {
+  handleSave = () => {
+    this.saved = this.pipe;
+    this.setState({
+      visible: true
+    });
+  };
+
+  handleReset = () => {
+    this.pipe = jsonTemplate;
+    this.saved = this.pipe;
     this.setState({
       visible: false
+    });
+    this.setState({
+      visible: true
     });
   };
 
@@ -54,12 +87,20 @@ class PipeAdd extends Component {
         <Modal
           title="Add-Pipeline"
           visible={this.state.visible}
-          onOk={this.handleOk}
+          onOk={this.handleAddPipe}
           onCancel={this.handleCancel}
           width="800px"
-          okText="Add Pipe"
-          cancelText="Cancel">
-          <JsonEditor/>
+          footer={[
+            <Button onClick={this.handleCancel}> Cancel</Button>,
+            <Button onClick={this.handleReset}> Reset</Button>,
+            <Button type="primary" size="default" onClick={this.handleAddPipe}>
+              {' '}
+              Add Pipe
+            </Button>
+          ]}>
+          <JsonEditor
+            jsonTemplate={this.saved}
+            pipe={(newPipe) => (this.pipe = newPipe)}/>
           <p/>
           <p>
             Use <code>addn</code> <strong>snippet</strong> for adding{' '}
@@ -72,4 +113,6 @@ class PipeAdd extends Component {
   }
 }
 
-export default PipeAdd;
+const mapStateToProps = () => {};
+
+export default connect(mapStateToProps, { addPipe })(PipeAdd);
