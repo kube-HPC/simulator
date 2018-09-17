@@ -39,10 +39,10 @@ class WorkerTable extends Component {
     this.columns = [
       {
         title: 'Job ID',
-        dataIndex: 'data.jobID',
-        key: 'jobID',
+        dataIndex: 'data.jobId',
+        key: 'jobId',
         width: '20%',
-        sorter: (a, b) => sorter(a.data.jobID, b.data.jobID)
+        sorter: (a, b) => sorter(a.data.jobId, b.data.jobId)
       },
       {
         title: 'Pod Name',
