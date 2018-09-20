@@ -15,40 +15,36 @@ class AddPipe extends Component {
     this.pipe = jsonTemplate;
     this.saved = this.pipe;
   }
-  state = {
-    visible: false
-  };
+  state = { visible: false };
 
   showModal = () => {
-    this.setState({
-      visible: true
-    });
+    this.setState({ visible: true });
   };
 
   handleAddPipe = () => {
-    this.props.addPipe(this.pipe);
+    let visible = false;
+    try {
+      this.props.addPipe(JSON.parse(this.pipe));
+    } catch (e) {
+      // TODO: how to handle error?;
+      window.alert('Invalid Json File, Pipe NOT ADDED');
+      console.log(e.message);
+      visible = true;
+    }
     this.saved = this.pipe;
-    this.setState({
-      visible: false
-    });
+    this.setState({ visible });
   };
 
   handleCancel = () => {
     this.saved = this.pipe;
-    this.setState({
-      visible: false
-    });
+    this.setState({ visible: false });
   };
 
   handleReset = () => {
     this.pipe = jsonTemplate;
     this.saved = this.pipe;
-    this.setState({
-      visible: false
-    });
-    this.setState({
-      visible: true
-    });
+    this.setState({ visible: false });
+    this.setState({ visible: true });
   };
 
   render() {
@@ -95,7 +91,7 @@ class AddPipe extends Component {
             pipe={(newPipe) => (this.pipe = newPipe)}/>
           <p/>
           <p>
-            Use <code>addn</code> <strong>snippet</strong> for adding{' '}
+            Use <code>node</code> <strong>snippet</strong> for adding{' '}
             <strong>pipe-node</strong>. Use <code>Ctrl+Space</code> for{' '}
             <strong>auto-completion</strong>.
           </p>
