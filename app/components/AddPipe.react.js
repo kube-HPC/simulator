@@ -9,7 +9,7 @@ import template from './lib/json-object.json';
 
 const jsonTemplate = JSON.stringify(template, null, 2);
 
-class PipeAdd extends Component {
+class AddPipe extends Component {
   constructor() {
     super();
     this.pipe = jsonTemplate;
@@ -26,25 +26,17 @@ class PipeAdd extends Component {
   };
 
   handleAddPipe = () => {
-    addPipe(this.pipe);
+    this.props.addPipe(this.pipe);
     this.saved = this.pipe;
     this.setState({
       visible: false
     });
-    // add post call
   };
 
   handleCancel = () => {
     this.saved = this.pipe;
     this.setState({
       visible: false
-    });
-  };
-
-  handleSave = () => {
-    this.saved = this.pipe;
-    this.setState({
-      visible: true
     });
   };
 
@@ -113,6 +105,10 @@ class PipeAdd extends Component {
   }
 }
 
+AddPipe.propTypes = {
+  addPipe: React.PropTypes.string.isRequired
+};
+
 const mapStateToProps = () => {};
 
-export default connect(mapStateToProps, { addPipe })(PipeAdd);
+export default connect(mapStateToProps, { addPipe })(AddPipe);
