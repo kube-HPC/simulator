@@ -4,6 +4,7 @@ import { compose, withState } from 'recompose';
 import ContainerTable from './ContainerTable.react';
 import WorkerTable from './WorkerTable.react';
 import DebugTable from './DebugTable.react';
+import StoredPipesTable from './StoredPipesTable.react';
 import DriverTable from './DriverTable.react';
 import AlgorithmTable from './AlgorithmsTable.react';
 import { BackTop, Row, Col, Layout, Menu, Button } from 'antd';
@@ -21,7 +22,7 @@ const toggle = () => {
 };
 
 const menuSelection = (i, props) => {
-  if (i.key == 1) {
+  if (i.key === 1) {
     props.onMenuSelected({ visible: true, menuItem: i });
   } else {
     props.onMenuSelected({ visible: false, menuItem: i });
@@ -40,6 +41,8 @@ const selectTable = (props) => {
       return <AlgorithmTable/>;
     case '5':
       return <DebugTable/>;
+    case '6':
+      return <StoredPipesTable/>;
     default:
       return <ContainerTable/>;
   }
@@ -101,19 +104,22 @@ const LayoutInner = class extends React.Component {
               }}
               defaultSelectedKeys={['1']}>
               <Menu.Item key="1" style={{ paddingLeft: '0px' }}>
-                <span className="nav-text">jobs</span>
+                <span className="nav-text">Jobs</span>
               </Menu.Item>
               <Menu.Item key="2" style={{ paddingLeft: '0px' }}>
-                <span className="nav-text">workers</span>
+                <span className="nav-text">Workers</span>
               </Menu.Item>
               <Menu.Item key="3" style={{ paddingLeft: '0px' }}>
-                <span className="nav-text">drivers</span>
+                <span className="nav-text">Drivers</span>
               </Menu.Item>
               <Menu.Item key="4" style={{ paddingLeft: '0px' }}>
-                <span className="nav-text">algorithms</span>
+                <span className="nav-text">Algorithms</span>
               </Menu.Item>
               <Menu.Item key="5" style={{ paddingLeft: '0px' }}>
                 <span className="nav-text">Debug</span>
+              </Menu.Item>
+              <Menu.Item key="6" style={{ paddingLeft: '0px' }}>
+                <span className="nav-text">Stored Pipes</span>
               </Menu.Item>
               <span className="ant-divider"/>
             </Menu>

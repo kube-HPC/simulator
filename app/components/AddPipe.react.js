@@ -102,9 +102,10 @@ class AddPipe extends Component {
 }
 
 AddPipe.propTypes = {
-  addPipe: React.PropTypes.string.isRequired
+  addPipe: React.PropTypes.func.isRequired
 };
 
-const mapStateToProps = () => {};
+const mapStateToProps = (state) => state;
+const mapDispatchToProps = { addPipe };
 
-export default connect(mapStateToProps, { addPipe })(AddPipe);
+export default connect(mapStateToProps, mapDispatchToProps)(AddPipe);
