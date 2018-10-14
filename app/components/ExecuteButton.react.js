@@ -1,18 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Icon, Modal, Button } from 'antd';
-
+import { Modal, Button } from 'antd';
+import JsonEditor from './JsonEditor.react';
 import { addPipe } from '../actions/addpipe.action';
 
-import JsonEditor from './JsonEditor.react';
-import template from './lib/json-object.json';
-
-const jsonTemplate = JSON.stringify(template, null, 2);
-
-class AddPipe extends Component {
-  constructor() {
-    super();
-    this.pipe = jsonTemplate;
+class ExecuteButton extends Component {
+  constructor(props) {
+    super(props);
+    this.pipe = this.props.pipe;
   }
   state = { visible: false };
 
@@ -20,14 +15,11 @@ class AddPipe extends Component {
     this.setState({ visible: true });
   };
 
-  handleAddPipe = () => {
+  handleRun = () => {
     let visible = false;
     try {
       this.props.addPipe(JSON.parse(this.pipe));
     } catch (e) {
-      // TODO: how to handle error?;
-      window.alert('Invalid Json File, Pipe NOT ADDED');
-      console.log(e.message);
       visible = true;
     }
     this.setState({ visible });
@@ -38,7 +30,7 @@ class AddPipe extends Component {
   };
 
   handleReset = () => {
-    this.pipe = jsonTemplate;
+    this.pipe = this.props.pipe;
     this.setState({ visible: false });
     this.setState({ visible: true });
   };
@@ -47,39 +39,23 @@ class AddPipe extends Component {
     return (
       <div>
         <Button
-          className="Add-Pipe"
-          type="primary"
-          size="default"
-          style={{
-            color: 'white',
-            fontSize: '15px',
-            fontWeight: 'bold',
-            fontFamily: 'monospace',
-            letterSpacing: '1px',
-            backgroundColor: '#4da0ee'
-          }}
+          className="Execute"
+          type="default"
+          size="small"
           onClick={this.showModal}>
-          <Icon
-            type="plus"
-            style={{
-              fontSize: 15,
-              fontFamily: 'monospace',
-              fontWeight: 'bold'
-            }}/>{' '}
-          | PIPE
+          Execute
         </Button>
         <Modal
-          title="Add-Pipeline"
+          title="Execute-Pipeline"
           visible={this.state.visible}
-          onOk={this.handleAddPipe}
           onCancel={this.handleCancel}
           width="800px"
           footer={[
             <Button onClick={this.handleCancel}> Cancel</Button>,
             <Button onClick={this.handleReset}> Reset</Button>,
-            <Button type="primary" size="default" onClick={this.handleAddPipe}>
+            <Button type="primary" size="default" onClick={this.handleRun}>
               {' '}
-              Add Pipe
+              Run
             </Button>
           ]}>
           <JsonEditor
@@ -96,11 +72,12 @@ class AddPipe extends Component {
   }
 }
 
-AddPipe.propTypes = {
-  addPipe: React.PropTypes.func.isRequired
+ExecuteButton.propTypes = {
+  addPipe: React.PropTypes.func.isRequired,
+  pipe: React.PropTypes.string.isRequired
 };
 
 const mapStateToProps = (state) => state;
 const mapDispatchToProps = { addPipe };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddPipe);
+export default connect(mapStateToProps, mapDispatchToProps)(ExecuteButton);

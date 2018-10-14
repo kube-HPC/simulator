@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import ReactJson from 'react-json-view';
 import { init } from '../actions/workerTable.action';
 import { openModal } from '../actions/modal.action';
-import { createSelector } from 'reselect';
+import ExecuteButton from './ExecuteButton.react';
 
 const { Column } = Table;
 
@@ -33,7 +33,7 @@ class StoredPipesTable extends Component {
   }
 
   componentWillMount() {
-    this.props.init();
+    // this.props.init();
   }
 
   renderColumns() {}
@@ -73,6 +73,14 @@ class StoredPipesTable extends Component {
             title="Priority"
             dataIndex="priority"
             key="priority"/>
+          <Column
+            title="Action"
+            dataIndex="action"
+            key="action"
+            render={(() => (<div>
+              <ExecuteButton pipe={JSON.stringify(dataSource[0], null, 2)}/>
+            </div>
+        ))}/>
         </Table>
       </div>
     );
@@ -80,7 +88,6 @@ class StoredPipesTable extends Component {
 }
 
 StoredPipesTable.propTypes = {
-  // dataSource: React.PropTypes.array.isRequired,
   init: React.PropTypes.func.isRequired
 };
 
