@@ -91,22 +91,10 @@ StoredPipesTable.propTypes = {
   init: React.PropTypes.func.isRequired
 };
 
-// TODO:: fetch data from server
-// const storedPipesTable = (state) => state.storedPipesTable.dataSource;
-// const autoCompleteFilter = (state) => state.autoCompleteFilter.filter;
-
-// const tableDataSelector = createSelector(
-//   storedPipesTable,
-//   autoCompleteFilter,
-//   (storedPipes) => storedPipes
-// );
-
-// const mapStateToProps = (state) => ({
-//   dataSource: tableDataSelector(state),
-//   scriptsPath: state.serverSelection.currentSelection.scriptsPath,
-//   sshUser: state.serverSelection.currentSelection.user
-// });
-
-const mapStateToProps = (state) => state;
+const mapStateToProps = (state) => {
+  return {
+    dataSource: state.storedPipeline.dataSource
+  }
+};
 
 export default connect(mapStateToProps, { openModal, init })(StoredPipesTable);
