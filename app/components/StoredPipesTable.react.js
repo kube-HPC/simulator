@@ -3,47 +3,30 @@ import { connect } from 'react-redux';
 import { Table, Card } from 'antd';
 import React, { Component } from 'react';
 import ReactJson from 'react-json-view';
-import { init } from '../actions/workerTable.action';
+import { init } from '../actions/storedPipes.action';
 import { openModal } from '../actions/modal.action';
 import ExecuteButton from './ExecuteButton.react';
 
 const { Column } = Table;
 
-const dataSource = [{
-  key: 'unique-key',
-  name: 'dennis3',
-  nodes: [{
-    nodeName: 'green',
-    algorithmName: 'green-alg',
-    input: [
-      '@flowInput.files.link'
-    ]
-  }],
-  webhooks: {
-    progress: 'http://localhost:3003/webhook/progress',
-    result: 'http://localhost:3003/webhook/result'
-  },
-  priority: 3
-}];
-
 class StoredPipesTable extends Component {
   constructor(props) {
     super(props);
-    // this.props.dataSource = data;
   }
 
   componentWillMount() {
-    // this.props.init();
+    this.props.init();
   }
 
   renderColumns() {}
 
   render() {
-    // const { dataSource } = this.props;
+    const { dataSource } = this.props;
     return (
       <div>
         <Table
-          dataSource={dataSource}
+          rowKey="name"
+          dataSource={dataSource.asMutable()}
           pagination={{
             defaultCurrent: 1, pageSize: 15
           }}
@@ -77,8 +60,8 @@ class StoredPipesTable extends Component {
             title="Action"
             dataIndex="action"
             key="action"
-            render={(() => (<div>
-              <ExecuteButton pipe={JSON.stringify(dataSource[0], null, 2)}/>
+            render={((text, record) => (<div>
+              <ExecuteButton pipe={JSON.stringify(dataSource.find((p) => p.name === record.name), null, 2)}/>
             </div>
         ))}/>
         </Table>
@@ -88,13 +71,12 @@ class StoredPipesTable extends Component {
 }
 
 StoredPipesTable.propTypes = {
-  init: React.PropTypes.func.isRequired
+  init: React.PropTypes.func.isRequired,
+  dataSource: React.PropTypes.array.isRequired
 };
 
-const mapStateToProps = (state) => {
-  return {
-    dataSource: state.storedPipeline.dataSource
-  }
-};
+const mapStateToProps = (state) => ({
+  dataSource: state.storedPipeline.dataSource
+});
 
 export default connect(mapStateToProps, { openModal, init })(StoredPipesTable);

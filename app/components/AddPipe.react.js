@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Icon, Modal, Button } from 'antd';
 
-import { addPipe } from '../actions/addpipe.action';
+import { addPipe } from '../actions/addPipe.action';
 
 import JsonEditor from './JsonEditor.react';
 import template from './lib/json-object.json';
@@ -25,9 +25,6 @@ class AddPipe extends Component {
     try {
       this.props.addPipe(JSON.parse(this.pipe));
     } catch (e) {
-      // TODO: how to handle error?;
-      window.alert('Invalid Json File, Pipe NOT ADDED');
-      console.log(e.message);
       visible = true;
     }
     this.setState({ visible });

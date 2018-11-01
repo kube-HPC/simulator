@@ -2,37 +2,36 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Modal, Button } from 'antd';
 import JsonEditor from './JsonEditor.react';
-import { addPipe } from '../actions/addpipe.action';
+import { execStoredPipe } from '../actions/storedPipes.action';
 
 class ExecuteButton extends Component {
   constructor(props) {
     super(props);
     this.pipe = this.props.pipe;
   }
-  state = { visible: false };
+
+  componentWillMount() {
+    this.state = { visible: false };
+  }
+
+  onVisible = () => this.setState({ visible: !this.state.visible })
 
   showModal = () => {
-    this.setState({ visible: true });
+    this.onVisible();
   };
 
+
   handleRun = () => {
-    let visible = false;
-    try {
-      this.props.addPipe(JSON.parse(this.pipe));
-    } catch (e) {
-      visible = true;
-    }
-    this.setState({ visible });
+    this.props.execStoredPipe(JSON.parse(this.pipe));
+    this.onVisible();
   };
 
   handleCancel = () => {
-    this.setState({ visible: false });
+    this.onVisible();
   };
 
   handleReset = () => {
     this.pipe = this.props.pipe;
-    this.setState({ visible: false });
-    this.setState({ visible: true });
   };
 
   render() {
@@ -73,11 +72,11 @@ class ExecuteButton extends Component {
 }
 
 ExecuteButton.propTypes = {
-  addPipe: React.PropTypes.func.isRequired,
+  execStoredPipe: React.PropTypes.func.isRequired,
   pipe: React.PropTypes.string.isRequired
 };
 
 const mapStateToProps = (state) => state;
-const mapDispatchToProps = { addPipe };
+const mapDispatchToProps = { execStoredPipe };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExecuteButton);

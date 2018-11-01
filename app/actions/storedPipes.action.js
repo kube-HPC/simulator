@@ -9,3 +9,12 @@ export const init = () => ({
     actionType: actions.UPDATE_ROW_DATA_TABLE
   }
 });
+
+export const execStoredPipe = (pipe) => ({
+  type: actions.REST_REQ_POST,
+  payload: {
+    url: 'exec/stored',
+    body: { pipe },
+    actionType: actions.EXEC_STORED_PIPE
+  }
+});
