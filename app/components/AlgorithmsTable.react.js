@@ -1,5 +1,3 @@
-// libs
-
 import 'antd/dist/antd.css';
 import { connect } from 'react-redux';
 import { Table, Card, Button, Icon, Popover, Input } from 'antd';
@@ -21,9 +19,6 @@ const RECORD_STATUS = {
 };
 
 class AlgorithmTable extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   componentWillMount() {
     this.props.init();
@@ -86,7 +81,6 @@ class AlgorithmTable extends Component {
       }
     ];
   }
-  renderColumns() {}
   onVisible = () => this.setState({ isVisible: !this.state.isVisible })
   onFormDataChange = (e) => {
     this.setState({ formdata: e.target.value });
@@ -98,6 +92,7 @@ class AlgorithmTable extends Component {
   onPopOverCancel = () => {
     this.onVisible();
   }
+  renderColumns() {}
   render() {
     const AlgorithmInput = (<div style={{ height: '200px', width: '400px' }}>
       <Input 

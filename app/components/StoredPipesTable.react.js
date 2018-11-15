@@ -10,9 +10,6 @@ import ExecuteButton from './ExecuteButton.react';
 const { Column } = Table;
 
 class StoredPipesTable extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   componentWillMount() {
     this.props.init();
@@ -22,11 +19,20 @@ class StoredPipesTable extends Component {
 
   render() {
     const { dataSource } = this.props;
+
+    // Need to remove "nodes" key from each pipeline.
+    const fixedDataSource = [];
+    dataSource.forEach((p) => {
+      const pipe = JSON.parse(JSON.stringify(p));
+      delete pipe.nodes;
+      fixedDataSource.push(pipe);
+    });
+
     return (
       <div>
         <Table
           rowKey="name"
-          dataSource={dataSource.asMutable()}
+          dataSource={dataSource}
           pagination={{
             defaultCurrent: 1, pageSize: 15
           }}
@@ -61,7 +67,7 @@ class StoredPipesTable extends Component {
             dataIndex="action"
             key="action"
             render={((text, record) => (<div>
-              <ExecuteButton pipe={JSON.stringify(dataSource.find((p) => p.name === record.name), null, 2)}/>
+              <ExecuteButton pipe={JSON.stringify(fixedDataSource.find((p) => p.name === record.name), null, 2)}/>
             </div>
         ))}/>
         </Table>
