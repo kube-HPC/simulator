@@ -1,14 +1,12 @@
-// libs
-
 import 'antd/dist/antd.css';
 import { connect } from 'react-redux';
-import { Table, Card } from 'antd';
+import { Table, Card, Button, Icon, Popover, Input, InputNumber, Modal } from 'antd';
 import ReactJson from 'react-json-view';
-import { openModal } from '../actions/modal.action';
-import { init } from '../actions/algorithmTable.action';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import { withState } from 'recompose';
+import { openModal } from '../actions/modal.action';
+import { init, storeAlgorithm, deleteAlgorithmFromStore } from '../actions/algorithmTable.action';
 
 const RECORD_STATUS = {
   bootstrap: '#2db7f5',
@@ -21,15 +19,11 @@ const RECORD_STATUS = {
 };
 
 class AlgorithmTable extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   componentWillMount() {
     this.props.init();
-    const callPopOverWorkAround = (isVisible) => {
-      this.props.onPopoverClickVisible(isVisible);
-    };
+    this.state = { isVisible: false };
+    this.state = { algoToAdd: { name: 'name', algorithmImage: 'algorithmImage', cpu: 'cpu', mem: 'mem' } };
 
     const sorter = (a, b) => {
       let tempA = null;
@@ -38,6 +32,22 @@ class AlgorithmTable extends Component {
       tempB = b || '';
       return tempA.localeCompare(tempB);
     };
+
+    const deleteConfirmAction = (action, record) => {
+      Modal.confirm(
+        {
+          title: 'WARNING Deleting Algorithm',
+          content: 'Deleting algorithm will DELETE-ALL related pipelines and STOP-ALL executions',
+          okText: 'Confirm',
+          cancelText: 'Decline',
+          onOk() {
+            action(record.data.name);
+          },
+          onCancel() {}
+        },
+      );
+    };
+
     this.columns = [
       {
         title: 'Algorithm Name',
@@ -71,17 +81,49 @@ class AlgorithmTable extends Component {
         title: 'Worker Image',
         dataIndex: 'data.workerImage',
         key: 'workerImage',
-        width: '20%',
+        width: '10%',
         sorter: (a, b) => sorter(a.data.workerImage, b.data.workerImage)
-
+      },
+      {
+        title: 'Action',
+        dataIndex: 'action',
+        key: 'action',
+        width: '10%',
+        render: (text, record) => (<div>
+          <Button onClick={() => deleteConfirmAction(this.props.deleteAlgorithmFromStore, record)}> Delete </Button>
+        </div>)
       }
     ];
   }
-
-  renderColumns() {
+  onVisible = () => this.setState({ isVisible: !this.state.isVisible })
+  onFormDataChange = (e) => {
+    this.setState({ formdata: e.target.value });
   }
-
+  onPopOverConfirm = () => {
+    this.props.storeAlgorithm(this.state.algoToAdd);
+    this.onVisible();
+  }
+  onPopOverCancel = () => {
+    this.onVisible();
+  }
+  renderColumns() {}
   render() {
+    const AlgorithmInput = (<div style={{ height: '200px', width: '400px' }}>
+      <Input 
+      onChange={(e) => { this.state.algoToAdd.name = e.target.value; }}
+      prefix={<Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }}/>} placeholder="Insert algorithm name"/>
+      <Input 
+      onChange={(e) => { this.state.algoToAdd.algorithmImage = e.target.value; }}
+      prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }}/>} placeholder="Insert algorithm image"/>
+      <InputNumber
+      min={1}
+      defaultValue={3} 
+      onChange={(e) => { this.state.algoToAdd.cpu = e.target.value; }}/>
+      <InputNumber
+      min={1}
+      defaultValue={256} 
+      onChange={(e) => { this.state.algoToAdd.mem = e.target.value; }}/>
+    </div>);
     const { dataSource } = this.props;
     return (
       <div>
@@ -92,13 +134,31 @@ class AlgorithmTable extends Component {
             defaultCurrent: 1, pageSize: 15
           }}
           locale={{ emptyText: 'no data' }}
-
           expandedRowRender={(record) => (
             <Card title="Full details">
-              <ReactJson src={record} />
+              <ReactJson src={record}/>
             </Card>
-
-          )} />
+          )}/>
+        <Popover
+          content={
+            <div >
+              {AlgorithmInput}
+              <Button type="primary" onClick={this.onPopOverConfirm}> Confirm </Button>
+              <Button style={{ left: '65%' }} onClick={this.onPopOverCancel}> Cancel </Button>
+            </div>
+          }
+          title="Insert new algorithm to store"
+          trigger="click"
+          position="topRight"
+          visible={this.state.isVisible}>
+          <Button
+            type="primary" shape="circle" size="default"
+            style={{
+              position: 'absolute', width: '60px', height: '60px', top: '90%', right: '3%'
+            }} onClick={this.onVisible}>
+            <Icon type="plus" style={{ fontSize: 40 }}/>
+          </Button>
+        </Popover>
       </div>
     );
   }
@@ -110,13 +170,14 @@ const autoCompleteFilter = (state) => state.autoCompleteFilter.filter;
 const tableDataSelector = createSelector(
   algorithmTable,
   autoCompleteFilter,
-  (algorithmTable, autoCompleteFilter) => {
-    return algorithmTable;
-  }
+  (algorithmTable, autoCompleteFilter) => algorithmTable
 );
 
 AlgorithmTable.propTypes = {
-  dataSource: React.PropTypes.array.isRequired
+  dataSource: React.PropTypes.array.isRequired,
+  init: React.PropTypes.func.isRequired,
+  storeAlgorithm: React.PropTypes.func.isRequired,
+  deleteAlgorithmFromStore: React.PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => ({
@@ -125,6 +186,6 @@ const mapStateToProps = (state) => ({
   sshUser: state.serverSelection.currentSelection.user
 });
 
-export default connect(mapStateToProps, { openModal, init })(
+export default connect(mapStateToProps, { openModal, init, storeAlgorithm, deleteAlgorithmFromStore })(
   withState('isVisible', 'onPopoverClickVisible', { visible: false, podName: '' })(AlgorithmTable)
 );
