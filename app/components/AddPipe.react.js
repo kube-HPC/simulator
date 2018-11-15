@@ -48,12 +48,12 @@ class AddPipe extends Component {
           type="primary"
           size="default"
           style={{
-            color: 'white',
+            color: '#4689bb',
             fontSize: '15px',
             fontWeight: 'bold',
             fontFamily: 'monospace',
             letterSpacing: '1px',
-            backgroundColor: '#4da0ee'
+            backgroundColor: '#FFFEFD'
           }}
           onClick={this.showModal}>
           <Icon
@@ -63,7 +63,7 @@ class AddPipe extends Component {
               fontFamily: 'monospace',
               fontWeight: 'bold'
             }}/>{' '}
-          | PIPE
+          PIPELINE
         </Button>
         <Modal
           title="Add-Pipeline"
@@ -76,7 +76,7 @@ class AddPipe extends Component {
             <Button onClick={this.handleReset}> Reset</Button>,
             <Button type="primary" size="default" onClick={this.handleAddPipe}>
               {' '}
-              Add Pipe
+              Store Pipeline
             </Button>
           ]}>
           <JsonEditor

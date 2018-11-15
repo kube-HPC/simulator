@@ -1,6 +1,6 @@
 import 'antd/dist/antd.css';
 import { connect } from 'react-redux';
-import { Table, Card, Button, Icon, Popover, Input } from 'antd';
+import { Table, Card, Button, Icon, Popover, Input, InputNumber, Modal } from 'antd';
 import ReactJson from 'react-json-view';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
@@ -32,6 +32,22 @@ class AlgorithmTable extends Component {
       tempB = b || '';
       return tempA.localeCompare(tempB);
     };
+
+    const deleteConfirmAction = (action, record) => {
+      Modal.confirm(
+        {
+          title: 'WARNING Deleting Algorithm',
+          content: 'Deleting algorithm will DELETE-ALL related pipelines and STOP-ALL executions',
+          okText: 'Confirm',
+          cancelText: 'Decline',
+          onOk() {
+            action(record.data.name);
+          },
+          onCancel() {}
+        },
+      );
+    };
+
     this.columns = [
       {
         title: 'Algorithm Name',
@@ -74,9 +90,7 @@ class AlgorithmTable extends Component {
         key: 'action',
         width: '10%',
         render: (text, record) => (<div>
-          <Button onClick={() => {
-            this.props.deleteAlgorithmFromStore(record.data.name);
-          }}> Delete </Button>
+          <Button onClick={() => deleteConfirmAction(this.props.deleteAlgorithmFromStore, record)}> Delete </Button>
         </div>)
       }
     ];
@@ -97,16 +111,18 @@ class AlgorithmTable extends Component {
     const AlgorithmInput = (<div style={{ height: '200px', width: '400px' }}>
       <Input 
       onChange={(e) => { this.state.algoToAdd.name = e.target.value; }}
-      prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }}/>} placeholder="name"/>
+      prefix={<Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }}/>} placeholder="Insert algorithm name"/>
       <Input 
       onChange={(e) => { this.state.algoToAdd.algorithmImage = e.target.value; }}
-      prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }}/>} placeholder="algorithmImage"/>
-      <Input 
-      onChange={(e) => { this.state.algoToAdd.cpu = e.target.value; }}
-      prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }}/>} placeholder="cpu"/>
-      <Input 
-      onChange={(e) => { this.state.algoToAdd.mem = e.target.value; }}
-      prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }}/>} placeholder="mem"/>
+      prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }}/>} placeholder="Insert algorithm image"/>
+      <InputNumber
+      min={1}
+      defaultValue={3} 
+      onChange={(e) => { this.state.algoToAdd.cpu = e.target.value; }}/>
+      <InputNumber
+      min={1}
+      defaultValue={256} 
+      onChange={(e) => { this.state.algoToAdd.mem = e.target.value; }}/>
     </div>);
     const { dataSource } = this.props;
     return (

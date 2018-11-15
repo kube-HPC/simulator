@@ -3,7 +3,7 @@ import AceEditor from 'react-ace';
 import ace from 'brace';
 
 import 'brace/mode/json';
-import 'brace/theme/dreamweaver';
+import 'brace/theme/github';
 import 'brace/snippets/json';
 import 'brace/ext/language_tools';
 
@@ -20,7 +20,7 @@ const JsonEditor = ({ pipe, jsonTemplate }) => (
   <div>
     <AceEditor
       mode="json"
-      theme="dreamweaver"
+      theme="github"
       name="json-editor"
       fontSize={14}
       width="760px"
