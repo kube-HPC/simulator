@@ -8,15 +8,14 @@ import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import { withState } from 'recompose';
 
-const RECORD_STATUS = {
-  bootstrap: '#2db7f5',
+const STATUSES = {
+  bootstrap: '#87d068',
   ready: '#87d068',
-  init: '#f50',
-  working: '#ec8c16',
-  shutdown: '#87d068',
-  error: '#87d068',
-  stop: '#87d068'
-
+  init: '#87d068',
+  active: '#2db7f5',
+  stopped: '#ec8c16',
+  failed: '#f50',
+  completed: '#87d068'
 };
 
 class WorkerTable extends Component {
@@ -40,10 +39,10 @@ class WorkerTable extends Component {
     this.columns = [
       {
         title: 'Job ID',
-        dataIndex: 'data.jobID',
-        key: 'jobID',
+        dataIndex: 'data.jobId',
+        key: 'jobId',
         width: '20%',
-        sorter: (a, b) => sorter(a.data.jobID, b.data.jobID)
+        sorter: (a, b) => sorter(a.data.jobId, b.data.jobId)
       },
       {
         title: 'Pod Name',
@@ -65,7 +64,7 @@ class WorkerTable extends Component {
         width: '15%',
         key: 'driverStatus',
         render: (text, record) => (<span>
-          <Tag color={RECORD_STATUS[record.data.driverStatus]} > {record.data.driverStatus}</Tag>
+          <Tag color={STATUSES[record.data.driverStatus]} > {record.data.driverStatus}</Tag>
         </span>
         ),
         sorter: (a, b) => sorter(a.data.driverStatus, b.data.driverStatus)
@@ -76,7 +75,7 @@ class WorkerTable extends Component {
         width: '15%',
         key: 'jobStatus',
         render: (text, record) => (<span>
-          <Tag color={RECORD_STATUS[record.data.jobStatus]} > {record.data.jobStatus}</Tag>
+          <Tag color={STATUSES[record.data.jobStatus]} > {record.data.jobStatus}</Tag>
         </span>
         ),
         sorter: (a, b) => sorter(a.data.jobStatus, b.data.jobStatus)

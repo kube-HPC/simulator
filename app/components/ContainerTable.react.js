@@ -2,14 +2,13 @@
 
 import 'antd/dist/antd.css';
 import { connect } from 'react-redux';
-import { Table, Card, Tag, Progress } from 'antd';
-import ReactJson from 'react-json-view';
-import { openModal } from '../actions/modal.action';
-import { init } from '../actions/containerTable.action';
+import { Table, Tag, Progress } from 'antd';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import { withState } from 'recompose';
-import TabSwitcher from "./TabSwitcher";
+import { openModal } from '../actions/modal.action';
+import { init } from '../actions/containerTable.action';
+import TabSwitcher from './TabSwitcher';
 
 
 const RECORD_STATUS = {
@@ -22,10 +21,6 @@ const RECORD_STATUS = {
 class ContainerTable extends Component {
   componentWillMount() {
     this.props.init();
-
-    const callPopOverWorkAround = (isVisible) => {
-      this.props.onPopoverClickVisible(isVisible);
-    };
 
     const sorter = (a, b) => {
       let tempA = null;
@@ -81,14 +76,15 @@ class ContainerTable extends Component {
         key: 'y',
         render: (text, record) => {
           let progress = (record.status && record.status.data && record.status.data.progress) || 0;
-          progress = parseInt(progress, 10);
+          const stopped = (record.state && record.status.status === 'stopped');
+          progress = parseInt(progress);
           if (progress === 100) {
             return (<span>
-              <Progress percent={progress} />
+              <Progress percent={progress}/>
             </span>);
           }
           return (<span>
-            <Progress percent={progress} status="active" />
+            <Progress percent={progress} status={stopped ? 'exception' : 'active'}/>
           </span>);
         },
         sorter: (a, b) => sorter(a.status.data.progress, b.status.data.progress)
@@ -113,8 +109,8 @@ class ContainerTable extends Component {
           }}
           locale={{ emptyText: 'no data' }}
           expandedRowRender={(record) => (
-            <TabSwitcher record={record} />
-          )} />
+            <TabSwitcher record={record}/>
+          )}/>
       </div>
     );
   }
@@ -128,7 +124,7 @@ const autoCompleteFilter = (state) => state.autoCompleteFilter.filter;
 const tableDataSelector = createSelector(
   containerTable,
   autoCompleteFilter,
-  (containerTable, autoCompleteFilter) => {
+  (containerTable) => {
     return containerTable;
   }
 );

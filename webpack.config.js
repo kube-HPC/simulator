@@ -181,6 +181,7 @@ const config = {
                             host: process.env.MONITOR_BACKEND_HOST || 'localhost',
                             port: process.env.MONITOR_BACKEND_PORT || '30010',
                             path: process.env.MONITOR_BACKEND_PATH || '',
+                            socketIoPath: process.env.MONITOR_BACKEND_PATH_SOCKETIO || '',
                             schema: process.env.isSecure ? 'https://' : 'http://'
                         }
                     }

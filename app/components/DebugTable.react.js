@@ -71,14 +71,14 @@ class DebugTable extends Component {
         width: '40%',
         sorter: (a, b) => sorter(a.data.path, b.data.path),
         render: (text, record) =>
-          <CopyToClipboard text={record.data.path} onCopy={() => notification.success({
+          <CopyToClipboard text={`${window.location.origin}/${record.data.path}`} onCopy={() => notification.success({
             message:'Copied to clipboard',
            description:`` 
           })}>
             <Tag color="#399114">
               <div>
                 <Icon type="right" style={{ color: 'rgba(255,255,255,.75)', marginRight: '10px' }} />
-                {record.data.path}
+                {`${window.location.origin}/${record.data.path}`}
               </div>
             </Tag>
           </CopyToClipboard>

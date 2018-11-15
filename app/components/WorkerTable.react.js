@@ -30,6 +30,7 @@ class WorkerTable extends Component {
       this.props.onPopoverClickVisible(isVisible);
     };
 
+
     const sorter = (a, b) => {
       let tempA = null;
       let tempB = null;
@@ -40,16 +41,16 @@ class WorkerTable extends Component {
     this.columns = [
       {
         title: 'Job ID',
-        dataIndex: 'data.jobID',
-        key: 'jobID',
-        width: '20%',
-        sorter: (a, b) => sorter(a.data.jobID, b.data.jobID)
+        dataIndex: 'data.jobId',
+        key: 'jobId',
+        width: '10%',
+        sorter: (a, b) => sorter(a.data.jobId, b.data.jobId)
       },
       {
         title: 'Pod Name',
         dataIndex: 'data.podName',
         key: 'podName',
-        width: '20%',
+        width: '10%',
         onFilter: (value, record) => record.data.podName.includes(value),
         sorter: (a, b) => sorter(a.data.podName, b.data.podName)
       },
@@ -74,16 +75,41 @@ class WorkerTable extends Component {
         sorter: (a, b) => sorter(a.data.jobData.node, b.data.jobData.node)
       },
       {
-        title: 'Batch ID',
+        title: 'Batch',
         dataIndex: 'data.jobData.batchID',
         key: 'batchID',
-        width: '10%',
+        width: '5%',
         sorter: (a, b) => sorter(a.data.jobData.batchID, b.data.jobData.batchID)
       },
       {
+        title: 'Up Time',
+        dataIndex: 'data.workerStartingTime',
+        key: 'workerStartingTime',
+        width: '13%',
+        render: (text, record) => (
+          <span>
+            {record.data.workerStartingTime && new Date(record.data.workerStartingTime).toLocaleString()}
+          </span>),
+        sorter: (a, b) => sorter(a.data.workerStartingTime, b.data.workerStartingTime)
+
+      },
+      {
+        title: 'Job Time',
+        dataIndex: 'data.jobCurrentTime',
+        key: 'jobCurrentTime',
+        width: '13%',
+        render: (text, record) => (
+          <span>
+            {record.data.jobCurrentTime && new Date(record.data.jobCurrentTime).toLocaleString()}
+          </span>),
+        sorter: (a, b) => sorter(a.data.jobCurrentTime, b.data.jobCurrentTime)
+
+      },
+
+      {
         title: 'Worker State',
         dataIndex: 'data.workerStatus',
-        width: '10%',
+        width: '5%',
         key: 'workerStatus',
         render: (text, record) => (<span>
           <Tag color={RECORD_STATUS[record.data.workerStatus]} > {record.data.workerStatus}</Tag>
@@ -94,7 +120,7 @@ class WorkerTable extends Component {
       {
         title: 'Job State',
         dataIndex: 'data.jobStatus',
-        width: '10%',
+        width: '5%',
         key: 'jobStatus',
         render: (text, record) => (<span>
           <Tag color={RECORD_STATUS[record.data.jobStatus]} > {record.data.jobStatus}</Tag>
@@ -105,7 +131,7 @@ class WorkerTable extends Component {
       {
         title: 'Paused',
         dataIndex: 'data.workerPaused',
-        width: '10%',
+        width: '5%',
         key: 'workerPaused',
         render: (text, record) => (<span>
           <Tag color={record.data.workerPaused ? 'red' : 'green'} > {record.data.workerPaused ? 'paused' : 'ready'}</Tag>
@@ -147,9 +173,7 @@ const autoCompleteFilter = (state) => state.autoCompleteFilter.filter;
 const tableDataSelector = createSelector(
   workerTable,
   autoCompleteFilter,
-  (workerTable, autoCompleteFilter) => {
-    return workerTable;
-  }
+  (workerTable, autoCompleteFilter) => workerTable
 );
 
 WorkerTable.propTypes = {

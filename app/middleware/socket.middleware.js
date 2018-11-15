@@ -28,7 +28,7 @@ export const socketioMiddleware = ({ dispatch }) => (next) => (action) => {
             url = `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}`;
         }
         // const url = `${location.protocol}//${location.hostname}:30010`;
-        socket = io(url, { path: monitorBackend.path, transports: ['websocket'] });
+        socket = io(url, { path: monitorBackend.socketIoPath, transports: ['websocket'] });
 
         // socket = io(action.payload.currentSelection.url, { path: action.payload.currentSelection.path, transports: ['websocket'] });
         // /socket = io(action.payload.currentSelection.url, { transports: ['websocket'] });
