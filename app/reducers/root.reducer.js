@@ -9,7 +9,7 @@ import modal from './modal.reducer';
 import ui from './ui.reducer';
 import autoCompleteFilter from './autoCompleteFilter.reducer';
 import serverSelection from './serverSelection.reducer';
-
+import storedPipeline from './storedPipeline.reducer';
 const rootReducer = combineReducers({
   ui,
   layers,
@@ -20,7 +20,9 @@ const rootReducer = combineReducers({
   debugTable,
   modal,
   autoCompleteFilter,
-  serverSelection
+  serverSelection,
+  storedPipeline
+
 });
 export default rootReducer;
 

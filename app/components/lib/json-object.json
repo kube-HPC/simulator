@@ -1,0 +1,19 @@
+{
+  "name": "",
+  "nodes": [
+    {
+      "nodeName": "",
+      "algorithmName": "",
+      "input": []
+    }
+  ],
+  "flowInput": {
+    "files": {}
+  },
+  "webhooks": {
+    "progress": "",
+    "result": ""
+  },
+  "priority": 1,
+  "options": {}
+}
