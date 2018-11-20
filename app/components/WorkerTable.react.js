@@ -140,6 +140,39 @@ class WorkerTable extends Component {
         sorter: (a, b) => sorter(a.data.workerPaused, b.data.workerPaused)
       }
     ];
+
+    this.workerStatsColumns = [
+      {
+        title: 'Algorithm Name',
+        key: 'algorithmName',
+        dataIndex: 'algorithmName'
+      },
+      {
+        title: 'Ready Count',
+        key: 'readyCount',
+        dataIndex: 'ready'
+      },
+      {
+        title: 'Working Count',
+        key: 'workingCount',
+        dataIndex: 'working'
+      },
+      {
+        title: 'Init Count',
+        key: 'initCount',
+        dataIndex: 'init'
+      },
+      {
+        title: 'Exit Count',
+        key: 'exitCount',
+        dataIndex: 'exit'
+      },
+      {
+        title: 'Count',
+        key: 'count',
+        dataIndex: 'count'
+      }
+    ];
   }
 
   renderColumns() {
@@ -147,9 +180,15 @@ class WorkerTable extends Component {
   }
 
   render() {
-    const { dataSource } = this.props;
+    const { dataSource, stats } = this.props;
     return (
       <div>
+        <Table
+          columns={this.workerStatsColumns}
+          dataSource={stats.asMutable()}
+          pagination={{
+            defaultCurrent: 1, pageSize: 15
+          }} />
         <Table
           columns={this.columns}
           dataSource={dataSource.asMutable()}
@@ -168,20 +207,27 @@ class WorkerTable extends Component {
 }
 
 const workerTable = (state) => state.workerTable.dataSource;
+const stats = (state) => state.workerTable.stats;
 const autoCompleteFilter = (state) => state.autoCompleteFilter.filter;
 
 const tableDataSelector = createSelector(
-  workerTable,
-  autoCompleteFilter,
-  (workerTable, autoCompleteFilter) => workerTable
+  [workerTable],
+  (dataSource) => dataSource
+);
+const statsSelector = createSelector(
+  [stats],
+  (stats) => stats
 );
 
 WorkerTable.propTypes = {
-  dataSource: React.PropTypes.array.isRequired
+  dataSource: React.PropTypes.array.isRequired,
+  stats: React.PropTypes.array.isRequired
+
 };
 
 const mapStateToProps = (state) => ({
   dataSource: tableDataSelector(state),
+  stats: stats(state),
   scriptsPath: state.serverSelection.currentSelection.scriptsPath,
   sshUser: state.serverSelection.currentSelection.user
 });
