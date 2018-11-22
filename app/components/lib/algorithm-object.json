@@ -1,0 +1,9 @@
+{
+    "name": "",
+    "algorithmImage": "",
+    "cpu": 3,
+    "mem": "256Mi",
+    "options": {
+        "debug": false
+    }
+}
