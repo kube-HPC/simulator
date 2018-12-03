@@ -15,6 +15,9 @@ delete dependencies.express;
 const config = {
     // The base directory for resolving `entry` (must be absolute path)
     context: appPath,
+    node:{
+        fs:'empty',
+    },
     entry: {
         app: 'app.js',
         vendor: Object.keys(packageConfig.dependencies)
