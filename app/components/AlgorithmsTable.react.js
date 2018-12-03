@@ -1,14 +1,16 @@
 import 'antd/dist/antd.css';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Table, Card, Button, Icon, Popover, Input, InputNumber, Modal } from 'antd';
+import { Table, Card, Button, Icon, Popover, Input, InputNumber, Modal, Select, Row, Col } from 'antd';
 import ReactJson from 'react-json-view';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import { withState } from 'recompose';
 import { openModal } from '../actions/modal.action';
 import { init, storeAlgorithm, deleteAlgorithmFromStore } from '../actions/algorithmTable.action';
-// "antd": "^2.13.14",
+import FillAsJsonButton from './FillAsJsonButton.react';
+import algorithmObjectTemplate from './lib/algorithm-object.json';
+
 const RECORD_STATUS = {
   bootstrap: '#2db7f5',
   ready: '#87d068',
@@ -24,7 +26,7 @@ class AlgorithmTable extends Component {
   componentWillMount() {
     this.props.init();
     this.state = { isVisible: false };
-    this.state = { algoToAdd: { name: 'name', algorithmImage: 'algorithmImage', cpu: 'cpu', mem: 'mem' } };
+    this.state = { algoToAdd: { ...algorithmObjectTemplate } };
 
     const sorter = (a, b) => {
       let tempA = null;
@@ -40,7 +42,8 @@ class AlgorithmTable extends Component {
           title: 'WARNING Deleting Algorithm',
           content: 'Deleting algorithm will DELETE-ALL related pipelines and STOP-ALL executions',
           okText: 'Confirm',
-          cancelText: 'Decline',
+          okType: 'danger',
+          cancelText: 'Cancel',
           onOk() {
             action(record.data.name);
           },
@@ -109,21 +112,94 @@ class AlgorithmTable extends Component {
   }
   renderColumns() {}
   render() {
-    const AlgorithmInput = (<div style={{ height: '200px', width: '400px' }}>
-      <Input 
-      onChange={(e) => { this.state.algoToAdd.name = e.target.value; }}
-      prefix={<Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }}/>} placeholder="Insert algorithm name"/>
-      <Input 
-      onChange={(e) => { this.state.algoToAdd.algorithmImage = e.target.value; }}
-      prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }}/>} placeholder="Insert algorithm image"/>
-      <InputNumber
-      min={1}
-      defaultValue={3} 
-      onChange={(e) => { this.state.algoToAdd.cpu = e.target.value; }}/>
-      <InputNumber
-      min={1}
-      defaultValue={256} 
-      onChange={(e) => { this.state.algoToAdd.mem = e.target.value; }}/>
+    const Option = Select.Option;
+    const algoData = this.state.algoToAdd;
+    const getMemoryProp = (str, isGetNumber) => isGetNumber ? +str.match(/\d+/g).pop() : str.match(/\D+/g).pop();
+    const memoryNum = getMemoryProp(algoData.mem, true);
+    const memoryProp = getMemoryProp(algoData.mem, false);
+    const algoOptions = Object.entries(algoData.options).filter((p) => p[1]).map((a) => a[0]);
+
+    const AlgorithmInput = (<div style={{ height: 'auto', width: '400' }}>
+      <Row style={{ marginBottom: 5 }}>
+        <Input 
+        defaultValue={algoData.name}
+        onChange={(e) => { this.state.algoToAdd.name = e.target.value; }}
+        prefix={<Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }}/>}
+        placeholder="Insert algorithm name"/>
+      </Row>
+
+      <Row style={{ marginBottom: 5 }}>
+        <Input 
+          defaultValue={algoData.algorithmImage}
+          onChange={(e) => { this.state.algoToAdd.algorithmImage = e.target.value; }}
+          prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }}/>}
+          placeholder="Insert algorithm image"/>
+      </Row>
+
+      <Row style={{ marginBottom: 5 }}>
+        <span style={{ fontSize: '12px',
+          fontWeight: 'lighter',
+          fontFamily: 'monospace',
+          letterSpacing: 'normal',
+          marginRight: '3%' }}>CPU Usage:</span>
+        <InputNumber
+          min={1}
+          defaultValue={algoData.cpu}
+          onChange={(v) => {
+            this.state.algoToAdd.cpu = +v;
+          }}
+          style={{ width: 50 }}/>
+      </Row>
+      <Row style={{ marginBottom: 5 }}>
+        <span style={{ fontSize: '12px',
+          fontWeight: 'lighter',
+          fontFamily: 'monospace',
+          letterSpacing: 'normal',
+          marginRight: '3%' }}>Memory Usage:</span>
+        <InputNumber
+          min={1}
+          defaultValue={memoryNum}
+          onChange={(v) => {
+            this.state.algoToAdd.mem = v + getMemoryProp(algoData.mem, false); 
+          }}
+          style={{ width: 70 }}/>
+        <Select
+          defaultValue={memoryProp}
+          style={{ width: 50 }}
+          onChange={ (v) => {
+            this.state.algoToAdd.mem = getMemoryProp(algoData.mem, true) + v;
+          }}>
+          <Option value="Ki">Ki</Option>
+          <Option value="M">M</Option>
+          <Option value="Mi">Mi</Option>
+          <Option value="Gi">Gi</Option>
+          <Option value="m">m</Option>
+          <Option value="K">K</Option>
+          <Option value="G">G</Option>
+          <Option value="T">T</Option>
+          <Option value="Ti">Ti</Option>
+          <Option value="P">P</Option>
+          <Option value="Pi">Pi</Option>
+          <Option value="E">E</Option>
+          <Option value="Ei">Ei</Option>
+        </Select>
+      </Row>
+
+      <Row style={{ marginBottom: 40 }}>
+        <Select
+          defaultValue={algoOptions}
+          mode="tags"
+          style={{ width: '100%' }}
+          placeholder="Options"
+          onChange={(v) => {
+            const optionsArray = this.state.algoToAdd.options;
+            const status = optionsArray[v];
+            optionsArray[v] = !status;
+          }}>
+          <Option key="debug">Debug</Option>
+        </Select>
+      </Row>
+
     </div>);
     const { dataSource } = this.props;
     return (
@@ -141,11 +217,27 @@ class AlgorithmTable extends Component {
             </Card>
           )}/>
         <Popover
+          placement="topRight"
           content={
             <div >
               {AlgorithmInput}
-              <Button type="primary" onClick={this.onPopOverConfirm}> Confirm </Button>
-              <Button style={{ left: '65%' }} onClick={this.onPopOverCancel}> Cancel </Button>
+              <Row gutter={48} style={{ margin: 'auto' }}>
+                <Col span={8}>
+                  <Button type="primary" onClick={this.onPopOverConfirm}>
+                    Confirm
+                  </Button>
+                </Col>
+                <Col span={8}>
+                  <FillAsJsonButton
+                    algorithm={JSON.stringify(this.state.algoToAdd, null, 2)}
+                    action={this.props.storeAlgorithm}/>
+                </Col>
+                <Col span={8}>
+                  <Button onClick={this.onPopOverCancel}>
+                    Cancel
+                  </Button>
+                </Col>
+              </Row>
             </div>
           }
           title="Insert new algorithm to store"
