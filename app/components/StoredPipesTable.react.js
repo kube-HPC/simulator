@@ -2,6 +2,7 @@ import 'antd/dist/antd.css';
 import { connect } from 'react-redux';
 import { Table, Card } from 'antd';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import ReactJson from 'react-json-view';
 import { init } from '../actions/storedPipes.action';
 import { openModal } from '../actions/modal.action';
@@ -77,8 +78,8 @@ class StoredPipesTable extends Component {
 }
 
 StoredPipesTable.propTypes = {
-  init: React.PropTypes.func.isRequired,
-  dataSource: React.PropTypes.array.isRequired
+  init: PropTypes.func.isRequired,
+  dataSource: PropTypes.array.isRequired
 };
 
 const mapStateToProps = (state) => ({

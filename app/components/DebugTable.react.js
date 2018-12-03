@@ -9,6 +9,7 @@ import { openModal } from '../actions/modal.action';
 import { init, addAlgorithm,deleteAlgorithm} from '../actions/debugTable.action';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withState, withStateHandlers, compose } from 'recompose';
 import PopOver from './PopoverConfirmOperation.react'
 const FormItem = Form.Item;
@@ -156,7 +157,7 @@ const tableDataSelector = createSelector(
 );
 
 DebugTable.propTypes = {
-  dataSource: React.PropTypes.array.isRequired
+  dataSource: PropTypes.array.isRequired
 };
 
 const mapStateToProps = (state) => ({

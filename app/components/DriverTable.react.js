@@ -6,6 +6,7 @@ import { openModal } from '../actions/modal.action';
 import { init } from '../actions/driverTable.action';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withState } from 'recompose';
 
 const STATUSES = {
@@ -132,7 +133,7 @@ const tableDataSelector = createSelector(
 );
 
 WorkerTable.propTypes = {
-  dataSource: React.PropTypes.array.isRequired
+  dataSource: PropTypes.array.isRequired
 };
 
 const mapStateToProps = (state) => ({

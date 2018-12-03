@@ -6,6 +6,7 @@ import { openModal } from '../actions/modal.action';
 import { init } from '../actions/workerTable.action';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withState } from 'recompose';
 
 const RECORD_STATUS = {
@@ -158,10 +159,10 @@ class WorkerTable extends Component {
           }}
           expandedRowRender={(record) => (
             <Card title="Full details">
-              <ReactJson src={record} />
+              <ReactJson src={record}/>
             </Card>
 
-          )} />
+          )}/>
       </div>
     );
   }
@@ -177,7 +178,7 @@ const tableDataSelector = createSelector(
 );
 
 WorkerTable.propTypes = {
-  dataSource: React.PropTypes.array.isRequired
+  dataSource: PropTypes.array.isRequired
 };
 
 const mapStateToProps = (state) => ({

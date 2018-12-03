@@ -5,11 +5,12 @@ import { connect } from 'react-redux';
 import { Table, Tag, Progress } from 'antd';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withState } from 'recompose';
 import { openModal } from '../actions/modal.action';
 import { init } from '../actions/containerTable.action';
 import TabSwitcher from './TabSwitcher';
-
+import { getData } from '../actions/jaegerGetData.action';
 
 const RECORD_STATUS = {
   active: '#2db7f5',
@@ -109,8 +110,22 @@ class ContainerTable extends Component {
           }}
           locale={{ emptyText: 'no data' }}
           expandedRowRender={(record) => (
-            <TabSwitcher record={record}/>
-          )}/>
+            <TabSwitcher record={{
+              key: record.key,
+              graph: record.graph,
+              record: {
+                pipeline: record.pipeline,
+                status: record.status,
+                results: record.results
+              },
+              jaeger: (this.props.jaeger[record.key] || null)
+            }}/>
+          )}
+          onExpand={(expanded, record) => {
+            if (expanded) {
+              this.props.getData(record.key);
+            }
+          }}/>
       </div>
     );
   }
@@ -124,21 +139,20 @@ const autoCompleteFilter = (state) => state.autoCompleteFilter.filter;
 const tableDataSelector = createSelector(
   containerTable,
   autoCompleteFilter,
-  (containerTable) => {
-    return containerTable;
-  }
+  (containerTable) => containerTable
 );
 
 ContainerTable.propTypes = {
-  dataSource: React.PropTypes.array.isRequired
+  dataSource: PropTypes.array.isRequired
 };
 
 const mapStateToProps = (state) => ({
   dataSource: tableDataSelector(state),
+  jaeger: state.jaeger,
   scriptsPath: state.serverSelection.currentSelection.scriptsPath,
   sshUser: state.serverSelection.currentSelection.user
 });
 
-export default connect(mapStateToProps, { openModal, init })(
+export default connect(mapStateToProps, { openModal, init, getData })(
   withState('isVisible', 'onPopoverClickVisible', { visible: false, podName: '' })(ContainerTable)
 );

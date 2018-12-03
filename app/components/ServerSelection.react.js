@@ -1,5 +1,6 @@
 import { Modal, Button, Menu, Dropdown } from 'antd';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { init, updateConnectionServer } from '../actions/serverSelection.action';
 import { withState } from 'recompose';
 
@@ -42,8 +43,8 @@ class ServerSelection extends React.Component {
 }
 
 ServerSelection.propTypes = {
-  // columns: React.PropTypes.array.isRequired,
-  // data: React.PropTypes.array.isRequired
+  // columns: PropTypes.array.isRequired,
+  // data: PropTypes.array.isRequired
 };
 
 const mapStateToProps = (state) => ({

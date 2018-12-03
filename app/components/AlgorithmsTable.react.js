@@ -1,5 +1,6 @@
 import 'antd/dist/antd.css';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { Table, Card, Button, Icon, Popover, Input, InputNumber, Modal } from 'antd';
 import ReactJson from 'react-json-view';
 import { createSelector } from 'reselect';
@@ -7,7 +8,7 @@ import React, { Component } from 'react';
 import { withState } from 'recompose';
 import { openModal } from '../actions/modal.action';
 import { init, storeAlgorithm, deleteAlgorithmFromStore } from '../actions/algorithmTable.action';
-
+// "antd": "^2.13.14",
 const RECORD_STATUS = {
   bootstrap: '#2db7f5',
   ready: '#87d068',
@@ -174,10 +175,10 @@ const tableDataSelector = createSelector(
 );
 
 AlgorithmTable.propTypes = {
-  dataSource: React.PropTypes.array.isRequired,
-  init: React.PropTypes.func.isRequired,
-  storeAlgorithm: React.PropTypes.func.isRequired,
-  deleteAlgorithmFromStore: React.PropTypes.func.isRequired
+  dataSource: PropTypes.array.isRequired,
+  init: PropTypes.func.isRequired,
+  storeAlgorithm: PropTypes.func.isRequired,
+  deleteAlgorithmFromStore: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => ({

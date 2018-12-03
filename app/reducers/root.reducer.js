@@ -10,6 +10,7 @@ import ui from './ui.reducer';
 import autoCompleteFilter from './autoCompleteFilter.reducer';
 import serverSelection from './serverSelection.reducer';
 import storedPipeline from './storedPipeline.reducer';
+import jaeger from './jaegerData.reducer';
 const rootReducer = combineReducers({
   ui,
   layers,
@@ -21,8 +22,8 @@ const rootReducer = combineReducers({
   modal,
   autoCompleteFilter,
   serverSelection,
-  storedPipeline
-
+  storedPipeline,
+  jaeger
 });
 export default rootReducer;
 

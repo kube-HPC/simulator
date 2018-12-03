@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Icon, Modal, Button } from 'antd';
 
@@ -94,7 +95,7 @@ class AddPipe extends Component {
 }
 
 AddPipe.propTypes = {
-  addPipe: React.PropTypes.func.isRequired
+  addPipe: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => state;

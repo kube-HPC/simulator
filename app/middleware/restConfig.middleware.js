@@ -27,11 +27,11 @@ const success = (dispatch, payload, action) => {
 };
 
 export const restConfigMiddleware = ({ dispatch }) => (next) => (action) => {
-  if (![AT.REST_REQ].includes(action.type)) {
+  if (![AT.REST_REQ_CONFIG].includes(action.type)) {
     return next(action);
   }
 
-  if (action.type === AT.REST_REQ) {
+  if (action.type === AT.REST_REQ_CONFIG) {
     pending(dispatch, 'pending', action);
     fetch(`${location.href}${action.payload.url}`).then((res) => {
       res.json().then((data) => {

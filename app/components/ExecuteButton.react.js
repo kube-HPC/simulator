@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Modal, Button } from 'antd';
 import JsonEditor from './JsonEditor.react';
@@ -72,8 +73,8 @@ class ExecuteButton extends Component {
 }
 
 ExecuteButton.propTypes = {
-  execStoredPipe: React.PropTypes.func.isRequired,
-  pipe: React.PropTypes.string.isRequired
+  execStoredPipe: PropTypes.func.isRequired,
+  pipe: PropTypes.string.isRequired
 };
 
 const mapStateToProps = (state) => state;

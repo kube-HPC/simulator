@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import * as charts from 'react-chartjs-2';
 import { Pie } from 'react-chartjs-2';
 import './../../stylesheets/Chart.scss';
@@ -30,9 +31,9 @@ const Chart = ({ type, title, dataset, handleClick }) => {
 };
 
 Chart.propTypes = {
-  type: React.PropTypes.string.isRequired,
-  title: React.PropTypes.string.isRequired,
-  dataset: React.PropTypes.object.isRequired
+  type: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  dataset: PropTypes.object.isRequired
 };
 
 export default Chart;

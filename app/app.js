@@ -5,7 +5,7 @@ import { IntlProvider } from 'react-intl';
 import { store } from 'store/index';
 import LayoutInner from './components/Layout.react';
 import './stylesheets/app.scss';
-
+import  './App.css';
 if ($_ENVIRONMENT === 'development') {
   /* eslint-disable */
   // const Mimic = require('mimic').default;
