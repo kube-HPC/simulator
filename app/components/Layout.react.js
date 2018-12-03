@@ -12,7 +12,7 @@ import TableAutoComplete from './TableAutoComplete.react';
 import ServerSelection from './ServerSelection.react';
 import { init } from '../actions/config.action.js';
 import AddPipe from './AddPipe.react';
-// import img from '../../images/logo.png'
+import './Layout.css';
 
 const { Header, Sider, Content } = Layout;
 
@@ -32,19 +32,19 @@ const menuSelection = (i, props) => {
 const selectTable = (props) => {
   switch (props.isTableVIsible.menuItem.key) {
     case '1':
-      return <ContainerTable/>;
-    case '2':
-      return <WorkerTable/>;
-    case '3':
-      return <DriverTable/>;
-    case '4':
-      return <AlgorithmTable/>;
-    case '5':
-      return <DebugTable/>;
-    case '6':
       return <StoredPipesTable/>;
-    default:
+    case '2':
       return <ContainerTable/>;
+    case '3':
+      return <WorkerTable/>;
+    case '4':
+      return <DriverTable/>;
+    case '5':
+      return <AlgorithmTable/>;
+    case '6':
+      return <DebugTable/>;
+    default:
+      return <StoredPipesTable/>;
   }
 };
 
@@ -61,31 +61,33 @@ const LayoutInner = class extends React.Component {
       <Layout>
         <Header
           style={{
-            background: '#4285f4',
+            background: 'rgb(81, 144, 247)',
             boxShadow: '5px 0 5px 0 rgba(0,0,0,0.7)',
             zIndex: '2 '
           }}>
-          <Row type="flex" justify="start" align="middle">
-            <Col
-              span={2}
-              style={{
+          <Row type="flex" justify="space-between">
+            <Col span={2}>
+              <img src="../images/logo.png" alt="logo" width="50px" height="50px"
+                style={{
+                  margin: '4%',
+                  marginRight: '10%',
+                  marginLeft: '-20%'
+                }}/>
+              <span style={{
+                margin: 'auto',
                 color: 'white',
                 fontSize: '22px',
                 fontWeight: 'bold',
                 fontFamily: 'monospace',
-                letterSpacing: '1px'
-              }}>
-              {' '}
-              HKUBE
+                letterSpacing: '1px',
+                position: 'fixed'
+              }}>HKUBE</span>
             </Col>
-            <Col span={10} offset={6}>
+            <Col span={8}>
               <TableAutoComplete/>
             </Col>
-            <Col span={2}>
-              <ServerSelection/>
-            </Col>
-            <Col span={4}>
-              <AddPipe/>
+            <Col span={2} style={{ textAlign: 'center' }}>
+              <AddPipe style={{ margin: 'auto' }}/>
             </Col>
           </Row>
         </Header>
@@ -100,27 +102,27 @@ const LayoutInner = class extends React.Component {
               mode="inline"
               onSelect={(i, k, s) => {
                 menuSelection(i, props);
-                // console.log(`i ${i} k ${k} s ${s} `)
               }}
               defaultSelectedKeys={['1']}>
-              <Menu.Item key="1" style={{ paddingLeft: '0px' }}>
-                <span className="nav-text">Jobs</span>
-              </Menu.Item>
-              <Menu.Item key="2" style={{ paddingLeft: '0px' }}>
-                <span className="nav-text">Workers</span>
-              </Menu.Item>
-              <Menu.Item key="3" style={{ paddingLeft: '0px' }}>
-                <span className="nav-text">Drivers</span>
-              </Menu.Item>
-              <Menu.Item key="4" style={{ paddingLeft: '0px' }}>
-                <span className="nav-text">Algorithms</span>
-              </Menu.Item>
-              <Menu.Item key="5" style={{ paddingLeft: '0px' }}>
-                <span className="nav-text">Debug</span>
-              </Menu.Item>
-              <Menu.Item key="6" style={{ paddingLeft: '0px' }}>
+              <Menu.Item key="1">
                 <span className="nav-text">Stored Pipes</span>
               </Menu.Item>
+              <Menu.Item key="2">
+                <span className="nav-text">Jobs</span>
+              </Menu.Item>
+              <Menu.Item key="3">
+                <span className="nav-text">Workers</span>
+              </Menu.Item>
+              <Menu.Item key="4" >
+                <span className="nav-text">Drivers</span>
+              </Menu.Item>
+              <Menu.Item key="5" >
+                <span className="nav-text">Algorithms</span>
+              </Menu.Item>
+              <Menu.Item key="6" >
+                <span className="nav-text">Debug</span>
+              </Menu.Item>
+
               <span className="ant-divider"/>
             </Menu>
           </Sider>
@@ -133,12 +135,7 @@ const LayoutInner = class extends React.Component {
               minHeight: '89vh'
             }}>
             <BackTop/>
-            {/* <ContainerTable />*/}
             {selectTable(props)}
-            {/* {props.isTableVIsible.visible ?
-              <ContainerTable /> : <WorkerTable />
-              
-            } */}
           </Content>
         </Layout>
       </Layout>

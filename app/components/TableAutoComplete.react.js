@@ -41,7 +41,7 @@ const TableAutoComplete = (props) => (
       size="large"
       style={{ width: '600px', border: '0px' }}
       dataSource={options(props.dataSource)}
-      placeholder="input here"
+      placeholder="Search for Algorithm, Pipeline, Job..."
       onSelect={props.updateFilter}
       onChange={(val) => {
         props.updateFilter(val);

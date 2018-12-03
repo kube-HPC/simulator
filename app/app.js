@@ -14,9 +14,7 @@ if ($_ENVIRONMENT === 'development') {
   /* eslint-enable */
 }
 render((
-  // <IntlProvider locale="en-US" messages={ messages }>
   <Provider store={ store }>
     <LayoutInner/>
-  </ Provider>
-  // </IntlProvider>
+  </Provider>
 ), document.getElementById('root'));

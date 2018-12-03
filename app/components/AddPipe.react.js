@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Icon, Modal, Button } from 'antd';
+import { Modal, Button } from 'antd';
 
 import { addPipe } from '../actions/addPipe.action';
 
 import JsonEditor from './JsonEditor.react';
 import template from './lib/json-object.json';
+import './AddPipe.css';
 
 const jsonTemplate = JSON.stringify(template, null, 2);
 
@@ -44,26 +45,11 @@ class AddPipe extends Component {
     return (
       <div>
         <Button
-          className="Add-Pipe"
-          type="primary"
+          className="buttonPipeline"
+          type="default"
           size="default"
-          style={{
-            color: '#4689bb',
-            fontSize: '15px',
-            fontWeight: 'bold',
-            fontFamily: 'monospace',
-            letterSpacing: '1px',
-            backgroundColor: '#FFFEFD'
-          }}
-          onClick={this.showModal}>
-          <Icon
-            type="plus"
-            style={{
-              fontSize: 15,
-              fontFamily: 'monospace',
-              fontWeight: 'bold'
-            }}/>{' '}
-          PIPELINE
+          onClick={this.showModal} >
+          + Pipeline
         </Button>
         <Modal
           title="Add-Pipeline"

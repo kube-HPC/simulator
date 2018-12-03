@@ -8,6 +8,7 @@ import { withState } from 'recompose';
 import { openModal } from '../actions/modal.action';
 import { init, storeAlgorithm, deleteAlgorithmFromStore } from '../actions/algorithmTable.action';
 import FillAsJsonButton from './FillAsJsonButton.react';
+import AddButton from './AddButton.react';
 import algorithmObjectTemplate from './lib/algorithm-object.json';
 
 const RECORD_STATUS = {
@@ -68,30 +69,30 @@ class AlgorithmTable extends Component {
         sorter: (a, b) => sorter(a.data.algorithmImage, b.data.algorithmImage)
       },
       {
-        title: 'cpu',
+        title: 'CPU Usage',
         dataIndex: 'data.cpu',
         key: 'cpu',
-        width: '20%'
+        width: '10%'
       },
       {
-        title: 'mem',
+        title: 'Memory Usage',
         dataIndex: 'data.mem',
         key: 'mem',
-        width: '20%',
+        width: '10%',
         sorter: (a, b) => sorter(a.data.mem, b.data.mem)
       },
       {
         title: 'Worker Image',
         dataIndex: 'data.workerImage',
         key: 'workerImage',
-        width: '10%',
+        width: '20%',
         sorter: (a, b) => sorter(a.data.workerImage, b.data.workerImage)
       },
       {
         title: 'Action',
         dataIndex: 'action',
         key: 'action',
-        width: '10%',
+        width: '20%',
         render: (text, record) => (<div>
           <Button onClick={() => deleteConfirmAction(this.props.deleteAlgorithmFromStore, record)}> Delete </Button>
         </div>)
@@ -220,19 +221,20 @@ class AlgorithmTable extends Component {
           content={
             <div >
               {AlgorithmInput}
-              <Row gutter={48} style={{ margin: 'auto' }}>
-                <Col span={8}>
-                  <Button type="primary" onClick={this.onPopOverConfirm}>
+              <Row type="flex" justify="space-between">
+                <Col span={8} style={{ textAlign: 'center' }}>
+                  <Button type="primary" onClick={this.onPopOverConfirm} style={{ margin: 'auto' }}>
                     Confirm
                   </Button>
                 </Col>
-                <Col span={8}>
+                <Col span={8} style={{ textAlign: 'center' }}>
                   <FillAsJsonButton
                     algorithm={JSON.stringify(this.state.algoToAdd, null, 2)}
-                    action={this.props.storeAlgorithm}/>
+                    action={this.props.storeAlgorithm}
+                    style={{ margin: 'auto' }}/>
                 </Col>
-                <Col span={8}>
-                  <Button onClick={this.onPopOverCancel}>
+                <Col span={8} style={{ textAlign: 'center' }}>
+                  <Button onClick={this.onPopOverCancel}  style={{ margin: 'auto' }}>
                     Cancel
                   </Button>
                 </Col>
@@ -241,14 +243,19 @@ class AlgorithmTable extends Component {
           }
           title="Insert new algorithm to store"
           trigger="click"
-          position="topRight"
           visible={this.state.isVisible}>
           <Button
             type="primary" shape="circle" size="default"
             style={{
-              position: 'absolute', width: '60px', height: '60px', top: '90%', right: '3%'
+              textAlign: 'center',
+              position: 'absolute',
+              width: '56px',
+              height: '56px',
+              top: '90%',
+              right: '3%',
+              boxShadow: '0 8px 10px 1px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.2)'
             }} onClick={this.onVisible}>
-            <Icon type="plus" style={{ fontSize: 40 }}/>
+            <Icon type="plus" width="24px" height="24px" style={{ margin: 'auto', fontSize: 'x-large' }}/>
           </Button>
         </Popover>
       </div>
