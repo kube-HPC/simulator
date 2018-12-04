@@ -4,8 +4,14 @@
     font-size: 15px;
     font-family: monospace;
     letter-spacing: 1px;
-    border-color: #c6dcf7;
+    border-color: transparent;
 }
 .buttonPipeline:hover {
-    color: rgb(66, 133, 244);
+    color: rgba(0, 0, 0, 0.62);
+    border-color: transparent;
+}
+
+.buttonPipeline:focus {
+    color: rgba(0, 0, 0, 0.62);
+    border-color: transparent;
 }

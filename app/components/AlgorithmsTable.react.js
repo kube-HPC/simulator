@@ -57,14 +57,14 @@ class AlgorithmTable extends Component {
         title: 'Algorithm Name',
         dataIndex: 'data.name',
         key: 'name',
-        width: '20%',
+        width: '25%',
         sorter: (a, b) => sorter(a.data.name, b.data.name)
       },
       {
         title: 'Algorithm Image',
         dataIndex: 'data.algorithmImage',
         key: 'algorithmImage',
-        width: '20%',
+        width: '25%',
         onFilter: (value, record) => record.data.algorithmImage.includes(value),
         sorter: (a, b) => sorter(a.data.algorithmImage, b.data.algorithmImage)
       },
@@ -85,14 +85,14 @@ class AlgorithmTable extends Component {
         title: 'Worker Image',
         dataIndex: 'data.workerImage',
         key: 'workerImage',
-        width: '20%',
+        width: '10%',
         sorter: (a, b) => sorter(a.data.workerImage, b.data.workerImage)
       },
       {
         title: 'Action',
         dataIndex: 'action',
         key: 'action',
-        width: '20%',
+        width: '10%',
         render: (text, record) => (<div>
           <Button onClick={() => deleteConfirmAction(this.props.deleteAlgorithmFromStore, record)}> Delete </Button>
         </div>)

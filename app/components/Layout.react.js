@@ -30,7 +30,7 @@ const menuSelection = (i, props) => {
 };
 
 const selectTable = (props) => {
-  switch (props.isTableVIsible.menuItem.key) {
+  switch (props.isTableVisible.menuItem.key) {
     case '1':
       return <StoredPipesTable/>;
     case '2':
@@ -62,16 +62,16 @@ const LayoutInner = class extends React.Component {
         <Header
           style={{
             background: 'white',
-            boxShadow: '5px 0 5px 0 rgba(0,0,0,0.7)',
-            zIndex: '2 '
+            zIndex: '2 ',
+            borderBottom: '1pt solid #ccc'
           }}>
           <Row type="flex" justify="space-between">
             <Col span={2}>
-              <img src="../images/HkubeBorder.svg" alt="logo" width="50px" height="50px"
+              <img src="../images/HkubeBlueBordered.svg" width="50px" height="50px" alt="logo"
                 style={{
-                  margin: '4%',
-                  marginRight: '10%',
-                  marginLeft: '-20%'
+                  marginRight: '6.5%',
+                  marginLeft: '-20%',
+                  height: '-webkit-fill-available'
                 }}/>
               <span style={{
                 margin: 'auto',
@@ -128,11 +128,9 @@ const LayoutInner = class extends React.Component {
           </Sider>
           <Content
             style={{
-              boxShadow: 'rgba(0, 0, 0, 0.15) 4px 4px 5px 0px',
               margin: '24px 16px',
-              padding: 24,
               background: '#fff',
-              minHeight: '89vh'
+              minHeight: '-webkit-fill-available'
             }}>
             <BackTop/>
             {selectTable(props)}
@@ -143,6 +141,7 @@ const LayoutInner = class extends React.Component {
   }
 };
 
+
 const mapStateToProps = (state) => ({
   scriptsPath: state.serverSelection.currentSelection.scriptsPath
 });
@@ -152,7 +151,7 @@ export default compose(
     mapStateToProps,
     { init }
   ),
-  withState('isTableVIsible', 'onMenuSelected', {
+  withState('isTableVisible', 'onMenuSelected', {
     visible: true,
     menuItem: {}
   }),

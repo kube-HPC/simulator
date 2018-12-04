@@ -6,7 +6,7 @@ import ReactJson from 'react-json-view';
 import { init } from '../actions/storedPipes.action';
 import { openModal } from '../actions/modal.action';
 import ExecuteButton from './ExecuteButton.react';
-// import './Table.css';
+import './StoredPipesTable.css';
 
 const { Column } = Table;
 
