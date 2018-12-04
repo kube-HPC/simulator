@@ -32,7 +32,7 @@ const options = (data) => {
   return obj;
 };
 const TableAutoComplete = (props) => (
-  <div style={{ width: 250 }}>
+  <div>
     <AutoComplete
       className="certain-category-search"
       dropdownClassName="certain-category-search-dropdown"

@@ -12,6 +12,6 @@
 }
 
 .buttonPipeline:focus {
-    color: rgba(0, 0, 0, 0.62);
+    color: #307fe6;
     border-color: transparent;
 }

@@ -58,32 +58,33 @@ const LayoutInner = class extends React.Component {
   render() {
     const { props } = this;
     return (
-      <Layout>
+      <Layout 
+        style={{ minHeight: '-webkit-fill-available' }}>
         <Header
           style={{
             background: 'white',
             zIndex: '2 ',
             borderBottom: '1pt solid #ccc'
           }}>
-          <Row type="flex" justify="space-between">
-            <Col span={2}>
+          <Row type="flex" justify="space-between" style={{ textAlign: 'center' }}>
+            <Col span={2} style={{ marginLeft: '-4.3%' }}>
               <img src="../images/HkubeBlueBordered.svg" width="50px" height="50px" alt="logo"
                 style={{
                   marginRight: '6.5%',
-                  marginLeft: '-20%',
                   height: '-webkit-fill-available'
                 }}/>
               <span style={{
                 margin: 'auto',
                 color: '#307fe6',
-                fontSize: '22px',
+                fontSize: '30px',
                 fontWeight: 'bold',
                 fontFamily: 'monospace',
                 letterSpacing: '1px',
-                position: 'fixed'
+                position: 'absolute',
+                height: '-webkit-fill-available'
               }}>HKUBE</span>
             </Col>
-            <Col span={8}>
+            <Col span={12} style={{ height: '-webkit-fill-available' }}>
               <TableAutoComplete/>
             </Col>
             <Col span={2} style={{ textAlign: 'center' }}>
@@ -129,8 +130,7 @@ const LayoutInner = class extends React.Component {
           <Content
             style={{
               margin: '24px 16px',
-              background: '#fff',
-              minHeight: '-webkit-fill-available'
+              background: '#fff'
             }}>
             <BackTop/>
             {selectTable(props)}
