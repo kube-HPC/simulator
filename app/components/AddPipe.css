@@ -1,9 +1,10 @@
 .buttonPipeline {
     background-color: transparent;
-    color: white;
+    color: #307fe6;
     font-size: 15px;
     font-family: monospace;
     letter-spacing: 1px;
+    border-color: #c6dcf7;
 }
 .buttonPipeline:hover {
     color: rgb(66, 133, 244);

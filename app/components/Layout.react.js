@@ -61,13 +61,13 @@ const LayoutInner = class extends React.Component {
       <Layout>
         <Header
           style={{
-            background: 'rgb(81, 144, 247)',
+            background: 'white',
             boxShadow: '5px 0 5px 0 rgba(0,0,0,0.7)',
             zIndex: '2 '
           }}>
           <Row type="flex" justify="space-between">
             <Col span={2}>
-              <img src="../images/logo.png" alt="logo" width="50px" height="50px"
+              <img src="../images/HkubeBorder.svg" alt="logo" width="50px" height="50px"
                 style={{
                   margin: '4%',
                   marginRight: '10%',
@@ -75,7 +75,7 @@ const LayoutInner = class extends React.Component {
                 }}/>
               <span style={{
                 margin: 'auto',
-                color: 'white',
+                color: '#307fe6',
                 fontSize: '22px',
                 fontWeight: 'bold',
                 fontFamily: 'monospace',
@@ -128,7 +128,7 @@ const LayoutInner = class extends React.Component {
           </Sider>
           <Content
             style={{
-              boxShadow: '0px 0px 5px 0 rgba(0,0,0, 0.15)',
+              boxShadow: 'rgba(0, 0, 0, 0.15) 4px 4px 5px 0px',
               margin: '24px 16px',
               padding: 24,
               background: '#fff',

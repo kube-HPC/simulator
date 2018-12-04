@@ -47,8 +47,8 @@ const TableAutoComplete = (props) => (
         props.updateFilter(val);
       }}
       optionLabelProp="value">
-      <Input style={{ border: '0px' }}
-        suffix={<Icon type="search" className="certain-category-icon" />} />
+      <Input style={{ border: '0px', backgroundColor: '#0000000a' }}
+        suffix={<Icon type="search" className="certain-category-icon"/>}/>
     </AutoComplete>
   </div>
 );
