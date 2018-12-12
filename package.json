@@ -45,6 +45,7 @@
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "build": "./dockerfile/build.sh simulator",
+    "test-travis": "echo \"No test specified\"",
     "start:server": "node ./server/server.js"
   },
   "eslintConfig": {
