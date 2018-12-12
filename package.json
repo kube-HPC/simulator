@@ -1,6 +1,6 @@
 {
-  "name": "create-react-app-antd",
-  "version": "0.1.0",
+  "name": "simulator",
+  "version": "1.1.27",
   "private": true,
   "dependencies": {
     "antd": "^3.10.1",
@@ -41,9 +41,11 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
+    "builder": "react-app-rewired build",
     "test": "react-app-rewired test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build": "./dockerfile/build.sh simulator",
+    "start:server": "node ./server/server.js"
   },
   "eslintConfig": {
     "extends": "react-app"
