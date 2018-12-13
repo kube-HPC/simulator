@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
+import { get } from 'lodash'
 import Immutable from 'seamless-immutable';
 import actions from '../constants/actions';
-
 const dataSource = [];
 const tmp = { dataSource };
 // columns
@@ -26,7 +26,7 @@ const calaStats = (data) => {
 export default handleActions({
   [actions.UPDATE_ROW_DATA_TABLE](state, { type, payload, meta, error }) {
     const data = (payload.discovery && payload.discovery.worker) || [];
-    const stats = calaStats(data);
+    const stats = get(payload,'discovery.task-executor[0].data.actual',[]);
     return state.merge({ dataSource: data, stats });
   }
 
