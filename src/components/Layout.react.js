@@ -33,9 +33,9 @@ const menuSelection = (i, props) => {
 const selectTable = (props) => {
   switch (props.isTableVisible.menuItem.key) {
     case '1':
-      return <StoredPipesTable />;
-    case '2':
       return <ContainerTable />;
+    case '2':
+      return <StoredPipesTable />;
     case '3':
       return <WorkerTable />;
     case '4':
@@ -45,7 +45,7 @@ const selectTable = (props) => {
     case '6':
       return <DebugTable />;
     default:
-      return <StoredPipesTable />;
+      return <ContainerTable />;
   }
 };
 
@@ -71,7 +71,7 @@ const LayoutInner = class extends React.Component {
             <Col span={2} style={{ marginLeft: '-4.3%' }}>
               <img src={logo} className="App-logo" alt="logo"
                 style={{
-                  width: '6vh',
+                  width: '5vh',
                   marginRight: '20px'
                   // height: '-webkit-fill-available'
                 }} />
@@ -83,7 +83,8 @@ const LayoutInner = class extends React.Component {
                 fontFamily: 'monospace',
                 letterSpacing: '1px',
                 position: 'absolute',
-                height: '-webkit-fill-available'
+                height: '-webkit-fill-available',
+                marginBlockStart: '2px'
               }}>HKUBE</span>
             </Col>
             <Col span={12} style={{ height: '-webkit-fill-available' }}>
@@ -108,10 +109,10 @@ const LayoutInner = class extends React.Component {
               }}
               defaultSelectedKeys={['1']}>
               <Menu.Item key="1">
-                <span className="nav-text">Stored Pipes</span>
+                <span className="nav-text">Jobs</span>
               </Menu.Item>
               <Menu.Item key="2">
-                <span className="nav-text">Jobs</span>
+                <span className="nav-text">Stored Pipelines</span>
               </Menu.Item>
               <Menu.Item key="3">
                 <span className="nav-text">Workers</span>

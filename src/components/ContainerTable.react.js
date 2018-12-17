@@ -2,21 +2,26 @@
 
 
 import { connect } from 'react-redux';
-import { Table, Tag, Progress } from 'antd';
+import { Table, Tag, Progress, notification, Icon, Button } from 'antd';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
+import Moment from 'react-moment';
 import PropTypes from 'prop-types';
 import { withState } from 'recompose';
 import { openModal } from '../actions/modal.action';
 import { init } from '../actions/containerTable.action';
 import TabSwitcher from './TabSwitcher';
 import { getData } from '../actions/jaegerGetData.action';
-
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 const RECORD_STATUS = {
   active: '#2db7f5',
   completed: '#87d068',
   failed: '#f50',
-  stopped: '#ec8c16'
+  stopped: '#ec8c16',
+  succeed: '#87d068',
+  creating: '#838383',
+  skipped: '#eeda13',
+  //creating:'#108ee9'
 };
 
 class ContainerTable extends Component {
@@ -35,8 +40,21 @@ class ContainerTable extends Component {
         title: 'Job ID',
         dataIndex: 'key',
         key: 'key',
-        width: '20%',
-        sorter: (a, b) => sorter(a.key, b.key)
+        width: '25%',
+        sorter: (a, b) => sorter(a.key, b.key),
+        render: (text, record) =>
+          <CopyToClipboard text={`${record.key}`} onCopy={() => notification.success({
+            message: 'Copied to clipboard',
+            description: ``
+          })}>
+
+            <div>
+              <Icon type="right" style={{ color: 'rgba(187, 180, 180, 0.75)', marginRight: '10px' }} />
+              {`${record.key.substring(0, 35)} ...`}
+            </div>
+
+          </CopyToClipboard>
+
       },
       {
         title: 'Pipeline Name',
@@ -58,17 +76,52 @@ class ContainerTable extends Component {
         sorter: (a, b) => sorter(a.status.status, b.status.status)
       },
       {
-        title: 'time',
+        title: 'Start time',
         dataIndex: 'status.timestamp',
         key: 'timestamp',
         width: '15%',
-        sorter: (a, b) => sorter(a.timestamp, b.timestamp)
+        sorter: (a, b) => sorter(a.timestamp, b.timestamp),
+        render: (text, record) =>
+          (<span>
+            <Moment format="YYYY/MM/DD hh:mm:ss">
+              {record.pipeline.startTime}
+            </Moment>
+          </span>
+          )
+      },
+
+      {
+        title: 'Running time',
+        dataIndex: 'status.timestamp',
+        key: 'timestamp',
+        width: '15%',
+       // sorter: (a, b) => sorter(a.timestamp, b.timestamp),
+        render: (text, record) =>{
+          let  runningTime = record.results &&record.results.timeTook ? record.results.timeTook: Date.now()-record.pipeline.startTime
+          return(<span>
+            {/* <Moment format="ss"  >
+              {new Date(Date.now()-record.pipeline.startTime)}
+            </Moment> */}
+              <Moment  date={record.pipeline.startTime}
+                    durationFromNow
+            />
+          </span>
+          )
+        }
+        
       },
       {
         title: 'Description',
         dataIndex: 'status.data.details',
         key: 'details',
-        width: '25%'
+        width: '10%',
+        render: (text, record) => {
+          let statuses = Object.entries(record.status.data.states.asMutable()).map(s => <Tag color={RECORD_STATUS[s[0]] || 'magenta'}>{s[1]}</Tag>)
+          return (<span>
+            {statuses}
+          </span>
+          )
+        }
       },
       {
         title: 'Progress',
@@ -77,23 +130,41 @@ class ContainerTable extends Component {
         key: 'y',
         render: (text, record) => {
           let progress = (record.status && record.status.data && record.status.data.progress) || 0;
-          const stopped = (record.state && record.status.status === 'stopped');
+          const stopped = (record.status && record.status.status === 'stopped');
+          const failed = (record.status && record.status.status === 'failed');
           progress = parseInt(progress);
           if (progress === 100) {
             return (<span>
-              <Progress percent={progress}/>
+              <Progress percent={progress} status={stopped || failed ? 'exception' : 'success'} strokeColor={failed ? '#f50' : stopped ? 'orange' : null} />
             </span>);
           }
           return (<span>
-            <Progress percent={progress} status={stopped ? 'exception' : 'active'}/>
+            <Progress percent={progress} status={stopped || failed ? 'exception' : 'active'} strokeColor={failed ? '#f50' : stopped ? 'orange' : null} />
           </span>);
         },
-        sorter: (a, b) => sorter(a.status.data.progress, b.status.data.progress)
+        // sorter: (a, b) => sorter(a.status.data.progress, b.status.data.progress)
+      },
+      {
+        title: '',
+        dataIndex: '',
+        key: 'stop',
+        width: '5%',
+        render: (text, record) => {
+          //let progress = (record.status && record.status.data && record.status.data.progress) || 0;
+          const actionButton = record.status.status === 'active' ?
+            <Button type="danger" shape="circle" icon="close" onClick={() => this.onDelete(record.key)} /> :
+            <Button type="default" shape="circle" icon="redo" onClick={() => this.onDelete(record.key)} />;
+          return (actionButton)
+        }
       }
 
     ];
   }
 
+
+  stopPipeline(jobId) {
+
+  }
   renderColumns() {
 
   }
@@ -119,13 +190,13 @@ class ContainerTable extends Component {
                 results: record.results
               },
               jaeger: (this.props.jaeger[record.key] || null)
-            }}/>
+            }} />
           )}
           onExpand={(expanded, record) => {
             if (expanded) {
               this.props.getData(record.key);
             }
-          }}/>
+          }} />
       </div>
     );
   }

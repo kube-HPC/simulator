@@ -23,7 +23,7 @@ const TabSwitcher = ({ record }) => {
     </Tabs.TabPane>
     <Tabs.TabPane tab="JSON" key="3">
       <Card>
-        <ReactJson src={record.record}/>
+        <ReactJson src={record.record} displayDataTypes={false} displayObjectSize={false}/>
       </Card>
     </Tabs.TabPane>
     {/* <Tabs.TabPane tab="Details" key="2">
