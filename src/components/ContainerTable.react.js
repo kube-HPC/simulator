@@ -116,8 +116,12 @@ class ContainerTable extends Component {
         key: 'details',
         width: '10%',
         render: (text, record) => {
-          let statuses = Object.entries(record.status.data.states.asMutable()).map(s => <Tag color={RECORD_STATUS[s[0]] || 'magenta'}>{s[1]}</Tag>)
-          return (<span>
+          let statuses =record.status.data&&record.status.data.states?
+           Object.entries(record.status.data.states.asMutable()).map(s => <Tag color={RECORD_STATUS[s[0]] || 'magenta'}>{s[1]}</Tag>)
+           :null;
+        
+        
+        return (<span>
             {statuses}
           </span>
           )
