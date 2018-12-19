@@ -51,12 +51,12 @@ class ExecuteButton extends Component {
           onCancel={this.handleCancel}
           width="800px"
           footer={[
-            <Button onClick={this.handleCancel}> Cancel</Button>,
-            <Button onClick={this.handleReset}> Reset</Button>,
             <Button type="primary" size="default" onClick={this.handleRun}>
               {' '}
               Run
-            </Button>
+            </Button>,
+            <Button onClick={this.handleReset}> Reset</Button>,
+            <Button onClick={this.handleCancel}> Cancel</Button>
           ]}>
           <JsonEditor
             jsonTemplate={this.pipe}
