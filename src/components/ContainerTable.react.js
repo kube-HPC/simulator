@@ -78,12 +78,12 @@ class ContainerTable extends Component {
       {
         title: 'Start time',
         dataIndex: 'status.timestamp',
-        key: 'timestamp',
+        key: 'Start timestamp',
         width: '15%',
         sorter: (a, b) => sorter(a.timestamp, b.timestamp),
         render: (text, record) =>
           (<span>
-            <Moment format="YYYY/MM/DD hh:mm:ss">
+            <Moment format="DD/MM/YY hh:mm:ss">
               {record.pipeline.startTime}
             </Moment>
           </span>
@@ -95,20 +95,26 @@ class ContainerTable extends Component {
         dataIndex: 'status.timestamp',
         key: 'timestamp',
         width: '15%',
-       // sorter: (a, b) => sorter(a.timestamp, b.timestamp),
-        render: (text, record) =>{
-          let  runningTime = record.results &&record.results.timeTook ? record.results.timeTook: Date.now()-record.pipeline.startTime
-          return(<span>
-            {/* <Moment format="ss"  >
-              {new Date(Date.now()-record.pipeline.startTime)}
-            </Moment> */}
-              <Moment  date={record.pipeline.startTime}
-                    durationFromNow
-            />
+        // sorter: (a, b) => sorter(a.timestamp, b.timestamp),
+        render: (text, record) => {
+          let runningTime = record.results && record.results.timeTook ? record.results.timeTook : Date.now() - record.pipeline.startTime
+          let timeTook =  record.results && record.results.timeTook ?  record.results.timeTook :null;
+          return (<span>{
+            record.results ?
+              // <Moment>
+              <span>
+                {record.results.timeTook+ " Seconds"}
+                </span>
+          //    </Moment> 
+              :
+               <Moment date={record.pipeline.startTime}
+                durationFromNow
+              />
+          }
           </span>
           )
         }
-        
+
       },
       {
         title: 'Description',
