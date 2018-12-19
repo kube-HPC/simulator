@@ -10,19 +10,37 @@ export const init = () => ({
   }
 });
 
-export const execRawPipeline = (pipe) => ({
-  type: actions.REST_REQ_POST,
-  payload: {
-    url: 'exec/raw',
-    body: { pipe },
-    actionType: actions.EXEC_RAW_PIPELINE
+export const execRawPipeline = (nominalPipeline) => {
+  const { name, flowInputOrig, options, webhooks, priority } = nominalPipeline;
+  let pipeline = {
+    name,
+   
+    flowInput: flowInputOrig,
+    options,
+    webhooks,
+    priority
+
   }
-});
+
+
+  let action = {
+    type: actions.REST_REQ_POST,
+    payload: {
+      url: 'exec/stored',
+      body: { pipeline },
+      actionType: actions.EXEC_STORED_PIPE
+    }
+  }
+
+  return action
+};
+
+
 
 export const stopPipeline = (jobId) => ({
   type: actions.REST_REQ_POST,
   payload: {
-    url: 'exec/stored',
+    url: 'exec/stop',
     body: { jobId },
     actionType: actions.STOP_PIPELINE
   }
