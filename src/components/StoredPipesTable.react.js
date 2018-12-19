@@ -33,7 +33,7 @@ class StoredPipesTable extends Component {
       <div>
         <Table
           rowKey="name"
-          dataSource={dataSource}
+          dataSource={dataSource.asMutable()}
           pagination={{
             defaultCurrent: 1, pageSize: 15
           }}

@@ -8,6 +8,7 @@ import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withState } from 'recompose';
+import temp from './lib/worker.json'
 
 const RECORD_STATUS = {
   bootstrap: '#2db7f5',
@@ -21,17 +22,10 @@ const RECORD_STATUS = {
 };
 
 class WorkerTable extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentWillMount() {
     this.props.init();
-    const callPopOverWorkAround = (isVisible) => {
-      this.props.onPopoverClickVisible(isVisible);
-    };
 
-
+    
     const sorter = (a, b) => {
       let tempA = null;
       let tempB = null;
@@ -39,7 +33,7 @@ class WorkerTable extends Component {
       tempB = b || '';
       return tempA.localeCompare(tempB);
     };
-    this.columns = [
+    this.workerColumns = [
       {
         title: 'Job ID',
         dataIndex: 'data.jobId',
@@ -176,22 +170,41 @@ class WorkerTable extends Component {
     ];
   }
 
-  renderColumns() {
+  renderColumns() {}
 
-  }
+
 
   render() {
+    
     const { dataSource, stats } = this.props;
+    const tempStats = JSON.parse(JSON.stringify(temp));
+    const expandedRowRender = (columns,dataSource) => () =>{
+      return (
+        <Table
+          columns={columns}
+          dataSource={dataSource}
+          pagination={{
+            defaultCurrent: 1, pageSize: 15
+          }}
+          expandedRowRender={(record) => (
+            <Card title="Full details">
+              <ReactJson src={record}/>
+            </Card>
+          )}/>
+      );
+    }
     return (
       <div>
         <Table
           columns={this.workerStatsColumns}
-          dataSource={stats.asMutable()}
+          // {dataSource={stats.asMutable()}}
+          dataSource={tempStats}
           pagination={{
             defaultCurrent: 1, pageSize: 15
-          }}/>
-        <Table
-          columns={this.columns}
+          }}
+          expandedRowRender={expandedRowRender(this.workerColumns,dataSource.asMutable())}/>
+        {/* <Table
+          columns={this.workerColumns}
           dataSource={dataSource.asMutable()}
           pagination={{
             defaultCurrent: 1, pageSize: 15
@@ -201,11 +214,13 @@ class WorkerTable extends Component {
               <ReactJson src={record}/>
             </Card>
 
-          )}/>
+          )}/> */}
       </div>
     );
   }
 }
+
+
 
 const workerTable = (state) => state.workerTable.dataSource;
 const stats = (state) => state.workerTable.stats;

@@ -18,9 +18,6 @@ import './Layout.css';
 const { Header, Sider, Content } = Layout;
 
 let collapsedState = false;
-const toggle = () => {
-  collapsedState = !collapsedState;
-};
 
 const menuSelection = (i, props) => {
   if (i.key === 1) {
@@ -50,9 +47,6 @@ const selectTable = (props) => {
 };
 
 const LayoutInner = class extends React.Component {
-  constructor(props) {
-    super(props);
-  }
   componentWillMount() {
     this.props.init();
   }
