@@ -33,9 +33,9 @@ const menuSelection = (i, props) => {
 const selectTable = (props) => {
   switch (props.isTableVisible.menuItem.key) {
     case '1':
-      return <ContainerTable />;
-    case '2':
       return <StoredPipesTable />;
+    case '2':
+      return <ContainerTable />;
     case '3':
       return <WorkerTable />;
     case '4':
@@ -45,7 +45,7 @@ const selectTable = (props) => {
     case '6':
       return <DebugTable />;
     default:
-      return <ContainerTable />;
+      return <StoredPipesTable />;
   }
 };
 
@@ -109,10 +109,10 @@ const LayoutInner = class extends React.Component {
               }}
               defaultSelectedKeys={['1']}>
               <Menu.Item key="1">
-                <span className="nav-text">Jobs</span>
+                <span className="nav-text">Stored Pipelines</span>
               </Menu.Item>
               <Menu.Item key="2">
-                <span className="nav-text">Stored Pipelines</span>
+                <span className="nav-text">Jobs</span>
               </Menu.Item>
               <Menu.Item key="3">
                 <span className="nav-text">Workers</span>

@@ -5,6 +5,7 @@
     font-family: monospace;
     letter-spacing: 1px;
     border-color: transparent;
+    box-shadow: none;
 }
 .buttonPipeline:hover {
     color: rgba(0, 0, 0, 0.62);
