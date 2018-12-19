@@ -118,7 +118,7 @@ class AlgorithmTable extends Component {
     const memoryProp = getMemoryProp(algoData.mem, false);
     const algoOptions = Object.entries(algoData.options).filter((p) => p[1]).map((a) => a[0]);
 
-    const AlgorithmInput = (<div style={{ height: 'auto', width: '400' }}>
+    const AlgorithmInput = (<div style={{ height: 'auto', width: '400px' }}>
       <Row style={{ marginBottom: 5 }}>
         <Input 
         defaultValue={algoData.name}
@@ -161,10 +161,10 @@ class AlgorithmTable extends Component {
           onChange={(v) => {
             this.state.algoToAdd.mem = v + getMemoryProp(algoData.mem, false); 
           }}
-          style={{ width: 70 }}/>
+          style={{ width: 'auto' }}/>
         <Select
           defaultValue={memoryProp}
-          style={{ width: 50 }}
+          style={{ width: 'auto' }}
           onChange={ (v) => {
             this.state.algoToAdd.mem = getMemoryProp(algoData.mem, true) + v;
           }}>
@@ -220,19 +220,20 @@ class AlgorithmTable extends Component {
           content={
             <div >
               {AlgorithmInput}
-              <Row gutter={48} style={{ margin: 'auto' }}>
-                <Col span={8}>
-                  <Button type="primary" onClick={this.onPopOverConfirm}>
+              <Row type="flex" justify="space-between" align="center">
+                <Col span={5} style={{ textAlign: 'center' }}>
+                  <Button type="primary" onClick={this.onPopOverConfirm} style={{ margin: 'auto' }}>
                     Confirm
                   </Button>
                 </Col>
-                <Col span={8}>
+                <Col span={10} style={{ textAlign: 'center' }}>
                   <FillAsJsonButton
                     algorithm={JSON.stringify(this.state.algoToAdd, null, 2)}
-                    action={this.props.storeAlgorithm}/>
+                    action={this.props.storeAlgorithm}
+                    style={{ margin: 'auto' }}/>
                 </Col>
-                <Col span={8}>
-                  <Button onClick={this.onPopOverCancel}>
+                <Col span={5} style={{ textAlign: 'center' }}>
+                  <Button onClick={this.onPopOverCancel}  style={{ margin: 'auto' }}>
                     Cancel
                   </Button>
                 </Col>
@@ -241,14 +242,19 @@ class AlgorithmTable extends Component {
           }
           title="Insert new algorithm to store"
           trigger="click"
-          position="topRight"
           visible={this.state.isVisible}>
           <Button
             type="primary" shape="circle" size="default"
             style={{
-              position: 'absolute', width: '60px', height: '60px', top: '90%', right: '3%'
+              textAlign: 'center',
+              position: 'absolute',
+              width: '56px',
+              height: '56px',
+              top: '90%',
+              right: '3%',
+              boxShadow: '0 8px 10px 1px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.2)'
             }} onClick={this.onVisible}>
-            <Icon type="plus" style={{ fontSize: 40 }}/>
+            <Icon type="plus" width="24px" height="24px" style={{ margin: 'auto', fontSize: 'x-large' }}/>
           </Button>
         </Popover>
       </div>

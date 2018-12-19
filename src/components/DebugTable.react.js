@@ -1,7 +1,7 @@
 // libs
 
 import { connect } from 'react-redux';
-import { Table, Card, Button, Icon, Form, Input, Tag,message,notification } from 'antd';
+import { Table, Card, Button, Icon, Form, Input, Tag, Row, Col, notification, Popover } from 'antd';
 import ReactJson from 'react-json-view';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { openModal } from '../actions/modal.action';
@@ -9,8 +9,8 @@ import { init, addAlgorithm,deleteAlgorithm} from '../actions/debugTable.action'
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withState, withStateHandlers, compose } from 'recompose';
-import PopOver from './PopoverConfirmOperation.react'
+// import { withState, withStateHandlers, compose } from 'recompose';
+// import PopOver from './PopoverConfirmOperation.react'
 const FormItem = Form.Item;
 const RECORD_STATUS = {
   bootstrap: '#2db7f5',
@@ -48,22 +48,6 @@ class DebugTable extends Component {
         width: '40%',
         sorter: (a, b) => sorter(a.data.name, b.data.name)
       },
-      // {
-      //   title: 'Algorithm Image',
-      //   dataIndex: 'data.algorithmImage',
-      //   key: 'algorithmImage',
-      //   width: '20%',
-      //   onFilter: (value, record) => record.data.algorithmImage.includes(value),
-      //   sorter: (a, b) => sorter(a.data.algorithmImage, b.data.algorithmImage)
-      // },
-
-      // {
-      //   title: 'mem',
-      //   dataIndex: 'data.mem',
-      //   key: 'mem',
-      //   width: '20%',
-      //   sorter: (a, b) => sorter(a.data.mem, b.data.mem)
-      // },
       {
         title: 'path',
         dataIndex: 'data.path',
@@ -111,15 +95,21 @@ class DebugTable extends Component {
     this.onVisible()
   }
   render() {
-    const AlgorithmInput = <div style={{ height: "200px", width: "400px" }}>
-      <Input onChange={this.onFormDataChange}
-        prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Algorithm" />
-    </div>
+    const AlgorithmInput = (
+      <div style={{ height: 'auto', width: '300' }}>
+        <Row style={{ marginBottom: 5 }}>
+          <Input 
+            onChange={this.onFormDataChange}
+            prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }}/>} 
+            placeholder="Algorithm"/>
+        </Row>
+
+      </div>
+    );
 
     const { dataSource } = this.props;
     return (
       <div>
-
         <Table
           columns={this.columns}
           dataSource={dataSource.asMutable()}
@@ -129,19 +119,46 @@ class DebugTable extends Component {
           locale={{ emptyText: 'no data' }}
           expandedRowRender={(record) => (
             <Card title="Full details">
-              <ReactJson src={record} />
+              <ReactJson src={record}/>
             </Card>
-
-          )} />
-        <PopOver isVisible={this.state.isVisable} position="topRight" content={AlgorithmInput}
-          onConfirm={this.onPopOverConfirm} onCancel={this.onPopOverCancel}>
-          <Button type="primary" shape="circle" size="500px" style={{
-            position: 'absolute', width: '60px', height: '60px', top: '90%', right: '3%'
-          }} onClick={this.onVisible}>
-            <Icon type="plus" style={{ fontSize: 40 }} />
+          )}/>
+        <Popover 
+          placement="topRight"
+          isVisible={this.state.isVisible} 
+          position="topRight" 
+          trigger="click"
+          content={
+            <div >
+              {AlgorithmInput}
+              <Row type="flex" justify="space-between">
+                <Col span={8} style={{ textAlign: 'center' }}>
+                  <Button type="primary" onClick={this.onPopOverConfirm} style={{ margin: 'auto' }}>
+                    Confirm
+                  </Button>
+                </Col>
+                <Col span={8} style={{ textAlign: 'center' }}>
+                  <Button onClick={this.onPopOverCancel}  style={{ margin: 'auto' }}>
+                    Cancel
+                  </Button>
+                </Col>
+              </Row>
+            </div>
+            }>
+          <Button
+            type="primary" shape="circle" size="default"
+            style={{
+              textAlign: 'center',
+              position: 'absolute',
+              width: '56px',
+              height: '56px',
+              top: '90%',
+              right: '3%',
+              boxShadow: '0 8px 10px 1px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.2)'
+            }} onClick={this.onVisible}>
+            <Icon type="plus" width="24px" height="24px" style={{ margin: 'auto', fontSize: 'x-large' }}/>
           </Button>
-        </PopOver>
-      </div >
+        </Popover>
+      </div>
     );
   }
 }

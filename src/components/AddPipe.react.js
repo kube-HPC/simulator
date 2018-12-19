@@ -47,8 +47,6 @@ class AddPipe extends Component {
       <div>
         <Button
           className="buttonPipeline"
-          type="default"
-          size="default"
           onClick={this.showModal} >
           + Pipeline
         </Button>
