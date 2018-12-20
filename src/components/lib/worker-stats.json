@@ -20,23 +20,18 @@
     "ready": 0,
     "working": 2,
     "init": 5,
-    "count": 2,
-    "exit": 4
+    "undefined": 3
   },
   {
     "algorithmName": "red-alg",
     "ready": 0,
     "working": 2,
     "init": 5,
-    "count": 2,
-    "exit": 4
+    "undefined": 1
   },
   {
     "algorithmName": "black-alg",
-    "ready": 0,
-    "working": 2,
-    "init": 5,
-    "count": 2,
-    "exit": 4
+    "ready": 1,
+    "undefined": 1
   }
 ]

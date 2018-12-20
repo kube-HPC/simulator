@@ -7,7 +7,8 @@ import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withState } from 'recompose';
-import temp from './lib/worker.json'
+import workerStats from './lib/worker-stats.json'
+import defaultWorkerData from './lib/worker-default-data.json'
 
 const RECORD_STATUS = {
   bootstrap: '#2db7f5',
@@ -166,20 +167,24 @@ class WorkerTable extends Component {
 
   render() {
     const { dataSource, stats } = this.props;
-    const tempStats = JSON.parse(JSON.stringify(temp));
+
+    // TODO: in prod use stats
+    const tempStats = JSON.parse(JSON.stringify(workerStats));
+    
+
     const expandedRowRender = (columns,dataSource) => (record) => {
       const filteredDataSource =
         dataSource.filter((d) => d.data.algorithmName === record.algorithmName);
 
-      const mutable = JSON.parse(JSON.stringify(filteredDataSource));
-      mutable.forEach((algo)=> algo.data.jobId = algo.key);
-
+      // Adding fake jobId. TODO: delete in prod
+      const mutableDataSource = JSON.parse(JSON.stringify(filteredDataSource));
+      mutableDataSource.forEach((algo)=> algo.data.jobId = algo.key);
 
       return (
         <Table
           size="middle"
           columns={columns}
-          dataSource={mutable}
+          dataSource={mutableDataSource}
           pagination={false}
           expandedRowRender={
             (record) => {
@@ -218,11 +223,14 @@ class WorkerTable extends Component {
           }/>
       );
     };
+
+    const statsMergedWithDefault = tempStats.map((algo) => ({ ...defaultWorkerData,...algo }) );
+    // const statsMergedWithDefault = stats.map((algo) => ({ ...defaultWorkerData,...algo }) );
     return (
       <div>
         <Table
           columns={this.workerStatsColumns}
-          dataSource={tempStats}
+          dataSource={statsMergedWithDefault}
           indentSize="0"
           pagination={{
             defaultCurrent: 1, pageSize: 15
