@@ -1,8 +1,18 @@
-[{
-  "algorithmName": "eval-alg",
-  "ready": 7,
-  "working": 0,
-  "init": 0,
-  "count": 7,
-  "exit": 0
-}]
+[
+  {
+    "algorithmName": "eval-alg",
+    "ready": 7,
+    "working": 0,
+    "init": 0,
+    "count": 7,
+    "exit": 0
+  },
+  {
+    "algorithmName": "green-alg",
+    "ready": 0,
+    "working": 2,
+    "init": 0,
+    "count": 7,
+    "exit": 0
+  }
+]

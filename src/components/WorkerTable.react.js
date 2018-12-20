@@ -1,4 +1,3 @@
-
 import { connect } from 'react-redux';
 import { Table, Card, Tag } from 'antd';
 import ReactJson from 'react-json-view';
@@ -25,7 +24,6 @@ class WorkerTable extends Component {
   componentWillMount() {
     this.props.init();
 
-    
     const sorter = (a, b) => {
       let tempA = null;
       let tempB = null;
@@ -172,17 +170,16 @@ class WorkerTable extends Component {
 
   renderColumns() {}
 
-
-
   render() {
-    
     const { dataSource, stats } = this.props;
     const tempStats = JSON.parse(JSON.stringify(temp));
-    const expandedRowRender = (columns,dataSource) => () =>{
+    const expandedRowRender = (columns,dataSource) => (record) => {
+      const filteredDataSource =
+        dataSource.filter((d) => d.data.algorithmName === record.algorithmName);
       return (
         <Table
           columns={columns}
-          dataSource={dataSource}
+          dataSource={filteredDataSource}
           pagination={{
             defaultCurrent: 1, pageSize: 15
           }}
@@ -192,7 +189,7 @@ class WorkerTable extends Component {
             </Card>
           )}/>
       );
-    }
+    };
     return (
       <div>
         <Table
@@ -203,9 +200,10 @@ class WorkerTable extends Component {
             defaultCurrent: 1, pageSize: 15
           }}
           expandedRowRender={expandedRowRender(this.workerColumns,dataSource.asMutable())}/>
-        {/* <Table
+
+          <Table
           columns={this.workerColumns}
-          dataSource={dataSource.asMutable()}
+          dataSource={dataSource}
           pagination={{
             defaultCurrent: 1, pageSize: 15
           }}
@@ -213,8 +211,7 @@ class WorkerTable extends Component {
             <Card title="Full details">
               <ReactJson src={record}/>
             </Card>
-
-          )}/> */}
+          )}/>
       </div>
     );
   }
