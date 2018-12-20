@@ -169,7 +169,7 @@ class WorkerTable extends Component {
     const { dataSource, stats } = this.props;
 
     // TODO: in prod use stats
-    const tempStats = JSON.parse(JSON.stringify(workerStats));
+    // const tempStats = JSON.parse(JSON.stringify(workerStats));
     
 
     const expandedRowRender = (columns,dataSource) => (record) => {
@@ -177,14 +177,14 @@ class WorkerTable extends Component {
         dataSource.filter((d) => d.data.algorithmName === record.algorithmName);
 
       // Adding fake jobId. TODO: delete in prod
-      const mutableDataSource = JSON.parse(JSON.stringify(filteredDataSource));
-      mutableDataSource.forEach((algo)=> algo.data.jobId = algo.key);
+      // const mutableDataSource = JSON.parse(JSON.stringify(filteredDataSource));
+      // mutableDataSource.forEach((algo)=> algo.data.jobId = algo.key);
 
       return (
         <Table
           size="middle"
           columns={columns}
-          dataSource={mutableDataSource}
+          dataSource={filteredDataSource}
           pagination={false}
           expandedRowRender={
             (record) => {
@@ -224,14 +224,14 @@ class WorkerTable extends Component {
       );
     };
 
-    const statsMergedWithDefault = tempStats.map((algo) => ({ ...defaultWorkerData,...algo }) );
-    // const statsMergedWithDefault = stats.map((algo) => ({ ...defaultWorkerData,...algo }) );
+    // const statsMergedWithDefault = tempStats.map((algo) => ({ ...defaultWorkerData,...algo }) );
+    const statsMergedWithDefault = stats.map((algo) => ({ ...defaultWorkerData,...algo }) );
     return (
       <div>
         <Table
           columns={this.workerStatsColumns}
           dataSource={statsMergedWithDefault}
-          indentSize="0"
+          indentSize="0px"
           pagination={{
             defaultCurrent: 1, pageSize: 15
           }}
