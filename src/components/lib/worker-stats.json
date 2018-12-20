@@ -1,0 +1,37 @@
+[
+  {
+    "algorithmName": "eval-alg",
+    "ready": 7,
+    "working": 0,
+    "init": 0,
+    "count": 7,
+    "exit": 0
+  },
+  {
+    "algorithmName": "green-alg",
+    "ready": 0,
+    "working": 2,
+    "init": 0,
+    "count": 7,
+    "exit": 0
+  },
+  {
+    "algorithmName": "yellow-alg",
+    "ready": 0,
+    "working": 2,
+    "init": 5,
+    "undefined": 3
+  },
+  {
+    "algorithmName": "red-alg",
+    "ready": 0,
+    "working": 2,
+    "init": 5,
+    "undefined": 1
+  },
+  {
+    "algorithmName": "black-alg",
+    "ready": 1,
+    "undefined": 1
+  }
+]

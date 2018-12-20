@@ -28,19 +28,24 @@ class StoredPipesTable extends Component {
       delete pipe.nodes;
       fixedDataSource.push(pipe);
     });
-
+    
     return (
       <div>
         <Table
           rowKey="name"
-          dataSource={dataSource}
+          dataSource={dataSource.asMutable()}
           pagination={{
             defaultCurrent: 1, pageSize: 15
           }}
           locale={{ emptyText: 'no data' }}
           expandedRowRender={(record) => (
             <Card title="Full details">
-              <ReactJson src={record}/>
+              <ReactJson 
+                src={record} 
+                displayDataTypes={false} 
+                displayObjectSize={false} 
+                iconStyle="square"
+                enableClipboard={false}/>
             </Card>
           )}>
           <Column

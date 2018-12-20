@@ -1,6 +1,5 @@
-
 import { connect } from 'react-redux';
-import { Table, Card, Tag } from 'antd';
+import { Table, Tabs, Card, Tag, Button } from 'antd';
 import ReactJson from 'react-json-view';
 import { openModal } from '../actions/modal.action';
 import { init } from '../actions/workerTable.action';
@@ -8,29 +7,24 @@ import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withState } from 'recompose';
+import workerStats from './lib/worker-stats.json'
+import defaultWorkerData from './lib/worker-default-data.json'
 
 const RECORD_STATUS = {
   bootstrap: '#2db7f5',
   ready: '#87d068',
-  init: '#f50',
-  working: '#ec8c16',
+  init: '#eeda13',
+  working: '#838383',
   shutdown: '#87d068',
-  error: '#87d068',
-  stop: '#87d068'
-
+  error: '#f30',
+  exit: '#f50',
+  stop: '#ec8c16',
+  count: '#2db7f5'
 };
 
 class WorkerTable extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentWillMount() {
     this.props.init();
-    const callPopOverWorkAround = (isVisible) => {
-      this.props.onPopoverClickVisible(isVisible);
-    };
-
 
     const sorter = (a, b) => {
       let tempA = null;
@@ -39,78 +33,25 @@ class WorkerTable extends Component {
       tempB = b || '';
       return tempA.localeCompare(tempB);
     };
-    this.columns = [
-      {
-        title: 'Job ID',
-        dataIndex: 'data.jobId',
-        key: 'jobId',
-        width: '10%',
-        sorter: (a, b) => sorter(a.data.jobId, b.data.jobId)
-      },
+    this.workerColumns = [
       {
         title: 'Pod Name',
         dataIndex: 'data.podName',
         key: 'podName',
-        width: '10%',
         onFilter: (value, record) => record.data.podName.includes(value),
         sorter: (a, b) => sorter(a.data.podName, b.data.podName)
       },
       {
-        title: 'Pipeline',
-        dataIndex: 'data.pipelineName',
-        key: 'pipelineName',
-        width: '10%'
+        title: 'Job ID',
+        dataIndex: 'data.jobId',
+        width: '30%',
+        key: 'jobId',
+        sorter: (a, b) => sorter(a.data.jobId, b.data.jobId)
       },
-      {
-        title: 'Algorithm',
-        dataIndex: 'data.algorithmName',
-        key: 'algorithmName',
-        width: '10%',
-        sorter: (a, b) => sorter(a.data.algorithmName, b.data.algorithmName)
-      },
-      {
-        title: 'Node name',
-        dataIndex: 'data.jobData.node',
-        key: 'node',
-        width: '10%',
-        sorter: (a, b) => sorter(a.data.jobData.node, b.data.jobData.node)
-      },
-      {
-        title: 'Batch',
-        dataIndex: 'data.jobData.batchID',
-        key: 'batchID',
-        width: '5%',
-        sorter: (a, b) => sorter(a.data.jobData.batchID, b.data.jobData.batchID)
-      },
-      {
-        title: 'Up Time',
-        dataIndex: 'data.workerStartingTime',
-        key: 'workerStartingTime',
-        width: '13%',
-        render: (text, record) => (
-          <span>
-            {record.data.workerStartingTime && new Date(record.data.workerStartingTime).toLocaleString()}
-          </span>),
-        sorter: (a, b) => sorter(a.data.workerStartingTime, b.data.workerStartingTime)
-
-      },
-      {
-        title: 'Job Time',
-        dataIndex: 'data.jobCurrentTime',
-        key: 'jobCurrentTime',
-        width: '13%',
-        render: (text, record) => (
-          <span>
-            {record.data.jobCurrentTime && new Date(record.data.jobCurrentTime).toLocaleString()}
-          </span>),
-        sorter: (a, b) => sorter(a.data.jobCurrentTime, b.data.jobCurrentTime)
-
-      },
-
       {
         title: 'Worker State',
         dataIndex: 'data.workerStatus',
-        width: '5%',
+        width: '10%',
         key: 'workerStatus',
         render: (text, record) => (<span>
           <Tag color={RECORD_STATUS[record.data.workerStatus]} > {record.data.workerStatus}</Tag>
@@ -121,7 +62,7 @@ class WorkerTable extends Component {
       {
         title: 'Job State',
         dataIndex: 'data.jobStatus',
-        width: '5%',
+        width: '10%',
         key: 'jobStatus',
         render: (text, record) => (<span>
           <Tag color={RECORD_STATUS[record.data.jobStatus]} > {record.data.jobStatus}</Tag>
@@ -132,13 +73,24 @@ class WorkerTable extends Component {
       {
         title: 'Paused',
         dataIndex: 'data.workerPaused',
-        width: '5%',
+        width: '10%',
         key: 'workerPaused',
         render: (text, record) => (<span>
           <Tag color={record.data.workerPaused ? 'red' : 'green'} > {record.data.workerPaused ? 'paused' : 'ready'}</Tag>
         </span>
         ),
         sorter: (a, b) => sorter(a.data.workerPaused, b.data.workerPaused)
+      },
+      {
+        title: 'View Logs',
+        dataIndex: 'data.logs',
+        width: '10%',
+        key: 'logs',
+        render: (text, record) => (
+        <span>
+          <Button size="small">Log</Button>
+        </span>
+        ),
       }
     ];
 
@@ -151,57 +103,139 @@ class WorkerTable extends Component {
       {
         title: 'Ready Count',
         key: 'readyCount',
-        dataIndex: 'ready'
+        dataIndex: 'ready',
+        // render: (_, record) => {
+        //   return (
+        //      <span>
+        //       <Tag color={RECORD_STATUS.ready}>{record.ready}</Tag>
+        //     </span>
+        //     )
+        //   }
       },
       {
         title: 'Working Count',
         key: 'workingCount',
-        dataIndex: 'working'
+        dataIndex: 'working',
+        // render: (_, record) => {
+        //   return (
+        //      <span>
+        //       <Tag color={RECORD_STATUS.working}>{record.working}</Tag>
+        //     </span>
+        //     )
+        //   }
       },
       {
         title: 'Init Count',
         key: 'initCount',
-        dataIndex: 'init'
+        dataIndex: 'init',
+        // render: (_, record) => {
+        //   return (
+        //      <span>
+        //       <Tag color={RECORD_STATUS.init}>{record.init}</Tag>
+        //     </span>
+        //     )
+        //   }
       },
       {
         title: 'Exit Count',
         key: 'exitCount',
-        dataIndex: 'exit'
+        dataIndex: 'exit',
+        // render: (_, record) => {
+        //   return (
+        //      <span>
+        //       <Tag color={RECORD_STATUS.exit}>{record.exit}</Tag>
+        //     </span>
+        //     )
+        //   }
       },
       {
         title: 'Count',
         key: 'count',
-        dataIndex: 'count'
+        dataIndex: 'count',
+        // render: (_, record) => {
+        //   return (
+        //      <span>
+        //       <Tag color={RECORD_STATUS.count}>{record.count}</Tag>
+        //     </span>
+        //     )
+        // }
       }
     ];
   }
 
-  renderColumns() {
-
-  }
+  renderColumns() {}
 
   render() {
     const { dataSource, stats } = this.props;
+
+    // TODO: in prod use stats
+    // const tempStats = JSON.parse(JSON.stringify(workerStats));
+    
+
+    const expandedRowRender = (columns,dataSource) => (record) => {
+      const filteredDataSource =
+        dataSource.filter((d) => d.data.algorithmName === record.algorithmName);
+
+      // Adding fake jobId. TODO: delete in prod
+      // const mutableDataSource = JSON.parse(JSON.stringify(filteredDataSource));
+      // mutableDataSource.forEach((algo)=> algo.data.jobId = algo.key);
+
+      return (
+        <Table
+          size="middle"
+          columns={columns}
+          dataSource={filteredDataSource}
+          pagination={false}
+          expandedRowRender={
+            (record) => {
+              const timer = {
+                  workerStartingTime: record.data.workerStartingTime && new Date(record.data.workerStartingTime).toLocaleString(),
+                  jobCurrentTime: record.data.jobCurrentTime && new Date(record.data.jobCurrentTime).toLocaleString()
+                }
+
+              return (
+                <Tabs defaultActiveKey="1">
+                  <Tabs.TabPane tab="JSON" key="1">
+                    <Card>
+                      <ReactJson
+                      src={record} 
+                      displayDataTypes={false}
+                      displayObjectSize={false}
+                      iconStyle="square"
+                      enableClipboard={false}
+                    />
+                    </Card>
+                  </Tabs.TabPane>
+                  <Tabs.TabPane tab="Additional Details" key="2">
+                    <Card>
+                      <ReactJson
+                      src={timer} 
+                      displayDataTypes={false}
+                      displayObjectSize={false}
+                      iconStyle="square"
+                      enableClipboard={false}
+                    />
+                    </Card>
+                  </Tabs.TabPane>
+                </Tabs>
+              )
+            }
+          }/>
+      );
+    };
+
+    // const statsMergedWithDefault = tempStats.map((algo) => ({ ...defaultWorkerData,...algo }) );
+    const statsMergedWithDefault = stats.map((algo) => ({ ...defaultWorkerData,...algo }) );
     return (
       <div>
         <Table
           columns={this.workerStatsColumns}
-          dataSource={stats.asMutable()}
-          pagination={{
-            defaultCurrent: 1, pageSize: 15
-          }}/>
-        <Table
-          columns={this.columns}
-          dataSource={dataSource.asMutable()}
+          dataSource={statsMergedWithDefault}
+          indentSize="0px"
           pagination={{
             defaultCurrent: 1, pageSize: 15
           }}
-          expandedRowRender={(record) => (
-            <Card title="Full details">
-              <ReactJson src={record}/>
-            </Card>
-
-          )}/>
+          expandedRowRender={expandedRowRender(this.workerColumns,dataSource)}/>
       </div>
     );
   }
@@ -215,6 +249,7 @@ const tableDataSelector = createSelector(
   [workerTable],
   (dataSource) => dataSource
 );
+
 const statsSelector = createSelector(
   [stats],
   (stats) => stats
