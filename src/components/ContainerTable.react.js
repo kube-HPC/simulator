@@ -188,7 +188,7 @@ class ContainerTable extends Component {
       <div>
         <Table
           columns={this.columns}
-          dataSource={dataSource.asMutable()}
+          dataSource={dataSource}
           pagination={{
             defaultCurrent: 1, pageSize: 15
           }}
@@ -219,11 +219,12 @@ class ContainerTable extends Component {
 
 const containerTable = (state) => state.containerTable.dataSource;
 const autoCompleteFilter = (state) => state.autoCompleteFilter.filter;
-
+const rowFilter = (raw,value)=>Object.values(raw.status).find(data=>data instanceof Object?false:data.includes(value)?true:false)
 const tableDataSelector = createSelector(
   containerTable,
   autoCompleteFilter,
-  (containerTable) => containerTable
+  (containerTable,autoCompleteFilter) => containerTable&& containerTable.asMutable().filter(row=>rowFilter(row,autoCompleteFilter))
+  
 );
 
 ContainerTable.propTypes = {
