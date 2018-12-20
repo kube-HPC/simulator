@@ -9,7 +9,7 @@ import Moment from 'react-moment';
 import PropTypes from 'prop-types';
 import { withState } from 'recompose';
 import { openModal } from '../actions/modal.action';
-import { init } from '../actions/containerTable.action';
+import { init, stopPipeline,execRawPipeline } from '../actions/containerTable.action';
 import TabSwitcher from './TabSwitcher';
 import { getData } from '../actions/jaegerGetData.action';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -40,7 +40,7 @@ class ContainerTable extends Component {
         title: 'Job ID',
         dataIndex: 'key',
         key: 'key',
-        width: '25%',
+        width: '20%',
         sorter: (a, b) => sorter(a.key, b.key),
         render: (text, record) =>
           <CopyToClipboard text={`${record.key}`} onCopy={() => notification.success({
@@ -50,7 +50,7 @@ class ContainerTable extends Component {
 
             <div>
               <Icon type="right" style={{ color: 'rgba(187, 180, 180, 0.75)', marginRight: '10px' }} />
-              {`${record.key.substring(0, 35)} ...`}
+              {`${record.key.substring(0, 25)} ...`}
             </div>
 
           </CopyToClipboard>
@@ -78,12 +78,12 @@ class ContainerTable extends Component {
       {
         title: 'Start time',
         dataIndex: 'status.timestamp',
-        key: 'timestamp',
+        key: 'Start timestamp',
         width: '15%',
         sorter: (a, b) => sorter(a.timestamp, b.timestamp),
         render: (text, record) =>
           (<span>
-            <Moment format="YYYY/MM/DD hh:mm:ss">
+            <Moment format="DD/MM/YY hh:mm:ss">
               {record.pipeline.startTime}
             </Moment>
           </span>
@@ -95,20 +95,26 @@ class ContainerTable extends Component {
         dataIndex: 'status.timestamp',
         key: 'timestamp',
         width: '15%',
-       // sorter: (a, b) => sorter(a.timestamp, b.timestamp),
-        render: (text, record) =>{
-          let  runningTime = record.results &&record.results.timeTook ? record.results.timeTook: Date.now()-record.pipeline.startTime
-          return(<span>
-            {/* <Moment format="ss"  >
-              {new Date(Date.now()-record.pipeline.startTime)}
-            </Moment> */}
-              <Moment  date={record.pipeline.startTime}
-                    durationFromNow
-            />
+        // sorter: (a, b) => sorter(a.timestamp, b.timestamp),
+        render: (text, record) => {
+          let runningTime = record.results && record.results.timeTook ? record.results.timeTook : Date.now() - record.pipeline.startTime
+          let timeTook =  record.results && record.results.timeTook ?  record.results.timeTook :null;
+          return (<span>{
+            record.results ?
+              // <Moment>
+              <span>
+                {record.results.timeTook+ " Seconds"}
+                </span>
+          //    </Moment> 
+              :
+               <Moment date={record.pipeline.startTime}
+                durationFromNow
+              />
+          }
           </span>
           )
         }
-        
+
       },
       {
         title: 'Description',
@@ -156,8 +162,8 @@ class ContainerTable extends Component {
         render: (text, record) => {
           //let progress = (record.status && record.status.data && record.status.data.progress) || 0;
           const actionButton = record.status.status === 'active' ?
-            <Button type="danger" shape="circle" icon="close" onClick={() => this.onDelete(record.key)} /> :
-            <Button type="default" shape="circle" icon="redo" onClick={() => this.onDelete(record.key)} />;
+            <Button type="danger" shape="circle" icon="close" onClick={() => this.stopPipeline(record.key)} /> :
+            <Button type="default" shape="circle" icon="redo" onClick={() => this.rerunPipeline(record.pipeline)} />;
           return (actionButton)
         }
       }
@@ -165,9 +171,12 @@ class ContainerTable extends Component {
     ];
   }
 
+  rerunPipeline(pipeline){
+    this.props.execRawPipeline(pipeline);
+  }
 
   stopPipeline(jobId) {
-
+    this.props.stopPipeline(jobId);
   }
   renderColumns() {
 
@@ -179,7 +188,7 @@ class ContainerTable extends Component {
       <div>
         <Table
           columns={this.columns}
-          dataSource={dataSource.asMutable()}
+          dataSource={dataSource}
           pagination={{
             defaultCurrent: 1, pageSize: 15
           }}
@@ -210,11 +219,12 @@ class ContainerTable extends Component {
 
 const containerTable = (state) => state.containerTable.dataSource;
 const autoCompleteFilter = (state) => state.autoCompleteFilter.filter;
-
+const rowFilter = (raw,value)=>Object.values(raw.status).find(data=>data instanceof Object?false:data.includes(value)?true:false)
 const tableDataSelector = createSelector(
   containerTable,
   autoCompleteFilter,
-  (containerTable) => containerTable
+  (containerTable,autoCompleteFilter) => containerTable&& containerTable.asMutable().filter(row=>rowFilter(row,autoCompleteFilter))
+  
 );
 
 ContainerTable.propTypes = {
@@ -228,6 +238,6 @@ const mapStateToProps = (state) => ({
   sshUser: state.serverSelection.currentSelection.user
 });
 
-export default connect(mapStateToProps, { openModal, init, getData })(
+export default connect(mapStateToProps, { openModal, init,stopPipeline,execRawPipeline, getData })(
   withState('isVisible', 'onPopoverClickVisible', { visible: false, podName: '' })(ContainerTable)
 );
