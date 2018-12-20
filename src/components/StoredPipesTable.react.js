@@ -28,7 +28,7 @@ class StoredPipesTable extends Component {
       delete pipe.nodes;
       fixedDataSource.push(pipe);
     });
-
+    
     return (
       <div>
         <Table
@@ -40,7 +40,12 @@ class StoredPipesTable extends Component {
           locale={{ emptyText: 'no data' }}
           expandedRowRender={(record) => (
             <Card title="Full details">
-              <ReactJson src={record}/>
+              <ReactJson 
+                src={record} 
+                displayDataTypes={false} 
+                displayObjectSize={false} 
+                iconStyle="square"
+                enableClipboard={false}/>
             </Card>
           )}>
           <Column

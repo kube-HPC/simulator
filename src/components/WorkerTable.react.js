@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { Table, Card, Tag } from 'antd';
+import { Table, Tabs, Card, Tag, Button } from 'antd';
 import ReactJson from 'react-json-view';
 import { openModal } from '../actions/modal.action';
 import { init } from '../actions/workerTable.action';
@@ -12,12 +12,13 @@ import temp from './lib/worker.json'
 const RECORD_STATUS = {
   bootstrap: '#2db7f5',
   ready: '#87d068',
-  init: '#f50',
-  working: '#ec8c16',
+  init: '#eeda13',
+  working: '#838383',
   shutdown: '#87d068',
-  error: '#87d068',
-  stop: '#87d068'
-
+  error: '#f30',
+  exit: '#f50',
+  stop: '#ec8c16',
+  count: '#2db7f5'
 };
 
 class WorkerTable extends Component {
@@ -33,76 +34,23 @@ class WorkerTable extends Component {
     };
     this.workerColumns = [
       {
-        title: 'Job ID',
-        dataIndex: 'data.jobId',
-        key: 'jobId',
-        width: '10%',
-        sorter: (a, b) => sorter(a.data.jobId, b.data.jobId)
-      },
-      {
         title: 'Pod Name',
         dataIndex: 'data.podName',
         key: 'podName',
-        width: '10%',
         onFilter: (value, record) => record.data.podName.includes(value),
         sorter: (a, b) => sorter(a.data.podName, b.data.podName)
       },
       {
-        title: 'Pipeline',
-        dataIndex: 'data.pipelineName',
-        key: 'pipelineName',
-        width: '10%'
+        title: 'Job ID',
+        dataIndex: 'data.jobId',
+        width: '30%',
+        key: 'jobId',
+        sorter: (a, b) => sorter(a.data.jobId, b.data.jobId)
       },
-      {
-        title: 'Algorithm',
-        dataIndex: 'data.algorithmName',
-        key: 'algorithmName',
-        width: '10%',
-        sorter: (a, b) => sorter(a.data.algorithmName, b.data.algorithmName)
-      },
-      {
-        title: 'Node name',
-        dataIndex: 'data.jobData.node',
-        key: 'node',
-        width: '10%',
-        sorter: (a, b) => sorter(a.data.jobData.node, b.data.jobData.node)
-      },
-      {
-        title: 'Batch',
-        dataIndex: 'data.jobData.batchID',
-        key: 'batchID',
-        width: '5%',
-        sorter: (a, b) => sorter(a.data.jobData.batchID, b.data.jobData.batchID)
-      },
-      {
-        title: 'Up Time',
-        dataIndex: 'data.workerStartingTime',
-        key: 'workerStartingTime',
-        width: '13%',
-        render: (text, record) => (
-          <span>
-            {record.data.workerStartingTime && new Date(record.data.workerStartingTime).toLocaleString()}
-          </span>),
-        sorter: (a, b) => sorter(a.data.workerStartingTime, b.data.workerStartingTime)
-
-      },
-      {
-        title: 'Job Time',
-        dataIndex: 'data.jobCurrentTime',
-        key: 'jobCurrentTime',
-        width: '13%',
-        render: (text, record) => (
-          <span>
-            {record.data.jobCurrentTime && new Date(record.data.jobCurrentTime).toLocaleString()}
-          </span>),
-        sorter: (a, b) => sorter(a.data.jobCurrentTime, b.data.jobCurrentTime)
-
-      },
-
       {
         title: 'Worker State',
         dataIndex: 'data.workerStatus',
-        width: '5%',
+        width: '10%',
         key: 'workerStatus',
         render: (text, record) => (<span>
           <Tag color={RECORD_STATUS[record.data.workerStatus]} > {record.data.workerStatus}</Tag>
@@ -113,7 +61,7 @@ class WorkerTable extends Component {
       {
         title: 'Job State',
         dataIndex: 'data.jobStatus',
-        width: '5%',
+        width: '10%',
         key: 'jobStatus',
         render: (text, record) => (<span>
           <Tag color={RECORD_STATUS[record.data.jobStatus]} > {record.data.jobStatus}</Tag>
@@ -124,13 +72,24 @@ class WorkerTable extends Component {
       {
         title: 'Paused',
         dataIndex: 'data.workerPaused',
-        width: '5%',
+        width: '10%',
         key: 'workerPaused',
         render: (text, record) => (<span>
           <Tag color={record.data.workerPaused ? 'red' : 'green'} > {record.data.workerPaused ? 'paused' : 'ready'}</Tag>
         </span>
         ),
         sorter: (a, b) => sorter(a.data.workerPaused, b.data.workerPaused)
+      },
+      {
+        title: 'View Logs',
+        dataIndex: 'data.logs',
+        width: '10%',
+        key: 'logs',
+        render: (text, record) => (
+        <span>
+          <Button size="small">Log</Button>
+        </span>
+        ),
       }
     ];
 
@@ -143,27 +102,62 @@ class WorkerTable extends Component {
       {
         title: 'Ready Count',
         key: 'readyCount',
-        dataIndex: 'ready'
+        dataIndex: 'ready',
+        // render: (_, record) => {
+        //   return (
+        //      <span>
+        //       <Tag color={RECORD_STATUS.ready}>{record.ready}</Tag>
+        //     </span>
+        //     )
+        //   }
       },
       {
         title: 'Working Count',
         key: 'workingCount',
-        dataIndex: 'working'
+        dataIndex: 'working',
+        // render: (_, record) => {
+        //   return (
+        //      <span>
+        //       <Tag color={RECORD_STATUS.working}>{record.working}</Tag>
+        //     </span>
+        //     )
+        //   }
       },
       {
         title: 'Init Count',
         key: 'initCount',
-        dataIndex: 'init'
+        dataIndex: 'init',
+        // render: (_, record) => {
+        //   return (
+        //      <span>
+        //       <Tag color={RECORD_STATUS.init}>{record.init}</Tag>
+        //     </span>
+        //     )
+        //   }
       },
       {
         title: 'Exit Count',
         key: 'exitCount',
-        dataIndex: 'exit'
+        dataIndex: 'exit',
+        // render: (_, record) => {
+        //   return (
+        //      <span>
+        //       <Tag color={RECORD_STATUS.exit}>{record.exit}</Tag>
+        //     </span>
+        //     )
+        //   }
       },
       {
         title: 'Count',
         key: 'count',
-        dataIndex: 'count'
+        dataIndex: 'count',
+        // render: (_, record) => {
+        //   return (
+        //      <span>
+        //       <Tag color={RECORD_STATUS.count}>{record.count}</Tag>
+        //     </span>
+        //     )
+        // }
       }
     ];
   }
@@ -176,48 +170,68 @@ class WorkerTable extends Component {
     const expandedRowRender = (columns,dataSource) => (record) => {
       const filteredDataSource =
         dataSource.filter((d) => d.data.algorithmName === record.algorithmName);
+
+      const mutable = JSON.parse(JSON.stringify(filteredDataSource));
+      mutable.forEach((algo)=> algo.data.jobId = algo.key);
+
+
       return (
         <Table
+          size="middle"
           columns={columns}
-          dataSource={filteredDataSource}
-          pagination={{
-            defaultCurrent: 1, pageSize: 15
-          }}
-          expandedRowRender={(record) => (
-            <Card title="Full details">
-              <ReactJson src={record}/>
-            </Card>
-          )}/>
+          dataSource={mutable}
+          pagination={false}
+          expandedRowRender={
+            (record) => {
+              const timer = {
+                  workerStartingTime: record.data.workerStartingTime && new Date(record.data.workerStartingTime).toLocaleString(),
+                  jobCurrentTime: record.data.jobCurrentTime && new Date(record.data.jobCurrentTime).toLocaleString()
+                }
+
+              return (
+                <Tabs defaultActiveKey="1">
+                  <Tabs.TabPane tab="JSON" key="1">
+                    <Card>
+                      <ReactJson
+                      src={record} 
+                      displayDataTypes={false}
+                      displayObjectSize={false}
+                      iconStyle="square"
+                      enableClipboard={false}
+                    />
+                    </Card>
+                  </Tabs.TabPane>
+                  <Tabs.TabPane tab="Additional Details" key="2">
+                    <Card>
+                      <ReactJson
+                      src={timer} 
+                      displayDataTypes={false}
+                      displayObjectSize={false}
+                      iconStyle="square"
+                      enableClipboard={false}
+                    />
+                    </Card>
+                  </Tabs.TabPane>
+                </Tabs>
+              )
+            }
+          }/>
       );
     };
     return (
       <div>
         <Table
           columns={this.workerStatsColumns}
-          // {dataSource={stats.asMutable()}}
           dataSource={tempStats}
+          indentSize="0"
           pagination={{
             defaultCurrent: 1, pageSize: 15
           }}
-          expandedRowRender={expandedRowRender(this.workerColumns,dataSource.asMutable())}/>
-
-          <Table
-          columns={this.workerColumns}
-          dataSource={dataSource}
-          pagination={{
-            defaultCurrent: 1, pageSize: 15
-          }}
-          expandedRowRender={(record) => (
-            <Card title="Full details">
-              <ReactJson src={record}/>
-            </Card>
-          )}/>
+          expandedRowRender={expandedRowRender(this.workerColumns,dataSource)}/>
       </div>
     );
   }
 }
-
-
 
 const workerTable = (state) => state.workerTable.dataSource;
 const stats = (state) => state.workerTable.stats;
@@ -227,6 +241,7 @@ const tableDataSelector = createSelector(
   [workerTable],
   (dataSource) => dataSource
 );
+
 const statsSelector = createSelector(
   [stats],
   (stats) => stats
