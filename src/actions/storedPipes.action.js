@@ -14,7 +14,7 @@ export const execStoredPipe = (pipe) => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: 'exec/stored',
-    body: { pipe },
+    body: { pipeline:pipe },
     actionType: actions.EXEC_STORED_PIPE
   }
 });
