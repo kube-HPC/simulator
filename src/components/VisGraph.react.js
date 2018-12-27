@@ -35,9 +35,9 @@ class Graph extends Component {
       const nodesRemoved = differenceWith(this.props.graph.nodes, nextProps.graph.nodes, idIsEqual);
       const nodesAdded = differenceWith(nextProps.graph.nodes, this.props.graph.nodes, idIsEqual);
       const nodesChanged = differenceWith(
-                differenceWith(nextProps.graph.nodes, this.props.graph.nodes, isEqual),
-                nodesAdded
-            );
+        differenceWith(nextProps.graph.nodes, this.props.graph.nodes, isEqual),
+        nodesAdded
+      );
       this.patchNodes({ nodesRemoved, nodesAdded, nodesChanged });
     }
 
@@ -45,9 +45,9 @@ class Graph extends Component {
       const edgesRemoved = differenceWith(this.props.graph.edges, nextProps.graph.edges, isEqual);
       const edgesAdded = differenceWith(nextProps.graph.edges, this.props.graph.edges, isEqual);
       const edgesChanged = differenceWith(
-                differenceWith(nextProps.graph.edges, this.props.graph.edges, isEqual),
-                edgesAdded
-            );
+        differenceWith(nextProps.graph.edges, this.props.graph.edges, isEqual),
+        edgesAdded
+      );
       this.patchEdges({ edgesRemoved, edgesAdded, edgesChanged });
     }
 
@@ -102,17 +102,17 @@ class Graph extends Component {
       }
     };
 
-        // merge user provied options with our default ones
+    // merge user provied options with our default ones
     const options = defaultsDeep(defaultOptions, this.props.options);
 
     this.Network = new vis.Network(
-            container,
-            Object.assign({}, this.props.graph, {
-              edges: this.edges,
-              nodes: this.nodes
-            }),
-            options
-        );
+      container,
+      Object.assign({}, this.props.graph, {
+        edges: this.edges,
+        nodes: this.nodes
+      }),
+      options
+    );
 
     if (this.props.getNetwork) {
       this.props.getNetwork(this.Network);
@@ -126,7 +126,7 @@ class Graph extends Component {
       this.props.getEdges(this.edges);
     }
 
-        // Add user provied events to network
+    // Add user provied events to network
     const events = this.props.events || {};
     for (const eventName of Object.keys(events)) {
       this.Network.on(eventName, events[eventName]);
@@ -137,13 +137,13 @@ class Graph extends Component {
     const { identifier } = this.state;
     const { style } = this.props;
     return React.createElement(
-            'div',
+      'div',
       {
         id: identifier,
         style
       },
-            identifier
-        );
+      identifier
+    );
   }
 }
 

@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import { withState } from 'recompose';
 import { openModal } from '../actions/modal.action';
 import { init, stopPipeline,execRawPipeline } from '../actions/containerTable.action';
-import TabSwitcher from './TabSwitcher';
+import TabSwitcher from './TabSwitcher.react';
 import { getData } from '../actions/jaegerGetData.action';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 const RECORD_STATUS = {
@@ -45,7 +45,7 @@ class ContainerTable extends Component {
         render: (text, record) =>
           <CopyToClipboard text={`${record.key}`} onCopy={() => notification.success({
             message: 'Copied to clipboard',
-            description: ``
+            description: ''
           })}>
 
             <div>
@@ -97,22 +97,22 @@ class ContainerTable extends Component {
         width: '15%',
         // sorter: (a, b) => sorter(a.timestamp, b.timestamp),
         render: (text, record) => {
-          let runningTime = record.results && record.results.timeTook ? record.results.timeTook : Date.now() - record.pipeline.startTime
+          let runningTime = record.results && record.results.timeTook ? record.results.timeTook : Date.now() - record.pipeline.startTime;
           let timeTook =  record.results && record.results.timeTook ?  record.results.timeTook :null;
           return (<span>{
             record.results ?
-              // <Moment>
+            // <Moment>
               <span>
-                {record.results.timeTook+ " Seconds"}
-                </span>
-          //    </Moment> 
+                {record.results.timeTook+ ' Seconds'}
+              </span>
+            //    </Moment> 
               :
-               <Moment date={record.pipeline.startTime}
+              <Moment date={record.pipeline.startTime}
                 durationFromNow
               />
           }
           </span>
-          )
+          );
         }
 
       },
@@ -123,14 +123,14 @@ class ContainerTable extends Component {
         width: '10%',
         render: (text, record) => {
           let statuses =record.status.data&&record.status.data.states?
-           Object.entries(record.status.data.states.asMutable()).map(s => <Tag color={RECORD_STATUS[s[0]] || 'magenta'}>{s[1]}</Tag>)
-           :null;
+            Object.entries(record.status.data.states.asMutable()).map(s => <Tag color={RECORD_STATUS[s[0]] || 'magenta'}>{s[1]}</Tag>)
+            :null;
         
         
-        return (<span>
+          return (<span>
             {statuses}
           </span>
-          )
+          );
         }
       },
       {
@@ -164,7 +164,7 @@ class ContainerTable extends Component {
           const actionButton = record.status.status === 'active' ?
             <Button type="danger" shape="circle" icon="close" onClick={() => this.stopPipeline(record.key)} /> :
             <Button type="default" shape="circle" icon="redo" onClick={() => this.rerunPipeline(record.pipeline)} />;
-          return (actionButton)
+          return (actionButton);
         }
       }
 
@@ -219,7 +219,7 @@ class ContainerTable extends Component {
 
 const containerTable = (state) => state.containerTable.dataSource;
 const autoCompleteFilter = (state) => state.autoCompleteFilter.filter;
-const rowFilter = (raw,value)=>Object.values(raw.status).find(data=>data instanceof Object?false:data.includes(value)?true:false)
+const rowFilter = (raw,value)=>Object.values(raw.status).find(data=>data instanceof Object?false:data.includes(value)?true:false);
 const tableDataSelector = createSelector(
   containerTable,
   autoCompleteFilter,

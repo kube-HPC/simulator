@@ -1,13 +1,15 @@
 {
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:jsx-a11y/recommended"
+    ],
     "env": {
         "browser": true,
         "es6": true,
         "node": true
     },
-    "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended"
-    ],
+    "parser": "babel-eslint",
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
@@ -16,34 +18,21 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react"
+        "react",
+        "jsx-a11y"
     ],
     "rules": {
         "react/jsx-uses-react": "error",
         "react/jsx-uses-vars": "error",
-        "indent": [
-            "error",
-            4
-        ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
-        "quotes": [
-            "error",
-            "single"
-        ],
-        "semi": [
-            "error",
-            "always"
-        ]
+        "react/jsx-indent": [2,2],
+        "react/jsx-indent-props": [2,2]
     },
     "settings": {
         "react": {
-          "createClass": "createReactClass",
-          "pragma": "React",
-          "version": "default"
+            "createClass": "createReactClass",
+            "pragma": "React",
+            "version": "default"
         },
-        "propWrapperFunctions": [ "" ] 
-      }
+        "propWrapperFunctions": [""]
+    }
 }

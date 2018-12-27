@@ -1,13 +1,12 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Modal, Button } from 'antd';
+import {connect} from 'react-redux';
+import {Modal, Button, Card} from 'antd';
 
-import { addPipe } from '../actions/addPipe.action';
-
+import {ButtonAddPipeline,Paragraph} from './Styled';
+import {addPipe} from '../actions/addPipe.action';
 import JsonEditor from './JsonEditor.react';
 import template from './lib/json-object.json';
-import './AddPipe.css';
 
 const jsonTemplate = JSON.stringify(template, null, 2);
 
@@ -15,11 +14,11 @@ class AddPipe extends Component {
   constructor() {
     super();
     this.pipe = jsonTemplate;
+    this.state = {visible: false};
   }
-  state = { visible: false };
 
   showModal = () => {
-    this.setState({ visible: true });
+    this.setState({visible: true});
   };
 
   handleAddPipe = () => {
@@ -29,49 +28,43 @@ class AddPipe extends Component {
     } catch (e) {
       visible = true;
     }
-    this.setState({ visible });
+    this.setState({visible});
   };
 
   handleCancel = () => {
-    this.setState({ visible: false });
+    this.setState({visible: false});
   };
 
   handleReset = () => {
     this.pipe = jsonTemplate;
-    this.setState({ visible: false });
-    this.setState({ visible: true });
+    this.setState( (state)=> {
+      state.visible = !state.visible;
+      state.visible = !state.visible;
+    });
   };
 
   render() {
     return (
       <div>
-        <Button
-          className="buttonPipeline"
-          onClick={this.showModal} >
-          + Pipeline
-        </Button>
+        <ButtonAddPipeline onClick={this.showModal}> + Pipeline </ButtonAddPipeline>
         <Modal
-          title="Add-Pipeline"
+          title="Add Pipeline Editor"
           visible={this.state.visible}
           onOk={this.handleAddPipe}
           onCancel={this.handleCancel}
-          width="800px"
           footer={[
-            <Button type="primary" size="default" onClick={this.handleAddPipe}>
-              {' '}
-              Store Pipeline
-            </Button>,
-            <Button onClick={this.handleReset}> Reset</Button>,
-            <Button onClick={this.handleCancel}> Cancel</Button>
+            <Button key={1} type="primary" size="default" onClick={this.handleAddPipe}> Store Pipeline </Button>,
+            <Button key={2} onClick={this.handleReset}> Reset</Button>,
+            <Button key={3} onClick={this.handleCancel}> Cancel</Button>,
           ]}>
-          <JsonEditor
-            jsonTemplate={this.pipe}
-            pipe={(newPipe) => (this.pipe = newPipe)}/>
-          <p>
-            Use <code>node</code> <strong>snippet</strong> for adding{' '}
-            <strong>pipe-node</strong>. Use <code>Ctrl+Space</code> for{' '}
-            <strong>auto-completion</strong>.
-          </p>
+          <Card>
+            <JsonEditor
+              jsonTemplate={this.pipe}
+              pipe={(newPipe) => (this.pipe = newPipe)}/>
+          </Card>
+          <Paragraph>
+            Hint: Type <strong>node</strong> for adding pipe-node.
+          </Paragraph>
         </Modal>
       </div>
     );
@@ -79,10 +72,10 @@ class AddPipe extends Component {
 }
 
 AddPipe.propTypes = {
-  addPipe: PropTypes.func.isRequired
+  addPipe: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => state;
-const mapDispatchToProps = { addPipe };
+const mapDispatchToProps = {addPipe};
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddPipe);

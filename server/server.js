@@ -12,7 +12,7 @@ const parseBool = (value) => {
         return false;
     }
     return true;
-}
+};
 app.use(express.static(path.join(__dirname, '../build')));
 
 app.get('/', (req, res) => {
@@ -30,9 +30,10 @@ app.get('/config', (req, res) => {
                 schema: process.env.isSecure ? 'https://' : 'http://'
             }
         }
-    })
-})
+    });
+});
 const server = http.createServer(app);
 server.listen(DEFAULT_PORT, () => {
+    // eslint-disable-next-line no-console
     console.log('Listening on port', DEFAULT_PORT);
 });

@@ -22,21 +22,20 @@ const JsonEditor = ({ pipe, jsonTemplate }) => (
       mode="json"
       theme="github"
       name="json-editor"
-      fontSize={14}
-      width="760px"
-      showPrintMargin
-      showGutter
-      highlightActiveLine
+      fontSize={16}
+      showGutter={false}
+      highlightActiveLine={true}
       value={jsonTemplate}
       setOptions={{
         enableBasicAutocompletion: true,
         enableLiveAutocompletion: true,
         enableSnippets: true,
-        showLineNumbers: true,
+        showLineNumbers: false,
         tabSize: 2
       }}
       editorProps={{ $blockScrolling: true }}
-      onChange={(newPipe) => pipe(newPipe)}/>
+      onChange={(newPipe) => pipe(newPipe)}
+      style={{ width: 'auto' }}/>
   </div>
 );
 

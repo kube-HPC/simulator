@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Graph from './VisGraph';
+import Graph from './VisGraph.react';
 
 const options = {
   physics: {
