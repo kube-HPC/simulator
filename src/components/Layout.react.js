@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {compose, withState} from 'recompose';
-import logo from '../images/logo.svg';
 import ContainerTable from './ContainerTable.react';
 import WorkerTable from './WorkerTable.react';
 import DebugTable from './DebugTable.react';
@@ -13,8 +12,7 @@ import {BackTop, Row, Col, Layout, Menu} from 'antd';
 import TableAutoComplete from './TableAutoComplete.react';
 import {init} from '../actions/config.action.js';
 import AddPipe from './AddPipe.react';
-import {DynamicLayout, LayoutHeader} from './Styled';
-
+import {DynamicLayout, LayoutHeader, AlignRow, Logo, HeaderTitle} from './Styled';
 const {Sider, Content} = Layout;
 
 let collapsedState = false;
@@ -52,36 +50,26 @@ class LayoutInner extends React.Component {
     }
     render() {
         const {props} = this;
+
+        //TODO: Continue here
+
         return (
           <DynamicLayout>
             <LayoutHeader>
-              <Row type="flex" align="top" justify="space-between" style={{textAlign: 'center', height: "1vh"}}>
-                <Col span={2} style={{marginLeft: '-4.3%'}}>
-                  <img src={logo} className="App-logo" alt="logo"
-                    style={{
-                                    width: '5vh',
-                                    marginRight: '20px'
-                                    // height: '-webkit-fill-available'
-                                }} />
-                  <span style={{
-                                margin: 'auto',
-                                color: '#307fe6',
-                                fontSize: '30px',
-                                fontWeight: 'bold',
-                                fontFamily: 'monospace',
-                                letterSpacing: '1px',
-                                position: 'absolute',
-                                height: '-webkit-fill-available',
-                                marginBlockStart: '2px'
-                            }}>HKUBE</span>
+              <AlignRow type="flex" align="top" justify="space-between">
+                <Col span={4}>
+                  <Row gutter={3}>
+                    <Col span={4}> <Logo/> </Col>
+                    <Col span={2}> <HeaderTitle>Hkube</HeaderTitle> </Col>
+                  </Row>
                 </Col>
-                <Col span={12} style={{height: '-webkit-fill-available'}}>
+                <Col style={{height: '-webkit-fill-available'}}>
                   <TableAutoComplete />
                 </Col>
-                <Col span={2} style={{textAlign: 'center'}}>
+                <Col style={{textAlign: 'center'}}>
                   <AddPipe style={{margin: 'auto'}} />
                 </Col>
-              </Row>
+              </AlignRow>
             </LayoutHeader>
 
 

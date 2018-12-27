@@ -1,5 +1,7 @@
 import styled from 'styled-components';
-import { Button, Layout } from 'antd';
+import logo from "../images/logo.svg";
+import color from '../constants/colors';
+import { Button, Layout, BackTop, Row, Col , Menu } from 'antd';
 
 const {Header, Sider, Content} = Layout;
 
@@ -39,4 +41,24 @@ export const LayoutHeader = styled(Header)`
   }
   z-index: 2;
   border-bottom: 1pt solid #ccc;
+  padding: 0 10px;
+`
+
+export const AlignRow = styled(Row)`
+  text-align: center;
+  height: 1vh;
+`
+
+export const HeaderTitle = styled.span`
+  text-transform: uppercase;
+  color: ${color.blue};
+  font-size: 30px;
+  font-weight: bold;
+  font-family: monospace;
+  letter-spacing: 1px;
+  position: absolute;
+`
+
+export const Logo = styled.img.attrs({src: logo})`
+  width: 5vh;
 `
