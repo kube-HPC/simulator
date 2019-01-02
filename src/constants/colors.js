@@ -1,4 +1,4 @@
-const COLOR = {
+export const COLOR = {
   blue: '#307fe6',
   blueHighlight: '#45a9ec',
   red: '#e74c3c',
@@ -7,7 +7,17 @@ const COLOR = {
   redHighlight: '#f85d4d',
   green: '#1abc9c',
   greenHighlight: '#2bcdad',
-  textBlue: '#307fe6'
+  textBlue: '#307fe6',
+  whiteHighlight: '#ececec',
+  white: 'white',
+  grey: '#ccc',
 };
 
-export default COLOR;
+export const HCOLOR = {
+  colorPrimary: COLOR.blue,
+  colorAccent: COLOR.whiteHighlight,
+  border: COLOR.grey,
+  header: COLOR.white,
+  headerBorder: COLOR.grey,
+  content: COLOR.white,
+}

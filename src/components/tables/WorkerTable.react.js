@@ -1,14 +1,13 @@
 import { connect } from 'react-redux';
 import { Table, Tabs, Card, Tag, Button } from 'antd';
 import ReactJson from 'react-json-view';
-import { openModal } from '../actions/modal.action';
-import { init } from '../actions/workerTable.action';
+import { openModal } from '../../actions/modal.action';
+import { init } from '../../actions/workerTable.action';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withState } from 'recompose';
-import workerStats from './lib/worker-stats.json'
-import defaultWorkerData from './lib/worker-default-data.json'
+import defaultWorkerData from '../stubs/worker-default-data.json'
 
 const RECORD_STATUS = {
   bootstrap: '#2db7f5',

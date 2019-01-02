@@ -2,8 +2,8 @@
 import { connect } from 'react-redux';
 import { Table, Card, Tag } from 'antd';
 import ReactJson from 'react-json-view';
-import { openModal } from '../actions/modal.action';
-import { init } from '../actions/driverTable.action';
+import { openModal } from '../../actions/modal.action';
+import { init } from '../../actions/driverTable.action';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';

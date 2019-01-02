@@ -1,6 +1,3 @@
-// libs
-
-
 import { connect } from 'react-redux';
 import { Table, Tag, Progress, notification, Icon, Button } from 'antd';
 import { createSelector } from 'reselect';
@@ -8,10 +5,10 @@ import React, { Component } from 'react';
 import Moment from 'react-moment';
 import PropTypes from 'prop-types';
 import { withState } from 'recompose';
-import { openModal } from '../actions/modal.action';
-import { init, stopPipeline,execRawPipeline } from '../actions/containerTable.action';
-import TabSwitcher from './TabSwitcher.react';
-import { getData } from '../actions/jaegerGetData.action';
+import { openModal } from '../../actions/modal.action';
+import { init, stopPipeline,execRawPipeline } from '../../actions/containerTable.action';
+import TabSwitcher from '../TabSwitcher.react';
+import { getData } from '../../actions/jaegerGetData.action';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 const RECORD_STATUS = {
   active: '#2db7f5',

@@ -5,27 +5,19 @@ import ReactJson from 'react-json-view';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import { withState } from 'recompose';
-import { openModal } from '../actions/modal.action';
-import { init, storeAlgorithm, deleteAlgorithmFromStore } from '../actions/algorithmTable.action';
-import FillAsJsonButton from './FillAsJsonButton.react';
-import algorithmObjectTemplate from './lib/algorithm-object.json';
+import { openModal } from '../../actions/modal.action';
+import { init, storeAlgorithm, deleteAlgorithmFromStore } from '../../actions/algorithmTable.action';
+import HEditor from '../HEditor.react';
 
-const RECORD_STATUS = {
-  bootstrap: '#2db7f5',
-  ready: '#87d068',
-  init: '#f50',
-  working: '#ec8c16',
-  shutdown: '#87d068',
-  error: '#87d068',
-  stop: '#87d068'
-};
+import algorithmObjectTemplate from '../stubs/algorithm-object.json';
+import AddButton from '../stateless/AddButton.react';
 
 class AlgorithmTable extends Component {
 
   componentWillMount() {
     this.props.init();
-    this.state = { isVisible: false };
-    this.state = { algoToAdd: { ...algorithmObjectTemplate } };
+    this.setState( { isVisible: false } );
+    this.setState({ algoToAdd: { ...algorithmObjectTemplate } });
 
     const sorter = (a, b) => {
       let tempA = null;
@@ -121,16 +113,16 @@ class AlgorithmTable extends Component {
     const AlgorithmInput = (<div style={{ height: 'auto', width: '400px' }}>
       <Row style={{ marginBottom: 5 }}>
         <Input 
-        defaultValue={algoData.name}
-        onChange={(e) => { this.state.algoToAdd.name = e.target.value; }}
-        prefix={<Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }}/>}
-        placeholder="Insert algorithm name"/>
+          defaultValue={algoData.name}
+          onChange={(e) => { this.setState( (state) => state.algoToAdd.name = e.target.value)}}
+          prefix={<Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }}/>}
+          placeholder="Insert algorithm name"/>
       </Row>
 
       <Row style={{ marginBottom: 5 }}>
         <Input 
           defaultValue={algoData.algorithmImage}
-          onChange={(e) => { this.state.algoToAdd.algorithmImage = e.target.value; }}
+          onChange={(e) => this.setState( (state) => state.algoToAdd.algorithmImage = e.target.value)}
           prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }}/>}
           placeholder="Insert algorithm image"/>
       </Row>
@@ -144,9 +136,7 @@ class AlgorithmTable extends Component {
         <InputNumber
           min={1}
           defaultValue={algoData.cpu}
-          onChange={(v) => {
-            this.state.algoToAdd.cpu = +v;
-          }}
+          onChange={(v) => this.setState( (state) => state.algoToAdd.cpu = +v) }
           style={{ width: 50 }}/>
       </Row>
       <Row style={{ marginBottom: 5 }}>
@@ -158,16 +148,12 @@ class AlgorithmTable extends Component {
         <InputNumber
           min={1}
           defaultValue={memoryNum}
-          onChange={(v) => {
-            this.state.algoToAdd.mem = v + getMemoryProp(algoData.mem, false); 
-          }}
+          onChange={(v) => this.setState( (state) => state.algoToAdd.mem = v + getMemoryProp(algoData.mem, false))}
           style={{ width: 'auto' }}/>
         <Select
           defaultValue={memoryProp}
           style={{ width: 'auto' }}
-          onChange={ (v) => {
-            this.state.algoToAdd.mem = getMemoryProp(algoData.mem, true) + v;
-          }}>
+          onChange={ (v) => this.setState( (state) => state.algoToAdd.mem = getMemoryProp(algoData.mem, true) + v)}>
           <Option value="Ki">Ki</Option>
           <Option value="M">M</Option>
           <Option value="Mi">Mi</Option>
@@ -200,62 +186,54 @@ class AlgorithmTable extends Component {
       </Row>
 
     </div>);
+
+    const PopOverContent = (
+      <div >
+        {AlgorithmInput}
+        <Row type="flex" justify="space-between" align="center">
+          <Col span={5} style={{ textAlign: 'center' }}>
+            <Button type="primary" onClick={this.onPopOverConfirm} style={{ margin: 'auto' }}>
+                    Confirm
+            </Button>
+          </Col>
+          <Col span={10} style={{ textAlign: 'center' }}>
+            <HEditor 
+              styledButton={(onClick) => <Button onClick={onClick}>Add As JSON</Button>}
+              jsonTemplate={JSON.stringify(this.state.algoToAdd, null, 2)}
+              title={'Store Algorithm Editor'}
+              okText={'Store Algorithm'}
+              action={this.props.storeAlgorithm}
+              />
+          </Col>
+          <Col span={5} style={{ textAlign: 'center' }}>
+            <Button onClick={this.onPopOverCancel}  style={{ margin: 'auto' }}>
+                    Cancel
+            </Button>
+          </Col>
+        </Row>
+      </div>
+    );
+
     const { dataSource } = this.props;
     return (
       <div>
         <Table
           columns={this.columns}
           dataSource={dataSource.asMutable()}
-          pagination={{
-            defaultCurrent: 1, pageSize: 15
-          }}
+          pagination={{ defaultCurrent: 1, pageSize: 15 }}
           locale={{ emptyText: 'no data' }}
           expandedRowRender={(record) => (
-            <Card title="Full details">
+            <Card title="JSON">
               <ReactJson src={record}/>
             </Card>
           )}/>
         <Popover
           placement="topRight"
-          content={
-            <div >
-              {AlgorithmInput}
-              <Row type="flex" justify="space-between" align="center">
-                <Col span={5} style={{ textAlign: 'center' }}>
-                  <Button type="primary" onClick={this.onPopOverConfirm} style={{ margin: 'auto' }}>
-                    Confirm
-                  </Button>
-                </Col>
-                <Col span={10} style={{ textAlign: 'center' }}>
-                  <FillAsJsonButton
-                    algorithm={JSON.stringify(this.state.algoToAdd, null, 2)}
-                    action={this.props.storeAlgorithm}
-                    style={{ margin: 'auto' }}/>
-                </Col>
-                <Col span={5} style={{ textAlign: 'center' }}>
-                  <Button onClick={this.onPopOverCancel}  style={{ margin: 'auto' }}>
-                    Cancel
-                  </Button>
-                </Col>
-              </Row>
-            </div>
-          }
+          content={ PopOverContent }
           title="Insert new algorithm to store"
           trigger="click"
           visible={this.state.isVisible}>
-          <Button
-            type="primary" shape="circle" size="default"
-            style={{
-              textAlign: 'center',
-              position: 'absolute',
-              width: '56px',
-              height: '56px',
-              top: '90%',
-              right: '3%',
-              boxShadow: '0 8px 10px 1px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.2)'
-            }} onClick={this.onVisible}>
-            <Icon type="plus" width="24px" height="24px" style={{ margin: 'auto', fontSize: 'x-large' }}/>
-          </Button>
+          <AddButton onVisible={this.onVisible.bind(this)}> </AddButton>
         </Popover>
       </div>
     );
@@ -268,7 +246,7 @@ const autoCompleteFilter = (state) => state.autoCompleteFilter.filter;
 const tableDataSelector = createSelector(
   algorithmTable,
   autoCompleteFilter,
-  (algorithmTable, autoCompleteFilter) => algorithmTable
+  (algorithmTable) => algorithmTable
 );
 
 AlgorithmTable.propTypes = {

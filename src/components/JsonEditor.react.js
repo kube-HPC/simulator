@@ -1,13 +1,14 @@
 import React from 'react';
 import AceEditor from 'react-ace';
 import ace from 'brace';
+import PropTypes from 'prop-types';
 
 import 'brace/mode/json';
 import 'brace/theme/github';
 import 'brace/snippets/json';
 import 'brace/ext/language_tools';
 
-import snippet from './lib/json-snippet';
+import snippet from './stubs/json-snippet';
 
 // SUPER HACK FOR ADDING SNIPPETS
 // eslint-disable-next-line
@@ -38,5 +39,10 @@ const JsonEditor = ({ pipe, jsonTemplate }) => (
       style={{ width: 'auto' }}/>
   </div>
 );
+
+JsonEditor.propTypes = {
+  pipe: PropTypes.func.isRequired,
+  jsonTemplate: PropTypes.string.isRequired,
+};
 
 export default JsonEditor;

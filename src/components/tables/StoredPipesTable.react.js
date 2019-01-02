@@ -4,9 +4,9 @@ import { Table, Card } from 'antd';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactJson from 'react-json-view';
-import { init } from '../actions/storedPipes.action';
-import { openModal } from '../actions/modal.action';
-import ExecuteButton from './ExecuteButton.react';
+import { init } from '../../actions/storedPipes.action';
+import { openModal } from '../../actions/modal.action';
+import ExecuteButton from '../ExecuteButton.react';
 
 const { Column } = Table;
 
