@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon, Input, AutoComplete } from 'antd';
 import { connect } from 'react-redux';
-import { updateFilter } from '../actions/autoCompleteFilter.action';
+import { updateFilter } from '../../actions/autoCompleteFilter.action';
 const Option = AutoComplete.Option;
 const OptGroup = AutoComplete.OptGroup;
 

@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { withState } from 'recompose';
 import { openModal } from '../../actions/modal.action';
 import { init, stopPipeline,execRawPipeline } from '../../actions/containerTable.action';
-import TabSwitcher from '../TabSwitcher.react';
+import TabSwitcher from '../stateless/TabSwitcher.react';
 import { getData } from '../../actions/jaegerGetData.action';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 const RECORD_STATUS = {

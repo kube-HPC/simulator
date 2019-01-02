@@ -9,18 +9,6 @@ import { init, addAlgorithm,deleteAlgorithm} from '../../actions/debugTable.acti
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import { withState, withStateHandlers, compose } from 'recompose';
-// import PopOver from './PopoverConfirmOperation.react'
-const FormItem = Form.Item;
-const RECORD_STATUS = {
-  bootstrap: '#2db7f5',
-  ready: '#87d068',
-  init: '#f50',
-  working: '#ec8c16',
-  shutdown: '#87d068',
-  error: '#87d068',
-  stop: '#87d068'
-};
 
 class DebugTable extends Component {
   constructor(props) {

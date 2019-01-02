@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Modal, Button } from 'antd';
-import JsonEditor from './JsonEditor.react';
-import { execStoredPipe } from '../actions/storedPipes.action';
+import JsonEditor from '../stateless/JsonEditor.react';
+import { execStoredPipe } from '../../actions/storedPipes.action';
 
 class ExecuteButton extends Component {
   constructor(props) {

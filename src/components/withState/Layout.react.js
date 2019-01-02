@@ -2,20 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {compose, withState} from 'recompose';
-import ContainerTable from './tables/ContainerTable.react';
-import WorkerTable from './tables/WorkerTable.react';
-import DebugTable from './tables/DebugTable.react';
-import StoredPipesTable from './tables/StoredPipesTable.react';
-import DriverTable from './tables/DriverTable.react';
-import AlgorithmTable from './tables/AlgorithmsTable.react';
+import ContainerTable from '../tables/ContainerTable.react';
+import WorkerTable from '../tables/WorkerTable.react';
+import DebugTable from '../tables/DebugTable.react';
+import StoredPipesTable from '../tables/StoredPipesTable.react';
+import DriverTable from '../tables/DriverTable.react';
+import AlgorithmTable from '../tables/AlgorithmsTable.react';
 import {BackTop, Row, Col } from 'antd';
-import TableAutoComplete from './TableAutoComplete.react';
-import {init} from '../actions/config.action.js';
-import {addPipe} from '../actions/addPipe.action';
+import TableAutoComplete from '../stateless/TableAutoComplete.react';
+import {init} from '../../actions/config.action.js';
+import {addPipe} from '../../actions/addPipe.action';
 import HEditor from './HEditor.react';
-import {HContent, HMenu, HLayout, HSider, LayoutHeader, AlignRow, Logo, HeaderTitle} from './Styled';
-import template from './stubs/json-object.json';
-import {ButtonAddPipeline} from './Styled'
+import {HContent, HMenu, HLayout, HSider, LayoutHeader, AlignRow, Logo, HeaderTitle} from '../Styled';
+import template from '../stubs/json-object.json';
+import {ButtonAddPipeline} from '../Styled'
 
 const jsonTemplate = JSON.stringify(template, null, 2);
 

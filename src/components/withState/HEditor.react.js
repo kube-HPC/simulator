@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Modal, Button, Card} from 'antd';
 
-import {Paragraph} from './Styled';
-import {addPipe} from '../actions/addPipe.action';
-import JsonEditor from './JsonEditor.react';
+import {Paragraph} from '../Styled';
+import JsonEditor from '../stateless/JsonEditor.react';
 
 class HEditor extends Component {
   constructor(props) {
@@ -71,6 +70,5 @@ HEditor.propTypes = {
 };
 
 const mapStateToProps = (state) => state;
-const mapDispatchToProps = {addPipe};
 
-export default connect(mapStateToProps, mapDispatchToProps)(HEditor);
+export default connect(mapStateToProps)(HEditor);

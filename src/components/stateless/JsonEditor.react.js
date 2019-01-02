@@ -8,7 +8,7 @@ import 'brace/theme/github';
 import 'brace/snippets/json';
 import 'brace/ext/language_tools';
 
-import snippet from './stubs/json-snippet';
+import snippet from '../stubs/json-snippet';
 
 // SUPER HACK FOR ADDING SNIPPETS
 // eslint-disable-next-line

@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import { withState } from 'recompose';
 import { openModal } from '../../actions/modal.action';
 import { init, storeAlgorithm, deleteAlgorithmFromStore } from '../../actions/algorithmTable.action';
-import HEditor from '../HEditor.react';
+import HEditor from '../withState/HEditor.react';
 
 import algorithmObjectTemplate from '../stubs/algorithm-object.json';
 import AddButton from '../stateless/AddButton.react';
