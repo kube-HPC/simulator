@@ -45,7 +45,7 @@ class StoredPipesTable extends Component {
                 displayDataTypes={false} 
                 displayObjectSize={false} 
                 iconStyle="square"
-                enableClipboard={false}/>
+               />
             </Card>
           )}>
           <Column
