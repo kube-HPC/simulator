@@ -6,11 +6,13 @@ import driverTable from './driverTable.reducer';
 import debugTable from './debugTable.reducer';
 import algorithmTable from './algorithmTable.reducer';
 import modal from './modal.reducer';
+import sideBar from './sideBar.reducer';
 import ui from './ui.reducer';
 import autoCompleteFilter from './autoCompleteFilter.reducer';
 import serverSelection from './serverSelection.reducer';
 import storedPipeline from './storedPipeline.reducer';
 import jaeger from './jaegerData.reducer';
+import kubernetesLogs from './kubernetesLogs.reducer';
 const rootReducer = combineReducers({
   ui,
   layers,
@@ -20,10 +22,12 @@ const rootReducer = combineReducers({
   algorithmTable,
   debugTable,
   modal,
+  sideBar,
   autoCompleteFilter,
   serverSelection,
   storedPipeline,
-  jaeger
+  jaeger,
+  kubernetesLogs
 });
 export default rootReducer;
 

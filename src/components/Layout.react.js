@@ -13,6 +13,7 @@ import TableAutoComplete from './TableAutoComplete.react';
 import ServerSelection from './ServerSelection.react';
 import { init } from '../actions/config.action.js';
 import AddPipe from './AddPipe.react';
+import SideBar from './SideBarConatainer';
 import './Layout.css';
 
 const { Header, Sider, Content } = Layout;
@@ -53,13 +54,17 @@ const LayoutInner = class extends React.Component {
   render() {
     const { props } = this;
     return (
-      <Layout
-        style={{ minHeight: '-webkit-fill-available' }}>
+      
+      <Layout  style={{ minHeight: '-webkit-fill-available' }}>
+        <SideBar
+         open={false}/>
         <Header
           style={{
             background: 'white',
             zIndex: '2 ',
-            borderBottom: '1pt solid #ccc'
+            borderBottom: '1pt solid #ccc',
+            position:'fixed',
+            width:'100vw'
           }}>
           <Row type="flex" align="top" justify="space-between" style={{ textAlign: 'center', height: "1vh" }}>
             <Col span={2} style={{ marginLeft: '-4.3%' }}>
@@ -89,7 +94,7 @@ const LayoutInner = class extends React.Component {
             </Col>
           </Row>
         </Header>
-        <Layout>
+        <Layout style={{marginTop:"64px"}}>
           <Sider
             style={{ background: '#ececec' }}
             trigger={null}
@@ -134,6 +139,7 @@ const LayoutInner = class extends React.Component {
           </Content>
         </Layout>
       </Layout>
+          
     );
   }
 };

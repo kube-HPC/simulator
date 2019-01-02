@@ -1,6 +1,6 @@
 import actions from '../constants/actions';
 
-export const getData = (jobId) => ({
+export const getJaegerData = (jobId) => ({
   type: actions.REST_REQ,
   payload: {
     url: `/jaeger?jobId=${jobId}`,

@@ -11,7 +11,9 @@ import { withState } from 'recompose';
 import { openModal } from '../actions/modal.action';
 import { init, stopPipeline,execRawPipeline } from '../actions/containerTable.action';
 import TabSwitcher from './TabSwitcher';
-import { getData } from '../actions/jaegerGetData.action';
+import { getJaegerData } from '../actions/jaegerGetData.action';
+import { getKubernetesLogsData } from '../actions/kubernetesLog.action';
+
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 const RECORD_STATUS = {
   active: '#2db7f5',
@@ -25,6 +27,7 @@ const RECORD_STATUS = {
 };
 
 class ContainerTable extends Component {
+ 
   componentWillMount() {
     this.props.init();
 
@@ -84,7 +87,7 @@ class ContainerTable extends Component {
         render: (text, record) =>
           (<span>
             <Moment format="DD/MM/YY hh:mm:ss">
-              {record.pipeline.startTime}
+              {record.pipeline&&record.pipeline.startTime}
             </Moment>
           </span>
           )
@@ -97,7 +100,7 @@ class ContainerTable extends Component {
         width: '15%',
         // sorter: (a, b) => sorter(a.timestamp, b.timestamp),
         render: (text, record) => {
-          let runningTime = record.results && record.results.timeTook ? record.results.timeTook : Date.now() - record.pipeline.startTime
+          let runningTime = record.results && record.results.timeTook ? record.results.timeTook : record.pipeline&&Date.now() - record.pipeline.startTime
           let timeTook =  record.results && record.results.timeTook ?  record.results.timeTook :null;
           return (<span>{
             record.results ?
@@ -107,7 +110,7 @@ class ContainerTable extends Component {
                 </span>
           //    </Moment> 
               :
-               <Moment date={record.pipeline.startTime}
+               <Moment date={record.pipeline&&record.pipeline.startTime}
                 durationFromNow
               />
           }
@@ -170,6 +173,7 @@ class ContainerTable extends Component {
 
     ];
   }
+ 
 
   rerunPipeline(pipeline){
     this.props.execRawPipeline(pipeline);
@@ -186,6 +190,7 @@ class ContainerTable extends Component {
     const { dataSource } = this.props;
     return (
       <div>
+       
         <Table
           columns={this.columns}
           dataSource={dataSource}
@@ -207,7 +212,8 @@ class ContainerTable extends Component {
           )}
           onExpand={(expanded, record) => {
             if (expanded) {
-              this.props.getData(record.key);
+              this.props.getJaegerData(record.key);
+            
             }
           }} />
       </div>
@@ -234,10 +240,11 @@ ContainerTable.propTypes = {
 const mapStateToProps = (state) => ({
   dataSource: tableDataSelector(state),
   jaeger: state.jaeger,
+  kubernetesLogs:state.kubernetesLogs,
   scriptsPath: state.serverSelection.currentSelection.scriptsPath,
   sshUser: state.serverSelection.currentSelection.user
 });
 
-export default connect(mapStateToProps, { openModal, init,stopPipeline,execRawPipeline, getData })(
+export default connect(mapStateToProps, { openModal, init,stopPipeline,execRawPipeline, getJaegerData,getKubernetesLogsData })(
   withState('isVisible', 'onPopoverClickVisible', { visible: false, podName: '' })(ContainerTable)
 );

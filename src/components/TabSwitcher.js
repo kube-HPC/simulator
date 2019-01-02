@@ -11,7 +11,7 @@ const TabSwitcher = ({ record }) => {
   <Tabs defaultActiveKey="1">
     <Tabs.TabPane tab="Graph" key="1">
       <Card>
-        <JobGraph graph={record.graph}/>
+        <JobGraph graph={{...record.graph,jobId:record.key}}/>
       </Card>
     </Tabs.TabPane>
     <Tabs.TabPane tab="Trace" key="2">

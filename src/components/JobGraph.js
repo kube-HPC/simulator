@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Graph from './VisGraph';
-
+import { connect } from 'react-redux';
+import { sideBarOpen,sideBarClose } from "../actions/sideBar.action";
+import { getKubernetesLogsData} from "../actions/kubernetesLog.action";
 const options = {
   physics: {
     stabilization: true
@@ -9,41 +11,65 @@ const options = {
     hierarchical: {
       enabled: true,
       direction: 'LR',
-      sortMethod: 'directed'
+    sortMethod: 'directed'
     }
   },
   nodes: {
-    shape: 'dot',
+    shape: 'box',
     size: 40,
     font: {
-      size: 15,
-      color: 'black'
+      size: 14,
+      color: 'rgba(0,0,0,0.5)'
     },
-    borderWidth: 2
+    margin:{
+      top:15,
+      bottom:15,
+      left:15,
+      right:15
+    },
+    borderWidth: 1,
+    shadow:true,
+    // widthConstraint: {
+    //   maximum: 100,
+    //   minimum: 100
+    // }
   },
   edges: {
-    width: 2
+    width: 2,
+    shadow:true,
+    length:500,
+    smooth: {
+      enabled: true,
+      type: "cubicBezier",
+      roundness: 0.7
+    },
   },
   groups: {
     batchCompleted: {
-      color: { background: 'green', border: 'black' },
-      shape: 'diamond'
+      color: { background: '#87d068', border: 'black' },
+     
     },
     batchNotStarted: {
-      color: { background: 'red', border: 'black' },
-      shape: 'diamond'
+      color: { background: '#FF5441', border: 'black' },
+      // font:{
+      //   color:"white"
+      // }
+   
 
 
     },
     batchRunning: {
-      color: { background: 'yellow', border: 'black' },
-      shape: 'diamond'
+      color: { background: '#eeda13', border: 'rgba(0,0,0,0.5)' },
+      
     },
     notStarted: {
-      shape: 'dot',
-      color: { background: 'red', border: 'black' }
+      
+      color: { background: '#FF5441', border: 'rgba(0,0,0,0.5)' },
+      // font:{
+      //   color:"white"
+      // }
     },
-    completed: { color: 'rgb(0,255,140)' },
+    completed: { color: '#87d068' },
     source: {
       color: { border: 'white' }
     }
@@ -75,6 +101,15 @@ class JobGraph extends Component {
 
   initNetworkInstance(network) {
     this.network = network;
+    this.network.on("click",  (params) => {
+      if(params.nodes[0]){
+        const nodeData = this.network.body.data.nodes._data[params.nodes[0]];
+        const taskId =nodeData.taskId?nodeData.taskId:nodeData.batchTasks[0].taskId;
+        this.props.sideBarOpen({payload:{taskId,algorithmName:nodeData.algorithmName}});
+    //   alert(this.network.body.data.nodes._data[params.nodes[0]].taskId?this.network.body.data.nodes._data[params.nodes[0]].taskId:this.network.body.data.nodes._data[params.nodes[0]].batchTasks[0].taskId); 
+        this.props.getKubernetesLogsData(taskId);
+      }
+  });
   }
   render() {
     if (!this.props.graph) {
@@ -82,14 +117,14 @@ class JobGraph extends Component {
         <div>Graph is not available</div>
       </div>);
     }
-    const { nodes, edges } = this.props.graph;
+    const { nodes, edges,jobId } = this.props.graph;
     const adaptedGraph = {
       edges: [],
       nodes: []
 
     };
-    nodes.forEach((n) => adaptedGraph.nodes.push({ ...n, label: n.extra.batch ? `${n.label} - ${n.extra.batch}` : n.label }));
-    edges.forEach((e) => adaptedGraph.edges.push({ ...e, dashes: e.group === 'waitAny' }));
+    nodes&&nodes.forEach((n) => adaptedGraph.nodes.push({ ...n, label: n.extra.batch ? `${n.label}-${n.extra.batch}` : n.label }));
+    edges&&edges.forEach((e) => adaptedGraph.edges.push({ ...e, dashes: e.group === 'waitAny' }));
 
     return (<div style={{ height: '600px' }}>
       <Graph graph={adaptedGraph} options={options} events={this.events} getNetwork={this._initNetworkInstance} />
@@ -98,4 +133,10 @@ class JobGraph extends Component {
 }
 
 
-export default JobGraph;
+
+
+const mapStateToProps = (state) => state;
+
+export default connect(mapStateToProps,  { sideBarOpen,sideBarClose,getKubernetesLogsData })(JobGraph);
+
+

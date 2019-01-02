@@ -20,3 +20,11 @@ render((
   </ Provider>
   // </IntlProvider>
 ), document.getElementById('root'));
+
+
+// webpack Hot Module Replacement API
+if (module.hot) {
+  // keep in mind - here you are configuring HMR to accept CHILDREN MODULE
+  // while `hot` would configure HMR for the CURRENT module
+  module.hot.accept()
+}
