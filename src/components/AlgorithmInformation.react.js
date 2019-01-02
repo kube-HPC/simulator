@@ -29,7 +29,7 @@ class AlgorithmInformation extends Component {
             <ReactJson src={algorithmDetails}   iconStyle="square" displayDataTypes={false} displayObjectSize={false}  enableClipboard={false}/>
           </Card>
         </Tabs.TabPane>
-        <Tabs.TabPane  disabled  tab={<Button onClick={()=>alert("nice")} >Start from this node</Button>} key="3">
+        <Tabs.TabPane  tab={<Button onClick={()=>alert("nice")} >Start from this node</Button>} key="3">
         
         </Tabs.TabPane>
       </Tabs>

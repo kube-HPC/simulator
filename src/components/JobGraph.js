@@ -105,7 +105,7 @@ class JobGraph extends Component {
       if(params.nodes[0]){
         const nodeData = this.network.body.data.nodes._data[params.nodes[0]];
         const taskId =nodeData.taskId?nodeData.taskId:nodeData.batchTasks[0].taskId;
-        this.props.sideBarOpen({payload:{taskId,algorithmName:nodeData.algorithmName}});
+        this.props.sideBarOpen({payload:{taskId,algorithmName:nodeData.algorithmName,jobId:this.props.graph.jobId}});
     //   alert(this.network.body.data.nodes._data[params.nodes[0]].taskId?this.network.body.data.nodes._data[params.nodes[0]].taskId:this.network.body.data.nodes._data[params.nodes[0]].batchTasks[0].taskId); 
         this.props.getKubernetesLogsData(taskId);
       }
