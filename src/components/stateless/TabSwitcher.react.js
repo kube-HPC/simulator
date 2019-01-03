@@ -4,6 +4,7 @@ import { Tabs, Card } from 'antd';
 import ReactJson from 'react-json-view';
 import JobGraph from '../withState/JobGraph.react';
 import Trace from 'jaeger-react-trace-component';
+
 const TabSwitcher = ({ record }) => {
   
   const [context, setContext] = useState({ });
