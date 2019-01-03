@@ -7,4 +7,3 @@ export const getJaegerData = (jobId) => ({
     actionType: actions.JAEGER_REST
   }
 });
-
