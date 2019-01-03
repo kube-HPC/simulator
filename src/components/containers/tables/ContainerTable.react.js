@@ -99,8 +99,8 @@ class ContainerTable extends Component {
         width: '15%',
         // sorter: (a, b) => sorter(a.timestamp, b.timestamp),
         render: (text, record) => {
-          let runningTime = record.results && record.results.timeTook ? record.results.timeTook : record.pipeline && Date.now() - record.pipeline.startTime
-          let timeTook = record.results && record.results.timeTook ? record.results.timeTook : null;
+          // let runningTime = record.results && record.results.timeTook ? record.results.timeTook : record.pipeline && Date.now() - record.pipeline.startTime
+          // let timeTook = record.results && record.results.timeTook ? record.results.timeTook : null;
           return (<span>{
             record.results ?
               // <Moment>
@@ -125,8 +125,8 @@ class ContainerTable extends Component {
         width: '10%',
         render: (text, record) => {
           let statuses = record.status.data && record.status.data.states ?
-            Object.entries(record.status.data.states.asMutable()).map(s =>
-              <Tooltip style={{ backgroundColor: "white", color: "black" }} placement="top" title={s[0]} >
+            Object.entries(record.status.data.states.asMutable()).map((s,i) =>
+              <Tooltip key={i} style={{ backgroundColor: "white", color: "black" }} placement="top" title={s[0]} >
                 <Tag color={RECORD_STATUS[s[0]] || 'magenta'}>{s[1]}</Tag>
               </Tooltip>)
             : null;
@@ -233,6 +233,7 @@ const tableDataSelector = createSelector(
 
 ContainerTable.propTypes = {
   execRawPipeline: PropTypes.func.isRequired,
+  init: PropTypes.func.isRequired,
   getJaegerData: PropTypes.func.isRequired,
   dataSource: PropTypes.array.isRequired,
   stopPipeline: PropTypes.func.isRequired,

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Graph from './VisGraph.react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { sideBarOpen, sideBarClose } from "../../actions/sideBar.action";
 import { getKubernetesLogsData } from "../../actions/kubernetesLog.action";
@@ -122,7 +123,7 @@ class JobGraph extends Component {
         <div>Graph is not available</div>
       </div>);
     }
-    const { nodes, edges, jobId } = this.props.graph;
+    const { nodes, edges } = this.props.graph;
     const adaptedGraph = {
       edges: [],
       nodes: []
@@ -137,8 +138,12 @@ class JobGraph extends Component {
   }
 }
 
-
-
+JobGraph.propTypes = {
+  sideBarOpen: PropTypes.func.isRequired,
+  getKubernetesLogsData: PropTypes.func.isRequired,
+  graph: PropTypes.object,
+  jobId: PropTypes.object
+};
 
 const mapStateToProps = (state) => state;
 

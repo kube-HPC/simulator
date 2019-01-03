@@ -1,8 +1,8 @@
 import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
-import actions from '../constants/actions';
+// import actions from '../constants/actions';
 
-const dataSource = {};
+// const dataSource = {};
 // const tmp = { dataSource };
 const tmp = {dataSource:[]};
 // columns
@@ -13,7 +13,8 @@ export default handleActions({
   // ['JAEGER_REST_SUCCESS'](state, { type, payload, meta, error }) {
   //   return state.merge({ dataSource: payload || {} });
   // }
-  'KUBERNETES_LOGS_REST_SUCCESS'(state, { type, payload, meta, error }) {
+
+  'KUBERNETES_LOGS_REST_SUCCESS'(state, { payload }) {
     return state.merge({ dataSource: payload });
   }
 

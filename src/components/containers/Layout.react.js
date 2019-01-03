@@ -8,7 +8,7 @@ import DebugTable from './tables/DebugTable.react';
 import StoredPipesTable from './tables/StoredPipesTable.react';
 import DriverTable from './tables/DriverTable.react';
 import AlgorithmTable from './tables/AlgorithmsTable.react';
-import SideBar from './SideBarConatainer';
+import SideBar from './SideBarContainer.react';
 import { BackTop, Row, Col } from 'antd';
 import TableAutoComplete from '../dumb/TableAutoComplete.react';
 import { init } from '../../actions/config.action.js';

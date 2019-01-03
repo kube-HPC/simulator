@@ -1,21 +1,15 @@
 import React, { Component } from 'react';
 import ReactJson from 'react-json-view';
+import PropTypes from 'prop-types';
 import { sideBarOpen, sideBarClose } from "../../actions/sideBar.action";
 import { getCaching } from "../../actions/caching.action";
 import Logs from "../dumb/Logs.react";
 import Caching from "../dumb/Caching.react"
 import { getKubernetesLogsData } from "../../actions/kubernetesLog.action";
-import { Tabs, Card,Button } from 'antd';
+import { Tabs, Card } from 'antd';
 
 import { connect } from 'react-redux';
 class AlgorithmInformation extends Component {
-
-  constructor() {
-    super();
-
-  }
-
-
 
   render() {
     
@@ -41,7 +35,12 @@ class AlgorithmInformation extends Component {
 
 }
 
-
+AlgorithmInformation.propTypes = {
+  getCaching: PropTypes.func,
+  sideBar: PropTypes.object,
+  logs: PropTypes.object,
+  algorithmTable: PropTypes.object,
+};
 
 const mapStateToProps = (state) => ({
   logs: state.kubernetesLogs,
