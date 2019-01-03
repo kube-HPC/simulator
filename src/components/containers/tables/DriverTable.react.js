@@ -106,9 +106,7 @@ class WorkerTable extends Component {
         <Table
           columns={this.columns}
           dataSource={dataSource.asMutable()}
-          pagination={{
-            defaultCurrent: 1, pageSize: 15
-          }}
+          pagination={{ defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true, style: { paddingRight: '30px' }}}
           locale={{ emptyText: 'no data' }}
           expandedRowRender={(record) => (
             <Card title="Full details">

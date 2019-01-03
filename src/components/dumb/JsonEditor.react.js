@@ -25,6 +25,7 @@ const JsonEditor = ({ pipe, jsonTemplate }) => (
       name="json-editor"
       fontSize={16}
       showGutter={false}
+      showPrintMargin={false}
       highlightActiveLine={true}
       value={jsonTemplate}
       setOptions={{

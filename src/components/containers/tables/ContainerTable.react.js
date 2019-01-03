@@ -187,13 +187,10 @@ class ContainerTable extends Component {
     const { dataSource } = this.props;
     return (
       <div>
-       
         <Table
           columns={this.columns}
           dataSource={dataSource}
-          pagination={{
-            defaultCurrent: 1, pageSize: 15
-          }}
+          pagination={{ defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true, style: { paddingRight: '30px' }}}
           locale={{ emptyText: 'no data' }}
           expandedRowRender={(record) => (
             <TabSwitcher record={{

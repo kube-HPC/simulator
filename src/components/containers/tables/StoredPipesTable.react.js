@@ -1,12 +1,14 @@
 
 import { connect } from 'react-redux';
-import { Table, Card } from 'antd';
+import { Table, Card, Button, Icon } from 'antd';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactJson from 'react-json-view';
 import { init } from '../../../actions/storedPipes.action';
 import { openModal } from '../../../actions/modal.action';
-import ExecuteButton from '../ExecuteButton.react';
+import { execStoredPipe } from '../../../actions/storedPipes.action';
+// import ExecuteButton from '../ExecuteButton.react';
+import HEditor from '../HEditor.react';
 
 const { Column } = Table;
 
@@ -34,9 +36,7 @@ class StoredPipesTable extends Component {
         <Table
           rowKey="name"
           dataSource={dataSource.asMutable()}
-          pagination={{
-            defaultCurrent: 1, pageSize: 15
-          }}
+          pagination={{ defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true, style: { paddingRight: '30px' }}}
           locale={{ emptyText: 'no data' }}
           expandedRowRender={(record) => (
             <Card title="Full details">
@@ -72,23 +72,35 @@ class StoredPipesTable extends Component {
             title="Action"
             dataIndex="action"
             key="action"
-            render={((text, record) => (<div>
-              <ExecuteButton pipe={JSON.stringify(fixedDataSource.find((p) => p.name === record.name), null, 2)}/>
-            </div>
-        ))}/>
+            render={((_,record) => (
+              <HEditor 
+                jsonTemplate={JSON.stringify(fixedDataSource.find((p) => p.name === record.name), null, 2)}
+                styledButton={(onClick) => 
+                  <Button shape="circle" icon="play-circle" onClick={onClick} />
+                }
+                title={'Execute Pipeline Editor'}
+                okText={'Execute'}
+                action={this.props.execStoredPipe}
+              />
+        ))}
+            />
         </Table>
       </div>
     );
   }
 }
+                  {/* <Button size="small" onClick={onClick}>
+                    <Icon type="play-circle" style={{fontSize: 'x-large' }}/>
+                  </Button> */}
 
 StoredPipesTable.propTypes = {
   init: PropTypes.func.isRequired,
-  dataSource: PropTypes.array.isRequired
+  dataSource: PropTypes.array.isRequired,
+  execStoredPipe: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => ({
   dataSource: state.storedPipeline.dataSource
 });
 
-export default connect(mapStateToProps, { openModal, init })(StoredPipesTable);
+export default connect(mapStateToProps, { openModal, init, execStoredPipe })(StoredPipesTable);

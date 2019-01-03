@@ -86,9 +86,9 @@ class WorkerTable extends Component {
         width: '10%',
         key: 'logs',
         render: (text, record) => (
-        <span>
-          <Button size="small">Log</Button>
-        </span>
+          <span>
+            <Button size="small">Log</Button>
+          </span>
         ),
       }
     ];
@@ -197,22 +197,22 @@ class WorkerTable extends Component {
                   <Tabs.TabPane tab="JSON" key="1">
                     <Card>
                       <ReactJson
-                      src={record} 
-                      displayDataTypes={false}
-                      displayObjectSize={false}
-                      iconStyle="square"
-                      enableClipboard={false}
+                        src={record} 
+                        displayDataTypes={false}
+                        displayObjectSize={false}
+                        iconStyle="square"
+                        enableClipboard={false}
                     />
                     </Card>
                   </Tabs.TabPane>
                   <Tabs.TabPane tab="Additional Details" key="2">
                     <Card>
                       <ReactJson
-                      src={timer} 
-                      displayDataTypes={false}
-                      displayObjectSize={false}
-                      iconStyle="square"
-                      enableClipboard={false}
+                        src={timer} 
+                        displayDataTypes={false}
+                        displayObjectSize={false}
+                        iconStyle="square"
+                        enableClipboard={false}
                     />
                     </Card>
                   </Tabs.TabPane>
@@ -223,7 +223,7 @@ class WorkerTable extends Component {
       );
     };
 
-    // const statsMergedWithDefault = tempStats.map((algo) => ({ ...defaultWorkerData,...algo }) );
+    // const statsMergedWithDefault = stats.map((algo) => ({ ...defaultWorkerData,...algo }) );
     const statsMergedWithDefault = stats.map((algo) => ({ ...defaultWorkerData,...algo }) );
     return (
       <div>
@@ -231,9 +231,7 @@ class WorkerTable extends Component {
           columns={this.workerStatsColumns}
           dataSource={statsMergedWithDefault}
           indentSize="0px"
-          pagination={{
-            defaultCurrent: 1, pageSize: 15
-          }}
+          pagination={{ defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true, style: { paddingRight: '30px' }}}
           expandedRowRender={expandedRowRender(this.workerColumns,dataSource)}/>
       </div>
     );

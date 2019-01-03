@@ -77,10 +77,8 @@ class LayoutInner extends React.Component {
               </AlignRow>
             </LayoutHeader>
 
-            {/* styledButton={(onClick) => <ButtonAddPipeline onClick={onClick}> + Pipeline </ButtonAddPipeline>} */}
-
             <HLayout  hasSider={true}>
-              <HSider trigger={null} collapsible={false} collapsed={false}>
+              <HSider>
                 <HMenu mode="inline" onSelect={(i) => {menuSelection(i, props)}} defaultSelectedKeys={['1']}>
                   <HMenu.Item key="1"> <span className="nav-text">Jobs</span> </HMenu.Item>
                   <HMenu.Item key="2"> <span className="nav-text">Stored Pipelines</span> </HMenu.Item>

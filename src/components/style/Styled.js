@@ -31,12 +31,16 @@ export const Paragraph = styled.p`
 `
 
 export const HLayout = styled(Layout)`
+  height: 100vh
   ${LayoutHeader}
 `
 
 export const HSider = styled(Sider)`
-  height: -webkit-fill-available;
   background: ${HCOLOR.colorAccent};
+`
+
+export const HContent = styled(Content)`
+  background: ${HCOLOR.content};
 `
 
 export const HMenu = styled(Menu)`
@@ -69,10 +73,6 @@ export const HeaderTitle = styled.span`
 
 export const Logo = styled.img.attrs({src: logo})`
   width: 5vh;
-`
-
-export const HContent = styled(Content)`
-  background: ${HCOLOR.content};
 `
 
 export const HAddButton = styled(Button)`
