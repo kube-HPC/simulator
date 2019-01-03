@@ -2,7 +2,7 @@
 
 
 import { connect } from 'react-redux';
-import { Table, Tag, Progress, notification, Icon, Button } from 'antd';
+import { Table, Tag, Progress, notification, Icon, Button,Tooltip } from 'antd';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import Moment from 'react-moment';
@@ -126,7 +126,10 @@ class ContainerTable extends Component {
         width: '10%',
         render: (text, record) => {
           let statuses =record.status.data&&record.status.data.states?
-           Object.entries(record.status.data.states.asMutable()).map(s => <Tag color={RECORD_STATUS[s[0]] || 'magenta'}>{s[1]}</Tag>)
+           Object.entries(record.status.data.states.asMutable()).map(s =>
+            <Tooltip  style={{backgroundColor:"white",color:"black"}} placement="top" title={s[0]} >
+            <Tag color={RECORD_STATUS[s[0]] || 'magenta'}>{s[1]}</Tag>
+            </Tooltip>)
            :null;
         
         
