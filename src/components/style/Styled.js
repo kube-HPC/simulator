@@ -51,6 +51,7 @@ export const LayoutHeader = styled(Header)`
   z-index: 2;
   border-bottom: 1pt solid ${HCOLOR.headerBorder};
   padding: 0 10px;
+  position:'fixed';
 `
 
 export const AlignRow = styled(Row)`

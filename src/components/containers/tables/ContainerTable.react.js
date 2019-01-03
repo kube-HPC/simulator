@@ -1,12 +1,12 @@
 import { connect } from 'react-redux';
-import { Table, Tag, Progress, notification, Icon, Button } from 'antd';
+import { Table, Tag, Progress, notification, Icon, Button, Tooltip } from 'antd';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import Moment from 'react-moment';
 import PropTypes from 'prop-types';
 import { withState } from 'recompose';
 import { openModal } from '../../../actions/modal.action';
-import { init, stopPipeline,execRawPipeline } from '../../../actions/containerTable.action';
+import { init, stopPipeline, execRawPipeline } from '../../../actions/containerTable.action';
 import TabSwitcher from '../../dumb/TabSwitcher.react';
 import { getJaegerData } from '../../../actions/jaegerGetData.action';
 import { getKubernetesLogsData } from '../../../actions/kubernetesLog.action';
@@ -26,7 +26,7 @@ const RECORD_STATUS = {
 };
 
 class ContainerTable extends Component {
- 
+
   componentWillMount() {
     this.props.init();
 
@@ -86,7 +86,7 @@ class ContainerTable extends Component {
         render: (text, record) =>
           (<span>
             <Moment format="DD/MM/YY hh:mm:ss">
-              {record.pipeline&&record.pipeline.startTime}
+              {record.pipeline && record.pipeline.startTime}
             </Moment>
           </span>
           )
@@ -99,17 +99,17 @@ class ContainerTable extends Component {
         width: '15%',
         // sorter: (a, b) => sorter(a.timestamp, b.timestamp),
         render: (text, record) => {
-          // let runningTime = record.results && record.results.timeTook ? record.results.timeTook : record.pipeline&&Date.now() - record.pipeline.startTime
-          // let timeTook =  record.results && record.results.timeTook ?  record.results.timeTook :null;
+          let runningTime = record.results && record.results.timeTook ? record.results.timeTook : record.pipeline && Date.now() - record.pipeline.startTime
+          let timeTook = record.results && record.results.timeTook ? record.results.timeTook : null;
           return (<span>{
             record.results ?
               // <Moment>
               <span>
-                {record.results.timeTook+ " Seconds"}
+                {record.results.timeTook + " Seconds"}
               </span>
-          //    </Moment> 
+              //    </Moment> 
               :
-              <Moment date={record.pipeline&&record.pipeline.startTime}
+              <Moment date={record.pipeline && record.pipeline.startTime}
                 durationFromNow
               />
           }
@@ -124,14 +124,15 @@ class ContainerTable extends Component {
         key: 'details',
         width: '10%',
         render: (text, record) => {
-          let statuses =record.status.data&&record.status.data.states?
-           Object.entries(record.status.data.states.asMutable()).map(
-             (s,i) => <Tag key={i} color={RECORD_STATUS[s[0]] || 'magenta'}>{s[1]}</Tag>
-          )
-           :null;
-        return (<span>
-          {statuses}
-        </span>
+          let statuses = record.status.data && record.status.data.states ?
+            Object.entries(record.status.data.states.asMutable()).map(s =>
+              <Tooltip style={{ backgroundColor: "white", color: "black" }} placement="top" title={s[0]} >
+                <Tag color={RECORD_STATUS[s[0]] || 'magenta'}>{s[1]}</Tag>
+              </Tooltip>)
+            : null;
+          return (<span>
+            {statuses}
+          </span>
           )
         }
       },
@@ -172,9 +173,9 @@ class ContainerTable extends Component {
 
     ];
   }
- 
 
-  rerunPipeline(pipeline){
+
+  rerunPipeline(pipeline) {
     this.props.execRawPipeline(pipeline);
   }
 
@@ -189,10 +190,11 @@ class ContainerTable extends Component {
     const { dataSource } = this.props;
     return (
       <div>
+
         <Table
           columns={this.columns}
           dataSource={dataSource}
-          pagination={{ className: 'tablePagination', defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true}}
+          pagination={{ className: 'tablePagination', defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true }}
           locale={{ emptyText: 'no data' }}
           expandedRowRender={(record) => (
             <TabSwitcher record={{
@@ -209,7 +211,7 @@ class ContainerTable extends Component {
           onExpand={(expanded, record) => {
             if (expanded) {
               this.props.getJaegerData(record.key);
-            
+
             }
           }} />
       </div>
@@ -221,12 +223,12 @@ class ContainerTable extends Component {
 
 const containerTable = (state) => state.containerTable.dataSource;
 const autoCompleteFilter = (state) => state.autoCompleteFilter.filter;
-const rowFilter = (raw,value)=>Object.values(raw.status).find(data=>data instanceof Object?false:data.includes(value)?true:false)
+const rowFilter = (raw, value) => Object.values(raw.status).find(data => data instanceof Object ? false : data.includes(value) ? true : false)
 const tableDataSelector = createSelector(
   containerTable,
   autoCompleteFilter,
-  (containerTable,autoCompleteFilter) => containerTable&& containerTable.asMutable().filter(row=>rowFilter(row,autoCompleteFilter))
-  
+  (containerTable, autoCompleteFilter) => containerTable && containerTable.asMutable().filter(row => rowFilter(row, autoCompleteFilter))
+
 );
 
 ContainerTable.propTypes = {
@@ -240,11 +242,11 @@ ContainerTable.propTypes = {
 const mapStateToProps = (state) => ({
   dataSource: tableDataSelector(state),
   jaeger: state.jaeger,
-  kubernetesLogs:state.kubernetesLogs,
+  kubernetesLogs: state.kubernetesLogs,
   scriptsPath: state.serverSelection.currentSelection.scriptsPath,
   sshUser: state.serverSelection.currentSelection.user
 });
 
-export default connect(mapStateToProps, { openModal, init,stopPipeline,execRawPipeline, getJaegerData,getKubernetesLogsData })(
+export default connect(mapStateToProps, { openModal, init, stopPipeline, execRawPipeline, getJaegerData, getKubernetesLogsData })(
   withState('isVisible', 'onPopoverClickVisible', { visible: false, podName: '' })(ContainerTable)
 );

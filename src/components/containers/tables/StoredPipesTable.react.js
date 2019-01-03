@@ -46,7 +46,7 @@ class StoredPipesTable extends Component {
                 displayDataTypes={false} 
                 displayObjectSize={false} 
                 iconStyle="square"
-                enableClipboard={false}/>
+               />
             </Card>
           )}>
           <Column
@@ -76,8 +76,8 @@ class StoredPipesTable extends Component {
             render={((_,record) => (
               <HEditor 
                 jsonTemplate={JSON.stringify(fixedDataSource.find((p) => p.name === record.name), null, 2)}
-                styledButton={(onClick) => 
-                  <Button shape="circle" icon="caret-right" onClick={onClick} />
+                styledButton={(showPopup) => 
+                  <Button shape="circle" icon="caret-right" onClick={showPopup} />
                 }
                 title={'Execute Pipeline Editor'}
                 okText={'Execute'}

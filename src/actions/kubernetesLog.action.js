@@ -7,3 +7,4 @@ export const getKubernetesLogsData = (podId) => ({
     actionType: actions.KUBERNETES_LOGS_REST
   }
 });
+

@@ -189,7 +189,8 @@ class WorkerTable extends Component {
       );
     };
 
-    const statsMergedWithDefault = stats.map((algo) => ({ ...defaultWorkerData,...algo }) );
+    // const statsMergedWithDefault = tempStats.map((algo) => ({ ...defaultWorkerData,...algo }) );
+    const statsMergedWithDefault = stats&&stats.map((algo) => ({ ...defaultWorkerData,...algo }) );
     return (
       <div>
         <Table

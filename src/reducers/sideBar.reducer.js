@@ -1,14 +1,17 @@
 import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
 import actions from '../constants/actions';
-const initState = { modalType: null, visible: false, data: null, command: null, sshInitData: null };
+
+const initState = { visible: false, data: null };
+
+
 const inititalState = Immutable.from(initState);
 
 export default handleActions({
-  [actions.OPEN_MODAL](state, { type, payload, meta, error }) {
+  [actions.OPEN_SIDEBAR](state, { type, payload, meta, error }) {
     return state.merge(payload);
   },
-  [actions.CLOSE_MODAL](state, { type, payload, meta, error }) {
+  [actions.CLOSE_SIDEBAR](state, { type, payload, meta, error }) {
     return state.merge(payload);
   }
 }, inititalState);
