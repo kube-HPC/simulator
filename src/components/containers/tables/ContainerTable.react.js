@@ -8,11 +8,19 @@ import React, { Component } from 'react';
 import Moment from 'react-moment';
 import PropTypes from 'prop-types';
 import { withState } from 'recompose';
+<<<<<<< HEAD:src/components/containers/tables/ContainerTable.react.js
 import { openModal } from '../../../actions/modal.action';
 import { init, stopPipeline,execRawPipeline } from '../../../actions/containerTable.action';
 import TabSwitcher from '../../dumb/TabSwitcher.react';
 import { getJaegerData } from '../../../actions/jaegerGetData.action';
 import { getKubernetesLogsData } from '../../../actions/kubernetesLog.action';
+=======
+import { openModal } from '../../actions/modal.action';
+import { init, stopPipeline,execRawPipeline } from '../../actions/containerTable.action';
+import TabSwitcher from '../stateless/TabSwitcher.react';
+import { getJaegerData } from '../../actions/jaegerGetData.action';
+import { getKubernetesLogsData } from '../../actions/kubernetesLog.action';
+>>>>>>> a515d49de5af38e999feb4109131bc2b1659b559:src/components/tables/ContainerTable.react.js
 
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 const RECORD_STATUS = {
