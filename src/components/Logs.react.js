@@ -15,7 +15,8 @@ const Logs = (props) => {
 
     return (
         <div>
-            <Button type="default"  type="primary" style={{left: "95%"}} shape="circle" icon="redo" onClick={() => props.rerunLogs()} />
+    
+            <Button type="default"  type="primary" style={{left: "85%"}}  icon="redo" onClick={() => props.rerunLogs()}>Refresh</Button>
             <ul style={{
                 background: 'rgba(0,0,0,0.8)', margin: '20px', padding: '10px',
                 overflowY: 'auto', overflowX: 'hidden', height: '80vh'
