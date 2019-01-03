@@ -1,6 +1,6 @@
 
 import { connect } from 'react-redux';
-import { Table, Card, Button, Icon } from 'antd';
+import { Table, Card, Button } from 'antd';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactJson from 'react-json-view';
@@ -9,6 +9,7 @@ import { openModal } from '../../../actions/modal.action';
 import { execStoredPipe } from '../../../actions/storedPipes.action';
 // import ExecuteButton from '../ExecuteButton.react';
 import HEditor from '../HEditor.react';
+import './StoredPipesTable.scss';
 
 const { Column } = Table;
 
@@ -36,7 +37,7 @@ class StoredPipesTable extends Component {
         <Table
           rowKey="name"
           dataSource={dataSource.asMutable()}
-          pagination={{ defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true, style: { paddingRight: '30px' }}}
+          pagination={{ className: "tablePagination", defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true,}}
           locale={{ emptyText: 'no data' }}
           expandedRowRender={(record) => (
             <Card title="Full details">
@@ -81,6 +82,7 @@ class StoredPipesTable extends Component {
                 title={'Execute Pipeline Editor'}
                 okText={'Execute'}
                 action={this.props.execStoredPipe}
+                hintText={{}}
               />
         ))}
             />
@@ -89,9 +91,6 @@ class StoredPipesTable extends Component {
     );
   }
 }
-                  {/* <Button size="small" onClick={onClick}>
-                    <Icon type="play-circle" style={{fontSize: 'x-large' }}/>
-                  </Button> */}
 
 StoredPipesTable.propTypes = {
   init: PropTypes.func.isRequired,

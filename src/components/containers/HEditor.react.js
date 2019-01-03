@@ -66,7 +66,7 @@ HEditor.propTypes = {
   okText: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   styledButton: PropTypes.func.isRequired,
-  hintText: PropTypes.symbol.isRequired,
+  hintText: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => state;

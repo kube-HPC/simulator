@@ -1,7 +1,7 @@
 // libs
 
 import { connect } from 'react-redux';
-import { Table, Card, Button, Icon, Form, Input, Tag, Row, Col, notification, Popover } from 'antd';
+import { Table, Card, Button, Icon, Input, Tag, Row, Col, notification, Popover } from 'antd';
 import ReactJson from 'react-json-view';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { openModal } from '../../../actions/modal.action';
@@ -9,18 +9,13 @@ import { init, addAlgorithm,deleteAlgorithm} from '../../../actions/debugTable.a
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
+import './DebugTable.scss'
 class DebugTable extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentWillMount() {
     this.props.init();
-    // const callPopOverWorkAround = (isVisible) => {
-    //   this.props.onPopoverClickVisible(isVisible);
-    // };
-    this.state = { isVisable: false }
+    
+    this.setState({ visible: false })
+    
     const sorter = (a, b) => {
       let tempA = null;
       let tempB = null;
@@ -61,7 +56,7 @@ class DebugTable extends Component {
         key: 'stop',
         width: '20%',
         render: (text, record) =>
-         <Button type="danger" shape="circle" icon="close" onClick ={ ()=>this.onDelete(record.key) }/>
+          <Button type="danger" shape="circle" icon="close" onClick ={ ()=>this.onDelete(record.key) }/>
       }
     ];
   }
@@ -84,11 +79,11 @@ class DebugTable extends Component {
   }
   render() {
     const AlgorithmInput = (
-      <div style={{ height: 'auto', width: '300' }}>
-        <Row style={{ marginBottom: 5 }}>
+      <div className="AlgorithmInput">
+        <Row className='AlgorithmRow'>
           <Input 
             onChange={this.onFormDataChange}
-            prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }}/>} 
+            prefix={<Icon type="share-alt" className='AlgorithmInputPrefix'/>} 
             placeholder="Algorithm"/>
         </Row>
 
@@ -101,7 +96,7 @@ class DebugTable extends Component {
         <Table
           columns={this.columns}
           dataSource={dataSource.asMutable()}
-          pagination={{ defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true, style: { paddingRight: '30px' }}}
+          pagination={{ className: "tablePagination", defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true}}
           locale={{ emptyText: 'no data' }}
           expandedRowRender={(record) => (
             <Card title="Full details">
@@ -155,11 +150,14 @@ const autoCompleteFilter = (state) => state.autoCompleteFilter.filter;
 const tableDataSelector = createSelector(
   debugTable,
   autoCompleteFilter,
-  (debugTable, autoCompleteFilter) => debugTable
+  (debugTable) => debugTable
 );
 
 DebugTable.propTypes = {
-  dataSource: PropTypes.array.isRequired
+  init: PropTypes.func.isRequired,
+  dataSource: PropTypes.array.isRequired,
+  addAlgorithm: PropTypes.func.isRequired,
+  deleteAlgorithm: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({

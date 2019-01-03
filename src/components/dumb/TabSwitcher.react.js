@@ -7,7 +7,7 @@ import Trace from 'jaeger-react-trace-component';
 
 const TabSwitcher = ({ record }) => {
   
-  const [context, setContext] = useState({ });
+  const [context] = useState({ });
   return(
     <Tabs defaultActiveKey="1">
       <Tabs.TabPane tab="Graph" key="1">

@@ -57,10 +57,8 @@ class JobGraph extends Component {
     super();
     this.network = null;
     this.events = {
-      select: (event) => {
-        const { nodes, edges } = event;
-      },
-      afterDrawing: (e) => {
+      select: () => {},
+      afterDrawing: () => {
         this.network.fit({
           animation: {
             duration: 400,

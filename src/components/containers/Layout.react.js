@@ -80,13 +80,12 @@ class LayoutInner extends React.Component {
             <HLayout  hasSider={true}>
               <HSider>
                 <HMenu mode="inline" onSelect={(i) => {menuSelection(i, props)}} defaultSelectedKeys={['1']}>
-                  <HMenu.Item key="1"> <span className="nav-text">Jobs</span> </HMenu.Item>
-                  <HMenu.Item key="2"> <span className="nav-text">Stored Pipelines</span> </HMenu.Item>
-                  <HMenu.Item key="3"> <span className="nav-text">Workers</span> </HMenu.Item>
-                  <HMenu.Item key="4"> <span className="nav-text">Drivers</span> </HMenu.Item>
-                  <HMenu.Item key="5"> <span className="nav-text">Algorithms</span> </HMenu.Item>
-                  <HMenu.Item key="6"> <span className="nav-text">Debug</span> </HMenu.Item>
-                  <span className="ant-divider" />
+                  <HMenu.Item key="1"> Jobs </HMenu.Item>
+                  <HMenu.Item key="2"> Stored Pipelines </HMenu.Item>
+                  <HMenu.Item key="3"> Workers </HMenu.Item>
+                  <HMenu.Item key="4"> Drivers </HMenu.Item>
+                  <HMenu.Item key="5"> Algorithms </HMenu.Item>
+                  <HMenu.Item key="6"> Debug </HMenu.Item>
                 </HMenu>
               </HSider>
               <HContent> <BackTop/> {selectTable(props)} </HContent>
@@ -102,6 +101,7 @@ const mapStateToProps = (state) => ({
 
 LayoutInner.propTypes = {
   init: PropTypes.func.isRequired,
+  addPipe: PropTypes.func.isRequired,
 };
 
 export default compose(connect(mapStateToProps,{init, addPipe}),

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import logo from "../../images/logo.svg";
 import { HCOLOR } from '../../constants/colors';
-import { Button, Layout, BackTop, Row, Col , Menu } from 'antd';
+import { Button, Layout, Row , Menu } from 'antd';
 
 const {Header, Sider, Content} = Layout;
 
@@ -14,12 +14,12 @@ export const ButtonAddPipeline = styled(Button)`
     border-color: transparent;
     box-shadow: none;
 
-    ${ButtonAddPipeline}:hover {
+    :hover {
       color: rgba(0, 0, 0, 0.62);
       border-color: transparent;
     }
 
-    ${ButtonAddPipeline}:focus {
+    :focus {
       color: ${HCOLOR.colorPrimary};
       border-color: transparent;
     }
@@ -31,8 +31,7 @@ export const Paragraph = styled.p`
 `
 
 export const HLayout = styled(Layout)`
-  height: 100vh
-  ${LayoutHeader}
+  height: 100vh;
 `
 
 export const HSider = styled(Sider)`
@@ -48,9 +47,7 @@ export const HMenu = styled(Menu)`
 `
 
 export const LayoutHeader = styled(Header)`
-  ${LayoutHeader} {
-    background: ${HCOLOR.header}
-  }
+  background: ${HCOLOR.header};
   z-index: 2;
   border-bottom: 1pt solid ${HCOLOR.headerBorder};
   padding: 0 10px;

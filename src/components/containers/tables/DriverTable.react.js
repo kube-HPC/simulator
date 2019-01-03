@@ -8,6 +8,7 @@ import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withState } from 'recompose';
+import './DebugTable.scss'
 
 const STATUSES = {
   bootstrap: '#87d068',
@@ -20,16 +21,9 @@ const STATUSES = {
 };
 
 class WorkerTable extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentWillMount() {
     this.props.init();
-    const callPopOverWorkAround = (isVisible) => {
-      this.props.onPopoverClickVisible(isVisible);
-    };
-
+  
     const sorter = (a, b) => {
       let tempA = null;
       let tempB = null;
@@ -106,7 +100,7 @@ class WorkerTable extends Component {
         <Table
           columns={this.columns}
           dataSource={dataSource.asMutable()}
-          pagination={{ defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true, style: { paddingRight: '30px' }}}
+          pagination={{ className: "tablePagination", defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true }}
           locale={{ emptyText: 'no data' }}
           expandedRowRender={(record) => (
             <Card title="Full details">
@@ -125,12 +119,13 @@ const autoCompleteFilter = (state) => state.autoCompleteFilter.filter;
 const tableDataSelector = createSelector(
   driverTable,
   autoCompleteFilter,
-  (driverTable, autoCompleteFilter) => {
+  (driverTable) => {
     return driverTable;
   }
 );
 
 WorkerTable.propTypes = {
+  init: PropTypes.func.isRequired,
   dataSource: PropTypes.array.isRequired
 };
 

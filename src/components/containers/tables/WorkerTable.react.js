@@ -9,6 +9,8 @@ import PropTypes from 'prop-types';
 import { withState } from 'recompose';
 import defaultWorkerData from '../../stubs/worker-default-data.json'
 
+import './WorkerTable.scss'
+
 const RECORD_STATUS = {
   bootstrap: '#2db7f5',
   ready: '#87d068',
@@ -85,7 +87,7 @@ class WorkerTable extends Component {
         dataIndex: 'data.logs',
         width: '10%',
         key: 'logs',
-        render: (text, record) => (
+        render: () => (
           <span>
             <Button size="small">Log</Button>
           </span>
@@ -103,61 +105,27 @@ class WorkerTable extends Component {
         title: 'Ready Count',
         key: 'readyCount',
         dataIndex: 'ready',
-        // render: (_, record) => {
-        //   return (
-        //      <span>
-        //       <Tag color={RECORD_STATUS.ready}>{record.ready}</Tag>
-        //     </span>
-        //     )
-        //   }
       },
       {
         title: 'Working Count',
         key: 'workingCount',
         dataIndex: 'working',
-        // render: (_, record) => {
-        //   return (
-        //      <span>
-        //       <Tag color={RECORD_STATUS.working}>{record.working}</Tag>
-        //     </span>
-        //     )
-        //   }
       },
       {
         title: 'Init Count',
         key: 'initCount',
         dataIndex: 'init',
-        // render: (_, record) => {
-        //   return (
-        //      <span>
-        //       <Tag color={RECORD_STATUS.init}>{record.init}</Tag>
-        //     </span>
-        //     )
         //   }
       },
       {
         title: 'Exit Count',
         key: 'exitCount',
         dataIndex: 'exit',
-        // render: (_, record) => {
-        //   return (
-        //      <span>
-        //       <Tag color={RECORD_STATUS.exit}>{record.exit}</Tag>
-        //     </span>
-        //     )
-        //   }
       },
       {
         title: 'Count',
         key: 'count',
         dataIndex: 'count',
-        // render: (_, record) => {
-        //   return (
-        //      <span>
-        //       <Tag color={RECORD_STATUS.count}>{record.count}</Tag>
-        //     </span>
-        //     )
-        // }
       }
     ];
   }
@@ -169,13 +137,11 @@ class WorkerTable extends Component {
 
     // TODO: in prod use stats
     // const tempStats = JSON.parse(JSON.stringify(workerStats));
-    
 
     const expandedRowRender = (columns,dataSource) => (record) => {
       const filteredDataSource =
         dataSource.filter((d) => d.data.algorithmName === record.algorithmName);
 
-      // Adding fake jobId. TODO: delete in prod
       // const mutableDataSource = JSON.parse(JSON.stringify(filteredDataSource));
       // mutableDataSource.forEach((algo)=> algo.data.jobId = algo.key);
 
@@ -223,15 +189,14 @@ class WorkerTable extends Component {
       );
     };
 
-    // const statsMergedWithDefault = stats.map((algo) => ({ ...defaultWorkerData,...algo }) );
     const statsMergedWithDefault = stats.map((algo) => ({ ...defaultWorkerData,...algo }) );
     return (
       <div>
         <Table
           columns={this.workerStatsColumns}
           dataSource={statsMergedWithDefault}
-          indentSize="0px"
-          pagination={{ defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true, style: { paddingRight: '30px' }}}
+          indentSize={0}
+          pagination={{ className: "tablePagination", defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true }}
           expandedRowRender={expandedRowRender(this.workerColumns,dataSource)}/>
       </div>
     );
@@ -240,22 +205,16 @@ class WorkerTable extends Component {
 
 const workerTable = (state) => state.workerTable.dataSource;
 const stats = (state) => state.workerTable.stats;
-const autoCompleteFilter = (state) => state.autoCompleteFilter.filter;
 
 const tableDataSelector = createSelector(
   [workerTable],
   (dataSource) => dataSource
 );
 
-const statsSelector = createSelector(
-  [stats],
-  (stats) => stats
-);
-
 WorkerTable.propTypes = {
+  init: PropTypes.func.isRequired,
   dataSource: PropTypes.array.isRequired,
   stats: PropTypes.array.isRequired
-
 };
 
 const mapStateToProps = (state) => ({

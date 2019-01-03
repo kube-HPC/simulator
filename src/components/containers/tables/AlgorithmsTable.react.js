@@ -11,7 +11,7 @@ import HEditor from '../HEditor.react';
 
 import algorithmObjectTemplate from '../../stubs/algorithm-object.json';
 import AddButton from '../../dumb/AddButton.react';
-
+import './AlgorithmsTable.scss'
 class AlgorithmTable extends Component {
 
   componentWillMount() {
@@ -85,7 +85,7 @@ class AlgorithmTable extends Component {
         key: 'action',
         width: '10%',
         render: (text, record) => (<div>
-          <Button onClick={() => deleteConfirmAction(this.props.deleteAlgorithmFromStore, record)}> Delete </Button>
+          <Button size="small" onClick={() => deleteConfirmAction(this.props.deleteAlgorithmFromStore, record)}> Delete </Button>
         </div>)
       }
     ];
@@ -190,22 +190,23 @@ class AlgorithmTable extends Component {
     const PopOverContent = (
       <div >
         {AlgorithmInput}
-        <Row type="flex" justify="space-between" align="center">
-          <Col span={5} style={{ textAlign: 'center' }}>
+        <Row type="flex" justify="space-between" align="middle">
+          <Col span={5} className='textAlign'>
             <Button type="primary" onClick={this.onPopOverConfirm} style={{ margin: 'auto' }}>
                     Confirm
             </Button>
           </Col>
-          <Col span={10} style={{ textAlign: 'center' }}>
+          <Col span={10} className='textAlign'>
             <HEditor 
               styledButton={(onClick) => <Button onClick={onClick}>Add As JSON</Button>}
               jsonTemplate={JSON.stringify(this.state.algoToAdd, null, 2)}
               title={'Store Algorithm Editor'}
               okText={'Store Algorithm'}
               action={this.props.storeAlgorithm}
+              hintText={{}}
               />
           </Col>
-          <Col span={5} style={{ textAlign: 'center' }}>
+          <Col span={5} className='textAlign'>
             <Button onClick={this.onPopOverCancel}  style={{ margin: 'auto' }}>
                     Cancel
             </Button>
@@ -220,7 +221,7 @@ class AlgorithmTable extends Component {
         <Table
           columns={this.columns}
           dataSource={dataSource.asMutable()}
-          pagination={{ defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true, style: { paddingRight: '30px' }}}
+          pagination={{ className: "tablePagination", defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true}}
           locale={{ emptyText: 'no data' }}
           expandedRowRender={(record) => (
             <Card title="JSON">

@@ -12,6 +12,8 @@ import { getJaegerData } from '../../../actions/jaegerGetData.action';
 import { getKubernetesLogsData } from '../../../actions/kubernetesLog.action';
 
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import './ContainerTable.scss'
+
 const RECORD_STATUS = {
   active: '#2db7f5',
   completed: '#87d068',
@@ -49,7 +51,7 @@ class ContainerTable extends Component {
           })}>
 
             <div>
-              <Icon type="right" style={{ color: 'rgba(187, 180, 180, 0.75)', marginRight: '10px' }} />
+              <Icon type="right" className='jobIdIcon' />
               {`${record.key.substring(0, 25)} ...`}
             </div>
 
@@ -97,17 +99,17 @@ class ContainerTable extends Component {
         width: '15%',
         // sorter: (a, b) => sorter(a.timestamp, b.timestamp),
         render: (text, record) => {
-          let runningTime = record.results && record.results.timeTook ? record.results.timeTook : record.pipeline&&Date.now() - record.pipeline.startTime
-          let timeTook =  record.results && record.results.timeTook ?  record.results.timeTook :null;
+          // let runningTime = record.results && record.results.timeTook ? record.results.timeTook : record.pipeline&&Date.now() - record.pipeline.startTime
+          // let timeTook =  record.results && record.results.timeTook ?  record.results.timeTook :null;
           return (<span>{
             record.results ?
               // <Moment>
               <span>
                 {record.results.timeTook+ " Seconds"}
-                </span>
+              </span>
           //    </Moment> 
               :
-               <Moment date={record.pipeline&&record.pipeline.startTime}
+              <Moment date={record.pipeline&&record.pipeline.startTime}
                 durationFromNow
               />
           }
@@ -123,13 +125,13 @@ class ContainerTable extends Component {
         width: '10%',
         render: (text, record) => {
           let statuses =record.status.data&&record.status.data.states?
-           Object.entries(record.status.data.states.asMutable()).map(s => <Tag color={RECORD_STATUS[s[0]] || 'magenta'}>{s[1]}</Tag>)
+           Object.entries(record.status.data.states.asMutable()).map(
+             (s,i) => <Tag key={i} color={RECORD_STATUS[s[0]] || 'magenta'}>{s[1]}</Tag>
+          )
            :null;
-        
-        
         return (<span>
-            {statuses}
-          </span>
+          {statuses}
+        </span>
           )
         }
       },
@@ -190,7 +192,7 @@ class ContainerTable extends Component {
         <Table
           columns={this.columns}
           dataSource={dataSource}
-          pagination={{ defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true, style: { paddingRight: '30px' }}}
+          pagination={{ className: 'tablePagination', defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true}}
           locale={{ emptyText: 'no data' }}
           expandedRowRender={(record) => (
             <TabSwitcher record={{
@@ -228,7 +230,11 @@ const tableDataSelector = createSelector(
 );
 
 ContainerTable.propTypes = {
-  dataSource: PropTypes.array.isRequired
+  execRawPipeline: PropTypes.func.isRequired,
+  getJaegerData: PropTypes.func.isRequired,
+  dataSource: PropTypes.array.isRequired,
+  stopPipeline: PropTypes.func.isRequired,
+  jaeger: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
