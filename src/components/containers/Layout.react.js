@@ -57,42 +57,42 @@ class LayoutInner extends React.Component {
         return (
           <HLayout>
             <SideBar
-                open={false} />
+              open={false} />
             <LayoutHeader>
-                <AlignRow type="flex" align="top" justify="space-between">
-                    <Col span={4}>
-                        <Row gutter={3}>
-                            <Col span={4}> <Logo /> </Col>
-                            <Col span={2}> <HeaderTitle>Hkube</HeaderTitle> </Col>
-                          </Row>
-                      </Col>
-                    <Col> <TableAutoComplete /> </Col>
-                    <Col>
-                        <HEditor
-                            jsonTemplate={jsonTemplate}
-                            styledButton={(onClick) => <ButtonAddPipeline onClick={onClick}> + Pipeline </ButtonAddPipeline>}
-                            title={'Add Pipeline Editor'}
-                            okText={'Store Pipeline'}
-                            hintText={<div> Hint: Type <strong>node</strong> for adding pipe-node.</div>}
-                            action={this.props.addPipe}
-                            />
-                      </Col>
-                  </AlignRow>
-              </LayoutHeader>
+              <AlignRow type="flex" align="top" justify="space-between">
+                <Col span={4}>
+                  <Row gutter={3}>
+                    <Col span={4}> <Logo /> </Col>
+                    <Col span={2}> <HeaderTitle>Hkube</HeaderTitle> </Col>
+                  </Row>
+                </Col>
+                <Col> <TableAutoComplete /> </Col>
+                <Col>
+                  <HEditor
+                    jsonTemplate={jsonTemplate}
+                    styledButton={(onClick) => <ButtonAddPipeline onClick={onClick}> + Pipeline </ButtonAddPipeline>}
+                    title={'Add Pipeline Editor'}
+                    okText={'Store Pipeline'}
+                    hintText={<div> Hint: Type <strong>node</strong> for adding pipe-node.</div>}
+                    action={this.props.addPipe}
+                    />
+                </Col>
+              </AlignRow>
+            </LayoutHeader>
 
             <HLayout hasSider={true}>
-                <HSider>
-                    <HMenu mode="inline" onSelect={(i) => { menuSelection(i, props) }} defaultSelectedKeys={['1']}>
-                        <HMenu.Item key="1"> Jobs </HMenu.Item>
-                        <HMenu.Item key="2"> Stored Pipelines </HMenu.Item>
-                        <HMenu.Item key="3"> Workers </HMenu.Item>
-                        <HMenu.Item key="4"> Drivers </HMenu.Item>
-                        <HMenu.Item key="5"> Algorithms </HMenu.Item>
-                        <HMenu.Item key="6"> Debug </HMenu.Item>
-                      </HMenu>
-                  </HSider>
-                <HContent> <BackTop /> {selectTable(props)} </HContent>
-              </HLayout>
+              <HSider>
+                <HMenu mode="inline" onSelect={(i) => { menuSelection(i, props) }} defaultSelectedKeys={['1']}>
+                  <HMenu.Item key="1"> Jobs </HMenu.Item>
+                  <HMenu.Item key="2"> Stored Pipelines </HMenu.Item>
+                  <HMenu.Item key="3"> Workers </HMenu.Item>
+                  <HMenu.Item key="4"> Drivers </HMenu.Item>
+                  <HMenu.Item key="5"> Algorithms </HMenu.Item>
+                  <HMenu.Item key="6"> Debug </HMenu.Item>
+                </HMenu>
+              </HSider>
+              <HContent> <BackTop /> {selectTable(props)} </HContent>
+            </HLayout>
           </HLayout>
         );
     }

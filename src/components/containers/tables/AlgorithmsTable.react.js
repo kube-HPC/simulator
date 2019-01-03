@@ -203,7 +203,6 @@ class AlgorithmTable extends Component {
               title={'Store Algorithm Editor'}
               okText={'Store Algorithm'}
               action={this.props.storeAlgorithm}
-              hintText={{}}
               />
           </Col>
           <Col span={5} className='textAlign'>
