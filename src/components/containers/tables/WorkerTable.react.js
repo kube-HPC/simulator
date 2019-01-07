@@ -123,6 +123,11 @@ class WorkerTable extends Component {
         dataIndex: 'exit',
       },
       {
+        title: 'Hot Count',
+        key: 'hotCount',
+        dataIndex: 'hot',
+      },
+      {
         title: 'Count',
         key: 'count',
         dataIndex: 'count',
