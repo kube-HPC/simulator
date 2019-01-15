@@ -38,7 +38,7 @@ const options = {
   edges: {
     width: 2,
     shadow: true,
-    length: 500,
+    length: 200,
     smooth: {
       enabled: true,
       type: "cubicBezier",

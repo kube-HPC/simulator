@@ -44,7 +44,7 @@
     "vis": "^4.21.0"
   },
   "scripts": {
-    "start": "react-app-rewired start",
+    "start": "PORT=9050 react-app-rewired start",
     "builder": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
