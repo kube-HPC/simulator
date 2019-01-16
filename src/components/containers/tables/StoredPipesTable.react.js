@@ -1,15 +1,14 @@
 
 import { connect } from 'react-redux';
-import { Table, Card, Button } from 'antd';
+import { Table, Card, Button, Row, Col, Modal } from 'antd';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactJson from 'react-json-view';
 import { init } from '../../../actions/storedPipes.action';
 import { openModal } from '../../../actions/modal.action';
-import { execStoredPipe } from '../../../actions/storedPipes.action';
-// import ExecuteButton from '../ExecuteButton.react';
-import HEditor from '../HEditor.react';
+import { execStoredPipe, deleteStoredPipeline } from '../../../actions/storedPipes.action';
 import './StoredPipesTable.scss';
+import HEditor from '../HEditor.react';
 
 const { Column } = Table;
 
@@ -31,6 +30,22 @@ class StoredPipesTable extends Component {
       delete pipe.nodes;
       fixedDataSource.push(pipe);
     });
+
+    const deleteConfirmAction = (action, record) => {
+      Modal.confirm(
+        {
+          title: 'WARNING Deleting Pipeline',
+          content: `Are you sure you want to delete ${record.name}? Deleting Pipeline will Stop-ALL related Jobs and Executions`,
+          okText: 'Confirm',
+          okType: 'danger',
+          cancelText: 'Cancel',
+          onOk() {
+            action(record.name);
+          },
+          onCancel() {}
+        },
+      );
+    };
     
     return (
       <div>
@@ -38,7 +53,7 @@ class StoredPipesTable extends Component {
           rowKey="name"
           dataSource={dataSource.asMutable()}
           pagination={{ className: "tablePagination", defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true,}}
-          locale={{ emptyText: 'no data' }}
+          locale={{ emptyText: 'No Stored Pipelines' }}
           expandedRowRender={(record) => (
             <Card title="Full details">
               <ReactJson 
@@ -74,16 +89,25 @@ class StoredPipesTable extends Component {
             dataIndex="action"
             key="action"
             render={((_,record) => (
-              <HEditor 
-                jsonTemplate={JSON.stringify(fixedDataSource.find((p) => p.name === record.name), null, 2)}
-                styledButton={(onClick) => 
-                  <Button shape="circle" icon="caret-right" onClick={onClick} />
-                }
-                title={'Execute Pipeline Editor'}
-                okText={'Execute'}
-                action={this.props.execStoredPipe}
-              />
-        ))}
+              <Row type="flex" justify="space-around">
+                <Col >
+                  <HEditor 
+                    jsonTemplate={JSON.stringify(fixedDataSource.find((p) => p.name === record.name), null, 2)}
+                    styledButton={(onClick) => 
+                      <Button shape="circle" icon="caret-right" onClick={onClick}/>
+                    }
+                    title={'Execute Pipeline Editor'}
+                    okText={'Execute'}
+                    action={this.props.execStoredPipe}
+                  />
+                </Col>
+                <Col >
+                  <Button type="danger" shape="circle" icon="delete" 
+                    onClick={() => deleteConfirmAction(this.props.deleteStoredPipeline, record)}
+                  />
+                </Col>
+              </Row>
+            ))}
             />
         </Table>
       </div>
@@ -94,11 +118,12 @@ class StoredPipesTable extends Component {
 StoredPipesTable.propTypes = {
   init: PropTypes.func.isRequired,
   dataSource: PropTypes.array.isRequired,
-  execStoredPipe: PropTypes.func.isRequired
+  execStoredPipe: PropTypes.func.isRequired,
+  deleteStoredPipeline: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   dataSource: state.storedPipeline.dataSource
 });
 
-export default connect(mapStateToProps, { openModal, init, execStoredPipe })(StoredPipesTable);
+export default connect(mapStateToProps, { openModal, init, execStoredPipe, deleteStoredPipeline })(StoredPipesTable);

@@ -84,9 +84,9 @@ class AlgorithmTable extends Component {
         dataIndex: 'action',
         key: 'action',
         width: '10%',
-        render: (text, record) => (<div>
-          <Button size="small" onClick={() => deleteConfirmAction(this.props.deleteAlgorithmFromStore, record)}> Delete </Button>
-        </div>)
+        render: (text, record) => (<Button type="danger" shape="circle" icon="delete" 
+          onClick={() => deleteConfirmAction(this.props.deleteAlgorithmFromStore, record)}
+              />)
       }
     ];
   }
