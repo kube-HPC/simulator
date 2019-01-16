@@ -14,9 +14,8 @@ import TableAutoComplete from '../dumb/TableAutoComplete.react';
 import { init } from '../../actions/config.action.js';
 import { addPipe } from '../../actions/addPipe.action';
 import HEditor from './HEditor.react';
-import { HContent, HMenu, HLayout, HSider, LayoutHeader, AlignRow, Logo, HeaderTitle } from '../style/Styled';
+import { HContent, HMenu, HLayout, HSider, LayoutHeader, AlignRow, Logo, HeaderTitle, ButtonAddPipeline } from '../style/Styled';
 import template from '../stubs/json-object.json';
-import { ButtonAddPipeline } from '../style/Styled'
 
 const jsonTemplate = JSON.stringify(template, null, 2);
 

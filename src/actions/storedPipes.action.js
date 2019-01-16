@@ -22,7 +22,8 @@ export const execStoredPipe = (pipe) => ({
 export const deleteStoredPipeline = (pipelineName) => ({
   type: actions.REST_REQ_DELETE,
   payload: {
-    url: `store/pipelines/${pipelineName}`,
+    url: 'store/pipelines',
+    body: { pipelineName },
     actionType: actions.DELETE_STORED_PIPE
   }
 });
