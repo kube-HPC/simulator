@@ -40,7 +40,7 @@ const setPath = ({ monitorBackend }) => {
 export const restMiddleware = ({ dispatch }) => (next) => (action) => {
   if (action.type === `${AT.GET_CONFIG}_SUCCESS`) {
     url = setPath(action.payload.config);
-  } else if (![AT.REST_REQ, AT.REST_REQ_POST, AT.REST_REQ_DELETE].includes(action.type)) {
+  } else if (![AT.REST_REQ, AT.REST_REQ_POST,AT.REST_REQ_PUT, AT.REST_REQ_DELETE].includes(action.type)) {
     return next(action);
   } else if (action.type === AT.REST_REQ) {
     if (!url) {
@@ -60,7 +60,8 @@ export const restMiddleware = ({ dispatch }) => (next) => (action) => {
     });
 
     return next(action);
-  } else if (action.type === AT.REST_REQ_POST) {
+  }
+   else if (action.type === AT.REST_REQ_POST) {
     if (!url) {
       return next(action);
     }
@@ -93,7 +94,26 @@ export const restMiddleware = ({ dispatch }) => (next) => (action) => {
     // });
 
     return next(action);
-  } else if (action.type === AT.REST_REQ_DELETE) {
+  } 
+  else if (action.type === AT.REST_REQ_PUT) {
+    if (!url) {
+      return next(action);
+    }
+    pending(dispatch, 'pending', action);
+    axios.put(`${url}/${action.payload.url}`, { ...action.payload.body })
+      .then((res) => {
+        res.json().then((data) => {
+          console.log(data);
+          success(dispatch, data, action);
+        });
+      }).catch((err) => {
+        reject(dispatch, err, action);
+        console.error('get config error');
+      });
+
+    return next(action);
+  } 
+  else if (action.type === AT.REST_REQ_DELETE) {
     if (!url) {
       return next(action);
     }
