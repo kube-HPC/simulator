@@ -21,3 +21,14 @@ export const HCOLOR = {
   headerBorder: COLOR.grey,
   content: COLOR.white,
 }
+
+export const RECORD_STATUS = {
+  active: '#2db7f5',
+  completed: '#87d068',
+  failed: '#f50',
+  stopped: '#ec8c16',
+  succeed: '#87d068',
+  creating: '#838383',
+  skipped: '#eeda13',
+  //creating:'#108ee9'
+};
