@@ -10,11 +10,11 @@ export const init = () => ({
   }
 });
 
-export const execStoredPipe = (pipe) => ({
+export const execStoredPipe = (pipeline) => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: 'exec/stored',
-    body: { pipeline:pipe },
+    body: { pipeline },
     actionType: actions.EXEC_STORED_PIPE
   }
 });
@@ -25,5 +25,14 @@ export const deleteStoredPipeline = (pipelineName) => ({
     url: 'store/pipelines',
     body: { pipelineName },
     actionType: actions.DELETE_STORED_PIPE
+  }
+});
+
+export const updateStoredPipeline = (pipeline) => ({
+  type: actions.REST_REQ_PUT,
+  payload: {
+    url: 'store/pipelines',
+    body: { pipeline },
+    actionType: actions.UPDATE_STORED_PIPELINE
   }
 });

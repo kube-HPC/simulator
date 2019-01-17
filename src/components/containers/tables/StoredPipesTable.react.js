@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import ReactJson from 'react-json-view';
 import { init } from '../../../actions/storedPipes.action';
 import { openModal } from '../../../actions/modal.action';
-import { execStoredPipe, deleteStoredPipeline } from '../../../actions/storedPipes.action';
+import { execStoredPipe, deleteStoredPipeline, updateStoredPipeline } from '../../../actions/storedPipes.action';
 import './StoredPipesTable.scss';
 import HEditor from '../HEditor.react';
 
@@ -61,7 +61,7 @@ class StoredPipesTable extends Component {
                 displayDataTypes={false} 
                 displayObjectSize={false} 
                 iconStyle="square"
-               />
+              />
             </Card>
           )}>
           <Column
@@ -89,7 +89,7 @@ class StoredPipesTable extends Component {
             dataIndex="action"
             key="action"
             render={((_,record) => (
-              <Row type="flex" justify="space-around">
+              <Row type="flex" justify="space-between">
                 <Col >
                   <HEditor 
                     jsonTemplate={JSON.stringify(fixedDataSource.find((p) => p.name === record.name), null, 2)}
@@ -99,6 +99,17 @@ class StoredPipesTable extends Component {
                     title={'Execute Pipeline Editor'}
                     okText={'Execute'}
                     action={this.props.execStoredPipe}
+                  />
+                </Col>
+                <Col >
+                  <HEditor 
+                    jsonTemplate={JSON.stringify(fixedDataSource.find((p) => p.name === record.name), null, 2)}
+                    styledButton={(onClick) => 
+                      <Button shape="circle" icon="edit" onClick={onClick}/>
+                    }
+                    title={'Edit Pipeline Editor'}
+                    okText={'Update'}
+                    action={this.props.updateStoredPipeline}
                   />
                 </Col>
                 <Col >
@@ -120,10 +131,11 @@ StoredPipesTable.propTypes = {
   dataSource: PropTypes.array.isRequired,
   execStoredPipe: PropTypes.func.isRequired,
   deleteStoredPipeline: PropTypes.func.isRequired,
+  updateStoredPipeline: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   dataSource: state.storedPipeline.dataSource
 });
 
-export default connect(mapStateToProps, { openModal, init, execStoredPipe, deleteStoredPipeline })(StoredPipesTable);
+export default connect(mapStateToProps, { openModal, init, execStoredPipe, deleteStoredPipeline, updateStoredPipeline })(StoredPipesTable);
