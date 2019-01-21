@@ -87,7 +87,7 @@ class LayoutInner extends React.Component {
                   {/* <HMenu.Item key="2"> <Badge count={props.algorithmCount} offset={[15,0]} style={{scale: "0.8", background:"#0090fa"}}>Pipelines</Badge></HMenu.Item> */}
                   <HMenu.Item key="2"><span>
                   Pipelines
-                    <Tag  color={'blue'} style={{ marginLeft: "42px"}}>{props.algorithmCount}</Tag>
+                    <Tag  color={'blue'} style={{ marginLeft: "42px"}}>{props.pipelineCount}</Tag>
                   </span> 
                   </HMenu.Item>
                   {/* <HMenu.Item key="3"> <Badge count={} offset={[10,5]} style={{scale: "0.8", background:"#0090fa"}}>Workers</Badge></HMenu.Item> */}
