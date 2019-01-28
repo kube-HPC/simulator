@@ -31,7 +31,7 @@ const Logs = (props) => {
 }
 
 Logs.propTypes = {
-    log: PropTypes.object,
+    log: PropTypes.array,
     rerunLogs: PropTypes.func,
   };
 export default Logs;

@@ -13,6 +13,7 @@ import serverSelection from './serverSelection.reducer';
 import storedPipeline from './storedPipeline.reducer';
 import jaeger from './jaegerData.reducer';
 import kubernetesLogs from './kubernetesLogs.reducer';
+import nodeStatistics from './nodeStatistics.reducer';
 const rootReducer = combineReducers({
   ui,
   layers,
@@ -27,7 +28,8 @@ const rootReducer = combineReducers({
   serverSelection,
   storedPipeline,
   jaeger,
-  kubernetesLogs
+  kubernetesLogs,
+  nodeStatistics
 });
 export default rootReducer;
 

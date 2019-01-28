@@ -8,6 +8,7 @@ import DebugTable from './tables/DebugTable.react';
 import StoredPipesTable from './tables/StoredPipesTable.react';
 import DriverTable from './tables/DriverTable.react';
 import AlgorithmTable from './tables/AlgorithmsTable.react';
+import NodeStatistics from './NodeStatistics.react';
 import SideBar from './SideBarContainer.react';
 import { BackTop, Row, Col } from 'antd';
 import TableAutoComplete from '../dumb/TableAutoComplete.react';
@@ -42,6 +43,8 @@ const selectTable = (props) => {
             return <AlgorithmTable />;
         case '6':
             return <DebugTable />;
+        case '7':
+            return <NodeStatistics />;
         default:
             return <ContainerTable />;
     }
@@ -74,7 +77,7 @@ class LayoutInner extends React.Component {
                     okText={'Store Pipeline'}
                     hintText={<div> Hint: Type <strong>node</strong> for adding pipe-node.</div>}
                     action={this.props.addPipe}
-                    />
+                            />
                 </Col>
               </AlignRow>
             </LayoutHeader>
@@ -88,6 +91,7 @@ class LayoutInner extends React.Component {
                   <HMenu.Item key="4"> Drivers </HMenu.Item>
                   <HMenu.Item key="5"> Algorithms </HMenu.Item>
                   <HMenu.Item key="6"> Debug </HMenu.Item>
+                  <HMenu.Item key="7"> Node Stats </HMenu.Item>
                 </HMenu>
               </HSider>
               <HContent> <BackTop /> {selectTable(props)} </HContent>

@@ -39,7 +39,7 @@ AlgorithmInformation.propTypes = {
   getCaching: PropTypes.func,
   sideBar: PropTypes.object,
   logs: PropTypes.object,
-  algorithmTable: PropTypes.object,
+  algorithmTable: PropTypes.array,
 };
 
 const mapStateToProps = (state) => ({
