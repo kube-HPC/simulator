@@ -10,14 +10,15 @@ import DriverTable from './tables/DriverTable.react';
 import AlgorithmTable from './tables/AlgorithmsTable.react';
 import NodeStatistics from './NodeStatistics.react';
 import SideBar from './SideBarContainer.react';
-import { BackTop, Row, Col, Tag} from 'antd';
+import { BackTop, Row, Col, Tag, Icon } from 'antd';
 import TableAutoComplete from '../dumb/TableAutoComplete.react';
 import { init } from '../../actions/config.action.js';
 import { addPipe } from '../../actions/addPipe.action';
 import HEditor from './HEditor.react';
 import { HContent, HMenu, HLayout, HSider, LayoutHeader, AlignRow, Logo, HeaderTitle, ButtonAddPipeline } from '../style/Styled';
 import template from '../stubs/json-object.json';
-
+import SubMenu from 'antd/lib/menu/SubMenu';
+import './Layout.scss'
 const jsonTemplate = JSON.stringify(template, null, 2);
 
 const menuSelection = (i, props) => {
@@ -43,8 +44,10 @@ const selectTable = (props) => {
             return <AlgorithmTable />;
         case '6':
             return <DebugTable />;
-        case '7':
-            return <NodeStatistics />;
+        case '8':
+            return <NodeStatistics metric='cpu' />;
+        case '9':
+            return <NodeStatistics metric='mem' />;
         default:
             return <ContainerTable />;
     }
@@ -89,48 +92,52 @@ class LayoutInner extends React.Component {
                   {/* <HMenu.Item key="2"> Stored Pipelines </HMenu.Item> */}
                   {/* <HMenu.Item key="2"> <Badge count={props.algorithmCount} offset={[15,0]} style={{scale: "0.8", background:"#0090fa"}}>Pipelines</Badge></HMenu.Item> */}
                   <HMenu.Item key="2"><span>
-                  Pipelines
-                    <Tag  color={'blue'} style={{ marginLeft: "42px"}}>{props.pipelineCount}</Tag>
-                  </span> 
+                                Pipelines
+                    <Tag color={'blue'} style={{ marginLeft: "42px" }}>{props.pipelineCount}</Tag>
+                  </span>
                   </HMenu.Item>
                   {/* <HMenu.Item key="3"> <Badge count={} offset={[10,5]} style={{scale: "0.8", background:"#0090fa"}}>Workers</Badge></HMenu.Item> */}
                   <HMenu.Item key="3"><span>
-                        Workers
-                    <Tag  color={'blue'} style={{ marginLeft: "60px"}}>{props.workerCount}</Tag>
-                  </span> 
+                                Workers
+                    <Tag color={'blue'} style={{ marginLeft: "60px" }}>{props.workerCount}</Tag>
+                  </span>
                   </HMenu.Item>
                   {/* <HMenu.Item key="4"> <Badge count={props.driversCount} offset={[15,7]} style={{scale: "0.8",background:"#0090fa"}}>Drivers</Badge></HMenu.Item> */}
                   <HMenu.Item key="4"><span>
-                        Drivers
-                    <Tag  color={'blue'} style={{ marginLeft: "60px"}}>{props.driversCount}</Tag>
-                  </span> 
+                                Drivers
+                    <Tag color={'blue'} style={{ marginLeft: "60px" }}>{props.driversCount}</Tag>
+                  </span>
                   </HMenu.Item>
 
                   {/* <HMenu.Item key="5"> <Badge count={props.algorithmCount} offset={[15,0]} style={{scale: "0.8",background:"#0090fa"}}>Algorithms</Badge></HMenu.Item> */}
                   <HMenu.Item key="5"><span>
-                  Algorithms
-                    <Tag  color={'blue'} style={{ marginLeft: "35px"}}>{props.algorithmCount}</Tag>
-                  </span> 
+                                Algorithms
+                    <Tag color={'blue'} style={{ marginLeft: "35px" }}>{props.algorithmCount}</Tag>
+                  </span>
                   </HMenu.Item>
 
                   <HMenu.Item key="6"> Debug </HMenu.Item>
-                  <HMenu.Item key="7"> Node Stats </HMenu.Item>
+                  <SubMenu  title={<span><span>Node Stats</span></span>} key="7">
+                    <HMenu.Item key="8" > CPU </HMenu.Item>
+                    <HMenu.Item key="9" > Memory </HMenu.Item>
+                 
+                  </SubMenu>
                 </HMenu>
               </HSider>
               <HContent> <BackTop /> {selectTable(props)} </HContent>
             </HLayout>
-          </HLayout>
+          </HLayout >
         );
     }
 }
 
 const mapStateToProps = (state) => {
     return {
-    scriptsPath: state.serverSelection.currentSelection.scriptsPath,
-    driversCount: (state.driverTable.dataSource||[]).length,
-    algorithmCount: (state.algorithmTable.dataSource||[]).length,
-    pipelineCount: (state.storedPipeline.dataSource||[]).length,
-    workerCount: (state.workerTable.stats||{}).total,
+        scriptsPath: state.serverSelection.currentSelection.scriptsPath,
+        driversCount: (state.driverTable.dataSource || []).length,
+        algorithmCount: (state.algorithmTable.dataSource || []).length,
+        pipelineCount: (state.storedPipeline.dataSource || []).length,
+        workerCount: (state.workerTable.stats || {}).total,
     }
 };
 
