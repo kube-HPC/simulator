@@ -7,7 +7,7 @@ import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withState } from 'recompose';
-import { ResponsiveBar } from "@nivo/bar";
+import { ResponsiveBar, Bar } from "@nivo/bar";
 import './NodeStatistics.scss'
 const stubData = [
   {
@@ -117,112 +117,137 @@ class NodeStatistics extends Component {
 
   render() {
     return (
-      <ResponsiveBar
-        data={this.props.dataSource.data}
-        keys={this.props.dataSource.legend}
-        indexBy="nodes"
-        margin={{
-          "top": 0,
-          "right": 124,
-          "bottom": 50,
-          "left": 60
-        }}
-        padding={0.1}
-        borderWidth={1}
-        layout="horizontal"
-        colors="blue_green"
-        colorBy="id"
-        defs={[
-          {
-            "id": "dots",
-            "type": "patternDots",
-            "background": "#99d89d",
-            "color": "#fff",
-            "size": 2,
-            "padding": 3,
-            "stagger": true
-          },
-          {
-            "id": "lines",
-            "type": "patternLines",
-            "background": "inherit",
-            "color": "#fff",
-            "rotation": -45,
-            "lineWidth": 1,
-            "spacing": 10
-          }
-        ]}
-        fill={[
-          {
-            "match": {
-              "id": "free"
-            },
-            "id": "dots"
-          },
-          {
-            "match": {
-              "id": "reserved"
-            },
-            "id": "lines"
-          }
-        ]}
-        borderColor="inherit:darker(1.6)"
-        axisTop={{
-          "tickSize": 0,
-          "tickPadding": 4,
-          "tickRotation": 0,
-          "legend": "",
-          "legendOffset": 100
-        }}
-        axisRight={null}
-        axisBottom={{
-          "tickSize": 5,
-          "tickPadding": 5,
-          "tickRotation": 0,
-          "legend": "size",
-          "legendPosition": "middle",
-          "legendOffset": 32
-        }}
-        axisLeft={{
-          "tickSize": 5,
-          "tickPadding": 5,
-          "tickRotation": 0,
-          "legend": "nodes",
-          "legendPosition": "middle",
-          "legendOffset": -40
-        }}
-        enableGridY={false}
-        labelSkipWidth={12}
-        labelSkipHeight={12}
-        labelTextColor="inherit:darker(1.6)"
-        animate={true}
-        motionStiffness={165}
-        motionDamping={27}
-        legends={[
-          {
-            "dataFrom": "keys",
-            "anchor": "bottom-right",
-            "direction": "column",
-            "justify": false,
-            "translateX": 120,
-            "translateY": -28,
-            "itemsSpacing": 2,
-            "itemWidth": 100,
-            "itemHeight": 20,
-            "itemDirection": "left-to-right",
-            "itemOpacity": 0.85,
-            "symbolSize": 20,
-            "effects": [
-              {
-                "on": "hover",
-                "style": {
-                  "itemOpacity": 1
+      <div style={{ fontSize: "20px", width: "80%", height: "80%", left: "10%", position: "relative", top: "10%" }}>
+        <div>CPU</div>
+        <ResponsiveBar
+          data={this.props.dataSource.data}
+          keys={this.props.dataSource.legend}
+          indexBy="nodes"
+          theme={{
+              axis: {
+                ticks: {
+                  line: {
+                    stroke: "green"
+                  },
+                  text: {
+                    //fill: "#91d5ff",
+                    fontSize: "12px",
+                    marginRight: "10px"
+                  }
+
+
+                },
+                legend: {
+                  text: {
+                    fontSize: "18px"
+                  }
                 }
+              },
+            }}
+
+          margin={{
+              "top": 0,
+              "right": 124,
+              "bottom": 50,
+              "left": 60
+            }}
+          padding={0.1}
+          borderWidth={1}
+          layout="horizontal"
+          colors="blues"
+          colorBy="id"
+          defs={[
+              {
+                "id": "dots",
+                "type": "patternDots",
+                "background": "inherit",
+                "color": "#fff",
+                "size": 2,
+                "padding": 3,
+                "stagger": true
+              },
+              {
+                "id": "lines",
+                "type": "patternLines",
+                "background": "inherit",
+                "color": "#fff",
+                "rotation": -45,
+                "lineWidth": 1,
+                "spacing": 10
               }
-            ]
-          }
-        ]}
-      />
+            ]}
+          fill={[
+              {
+                "match": {
+                  "id": "free"
+                },
+                "id": "dots"
+              },
+              {
+                "match": {
+                  "id": "reserved"
+                },
+                "id": "lines"
+              }
+            ]}
+          borderColor="inherit:darker(1.6)"
+          axisTop={{
+              "tickSize": 0,
+              "tickPadding": 4,
+              "tickRotation": 0,
+              "legend": "",
+              "legendOffset": 100
+            }}
+          axisRight={null}
+          axisBottom={{
+              "tickSize": 5,
+              "tickPadding": 5,
+              "tickRotation": 0,
+              "legend": "size",
+              "legendPosition": "middle",
+              "legendOffset": 32,
+            }}
+          axisLeft={{
+              "tickSize": 5,
+              "tickPadding": 5,
+              "tickRotation": 50,
+              "legend": "nodes",
+              "legendPosition": "middle",
+              "legendOffset": -50
+            }}
+          enableGridY={false}
+          labelSkipWidth={12}
+          labelSkipHeight={12}
+          labelTextColor="inherit:darker(1.6)"
+          animate={true}
+          motionStiffness={165}
+          motionDamping={27}
+          legends={[
+              {
+                "dataFrom": "keys",
+                "anchor": "bottom-right",
+                "direction": "column",
+                "justify": false,
+                "translateX": 120,
+                "translateY": -28,
+                "itemsSpacing": 2,
+                "itemWidth": 100,
+                "itemHeight": 20,
+                "itemDirection": "left-to-right",
+                "itemOpacity": 0.85,
+                "symbolSize": 20,
+                "effects": [
+                  {
+                    "on": "hover",
+                    "style": {
+                      "itemOpacity": 1
+                    }
+                  }
+                ]
+              }
+            ]}
+          />
+      </div>
     )
   }
 
@@ -253,7 +278,7 @@ const adaptedData = (statistics) => {
   })
   return {
     data: cpu,
-    legend: statistics &&statistics[0]&& statistics[0].legend
+    legend: statistics && statistics[0] && statistics[0].legend
   }
 }
 
