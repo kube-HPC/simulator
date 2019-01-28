@@ -10,7 +10,7 @@ import DriverTable from './tables/DriverTable.react';
 import AlgorithmTable from './tables/AlgorithmsTable.react';
 import NodeStatistics from './NodeStatistics.react';
 import SideBar from './SideBarContainer.react';
-import { BackTop, Row, Col } from 'antd';
+import { BackTop, Row, Col, Tag} from 'antd';
 import TableAutoComplete from '../dumb/TableAutoComplete.react';
 import { init } from '../../actions/config.action.js';
 import { addPipe } from '../../actions/addPipe.action';
@@ -86,10 +86,33 @@ class LayoutInner extends React.Component {
               <HSider>
                 <HMenu mode="inline" onSelect={(i) => { menuSelection(i, props) }} defaultSelectedKeys={['1']}>
                   <HMenu.Item key="1"> Jobs </HMenu.Item>
-                  <HMenu.Item key="2"> Stored Pipelines </HMenu.Item>
-                  <HMenu.Item key="3"> Workers </HMenu.Item>
-                  <HMenu.Item key="4"> Drivers </HMenu.Item>
-                  <HMenu.Item key="5"> Algorithms </HMenu.Item>
+                  {/* <HMenu.Item key="2"> Stored Pipelines </HMenu.Item> */}
+                  {/* <HMenu.Item key="2"> <Badge count={props.algorithmCount} offset={[15,0]} style={{scale: "0.8", background:"#0090fa"}}>Pipelines</Badge></HMenu.Item> */}
+                  <HMenu.Item key="2"><span>
+                  Pipelines
+                    <Tag  color={'blue'} style={{ marginLeft: "42px"}}>{props.pipelineCount}</Tag>
+                  </span> 
+                  </HMenu.Item>
+                  {/* <HMenu.Item key="3"> <Badge count={} offset={[10,5]} style={{scale: "0.8", background:"#0090fa"}}>Workers</Badge></HMenu.Item> */}
+                  <HMenu.Item key="3"><span>
+                        Workers
+                    <Tag  color={'blue'} style={{ marginLeft: "60px"}}>{props.workerCount}</Tag>
+                  </span> 
+                  </HMenu.Item>
+                  {/* <HMenu.Item key="4"> <Badge count={props.driversCount} offset={[15,7]} style={{scale: "0.8",background:"#0090fa"}}>Drivers</Badge></HMenu.Item> */}
+                  <HMenu.Item key="4"><span>
+                        Drivers
+                    <Tag  color={'blue'} style={{ marginLeft: "60px"}}>{props.driversCount}</Tag>
+                  </span> 
+                  </HMenu.Item>
+
+                  {/* <HMenu.Item key="5"> <Badge count={props.algorithmCount} offset={[15,0]} style={{scale: "0.8",background:"#0090fa"}}>Algorithms</Badge></HMenu.Item> */}
+                  <HMenu.Item key="5"><span>
+                  Algorithms
+                    <Tag  color={'blue'} style={{ marginLeft: "35px"}}>{props.algorithmCount}</Tag>
+                  </span> 
+                  </HMenu.Item>
+
                   <HMenu.Item key="6"> Debug </HMenu.Item>
                   <HMenu.Item key="7"> Node Stats </HMenu.Item>
                 </HMenu>
@@ -101,9 +124,15 @@ class LayoutInner extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    scriptsPath: state.serverSelection.currentSelection.scriptsPath
-});
+const mapStateToProps = (state) => {
+    return {
+    scriptsPath: state.serverSelection.currentSelection.scriptsPath,
+    driversCount: (state.driverTable.dataSource||[]).length,
+    algorithmCount: (state.algorithmTable.dataSource||[]).length,
+    pipelineCount: (state.storedPipeline.dataSource||[]).length,
+    workerCount: (state.workerTable.stats||{}).total,
+    }
+};
 
 LayoutInner.propTypes = {
     init: PropTypes.func.isRequired,

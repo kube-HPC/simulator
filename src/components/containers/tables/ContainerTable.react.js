@@ -85,7 +85,7 @@ class ContainerTable extends Component {
         sorter: (a, b) => sorter(a.timestamp, b.timestamp),
         render: (text, record) =>
           (<span>
-            <Moment format="DD/MM/YY hh:mm:ss">
+            <Moment format="DD/MM/YY HH:mm:ss">
               {record.pipeline && record.pipeline.startTime}
             </Moment>
           </span>

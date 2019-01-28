@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { Table, Tabs, Card, Tag, Button } from 'antd';
+import { Table, Tabs, Card, Tag, Button, Icon } from 'antd';
 import ReactJson from 'react-json-view';
 import { openModal } from '../../../actions/modal.action';
 import { init } from '../../../actions/workerTable.action';
@@ -20,67 +20,52 @@ const RECORD_STATUS = {
   error: '#f30',
   exit: '#f50',
   stop: '#ec8c16',
-  count: '#2db7f5'
+  count: '#2db7f5',
+  failed: 'red',
+  succeed: 'green'
 };
 
 class WorkerTable extends Component {
   componentWillMount() {
     this.props.init();
-
-    const sorter = (a, b) => {
-      let tempA = null;
-      let tempB = null;
-      tempA = a || '';
-      tempB = b || '';
-      return tempA.localeCompare(tempB);
-    };
+    const undefinedStateFilter=(state)=>(state||'creating');
     this.workerColumns = [
+      {
+        title: '',
+        dataIndex: 'data.workerStatus',
+        width: '2%',
+        key: 'workerStatusIcon',
+        render: (text, record) => (<span>
+          {record.data.workerPaused?<Icon type="pause-circle" theme="twoTone" twoToneColor="red"/>:null}
+          {record.data.hotWorker?<Icon type="fire" theme="filled" style={{color: "orange"}}/>:null}
+        </span>
+        )
+      },
       {
         title: 'Pod Name',
         dataIndex: 'data.podName',
         key: 'podName',
-        onFilter: (value, record) => record.data.podName.includes(value),
-        sorter: (a, b) => sorter(a.data.podName, b.data.podName)
+        onFilter: (value, record) => record.data.podName.includes(value)
+      },
+      {
+        title: 'Worker State',
+        dataIndex: 'data.workerStatus',
+        width: '30%',
+        key: 'workerStatus',
+        render: (text, record) => (<span>
+          <Tag color={RECORD_STATUS[record.data.workerStatus]} > {undefinedStateFilter(record.data.workerStatus)}</Tag>
+          {/* {record.data.hotWorker?<Tag color={'orange'} >hot</Tag>:null} */}
+          <Tag color={RECORD_STATUS[record.data.jobStatus]} > {'job '+undefinedStateFilter(record.data.jobStatus)}</Tag>
+          
+
+        </span>
+        )
       },
       {
         title: 'Job ID',
         dataIndex: 'data.jobId',
         width: '30%',
-        key: 'jobId',
-        sorter: (a, b) => sorter(a.data.jobId, b.data.jobId)
-      },
-      {
-        title: 'Worker State',
-        dataIndex: 'data.workerStatus',
-        width: '10%',
-        key: 'workerStatus',
-        render: (text, record) => (<span>
-          <Tag color={RECORD_STATUS[record.data.workerStatus]} > {record.data.workerStatus}</Tag>
-        </span>
-        ),
-        sorter: (a, b) => sorter(a.data.workerStatus, b.data.workerStatus)
-      },
-      {
-        title: 'Job State',
-        dataIndex: 'data.jobStatus',
-        width: '10%',
-        key: 'jobStatus',
-        render: (text, record) => (<span>
-          <Tag color={RECORD_STATUS[record.data.jobStatus]} > {record.data.jobStatus}</Tag>
-        </span>
-        ),
-        sorter: (a, b) => sorter(a.data.jobStatus, b.data.jobStatus)
-      },
-      {
-        title: 'Paused',
-        dataIndex: 'data.workerPaused',
-        width: '10%',
-        key: 'workerPaused',
-        render: (text, record) => (<span>
-          <Tag color={record.data.workerPaused ? 'red' : 'green'} > {record.data.workerPaused ? 'paused' : 'ready'}</Tag>
-        </span>
-        ),
-        sorter: (a, b) => sorter(a.data.workerPaused, b.data.workerPaused)
+        key: 'jobId'
       },
       {
         title: 'View Logs',
@@ -89,7 +74,7 @@ class WorkerTable extends Component {
         key: 'logs',
         render: () => (
           <span>
-            <Button size="small">Log</Button>
+            <Button size="small" icon="read"/>
           </span>
         ),
       }
@@ -195,7 +180,7 @@ class WorkerTable extends Component {
     };
 
     // const statsMergedWithDefault = tempStats.map((algo) => ({ ...defaultWorkerData,...algo }) );
-    const statsMergedWithDefault = stats&&stats.map((algo) => ({ ...defaultWorkerData,...algo }) );
+    const statsMergedWithDefault = stats&&stats.stats&&stats.stats.map((algo) => ({ ...defaultWorkerData,...algo }) );
     return (
       <div>
         <Table
