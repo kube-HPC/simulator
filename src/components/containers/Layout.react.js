@@ -10,7 +10,7 @@ import DriverTable from './tables/DriverTable.react';
 import AlgorithmTable from './tables/AlgorithmsTable.react';
 import NodeStatistics from './NodeStatistics.react';
 import SideBar from './SideBarContainer.react';
-import { BackTop, Row, Col, Tag, Icon } from 'antd';
+import { BackTop, Row, Col, Tag } from 'antd';
 import TableAutoComplete from '../dumb/TableAutoComplete.react';
 import { init } from '../../actions/config.action.js';
 import { addPipe } from '../../actions/addPipe.action';
