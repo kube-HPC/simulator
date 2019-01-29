@@ -138,7 +138,8 @@ class NodeStatistics extends Component {
     const {data,legend} = this.adaptedData(this.props.dataSource, this.props.metric)
     return (
       <div style={{ fontSize: "20px", width: "80%", height: "80%", left: "10%", position: "relative", top: "10%" }}>
-        <div>{metricToLabel[this.props.metric]}</div>
+        <div>{metricToLabel[this.props.metric
+        ]}</div>
         <ResponsiveBar
           data={data}
           keys={legend}
