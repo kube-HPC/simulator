@@ -7,7 +7,6 @@ import Logs from "../dumb/Logs.react";
 import Caching from "../dumb/Caching.react"
 import { getKubernetesLogsData } from "../../actions/kubernetesLog.action";
 import { Tabs, Card } from 'antd';
-import get from "lodash.get";
 import { connect } from 'react-redux';
 class AlgorithmInformation extends Component {
 

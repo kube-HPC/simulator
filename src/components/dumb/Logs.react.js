@@ -14,10 +14,10 @@ class Logs extends Component {
   render() {
     const { props } = this;
     let menu = props && props.taskDetails && props.taskDetails.map((task, index) => <Menu.Item key={index}>{`(${index + 1}) ${task.taskId}`}</Menu.Item>)
-    this.currentTaskId = props && props.taskDetails ? this.isAlreadySelected ? this.currentTaskId : props.taskDetails[0].taskId:null;
+    this.currentTaskId = props && props.taskDetails ? this.isAlreadySelected ? this.currentTaskId : props.taskDetails[0].taskId : null;
     let menuList =
       < Menu onClick={(data) => {
-        this.isAlreadySelected =true;
+        this.isAlreadySelected = true;
         this.currentTaskId = props.taskDetails[data.key].taskId;
         props.rerunLogs(this.currentTaskId)
         console.log(props.taskDetails[data.key])
@@ -38,11 +38,11 @@ class Logs extends Component {
 
     return (
       <div id="log" >
-        <span style={{ paddingLeft: '10px' }} >
+        <span style={{ paddingLeft: '10px',color:"#1890ff" }} >
           <Dropdown overlay={menuList} trigger={['click']} getPopupContainer={() => document.getElementById('log')}>
-            <a className="ant-dropdown-link" href="#">
+            <span className="ant-dropdown-link">
               {this.currentTaskId} <Icon type="down" />
-            </a>
+            </span>
           </Dropdown>
         </span>
         <Button type="primary" style={{ left: "35%" }} icon="redo" onClick={() => props.rerunLogs(this.currentTaskId)}>Refresh</Button>
