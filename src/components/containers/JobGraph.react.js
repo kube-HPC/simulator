@@ -84,7 +84,7 @@ class JobGraph extends Component {
     super();
     this.network = null;
     this.events = {
-      select: () => {},
+      select: () => { },
       afterDrawing: () => {
         this.network.fit({
           animation: {
@@ -101,15 +101,16 @@ class JobGraph extends Component {
   initNetworkInstance(network) {
     this.network = network;
     this.network.on("click", (params) => {
-      if (params&&params.nodes[0]) {
+      if (params && params.nodes[0]) {
         const nodeData = this.network.body.data.nodes._data[params.nodes[0]];
-        const taskId = nodeData.taskId ? nodeData.taskId :  nodeData.batchTasks&&nodeData.batchTasks[0].taskId;
+        const taskId = nodeData.taskId ? nodeData.taskId : nodeData.batchTasks && nodeData.batchTasks[0].taskId;
         this.props.sideBarOpen({
           payload: {
             taskId,
             algorithmName: nodeData.algorithmName,
             jobId: this.props.graph.jobId,
-            nodeName: params.nodes[0]
+            nodeName: params.nodes[0],
+            batch: nodeData.batchTasks || []
           }
         });
         //   alert(this.network.body.data.nodes._data[params.nodes[0]].taskId?this.network.body.data.nodes._data[params.nodes[0]].taskId:this.network.body.data.nodes._data[params.nodes[0]].batchTasks[0].taskId); 
