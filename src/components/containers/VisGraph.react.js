@@ -29,7 +29,7 @@ class Graph extends Component {
     const edgesChange = !isEqual(this.props.graph.edges, nextProps.graph.edges);
     const optionsChange = !isEqual(this.props.options, nextProps.options);
     const eventsChange = !isEqual(this.props.events, nextProps.events);
-    this.Network.stabilize();
+    // this.Network.stabilize();
     if (nodesChange) {
       const idIsEqual = (n1, n2) => n1.id === n2.id;
       const nodesRemoved = differenceWith(this.props.graph.nodes, nextProps.graph.nodes, idIsEqual);
