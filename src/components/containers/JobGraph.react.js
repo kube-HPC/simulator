@@ -114,7 +114,9 @@ class JobGraph extends Component {
   }
 
   formatEdge(e) {
-    const edge = {};
+    const edge = {
+      id: `${e.from}->${e.to}`
+    };
     if (e.group === 'waitAny' || e.group === 'AlgorithmExecution') {
       edge.dashes = true;
     }
