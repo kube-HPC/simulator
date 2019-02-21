@@ -120,7 +120,7 @@ class LayoutInner extends React.Component {
                   <SubMenu  title={<span><span>Node Stats</span></span>} key="7">
                     <HMenu.Item key="8" > CPU </HMenu.Item>
                     <HMenu.Item key="9" > Memory </HMenu.Item>
-                 
+
                   </SubMenu>
                 </HMenu>
               </HSider>

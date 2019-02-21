@@ -36,3 +36,21 @@ export const updateStoredPipeline = (pipeline) => ({
     actionType: actions.UPDATE_STORED_PIPELINE
   }
 });
+
+export const cronStart = (pipelineName) => ({
+  type: actions.REST_REQ_POST,
+  payload: {
+    url: 'cron/start',
+    body: { pipelineName },
+    actionType: actions.CRON_START
+  }
+});
+
+export const cronStop = (pipelineName) => ({
+  type: actions.REST_REQ_POST,
+  payload: {
+    url: 'cron/stop',
+    body: { pipelineName },
+    actionType: actions.CRON_STOP
+  }
+});
