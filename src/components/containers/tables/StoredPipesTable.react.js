@@ -1,6 +1,6 @@
 
 import { connect } from 'react-redux';
-import { Table, Card, Button, Row, Col, Modal, Icon, Tag, Tooltip, Switch } from 'antd';
+import { Table, Card, Button, Row, Col, Modal, Icon, Tag, Tooltip, Switch, Input } from 'antd';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactJson from 'react-json-view';
@@ -19,7 +19,6 @@ import { RECORD_STATUS } from '../../../constants/colors'
 import { ReactComponent as PlayIconSvg } from '../../../images/play-icon.svg'
 
 const { Column } = Table;
-
 class StoredPipesTable extends Component {
 
   componentWillMount() {
@@ -75,22 +74,18 @@ class StoredPipesTable extends Component {
                 src={record}
                 displayDataTypes={false}
                 displayObjectSize={false}
-                iconStyle="square"
+                iconStyle="triangle"
+                indentWidth="4"
+                collapsed="2"
+                enableClipboard={false}
+
               />
             </Card>
           )}>
           <Column
-            title="Pipe Name"
+            title="Pipeline Name"
             dataIndex="name"
             key="name"/>
-          <Column
-            title="Progress"
-            dataIndex="webhooks.progress"
-            key="progress"/>
-          <Column
-            title="Result"
-            dataIndex="webhooks.result"
-            key="result"/>
           <Column
             title="Total Nodes"
             dataIndex="nodes.length"
@@ -100,16 +95,36 @@ class StoredPipesTable extends Component {
             dataIndex="priority"
             key="priority"/>
           <Column
-            title="Cron"
+            title="Cron Job"
             dataIndex="cron"
+            colSpan="1"
             key="cron"
-            render={(text,record) => (
-              <Switch
-                checked={
-                record.hasOwnProperty('triggers') &&
+            render={(text,record) => {
+              const cronIsEnabled = record.hasOwnProperty('triggers') &&
                 record.triggers.hasOwnProperty('cron') && record.triggers.cron.enabled
-              } onChange={revertCronTrigger(record,this.props.cronStart,this.props.cronStop)}/>
-            )
+              const cronExpr = cronIsEnabled ? record.triggers.cron.pattern : "* * * * *"
+              return (
+                <Row type="flex" justify="space-around">
+                  <Col>
+                    <Switch
+                      className="switch"
+                      checkedChildren={<Icon type="check" />}
+                      unCheckedChildren={<Icon type="close" />}
+                      checked={cronIsEnabled}
+                      onChange={revertCronTrigger(record,this.props.cronStart,this.props.cronStop)}/>
+                  </Col>
+                  <Col>
+                    <Input.Search className="cronInput"
+                      maxLength={9}
+                      size="small"
+                      disabled={!cronIsEnabled}
+                      placeholder="Cron Expression"
+                      enterButton={<Icon type="check"/>}
+                      defaultValue={cronExpr}
+                    />
+                  </Col>
+                </Row>
+            )}
             }
             />
           <Column
