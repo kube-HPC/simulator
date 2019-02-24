@@ -19,6 +19,7 @@ import { HContent, HMenu, HLayout, HSider, LayoutHeader, AlignRow, Logo, HeaderT
 import template from '../stubs/json-object.json';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import './Layout.scss'
+
 const jsonTemplate = JSON.stringify(template, null, 2);
 
 const menuSelection = (i, props) => {
@@ -80,7 +81,7 @@ class LayoutInner extends React.Component {
                     okText={'Store Pipeline'}
                     hintText={<div> Hint: Type <strong>node</strong> for adding pipe-node.</div>}
                     action={this.props.addPipe}
-                            />
+                  />
                 </Col>
               </AlignRow>
             </LayoutHeader>
@@ -88,45 +89,75 @@ class LayoutInner extends React.Component {
             <HLayout hasSider={true}>
               <HSider>
                 <HMenu mode="inline" onSelect={(i) => { menuSelection(i, props) }} defaultSelectedKeys={['1']}>
-                  <HMenu.Item key="1"> Jobs </HMenu.Item>
-                  {/* <HMenu.Item key="2"> Stored Pipelines </HMenu.Item> */}
-                  {/* <HMenu.Item key="2"> <Badge count={props.algorithmCount} offset={[15,0]} style={{scale: "0.8", background:"#0090fa"}}>Pipelines</Badge></HMenu.Item> */}
-                  <HMenu.Item key="2"><span>
-                                Pipelines
-                    <Tag color={'blue'} style={{ marginLeft: "42px" }}>{props.pipelineCount}</Tag>
-                  </span>
+                  <HMenu.Item key="1">
+                    <Row type="flex" justify="space-between">
+                      <Col>
+                        Jobs
+                      </Col>
+                      <Col>
+                        <Tag className="tag">{props.jobsCount}</Tag>
+                      </Col>
+                    </Row>
                   </HMenu.Item>
-                  {/* <HMenu.Item key="3"> <Badge count={} offset={[10,5]} style={{scale: "0.8", background:"#0090fa"}}>Workers</Badge></HMenu.Item> */}
-                  <HMenu.Item key="3"><span>
-                                Workers
-                    <Tag color={'blue'} style={{ marginLeft: "60px" }}>{props.workerCount}</Tag>
-                  </span>
+                  <HMenu.Item key="2">
+                    <Row type="flex" justify="space-between">
+                      <Col>
+                        Pipelines
+                      </Col>
+                      <Col>
+                        <Tag className="tag">{props.pipelineCount}</Tag>
+                      </Col>
+                    </Row>
                   </HMenu.Item>
-                  {/* <HMenu.Item key="4"> <Badge count={props.driversCount} offset={[15,7]} style={{scale: "0.8",background:"#0090fa"}}>Drivers</Badge></HMenu.Item> */}
-                  <HMenu.Item key="4"><span>
-                                Drivers
-                    <Tag color={'blue'} style={{ marginLeft: "60px" }}>{props.driversCount}</Tag>
-                  </span>
+                  <HMenu.Item key="3">
+                    <Row type="flex" justify="space-between">
+                      <Col>
+                        Workers
+                      </Col>
+                      <Col>
+                        <Tag className="tag">{props.workerCount}</Tag>
+                      </Col>
+                    </Row>
                   </HMenu.Item>
-
-                  {/* <HMenu.Item key="5"> <Badge count={props.algorithmCount} offset={[15,0]} style={{scale: "0.8",background:"#0090fa"}}>Algorithms</Badge></HMenu.Item> */}
-                  <HMenu.Item key="5"><span>
-                                Algorithms
-                    <Tag color={'blue'} style={{ marginLeft: "35px" }}>{props.algorithmCount}</Tag>
-                  </span>
+                  <HMenu.Item key="4">
+                    <Row type="flex" justify="space-between">
+                      <Col>
+                        Drivers
+                      </Col>
+                      <Col>
+                        <Tag className="tag">{props.driversCount}</Tag>
+                      </Col>
+                    </Row>
                   </HMenu.Item>
-
-                  <HMenu.Item key="6"> Debug </HMenu.Item>
+                  <HMenu.Item key="5">
+                    <Row type="flex" justify="space-between">
+                      <Col>
+                        Algorithms
+                      </Col>
+                      <Col>
+                        <Tag className="tag">{props.algorithmCount}</Tag>
+                      </Col>
+                    </Row>
+                  </HMenu.Item>
+                  <HMenu.Item key="6">
+                    <Row type="flex" justify="space-between">
+                      <Col>
+                        Debug
+                      </Col>
+                      <Col>
+                        <Tag className="tag">{props.debugCount}</Tag>
+                      </Col>
+                    </Row>
+                  </HMenu.Item>
                   <SubMenu  title={<span><span>Node Stats</span></span>} key="7">
                     <HMenu.Item key="8" > CPU </HMenu.Item>
                     <HMenu.Item key="9" > Memory </HMenu.Item>
-
                   </SubMenu>
                 </HMenu>
               </HSider>
               <HContent> <BackTop /> {selectTable(props)} </HContent>
             </HLayout>
-          </HLayout >
+          </HLayout>
         );
     }
 }
@@ -134,10 +165,12 @@ class LayoutInner extends React.Component {
 const mapStateToProps = (state) => {
     return {
         scriptsPath: state.serverSelection.currentSelection.scriptsPath,
+        jobsCount: (state.containerTable.dataSource || []).length,
         driversCount: (state.driverTable.dataSource || []).length,
         algorithmCount: (state.algorithmTable.dataSource || []).length,
         pipelineCount: (state.storedPipeline.dataSource || []).length,
-        workerCount: (state.workerTable.stats || {}).total,
+        workerCount: (state.workerTable.stats ||state.workerTable.dataSource || []).length,
+        debugCount: (state.debugTable.dataSource || []).length,
     }
 };
 

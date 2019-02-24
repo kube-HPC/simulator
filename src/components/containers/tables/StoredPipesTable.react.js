@@ -1,9 +1,11 @@
 
 import { connect } from 'react-redux';
-import { Table, Card, Button, Row, Col, Modal, Icon, Tag, Tooltip, Switch, Input } from 'antd';
+import { Table, Card, Button, Row, Col, Modal, Icon, Tag, Tooltip, Switch, Input, Popover } from 'antd';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactJson from 'react-json-view';
+import cronstrue from 'cronstrue';
+
 import { init } from '../../../actions/storedPipes.action';
 import { openModal } from '../../../actions/modal.action';
 import {
@@ -61,6 +63,11 @@ class StoredPipesTable extends Component {
         cronStop(pipelineName) : cronStart(pipelineName)) : {};
     }
 
+    const updateCronPattern = (pipeline, pattern, updateStoredPipeline) => {
+      pipeline.triggers.cron.pattern = pattern;
+      updateStoredPipeline(pipeline);
+    }
+
     return (
       <div>
         <Table
@@ -78,7 +85,6 @@ class StoredPipesTable extends Component {
                 indentWidth="4"
                 collapsed="2"
                 enableClipboard={false}
-
               />
             </Card>
           )}>
@@ -87,41 +93,34 @@ class StoredPipesTable extends Component {
             dataIndex="name"
             key="name"/>
           <Column
-            title="Total Nodes"
-            dataIndex="nodes.length"
-            key="nodes"/>
-          <Column
-            title="Priority"
-            dataIndex="priority"
-            key="priority"/>
-          <Column
             title="Cron Job"
             dataIndex="cron"
-            colSpan="1"
             key="cron"
-            render={(text,record) => {
+            render={(_,record) => {
               const cronIsEnabled = record.hasOwnProperty('triggers') &&
                 record.triggers.hasOwnProperty('cron') && record.triggers.cron.enabled
               const cronExpr = cronIsEnabled ? record.triggers.cron.pattern : "* * * * *"
               return (
-                <Row type="flex" justify="space-around">
-                  <Col>
+                <Row type="flex" justify="start">
+                  <Col span={4} order={1}>
                     <Switch
-                      className="switch"
                       checkedChildren={<Icon type="check" />}
                       unCheckedChildren={<Icon type="close" />}
                       checked={cronIsEnabled}
                       onChange={revertCronTrigger(record,this.props.cronStart,this.props.cronStop)}/>
                   </Col>
-                  <Col>
-                    <Input.Search className="cronInput"
-                      maxLength={9}
-                      size="small"
-                      disabled={!cronIsEnabled}
-                      placeholder="Cron Expression"
-                      enterButton={<Icon type="check"/>}
-                      defaultValue={cronExpr}
+                  <Col span={8} order={2}>
+                    <Popover content={cronstrue.toString(cronExpr)} trigger="focus">
+                      <Input.Search className="cronInput"
+                        maxLength={9}
+                        size="small"
+                        disabled={!cronIsEnabled}
+                        placeholder="Cron Expression"
+                        enterButton={<Icon type="check"/>}
+                        defaultValue={cronExpr}
+                        onSearch={pattern => updateCronPattern(JSON.parse(JSON.stringify(record)), pattern, this.props.updateStoredPipeline)}
                     />
+                    </Popover>
                   </Col>
                 </Row>
             )}
@@ -131,10 +130,39 @@ class StoredPipesTable extends Component {
             title="Status"
             dataIndex="status"
             key="status"
-            render={(text,record) => (
-              <Tooltip style={{ backgroundColor: "white", color: "black" }} placement="top" title={"Finish"} >
-                <Tag color={RECORD_STATUS.active }>{3}</Tag>
-              </Tooltip>
+            render={() => (
+              <Row>
+                <Col className="align-center" span={2}>
+                  <Tooltip placement="top" title={"Creating"} >
+                    <Tag color={RECORD_STATUS.creating}>{3}</Tag>
+                  </Tooltip>
+                </Col>
+                <Col className="align-center" span={2}>
+                  <Tooltip placement="top" title={"Completed"} >
+                    <Tag color={RECORD_STATUS.completed}>{3}</Tag>
+                  </Tooltip>
+                </Col>
+                <Col className="align-center" span={2}>
+                  <Tooltip placement="top" title={"Active"} >
+                    <Tag color={RECORD_STATUS.active}>{3}</Tag>
+                  </Tooltip>
+                </Col>
+                <Col className="align-center" span={2}>
+                  <Tooltip  placement="top" title={"Stopped"} >
+                    <Tag color={RECORD_STATUS.stopped }>{3}</Tag>
+                  </Tooltip>
+                </Col>
+                <Col className="align-center" span={2}>
+                  <Tooltip className="toolTip" placement="top" title={"Failed"} >
+                    <Tag color={RECORD_STATUS.failed }>{3}</Tag>
+                  </Tooltip>
+                </Col>
+                <Col className="align-center" span={2}>
+                  <Tooltip className="toolTip" placement="top" title={"Skipped"} >
+                    <Tag color={RECORD_STATUS.skipped }>{3}</Tag>
+                  </Tooltip>
+                </Col>
+              </Row>
             )
             }
             />
@@ -143,8 +171,8 @@ class StoredPipesTable extends Component {
             dataIndex="action"
             key="action"
             render={((_,record) => (
-              <Row type="flex" justify="space-between">
-                <Col >
+              <Row type="flex" justify="start">
+                <Col span={4}>
                   <HEditor
                     jsonTemplate={JSON.stringify(fixedDataSource.find((p) => p.name === record.name), null, 2)}
                     styledButton={(onClick) =>
@@ -157,9 +185,9 @@ class StoredPipesTable extends Component {
                     action={this.props.execStoredPipe}
                   />
                 </Col>
-                <Col >
+                <Col span={4} >
                   <HEditor
-                    jsonTemplate={JSON.stringify(fixedDataSource.find((p) => p.name === record.name), null, 2)}
+                    jsonTemplate={JSON.stringify(dataSource.find((p) => p.name === record.name), null, 2)}
                     styledButton={(onClick) =>
                       <Button shape="circle" icon="edit" onClick={onClick}/>
                     }
@@ -168,7 +196,7 @@ class StoredPipesTable extends Component {
                     action={this.props.updateStoredPipeline}
                   />
                 </Col>
-                <Col >
+                <Col span={4} >
                   <Button type="danger" shape="circle" icon="delete"
                     onClick={() => deleteConfirmAction(this.props.deleteStoredPipeline, record)}
                   />

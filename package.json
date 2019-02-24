@@ -11,6 +11,7 @@
     "brace": "^0.11.1",
     "chart.js": "^2.7.3",
     "classnames": "^2.2.6",
+    "cronstrue": "^1.61.0",
     "dateformat": "^3.0.3",
     "http-proxy-middleware": "^0.19.1",
     "jaeger-react-trace-component": "^1.0.16",

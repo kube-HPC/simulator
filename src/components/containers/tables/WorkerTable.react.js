@@ -56,7 +56,7 @@ class WorkerTable extends Component {
           <Tag color={RECORD_STATUS[record.data.workerStatus]} > {undefinedStateFilter(record.data.workerStatus)}</Tag>
           {/* {record.data.hotWorker?<Tag color={'orange'} >hot</Tag>:null} */}
           <Tag color={RECORD_STATUS[record.data.jobStatus]} > {'job '+undefinedStateFilter(record.data.jobStatus)}</Tag>
-          
+
 
         </span>
         )
@@ -100,7 +100,6 @@ class WorkerTable extends Component {
         title: 'Init Count',
         key: 'initCount',
         dataIndex: 'init',
-        //   }
       },
       {
         title: 'Exit Count',
@@ -153,7 +152,7 @@ class WorkerTable extends Component {
                   <Tabs.TabPane tab="JSON" key="1">
                     <Card>
                       <ReactJson
-                        src={record} 
+                        src={record}
                         displayDataTypes={false}
                         displayObjectSize={false}
                         iconStyle="square"
@@ -164,7 +163,7 @@ class WorkerTable extends Component {
                   <Tabs.TabPane tab="Additional Details" key="2">
                     <Card>
                       <ReactJson
-                        src={timer} 
+                        src={timer}
                         displayDataTypes={false}
                         displayObjectSize={false}
                         iconStyle="square"

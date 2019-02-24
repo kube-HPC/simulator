@@ -3,7 +3,7 @@ export const COLOR = {
   blueHighlight: '#45a9ec',
   red: '#e74c3c',
   purple: '#9b59b6',
-  purleHighlight: '#ac6ad7',
+  purpleHighlight: '#ac6ad7',
   redHighlight: '#f85d4d',
   green: '#1abc9c',
   greenHighlight: '#2bcdad',
@@ -23,12 +23,11 @@ export const HCOLOR = {
 }
 
 export const RECORD_STATUS = {
-  active: '#2db7f5',
-  completed: '#87d068',
-  failed: '#f50',
-  stopped: '#ec8c16',
-  succeed: '#87d068',
   creating: '#838383',
+  completed: '#87d068',
+  active: '#2db7f5',
+  stopped: '#ec8c16',
+  failed: '#f50',
+  succeed: '#87d068',
   skipped: '#eeda13',
-  //creating:'#108ee9'
 };

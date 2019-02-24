@@ -49,12 +49,10 @@ class ContainerTable extends Component {
             message: 'Copied to clipboard',
             description: ``
           })}>
-
             <div>
               <Icon type="right" className='jobIdIcon' />
               {`${record.key.substring(0, 25)} ...`}
             </div>
-
           </CopyToClipboard>
 
       },
@@ -107,7 +105,7 @@ class ContainerTable extends Component {
               <span>
                 {record.results.timeTook + " Seconds"}
               </span>
-              //    </Moment> 
+              //    </Moment>
               :
               <Moment date={record.pipeline && record.pipeline.startTime}
                 durationFromNow
@@ -126,7 +124,7 @@ class ContainerTable extends Component {
         render: (text, record) => {
           let statuses = record.status.data && record.status.data.states ?
             Object.entries(record.status.data.states.asMutable()).map((s,i) =>
-              <Tooltip key={i} style={{ backgroundColor: "white", color: "black" }} placement="top" title={s[0]} >
+              <Tooltip key={i} placement="top" title={s[0]} >
                 <Tag color={RECORD_STATUS[s[0]] || 'magenta'}>{s[1]}</Tag>
               </Tooltip>)
             : null;
