@@ -25,6 +25,7 @@ class HEditor extends Component {
   handleOk = () => {
     try {
       this.props.action(JSON.parse(this.userData));
+      this.isEditable = false;
     } catch (e) {
       notification.config({
         placement: 'bottomRight'

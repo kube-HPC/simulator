@@ -30,6 +30,8 @@ class ContainerTable extends Component {
   componentWillMount() {
     this.props.init();
 
+    const firstLetterUpperCase = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
     const sorter = (a, b) => {
       let tempA = null;
       let tempB = null;
@@ -70,7 +72,7 @@ class ContainerTable extends Component {
         width: '5%',
         key: 'status',
         render: (text, record) => (<span>
-          <Tag color={RECORD_STATUS[record.status && record.status.status]}>{record.status && record.status.status}</Tag>
+          <Tag color={RECORD_STATUS[record.status && record.status.status]}>{firstLetterUpperCase(record.status && record.status.status)}</Tag>
         </span>
         ),
         sorter: (a, b) => sorter(a.status.status, b.status.status)

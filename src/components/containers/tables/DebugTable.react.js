@@ -1,7 +1,5 @@
-// libs
-
 import { connect } from 'react-redux';
-import { Table, Card, Button, Icon, Input, Tag, Row, Col, notification, Popover } from 'antd';
+import { Table, Card, Button, Icon, Input, Tag, Row, Col, notification, Popover, Empty } from 'antd';
 import ReactJson from 'react-json-view';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { openModal } from '../../../actions/modal.action';
@@ -13,9 +11,9 @@ import './DebugTable.scss'
 class DebugTable extends Component {
   componentWillMount() {
     this.props.init();
-    
+
     this.setState({ visible: false })
-    
+
     const sorter = (a, b) => {
       let tempA = null;
       let tempB = null;
@@ -40,7 +38,7 @@ class DebugTable extends Component {
         render: (text, record) =>
           <CopyToClipboard text={`${window.location.origin}/${record.data.path}`} onCopy={() => notification.success({
             message:'Copied to clipboard',
-           description:`` 
+           description:``
           })}>
             <Tag color="#399114">
               <div>
@@ -81,9 +79,9 @@ class DebugTable extends Component {
     const AlgorithmInput = (
       <div className="AlgorithmInput">
         <Row className='AlgorithmRow'>
-          <Input 
+          <Input
             onChange={this.onFormDataChange}
-            prefix={<Icon type="share-alt" className='AlgorithmInputPrefix'/>} 
+            prefix={<Icon type="share-alt" className='AlgorithmInputPrefix'/>}
             placeholder="Algorithm"/>
         </Row>
 
@@ -91,22 +89,22 @@ class DebugTable extends Component {
     );
 
     const { dataSource } = this.props;
-    return (
+    return dataSource.length === 0 ? <Empty className="empty"/> : (
       <div>
         <Table
           columns={this.columns}
           dataSource={dataSource.asMutable()}
           pagination={{ className: "tablePagination", defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true}}
-          locale={{ emptyText: 'no data' }}
+          locale={{ emptyText: 'No Data' }}
           expandedRowRender={(record) => (
             <Card title="Full details">
               <ReactJson src={record}/>
             </Card>
           )}/>
-        <Popover 
+        <Popover
           placement="topRight"
-          isVisible={this.state.isVisible} 
-          position="topRight" 
+          isVisible={this.state.isVisible}
+          position="topRight"
           trigger="click"
           content={
             <div >
@@ -167,4 +165,3 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, { openModal, init, addAlgorithm,deleteAlgorithm })(DebugTable);
-
