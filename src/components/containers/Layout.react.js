@@ -19,6 +19,7 @@ import { HContent, HMenu, HLayout, HSider, LayoutHeader, AlignRow, Logo, HeaderT
 import template from '../stubs/json-object.json';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import './Layout.scss'
+import { isUndefined } from 'util';
 
 const jsonTemplate = JSON.stringify(template, null, 2);
 
@@ -115,7 +116,7 @@ class LayoutInner extends React.Component {
                         Workers
                       </Col>
                       <Col>
-                        <Tag className="tag">{props.workerCount}</Tag>
+                        <Tag className="tag">{isUndefined(props.workerCount) ? 0 : props.workerCount}</Tag>
                       </Col>
                     </Row>
                   </HMenu.Item>
@@ -169,7 +170,7 @@ const mapStateToProps = (state) => {
         driversCount: (state.driverTable.dataSource || []).length,
         algorithmCount: (state.algorithmTable.dataSource || []).length,
         pipelineCount: (state.storedPipeline.dataSource || []).length,
-        workerCount: (state.workerTable.stats ||state.workerTable.dataSource || []).length,
+        workerCount: (state.workerTable.stats || {total: 0}).total,
         debugCount: (state.debugTable.dataSource || []).length,
     }
 };

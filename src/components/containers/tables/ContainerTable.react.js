@@ -122,9 +122,10 @@ class ContainerTable extends Component {
         key: 'details',
         width: '10%',
         render: (text, record) => {
+          const firstLetterUpperCase = (s) => s.charAt(0).toUpperCase() + s.slice(1);
           let statuses = record.status.data && record.status.data.states ?
             Object.entries(record.status.data.states.asMutable()).map((s,i) =>
-              <Tooltip key={i} placement="top" title={s[0]} >
+              <Tooltip key={i} placement="top" title={firstLetterUpperCase(s[0])} >
                 <Tag color={RECORD_STATUS[s[0]] || 'magenta'}>{s[1]}</Tag>
               </Tooltip>)
             : null;

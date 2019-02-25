@@ -1,6 +1,6 @@
 
 import { connect } from 'react-redux';
-import { Table, Card, Button, Row, Col, Modal, Icon, Tag, Tooltip, Switch, Input, Popover } from 'antd';
+import { Table, Card, Button, Row, Col, Modal, Icon, Tag, Tooltip, Switch, Input, Popover, notification} from 'antd';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactJson from 'react-json-view';
@@ -22,7 +22,6 @@ import { ReactComponent as PlayIconSvg } from '../../../images/play-icon.svg'
 
 const { Column } = Table;
 class StoredPipesTable extends Component {
-
   componentWillMount() {
     this.props.init();
   }
@@ -30,7 +29,7 @@ class StoredPipesTable extends Component {
   renderColumns() {}
 
   render() {
-    const { dataSource } = this.props;
+    const { dataSource, dataStats } = this.props;
 
     // Need to remove "nodes" key from each pipeline.
     const fixedDataSource = [];
@@ -64,8 +63,20 @@ class StoredPipesTable extends Component {
     }
 
     const updateCronPattern = (pipeline, pattern, updateStoredPipeline) => {
-      pipeline.triggers.cron.pattern = pattern;
-      updateStoredPipeline(pipeline);
+      try {
+        cronstrue.toString(pattern);
+        pipeline.triggers.cron.pattern = pattern;
+        updateStoredPipeline(pipeline);
+      } catch (errorMessage) {
+        notification.config({
+          placement: 'bottomRight'
+        });
+        notification.open({
+          message: 'Cron Job Error',
+          description: errorMessage,
+          icon: <Icon type="warning" style={{color:'red'}}/>
+        })
+      }
     }
 
     return (
@@ -110,9 +121,8 @@ class StoredPipesTable extends Component {
                       onChange={revertCronTrigger(record,this.props.cronStart,this.props.cronStop)}/>
                   </Col>
                   <Col span={8} order={2}>
-                    <Popover content={cronstrue.toString(cronExpr)} trigger="focus">
+                    <Popover content={cronExpr.split(' ').length===5 ? cronstrue.toString(cronExpr, {use24HourTimeFormat: true}) : 'Invalid Cron-Expression'} trigger="focus">
                       <Input.Search className="cronInput"
-                        maxLength={9}
                         size="small"
                         disabled={!cronIsEnabled}
                         placeholder="Cron Expression"
@@ -130,40 +140,27 @@ class StoredPipesTable extends Component {
             title="Status"
             dataIndex="status"
             key="status"
-            render={() => (
-              <Row>
-                <Col className="align-center" span={2}>
-                  <Tooltip placement="top" title={"Creating"} >
-                    <Tag color={RECORD_STATUS.creating}>{3}</Tag>
+            render={(_,record) => {
+              const pipelineStats = dataStats
+                .filter(status => status.name === record.name && status.stats.length !== 0)
+                .map(pipeline => pipeline.stats)
+                .flat();
+
+              const firstLetterUpperCase = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+              const out = pipelineStats.map((s,i) =>
+                <Col key={i} className="align-center" span={2}>
+                  <Tooltip placement="top" title={firstLetterUpperCase(s[0])} >
+                    <Tag color={RECORD_STATUS[s[0]]}>{[s[1]]}</Tag>
                   </Tooltip>
                 </Col>
-                <Col className="align-center" span={2}>
-                  <Tooltip placement="top" title={"Completed"} >
-                    <Tag color={RECORD_STATUS.completed}>{3}</Tag>
-                  </Tooltip>
-                </Col>
-                <Col className="align-center" span={2}>
-                  <Tooltip placement="top" title={"Active"} >
-                    <Tag color={RECORD_STATUS.active}>{3}</Tag>
-                  </Tooltip>
-                </Col>
-                <Col className="align-center" span={2}>
-                  <Tooltip  placement="top" title={"Stopped"} >
-                    <Tag color={RECORD_STATUS.stopped }>{3}</Tag>
-                  </Tooltip>
-                </Col>
-                <Col className="align-center" span={2}>
-                  <Tooltip className="toolTip" placement="top" title={"Failed"} >
-                    <Tag color={RECORD_STATUS.failed }>{3}</Tag>
-                  </Tooltip>
-                </Col>
-                <Col className="align-center" span={2}>
-                  <Tooltip className="toolTip" placement="top" title={"Skipped"} >
-                    <Tag color={RECORD_STATUS.skipped }>{3}</Tag>
-                  </Tooltip>
-                </Col>
-              </Row>
-            )
+              );
+
+              return (
+                <Row>
+                  {out}
+                </Row>
+            )}
             }
             />
           <Column
@@ -213,6 +210,7 @@ class StoredPipesTable extends Component {
 StoredPipesTable.propTypes = {
   init: PropTypes.func.isRequired,
   dataSource: PropTypes.array.isRequired,
+  dataStats: PropTypes.array.isRequired,
   execStoredPipe: PropTypes.func.isRequired,
   deleteStoredPipeline: PropTypes.func.isRequired,
   updateStoredPipeline: PropTypes.func.isRequired,
@@ -221,7 +219,8 @@ StoredPipesTable.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  dataSource: state.storedPipeline.dataSource
+  dataSource: state.storedPipeline.dataSource,
+  dataStats: state.storedPipeline.dataStats,
 });
 
 export default connect(mapStateToProps,
