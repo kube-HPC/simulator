@@ -149,17 +149,15 @@ class StoredPipesTable extends Component {
               const firstLetterUpperCase = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
               const out = pipelineStats.map((s,i) =>
-                <Col key={i} className="align-center" span={2}>
-                  <Tooltip placement="top" title={firstLetterUpperCase(s[0])} >
-                    <Tag color={RECORD_STATUS[s[0]]}>{[s[1]]}</Tag>
-                  </Tooltip>
-                </Col>
+                <Tooltip key ={i} placement="top" title={firstLetterUpperCase(s[0])} >
+                  <Tag color={RECORD_STATUS[s[0]]}>{[s[1]]}</Tag>
+                </Tooltip>
               );
 
               return (
-                <Row>
+                <span>
                   {out}
-                </Row>
+                </span>
             )}
             }
             />
