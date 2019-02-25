@@ -170,10 +170,12 @@ class StoredPipesTable extends Component {
                 <Col span={4}>
                   <HEditor
                     jsonTemplate={JSON.stringify(fixedDataSource.find((p) => p.name === record.name), null, 2)}
-                    styledButton={(onClick) =>
-                      <Button shape="circle" onClick={onClick}>
-                        <Icon component={PlayIconSvg}/>
-                      </Button>
+                    styledButton={(onClick, isEditable = false) =>
+                      <Badge dot={isEditable}>
+                        <Button shape="circle" onClick={onClick}>
+                          <Icon component={PlayIconSvg}/>
+                        </Button>
+                      </Badge>
                     }
                     title={'Execute Pipeline Editor'}
                     okText={'Execute'}

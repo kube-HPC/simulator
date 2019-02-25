@@ -10,7 +10,7 @@ import DriverTable from './tables/DriverTable.react';
 import AlgorithmTable from './tables/AlgorithmsTable.react';
 import NodeStatistics from './NodeStatistics.react';
 import SideBar from './SideBarContainer.react';
-import { BackTop, Row, Col, Tag } from 'antd';
+import { BackTop, Row, Col, Tag, Badge } from 'antd';
 import TableAutoComplete from '../dumb/TableAutoComplete.react';
 import { init } from '../../actions/config.action.js';
 import { addPipe } from '../../actions/addPipe.action';
@@ -77,7 +77,11 @@ class LayoutInner extends React.Component {
                 <Col>
                   <HEditor
                     jsonTemplate={jsonTemplate}
-                    styledButton={(onClick) => <ButtonAddPipeline onClick={onClick}> + Pipeline </ButtonAddPipeline>}
+                    styledButton={(onClick, isEditable = false) =>
+                      <Badge dot={isEditable}>
+                        <ButtonAddPipeline onClick={onClick}> + Pipeline </ButtonAddPipeline>
+                      </Badge>
+                      }
                     title={'Add Pipeline Editor'}
                     okText={'Store Pipeline'}
                     hintText={<div> Hint: Type <strong>node</strong> for adding pipe-node.</div>}
