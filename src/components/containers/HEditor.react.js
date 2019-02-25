@@ -9,6 +9,7 @@ import JsonEditor from '../dumb/JsonEditor.react';
 class HEditor extends Component {
   constructor(props) {
     super(props);
+    this.userData = this.props.jsonTemplate;
     this.isEditable = false;
     this.state = { visible: false };
   }
@@ -43,13 +44,14 @@ class HEditor extends Component {
   };
 
   handleReset = () => {
+    this.isEditable = false;
     this.userData = this.props.jsonTemplate;
   };
 
   render() {
     return (
       <div>
-        {this.props.styledButton(this.isEditable,this.showModal)}
+        {this.props.styledButton(this.showModal,this.isEditable)}
         <Modal
           title={this.props.title}
           visible={this.state.visible}

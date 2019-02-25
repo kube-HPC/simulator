@@ -114,7 +114,7 @@ class StoredPipesTable extends Component {
               return (
                 <Row type="flex" justify="start">
                   <Col span={4} order={1}>
-                    <Switch
+                    <Switch loading={false}
                       checkedChildren={<Icon type="check" />}
                       unCheckedChildren={<Icon type="close" />}
                       checked={cronIsEnabled}
@@ -183,7 +183,7 @@ class StoredPipesTable extends Component {
                 <Col span={4} >
                   <HEditor
                     jsonTemplate={JSON.stringify(dataSource.find((p) => p.name === record.name), null, 2)}
-                    styledButton={(isEditable, onClick) =>
+                    styledButton={(onClick, isEditable = false) =>
                       <Badge dot={isEditable}>
                         <Button shape="circle" icon="edit" onClick={onClick}/>
                       </Badge>
