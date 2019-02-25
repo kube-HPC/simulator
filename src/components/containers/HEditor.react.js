@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {Modal, Button, Card} from 'antd';
+import {Modal, Button, Card, notification, Icon} from 'antd';
 
 import {Paragraph} from '../style/Styled';
 import JsonEditor from '../dumb/JsonEditor.react';
@@ -9,18 +9,32 @@ import JsonEditor from '../dumb/JsonEditor.react';
 class HEditor extends Component {
   constructor(props) {
     super(props);
-    this.userData = this.props.jsonTemplate;
-    this.state = {visible: false};
+    this.isEditable = false;
+    this.state = { visible: false };
   }
 
-  onVisible = () => this.setState({ visible: !this.state.visible })
-
+  onVisible = () => {
+    this.userData = this.isEditable ? this.userData : this.props.jsonTemplate;
+    this.setState({ visible: !this.state.visible });
+}
   showModal = () => {
     this.onVisible()
   };
 
   handleOk = () => {
-    this.props.action(JSON.parse(this.userData));
+    try {
+      this.props.action(JSON.parse(this.userData));
+    } catch (e) {
+      notification.config({
+        placement: 'bottomRight'
+      });
+      notification.open({
+        message: 'Hkube Editor Error',
+        description: e.message,
+        icon: <Icon type="warning" style={{color:'red'}}/>
+      })
+    }
+
     this.onVisible()
   };
 
@@ -35,7 +49,7 @@ class HEditor extends Component {
   render() {
     return (
       <div>
-        {this.props.styledButton(this.showModal)}
+        {this.props.styledButton(this.isEditable,this.showModal)}
         <Modal
           title={this.props.title}
           visible={this.state.visible}
@@ -49,7 +63,10 @@ class HEditor extends Component {
           <Card>
             <JsonEditor
               jsonTemplate={this.userData}
-              pipe={(newPipe) => (this.userData = newPipe)}/>
+              pipe={(newPipe) => {
+                this.isEditable = true;
+                this.userData = newPipe;
+                }}/>
           </Card>
           <Paragraph>
             {this.props.hintText}

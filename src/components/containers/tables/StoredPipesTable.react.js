@@ -1,6 +1,6 @@
 
 import { connect } from 'react-redux';
-import { Table, Card, Button, Row, Col, Modal, Icon, Tag, Tooltip, Switch, Input, Popover, notification} from 'antd';
+import { Table, Card, Button, Row, Col, Modal, Icon, Tag, Tooltip, Switch, Input, Popover, notification, Badge} from 'antd';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactJson from 'react-json-view';
@@ -183,8 +183,10 @@ class StoredPipesTable extends Component {
                 <Col span={4} >
                   <HEditor
                     jsonTemplate={JSON.stringify(dataSource.find((p) => p.name === record.name), null, 2)}
-                    styledButton={(onClick) =>
-                      <Button shape="circle" icon="edit" onClick={onClick}/>
+                    styledButton={(isEditable, onClick) =>
+                      <Badge dot={isEditable}>
+                        <Button shape="circle" icon="edit" onClick={onClick}/>
+                      </Badge>
                     }
                     title={'Edit Pipeline Editor'}
                     okText={'Update'}
