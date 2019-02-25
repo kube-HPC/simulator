@@ -85,7 +85,6 @@ class StoredPipesTable extends Component {
           rowKey="name"
           dataSource={dataSource.asMutable()}
           pagination={{ className: "tablePagination", defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true,}}
-          locale={{ emptyText: 'No Stored Pipelines' }}
           expandedRowRender={(record) => (
             <Card title="Full details">
               <ReactJson

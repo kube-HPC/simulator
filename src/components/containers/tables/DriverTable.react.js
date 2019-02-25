@@ -23,7 +23,7 @@ const STATUSES = {
 class WorkerTable extends Component {
   componentWillMount() {
     this.props.init();
-  
+
     const sorter = (a, b) => {
       let tempA = null;
       let tempB = null;
@@ -101,7 +101,6 @@ class WorkerTable extends Component {
           columns={this.columns}
           dataSource={dataSource.asMutable()}
           pagination={{ className: "tablePagination", defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true }}
-          locale={{ emptyText: 'no data' }}
           expandedRowRender={(record) => (
             <Card title="Full details">
               <ReactJson src={record} />

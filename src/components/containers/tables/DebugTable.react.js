@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { Table, Card, Button, Icon, Input, Tag, Row, Col, notification, Popover, Empty } from 'antd';
+import { Table, Card, Button, Icon, Input, Tag, Row, Col, notification, Popover } from 'antd';
 import ReactJson from 'react-json-view';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { openModal } from '../../../actions/modal.action';
@@ -89,13 +89,12 @@ class DebugTable extends Component {
     );
 
     const { dataSource } = this.props;
-    return dataSource.length === 0 ? <Empty className="empty"/> : (
+    return (
       <div>
         <Table
           columns={this.columns}
           dataSource={dataSource.asMutable()}
           pagination={{ className: "tablePagination", defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true}}
-          locale={{ emptyText: 'No Data' }}
           expandedRowRender={(record) => (
             <Card title="Full details">
               <ReactJson src={record}/>

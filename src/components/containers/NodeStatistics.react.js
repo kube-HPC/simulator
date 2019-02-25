@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withState } from 'recompose';
 import { ResponsiveBar } from "@nivo/bar";
+import { Empty } from 'antd';
 import './NodeStatistics.scss'
 
 const metricToLabel = {
@@ -32,6 +33,7 @@ class NodeStatistics extends Component {
   render() {
     const {data,legend} = this.adaptedData(this.props.dataSource, this.props.metric)
     return (
+      data === [] || legend === undefined ? <Empty className="empty"/> :
       <div style={{ fontSize: "20px", width: "80%", height: "80%", left: "10%", position: "relative", top: "10%" }}>
         <div>{metricToLabel[this.props.metric
         ]}</div>

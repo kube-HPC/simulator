@@ -196,7 +196,6 @@ class ContainerTable extends Component {
           columns={this.columns}
           dataSource={dataSource}
           pagination={{ className: 'tablePagination', defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true }}
-          locale={{ emptyText: 'no data' }}
           expandedRowRender={(record) => (
             <TabSwitcher record={{
               key: record.key,

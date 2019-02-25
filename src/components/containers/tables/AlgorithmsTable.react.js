@@ -84,7 +84,7 @@ class AlgorithmTable extends Component {
         dataIndex: 'action',
         key: 'action',
         width: '10%',
-        render: (text, record) => (<Button type="danger" shape="circle" icon="delete" 
+        render: (text, record) => (<Button type="danger" shape="circle" icon="delete"
           onClick={() => deleteConfirmAction(this.props.deleteAlgorithmFromStore, record)}
               />)
       }
@@ -112,7 +112,7 @@ class AlgorithmTable extends Component {
 
     const AlgorithmInput = (<div style={{ height: 'auto', width: '400px' }}>
       <Row style={{ marginBottom: 5 }}>
-        <Input 
+        <Input
           defaultValue={algoData.name}
           onChange={(e) => { this.setState( (state) => state.algoToAdd.name = e.target.value)}}
           prefix={<Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }}/>}
@@ -120,7 +120,7 @@ class AlgorithmTable extends Component {
       </Row>
 
       <Row style={{ marginBottom: 5 }}>
-        <Input 
+        <Input
           defaultValue={algoData.algorithmImage}
           onChange={(e) => this.setState( (state) => state.algoToAdd.algorithmImage = e.target.value)}
           prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }}/>}
@@ -197,7 +197,7 @@ class AlgorithmTable extends Component {
             </Button>
           </Col>
           <Col span={10} className='textAlign'>
-            <HEditor 
+            <HEditor
               styledButton={(onClick) => <Button onClick={onClick}>Add As JSON</Button>}
               jsonTemplate={JSON.stringify(this.state.algoToAdd, null, 2)}
               title={'Store Algorithm Editor'}
@@ -221,7 +221,6 @@ class AlgorithmTable extends Component {
           columns={this.columns}
           dataSource={dataSource.asMutable()}
           pagination={{ className: "tablePagination", defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true}}
-          locale={{ emptyText: 'no data' }}
           expandedRowRender={(record) => (
             <Card title="JSON">
               <ReactJson src={record}/>
