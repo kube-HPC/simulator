@@ -103,7 +103,7 @@ class WorkerTable extends Component {
           pagination={{ className: "tablePagination", defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true }}
           expandedRowRender={(record) => (
             <Card title="Full details">
-              <ReactJson src={record} />
+              <ReactJson src={record} name={false} iconStyle="square" displayDataTypes={false} displayObjectSize={false} enableClipboard={false} />
             </Card>
 
           )} />

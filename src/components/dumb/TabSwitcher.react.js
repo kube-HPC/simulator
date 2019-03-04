@@ -1,5 +1,5 @@
 
-import React, {  Component } from 'react';
+import React, { Component } from 'react';
 import { Tabs, Card } from 'antd';
 import ReactJson from 'react-json-view';
 import JobGraph from '../containers/JobGraph.react';
@@ -18,7 +18,7 @@ class TabSwitcher extends Component {
       <Tabs defaultActiveKey="1">
         <Tabs.TabPane tab="Graph" key="1">
           <Card>
-            <JobGraph graph={{ ...record.graph, jobId: record.key }} />
+            <JobGraph graph={{ ...record.graph, jobId: record.key }} pipeline={record.record.pipeline} />
           </Card>
         </Tabs.TabPane>
         <Tabs.TabPane tab="Trace" key="2">
@@ -30,7 +30,7 @@ class TabSwitcher extends Component {
         </Tabs.TabPane>
         <Tabs.TabPane tab="JSON" key="3">
           <Card>
-            <ReactJson src={record.record} displayDataTypes={false} displayObjectSize={false} />
+            <ReactJson src={record.record} collapsed={2} displayDataTypes={false} displayObjectSize={false} name={false} iconStyle="square" enableClipboard={false} />
           </Card>
         </Tabs.TabPane>
         {/* <Tabs.TabPane tab="Details" key="2">

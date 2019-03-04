@@ -88,18 +88,23 @@ class JobGraph extends Component {
     this.network = network;
     this.network.on("click", (params) => {
       if (params && params.nodes[0]) {
-        const nodeData = this.network.body.data.nodes._data[params.nodes[0]];
+        const nodeName = params.nodes[0];
+        const nodeData = this.network.body.data.nodes._data[nodeName];
+        const node = this.props.pipeline.nodes.find(n => n.nodeName === nodeName);
         const taskId = nodeData.taskId ? nodeData.taskId : nodeData.batchTasks && nodeData.batchTasks[0].taskId;
         this.props.sideBarOpen({
           payload: {
             taskId,
             algorithmName: nodeData.algorithmName,
             jobId: this.props.graph.jobId,
-            nodeName: params.nodes[0],
-            batch: nodeData.batchTasks || []
+            nodeName,
+            origInput: node.input,
+            batch: nodeData.batchTasks || [],
+            input: nodeData.input,
+            output: nodeData.output,
+            error: node.error
           }
         });
-        //   alert(this.network.body.data.nodes._data[params.nodes[0]].taskId?this.network.body.data.nodes._data[params.nodes[0]].taskId:this.network.body.data.nodes._data[params.nodes[0]].batchTasks[0].taskId); 
         this.props.getKubernetesLogsData(taskId);
       }
     });
@@ -148,7 +153,8 @@ JobGraph.propTypes = {
   sideBarOpen: PropTypes.func.isRequired,
   getKubernetesLogsData: PropTypes.func.isRequired,
   graph: PropTypes.object,
-  jobId: PropTypes.object
+  jobId: PropTypes.object,
+  pipeline: PropTypes.object
 };
 
 const mapStateToProps = (state) => state;

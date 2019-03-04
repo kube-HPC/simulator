@@ -16,7 +16,7 @@ class AlgorithmTable extends Component {
 
   componentWillMount() {
     this.props.init();
-    this.setState( { isVisible: false } );
+    this.setState({ isVisible: false });
     this.setState({ algoToAdd: { ...algorithmObjectTemplate } });
 
     const sorter = (a, b) => {
@@ -38,7 +38,7 @@ class AlgorithmTable extends Component {
           onOk() {
             action(record.data.name);
           },
-          onCancel() {}
+          onCancel() { }
         },
       );
     };
@@ -86,7 +86,7 @@ class AlgorithmTable extends Component {
         width: '10%',
         render: (text, record) => (<Button type="danger" shape="circle" icon="delete"
           onClick={() => deleteConfirmAction(this.props.deleteAlgorithmFromStore, record)}
-              />)
+        />)
       }
     ];
   }
@@ -101,7 +101,7 @@ class AlgorithmTable extends Component {
   onPopOverCancel = () => {
     this.onVisible();
   }
-  renderColumns() {}
+  renderColumns() { }
   render() {
     const Option = Select.Option;
     const algoData = this.state.algoToAdd;
@@ -114,46 +114,50 @@ class AlgorithmTable extends Component {
       <Row style={{ marginBottom: 5 }}>
         <Input
           defaultValue={algoData.name}
-          onChange={(e) => { this.setState( (state) => state.algoToAdd.name = e.target.value)}}
-          prefix={<Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }}/>}
-          placeholder="Insert algorithm name"/>
+          onChange={(e) => { this.setState((state) => state.algoToAdd.name = e.target.value) }}
+          prefix={<Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }} />}
+          placeholder="Insert algorithm name" />
       </Row>
 
       <Row style={{ marginBottom: 5 }}>
         <Input
           defaultValue={algoData.algorithmImage}
-          onChange={(e) => this.setState( (state) => state.algoToAdd.algorithmImage = e.target.value)}
-          prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }}/>}
-          placeholder="Insert algorithm image"/>
+          onChange={(e) => this.setState((state) => state.algoToAdd.algorithmImage = e.target.value)}
+          prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }} />}
+          placeholder="Insert algorithm image" />
       </Row>
 
       <Row style={{ marginBottom: 5 }}>
-        <span style={{ fontSize: '12px',
+        <span style={{
+          fontSize: '12px',
           fontWeight: 'lighter',
           fontFamily: 'monospace',
           letterSpacing: 'normal',
-          marginRight: '3%' }}>CPU Usage:</span>
+          marginRight: '3%'
+        }}>CPU Usage:</span>
         <InputNumber
           min={1}
           defaultValue={algoData.cpu}
-          onChange={(v) => this.setState( (state) => state.algoToAdd.cpu = +v) }
-          style={{ width: 50 }}/>
+          onChange={(v) => this.setState((state) => state.algoToAdd.cpu = +v)}
+          style={{ width: 50 }} />
       </Row>
       <Row style={{ marginBottom: 5 }}>
-        <span style={{ fontSize: '12px',
+        <span style={{
+          fontSize: '12px',
           fontWeight: 'lighter',
           fontFamily: 'monospace',
           letterSpacing: 'normal',
-          marginRight: '3%' }}>Memory Usage:</span>
+          marginRight: '3%'
+        }}>Memory Usage:</span>
         <InputNumber
           min={1}
           defaultValue={memoryNum}
-          onChange={(v) => this.setState( (state) => state.algoToAdd.mem = v + getMemoryProp(algoData.mem, false))}
-          style={{ width: 'auto' }}/>
+          onChange={(v) => this.setState((state) => state.algoToAdd.mem = v + getMemoryProp(algoData.mem, false))}
+          style={{ width: 'auto' }} />
         <Select
           defaultValue={memoryProp}
           style={{ width: 'auto' }}
-          onChange={ (v) => this.setState( (state) => state.algoToAdd.mem = getMemoryProp(algoData.mem, true) + v)}>
+          onChange={(v) => this.setState((state) => state.algoToAdd.mem = getMemoryProp(algoData.mem, true) + v)}>
           <Option value="Ki">Ki</Option>
           <Option value="M">M</Option>
           <Option value="Mi">Mi</Option>
@@ -193,7 +197,7 @@ class AlgorithmTable extends Component {
         <Row type="flex" justify="space-between" align="middle">
           <Col span={5} className='textAlign'>
             <Button type="primary" onClick={this.onPopOverConfirm} style={{ margin: 'auto' }}>
-                    Confirm
+              Confirm
             </Button>
           </Col>
           <Col span={10} className='textAlign'>
@@ -203,11 +207,11 @@ class AlgorithmTable extends Component {
               title={'Store Algorithm Editor'}
               okText={'Store Algorithm'}
               action={this.props.storeAlgorithm}
-              />
+            />
           </Col>
           <Col span={5} className='textAlign'>
-            <Button onClick={this.onPopOverCancel}  style={{ margin: 'auto' }}>
-                    Cancel
+            <Button onClick={this.onPopOverCancel} style={{ margin: 'auto' }}>
+              Cancel
             </Button>
           </Col>
         </Row>
@@ -220,15 +224,15 @@ class AlgorithmTable extends Component {
         <Table
           columns={this.columns}
           dataSource={dataSource.asMutable()}
-          pagination={{ className: "tablePagination", defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true}}
+          pagination={{ className: "tablePagination", defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true }}
           expandedRowRender={(record) => (
             <Card title="JSON">
-              <ReactJson src={record}/>
+              <ReactJson src={record.data} name={false} iconStyle="square" displayDataTypes={false} displayObjectSize={false} enableClipboard={false} />
             </Card>
-          )}/>
+          )} />
         <Popover
           placement="topRight"
-          content={ PopOverContent }
+          content={PopOverContent}
           title="Insert new algorithm to store"
           trigger="click"
           visible={this.state.isVisible}>
