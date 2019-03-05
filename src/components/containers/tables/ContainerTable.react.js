@@ -6,11 +6,10 @@ import Moment from 'react-moment';
 import PropTypes from 'prop-types';
 import { withState } from 'recompose';
 import { openModal } from '../../../actions/modal.action';
-import { init, stopPipeline, execRawPipeline } from '../../../actions/containerTable.action';
+import { init, stopPipeline, execRawPipeline, downloadStorageResults } from '../../../actions/containerTable.action';
 import TabSwitcher from '../../dumb/TabSwitcher.react';
 import { getJaegerData } from '../../../actions/jaegerGetData.action';
 import { getKubernetesLogsData } from '../../../actions/kubernetesLog.action';
-
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import './ContainerTable.scss'
 
@@ -22,7 +21,6 @@ const RECORD_STATUS = {
   succeed: '#87d068',
   creating: '#838383',
   skipped: '#eeda13',
-  //creating:'#108ee9'
 };
 
 class ContainerTable extends Component {
@@ -44,19 +42,15 @@ class ContainerTable extends Component {
         title: 'Job ID',
         dataIndex: 'key',
         key: 'key',
-        width: '20%',
+        width: '15%',
         sorter: (a, b) => sorter(a.key, b.key),
         render: (text, record) =>
-          <CopyToClipboard text={`${record.key}`} onCopy={() => notification.success({
-            message: 'Copied to clipboard',
-            description: ``
-          })}>
+          <CopyToClipboard text={`${record.key}`} onCopy={() => notification.success({ message: 'Copied to clipboard' })}>
             <div>
               <Icon type="right" className='jobIdIcon' />
-              {`${record.key.substring(0, 25)} ...`}
+              {`${record.key.substring(0, 15)} ...`}
             </div>
           </CopyToClipboard>
-
       },
       {
         title: 'Pipeline Name',
@@ -91,32 +85,23 @@ class ContainerTable extends Component {
           </span>
           )
       },
-
       {
         title: 'Running time',
         dataIndex: 'status.timestamp',
         key: 'timestamp',
-        width: '15%',
-        // sorter: (a, b) => sorter(a.timestamp, b.timestamp),
+        width: '10%',
         render: (text, record) => {
-          // let runningTime = record.results && record.results.timeTook ? record.results.timeTook : record.pipeline && Date.now() - record.pipeline.startTime
-          // let timeTook = record.results && record.results.timeTook ? record.results.timeTook : null;
           return (<span>{
             record.results ?
-              // <Moment>
               <span>
                 {record.results.timeTook + " Seconds"}
               </span>
-              //    </Moment>
               :
-              <Moment date={record.pipeline && record.pipeline.startTime}
-                durationFromNow
-              />
+              <Moment date={record.pipeline && record.pipeline.startTime} durationFromNow />
           }
           </span>
           )
         }
-
       },
       {
         title: 'Description',
@@ -124,9 +109,8 @@ class ContainerTable extends Component {
         key: 'details',
         width: '10%',
         render: (text, record) => {
-          const firstLetterUpperCase = (s) => s.charAt(0).toUpperCase() + s.slice(1);
           let statuses = record.status.data && record.status.data.states ?
-            Object.entries(record.status.data.states.asMutable()).map((s,i) =>
+            Object.entries(record.status.data.states.asMutable()).map((s, i) =>
               <Tooltip key={i} placement="top" title={firstLetterUpperCase(s[0])} >
                 <Tag color={RECORD_STATUS[s[0]] || 'magenta'}>{s[1]}</Tag>
               </Tooltip>)
@@ -140,7 +124,7 @@ class ContainerTable extends Component {
       {
         title: 'Progress',
         dataIndex: 'Progress',
-        width: '30%',
+        width: '20%',
         key: 'y',
         render: (text, record) => {
           let progress = (record.status && record.status.data && record.status.data.progress) || 0;
@@ -155,8 +139,7 @@ class ContainerTable extends Component {
           return (<span>
             <Progress percent={progress} status={stopped || failed ? 'exception' : 'active'} strokeColor={failed ? '#f50' : stopped ? 'orange' : null} />
           </span>);
-        },
-        // sorter: (a, b) => sorter(a.status.data.progress, b.status.data.progress)
+        }
       },
       {
         title: '',
@@ -164,17 +147,33 @@ class ContainerTable extends Component {
         key: 'stop',
         width: '5%',
         render: (text, record) => {
-          //let progress = (record.status && record.status.data && record.status.data.progress) || 0;
           const actionButton = record.status.status === 'active' ?
             <Button type="danger" shape="circle" icon="close" onClick={() => this.stopPipeline(record.key)} /> :
             <Button type="default" shape="circle" icon="redo" onClick={() => this.rerunPipeline(record.pipeline)} />;
           return (actionButton)
         }
+      },
+      {
+        title: '',
+        dataIndex: '',
+        key: 'results',
+        width: '10%',
+        render: (text, record) => {
+          let disabled = true;
+          if (record.results && record.results.data && record.results.data.storageInfo) {
+            disabled = false
+          }
+          return <Button
+            type="primary"
+            disabled={disabled}
+            shape="circle"
+            icon="download"
+            title="download results"
+            onClick={() => this.downloadStorageResults(record.results.data.storageInfo.path)} />
+        }
       }
-
     ];
   }
-
 
   rerunPipeline(pipeline) {
     this.props.execRawPipeline(pipeline);
@@ -183,15 +182,18 @@ class ContainerTable extends Component {
   stopPipeline(jobId) {
     this.props.stopPipeline(jobId);
   }
-  renderColumns() {
 
+  downloadStorageResults(path) {
+    this.props.downloadStorageResults(path);
+  }
+
+  renderColumns() {
   }
 
   render() {
     const { dataSource } = this.props;
     return (
       <div>
-
         <Table
           columns={this.columns}
           dataSource={dataSource}
@@ -217,9 +219,7 @@ class ContainerTable extends Component {
       </div>
     );
   }
-
 }
-
 
 const containerTable = (state) => state.containerTable.dataSource;
 const autoCompleteFilter = (state) => state.autoCompleteFilter.filter;
@@ -233,6 +233,7 @@ const tableDataSelector = createSelector(
 
 ContainerTable.propTypes = {
   execRawPipeline: PropTypes.func.isRequired,
+  downloadStorageResults: PropTypes.func.isRequired,
   init: PropTypes.func.isRequired,
   getJaegerData: PropTypes.func.isRequired,
   dataSource: PropTypes.array.isRequired,
@@ -248,6 +249,6 @@ const mapStateToProps = (state) => ({
   sshUser: state.serverSelection.currentSelection.user
 });
 
-export default connect(mapStateToProps, { openModal, init, stopPipeline, execRawPipeline, getJaegerData, getKubernetesLogsData })(
+export default connect(mapStateToProps, { openModal, init, stopPipeline, execRawPipeline, downloadStorageResults, getJaegerData, getKubernetesLogsData })(
   withState('isVisible', 'onPopoverClickVisible', { visible: false, podName: '' })(ContainerTable)
 );

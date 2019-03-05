@@ -38,10 +38,10 @@ class AlgorithmInformation extends Component {
           </Card>
         </Tabs.TabPane>
         <Tabs.TabPane tab="Caching" key="3">
-          <Caching runCaching={() => this.props.sideBar.data && this.props.getCaching(this.props.sideBar.data.payload.jobId, this.props.sideBar.data.payload.nodeName)} />
+          <Caching runCaching={() => data && this.props.getCaching(data.payload.jobId, data.payload.nodeName)} />
         </Tabs.TabPane>
         <Tabs.TabPane tab="Input/Output" key="4">
-          <InputOutput payload={this.props.sideBar.data && this.props.sideBar.data.payload} />
+          <InputOutput payload={data && data.payload} />
         </Tabs.TabPane>
       </Tabs>
     )

@@ -1,5 +1,6 @@
 {
   "name": "",
+  "description": "",
   "nodes": [
     {
       "nodeName": "",
@@ -14,6 +15,20 @@
     "progress": "",
     "result": ""
   },
-  "priority": 1,
-  "options": {}
+  "triggers": {
+    "cron": {
+      "pattern": "0 * * * *",
+      "enabled": false
+    },
+    "pipelines": [
+      "other-pipeline"
+    ]
+  },
+  "options": {
+    "batchTolerance": 100,
+    "concurrentPipelines": 10,
+    "progressVerbosityLevel": "info",
+    "ttl": 3600
+  },
+  "priority": 1
 }

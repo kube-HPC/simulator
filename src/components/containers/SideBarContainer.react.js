@@ -3,6 +3,7 @@ import Sidebar from "react-sidebar";
 import { connect } from 'react-redux';
 import AlgorithmInformation from "./AlgorithmInformation.react";
 import { sideBarClose } from "../../actions/sideBar.action";
+
 class SideBarContainer extends Component {
   constructor() {
     super();
@@ -14,9 +15,11 @@ class SideBarContainer extends Component {
     };
 
   }
+
   componentDidMount() {
     document.addEventListener('mousedown', this.handleClickOutside);
   }
+
   handleClickOutside(event) {
     if (this.sidebar && this.props.sideBar.visible) {
       if (!this.sidebar.sidebar.contains(event.target)) {
@@ -26,6 +29,7 @@ class SideBarContainer extends Component {
       }
     }
   }
+
   setChildRef(node) { // receives reference to component as argument
     this.sidebar = node;
   }

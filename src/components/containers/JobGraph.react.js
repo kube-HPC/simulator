@@ -99,7 +99,7 @@ class JobGraph extends Component {
             jobId: this.props.graph.jobId,
             nodeName,
             origInput: node.input,
-            batch: nodeData.batchTasks || [],
+            batch: nodeData.batchTasks && nodeData.batchTasks.slice(0, 10) || [],
             input: nodeData.input,
             output: nodeData.output,
             error: node.error

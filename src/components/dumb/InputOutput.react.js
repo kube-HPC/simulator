@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Button, Menu, Dropdown, Icon, Card } from 'antd';
+import { connect } from 'react-redux';
+import { Card } from 'antd';
 import PropTypes from 'prop-types';
 import ReactJson from 'react-json-view';
-
+import { downloadStorageResults } from '../../actions/containerTable.action';
 
 class InputOutput extends Component {
   constructor() {
@@ -12,8 +13,10 @@ class InputOutput extends Component {
   }
 
   onSelect(select) {
-    if (select.namespace && select.namespace[0] === 'output' && select.name === 'path' && select.value) {
-      alert(select);
+    if (select.namespace &&
+      (select.namespace.includes('input') || select.namespace.includes('output')) &&
+      select.name === 'path' && select.value) {
+      this.props.downloadStorageResults(select.value);
     }
   }
 
@@ -56,6 +59,7 @@ class InputOutput extends Component {
         <ReactJson src={src}
           name={false}
           iconStyle="square"
+          collapsed={1}
           onSelect={(select) => { this.onSelect(select) }}
           displayDataTypes={false}
           displayObjectSize={false}
@@ -71,7 +75,12 @@ class InputOutput extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+});
+
 InputOutput.propTypes = {
-  payload: PropTypes.object
+  payload: PropTypes.object,
+  downloadStorageResults: PropTypes.func.isRequired
 };
-export default InputOutput;
+
+export default connect(mapStateToProps, { downloadStorageResults })(InputOutput);

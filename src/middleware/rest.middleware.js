@@ -1,6 +1,9 @@
 import AT from '../constants/actions';
 import axios from 'axios';
+import FileSaver from 'file-saver';
+
 let url = null;
+
 const reject = (dispatch, payload, action) => {
   dispatch({
     type: `${action.payload.actionType}_REJECT`,
@@ -37,12 +40,15 @@ const setPath = ({ monitorBackend }) => {
 
   return _url;
 };
+
 export const restMiddleware = ({ dispatch }) => (next) => (action) => {
   if (action.type === `${AT.GET_CONFIG}_SUCCESS`) {
     url = setPath(action.payload.config);
-  } else if (![AT.REST_REQ, AT.REST_REQ_POST,AT.REST_REQ_PUT, AT.REST_REQ_DELETE].includes(action.type)) {
+  }
+  else if (![AT.REST_REQ, AT.REST_REQ_POST, AT.REST_REQ_PUT, AT.REST_REQ_DELETE, AT.DOWNLOAD_REQ].includes(action.type)) {
     return next(action);
-  } else if (action.type === AT.REST_REQ) {
+  }
+  else if (action.type === AT.REST_REQ) {
     if (!url) {
       return next(action);
     }
@@ -61,7 +67,7 @@ export const restMiddleware = ({ dispatch }) => (next) => (action) => {
 
     return next(action);
   }
-   else if (action.type === AT.REST_REQ_POST) {
+  else if (action.type === AT.REST_REQ_POST) {
     if (!url) {
       return next(action);
     }
@@ -76,25 +82,9 @@ export const restMiddleware = ({ dispatch }) => (next) => (action) => {
         reject(dispatch, err, action);
         console.error('get config error');
       });
-    // fetch(`${url}/${action.payload.url}`, {
-    //   method: "POST",
-    //   headers: {
-    //     'Accept': 'application/json',
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify(action.payload.body)
-    // }).then((res) => {
-    //   res.json().then((data) => {
-    //     console.log(data);
-    //     success(dispatch, data, action);
-    //   });
-    // }).catch((err) => {
-    //   reject(dispatch, err, action);
-    //   console.error('get config error');
-    // });
 
     return next(action);
-  } 
+  }
   else if (action.type === AT.REST_REQ_PUT) {
     if (!url) {
       return next(action);
@@ -112,7 +102,7 @@ export const restMiddleware = ({ dispatch }) => (next) => (action) => {
       });
 
     return next(action);
-  } 
+  }
   else if (action.type === AT.REST_REQ_DELETE) {
     if (!url) {
       return next(action);
@@ -128,22 +118,21 @@ export const restMiddleware = ({ dispatch }) => (next) => (action) => {
         reject(dispatch, err, action);
         console.error('get config error');
       });
-    // fetch(`${url}/${action.payload.url}`, {
-    //   method: "POST",
-    //   headers: {
-    //     'Accept': 'application/json',
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify(action.payload.body)
-    // }).then((res) => {
-    //   res.json().then((data) => {
-    //     console.log(data);
-    //     success(dispatch, data, action);
-    //   });
-    // }).catch((err) => {
-    //   reject(dispatch, err, action);
-    //   console.error('get config error');
-    // });
+
+    return next(action);
+  }
+  else if (action.type === AT.DOWNLOAD_REQ) {
+    if (!url) {
+      return next(action);
+    }
+    pending(dispatch, 'pending', action);
+    axios.get(`${url}${action.payload.url}`, { responseType: 'blob', timeout: 30000 }).then((res) => {
+      FileSaver.saveAs(res.data, 'results.json');
+      success(dispatch, res.data, action);
+    }).catch((err) => {
+      reject(dispatch, err, action);
+      console.log(err);
+    });
 
     return next(action);
   }

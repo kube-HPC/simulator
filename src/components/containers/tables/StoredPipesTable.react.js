@@ -1,6 +1,6 @@
 
 import { connect } from 'react-redux';
-import { Table, Card, Button, Row, Col, Modal, Icon, Tag, Tooltip, Switch, Input, Popover, notification, Badge} from 'antd';
+import { Table, Card, Button, Row, Col, Modal, Icon, Tag, Tooltip, Switch, Input, Popover, notification, Badge } from 'antd';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactJson from 'react-json-view';
@@ -9,12 +9,12 @@ import cronstrue from 'cronstrue';
 import { init } from '../../../actions/storedPipes.action';
 import { openModal } from '../../../actions/modal.action';
 import {
-   execStoredPipe,
-   deleteStoredPipeline,
-   updateStoredPipeline,
-   cronStart,
-   cronStop
-  } from '../../../actions/storedPipes.action';
+  execStoredPipe,
+  deleteStoredPipeline,
+  updateStoredPipeline,
+  cronStart,
+  cronStop
+} from '../../../actions/storedPipes.action';
 import './StoredPipesTable.scss';
 import HEditor from '../HEditor.react';
 import { RECORD_STATUS } from '../../../constants/colors'
@@ -26,7 +26,7 @@ class StoredPipesTable extends Component {
     this.props.init();
   }
 
-  renderColumns() {}
+  renderColumns() { }
 
   render() {
     const { dataSource, dataStats } = this.props;
@@ -50,15 +50,15 @@ class StoredPipesTable extends Component {
           onOk() {
             action(record.name);
           },
-          onCancel() {}
+          onCancel() { }
         },
       );
     };
 
-    const revertCronTrigger = (record,cronStart,cronStop) => {
+    const revertCronTrigger = (record, cronStart, cronStop) => {
       const pipelineName = record.name;
       const isCronEnabled = record.hasOwnProperty('triggers') && record.triggers.hasOwnProperty('cron');
-      return () => isCronEnabled ? ( record.triggers.cron.enabled ?
+      return () => isCronEnabled ? (record.triggers.cron.enabled ?
         cronStop(pipelineName) : cronStart(pipelineName)) : {};
     }
 
@@ -74,7 +74,7 @@ class StoredPipesTable extends Component {
         notification.open({
           message: 'Cron Job Error',
           description: errorMessage,
-          icon: <Icon type="warning" style={{color:'red'}}/>
+          icon: <Icon type="warning" style={{ color: 'red' }} />
         })
       }
     }
@@ -84,10 +84,11 @@ class StoredPipesTable extends Component {
         <Table
           rowKey="name"
           dataSource={dataSource.asMutable()}
-          pagination={{ className: "tablePagination", defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true,}}
+          pagination={{ className: "tablePagination", defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true, }}
           expandedRowRender={(record) => (
             <Card title="Full details">
               <ReactJson
+                name={false}
                 src={record}
                 displayDataTypes={false}
                 displayObjectSize={false}
@@ -101,12 +102,12 @@ class StoredPipesTable extends Component {
           <Column
             title="Pipeline Name"
             dataIndex="name"
-            key="name"/>
+            key="name" />
           <Column
             title="Cron Job"
             dataIndex="cron"
             key="cron"
-            render={(_,record) => {
+            render={(_, record) => {
               const cronIsEnabled = record.hasOwnProperty('triggers') &&
                 record.triggers.hasOwnProperty('cron') && record.triggers.cron.enabled
               const cronExpr = cronIsEnabled ? record.triggers.cron.pattern : "* * * * *"
@@ -117,38 +118,38 @@ class StoredPipesTable extends Component {
                       checkedChildren={<Icon type="check" />}
                       unCheckedChildren={<Icon type="close" />}
                       checked={cronIsEnabled}
-                      onChange={revertCronTrigger(record,this.props.cronStart,this.props.cronStop)}/>
+                      onChange={revertCronTrigger(record, this.props.cronStart, this.props.cronStop)} />
                   </Col>
                   <Col span={8} order={2}>
-                    <Popover content={cronExpr.split(' ').length===5 ? cronstrue.toString(cronExpr, {use24HourTimeFormat: true}) : 'Invalid Cron-Expression'} trigger="focus">
+                    <Popover content={cronExpr.split(' ').length === 5 ? cronstrue.toString(cronExpr, { use24HourTimeFormat: true }) : 'Invalid Cron-Expression'} trigger="focus">
                       <Input.Search className="cronInput"
                         size="small"
                         disabled={!cronIsEnabled}
                         placeholder="Cron Expression"
-                        enterButton={<Icon type="check"/>}
+                        enterButton={<Icon type="check" />}
                         defaultValue={cronExpr}
                         onSearch={pattern => updateCronPattern(JSON.parse(JSON.stringify(record)), pattern, this.props.updateStoredPipeline)}
-                    />
+                      />
                     </Popover>
                   </Col>
                 </Row>
-            )}
+              )
             }
-            />
+            }
+          />
           <Column
             title="Status"
             dataIndex="status"
             key="status"
-            render={(_,record) => {
+            render={(_, record) => {
               const pipelineStats = dataStats
                 .filter(status => status.name === record.name && status.stats.length !== 0)
                 .map(pipeline => pipeline.stats)
-                .flat();
 
-              const firstLetterUpperCase = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+              const firstLetterUpperCase = (s) => s && s.charAt && s.charAt(0).toUpperCase() + s.slice(1);
 
-              const out = pipelineStats.map((s,i) =>
-                <Tooltip key ={i} placement="top" title={firstLetterUpperCase(s[0])} >
+              const out = pipelineStats.map((s, i) =>
+                <Tooltip key={i} placement="top" title={firstLetterUpperCase(s[0])} >
                   <Tag color={RECORD_STATUS[s[0]]}>{[s[1]]}</Tag>
                 </Tooltip>
               );
@@ -157,14 +158,15 @@ class StoredPipesTable extends Component {
                 <span>
                   {out}
                 </span>
-            )}
+              )
             }
-            />
+            }
+          />
           <Column
             title="Action"
             dataIndex="action"
             key="action"
-            render={((_,record) => (
+            render={((_, record) => (
               <Row type="flex" justify="start">
                 <Col span={4}>
                   <HEditor
@@ -172,7 +174,7 @@ class StoredPipesTable extends Component {
                     styledButton={(onClick, isEditable = false) =>
                       <Badge dot={isEditable}>
                         <Button shape="circle" onClick={onClick}>
-                          <Icon component={PlayIconSvg}/>
+                          <Icon component={PlayIconSvg} />
                         </Button>
                       </Badge>
                     }
@@ -186,7 +188,7 @@ class StoredPipesTable extends Component {
                     jsonTemplate={JSON.stringify(dataSource.find((p) => p.name === record.name), null, 2)}
                     styledButton={(onClick, isEditable = false) =>
                       <Badge dot={isEditable}>
-                        <Button shape="circle" icon="edit" onClick={onClick}/>
+                        <Button shape="circle" icon="edit" onClick={onClick} />
                       </Badge>
                     }
                     title={'Edit Pipeline Editor'}
@@ -201,7 +203,7 @@ class StoredPipesTable extends Component {
                 </Col>
               </Row>
             ))}
-            />
+          />
         </Table>
       </div>
     );
