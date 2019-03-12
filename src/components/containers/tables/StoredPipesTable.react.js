@@ -40,7 +40,7 @@ class StoredPipesTable extends Component {
     this.props.init();
   }
 
-  renderColumns() {}
+  renderColumns() { }
 
   render() {
     const { dataSource, dataStats } = this.props;
@@ -58,14 +58,14 @@ class StoredPipesTable extends Component {
         title: 'WARNING Deleting Pipeline',
         content: `Are you sure you want to delete ${
           record.name
-        }? Deleting Pipeline will Stop-ALL related Jobs and Executions`,
+          }? Deleting Pipeline will Stop-ALL related Jobs and Executions`,
         okText: 'Confirm',
         okType: 'danger',
         cancelText: 'Cancel',
         onOk() {
           action(record.name);
         },
-        onCancel() {}
+        onCancel() { }
       });
     };
 
@@ -155,8 +155,8 @@ class StoredPipesTable extends Component {
                       content={
                         cronExpr.split(' ').length === 5
                           ? cronstrue.toString(cronExpr, {
-                              use24HourTimeFormat: true
-                            })
+                            use24HourTimeFormat: true
+                          })
                           : 'Invalid Cron-Expression'
                       }
                       trigger="focus"
@@ -187,7 +187,7 @@ class StoredPipesTable extends Component {
             dataIndex="status"
             key="status"
             render={(_, record) => {
-              if (!dataStats) {
+              if (!dataStats || dataStats.length === 0) {
                 return;
               }
               const pipelineStats = dataStats
