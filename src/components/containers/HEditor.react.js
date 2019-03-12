@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Modal, Button, Card, notification, Icon } from 'antd';
-
 import { Paragraph } from '../style/Styled';
 import JsonEditor from '../dumb/JsonEditor.react';
 import './HEditor.scss';

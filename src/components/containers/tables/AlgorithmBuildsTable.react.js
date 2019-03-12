@@ -22,7 +22,7 @@ const BUILD_STATUS = {
 };
 
 class AlgorithmBuildsTable extends Component {
-  firstLetterUpperCase = s => s.charAt(0).toUpperCase() + s.slice(1);
+  firstLetterUpperCase = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
   showModal = () => {
     this.setState({
@@ -151,8 +151,8 @@ class AlgorithmBuildsTable extends Component {
               {record.endTime ? (
                 <Moment date={record.endTime} duration={record.startTime} />
               ) : (
-                <Moment date={record.startTime} durationFromNow />
-              )}
+                  <Moment date={record.startTime} durationFromNow />
+                )}
             </span>
           );
         }
@@ -215,13 +215,13 @@ class AlgorithmBuildsTable extends Component {
                 onClick={() => this.cancelBuild(record.buildId)}
               />
             ) : (
-              <Button
-                type="default"
-                shape="circle"
-                icon="redo"
-                onClick={() => this.rerunBuild(record.buildId)}
-              />
-            );
+                <Button
+                  type="default"
+                  shape="circle"
+                  icon="redo"
+                  onClick={() => this.rerunBuild(record.buildId)}
+                />
+              );
           return actionButton;
         }
       }
