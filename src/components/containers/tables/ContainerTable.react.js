@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { Table, Tag, Progress, notification, Icon, Button, Tooltip } from 'antd';
+import { Table, Tag, Progress, notification, Icon, Button, Tooltip, Row, Col, Collapse } from 'antd';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import Moment from 'react-moment';
@@ -142,34 +142,33 @@ class ContainerTable extends Component {
         }
       },
       {
-        title: '',
-        dataIndex: '',
+        title: 'Action',
+        dataIndex: 'action',
         key: 'stop',
-        width: '5%',
-        render: (text, record) => {
-          const actionButton = record.status.status === 'active' ?
-            <Button type="danger" shape="circle" icon="close" onClick={() => this.stopPipeline(record.key)} /> :
-            <Button type="default" shape="circle" icon="redo" onClick={() => this.rerunPipeline(record.pipeline)} />;
-          return (actionButton)
-        }
-      },
-      {
-        title: '',
-        dataIndex: '',
-        key: 'results',
         width: '10%',
         render: (text, record) => {
-          let disabled = true;
-          if (record.results && record.results.data && record.results.data.storageInfo) {
-            disabled = false
-          }
-          return <Button
-            type="primary"
-            disabled={disabled}
-            shape="circle"
-            icon="download"
-            title="download results"
-            onClick={() => this.downloadStorageResults(record.results.data.storageInfo.path)} />
+          const stopAction = record.status.status === 'active' ?
+            <Button type="danger" shape="circle" icon="close" onClick={() => this.stopPipeline(record.key)} /> :
+            <Button type="default" shape="circle" icon="redo" onClick={() => this.rerunPipeline(record.pipeline)} />;
+          const isDisabled = !(record.results && record.results.data && record.results.data.storageInfo);
+          const downloadAction =
+            <Tooltip placement="top" title={'Download Results'} >
+              <Button
+                type="default"
+                disabled={isDisabled}
+                shape="circle"
+                icon="download"
+                onClick={() => this.downloadStorageResults(record.results.data.storageInfo.path)} />
+            </Tooltip>
+
+          return (<Row type="flex" justify="start">
+            <Col span={8}>
+              {stopAction}
+            </Col>
+            <Col span={8}>
+              {downloadAction}
+            </Col>
+          </Row>)
         }
       }
     ];
