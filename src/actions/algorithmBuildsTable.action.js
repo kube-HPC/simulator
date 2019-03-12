@@ -9,7 +9,7 @@ export const init = () => ({
   }
 });
 
-export const cancelBuild = (buildId) => ({
+export const cancelBuild = buildId => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: 'builds/stop',
@@ -18,7 +18,7 @@ export const cancelBuild = (buildId) => ({
   }
 });
 
-export const rerunBuild = (buildId) => ({
+export const rerunBuild = buildId => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: 'builds/rerun',

@@ -14,7 +14,7 @@ import {
   Select,
   Row,
   Col,
-  Badge,
+  Badge
 } from 'antd';
 import ReactJson from 'react-json-view';
 import { createSelector } from 'reselect';
@@ -26,7 +26,7 @@ import {
   init,
   storeAlgorithm,
   applyAlgorithm,
-  deleteAlgorithmFromStore,
+  deleteAlgorithmFromStore
 } from '../../../actions/algorithmTable.action';
 import HEditor from '../HEditor.react';
 import algorithmObjectTemplate from '../../stubs/algorithm-object.json';
@@ -51,15 +51,14 @@ class AlgorithmTable extends Component {
     const deleteConfirmAction = (action, record) => {
       Modal.confirm({
         title: 'WARNING Deleting Algorithm',
-        content:
-          'Deleting algorithm will DELETE-ALL related pipelines and STOP-ALL executions',
+        content: 'Deleting algorithm will DELETE-ALL related pipelines and STOP-ALL executions',
         okText: 'Confirm',
         okType: 'danger',
         cancelText: 'Cancel',
         onOk() {
           action(record.data.name);
         },
-        onCancel() {},
+        onCancel() {}
       });
     };
 
@@ -83,7 +82,7 @@ class AlgorithmTable extends Component {
         } else if (status === 'error') {
           console.log(`${info.file.name} file upload failed.`);
         }
-      },
+      }
     };
 
     this.dragProps.onChange = this.dragProps.onChange.bind(this);
@@ -94,7 +93,7 @@ class AlgorithmTable extends Component {
         dataIndex: 'data.name',
         key: 'name',
         width: '20%',
-        sorter: (a, b) => sorter(a.data.name, b.data.name),
+        sorter: (a, b) => sorter(a.data.name, b.data.name)
       },
       {
         title: 'Algorithm Image',
@@ -102,34 +101,34 @@ class AlgorithmTable extends Component {
         key: 'algorithmImage',
         width: '20%',
         onFilter: (value, record) => record.data.algorithmImage.includes(value),
-        sorter: (a, b) => sorter(a.data.algorithmImage, b.data.algorithmImage),
+        sorter: (a, b) => sorter(a.data.algorithmImage, b.data.algorithmImage)
       },
       {
         title: 'cpu',
         dataIndex: 'data.cpu',
         key: 'cpu',
-        width: '10%',
+        width: '10%'
       },
       {
         title: 'mem',
         dataIndex: 'data.mem',
         key: 'mem',
         width: '10%',
-        sorter: (a, b) => sorter(a.data.mem, b.data.mem),
+        sorter: (a, b) => sorter(a.data.mem, b.data.mem)
       },
       {
         title: 'Worker Image',
         dataIndex: 'data.workerImage',
         key: 'workerImage',
         width: '10%',
-        sorter: (a, b) => sorter(a.data.workerImage, b.data.workerImage),
+        sorter: (a, b) => sorter(a.data.workerImage, b.data.workerImage)
       },
       {
         title: 'minHotWorkers',
         dataIndex: 'data.minHotWorkers',
         key: 'minHotWorkers',
         width: '10%',
-        sorter: (a, b) => sorter(a.data.workerImage, b.data.workerImage),
+        sorter: (a, b) => sorter(a.data.workerImage, b.data.workerImage)
       },
       {
         title: 'Action',
@@ -146,7 +145,7 @@ class AlgorithmTable extends Component {
                 onClick={() => {
                   this.setState({ isVisible: true });
                   this.setState({
-                    algoToAdd: { ...record.data, mem: record.data.mem + 'Mi' },
+                    algoToAdd: { ...record.data, mem: record.data.mem + 'Mi' }
                   });
                 }}
               />
@@ -156,17 +155,12 @@ class AlgorithmTable extends Component {
                 type="danger"
                 shape="circle"
                 icon="delete"
-                onClick={() =>
-                  deleteConfirmAction(
-                    this.props.deleteAlgorithmFromStore,
-                    record
-                  )
-                }
+                onClick={() => deleteConfirmAction(this.props.deleteAlgorithmFromStore, record)}
               />
             </Col>
           </Row>
-        ),
-      },
+        )
+      }
     ];
   }
 
@@ -211,7 +205,7 @@ class AlgorithmTable extends Component {
             value={algoData.name}
             onChange={e =>
               this.setState({
-                algoToAdd: { ...this.state.algoToAdd, name: e.target.value },
+                algoToAdd: { ...this.state.algoToAdd, name: e.target.value }
               })
             }
             prefix={<Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -226,13 +220,11 @@ class AlgorithmTable extends Component {
               this.setState({
                 algoToAdd: {
                   ...this.state.algoToAdd,
-                  algorithmImage: e.target.value,
-                },
+                  algorithmImage: e.target.value
+                }
               })
             }
-            prefix={
-              <Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }} />
-            }
+            prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }} />}
             placeholder="Insert algorithm image"
           />
         </Row>
@@ -243,7 +235,7 @@ class AlgorithmTable extends Component {
               fontWeight: 'lighter',
               fontFamily: 'monospace',
               letterSpacing: 'normal',
-              marginRight: '3%',
+              marginRight: '3%'
             }}
           >
             Env
@@ -266,7 +258,7 @@ class AlgorithmTable extends Component {
               fontWeight: 'lighter',
               fontFamily: 'monospace',
               letterSpacing: 'normal',
-              marginRight: '3%',
+              marginRight: '3%'
             }}
           >
             CPU Usage:
@@ -286,7 +278,7 @@ class AlgorithmTable extends Component {
               fontWeight: 'lighter',
               fontFamily: 'monospace',
               letterSpacing: 'normal',
-              marginRight: '3%',
+              marginRight: '3%'
             }}
           >
             GPU Usage:
@@ -306,7 +298,7 @@ class AlgorithmTable extends Component {
               fontWeight: 'lighter',
               fontFamily: 'monospace',
               letterSpacing: 'normal',
-              marginRight: '3%',
+              marginRight: '3%'
             }}
           >
             Memory Usage:
@@ -319,8 +311,8 @@ class AlgorithmTable extends Component {
               this.setState({
                 algoToAdd: {
                   ...this.state.algoToAdd,
-                  mem: v + this._parseUnit(algoData.mem).unit,
-                },
+                  mem: v + this._parseUnit(algoData.mem).unit
+                }
               })
             }
             style={{ width: 'auto' }}
@@ -333,8 +325,8 @@ class AlgorithmTable extends Component {
               this.setState({
                 algoToAdd: {
                   ...this.state.algoToAdd,
-                  mem: this._parseUnit(algoData.mem).val + v,
-                },
+                  mem: this._parseUnit(algoData.mem).val + v
+                }
               })
             }
           >
@@ -360,7 +352,7 @@ class AlgorithmTable extends Component {
               fontWeight: 'lighter',
               fontFamily: 'monospace',
               letterSpacing: 'normal',
-              marginRight: '3%',
+              marginRight: '3%'
             }}
           >
             Min Hot Workers:
@@ -369,9 +361,7 @@ class AlgorithmTable extends Component {
             min={0}
             value={algoData.minHotWorkers}
             defaultValue={algoData.minHotWorkers}
-            onChange={v =>
-              this.setState(state => (state.algoToAdd.minHotWorkers = v))
-            }
+            onChange={v => this.setState(state => (state.algoToAdd.minHotWorkers = v))}
             style={{ width: 50 }}
           />
         </Row>
@@ -409,19 +399,13 @@ class AlgorithmTable extends Component {
         {AlgorithmInput}
         <Row type="flex" justify="space-between" align="middle">
           <Col span={5} className="textAlign">
-            <Button
-              type="primary"
-              onClick={this.onPopOverConfirm}
-              style={{ margin: 'auto' }}
-            >
+            <Button type="primary" onClick={this.onPopOverConfirm} style={{ margin: 'auto' }}>
               Confirm
             </Button>
           </Col>
           <Col span={10} className="textAlign">
             <HEditor
-              styledButton={onClick => (
-                <Button onClick={onClick}>Add As JSON</Button>
-              )}
+              styledButton={onClick => <Button onClick={onClick}>Add As JSON</Button>}
               jsonTemplate={JSON.stringify(this.state.algoToAdd, null, 2)}
               title={'Store Algorithm Editor'}
               okText={'Store Algorithm'}
@@ -447,7 +431,7 @@ class AlgorithmTable extends Component {
             className: 'tablePagination',
             defaultCurrent: 1,
             pageSize: 15,
-            hideOnSinglePage: true,
+            hideOnSinglePage: true
           }}
           expandedRowRender={record => (
             <Card title="JSON">
@@ -494,13 +478,13 @@ AlgorithmTable.propTypes = {
   dataSource: PropTypes.array.isRequired,
   init: PropTypes.func.isRequired,
   storeAlgorithm: PropTypes.func.isRequired,
-  deleteAlgorithmFromStore: PropTypes.func.isRequired,
+  deleteAlgorithmFromStore: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   dataSource: tableDataSelector(state),
   scriptsPath: state.serverSelection.currentSelection.scriptsPath,
-  sshUser: state.serverSelection.currentSelection.user,
+  sshUser: state.serverSelection.currentSelection.user
 });
 
 export default connect(
@@ -509,6 +493,6 @@ export default connect(
 )(
   withState('isVisible', 'onPopoverClickVisible', {
     visible: false,
-    podName: '',
+    podName: ''
   })(AlgorithmTable)
 );

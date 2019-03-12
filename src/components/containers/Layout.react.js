@@ -25,7 +25,7 @@ import {
   AlignRow,
   Logo,
   HeaderTitle,
-  ButtonAddPipeline,
+  ButtonAddPipeline
 } from '../style/Styled';
 import template from '../stubs/json-object.json';
 import SubMenu from 'antd/lib/menu/SubMenu';
@@ -99,10 +99,7 @@ class LayoutInner extends React.Component {
                 jsonTemplate={jsonTemplate}
                 styledButton={(onClick, isEditable = false) => (
                   <Badge dot={isEditable}>
-                    <ButtonAddPipeline onClick={onClick}>
-                      {' '}
-                      + Pipeline{' '}
-                    </ButtonAddPipeline>
+                    <ButtonAddPipeline onClick={onClick}> + Pipeline </ButtonAddPipeline>
                   </Badge>
                 )}
                 title={'Add Pipeline Editor'}
@@ -218,13 +215,13 @@ const mapStateToProps = state => {
     algorithmBuildsCount: (state.algorithmBuildsTable.dataSource || []).length,
     pipelineCount: (state.storedPipeline.dataSource || []).length,
     workerCount: (state.workerTable.stats || { total: 0 }).total,
-    debugCount: (state.debugTable.dataSource || []).length,
+    debugCount: (state.debugTable.dataSource || []).length
   };
 };
 
 LayoutInner.propTypes = {
   init: PropTypes.func.isRequired,
-  addPipe: PropTypes.func.isRequired,
+  addPipe: PropTypes.func.isRequired
 };
 
 export default compose(
@@ -234,7 +231,7 @@ export default compose(
   ),
   withState('isTableVisible', 'onMenuSelected', {
     visible: true,
-    menuItem: {},
+    menuItem: {}
   }),
   withState('isVodUpVisible', 'onVodUpPopoverClickVisible', false),
   withState('isVodDownVisible', 'onVodDownPopoverClickVisible', false)

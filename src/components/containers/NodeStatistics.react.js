@@ -10,7 +10,7 @@ import './NodeStatistics.scss';
 
 const metricToLabel = {
   cpu: 'CPU',
-  mem: 'Memory',
+  mem: 'Memory'
 };
 
 class NodeStatistics extends Component {
@@ -25,24 +25,19 @@ class NodeStatistics extends Component {
           res.algorithmsData &&
           res.algorithmsData
             .asMutable()
-            .forEach(
-              algorithm => (algorithms[algorithm.name] = algorithm.size)
-            );
+            .forEach(algorithm => (algorithms[algorithm.name] = algorithm.size));
         return {
           nodes: res.name,
-          ...algorithms,
+          ...algorithms
         };
       });
     return {
       data: data || [],
-      legend: statisticsForMetric && statisticsForMetric.legend,
+      legend: statisticsForMetric && statisticsForMetric.legend
     };
   }
   render() {
-    const { data, legend } = this.adaptedData(
-      this.props.dataSource,
-      this.props.metric
-    );
+    const { data, legend } = this.adaptedData(this.props.dataSource, this.props.metric);
     return data === [] || legend === undefined ? (
       <Empty className="empty" />
     ) : (
@@ -53,7 +48,7 @@ class NodeStatistics extends Component {
           height: '80%',
           left: '10%',
           position: 'relative',
-          top: '10%',
+          top: '10%'
         }}
       >
         <div>{metricToLabel[this.props.metric]}</div>
@@ -65,26 +60,26 @@ class NodeStatistics extends Component {
             axis: {
               ticks: {
                 line: {
-                  stroke: 'green',
+                  stroke: 'green'
                 },
                 text: {
                   //fill: "#91d5ff",
                   fontSize: '12px',
-                  marginRight: '10px',
-                },
+                  marginRight: '10px'
+                }
               },
               legend: {
                 text: {
-                  fontSize: '18px',
-                },
-              },
-            },
+                  fontSize: '18px'
+                }
+              }
+            }
           }}
           margin={{
             top: 0,
             right: 124,
             bottom: 50,
-            left: 60,
+            left: 60
           }}
           padding={0.1}
           borderWidth={1}
@@ -99,7 +94,7 @@ class NodeStatistics extends Component {
               color: '#fff',
               size: 2,
               padding: 3,
-              stagger: true,
+              stagger: true
             },
             {
               id: 'lines',
@@ -108,22 +103,22 @@ class NodeStatistics extends Component {
               color: '#fff',
               rotation: -45,
               lineWidth: 1,
-              spacing: 10,
-            },
+              spacing: 10
+            }
           ]}
           fill={[
             {
               match: {
-                id: 'free',
+                id: 'free'
               },
-              id: 'dots',
+              id: 'dots'
             },
             {
               match: {
-                id: 'reserved',
+                id: 'reserved'
               },
-              id: 'lines',
-            },
+              id: 'lines'
+            }
           ]}
           borderColor="inherit:darker(1.6)"
           axisTop={{
@@ -131,7 +126,7 @@ class NodeStatistics extends Component {
             tickPadding: 4,
             tickRotation: 0,
             legend: '',
-            legendOffset: 100,
+            legendOffset: 100
           }}
           axisRight={null}
           axisBottom={{
@@ -140,7 +135,7 @@ class NodeStatistics extends Component {
             tickRotation: 0,
             legend: 'size',
             legendPosition: 'middle',
-            legendOffset: 32,
+            legendOffset: 32
           }}
           axisLeft={{
             tickSize: 5,
@@ -148,7 +143,7 @@ class NodeStatistics extends Component {
             tickRotation: 50,
             legend: 'nodes',
             legendPosition: 'middle',
-            legendOffset: -50,
+            legendOffset: -50
           }}
           enableGridY={false}
           labelSkipWidth={12}
@@ -175,11 +170,11 @@ class NodeStatistics extends Component {
                 {
                   on: 'hover',
                   style: {
-                    itemOpacity: 1,
-                  },
-                },
-              ],
-            },
+                    itemOpacity: 1
+                  }
+                }
+              ]
+            }
           ]}
         />
       </div>
@@ -197,11 +192,11 @@ class NodeStatistics extends Component {
 
 NodeStatistics.propTypes = {
   dataSource: PropTypes.object.isRequired,
-  metric: PropTypes.string.isRequired,
+  metric: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => ({
-  dataSource: state.nodeStatistics.dataSource,
+  dataSource: state.nodeStatistics.dataSource
   //stats: stats(state),
 });
 
@@ -211,6 +206,6 @@ export default connect(
 )(
   withState('isVisible', 'onPopoverClickVisible', {
     visible: false,
-    podName: '',
+    podName: ''
   })(NodeStatistics)
 );

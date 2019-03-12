@@ -7,12 +7,14 @@ const tmp = { dataSource, showModal: false };
 
 const initialState = Immutable.from(tmp);
 
-export default handleActions({
-  [actions.UPDATE_ROW_DATA_TABLE](state, { type, payload, meta, error }) {
-    return state.merge({ dataSource: payload.algorithmBuilds });
+export default handleActions(
+  {
+    [actions.UPDATE_ROW_DATA_TABLE](state, { type, payload, meta, error }) {
+      return state.merge({ dataSource: payload.algorithmBuilds });
+    },
+    [actions.ALGORITHM_STORE](state, { type, payload, meta, error }) {
+      // return state.merge({ showModal: true });
+    }
   },
-  [actions.ALGORITHM_STORE](state, { type, payload, meta, error }) {
-    // return state.merge({ showModal: true });
-  }
-
-}, initialState);
+  initialState
+);
