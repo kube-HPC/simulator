@@ -45,7 +45,7 @@ export const restMiddleware = ({ dispatch }) => (next) => (action) => {
   if (action.type === `${AT.GET_CONFIG}_SUCCESS`) {
     url = setPath(action.payload.config);
   }
-  else if (![AT.REST_REQ, AT.REST_REQ_POST, AT.REST_REQ_PUT, AT.REST_REQ_DELETE, AT.DOWNLOAD_REQ].includes(action.type)) {
+  else if (![AT.REST_REQ, AT.REST_REQ_POST, AT.REST_REQ_POST_FORM, AT.REST_REQ_PUT, AT.REST_REQ_DELETE, AT.DOWNLOAD_REQ].includes(action.type)) {
     return next(action);
   }
   else if (action.type === AT.REST_REQ) {
@@ -55,14 +55,12 @@ export const restMiddleware = ({ dispatch }) => (next) => (action) => {
     pending(dispatch, 'pending', action);
     fetch(`${url}${action.payload.url}`).then((res) => {
       res.json().then((data) => {
-        console.log(data);
         success(dispatch, data, action);
       }).catch((error) => {
         console.log(error);
       });
     }).catch((err) => {
       reject(dispatch, err, action);
-      console.error('get config error');
     });
 
     return next(action);
@@ -85,6 +83,22 @@ export const restMiddleware = ({ dispatch }) => (next) => (action) => {
 
     return next(action);
   }
+  else if (action.type === AT.REST_REQ_POST_FORM) {
+    if (!url) {
+      return next(action);
+    }
+    pending(dispatch, 'pending', action);
+    axios.post(`${url}/${action.payload.url}`, action.payload.formData)
+      .then((res) => {
+        res.json().then((data) => {
+          success(dispatch, data, action);
+        });
+      }).catch((err) => {
+        reject(dispatch, err, action);
+      });
+
+    return next(action);
+  }
   else if (action.type === AT.REST_REQ_PUT) {
     if (!url) {
       return next(action);
@@ -93,12 +107,10 @@ export const restMiddleware = ({ dispatch }) => (next) => (action) => {
     axios.put(`${url}/${action.payload.url}`, { ...action.payload.body })
       .then((res) => {
         res.json().then((data) => {
-          console.log(data);
           success(dispatch, data, action);
         });
       }).catch((err) => {
         reject(dispatch, err, action);
-        console.error('get config error');
       });
 
     return next(action);
@@ -111,12 +123,10 @@ export const restMiddleware = ({ dispatch }) => (next) => (action) => {
     axios.delete(`${url}/${action.payload.url}/${action.payload.body.algorithmName}`, { data: action.payload.body })
       .then((res) => {
         res.json().then((data) => {
-          console.log(data);
           success(dispatch, data, action);
         });
       }).catch((err) => {
         reject(dispatch, err, action);
-        console.error('get config error');
       });
 
     return next(action);
@@ -131,7 +141,6 @@ export const restMiddleware = ({ dispatch }) => (next) => (action) => {
       success(dispatch, res.data, action);
     }).catch((err) => {
       reject(dispatch, err, action);
-      console.log(err);
     });
 
     return next(action);
