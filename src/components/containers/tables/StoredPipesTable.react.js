@@ -19,6 +19,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactJson from 'react-json-view';
 import cronstrue from 'cronstrue';
+import cronParser from 'cron-parser';
 
 import { init } from '../../../actions/storedPipes.action';
 import { openModal } from '../../../actions/modal.action';
@@ -29,10 +30,13 @@ import {
   cronStart,
   cronStop
 } from '../../../actions/storedPipes.action';
+import { addPipe } from '../../../actions/addPipe.action';
 import './StoredPipesTable.scss';
 import HEditor from '../HEditor.react';
+import AddButton from '../../dumb/AddButton.react';
 import { RECORD_STATUS } from '../../../constants/colors';
 import { ReactComponent as PlayIconSvg } from '../../../images/play-icon.svg';
+import template from '../../stubs/json-object.json';
 
 const { Column } = Table;
 class StoredPipesTable extends Component {
@@ -69,16 +73,25 @@ class StoredPipesTable extends Component {
       });
     };
 
-    const revertCronTrigger = (record, cronStart, cronStop) => {
-      const pipelineName = record.name;
-      const isCronEnabled =
-        record.hasOwnProperty('triggers') && record.triggers.hasOwnProperty('cron');
-      return () =>
-        isCronEnabled
-          ? record.triggers.cron.enabled
-            ? cronStop(pipelineName)
-            : cronStart(pipelineName)
-          : {};
+    const revertCronTrigger = (record, cronStart, cronStop, updateAction) => {
+      return () => {
+        const pipelineName = record.name;
+        const hasCronProperty =
+          !record.hasOwnProperty('triggers') ||
+          (record.hasOwnProperty('triggers') && !record.triggers.hasOwnProperty('cron'));
+
+        if (hasCronProperty) {
+          record['triggers'] = {
+            cron: {
+              pattern: '0 * * * *',
+              enabled: true
+            },
+            ...record['triggers']
+          };
+          updateAction(record);
+        }
+        record.triggers.cron.enabled ? cronStop(pipelineName) : cronStart(pipelineName);
+      };
     };
 
     const updateCronPattern = (pipeline, pattern, updateStoredPipeline) => {
@@ -134,31 +147,29 @@ class StoredPipesTable extends Component {
                 record.hasOwnProperty('triggers') &&
                 record.triggers.hasOwnProperty('cron') &&
                 record.triggers.cron.enabled;
-              const cronExpr = cronIsEnabled ? record.triggers.cron.pattern : '* * * * *';
+
+              const cronExpr = cronIsEnabled ? record.triggers.cron.pattern : '0 * * * *';
+
+              const interval = cronParser.parseExpression(cronExpr);
+
               return (
                 <Row type="flex" justify="start">
                   <Col span={4} order={1}>
                     <Switch
-                      loading={false}
-                      checkedChildren={<Icon type="check" />}
-                      unCheckedChildren={<Icon type="close" />}
                       checked={cronIsEnabled}
                       onChange={revertCronTrigger(
-                        record,
+                        JSON.parse(JSON.stringify(record)),
                         this.props.cronStart,
-                        this.props.cronStop
+                        this.props.cronStop,
+                        this.props.updateStoredPipeline
                       )}
                     />
                   </Col>
                   <Col span={8} order={2}>
                     <Popover
-                      content={
-                        cronExpr.split(' ').length === 5
-                          ? cronstrue.toString(cronExpr, {
-                              use24HourTimeFormat: true
-                            })
-                          : 'Invalid Cron-Expression'
-                      }
+                      content={`${cronstrue.toString(cronExpr, {
+                        use24HourTimeFormat: true
+                      })}, Next Interval: ${interval.next().toString()}`}
                       trigger="focus"
                     >
                       <Input.Search
@@ -190,10 +201,14 @@ class StoredPipesTable extends Component {
               if (!dataStats) {
                 return;
               }
-              const pipelineStats = dataStats
-                .filter(status => status.name === record.name && status.stats.length !== 0)
-                .map(pipeline => pipeline.stats)
-                .flat();
+
+              const pipelineStats = [].concat(
+                ...[
+                  ...dataStats
+                    .filter(status => status.name === record.name && status.stats.length !== 0)
+                    .map(pipeline => pipeline.stats)
+                ]
+              );
 
               const firstLetterUpperCase = s =>
                 s && s.charAt && s.charAt(0).toUpperCase() + s.slice(1);
@@ -263,6 +278,21 @@ class StoredPipesTable extends Component {
             }}
           />
         </Table>
+        <Popover placement="topRight" title="Update algorithm" trigger="click">
+          <HEditor
+            jsonTemplate={JSON.stringify(template, null, 2)}
+            styledButton={(onClick, isEditable = false) => <AddButton onVisible={onClick} />}
+            title={'Add Pipeline Editor'}
+            okText={'Store Pipeline'}
+            hintText={
+              <div>
+                {' '}
+                Hint: Type <strong>node</strong> for adding pipe-node.
+              </div>
+            }
+            action={this.props.addPipe}
+          />
+        </Popover>
       </div>
     );
   }
@@ -276,7 +306,8 @@ StoredPipesTable.propTypes = {
   deleteStoredPipeline: PropTypes.func.isRequired,
   updateStoredPipeline: PropTypes.func.isRequired,
   cronStop: PropTypes.func.isRequired,
-  cronStart: PropTypes.func.isRequired
+  cronStart: PropTypes.func.isRequired,
+  addPipe: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -289,6 +320,7 @@ export default connect(
   {
     openModal,
     init,
+    addPipe,
     execStoredPipe,
     deleteStoredPipeline,
     updateStoredPipeline,
