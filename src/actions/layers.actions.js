@@ -18,7 +18,7 @@ export function removeLayer(layers, layerToRemove, selectedLayer) {
   let nextSelected = selectedLayer;
   if (layerToRemove === selectedLayer) {
     const index = layers.indexOf(layerToRemove);
-    nextSelected = (index === 0) ? layers[1] : layers[index - 1];
+    nextSelected = index === 0 ? layers[1] : layers[index - 1];
   }
   return {
     type: actions.REMOVE_LAYER,

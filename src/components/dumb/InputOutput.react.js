@@ -13,9 +13,12 @@ class InputOutput extends Component {
   }
 
   onSelect(select) {
-    if (select.namespace &&
+    if (
+      select.namespace &&
       (select.namespace.includes('input') || select.namespace.includes('output')) &&
-      select.name === 'path' && select.value) {
+      select.name === 'path' &&
+      select.value
+    ) {
       this.props.downloadStorageResults(select.value);
     }
   }
@@ -33,54 +36,62 @@ class InputOutput extends Component {
           input: b.input,
           output: b.output && b.output.storageInfo,
           error: b.error
-        }
+        };
         return (
           <Card key={i}>
             <span style={{ color: '#1890ff' }}>index: {b.batchIndex}</span>
-            <ReactJson src={src}
+            <ReactJson
+              src={src}
               name={false}
               iconStyle="square"
               collapsed={1}
-              onSelect={(select) => { this.onSelect(select) }}
+              onSelect={select => {
+                this.onSelect(select);
+              }}
               displayDataTypes={false}
               displayObjectSize={false}
-              enableClipboard={false} />
-          </Card >)
-      })
-    }
-    else {
+              enableClipboard={false}
+            />
+          </Card>
+        );
+      });
+    } else {
       const src = {
         origInput: payload.origInput,
         input: payload.input,
         output: payload.output && payload.output.storageInfo,
         error: payload.error
-      }
-      items = <Card>
-        <ReactJson src={src}
-          name={false}
-          iconStyle="square"
-          collapsed={1}
-          onSelect={(select) => { this.onSelect(select) }}
-          displayDataTypes={false}
-          displayObjectSize={false}
-          enableClipboard={false} />
-      </Card >
+      };
+      items = (
+        <Card>
+          <ReactJson
+            src={src}
+            name={false}
+            iconStyle="square"
+            collapsed={1}
+            onSelect={select => {
+              this.onSelect(select);
+            }}
+            displayDataTypes={false}
+            displayObjectSize={false}
+            enableClipboard={false}
+          />
+        </Card>
+      );
     }
 
-    return (
-      <div id="inputOutput">
-        {items}
-      </div>
-    )
+    return <div id="inputOutput">{items}</div>;
   }
 }
 
-const mapStateToProps = (state) => ({
-});
+const mapStateToProps = state => ({});
 
 InputOutput.propTypes = {
   payload: PropTypes.object,
   downloadStorageResults: PropTypes.func.isRequired
 };
 
-export default connect(mapStateToProps, { downloadStorageResults })(InputOutput);
+export default connect(
+  mapStateToProps,
+  { downloadStorageResults }
+)(InputOutput);

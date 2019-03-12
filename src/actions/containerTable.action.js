@@ -9,7 +9,7 @@ export const init = () => ({
   }
 });
 
-export const execRawPipeline = (nominalPipeline) => {
+export const execRawPipeline = nominalPipeline => {
   const { name, flowInputOrig, options, webhooks, priority } = nominalPipeline;
   let pipeline = {
     name,
@@ -17,7 +17,7 @@ export const execRawPipeline = (nominalPipeline) => {
     options,
     webhooks,
     priority
-  }
+  };
 
   let action = {
     type: actions.REST_REQ_POST,
@@ -26,11 +26,11 @@ export const execRawPipeline = (nominalPipeline) => {
       body: { pipeline },
       actionType: actions.EXEC_STORED_PIPE
     }
-  }
-  return action
+  };
+  return action;
 };
 
-export const stopPipeline = (jobId) => ({
+export const stopPipeline = jobId => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: 'exec/stop',
@@ -39,7 +39,7 @@ export const stopPipeline = (jobId) => ({
   }
 });
 
-export const downloadStorageResults = (path) => ({
+export const downloadStorageResults = path => ({
   type: actions.DOWNLOAD_REQ,
   payload: {
     url: `/download/results?path=${path}`,

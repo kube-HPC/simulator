@@ -32,4 +32,3 @@ const rootReducer = combineReducers({
   nodeStatistics
 });
 export default rootReducer;
-

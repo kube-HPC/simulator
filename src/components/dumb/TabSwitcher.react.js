@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import { Tabs, Card } from 'antd';
 import isEqual from 'lodash/isEqual';
@@ -12,7 +11,7 @@ class TabSwitcher extends Component {
     super();
     this.state = {
       context: {}
-    }
+    };
   }
 
   shouldComponentUpdate(nextProps) {
@@ -28,24 +27,35 @@ class TabSwitcher extends Component {
       <Tabs defaultActiveKey="1">
         <Tabs.TabPane tab="Graph" key="1">
           <Card>
-            <JobGraph graph={{ ...record.graph, jobId: record.key }} pipeline={record.record.pipeline} />
+            <JobGraph
+              graph={{ ...record.graph, jobId: record.key }}
+              pipeline={record.record.pipeline}
+            />
           </Card>
         </Tabs.TabPane>
         <Tabs.TabPane tab="Trace" key="2">
           <Card>
-            {record.jaeger && record.jaeger && Object.keys(record.jaeger[record.key].asMutable()).length !== 0 ?
-              <Trace trace={{ data: record.jaeger[record.key] }} context={this.state.context} /> : null
-            }
+            {record.jaeger &&
+            record.jaeger &&
+            Object.keys(record.jaeger[record.key].asMutable()).length !== 0 ? (
+              <Trace trace={{ data: record.jaeger[record.key] }} context={this.state.context} />
+            ) : null}
           </Card>
         </Tabs.TabPane>
         <Tabs.TabPane tab="JSON" key="3">
           <Card>
-            <ReactJson src={record.record} collapsed={2} displayDataTypes={false} displayObjectSize={false} name={false} iconStyle="square" enableClipboard={false} />
+            <ReactJson
+              src={record.record}
+              collapsed={2}
+              displayDataTypes={false}
+              displayObjectSize={false}
+              name={false}
+              iconStyle="square"
+              enableClipboard={false}
+            />
           </Card>
         </Tabs.TabPane>
       </Tabs>
-
-
     );
   }
 }

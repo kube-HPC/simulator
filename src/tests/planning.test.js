@@ -16,7 +16,6 @@ function setMode() {
   console.log('test - setMode passed');
 }
 
-
 function setDate() {
   console.log('test - setDate started');
   const store = createStore(reducer);
@@ -48,7 +47,6 @@ function setDistrict() {
 
   console.log('test - setDate passed');
 }
-
 
 setMode();
 setDate();

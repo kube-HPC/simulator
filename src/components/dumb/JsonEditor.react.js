@@ -36,14 +36,15 @@ const JsonEditor = ({ pipe, jsonTemplate }) => (
         tabSize: 2
       }}
       editorProps={{ $blockScrolling: true }}
-      onChange={(newPipe) => pipe(newPipe)}
-      style={{ width: 'auto' }}/>
+      onChange={newPipe => pipe(newPipe)}
+      style={{ width: 'auto' }}
+    />
   </div>
 );
 
 JsonEditor.propTypes = {
   pipe: PropTypes.func.isRequired,
-  jsonTemplate: PropTypes.string.isRequired,
+  jsonTemplate: PropTypes.string.isRequired
 };
 
 export default JsonEditor;

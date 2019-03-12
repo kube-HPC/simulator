@@ -1,7 +1,6 @@
 import actions from '../constants/actions';
 import topics from '../constants/topics';
 
-
 export const init = () => ({
   type: actions.SOCKET_INIT,
   payload: {
@@ -10,7 +9,7 @@ export const init = () => ({
   }
 });
 
-export const addAlgorithm = (algorithmName) => ({
+export const addAlgorithm = algorithmName => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: `debug/add`,
@@ -18,7 +17,7 @@ export const addAlgorithm = (algorithmName) => ({
     actionType: actions.ALGORITHM_ADD
   }
 });
-export const deleteAlgorithm = (algorithmName) => ({
+export const deleteAlgorithm = algorithmName => ({
   type: actions.REST_REQ_DELETE,
   payload: {
     url: `debug/delete`,

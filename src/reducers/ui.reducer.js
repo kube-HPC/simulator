@@ -7,15 +7,18 @@ const inititalState = Immutable({
   selectedLayer: ''
 });
 
-export default handleActions({
-  [actions.TOGGLE_HIDDEN](state, { type, payload, meta, error }) {
-    return Immutable.set(state, 'hidden', !state.hidden);
+export default handleActions(
+  {
+    [actions.TOGGLE_HIDDEN](state, { type, payload, meta, error }) {
+      return Immutable.set(state, 'hidden', !state.hidden);
+    },
+    [actions.SELECT_LAYER](state, { type, payload, meta, error }) {
+      return Immutable.set(state, 'selectedLayer', payload);
+    },
+    [actions.REMOVE_LAYER](state, { type, payload, meta, error }) {
+      // add correction in case of removing the current collection
+      return Immutable.set(state, 'selectedLayer', payload.nextSelected);
+    }
   },
-  [actions.SELECT_LAYER](state, { type, payload, meta, error }) {
-    return Immutable.set(state, 'selectedLayer', payload);
-  },
-  [actions.REMOVE_LAYER](state, { type, payload, meta, error }) {
-    // add correction in case of removing the current collection
-    return Immutable.set(state, 'selectedLayer', payload.nextSelected);
-  }
-}, inititalState);
+  inititalState
+);

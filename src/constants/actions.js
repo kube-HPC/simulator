@@ -1,4 +1,4 @@
-const restHelper = (action) => {
+const restHelper = action => {
   actionType[`${action}_PENDING`] = `${action}_PENDING`;
   actionType[`${action}_SUCCESS`] = `${action}_SUCCESS`;
   actionType[`${action}_REJECT`] = `${action}_REJECT`;
@@ -44,12 +44,12 @@ const actionType = {
   STOP_PIPELINE: 'STOP_PIPELINE',
   DOWNLOAD_RESULTS: 'DOWNLOAD_RESULTS',
   UPDATE_STORED_PIPELINE: 'UPDATE_STORED_PIPELINE',
-  KUBERNETES_LOGS_REST: "KUBERNETES_LOGS_REST",
-  OPEN_SIDEBAR: "OPEN_SIDEBAR",
-  CLOSE_SIDEBAR: "CLOSE_SIDEBAR",
-  EXEC_CACHING: "EXEC_CACHING",
-  CRON_START: "CRON_START",
-  CRON_STOP: "CRON_STOP"
+  KUBERNETES_LOGS_REST: 'KUBERNETES_LOGS_REST',
+  OPEN_SIDEBAR: 'OPEN_SIDEBAR',
+  CLOSE_SIDEBAR: 'CLOSE_SIDEBAR',
+  EXEC_CACHING: 'EXEC_CACHING',
+  CRON_START: 'CRON_START',
+  CRON_STOP: 'CRON_STOP'
 };
 restHelper(actionType.GET_CONFIG);
 restHelper(actionType.ALGORITHM_ADD);

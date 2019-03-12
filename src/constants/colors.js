@@ -10,7 +10,7 @@ export const COLOR = {
   textBlue: '#307fe6',
   whiteHighlight: '#ececec',
   white: 'white',
-  grey: '#ccc',
+  grey: '#ccc'
 };
 
 export const HCOLOR = {
@@ -19,8 +19,8 @@ export const HCOLOR = {
   border: COLOR.grey,
   header: COLOR.white,
   headerBorder: COLOR.grey,
-  content: COLOR.white,
-}
+  content: COLOR.white
+};
 
 export const RECORD_STATUS = {
   creating: '#838383',
@@ -29,5 +29,5 @@ export const RECORD_STATUS = {
   stopped: '#ec8c16',
   failed: '#f50',
   succeed: '#87d068',
-  skipped: '#eeda13',
+  skipped: '#eeda13'
 };

@@ -9,7 +9,7 @@ export const init = () => ({
   }
 });
 
-export const storeAlgorithm = (algorithm) => ({
+export const storeAlgorithm = algorithm => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: 'store/algorithms',
@@ -18,7 +18,7 @@ export const storeAlgorithm = (algorithm) => ({
   }
 });
 
-export const deleteAlgorithmFromStore = (algorithmName) => ({
+export const deleteAlgorithmFromStore = algorithmName => ({
   type: actions.REST_REQ_DELETE,
   payload: {
     url: 'store/algorithms',
