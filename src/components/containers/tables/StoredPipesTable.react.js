@@ -190,10 +190,11 @@ class StoredPipesTable extends Component {
               if (!dataStats || dataStats.length === 0) {
                 return;
               }
-              const pipelineStats = dataStats
+              let pipelineStats = dataStats
                 .filter(status => status.name === record.name && status.stats.length !== 0)
                 .map(pipeline => pipeline.stats)
-                .flat();
+
+              pipelineStats = [].concat(...pipelineStats)
 
               const firstLetterUpperCase = s =>
                 s && s.charAt && s.charAt(0).toUpperCase() + s.slice(1);
