@@ -14,15 +14,15 @@ class HEditor extends Component {
     this.state = { visible: false };
   }
 
-  onVisible = () => {
+  onVisible() {
     this.userData = this.isEditable ? this.userData : this.props.jsonTemplate;
     this.setState({ visible: !this.state.visible });
-  };
-  showModal = () => {
+  }
+  showModal() {
     this.onVisible();
-  };
+  }
 
-  handleOk = () => {
+  handleOk() {
     try {
       this.props.action(JSON.parse(this.userData));
       this.isEditable = false;
@@ -38,16 +38,16 @@ class HEditor extends Component {
     }
 
     this.onVisible();
-  };
+  }
 
-  handleCancel = () => {
+  handleCancel() {
     this.onVisible();
-  };
+  }
 
-  handleReset = () => {
+  handleReset() {
     this.isEditable = false;
     this.userData = this.props.jsonTemplate;
-  };
+  }
 
   render() {
     return (

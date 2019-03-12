@@ -1,5 +1,5 @@
 {
-  "extends": ["eslint:recommended", "prettier", "prettier/react"],
+  "extends": ["eslint:recommended", "prettier", "prettier/react", "plugin:react/recommended"],
   "env": {
     "browser": true,
     "commonjs": true,
@@ -8,7 +8,10 @@
   },
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 2018
+    "ecmaVersion": 2018,
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
   "rules": {
     "no-console": "off",

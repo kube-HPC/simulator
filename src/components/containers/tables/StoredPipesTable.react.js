@@ -36,7 +36,7 @@ import { ReactComponent as PlayIconSvg } from '../../../images/play-icon.svg';
 
 const { Column } = Table;
 class StoredPipesTable extends Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.init();
   }
 
@@ -187,7 +187,9 @@ class StoredPipesTable extends Component {
             dataIndex="status"
             key="status"
             render={(_, record) => {
-              if (!dataStats) return;
+              if (!dataStats) {
+                return;
+              }
               const pipelineStats = dataStats
                 .filter(status => status.name === record.name && status.stats.length !== 0)
                 .map(pipeline => pipeline.stats)
