@@ -5,8 +5,8 @@ export const init = () => ({
   type: actions.SOCKET_INIT,
   payload: {
     topic: topics.PROGRESS,
-    actionType: actions.UPDATE_ROW_DATA_TABLE
-  }
+    actionType: actions.UPDATE_ROW_DATA_TABLE,
+  },
 });
 
 export const storeAlgorithm = algorithm => ({
@@ -14,8 +14,17 @@ export const storeAlgorithm = algorithm => ({
   payload: {
     url: 'store/algorithms',
     body: { algorithm },
-    actionType: actions.ALGORITHM_STORE
-  }
+    actionType: actions.ALGORITHM_STORE,
+  },
+});
+
+export const applyAlgorithm = formData => ({
+  type: actions.REST_REQ_POST_FORM,
+  payload: {
+    url: 'store/algorithms/apply',
+    formData,
+    actionType: actions.ALGORITHM_APPLY,
+  },
 });
 
 export const deleteAlgorithmFromStore = algorithmName => ({
@@ -23,6 +32,6 @@ export const deleteAlgorithmFromStore = algorithmName => ({
   payload: {
     url: 'store/algorithms',
     body: { algorithmName },
-    actionType: actions.ALGORITHM_STORE_REMOVE
-  }
+    actionType: actions.ALGORITHM_STORE_REMOVE,
+  },
 });

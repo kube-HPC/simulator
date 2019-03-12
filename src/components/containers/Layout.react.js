@@ -5,6 +5,7 @@ import { compose, withState } from 'recompose';
 import ContainerTable from './tables/ContainerTable.react';
 import WorkerTable from './tables/WorkerTable.react';
 import DebugTable from './tables/DebugTable.react';
+import AlgorithmBuildsTable from './tables/AlgorithmBuildsTable.react';
 import StoredPipesTable from './tables/StoredPipesTable.react';
 import DriverTable from './tables/DriverTable.react';
 import AlgorithmTable from './tables/AlgorithmsTable.react';
@@ -24,7 +25,7 @@ import {
   AlignRow,
   Logo,
   HeaderTitle,
-  ButtonAddPipeline
+  ButtonAddPipeline,
 } from '../style/Styled';
 import template from '../stubs/json-object.json';
 import SubMenu from 'antd/lib/menu/SubMenu';
@@ -55,9 +56,11 @@ const selectTable = props => {
       return <AlgorithmTable />;
     case '6':
       return <DebugTable />;
-    case '8':
-      return <NodeStatistics metric="cpu" />;
+    case '7':
+      return <AlgorithmBuildsTable />;
     case '9':
+      return <NodeStatistics metric="cpu" />;
+    case '10':
       return <NodeStatistics metric="mem" />;
     default:
       return <ContainerTable />;
@@ -96,7 +99,10 @@ class LayoutInner extends React.Component {
                 jsonTemplate={jsonTemplate}
                 styledButton={(onClick, isEditable = false) => (
                   <Badge dot={isEditable}>
-                    <ButtonAddPipeline onClick={onClick}> + Pipeline </ButtonAddPipeline>
+                    <ButtonAddPipeline onClick={onClick}>
+                      {' '}
+                      + Pipeline{' '}
+                    </ButtonAddPipeline>
                   </Badge>
                 )}
                 title={'Add Pipeline Editor'}
@@ -172,16 +178,24 @@ class LayoutInner extends React.Component {
                   </Col>
                 </Row>
               </HMenu.Item>
+              <HMenu.Item key="7">
+                <Row type="flex" justify="space-between">
+                  <Col>Builds</Col>
+                  <Col>
+                    <Tag className="tag">{props.algorithmBuildsCount}</Tag>
+                  </Col>
+                </Row>
+              </HMenu.Item>
               <SubMenu
                 title={
                   <span>
                     <span>Node Stats</span>
                   </span>
                 }
-                key="7"
+                key="8"
               >
-                <HMenu.Item key="8"> CPU </HMenu.Item>
-                <HMenu.Item key="9"> Memory </HMenu.Item>
+                <HMenu.Item key="9"> CPU </HMenu.Item>
+                <HMenu.Item key="10"> Memory </HMenu.Item>
               </SubMenu>
             </HMenu>
           </HSider>
@@ -201,15 +215,16 @@ const mapStateToProps = state => {
     jobsCount: (state.containerTable.dataSource || []).length,
     driversCount: (state.driverTable.dataSource || []).length,
     algorithmCount: (state.algorithmTable.dataSource || []).length,
+    algorithmBuildsCount: (state.algorithmBuildsTable.dataSource || []).length,
     pipelineCount: (state.storedPipeline.dataSource || []).length,
     workerCount: (state.workerTable.stats || { total: 0 }).total,
-    debugCount: (state.debugTable.dataSource || []).length
+    debugCount: (state.debugTable.dataSource || []).length,
   };
 };
 
 LayoutInner.propTypes = {
   init: PropTypes.func.isRequired,
-  addPipe: PropTypes.func.isRequired
+  addPipe: PropTypes.func.isRequired,
 };
 
 export default compose(
@@ -219,7 +234,7 @@ export default compose(
   ),
   withState('isTableVisible', 'onMenuSelected', {
     visible: true,
-    menuItem: {}
+    menuItem: {},
   }),
   withState('isVodUpVisible', 'onVodUpPopoverClickVisible', false),
   withState('isVodDownVisible', 'onVodDownPopoverClickVisible', false)

@@ -1,6 +1,8 @@
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import isEqual from 'lodash/isEqual';
 import {
+  Upload,
   Table,
   Card,
   Button,
@@ -11,23 +13,27 @@ import {
   Modal,
   Select,
   Row,
-  Col
+  Col,
+  Badge,
 } from 'antd';
 import ReactJson from 'react-json-view';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import { withState } from 'recompose';
+import parseUnit from 'parse-unit';
 import { openModal } from '../../../actions/modal.action';
 import {
   init,
   storeAlgorithm,
-  deleteAlgorithmFromStore
+  applyAlgorithm,
+  deleteAlgorithmFromStore,
 } from '../../../actions/algorithmTable.action';
 import HEditor from '../HEditor.react';
-
 import algorithmObjectTemplate from '../../stubs/algorithm-object.json';
 import AddButton from '../../dumb/AddButton.react';
 import './AlgorithmsTable.scss';
+const Dragger = Upload.Dragger;
+
 class AlgorithmTable extends Component {
   componentWillMount() {
     this.props.init();
@@ -45,16 +51,42 @@ class AlgorithmTable extends Component {
     const deleteConfirmAction = (action, record) => {
       Modal.confirm({
         title: 'WARNING Deleting Algorithm',
-        content: 'Deleting algorithm will DELETE-ALL related pipelines and STOP-ALL executions',
+        content:
+          'Deleting algorithm will DELETE-ALL related pipelines and STOP-ALL executions',
         okText: 'Confirm',
         okType: 'danger',
         cancelText: 'Cancel',
         onOk() {
           action(record.data.name);
         },
-        onCancel() {}
+        onCancel() {},
       });
     };
+
+    this.dragProps = {
+      name: 'file',
+      multiple: false,
+      accept: '.zip,.tar.gz',
+      customRequest: ({ file, onSuccess }) => {
+        setTimeout(() => {
+          this.setState({ file });
+          onSuccess('OK');
+        }, 0);
+      },
+      onChange(info) {
+        const status = info.file.status;
+        if (status !== 'uploading') {
+          console.log(info.file, info.fileList);
+        }
+        if (status === 'done') {
+          console.log(`${info.file.name} file uploaded successfully.`);
+        } else if (status === 'error') {
+          console.log(`${info.file.name} file upload failed.`);
+        }
+      },
+    };
+
+    this.dragProps.onChange = this.dragProps.onChange.bind(this);
 
     this.columns = [
       {
@@ -62,7 +94,7 @@ class AlgorithmTable extends Component {
         dataIndex: 'data.name',
         key: 'name',
         width: '20%',
-        sorter: (a, b) => sorter(a.data.name, b.data.name)
+        sorter: (a, b) => sorter(a.data.name, b.data.name),
       },
       {
         title: 'Algorithm Image',
@@ -70,63 +102,103 @@ class AlgorithmTable extends Component {
         key: 'algorithmImage',
         width: '20%',
         onFilter: (value, record) => record.data.algorithmImage.includes(value),
-        sorter: (a, b) => sorter(a.data.algorithmImage, b.data.algorithmImage)
+        sorter: (a, b) => sorter(a.data.algorithmImage, b.data.algorithmImage),
       },
       {
         title: 'cpu',
         dataIndex: 'data.cpu',
         key: 'cpu',
-        width: '20%'
+        width: '10%',
       },
       {
         title: 'mem',
         dataIndex: 'data.mem',
         key: 'mem',
-        width: '20%',
-        sorter: (a, b) => sorter(a.data.mem, b.data.mem)
+        width: '10%',
+        sorter: (a, b) => sorter(a.data.mem, b.data.mem),
       },
       {
         title: 'Worker Image',
         dataIndex: 'data.workerImage',
         key: 'workerImage',
         width: '10%',
-        sorter: (a, b) => sorter(a.data.workerImage, b.data.workerImage)
+        sorter: (a, b) => sorter(a.data.workerImage, b.data.workerImage),
+      },
+      {
+        title: 'minHotWorkers',
+        dataIndex: 'data.minHotWorkers',
+        key: 'minHotWorkers',
+        width: '10%',
+        sorter: (a, b) => sorter(a.data.workerImage, b.data.workerImage),
       },
       {
         title: 'Action',
         dataIndex: 'action',
         key: 'action',
-        width: '10%',
-        render: (text, record) => (
-          <Button
-            type="danger"
-            shape="circle"
-            icon="delete"
-            onClick={() => deleteConfirmAction(this.props.deleteAlgorithmFromStore, record)}
-          />
-        )
-      }
+        width: '20%',
+        render: (text, record, index) => (
+          <Row type="flex" justify="start">
+            <Col span={4}>
+              <Button
+                type="edit"
+                shape="circle"
+                icon="edit"
+                onClick={() => {
+                  this.setState({ isVisible: true });
+                  this.setState({
+                    algoToAdd: { ...record.data, mem: record.data.mem + 'Mi' },
+                  });
+                }}
+              />
+            </Col>
+            <Col span={4}>
+              <Button
+                type="danger"
+                shape="circle"
+                icon="delete"
+                onClick={() =>
+                  deleteConfirmAction(
+                    this.props.deleteAlgorithmFromStore,
+                    record
+                  )
+                }
+              />
+            </Col>
+          </Row>
+        ),
+      },
     ];
   }
+
   onVisible = () => this.setState({ isVisible: !this.state.isVisible });
+
   onFormDataChange = e => {
     this.setState({ formdata: e.target.value });
   };
+
   onPopOverConfirm = () => {
-    this.props.storeAlgorithm(this.state.algoToAdd);
+    const formData = new FormData();
+    formData.append('file', this.state.file);
+    formData.append('payload', JSON.stringify(this.state.algoToAdd));
+    this.props.applyAlgorithm(formData);
     this.onVisible();
   };
+
   onPopOverCancel = () => {
     this.onVisible();
   };
+
   renderColumns() {}
+
+  _parseUnit = obj => {
+    const [val, unit] = parseUnit(obj);
+    return { val, unit };
+  };
+
   render() {
     const Option = Select.Option;
     const algoData = this.state.algoToAdd;
-    const getMemoryProp = (str, isGetNumber) =>
-      isGetNumber ? +str.match(/\d+/g).pop() : str.match(/\D+/g).pop();
-    const memoryNum = getMemoryProp(algoData.mem, true);
-    const memoryProp = getMemoryProp(algoData.mem, false);
+    const memory = this._parseUnit(algoData.mem);
     const algoOptions = Object.entries(algoData.options)
       .filter(p => p[1])
       .map(a => a[0]);
@@ -136,25 +208,34 @@ class AlgorithmTable extends Component {
         <Row style={{ marginBottom: 5 }}>
           <Input
             defaultValue={algoData.name}
-            onChange={e => {
-              this.setState(state => (state.algoToAdd.name = e.target.value));
-            }}
+            value={algoData.name}
+            onChange={e =>
+              this.setState({
+                algoToAdd: { ...this.state.algoToAdd, name: e.target.value },
+              })
+            }
             prefix={<Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }} />}
             placeholder="Insert algorithm name"
           />
         </Row>
-
         <Row style={{ marginBottom: 5 }}>
           <Input
             defaultValue={algoData.algorithmImage}
+            value={algoData.algorithmImage}
             onChange={e =>
-              this.setState(state => (state.algoToAdd.algorithmImage = e.target.value))
+              this.setState({
+                algoToAdd: {
+                  ...this.state.algoToAdd,
+                  algorithmImage: e.target.value,
+                },
+              })
             }
-            prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }} />}
+            prefix={
+              <Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }} />
+            }
             placeholder="Insert algorithm image"
           />
         </Row>
-
         <Row style={{ marginBottom: 5 }}>
           <span
             style={{
@@ -162,13 +243,37 @@ class AlgorithmTable extends Component {
               fontWeight: 'lighter',
               fontFamily: 'monospace',
               letterSpacing: 'normal',
-              marginRight: '3%'
+              marginRight: '3%',
+            }}
+          >
+            Env
+          </span>
+          <Select
+            defaultValue={algoData.env}
+            value={algoData.env}
+            style={{ width: '60%' }}
+            onChange={v => this.setState(state => (state.algoToAdd.env = v))}
+          >
+            <Option value="python">python</Option>
+            <Option value="nodejs">nodejs</Option>
+            <Option value="jvm">jvm</Option>
+          </Select>
+        </Row>
+        <Row style={{ marginBottom: 5 }}>
+          <span
+            style={{
+              fontSize: '12px',
+              fontWeight: 'lighter',
+              fontFamily: 'monospace',
+              letterSpacing: 'normal',
+              marginRight: '3%',
             }}
           >
             CPU Usage:
           </span>
           <InputNumber
             min={1}
+            value={algoData.cpu}
             defaultValue={algoData.cpu}
             onChange={v => this.setState(state => (state.algoToAdd.cpu = +v))}
             style={{ width: 50 }}
@@ -181,24 +286,56 @@ class AlgorithmTable extends Component {
               fontWeight: 'lighter',
               fontFamily: 'monospace',
               letterSpacing: 'normal',
-              marginRight: '3%'
+              marginRight: '3%',
+            }}
+          >
+            GPU Usage:
+          </span>
+          <InputNumber
+            min={0}
+            value={algoData.gpu}
+            defaultValue={algoData.gpu}
+            onChange={v => this.setState(state => (state.algoToAdd.gpu = +v))}
+            style={{ width: 50 }}
+          />
+        </Row>
+        <Row style={{ marginBottom: 5 }}>
+          <span
+            style={{
+              fontSize: '12px',
+              fontWeight: 'lighter',
+              fontFamily: 'monospace',
+              letterSpacing: 'normal',
+              marginRight: '3%',
             }}
           >
             Memory Usage:
           </span>
           <InputNumber
             min={1}
-            defaultValue={memoryNum}
+            value={memory.val}
+            defaultValue={memory.val}
             onChange={v =>
-              this.setState(state => (state.algoToAdd.mem = v + getMemoryProp(algoData.mem, false)))
+              this.setState({
+                algoToAdd: {
+                  ...this.state.algoToAdd,
+                  mem: v + this._parseUnit(algoData.mem).unit,
+                },
+              })
             }
             style={{ width: 'auto' }}
           />
           <Select
-            defaultValue={memoryProp}
-            style={{ width: 'auto' }}
+            value={memory.unit}
+            defaultValue={memory.unit}
+            style={{ width: '90px' }}
             onChange={v =>
-              this.setState(state => (state.algoToAdd.mem = getMemoryProp(algoData.mem, true) + v))
+              this.setState({
+                algoToAdd: {
+                  ...this.state.algoToAdd,
+                  mem: this._parseUnit(algoData.mem).val + v,
+                },
+              })
             }
           >
             <Option value="Ki">Ki</Option>
@@ -216,7 +353,39 @@ class AlgorithmTable extends Component {
             <Option value="Ei">Ei</Option>
           </Select>
         </Row>
-
+        <Row style={{ marginBottom: 5 }}>
+          <span
+            style={{
+              fontSize: '12px',
+              fontWeight: 'lighter',
+              fontFamily: 'monospace',
+              letterSpacing: 'normal',
+              marginRight: '3%',
+            }}
+          >
+            Min Hot Workers:
+          </span>
+          <InputNumber
+            min={0}
+            value={algoData.minHotWorkers}
+            defaultValue={algoData.minHotWorkers}
+            onChange={v =>
+              this.setState(state => (state.algoToAdd.minHotWorkers = v))
+            }
+            style={{ width: 50 }}
+          />
+        </Row>
+        <Row style={{ marginBottom: 5 }}>
+          <Dragger {...this.dragProps}>
+            <p className="ant-upload-drag-icon">
+              <Icon type="inbox" />
+            </p>
+            <p className="ant-upload-text">
+              Click or drag algorithm source code to this area to upload
+            </p>
+            <p className="ant-upload-hint">Support for zip or tar.gz only</p>
+          </Dragger>
+        </Row>
         <Row style={{ marginBottom: 40 }}>
           <Select
             defaultValue={algoOptions}
@@ -240,13 +409,19 @@ class AlgorithmTable extends Component {
         {AlgorithmInput}
         <Row type="flex" justify="space-between" align="middle">
           <Col span={5} className="textAlign">
-            <Button type="primary" onClick={this.onPopOverConfirm} style={{ margin: 'auto' }}>
+            <Button
+              type="primary"
+              onClick={this.onPopOverConfirm}
+              style={{ margin: 'auto' }}
+            >
               Confirm
             </Button>
           </Col>
           <Col span={10} className="textAlign">
             <HEditor
-              styledButton={onClick => <Button onClick={onClick}>Add As JSON</Button>}
+              styledButton={onClick => (
+                <Button onClick={onClick}>Add As JSON</Button>
+              )}
               jsonTemplate={JSON.stringify(this.state.algoToAdd, null, 2)}
               title={'Store Algorithm Editor'}
               okText={'Store Algorithm'}
@@ -272,7 +447,7 @@ class AlgorithmTable extends Component {
             className: 'tablePagination',
             defaultCurrent: 1,
             pageSize: 15,
-            hideOnSinglePage: true
+            hideOnSinglePage: true,
           }}
           expandedRowRender={record => (
             <Card title="JSON">
@@ -290,11 +465,16 @@ class AlgorithmTable extends Component {
         <Popover
           placement="topRight"
           content={PopOverContent}
-          title="Insert new algorithm to store"
+          title="Update algorithm"
           trigger="click"
           visible={this.state.isVisible}
         >
-          <AddButton onVisible={this.onVisible.bind(this)}> </AddButton>
+          <AddButton
+            onVisible={() => {
+              this.onVisible();
+              this.setState({ algoToAdd: { ...algorithmObjectTemplate } });
+            }}
+          />
         </Popover>
       </div>
     );
@@ -314,21 +494,21 @@ AlgorithmTable.propTypes = {
   dataSource: PropTypes.array.isRequired,
   init: PropTypes.func.isRequired,
   storeAlgorithm: PropTypes.func.isRequired,
-  deleteAlgorithmFromStore: PropTypes.func.isRequired
+  deleteAlgorithmFromStore: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   dataSource: tableDataSelector(state),
   scriptsPath: state.serverSelection.currentSelection.scriptsPath,
-  sshUser: state.serverSelection.currentSelection.user
+  sshUser: state.serverSelection.currentSelection.user,
 });
 
 export default connect(
   mapStateToProps,
-  { openModal, init, storeAlgorithm, deleteAlgorithmFromStore }
+  { openModal, init, storeAlgorithm, applyAlgorithm, deleteAlgorithmFromStore }
 )(
   withState('isVisible', 'onPopoverClickVisible', {
     visible: false,
-    podName: ''
+    podName: '',
   })(AlgorithmTable)
 );

@@ -5,6 +5,7 @@ import workerTable from './workerTable.reducer';
 import driverTable from './driverTable.reducer';
 import debugTable from './debugTable.reducer';
 import algorithmTable from './algorithmTable.reducer';
+import algorithmBuildsTable from './algorithmBuildsTable.reducer';
 import modal from './modal.reducer';
 import sideBar from './sideBar.reducer';
 import ui from './ui.reducer';
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   workerTable,
   driverTable,
   algorithmTable,
+  algorithmBuildsTable,
   debugTable,
   modal,
   sideBar,
