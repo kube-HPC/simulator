@@ -1,9 +1,8 @@
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
-import isEqual from 'lodash/isEqual';
 import groupby from 'lodash/groupBy';
-import { Table, Modal, Tag, Icon, Progress, notification, Row, Col, Button, Tooltip } from 'antd';
+import { Table, Tag, Icon, Progress, notification, Button, Tooltip } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { createSelector } from 'reselect';
 import ReactJson from 'react-json-view';
@@ -11,15 +10,8 @@ import React, { Component } from 'react';
 import { withState } from 'recompose';
 import { openModal } from '../../../actions/modal.action';
 import { init, cancelBuild, rerunBuild } from '../../../actions/algorithmBuildsTable.action';
+import { RECORD_STATUS } from '../../../constants/colors';
 import './AlgorithmsTable.scss';
-
-const BUILD_STATUS = {
-  pending: '#838383',
-  active: '#2db7f5',
-  completed: '#87d068',
-  failed: '#f50',
-  stopped: '#ec8c16'
-};
 
 class AlgorithmBuildsTable extends Component {
   firstLetterUpperCase = (s) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -78,7 +70,7 @@ class AlgorithmBuildsTable extends Component {
         render: (text, record) => {
           const tags = Object.entries(record.statuses).map((s, i) => (
             <Tooltip key={i} placement="top" title={this.firstLetterUpperCase(s[0])}>
-              <Tag color={BUILD_STATUS[s[0]] || 'magenta'}>{s[1].length}</Tag>
+              <Tag color={RECORD_STATUS[s[0]] || 'magenta'}>{s[1].length}</Tag>
             </Tooltip>
           ));
           return <span>{tags}</span>;
@@ -164,7 +156,7 @@ class AlgorithmBuildsTable extends Component {
         sorter: (a, b) => sorter(a.status, b.status),
         render: (text, record) => (
           <span>
-            <Tag color={BUILD_STATUS[record.status]}>
+            <Tag color={RECORD_STATUS[record.status]}>
               {this.firstLetterUpperCase(record.status)}
             </Tag>
           </span>

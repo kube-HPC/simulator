@@ -7,17 +7,8 @@ import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withState } from 'recompose';
+import { RECORD_STATUS } from '../../../constants/colors';
 import './DebugTable.scss';
-
-const STATUSES = {
-  bootstrap: '#87d068',
-  ready: '#87d068',
-  init: '#87d068',
-  active: '#2db7f5',
-  stopped: '#ec8c16',
-  failed: '#f50',
-  completed: '#87d068'
-};
 
 class WorkerTable extends Component {
   componentWillMount() {
@@ -59,7 +50,7 @@ class WorkerTable extends Component {
         key: 'driverStatus',
         render: (text, record) => (
           <span>
-            <Tag color={STATUSES[record.data.driverStatus]}> {record.data.driverStatus}</Tag>
+            <Tag color={RECORD_STATUS[record.data.driverStatus]}> {record.data.driverStatus}</Tag>
           </span>
         ),
         sorter: (a, b) => sorter(a.data.driverStatus, b.data.driverStatus)
@@ -71,7 +62,7 @@ class WorkerTable extends Component {
         key: 'jobStatus',
         render: (text, record) => (
           <span>
-            <Tag color={STATUSES[record.data.jobStatus]}> {record.data.jobStatus}</Tag>
+            <Tag color={RECORD_STATUS[record.data.jobStatus]}> {record.data.jobStatus}</Tag>
           </span>
         ),
         sorter: (a, b) => sorter(a.data.jobStatus, b.data.jobStatus)
@@ -94,7 +85,7 @@ class WorkerTable extends Component {
     ];
   }
 
-  renderColumns() {}
+  renderColumns() { }
 
   render() {
     const { dataSource } = this.props;

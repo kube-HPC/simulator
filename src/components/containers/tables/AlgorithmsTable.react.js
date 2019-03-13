@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import isEqual from 'lodash/isEqual';
 import {
   Upload,
   Table,
@@ -13,8 +12,7 @@ import {
   Modal,
   Select,
   Row,
-  Col,
-  Badge
+  Col
 } from 'antd';
 import ReactJson from 'react-json-view';
 import { createSelector } from 'reselect';
@@ -58,7 +56,7 @@ class AlgorithmTable extends Component {
         onOk() {
           action(record.data.name);
         },
-        onCancel() {}
+        onCancel() { }
       });
     };
 
@@ -182,7 +180,7 @@ class AlgorithmTable extends Component {
     this.onVisible();
   };
 
-  renderColumns() {}
+  renderColumns() { }
 
   _parseUnit = obj => {
     const [val, unit] = parseUnit(obj);

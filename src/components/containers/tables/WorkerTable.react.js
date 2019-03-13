@@ -129,7 +129,7 @@ class WorkerTable extends Component {
     ];
   }
 
-  renderColumns() {}
+  renderColumns() { }
 
   render() {
     const { dataSource, stats } = this.props;

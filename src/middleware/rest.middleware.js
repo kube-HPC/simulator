@@ -91,7 +91,6 @@ export const restMiddleware = ({ dispatch }) => next => action => {
       })
       .catch(err => {
         reject(dispatch, err, action);
-        console.error('get config error');
       });
 
     return next(action);
