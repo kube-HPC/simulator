@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Modal, Button, Card, notification, Icon } from 'antd';
 import { Paragraph } from '../style/Styled';
 import JsonEditor from '../dumb/JsonEditor.react';
+import './HEditor.scss';
 
 class HEditor extends Component {
   constructor(props) {
@@ -16,11 +17,10 @@ class HEditor extends Component {
   onVisible = () => {
     this.userData = this.isEditable ? this.userData : this.props.jsonTemplate;
     this.setState({ visible: !this.state.visible });
-  }
-
+  };
   showModal = () => {
     this.onVisible();
-  }
+  };
 
   handleOk = () => {
     try {
@@ -38,22 +38,23 @@ class HEditor extends Component {
     }
 
     this.onVisible();
-  }
+  };
 
   handleCancel = () => {
     this.onVisible();
-  }
+  };
 
   handleReset = () => {
     this.isEditable = false;
     this.userData = this.props.jsonTemplate;
-  }
+  };
 
   render() {
     return (
       <div>
         {this.props.styledButton(this.showModal, this.isEditable)}
         <Modal
+          className="modal"
           title={this.props.title}
           visible={this.state.visible}
           onOk={this.handleOk}

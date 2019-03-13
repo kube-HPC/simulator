@@ -33,31 +33,18 @@ import './AlgorithmsTable.scss';
 const Dragger = Upload.Dragger;
 
 class AlgorithmTable extends Component {
-  componentWillMount() {
-    this.props.init();
-    this.setState({ isVisible: false });
-    this.setState({ algoToAdd: { ...algorithmObjectTemplate } });
+  constructor(props) {
+    super(props);
 
+    this.props.init();
+
+    this.state = { isVisible: false, algoToAdd: { ...algorithmObjectTemplate } };
     const sorter = (a, b) => {
       let tempA = null;
       let tempB = null;
       tempA = a || '';
       tempB = b || '';
       return tempA.localeCompare(tempB);
-    };
-
-    const deleteConfirmAction = (action, record) => {
-      Modal.confirm({
-        title: 'WARNING Deleting Algorithm',
-        content: 'Deleting algorithm will DELETE-ALL related pipelines and STOP-ALL executions',
-        okText: 'Confirm',
-        okType: 'danger',
-        cancelText: 'Cancel',
-        onOk() {
-          action(record.data.name);
-        },
-        onCancel() { }
-      });
     };
 
     this.dragProps = {
@@ -84,6 +71,20 @@ class AlgorithmTable extends Component {
     };
 
     this.dragProps.onChange = this.dragProps.onChange.bind(this);
+
+    const deleteConfirmAction = (action, record) => {
+      Modal.confirm({
+        title: 'WARNING Deleting Algorithm',
+        content: 'Deleting algorithm will DELETE-ALL related pipelines and STOP-ALL executions',
+        okText: 'Confirm',
+        okType: 'danger',
+        cancelText: 'Cancel',
+        onOk() {
+          action(record.data.name);
+        },
+        onCancel() { }
+      });
+    };
 
     this.columns = [
       {
@@ -196,7 +197,7 @@ class AlgorithmTable extends Component {
       .map(a => a[0]);
 
     const AlgorithmInput = (
-      <div style={{ height: 'auto', width: '400px' }}>
+      <div>
         <Row style={{ marginBottom: 5 }}>
           <Input
             defaultValue={algoData.name}

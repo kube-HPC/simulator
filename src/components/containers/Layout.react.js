@@ -15,7 +15,6 @@ import { BackTop, Row, Col, Tag, Badge } from 'antd';
 import TableAutoComplete from '../dumb/TableAutoComplete.react';
 import { init } from '../../actions/config.action.js';
 import { addPipe } from '../../actions/addPipe.action';
-import HEditor from './HEditor.react';
 import {
   HContent,
   HMenu,
@@ -24,15 +23,11 @@ import {
   LayoutHeader,
   AlignRow,
   Logo,
-  HeaderTitle,
-  ButtonAddPipeline
+  HeaderTitle
 } from '../style/Styled';
-import template from '../stubs/json-object.json';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import './Layout.scss';
 import { isUndefined } from 'util';
-
-const jsonTemplate = JSON.stringify(template, null, 2);
 
 const menuSelection = (i, props) => {
   if (i.key === 1) {
@@ -93,25 +88,6 @@ class LayoutInner extends React.Component {
             <Col>
               {' '}
               <TableAutoComplete />{' '}
-            </Col>
-            <Col>
-              <HEditor
-                jsonTemplate={jsonTemplate}
-                styledButton={(onClick, isEditable = false) => (
-                  <Badge dot={isEditable}>
-                    <ButtonAddPipeline onClick={onClick}> + Pipeline </ButtonAddPipeline>
-                  </Badge>
-                )}
-                title={'Add Pipeline Editor'}
-                okText={'Store Pipeline'}
-                hintText={
-                  <div>
-                    {' '}
-                    Hint: Type <strong>node</strong> for adding pipe-node.
-                  </div>
-                }
-                action={this.props.addPipe}
-              />
             </Col>
           </AlignRow>
         </LayoutHeader>
@@ -227,7 +203,7 @@ LayoutInner.propTypes = {
 export default compose(
   connect(
     mapStateToProps,
-    { init, addPipe }
+    { init }
   ),
   withState('isTableVisible', 'onMenuSelected', {
     visible: true,
