@@ -61,32 +61,30 @@ function DynamicForm(props) {
   return (
     <Form>
       <Form.Item {...formItemLayout} label="Nodes" required={true}>
-        <Form>
-          <Form.Item required={true}>
-            <Row gutter={12}>
-              <Col span={12}>
-                <Input
-                  placeholder="Node Name"
-                  value={pipeline.nodes[0].nodeName}
-                  onChange={s => {
-                    pipeline.nodes[0].nodeName = s.target.value;
-                    onChange(JSON.stringify(pipeline, null, 2));
-                  }}
-                />
-              </Col>
-              <Col span={12}>
-                <Input
-                  placeholder="Algorithm Name"
-                  value={pipeline.nodes[0].algorithmName}
-                  onChange={s => {
-                    pipeline.nodes[0].algorithmName = s.target.value;
-                    onChange(JSON.stringify(pipeline, null, 2));
-                  }}
-                />
-              </Col>
-            </Row>
-          </Form.Item>
-        </Form>
+        <Form.Item required={true}>
+          <Row gutter={12}>
+            <Col span={12}>
+              <Input
+                placeholder="Node Name"
+                value={pipeline.nodes[0].nodeName}
+                onChange={s => {
+                  pipeline.nodes[0].nodeName = s.target.value;
+                  onChange(JSON.stringify(pipeline, null, 2));
+                }}
+              />
+            </Col>
+            <Col span={12}>
+              <Input
+                placeholder="Algorithm Name"
+                value={pipeline.nodes[0].algorithmName}
+                onChange={s => {
+                  pipeline.nodes[0].algorithmName = s.target.value;
+                  onChange(JSON.stringify(pipeline, null, 2));
+                }}
+              />
+            </Col>
+          </Row>
+        </Form.Item>
         {formItems}
       </Form.Item>
       <Form.Item {...formItemLayoutWithOutLabel}>

@@ -197,7 +197,7 @@ const mapStateToProps = state => {
 
 LayoutInner.propTypes = {
   init: PropTypes.func.isRequired,
-  addPipe: PropTypes.func.isRequired
+  addPipe: PropTypes.func
 };
 
 export default compose(
