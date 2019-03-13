@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 import {
   Table,
   Card,
@@ -32,6 +33,7 @@ import {
 } from '../../../actions/storedPipes.action';
 import { addPipe } from '../../../actions/addPipe.action';
 import './StoredPipesTable.scss';
+import HKubeEditor from '../HKubeEditor.react';
 import HEditor from '../HEditor.react';
 import AddButton from '../../dumb/AddButton.react';
 import { RECORD_STATUS } from '../../../constants/colors';
@@ -44,14 +46,14 @@ class StoredPipesTable extends Component {
     this.props.init();
   }
 
-  renderColumns() { }
+  renderColumns() {}
 
   render() {
-    const { dataSource, dataStats } = this.props;
+    const { storedPipelines, dataStats, dataSource } = this.props;
 
     // Need to remove "nodes" key from each pipeline.
     const fixedDataSource = [];
-    dataSource.forEach(p => {
+    storedPipelines.forEach(p => {
       const pipe = JSON.parse(JSON.stringify(p));
       delete pipe.nodes;
       fixedDataSource.push(pipe);
@@ -62,14 +64,14 @@ class StoredPipesTable extends Component {
         title: 'WARNING Deleting Pipeline',
         content: `Are you sure you want to delete ${
           record.name
-          }? Deleting Pipeline will Stop-ALL related Jobs and Executions`,
+        }? Deleting Pipeline will Stop-ALL related Jobs and Executions`,
         okText: 'Confirm',
         okType: 'danger',
         cancelText: 'Cancel',
         onOk() {
           action(record.name);
         },
-        onCancel() { }
+        onCancel() {}
       });
     };
 
@@ -115,7 +117,7 @@ class StoredPipesTable extends Component {
       <div>
         <Table
           rowKey="name"
-          dataSource={dataSource.asMutable()}
+          dataSource={storedPipelines.asMutable()}
           pagination={{
             className: 'tablePagination',
             defaultCurrent: 1,
@@ -202,6 +204,7 @@ class StoredPipesTable extends Component {
                 return;
               }
 
+              // array flat one-liner
               const pipelineStats = [].concat(
                 ...[
                   ...dataStats
@@ -251,7 +254,7 @@ class StoredPipesTable extends Component {
                   <Col span={4}>
                     <HEditor
                       jsonTemplate={JSON.stringify(
-                        dataSource.find(p => p.name === record.name),
+                        storedPipelines.find(p => p.name === record.name),
                         null,
                         2
                       )}
@@ -279,9 +282,10 @@ class StoredPipesTable extends Component {
           />
         </Table>
         <Popover placement="topRight" title="Update algorithm" trigger="click">
-          <HEditor
+          <HKubeEditor
             jsonTemplate={JSON.stringify(template, null, 2)}
             styledButton={(onClick, isEditable = false) => <AddButton onVisible={onClick} />}
+            algorithms={dataSource.asMutable()}
             title={'Add Pipeline Editor'}
             okText={'Store Pipeline'}
             hintText={
@@ -301,6 +305,7 @@ class StoredPipesTable extends Component {
 StoredPipesTable.propTypes = {
   init: PropTypes.func.isRequired,
   dataSource: PropTypes.array.isRequired,
+  storedPipelines: PropTypes.array.isRequired,
   dataStats: PropTypes.array.isRequired,
   execStoredPipe: PropTypes.func.isRequired,
   deleteStoredPipeline: PropTypes.func.isRequired,
@@ -310,8 +315,18 @@ StoredPipesTable.propTypes = {
   addPipe: PropTypes.func.isRequired
 };
 
+const algorithmTable = state => state.algorithmTable.dataSource;
+const autoCompleteFilter = state => state.autoCompleteFilter.filter;
+
+const tableDataSelector = createSelector(
+  algorithmTable,
+  autoCompleteFilter,
+  algorithmTable => algorithmTable
+);
+
 const mapStateToProps = state => ({
-  dataSource: state.storedPipeline.dataSource,
+  dataSource: tableDataSelector(state),
+  storedPipelines: state.storedPipeline.dataSource,
   dataStats: state.storedPipeline.dataStats
 });
 

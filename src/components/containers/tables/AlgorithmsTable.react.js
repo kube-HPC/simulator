@@ -199,7 +199,7 @@ class AlgorithmTable extends Component {
       .map(a => a[0]);
 
     const AlgorithmInput = (
-      <div style={{ height: 'auto', width: '400px' }}>
+      <div>
         <Row style={{ marginBottom: 5 }}>
           <Input
             defaultValue={algoData.name}

@@ -6,6 +6,7 @@
     "node": true,
     "es6": true
   },
+  "plugins": ["react-hooks"],
   "parser": "babel-eslint",
   "parserOptions": {
     "sourceType": "module",
@@ -20,7 +21,9 @@
     "react/display-name": 1,
     "no-unused-vars": "warn",
     "no-console": 1,
-    "no-unexpected-multiline": "warn"
+    "no-unexpected-multiline": "warn",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   },
   "ecmaFeatures": {
     "modules": true,

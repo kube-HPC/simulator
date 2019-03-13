@@ -1,104 +1,136 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Modal, Button, Card, notification, Icon } from 'antd';
-
+import React, { useState } from 'react';
+import { Modal, Button, Card, notification, Icon, Row, Col, Input, Form, Divider } from 'antd';
 import { Paragraph } from '../style/Styled';
+import generateName from 'sillyname';
+import './HKubeEditor.scss';
+
 import JsonEditor from '../dumb/JsonEditor.react';
-import './HEditor.scss';
+import DynamicForm from './DynamicForm.react';
 
-class HEditor extends Component {
-  constructor(props) {
-    super(props);
-    this.userData = this.props.jsonTemplate;
-    this.isEditable = false;
-    this.state = { visible: false };
-  }
+export default function HKubeEditor(props) {
+  const [json, setJson] = useState(props.jsonTemplate);
+  const pipeline = JSON.parse(json);
+  const algorithms = props.algorithms.map(a => a.data.name);
 
-  onVisible = () => {
-    this.userData = this.isEditable ? this.userData : this.props.jsonTemplate;
-    this.setState({ visible: !this.state.visible });
-  };
-  showModal = () => {
-    this.onVisible();
+  let [isVisible, setVisible] = useState(true);
+  let [isEditable, setEditable] = useState(false);
+
+  const onReset = () => {
+    setEditable(false);
+    setJson(props.jsonTemplate);
   };
 
-  handleOk = () => {
+  const onOk = () => {
     try {
-      this.props.action(JSON.parse(this.userData));
-      this.isEditable = false;
+      props.action(JSON.parse(json));
+      setEditable(false);
     } catch (e) {
       notification.config({
         placement: 'bottomRight'
       });
       notification.open({
-        message: 'Hkube Editor Error',
+        message: 'HKube Editor Error',
         description: e.message,
         icon: <Icon type="warning" style={{ color: 'red' }} />
       });
     }
 
-    this.onVisible();
+    onVisible();
   };
 
-  handleCancel = () => {
-    this.onVisible();
+  const onVisible = () => {
+    setJson(isEditable ? json : props.jsonTemplate);
+    setVisible(!isVisible);
   };
 
-  handleReset = () => {
-    this.isEditable = false;
-    this.userData = this.props.jsonTemplate;
+  const onGenerate = () => {
+    const minimalPipeline = {
+      name: generateName().replace(' ', '-'),
+      nodes: [
+        {
+          nodeName: generateName(),
+          algorithmName: algorithms[Math.floor(Math.random() * algorithms.length)]
+        }
+      ]
+    };
+
+    setJson(JSON.stringify(minimalPipeline, null, 2));
   };
 
-  render() {
-    return (
-      <div>
-        {this.props.styledButton(this.showModal, this.isEditable)}
-        <Modal
-          className="modal"
-          title={this.props.title}
-          visible={this.state.visible}
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
-          footer={[
-            <Button key={1} type="primary" size="default" onClick={this.handleOk}>
-              {this.props.okText}
-            </Button>,
-            <Button key={2} onClick={this.handleReset}>
-              {' '}
-              Reset
-            </Button>,
-            <Button key={3} onClick={this.handleCancel}>
-              {' '}
-              Cancel
-            </Button>
-          ]}
-        >
-          <Card>
+  const onCancel = onVisible;
+
+  const formItemLayout = {
+    labelCol: { span: 3 },
+    wrapperCol: { span: 20 }
+  };
+
+  const formItemLayoutWithOutLabel = {
+    wrapperCol: {
+      xs: { span: 20, offset: 3 }
+    }
+  };
+
+  return (
+    <div>
+      {props.styledButton(() => setVisible(!isVisible))}
+      <Modal
+        visible={isVisible}
+        width={'60%'}
+        title={props.title}
+        onOk={onOk}
+        onCancel={onCancel}
+        footer={[
+          <Button key={1} type="primary" size="default" onClick={onOk}>
+            {props.okText}
+          </Button>,
+          <Button key={2} onClick={onReset}>
+            {' '}
+            Reset
+          </Button>,
+          <Button key={3} onClick={onGenerate}>
+            {' '}
+            Generate
+          </Button>,
+          <Button key={4} onClick={onCancel}>
+            {' '}
+            Cancel
+          </Button>
+        ]}
+      >
+        <Row>
+          <Col span={9}>
             <JsonEditor
-              jsonTemplate={this.userData}
+              jsonTemplate={json}
               pipe={newPipe => {
-                this.isEditable = true;
-                this.userData = newPipe;
+                setJson(newPipe);
+                setEditable(true);
               }}
             />
-          </Card>
-          <Paragraph>{this.props.hintText}</Paragraph>
-        </Modal>
-      </div>
-    );
-  }
+          </Col>
+          <Col span={1}>
+            <Divider type="vertical" className="divider" />
+          </Col>
+          <Col span={14}>
+            <Form.Item {...formItemLayout} label="Name" required={true}>
+              <Input
+                placeholder="Unique Identifier"
+                value={pipeline.name}
+                onChange={s => {
+                  pipeline.name = s.target.value;
+                  setJson(JSON.stringify(pipeline, null, 2));
+                }}
+              />
+            </Form.Item>
+            <DynamicForm
+              jsonRecord={json}
+              onChange={pipeline => setJson(pipeline)}
+              formItemLayout={formItemLayout}
+              formItemLayoutWithOutLabel={formItemLayoutWithOutLabel}
+            />
+          </Col>
+        </Row>
+        <Paragraph>{props.hintText}</Paragraph>
+      </Modal>
+    </div>
+  );
 }
-
-HEditor.propTypes = {
-  action: PropTypes.func.isRequired,
-  jsonTemplate: PropTypes.string.isRequired,
-  okText: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  styledButton: PropTypes.func.isRequired,
-  hintText: PropTypes.object
-};
-
-const mapStateToProps = state => state;
-
-export default connect(mapStateToProps)(HEditor);

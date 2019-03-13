@@ -23,8 +23,8 @@ const JsonEditor = ({ pipe, jsonTemplate }) => (
       mode="json"
       theme="github"
       name="json-editor"
-      fontSize={16}
-      showGutter={true}
+      fontSize={14}
+      showGutter={false}
       showPrintMargin={false}
       highlightActiveLine={true}
       value={jsonTemplate}
@@ -36,8 +36,8 @@ const JsonEditor = ({ pipe, jsonTemplate }) => (
         tabSize: 2
       }}
       editorProps={{ $blockScrolling: true }}
-      onChange={newPipe => pipe(newPipe)}
-      style={{ width: 'auto' }}
+      onChange={changedText => pipe(changedText)}
+      style={{ width: 'auto', height: '60vh', fontFamily: 'monospace' }}
     />
   </div>
 );
