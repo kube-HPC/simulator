@@ -12,7 +12,7 @@ export default function HKubeEditor(props) {
   const pipeline = JSON.parse(json);
   const algorithms = props.algorithms.map(a => a.data.name);
 
-  let [isVisible, setVisible] = useState(true);
+  let [isVisible, setVisible] = useState(false);
   let [isEditable, setEditable] = useState(false);
 
   const onReset = () => {
