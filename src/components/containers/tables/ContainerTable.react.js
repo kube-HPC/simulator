@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import Moment from 'react-moment';
 import PropTypes from 'prop-types';
 import { withState } from 'recompose';
+import humanizeDuration from 'humanize-duration';
 import { openModal } from '../../../actions/modal.action';
 import {
   init,
@@ -96,10 +97,11 @@ class ContainerTable extends Component {
         render: (text, record) => {
           return (
             <span>
-              {record.results ? (
-                <span>{record.results.timeTook + ' Seconds'}</span>
-              ) : (
-                  <Moment date={record.pipeline && record.pipeline.startTime} durationFromNow />
+              {record.results ?
+                (
+                  <span>{humanizeDuration(record.results.timeTook * 1000, { maxDecimalPoints: 2 })}</span>
+                ) : (
+                  <span>{humanizeDuration(Date.now() - (record.pipeline && record.pipeline.startTime), { maxDecimalPoints: 2 })}</span>
                 )}
             </span>
           );

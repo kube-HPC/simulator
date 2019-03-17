@@ -8,6 +8,7 @@ import { createSelector } from 'reselect';
 import ReactJson from 'react-json-view';
 import React, { Component } from 'react';
 import { withState } from 'recompose';
+import humanizeDuration from 'humanize-duration';
 import { openModal } from '../../../actions/modal.action';
 import { init, cancelBuild, rerunBuild } from '../../../actions/algorithmBuildsTable.action';
 import { RECORD_STATUS } from '../../../constants/colors';
@@ -140,10 +141,11 @@ class AlgorithmBuildsTable extends Component {
         render: (text, record) => {
           return (
             <span>
-              {record.endTime ? (
-                <Moment date={record.endTime} duration={record.startTime} />
-              ) : (
-                  <Moment date={record.startTime} durationFromNow />
+              {record.endTime ?
+                (
+                  <span>{humanizeDuration(record.endTime - record.startTime, { maxDecimalPoints: 2 })}</span>
+                ) : (
+                  <span>{humanizeDuration(Date.now() - record.startTime, { maxDecimalPoints: 2 })}</span>
                 )}
             </span>
           );

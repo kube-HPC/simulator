@@ -64,7 +64,7 @@ class AlgorithmInformation extends Component {
             }
           />
         </Tabs.TabPane>
-        <Tabs.TabPane tab="Input/Output" key="4">
+        <Tabs.TabPane tab="Info" key="4">
           <InputOutput payload={data && data.payload} />
         </Tabs.TabPane>
       </Tabs>
