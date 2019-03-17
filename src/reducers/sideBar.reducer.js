@@ -4,7 +4,7 @@ import actions from '../constants/actions';
 
 const initState = { visible: false, data: null };
 
-const inititalState = Immutable.from(initState);
+const initialState = Immutable.from(initState);
 
 export default handleActions(
   {
@@ -15,7 +15,7 @@ export default handleActions(
       return state.merge(payload);
     }
   },
-  inititalState
+  initialState
 );
 
 // export default (state = inititalState, action) => {

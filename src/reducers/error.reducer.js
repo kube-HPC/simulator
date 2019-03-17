@@ -8,7 +8,7 @@ export default handleActions(
   {
     [actions.ERROR](state, { type, payload, meta, error }) {
       return state.merge({
-        message: payload.message
+        message: payload
       });
     }
   },
