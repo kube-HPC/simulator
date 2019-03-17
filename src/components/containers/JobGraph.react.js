@@ -69,7 +69,7 @@ class JobGraph extends Component {
     super();
     this.network = null;
     this.events = {
-      select: () => {},
+      select: () => { },
       afterDrawing: () => {
         this.network.fit({
           animation: {
@@ -102,7 +102,9 @@ class JobGraph extends Component {
             batch: (nodeData.batchTasks && nodeData.batchTasks.slice(0, 10)) || [],
             input: nodeData.input,
             output: nodeData.output,
-            error: node.error
+            error: node.error,
+            startTime: nodeData.startTime,
+            endTime: nodeData.endTime
           }
         });
         this.props.getKubernetesLogsData(taskId);
@@ -111,9 +113,12 @@ class JobGraph extends Component {
   }
 
   formatNode(n) {
-    const node = {};
-    if (n.extra.batch) {
-      node.label = `${n.label}-${n.extra.batch}`;
+    const node = {
+      id: n.nodeName,
+      label: n.nodeName
+    };
+    if (n.extra && n.extra.batch) {
+      node.label = `${n.nodeName}-${n.extra.batch}`;
     }
     return { ...n, ...node };
   }

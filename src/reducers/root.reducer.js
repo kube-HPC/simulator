@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import layers from './layers.reducer';
 import containerTable from './conatainerTable.reducer';
 import workerTable from './workerTable.reducer';
 import driverTable from './driverTable.reducer';
@@ -19,7 +18,6 @@ import error from './error.reducer';
 
 const rootReducer = combineReducers({
   ui,
-  layers,
   containerTable,
   workerTable,
   driverTable,

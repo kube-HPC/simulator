@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import Moment from 'react-moment';
 import PropTypes from 'prop-types';
 import { withState } from 'recompose';
+import humanizeDuration from 'humanize-duration';
 import { openModal } from '../../../actions/modal.action';
 import {
   init,
@@ -16,17 +17,9 @@ import TabSwitcher from '../../dumb/TabSwitcher.react';
 import { getJaegerData } from '../../../actions/jaegerGetData.action';
 import { getKubernetesLogsData } from '../../../actions/kubernetesLog.action';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { RECORD_STATUS } from '../../../constants/colors';
 import './ContainerTable.scss';
 
-const RECORD_STATUS = {
-  active: '#2db7f5',
-  completed: '#87d068',
-  failed: '#f50',
-  stopped: '#ec8c16',
-  succeed: '#87d068',
-  creating: '#838383',
-  skipped: '#eeda13'
-};
 
 class ContainerTable extends Component {
   componentWillMount() {
@@ -104,11 +97,12 @@ class ContainerTable extends Component {
         render: (text, record) => {
           return (
             <span>
-              {record.results ? (
-                <span>{record.results.timeTook + ' Seconds'}</span>
-              ) : (
-                <Moment date={record.pipeline && record.pipeline.startTime} durationFromNow />
-              )}
+              {record.results ?
+                (
+                  <span>{humanizeDuration(record.results.timeTook * 1000, { maxDecimalPoints: 2 })}</span>
+                ) : (
+                  <span>{humanizeDuration(Date.now() - (record.pipeline && record.pipeline.startTime), { maxDecimalPoints: 2 })}</span>
+                )}
             </span>
           );
         }
@@ -122,10 +116,10 @@ class ContainerTable extends Component {
           let statuses =
             record.status.data && record.status.data.states
               ? Object.entries(record.status.data.states.asMutable()).map((s, i) => (
-                  <Tooltip key={i} placement="top" title={firstLetterUpperCase(s[0])}>
-                    <Tag color={RECORD_STATUS[s[0]] || 'magenta'}>{s[1]}</Tag>
-                  </Tooltip>
-                ))
+                <Tooltip key={i} placement="top" title={firstLetterUpperCase(s[0])}>
+                  <Tag color={RECORD_STATUS[s[0]] || 'magenta'}>{s[1]}</Tag>
+                </Tooltip>
+              ))
               : null;
           return <span>{statuses}</span>;
         }
@@ -177,13 +171,13 @@ class ContainerTable extends Component {
                 onClick={() => this.stopPipeline(record.key)}
               />
             ) : (
-              <Button
-                type="default"
-                shape="circle"
-                icon="redo"
-                onClick={() => this.rerunPipeline(record.pipeline)}
-              />
-            );
+                <Button
+                  type="default"
+                  shape="circle"
+                  icon="redo"
+                  onClick={() => this.rerunPipeline(record.pipeline)}
+                />
+              );
 
           const isDisabled = !(
             record.results &&
@@ -225,7 +219,7 @@ class ContainerTable extends Component {
     this.props.downloadStorageResults(path);
   }
 
-  renderColumns() {}
+  renderColumns() { }
 
   render() {
     const { dataSource } = this.props;

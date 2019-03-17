@@ -23,6 +23,9 @@ export const HCOLOR = {
 };
 
 export const RECORD_STATUS = {
+  bootstrap: '#87d068',
+  ready: '#87d068',
+  init: '#87d068',
   creating: '#838383',
   completed: '#87d068',
   active: '#2db7f5',

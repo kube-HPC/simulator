@@ -1,6 +1,6 @@
 {
   "name": "simulator",
-  "version": "1.1.88",
+  "version": "1.1.90",
   "private": true,
   "homepage": ".",
   "dependencies": {
@@ -16,6 +16,7 @@
     "dev": "^0.1.3",
     "file-saver": "^2.0.1",
     "http-proxy-middleware": "^0.19.1",
+    "humanize-duration": "^3.18.0",
     "jaeger-react-trace-component": "^1.0.16",
     "lodash": "^4.17.11",
     "moment": "^2.22.2",

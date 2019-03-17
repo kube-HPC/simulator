@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Card } from 'antd';
 import PropTypes from 'prop-types';
 import ReactJson from 'react-json-view';
+import humanizeDuration from 'humanize-duration';
 import { downloadStorageResults } from '../../actions/containerTable.action';
 
 class InputOutput extends Component {
@@ -35,7 +36,8 @@ class InputOutput extends Component {
           origInput: payload.origInput,
           input: b.input,
           output: b.output && b.output.storageInfo,
-          error: b.error
+          error: b.error,
+          duration: humanizeDuration(b.endTime - b.startTime)
         };
         return (
           <Card key={i}>
@@ -44,7 +46,7 @@ class InputOutput extends Component {
               src={src}
               name={false}
               iconStyle="square"
-              collapsed={1}
+              collapsed={2}
               onSelect={select => {
                 this.onSelect(select);
               }}
@@ -60,7 +62,8 @@ class InputOutput extends Component {
         origInput: payload.origInput,
         input: payload.input,
         output: payload.output && payload.output.storageInfo,
-        error: payload.error
+        error: payload.error,
+        duration: humanizeDuration(payload.endTime - payload.startTime)
       };
       items = (
         <Card>
@@ -68,7 +71,7 @@ class InputOutput extends Component {
             src={src}
             name={false}
             iconStyle="square"
-            collapsed={1}
+            collapsed={2}
             onSelect={select => {
               this.onSelect(select);
             }}
