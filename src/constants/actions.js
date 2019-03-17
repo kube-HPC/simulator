@@ -53,7 +53,8 @@ const actionType = {
   CRON_START: 'CRON_START',
   CRON_STOP: 'CRON_STOP',
   BUILD_STOP: 'BUILD_STOP',
-  BUILD_RERUN: 'CRON_STOP'
+  BUILD_RERUN: 'CRON_STOP',
+  ERROR: 'ERROR'
 };
 restHelper(actionType.GET_CONFIG);
 restHelper(actionType.ALGORITHM_ADD);

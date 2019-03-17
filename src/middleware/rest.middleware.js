@@ -10,6 +10,11 @@ const reject = (dispatch, payload, action) => {
     meta: action.meta,
     payload
   });
+  dispatch({
+    type: `ERROR`,
+    meta: action.meta,
+    payload
+  });
 };
 
 const pending = (dispatch, payload, action) => {
@@ -67,8 +72,8 @@ export const restMiddleware = ({ dispatch }) => next => action => {
           .then(data => {
             success(dispatch, data, action);
           })
-          .catch(error => {
-            console.log(error);
+          .catch(err => {
+            reject(dispatch, err, action);
           });
       })
       .catch(err => {
@@ -91,7 +96,6 @@ export const restMiddleware = ({ dispatch }) => next => action => {
       })
       .catch(err => {
         reject(dispatch, err, action);
-        console.error('get config error');
       });
 
     return next(action);

@@ -1,6 +1,7 @@
 import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
 import actions from '../constants/actions';
+
 const initState = {
   modalType: null,
   visible: false,
@@ -8,7 +9,8 @@ const initState = {
   command: null,
   sshInitData: null
 };
-const inititalState = Immutable.from(initState);
+
+const initialState = Immutable.from(initState);
 
 export default handleActions(
   {
@@ -19,10 +21,5 @@ export default handleActions(
       return state.merge(payload);
     }
   },
-  inititalState
+  initialState
 );
-
-// export default (state = inititalState, action) => {
-//   console.log(action.type);
-//   return state;
-// }

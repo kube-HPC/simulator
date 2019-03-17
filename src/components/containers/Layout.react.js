@@ -11,10 +11,9 @@ import DriverTable from './tables/DriverTable.react';
 import AlgorithmTable from './tables/AlgorithmsTable.react';
 import NodeStatistics from './NodeStatistics.react';
 import SideBar from './SideBarContainer.react';
-import { BackTop, Row, Col, Tag, Badge } from 'antd';
+import { BackTop, Row, Col, Tag, Alert } from 'antd';
 import TableAutoComplete from '../dumb/TableAutoComplete.react';
 import { init } from '../../actions/config.action.js';
-import { addPipe } from '../../actions/addPipe.action';
 import {
   HContent,
   HMenu,
@@ -62,11 +61,26 @@ const selectTable = props => {
   }
 };
 class LayoutInner extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.init();
   }
+
   render() {
     const { props } = this;
+
+    const showAlert = message => {
+      const alertComponent = (
+        <Alert
+          message={props.errorMessage}
+          type="error"
+          showIcon
+          className="alert"
+          closable={true}
+          description={'Description'}
+        />
+      );
+      return message ? [alertComponent] : [];
+    };
 
     return (
       <HLayout>
@@ -76,22 +90,19 @@ class LayoutInner extends React.Component {
             <Col span={4}>
               <Row gutter={3}>
                 <Col span={4}>
-                  {' '}
-                  <Logo />{' '}
+                  <Logo />
                 </Col>
                 <Col span={2}>
-                  {' '}
-                  <HeaderTitle>Hkube</HeaderTitle>{' '}
+                  <HeaderTitle>Hkube</HeaderTitle>
                 </Col>
               </Row>
             </Col>
             <Col>
-              {' '}
-              <TableAutoComplete />{' '}
+              <TableAutoComplete />
             </Col>
           </AlignRow>
         </LayoutHeader>
-
+        {showAlert(props.errorMessage)}
         <HLayout hasSider={true}>
           <HSider>
             <HMenu
@@ -191,13 +202,13 @@ const mapStateToProps = state => {
     algorithmBuildsCount: (state.algorithmBuildsTable.dataSource || []).length,
     pipelineCount: (state.storedPipeline.dataSource || []).length,
     workerCount: (state.workerTable.stats || { total: 0 }).total,
-    debugCount: (state.debugTable.dataSource || []).length
+    debugCount: (state.debugTable.dataSource || []).length,
+    errorMessage: state.error.message || ''
   };
 };
 
 LayoutInner.propTypes = {
-  init: PropTypes.func.isRequired,
-  addPipe: PropTypes.func
+  init: PropTypes.func.isRequired
 };
 
 export default compose(

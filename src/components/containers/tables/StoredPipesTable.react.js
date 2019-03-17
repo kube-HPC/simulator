@@ -75,30 +75,9 @@ class StoredPipesTable extends Component {
       });
     };
 
-    const revertCronTrigger = (
-      cronIsEnabled,
-      record,
-      cronExpr,
-      cronStart,
-      cronStop,
-      updateAction
-    ) => {
+    const revertCronTrigger = (cronIsEnabled, record, cronExpr, cronStart, cronStop) => {
       return () => {
         const pipelineName = record.name;
-        // const hasCronProperty =
-        //   !record.hasOwnProperty('triggers') ||
-        //   (record.hasOwnProperty('triggers') && !record.triggers.hasOwnProperty('cron'));
-
-        // if (hasCronProperty) {
-        //   record['triggers'] = {
-        //     cron: {
-        //       pattern: '0 * * * *',
-        //       enabled: true
-        //     },
-        //     ...record['triggers']
-        //   };
-        //   updateAction(record);
-        // }
         cronIsEnabled ? cronStop(pipelineName, cronExpr) : cronStart(pipelineName, cronExpr);
       };
     };
