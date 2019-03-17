@@ -75,24 +75,31 @@ class StoredPipesTable extends Component {
       });
     };
 
-    const revertCronTrigger = (record, cronStart, cronStop, updateAction) => {
+    const revertCronTrigger = (
+      cronIsEnabled,
+      record,
+      cronExpr,
+      cronStart,
+      cronStop,
+      updateAction
+    ) => {
       return () => {
         const pipelineName = record.name;
-        const hasCronProperty =
-          !record.hasOwnProperty('triggers') ||
-          (record.hasOwnProperty('triggers') && !record.triggers.hasOwnProperty('cron'));
+        // const hasCronProperty =
+        //   !record.hasOwnProperty('triggers') ||
+        //   (record.hasOwnProperty('triggers') && !record.triggers.hasOwnProperty('cron'));
 
-        if (hasCronProperty) {
-          record['triggers'] = {
-            cron: {
-              pattern: '0 * * * *',
-              enabled: true
-            },
-            ...record['triggers']
-          };
-          updateAction(record);
-        }
-        record.triggers.cron.enabled ? cronStop(pipelineName) : cronStart(pipelineName);
+        // if (hasCronProperty) {
+        //   record['triggers'] = {
+        //     cron: {
+        //       pattern: '0 * * * *',
+        //       enabled: true
+        //     },
+        //     ...record['triggers']
+        //   };
+        //   updateAction(record);
+        // }
+        cronIsEnabled ? cronStop(pipelineName, cronExpr) : cronStart(pipelineName, cronExpr);
       };
     };
 
@@ -160,7 +167,9 @@ class StoredPipesTable extends Component {
                     <Switch
                       checked={cronIsEnabled}
                       onChange={revertCronTrigger(
+                        cronIsEnabled,
                         JSON.parse(JSON.stringify(record)),
+                        cronExpr,
                         this.props.cronStart,
                         this.props.cronStop,
                         this.props.updateStoredPipeline
@@ -289,10 +298,10 @@ class StoredPipesTable extends Component {
             title={'Add Pipeline Editor'}
             okText={'Store Pipeline'}
             hintText={
-              <div>
+              <span>
                 {' '}
                 Hint: Type <strong>node</strong> for adding pipe-node.
-              </div>
+              </span>
             }
             action={this.props.addPipe}
           />
@@ -306,7 +315,7 @@ StoredPipesTable.propTypes = {
   init: PropTypes.func.isRequired,
   dataSource: PropTypes.array.isRequired,
   storedPipelines: PropTypes.array.isRequired,
-  dataStats: PropTypes.array.isRequired,
+  dataStats: PropTypes.array,
   execStoredPipe: PropTypes.func.isRequired,
   deleteStoredPipeline: PropTypes.func.isRequired,
   updateStoredPipeline: PropTypes.func.isRequired,
