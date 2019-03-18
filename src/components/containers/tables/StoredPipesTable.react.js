@@ -13,8 +13,8 @@ import {
   Switch,
   Input,
   Popover,
-  notification,
-  Badge
+  Badge,
+  message
 } from 'antd';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
@@ -88,14 +88,7 @@ class StoredPipesTable extends Component {
         pipeline.triggers.cron.pattern = pattern;
         updateStoredPipeline(pipeline);
       } catch (errorMessage) {
-        notification.config({
-          placement: 'bottomRight'
-        });
-        notification.open({
-          message: 'Cron Job Error',
-          description: errorMessage,
-          icon: <Icon type="warning" style={{ color: 'red' }} />
-        });
+        message.error(errorMessage);
       }
     };
 

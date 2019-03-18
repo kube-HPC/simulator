@@ -11,9 +11,9 @@ import DriverTable from './tables/DriverTable.react';
 import AlgorithmTable from './tables/AlgorithmsTable.react';
 import NodeStatistics from './NodeStatistics.react';
 import SideBar from './SideBarContainer.react';
-import { BackTop, Row, Col, Tag, Alert } from 'antd';
 import TableAutoComplete from '../dumb/TableAutoComplete.react';
 import { init } from '../../actions/config.action.js';
+import { BackTop, Row, Col, Tag, message } from 'antd';
 import {
   HContent,
   HMenu,
@@ -27,6 +27,7 @@ import {
 import SubMenu from 'antd/lib/menu/SubMenu';
 import './Layout.scss';
 import { isUndefined } from 'util';
+import { clearError } from '../../actions/error.action';
 
 const menuSelection = (i, props) => {
   if (i.key === 1) {
@@ -60,27 +61,31 @@ const selectTable = props => {
       return <ContainerTable />;
   }
 };
+
 class LayoutInner extends React.Component {
   componentDidMount() {
     this.props.init();
   }
 
+  componentDidUpdate() {
+    // TODO: clear errors after update
+    // const errorObj = this.props.errorMessage;
+    // if (errorObj) {
+    //   if (typeof errorObj === 'string') {
+    //     message.error(errorObj);
+    //   } else if (errorObj.response && errorObj.response.data && errorObj.response.data.error) {
+    //     const error = errorObj.response.data.error;
+    //     message.error(`Error Code: ${error.code}, ${error.message}`);
+    //   } else if (errorObj.message) {
+    //     message.error(errorObj.message);
+    //   } else {
+    //     message.error(JSON.stringify(errorObj, null, 2));
+    //   }
+    // }
+  }
+
   render() {
     const { props } = this;
-
-    const showAlert = message => {
-      const alertComponent = (
-        <Alert
-          message={props.errorMessage}
-          type="error"
-          showIcon
-          className="alert"
-          closable={true}
-          description={'Description'}
-        />
-      );
-      return message ? [alertComponent] : [];
-    };
 
     return (
       <HLayout>
@@ -102,7 +107,6 @@ class LayoutInner extends React.Component {
             </Col>
           </AlignRow>
         </LayoutHeader>
-        {showAlert(props.errorMessage)}
         <HLayout hasSider={true}>
           <HSider>
             <HMenu
@@ -203,7 +207,7 @@ const mapStateToProps = state => {
     pipelineCount: (state.storedPipeline.dataSource || []).length,
     workerCount: (state.workerTable.stats || { total: 0 }).total,
     debugCount: (state.debugTable.dataSource || []).length,
-    errorMessage: state.error.message || ''
+    errorMessage: state.error.message
   };
 };
 
@@ -214,7 +218,7 @@ LayoutInner.propTypes = {
 export default compose(
   connect(
     mapStateToProps,
-    { init }
+    { init, clearError }
   ),
   withState('isTableVisible', 'onMenuSelected', {
     visible: true,
