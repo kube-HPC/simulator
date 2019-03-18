@@ -65,19 +65,12 @@ export const restMiddleware = ({ dispatch }) => next => action => {
       return next(action);
     }
     pending(dispatch, 'pending', action);
-    fetch(`${url}${action.payload.url}`)
+    axios.get(`${url}${action.payload.url}`)
       .then(res => {
-        res
-          .json()
-          .then(data => {
-            success(dispatch, data, action);
-          })
-          .catch(err => {
-            reject(dispatch, err, action);
-          });
+        success(dispatch, res.data, action);
       })
       .catch(err => {
-        reject(dispatch, err, action);
+        reject(dispatch, err.response.data.error, action);
       });
 
     return next(action);
@@ -87,15 +80,12 @@ export const restMiddleware = ({ dispatch }) => next => action => {
     }
     pending(dispatch, 'pending', action);
     axios
-      .post(`${url}/${action.payload.url}`, { ...action.payload.body })
+      .post(`${url}/${action.payload.url}`, action.payload.body)
       .then(res => {
-        res.json().then(data => {
-          console.log(data);
-          success(dispatch, data, action);
-        });
+        success(dispatch, res.data, action);
       })
       .catch(err => {
-        reject(dispatch, err, action);
+        reject(dispatch, err.response.data.error, action);
       });
 
     return next(action);
@@ -107,12 +97,10 @@ export const restMiddleware = ({ dispatch }) => next => action => {
     axios
       .post(`${url}/${action.payload.url}`, action.payload.formData)
       .then(res => {
-        res.json().then(data => {
-          success(dispatch, data, action);
-        });
+        success(dispatch, res.data, action);
       })
       .catch(err => {
-        reject(dispatch, err, action);
+        reject(dispatch, err.response.data.error, action);
       });
 
     return next(action);
@@ -122,14 +110,12 @@ export const restMiddleware = ({ dispatch }) => next => action => {
     }
     pending(dispatch, 'pending', action);
     axios
-      .put(`${url}/${action.payload.url}`, { ...action.payload.body })
+      .put(`${url}/${action.payload.url}`, action.payload.body)
       .then(res => {
-        res.json().then(data => {
-          success(dispatch, data, action);
-        });
+        success(dispatch, res.data, action);
       })
       .catch(err => {
-        reject(dispatch, err, action);
+        reject(dispatch, err.response.data.error, action);
       });
 
     return next(action);
@@ -143,12 +129,10 @@ export const restMiddleware = ({ dispatch }) => next => action => {
         data: action.payload.body
       })
       .then(res => {
-        res.json().then(data => {
-          success(dispatch, data, action);
-        });
+        success(dispatch, res.data, action);
       })
       .catch(err => {
-        reject(dispatch, err, action);
+        reject(dispatch, err.response.data.error, action);
       });
 
     return next(action);
@@ -167,7 +151,7 @@ export const restMiddleware = ({ dispatch }) => next => action => {
         success(dispatch, res.data, action);
       })
       .catch(err => {
-        reject(dispatch, err, action);
+        reject(dispatch, err.response.data.error, action);
       });
 
     return next(action);
