@@ -98,11 +98,11 @@ class JobGraph extends Component {
             algorithmName: nodeData.algorithmName,
             jobId: this.props.graph.jobId,
             nodeName,
-            origInput: node.input,
+            origInput: node && node.input,
             batch: (nodeData.batchTasks && nodeData.batchTasks.slice(0, 10)) || [],
             input: nodeData.input,
             output: nodeData.output,
-            error: node.error,
+            error: node && node.error,
             startTime: nodeData.startTime,
             endTime: nodeData.endTime
           }
