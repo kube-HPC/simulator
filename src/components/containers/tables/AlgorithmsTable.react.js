@@ -237,29 +237,6 @@ class AlgorithmTable extends Component {
               marginRight: '3%'
             }}
           >
-            Env
-          </span>
-          <Select
-            defaultValue={algoData.env}
-            value={algoData.env}
-            style={{ width: '60%' }}
-            onChange={v => this.setState(state => (state.algoToAdd.env = v))}
-          >
-            <Option value="python">python</Option>
-            <Option value="nodejs">nodejs</Option>
-            <Option value="jvm">jvm</Option>
-          </Select>
-        </Row>
-        <Row style={{ marginBottom: 5 }}>
-          <span
-            style={{
-              fontSize: '12px',
-              fontWeight: 'lighter',
-              fontFamily: 'monospace',
-              letterSpacing: 'normal',
-              marginRight: '3%'
-            }}
-          >
             CPU Usage:
           </span>
           <InputNumber
@@ -362,6 +339,45 @@ class AlgorithmTable extends Component {
             defaultValue={algoData.minHotWorkers}
             onChange={v => this.setState(state => (state.algoToAdd.minHotWorkers = v))}
             style={{ width: 50 }}
+          />
+        </Row>
+        <Row style={{ marginBottom: 5 }}>
+          <span
+            style={{
+              fontSize: '12px',
+              fontWeight: 'lighter',
+              fontFamily: 'monospace',
+              letterSpacing: 'normal',
+              marginRight: '3%'
+            }}
+          >
+            Env
+          </span>
+          <Select
+            defaultValue={algoData.env}
+            value={algoData.env}
+            style={{ width: '60%' }}
+            onChange={v => this.setState(state => (state.algoToAdd.env = v))}
+          >
+            <Option value="python">python</Option>
+            <Option value="nodejs">nodejs</Option>
+            <Option value="jvm">jvm</Option>
+          </Select>
+        </Row>
+        <Row style={{ marginBottom: 5 }}>
+          <Input
+            defaultValue={algoData.entryPoint}
+            value={algoData.entryPoint}
+            onChange={e =>
+              this.setState({
+                algoToAdd: {
+                  ...this.state.algoToAdd,
+                  entryPoint: e.target.value
+                }
+              })
+            }
+            prefix={<Icon type="login" style={{ color: 'rgba(0,0,0,.25)' }} />}
+            placeholder="Insert entry point"
           />
         </Row>
         <Row style={{ marginBottom: 5 }}>

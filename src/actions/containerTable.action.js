@@ -10,21 +10,18 @@ export const init = () => ({
 });
 
 export const execRawPipeline = nominalPipeline => {
-  const { name, flowInputOrig, options, webhooks, priority } = nominalPipeline;
+  const { jobId, flowInputOrig, flowInput, startTime, lastRunResult, ...rest } = nominalPipeline;
   let pipeline = {
-    name,
     flowInput: flowInputOrig,
-    options,
-    webhooks,
-    priority
+    ...rest
   };
 
   let action = {
     type: actions.REST_REQ_POST,
     payload: {
-      url: 'exec/stored',
-      body: { pipeline },
-      actionType: actions.EXEC_STORED_PIPE
+      url: 'exec/raw',
+      body: pipeline,
+      actionType: actions.EXEC_RAW_PIPELINE
     }
   };
   return action;

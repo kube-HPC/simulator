@@ -7,7 +7,7 @@ import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withState } from 'recompose';
-import { RECORD_STATUS } from '../../../constants/colors';
+import { STATUS } from '../../../constants/colors';
 import './DebugTable.scss';
 
 class WorkerTable extends Component {
@@ -50,7 +50,7 @@ class WorkerTable extends Component {
         key: 'driverStatus',
         render: (text, record) => (
           <span>
-            <Tag color={RECORD_STATUS[record.data.driverStatus]}> {record.data.driverStatus}</Tag>
+            <Tag color={STATUS[record.data.driverStatus]}> {record.data.driverStatus}</Tag>
           </span>
         ),
         sorter: (a, b) => sorter(a.data.driverStatus, b.data.driverStatus)
@@ -62,7 +62,7 @@ class WorkerTable extends Component {
         key: 'jobStatus',
         render: (text, record) => (
           <span>
-            <Tag color={RECORD_STATUS[record.data.jobStatus]}> {record.data.jobStatus}</Tag>
+            <Tag color={STATUS[record.data.jobStatus]}> {record.data.jobStatus}</Tag>
           </span>
         ),
         sorter: (a, b) => sorter(a.data.jobStatus, b.data.jobStatus)

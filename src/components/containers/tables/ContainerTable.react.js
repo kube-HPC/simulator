@@ -17,7 +17,7 @@ import TabSwitcher from '../../dumb/TabSwitcher.react';
 import { getJaegerData } from '../../../actions/jaegerGetData.action';
 import { getKubernetesLogsData } from '../../../actions/kubernetesLog.action';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { RECORD_STATUS } from '../../../constants/colors';
+import { STATUS, PIPELINE_STATUS, PRIORITY } from '../../../constants/colors';
 import './ContainerTable.scss';
 
 
@@ -34,6 +34,15 @@ class ContainerTable extends Component {
       tempB = b || '';
       return tempA.localeCompare(tempB);
     };
+
+    const intSorter = (a, b) => {
+      return a - b
+    };
+
+    const getStatusFilter = () => {
+      return Object.keys(PIPELINE_STATUS).map(k => ({ text: firstLetterUpperCase(k), value: k }));
+    };
+
     this.columns = [
       {
         title: 'Job ID',
@@ -54,32 +63,36 @@ class ContainerTable extends Component {
         )
       },
       {
-        title: 'Pipeline Name',
+        title: 'Pipeline',
         dataIndex: 'status.pipeline',
         key: 'pipeline',
         width: '10%',
-        onFilter: (value, record) => record.key.includes(value),
         sorter: (a, b) => sorter(a.key, b.key)
       },
       {
         title: 'Status',
         dataIndex: 'status.status',
-        width: '5%',
+        width: '10%',
         key: 'status',
         render: (text, record) => (
           <span>
-            <Tag color={RECORD_STATUS[record.status && record.status.status]}>
+            <Tag color={STATUS[record.status && record.status.status]}>
               {firstLetterUpperCase(record.status && record.status.status)}
             </Tag>
           </span>
         ),
-        sorter: (a, b) => sorter(a.status.status, b.status.status)
+        sorter: (a, b) => sorter(a.status.status, b.status.status),
+        filterMultiple: true,
+        filters: getStatusFilter(),
+        onFilter: (value, record) => {
+          return record.status.status === value
+        }
       },
       {
         title: 'Start time',
         dataIndex: 'status.timestamp',
         key: 'Start timestamp',
-        width: '15%',
+        width: '10%',
         sorter: (a, b) => sorter(a.timestamp, b.timestamp),
         render: (text, record) => (
           <span>
@@ -108,7 +121,7 @@ class ContainerTable extends Component {
         }
       },
       {
-        title: 'Description',
+        title: 'Nodes',
         dataIndex: 'status.data.details',
         key: 'details',
         width: '10%',
@@ -117,11 +130,25 @@ class ContainerTable extends Component {
             record.status.data && record.status.data.states
               ? Object.entries(record.status.data.states.asMutable()).map((s, i) => (
                 <Tooltip key={i} placement="top" title={firstLetterUpperCase(s[0])}>
-                  <Tag color={RECORD_STATUS[s[0]] || 'magenta'}>{s[1]}</Tag>
+                  <Tag color={STATUS[s[0]] || 'magenta'}>{s[1]}</Tag>
                 </Tooltip>
               ))
               : null;
           return <span>{statuses}</span>;
+        }
+      },
+      {
+        title: 'Priority',
+        dataIndex: 'pipeline.priority',
+        key: 'priority',
+        width: '5%',
+        sorter: (a, b) => intSorter(a.pipeline.priority, b.pipeline.priority),
+        render: (text, record) => {
+          return (
+            <Tooltip placement="top" title={PRIORITY[record.pipeline.priority].name}>
+              <Tag color={PRIORITY[record.pipeline.priority].color}>{PRIORITY[record.pipeline.priority].name}</Tag>
+            </Tooltip>
+          )
         }
       },
       {
@@ -163,20 +190,24 @@ class ContainerTable extends Component {
         width: '10%',
         render: (text, record) => {
           const stopAction =
-            record.status.status === 'active' ? (
-              <Button
-                type="danger"
-                shape="circle"
-                icon="close"
-                onClick={() => this.stopPipeline(record.key)}
-              />
-            ) : (
+            record.status.status === 'active' || record.status.status === 'pending' ? (
+              <Tooltip placement="top" title={'Stop Pipeline'}>
                 <Button
-                  type="default"
+                  type="danger"
                   shape="circle"
-                  icon="redo"
-                  onClick={() => this.rerunPipeline(record.pipeline)}
+                  icon="close"
+                  onClick={() => this.stopPipeline(record.key)}
                 />
+              </Tooltip>
+            ) : (
+                <Tooltip placement="top" title={'Re-Run'}>
+                  <Button
+                    type="default"
+                    shape="circle"
+                    icon="redo"
+                    onClick={() => this.rerunPipeline(record.pipeline)}
+                  />
+                </Tooltip>
               );
 
           const isDisabled = !(

@@ -11,7 +11,7 @@ import defaultWorkerData from '../../stubs/worker-default-data.json';
 
 import './WorkerTable.scss';
 
-const RECORD_STATUS = {
+const STATUS = {
   bootstrap: '#2db7f5',
   ready: '#87d068',
   init: '#eeda13',
@@ -59,12 +59,12 @@ class WorkerTable extends Component {
         key: 'workerStatus',
         render: (text, record) => (
           <span>
-            <Tag color={RECORD_STATUS[record.data.workerStatus]}>
+            <Tag color={STATUS[record.data.workerStatus]}>
               {' '}
               {undefinedStateFilter(record.data.workerStatus)}
             </Tag>
             {/* {record.data.hotWorker?<Tag color={'orange'} >hot</Tag>:null} */}
-            <Tag color={RECORD_STATUS[record.data.jobStatus]}>
+            <Tag color={STATUS[record.data.jobStatus]}>
               {' '}
               {'job ' + undefinedStateFilter(record.data.jobStatus)}
             </Tag>

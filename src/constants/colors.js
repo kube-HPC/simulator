@@ -22,7 +22,8 @@ export const HCOLOR = {
   content: COLOR.white
 };
 
-export const RECORD_STATUS = {
+export const STATUS = {
+  pending: '#838383',
   bootstrap: '#87d068',
   ready: '#87d068',
   init: '#87d068',
@@ -33,4 +34,22 @@ export const RECORD_STATUS = {
   failed: '#f50',
   succeed: '#87d068',
   skipped: '#eeda13'
+};
+
+export const PIPELINE_STATUS = {
+  pending: '#838383',
+  active: '#2db7f5',
+  completed: '#87d068',
+  failed: '#f50',
+  stopped: '#ec8c16',
+  stopping: '#838383',
+  recovering: '#838383'
+};
+
+export const PRIORITY = {
+  1: { color: '#e74c3c', name: 'Highest' },
+  2: { color: '#f50', name: 'High' },
+  3: { color: '#ec8c16', name: 'Medium' },
+  4: { color: '#87d068', name: 'Low' },
+  5: { color: '#2db7f5', name: 'Lowest' }
 };

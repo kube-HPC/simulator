@@ -36,7 +36,7 @@ import './StoredPipesTable.scss';
 import HKubeEditor from '../HKubeEditor.react';
 import HEditor from '../HEditor.react';
 import AddButton from '../../dumb/AddButton.react';
-import { RECORD_STATUS } from '../../../constants/colors';
+import { STATUS } from '../../../constants/colors';
 import { ReactComponent as PlayIconSvg } from '../../../images/play-icon.svg';
 import template from '../../stubs/json-object.json';
 
@@ -46,7 +46,7 @@ class StoredPipesTable extends Component {
     this.props.init();
   }
 
-  renderColumns() {}
+  renderColumns() { }
 
   render() {
     const { storedPipelines, dataStats, dataSource } = this.props;
@@ -64,14 +64,14 @@ class StoredPipesTable extends Component {
         title: 'WARNING Deleting Pipeline',
         content: `Are you sure you want to delete ${
           record.name
-        }? Deleting Pipeline will Stop-ALL related Jobs and Executions`,
+          }? Deleting Pipeline will Stop-ALL related Jobs and Executions`,
         okText: 'Confirm',
         okType: 'danger',
         cancelText: 'Cancel',
         onOk() {
           action(record.name);
         },
-        onCancel() {}
+        onCancel() { }
       });
     };
 
@@ -199,7 +199,7 @@ class StoredPipesTable extends Component {
 
               const out = pipelineStats.map((s, i) => (
                 <Tooltip key={i} placement="top" title={firstLetterUpperCase(s[0])}>
-                  <Tag color={RECORD_STATUS[s[0]]}>{[s[1]]}</Tag>
+                  <Tag color={STATUS[s[0]]}>{[s[1]]}</Tag>
                 </Tooltip>
               ));
 
