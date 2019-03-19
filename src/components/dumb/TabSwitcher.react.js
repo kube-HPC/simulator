@@ -4,7 +4,7 @@ import { Tabs, Card } from 'antd';
 import ReactJson from 'react-json-view';
 import JobGraph from '../containers/JobGraph.react';
 import Trace from 'jaeger-react-trace-component';
-
+import MDEditor from "../containers/MDEditor.react";
 class TabSwitcher extends Component {
   constructor() {
     super();
@@ -30,6 +30,7 @@ class TabSwitcher extends Component {
         </Tabs.TabPane>
         <Tabs.TabPane tab="JSON" key="3">
           <Card>
+            <MDEditor/>
             <ReactJson src={record.record} displayDataTypes={false} displayObjectSize={false} />
           </Card>
         </Tabs.TabPane>

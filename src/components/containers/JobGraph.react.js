@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { sideBarOpen, sideBarClose } from "../../actions/sideBar.action";
 import { getKubernetesLogsData } from "../../actions/kubernetesLog.action";
+import sideBarTypes from "../../constants/sideBarTypes";
 const options = {
   physics: {
     enabled: false
@@ -91,7 +92,9 @@ class JobGraph extends Component {
         const nodeData = this.network.body.data.nodes._data[params.nodes[0]];
         const taskId = nodeData.taskId ? nodeData.taskId : nodeData.batchTasks && nodeData.batchTasks[0].taskId;
         this.props.sideBarOpen({
+          
           payload: {
+            type: sideBarTypes.PIPELINE,
             taskId,
             algorithmName: nodeData.algorithmName,
             jobId: this.props.graph.jobId,

@@ -7,6 +7,7 @@ const reject = (dispatch, payload, action) => {
     meta: action.meta,
     payload
   });
+  
 };
 
 const pending = (dispatch, payload, action) => {

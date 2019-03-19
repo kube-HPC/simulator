@@ -6,13 +6,15 @@ import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import { withState } from 'recompose';
 import { openModal } from '../../../actions/modal.action';
+import { getAlgorithmReadme } from '../../../actions/readme.action';
 import { init, storeAlgorithm, deleteAlgorithmFromStore } from '../../../actions/algorithmTable.action';
 import HEditor from '../HEditor.react';
-
+import AlgorithmTabSwitcher from "../../dumb/AlgorithmTabSwitcher";
 import algorithmObjectTemplate from '../../stubs/algorithm-object.json';
 import AddButton from '../../dumb/AddButton.react';
 import './AlgorithmsTable.scss'
 class AlgorithmTable extends Component {
+
 
   componentWillMount() {
     this.props.init();
@@ -214,7 +216,7 @@ class AlgorithmTable extends Component {
       </div>
     );
 
-    const { dataSource } = this.props;
+    const { dataSource,algorithmReadme } = this.props;
     return (
       <div>
         <Table
@@ -222,10 +224,13 @@ class AlgorithmTable extends Component {
           dataSource={dataSource.asMutable()}
           pagination={{ className: "tablePagination", defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true}}
           locale={{ emptyText: 'no data' }}
+          onExpand={(expanded, record) => {
+            if (expanded) {
+              this.props.getAlgorithmReadme(record.key)
+
+            }}}
           expandedRowRender={(record) => (
-            <Card title="JSON">
-              <ReactJson src={record}/>
-            </Card>
+            <AlgorithmTabSwitcher algorithmDetails={record} readme={algorithmReadme&&algorithmReadme[record.key]&&algorithmReadme[record.key].readme}/>
           )}/>
         <Popover
           placement="topRight"
@@ -252,16 +257,19 @@ const tableDataSelector = createSelector(
 AlgorithmTable.propTypes = {
   dataSource: PropTypes.array.isRequired,
   init: PropTypes.func.isRequired,
+  getAlgorithmReadme: PropTypes.func.isRequired,
   storeAlgorithm: PropTypes.func.isRequired,
-  deleteAlgorithmFromStore: PropTypes.func.isRequired
+  deleteAlgorithmFromStore: PropTypes.func.isRequired,
+  algorithmReadme:PropTypes.Object
 };
 
 const mapStateToProps = (state) => ({
   dataSource: tableDataSelector(state),
   scriptsPath: state.serverSelection.currentSelection.scriptsPath,
-  sshUser: state.serverSelection.currentSelection.user
+  sshUser: state.serverSelection.currentSelection.user,
+  algorithmReadme:state.algorithmReadme
 });
 
-export default connect(mapStateToProps, { openModal, init, storeAlgorithm, deleteAlgorithmFromStore })(
+export default connect(mapStateToProps, { openModal, init, storeAlgorithm, deleteAlgorithmFromStore,getAlgorithmReadme })(
   withState('isVisible', 'onPopoverClickVisible', { visible: false, podName: '' })(AlgorithmTable)
 );

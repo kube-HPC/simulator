@@ -15,4 +15,5 @@ export default handleActions({
     return state.setIn([Object.keys(payload)[0]],payload);
   }
 
+
 }, inititalState);

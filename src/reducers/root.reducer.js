@@ -14,6 +14,9 @@ import storedPipeline from './storedPipeline.reducer';
 import jaeger from './jaegerData.reducer';
 import kubernetesLogs from './kubernetesLogs.reducer';
 import nodeStatistics from './nodeStatistics.reducer';
+import pipelineReadme from "./pipelineReadme.reducer";
+import algorithmReadme from "./algorithmReadme.reducer";
+
 const rootReducer = combineReducers({
   ui,
   layers,
@@ -29,7 +32,10 @@ const rootReducer = combineReducers({
   storedPipeline,
   jaeger,
   kubernetesLogs,
-  nodeStatistics
+  nodeStatistics,
+  pipelineReadme,
+  algorithmReadme,
+ 
 });
 export default rootReducer;
 
