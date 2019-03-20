@@ -1,7 +1,6 @@
 import actions from '../constants/actions';
 import topics from '../constants/topics';
 
-
 export const init = () => ({
   type: actions.SOCKET_INIT,
   payload: {
@@ -10,16 +9,16 @@ export const init = () => ({
   }
 });
 
-export const execStoredPipe = (pipeline) => ({
+export const execStoredPipe = pipeline => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: 'exec/stored',
-    body: { pipeline },
+    body: pipeline,
     actionType: actions.EXEC_STORED_PIPE
   }
 });
 
-export const deleteStoredPipeline = (pipelineName) => ({
+export const deleteStoredPipeline = pipelineName => ({
   type: actions.REST_REQ_DELETE,
   payload: {
     url: 'store/pipelines',
@@ -28,11 +27,29 @@ export const deleteStoredPipeline = (pipelineName) => ({
   }
 });
 
-export const updateStoredPipeline = (pipeline) => ({
+export const updateStoredPipeline = pipeline => ({
   type: actions.REST_REQ_PUT,
   payload: {
     url: 'store/pipelines',
-    body: { pipeline },
+    body: pipeline,
     actionType: actions.UPDATE_STORED_PIPELINE
+  }
+});
+
+export const cronStart = (name, pattern) => ({
+  type: actions.REST_REQ_POST,
+  payload: {
+    url: 'cron/start',
+    body: { name, pattern },
+    actionType: actions.CRON_START
+  }
+});
+
+export const cronStop = (name, pattern) => ({
+  type: actions.REST_REQ_POST,
+  payload: {
+    url: 'cron/stop',
+    body: { name, pattern },
+    actionType: actions.CRON_STOP
   }
 });

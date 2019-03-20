@@ -13,10 +13,15 @@ export const openModal = (modalType, data, commands, sshInitData) => {
   };
 };
 
-
 export const closeModal = () => ({
   type: actions.CLOSE_MODAL,
-  payload: { modalType: null, visible: false, data: null, command: null, sshInitData: null }
+  payload: {
+    modalType: null,
+    visible: false,
+    data: null,
+    command: null,
+    sshInitData: null
+  }
 });
 
 // WEBPACK FOOTER //

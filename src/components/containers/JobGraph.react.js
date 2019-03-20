@@ -41,9 +41,9 @@ const options = {
     length: 200,
     smooth: {
       enabled: true,
-      type: "cubicBezier",
+      type: 'cubicBezier',
       roundness: 0.7
-    },
+    }
   },
   groups: {
     batchCompleted: {
@@ -65,9 +65,7 @@ const options = {
   }
 };
 
-
 class JobGraph extends Component {
-
   constructor() {
     super();
     this.network = null;
@@ -87,10 +85,14 @@ class JobGraph extends Component {
 
   initNetworkInstance(network) {
     this.network = network;
-    this.network.on("click", (params) => {
+    this.network.on('click', params => {
       if (params && params.nodes[0]) {
-        const nodeData = this.network.body.data.nodes._data[params.nodes[0]];
-        const taskId = nodeData.taskId ? nodeData.taskId : nodeData.batchTasks && nodeData.batchTasks[0].taskId;
+        const nodeName = params.nodes[0];
+        const nodeData = this.network.body.data.nodes._data[nodeName];
+        const node = this.props.pipeline.nodes.find(n => n.nodeName === nodeName);
+        const taskId = nodeData.taskId
+          ? nodeData.taskId
+          : nodeData.batchTasks && nodeData.batchTasks[0].taskId;
         this.props.sideBarOpen({
           
           payload: {
@@ -98,20 +100,28 @@ class JobGraph extends Component {
             taskId,
             algorithmName: nodeData.algorithmName,
             jobId: this.props.graph.jobId,
-            nodeName: params.nodes[0],
-            batch: nodeData.batchTasks || []
+            nodeName,
+            origInput: node && node.input,
+            batch: (nodeData.batchTasks && nodeData.batchTasks.slice(0, 10)) || [],
+            input: nodeData.input,
+            output: nodeData.output,
+            error: node && node.error,
+            startTime: nodeData.startTime,
+            endTime: nodeData.endTime
           }
         });
-        //   alert(this.network.body.data.nodes._data[params.nodes[0]].taskId?this.network.body.data.nodes._data[params.nodes[0]].taskId:this.network.body.data.nodes._data[params.nodes[0]].batchTasks[0].taskId); 
         this.props.getKubernetesLogsData(taskId);
       }
     });
   }
 
   formatNode(n) {
-    const node = {};
-    if (n.extra.batch) {
-      node.label = `${n.label}-${n.extra.batch}`;
+    const node = {
+      id: n.nodeName,
+      label: n.nodeName
+    };
+    if (n.extra && n.extra.batch) {
+      node.label = `${n.nodeName}-${n.extra.batch}`;
     }
     return { ...n, ...node };
   }
@@ -128,22 +138,30 @@ class JobGraph extends Component {
 
   render() {
     if (!this.props.graph) {
-      return (<div style={{ height: '600px' }}>
-        <div>Graph is not available</div>
-      </div>);
+      return (
+        <div style={{ height: '600px' }}>
+          <div>Graph is not available</div>
+        </div>
+      );
     }
     const { nodes, edges } = this.props.graph;
     const adaptedGraph = {
       edges: [],
       nodes: []
-
     };
-    nodes && nodes.forEach((n) => adaptedGraph.nodes.push(this.formatNode(n)));
-    edges && edges.forEach((e) => adaptedGraph.edges.push(this.formatEdge(e)));
+    nodes && nodes.forEach(n => adaptedGraph.nodes.push(this.formatNode(n)));
+    edges && edges.forEach(e => adaptedGraph.edges.push(this.formatEdge(e)));
 
-    return (<div style={{ height: '600px' }}>
-      <Graph graph={adaptedGraph} options={options} events={this.events} getNetwork={this._initNetworkInstance} />
-    </div>);
+    return (
+      <div style={{ height: '600px' }}>
+        <Graph
+          graph={adaptedGraph}
+          options={options}
+          events={this.events}
+          getNetwork={this._initNetworkInstance}
+        />
+      </div>
+    );
   }
 }
 
@@ -151,11 +169,13 @@ JobGraph.propTypes = {
   sideBarOpen: PropTypes.func.isRequired,
   getKubernetesLogsData: PropTypes.func.isRequired,
   graph: PropTypes.object,
-  jobId: PropTypes.object
+  jobId: PropTypes.object,
+  pipeline: PropTypes.object
 };
 
-const mapStateToProps = (state) => state;
+const mapStateToProps = state => state;
 
-export default connect(mapStateToProps, { sideBarOpen, sideBarClose, getKubernetesLogsData })(JobGraph);
-
-
+export default connect(
+  mapStateToProps,
+  { sideBarOpen, sideBarClose, getKubernetesLogsData }
+)(JobGraph);

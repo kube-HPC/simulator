@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import Sidebar from "react-sidebar";
+import React, { Component } from 'react';
+import Sidebar from 'react-sidebar';
 import { connect } from 'react-redux';
 import AlgorithmInformation from "./AlgorithmInformation.react";
 import MDEditor from "./MDEditor.react";

@@ -260,7 +260,7 @@ AlgorithmTable.propTypes = {
   getAlgorithmReadme: PropTypes.func.isRequired,
   storeAlgorithm: PropTypes.func.isRequired,
   deleteAlgorithmFromStore: PropTypes.func.isRequired,
-  algorithmReadme:PropTypes.Object
+  algorithmReadme:PropTypes.object
 };
 
 const mapStateToProps = (state) => ({

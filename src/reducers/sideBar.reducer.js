@@ -4,20 +4,21 @@ import actions from '../constants/actions';
 
 const initState = { visible: false, data: null };
 
+const initialState = Immutable.from(initState);
 
-const inititalState = Immutable.from(initState);
-
-export default handleActions({
-  [actions.OPEN_SIDEBAR](state, { type, payload, meta, error }) {
-    return state.merge(payload);
+export default handleActions(
+  {
+    [actions.OPEN_SIDEBAR](state, { type, payload, meta, error }) {
+      return state.merge(payload);
+    },
+    [actions.CLOSE_SIDEBAR](state, { type, payload, meta, error }) {
+      return state.merge(payload);
+    }
   },
-  [actions.CLOSE_SIDEBAR](state, { type, payload, meta, error }) {
-    return state.merge(payload);
-  }
-}, inititalState);
+  initialState
+);
 
 // export default (state = inititalState, action) => {
 //   console.log(action.type);
 //   return state;
 // }
-

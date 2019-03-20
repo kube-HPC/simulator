@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
-import layers from './layers.reducer';
 import containerTable from './conatainerTable.reducer';
 import workerTable from './workerTable.reducer';
 import driverTable from './driverTable.reducer';
 import debugTable from './debugTable.reducer';
 import algorithmTable from './algorithmTable.reducer';
+import algorithmBuildsTable from './algorithmBuildsTable.reducer';
 import modal from './modal.reducer';
 import sideBar from './sideBar.reducer';
 import ui from './ui.reducer';
@@ -16,14 +16,15 @@ import kubernetesLogs from './kubernetesLogs.reducer';
 import nodeStatistics from './nodeStatistics.reducer';
 import pipelineReadme from "./pipelineReadme.reducer";
 import algorithmReadme from "./algorithmReadme.reducer";
+import error from './error.reducer';
 
 const rootReducer = combineReducers({
   ui,
-  layers,
   containerTable,
   workerTable,
   driverTable,
   algorithmTable,
+  algorithmBuildsTable,
   debugTable,
   modal,
   sideBar,
@@ -35,7 +36,6 @@ const rootReducer = combineReducers({
   nodeStatistics,
   pipelineReadme,
   algorithmReadme,
- 
+  error
 });
 export default rootReducer;
-

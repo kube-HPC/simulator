@@ -1,8 +1,11 @@
 {
     "name": "",
     "algorithmImage": "",
+    "env": "python",
     "cpu": 3,
+    "gpu": 0,
     "mem": "256Mi",
+    "minHotWorkers": 0,
     "options": {
         "debug": false
     }

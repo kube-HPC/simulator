@@ -1,4 +1,3 @@
-
 import { connect } from 'react-redux';
 import { Table, Card, Tag } from 'antd';
 import ReactJson from 'react-json-view';
@@ -8,22 +7,13 @@ import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withState } from 'recompose';
-import './DebugTable.scss'
-
-const STATUSES = {
-  bootstrap: '#87d068',
-  ready: '#87d068',
-  init: '#87d068',
-  active: '#2db7f5',
-  stopped: '#ec8c16',
-  failed: '#f50',
-  completed: '#87d068'
-};
+import { RECORD_STATUS } from '../../../constants/colors';
+import './DebugTable.scss';
 
 class WorkerTable extends Component {
   componentWillMount() {
     this.props.init();
-  
+
     const sorter = (a, b) => {
       let tempA = null;
       let tempB = null;
@@ -58,9 +48,10 @@ class WorkerTable extends Component {
         dataIndex: 'data.driverStatus',
         width: '15%',
         key: 'driverStatus',
-        render: (text, record) => (<span>
-          <Tag color={STATUSES[record.data.driverStatus]} > {record.data.driverStatus}</Tag>
-        </span>
+        render: (text, record) => (
+          <span>
+            <Tag color={RECORD_STATUS[record.data.driverStatus]}> {record.data.driverStatus}</Tag>
+          </span>
         ),
         sorter: (a, b) => sorter(a.data.driverStatus, b.data.driverStatus)
       },
@@ -69,9 +60,10 @@ class WorkerTable extends Component {
         dataIndex: 'data.jobStatus',
         width: '15%',
         key: 'jobStatus',
-        render: (text, record) => (<span>
-          <Tag color={STATUSES[record.data.jobStatus]} > {record.data.jobStatus}</Tag>
-        </span>
+        render: (text, record) => (
+          <span>
+            <Tag color={RECORD_STATUS[record.data.jobStatus]}> {record.data.jobStatus}</Tag>
+          </span>
         ),
         sorter: (a, b) => sorter(a.data.jobStatus, b.data.jobStatus)
       },
@@ -80,18 +72,20 @@ class WorkerTable extends Component {
         dataIndex: 'data.paused',
         width: '15%',
         key: 'paused',
-        render: (text, record) => (<span>
-          <Tag color={record.data.paused ? 'red' : 'green'} > {record.data.paused ? 'paused' : 'ready'}</Tag>
-        </span>
+        render: (text, record) => (
+          <span>
+            <Tag color={record.data.paused ? 'red' : 'green'}>
+              {' '}
+              {record.data.paused ? 'paused' : 'ready'}
+            </Tag>
+          </span>
         ),
         sorter: (a, b) => sorter(a.data.paused, b.data.paused)
       }
     ];
   }
 
-  renderColumns() {
-
-  }
+  renderColumns() { }
 
   render() {
     const { dataSource } = this.props;
@@ -100,26 +94,37 @@ class WorkerTable extends Component {
         <Table
           columns={this.columns}
           dataSource={dataSource.asMutable()}
-          pagination={{ className: "tablePagination", defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true }}
-          locale={{ emptyText: 'no data' }}
-          expandedRowRender={(record) => (
+          pagination={{
+            className: 'tablePagination',
+            defaultCurrent: 1,
+            pageSize: 15,
+            hideOnSinglePage: true
+          }}
+          expandedRowRender={record => (
             <Card title="Full details">
-              <ReactJson src={record} />
+              <ReactJson
+                src={record}
+                name={false}
+                iconStyle="square"
+                displayDataTypes={false}
+                displayObjectSize={false}
+                enableClipboard={false}
+              />
             </Card>
-
-          )} />
+          )}
+        />
       </div>
     );
   }
 }
 
-const driverTable = (state) => state.driverTable.dataSource;
-const autoCompleteFilter = (state) => state.autoCompleteFilter.filter;
+const driverTable = state => state.driverTable.dataSource;
+const autoCompleteFilter = state => state.autoCompleteFilter.filter;
 
 const tableDataSelector = createSelector(
   driverTable,
   autoCompleteFilter,
-  (driverTable) => {
+  driverTable => {
     return driverTable;
   }
 );
@@ -129,12 +134,18 @@ WorkerTable.propTypes = {
   dataSource: PropTypes.array.isRequired
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   dataSource: tableDataSelector(state),
   scriptsPath: state.serverSelection.currentSelection.scriptsPath,
   sshUser: state.serverSelection.currentSelection.user
 });
 
-export default connect(mapStateToProps, { openModal, init })(
-  withState('isVisible', 'onPopoverClickVisible', { visible: false, podName: '' })(WorkerTable)
+export default connect(
+  mapStateToProps,
+  { openModal, init }
+)(
+  withState('isVisible', 'onPopoverClickVisible', {
+    visible: false,
+    podName: ''
+  })(WorkerTable)
 );

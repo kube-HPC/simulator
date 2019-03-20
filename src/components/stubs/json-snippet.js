@@ -1,5 +1,6 @@
 /* eslint-disable */
-const snippet = '# AddNode\n\
+const snippet =
+  '# AddNode\n\
 snippet node\n\
 	{\n\
 		"nodeName": "${1:node_name}",\n\

@@ -18,9 +18,7 @@ function addFilter() {
   console.log('test - addFilter started');
   const store = createStore(reducer);
 
-  store.dispatch(
-    filters.addFilter(8, 'someDecision')
-  );
+  store.dispatch(filters.addFilter(8, 'someDecision'));
   expect(store.getState().length).toEqual(1);
 
   const expectedState = [{ id: 8, selection: 'someDecision' }];
@@ -46,7 +44,6 @@ function removeFilter() {
 
   console.log('test - removeFilter passed');
 }
-
 
 initialize();
 addFilter();
