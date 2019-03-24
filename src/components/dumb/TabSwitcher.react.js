@@ -44,7 +44,7 @@ class TabSwitcher extends Component {
         </Tabs.TabPane>
         <Tabs.TabPane tab="JSON" key="3">
           <Card>
-            <MDEditor/>
+            {/* <MDEditor/> */}
             <ReactJson
               src={record.record}
               collapsed={2}

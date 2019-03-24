@@ -10,6 +10,11 @@ const reject = (dispatch, payload, action) => {
     meta: action.meta,
     payload
   });
+  dispatch({
+    type: `ERROR`,
+    meta: action.meta,
+    payload
+  });
   
 };
 

@@ -39,7 +39,7 @@ class AlgorithmTabSwitcher extends Component {
         return (
           <Tabs defaultActiveKey="1">
             <Tabs.TabPane tab="Description" key="1">
-              <MdViewer name ={algorithmDetails.key} readme={readme||this.default}/>
+              <MdViewer name ={algorithmDetails.key} readme={readme||this.default} readmeType={'algorithm'}/>
             </Tabs.TabPane>
             <Tabs.TabPane tab="JSON" key="3">
               <Card>

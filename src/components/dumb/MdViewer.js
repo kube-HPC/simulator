@@ -12,7 +12,7 @@ import ReadmeViewerCodeHighlight from './ReadmeViewerCodeHighlight';
 
 const MdViewer = props => (
   // eslint-disable-next-line react/prop-types
-  <Card style = {{maxWidth: '80vw'}} title={props.name} extra={<Button  onClick={()=>props.sideBarOpen({data:props.readme,contentType:sideBarTypes.ALGORITHM, type:sideBarTypes.ALGORITHM,name:props.name})} >Edit</Button>}>
+  <Card style = {{maxWidth: '80vw'}} title={props.name} extra={<Button  onClick={()=>props.sideBarOpen({data:props.readme,contentType:sideBarTypes.ALGORITHM, type:sideBarTypes.ALGORITHM,name:props.name, readmeType:props.readmeType})} >Edit</Button>}>
     <div>
       <ReactMarkdown source={props.readme} 
         renderers={{
@@ -27,6 +27,7 @@ const MdViewer = props => (
 MdViewer.propTypes = {
     readme: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
+    readmeType: PropTypes.string
    // sideBarOpen:PropTypes.func.isRequired
 
 }

@@ -37,7 +37,7 @@ class SideBarContainer extends Component {
   // Passing div in SideBar children because it's props requirement
   render() {
     const { sideBar } = this.props;
-    const Component = sideBar.data&&sideBar.data.type === sideBarTypes.PIPELINE ? <AlgorithmInformation /> : <MDContentSwitcher readme={sideBar.data&&sideBar.data.data}  name={sideBar.data&&sideBar.data.name}/>
+    const Component = sideBar.data&&sideBar.data.payload&&sideBar.data.payload.type === sideBarTypes.PIPELINE ? <AlgorithmInformation /> : <MDContentSwitcher readme={sideBar.data&&sideBar.data.data}  name={sideBar.data&&sideBar.data.name} readmeType={sideBar.data&&sideBar.data.readmeType}/>
     return (
       <div>
         <Sidebar

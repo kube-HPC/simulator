@@ -50,7 +50,16 @@ class MDContentSwitcher extends Component{
         //       <ReactMarkdown source={this.state.mdData}/>
         //     </div>
           <div style={{marginTop:'20px'}} >
-            <Button type="primary" style={{left:'90%'}} onClick={()=>{this.setState({mdData:this.mdData}); this.props.postAlgorithmReadme(this.props.name,this.mdData)}} >Save</Button>  
+            <Button type="primary" style={{left:'90%'}} onClick={()=>{
+              this.setState({mdData:this.mdData});
+              if(this.props.readmeType&&this.props.readmeType=='algorithm'){
+                this.props.postAlgorithmReadme(this.props.name,this.mdData)
+              } 
+              else{
+                this.props.postPipelineReadme(this.props.name,this.mdData)
+
+              }
+               }} >Save</Button>  
             <span   >
               <Radio.Group style={{display: 'flex',justifyContent: 'center'}} defaultValue={this.state.defaultRadio} buttonStyle="solid" onChange={this.onChange} >
                 <Radio.Button value="Edit">Edit</Radio.Button>

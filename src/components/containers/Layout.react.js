@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose, withState } from 'recompose';
+import isEqual from 'lodash/isEqual';
 import ContainerTable from './tables/ContainerTable.react';
 import WorkerTable from './tables/WorkerTable.react';
 import DebugTable from './tables/DebugTable.react';
@@ -65,23 +66,23 @@ const selectTable = props => {
 class LayoutInner extends React.Component {
   componentDidMount() {
     this.props.init();
+    message.config({
+      duration: 5,
+      maxCount: 3
+    });
   }
 
-  componentDidUpdate() {
-    // TODO: clear errors after update
-    // const errorObj = this.props.errorMessage;
-    // if (errorObj) {
-    //   if (typeof errorObj === 'string') {
-    //     message.error(errorObj);
-    //   } else if (errorObj.response && errorObj.response.data && errorObj.response.data.error) {
-    //     const error = errorObj.response.data.error;
-    //     message.error(`Error Code: ${error.code}, ${error.message}`);
-    //   } else if (errorObj.message) {
-    //     message.error(errorObj.message);
-    //   } else {
-    //     message.error(JSON.stringify(errorObj, null, 2));
-    //   }
-    // }
+  componentDidUpdate(prevProps) {
+    const errorObj = this.props.errorMessage;
+    if (errorObj) {
+      if (typeof errorObj === 'string') {
+        message.error(errorObj);
+      }
+      else if (errorObj.message) {
+        message.error(errorObj.message);
+      }
+      this.props.clearError();
+    }
   }
 
   render() {

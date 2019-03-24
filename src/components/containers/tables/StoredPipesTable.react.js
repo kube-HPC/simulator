@@ -21,7 +21,7 @@ import PropTypes from 'prop-types';
 import ReactJson from 'react-json-view';
 import cronstrue from 'cronstrue';
 import cronParser from 'cron-parser';
-
+import PipelineTabSwitcher from "../../dumb/PipelineTabSwitcher.react";
 import { init } from '../../../actions/storedPipes.action';
 import { openModal } from '../../../actions/modal.action';
 import {
@@ -36,7 +36,8 @@ import './StoredPipesTable.scss';
 import HKubeEditor from '../HKubeEditor.react';
 import HEditor from '../HEditor.react';
 import AddButton from '../../dumb/AddButton.react';
-import { RECORD_STATUS } from '../../../constants/colors';
+import { getPipelineReadme } from "../../../actions/readme.action";
+import { STATUS } from '../../../constants/colors';
 import { ReactComponent as PlayIconSvg } from '../../../images/play-icon.svg';
 import template from '../../stubs/json-object.json';
 
@@ -46,10 +47,10 @@ class StoredPipesTable extends Component {
     this.props.init();
   }
 
-  renderColumns() {}
+  renderColumns() { }
 
   render() {
-    const { storedPipelines, dataStats, dataSource } = this.props;
+    const { storedPipelines, dataStats, dataSource,pipelineReadme } = this.props;
 
     // Need to remove "nodes" key from each pipeline.
     const fixedDataSource = [];
@@ -64,14 +65,14 @@ class StoredPipesTable extends Component {
         title: 'WARNING Deleting Pipeline',
         content: `Are you sure you want to delete ${
           record.name
-        }? Deleting Pipeline will Stop-ALL related Jobs and Executions`,
+          }? Deleting Pipeline will Stop-ALL related Jobs and Executions`,
         okText: 'Confirm',
         okType: 'danger',
         cancelText: 'Cancel',
         onOk() {
           action(record.name);
         },
-        onCancel() {}
+        onCancel() { }
       });
     };
 
@@ -103,19 +104,12 @@ class StoredPipesTable extends Component {
             pageSize: 15,
             hideOnSinglePage: true
           }}
+          onExpand={(expanded, record) => {
+            if (expanded) {
+              this.props.getPipelineReadme(record.name)
+            }}}
           expandedRowRender={record => (
-            <Card title="Full details">
-              <ReactJson
-                name={false}
-                src={record}
-                displayDataTypes={false}
-                displayObjectSize={false}
-                iconStyle="triangle"
-                indentWidth="4"
-                collapsed="2"
-                enableClipboard={false}
-              />
-            </Card>
+            <PipelineTabSwitcher pipelineDetails={record}  readme={pipelineReadme&&pipelineReadme[record.name]&&pipelineReadme[record.name].readme}/>
           )}
         >
           <Column title="Pipeline Name" dataIndex="name" key="name" />
@@ -199,7 +193,7 @@ class StoredPipesTable extends Component {
 
               const out = pipelineStats.map((s, i) => (
                 <Tooltip key={i} placement="top" title={firstLetterUpperCase(s[0])}>
-                  <Tag color={RECORD_STATUS[s[0]]}>{[s[1]]}</Tag>
+                  <Tag color={STATUS[s[0]]}>{[s[1]]}</Tag>
                 </Tooltip>
               ));
 
@@ -308,19 +302,21 @@ const tableDataSelector = createSelector(
 const mapStateToProps = state => ({
   dataSource: tableDataSelector(state),
   storedPipelines: state.storedPipeline.dataSource,
-  dataStats: state.storedPipeline.dataStats
+  dataStats: state.storedPipeline.dataStats,
+  pipelineReadme:state.pipelineReadme
 });
+
 
 export default connect(
   mapStateToProps,
-  {
-    openModal,
+  {    openModal,
     init,
     addPipe,
     execStoredPipe,
     deleteStoredPipeline,
     updateStoredPipeline,
     cronStop,
-    cronStart
+    cronStart,
+    getPipelineReadme
   }
 )(StoredPipesTable);

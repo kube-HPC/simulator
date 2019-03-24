@@ -3,7 +3,7 @@ import actions from '../constants/actions';
 const _getReadme = (type,name,actionType) => ({
   type: actions.REST_REQ,
   payload: {
-    url: `/${type}/${name}`,
+    url: `/readme/${type}/${name}`,
     actionType
   }
 });
@@ -11,7 +11,7 @@ const _getReadme = (type,name,actionType) => ({
 const _postReadme = (type,name,actionType,readme) => ({
   type: actions.REST_REQ_POST,
   payload: {
-    url: `${type}/${name}`,
+    url: `readme/${type}/${name}`,
     actionType,
     body: { readme,name },
   }

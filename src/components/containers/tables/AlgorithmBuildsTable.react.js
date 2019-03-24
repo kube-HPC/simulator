@@ -11,7 +11,7 @@ import { withState } from 'recompose';
 import humanizeDuration from 'humanize-duration';
 import { openModal } from '../../../actions/modal.action';
 import { init, cancelBuild, rerunBuild } from '../../../actions/algorithmBuildsTable.action';
-import { RECORD_STATUS } from '../../../constants/colors';
+import { STATUS } from '../../../constants/colors';
 import './AlgorithmsTable.scss';
 
 class AlgorithmBuildsTable extends Component {
@@ -71,7 +71,7 @@ class AlgorithmBuildsTable extends Component {
         render: (text, record) => {
           const tags = Object.entries(record.statuses).map((s, i) => (
             <Tooltip key={i} placement="top" title={this.firstLetterUpperCase(s[0])}>
-              <Tag color={RECORD_STATUS[s[0]] || 'magenta'}>{s[1].length}</Tag>
+              <Tag color={STATUS[s[0]] || 'magenta'}>{s[1].length}</Tag>
             </Tooltip>
           ));
           return <span>{tags}</span>;
@@ -158,7 +158,7 @@ class AlgorithmBuildsTable extends Component {
         sorter: (a, b) => sorter(a.status, b.status),
         render: (text, record) => (
           <span>
-            <Tag color={RECORD_STATUS[record.status]}>
+            <Tag color={STATUS[record.status]}>
               {this.firstLetterUpperCase(record.status)}
             </Tag>
           </span>
