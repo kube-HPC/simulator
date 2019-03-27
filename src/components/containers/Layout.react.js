@@ -13,22 +13,47 @@ import AlgorithmTable from './tables/AlgorithmsTable.react';
 import NodeStatistics from './NodeStatistics.react';
 import SideBar from './SideBarContainer.react';
 import TableAutoComplete from '../dumb/TableAutoComplete.react';
+import AnimatedHeader from '../dumb/AnimatedHeader.react';
 import { init } from '../../actions/config.action.js';
-import { BackTop, Row, Col, Tag, message } from 'antd';
-import {
-  HContent,
-  HMenu,
-  HLayout,
-  HSider,
-  LayoutHeader,
-  AlignRow,
-  Logo,
-  HeaderTitle
-} from '../style/Styled';
+import { BackTop, Row, Col, Tag, message, Layout, Icon, Menu } from 'antd';
+import { HContent, HMenu, HLayout, HSider, LayoutHeader, AlignRow, Logo, HeaderTitle } from '../style/Styled';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import './Layout.scss';
 import { isUndefined } from 'util';
 import { clearError } from '../../actions/error.action';
+
+import { ReactComponent as LogoSvg } from '../../images/logoBordered.svg';
+import { ReactComponent as DebugIcon } from '../../images/debug-icon.svg';
+import { ReactComponent as DriversIcon } from '../../images/drivers-icon.svg';
+import { ReactComponent as PipelineIcon } from '../../images/pipeline-icon.svg';
+import { ReactComponent as WorkerIcon } from '../../images/worker-icon.svg';
+
+const { Header, Content, Footer, Sider } = Layout;
+
+const showHeader = isCollapsed =>
+  isCollapsed ? (
+    <div />
+  ) : (
+    <Col span={12} style={{ margin: 'auto' }}>
+      <AnimatedHeader />
+    </Col>
+  );
+
+const setMenuItemTitle = (title, count) => (
+  <div>
+    {title} <Tag className="tag">{count}</Tag>
+  </div>
+);
+
+const setMenuItem = (iconComponent, title, count) => (
+  <Row type="flex" justify="start">
+    <Col>{iconComponent} </Col>
+    <Col span={12}>{title}</Col>
+    <Col span={4} offset={4}>
+      <Tag className="tag">{count}</Tag>
+    </Col>
+  </Row>
+);
 
 const menuSelection = (i, props) => {
   if (i.key === 1) {
@@ -64,6 +89,15 @@ const selectTable = props => {
 };
 
 class LayoutInner extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { collapsed: true };
+  }
+
+  onCollapse = collapsed => {
+    this.setState({ collapsed });
+  };
+
   componentDidMount() {
     this.props.init();
     message.config({
@@ -77,8 +111,7 @@ class LayoutInner extends React.Component {
     if (errorObj) {
       if (typeof errorObj === 'string') {
         message.error(errorObj);
-      }
-      else if (errorObj.message) {
+      } else if (errorObj.message) {
         message.error(errorObj.message);
       }
       this.props.clearError();
@@ -91,103 +124,60 @@ class LayoutInner extends React.Component {
     return (
       <HLayout>
         <SideBar open={false} />
-        <LayoutHeader>
-          <AlignRow type="flex" align="top" justify="space-between">
-            <Col span={4}>
-              <Row gutter={3}>
-                <Col span={4}>
-                  <Logo />
-                </Col>
-                <Col span={2}>
-                  <HeaderTitle>Hkube</HeaderTitle>
-                </Col>
-              </Row>
+        <HSider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
+          <Row type="flex">
+            <Col span={8}>
+              <Icon className="logo" component={LogoSvg} fill="white" />
             </Col>
-            <Col>
-              <TableAutoComplete />
-            </Col>
-          </AlignRow>
-        </LayoutHeader>
-        <HLayout hasSider={true}>
-          <HSider>
-            <HMenu
-              mode="inline"
-              onSelect={i => {
-                menuSelection(i, props);
-              }}
-              defaultSelectedKeys={['1']}
+            {showHeader(this.state.collapsed)}
+          </Row>
+          <HMenu
+            mode="inline"
+            onSelect={i => {
+              menuSelection(i, props);
+            }}
+            defaultSelectedKeys={['1']}
+          >
+            <Menu.Item key="1" title={setMenuItemTitle('Jobs', props.jobsCount)}>
+              {setMenuItem(<Icon type="area-chart" />, 'Jobs', props.jobsCount)}
+            </Menu.Item>
+            <Menu.Item key="2" title={setMenuItemTitle('Pipelines', props.pipelineCount)}>
+              {setMenuItem(<Icon component={PipelineIcon} />, 'Pipelines', props.pipelineCount)}
+            </Menu.Item>
+            <HMenu.Item key="3" title={setMenuItemTitle('Workers', isUndefined(props.workerCount) ? 0 : props.workerCount)}>
+              {setMenuItem(<Icon component={WorkerIcon} />, 'Workers', isUndefined(props.workerCount) ? 0 : props.workerCount)}
+            </HMenu.Item>
+            <HMenu.Item key="4" title={setMenuItemTitle('Drivers', props.driversCount)}>
+              {setMenuItem(<Icon component={DriversIcon} />, 'Drivers', props.driversCount)}
+            </HMenu.Item>
+            <HMenu.Item key="5" title={setMenuItemTitle('Algorithms', props.algorithmCount)}>
+              {setMenuItem(<Icon type="share-alt" />, 'Algorithms', props.algorithmCount)}
+            </HMenu.Item>
+            <HMenu.Item key="6" title={setMenuItemTitle('Debug', props.debugCount)}>
+              {setMenuItem(<Icon component={DebugIcon} />, 'Debug', props.debugCount)}
+            </HMenu.Item>
+            <HMenu.Item key="7" title={setMenuItemTitle('Builds', props.algorithmBuildsCount)}>
+              {setMenuItem(<Icon type="build" />, 'Build', props.algorithmBuildsCount)}
+            </HMenu.Item>
+            <SubMenu
+              title={
+                <span>
+                  <Icon type="user" />
+                  <span>Node Stats</span>
+                </span>
+              }
+              key="8"
             >
-              <HMenu.Item key="1">
-                <Row type="flex" justify="space-between">
-                  <Col>Jobs</Col>
-                  <Col>
-                    <Tag className="tag">{props.jobsCount}</Tag>
-                  </Col>
-                </Row>
-              </HMenu.Item>
-              <HMenu.Item key="2">
-                <Row type="flex" justify="space-between">
-                  <Col>Pipelines</Col>
-                  <Col>
-                    <Tag className="tag">{props.pipelineCount}</Tag>
-                  </Col>
-                </Row>
-              </HMenu.Item>
-              <HMenu.Item key="3">
-                <Row type="flex" justify="space-between">
-                  <Col>Workers</Col>
-                  <Col>
-                    <Tag className="tag">
-                      {isUndefined(props.workerCount) ? 0 : props.workerCount}
-                    </Tag>
-                  </Col>
-                </Row>
-              </HMenu.Item>
-              <HMenu.Item key="4">
-                <Row type="flex" justify="space-between">
-                  <Col>Drivers</Col>
-                  <Col>
-                    <Tag className="tag">{props.driversCount}</Tag>
-                  </Col>
-                </Row>
-              </HMenu.Item>
-              <HMenu.Item key="5">
-                <Row type="flex" justify="space-between">
-                  <Col>Algorithms</Col>
-                  <Col>
-                    <Tag className="tag">{props.algorithmCount}</Tag>
-                  </Col>
-                </Row>
-              </HMenu.Item>
-              <HMenu.Item key="6">
-                <Row type="flex" justify="space-between">
-                  <Col>Debug</Col>
-                  <Col>
-                    <Tag className="tag">{props.debugCount}</Tag>
-                  </Col>
-                </Row>
-              </HMenu.Item>
-              <HMenu.Item key="7">
-                <Row type="flex" justify="space-between">
-                  <Col>Builds</Col>
-                  <Col>
-                    <Tag className="tag">{props.algorithmBuildsCount}</Tag>
-                  </Col>
-                </Row>
-              </HMenu.Item>
-              <SubMenu
-                title={
-                  <span>
-                    <span>Node Stats</span>
-                  </span>
-                }
-                key="8"
-              >
-                <HMenu.Item key="9"> CPU </HMenu.Item>
-                <HMenu.Item key="10"> Memory </HMenu.Item>
-              </SubMenu>
-            </HMenu>
-          </HSider>
+              <HMenu.Item key="9"> CPU </HMenu.Item>
+              <HMenu.Item key="10"> Memory </HMenu.Item>
+            </SubMenu>
+          </HMenu>
+        </HSider>
+
+        <HLayout>
+          <Header className="layout-header">
+            <TableAutoComplete />
+          </Header>
           <HContent>
             {' '}
             <BackTop /> {selectTable(props)}{' '}
