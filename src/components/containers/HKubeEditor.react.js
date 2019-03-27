@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Modal, Button, notification, Icon } from 'antd';
-import { Paragraph } from '../style/Styled';
+import PropTypes from 'prop-types';
 import generateName from 'sillyname';
 import './HKubeEditor.scss';
 
 import LiveJsonEditor from '../dumb/LiveJsonEditor.react';
 
-export default function HKubeEditor(props) {
+function HKubeEditor(props) {
   const [json, setJson] = useState(props.jsonTemplate);
   const algorithms = props.algorithms.map(a => a.data.name);
 
@@ -74,7 +74,7 @@ export default function HKubeEditor(props) {
             {' '}
             Reset
           </Button>,
-          <Button key={3} onClick={onGenerate}>
+          <Button key={3} onClick={onGenerate} disabled={true}>
             {' '}
             Generate
           </Button>,
@@ -85,8 +85,21 @@ export default function HKubeEditor(props) {
         ]}
       >
         <LiveJsonEditor onChange={setJson} formData={JSON.parse(json)} pipelines={props.pipelines} algorithms={props.algorithms.map(value => value.key)} />
-        <Paragraph>{props.hintText}</Paragraph>
+        <p className="paragraph">{props.hintText}</p>
       </Modal>
     </div>
   );
 }
+
+export default HKubeEditor;
+
+HKubeEditor.propTypes = {
+  okText: PropTypes.string.isRequired,
+  title: PropTypes.string,
+  hintText: PropTypes.string,
+  pipelines: PropTypes.array.isRequired,
+  algorithms: PropTypes.array.isRequired,
+  styledButton: PropTypes.object.isRequired,
+  action: PropTypes.func.isRequired,
+  jsonTemplate: PropTypes.object.isRequired
+};

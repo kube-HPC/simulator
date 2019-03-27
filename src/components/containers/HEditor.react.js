@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { Modal, Button, Card, notification, Icon } from 'antd';
-import { Paragraph } from '../style/Styled';
 import JsonEditor from '../dumb/JsonEditor.react';
 import './HEditor.scss';
 
@@ -75,14 +73,14 @@ class HEditor extends Component {
         >
           <Card>
             <JsonEditor
-              jsonTemplate={this.userData}
-              pipe={newPipe => {
+              value={this.userData}
+              onChange={newPipe => {
                 this.isEditable = true;
                 this.userData = newPipe;
               }}
             />
           </Card>
-          <Paragraph>{this.props.hintText}</Paragraph>
+          <p className="paragraph">{this.props.hintText}</p>
         </Modal>
       </div>
     );
@@ -98,6 +96,4 @@ HEditor.propTypes = {
   hintText: PropTypes.object
 };
 
-const mapStateToProps = state => state;
-
-export default connect(mapStateToProps)(HEditor);
+export default HEditor;

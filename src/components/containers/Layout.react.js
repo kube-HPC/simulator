@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose, withState } from 'recompose';
-import isEqual from 'lodash/isEqual';
 import ContainerTable from './tables/ContainerTable.react';
 import WorkerTable from './tables/WorkerTable.react';
 import DebugTable from './tables/DebugTable.react';
@@ -16,7 +15,6 @@ import TableAutoComplete from '../dumb/TableAutoComplete.react';
 import AnimatedHeader from '../dumb/AnimatedHeader.react';
 import { init } from '../../actions/config.action.js';
 import { BackTop, Row, Col, Tag, message, Layout, Icon, Menu } from 'antd';
-import { HContent, HMenu, HLayout, HSider, LayoutHeader, AlignRow, Logo, HeaderTitle } from '../style/Styled';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import './Layout.scss';
 import { isUndefined } from 'util';
@@ -27,8 +25,11 @@ import { ReactComponent as DebugIcon } from '../../images/debug-icon.svg';
 import { ReactComponent as DriversIcon } from '../../images/drivers-icon.svg';
 import { ReactComponent as PipelineIcon } from '../../images/pipeline-icon.svg';
 import { ReactComponent as WorkerIcon } from '../../images/worker-icon.svg';
+import { ReactComponent as AlgorithmIcon } from '../../images/algorithm-icon.svg';
 
-const { Header, Content, Footer, Sider } = Layout;
+import MenuIcon from '../dumb/MenuIcon.react';
+
+const { Header, Content, Sider } = Layout;
 
 const showHeader = isCollapsed =>
   isCollapsed ? (
@@ -49,7 +50,7 @@ const setMenuItem = (iconComponent, title, count) => (
   <Row type="flex" justify="start">
     <Col>{iconComponent} </Col>
     <Col span={12}>{title}</Col>
-    <Col span={4} offset={4}>
+    <Col span={3} offset={3}>
       <Tag className="tag">{count}</Tag>
     </Col>
   </Row>
@@ -106,7 +107,7 @@ class LayoutInner extends React.Component {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     const errorObj = this.props.errorMessage;
     if (errorObj) {
       if (typeof errorObj === 'string') {
@@ -122,16 +123,17 @@ class LayoutInner extends React.Component {
     const { props } = this;
 
     return (
-      <HLayout>
+      <Layout className="layout">
         <SideBar open={false} />
-        <HSider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
+        <Sider className="sider" collapsible onCollapse={this.onCollapse} collapsed={this.state.collapsed}>
           <Row type="flex">
             <Col span={8}>
               <Icon className="logo" component={LogoSvg} fill="white" />
             </Col>
             {showHeader(this.state.collapsed)}
           </Row>
-          <HMenu
+          <Menu
+            className="menu"
             mode="inline"
             onSelect={i => {
               menuSelection(i, props);
@@ -139,51 +141,51 @@ class LayoutInner extends React.Component {
             defaultSelectedKeys={['1']}
           >
             <Menu.Item key="1" title={setMenuItemTitle('Jobs', props.jobsCount)}>
-              {setMenuItem(<Icon type="area-chart" />, 'Jobs', props.jobsCount)}
+              {setMenuItem(<MenuIcon type="area-chart" />, 'Jobs', props.jobsCount)}
             </Menu.Item>
             <Menu.Item key="2" title={setMenuItemTitle('Pipelines', props.pipelineCount)}>
-              {setMenuItem(<Icon component={PipelineIcon} />, 'Pipelines', props.pipelineCount)}
+              {setMenuItem(<MenuIcon type={PipelineIcon} />, 'Pipelines', props.pipelineCount)}
             </Menu.Item>
-            <HMenu.Item key="3" title={setMenuItemTitle('Workers', isUndefined(props.workerCount) ? 0 : props.workerCount)}>
-              {setMenuItem(<Icon component={WorkerIcon} />, 'Workers', isUndefined(props.workerCount) ? 0 : props.workerCount)}
-            </HMenu.Item>
-            <HMenu.Item key="4" title={setMenuItemTitle('Drivers', props.driversCount)}>
-              {setMenuItem(<Icon component={DriversIcon} />, 'Drivers', props.driversCount)}
-            </HMenu.Item>
-            <HMenu.Item key="5" title={setMenuItemTitle('Algorithms', props.algorithmCount)}>
-              {setMenuItem(<Icon type="share-alt" />, 'Algorithms', props.algorithmCount)}
-            </HMenu.Item>
-            <HMenu.Item key="6" title={setMenuItemTitle('Debug', props.debugCount)}>
-              {setMenuItem(<Icon component={DebugIcon} />, 'Debug', props.debugCount)}
-            </HMenu.Item>
-            <HMenu.Item key="7" title={setMenuItemTitle('Builds', props.algorithmBuildsCount)}>
-              {setMenuItem(<Icon type="build" />, 'Build', props.algorithmBuildsCount)}
-            </HMenu.Item>
+            <Menu.Item key="3" title={setMenuItemTitle('Workers', isUndefined(props.workerCount) ? 0 : props.workerCount)}>
+              {setMenuItem(<MenuIcon type={WorkerIcon} />, 'Workers', isUndefined(props.workerCount) ? 0 : props.workerCount)}
+            </Menu.Item>
+            <Menu.Item key="4" title={setMenuItemTitle('Drivers', props.driversCount)}>
+              {setMenuItem(<MenuIcon type={DriversIcon} />, 'Drivers', props.driversCount)}
+            </Menu.Item>
+            <Menu.Item key="5" title={setMenuItemTitle('Algorithms', props.algorithmCount)}>
+              {setMenuItem(<MenuIcon type={AlgorithmIcon} />, 'Algorithms', props.algorithmCount)}
+            </Menu.Item>
+            <Menu.Item key="6" title={setMenuItemTitle('Debug', props.debugCount)}>
+              {setMenuItem(<MenuIcon type={DebugIcon} />, 'Debug', props.debugCount)}
+            </Menu.Item>
+            <Menu.Item key="7" title={setMenuItemTitle('Builds', props.algorithmBuildsCount)}>
+              {setMenuItem(<MenuIcon type={'build'} />, 'Build', props.algorithmBuildsCount)}
+            </Menu.Item>
             <SubMenu
               title={
                 <span>
-                  <Icon type="user" />
+                  <MenuIcon type={'line-chart'} />
                   <span>Node Stats</span>
                 </span>
               }
               key="8"
             >
-              <HMenu.Item key="9"> CPU </HMenu.Item>
-              <HMenu.Item key="10"> Memory </HMenu.Item>
+              <Menu.Item key="9"> CPU </Menu.Item>
+              <Menu.Item key="10"> Memory </Menu.Item>
             </SubMenu>
-          </HMenu>
-        </HSider>
+          </Menu>
+        </Sider>
 
-        <HLayout>
+        <Layout className="layout">
           <Header className="layout-header">
             <TableAutoComplete />
           </Header>
-          <HContent>
-            {' '}
-            <BackTop /> {selectTable(props)}{' '}
-          </HContent>
-        </HLayout>
-      </HLayout>
+          <Content className="content">
+            <BackTop />
+            {selectTable(props)}
+          </Content>
+        </Layout>
+      </Layout>
     );
   }
 }
@@ -203,7 +205,9 @@ const mapStateToProps = state => {
 };
 
 LayoutInner.propTypes = {
-  init: PropTypes.func.isRequired
+  init: PropTypes.func.isRequired,
+  clearError: PropTypes.func.isRequired,
+  errorMessage: PropTypes.object
 };
 
 export default compose(
