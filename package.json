@@ -82,6 +82,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "cron-parser": "^2.9.0",
+    "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-prettier": "^3.0.1",
     "eslint-plugin-react": "^7.11.1",

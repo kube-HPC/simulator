@@ -1,5 +1,5 @@
 {
-  "extends": ["eslint:recommended", "prettier", "prettier/react", "plugin:react/recommended"],
+  "extends": ["eslint:recommended", "plugin:react/recommended", "prettier", "prettier/react"],
   "env": {
     "browser": true,
     "commonjs": true,
@@ -19,15 +19,16 @@
     "comma-dangle": 0,
     "react/jsx-uses-vars": 1,
     "react/display-name": 1,
+    "react/prop-types": 2,
     "no-unused-vars": "warn",
     "no-console": 1,
     "no-unexpected-multiline": "warn",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn"
   },
-  "ecmaFeatures": {
-    "modules": true,
-    "spread": true,
-    "restParams": true
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }
