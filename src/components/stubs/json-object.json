@@ -12,17 +12,15 @@
     "files": {}
   },
   "webhooks": {
-    "progress": "",
-    "result": ""
+    "progress": "http://localhost:3003/webhook/progress",
+    "result": "http://localhost:3003/webhook/result"
   },
   "triggers": {
     "cron": {
       "pattern": "0 * * * *",
       "enabled": false
     },
-    "pipelines": [
-      "other-pipeline"
-    ]
+    "pipelines": []
   },
   "options": {
     "batchTolerance": 100,

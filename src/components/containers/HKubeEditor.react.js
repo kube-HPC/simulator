@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
-import { Modal, Button, Card, notification, Icon, Row, Col, Input, Form, Divider } from 'antd';
+import { Modal, Button, notification, Icon } from 'antd';
 import { Paragraph } from '../style/Styled';
 import generateName from 'sillyname';
 import './HKubeEditor.scss';
 
-import JsonEditor from '../dumb/JsonEditor.react';
-import DynamicForm from './DynamicForm.react';
+import LiveJsonEditor from '../dumb/LiveJsonEditor.react';
 
 export default function HKubeEditor(props) {
   const [json, setJson] = useState(props.jsonTemplate);
-  const pipeline = JSON.parse(json);
   const algorithms = props.algorithms.map(a => a.data.name);
 
   let [isVisible, setVisible] = useState(false);
@@ -59,23 +57,12 @@ export default function HKubeEditor(props) {
 
   const onCancel = onVisible;
 
-  const formItemLayout = {
-    labelCol: { span: 3 },
-    wrapperCol: { span: 20 }
-  };
-
-  const formItemLayoutWithOutLabel = {
-    wrapperCol: {
-      xs: { span: 20, offset: 3 }
-    }
-  };
-
   return (
     <div>
       {props.styledButton(() => setVisible(!isVisible))}
       <Modal
         visible={isVisible}
-        width={'60%'}
+        width={'80%'}
         title={props.title}
         onOk={onOk}
         onCancel={onCancel}
@@ -97,38 +84,7 @@ export default function HKubeEditor(props) {
           </Button>
         ]}
       >
-        <Row>
-          <Col span={9}>
-            <JsonEditor
-              jsonTemplate={json}
-              pipe={newPipe => {
-                setJson(newPipe);
-                setEditable(true);
-              }}
-            />
-          </Col>
-          <Col span={1}>
-            <Divider type="vertical" className="divider" />
-          </Col>
-          <Col span={14}>
-            <Form.Item {...formItemLayout} label="Name" required={true}>
-              <Input
-                placeholder="Unique Identifier"
-                value={pipeline.name}
-                onChange={s => {
-                  pipeline.name = s.target.value;
-                  setJson(JSON.stringify(pipeline, null, 2));
-                }}
-              />
-            </Form.Item>
-            <DynamicForm
-              jsonRecord={json}
-              onChange={pipeline => setJson(pipeline)}
-              formItemLayout={formItemLayout}
-              formItemLayoutWithOutLabel={formItemLayoutWithOutLabel}
-            />
-          </Col>
-        </Row>
+        <LiveJsonEditor onChange={setJson} formData={JSON.parse(json)} pipelines={props.pipelines} algorithms={props.algorithms.map(value => value.key)} />
         <Paragraph>{props.hintText}</Paragraph>
       </Modal>
     </div>

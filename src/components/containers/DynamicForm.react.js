@@ -1,98 +1,94 @@
-import React, { useState } from 'react';
-import { Modal, Button, Card, notification, Icon, Row, Col, Input, Form, Divider } from 'antd';
+import React from 'react';
+import { Button, Icon, Row, Col, Input, Form, Select } from 'antd';
 
 import './DynamicForm.scss';
 
-let id = 0;
+const removeElementN = (array, N) => array.slice(0, N).concat(array.slice(N + 1, array.length));
+
+const selectOptions = algorithms =>
+  algorithms.map((value, i) => (
+    <Select.Option key={i} value={value}>
+      {value}
+    </Select.Option>
+  ));
 
 function DynamicForm(props) {
-  const { formItemLayout, formItemLayoutWithOutLabel } = props;
-  const { getFieldDecorator, getFieldValue } = props.form;
+  const { formData, form, onChange } = props;
+  const { getFieldDecorator, getFieldValue } = form;
+  const nodes = formData.nodes;
 
-  const pipeline = JSON.parse(props.jsonRecord);
-  const onChange = props.onChange;
+  const onChangeNode = (formData, index, t1, t2 = undefined) => c => {
+    const value = c && c.target ? c.target.value : c;
+    const node = formData[t1][index];
+    formData[t1][index] = { ...node, [t2]: value };
+    onChange({ ...formData });
+  };
 
-  getFieldDecorator('keys', { initialValue: [] });
+  const addRemoveIcon = i => {
+    const iconComponent = (
+      <Col key={i}>
+        <Icon className="dynamic-delete-button" type="minus-circle-o" onClick={() => removeNode(i)} />
+      </Col>
+    );
+    return i === 0 ? [] : [iconComponent];
+  };
+
+  getFieldDecorator('keys', { initialValue: [...Array(nodes.length).keys()] });
   const keys = getFieldValue('keys');
 
-  const formItems = keys.map((k, index) => {
+  const formItems = keys.map(i => {
     return (
-      <Form.Item key={k}>
+      <Form.Item key={i} required={i === 0}>
         <Row type="flex" justify="space-between">
           <Col span={22}>
             <Row gutter={12}>
               <Col span={12}>
-                <Input placeholder="Node Name" />
+                <Input placeholder="Node Name" value={nodes[i] ? nodes[i].nodeName : ''} onChange={onChangeNode(formData, i, 'nodes', 'nodeName')} />
               </Col>
               <Col span={12}>
-                <Input placeholder="Algorithm Name" />
+                <Select value={nodes[i] ? nodes[i].algorithmName : ''} onChange={onChangeNode(formData, i, 'nodes', 'algorithmName')}>
+                  {selectOptions(props.algorithms)}
+                </Select>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Input.TextArea value={JSON.stringify(nodes[i].input)} placeholder="Input" autosize={{ minRows: 2 }} disabled={true} />
               </Col>
             </Row>
           </Col>
-          <Col>
-            <Icon
-              className="dynamic-delete-button"
-              type="minus-circle-o"
-              onClick={() => removeNode(k)}
-            />
-          </Col>
+
+          {addRemoveIcon(i)}
         </Row>
       </Form.Item>
     );
   });
 
   const addNode = () => {
-    const { form } = props;
     const keys = form.getFieldValue('keys');
-    const nextKeys = keys.concat(id++);
-    form.setFieldsValue({
-      keys: nextKeys
-    });
+    nodes.push(props.emptyData);
+    onChange({ ...formData, nodes });
+    const nextKeys = keys.concat(nodes.length - 1);
+    form.setFieldsValue({ keys: nextKeys });
   };
 
   const removeNode = k => {
-    const { form } = props;
-    const keys = form.getFieldValue('keys');
-    form.setFieldsValue({
-      keys: keys.filter(key => key !== k)
-    });
+    const updateNode = removeElementN(nodes, k);
+    form.setFieldsValue({ keys: [...updateNode.keys()] });
+    onChange({ ...formData, nodes: updateNode });
   };
 
   return (
-    <Form>
-      <Form.Item {...formItemLayout} label="Nodes" required={true}>
-        <Form.Item required={true}>
-          <Row gutter={12}>
-            <Col span={12}>
-              <Input
-                placeholder="Node Name"
-                value={pipeline.nodes[0].nodeName}
-                onChange={s => {
-                  pipeline.nodes[0].nodeName = s.target.value;
-                  onChange(JSON.stringify(pipeline, null, 2));
-                }}
-              />
-            </Col>
-            <Col span={12}>
-              <Input
-                placeholder="Algorithm Name"
-                value={pipeline.nodes[0].algorithmName}
-                onChange={s => {
-                  pipeline.nodes[0].algorithmName = s.target.value;
-                  onChange(JSON.stringify(pipeline, null, 2));
-                }}
-              />
-            </Col>
-          </Row>
-        </Form.Item>
+    <div>
+      <Form.Item {...props.formItemLayout} label="Nodes" required={true}>
         {formItems}
       </Form.Item>
-      <Form.Item {...formItemLayoutWithOutLabel}>
+      <Form.Item {...props.formItemLayoutWithOutLabel}>
         <Button type="dashed" onClick={addNode} style={{ width: '100%' }}>
           <Icon type="plus" /> Add Node
         </Button>
       </Form.Item>
-    </Form>
+    </div>
   );
 }
 
