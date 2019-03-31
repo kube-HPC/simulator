@@ -58,6 +58,7 @@
     "seamless-immutable": "^7.1.4",
     "showdown": "^1.9.0",
     "socket.io-client": "^1.7.4",
+    "styled-components": "^4.2.0",
     "uuid": "^3.3.2",
     "vis": "^4.21.0"
   },
