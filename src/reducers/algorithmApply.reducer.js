@@ -6,10 +6,8 @@ const initialState = Immutable.from({ message: undefined });
 
 export default handleActions(
   {
-    [actions.ERROR](state, { type, payload, meta, error }) {
-      return state.merge({
-        message: payload
-      });
+    [actions.ALGORITHM_APPLY_SUCCESS](state, { type, payload, meta, error }) {
+      return state.merge({ payload });
     }
   },
   initialState

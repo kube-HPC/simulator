@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual'
-import {Upload, Table, Card, Button, Icon, Popover, Input, InputNumber, Modal, Select, Row, Col } from 'antd';
+import { Upload, Table, Card, message, Button, Icon, Popover, Input, InputNumber, Modal, Select, Row, Col } from 'antd';
 import ReactJson from 'react-json-view';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
@@ -9,7 +9,7 @@ import { withState } from 'recompose';
 import parseUnit from 'parse-unit';
 import { openModal } from '../../../actions/modal.action';
 import { getAlgorithmReadme } from '../../../actions/readme.action';
-import { init, storeAlgorithm, deleteAlgorithmFromStore,applyAlgorithm } from '../../../actions/algorithmTable.action';
+import { init, storeAlgorithm, deleteAlgorithmFromStore, applyAlgorithm } from '../../../actions/algorithmTable.action';
 import HEditor from '../HEditor.react';
 import AlgorithmTabSwitcher from "../../dumb/AlgorithmTabSwitcher";
 import algorithmObjectTemplate from '../../stubs/algorithm-object.json';
@@ -20,7 +20,7 @@ const Dragger = Upload.Dragger;
 class AlgorithmTable extends Component {
   componentWillMount() {
     this.props.init();
-    this.setState( { isVisible: false } );
+    this.setState({ isVisible: false });
     this.setState({ algoToAdd: { ...algorithmObjectTemplate } });
 
     const sorter = (a, b) => {
@@ -42,7 +42,7 @@ class AlgorithmTable extends Component {
           onOk() {
             action(record.data.name);
           },
-          onCancel() {}
+          onCancel() { }
         },
       );
     };
@@ -72,8 +72,6 @@ class AlgorithmTable extends Component {
     };
 
     this.dragProps.onChange = this.dragProps.onChange.bind(this);
-
-   
 
     this.columns = [
       {
@@ -144,7 +142,6 @@ class AlgorithmTable extends Component {
       }
     ];
   }
-  
   onVisible = () => this.setState({ isVisible: !this.state.isVisible })
   onFormDataChange = (e) => {
     this.setState({ formdata: e.target.value });
@@ -159,7 +156,6 @@ class AlgorithmTable extends Component {
   onPopOverCancel = () => {
     this.onVisible();
   }
-  
   _parseUnit = (obj) => {
     const [val, unit] = parseUnit(obj);
     return { val, unit };
@@ -167,10 +163,7 @@ class AlgorithmTable extends Component {
   render() {
     const Option = Select.Option;
     const algoData = this.state.algoToAdd;
-    // const getMemoryProp = (str, isGetNumber) => isGetNumber ? +str.match(/\d+/g).pop() : str.match(/\D+/g).pop();
     const memory = this._parseUnit(algoData.mem);
-    // const memoryNum = getMemoryProp(algoData.mem, true);
-    // const memoryProp = getMemoryProp(algoData.mem, false);
     const algoOptions = Object.entries(algoData.options).filter((p) => p[1]).map((a) => a[0]);
 
     const AlgorithmInput = (
@@ -203,6 +196,9 @@ class AlgorithmTable extends Component {
             prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }} />}
             placeholder="Insert algorithm image"
           />
+        </Row>
+        <Row style={{ marginBottom: 5, marginTop: 10 }}>
+          <div><b>Resources</b></div>
         </Row>
         <Row style={{ marginBottom: 5 }}>
           <span
@@ -298,6 +294,9 @@ class AlgorithmTable extends Component {
             <Option value="Ei">Ei</Option>
           </Select>
         </Row>
+        <Row style={{ marginBottom: 5, marginTop: 10 }}>
+          <div><b>Advanced</b></div>
+        </Row>
         <Row style={{ marginBottom: 5 }}>
           <span
             style={{
@@ -317,6 +316,24 @@ class AlgorithmTable extends Component {
             onChange={v => this.setState(state => (state.algoToAdd.minHotWorkers = v))}
             style={{ width: 50 }}
           />
+        </Row>
+        <Row style={{ marginBottom: 5 }}>
+          <Select
+            defaultValue={algoOptions}
+            mode="tags"
+            style={{ width: '100%' }}
+            placeholder="Options"
+            onChange={v => {
+              const optionsArray = this.state.algoToAdd.options;
+              const status = optionsArray[v];
+              optionsArray[v] = !status;
+            }}
+          >
+            <Option key="debug">Debug</Option>
+          </Select>
+        </Row>
+        <Row style={{ marginBottom: 5, marginTop: 10 }}>
+          <div><b>Code</b></div>
         </Row>
         <Row style={{ marginBottom: 5 }}>
           <span
@@ -368,21 +385,6 @@ class AlgorithmTable extends Component {
             <p className="ant-upload-hint">Support for zip or tar.gz only</p>
           </Dragger>
         </Row>
-        <Row style={{ marginBottom: 40 }}>
-          <Select
-            defaultValue={algoOptions}
-            mode="tags"
-            style={{ width: '100%' }}
-            placeholder="Options"
-            onChange={v => {
-              const optionsArray = this.state.algoToAdd.options;
-              const status = optionsArray[v];
-              optionsArray[v] = !status;
-            }}
-          >
-            <Option key="debug">Debug</Option>
-          </Select>
-        </Row>
       </div>
     );
     const PopOverContent = (
@@ -391,46 +393,47 @@ class AlgorithmTable extends Component {
         <Row type="flex" justify="space-between" align="middle">
           <Col span={5} className='textAlign'>
             <Button type="primary" onClick={this.onPopOverConfirm} style={{ margin: 'auto' }}>
-                    Confirm
+              Confirm
             </Button>
           </Col>
           <Col span={10} className='textAlign'>
-            <HEditor 
+            <HEditor
               styledButton={(onClick) => <Button onClick={onClick}>Add As JSON</Button>}
               jsonTemplate={JSON.stringify(this.state.algoToAdd, null, 2)}
               title={'Store Algorithm Editor'}
               okText={'Store Algorithm'}
               action={this.props.storeAlgorithm}
-              />
+            />
           </Col>
           <Col span={5} className='textAlign'>
-            <Button onClick={this.onPopOverCancel}  style={{ margin: 'auto' }}>
-                    Cancel
+            <Button onClick={this.onPopOverCancel} style={{ margin: 'auto' }}>
+              Cancel
             </Button>
           </Col>
         </Row>
       </div>
     );
 
-    const { dataSource,algorithmReadme } = this.props;
+    const { dataSource, algorithmReadme } = this.props;
     return (
       <div>
         <Table
           columns={this.columns}
           dataSource={dataSource.asMutable()}
-          pagination={{ className: "tablePagination", defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true}}
+          pagination={{ className: "tablePagination", defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true }}
           locale={{ emptyText: 'no data' }}
           onExpand={(expanded, record) => {
             if (expanded) {
               this.props.getAlgorithmReadme(record.key)
 
-            }}}
+            }
+          }}
           expandedRowRender={(record) => (
-            <AlgorithmTabSwitcher algorithmDetails={record} readme={algorithmReadme&&algorithmReadme[record.key]&&algorithmReadme[record.key].readme}/>
-          )}/>
+            <AlgorithmTabSwitcher algorithmDetails={record} readme={algorithmReadme && algorithmReadme[record.key] && algorithmReadme[record.key].readme} />
+          )} />
         <Popover
           placement="topRight"
-          content={ PopOverContent }
+          content={PopOverContent}
           title="Insert new algorithm to store"
           trigger="click"
           visible={this.state.isVisible}>
@@ -456,16 +459,16 @@ AlgorithmTable.propTypes = {
   getAlgorithmReadme: PropTypes.func.isRequired,
   storeAlgorithm: PropTypes.func.isRequired,
   deleteAlgorithmFromStore: PropTypes.func.isRequired,
-  algorithmReadme:PropTypes.object
+  algorithmReadme: PropTypes.object
 };
 
 const mapStateToProps = (state) => ({
   dataSource: tableDataSelector(state),
   scriptsPath: state.serverSelection.currentSelection.scriptsPath,
   sshUser: state.serverSelection.currentSelection.user,
-  algorithmReadme:state.algorithmReadme
+  algorithmReadme: state.algorithmReadme
 });
 
-export default connect(mapStateToProps, { openModal, init, storeAlgorithm, deleteAlgorithmFromStore,getAlgorithmReadme,applyAlgorithm })(
+export default connect(mapStateToProps, { openModal, init, storeAlgorithm, deleteAlgorithmFromStore, getAlgorithmReadme, applyAlgorithm })(
   withState('isVisible', 'onPopoverClickVisible', { visible: false, podName: '' })(AlgorithmTable)
 );

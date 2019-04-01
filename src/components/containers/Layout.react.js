@@ -18,8 +18,6 @@ import { BackTop, Row, Col, Tag, message, Layout, Icon, Menu } from 'antd';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import './Layout.scss';
 import { isUndefined } from 'util';
-import { clearError } from '../../actions/error.action';
-
 import { ReactComponent as LogoSvg } from '../../images/logoBordered.svg';
 import { ReactComponent as DebugIcon } from '../../images/debug-icon.svg';
 import { ReactComponent as DriversIcon } from '../../images/drivers-icon.svg';
@@ -35,10 +33,10 @@ const showHeader = isCollapsed =>
   isCollapsed ? (
     <div />
   ) : (
-    <Col span={12} style={{ margin: 'auto' }}>
-      <AnimatedHeader />
-    </Col>
-  );
+      <Col span={12} style={{ margin: 'auto' }}>
+        <AnimatedHeader />
+      </Col>
+    );
 
 const setMenuItemTitle = (title, count) => (
   <div>
@@ -105,18 +103,6 @@ class LayoutInner extends React.Component {
       duration: 5,
       maxCount: 3
     });
-  }
-
-  componentDidUpdate() {
-    const errorObj = this.props.errorMessage;
-    if (errorObj) {
-      if (typeof errorObj === 'string') {
-        message.error(errorObj);
-      } else if (errorObj.message) {
-        message.error(errorObj.message);
-      }
-      this.props.clearError();
-    }
   }
 
   render() {
@@ -199,21 +185,18 @@ const mapStateToProps = state => {
     algorithmBuildsCount: (state.algorithmBuildsTable.dataSource || []).length,
     pipelineCount: (state.storedPipeline.dataSource || []).length,
     workerCount: (state.workerTable.stats || { total: 0 }).total,
-    debugCount: (state.debugTable.dataSource || []).length,
-    errorMessage: state.error.message
+    debugCount: (state.debugTable.dataSource || []).length
   };
 };
 
 LayoutInner.propTypes = {
-  init: PropTypes.func.isRequired,
-  clearError: PropTypes.func.isRequired,
-  errorMessage: PropTypes.object
+  init: PropTypes.func.isRequired
 };
 
 export default compose(
   connect(
     mapStateToProps,
-    { init, clearError }
+    { init }
   ),
   withState('isTableVisible', 'onMenuSelected', {
     visible: true,

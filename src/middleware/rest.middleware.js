@@ -7,15 +7,14 @@ let url = null;
 const reject = (dispatch, payload, action) => {
   dispatch({
     type: `${action.payload.actionType}_REJECT`,
-    meta: action.meta,
+    meta: {
+      message: {
+        type: 'error',
+        content: _formatError(payload)
+      }
+    },
     payload
   });
-  dispatch({
-    type: `ERROR`,
-    meta: action.meta,
-    payload
-  });
-  
 };
 
 const pending = (dispatch, payload, action) => {
@@ -27,13 +26,44 @@ const pending = (dispatch, payload, action) => {
 };
 
 const success = (dispatch, payload, action) => {
-  setTimeout(() => {
-    dispatch({
-      type: `${action.payload.actionType}_SUCCESS`,
-      meta: action.meta,
-      payload
-    });
-  }, 100);
+  dispatch({
+    type: `${action.payload.actionType}_SUCCESS`,
+    meta: {
+      message: {
+        type: 'success', // 'success/error/warning'
+        content: _formatSuccess(payload)
+      }
+    },
+    payload
+  });
+};
+
+const _formatError = (payload) => {
+  let content;
+  if (typeof payload === 'string') {
+    content = payload;
+  }
+  else if (payload.message) {
+    content = payload.message;
+  }
+  else {
+    content = 'Error';
+  }
+  return content;
+};
+
+const _formatSuccess = (payload) => {
+  let content;
+  if (payload.messages) {
+    content = payload.messages.join(', ');
+  }
+  else if (payload.message) {
+    content = payload.message;
+  }
+  else {
+    content = 'Success';
+  }
+  return content;
 };
 
 const setPath = ({ monitorBackend }) => {

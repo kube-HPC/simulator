@@ -16,7 +16,6 @@ import kubernetesLogs from './kubernetesLogs.reducer';
 import nodeStatistics from './nodeStatistics.reducer';
 import pipelineReadme from "./pipelineReadme.reducer";
 import algorithmReadme from "./algorithmReadme.reducer";
-import error from './error.reducer';
 
 const rootReducer = combineReducers({
   ui,
@@ -35,7 +34,6 @@ const rootReducer = combineReducers({
   kubernetesLogs,
   nodeStatistics,
   pipelineReadme,
-  algorithmReadme,
-  error
+  algorithmReadme
 });
 export default rootReducer;
