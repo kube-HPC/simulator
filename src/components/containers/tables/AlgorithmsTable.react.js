@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Table, Button, Popover, Modal, Row, Col } from 'antd';
+import { Table, Button, Popover, Modal, Row, Col, Badge } from 'antd';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import { withState } from 'recompose';
@@ -13,6 +13,7 @@ import AlgorithmTabSwitcher from '../../dumb/AlgorithmTabSwitcher';
 import AddButton from '../../dumb/AddButton.react';
 import './AlgorithmsTable.scss';
 import AddAlgorithmModal from '../../dumb/AddAlgorithmModal.react';
+import HEditor from '../HEditor.react';
 
 class AlgorithmTable extends Component {
   state = {
@@ -92,18 +93,19 @@ class AlgorithmTable extends Component {
         title: 'Action',
         dataIndex: 'action',
         key: 'action',
-        width: '20%',
         render: (text, record, index) => (
           <Row type="flex" justify="start">
             <Col span={4}>
-              <Button
-                type="edit"
-                shape="circle"
-                icon="edit"
-                onClick={() => {
-                  this.setState({ isVisible: true });
-                  this.setState({ algoToAdd: { ...record.data, mem: record.data.mem + 'Mi' } });
-                }}
+              <HEditor
+                jsonTemplate={JSON.stringify(record.data, null, 2)}
+                styledButton={(onClick, isEditable = false) => (
+                  <Badge dot={isEditable}>
+                    <Button type="edit" shape="circle" icon="edit" onClick={onClick} />
+                  </Badge>
+                )}
+                title={'Edit Algorithm'}
+                okText={'Update'}
+                action={this.props.storeAlgorithm}
               />
             </Col>
             <Col span={4}>
@@ -135,6 +137,7 @@ class AlgorithmTable extends Component {
           }}
           expandedRowRender={record => <AlgorithmTabSwitcher algorithmDetails={record} readme={algorithmReadme && algorithmReadme[record.key] && algorithmReadme[record.key].readme} />}
         />
+
         <AddButton onVisible={this.toggleAddAlgoVisible}> </AddButton>
         <AddAlgorithmModal visible={this.state.isAddAlgoVisible} onSubmit={this.props.applyAlgorithm} toggleVisible={this.toggleAddAlgoVisible} />
       </div>
