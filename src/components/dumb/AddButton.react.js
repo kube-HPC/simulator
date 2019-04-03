@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { HAddButton } from '../style/Styled';
-import { Icon } from 'antd';
+import './AddButton.scss';
+import { Button, Icon } from 'antd';
 
 const AddButton = ({ onVisible }) => (
-  <HAddButton type="primary" size="default" shape="circle" onClick={onVisible}>
+  <Button className="button" type="primary" size="default" shape="circle" onClick={onVisible}>
     <Icon type="plus" style={{ fontSize: 'x-large' }} />
-  </HAddButton>
+  </Button>
 );
 
 AddButton.propTypes = {

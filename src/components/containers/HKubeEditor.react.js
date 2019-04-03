@@ -71,15 +71,12 @@ function HKubeEditor(props) {
             {props.okText}
           </Button>,
           <Button key={2} onClick={onReset}>
-            {' '}
             Reset
           </Button>,
           <Button key={3} onClick={onGenerate} disabled={true}>
-            {' '}
             Generate
           </Button>,
           <Button key={4} onClick={onCancel}>
-            {' '}
             Cancel
           </Button>
         ]}

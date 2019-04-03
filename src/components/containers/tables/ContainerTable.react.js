@@ -7,19 +7,13 @@ import PropTypes from 'prop-types';
 import { withState } from 'recompose';
 import humanizeDuration from 'humanize-duration';
 import { openModal } from '../../../actions/modal.action';
-import {
-  init,
-  stopPipeline,
-  execRawPipeline,
-  downloadStorageResults
-} from '../../../actions/containerTable.action';
+import { init, stopPipeline, execRawPipeline, downloadStorageResults } from '../../../actions/containerTable.action';
 import TabSwitcher from '../../dumb/TabSwitcher.react';
 import { getJaegerData } from '../../../actions/jaegerGetData.action';
 import { getKubernetesLogsData } from '../../../actions/kubernetesLog.action';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { STATUS, PIPELINE_STATUS, PRIORITY } from '../../../constants/colors';
 import './ContainerTable.scss';
-
 
 class ContainerTable extends Component {
   componentWillMount() {
@@ -36,7 +30,7 @@ class ContainerTable extends Component {
     };
 
     const intSorter = (a, b) => {
-      return a - b
+      return a - b;
     };
 
     const getStatusFilter = () => {
@@ -51,10 +45,7 @@ class ContainerTable extends Component {
         width: '15%',
         sorter: (a, b) => sorter(a.key, b.key),
         render: (text, record) => (
-          <CopyToClipboard
-            text={`${record.key}`}
-            onCopy={() => notification.success({ message: 'Copied to clipboard' })}
-          >
+          <CopyToClipboard text={`${record.key}`} onCopy={() => notification.success({ message: 'Copied to clipboard' })}>
             <div>
               <Icon type="right" className="jobIdIcon" />
               {`${record.key.substring(0, 15)} ...`}
@@ -76,16 +67,14 @@ class ContainerTable extends Component {
         key: 'status',
         render: (text, record) => (
           <span>
-            <Tag color={STATUS[record.status && record.status.status]}>
-              {firstLetterUpperCase(record.status && record.status.status)}
-            </Tag>
+            <Tag color={STATUS[record.status && record.status.status]}>{firstLetterUpperCase(record.status && record.status.status)}</Tag>
           </span>
         ),
         sorter: (a, b) => sorter(a.status.status, b.status.status),
         filterMultiple: true,
         filters: getStatusFilter(),
         onFilter: (value, record) => {
-          return record.status.status === value
+          return record.status.status === value;
         }
       },
       {
@@ -96,9 +85,7 @@ class ContainerTable extends Component {
         sorter: (a, b) => sorter(a.timestamp, b.timestamp),
         render: (text, record) => (
           <span>
-            <Moment format="DD/MM/YY HH:mm:ss">
-              {record.pipeline && record.pipeline.startTime}
-            </Moment>
+            <Moment format="DD/MM/YY HH:mm:ss">{record.pipeline && record.pipeline.startTime}</Moment>
           </span>
         )
       },
@@ -110,12 +97,11 @@ class ContainerTable extends Component {
         render: (text, record) => {
           return (
             <span>
-              {record.results ?
-                (
-                  <span>{humanizeDuration(record.results.timeTook * 1000, { maxDecimalPoints: 2 })}</span>
-                ) : (
-                  <span>{humanizeDuration(Date.now() - (record.pipeline && record.pipeline.startTime), { maxDecimalPoints: 2 })}</span>
-                )}
+              {record.results ? (
+                <span>{humanizeDuration(record.results.timeTook * 1000, { maxDecimalPoints: 2 })}</span>
+              ) : (
+                <span>{humanizeDuration(Date.now() - (record.pipeline && record.pipeline.startTime), { maxDecimalPoints: 2 })}</span>
+              )}
             </span>
           );
         }
@@ -129,10 +115,10 @@ class ContainerTable extends Component {
           let statuses =
             record.status.data && record.status.data.states
               ? Object.entries(record.status.data.states.asMutable()).map((s, i) => (
-                <Tooltip key={i} placement="top" title={firstLetterUpperCase(s[0])}>
-                  <Tag color={STATUS[s[0]] || 'magenta'}>{s[1]}</Tag>
-                </Tooltip>
-              ))
+                  <Tooltip key={i} placement="top" title={firstLetterUpperCase(s[0])}>
+                    <Tag color={STATUS[s[0]] || 'magenta'}>{s[1]}</Tag>
+                  </Tooltip>
+                ))
               : null;
           return <span>{statuses}</span>;
         }
@@ -148,7 +134,7 @@ class ContainerTable extends Component {
             <Tooltip placement="top" title={PRIORITY[record.pipeline.priority].name}>
               <Tag color={PRIORITY[record.pipeline.priority].color}>{PRIORITY[record.pipeline.priority].name}</Tag>
             </Tooltip>
-          )
+          );
         }
       },
       {
@@ -164,21 +150,13 @@ class ContainerTable extends Component {
           if (progress === 100) {
             return (
               <span>
-                <Progress
-                  percent={progress}
-                  status={stopped || failed ? 'exception' : 'success'}
-                  strokeColor={failed ? '#f50' : stopped ? 'orange' : null}
-                />
+                <Progress percent={progress} status={stopped || failed ? 'exception' : 'success'} strokeColor={failed ? '#f50' : stopped ? 'orange' : null} />
               </span>
             );
           }
           return (
             <span>
-              <Progress
-                percent={progress}
-                status={stopped || failed ? 'exception' : 'active'}
-                strokeColor={failed ? '#f50' : stopped ? 'orange' : null}
-              />
+              <Progress percent={progress} status={stopped || failed ? 'exception' : 'active'} strokeColor={failed ? '#f50' : stopped ? 'orange' : null} />
             </span>
           );
         }
@@ -192,38 +170,18 @@ class ContainerTable extends Component {
           const stopAction =
             record.status.status === 'active' || record.status.status === 'pending' ? (
               <Tooltip placement="top" title={'Stop Pipeline'}>
-                <Button
-                  type="danger"
-                  shape="circle"
-                  icon="close"
-                  onClick={() => this.stopPipeline(record.key)}
-                />
+                <Button type="danger" shape="circle" icon="close" onClick={() => this.stopPipeline(record.key)} data-cy="pipelineStop" />
               </Tooltip>
             ) : (
-                <Tooltip placement="top" title={'Re-Run'}>
-                  <Button
-                    type="default"
-                    shape="circle"
-                    icon="redo"
-                    onClick={() => this.rerunPipeline(record.pipeline)}
-                  />
-                </Tooltip>
-              );
+              <Tooltip placement="top" title={'Re-Run'}>
+                <Button type="default" shape="circle" icon="redo" onClick={() => this.rerunPipeline(record.pipeline)} />
+              </Tooltip>
+            );
 
-          const isDisabled = !(
-            record.results &&
-            record.results.data &&
-            record.results.data.storageInfo
-          );
+          const isDisabled = !(record.results && record.results.data && record.results.data.storageInfo);
           const downloadAction = (
             <Tooltip placement="top" title={'Download Results'}>
-              <Button
-                type="default"
-                disabled={isDisabled}
-                shape="circle"
-                icon="download"
-                onClick={() => this.downloadStorageResults(record.results.data.storageInfo.path)}
-              />
+              <Button type="default" disabled={isDisabled} shape="circle" icon="download" onClick={() => this.downloadStorageResults(record.results.data.storageInfo.path)} />
             </Tooltip>
           );
 
@@ -250,7 +208,7 @@ class ContainerTable extends Component {
     this.props.downloadStorageResults(path);
   }
 
-  renderColumns() { }
+  renderColumns() {}
 
   render() {
     const { dataSource } = this.props;
@@ -292,15 +250,11 @@ class ContainerTable extends Component {
 
 const containerTable = state => state.containerTable.dataSource;
 const autoCompleteFilter = state => state.autoCompleteFilter.filter;
-const rowFilter = (raw, value) =>
-  Object.values(raw.status).find(data =>
-    data instanceof Object ? false : data.includes(value) ? true : false
-  );
+const rowFilter = (raw, value) => Object.values(raw.status).find(data => (data instanceof Object ? false : data.includes(value) ? true : false));
 const tableDataSelector = createSelector(
   containerTable,
   autoCompleteFilter,
-  (containerTable, autoCompleteFilter) =>
-    containerTable && containerTable.asMutable().filter(row => rowFilter(row, autoCompleteFilter))
+  (containerTable, autoCompleteFilter) => containerTable && containerTable.asMutable().filter(row => rowFilter(row, autoCompleteFilter))
 );
 
 ContainerTable.propTypes = {

@@ -195,7 +195,7 @@ class StoredPipesTable extends Component {
             }}
           />
         </Table>
-        <Popover placement="topRight" title="Update algorithm" trigger="click">
+        <Popover placement="topRight">
           <HKubeEditor
             jsonTemplate={JSON.stringify(template, null, 2)}
             styledButton={(onClick, isEditable = false) => <AddButton onVisible={onClick} />}
