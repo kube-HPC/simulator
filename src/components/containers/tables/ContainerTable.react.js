@@ -173,10 +173,16 @@ class ContainerTable extends Component {
                 <Button type="danger" shape="circle" icon="close" onClick={() => this.stopPipeline(record.key)} data-cy="pipelineStop" />
               </Tooltip>
             ) : (
-              <Tooltip placement="top" title={'Re-Run'}>
-                <Button type="default" shape="circle" icon="redo" onClick={() => this.rerunPipeline(record.pipeline)} />
-              </Tooltip>
-            );
+                <Tooltip placement="top" title={'Re-Run'}>
+                  <Button
+                    type="default"
+                    shape="circle"
+                    icon="redo"
+                    data-meta="pipelineReRun"
+                    onClick={() => this.rerunPipeline(record.pipeline)}
+                  />
+                </Tooltip>
+              );
 
           const isDisabled = !(record.results && record.results.data && record.results.data.storageInfo);
           const downloadAction = (
