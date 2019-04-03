@@ -58,10 +58,10 @@ class AlgorithmBuildsTable extends Component {
     this.columns = [
       {
         title: 'Algorithm Name',
-        dataIndex: 'name',
-        key: 'name',
+        dataIndex: 'algorithmName',
+        key: 'algorithmName',
         width: '20%',
-        sorter: (a, b) => sorter(a.name, b.name)
+        sorter: (a, b) => sorter(a.algorithmName, b.algorithmName)
       },
       {
         title: 'Status',
@@ -83,7 +83,7 @@ class AlgorithmBuildsTable extends Component {
         key: 'builds',
         width: '60%',
         render: (text, record) =>
-          this.props.dataSource.filter(d => d.algorithm.name === record.name).length
+          this.props.dataSource.filter(d => d.algorithmName === record.algorithmName).length
       }
     ];
 
@@ -108,17 +108,17 @@ class AlgorithmBuildsTable extends Component {
       },
       {
         title: 'Env',
-        dataIndex: 'algorithm.env',
+        dataIndex: 'env',
         key: 'env',
         width: '10%',
-        sorter: (a, b) => sorter(a.algorithm.env, b.algorithm.env)
+        sorter: (a, b) => sorter(a.env, b.env)
       },
       {
         title: 'Version',
-        dataIndex: 'algorithm.version',
+        dataIndex: 'version',
         key: 'version',
         width: '10%',
-        sorter: (a, b) => sorter(a.algorithm.version, b.algorithm.version)
+        sorter: (a, b) => sorter(a.version, b.version)
       },
       {
         title: 'Start Time',
@@ -224,7 +224,7 @@ class AlgorithmBuildsTable extends Component {
 
   _expandedRowRender = record => {
     const data = [];
-    const dataSource = this.props.dataSource.filter(d => d.algorithm.name === record.name);
+    const dataSource = this.props.dataSource.filter(d => d.algorithmName === record.algorithmName);
 
     dataSource.forEach(d => {
       data.push(d);
@@ -251,10 +251,10 @@ class AlgorithmBuildsTable extends Component {
 
   render() {
     const { dataSource } = this.props;
-    const grouped = groupby(dataSource, 'algorithm.name');
+    const grouped = groupby(dataSource, 'algorithmName');
     const builds = Object.entries(grouped).map(([k, v]) => {
       return {
-        name: k,
+        algorithmName: k,
         statuses: groupby(v, 'status')
       };
     });
