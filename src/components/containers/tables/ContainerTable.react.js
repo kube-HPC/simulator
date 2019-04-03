@@ -205,6 +205,7 @@ class ContainerTable extends Component {
                     type="default"
                     shape="circle"
                     icon="redo"
+                    data-meta="pipelineReRun"
                     onClick={() => this.rerunPipeline(record.pipeline)}
                   />
                 </Tooltip>
