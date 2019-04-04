@@ -39,7 +39,7 @@ export default function JsonEditor({ onChange, value }) {
         }}
         editorProps={{ $blockScrolling: true }}
         onChange={onChange}
-        style={{ width: 'auto', height: '60vh', fontFamily: 'monospace' }}
+        style={{ width: 'auto', height: '70vh', fontFamily: 'monospace' }}
       />
     </div>
   );

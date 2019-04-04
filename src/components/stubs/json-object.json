@@ -12,8 +12,8 @@
     "files": {}
   },
   "webhooks": {
-    "progress": "http://localhost:3003/webhook/progress",
-    "result": "http://localhost:3003/webhook/result"
+    "progress": "",
+    "result": ""
   },
   "triggers": {
     "cron": {

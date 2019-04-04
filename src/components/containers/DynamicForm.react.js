@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Icon, Row, Col, Input, Form, Select } from 'antd';
+import { Button, Icon, Input, Form, Select } from 'antd';
 
 import './DynamicForm.scss';
 
@@ -14,8 +14,8 @@ const selectOptions = algorithms =>
 
 function DynamicForm(props) {
   const { formData, form, onChange } = props;
+  const { formItemLayout, formItemLayoutWithOutLabel } = props;
   const { getFieldDecorator, getFieldValue } = form;
-  const nodes = formData.nodes;
 
   const onChangeNode = (formData, index, t1, t2 = undefined) => c => {
     const value = c && c.target ? c.target.value : c;
@@ -24,42 +24,33 @@ function DynamicForm(props) {
     onChange({ ...formData });
   };
 
-  const addRemoveIcon = i => {
-    const iconComponent = (
-      <Col key={i}>
-        <Icon className="dynamic-delete-button" type="minus-circle-o" onClick={() => removeNode(i)} />
-      </Col>
-    );
-    return i === 0 ? [] : [iconComponent];
-  };
+  const nodes = formData.nodes;
 
   getFieldDecorator('keys', { initialValue: [...Array(nodes.length).keys()] });
-  const keys = getFieldValue('keys');
 
-  const formItems = keys.map(i => {
+  const formItems = getFieldValue('keys').map(i => {
     return (
       <Form.Item key={i} required={i === 0}>
-        <Row type="flex" justify="space-between">
-          <Col span={22}>
-            <Row gutter={12}>
-              <Col span={12}>
-                <Input placeholder="Node Name" value={nodes[i] ? nodes[i].nodeName : ''} onChange={onChangeNode(formData, i, 'nodes', 'nodeName')} />
-              </Col>
-              <Col span={12}>
-                <Select value={nodes[i] ? nodes[i].algorithmName : ''} onChange={onChangeNode(formData, i, 'nodes', 'algorithmName')}>
-                  {selectOptions(props.algorithms)}
-                </Select>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Input.TextArea value={JSON.stringify(nodes[i].input)} placeholder="Input" autosize={{ minRows: 2 }} disabled={true} />
-              </Col>
-            </Row>
-          </Col>
-
-          {addRemoveIcon(i)}
-        </Row>
+        <Form.Item {...formItemLayout} label="Node Name">
+          <Input placeholder="Node Name" value={nodes[i] ? nodes[i].nodeName : ''} onChange={onChangeNode(formData, i, 'nodes', 'nodeName')} />
+        </Form.Item>
+        <Form.Item {...formItemLayout} label="Algorithm Name">
+          <Select placeholder="Select Algorithm Name" onChange={onChangeNode(formData, i, 'nodes', 'algorithmName')}>
+            {selectOptions(props.algorithms)}
+          </Select>
+        </Form.Item>
+        <Form.Item {...formItemLayout} label="Input">
+          <Input.TextArea placeholder="Insert Input Array" autosize={{ minRows: 2 }} disabled={true} />
+        </Form.Item>
+        {i !== 0 ? (
+          <Form.Item {...formItemLayoutWithOutLabel}>
+            <Button type="danger" onClick={() => removeNode(i)}>
+              <Icon type="minus" /> Remove Node
+            </Button>
+          </Form.Item>
+        ) : (
+          <div />
+        )}
       </Form.Item>
     );
   });
@@ -80,10 +71,8 @@ function DynamicForm(props) {
 
   return (
     <div>
-      <Form.Item {...props.formItemLayout} label="Nodes" required={true}>
-        {formItems}
-      </Form.Item>
-      <Form.Item {...props.formItemLayoutWithOutLabel}>
+      <Form.Item required={true}>{formItems}</Form.Item>
+      <Form.Item {...formItemLayoutWithOutLabel}>
         <Button type="dashed" onClick={addNode} style={{ width: '100%' }}>
           <Icon type="plus" /> Add Node
         </Button>

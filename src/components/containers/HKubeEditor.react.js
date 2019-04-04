@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Modal, Button, notification, Icon } from 'antd';
+import { Modal, Button, notification, Icon, Tabs } from 'antd';
 import PropTypes from 'prop-types';
 import generateName from 'sillyname';
 import './HKubeEditor.scss';
 
-import LiveJsonEditor from '../dumb/LiveJsonEditor.react';
+import AddPipelineForm from './AddPipelineForm.react';
+import JsonEditor from '../dumb/JsonEditor.react';
 
 function HKubeEditor(props) {
   const [json, setJson] = useState(props.jsonTemplate);
@@ -51,7 +52,6 @@ function HKubeEditor(props) {
         }
       ]
     };
-
     setJson(JSON.stringify(minimalPipeline, null, 2));
   };
 
@@ -61,6 +61,7 @@ function HKubeEditor(props) {
     <div>
       {props.styledButton(() => setVisible(!isVisible))}
       <Modal
+        style={{ top: '2%' }}
         visible={isVisible}
         width={'80%'}
         title={props.title}
@@ -81,8 +82,14 @@ function HKubeEditor(props) {
           </Button>
         ]}
       >
-        <LiveJsonEditor onChange={setJson} formData={JSON.parse(json)} pipelines={props.pipelines} algorithms={props.algorithms.map(value => value.key)} />
-        <p className="paragraph">{props.hintText}</p>
+        <Tabs defaultActiveKey="2">
+          <Tabs.TabPane tab="Form" key="1">
+            <AddPipelineForm formData={JSON.parse(json)} pipelines={props.pipelines} algorithms={algorithms} />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Json Editor" key="2">
+            <JsonEditor value={json} onChange={setJson} />
+          </Tabs.TabPane>
+        </Tabs>
       </Modal>
     </div>
   );
