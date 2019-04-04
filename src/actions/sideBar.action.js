@@ -9,7 +9,7 @@ export const sideBarOpen = data => {
 
 export const sideBarClose = () => ({
   type: actions.CLOSE_SIDEBAR,
-  payload: { visible: false, data: null }
+  payload: { data: null, visible: false }
 });
 
 // WEBPACK FOOTER //

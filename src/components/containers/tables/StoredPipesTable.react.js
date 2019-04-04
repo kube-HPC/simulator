@@ -11,13 +11,15 @@ import { openModal } from '../../../actions/modal.action';
 import { execStoredPipe, deleteStoredPipeline, updateStoredPipeline, cronStart, cronStop } from '../../../actions/storedPipes.action';
 import { addPipe } from '../../../actions/addPipe.action';
 import './StoredPipesTable.scss';
-import HKubeEditor from '../HKubeEditor.react';
 import HEditor from '../HEditor.react';
 import AddButton from '../../dumb/AddButton.react';
 import { getPipelineReadme } from '../../../actions/readme.action';
 import { STATUS } from '../../../constants/colors';
 import { ReactComponent as PlayIconSvg } from '../../../images/play-icon.svg';
 import template from '../../stubs/json-object.json';
+import AddPipeline from '../AddPipeline.react';
+import { sideBarOpen, sideBarClose } from '../../../actions/sideBar.action';
+import sideBarTypes from '../../../constants/sideBarTypes';
 
 const { Column } = Table;
 class StoredPipesTable extends Component {
@@ -28,7 +30,7 @@ class StoredPipesTable extends Component {
   renderColumns() {}
 
   render() {
-    const { storedPipelines, dataStats, dataSource, pipelineReadme } = this.props;
+    const { storedPipelines, dataStats, dataSource, pipelineReadme, sideBarOpen } = this.props;
 
     // Need to remove "nodes" key from each pipeline.
     const fixedDataSource = [];
@@ -195,7 +197,7 @@ class StoredPipesTable extends Component {
             }}
           />
         </Table>
-        <AddButton onClick={() => console.log('show sidebar')} />
+        <AddButton onClick={() => sideBarOpen({ data: template, contentType: sideBarTypes.ADD_PIPELINE, type: sideBarTypes.ADD_PIPELINE })} />
       </div>
     );
   }
@@ -227,10 +229,11 @@ const mapStateToProps = state => ({
   dataSource: tableDataSelector(state),
   storedPipelines: state.storedPipeline.dataSource,
   dataStats: state.storedPipeline.dataStats,
-  pipelineReadme: state.pipelineReadme
+  pipelineReadme: state.pipelineReadme,
+  sideBar: state.sideBar
 });
 
 export default connect(
   mapStateToProps,
-  { openModal, init, addPipe, execStoredPipe, deleteStoredPipeline, updateStoredPipeline, cronStop, cronStart, getPipelineReadme }
+  { openModal, init, addPipe, execStoredPipe, deleteStoredPipeline, updateStoredPipeline, cronStop, cronStart, getPipelineReadme, sideBarOpen, sideBarClose }
 )(StoredPipesTable);

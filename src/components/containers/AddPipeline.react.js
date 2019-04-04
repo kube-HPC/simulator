@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import { sideBarOpen, sideBarClose } from '../../actions/sideBar.action';
+
 function AddPipeline(props) {
   return <div>{JSON.stringify(props.storedPipelines)}</div>;
 }
@@ -15,4 +17,7 @@ const mapStateToProps = state => ({
   sideBar: state.sideBar
 });
 
-export default connect(mapStateToProps)(AddPipeline);
+export default connect(
+  mapStateToProps,
+  { sideBarOpen, sideBarClose }
+)(AddPipeline);
