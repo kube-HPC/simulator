@@ -3,7 +3,7 @@ import algorithmObjectTemplate from './../stubs/algorithm-object.json';
 import schema from './../../config/algorithm-input-schema.json';
 import { Modal, Input, Icon, Select, InputNumber, Upload, Divider, Form, Row, Col, Button } from 'antd';
 import parseUnit from 'parse-unit';
-import './AlgorithmInput.scss';
+import './AddAlgorithmModal.scss';
 
 const Option = Select.Option;
 
@@ -19,6 +19,13 @@ const insertAlgorithmOptions = options =>
     </Option>
   ));
 
+const insertEnvOptions = options =>
+  Object.entries(options).map(([key, value]) => (
+    <Option key={key} value={key}>
+      {value}
+    </Option>
+  ));
+
 const availableOptions = options =>
   Object.entries(options)
     .filter(([, value]) => value)
@@ -30,10 +37,14 @@ const formItemLayout = {
   labelAlign: 'left'
 };
 
+const getMemValue = (mem, isReturnUnit) => {
+  const { val, unit } = _parseUnit(mem);
+  return isReturnUnit ? unit : val;
+};
+
 export default function AddAlgorithmModal(props) {
   const [algoData, setAlgoData] = useState(algorithmObjectTemplate);
   const [file, setFile] = useState(undefined);
-  const memory = _parseUnit(algoData.mem);
 
   const dragProps = {
     name: 'file',
@@ -62,8 +73,6 @@ export default function AddAlgorithmModal(props) {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('payload', JSON.stringify(algoData));
-    // TODO: remove console
-    console.info(algoData);
     props.onSubmit(formData);
     props.toggleVisible();
   };
@@ -105,9 +114,7 @@ export default function AddAlgorithmModal(props) {
             placeholder="Insert algorithm image"
           />
         </Form.Item>
-        <Divider className="divider" orientation="left">
-          {schema.resources}
-        </Divider>
+        <Divider orientation="left">{schema.resources}</Divider>
         <Form.Item {...formItemLayout} label={schema.cpu}>
           <InputNumber min={1} value={algoData.cpu} defaultValue={algoData.cpu} onChange={v => setAlgoData({ ...algoData, cpu: +v })} />
         </Form.Item>
@@ -117,10 +124,24 @@ export default function AddAlgorithmModal(props) {
         <Form.Item {...formItemLayout} label={schema.memory} labelAlign="left">
           <Row type="flex" justify="start" gutter={4}>
             <Col>
-              <InputNumber min={1} value={memory.val} defaultValue={memory.val} onChange={v => setAlgoData({ ...algoData, mem: v + _parseUnit(algoData.mem).unit })} />
+              <InputNumber
+                min={1}
+                value={getMemValue(algoData.mem)}
+                onChange={v => {
+                  const { unit } = _parseUnit(algoData.mem);
+                  setAlgoData({ ...algoData, mem: v + unit });
+                }}
+              />
             </Col>
             <Col>
-              <Select value={memory.unit} defaultValue={memory.unit} style={{ width: '90px' }} onChange={v => (algoData.mem = _parseUnit(algoData.mem).val + v)}>
+              <Select
+                value={getMemValue(algoData.mem, true)}
+                style={{ width: '90px' }}
+                onChange={v => {
+                  const { val } = _parseUnit(algoData.mem);
+                  setAlgoData({ ...algoData, mem: val + v });
+                }}
+              >
                 <Option value="Ki">Ki</Option>
                 <Option value="M">M</Option>
                 <Option value="Mi">Mi</Option>
@@ -138,14 +159,18 @@ export default function AddAlgorithmModal(props) {
             </Col>
           </Row>
         </Form.Item>
-        <Divider className="divider" orientation="left">
-          {schema.advanced}
-        </Divider>
+        <Divider orientation="left">{schema.advanced}</Divider>
         <Form.Item {...formItemLayout} label={schema.minHotWorkers}>
-          <InputNumber min={0} value={algoData.minHotWorkers} defaultValue={algoData.minHotWorkers} onChange={v => setAlgoData({ ...setAlgoData, minHotWorkers: v })} />
+          <InputNumber min={0} value={algoData.minHotWorkers} onChange={minHotWorkers => setAlgoData({ ...algoData, minHotWorkers: minHotWorkers })} />
         </Form.Item>
         <Form.Item {...formItemLayout} label={schema.options}>
-          <Select className="input" defaultValue={availableOptions(algoData.options)} mode="tags" placeholder="Enable Options" onSelect={v => (algoData.options[v] = !algoData.options[v])}>
+          <Select
+            className="input"
+            defaultValue={availableOptions(algoData.options)}
+            mode="tags"
+            placeholder="Enable Options"
+            onSelect={key => setAlgoData({ ...algoData, options: { ...algoData.options, [key]: !algoData.options[key] } })}
+          >
             {insertAlgorithmOptions(algoData.options)}
           </Select>
         </Form.Item>
@@ -154,9 +179,7 @@ export default function AddAlgorithmModal(props) {
         </Divider>
         <Form.Item {...formItemLayout} label={schema.environment}>
           <Select className="input" defaultValue={algoData.env} value={algoData.env} onChange={v => (algoData.env = v)}>
-            <Option value="python">python</Option>
-            <Option value="nodejs">nodejs</Option>
-            <Option value="jvm">jvm</Option>
+            {insertEnvOptions(schema.env)}
           </Select>
         </Form.Item>
         <Form.Item {...formItemLayout} label={schema.entryPoint}>
