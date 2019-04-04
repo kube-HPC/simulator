@@ -174,9 +174,7 @@ export default function AddAlgorithmModal(props) {
             {insertAlgorithmOptions(algoData.options)}
           </Select>
         </Form.Item>
-        <Divider className="divider" orientation="left">
-          {schema.code}
-        </Divider>
+        <Divider orientation="left">{schema.code}</Divider>
         <Form.Item {...formItemLayout} label={schema.environment}>
           <Select className="input" defaultValue={algoData.env} value={algoData.env} onChange={v => (algoData.env = v)}>
             {insertEnvOptions(schema.env)}
