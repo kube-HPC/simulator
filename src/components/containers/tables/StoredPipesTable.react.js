@@ -195,22 +195,20 @@ class StoredPipesTable extends Component {
             }}
           />
         </Table>
-        <Popover placement="topRight">
-          <HKubeEditor
-            jsonTemplate={JSON.stringify(template, null, 2)}
-            styledButton={(onClick, isEditable = false) => <AddButton onVisible={onClick} />}
-            algorithms={dataSource.asMutable()}
-            pipelines={storedPipelines.asMutable().map(value => value.name)}
-            title={'Add Pipeline Editor'}
-            okText={'Store Pipeline'}
-            hintText={
-              <span>
-                Hint: Type <strong>node</strong> for adding pipe-node.
-              </span>
-            }
-            action={this.props.addPipe}
-          />
-        </Popover>
+        <HKubeEditor
+          jsonTemplate={JSON.stringify(template, null, 2)}
+          styledButton={(onClick, isEditable = false) => <AddButton onVisible={onClick} />}
+          algorithms={dataSource.asMutable()}
+          pipelines={storedPipelines.asMutable().map(value => value.name)}
+          title={'Add Pipeline Editor'}
+          okText={'Store Pipeline'}
+          hintText={
+            <span>
+              Hint: Type <strong>node</strong> for adding pipe-node.
+            </span>
+          }
+          action={this.props.addPipe}
+        />
       </div>
     );
   }

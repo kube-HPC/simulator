@@ -1,22 +1,21 @@
 import React, { Component } from 'react';
 import Sidebar from 'react-sidebar';
 import { connect } from 'react-redux';
-import AlgorithmInformation from "./AlgorithmInformation.react";
-import MDEditor from "./MDEditor.react";
-import { sideBarClose } from "../../actions/sideBar.action";
+import AlgorithmInformation from './AlgorithmInformation.react';
+import MDEditor from './MDEditor.react';
+import { sideBarClose } from '../../actions/sideBar.action';
 
-import sideBarTypes from "../../constants/sideBarTypes";
-import MDContentSwitcher from "./MDContentSwitcher";
+import sideBarTypes from '../../constants/sideBarTypes';
+import MDContentSwitcher from './MDContentSwitcher';
 class SideBarContainer extends Component {
   constructor() {
     super();
     this.sideBar = null;
-    this.handleClickOutside = this.handleClickOutside.bind(this)
-    this.setChildRef = this.setChildRef.bind(this)
+    this.handleClickOutside = this.handleClickOutside.bind(this);
+    this.setChildRef = this.setChildRef.bind(this);
     this.state = {
       isOpen: false
     };
-
   }
   componentDidMount() {
     document.addEventListener('mousedown', this.handleClickOutside);
@@ -30,31 +29,33 @@ class SideBarContainer extends Component {
       }
     }
   }
-  setChildRef(node) { // receives reference to component as argument
+  setChildRef(node) {
+    // receives reference to component as argument
     this.sidebar = node;
   }
 
   // Passing div in SideBar children because it's props requirement
   render() {
     const { sideBar } = this.props;
-    const Component = sideBar.data&&sideBar.data.payload&&sideBar.data.payload.type === sideBarTypes.PIPELINE ? <AlgorithmInformation /> : <MDContentSwitcher readme={sideBar.data&&sideBar.data.data}  name={sideBar.data&&sideBar.data.name} readmeType={sideBar.data&&sideBar.data.readmeType}/>
+    const Component =
+      sideBar.data && sideBar.data.payload && sideBar.data.payload.type === sideBarTypes.PIPELINE ? (
+        <AlgorithmInformation />
+      ) : (
+        <MDContentSwitcher readme={sideBar.data && sideBar.data.data} name={sideBar.data && sideBar.data.name} readmeType={sideBar.data && sideBar.data.readmeType} />
+      );
     return (
       <div>
-        <Sidebar
-          ref={this.setChildRef}
-          sidebar={Component}
-          open={sideBar.visible}
-          styles={{ sidebar: { background: "white", width: "50vw", height: "100vh", position: "fixed", top: "4EM" } }}
-          pullRight={true}
-        >
+        <Sidebar ref={this.setChildRef} sidebar={Component} open={sideBar.visible} styles={{ sidebar: { background: 'white', width: '50vw', height: '100vh', position: 'fixed' } }} pullRight={true}>
           <div />
         </Sidebar>
       </div>
-    )
-
+    );
   }
 }
 
-const mapStateToProps = (state) => ({ sideBar: state.sideBar });
+const mapStateToProps = state => ({ sideBar: state.sideBar });
 
-export default connect(mapStateToProps, { sideBarClose })(SideBarContainer);
+export default connect(
+  mapStateToProps,
+  { sideBarClose }
+)(SideBarContainer);

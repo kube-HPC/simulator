@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import algorithmObjectTemplate from './../stubs/algorithm-object.json';
 import schema from './../../config/algorithm-input-schema.json';
-import { Modal, Input, Icon, Select, InputNumber, Upload, Divider, Form, Row, Col, Button } from 'antd';
+import { Modal, Input, Icon, Select, InputNumber, Upload, Divider, Form, Row, Col, Button, Radio } from 'antd';
 import parseUnit from 'parse-unit';
 import './AddAlgorithmModal.scss';
 
@@ -42,8 +42,16 @@ const getMemValue = (mem, isReturnUnit) => {
   return isReturnUnit ? unit : val;
 };
 
+const insertRadioButtons = buildTypes =>
+  Object.entries(buildTypes).map(([type]) => (
+    <Radio.Button key={type} value={type}>
+      {type.toUpperCaseFirstLetter()}
+    </Radio.Button>
+  ));
+
 export default function AddAlgorithmModal(props) {
   const [algoData, setAlgoData] = useState(algorithmObjectTemplate);
+  const [buildType, setBuildType] = useState('code');
   const [file, setFile] = useState(undefined);
 
   const dragProps = {
@@ -77,6 +85,48 @@ export default function AddAlgorithmModal(props) {
     props.toggleVisible();
   };
 
+  const buildTypes = {
+    code: (
+      <div>
+        <Form.Item {...formItemLayout} label={schema.environment}>
+          <Select className="input" defaultValue={algoData.env} value={algoData.env} onChange={v => (algoData.env = v)}>
+            {insertEnvOptions(schema.env)}
+          </Select>
+        </Form.Item>
+        <Form.Item {...formItemLayout} label={schema.entryPoint}>
+          <Input
+            className="input"
+            defaultValue={algoData.entryPoint}
+            value={algoData.entryPoint}
+            onChange={e => setAlgoData({ ...algoData, entryPoint: e.target.value })}
+            prefix={<Icon type="login" style={{ color: 'rgba(0,0,0,.25)' }} />}
+            placeholder="Insert Entry Point"
+          />
+        </Form.Item>
+        <Form.Item style={{ marginTop: '15px' }}>
+          <Upload.Dragger {...dragProps}>
+            <p className="ant-upload-drag-icon">
+              <Icon type="inbox" />
+            </p>
+            <p className="ant-upload-text">Click or drag algorithm source code to this area to upload</p>
+            <p className="ant-upload-hint">Support for zip or tar.gz only</p>
+          </Upload.Dragger>
+        </Form.Item>
+      </div>
+    ),
+    image: (
+      <Form.Item {...formItemLayout} label={schema.image}>
+        <Input
+          className="input"
+          value={algoData.algorithmImage}
+          onChange={e => setAlgoData({ ...algoData, algorithmImage: e.target.value })}
+          prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }} />}
+          placeholder="Insert algorithm image"
+        />
+      </Form.Item>
+    )
+  };
+
   return (
     <Modal
       title={'Add New Algorithm'}
@@ -105,14 +155,10 @@ export default function AddAlgorithmModal(props) {
             placeholder="Insert algorithm name"
           />
         </Form.Item>
-        <Form.Item {...formItemLayout} label={schema.image}>
-          <Input
-            className="input"
-            value={algoData.algorithmImage}
-            onChange={e => setAlgoData({ ...algoData, algorithmImage: e.target.value })}
-            prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }} />}
-            placeholder="Insert algorithm image"
-          />
+        <Form.Item {...formItemLayout} label="Build Type">
+          <Radio.Group defaultValue={buildType} buttonStyle="solid" onChange={v => setBuildType(v.target.value)}>
+            {insertRadioButtons(buildTypes)}
+          </Radio.Group>
         </Form.Item>
         <Divider orientation="left">{schema.resources}</Divider>
         <Form.Item {...formItemLayout} label={schema.cpu}>
@@ -175,30 +221,7 @@ export default function AddAlgorithmModal(props) {
           </Select>
         </Form.Item>
         <Divider orientation="left">{schema.code}</Divider>
-        <Form.Item {...formItemLayout} label={schema.environment}>
-          <Select className="input" defaultValue={algoData.env} value={algoData.env} onChange={v => (algoData.env = v)}>
-            {insertEnvOptions(schema.env)}
-          </Select>
-        </Form.Item>
-        <Form.Item {...formItemLayout} label={schema.entryPoint}>
-          <Input
-            className="input"
-            defaultValue={algoData.entryPoint}
-            value={algoData.entryPoint}
-            onChange={e => setAlgoData({ ...algoData, entryPoint: e.target.value })}
-            prefix={<Icon type="login" style={{ color: 'rgba(0,0,0,.25)' }} />}
-            placeholder="Insert Entry Point"
-          />
-        </Form.Item>
-        <Form.Item style={{ marginTop: '15px' }}>
-          <Upload.Dragger {...dragProps}>
-            <p className="ant-upload-drag-icon">
-              <Icon type="inbox" />
-            </p>
-            <p className="ant-upload-text">Click or drag algorithm source code to this area to upload</p>
-            <p className="ant-upload-hint">Support for zip or tar.gz only</p>
-          </Upload.Dragger>
-        </Form.Item>
+        {buildTypes[buildType]}
       </Form>
     </Modal>
   );
