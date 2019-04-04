@@ -8,7 +8,7 @@ export default store => next => action => {
      * @{param} action.meta.message.type - success or error
      * @{param} action.meta.message.content - the content of the message
      */
-    if (action.meta && action.meta.message) {
+    if (action.meta && action.meta.message && action.meta.message.type && action.meta.message.content) {
         message[action.meta.message.type](action.meta.message.content);
     }
     return next(action)

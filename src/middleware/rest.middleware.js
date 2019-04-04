@@ -60,9 +60,6 @@ const _formatSuccess = (payload) => {
   else if (payload.message) {
     content = payload.message;
   }
-  else {
-    content = 'Success';
-  }
   return content;
 };
 
