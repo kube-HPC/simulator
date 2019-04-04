@@ -138,7 +138,7 @@ class AlgorithmTable extends Component {
           expandedRowRender={record => <AlgorithmTabSwitcher algorithmDetails={record} readme={algorithmReadme && algorithmReadme[record.key] && algorithmReadme[record.key].readme} />}
         />
 
-        <AddButton onVisible={this.toggleAddAlgoVisible}> </AddButton>
+        <AddButton onClick={this.toggleAddAlgoVisible}> </AddButton>
         <AddAlgorithmModal visible={this.state.isAddAlgoVisible} onSubmit={this.props.applyAlgorithm} toggleVisible={this.toggleAddAlgoVisible} />
       </div>
     );
