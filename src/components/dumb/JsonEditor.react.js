@@ -3,7 +3,7 @@ import AceEditor from 'react-ace';
 import PropTypes from 'prop-types';
 import ace from 'brace';
 
-import snippet from '../stubs/json-snippet';
+import snippet from 'config/jsonEditor.snippet';
 
 // Set Ace-Editor properties
 import 'brace/mode/json';
@@ -12,9 +12,7 @@ import 'brace/snippets/json';
 import 'brace/ext/language_tools';
 
 // SUPER HACK FOR ADDING SNIPPETS
-// eslint-disable-next-line
 ace.define('ace/snippets/json', ['require', 'exports', 'module'], (e, t, n) => {
-  // eslint-disable-next-line
   (t.snippetText = snippet), (t.scope = 'json');
 });
 
@@ -39,7 +37,7 @@ export default function JsonEditor({ onChange, value }) {
         }}
         editorProps={{ $blockScrolling: true }}
         onChange={onChange}
-        style={{ width: 'auto', height: '70vh', fontFamily: 'monospace' }}
+        style={{ width: 'auto', height: '-webkit-fill-available', fontFamily: 'monospace' }}
       />
     </div>
   );
