@@ -10,7 +10,7 @@ import { getAlgorithmReadme } from '../../../actions/readme.action';
 import { init, storeAlgorithm, deleteAlgorithmFromStore, applyAlgorithm } from '../../../actions/algorithmTable.action';
 import AlgorithmTabSwitcher from '../../dumb/AlgorithmTabSwitcher';
 
-import AddButton from '../../dumb/AddButton.react';
+import FloatingAddButton from '../../dumb/FloatingAddButton.react';
 import './AlgorithmsTable.scss';
 import AddAlgorithmModal from '../../dumb/AddAlgorithmModal.react';
 import HEditor from '../HEditor.react';
@@ -138,7 +138,7 @@ class AlgorithmTable extends Component {
           expandedRowRender={record => <AlgorithmTabSwitcher algorithmDetails={record} readme={algorithmReadme && algorithmReadme[record.key] && algorithmReadme[record.key].readme} />}
         />
 
-        <AddButton onClick={this.toggleAddAlgoVisible}> </AddButton>
+        <FloatingAddButton onClick={this.toggleAddAlgoVisible}> </FloatingAddButton>
         <AddAlgorithmModal visible={this.state.isAddAlgoVisible} onSubmit={this.props.applyAlgorithm} toggleVisible={this.toggleAddAlgoVisible} />
       </div>
     );

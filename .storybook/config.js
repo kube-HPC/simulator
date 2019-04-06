@@ -2,7 +2,8 @@ import { configure } from '@storybook/react';
 import 'antd/dist/antd.css';
 
 function loadStories() {
-  require('../src/stories');
+  const req = require.context('stories', true, /\.stories\.js$/);
+  req.keys().forEach(filename => req(filename));
 }
 
 configure(loadStories, module);

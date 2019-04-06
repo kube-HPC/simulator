@@ -1,9 +1,24 @@
 import React, { useState } from 'react';
 import algorithmObjectTemplate from './../stubs/algorithm-object.json';
 import schema from './../../config/algorithm-input-schema.json';
-import { Modal, Input, Icon, Select, InputNumber, Upload, Divider, Form, Row, Col, Button, Radio } from 'antd';
+import {
+  Modal,
+  Input,
+  Icon,
+  Select,
+  InputNumber,
+  Upload,
+  Divider,
+  Form,
+  Row,
+  Col,
+  Button,
+  Radio
+} from 'antd';
 import parseUnit from 'parse-unit';
 import './AddAlgorithmModal.scss';
+
+import PropTypes from 'prop-types';
 
 const Option = Select.Option;
 
@@ -89,7 +104,12 @@ export default function AddAlgorithmModal(props) {
     code: (
       <div>
         <Form.Item {...formItemLayout} label={schema.environment}>
-          <Select className="input" defaultValue={algoData.env} value={algoData.env} onChange={v => (algoData.env = v)}>
+          <Select
+            className="input"
+            defaultValue={algoData.env}
+            value={algoData.env}
+            onChange={v => (algoData.env = v)}
+          >
             {insertEnvOptions(schema.env)}
           </Select>
         </Form.Item>
@@ -108,7 +128,9 @@ export default function AddAlgorithmModal(props) {
             <p className="ant-upload-drag-icon">
               <Icon type="inbox" />
             </p>
-            <p className="ant-upload-text">Click or drag algorithm source code to this area to upload</p>
+            <p className="ant-upload-text">
+              Click or drag algorithm source code to this area to upload
+            </p>
             <p className="ant-upload-hint">Support for zip or tar.gz only</p>
           </Upload.Dragger>
         </Form.Item>
@@ -156,16 +178,30 @@ export default function AddAlgorithmModal(props) {
           />
         </Form.Item>
         <Form.Item {...formItemLayout} label="Build Type">
-          <Radio.Group defaultValue={buildType} buttonStyle="solid" onChange={v => setBuildType(v.target.value)}>
+          <Radio.Group
+            defaultValue={buildType}
+            buttonStyle="solid"
+            onChange={v => setBuildType(v.target.value)}
+          >
             {insertRadioButtons(buildTypes)}
           </Radio.Group>
         </Form.Item>
         <Divider orientation="left">{schema.resources}</Divider>
         <Form.Item {...formItemLayout} label={schema.cpu}>
-          <InputNumber min={1} value={algoData.cpu} defaultValue={algoData.cpu} onChange={v => setAlgoData({ ...algoData, cpu: +v })} />
+          <InputNumber
+            min={1}
+            value={algoData.cpu}
+            defaultValue={algoData.cpu}
+            onChange={v => setAlgoData({ ...algoData, cpu: +v })}
+          />
         </Form.Item>
         <Form.Item {...formItemLayout} label={schema.gpu}>
-          <InputNumber min={0} value={algoData.gpu} defaultValue={algoData.gpu} onChange={v => setAlgoData({ ...algoData, gpu: +v })} />
+          <InputNumber
+            min={0}
+            value={algoData.gpu}
+            defaultValue={algoData.gpu}
+            onChange={v => setAlgoData({ ...algoData, gpu: +v })}
+          />
         </Form.Item>
         <Form.Item {...formItemLayout} label={schema.memory} labelAlign="left">
           <Row type="flex" justify="start" gutter={4}>
@@ -207,7 +243,11 @@ export default function AddAlgorithmModal(props) {
         </Form.Item>
         <Divider orientation="left">{schema.advanced}</Divider>
         <Form.Item {...formItemLayout} label={schema.minHotWorkers}>
-          <InputNumber min={0} value={algoData.minHotWorkers} onChange={minHotWorkers => setAlgoData({ ...algoData, minHotWorkers: minHotWorkers })} />
+          <InputNumber
+            min={0}
+            value={algoData.minHotWorkers}
+            onChange={minHotWorkers => setAlgoData({ ...algoData, minHotWorkers: minHotWorkers })}
+          />
         </Form.Item>
         <Form.Item {...formItemLayout} label={schema.options}>
           <Select
@@ -215,7 +255,12 @@ export default function AddAlgorithmModal(props) {
             defaultValue={availableOptions(algoData.options)}
             mode="tags"
             placeholder="Enable Options"
-            onSelect={key => setAlgoData({ ...algoData, options: { ...algoData.options, [key]: !algoData.options[key] } })}
+            onSelect={key =>
+              setAlgoData({
+                ...algoData,
+                options: { ...algoData.options, [key]: !algoData.options[key] }
+              })
+            }
           >
             {insertAlgorithmOptions(algoData.options)}
           </Select>

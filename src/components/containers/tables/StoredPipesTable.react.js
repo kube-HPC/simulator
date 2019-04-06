@@ -12,7 +12,7 @@ import { execStoredPipe, deleteStoredPipeline, updateStoredPipeline, cronStart, 
 import { addPipe } from '../../../actions/addPipe.action';
 import './StoredPipesTable.scss';
 import HEditor from '../HEditor.react';
-import AddButton from '../../dumb/AddButton.react';
+import FloatingAddButton from '../../dumb/FloatingAddButton.react';
 import { getPipelineReadme } from '../../../actions/readme.action';
 import { STATUS } from '../../../constants/colors';
 import { ReactComponent as PlayIconSvg } from '../../../images/play-icon.svg';
@@ -197,7 +197,7 @@ class StoredPipesTable extends Component {
             }}
           />
         </Table>
-        <AddButton onClick={() => sideBarOpen({ data: template, contentType: sideBarTypes.ADD_PIPELINE, type: sideBarTypes.ADD_PIPELINE })} />
+        <FloatingAddButton onClick={() => sideBarOpen({ data: template, contentType: sideBarTypes.ADD_PIPELINE, type: sideBarTypes.ADD_PIPELINE })} />
       </div>
     );
   }
