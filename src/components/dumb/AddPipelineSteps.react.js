@@ -8,7 +8,6 @@ import {
   Form,
   Input,
   InputNumber,
-  Divider,
   Row,
   Col,
   Select,
@@ -26,8 +25,8 @@ import cronParser from 'cron-parser';
 const Step = Steps.Step;
 
 const formItemLayout = {
-  labelCol: { span: 4 },
-  wrapperCol: { span: 20 }
+  labelCol: { span: 3 },
+  wrapperCol: { span: 21 }
 };
 
 const addPipelineOptions = pipelines =>
@@ -67,7 +66,7 @@ export default function AddPipelineSteps(props) {
   };
 
   const PipelineDescription = (
-    <>
+    <div>
       <Form.Item {...formItemLayout} label="Name" required={true}>
         <Input
           placeholder="Unique Identifier"
@@ -93,7 +92,7 @@ export default function AddPipelineSteps(props) {
           }}
         />
       </Form.Item>
-    </>
+    </div>
   );
 
   const Nodes = (
@@ -103,12 +102,12 @@ export default function AddPipelineSteps(props) {
       onChange={setFormData}
       algorithms={props.algorithms}
       formItemLayout={formItemLayout}
-      formItemLayoutWithOutLabel={{ wrapperCol: { offset: 4 } }}
+      formItemLayoutWithOutLabel={{ wrapperCol: { offset: formItemLayout.labelCol.span } }}
     />
   );
 
   const Hooks = (
-    <>
+    <div>
       <Form.Item {...formItemLayout} label="Flow">
         <Input.TextArea
           value={stringify(formData.flowInput)}
@@ -131,11 +130,11 @@ export default function AddPipelineSteps(props) {
           value={formData.webhooks.result}
         />
       </Form.Item>
-    </>
+    </div>
   );
 
   const Triggers = (
-    <>
+    <div>
       <Form.Item {...formItemLayout} label="Cron">
         <Row>
           <Col span={2} style={{ textAlign: 'center' }}>
@@ -179,7 +178,7 @@ export default function AddPipelineSteps(props) {
           {addPipelineOptions(props.pipelines)}
         </Select>
       </Form.Item>
-    </>
+    </div>
   );
 
   const Options = (
@@ -273,7 +272,7 @@ export default function AddPipelineSteps(props) {
     },
     {
       title: 'Options',
-      content: Hooks
+      content: Options
     }
   ];
 
@@ -287,13 +286,25 @@ export default function AddPipelineSteps(props) {
       <Form>{steps[current].content}</Form>
       <div className="steps-action">
         {current < steps.length - 1 && (
-          <Button type="primary" onClick={() => setCurrent(current + 1)}>
+          <Button
+            type="primary"
+            onClick={() => {
+              props.onChange(formData);
+              setCurrent(current + 1);
+            }}
+          >
             Next
           </Button>
         )}
         {current === steps.length - 1 && (
-          <Button type="primary" onClick={() => message.success('Processing complete!')}>
-            Done
+          <Button
+            type="primary"
+            onClick={() => {
+              props.onSubmit(formData);
+              message.success('Processing complete!');
+            }}
+          >
+            Submit
           </Button>
         )}
         {current > 0 && (
