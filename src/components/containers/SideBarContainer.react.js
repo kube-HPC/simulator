@@ -7,7 +7,7 @@ import { sideBarClose } from '../../actions/sideBar.action';
 
 import sideBarTypes from '../../constants/sideBarTypes';
 import MDContentSwitcher from './MDContentSwitcher';
-import AddPipeline from '../dumb/AddPipeline.react';
+import AddPipelineSteps from '../dumb/AddPipelineSteps.react';
 class SideBarContainer extends Component {
   constructor() {
     super();
@@ -44,7 +44,7 @@ class SideBarContainer extends Component {
       ) : sideBar.data && sideBar.data.payload && sideBar.data.payload.type === sideBarTypes.ALGORITHM ? (
         <MDContentSwitcher readme={sideBar.data && sideBar.data.data} name={sideBar.data && sideBar.data.name} readmeType={sideBar.data && sideBar.data.readmeType} />
       ) : (
-        <AddPipeline />
+        <AddPipelineSteps />
       );
     return (
       <div>

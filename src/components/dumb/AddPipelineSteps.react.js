@@ -1,326 +1,52 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import {
-  Steps,
-  Button,
-  message,
-  Form,
-  Input,
-  InputNumber,
-  Row,
-  Col,
-  Select,
-  Switch,
-  Popover,
-  Slider,
-  Icon
-} from 'antd';
+import AddPipelineForm from 'components/dumb/AddPipelineForm.react';
+import { Row, Col, Steps, Card } from 'antd';
 
-import DynamicForm from 'components/dumb/DynamicForm.react';
-import { stringify } from 'utils.js';
-
-import cronstrue from 'cronstrue';
-import cronParser from 'cron-parser';
-
-const Step = Steps.Step;
-
-const span = 5;
-const formItemLayout = {
-  labelCol: { span },
-  wrapperCol: { span: 24 - span }
-};
-
-const addPipelineOptions = pipelines =>
-  pipelines.map((pipeline, i) => (
-    <Select.Option key={i} value={pipeline}>
-      {pipeline}
-    </Select.Option>
-  ));
+import JsonView from 'components/dumb/JsonView.react';
 
 export default function AddPipelineSteps(props) {
-  const [current, setCurrent] = useState(0);
-  const [formData, setFormData] = useState(props.formData);
-
-  const onChangeTarget = (formData, t1, t2 = undefined) => c => {
-    const value = c && c.target ? c.target.value : c;
-    const targetKey = t2 ? { ...formData[t1], [t2]: value } : value;
-    setFormData({ ...formData, [t1]: targetKey });
-  };
-
-  const addCronContent = formData => {
-    let isLegalPattern = false;
-    let next = '';
-    let current = '';
-    try {
-      next = cronParser
-        .parseExpression(formData.triggers.cron.pattern)
-        .next()
-        .toString();
-      current = cronstrue.toString(formData.triggers.cron.pattern, {
-        use24HourTimeFormat: true
-      });
-      isLegalPattern = true;
-    } catch {
-      isLegalPattern = false;
-    }
-    return isLegalPattern ? `${current}, Next Interval: ${next}` : 'Invalid Pattern';
-  };
-
-  const PipelineDescription = (
-    <div>
-      <Form.Item {...formItemLayout} label="Name" required={true}>
-        <Input
-          placeholder="Unique Identifier"
-          value={formData.name}
-          onChange={onChangeTarget(formData, 'name')}
-        />
-      </Form.Item>
-      <Form.Item {...formItemLayout} label="Description">
-        <Input.TextArea
-          value={formData.description}
-          placeholder="Pipeline Description"
-          onChange={onChangeTarget(formData, 'description')}
-        />
-      </Form.Item>
-      <Form.Item {...formItemLayout} label="Priority">
-        <InputNumber
-          min={1}
-          max={5}
-          value={formData.priority}
-          onChange={value => {
-            formData.priority = isNaN(value) ? 0 : value;
-            setFormData({ ...formData });
-          }}
-        />
-      </Form.Item>
-    </div>
-  );
-
-  const Nodes = (
-    <DynamicForm
-      formData={formData}
-      emptyData={{ nodeName: '', algorithmName: '' }}
-      onChange={setFormData}
-      algorithms={props.algorithms}
-      formItemLayout={formItemLayout}
-      formItemLayoutWithOutLabel={{ wrapperCol: { offset: formItemLayout.labelCol.span } }}
-    />
-  );
-
-  const Hooks = (
-    <div>
-      <Form.Item {...formItemLayout} label="Flow">
-        <Input.TextArea
-          value={stringify(formData.flowInput)}
-          placeholder="Object"
-          autosize={{ minRows: 2 }}
-          disabled={true}
-        />
-      </Form.Item>
-      <Form.Item {...formItemLayout} label="Progress">
-        <Input
-          placeholder="Progress Webhook URI"
-          onChange={onChangeTarget(formData, 'webhooks', 'progress')}
-          value={formData.webhooks.progress}
-        />
-      </Form.Item>
-      <Form.Item {...formItemLayout} label="Result">
-        <Input
-          placeholder="Result Webhook URI"
-          onChange={onChangeTarget(formData, 'webhooks', 'result')}
-          value={formData.webhooks.result}
-        />
-      </Form.Item>
-    </div>
-  );
-
-  const Triggers = (
-    <div>
-      <Form.Item {...formItemLayout} label="Cron">
-        <Row>
-          <Col span={2} style={{ textAlign: 'center' }}>
-            <Switch
-              onClick={() => {
-                formData.triggers.cron.enabled = !formData.triggers.cron.enabled;
-                setFormData({ ...formData });
-              }}
-              value={formData.triggers.cron.enabled}
-              checked={formData.triggers.cron.enabled}
-            />
-          </Col>
-          <Col span={12}>
-            <Popover content={addCronContent(formData)} trigger="focus">
-              <Input
-                placeholder="Pattern"
-                onChange={c => {
-                  formData.triggers.cron.pattern = c.target.value;
-                  setFormData({ ...formData });
-                }}
-                value={formData.triggers.cron.pattern}
-              />
-            </Popover>
-          </Col>
-        </Row>
-      </Form.Item>
-      <Form.Item {...formItemLayout} label="Pipelines">
-        <Select
-          mode="multiple"
-          placeholder="Pipelines to activate upon result"
-          defaultValue={formData.triggers.pipelines}
-          onSelect={pipeline => {
-            formData.triggers.pipelines.push(pipeline);
-            setFormData({ ...formData });
-          }}
-          onDeselect={pipeline => {
-            formData.triggers.pipelines = formData.triggers.pipelines.filter(p => p !== pipeline);
-            setFormData({ ...formData });
-          }}
-        >
-          {addPipelineOptions(props.pipelines)}
-        </Select>
-      </Form.Item>
-    </div>
-  );
-
-  const Options = (
-    <div>
-      <Form.Item {...formItemLayout} label="Batch Tolerance">
-        <Row gutter={15}>
-          <Col span={20}>
-            <Slider
-              min={0}
-              max={100}
-              value={formData.options.batchTolerance}
-              onChange={onChangeTarget(formData, 'options', 'batchTolerance')}
-            />
-          </Col>
-          <Col span={4}>
-            <InputNumber
-              min={0}
-              max={100}
-              value={formData.options.batchTolerance}
-              onChange={onChangeTarget(formData, 'options', 'batchTolerance')}
-            />
-          </Col>
-        </Row>
-      </Form.Item>
-      <Form.Item {...formItemLayout} label="Concurrent">
-        <Row gutter={15}>
-          <Col span={20}>
-            <Slider
-              min={0}
-              max={10000}
-              value={formData.options.concurrentPipelines}
-              onChange={onChangeTarget(formData, 'options', 'concurrentPipelines')}
-            />
-          </Col>
-          <Col span={4}>
-            <InputNumber
-              min={0}
-              max={10000}
-              value={formData.options.concurrentPipelines}
-              onChange={onChangeTarget(formData, 'options', 'concurrentPipelines')}
-            />
-          </Col>
-        </Row>
-      </Form.Item>
-      <Form.Item {...formItemLayout} label="TTL">
-        <Row>
-          <Col>
-            <InputNumber
-              min={1}
-              value={formData.options.ttl}
-              onChange={onChangeTarget(formData, 'options', 'ttl')}
-            />
-          </Col>
-          <Col />
-        </Row>
-      </Form.Item>
-      <Form.Item {...formItemLayout} label="Verbosity Level">
-        <Select
-          defaultValue="info"
-          value={formData.options.progressVerbosityLevel}
-          style={{ width: 120 }}
-          onChange={onChangeTarget(formData, 'options', 'progressVerbosityLevel')}
-        >
-          <Select.Option value="info">Info</Select.Option>
-          <Select.Option value="trace">Trace</Select.Option>
-          <Select.Option value="debug">Debug</Select.Option>
-          <Select.Option value="warn">Warn</Select.Option>
-          <Select.Option value="error">Error</Select.Option>
-          <Select.Option value="critical">Critical</Select.Option>
-        </Select>
-      </Form.Item>
-    </div>
-  );
-
-  const steps = [
-    {
-      title: 'Initial',
-      content: PipelineDescription
-    },
-    {
-      title: 'Nodes',
-      content: Nodes
-    },
-    {
-      title: 'Side Effects',
-      content: Hooks
-    },
-    {
-      title: 'Triggers',
-      content: Triggers
-    },
-    {
-      title: 'Options',
-      content: Options
-    }
-  ];
+  const [step, setStep] = useState(0);
+  const steps = ['Initial', 'Nodes', 'Side Effects', 'Triggers', 'Options'];
+  const span = 15;
 
   return (
-    <div>
-      <Steps progressDot current={current}>
-        {steps.map(item => (
-          <Step key={item.title} title={item.title} />
-        ))}
-      </Steps>
-      <Form>
-        {steps[current].content}
-        <Form.Item>
-          <Row gutter={10} type="flex" justify="space-between">
-            <Col span={12}>
-              <Button
-                disabled={current === 0}
-                type="default"
-                icon="left"
-                onClick={() => {
-                  props.onChange(formData);
-                  setCurrent(current - 1);
-                }}
-                style={{ width: '100%' }}
-              />
-            </Col>
-            <Col span={12}>
-              <Button
-                type="primary"
-                icon={current !== steps.length - 1 && 'right'}
-                onClick={() => {
-                  props.onChange(formData);
-                  setCurrent(current + 1);
-                }}
-                style={{ width: '100%' }}
-              >
-                {current === steps.length - 1 && 'Submit'}
-              </Button>
-            </Col>
-          </Row>
-        </Form.Item>
-      </Form>
-    </div>
+    <Card
+      style={props.style}
+      title={
+        <Steps progressDot current={step}>
+          {steps.map(title => (
+            <Steps.Step key={title} title={title} />
+          ))}
+        </Steps>
+      }
+    >
+      <Row gutter={15} type="flex" justify="space-between">
+        <Col span={span}>
+          <AddPipelineForm
+            formData={props.formData}
+            algorithms={props.algorithms}
+            pipelines={props.pipelines}
+            onSubmit={props.onSubmit}
+            onChange={props.onChange}
+            onStep={setStep}
+            step={step}
+          />
+        </Col>
+        <Col span={24 - span}>
+          <JsonView jsonObject={props.formData} />
+        </Col>
+      </Row>
+    </Card>
   );
 }
 
 AddPipelineSteps.propTypes = {
-  formData: PropTypes.object.isRequired
+  formData: PropTypes.object.isRequired,
+  algorithms: PropTypes.array.isRequired,
+  pipelines: PropTypes.array.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
+  style: PropTypes.object
 };
