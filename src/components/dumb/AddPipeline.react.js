@@ -12,7 +12,7 @@ const HorizontalDivider = styled(Divider)`
 `;
 
 const ColAlign = styled(Col)`
-  text-align: center;
+  margin: auto;
 `;
 
 export default function AddPipeline(props) {
@@ -25,7 +25,7 @@ export default function AddPipeline(props) {
         <ColAlign span={1}>
           <HorizontalDivider type="vertical" />
         </ColAlign>
-        <Col span={15}>
+        <ColAlign span={15} style={{ margin: 'auto' }}>
           <AddPipelineSteps
             formData={props.formData}
             algorithms={props.algorithms}
@@ -33,7 +33,7 @@ export default function AddPipeline(props) {
             onSubmit={props.onSubmit}
             onChange={props.onChange}
           />
-        </Col>
+        </ColAlign>
       </Row>
     </div>
   );

@@ -7,7 +7,7 @@ import { sideBarClose } from '../../actions/sideBar.action';
 
 import sideBarTypes from '../../constants/sideBarTypes';
 import MDContentSwitcher from './MDContentSwitcher';
-import AddPipeline from './AddPipeline.react';
+import AddPipeline from '../dumb/AddPipeline.react';
 class SideBarContainer extends Component {
   constructor() {
     super();

@@ -13,10 +13,11 @@ import {
   Select,
   Switch,
   Popover,
-  Slider
+  Slider,
+  Icon
 } from 'antd';
 
-import DynamicForm from 'components/containers/DynamicForm.react';
+import DynamicForm from 'components/dumb/DynamicForm.react';
 import { stringify } from 'utils.js';
 
 import cronstrue from 'cronstrue';
@@ -24,9 +25,10 @@ import cronParser from 'cron-parser';
 
 const Step = Steps.Step;
 
+const span = 5;
 const formItemLayout = {
-  labelCol: { span: 3 },
-  wrapperCol: { span: 21 }
+  labelCol: { span },
+  wrapperCol: { span: 24 - span }
 };
 
 const addPipelineOptions = pipelines =>
@@ -116,16 +118,16 @@ export default function AddPipelineSteps(props) {
           disabled={true}
         />
       </Form.Item>
-      <Form.Item {...formItemLayout} label="Progress Webhook">
+      <Form.Item {...formItemLayout} label="Progress">
         <Input
-          placeholder="Progress URI"
+          placeholder="Progress Webhook URI"
           onChange={onChangeTarget(formData, 'webhooks', 'progress')}
           value={formData.webhooks.progress}
         />
       </Form.Item>
-      <Form.Item {...formItemLayout} label="Result Webhook">
+      <Form.Item {...formItemLayout} label="Result">
         <Input
-          placeholder="Result URI"
+          placeholder="Result Webhook URI"
           onChange={onChangeTarget(formData, 'webhooks', 'result')}
           value={formData.webhooks.result}
         />
@@ -203,7 +205,7 @@ export default function AddPipelineSteps(props) {
           </Col>
         </Row>
       </Form.Item>
-      <Form.Item {...formItemLayout} label="Concurrent Pipelines">
+      <Form.Item {...formItemLayout} label="Concurrent">
         <Row gutter={15}>
           <Col span={20}>
             <Slider
@@ -277,43 +279,45 @@ export default function AddPipelineSteps(props) {
   ];
 
   return (
-    <>
-      <Steps current={current}>
+    <div>
+      <Steps progressDot current={current}>
         {steps.map(item => (
           <Step key={item.title} title={item.title} />
         ))}
       </Steps>
-      <Form>{steps[current].content}</Form>
-      <div className="steps-action">
-        {current < steps.length - 1 && (
-          <Button
-            type="primary"
-            onClick={() => {
-              props.onChange(formData);
-              setCurrent(current + 1);
-            }}
-          >
-            Next
-          </Button>
-        )}
-        {current === steps.length - 1 && (
-          <Button
-            type="primary"
-            onClick={() => {
-              props.onSubmit(formData);
-              message.success('Processing complete!');
-            }}
-          >
-            Submit
-          </Button>
-        )}
-        {current > 0 && (
-          <Button style={{ marginLeft: 8 }} onClick={() => setCurrent(current - 1)}>
-            Previous
-          </Button>
-        )}
-      </div>
-    </>
+      <Form>
+        {steps[current].content}
+        <Form.Item>
+          <Row gutter={10} type="flex" justify="space-between">
+            <Col span={12}>
+              <Button
+                disabled={current === 0}
+                type="default"
+                icon="left"
+                onClick={() => {
+                  props.onChange(formData);
+                  setCurrent(current - 1);
+                }}
+                style={{ width: '100%' }}
+              />
+            </Col>
+            <Col span={12}>
+              <Button
+                type="primary"
+                icon={current !== steps.length - 1 && 'right'}
+                onClick={() => {
+                  props.onChange(formData);
+                  setCurrent(current + 1);
+                }}
+                style={{ width: '100%' }}
+              >
+                {current === steps.length - 1 && 'Submit'}
+              </Button>
+            </Col>
+          </Row>
+        </Form.Item>
+      </Form>
+    </div>
   );
 }
 

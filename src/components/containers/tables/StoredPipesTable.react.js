@@ -17,7 +17,7 @@ import { getPipelineReadme } from '../../../actions/readme.action';
 import { STATUS } from '../../../constants/colors';
 import { ReactComponent as PlayIconSvg } from '../../../images/play-icon.svg';
 import template from '../../stubs/json-object.json';
-import AddPipeline from '../AddPipeline.react';
+import AddPipeline from '../../dumb/AddPipeline.react';
 import { sideBarOpen, sideBarClose } from '../../../actions/sideBar.action';
 import sideBarTypes from '../../../constants/sideBarTypes';
 
