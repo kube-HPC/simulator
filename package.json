@@ -70,7 +70,7 @@
     "build": "./dockerfile/build.sh simulator",
     "test-travis": "echo \"No test specified\"",
     "start:server": "node ./server/server.js",
-    "storybook": "start-storybook -p 9009 -s public",
+    "storybook": "NODE_PATH=src/ start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public"
   },
   "eslintConfig": {
