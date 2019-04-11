@@ -11,21 +11,3 @@ export const sideBarClose = () => ({
   type: actions.CLOSE_SIDEBAR,
   payload: { data: null, visible: false }
 });
-
-// WEBPACK FOOTER //
-// ./actions/modal.action.js
-
-// WEBPACK FOOTER //
-// ./actions/modal.action.js
-
-// WEBPACK FOOTER //
-// ./actions/modal.action.js
-
-// WEBPACK FOOTER //
-// ./actions/modal.action.js
-
-// WEBPACK FOOTER //
-// ./actions/modal.action.js
-
-// WEBPACK FOOTER //
-// ./actions/modal.action.js

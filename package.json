@@ -30,7 +30,7 @@
     "parse-unit": "^1.0.1",
     "prettier": "^1.16.4",
     "prop-types": "^15.6.2",
-    "react": "^16.8.4",
+    "react": "^16.8.6",
     "react-ace": "^6.2.0",
     "react-addons-shallow-compare": "^15.6.2",
     "react-app-rewire-less": "^2.1.3",
@@ -39,7 +39,7 @@
     "react-codemirror2": "^5.1.0",
     "react-copy-to-clipboard": "^5.0.1",
     "react-day-picker": "^7.2.4",
-    "react-dom": "^16.8.4",
+    "react-dom": "^16.8.6",
     "react-json-view": "^1.19.1",
     "react-markdown": "^3.6.0",
     "react-mde": "^7.0.3",
@@ -69,7 +69,8 @@
     "eject": "react-app-rewired eject",
     "build": "./dockerfile/build.sh simulator",
     "test-travis": "echo \"No test specified\"",
-    "start:server": "node ./server/server.js"
+    "start:server": "node ./server/server.js",
+    "storybook": "NODE_PATH=src/ start-storybook"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -81,7 +82,13 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@babel/core": "^7.4.3",
+    "@storybook/addon-actions": "^5.0.6",
+    "@storybook/addon-links": "^5.0.6",
+    "@storybook/addons": "^5.0.6",
+    "@storybook/react": "^5.0.6",
     "babel-cli": "^6.26.0",
+    "babel-loader": "^8.0.4",
     "cron-parser": "^2.9.0",
     "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",

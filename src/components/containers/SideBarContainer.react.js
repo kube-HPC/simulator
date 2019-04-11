@@ -4,10 +4,12 @@ import { connect } from 'react-redux';
 import AlgorithmInformation from './AlgorithmInformation.react';
 import MDEditor from './MDEditor.react';
 import { sideBarClose } from '../../actions/sideBar.action';
+import cloneDeep from 'lodash/cloneDeep';
 
 import sideBarTypes from '../../constants/sideBarTypes';
 import MDContentSwitcher from './MDContentSwitcher';
-import AddPipelineSteps from '../dumb/AddPipelineSteps.react';
+import AddPipelineSteps from 'components/dumb/AddPipelineSteps.react';
+
 class SideBarContainer extends Component {
   constructor() {
     super();
@@ -38,26 +40,34 @@ class SideBarContainer extends Component {
   // Passing div in SideBar children because it's props requirement
   render() {
     const { sideBar } = this.props;
-    const Component =
-      sideBar.data &&
-      sideBar.data.payload &&
-      sideBar.data.payload.type === sideBarTypes.PIPELINE ? (
-        <AlgorithmInformation />
-      ) : (
+
+    const Component = {
+      PIPELINE: <AlgorithmInformation />,
+      ALGORITHM: (
         <MDContentSwitcher
           readme={sideBar.data && sideBar.data.data}
           name={sideBar.data && sideBar.data.name}
           readmeType={sideBar.data && sideBar.data.readmeType}
         />
-      );
+      ),
+      ADD_PIPELINE: (
+        <AddPipelineSteps
+          formData={sideBar.data ? cloneDeep(sideBar.data.payload.data) : null}
+          algorithms={['a1', 'a2']}
+          pipelines={['p1', 'p2']}
+          onSubmit={() => {}}
+          onChange={() => {}}
+        />
+      )
+    };
     return (
       <div>
         <Sidebar
           ref={this.setChildRef}
-          sidebar={Component}
+          sidebar={sideBar.data ? Component[sideBar.data.payload.type] : null}
           open={sideBar.visible}
           styles={{
-            sidebar: { background: 'white', width: '50vw', height: '100vh', position: 'fixed' }
+            sidebar: { background: 'white', width: '50vw', position: 'fixed' }
           }}
           pullRight={true}
         >

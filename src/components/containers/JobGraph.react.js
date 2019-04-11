@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import Graph from './VisGraph.react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { sideBarOpen, sideBarClose } from "../../actions/sideBar.action";
-import { getKubernetesLogsData } from "../../actions/kubernetesLog.action";
-import sideBarTypes from "../../constants/sideBarTypes";
+import { sideBarOpen, sideBarClose } from '../../actions/sideBar.action';
+import { getKubernetesLogsData } from '../../actions/kubernetesLog.action';
+import sideBarTypes from '../../constants/sideBarTypes';
 const options = {
   physics: {
     enabled: false
@@ -70,7 +70,7 @@ class JobGraph extends Component {
     super();
     this.network = null;
     this.events = {
-      select: () => { },
+      select: () => {},
       afterDrawing: () => {
         this.network.fit({
           animation: {
@@ -94,7 +94,6 @@ class JobGraph extends Component {
           ? nodeData.taskId
           : nodeData.batchTasks && nodeData.batchTasks[0].taskId;
         this.props.sideBarOpen({
-          
           payload: {
             type: sideBarTypes.PIPELINE,
             taskId,

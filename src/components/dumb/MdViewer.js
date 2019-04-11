@@ -9,12 +9,25 @@ import 'react-mde/lib/styles/css/react-mde-all.css';
 import ReadmeViewerCodeHighlight from './ReadmeViewerCodeHighlight';
 
 const MdViewer = props => (
-  // eslint-disable-next-line react/prop-types
   <Card
     style={{ maxWidth: '80vw' }}
     title={props.name}
     extra={
-      <Button onClick={() => props.sideBarOpen({ data: props.readme, contentType: sideBarTypes.ALGORITHM, type: sideBarTypes.ALGORITHM, name: props.name, readmeType: props.readmeType })}>Edit</Button>
+      <Button
+        onClick={() =>
+          props.sideBarOpen({
+            payload: {
+              data: props.readme,
+              contentType: sideBarTypes.ALGORITHM,
+              type: sideBarTypes.ALGORITHM,
+              name: props.name,
+              readmeType: props.readmeType
+            }
+          })
+        }
+      >
+        Edit
+      </Button>
     }
   >
     <div>
