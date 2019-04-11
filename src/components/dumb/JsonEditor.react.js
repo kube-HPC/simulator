@@ -13,6 +13,7 @@ import 'brace/ext/language_tools';
 
 // SUPER HACK FOR ADDING SNIPPETS
 ace.define('ace/snippets/json', ['require', 'exports', 'module'], (e, t, n) => {
+  // eslint-disable-next-line
   (t.snippetText = snippet), (t.scope = 'json');
 });
 
