@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import generateName from 'sillyname';
 import './HKubeEditor.scss';
 
-import AddPipelineForm from './AddPipelineForm.react';
-import JsonEditor from '../dumb/JsonEditor.react';
+// import AddPipelineForm from './AddPipelineForm.react';
+// import JsonEditor from '../dumb/JsonEditor.react';
 
 function HKubeEditor(props) {
   const [json, setJson] = useState(props.jsonTemplate);
@@ -82,14 +82,14 @@ function HKubeEditor(props) {
           </Button>
         ]}
       >
-        <Tabs defaultActiveKey="2">
+        {/* <Tabs defaultActiveKey="2">
           <Tabs.TabPane tab="Form" key="1">
             <AddPipelineForm formData={JSON.parse(json)} pipelines={props.pipelines} algorithms={algorithms} />
           </Tabs.TabPane>
           <Tabs.TabPane tab="Json Editor" key="2">
             <JsonEditor value={json} onChange={setJson} />
           </Tabs.TabPane>
-        </Tabs>
+        </Tabs> */}
       </Modal>
     </div>
   );

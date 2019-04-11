@@ -39,16 +39,28 @@ class SideBarContainer extends Component {
   render() {
     const { sideBar } = this.props;
     const Component =
-      sideBar.data && sideBar.data.payload && sideBar.data.payload.type === sideBarTypes.PIPELINE ? (
+      sideBar.data &&
+      sideBar.data.payload &&
+      sideBar.data.payload.type === sideBarTypes.PIPELINE ? (
         <AlgorithmInformation />
-      ) : sideBar.data && sideBar.data.payload && sideBar.data.payload.type === sideBarTypes.ALGORITHM ? (
-        <MDContentSwitcher readme={sideBar.data && sideBar.data.data} name={sideBar.data && sideBar.data.name} readmeType={sideBar.data && sideBar.data.readmeType} />
       ) : (
-        <AddPipelineSteps />
+        <MDContentSwitcher
+          readme={sideBar.data && sideBar.data.data}
+          name={sideBar.data && sideBar.data.name}
+          readmeType={sideBar.data && sideBar.data.readmeType}
+        />
       );
     return (
       <div>
-        <Sidebar ref={this.setChildRef} sidebar={Component} open={sideBar.visible} styles={{ sidebar: { background: 'white', width: '50vw', height: '100vh', position: 'fixed' } }} pullRight={true}>
+        <Sidebar
+          ref={this.setChildRef}
+          sidebar={Component}
+          open={sideBar.visible}
+          styles={{
+            sidebar: { background: 'white', width: '50vw', height: '100vh', position: 'fixed' }
+          }}
+          pullRight={true}
+        >
           <div />
         </Sidebar>
       </div>
