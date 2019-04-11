@@ -7,7 +7,7 @@ import cronParser from 'cron-parser';
 import DynamicForm from 'components/dumb/DynamicForm.react';
 import { stringify } from 'utils.js';
 
-const span = 4;
+const span = 6;
 const formItemLayout = {
   labelCol: { span },
   wrapperCol: { span: 24 - span }
@@ -123,35 +123,26 @@ export default function AddPipelineForm(props) {
   const Triggers = (
     <div>
       <Form.Item {...formItemLayout} label="Cron">
-        <Row gutter={10} type="flex">
-          <Col span={18}>
-            <Popover content={addCronContent(formData)} trigger="focus">
-              <Input
-                placeholder="Pattern"
-                onChange={c => {
-                  formData.triggers.cron.pattern = c.target.value;
-                  setFormData({ ...formData });
-                }}
-                value={formData.triggers.cron.pattern}
-              />
-            </Popover>
-          </Col>
-          <Col span={6}>
-            <Row gutter={10} type="flex" justify="space-around">
-              <Col>Enabled:</Col>
-              <Col>
-                <Switch
-                  onClick={() => {
-                    formData.triggers.cron.enabled = !formData.triggers.cron.enabled;
-                    setFormData({ ...formData });
-                  }}
-                  value={formData.triggers.cron.enabled}
-                  checked={formData.triggers.cron.enabled}
-                />
-              </Col>
-            </Row>
-          </Col>
-        </Row>
+        <Popover content={addCronContent(formData)} trigger="focus">
+          <Input
+            placeholder="Pattern"
+            onChange={c => {
+              formData.triggers.cron.pattern = c.target.value;
+              setFormData({ ...formData });
+            }}
+            value={formData.triggers.cron.pattern}
+          />
+        </Popover>
+      </Form.Item>
+      <Form.Item {...formItemLayout} label="Cron Enabled">
+        <Switch
+          onClick={() => {
+            formData.triggers.cron.enabled = !formData.triggers.cron.enabled;
+            setFormData({ ...formData });
+          }}
+          value={formData.triggers.cron.enabled}
+          checked={formData.triggers.cron.enabled}
+        />
       </Form.Item>
       <Form.Item {...formItemLayout} label="Pipelines">
         <Select
@@ -177,7 +168,7 @@ export default function AddPipelineForm(props) {
     <div>
       <Form.Item {...formItemLayout} label="Batch Tolerance">
         <Row type="flex" gutter={10}>
-          <Col span={20}>
+          <Col span={18}>
             <Slider
               min={0}
               max={100}
@@ -185,7 +176,7 @@ export default function AddPipelineForm(props) {
               onChange={onChangeTarget(formData, 'options', 'batchTolerance')}
             />
           </Col>
-          <Col span={4}>
+          <Col span={6}>
             <InputNumber
               min={0}
               max={100}
@@ -197,7 +188,7 @@ export default function AddPipelineForm(props) {
       </Form.Item>
       <Form.Item {...formItemLayout} label="Concurrent">
         <Row type="flex" gutter={10}>
-          <Col span={20}>
+          <Col span={18}>
             <Slider
               min={0}
               max={10000}
@@ -205,7 +196,7 @@ export default function AddPipelineForm(props) {
               onChange={onChangeTarget(formData, 'options', 'concurrentPipelines')}
             />
           </Col>
-          <Col span={4}>
+          <Col span={6}>
             <InputNumber
               min={0}
               max={10000}
@@ -273,7 +264,9 @@ export default function AddPipelineForm(props) {
                 props.onChange(formData);
                 if (!isLastStep) {
                   props.onStep(props.step + 1);
-                } else props.onSubmit(formData);
+                } else {
+                  props.onSubmit(formData);
+                }
               }}
               style={{ width: '100%' }}
             >

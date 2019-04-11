@@ -5,8 +5,10 @@ import AddPipelineForm from 'components/dumb/AddPipelineForm.react';
 import { Row, Col, Steps, Card } from 'antd';
 
 import JsonView from 'components/dumb/JsonView.react';
+import addPipelineTemplate from 'config/addPipeline.template.json';
 
 export default function AddPipelineSteps(props) {
+  const [formData, setFormData] = useState(addPipelineTemplate);
   const [step, setStep] = useState(0);
   const steps = ['Initial', 'Nodes', 'Side Effects', 'Triggers', 'Options'];
   const span = 15;
@@ -23,19 +25,23 @@ export default function AddPipelineSteps(props) {
       }
     >
       <Row gutter={15} type="flex" justify="space-between">
-        <Col span={span}>
-          <AddPipelineForm
-            formData={props.formData}
-            algorithms={props.algorithms}
-            pipelines={props.pipelines}
-            onSubmit={props.onSubmit}
-            onChange={props.onChange}
-            onStep={setStep}
-            step={step}
-          />
-        </Col>
         <Col span={24 - span}>
-          <JsonView jsonObject={props.formData} />
+          <Card>
+            <JsonView jsonObject={formData} />
+          </Card>
+        </Col>
+        <Col span={span}>
+          <Card>
+            <AddPipelineForm
+              formData={formData}
+              algorithms={props.algorithms}
+              pipelines={props.pipelines}
+              onSubmit={props.onSubmit}
+              onChange={setFormData}
+              onStep={setStep}
+              step={step}
+            />
+          </Card>
         </Col>
       </Row>
     </Card>

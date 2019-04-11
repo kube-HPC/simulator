@@ -45,8 +45,8 @@ const MdViewer = props => (
 MdViewer.propTypes = {
   readme: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  readmeType: PropTypes.string
-  // sideBarOpen:PropTypes.func.isRequired
+  readmeType: PropTypes.string,
+  sideBarOpen: PropTypes.func.isRequired
 };
 
 export default connect(

@@ -15,5 +15,6 @@
     "python": "Python",
     "nodejs": "Node.js",
     "jvm": "JVM"
-  }
+  },
+  "memoryType": ["Ki", "M", "Mi", "Gi", "m", "K", "G", "T", "Ti", "P", "Pi", "E", "Ei"]
 }

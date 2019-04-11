@@ -38,7 +38,7 @@ export default function JsonEditor({ onChange, value }) {
         }}
         editorProps={{ $blockScrolling: true }}
         onChange={onChange}
-        style={{ width: 'auto', height: '-webkit-fill-available', fontFamily: 'monospace' }}
+        style={{ width: 'unset' }}
       />
     </div>
   );

@@ -10,7 +10,7 @@ import addPipelineTemplate from 'config/addPipeline.template.json';
 
 const StyledCard = styled(Card)`
   width: 40%;
-  margin: 10px;
+  margin: 0 auto;
 `;
 
 storiesOf('Basics|JsonEditor', module)

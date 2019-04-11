@@ -40,6 +40,7 @@ import { sideBarOpen, sideBarClose } from '../../../actions/sideBar.action';
 import sideBarTypes from '../../../constants/sideBarTypes';
 
 import addPipelineTemplate from 'config/addPipeline.template.json';
+import SideBarAddPipeline from '../SideBarAddPipeline.react';
 
 const { Column } = Table;
 class StoredPipesTable extends Component {
@@ -50,7 +51,7 @@ class StoredPipesTable extends Component {
   renderColumns() {}
 
   render() {
-    const { storedPipelines, dataStats, dataSource, pipelineReadme, sideBarOpen } = this.props;
+    const { storedPipelines, dataStats, algorithms, pipelineReadme, sideBarOpen } = this.props;
 
     // Need to remove "nodes" key from each pipeline.
     const fixedDataSource = [];
@@ -263,16 +264,25 @@ class StoredPipesTable extends Component {
           />
         </Table>
         <FloatingAddButton
-          onClick={() =>
+          onClick={() => {
             sideBarOpen({
               payload: {
-                data: addPipelineTemplate,
-                contentType: sideBarTypes.ADD_PIPELINE,
+                formData: addPipelineTemplate,
+                algorithms: ['a1', 'a2'],
+                pipelines: storedPipelines.map(pipeline => pipeline.name),
+                onSubmit: this.props.addPipe,
                 type: sideBarTypes.ADD_PIPELINE
               }
-            })
-          }
+            });
+          }}
         />
+        {/* <SideBarAddPipeline
+          content={{
+            algorithms: ['a1', 'a2'],
+            pipelines: storedPipelines.map(pipeline => pipeline.name),
+            onSubmit: this.props.addPipe
+          }}
+        /> */}
       </div>
     );
   }
@@ -280,7 +290,7 @@ class StoredPipesTable extends Component {
 
 StoredPipesTable.propTypes = {
   init: PropTypes.func.isRequired,
-  dataSource: PropTypes.array.isRequired,
+  algorithms: PropTypes.array.isRequired,
   storedPipelines: PropTypes.array.isRequired,
   dataStats: PropTypes.array,
   execStoredPipe: PropTypes.func.isRequired,
@@ -291,17 +301,8 @@ StoredPipesTable.propTypes = {
   addPipe: PropTypes.func.isRequired
 };
 
-const algorithmTable = state => state.algorithmTable.dataSource;
-const autoCompleteFilter = state => state.autoCompleteFilter.filter;
-
-const tableDataSelector = createSelector(
-  algorithmTable,
-  autoCompleteFilter,
-  algorithmTable => algorithmTable
-);
-
 const mapStateToProps = state => ({
-  dataSource: tableDataSelector(state),
+  algorithms: state.algorithmTable.dataSource.map(tableRow => tableRow.key),
   storedPipelines: state.storedPipeline.dataSource,
   dataStats: state.storedPipeline.dataStats,
   pipelineReadme: state.pipelineReadme,

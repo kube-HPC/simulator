@@ -224,19 +224,11 @@ export default function AddAlgorithmModal(props) {
                   setAlgoData({ ...algoData, mem: val + v });
                 }}
               >
-                <Option value="Ki">Ki</Option>
-                <Option value="M">M</Option>
-                <Option value="Mi">Mi</Option>
-                <Option value="Gi">Gi</Option>
-                <Option value="m">m</Option>
-                <Option value="K">K</Option>
-                <Option value="G">G</Option>
-                <Option value="T">T</Option>
-                <Option value="Ti">Ti</Option>
-                <Option value="P">P</Option>
-                <Option value="Pi">Pi</Option>
-                <Option value="E">E</Option>
-                <Option value="Ei">Ei</Option>
+                {schema.memoryType.map(value => (
+                  <Option key={value} value={value}>
+                    {value}
+                  </Option>
+                ))}
               </Select>
             </Col>
           </Row>
@@ -271,3 +263,9 @@ export default function AddAlgorithmModal(props) {
     </Modal>
   );
 }
+
+AddAlgorithmModal.propsTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  toggleVisible: PropTypes.func.isRequired,
+  visible: PropTypes.bool.isRequired
+};

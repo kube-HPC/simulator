@@ -10,6 +10,7 @@ import FloatingAddButton from 'components/dumb/FloatingAddButton.react';
 function CardWithState() {
   const [isVisible, setVisible] = useState(false);
   const triggerVisible = () => setVisible(!isVisible);
+
   return (
     <div>
       <FloatingAddButton onClick={triggerVisible} />

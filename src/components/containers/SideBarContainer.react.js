@@ -52,11 +52,10 @@ class SideBarContainer extends Component {
       ),
       ADD_PIPELINE: (
         <AddPipelineSteps
-          formData={sideBar.data ? cloneDeep(sideBar.data.payload.data) : null}
-          algorithms={['a1', 'a2']}
-          pipelines={['p1', 'p2']}
-          onSubmit={() => {}}
-          onChange={() => {}}
+          formData={sideBar.data ? cloneDeep(sideBar.data.payload.formData) : null}
+          algorithms={sideBar.data ? sideBar.data.payload.algorithms : null}
+          pipelines={sideBar.data ? sideBar.data.payload.pipelines : null}
+          onSubmit={sideBar.data ? sideBar.data.payload.onSubmit : null}
         />
       )
     };

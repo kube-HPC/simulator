@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactJsonView from 'react-json-view';
 
-export default function JsonView({ jsonObject, collapsed }) {
+export default function JsonView({ jsonObject, collapsed, style }) {
   return (
     <ReactJsonView
       name={false}
@@ -13,6 +13,7 @@ export default function JsonView({ jsonObject, collapsed }) {
       indentWidth="4"
       collapsed={collapsed}
       enableClipboard={false}
+      style={style}
     />
   );
 }
