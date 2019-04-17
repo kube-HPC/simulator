@@ -81,15 +81,7 @@ function HKubeEditor(props) {
             Cancel
           </Button>
         ]}
-      >
-        {/* <Tabs defaultActiveKey="2">
-          <Tabs.TabPane tab="Form" key="1">
-            <AddPipelineForm formData={JSON.parse(json)} pipelines={props.pipelines} algorithms={algorithms} />
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="Json Editor" key="2">
-            <JsonEditor value={json} onChange={setJson} />
-          </Tabs.TabPane>
-        </Tabs> */}
+        <JsonEditor value={json} onChange={setJson} />
       </Modal>
     </div>
   );
