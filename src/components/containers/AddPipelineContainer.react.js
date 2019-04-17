@@ -22,7 +22,7 @@ export default function AddPipelineContainer({ content }) {
       </Tabs.TabPane>
       <Tabs.TabPane tab="Json Editor" key="3">
         <Card
-          style={{ width: '50%', margin: '0 auto' }}
+          style={{ width: '90%', margin: '0 auto' }}
           actions={[
             <Button
               type="primary"
@@ -35,7 +35,7 @@ export default function AddPipelineContainer({ content }) {
             </Button>
           ]}
         >
-          <JsonEditor value={json} onChange={setJson} />
+          <JsonEditor value={json} onChange={setJson} style={{ height: '80vh' }} />
         </Card>
       </Tabs.TabPane>
     </Tabs>

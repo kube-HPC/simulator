@@ -11,7 +11,13 @@ import 'brace/theme/github';
 import 'brace/snippets/json';
 import 'brace/ext/language_tools';
 
-export default function JsonEditor({ onChange, value, showGutter = true, snippetEnabled = true }) {
+export default function JsonEditor({
+  onChange,
+  value,
+  showGutter = true,
+  snippetEnabled = true,
+  style
+}) {
   if (snippetEnabled) {
     // A HACK FOR ADDING SNIPPETS
     ace.define('ace/snippets/json', ['require', 'exports', 'module'], (e, t, n) => {
@@ -39,7 +45,7 @@ export default function JsonEditor({ onChange, value, showGutter = true, snippet
       }}
       editorProps={{ $blockScrolling: true }}
       onChange={onChange}
-      style={{ width: 'unset', height: '50vh' }}
+      style={{ width: 'unset', height: '50vh', ...style }}
     />
   );
 }
@@ -48,5 +54,6 @@ JsonEditor.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
   snippetEnabled: PropTypes.bool,
-  showGutter: PropTypes.bool
+  showGutter: PropTypes.bool,
+  style: PropTypes.object.isRequired
 };
