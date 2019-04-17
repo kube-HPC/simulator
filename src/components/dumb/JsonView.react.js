@@ -20,5 +20,6 @@ export default function JsonView({ jsonObject, collapsed, style }) {
 
 JsonView.propTypes = {
   jsonObject: PropTypes.object.isRequired,
+  style: PropTypes.object,
   collapsed: PropTypes.number
 };

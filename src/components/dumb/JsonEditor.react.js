@@ -11,40 +11,42 @@ import 'brace/theme/github';
 import 'brace/snippets/json';
 import 'brace/ext/language_tools';
 
-// SUPER HACK FOR ADDING SNIPPETS
-ace.define('ace/snippets/json', ['require', 'exports', 'module'], (e, t, n) => {
-  // eslint-disable-next-line
-  (t.snippetText = snippet), (t.scope = 'json');
-});
+export default function JsonEditor({ onChange, value, showGutter = true, snippetEnabled = true }) {
+  if (snippetEnabled) {
+    // A HACK FOR ADDING SNIPPETS
+    ace.define('ace/snippets/json', ['require', 'exports', 'module'], (e, t, n) => {
+      // eslint-disable-next-line
+      (t.snippetText = snippet), (t.scope = 'json');
+    });
+  }
 
-export default function JsonEditor({ onChange, value }) {
   return (
-    <div>
-      <AceEditor
-        mode="json"
-        theme="github"
-        name="json-editor"
-        fontSize={14}
-        showGutter={true}
-        showPrintMargin={false}
-        highlightActiveLine={true}
-        value={value}
-        setOptions={{
-          enableBasicAutocompletion: true,
-          enableLiveAutocompletion: true,
-          enableSnippets: true,
-          showLineNumbers: false,
-          tabSize: 2
-        }}
-        editorProps={{ $blockScrolling: true }}
-        onChange={onChange}
-        style={{ width: 'unset' }}
-      />
-    </div>
+    <AceEditor
+      mode="json"
+      theme="github"
+      name="json-editor"
+      fontSize={16}
+      showGutter={showGutter}
+      showPrintMargin={false}
+      highlightActiveLine={true}
+      value={value}
+      setOptions={{
+        enableBasicAutocompletion: true,
+        enableLiveAutocompletion: true,
+        enableSnippets: true,
+        showLineNumbers: false,
+        tabSize: 2
+      }}
+      editorProps={{ $blockScrolling: true }}
+      onChange={onChange}
+      style={{ width: 'unset', height: '50vh' }}
+    />
   );
 }
 
 JsonEditor.propTypes = {
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired
+  value: PropTypes.string.isRequired,
+  snippetEnabled: PropTypes.bool,
+  showGutter: PropTypes.bool
 };

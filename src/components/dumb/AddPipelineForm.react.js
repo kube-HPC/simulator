@@ -1,11 +1,26 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form, Input, InputNumber, Row, Col, Select, Switch, Popover, Slider } from 'antd';
+import {
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  Row,
+  Col,
+  Select,
+  Switch,
+  Popover,
+  Slider,
+  Card,
+  notification,
+  Icon
+} from 'antd';
 import cronstrue from 'cronstrue';
 import cronParser from 'cron-parser';
 
 import DynamicForm from 'components/dumb/DynamicForm.react';
 import { stringify } from 'utils.js';
+import JsonEditor from 'components/dumb/JsonEditor.react';
 
 const span = 6;
 const formItemLayout = {
@@ -26,6 +41,7 @@ const verbosityLevels = ['info', 'trace', 'debug', 'warn', 'error', 'critical'];
 
 export default function AddPipelineForm(props) {
   const [formData, setFormData] = useState(props.formData);
+  const [flowInputString, setFlowInputString] = useState(stringify(formData.flowInput));
 
   const onChangeTarget = (formData, t1, t2 = undefined) => c => {
     const value = c && c.target ? c.target.value : c;
@@ -85,7 +101,7 @@ export default function AddPipelineForm(props) {
   const Nodes = (
     <DynamicForm
       formData={formData}
-      emptyData={{ nodeName: '', algorithmName: '' }}
+      emptyData={{ nodeName: '', algorithmName: '', input: [] }}
       onChange={setFormData}
       algorithms={props.algorithms}
       formItemLayout={formItemLayout}
@@ -109,19 +125,22 @@ export default function AddPipelineForm(props) {
           value={formData.webhooks.result}
         />
       </Form.Item>
-      <Form.Item {...formItemLayout} label="Flow">
-        <Input.TextArea
-          value={stringify(formData.flowInput)}
-          placeholder="Object"
-          autosize={{ minRows: 3 }}
-          disabled={true}
-        />
+      <Form.Item {...formItemLayout} label="Flow Input">
+        <Card>
+          <JsonEditor
+            value={flowInputString}
+            onChange={setFlowInputString}
+            snippetEnabled={false}
+            showGutter={true}
+          />
+        </Card>
       </Form.Item>
     </div>
   );
 
+  const triggersId = 'triggers-id';
   const Triggers = (
-    <div>
+    <div id={triggersId}>
       <Form.Item {...formItemLayout} label="Cron">
         <Popover content={addCronContent(formData)} trigger="focus">
           <Input
@@ -157,6 +176,7 @@ export default function AddPipelineForm(props) {
             formData.triggers.pipelines = formData.triggers.pipelines.filter(p => p !== pipeline);
             setFormData({ ...formData });
           }}
+          getPopupContainer={() => document.getElementById(triggersId)}
         >
           {addPipelineOptions(props.pipelines)}
         </Select>
@@ -242,7 +262,7 @@ export default function AddPipelineForm(props) {
   return (
     <Form>
       {steps[props.step]}
-      <Form.Item {...formItemLayoutWithOutLabel}>
+      <Form.Item style={{ marginTop: '5%' }}>
         <Row gutter={10} type="flex" justify="space-around">
           <Col span={12}>
             <Button
@@ -261,11 +281,22 @@ export default function AddPipelineForm(props) {
               type="primary"
               icon={!isLastStep ? 'right' : ''}
               onClick={() => {
-                props.onChange(formData);
-                if (!isLastStep) {
-                  props.onStep(props.step + 1);
-                } else {
-                  props.onSubmit(formData);
+                try {
+                  props.onChange({ ...formData, flowInput: JSON.parse(flowInputString) });
+                  if (!isLastStep) {
+                    props.onStep(props.step + 1);
+                  } else {
+                    props.onSubmit(formData);
+                  }
+                } catch (e) {
+                  notification.config({
+                    placement: 'bottomRight'
+                  });
+                  notification.open({
+                    message: 'Flow Input Error',
+                    description: e.message,
+                    icon: <Icon type="warning" style={{ color: 'red' }} />
+                  });
                 }
               }}
               style={{ width: '100%' }}

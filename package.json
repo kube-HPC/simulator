@@ -86,7 +86,7 @@
     "@storybook/addon-actions": "^5.0.6",
     "@storybook/addon-links": "^5.0.6",
     "@storybook/addons": "^5.0.6",
-    "@storybook/react": "^5.0.6",
+    "@storybook/react": "^5.0.8",
     "babel-cli": "^6.26.0",
     "babel-loader": "^8.0.4",
     "cron-parser": "^2.9.0",

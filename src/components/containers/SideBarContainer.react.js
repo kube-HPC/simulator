@@ -9,6 +9,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import sideBarTypes from '../../constants/sideBarTypes';
 import MDContentSwitcher from './MDContentSwitcher';
 import AddPipelineSteps from 'components/dumb/AddPipelineSteps.react';
+import AddPipelineContainer from 'components/containers/AddPipelineContainer.react';
 
 class SideBarContainer extends Component {
   constructor() {
@@ -51,23 +52,30 @@ class SideBarContainer extends Component {
         />
       ),
       ADD_PIPELINE: (
-        <AddPipelineSteps
-          formData={sideBar.data ? cloneDeep(sideBar.data.payload.formData) : null}
-          algorithms={sideBar.data ? sideBar.data.payload.algorithms : null}
-          pipelines={sideBar.data ? sideBar.data.payload.pipelines : null}
-          onSubmit={sideBar.data ? sideBar.data.payload.onSubmit : null}
+        <AddPipelineContainer
+          content={{
+            algorithms: sideBar.data ? sideBar.data.payload.algorithms : null,
+            pipelines: sideBar.data ? sideBar.data.payload.pipelines : null,
+            onSubmit: sideBar.data ? sideBar.data.payload.onSubmit : null
+          }}
         />
       )
     };
+
+    const AddPipelineSideBarStyle = { sidebar: { background: 'white', width: '120vh' } };
     return (
       <div>
         <Sidebar
           ref={this.setChildRef}
           sidebar={sideBar.data ? Component[sideBar.data.payload.type] : null}
           open={sideBar.visible}
-          styles={{
-            sidebar: { background: 'white', width: '50vw', position: 'fixed' }
-          }}
+          styles={
+            sideBar.data && sideBar.data.payload.type === sideBarTypes.ADD_PIPELINE
+              ? AddPipelineSideBarStyle
+              : {
+                  sidebar: { background: 'white', width: '50vw', position: 'fixed' }
+                }
+          }
           pullRight={true}
         >
           <div />

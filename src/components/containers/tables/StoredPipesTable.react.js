@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
 import {
   Table,
   Button,
@@ -40,7 +39,6 @@ import { sideBarOpen, sideBarClose } from '../../../actions/sideBar.action';
 import sideBarTypes from '../../../constants/sideBarTypes';
 
 import addPipelineTemplate from 'config/addPipeline.template.json';
-import SideBarAddPipeline from '../SideBarAddPipeline.react';
 
 const { Column } = Table;
 class StoredPipesTable extends Component {
@@ -51,7 +49,14 @@ class StoredPipesTable extends Component {
   renderColumns() {}
 
   render() {
-    const { storedPipelines, dataStats, algorithms, pipelineReadme, sideBarOpen } = this.props;
+    const {
+      storedPipelines,
+      dataStats,
+      algorithms,
+      pipelineReadme,
+      sideBarOpen,
+      sideBarClose
+    } = this.props;
 
     // Need to remove "nodes" key from each pipeline.
     const fixedDataSource = [];
@@ -268,21 +273,17 @@ class StoredPipesTable extends Component {
             sideBarOpen({
               payload: {
                 formData: addPipelineTemplate,
-                algorithms: ['a1', 'a2'],
+                algorithms: algorithms,
                 pipelines: storedPipelines.map(pipeline => pipeline.name),
-                onSubmit: this.props.addPipe,
+                onSubmit: pipeline => {
+                  this.props.addPipe(pipeline);
+                  sideBarClose();
+                },
                 type: sideBarTypes.ADD_PIPELINE
               }
             });
           }}
         />
-        {/* <SideBarAddPipeline
-          content={{
-            algorithms: ['a1', 'a2'],
-            pipelines: storedPipelines.map(pipeline => pipeline.name),
-            onSubmit: this.props.addPipe
-          }}
-        /> */}
       </div>
     );
   }
@@ -298,7 +299,9 @@ StoredPipesTable.propTypes = {
   updateStoredPipeline: PropTypes.func.isRequired,
   cronStop: PropTypes.func.isRequired,
   cronStart: PropTypes.func.isRequired,
-  addPipe: PropTypes.func.isRequired
+  addPipe: PropTypes.func.isRequired,
+  sideBarOpen: PropTypes.func.isRequired,
+  sideBarClose: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({

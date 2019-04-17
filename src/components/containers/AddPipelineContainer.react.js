@@ -12,21 +12,8 @@ import { stringify } from 'utils';
 
 import { Tabs, Card, Button } from 'antd';
 
-export default function SideBarAddPipeline({ content }) {
-  const [isVisible, setVisible] = useState(false);
-  const [sidebarRef, setSidebarRef] = useState(undefined);
+export default function AddPipelineContainer({ content }) {
   const [json, setJson] = useState(stringify(addPipelineTemplate));
-
-  const triggerVisible = () => setVisible(!isVisible);
-
-  const handleClickOutside = event =>
-    isVisible &&
-    sidebarRef &&
-    sidebarRef.sidebar &&
-    !sidebarRef.sidebar.contains(event.target) &&
-    triggerVisible();
-
-  document.addEventListener('mousedown', handleClickOutside);
 
   const Component = (
     <Tabs>
@@ -54,19 +41,9 @@ export default function SideBarAddPipeline({ content }) {
     </Tabs>
   );
 
-  return (
-    <Sidebar
-      ref={setSidebarRef}
-      styles={{ sidebar: { background: 'white', width: '120vh' } }}
-      open={isVisible}
-      sidebar={Component}
-      pullRight={true}
-    >
-      <FloatingAddButton onClick={triggerVisible} />
-    </Sidebar>
-  );
+  return Component;
 }
 
-SideBarAddPipeline.propTypes = {
+AddPipelineContainer.propTypes = {
   style: PropTypes.object
 };

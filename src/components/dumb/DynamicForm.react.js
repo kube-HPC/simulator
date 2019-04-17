@@ -1,9 +1,8 @@
 import React from 'react';
-import { Button, Icon, Input, Form, Select } from 'antd';
+import PropTypes from 'prop-types';
+import { Button, Input, Form, Select, Col, Row, Card } from 'antd';
 
-import './DynamicForm.scss';
-
-const removeElementN = (array, N) => array.slice(0, N).concat(array.slice(N + 1, array.length));
+import { removeNElement } from 'utils';
 
 const selectOptions = algorithms =>
   algorithms.map((value, i) => (
@@ -12,10 +11,13 @@ const selectOptions = algorithms =>
     </Select.Option>
   ));
 
+const id = 'dynamic-form';
+
 function DynamicForm(props) {
   const { formData, form, onChange } = props;
   const { formItemLayout, formItemLayoutWithOutLabel } = props;
   const { getFieldDecorator, getFieldValue } = form;
+  const nodes = formData.nodes;
 
   const onChangeNode = (formData, index, t1, t2 = undefined) => c => {
     const value = c && c.target ? c.target.value : c;
@@ -24,34 +26,80 @@ function DynamicForm(props) {
     onChange({ ...formData });
   };
 
-  const nodes = formData.nodes;
-
   getFieldDecorator('keys', { initialValue: [...Array(nodes.length).keys()] });
 
+  const addInput = i => () => {
+    nodes[i].input.push('');
+    onChange({ ...formData });
+  };
+
+  const removeInput = (nodeIndex, inputIndex) => {
+    const updated = removeNElement(nodes[nodeIndex].input, inputIndex);
+    nodes[nodeIndex].input = updated;
+    onChange({ ...formData });
+  };
+
   const formItems = getFieldValue('keys').map(i => {
+    const inputs = nodes[i].input;
     return (
-      <Form.Item key={i} required={i === 0}>
-        <Form.Item {...formItemLayout} label="Node Name">
-          <Input placeholder="Node Name" value={nodes[i] ? nodes[i].nodeName : ''} onChange={onChangeNode(formData, i, 'nodes', 'nodeName')} />
-        </Form.Item>
-        <Form.Item {...formItemLayout} label="Algorithm Name">
-          <Select placeholder="Select Algorithm Name" onChange={onChangeNode(formData, i, 'nodes', 'algorithmName')}>
-            {selectOptions(props.algorithms)}
-          </Select>
-        </Form.Item>
-        <Form.Item {...formItemLayout} label="Input">
-          <Input.TextArea placeholder="Insert Input Array" autosize={{ minRows: 2 }} disabled={true} />
-        </Form.Item>
-        {i !== 0 ? (
-          <Form.Item {...formItemLayoutWithOutLabel}>
-            <Button type="danger" onClick={() => removeNode(i)}>
-              <Icon type="minus" /> Remove Node
-            </Button>
-          </Form.Item>
-        ) : (
-          <div />
-        )}
-      </Form.Item>
+      <Card key={i} style={{ marginBottom: '5px' }}>
+        <Row type="flex" gutter={10}>
+          <Col span={22}>
+            <Form.Item required={i === 0}>
+              <Form.Item {...formItemLayout} label="Node Name">
+                <Input
+                  placeholder="Node Name"
+                  value={nodes[i] ? nodes[i].nodeName : ''}
+                  onChange={onChangeNode(formData, i, 'nodes', 'nodeName')}
+                />
+              </Form.Item>
+              <Form.Item {...formItemLayout} label="Algorithm Name">
+                <Select
+                  placeholder="Select Algorithm Name"
+                  onChange={onChangeNode(formData, i, 'nodes', 'algorithmName')}
+                  getPopupContainer={() => document.getElementById(id)}
+                >
+                  {selectOptions(props.algorithms)}
+                </Select>
+              </Form.Item>
+              <Form.Item {...formItemLayout} label="Input">
+                {inputs &&
+                  inputs.map((value, index) => (
+                    <Row key={`${i}_${index}`} gutter={10} type="flex">
+                      <Col span={22}>
+                        <Input
+                          value={value}
+                          onChange={e => {
+                            inputs[index] = e.target.value;
+                            onChange({ ...formData });
+                          }}
+                        />
+                      </Col>
+                      <Col span={2}>
+                        <Button type="danger" icon="minus" onClick={() => removeInput(i, index)} />
+                      </Col>
+                    </Row>
+                  ))}
+                <Button type="dashed" icon="plus" onClick={addInput(i)} style={{ width: '100%' }}>
+                  Add Input
+                </Button>
+              </Form.Item>
+            </Form.Item>
+          </Col>
+          <Col span={2}>
+            {i === 0 ? (
+              <div />
+            ) : (
+              <Button
+                type="danger"
+                icon="minus"
+                onClick={() => removeNode(i)}
+                style={{ marginTop: '7.5%' }}
+              />
+            )}
+          </Col>
+        </Row>
+      </Card>
     );
   });
 
@@ -64,21 +112,30 @@ function DynamicForm(props) {
   };
 
   const removeNode = k => {
-    const updateNode = removeElementN(nodes, k);
+    const updateNode = removeNElement(nodes, k);
     form.setFieldsValue({ keys: [...updateNode.keys()] });
     onChange({ ...formData, nodes: updateNode });
   };
 
   return (
-    <div>
+    <div id={id}>
       <Form.Item required={true}>{formItems}</Form.Item>
-      <Form.Item {...formItemLayoutWithOutLabel}>
-        <Button type="dashed" onClick={addNode} style={{ width: '100%' }}>
-          <Icon type="plus" /> Add Node
-        </Button>
-      </Form.Item>
+      <Button type="dashed" icon="plus" onClick={addNode} style={{ width: '100%' }}>
+        Add Node
+      </Button>
     </div>
   );
 }
+
+DynamicForm.propTypes = {
+  formData: PropTypes.object.isRequired,
+  emptyData: PropTypes.object.isRequired,
+  algorithms: PropTypes.array.isRequired,
+  pipelines: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
+  formItemLayoutWithOutLabel: PropTypes.object.isRequired,
+  formItemLayout: PropTypes.object.isRequired,
+  form: PropTypes.object.isRequired
+};
 
 export default Form.create({ name: 'dynamic_form_item' })(DynamicForm);

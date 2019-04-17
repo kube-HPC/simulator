@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Button, Card, notification, Icon } from 'antd';
-import JsonEditor from '../dumb/JsonEditor.react';
+import JsonEditor from 'components/dumb/JsonEditor.react';
 import './HEditor.scss';
 
 class HEditor extends Component {
