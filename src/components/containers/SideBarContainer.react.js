@@ -2,13 +2,9 @@ import React, { Component } from 'react';
 import Sidebar from 'react-sidebar';
 import { connect } from 'react-redux';
 import AlgorithmInformation from './AlgorithmInformation.react';
-import MDEditor from './MDEditor.react';
 import { sideBarClose } from '../../actions/sideBar.action';
-import cloneDeep from 'lodash/cloneDeep';
-
 import sideBarTypes from '../../constants/sideBarTypes';
-import MDContentSwitcher from './MDContentSwitcher';
-import AddPipelineSteps from 'components/dumb/AddPipelineSteps.react';
+import MDContentSwitcher from './MDContentSwitcher.react';
 import AddPipelineContainer from 'components/containers/AddPipelineContainer.react';
 
 class SideBarContainer extends Component {

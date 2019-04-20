@@ -19,7 +19,7 @@ import cronstrue from 'cronstrue';
 import cronParser from 'cron-parser';
 
 import DynamicForm from 'components/dumb/DynamicForm.react';
-import { stringify } from 'utils.js';
+import { stringify, toUpperCaseFirstLetter } from 'utils/string';
 import JsonEditor from 'components/dumb/JsonEditor.react';
 
 const span = 6;
@@ -247,7 +247,7 @@ export default function AddPipelineForm(props) {
         >
           {verbosityLevels.map(value => (
             <Select.Option key={value} value={value}>
-              {value.toUpperCaseFirstLetter()}
+              {toUpperCaseFirstLetter(value)}
             </Select.Option>
           ))}
         </Select>

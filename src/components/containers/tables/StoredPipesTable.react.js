@@ -30,7 +30,7 @@ import {
 } from '../../../actions/storedPipes.action';
 import { addPipe } from '../../../actions/addPipe.action';
 import './StoredPipesTable.scss';
-import HEditor from '../HEditor.react';
+import JsonEditorModal from '../JsonEditorModal.react';
 import FloatingAddButton from '../../dumb/FloatingAddButton.react';
 import { getPipelineReadme } from '../../../actions/readme.action';
 import { STATUS } from '../../../constants/colors';
@@ -38,7 +38,7 @@ import { ReactComponent as PlayIconSvg } from '../../../images/play-icon.svg';
 import { sideBarOpen, sideBarClose } from '../../../actions/sideBar.action';
 import sideBarTypes from '../../../constants/sideBarTypes';
 
-import addPipelineTemplate from 'config/addPipeline.template.json';
+import template from 'config/template/addPipeline.template';
 
 const { Column } = Table;
 class StoredPipesTable extends Component {
@@ -220,7 +220,7 @@ class StoredPipesTable extends Component {
               return (
                 <Row type="flex" justify="start">
                   <Col span={4}>
-                    <HEditor
+                    <JsonEditorModal
                       jsonTemplate={JSON.stringify(
                         fixedDataSource.find(p => p.name === record.name),
                         null,
@@ -239,7 +239,7 @@ class StoredPipesTable extends Component {
                     />
                   </Col>
                   <Col span={4}>
-                    <HEditor
+                    <JsonEditorModal
                       jsonTemplate={JSON.stringify(
                         storedPipelines.find(p => p.name === record.name),
                         null,
@@ -272,7 +272,7 @@ class StoredPipesTable extends Component {
           onClick={() => {
             sideBarOpen({
               payload: {
-                formData: addPipelineTemplate,
+                formData: template,
                 algorithms: algorithms,
                 pipelines: storedPipelines.map(pipeline => pipeline.name),
                 onSubmit: pipeline => {

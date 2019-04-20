@@ -1,19 +1,16 @@
 import React, { useState } from 'react';
-import Sidebar from 'react-sidebar';
 import PropTypes from 'prop-types';
 
 import AddPipelineSteps from 'components/dumb/AddPipelineSteps.react';
-import FloatingAddButton from 'components/dumb/FloatingAddButton.react';
-
 import JsonEditor from 'components/dumb/JsonEditor.react';
 
-import addPipelineTemplate from 'config/addPipeline.template.json';
-import { stringify } from 'utils';
+import template from 'config/template/addPipeline.template';
 
+import { stringify } from 'utils/string';
 import { Tabs, Card, Button } from 'antd';
 
 export default function AddPipelineContainer({ content }) {
-  const [json, setJson] = useState(stringify(addPipelineTemplate));
+  const [json, setJson] = useState(stringify(template));
 
   const Component = (
     <Tabs>

@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import ReactJson from 'react-json-view';
 import JobGraph from '../containers/JobGraph.react';
 import Trace from 'jaeger-react-trace-component';
-import MDEditor from "../containers/MDEditor.react";
 class TabSwitcher extends Component {
   constructor() {
     super();

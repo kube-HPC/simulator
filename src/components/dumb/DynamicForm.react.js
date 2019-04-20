@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Input, Form, Select, Col, Row, Card } from 'antd';
 
-import { removeNElement } from 'utils';
+export const removeNElement = (array, N) =>
+  array.slice(0, N).concat(array.slice(N + 1, array.length));
 
 const selectOptions = algorithms =>
   algorithms.map((value, i) => (
@@ -15,7 +16,7 @@ const id = 'dynamic-form';
 
 function DynamicForm(props) {
   const { formData, form, onChange } = props;
-  const { formItemLayout, formItemLayoutWithOutLabel } = props;
+  const { formItemLayout } = props;
   const { getFieldDecorator, getFieldValue } = form;
   const nodes = formData.nodes;
 

@@ -6,7 +6,7 @@ import { Card, Button } from 'antd';
 import { connect } from 'react-redux';
 import sideBarTypes from '../../constants/sideBarTypes';
 import 'react-mde/lib/styles/css/react-mde-all.css';
-import ReadmeViewerCodeHighlight from './ReadmeViewerCodeHighlight';
+import ReadmeViewerCodeHighlight from './ReadmeViewerCodeHighlight.react';
 
 const MdViewer = props => (
   <Card

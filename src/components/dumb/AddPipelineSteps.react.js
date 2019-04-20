@@ -5,10 +5,10 @@ import AddPipelineForm from 'components/dumb/AddPipelineForm.react';
 import { Row, Col, Steps, Card } from 'antd';
 
 import JsonView from 'components/dumb/JsonView.react';
-import addPipelineTemplate from 'config/addPipeline.template.json';
+import template from 'config/template/addPipeline.template';
 
 export default function AddPipelineSteps(props) {
-  const [formData, setFormData] = useState(addPipelineTemplate);
+  const [formData, setFormData] = useState(template);
   const [step, setStep] = useState(0);
   const steps = ['Initial', 'Nodes', 'Side Effects', 'Triggers', 'Options'];
   const span = 15;

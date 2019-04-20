@@ -1,3 +1,0 @@
-# Refactor
-
-- Adding storybook

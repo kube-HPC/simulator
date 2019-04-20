@@ -3,7 +3,7 @@ import AceEditor from 'react-ace';
 import PropTypes from 'prop-types';
 import ace from 'brace';
 
-import snippet from 'config/jsonEditor.snippet';
+import snippet from 'config/schema/jsonEditorSnippet.schema';
 
 // Set Ace-Editor properties
 import 'brace/mode/json';

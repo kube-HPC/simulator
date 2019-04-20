@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import algorithmObjectTemplate from './../stubs/algorithm-object.json';
-import schema from './../../config/algorithm-input-schema.json';
+import styled from 'styled-components';
+
+import template from 'config/template/algorithm-modal.template';
+import schema from 'config/schema/algorithm-modal.schema';
+import { toUpperCaseFirstLetter } from 'utils/string';
 import {
   Modal,
   Input,
@@ -16,7 +19,6 @@ import {
   Radio
 } from 'antd';
 import parseUnit from 'parse-unit';
-import './AddAlgorithmModal.scss';
 
 import PropTypes from 'prop-types';
 
@@ -30,7 +32,7 @@ const _parseUnit = obj => {
 const insertAlgorithmOptions = options =>
   Object.entries(options).map(([key]) => (
     <Option key={key.toString()} value={key}>
-      {key.toUpperCaseFirstLetter()}
+      {toUpperCaseFirstLetter(key)}
     </Option>
   ));
 
@@ -60,12 +62,18 @@ const getMemValue = (mem, isReturnUnit) => {
 const insertRadioButtons = buildTypes =>
   Object.entries(buildTypes).map(([type]) => (
     <Radio.Button key={type} value={type}>
-      {type.toUpperCaseFirstLetter()}
+      {toUpperCaseFirstLetter(type)}
     </Radio.Button>
   ));
 
+const StyledForm = styled(Form)`
+  .ant-form-item {
+    margin-bottom: 0px;
+  }
+`;
+
 export default function AddAlgorithmModal(props) {
-  const [algoData, setAlgoData] = useState(algorithmObjectTemplate);
+  const [algoData, setAlgoData] = useState(template);
   const [buildType, setBuildType] = useState('code');
   const [file, setFile] = useState(undefined);
 
@@ -105,7 +113,6 @@ export default function AddAlgorithmModal(props) {
       <div>
         <Form.Item {...formItemLayout} label={schema.environment}>
           <Select
-            className="input"
             defaultValue={algoData.env}
             value={algoData.env}
             onChange={v => (algoData.env = v)}
@@ -115,7 +122,6 @@ export default function AddAlgorithmModal(props) {
         </Form.Item>
         <Form.Item {...formItemLayout} label={schema.entryPoint}>
           <Input
-            className="input"
             defaultValue={algoData.entryPoint}
             value={algoData.entryPoint}
             onChange={e => setAlgoData({ ...algoData, entryPoint: e.target.value })}
@@ -167,7 +173,7 @@ export default function AddAlgorithmModal(props) {
         </Button>
       ]}
     >
-      <Form>
+      <StyledForm>
         <Form.Item {...formItemLayout} label={schema.name}>
           <Input
             className="input"
@@ -259,7 +265,7 @@ export default function AddAlgorithmModal(props) {
         </Form.Item>
         <Divider orientation="left">{schema.code}</Divider>
         {buildTypes[buildType]}
-      </Form>
+      </StyledForm>
     </Modal>
   );
 }

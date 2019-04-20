@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Button, Card, notification, Icon } from 'antd';
 import JsonEditor from 'components/dumb/JsonEditor.react';
-import './HEditor.scss';
 
-class HEditor extends Component {
+class JsonEditorModal extends Component {
   constructor(props) {
     super(props);
     this.userData = this.props.jsonTemplate;
@@ -80,14 +79,14 @@ class HEditor extends Component {
               }}
             />
           </Card>
-          <p className="paragraph">{this.props.hintText}</p>
+          <p style={{ marginTop: '1em', marginBottom: 'auto' }}>{this.props.hintText}</p>
         </Modal>
       </div>
     );
   }
 }
 
-HEditor.propTypes = {
+JsonEditorModal.propTypes = {
   action: PropTypes.func.isRequired,
   jsonTemplate: PropTypes.string.isRequired,
   okText: PropTypes.string.isRequired,
@@ -96,4 +95,4 @@ HEditor.propTypes = {
   hintText: PropTypes.object
 };
 
-export default HEditor;
+export default JsonEditorModal;

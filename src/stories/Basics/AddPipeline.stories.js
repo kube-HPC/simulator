@@ -5,6 +5,8 @@ import Sidebar from 'react-sidebar';
 import PropTypes from 'prop-types';
 
 import AddPipelineSteps from 'components/dumb/AddPipelineSteps.react';
+import AddPipelineForm from 'components/dumb/AddPipelineForm.react';
+import addPipelineTemplate from 'config/template/addPipeline.template';
 
 function AddPipelineContainer({ style }) {
   return (
@@ -17,7 +19,25 @@ function AddPipelineContainer({ style }) {
   );
 }
 
-storiesOf('Basics|AddPipelineSteps', module)
+function Container() {
+  const [current, setCurrent] = useState(0);
+  const [formData, setFormData] = useState(addPipelineTemplate);
+  return (
+    <AddPipelineForm
+      formData={formData}
+      algorithms={['a1', 'a2']}
+      pipelines={['p1', 'p2']}
+      onSubmit={action('click')}
+      onChange={setFormData}
+      onStep={setCurrent}
+      step={current}
+    />
+  );
+}
+
+storiesOf('Basics|AddPipeline/Form', module).add('Default', () => <Container />);
+
+storiesOf('Basics|AddPipeline/Steps', module)
   .add('Default', () => <AddPipelineContainer />)
   .add('Sidebar', () => (
     <Sidebar
