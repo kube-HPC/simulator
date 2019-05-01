@@ -4,7 +4,7 @@ import ReactJson from 'react-json-view';
 import PropTypes from 'prop-types';
 import MdViewer from './MdViewer.react';
 
-class PipelineTabSwitcher extends Component {
+class AlgorithmTabSwitcher extends Component {
   constructor() {
     super();
     this.state = {
@@ -15,10 +15,10 @@ class PipelineTabSwitcher extends Component {
   default = `
  # [ Name ]
   ## Description
-  ### a short description that explains about the Pipelines
+  ### a short description that explains about the algorithms
 
   ## API Description
-  \`\`\`([input a],[input b]) \`\`\` Pipeline api description about the expected input and outputs
+  \`\`\`([input a],[input b]) \`\`\` algorithm api description about the expected input and outputs
    - \`[input a]([type])\` - description about input a
    - \`[input b]([type])\` - description about input b
      ### Example
@@ -33,26 +33,23 @@ class PipelineTabSwitcher extends Component {
   \`\`\`\`
   `;
   render() {
-    const { pipelineDetails, readme } = this.props;
+    const { algorithmDetails, readme } = this.props;
     return (
       <Tabs defaultActiveKey="1">
         <Tabs.TabPane tab="Description" key="1">
           <MdViewer
-            name={pipelineDetails.name}
+            name={algorithmDetails.key}
             readme={readme || this.default}
-            readmeType={'pipeline'}
+            readmeType={'algorithm'}
           />
         </Tabs.TabPane>
         <Tabs.TabPane tab="JSON" key="3">
-          <Card title="Descriptor">
+          <Card>
             <ReactJson
-              name={false}
-              src={pipelineDetails}
+              src={algorithmDetails}
+              iconStyle="square"
               displayDataTypes={false}
               displayObjectSize={false}
-              iconStyle="triangle"
-              indentWidth="4"
-              collapsed="2"
               enableClipboard={false}
             />
           </Card>
@@ -61,9 +58,9 @@ class PipelineTabSwitcher extends Component {
     );
   }
 }
-PipelineTabSwitcher.propTypes = {
-  pipelineDetails: PropTypes.object.isRequired,
-  readme: PropTypes.string
+AlgorithmTabSwitcher.propTypes = {
+  algorithmDetails: PropTypes.string.isRequired,
+  readme: PropTypes.string.isRequired
 };
 
-export default PipelineTabSwitcher;
+export default AlgorithmTabSwitcher;

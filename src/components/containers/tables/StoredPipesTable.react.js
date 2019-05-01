@@ -1,23 +1,45 @@
 import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
-import { Table, Button, Row, Col, Modal, Icon, Tag, Tooltip, Switch, Input, Popover, Badge, message } from 'antd';
+import {
+  Table,
+  Button,
+  Row,
+  Col,
+  Modal,
+  Icon,
+  Tag,
+  Tooltip,
+  Switch,
+  Input,
+  Popover,
+  Badge,
+  message
+} from 'antd';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cronstrue from 'cronstrue';
 import cronParser from 'cron-parser';
-import PipelineTabSwitcher from '../../dumb/PipelineTabSwitcher.react';
-import { init } from '../../../actions/storedPipes.action';
-import { openModal } from '../../../actions/modal.action';
-import { execStoredPipe, deleteStoredPipeline, updateStoredPipeline, cronStart, cronStop } from '../../../actions/storedPipes.action';
-import { addPipe } from '../../../actions/addPipe.action';
-import './StoredPipesTable.scss';
-import HKubeEditor from '../HKubeEditor.react';
-import HEditor from '../HEditor.react';
-import AddButton from '../../dumb/AddButton.react';
-import { getPipelineReadme } from '../../../actions/readme.action';
-import { STATUS } from '../../../constants/colors';
-import { ReactComponent as PlayIconSvg } from '../../../images/play-icon.svg';
-import template from '../../stubs/json-object.json';
+import PipelineTabSwitcher from 'components/dumb/PipelineTabSwitcher.react';
+import { init } from 'actions/storedPipes.action';
+import { openModal } from 'actions/modal.action';
+import {
+  execStoredPipe,
+  deleteStoredPipeline,
+  updateStoredPipeline,
+  cronStart,
+  cronStop
+} from 'actions/storedPipes.action';
+import { addPipe } from 'actions/addPipe.action';
+// import './StoredPipesTable.scss';
+import JsonEditorModal from 'components/containers/JsonEditorModal.react';
+import FloatingAddButton from 'components/dumb/FloatingAddButton.react';
+import { getPipelineReadme } from 'actions/readme.action';
+import { STATUS } from 'constants/colors';
+import { ReactComponent as PlayIconSvg } from 'images/play-icon.svg';
+import { sideBarOpen, sideBarClose } from 'actions/sideBar.action';
+import sideBarTypes from 'constants/sideBarTypes';
+
+import template from 'config/template/addPipeline.template';
+import paginationStyle from 'config/template/table-pagination.template';
 
 const { Column } = Table;
 class StoredPipesTable extends Component {
@@ -28,7 +50,14 @@ class StoredPipesTable extends Component {
   renderColumns() {}
 
   render() {
-    const { storedPipelines, dataStats, dataSource, pipelineReadme } = this.props;
+    const {
+      storedPipelines,
+      dataStats,
+      algorithms,
+      pipelineReadme,
+      sideBarOpen,
+      sideBarClose
+    } = this.props;
 
     // Need to remove "nodes" key from each pipeline.
     const fixedDataSource = [];
@@ -41,7 +70,9 @@ class StoredPipesTable extends Component {
     const deleteConfirmAction = (action, record) => {
       Modal.confirm({
         title: 'WARNING Deleting Pipeline',
-        content: `Are you sure you want to delete ${record.name}? Deleting Pipeline will Stop-ALL related Jobs and Executions`,
+        content: `Are you sure you want to delete ${
+          record.name
+        }? Deleting Pipeline will Stop-ALL related Jobs and Executions`,
         okText: 'Confirm',
         okType: 'danger',
         cancelText: 'Cancel',
@@ -74,18 +105,20 @@ class StoredPipesTable extends Component {
         <Table
           rowKey="name"
           dataSource={storedPipelines.asMutable()}
-          pagination={{
-            className: 'tablePagination',
-            defaultCurrent: 1,
-            pageSize: 15,
-            hideOnSinglePage: true
-          }}
+          pagination={paginationStyle}
           onExpand={(expanded, record) => {
             if (expanded) {
               this.props.getPipelineReadme(record.name);
             }
           }}
-          expandedRowRender={record => <PipelineTabSwitcher pipelineDetails={record} readme={pipelineReadme && pipelineReadme[record.name] && pipelineReadme[record.name].readme} />}
+          expandedRowRender={record => (
+            <PipelineTabSwitcher
+              pipelineDetails={record}
+              readme={
+                pipelineReadme && pipelineReadme[record.name] && pipelineReadme[record.name].readme
+              }
+            />
+          )}
         >
           <Column title="Pipeline Name" dataIndex="name" key="name" />
           <Column
@@ -93,7 +126,10 @@ class StoredPipesTable extends Component {
             dataIndex="cron"
             key="cron"
             render={(_, record) => {
-              const cronIsEnabled = record.hasOwnProperty('triggers') && record.triggers.hasOwnProperty('cron') && record.triggers.cron.enabled;
+              const cronIsEnabled =
+                record.hasOwnProperty('triggers') &&
+                record.triggers.hasOwnProperty('cron') &&
+                record.triggers.cron.enabled;
 
               const cronExpr = cronIsEnabled ? record.triggers.cron.pattern : '0 * * * *';
 
@@ -104,7 +140,14 @@ class StoredPipesTable extends Component {
                   <Col span={4} order={1}>
                     <Switch
                       checked={cronIsEnabled}
-                      onChange={revertCronTrigger(cronIsEnabled, JSON.parse(JSON.stringify(record)), cronExpr, this.props.cronStart, this.props.cronStop, this.props.updateStoredPipeline)}
+                      onChange={revertCronTrigger(
+                        cronIsEnabled,
+                        JSON.parse(JSON.stringify(record)),
+                        cronExpr,
+                        this.props.cronStart,
+                        this.props.cronStop,
+                        this.props.updateStoredPipeline
+                      )}
                     />
                   </Col>
                   <Col span={8} order={2}>
@@ -115,13 +158,19 @@ class StoredPipesTable extends Component {
                       trigger="focus"
                     >
                       <Input.Search
-                        className="cronInput"
+                        style={{ width: 160 }}
                         size="small"
                         disabled={!cronIsEnabled}
                         placeholder="Cron Expression"
                         enterButton={<Icon type="check" />}
                         defaultValue={cronExpr}
-                        onSearch={pattern => updateCronPattern(JSON.parse(JSON.stringify(record)), pattern, this.props.updateStoredPipeline)}
+                        onSearch={pattern =>
+                          updateCronPattern(
+                            JSON.parse(JSON.stringify(record)),
+                            pattern,
+                            this.props.updateStoredPipeline
+                          )
+                        }
                       />
                     </Popover>
                   </Col>
@@ -139,9 +188,16 @@ class StoredPipesTable extends Component {
               }
 
               // array flat one-liner
-              const pipelineStats = [].concat(...[...dataStats.filter(status => status.name === record.name && status.stats.length !== 0).map(pipeline => pipeline.stats)]);
+              const pipelineStats = [].concat(
+                ...[
+                  ...dataStats
+                    .filter(status => status.name === record.name && status.stats.length !== 0)
+                    .map(pipeline => pipeline.stats)
+                ]
+              );
 
-              const firstLetterUpperCase = s => s && s.charAt && s.charAt(0).toUpperCase() + s.slice(1);
+              const firstLetterUpperCase = s =>
+                s && s.charAt && s.charAt(0).toUpperCase() + s.slice(1);
 
               const out = pipelineStats.map((s, i) => (
                 <Tooltip key={i} placement="top" title={firstLetterUpperCase(s[0])}>
@@ -160,8 +216,12 @@ class StoredPipesTable extends Component {
               return (
                 <Row type="flex" justify="start">
                   <Col span={4}>
-                    <HEditor
-                      jsonTemplate={JSON.stringify(fixedDataSource.find(p => p.name === record.name), null, 2)}
+                    <JsonEditorModal
+                      jsonTemplate={JSON.stringify(
+                        fixedDataSource.find(p => p.name === record.name),
+                        null,
+                        2
+                      )}
                       styledButton={(onClick, isEditable = false) => (
                         <Badge dot={isEditable}>
                           <Button shape="circle" onClick={onClick}>
@@ -175,8 +235,12 @@ class StoredPipesTable extends Component {
                     />
                   </Col>
                   <Col span={4}>
-                    <HEditor
-                      jsonTemplate={JSON.stringify(storedPipelines.find(p => p.name === record.name), null, 2)}
+                    <JsonEditorModal
+                      jsonTemplate={JSON.stringify(
+                        storedPipelines.find(p => p.name === record.name),
+                        null,
+                        2
+                      )}
                       styledButton={(onClick, isEditable = false) => (
                         <Badge dot={isEditable}>
                           <Button shape="circle" icon="edit" onClick={onClick} />
@@ -188,26 +252,33 @@ class StoredPipesTable extends Component {
                     />
                   </Col>
                   <Col span={4}>
-                    <Button type="danger" shape="circle" icon="delete" onClick={() => deleteConfirmAction(this.props.deleteStoredPipeline, record)} />
+                    <Button
+                      type="danger"
+                      shape="circle"
+                      icon="delete"
+                      onClick={() => deleteConfirmAction(this.props.deleteStoredPipeline, record)}
+                    />
                   </Col>
                 </Row>
               );
             }}
           />
         </Table>
-        <HKubeEditor
-          jsonTemplate={JSON.stringify(template, null, 2)}
-          styledButton={(onClick, isEditable = false) => <AddButton onVisible={onClick} />}
-          algorithms={dataSource.asMutable()}
-          pipelines={storedPipelines.asMutable().map(value => value.name)}
-          title={'Add Pipeline Editor'}
-          okText={'Store Pipeline'}
-          hintText={
-            <span>
-              Hint: Type <strong>node</strong> for adding pipe-node.
-            </span>
-          }
-          action={this.props.addPipe}
+        <FloatingAddButton
+          onClick={() => {
+            sideBarOpen({
+              payload: {
+                formData: template,
+                algorithms: algorithms,
+                pipelines: storedPipelines.map(pipeline => pipeline.name),
+                onSubmit: pipeline => {
+                  this.props.addPipe(pipeline);
+                  sideBarClose();
+                },
+                type: sideBarTypes.ADD_PIPELINE
+              }
+            });
+          }}
         />
       </div>
     );
@@ -216,7 +287,7 @@ class StoredPipesTable extends Component {
 
 StoredPipesTable.propTypes = {
   init: PropTypes.func.isRequired,
-  dataSource: PropTypes.array.isRequired,
+  algorithms: PropTypes.array.isRequired,
   storedPipelines: PropTypes.array.isRequired,
   dataStats: PropTypes.array,
   execStoredPipe: PropTypes.func.isRequired,
@@ -224,26 +295,32 @@ StoredPipesTable.propTypes = {
   updateStoredPipeline: PropTypes.func.isRequired,
   cronStop: PropTypes.func.isRequired,
   cronStart: PropTypes.func.isRequired,
-  addPipe: PropTypes.func.isRequired
+  addPipe: PropTypes.func.isRequired,
+  sideBarOpen: PropTypes.func.isRequired,
+  sideBarClose: PropTypes.func.isRequired
 };
 
-const algorithmTable = state => state.algorithmTable.dataSource;
-const autoCompleteFilter = state => state.autoCompleteFilter.filter;
-
-const tableDataSelector = createSelector(
-  algorithmTable,
-  autoCompleteFilter,
-  algorithmTable => algorithmTable
-);
-
 const mapStateToProps = state => ({
-  dataSource: tableDataSelector(state),
+  algorithms: state.algorithmTable.dataSource.map(tableRow => tableRow.key),
   storedPipelines: state.storedPipeline.dataSource,
   dataStats: state.storedPipeline.dataStats,
-  pipelineReadme: state.pipelineReadme
+  pipelineReadme: state.pipelineReadme,
+  sideBar: state.sideBar
 });
 
 export default connect(
   mapStateToProps,
-  { openModal, init, addPipe, execStoredPipe, deleteStoredPipeline, updateStoredPipeline, cronStop, cronStart, getPipelineReadme }
+  {
+    openModal,
+    init,
+    addPipe,
+    execStoredPipe,
+    deleteStoredPipeline,
+    updateStoredPipeline,
+    cronStop,
+    cronStart,
+    getPipelineReadme,
+    sideBarOpen,
+    sideBarClose
+  }
 )(StoredPipesTable);

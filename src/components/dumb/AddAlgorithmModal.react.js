@@ -1,9 +1,26 @@
 import React, { useState } from 'react';
-import algorithmObjectTemplate from './../stubs/algorithm-object.json';
-import schema from './../../config/algorithm-input-schema.json';
-import { Modal, Input, Icon, Select, InputNumber, Upload, Divider, Form, Row, Col, Button, Radio } from 'antd';
+import styled from 'styled-components';
+
+import template from 'config/template/algorithm-modal.template';
+import schema from 'config/schema/algorithm-modal.schema';
+import { toUpperCaseFirstLetter } from 'utils/string';
+import {
+  Modal,
+  Input,
+  Icon,
+  Select,
+  InputNumber,
+  Upload,
+  Divider,
+  Form,
+  Row,
+  Col,
+  Button,
+  Radio
+} from 'antd';
 import parseUnit from 'parse-unit';
-import './AddAlgorithmModal.scss';
+
+import PropTypes from 'prop-types';
 
 const Option = Select.Option;
 
@@ -15,7 +32,7 @@ const _parseUnit = obj => {
 const insertAlgorithmOptions = options =>
   Object.entries(options).map(([key]) => (
     <Option key={key.toString()} value={key}>
-      {key.toUpperCaseFirstLetter()}
+      {toUpperCaseFirstLetter(key)}
     </Option>
   ));
 
@@ -45,12 +62,18 @@ const getMemValue = (mem, isReturnUnit) => {
 const insertRadioButtons = buildTypes =>
   Object.entries(buildTypes).map(([type]) => (
     <Radio.Button key={type} value={type}>
-      {type.toUpperCaseFirstLetter()}
+      {toUpperCaseFirstLetter(type)}
     </Radio.Button>
   ));
 
+const StyledForm = styled(Form)`
+  .ant-form-item {
+    margin-bottom: 0px;
+  }
+`;
+
 export default function AddAlgorithmModal(props) {
-  const [algoData, setAlgoData] = useState(algorithmObjectTemplate);
+  const [algoData, setAlgoData] = useState(template);
   const [buildType, setBuildType] = useState('code');
   const [file, setFile] = useState(undefined);
 
@@ -89,13 +112,16 @@ export default function AddAlgorithmModal(props) {
     code: (
       <div>
         <Form.Item {...formItemLayout} label={schema.environment}>
-          <Select className="input" defaultValue={algoData.env} value={algoData.env} onChange={v => (algoData.env = v)}>
+          <Select
+            defaultValue={algoData.env}
+            value={algoData.env}
+            onChange={v => (algoData.env = v)}
+          >
             {insertEnvOptions(schema.env)}
           </Select>
         </Form.Item>
         <Form.Item {...formItemLayout} label={schema.entryPoint}>
           <Input
-            className="input"
             defaultValue={algoData.entryPoint}
             value={algoData.entryPoint}
             onChange={e => setAlgoData({ ...algoData, entryPoint: e.target.value })}
@@ -108,7 +134,9 @@ export default function AddAlgorithmModal(props) {
             <p className="ant-upload-drag-icon">
               <Icon type="inbox" />
             </p>
-            <p className="ant-upload-text">Click or drag algorithm source code to this area to upload</p>
+            <p className="ant-upload-text">
+              Click or drag algorithm source code to this area to upload
+            </p>
             <p className="ant-upload-hint">Support for zip or tar.gz only</p>
           </Upload.Dragger>
         </Form.Item>
@@ -145,7 +173,7 @@ export default function AddAlgorithmModal(props) {
         </Button>
       ]}
     >
-      <Form>
+      <StyledForm>
         <Form.Item {...formItemLayout} label={schema.name}>
           <Input
             className="input"
@@ -156,16 +184,30 @@ export default function AddAlgorithmModal(props) {
           />
         </Form.Item>
         <Form.Item {...formItemLayout} label="Build Type">
-          <Radio.Group defaultValue={buildType} buttonStyle="solid" onChange={v => setBuildType(v.target.value)}>
+          <Radio.Group
+            defaultValue={buildType}
+            buttonStyle="solid"
+            onChange={v => setBuildType(v.target.value)}
+          >
             {insertRadioButtons(buildTypes)}
           </Radio.Group>
         </Form.Item>
         <Divider orientation="left">{schema.resources}</Divider>
         <Form.Item {...formItemLayout} label={schema.cpu}>
-          <InputNumber min={1} value={algoData.cpu} defaultValue={algoData.cpu} onChange={v => setAlgoData({ ...algoData, cpu: +v })} />
+          <InputNumber
+            min={1}
+            value={algoData.cpu}
+            defaultValue={algoData.cpu}
+            onChange={v => setAlgoData({ ...algoData, cpu: +v })}
+          />
         </Form.Item>
         <Form.Item {...formItemLayout} label={schema.gpu}>
-          <InputNumber min={0} value={algoData.gpu} defaultValue={algoData.gpu} onChange={v => setAlgoData({ ...algoData, gpu: +v })} />
+          <InputNumber
+            min={0}
+            value={algoData.gpu}
+            defaultValue={algoData.gpu}
+            onChange={v => setAlgoData({ ...algoData, gpu: +v })}
+          />
         </Form.Item>
         <Form.Item {...formItemLayout} label={schema.memory} labelAlign="left">
           <Row type="flex" justify="start" gutter={4}>
@@ -188,26 +230,22 @@ export default function AddAlgorithmModal(props) {
                   setAlgoData({ ...algoData, mem: val + v });
                 }}
               >
-                <Option value="Ki">Ki</Option>
-                <Option value="M">M</Option>
-                <Option value="Mi">Mi</Option>
-                <Option value="Gi">Gi</Option>
-                <Option value="m">m</Option>
-                <Option value="K">K</Option>
-                <Option value="G">G</Option>
-                <Option value="T">T</Option>
-                <Option value="Ti">Ti</Option>
-                <Option value="P">P</Option>
-                <Option value="Pi">Pi</Option>
-                <Option value="E">E</Option>
-                <Option value="Ei">Ei</Option>
+                {schema.memoryType.map(value => (
+                  <Option key={value} value={value}>
+                    {value}
+                  </Option>
+                ))}
               </Select>
             </Col>
           </Row>
         </Form.Item>
         <Divider orientation="left">{schema.advanced}</Divider>
         <Form.Item {...formItemLayout} label={schema.minHotWorkers}>
-          <InputNumber min={0} value={algoData.minHotWorkers} onChange={minHotWorkers => setAlgoData({ ...algoData, minHotWorkers: minHotWorkers })} />
+          <InputNumber
+            min={0}
+            value={algoData.minHotWorkers}
+            onChange={minHotWorkers => setAlgoData({ ...algoData, minHotWorkers: minHotWorkers })}
+          />
         </Form.Item>
         <Form.Item {...formItemLayout} label={schema.options}>
           <Select
@@ -215,14 +253,25 @@ export default function AddAlgorithmModal(props) {
             defaultValue={availableOptions(algoData.options)}
             mode="tags"
             placeholder="Enable Options"
-            onSelect={key => setAlgoData({ ...algoData, options: { ...algoData.options, [key]: !algoData.options[key] } })}
+            onSelect={key =>
+              setAlgoData({
+                ...algoData,
+                options: { ...algoData.options, [key]: !algoData.options[key] }
+              })
+            }
           >
             {insertAlgorithmOptions(algoData.options)}
           </Select>
         </Form.Item>
         <Divider orientation="left">{schema.code}</Divider>
         {buildTypes[buildType]}
-      </Form>
+      </StyledForm>
     </Modal>
   );
 }
+
+AddAlgorithmModal.propsTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  toggleVisible: PropTypes.func.isRequired,
+  visible: PropTypes.bool.isRequired
+};

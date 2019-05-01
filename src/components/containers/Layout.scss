@@ -2,14 +2,6 @@
   background-color: #ececeb;
 }
 
-.logo {
-  margin: 16px;
-  text-align: center;
-  font-size: 50px;
-  color: transparent;
-  width: -webkit-fill-available;
-}
-
 .header-title {
   text-transform: uppercase;
   color: #307fe6;
@@ -67,4 +59,14 @@ html > body {
 .ant-layout-sider-trigger {
   color: #2f8ee6;
   background: #dedede87;
+}
+
+.ant-tooltip-inner {
+  background-color: white;
+  color: black;
+}
+
+.ant-btn-primary {
+  background: #2db7f5;
+  border: 1px solid #2db7f5;
 }

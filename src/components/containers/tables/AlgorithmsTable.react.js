@@ -1,19 +1,23 @@
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Table, Button, Popover, Modal, Row, Col, Badge } from 'antd';
+import { Table, Button, Modal, Row, Col, Badge } from 'antd';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import { withState } from 'recompose';
 
 import { openModal } from '../../../actions/modal.action';
 import { getAlgorithmReadme } from '../../../actions/readme.action';
-import { init, storeAlgorithm, deleteAlgorithmFromStore, applyAlgorithm } from '../../../actions/algorithmTable.action';
-import AlgorithmTabSwitcher from '../../dumb/AlgorithmTabSwitcher';
+import {
+  init,
+  storeAlgorithm,
+  deleteAlgorithmFromStore,
+  applyAlgorithm
+} from '../../../actions/algorithmTable.action';
+import AlgorithmTabSwitcher from '../../dumb/AlgorithmTabSwitcher.react';
 
-import AddButton from '../../dumb/AddButton.react';
-import './AlgorithmsTable.scss';
+import FloatingAddButton from '../../dumb/FloatingAddButton.react';
 import AddAlgorithmModal from '../../dumb/AddAlgorithmModal.react';
-import HEditor from '../HEditor.react';
+import JsonEditorModal from '../JsonEditorModal.react';
 
 class AlgorithmTable extends Component {
   state = {
@@ -96,7 +100,7 @@ class AlgorithmTable extends Component {
         render: (text, record, index) => (
           <Row type="flex" justify="start">
             <Col span={4}>
-              <HEditor
+              <JsonEditorModal
                 jsonTemplate={JSON.stringify(record.data, null, 2)}
                 styledButton={(onClick, isEditable = false) => (
                   <Badge dot={isEditable}>
@@ -109,7 +113,12 @@ class AlgorithmTable extends Component {
               />
             </Col>
             <Col span={4}>
-              <Button type="danger" shape="circle" icon="delete" onClick={() => deleteConfirmAction(this.props.deleteAlgorithmFromStore, record)} />
+              <Button
+                type="danger"
+                shape="circle"
+                icon="delete"
+                onClick={() => deleteConfirmAction(this.props.deleteAlgorithmFromStore, record)}
+              />
             </Col>
           </Row>
         )
@@ -128,18 +137,34 @@ class AlgorithmTable extends Component {
         <Table
           columns={this.columns}
           dataSource={dataSource.asMutable()}
-          pagination={{ className: 'tablePagination', defaultCurrent: 1, pageSize: 15, hideOnSinglePage: true }}
+          pagination={{
+            style: { paddingRight: '50px' },
+            defaultCurrent: 1,
+            pageSize: 15,
+            hideOnSinglePage: true
+          }}
           locale={{ emptyText: 'no data' }}
           onExpand={(expanded, record) => {
             if (expanded) {
               this.props.getAlgorithmReadme(record.key);
             }
           }}
-          expandedRowRender={record => <AlgorithmTabSwitcher algorithmDetails={record} readme={algorithmReadme && algorithmReadme[record.key] && algorithmReadme[record.key].readme} />}
+          expandedRowRender={record => (
+            <AlgorithmTabSwitcher
+              algorithmDetails={record}
+              readme={
+                algorithmReadme && algorithmReadme[record.key] && algorithmReadme[record.key].readme
+              }
+            />
+          )}
         />
 
-        <AddButton onVisible={this.toggleAddAlgoVisible}> </AddButton>
-        <AddAlgorithmModal visible={this.state.isAddAlgoVisible} onSubmit={this.props.applyAlgorithm} toggleVisible={this.toggleAddAlgoVisible} />
+        <FloatingAddButton onClick={this.toggleAddAlgoVisible}> </FloatingAddButton>
+        <AddAlgorithmModal
+          visible={this.state.isAddAlgoVisible}
+          onSubmit={this.props.applyAlgorithm}
+          toggleVisible={this.toggleAddAlgoVisible}
+        />
       </div>
     );
   }

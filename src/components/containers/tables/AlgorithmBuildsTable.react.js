@@ -12,10 +12,9 @@ import humanizeDuration from 'humanize-duration';
 import { openModal } from '../../../actions/modal.action';
 import { init, cancelBuild, rerunBuild } from '../../../actions/algorithmBuildsTable.action';
 import { STATUS } from '../../../constants/colors';
-import './AlgorithmsTable.scss';
 
 class AlgorithmBuildsTable extends Component {
-  firstLetterUpperCase = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+  firstLetterUpperCase = s => s.charAt(0).toUpperCase() + s.slice(1);
 
   showModal = () => {
     this.setState({
@@ -141,12 +140,15 @@ class AlgorithmBuildsTable extends Component {
         render: (text, record) => {
           return (
             <span>
-              {record.endTime ?
-                (
-                  <span>{humanizeDuration(record.endTime - record.startTime, { maxDecimalPoints: 2 })}</span>
-                ) : (
-                  <span>{humanizeDuration(Date.now() - record.startTime, { maxDecimalPoints: 2 })}</span>
-                )}
+              {record.endTime ? (
+                <span>
+                  {humanizeDuration(record.endTime - record.startTime, { maxDecimalPoints: 2 })}
+                </span>
+              ) : (
+                <span>
+                  {humanizeDuration(Date.now() - record.startTime, { maxDecimalPoints: 2 })}
+                </span>
+              )}
             </span>
           );
         }
@@ -158,9 +160,7 @@ class AlgorithmBuildsTable extends Component {
         sorter: (a, b) => sorter(a.status, b.status),
         render: (text, record) => (
           <span>
-            <Tag color={STATUS[record.status]}>
-              {this.firstLetterUpperCase(record.status)}
-            </Tag>
+            <Tag color={STATUS[record.status]}>{this.firstLetterUpperCase(record.status)}</Tag>
           </span>
         )
       },
@@ -209,13 +209,13 @@ class AlgorithmBuildsTable extends Component {
                 onClick={() => this.cancelBuild(record.buildId)}
               />
             ) : (
-                <Button
-                  type="default"
-                  shape="circle"
-                  icon="redo"
-                  onClick={() => this.rerunBuild(record.buildId)}
-                />
-              );
+              <Button
+                type="default"
+                shape="circle"
+                icon="redo"
+                onClick={() => this.rerunBuild(record.buildId)}
+              />
+            );
           return actionButton;
         }
       }
@@ -234,7 +234,12 @@ class AlgorithmBuildsTable extends Component {
       <Table
         columns={this.nestedColumns}
         dataSource={data}
-        pagination={false}
+        pagination={{
+          style: { paddingRight: '50px' },
+          defaultCurrent: 1,
+          pageSize: 15,
+          hideOnSinglePage: true
+        }}
         expandedRowRender={record => (
           <ReactJson
             src={record}

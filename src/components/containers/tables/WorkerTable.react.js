@@ -7,9 +7,7 @@ import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withState } from 'recompose';
-import defaultWorkerData from '../../stubs/worker-default-data.json';
-
-import './WorkerTable.scss';
+import defaultWorkerData from 'config/template/worker.template';
 
 const STATUS = {
   bootstrap: '#2db7f5',
@@ -129,7 +127,7 @@ class WorkerTable extends Component {
     ];
   }
 
-  renderColumns() { }
+  renderColumns() {}
 
   render() {
     const { dataSource, stats } = this.props;
@@ -191,7 +189,6 @@ class WorkerTable extends Component {
       );
     };
 
-    // const statsMergedWithDefault = tempStats.map((algo) => ({ ...defaultWorkerData,...algo }) );
     const statsMergedWithDefault =
       stats && stats.stats && stats.stats.map(algo => ({ ...defaultWorkerData, ...algo }));
     return (

@@ -1,16 +1,12 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { store } from './store/index';
-import LayoutInner from './components/containers/Layout.react';
-
-String.prototype.toUpperCaseFirstLetter = function() {
-  return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
-};
+import { store } from 'store/index';
+import Layout from 'components/containers/LayoutInner.react';
 
 render(
   <Provider store={store}>
-    <LayoutInner />
+    <Layout />
   </Provider>,
   document.getElementById('root')
 );

@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import { withState } from 'recompose';
 import { ResponsiveBar } from '@nivo/bar';
 import { Empty } from 'antd';
-import './NodeStatistics.scss';
 
 const metricToLabel = {
   cpu: 'CPU',
@@ -39,7 +38,7 @@ class NodeStatistics extends Component {
   render() {
     const { data, legend } = this.adaptedData(this.props.dataSource, this.props.metric);
     return data === [] || legend === undefined ? (
-      <Empty className="empty" />
+      <Empty style={{ marginTop: '20px' }} />
     ) : (
       <div
         style={{
