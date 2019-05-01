@@ -9,7 +9,7 @@ import JsonEditor from 'components/dumb/JsonEditor.react';
 import template from 'config/template/addPipeline.template';
 import { stringify } from 'utils/string';
 
-export default function SideBarAddPipeline({ content }) {
+export default function SideBarAddPipeline({ content, ...props }) {
   const [isVisible, setVisible] = useState(false);
   const [sidebarRef, setSidebarRef] = useState(undefined);
   const [json, setJson] = useState(stringify(template));
@@ -59,6 +59,7 @@ export default function SideBarAddPipeline({ content }) {
       sidebar={Component}
       pullRight={true}
     >
+      {props.children}
       <FloatingAddButton onClick={triggerVisible} />
     </Sidebar>
   );

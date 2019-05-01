@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon, Input, AutoComplete } from 'antd';
 import { connect } from 'react-redux';
-import { updateFilter } from '../../actions/autoCompleteFilter.action';
+import { updateFilter } from 'actions/autoCompleteFilter.action';
 const Option = AutoComplete.Option;
 const OptGroup = AutoComplete.OptGroup;
 
@@ -26,7 +26,7 @@ const options = data => {
   return obj;
 };
 const TableAutoComplete = props => (
-  <div>
+  <>
     <AutoComplete
       className="certain-category-search"
       dropdownClassName="certain-category-search-dropdown"
@@ -47,7 +47,7 @@ const TableAutoComplete = props => (
         suffix={<Icon type="search" className="certain-category-icon" />}
       />
     </AutoComplete>
-  </div>
+  </>
 );
 
 const tableDataToAutoCompleteData = data => {
