@@ -25,18 +25,56 @@ import { ReactComponent as PipelineIcon } from '../../images/pipeline-icon.svg';
 import { ReactComponent as WorkerIcon } from '../../images/worker-icon.svg';
 import { ReactComponent as AlgorithmIcon } from '../../images/algorithm-icon.svg';
 
-import MenuIcon from '../dumb/MenuIcon.react';
+import MenuIcon from 'components/dumb/MenuIcon.react';
+
+import styled from 'styled-components';
 
 const { Header, Content, Sider } = Layout;
+
+const LayoutStyled = styled(Layout)`
+  height: 100vh;
+`;
+
+const HeaderStyled = styled(Header)`
+  background: white;
+  border-bottom: 1pt solid #ccc;
+  text-align: center;
+`;
+
+const IconLogo = styled(Icon)`
+  margin: 16px;
+  text-align: center;
+  font-size: 50px;
+  color: transparent;
+  width: -webkit-fill-available;
+`;
+
+const ContentStyled = styled(Content)`
+  background: white;
+  min-height: auto;
+`;
+
+const SiderStyled = styled(Sider)`
+  background: #ececec;
+`;
+
+const MenuStyled = styled(Menu)`
+  background: #ececec;
+
+  .ant-layout-sider-trigger {
+    color: #2f8ee6;
+    background: #dedede87;
+  }
+`;
 
 const showHeader = isCollapsed =>
   isCollapsed ? (
     <div />
   ) : (
-      <Col span={12} style={{ margin: 'auto' }}>
-        <AnimatedHeader />
-      </Col>
-    );
+    <Col span={12} style={{ margin: 'auto' }}>
+      <AnimatedHeader />
+    </Col>
+  );
 
 const setMenuItemTitle = (title, count) => (
   <div>
@@ -109,17 +147,16 @@ class LayoutInner extends React.Component {
     const { props } = this;
 
     return (
-      <Layout className="layout">
+      <LayoutStyled>
         <SideBar open={false} />
-        <Sider className="sider" collapsible onCollapse={this.onCollapse} collapsed={this.state.collapsed}>
+        <SiderStyled collapsible onCollapse={this.onCollapse} collapsed={this.state.collapsed}>
           <Row type="flex">
             <Col span={8}>
-              <Icon className="logo" component={LogoSvg} fill="white" />
+              <IconLogo component={LogoSvg} fill="white" />
             </Col>
             {showHeader(this.state.collapsed)}
           </Row>
-          <Menu
-            className="menu"
+          <MenuStyled
             mode="inline"
             onSelect={i => {
               menuSelection(i, props);
@@ -132,8 +169,18 @@ class LayoutInner extends React.Component {
             <Menu.Item key="2" title={setMenuItemTitle('Pipelines', props.pipelineCount)}>
               {setMenuItem(<MenuIcon type={PipelineIcon} />, 'Pipelines', props.pipelineCount)}
             </Menu.Item>
-            <Menu.Item key="3" title={setMenuItemTitle('Workers', isUndefined(props.workerCount) ? 0 : props.workerCount)}>
-              {setMenuItem(<MenuIcon type={WorkerIcon} />, 'Workers', isUndefined(props.workerCount) ? 0 : props.workerCount)}
+            <Menu.Item
+              key="3"
+              title={setMenuItemTitle(
+                'Workers',
+                isUndefined(props.workerCount) ? 0 : props.workerCount
+              )}
+            >
+              {setMenuItem(
+                <MenuIcon type={WorkerIcon} />,
+                'Workers',
+                isUndefined(props.workerCount) ? 0 : props.workerCount
+              )}
             </Menu.Item>
             <Menu.Item key="4" title={setMenuItemTitle('Drivers', props.driversCount)}>
               {setMenuItem(<MenuIcon type={DriversIcon} />, 'Drivers', props.driversCount)}
@@ -159,19 +206,19 @@ class LayoutInner extends React.Component {
               <Menu.Item key="9"> CPU </Menu.Item>
               <Menu.Item key="10"> Memory </Menu.Item>
             </SubMenu>
-          </Menu>
-        </Sider>
+          </MenuStyled>
+        </SiderStyled>
 
-        <Layout className="layout">
-          <Header className="layout-header">
+        <LayoutStyled>
+          <HeaderStyled>
             <TableAutoComplete />
-          </Header>
-          <Content className="content">
+          </HeaderStyled>
+          <ContentStyled>
             <BackTop />
             {selectTable(props)}
-          </Content>
-        </Layout>
-      </Layout>
+          </ContentStyled>
+        </LayoutStyled>
+      </LayoutStyled>
     );
   }
 }

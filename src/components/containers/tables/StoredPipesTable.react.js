@@ -18,27 +18,28 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cronstrue from 'cronstrue';
 import cronParser from 'cron-parser';
-import PipelineTabSwitcher from '../../dumb/PipelineTabSwitcher.react';
-import { init } from '../../../actions/storedPipes.action';
-import { openModal } from '../../../actions/modal.action';
+import PipelineTabSwitcher from 'components/dumb/PipelineTabSwitcher.react';
+import { init } from 'actions/storedPipes.action';
+import { openModal } from 'actions/modal.action';
 import {
   execStoredPipe,
   deleteStoredPipeline,
   updateStoredPipeline,
   cronStart,
   cronStop
-} from '../../../actions/storedPipes.action';
-import { addPipe } from '../../../actions/addPipe.action';
-import './StoredPipesTable.scss';
-import JsonEditorModal from '../JsonEditorModal.react';
-import FloatingAddButton from '../../dumb/FloatingAddButton.react';
-import { getPipelineReadme } from '../../../actions/readme.action';
-import { STATUS } from '../../../constants/colors';
-import { ReactComponent as PlayIconSvg } from '../../../images/play-icon.svg';
-import { sideBarOpen, sideBarClose } from '../../../actions/sideBar.action';
-import sideBarTypes from '../../../constants/sideBarTypes';
+} from 'actions/storedPipes.action';
+import { addPipe } from 'actions/addPipe.action';
+// import './StoredPipesTable.scss';
+import JsonEditorModal from 'components/containers/JsonEditorModal.react';
+import FloatingAddButton from 'components/dumb/FloatingAddButton.react';
+import { getPipelineReadme } from 'actions/readme.action';
+import { STATUS } from 'constants/colors';
+import { ReactComponent as PlayIconSvg } from 'images/play-icon.svg';
+import { sideBarOpen, sideBarClose } from 'actions/sideBar.action';
+import sideBarTypes from 'constants/sideBarTypes';
 
 import template from 'config/template/addPipeline.template';
+import paginationStyle from 'config/template/table-pagination.template';
 
 const { Column } = Table;
 class StoredPipesTable extends Component {
@@ -104,12 +105,7 @@ class StoredPipesTable extends Component {
         <Table
           rowKey="name"
           dataSource={storedPipelines.asMutable()}
-          pagination={{
-            className: 'tablePagination',
-            defaultCurrent: 1,
-            pageSize: 15,
-            hideOnSinglePage: true
-          }}
+          pagination={paginationStyle}
           onExpand={(expanded, record) => {
             if (expanded) {
               this.props.getPipelineReadme(record.name);
@@ -162,7 +158,7 @@ class StoredPipesTable extends Component {
                       trigger="focus"
                     >
                       <Input.Search
-                        className="cronInput"
+                        style={{ width: 160 }}
                         size="small"
                         disabled={!cronIsEnabled}
                         placeholder="Cron Expression"

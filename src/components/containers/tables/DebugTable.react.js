@@ -2,12 +2,11 @@ import { connect } from 'react-redux';
 import { Table, Card, Button, Icon, Input, Tag, Row, Col, notification, Popover } from 'antd';
 import ReactJson from 'react-json-view';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { openModal } from '../../../actions/modal.action';
-import { init, addAlgorithm, deleteAlgorithm } from '../../../actions/debugTable.action';
+import { openModal } from 'actions/modal.action';
+import { init, addAlgorithm, deleteAlgorithm } from 'actions/debugTable.action';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import './DebugTable.scss';
 class DebugTable extends Component {
   componentWillMount() {
     this.props.init();
@@ -94,11 +93,11 @@ class DebugTable extends Component {
   };
   render() {
     const AlgorithmInput = (
-      <div className="AlgorithmInput">
-        <Row className="AlgorithmRow">
+      <div style={{ height: 'auto', width: 300 }}>
+        <Row style={{ marginBottom: '5' }}>
           <Input
             onChange={this.onFormDataChange}
-            prefix={<Icon type="share-alt" className="AlgorithmInputPrefix" />}
+            prefix={<Icon type="share-alt" style={{ color: 'black' }} />}
             placeholder="Algorithm"
           />
         </Row>
@@ -112,7 +111,7 @@ class DebugTable extends Component {
           columns={this.columns}
           dataSource={dataSource.asMutable()}
           pagination={{
-            className: 'tablePagination',
+            style: { paddingRight: '50px' },
             defaultCurrent: 1,
             pageSize: 15,
             hideOnSinglePage: true

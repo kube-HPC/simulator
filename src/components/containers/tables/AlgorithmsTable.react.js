@@ -16,7 +16,6 @@ import {
 import AlgorithmTabSwitcher from '../../dumb/AlgorithmTabSwitcher.react';
 
 import FloatingAddButton from '../../dumb/FloatingAddButton.react';
-import './AlgorithmsTable.scss';
 import AddAlgorithmModal from '../../dumb/AddAlgorithmModal.react';
 import JsonEditorModal from '../JsonEditorModal.react';
 
@@ -139,7 +138,7 @@ class AlgorithmTable extends Component {
           columns={this.columns}
           dataSource={dataSource.asMutable()}
           pagination={{
-            className: 'tablePagination',
+            style: { paddingRight: '50px' },
             defaultCurrent: 1,
             pageSize: 15,
             hideOnSinglePage: true

@@ -8,7 +8,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withState } from 'recompose';
 import { STATUS } from '../../../constants/colors';
-import './DebugTable.scss';
 
 class WorkerTable extends Component {
   componentWillMount() {
@@ -85,7 +84,7 @@ class WorkerTable extends Component {
     ];
   }
 
-  renderColumns() { }
+  renderColumns() {}
 
   render() {
     const { dataSource } = this.props;
@@ -95,7 +94,7 @@ class WorkerTable extends Component {
           columns={this.columns}
           dataSource={dataSource.asMutable()}
           pagination={{
-            className: 'tablePagination',
+            style: { paddingRight: '50px' },
             defaultCurrent: 1,
             pageSize: 15,
             hideOnSinglePage: true

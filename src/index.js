@@ -1,12 +1,12 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { store } from './store/index';
-import LayoutInner from './components/containers/Layout.react';
+import { store } from 'store/index';
+import Layout from 'components/containers/LayoutInner.react';
 
 render(
   <Provider store={store}>
-    <LayoutInner />
+    <Layout />
   </Provider>,
   document.getElementById('root')
 );

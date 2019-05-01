@@ -9,8 +9,6 @@ import PropTypes from 'prop-types';
 import { withState } from 'recompose';
 import defaultWorkerData from 'config/template/worker.template';
 
-import './WorkerTable.scss';
-
 const STATUS = {
   bootstrap: '#2db7f5',
   ready: '#87d068',

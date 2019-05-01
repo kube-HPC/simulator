@@ -38,26 +38,23 @@ const success = (dispatch, payload, action) => {
   });
 };
 
-const _formatError = (payload) => {
+const _formatError = payload => {
   let content;
   if (typeof payload === 'string') {
     content = payload;
-  }
-  else if (payload.message) {
+  } else if (payload.message) {
     content = payload.message;
-  }
-  else {
+  } else {
     content = 'Error';
   }
   return content;
 };
 
-const _formatSuccess = (payload) => {
+const _formatSuccess = payload => {
   let content;
   if (payload.messages) {
     content = payload.messages.join(', ');
-  }
-  else if (payload.message) {
+  } else if (payload.message) {
     content = payload.message;
   }
   return content;
@@ -68,7 +65,9 @@ const setPath = ({ monitorBackend }) => {
   if (monitorBackend.useLocation) {
     _url = `${location.origin}${monitorBackend.path}`; //eslint-disable-line
   } else {
-    _url = `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}`;
+    _url = `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}${
+      monitorBackend.path
+    }`;
   }
 
   return _url;
@@ -93,7 +92,8 @@ export const restMiddleware = ({ dispatch }) => next => action => {
       return next(action);
     }
     pending(dispatch, 'pending', action);
-    axios.get(`${url}${action.payload.url}`)
+    axios
+      .get(`${url}${action.payload.url}`)
       .then(res => {
         success(dispatch, res.data, action);
       })
