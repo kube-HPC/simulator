@@ -8,7 +8,8 @@ module.exports = function override(config, env) {
   );
   config = rewireLess.withLoaderOptions({
     modifyVars: {
-      '@ant-prefix': 'ant'
+      '@ant-prefix': 'ant',
+      '@font-family': 'monospace, Roboto, sans-serif;' // Change font at Layout.css
     },
     javascriptEnabled: true
   })(config, env);
