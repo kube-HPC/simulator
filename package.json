@@ -63,7 +63,7 @@
   },
   "scripts": {
     "start": "NODE_PATH=src/ PORT=9050 react-app-rewired start",
-    "builder": "react-app-rewired --max_old_space_size=4096 build ",
+    "builder": "NODE_PATH=src/ react-app-rewired --max_old_space_size=4096 build",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
     "build": "./dockerfile/build.sh simulator",
