@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import AddPipelineForm from 'components/dumb/AddPipelineForm.react';
+import AddPipelineForm from 'components/dumb/AddPipeline/AddPipelineForm.react';
 import { Row, Col, Steps, Card } from 'antd';
 
 import JsonView from 'components/dumb/JsonView.react';

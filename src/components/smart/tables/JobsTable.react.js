@@ -25,7 +25,7 @@ const IconWhite = styled(Icon)`
   margin-right: 10px;
 `;
 
-class ContainerTable extends Component {
+class JobsTable extends Component {
   componentWillMount() {
     this.props.init();
 
@@ -316,7 +316,7 @@ const tableDataSelector = createSelector(
     containerTable && containerTable.asMutable().filter(row => rowFilter(row, autoCompleteFilter))
 );
 
-ContainerTable.propTypes = {
+JobsTable.propTypes = {
   execRawPipeline: PropTypes.func.isRequired,
   downloadStorageResults: PropTypes.func.isRequired,
   init: PropTypes.func.isRequired,
@@ -349,5 +349,5 @@ export default connect(
   withState('isVisible', 'onPopoverClickVisible', {
     visible: false,
     podName: ''
-  })(ContainerTable)
+  })(JobsTable)
 );

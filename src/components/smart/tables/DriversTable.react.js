@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { withState } from 'recompose';
 import { STATUS } from '../../../constants/colors';
 
-class WorkerTable extends Component {
+class DriversTable extends Component {
   componentWillMount() {
     this.props.init();
 
@@ -128,7 +128,7 @@ const tableDataSelector = createSelector(
   }
 );
 
-WorkerTable.propTypes = {
+DriversTable.propTypes = {
   init: PropTypes.func.isRequired,
   dataSource: PropTypes.array.isRequired
 };
@@ -146,5 +146,5 @@ export default connect(
   withState('isVisible', 'onPopoverClickVisible', {
     visible: false,
     podName: ''
-  })(WorkerTable)
+  })(DriversTable)
 );

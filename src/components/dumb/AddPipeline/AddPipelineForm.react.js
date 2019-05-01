@@ -18,7 +18,7 @@ import {
 import cronstrue from 'cronstrue';
 import cronParser from 'cron-parser';
 
-import DynamicForm from 'components/dumb/DynamicForm.react';
+import DynamicForm from 'components/dumb/AddPipeline/DynamicForm.react';
 import { stringify, toUpperCaseFirstLetter } from 'utils/string';
 import JsonEditor from 'components/dumb/JsonEditor.react';
 

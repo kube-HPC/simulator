@@ -3,7 +3,7 @@ import { Tabs, Card } from 'antd';
 import isEqual from 'lodash/isEqual';
 import PropTypes from 'prop-types';
 import ReactJson from 'react-json-view';
-import JobGraph from '../containers/JobGraph.react';
+import JobGraph from '../smart/JobGraph.react';
 import Trace from 'jaeger-react-trace-component';
 class TabSwitcher extends Component {
   constructor() {

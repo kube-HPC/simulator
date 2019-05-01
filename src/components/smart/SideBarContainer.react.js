@@ -5,7 +5,7 @@ import AlgorithmInformation from './AlgorithmInformation.react';
 import { sideBarClose } from '../../actions/sideBar.action';
 import sideBarTypes from '../../constants/sideBarTypes';
 import MDContentSwitcher from './MDContentSwitcher.react';
-import AddPipelineContainer from 'components/containers/AddPipelineContainer.react';
+import AddPipelineContainer from 'components/smart/AddPipelineContainer.react';
 
 class SideBarContainer extends Component {
   constructor() {
