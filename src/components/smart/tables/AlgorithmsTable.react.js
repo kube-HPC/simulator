@@ -16,10 +16,10 @@ import {
 import AlgorithmTabSwitcher from '../../dumb/AlgorithmTabSwitcher.react';
 
 import FloatingAddButton from '../../dumb/FloatingAddButton.react';
-import AddAlgorithmModal from '../../dumb/AddAlgorithmModal.react';
+import AddAlgorithmModal from '../../dumb/AddPipeline/AddAlgorithmModal.react';
 import JsonEditorModal from '../JsonEditorModal.react';
 
-class AlgorithmTable extends Component {
+class AlgorithmsTable extends Component {
   state = {
     isVisible: false,
     isAddAlgoVisible: false
@@ -179,7 +179,7 @@ const tableDataSelector = createSelector(
   algorithmTable => algorithmTable
 );
 
-AlgorithmTable.propTypes = {
+AlgorithmsTable.propTypes = {
   dataSource: PropTypes.array.isRequired,
   init: PropTypes.func.isRequired,
   getAlgorithmReadme: PropTypes.func.isRequired,
@@ -199,4 +199,6 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { openModal, init, storeAlgorithm, deleteAlgorithmFromStore, getAlgorithmReadme, applyAlgorithm }
-)(withState('isVisible', 'onPopoverClickVisible', { visible: false, podName: '' })(AlgorithmTable));
+)(
+  withState('isVisible', 'onPopoverClickVisible', { visible: false, podName: '' })(AlgorithmsTable)
+);

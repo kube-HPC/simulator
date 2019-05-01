@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import AddPipelineSteps from 'components/dumb/AddPipelineSteps.react';
+import AddPipelineSteps from 'components/dumb/AddPipeline/AddPipelineSteps.react';
 import JsonEditor from 'components/dumb/JsonEditor.react';
 
 import template from 'config/template/addPipeline.template';

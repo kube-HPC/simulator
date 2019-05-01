@@ -4,8 +4,8 @@ import { action } from '@storybook/addon-actions';
 import Sidebar from 'react-sidebar';
 import PropTypes from 'prop-types';
 
-import AddPipelineSteps from 'components/dumb/AddPipelineSteps.react';
-import AddPipelineForm from 'components/dumb/AddPipelineForm.react';
+import AddPipelineSteps from 'components/dumb/AddPipeline/AddPipelineSteps.react';
+import AddPipelineForm from 'components/dumb/AddPipeline/AddPipelineForm.react';
 import addPipelineTemplate from 'config/template/addPipeline.template';
 
 function AddPipelineContainer({ style }) {

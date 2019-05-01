@@ -23,7 +23,7 @@ const STATUS = {
   succeed: 'green'
 };
 
-class WorkerTable extends Component {
+class WorkersTable extends Component {
   componentWillMount() {
     this.props.init();
     const undefinedStateFilter = state => state || 'creating';
@@ -218,7 +218,7 @@ const tableDataSelector = createSelector(
   dataSource => dataSource
 );
 
-WorkerTable.propTypes = {
+WorkersTable.propTypes = {
   init: PropTypes.func.isRequired,
   dataSource: PropTypes.array.isRequired,
   stats: PropTypes.array.isRequired
@@ -238,5 +238,5 @@ export default connect(
   withState('isVisible', 'onPopoverClickVisible', {
     visible: false,
     podName: ''
-  })(WorkerTable)
+  })(WorkersTable)
 );

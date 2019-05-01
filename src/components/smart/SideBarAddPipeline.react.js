@@ -3,7 +3,7 @@ import Sidebar from 'react-sidebar';
 import PropTypes from 'prop-types';
 import { Tabs, Card, Button } from 'antd';
 
-import AddPipelineSteps from 'components/dumb/AddPipelineSteps.react';
+import AddPipelineSteps from 'components/dumb/AddPipeline/AddPipelineSteps.react';
 import FloatingAddButton from 'components/dumb/FloatingAddButton.react';
 import JsonEditor from 'components/dumb/JsonEditor.react';
 import template from 'config/template/addPipeline.template';

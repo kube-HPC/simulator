@@ -30,7 +30,7 @@ import {
 } from 'actions/storedPipes.action';
 import { addPipe } from 'actions/addPipe.action';
 // import './StoredPipesTable.scss';
-import JsonEditorModal from 'components/containers/JsonEditorModal.react';
+import JsonEditorModal from 'components/smart/JsonEditorModal.react';
 import FloatingAddButton from 'components/dumb/FloatingAddButton.react';
 import { getPipelineReadme } from 'actions/readme.action';
 import { STATUS } from 'constants/colors';
@@ -42,7 +42,7 @@ import template from 'config/template/addPipeline.template';
 import paginationStyle from 'config/template/table-pagination.template';
 
 const { Column } = Table;
-class StoredPipesTable extends Component {
+class PipelinesTable extends Component {
   componentDidMount() {
     this.props.init();
   }
@@ -285,7 +285,7 @@ class StoredPipesTable extends Component {
   }
 }
 
-StoredPipesTable.propTypes = {
+PipelinesTable.propTypes = {
   init: PropTypes.func.isRequired,
   algorithms: PropTypes.array.isRequired,
   storedPipelines: PropTypes.array.isRequired,
@@ -323,4 +323,4 @@ export default connect(
     sideBarOpen,
     sideBarClose
   }
-)(StoredPipesTable);
+)(PipelinesTable);
