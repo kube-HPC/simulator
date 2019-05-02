@@ -42,9 +42,9 @@ const ColCentered = styled(Col)`
   justify-content: center;
 `;
 
-const setMenuItem = (iconComponent, title, count) => (
+const setMenuItem = (component, title, count) => (
   <Row type="flex" justify="start" gutter={10}>
-    <Col style={{ textAlign: 'start' }}>{iconComponent}</Col>
+    <Col style={{ textAlign: 'start' }}>{component}</Col>
     <Col span={11} style={{ textAlign: 'start' }}>
       {title}
     </Col>
@@ -56,7 +56,7 @@ const setMenuItem = (iconComponent, title, count) => (
   </Row>
 );
 
-const setMenuItems = (items, isCollapsed) =>
+const addMenuItems = (items, isCollapsed) =>
   items.map(([name, component, count]) => (
     <Menu.Item key={name}>
       {setMenuItem(
@@ -100,8 +100,17 @@ export default function Sider({ onSelect, ...props }) {
         )}
       </RowCentered>
 
-      <Menu mode="inline" onSelect={i => onSelect(i.key)} defaultSelectedKeys={['Jobs']}>
-        {setMenuItems([
+      <Menu mode="vertical" onSelect={i => onSelect(i.key)} defaultSelectedKeys={['Jobs']}>
+        <Menu.SubMenu
+          title={setMenuItem(<Icon type={'file-add'} style={{ fontSize: '20px' }} />, 'Add Entity')}
+        >
+          {addMenuItems([
+            ['Add Pipeline', PipelineIcon],
+            ['Add Algorithm', AlgorithmIcon],
+            ['Add Debug', DebugIcon]
+          ])}
+        </Menu.SubMenu>
+        {addMenuItems([
           ['Jobs', 'area-chart', props.jobsCount],
           ['Pipelines', PipelineIcon, props.pipelinesCount],
           ['Workers', WorkerIcon, props.workersCount],
@@ -111,14 +120,12 @@ export default function Sider({ onSelect, ...props }) {
           ['Builds', 'build', props.buildsCount]
         ])}
         <Menu.SubMenu
-          title={
-            <span>
-              <Icon type="pie-chart" />
-              <span>Cluster Stats</span>
-            </span>
-          }
+          title={setMenuItem(
+            <Icon type={'pie-chart'} style={{ fontSize: '20px' }} />,
+            'Cluster Stats'
+          )}
         >
-          {setMenuItems([['CPU', 'heat-map'], ['Memory', 'hdd']])}
+          {addMenuItems([['CPU', 'heat-map'], ['Memory', 'hdd']])}
         </Menu.SubMenu>
       </Menu>
     </SiderLight>

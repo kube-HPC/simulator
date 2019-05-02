@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { compose, withState } from 'recompose';
-
-import { BackTop, message, Layout } from 'antd';
+import { message, Layout } from 'antd';
 
 import JobsTable from 'components/smart/tables/JobsTable.react';
 import WorkersTable from 'components/smart/tables/WorkersTable.react';
@@ -19,6 +17,8 @@ import TableAutoComplete from 'components/dumb/TableAutoComplete.react';
 import Sider from 'components/dumb/Sider.react';
 
 import { init } from 'actions/config.action.js';
+import DrawerContainer from 'components/dumb/DrawerContainer.react';
+import AddPipelineSteps from 'components/dumb/AddPipeline/AddPipelineSteps.react';
 
 const { Header, Content } = Layout;
 
@@ -51,20 +51,28 @@ const ContentStyled = styled(Content)`
   min-height: auto;
 `;
 
-const tableSelector = {
-  Jobs: <JobsTable />,
-  Pipelines: <PipelinesTable />,
-  Workers: <WorkersTable />,
-  Drivers: <DriversTable />,
-  Algorithms: <AlgorithmsTable />,
-  Debug: <DebugTable />,
-  Builds: <AlgorithmBuildsTable />,
-  CPU: <NodeStatistics metric="cpu" />,
-  Memory: <NodeStatistics metric="mem" />
+const content = {
+  algorithms: ['a1', 'a2'],
+  pipelines: ['p1', 'p2'],
+  onSubmit: () => {}
 };
 
 function LayoutInner({ init, ...props }) {
   const [table, setTable] = useState('Jobs');
+  const [visible, setVisible] = useState(true);
+
+  const tableSelector = {
+    Jobs: <JobsTable />,
+    Pipelines: <PipelinesTable />,
+    Workers: <WorkersTable />,
+    Drivers: <DriversTable />,
+    Algorithms: <AlgorithmsTable />,
+    Debug: <DebugTable />,
+    Builds: <AlgorithmBuildsTable />,
+    CPU: <NodeStatistics metric="cpu" />,
+    Memory: <NodeStatistics metric="mem" />,
+    ['Add Pipeline']: () => setVisible(true)
+  };
 
   useEffect(() => {
     init();
@@ -83,8 +91,10 @@ function LayoutInner({ init, ...props }) {
           <TableAutoComplete />
         </HeaderStyled>
         <ContentStyled>
-          <BackTop />
           {tableSelector[table]}
+          <DrawerContainer visible={visible} onClose={() => setVisible(!visible)}>
+            <AddPipelineSteps {...content} />
+          </DrawerContainer>
         </ContentStyled>
       </LayoutMargin>
     </LayoutStyled>
@@ -106,15 +116,7 @@ LayoutInner.propTypes = {
   init: PropTypes.func.isRequired
 };
 
-export default compose(
-  connect(
-    mapStateToProps,
-    { init }
-  ),
-  withState('isTableVisible', 'onMenuSelected', {
-    visible: true,
-    menuItem: {}
-  }),
-  withState('isVodUpVisible', 'onVodUpPopoverClickVisible', false),
-  withState('isVodDownVisible', 'onVodDownPopoverClickVisible', false)
+export default connect(
+  mapStateToProps,
+  { init }
 )(LayoutInner);

@@ -40,6 +40,8 @@ import sideBarTypes from 'constants/sideBarTypes';
 import template from 'config/template/addPipeline.template';
 import paginationStyle from 'config/template/table-pagination.template';
 
+import { slide as Menu } from 'react-burger-menu';
+
 const { Column } = Table;
 class PipelinesTable extends Component {
   componentDidMount() {
@@ -100,7 +102,7 @@ class PipelinesTable extends Component {
     };
 
     return (
-      <div>
+      <>
         <Table
           rowKey="name"
           dataSource={storedPipelines.asMutable()}
@@ -263,7 +265,13 @@ class PipelinesTable extends Component {
             }}
           />
         </Table>
-        <FloatingAddButton
+      </>
+    );
+  }
+}
+
+{
+  /* <FloatingAddButton
           onClick={() => {
             sideBarOpen({
               payload: {
@@ -278,10 +286,7 @@ class PipelinesTable extends Component {
               }
             });
           }}
-        />
-      </div>
-    );
-  }
+        /> */
 }
 
 PipelinesTable.propTypes = {
