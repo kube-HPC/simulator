@@ -28,7 +28,7 @@ import {
   cronStart,
   cronStop
 } from 'actions/storedPipes.action';
-import { addPipe } from 'actions/addPipe.action';
+import { addPipeline } from 'actions/addPipeline.action';
 import JsonEditorModal from 'components/smart/JsonEditorModal.react';
 import FloatingAddButton from 'components/dumb/FloatingAddButton.react';
 import { getPipelineReadme } from 'actions/readme.action';
@@ -39,8 +39,6 @@ import sideBarTypes from 'constants/sideBarTypes';
 
 import template from 'config/template/addPipeline.template';
 import paginationStyle from 'config/template/table-pagination.template';
-
-import { slide as Menu } from 'react-burger-menu';
 
 const { Column } = Table;
 class PipelinesTable extends Component {
@@ -270,25 +268,6 @@ class PipelinesTable extends Component {
   }
 }
 
-{
-  /* <FloatingAddButton
-          onClick={() => {
-            sideBarOpen({
-              payload: {
-                formData: template,
-                algorithms: algorithms,
-                pipelines: storedPipelines.map(pipeline => pipeline.name),
-                onSubmit: pipeline => {
-                  this.props.addPipe(pipeline);
-                  sideBarClose();
-                },
-                type: sideBarTypes.ADD_PIPELINE
-              }
-            });
-          }}
-        /> */
-}
-
 PipelinesTable.propTypes = {
   init: PropTypes.func.isRequired,
   algorithms: PropTypes.array.isRequired,
@@ -317,7 +296,7 @@ export default connect(
   {
     openModal,
     init,
-    addPipe,
+    addPipe: addPipeline,
     execStoredPipe,
     deleteStoredPipeline,
     updateStoredPipeline,

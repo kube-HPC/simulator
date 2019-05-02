@@ -22,7 +22,9 @@ const IconLogo = styled(Icon)`
   width: -webkit-fill-available;
 `;
 
-const SiderLight = styled(Layout.Sider)``;
+const SiderLight = styled(Layout.Sider)`
+  border-right: 1px solid #e8e8e8;
+`;
 
 const RowCentered = styled(Row)`
   text-align: center;
@@ -101,15 +103,6 @@ export default function Sider({ onSelect, ...props }) {
       </RowCentered>
 
       <Menu mode="vertical" onSelect={i => onSelect(i.key)} defaultSelectedKeys={['Jobs']}>
-        <Menu.SubMenu
-          title={setMenuItem(<Icon type={'file-add'} style={{ fontSize: '20px' }} />, 'Add Entity')}
-        >
-          {addMenuItems([
-            ['Add Pipeline', PipelineIcon],
-            ['Add Algorithm', AlgorithmIcon],
-            ['Add Debug', DebugIcon]
-          ])}
-        </Menu.SubMenu>
         {addMenuItems([
           ['Jobs', 'area-chart', props.jobsCount],
           ['Pipelines', PipelineIcon, props.pipelinesCount],

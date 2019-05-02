@@ -1,6 +1,6 @@
-import actions from '../constants/actions';
+import actions from 'constants/actions';
 
-export const addPipe = pipe => ({
+export const addPipeline = pipe => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: 'pipeline/add',

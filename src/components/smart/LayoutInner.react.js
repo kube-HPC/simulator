@@ -12,13 +12,16 @@ import PipelinesTable from 'components/smart/tables/PipelinesTable.react';
 import DriversTable from 'components/smart/tables/DriversTable.react';
 import AlgorithmsTable from 'components/smart/tables/AlgorithmsTable.react';
 import NodeStatistics from 'components/smart/NodeStatistics.react';
-import SideBar from 'components/smart/SideBarContainer.react';
 import TableAutoComplete from 'components/dumb/TableAutoComplete.react';
 import Sider from 'components/dumb/Sider.react';
+import SiderMini from 'components/dumb/SiderMini.react';
 
 import { init } from 'actions/config.action.js';
 import DrawerContainer from 'components/dumb/DrawerContainer.react';
 import AddPipelineSteps from 'components/dumb/AddPipeline/AddPipelineSteps.react';
+import AddAlgorithmForm from 'components/operations/AddAlgorithm.react';
+import AddPipeline from '../operations/AddPipeline.react';
+import AddDebug from 'components/operations/AddDebug.react';
 
 const { Header, Content } = Layout;
 
@@ -33,11 +36,17 @@ const LayoutStyled = styled(Layout)`
     background-color: white;
     color: black;
   }
+
+  .ant-layout-sider-light .ant-layout-sider-trigger {
+    color: rgba(0, 0, 0, 0.65);
+    font-size: 20px;
+    background: #fff;
+    border-right: 1px solid #e8e8e8;
+  }
 `;
 
 const LayoutMargin = styled(Layout)`
   background: white;
-  border-left: 1px solid #cccccc;
 `;
 
 const HeaderStyled = styled(Header)`
@@ -49,29 +58,32 @@ const HeaderStyled = styled(Header)`
 const ContentStyled = styled(Content)`
   background: white;
   min-height: auto;
+  margin: 10px;
 `;
 
-const content = {
-  algorithms: ['a1', 'a2'],
-  pipelines: ['p1', 'p2'],
-  onSubmit: () => {}
+const tableSelector = {
+  Jobs: <JobsTable />,
+  Pipelines: <PipelinesTable />,
+  Workers: <WorkersTable />,
+  Drivers: <DriversTable />,
+  Algorithms: <AlgorithmsTable />,
+  Debug: <DebugTable />,
+  Builds: <AlgorithmBuildsTable />,
+  CPU: <NodeStatistics metric="cpu" />,
+  Memory: <NodeStatistics metric="mem" />
 };
 
 function LayoutInner({ init, ...props }) {
   const [table, setTable] = useState('Jobs');
-  const [visible, setVisible] = useState(true);
+  const [operation, setOperation] = useState('AddPipeline');
+  const [visible, setVisible] = useState(false);
 
-  const tableSelector = {
-    Jobs: <JobsTable />,
-    Pipelines: <PipelinesTable />,
-    Workers: <WorkersTable />,
-    Drivers: <DriversTable />,
-    Algorithms: <AlgorithmsTable />,
-    Debug: <DebugTable />,
-    Builds: <AlgorithmBuildsTable />,
-    CPU: <NodeStatistics metric="cpu" />,
-    Memory: <NodeStatistics metric="mem" />,
-    ['Add Pipeline']: () => setVisible(true)
+  const triggerVisible = () => setVisible(!visible);
+
+  const operationSelector = {
+    AddPipeline: <AddPipeline onSubmit={triggerVisible} />,
+    AddAlgorithm: <AddAlgorithmForm onSubmit={triggerVisible} />,
+    AddDebug: <AddDebug onSubmit={triggerVisible} />
   };
 
   useEffect(() => {
@@ -84,19 +96,25 @@ function LayoutInner({ init, ...props }) {
 
   return (
     <LayoutStyled>
-      <SideBar open={false} />
       <Sider {...props} onSelect={setTable} />
-      <LayoutMargin>
+      <Layout>
         <HeaderStyled>
           <TableAutoComplete />
         </HeaderStyled>
-        <ContentStyled>
-          {tableSelector[table]}
-          <DrawerContainer visible={visible} onClose={() => setVisible(!visible)}>
-            <AddPipelineSteps {...content} />
+        <LayoutMargin>
+          <ContentStyled>{tableSelector[table]}</ContentStyled>
+          <SiderMini
+            {...props}
+            onSelect={op => {
+              setOperation(op);
+              setVisible(!visible);
+            }}
+          />
+          <DrawerContainer visible={visible} onClose={triggerVisible}>
+            {operationSelector[operation]}
           </DrawerContainer>
-        </ContentStyled>
-      </LayoutMargin>
+        </LayoutMargin>
+      </Layout>
     </LayoutStyled>
   );
 }
