@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { compose, withState } from 'recompose';
-
-import { BackTop, message, Layout } from 'antd';
+import { message, Layout } from 'antd';
 
 import JobsTable from 'components/smart/tables/JobsTable.react';
 import WorkersTable from 'components/smart/tables/WorkersTable.react';
@@ -14,11 +12,16 @@ import PipelinesTable from 'components/smart/tables/PipelinesTable.react';
 import DriversTable from 'components/smart/tables/DriversTable.react';
 import AlgorithmsTable from 'components/smart/tables/AlgorithmsTable.react';
 import NodeStatistics from 'components/smart/NodeStatistics.react';
-import SideBar from 'components/smart/SideBarContainer.react';
 import TableAutoComplete from 'components/dumb/TableAutoComplete.react';
 import Sider from 'components/dumb/Sider.react';
+import SiderMini from 'components/dumb/SiderMini.react';
 
 import { init } from 'actions/config.action.js';
+import DrawerContainer from 'components/dumb/DrawerContainer.react';
+import AddPipelineSteps from 'components/dumb/AddPipeline/AddPipelineSteps.react';
+import AddAlgorithmForm from 'components/operations/AddAlgorithm.react';
+import AddPipeline from '../operations/AddPipeline.react';
+import AddDebug from 'components/operations/AddDebug.react';
 
 const { Header, Content } = Layout;
 
@@ -33,11 +36,17 @@ const LayoutStyled = styled(Layout)`
     background-color: white;
     color: black;
   }
+
+  .ant-layout-sider-light .ant-layout-sider-trigger {
+    color: rgba(0, 0, 0, 0.65);
+    font-size: 20px;
+    background: #fff;
+    border-right: 1px solid #e8e8e8;
+  }
 `;
 
 const LayoutMargin = styled(Layout)`
   background: white;
-  border-left: 1px solid #cccccc;
 `;
 
 const HeaderStyled = styled(Header)`
@@ -49,6 +58,7 @@ const HeaderStyled = styled(Header)`
 const ContentStyled = styled(Content)`
   background: white;
   min-height: auto;
+  margin: 10px;
 `;
 
 const tableSelector = {
@@ -65,6 +75,16 @@ const tableSelector = {
 
 function LayoutInner({ init, ...props }) {
   const [table, setTable] = useState('Jobs');
+  const [operation, setOperation] = useState('AddPipeline');
+  const [visible, setVisible] = useState(false);
+
+  const triggerVisible = () => setVisible(!visible);
+
+  const operationSelector = {
+    AddPipeline: <AddPipeline onSubmit={triggerVisible} />,
+    AddAlgorithm: <AddAlgorithmForm onSubmit={triggerVisible} />,
+    AddDebug: <AddDebug onSubmit={triggerVisible} />
+  };
 
   useEffect(() => {
     init();
@@ -76,17 +96,25 @@ function LayoutInner({ init, ...props }) {
 
   return (
     <LayoutStyled>
-      <SideBar open={false} />
       <Sider {...props} onSelect={setTable} />
-      <LayoutMargin>
+      <Layout>
         <HeaderStyled>
           <TableAutoComplete />
         </HeaderStyled>
-        <ContentStyled>
-          <BackTop />
-          {tableSelector[table]}
-        </ContentStyled>
-      </LayoutMargin>
+        <LayoutMargin>
+          <ContentStyled>{tableSelector[table]}</ContentStyled>
+          <SiderMini
+            {...props}
+            onSelect={op => {
+              setOperation(op);
+              setVisible(!visible);
+            }}
+          />
+          <DrawerContainer visible={visible} onClose={triggerVisible}>
+            {operationSelector[operation]}
+          </DrawerContainer>
+        </LayoutMargin>
+      </Layout>
     </LayoutStyled>
   );
 }
@@ -106,15 +134,7 @@ LayoutInner.propTypes = {
   init: PropTypes.func.isRequired
 };
 
-export default compose(
-  connect(
-    mapStateToProps,
-    { init }
-  ),
-  withState('isTableVisible', 'onMenuSelected', {
-    visible: true,
-    menuItem: {}
-  }),
-  withState('isVodUpVisible', 'onVodUpPopoverClickVisible', false),
-  withState('isVodDownVisible', 'onVodDownPopoverClickVisible', false)
+export default connect(
+  mapStateToProps,
+  { init }
 )(LayoutInner);

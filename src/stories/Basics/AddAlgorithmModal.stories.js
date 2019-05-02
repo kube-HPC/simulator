@@ -2,8 +2,8 @@ import React from 'react';
 
 import { storiesOf } from '@storybook/react';
 
-import AddAlgorithmModal from 'components/dumb/AddPipeline/AddAlgorithmModal.react';
+import AddAlgorithmForm from 'components/operations/AddAlgorithm.react';
 
 storiesOf('Basics|AddAlgorithmModal', module).add('Default', () => (
-  <AddAlgorithmModal visible={true} onSubmit={() => {}} toggleVisible={() => {}} />
+  <AddAlgorithmForm visible={true} onSubmit={() => {}} toggleVisible={() => {}} />
 ));

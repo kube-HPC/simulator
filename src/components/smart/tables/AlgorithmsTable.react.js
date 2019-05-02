@@ -10,19 +10,15 @@ import { getAlgorithmReadme } from '../../../actions/readme.action';
 import {
   init,
   storeAlgorithm,
-  deleteAlgorithmFromStore,
-  applyAlgorithm
+  deleteAlgorithmFromStore
 } from '../../../actions/algorithmTable.action';
 import AlgorithmTabSwitcher from '../../dumb/AlgorithmTabSwitcher.react';
 
-import FloatingAddButton from '../../dumb/FloatingAddButton.react';
-import AddAlgorithmModal from '../../dumb/AddPipeline/AddAlgorithmModal.react';
 import JsonEditorModal from '../JsonEditorModal.react';
 import paginationStyle from 'config/template/table-pagination.template';
 class AlgorithmsTable extends Component {
   state = {
-    isVisible: false,
-    isAddAlgoVisible: false
+    isVisible: false
   };
   componentWillMount() {
     this.props.init();
@@ -127,7 +123,6 @@ class AlgorithmsTable extends Component {
   }
 
   onVisible = () => this.setState({ isVisible: !this.state.isVisible });
-  toggleAddAlgoVisible = () => this.setState({ isAddAlgoVisible: !this.state.isAddAlgoVisible });
 
   render() {
     const { dataSource, algorithmReadme } = this.props;
@@ -152,13 +147,6 @@ class AlgorithmsTable extends Component {
               }
             />
           )}
-        />
-
-        <FloatingAddButton onClick={this.toggleAddAlgoVisible}> </FloatingAddButton>
-        <AddAlgorithmModal
-          visible={this.state.isAddAlgoVisible}
-          onSubmit={this.props.applyAlgorithm}
-          toggleVisible={this.toggleAddAlgoVisible}
         />
       </div>
     );
@@ -193,7 +181,7 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { openModal, init, storeAlgorithm, deleteAlgorithmFromStore, getAlgorithmReadme, applyAlgorithm }
+  { openModal, init, storeAlgorithm, deleteAlgorithmFromStore, getAlgorithmReadme }
 )(
   withState('isVisible', 'onPopoverClickVisible', { visible: false, podName: '' })(AlgorithmsTable)
 );

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import AddPipelineForm from 'components/dumb/AddPipeline/AddPipelineForm.react';
@@ -6,8 +7,9 @@ import { Row, Col, Steps, Card } from 'antd';
 
 import JsonView from 'components/dumb/JsonView.react';
 import template from 'config/template/addPipeline.template';
+import { addPipeline } from 'actions/addPipeline.action';
 
-export default function AddPipelineSteps(props) {
+function AddPipelineSteps(props) {
   const [formData, setFormData] = useState(template);
   const [step, setStep] = useState(0);
   const steps = ['Initial', 'Nodes', 'Side Effects', 'Triggers', 'Options'];
@@ -15,7 +17,6 @@ export default function AddPipelineSteps(props) {
 
   return (
     <Card
-      style={props.style}
       title={
         <Steps progressDot current={step}>
           {steps.map(title => (
@@ -35,8 +36,11 @@ export default function AddPipelineSteps(props) {
             <AddPipelineForm
               formData={formData}
               algorithms={props.algorithms}
-              pipelines={props.pipelines}
-              onSubmit={props.onSubmit}
+              pipelines={props.storedPipelines.map(pipeline => pipeline.name)}
+              onSubmit={pipeline => {
+                props.addPipeline(pipeline);
+                props.onSubmit();
+              }}
               onChange={setFormData}
               onStep={setStep}
               step={step}
@@ -49,10 +53,37 @@ export default function AddPipelineSteps(props) {
 }
 
 AddPipelineSteps.propTypes = {
-  formData: PropTypes.object.isRequired,
+  storedPipelines: PropTypes.object.isRequired,
   algorithms: PropTypes.array.isRequired,
-  pipelines: PropTypes.array.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
-  style: PropTypes.object
+  addPipeline: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired
 };
+
+const mapStateToProps = state => ({
+  algorithms: state.algorithmTable.dataSource.map(tableRow => tableRow.key),
+  storedPipelines: state.storedPipeline.dataSource
+});
+
+export default connect(
+  mapStateToProps,
+  { addPipeline }
+)(AddPipelineSteps);
+
+{
+  /* <FloatingAddButton
+          onClick={() => {
+            sideBarOpen({
+              payload: {
+                formData: template,
+                algorithms: algorithms,
+                pipelines: storedPipelines.map(pipeline => pipeline.name),
+                onSubmit: pipeline => {
+                  this.props.addPipe(pipeline);
+                  sideBarClose();
+                },
+                type: sideBarTypes.ADD_PIPELINE
+              }
+            });
+          }}
+        /> */
+}

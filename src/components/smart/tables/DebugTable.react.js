@@ -93,21 +93,9 @@ class DebugTable extends Component {
     this.onVisible();
   };
   render() {
-    const AlgorithmInput = (
-      <div style={{ height: 'auto', width: 300 }}>
-        <Row style={{ marginBottom: '5' }}>
-          <Input
-            onChange={this.onFormDataChange}
-            prefix={<Icon type="share-alt" style={{ color: 'black' }} />}
-            placeholder="Algorithm"
-          />
-        </Row>
-      </div>
-    );
-
     const { dataSource } = this.props;
     return (
-      <div>
+      <>
         <Table
           columns={this.columns}
           dataSource={dataSource.asMutable()}
@@ -118,54 +106,7 @@ class DebugTable extends Component {
             </Card>
           )}
         />
-        <Popover
-          placement="topRight"
-          isVisible={this.state.isVisible}
-          position="topRight"
-          trigger="click"
-          content={
-            <div>
-              {AlgorithmInput}
-              <Row type="flex" justify="space-between">
-                <Col span={8} style={{ textAlign: 'center' }}>
-                  <Button type="primary" onClick={this.onPopOverConfirm} style={{ margin: 'auto' }}>
-                    Confirm
-                  </Button>
-                </Col>
-                <Col span={8} style={{ textAlign: 'center' }}>
-                  <Button onClick={this.onPopOverCancel} style={{ margin: 'auto' }}>
-                    Cancel
-                  </Button>
-                </Col>
-              </Row>
-            </div>
-          }
-        >
-          <Button
-            type="primary"
-            shape="circle"
-            size="default"
-            style={{
-              textAlign: 'center',
-              position: 'absolute',
-              width: '56px',
-              height: '56px',
-              top: '90%',
-              right: '3%',
-              boxShadow:
-                '0 8px 10px 1px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.2)'
-            }}
-            onClick={this.onVisible}
-          >
-            <Icon
-              type="plus"
-              width="24px"
-              height="24px"
-              style={{ margin: 'auto', fontSize: 'x-large' }}
-            />
-          </Button>
-        </Popover>
-      </div>
+      </>
     );
   }
 }

@@ -28,7 +28,7 @@ import {
   cronStart,
   cronStop
 } from 'actions/storedPipes.action';
-import { addPipe } from 'actions/addPipe.action';
+import { addPipeline } from 'actions/addPipeline.action';
 import JsonEditorModal from 'components/smart/JsonEditorModal.react';
 import FloatingAddButton from 'components/dumb/FloatingAddButton.react';
 import { getPipelineReadme } from 'actions/readme.action';
@@ -100,7 +100,7 @@ class PipelinesTable extends Component {
     };
 
     return (
-      <div>
+      <>
         <Table
           rowKey="name"
           dataSource={storedPipelines.asMutable()}
@@ -263,23 +263,7 @@ class PipelinesTable extends Component {
             }}
           />
         </Table>
-        <FloatingAddButton
-          onClick={() => {
-            sideBarOpen({
-              payload: {
-                formData: template,
-                algorithms: algorithms,
-                pipelines: storedPipelines.map(pipeline => pipeline.name),
-                onSubmit: pipeline => {
-                  this.props.addPipe(pipeline);
-                  sideBarClose();
-                },
-                type: sideBarTypes.ADD_PIPELINE
-              }
-            });
-          }}
-        />
-      </div>
+      </>
     );
   }
 }
@@ -312,7 +296,7 @@ export default connect(
   {
     openModal,
     init,
-    addPipe,
+    addPipe: addPipeline,
     execStoredPipe,
     deleteStoredPipeline,
     updateStoredPipeline,

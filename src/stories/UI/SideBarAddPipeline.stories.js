@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 
-import SideBarAddPipeline from 'components/smart/SideBarAddPipeline.react';
+import AddPipeline from 'components/operations/AddPipeline.react';
 
 const content = {
   algorithms: ['a1', 'a2'],
@@ -23,8 +23,8 @@ function Counter() {
 
 storiesOf('UI|SideBarAddPipeline', module).add('Default', () => (
   <>
-    <SideBarAddPipeline content={content}>
+    <AddPipeline content={content}>
       <Counter />
-    </SideBarAddPipeline>
+    </AddPipeline>
   </>
 ));
