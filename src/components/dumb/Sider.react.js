@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { useSpring, animated } from 'react-spring';
+import { useSpring, animated, config } from 'react-spring';
 
 import { ReactComponent as LogoSvg } from 'images/logoBordered.svg';
 import { ReactComponent as DebugIcon } from 'images/debug-icon.svg';
@@ -27,14 +27,15 @@ const SiderLight = styled(Layout.Sider)`
   .ant-menu {
     background-color: ${HCOLOR.colorAccent};
   }
+  .ant-layout-sider-trigger {
+    color: #777777;
+    background: ${HCOLOR.colorAccent};
+    font-size: 20px;
+  }
 `;
 
 const MenuStyled = styled(Menu)`
   background: ${HCOLOR.colorAccent};
-  .ant-layout-sider-trigger {
-    color: ${HCOLOR.colorPrimary};
-    background: ${HCOLOR.colorAccent};
-  }
 `;
 
 const RowCentered = styled(Row)`
@@ -57,10 +58,8 @@ const ColCentered = styled(Col)`
 
 const setMenuItem = (iconComponent, title, count) => (
   <Row type="flex" justify="start" gutter={10}>
-    <Col span={5} style={{ textAlign: 'start' }}>
-      {iconComponent}
-    </Col>
-    <Col span={12} style={{ textAlign: 'start' }}>
+    <Col style={{ textAlign: 'start' }}>{iconComponent}</Col>
+    <Col span={11} style={{ textAlign: 'start' }}>
       {title}
     </Col>
     {count && (
@@ -71,7 +70,7 @@ const setMenuItem = (iconComponent, title, count) => (
   </Row>
 );
 
-const setMenuItems = items =>
+const setMenuItems = (items, isCollapsed) =>
   items.map(([name, component, count]) => (
     <Menu.Item key={name}>
       {setMenuItem(
@@ -82,21 +81,34 @@ const setMenuItems = items =>
     </Menu.Item>
   ));
 
+function Animated() {
+  const styledProps = useSpring({ config: config.slow, opacity: 1, from: { opacity: 0 } });
+  return (
+    <animated.div style={styledProps}>
+      <TitleBig>Hkube</TitleBig>
+    </animated.div>
+  );
+}
+
 export default function Sider({ onSelect, ...props }) {
-  const styledProps = useSpring({ opacity: 1, from: { opacity: 0 } });
+  const [collapsed, setCollapsed] = useState(true);
 
   return (
-    <SiderLight>
-      <animated.div style={styledProps}>
-        <RowCentered type="flex">
-          <ColCentered span={10}>
-            <IconLogo component={LogoSvg} />
+    <SiderLight collapsible onCollapse={() => setCollapsed(!collapsed)} collapsed={collapsed}>
+      <RowCentered type="flex">
+        <ColCentered span={9}>
+          <IconLogo component={LogoSvg} />
+        </ColCentered>
+
+        {collapsed ? (
+          <div />
+        ) : (
+          <ColCentered span={14}>
+            <Animated />
           </ColCentered>
-          <ColCentered span={12}>
-            <TitleBig>Hkube</TitleBig>
-          </ColCentered>
-        </RowCentered>
-      </animated.div>
+        )}
+      </RowCentered>
+
       <MenuStyled mode="inline" onSelect={i => onSelect(i.key)} defaultSelectedKeys={['Jobs']}>
         {setMenuItems([
           ['Jobs', 'area-chart', props.jobsCount],
