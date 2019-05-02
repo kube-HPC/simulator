@@ -8,7 +8,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withState } from 'recompose';
 import { STATUS } from '../../../constants/colors';
-
+import paginationStyle from 'config/template/table-pagination.template';
 class DriversTable extends Component {
   componentWillMount() {
     this.props.init();
@@ -89,16 +89,11 @@ class DriversTable extends Component {
   render() {
     const { dataSource } = this.props;
     return (
-      <div>
+      <>
         <Table
           columns={this.columns}
           dataSource={dataSource.asMutable()}
-          pagination={{
-            style: { paddingRight: '50px' },
-            defaultCurrent: 1,
-            pageSize: 15,
-            hideOnSinglePage: true
-          }}
+          pagination={paginationStyle}
           expandedRowRender={record => (
             <Card title="Full details">
               <ReactJson
@@ -112,7 +107,7 @@ class DriversTable extends Component {
             </Card>
           )}
         />
-      </div>
+      </>
     );
   }
 }

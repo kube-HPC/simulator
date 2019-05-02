@@ -29,7 +29,6 @@ import {
   cronStop
 } from 'actions/storedPipes.action';
 import { addPipe } from 'actions/addPipe.action';
-// import './StoredPipesTable.scss';
 import JsonEditorModal from 'components/smart/JsonEditorModal.react';
 import FloatingAddButton from 'components/dumb/FloatingAddButton.react';
 import { getPipelineReadme } from 'actions/readme.action';

@@ -22,21 +22,7 @@ const IconLogo = styled(Icon)`
   width: -webkit-fill-available;
 `;
 
-const SiderLight = styled(Layout.Sider)`
-  background: ${HCOLOR.colorAccent};
-  .ant-menu {
-    background-color: ${HCOLOR.colorAccent};
-  }
-  .ant-layout-sider-trigger {
-    color: #777777;
-    background: ${HCOLOR.colorAccent};
-    font-size: 20px;
-  }
-`;
-
-const MenuStyled = styled(Menu)`
-  background: ${HCOLOR.colorAccent};
-`;
+const SiderLight = styled(Layout.Sider)``;
 
 const RowCentered = styled(Row)`
   text-align: center;
@@ -94,7 +80,12 @@ export default function Sider({ onSelect, ...props }) {
   const [collapsed, setCollapsed] = useState(true);
 
   return (
-    <SiderLight collapsible onCollapse={() => setCollapsed(!collapsed)} collapsed={collapsed}>
+    <SiderLight
+      theme="light"
+      collapsible
+      onCollapse={() => setCollapsed(!collapsed)}
+      collapsed={collapsed}
+    >
       <RowCentered type="flex">
         <ColCentered span={9}>
           <IconLogo component={LogoSvg} />
@@ -109,7 +100,7 @@ export default function Sider({ onSelect, ...props }) {
         )}
       </RowCentered>
 
-      <MenuStyled mode="inline" onSelect={i => onSelect(i.key)} defaultSelectedKeys={['Jobs']}>
+      <Menu mode="inline" onSelect={i => onSelect(i.key)} defaultSelectedKeys={['Jobs']}>
         {setMenuItems([
           ['Jobs', 'area-chart', props.jobsCount],
           ['Pipelines', PipelineIcon, props.pipelinesCount],
@@ -117,11 +108,19 @@ export default function Sider({ onSelect, ...props }) {
           ['Drivers', DriversIcon, props.driversCount],
           ['Algorithms', AlgorithmIcon, props.algorithmsCount],
           ['Debug', DebugIcon, props.debugCount],
-          ['Builds', 'build', props.buildsCount],
-          ['CPU', 'heat-map', undefined],
-          ['Memory', 'hdd', undefined]
+          ['Builds', 'build', props.buildsCount]
         ])}
-      </MenuStyled>
+        <Menu.SubMenu
+          title={
+            <span>
+              <Icon type="pie-chart" />
+              <span>Cluster Stats</span>
+            </span>
+          }
+        >
+          {setMenuItems([['CPU', 'heat-map'], ['Memory', 'hdd']])}
+        </Menu.SubMenu>
+      </Menu>
     </SiderLight>
   );
 }

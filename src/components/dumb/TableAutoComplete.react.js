@@ -2,16 +2,19 @@ import React from 'react';
 import { Icon, Input, AutoComplete } from 'antd';
 import { connect } from 'react-redux';
 import { updateFilter } from 'actions/autoCompleteFilter.action';
+import styled from 'styled-components';
+
+const InputTransparent = styled(AutoComplete)`
+  background: transparent;
+  width: 600px;
+`;
+
 const Option = AutoComplete.Option;
 const OptGroup = AutoComplete.OptGroup;
 
-function renderTitle(title) {
-  return <span>{title}</span>;
-}
-
 const options = data => {
   const obj = data.map(group => (
-    <OptGroup key={group.title} label={renderTitle(group.title)}>
+    <OptGroup key={group.title} label={<span>{group.title}</span>}>
       {group.children.map(opt => (
         <Option key={opt.title} value={opt.title}>
           {opt.title}
@@ -25,29 +28,19 @@ const options = data => {
 
   return obj;
 };
+
 const TableAutoComplete = props => (
-  <>
-    <AutoComplete
-      className="certain-category-search"
-      dropdownClassName="certain-category-search-dropdown"
-      dropdownMatchSelectWidth={false}
-      dropdownStyle={{ width: 300 }}
-      size="large"
-      style={{ width: '600px', border: '0px' }}
-      dataSource={options(props.dataSource)}
-      placeholder="Search for Algorithm, Pipeline, Job..."
-      onSelect={props.updateFilter}
-      onChange={val => {
-        props.updateFilter(val);
-      }}
-      optionLabelProp="value"
-    >
-      <Input
-        style={{ border: '0px', backgroundColor: '#0000000a' }}
-        suffix={<Icon type="search" className="certain-category-icon" />}
-      />
-    </AutoComplete>
-  </>
+  <InputTransparent
+    dropdownMatchSelectWidth={false}
+    dropdownStyle={{ width: 300 }}
+    dataSource={options(props.dataSource)}
+    onSelect={props.updateFilter}
+    onChange={props.updateFilter}
+    optionLabelProp="value"
+    placeholder="Search in current table"
+  >
+    <Input suffix={<Icon type="search" />} />
+  </InputTransparent>
 );
 
 const tableDataToAutoCompleteData = data => {

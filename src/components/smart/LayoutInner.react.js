@@ -35,6 +35,11 @@ const LayoutStyled = styled(Layout)`
   }
 `;
 
+const LayoutMargin = styled(Layout)`
+  background: white;
+  border-left: 1px solid #cccccc;
+`;
+
 const HeaderStyled = styled(Header)`
   background: white;
   border-bottom: 1pt solid #ccc;
@@ -73,7 +78,7 @@ function LayoutInner({ init, ...props }) {
     <LayoutStyled>
       <SideBar open={false} />
       <Sider {...props} onSelect={setTable} />
-      <LayoutStyled>
+      <LayoutMargin>
         <HeaderStyled>
           <TableAutoComplete />
         </HeaderStyled>
@@ -81,7 +86,7 @@ function LayoutInner({ init, ...props }) {
           <BackTop />
           {tableSelector[table]}
         </ContentStyled>
-      </LayoutStyled>
+      </LayoutMargin>
     </LayoutStyled>
   );
 }

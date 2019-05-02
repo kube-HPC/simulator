@@ -19,6 +19,7 @@ import { getKubernetesLogsData } from '../../../actions/kubernetesLog.action';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { STATUS, PIPELINE_STATUS, PRIORITY } from '../../../constants/colors';
 import styled from 'styled-components';
+import paginationStyle from 'config/template/table-pagination.template';
 
 const IconWhite = styled(Icon)`
   color: rgba(187, 180, 180, 0.75);
@@ -272,12 +273,7 @@ class JobsTable extends Component {
         <Table
           columns={this.columns}
           dataSource={dataSource}
-          pagination={{
-            style: { paddingRight: '50px' },
-            defaultCurrent: 1,
-            pageSize: 15,
-            hideOnSinglePage: true
-          }}
+          pagination={paginationStyle}
           expandedRowRender={record => (
             <TabSwitcher
               record={{

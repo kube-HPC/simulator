@@ -7,6 +7,7 @@ import { init, addAlgorithm, deleteAlgorithm } from 'actions/debugTable.action';
 import { createSelector } from 'reselect';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import paginationStyle from 'config/template/table-pagination.template';
 class DebugTable extends Component {
   componentWillMount() {
     this.props.init();
@@ -110,12 +111,7 @@ class DebugTable extends Component {
         <Table
           columns={this.columns}
           dataSource={dataSource.asMutable()}
-          pagination={{
-            style: { paddingRight: '50px' },
-            defaultCurrent: 1,
-            pageSize: 15,
-            hideOnSinglePage: true
-          }}
+          pagination={paginationStyle}
           expandedRowRender={record => (
             <Card title="Full details">
               <ReactJson src={record} />
