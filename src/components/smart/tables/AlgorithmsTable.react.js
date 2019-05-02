@@ -18,7 +18,7 @@ import AlgorithmTabSwitcher from '../../dumb/AlgorithmTabSwitcher.react';
 import FloatingAddButton from '../../dumb/FloatingAddButton.react';
 import AddAlgorithmModal from '../../dumb/AddPipeline/AddAlgorithmModal.react';
 import JsonEditorModal from '../JsonEditorModal.react';
-
+import paginationStyle from 'config/template/table-pagination.template';
 class AlgorithmsTable extends Component {
   state = {
     isVisible: false,
@@ -137,12 +137,7 @@ class AlgorithmsTable extends Component {
         <Table
           columns={this.columns}
           dataSource={dataSource.asMutable()}
-          pagination={{
-            style: { paddingRight: '50px' },
-            defaultCurrent: 1,
-            pageSize: 15,
-            hideOnSinglePage: true
-          }}
+          pagination={paginationStyle}
           locale={{ emptyText: 'no data' }}
           onExpand={(expanded, record) => {
             if (expanded) {

@@ -12,7 +12,7 @@ import humanizeDuration from 'humanize-duration';
 import { openModal } from '../../../actions/modal.action';
 import { init, cancelBuild, rerunBuild } from '../../../actions/algorithmBuildsTable.action';
 import { STATUS } from '../../../constants/colors';
-
+import paginationStyle from 'config/template/table-pagination.template';
 class AlgorithmBuildsTable extends Component {
   firstLetterUpperCase = s => s.charAt(0).toUpperCase() + s.slice(1);
 
@@ -234,12 +234,7 @@ class AlgorithmBuildsTable extends Component {
       <Table
         columns={this.nestedColumns}
         dataSource={data}
-        pagination={{
-          style: { paddingRight: '50px' },
-          defaultCurrent: 1,
-          pageSize: 15,
-          hideOnSinglePage: true
-        }}
+        pagination={paginationStyle}
         expandedRowRender={record => (
           <ReactJson
             src={record}

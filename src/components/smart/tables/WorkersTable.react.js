@@ -8,6 +8,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withState } from 'recompose';
 import defaultWorkerData from 'config/template/worker.template';
+import paginationStyle from 'config/template/table-pagination.template';
 
 const STATUS = {
   bootstrap: '#2db7f5',
@@ -148,7 +149,7 @@ class WorkersTable extends Component {
           size="middle"
           columns={columns}
           dataSource={filteredDataSource}
-          pagination={false}
+          pagination={paginationStyle}
           expandedRowRender={record => {
             const timer = {
               workerStartingTime:
