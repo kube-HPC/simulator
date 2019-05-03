@@ -13,12 +13,13 @@ import DriversTable from 'components/smart/tables/DriversTable.react';
 import AlgorithmsTable from 'components/smart/tables/AlgorithmsTable.react';
 import NodeStatistics from 'components/smart/NodeStatistics.react';
 import TableAutoComplete from 'components/dumb/TableAutoComplete.react';
+
+import SideBar from 'components/smart/SideBarContainer.react';
 import Sider from 'components/dumb/Sider.react';
 import SiderMini from 'components/dumb/SiderMini.react';
 
 import { init } from 'actions/config.action.js';
 import DrawerContainer from 'components/dumb/DrawerContainer.react';
-import AddPipelineSteps from 'components/dumb/AddPipeline/AddPipelineSteps.react';
 import AddAlgorithmForm from 'components/operations/AddAlgorithm.react';
 import AddPipeline from '../operations/AddPipeline.react';
 import AddDebug from 'components/operations/AddDebug.react';
@@ -96,6 +97,7 @@ function LayoutInner({ init, ...props }) {
 
   return (
     <LayoutStyled>
+      <SideBar open={false} />
       <Sider {...props} onSelect={setTable} />
       <Layout>
         <HeaderStyled>
