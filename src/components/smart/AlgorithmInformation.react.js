@@ -15,8 +15,14 @@ class AlgorithmInformation extends Component {
   shouldComponentUpdate(nextProps) {
     const currentPayload = this.props.sideBar.data && this.props.sideBar.data.payload;
     const nextPayload = nextProps.sideBar.data && nextProps.sideBar.data.payload;
+
+    const currentLogs = this.props.logs.dataSource;
+    const nextPayLogs = nextProps.logs.dataSource;
+
     const payloadChange = !isEqual(currentPayload, nextPayload);
-    return payloadChange;
+    const logsChange = !isEqual(currentLogs, nextPayLogs);
+
+    return payloadChange || logsChange;
   }
 
   render() {
