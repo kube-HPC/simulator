@@ -2,7 +2,7 @@
   "name": "simulator",
   "version": "1.1.120",
   "private": true,
-  "homepage": "hkube.io",
+  "homepage": ".",
   "dependencies": {
     "@nivo/bar": "^0.52.1",
     "antd": "^3.17.0",
