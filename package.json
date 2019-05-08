@@ -2,7 +2,7 @@
   "name": "simulator",
   "version": "1.1.120",
   "private": true,
-  "homepage": "hkube.io",
+  "homepage": ".",
   "dependencies": {
     "@nivo/bar": "^0.52.1",
     "antd": "^3.17.0",
@@ -89,6 +89,8 @@
     "@storybook/addon-links": "^5.0.10",
     "@storybook/addons": "^5.0.10",
     "@storybook/react": "^5.0.11",
+    "babel-cli": "^6.26.0",
+    "babel-loader": "^8.0.5",
     "cron-parser": "^2.9.0"
   }
 }
