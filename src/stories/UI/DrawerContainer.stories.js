@@ -25,4 +25,6 @@ function DrawerAddPipeline() {
   );
 }
 
-storiesOf('UI|DrawerContainer', module).add('Default', () => <DrawerAddPipeline />);
+storiesOf('UI|DrawerContainer', module).add('Default', () => (
+  <DrawerAddPipeline />
+));

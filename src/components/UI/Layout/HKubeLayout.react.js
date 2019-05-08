@@ -4,8 +4,6 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import 'antd/dist/antd.css';
 
-import { message, Layout, BackTop } from 'antd';
-
 import JobsTable from 'components/UI/tables/JobsTable.react';
 import WorkersTable from 'components/UI/tables/WorkersTable.react';
 import DebugTable from 'components/UI/tables/DebugTable.react';
@@ -17,18 +15,20 @@ import AlgorithmsTable from 'components/UI/tables/AlgorithmsTable.react';
 import NodeStatistics from 'components/smart/NodeStatistics.react';
 import TableAutoComplete from 'components/dumb/TableAutoComplete.react';
 
-import SideBar from 'components/smart/SideBarContainer.react';
-import Sider from 'components/dumb/Sider.react';
-import SiderMini from 'components/dumb/SiderMini.react';
-
-import { init } from 'actions/config.action.js';
+import SideBarContainer from 'components/smart/SideBarContainer.react';
 import DrawerContainer from 'components/dumb/DrawerContainer.react';
-import AddAlgorithmForm from 'components/UI/operations/AddAlgorithm.react';
-import AddPipeline from './operations/AddPipeline.react';
-import AddDebug from 'components/UI/operations/AddDebug.react';
-import './HKubeLayout.react.css';
 
+import SidebarOperations from 'components/UI/Layout/SidebarOperations.react';
+import Sidebar from 'components/UI/Layout/Sidebar.react';
+import AddAlgorithmForm from 'components/UI/operations/AddAlgorithm.react';
+import AddPipeline from 'components/UI/operations/AddPipeline.react';
+import AddDebug from 'components/UI/operations/AddDebug.react';
+
+import { message, Layout } from 'antd';
+import { init } from 'actions/config.action.js';
 import { HCOLOR } from 'constants/colors';
+
+import './HKubeLayout.css';
 
 const LayoutStyled = styled(Layout)`
   height: 100vh;
@@ -38,29 +38,12 @@ const LayoutStyled = styled(Layout)`
   }
 
   .ant-tooltip-inner {
-    &&& {
-      background-color: white !important;
-      color: blue !important;
-    }
-  }
-
-  .ant-tooltip-content {
-    &&& {
-      background-color: white;
-      color: blue;
-    }
+    background-color: white;
+    color: black;
   }
 
   .ant-layout-sider-light .ant-layout-sider-trigger {
     border-right: 1px solid ${HCOLOR.border};
-  }
-
-  .ant-tooltip-open {
-    &&& {
-      background-color: white;
-      background: white;
-      color: black;
-    }
   }
 `;
 
@@ -104,9 +87,9 @@ function HKubeLayout({ init, ...props }) {
   const triggerVisible = () => setVisible(!visible);
 
   const operationSelector = {
-    AddPipeline: <AddPipeline onSubmit={triggerVisible} />,
-    AddAlgorithm: <AddAlgorithmForm onSubmit={triggerVisible} />,
-    AddDebug: <AddDebug onSubmit={triggerVisible} />
+    'Add Pipeline': <AddPipeline onSubmit={triggerVisible} />,
+    'Add Algorithm': <AddAlgorithmForm onSubmit={triggerVisible} />,
+    'Add Debug': <AddDebug onSubmit={triggerVisible} />
   };
 
   useEffect(() => {
@@ -119,18 +102,15 @@ function HKubeLayout({ init, ...props }) {
 
   return (
     <LayoutStyled>
-      <SideBar open={false} />
-      <Sider {...props} onSelect={setTable} />
+      <SideBarContainer open={false} />
+      <Sidebar {...props} onSelect={setTable} />
       <Layout>
         <HeaderStyled>
           <TableAutoComplete />
         </HeaderStyled>
         <LayoutMargin>
-          <ContentStyled>
-            <BackTop visibilityHeight={200} />
-            {tableSelector[table]}
-          </ContentStyled>
-          <SiderMini
+          <ContentStyled>{tableSelector[table]}</ContentStyled>
+          <SidebarOperations
             {...props}
             onSelect={op => {
               setOperation(op);
@@ -146,6 +126,10 @@ function HKubeLayout({ init, ...props }) {
   );
 }
 
+HKubeLayout.propTypes = {
+  init: PropTypes.func.isRequired
+};
+
 const mapStateToProps = state => ({
   scriptsPath: state.serverSelection.currentSelection.scriptsPath,
   jobsCount: (state.containerTable.dataSource || []).length,
@@ -156,10 +140,6 @@ const mapStateToProps = state => ({
   workersCount: (state.workerTable.stats || { total: 0 }).total,
   debugCount: (state.debugTable.dataSource || []).length
 });
-
-HKubeLayout.propTypes = {
-  init: PropTypes.func.isRequired
-};
 
 export default connect(
   mapStateToProps,

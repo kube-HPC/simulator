@@ -89,7 +89,7 @@ function Animated() {
   );
 }
 
-export default function Sider({ onSelect, ...props }) {
+export default function Sidebar({ onSelect, ...props }) {
   const [collapsed, setCollapsed] = useState(true);
 
   const menuItems = [
@@ -141,7 +141,7 @@ export default function Sider({ onSelect, ...props }) {
   );
 }
 
-Sider.propTypes = {
+Sidebar.propTypes = {
   jobsCount: PropTypes.number,
   pipelinesCount: PropTypes.number,
   workersCount: PropTypes.number,

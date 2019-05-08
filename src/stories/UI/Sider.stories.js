@@ -4,7 +4,7 @@ import { storiesOf } from '@storybook/react';
 
 import { Layout } from 'antd';
 
-import Sider from 'components/dumb/Sider.react';
+import Sidebar from 'components/UI/Layout/Sidebar.react';
 
 const LayoutStyled = styled(Layout)`
   height: 100vh;
@@ -37,7 +37,7 @@ function SiderContainer() {
 
   return (
     <LayoutStyled>
-      <Sider {...props} onSelect={() => setCounter(counter + 1)} />
+      <Sidebar {...props} onSelect={() => setCounter(counter + 1)} />
       <LayoutCenter>
         <StyledCounter>{counter}</StyledCounter>
       </LayoutCenter>

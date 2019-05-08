@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
+import { ReactComponent as IconAddPipeline } from 'images/add-pipeline.svg';
+import { ReactComponent as IconAddAlgorithm } from 'images/add-algorithm.svg';
+import { ReactComponent as IconAddDebug } from 'images/add-debug.svg';
+
 import { Layout, Icon, Menu } from 'antd';
 
 import { HCOLOR } from 'constants/colors';
@@ -10,19 +14,24 @@ const SiderLight = styled(Layout.Sider)`
   border-left: 1px solid ${HCOLOR.border};
 `;
 
+const StyledItem = styled(Menu.Item)`
+  margin-left: -16px;
+  margin-top: 10px;
+`;
+
 const addMenuItems = items =>
   items.map(([name, component]) => (
-    <Menu.Item key={name} style={{ marginLeft: '-11px' }}>
+    <StyledItem key={name} style={{}}>
       <Icon
         type={component}
         component={component}
-        style={{ fontSize: '20px' }}
+        style={{ fontSize: '25px' }}
       />
       <span>{name}</span>
-    </Menu.Item>
+    </StyledItem>
   ));
 
-export default function SiderMini({ onSelect }) {
+export default function SidebarOperations({ onSelect }) {
   const [selected, setSelected] = useState([]);
 
   return (
@@ -36,15 +45,15 @@ export default function SiderMini({ onSelect }) {
         selectedKeys={selected}
       >
         {addMenuItems([
-          ['Add Pipeline', 'file-add'],
-          ['Add Algorithm', 'folder-add'],
-          ['Add Debug', 'plus-circle']
+          ['Add Pipeline', IconAddPipeline],
+          ['Add Algorithm', IconAddAlgorithm],
+          ['Add Debug', IconAddDebug]
         ])}
       </Menu>
     </SiderLight>
   );
 }
 
-SiderMini.propTypes = {
+SidebarOperations.propTypes = {
   onSelect: PropTypes.func.isRequired
 };
