@@ -2,11 +2,11 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { store } from 'store/index';
-import Layout from 'components/smart/LayoutInner.react';
+import HKubeLayout from 'components/UI/HKubeLayout.react';
 
 render(
   <Provider store={store}>
-    <Layout />
+    <HKubeLayout />
   </Provider>,
   document.getElementById('root')
 );

@@ -10,16 +10,15 @@ export const COLOR = {
   textBlue: '#307fe6',
   whiteHighlight: '#ececec',
   white: 'white',
+  lightGrey: '#e8e8e8',
   grey: '#ccc'
 };
 
 export const HCOLOR = {
   colorPrimary: COLOR.blue,
   colorAccent: COLOR.whiteHighlight,
-  border: COLOR.grey,
-  header: COLOR.white,
-  headerBorder: COLOR.grey,
-  content: COLOR.white
+  border: COLOR.lightGrey,
+  darkBorder: COLOR.grey
 };
 
 export const STATUS = {

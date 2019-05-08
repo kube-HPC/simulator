@@ -4,14 +4,21 @@ import styled from 'styled-components';
 
 import { Layout, Icon, Menu } from 'antd';
 
+import { HCOLOR } from 'constants/colors';
+
 const SiderLight = styled(Layout.Sider)`
-  border-left: 1px solid #e8e8e8;
+  border-left: 1px solid ${HCOLOR.border};
 `;
 
 const addMenuItems = items =>
   items.map(([name, component]) => (
     <Menu.Item key={name} style={{ marginLeft: '-11px' }}>
-      <Icon type={component} component={component} style={{ fontSize: '20px' }} />
+      <Icon
+        type={component}
+        component={component}
+        style={{ fontSize: '20px' }}
+      />
+      <span>{name}</span>
     </Menu.Item>
   ));
 
@@ -29,9 +36,9 @@ export default function SiderMini({ onSelect }) {
         selectedKeys={selected}
       >
         {addMenuItems([
-          ['AddPipeline', 'file-add'],
-          ['AddAlgorithm', 'folder-add'],
-          ['AddDebug', 'plus-circle']
+          ['Add Pipeline', 'file-add'],
+          ['Add Algorithm', 'folder-add'],
+          ['Add Debug', 'plus-circle']
         ])}
       </Menu>
     </SiderLight>

@@ -68,22 +68,3 @@ export default connect(
   mapStateToProps,
   { addPipeline }
 )(AddPipelineSteps);
-
-{
-  /* <FloatingAddButton
-          onClick={() => {
-            sideBarOpen({
-              payload: {
-                formData: template,
-                algorithms: algorithms,
-                pipelines: storedPipelines.map(pipeline => pipeline.name),
-                onSubmit: pipeline => {
-                  this.props.addPipe(pipeline);
-                  sideBarClose();
-                },
-                type: sideBarTypes.ADD_PIPELINE
-              }
-            });
-          }}
-        /> */
-}
