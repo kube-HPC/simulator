@@ -47,6 +47,7 @@ class AlgorithmTabSwitcher extends Component {
           <Card>
             <ReactJson
               src={algorithmDetails}
+              name={false}
               iconStyle="square"
               displayDataTypes={false}
               displayObjectSize={false}
