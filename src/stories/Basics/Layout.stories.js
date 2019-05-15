@@ -4,8 +4,6 @@ import { storiesOf } from '@storybook/react';
 
 const { Header, Footer, Sider, Content } = Layout;
 
-const SubMenu = Menu.SubMenu;
-
 storiesOf('Basics|Layout', module).add('Default', () => (
   <Layout>
     <Sider>

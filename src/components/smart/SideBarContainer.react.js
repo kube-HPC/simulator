@@ -58,18 +58,27 @@ class SideBarContainer extends Component {
       )
     };
 
-    const AddPipelineSideBarStyle = { sidebar: { background: 'white', width: '120vh' } };
+    const AddPipelineSideBarStyle = {
+      sidebar: { background: 'white', width: '120vh' }
+    };
     return (
       <div>
         <Sidebar
           ref={this.setChildRef}
-          sidebar={sideBar.data ? Component[sideBar.data.payload.type] : null}
+          sidebar={
+            sideBar.data ? Component[sideBar.data.payload.type] : <div />
+          }
           open={sideBar.visible}
           styles={
-            sideBar.data && sideBar.data.payload.type === sideBarTypes.ADD_PIPELINE
+            sideBar.data &&
+            sideBar.data.payload.type === sideBarTypes.ADD_PIPELINE
               ? AddPipelineSideBarStyle
               : {
-                  sidebar: { background: 'white', width: '50vw', position: 'fixed' }
+                  sidebar: {
+                    background: 'white',
+                    width: '50vw',
+                    position: 'fixed'
+                  }
                 }
           }
           pullRight={true}

@@ -25,10 +25,9 @@ import {
 } from '../../../actions/algorithmBuildsTable.action';
 import { STATUS } from '../../../constants/colors';
 import paginationStyle from 'config/template/table-pagination.template';
+import { toUpperCaseFirstLetter } from 'utils/string';
 
 class AlgorithmBuildsTable extends Component {
-  firstLetterUpperCase = s => s.charAt(0).toUpperCase() + s.slice(1);
-
   showModal = () => {
     this.setState({
       visible: true
@@ -85,7 +84,7 @@ class AlgorithmBuildsTable extends Component {
             <Tooltip
               key={i}
               placement="top"
-              title={this.firstLetterUpperCase(s[0])}
+              title={toUpperCaseFirstLetter(s[0])}
             >
               <Tag color={STATUS[s[0]] || 'magenta'}>{s[1].length}</Tag>
             </Tooltip>
@@ -186,7 +185,7 @@ class AlgorithmBuildsTable extends Component {
         render: (text, record) => (
           <span>
             <Tag color={STATUS[record.status]}>
-              {this.firstLetterUpperCase(record.status)}
+              {toUpperCaseFirstLetter(record.status)}
             </Tag>
           </span>
         )

@@ -30,9 +30,6 @@ import { HCOLOR } from 'constants/colors';
 
 import './HKubeLayout.css';
 
-import MonacoEditor from 'react-monaco-editor';
-import addPipelineTemplate from 'config/template/addPipeline.template';
-
 const LayoutStyled = styled(Layout)`
   height: 100vh;
   * {
@@ -82,32 +79,6 @@ const tableSelector = {
   Memory: <NodeStatistics metric="mem" />
 };
 
-const options = {
-  selectOnLineNumbers: true
-};
-
-function MonacoContainer() {
-  const [pipeline, setPipeline] = useState(addPipelineTemplate);
-
-  const editorDidMount = (editor, monaco) => {
-    console.log('editorDidMount', editor);
-    editor.focus();
-  };
-
-  return (
-    <MonacoEditor
-      width="800"
-      height="600"
-      language="json"
-      theme=""
-      value={pipeline}
-      onChange={setPipeline}
-      options={options}
-      editorDidMount={editorDidMount}
-    />
-  );
-}
-
 function HKubeLayout({ init, ...props }) {
   const [table, setTable] = useState('Jobs');
   const [operation, setOperation] = useState('AddPipeline');
@@ -131,7 +102,6 @@ function HKubeLayout({ init, ...props }) {
 
   return (
     <LayoutStyled>
-      <MonacoContainer />
       <SideBarContainer open={false} />
       <Sidebar {...props} onSelect={setTable} />
       <Layout>

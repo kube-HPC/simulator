@@ -53,7 +53,7 @@ const setMenuItem = (component, title, count) => (
       {component}
       <span>{title}</span>
     </Col>
-    {count && (
+    {!isNaN(count) && (
       <Col>
         <Tag style={{ color: HCOLOR.colorPrimary }}>{count}</Tag>
       </Col>
@@ -125,7 +125,7 @@ export default function Sidebar({ onSelect, ...props }) {
 
       <Menu
         onSelect={i => onSelect(i.key)}
-        defaultSelectedKeys={menuItems[0][0]}
+        defaultSelectedKeys={[menuItems[0][0]]}
       >
         {addMenuItems(menuItems)}
         <Menu.SubMenu

@@ -1,6 +1,6 @@
 export const COLOR = {
   blue: '#307fe6',
-  blueHighlight: '#45a9ec',
+  blueLight: '#45a9ec',
   red: '#e74c3c',
   purple: '#9b59b6',
   purpleHighlight: '#ac6ad7',
@@ -11,7 +11,12 @@ export const COLOR = {
   whiteHighlight: '#ececec',
   white: 'white',
   lightGrey: '#e8e8e8',
-  grey: '#ccc'
+  grey: '#ccc',
+  darkGrey: '#838383',
+  lightGreen: '#87d068',
+  yellow: '#eeda13',
+  orange: '#ec8c16',
+  darkOrange: '#f50'
 };
 
 export const HCOLOR = {
@@ -22,33 +27,27 @@ export const HCOLOR = {
 };
 
 export const STATUS = {
-  pending: '#838383',
-  bootstrap: '#87d068',
-  ready: '#87d068',
-  init: '#87d068',
-  creating: '#838383',
-  completed: '#87d068',
-  active: '#2db7f5',
-  stopped: '#ec8c16',
-  failed: '#f50',
-  succeed: '#87d068',
-  skipped: '#eeda13'
-};
-
-export const PIPELINE_STATUS = {
-  pending: '#838383',
-  active: '#2db7f5',
-  completed: '#87d068',
-  failed: '#f50',
-  stopped: '#ec8c16',
-  stopping: '#838383',
-  recovering: '#838383'
+  pending: COLOR.darkGrey,
+  bootstrap: COLOR.lightGreen,
+  ready: COLOR.lightGreen,
+  init: COLOR.lightGreen,
+  creating: COLOR.darkGrey,
+  completed: COLOR.lightGreen,
+  active: COLOR.blueLight,
+  stopped: COLOR.orange,
+  failed: COLOR.darkOrange,
+  warning: COLOR.red,
+  succeed: COLOR.lightGreen,
+  skipped: COLOR.yellow,
+  recovering: COLOR.darkGrey,
+  stalled: COLOR.lightGrey,
+  inProgress: COLOR.lightGrey
 };
 
 export const PRIORITY = {
-  1: { color: '#e74c3c', name: 'Highest' },
-  2: { color: '#f50', name: 'High' },
-  3: { color: '#ec8c16', name: 'Medium' },
-  4: { color: '#87d068', name: 'Low' },
-  5: { color: '#2db7f5', name: 'Lowest' }
+  1: { color: STATUS.warning, name: 'Highest' },
+  2: { color: STATUS.failed, name: 'High' },
+  3: { color: STATUS.stopped, name: 'Medium' },
+  4: { color: STATUS.completed, name: 'Low' },
+  5: { color: STATUS.active, name: 'Lowest' }
 };
