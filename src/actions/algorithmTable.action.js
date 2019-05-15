@@ -9,15 +9,6 @@ export const init = () => ({
   }
 });
 
-export const storeAlgorithm = algorithm => ({
-  type: actions.REST_REQ_POST,
-  payload: {
-    url: 'store/algorithms',
-    body: { algorithm },
-    actionType: actions.ALGORITHM_STORE
-  }
-});
-
 export const applyAlgorithm = formData => ({
   type: actions.REST_REQ_POST_FORM,
   payload: {

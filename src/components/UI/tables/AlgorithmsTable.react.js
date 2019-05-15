@@ -9,7 +9,7 @@ import { openModal } from '../../../actions/modal.action';
 import { getAlgorithmReadme } from '../../../actions/readme.action';
 import {
   init,
-  storeAlgorithm,
+  applyAlgorithm,
   deleteAlgorithmFromStore
 } from '../../../actions/algorithmTable.action';
 import AlgorithmTabSwitcher from '../../dumb/AlgorithmTabSwitcher.react';
@@ -20,6 +20,7 @@ class AlgorithmsTable extends Component {
   state = {
     isVisible: false
   };
+
   componentWillMount() {
     this.props.init();
     this.setState({ isVisible: false });
@@ -41,54 +42,54 @@ class AlgorithmsTable extends Component {
         okType: 'danger',
         cancelText: 'Cancel',
         onOk() {
-          action(record.data.name);
+          action(record.name);
         },
-        onCancel() {}
+        onCancel() { }
       });
     };
 
     this.columns = [
       {
         title: 'Algorithm Name',
-        dataIndex: 'data.name',
+        dataIndex: 'name',
         key: 'name',
         width: '20%',
-        sorter: (a, b) => sorter(a.data.name, b.data.name)
+        sorter: (a, b) => sorter(a.name, b.name)
       },
       {
         title: 'Algorithm Image',
-        dataIndex: 'data.algorithmImage',
+        dataIndex: 'algorithmImage',
         key: 'algorithmImage',
         width: '20%',
-        onFilter: (value, record) => record.data.algorithmImage.includes(value),
-        sorter: (a, b) => sorter(a.data.algorithmImage, b.data.algorithmImage)
+        onFilter: (value, record) => record.algorithmImage.includes(value),
+        sorter: (a, b) => sorter(a.algorithmImage, b.algorithmImage)
       },
       {
         title: 'cpu',
-        dataIndex: 'data.cpu',
+        dataIndex: 'cpu',
         key: 'cpu',
         width: '10%'
       },
       {
         title: 'mem',
-        dataIndex: 'data.mem',
+        dataIndex: 'mem',
         key: 'mem',
         width: '10%',
-        sorter: (a, b) => sorter(a.data.mem, b.data.mem)
+        sorter: (a, b) => sorter(a.mem, b.mem)
       },
       {
         title: 'Worker Image',
-        dataIndex: 'data.workerImage',
+        dataIndex: 'workerImage',
         key: 'workerImage',
         width: '10%',
-        sorter: (a, b) => sorter(a.data.workerImage, b.data.workerImage)
+        sorter: (a, b) => sorter(a.workerImage, b.workerImage)
       },
       {
         title: 'minHotWorkers',
-        dataIndex: 'data.minHotWorkers',
+        dataIndex: 'minHotWorkers',
         key: 'minHotWorkers',
         width: '10%',
-        sorter: (a, b) => sorter(a.data.workerImage, b.data.workerImage)
+        sorter: (a, b) => sorter(a.workerImage, b.workerImage)
       },
       {
         title: 'Action',
@@ -98,7 +99,7 @@ class AlgorithmsTable extends Component {
           <Row type="flex" justify="start">
             <Col span={4}>
               <JsonEditorModal
-                jsonTemplate={JSON.stringify(record.data, null, 2)}
+                jsonTemplate={JSON.stringify(record, null, 2)}
                 styledButton={(onClick, isEditable = false) => (
                   <Badge dot={isEditable}>
                     <Button
@@ -111,7 +112,7 @@ class AlgorithmsTable extends Component {
                 )}
                 title={'Edit Algorithm'}
                 okText={'Update'}
-                action={this.props.storeAlgorithm}
+                action={this.onSubmit}
               />
             </Col>
             <Col span={4}>
@@ -133,6 +134,12 @@ class AlgorithmsTable extends Component {
     ];
   }
 
+  onSubmit = (data) => {
+    const formData = new FormData();
+    formData.append('payload', JSON.stringify(data));
+    this.props.applyAlgorithm(formData);
+  };
+
   onVisible = () => this.setState({ isVisible: !this.state.isVisible });
 
   render() {
@@ -143,7 +150,13 @@ class AlgorithmsTable extends Component {
         <Table
           size="middle"
           columns={this.columns}
-          dataSource={dataSource.asMutable()}
+          dataSource={dataSource.asMutable().map((d) => {
+            const { memReadable, ...rest } = d;
+            return {
+              ...rest,
+              mem: d.memReadable
+            }
+          })}
           pagination={paginationStyle}
           locale={{ emptyText: 'no data' }}
           onExpand={(expanded, record) => {
@@ -180,9 +193,8 @@ AlgorithmsTable.propTypes = {
   dataSource: PropTypes.array.isRequired,
   init: PropTypes.func.isRequired,
   getAlgorithmReadme: PropTypes.func.isRequired,
-  storeAlgorithm: PropTypes.func.isRequired,
-  deleteAlgorithmFromStore: PropTypes.func.isRequired,
   applyAlgorithm: PropTypes.func.isRequired,
+  deleteAlgorithmFromStore: PropTypes.func.isRequired,
   algorithmReadme: PropTypes.object
 };
 
@@ -198,7 +210,7 @@ export default connect(
   {
     openModal,
     init,
-    storeAlgorithm,
+    applyAlgorithm,
     deleteAlgorithmFromStore,
     getAlgorithmReadme
   }

@@ -60,7 +60,7 @@ AddPipelineSteps.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  algorithms: state.algorithmTable.dataSource.map(tableRow => tableRow.key),
+  algorithms: state.algorithmTable.dataSource.map(tableRow => tableRow.name),
   storedPipelines: state.storedPipeline.dataSource
 });
 

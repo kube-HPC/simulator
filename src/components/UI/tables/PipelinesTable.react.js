@@ -42,7 +42,7 @@ class PipelinesTable extends Component {
     this.props.init();
   }
 
-  renderColumns() {}
+  renderColumns() { }
 
   render() {
     const { storedPipelines, dataStats, pipelineReadme } = this.props;
@@ -60,14 +60,14 @@ class PipelinesTable extends Component {
         title: 'WARNING Deleting Pipeline',
         content: `Are you sure you want to delete ${
           record.name
-        }? Deleting Pipeline will Stop-ALL related Jobs and Executions`,
+          }? Deleting Pipeline will Stop-ALL related Jobs and Executions`,
         okText: 'Confirm',
         okType: 'danger',
         cancelText: 'Cancel',
         onOk() {
           action(record.name);
         },
-        onCancel() {}
+        onCancel() { }
       });
     };
 
@@ -302,7 +302,7 @@ PipelinesTable.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  algorithms: state.algorithmTable.dataSource.map(tableRow => tableRow.key),
+  algorithms: state.algorithmTable.dataSource,
   storedPipelines: state.storedPipeline.dataSource,
   dataStats: state.storedPipeline.dataStats,
   pipelineReadme: state.pipelineReadme,
