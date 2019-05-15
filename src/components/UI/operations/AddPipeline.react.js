@@ -17,9 +17,9 @@ function AddPipeline({ onSubmit, addPipeline }) {
       <Tabs.TabPane tab="Wizard" key="1">
         <AddPipelineSteps onSubmit={onSubmit} />
       </Tabs.TabPane>
-      <Tabs.TabPane tab="Json Editor" key="3">
+      <Tabs.TabPane tab="Json Editor" key="2">
         <Card
-          style={{ width: '50%', margin: '0 auto' }}
+          style={{ margin: '0 auto' }}
           actions={[
             <Button
               type="primary"
@@ -33,7 +33,12 @@ function AddPipeline({ onSubmit, addPipeline }) {
             </Button>
           ]}
         >
-          <JsonEditor value={json} onChange={setJson} />
+          <JsonEditor
+            width="800"
+            height="600"
+            value={json}
+            onChange={setJson}
+          />
         </Card>
       </Tabs.TabPane>
     </Tabs>

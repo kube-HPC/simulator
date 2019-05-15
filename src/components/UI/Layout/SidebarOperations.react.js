@@ -15,8 +15,8 @@ const SiderLight = styled(Layout.Sider)`
 `;
 
 const StyledItem = styled(Menu.Item)`
-  /* margin-left: -16px; */
-  /* margin-top: 10px; */
+  margin-left: -16px;
+  margin-top: 10px;
 `;
 
 const addMenuItems = items =>
@@ -35,7 +35,7 @@ export default function SidebarOperations({ onSelect }) {
   const [selected, setSelected] = useState([]);
 
   return (
-    <SiderLight theme="light" collapsed={true}>
+    <SiderLight theme="light" collapsed={true} collapsedWidth={60}>
       <Menu
         mode="vertical"
         onSelect={i => {

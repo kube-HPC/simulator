@@ -9,7 +9,6 @@
     "antd-table-infinity": "^1.1.2",
     "axios": "^0.18.0",
     "babel-plugin-import": "^1.9.1",
-    "brace": "^0.11.1",
     "chart.js": "^2.7.3",
     "classnames": "^2.2.6",
     "cronstrue": "^1.61.0",
@@ -27,10 +26,10 @@
     "lodash": "^4.17.11",
     "markdown-draft-js": "^1.4.0",
     "moment": "^2.22.2",
+    "monaco-editor-webpack-plugin": "^1.7.0",
     "parse-unit": "^1.0.1",
     "prop-types": "^15.6.2",
     "react": "^16.8.6",
-    "react-ace": "^6.2.0",
     "react-addons-shallow-compare": "^15.6.2",
     "react-chartjs-2": "^2.7.4",
     "react-copy-to-clipboard": "^5.0.1",
@@ -40,6 +39,7 @@
     "react-markdown": "^3.6.0",
     "react-mde": "^7.0.3",
     "react-moment": "^0.8.4",
+    "react-monaco-editor": "^0.25.1",
     "react-redux": "7.1.0-alpha.4",
     "react-scripts": "^2.1.1",
     "react-select": "^1.3.0",
@@ -59,9 +59,9 @@
     "vis": "^4.21.0"
   },
   "scripts": {
-    "start": "NODE_PATH=src/ PORT=9050 react-scripts start",
-    "builder": "NODE_PATH=src/ react-scripts --max_old_space_size=4096 build",
-    "test": "react-scripts test",
+    "start": "NODE_PATH=src/ PORT=9050 react-app-rewired start",
+    "builder": "NODE_PATH=src/ react-app-rewired --max_old_space_size=4096 build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "build": "./dockerfile/build.sh simulator",
     "test-travis": "echo \"No test specified\"",
@@ -92,6 +92,7 @@
     "@storybook/react": "^5.0.11",
     "babel-cli": "^6.26.0",
     "babel-loader": "^8.0.5",
-    "cron-parser": "^2.9.0"
+    "cron-parser": "^2.9.0",
+    "react-app-rewired": "^2.1.3"
   }
 }

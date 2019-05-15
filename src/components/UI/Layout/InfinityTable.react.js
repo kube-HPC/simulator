@@ -13,13 +13,15 @@ const StyledSpin = styled(Spin)`
   border: 1px solid ${HCOLOR.colorAccent};
 `;
 
-export default function InfinityTable({ isLoading, ...props }) {
+export default function InfinityTable({ isLoading, dataSource, ...props }) {
+  const tableSize = (dataSource && dataSource.length) || 0;
   return (
     <Table
       key="InfinityTable"
       loadingIndicator={<StyledSpin tip="Loading..." />}
-      scroll={{ y: '88vh' }}
+      scroll={{ y: tableSize > 10 ? '88vh' : false }}
       size="middle"
+      dataSource={dataSource || []}
       {...props}
     />
   );
