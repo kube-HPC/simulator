@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import AddPipelineSteps from 'components/dumb/AddPipeline/AddPipelineSteps.react';
+import AddPipeline from 'components/UI/operations/AddPipeline.react';
 import JsonEditor from 'components/dumb/JsonEditor.react';
 
 import template from 'config/template/addPipeline.template';
@@ -15,7 +15,7 @@ export default function AddPipelineContainer({ content }) {
   const Component = (
     <Tabs>
       <Tabs.TabPane tab="Wizard" key="1">
-        <AddPipelineSteps {...content} style={{ width: '120vh' }} />
+        <AddPipeline {...content} style={{ width: '120vh' }} />
       </Tabs.TabPane>
       <Tabs.TabPane tab="Json Editor" key="3">
         <Card
@@ -32,7 +32,11 @@ export default function AddPipelineContainer({ content }) {
             </Button>
           ]}
         >
-          <JsonEditor value={json} onChange={setJson} style={{ height: '80vh' }} />
+          <JsonEditor
+            value={json}
+            onChange={setJson}
+            style={{ height: '80vh' }}
+          />
         </Card>
       </Tabs.TabPane>
     </Tabs>

@@ -4,7 +4,7 @@ import { action } from '@storybook/addon-actions';
 
 import { Button } from 'antd';
 
-import AddPipelineSteps from 'components/dumb/AddPipeline/AddPipelineSteps.react';
+import AddPipeline from 'components/UI/operations/AddPipeline.react';
 import DrawerContainer from 'components/dumb/DrawerContainer.react';
 
 const content = {
@@ -19,7 +19,7 @@ function DrawerAddPipeline() {
     <>
       <Button onClick={() => setVisible(!visible)}>Open Drawer</Button>
       <DrawerContainer visible={visible} onClose={() => setVisible(!visible)}>
-        <AddPipelineSteps {...content} />
+        <AddPipeline {...content} />
       </DrawerContainer>
     </>
   );

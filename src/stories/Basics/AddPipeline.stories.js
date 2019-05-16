@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 
-import AddPipelineSteps from 'components/dumb/AddPipeline/AddPipelineSteps.react';
+import AddPipeline from 'components/UI/operations/AddPipeline.react';
 import AddPipelineForm from 'components/dumb/AddPipeline/AddPipelineForm.react';
 import addPipelineTemplate from 'config/template/addPipeline.template';
 
@@ -18,7 +18,7 @@ const store = createStore(rootReducer);
 
 function AddPipelineContainer({ style }) {
   return (
-    <AddPipelineSteps
+    <AddPipeline
       algorithms={['a1', 'a2']}
       pipelines={['p1', 'p2']}
       onSubmit={action('click')}
@@ -51,26 +51,6 @@ storiesOf('Basics|AddPipeline', module).add('Default', () => (
     </DrawerContainer>
   </Provider>
 ));
-
-storiesOf('Basics|AddPipeline/Form', module).add('Default', () => (
-  <Provider store={store}>
-    <Container />
-  </Provider>
-));
-
-storiesOf('Basics|AddPipeline/Steps', module)
-  .add('Default', () => (
-    <Provider store={store}>
-      <AddPipelineContainer />
-    </Provider>
-  ))
-  .add('Sidebar', () => (
-    <Provider store={store}>
-      <DrawerContainer visible={true} operation={'Add Pipeline'}>
-        <AddPipelineContainer />
-      </DrawerContainer>
-    </Provider>
-  ));
 
 AddPipelineContainer.propTypes = {
   style: PropTypes.object
