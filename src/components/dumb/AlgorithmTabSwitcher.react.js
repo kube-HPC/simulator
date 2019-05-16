@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Tabs, Card } from 'antd';
-import ReactJson from 'react-json-view';
 import PropTypes from 'prop-types';
 import MdViewer from './MdViewer.react';
+import JsonView from './JsonView.react';
 
 class AlgorithmTabSwitcher extends Component {
   constructor() {
@@ -45,14 +45,7 @@ class AlgorithmTabSwitcher extends Component {
         </Tabs.TabPane>
         <Tabs.TabPane tab="JSON" key="3">
           <Card>
-            <ReactJson
-              src={algorithmDetails}
-              name={false}
-              iconStyle="square"
-              displayDataTypes={false}
-              displayObjectSize={false}
-              enableClipboard={false}
-            />
+            <JsonView jsonObject={algorithmDetails} />
           </Card>
         </Tabs.TabPane>
       </Tabs>

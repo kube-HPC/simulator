@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import { ReactComponent as IconAddPipeline } from 'images/add-pipeline.svg';
 import { ReactComponent as IconAddAlgorithm } from 'images/add-algorithm.svg';
 import { ReactComponent as IconAddDebug } from 'images/add-debug.svg';
-import { ReactComponent as IconLayers } from 'images/layers.svg';
 
 import { Layout, Icon, Menu } from 'antd';
 
@@ -26,7 +25,7 @@ const addMenuItems = items =>
       <Icon
         type={component}
         component={component}
-        style={{ fontSize: '25px' }}
+        style={{ fill: 'green', fontSize: '25px' }}
       />
       <span>{name}</span>
     </StyledItem>
@@ -39,8 +38,7 @@ export default function SidebarOperations({ onSelect }) {
         {addMenuItems([
           ['Add Pipeline', IconAddPipeline],
           ['Add Algorithm', IconAddAlgorithm],
-          ['Add Debug', IconAddDebug],
-          ['Build Pipeline', IconLayers]
+          ['Add Debug', IconAddDebug]
         ])}
       </Menu>
     </SiderLight>

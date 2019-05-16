@@ -85,9 +85,7 @@ JobsTable.propTypes = {
 const mapStateToProps = state => ({
   dataSource: tableDataSelector(state),
   jaeger: state.jaeger,
-  kubernetesLogs: state.kubernetesLogs,
-  scriptsPath: state.serverSelection.currentSelection.scriptsPath,
-  sshUser: state.serverSelection.currentSelection.user
+  kubernetesLogs: state.kubernetesLogs
 });
 
 export default connect(

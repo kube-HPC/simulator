@@ -30,8 +30,6 @@ import { message, Layout } from 'antd';
 import { init } from 'actions/config.action.js';
 import { HCOLOR } from 'constants/colors';
 
-import BuildPipeline from 'components/UI/operations/BuildPipeline.react';
-
 const LayoutStyled = styled(Layout)`
   height: 100vh;
   * {
@@ -91,8 +89,7 @@ function HKubeLayout({ init, ...props }) {
   const operationSelector = {
     'Add Pipeline': <AddPipeline onSubmit={triggerVisible} />,
     'Add Algorithm': <AddAlgorithmForm onSubmit={triggerVisible} />,
-    'Add Debug': <AddDebug onSubmit={triggerVisible} />,
-    'Build Pipeline': <BuildPipeline onSubmit={triggerVisible} />
+    'Add Debug': <AddDebug onSubmit={triggerVisible} />
   };
 
   useEffect(() => {
@@ -101,7 +98,7 @@ function HKubeLayout({ init, ...props }) {
       duration: 5,
       maxCount: 3
     });
-  }, [init]);
+  }, []);
 
   return (
     <LayoutStyled>

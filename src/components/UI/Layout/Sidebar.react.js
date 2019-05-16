@@ -9,6 +9,7 @@ import { ReactComponent as DriversIcon } from 'images/drivers-icon.svg';
 import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
 import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
 import { ReactComponent as AlgorithmIcon } from 'images/algorithm-icon.svg';
+import { ReactComponent as JobsIcon } from 'images/jobs-icon.svg';
 
 import { Row, Col, Tag, Layout, Icon, Menu } from 'antd';
 
@@ -93,7 +94,7 @@ export default function Sidebar({ onSelect, ...props }) {
   const [collapsed, setCollapsed] = useState(true);
 
   const menuItems = [
-    ['Jobs', 'area-chart', props.jobsCount],
+    ['Jobs', JobsIcon, props.jobsCount],
     ['Pipelines', PipelineIcon, props.pipelinesCount],
     ['Workers', WorkerIcon, props.workersCount],
     ['Drivers', DriversIcon, props.driversCount],
