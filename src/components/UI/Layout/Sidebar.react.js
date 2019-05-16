@@ -9,6 +9,7 @@ import { ReactComponent as DriversIcon } from 'images/drivers-icon.svg';
 import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
 import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
 import { ReactComponent as AlgorithmIcon } from 'images/algorithm-icon.svg';
+import { ReactComponent as JobsIcon } from 'images/jobs-icon.svg';
 
 import { Row, Col, Tag, Layout, Icon, Menu } from 'antd';
 
@@ -53,7 +54,7 @@ const setMenuItem = (component, title, count) => (
       {component}
       <span>{title}</span>
     </Col>
-    {count && (
+    {!isNaN(count) && (
       <Col>
         <Tag style={{ color: HCOLOR.colorPrimary }}>{count}</Tag>
       </Col>
@@ -93,7 +94,7 @@ export default function Sidebar({ onSelect, ...props }) {
   const [collapsed, setCollapsed] = useState(true);
 
   const menuItems = [
-    ['Jobs', 'area-chart', props.jobsCount],
+    ['Jobs', JobsIcon, props.jobsCount],
     ['Pipelines', PipelineIcon, props.pipelinesCount],
     ['Workers', WorkerIcon, props.workersCount],
     ['Drivers', DriversIcon, props.driversCount],
@@ -125,7 +126,7 @@ export default function Sidebar({ onSelect, ...props }) {
 
       <Menu
         onSelect={i => onSelect(i.key)}
-        defaultSelectedKeys={menuItems[0][0]}
+        defaultSelectedKeys={[menuItems[0][0]]}
       >
         {addMenuItems(menuItems)}
         <Menu.SubMenu

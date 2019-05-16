@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+
 import 'antd/dist/antd.css';
+import './HKubeLayout.css';
 
 import JobsTable from 'components/UI/tables/JobsTable.react';
 import WorkersTable from 'components/UI/tables/WorkersTable.react';
@@ -20,15 +22,13 @@ import DrawerContainer from 'components/dumb/DrawerContainer.react';
 
 import SidebarOperations from 'components/UI/Layout/SidebarOperations.react';
 import Sidebar from 'components/UI/Layout/Sidebar.react';
-import AddAlgorithmForm from 'components/UI/operations/AddAlgorithm.react';
+import AddAlgorithmForm from 'components/UI/operations/AddAlgorithmForm.react';
 import AddPipeline from 'components/UI/operations/AddPipeline.react';
 import AddDebug from 'components/UI/operations/AddDebug.react';
 
 import { message, Layout } from 'antd';
 import { init } from 'actions/config.action.js';
 import { HCOLOR } from 'constants/colors';
-
-import './HKubeLayout.css';
 
 const LayoutStyled = styled(Layout)`
   height: 100vh;
@@ -98,7 +98,7 @@ function HKubeLayout({ init, ...props }) {
       duration: 5,
       maxCount: 3
     });
-  }, [init]);
+  }, []);
 
   return (
     <LayoutStyled>
@@ -117,7 +117,11 @@ function HKubeLayout({ init, ...props }) {
               setVisible(!visible);
             }}
           />
-          <DrawerContainer visible={visible} onClose={triggerVisible}>
+          <DrawerContainer
+            visible={visible}
+            onClose={triggerVisible}
+            operation={operation}
+          >
             {operationSelector[operation]}
           </DrawerContainer>
         </LayoutMargin>

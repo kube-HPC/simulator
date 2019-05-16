@@ -28,7 +28,9 @@ const formItemLayout = {
   wrapperCol: { span: 24 - span }
 };
 
-const formItemLayoutWithOutLabel = { wrapperCol: { offset: formItemLayout.labelCol.span } };
+const formItemLayoutWithOutLabel = {
+  wrapperCol: { offset: formItemLayout.labelCol.span }
+};
 
 const addPipelineOptions = pipelines =>
   pipelines.map((pipeline, i) => (
@@ -41,7 +43,9 @@ const verbosityLevels = ['info', 'trace', 'debug', 'warn', 'error', 'critical'];
 
 export default function AddPipelineForm(props) {
   const [formData, setFormData] = useState(props.formData);
-  const [flowInputString, setFlowInputString] = useState(stringify(formData.flowInput));
+  const [flowInputString, setFlowInputString] = useState(
+    stringify(formData.flowInput)
+  );
 
   const onChangeTarget = (formData, t1, t2 = undefined) => c => {
     const value = c && c.target ? c.target.value : c;
@@ -65,7 +69,9 @@ export default function AddPipelineForm(props) {
     } catch {
       isLegalPattern = false;
     }
-    return isLegalPattern ? `${current}, Next Interval: ${next}` : 'Invalid Pattern';
+    return isLegalPattern
+      ? `${current}, Next Interval: ${next}`
+      : 'Invalid Pattern';
   };
 
   const Initial = (
@@ -128,6 +134,8 @@ export default function AddPipelineForm(props) {
       <Form.Item {...formItemLayout} label="Flow Input">
         <Card>
           <JsonEditor
+            width={'100%'}
+            height={'40vh'}
             value={flowInputString}
             onChange={setFlowInputString}
             snippetEnabled={false}
@@ -173,7 +181,9 @@ export default function AddPipelineForm(props) {
             setFormData({ ...formData });
           }}
           onDeselect={pipeline => {
-            formData.triggers.pipelines = formData.triggers.pipelines.filter(p => p !== pipeline);
+            formData.triggers.pipelines = formData.triggers.pipelines.filter(
+              p => p !== pipeline
+            );
             setFormData({ ...formData });
           }}
           getPopupContainer={() => document.getElementById(triggersId)}
@@ -213,7 +223,11 @@ export default function AddPipelineForm(props) {
               min={0}
               max={10000}
               value={formData.options.concurrentPipelines}
-              onChange={onChangeTarget(formData, 'options', 'concurrentPipelines')}
+              onChange={onChangeTarget(
+                formData,
+                'options',
+                'concurrentPipelines'
+              )}
             />
           </Col>
           <Col span={6}>
@@ -221,7 +235,11 @@ export default function AddPipelineForm(props) {
               min={0}
               max={10000}
               value={formData.options.concurrentPipelines}
-              onChange={onChangeTarget(formData, 'options', 'concurrentPipelines')}
+              onChange={onChangeTarget(
+                formData,
+                'options',
+                'concurrentPipelines'
+              )}
             />
           </Col>
         </Row>
@@ -243,7 +261,11 @@ export default function AddPipelineForm(props) {
           defaultValue="info"
           value={formData.options.progressVerbosityLevel}
           style={{ width: 120 }}
-          onChange={onChangeTarget(formData, 'options', 'progressVerbosityLevel')}
+          onChange={onChangeTarget(
+            formData,
+            'options',
+            'progressVerbosityLevel'
+          )}
         >
           {verbosityLevels.map(value => (
             <Select.Option key={value} value={value}>
@@ -263,8 +285,8 @@ export default function AddPipelineForm(props) {
     <Form>
       {steps[props.step]}
       <Form.Item style={{ marginTop: '5%' }}>
-        <Row gutter={10} type="flex" justify="space-around">
-          <Col span={12}>
+        <Row gutter={10} type="flex" justify="center">
+          <Col>
             <Button
               disabled={isFirstStep}
               type="default"
@@ -273,16 +295,18 @@ export default function AddPipelineForm(props) {
                 props.onChange(formData);
                 props.onStep(props.step - 1);
               }}
-              style={{ width: '100%' }}
             />
           </Col>
-          <Col span={12}>
+          <Col>
             <Button
               type="primary"
               icon={!isLastStep ? 'right' : ''}
               onClick={() => {
                 try {
-                  props.onChange({ ...formData, flowInput: JSON.parse(flowInputString) });
+                  props.onChange({
+                    ...formData,
+                    flowInput: JSON.parse(flowInputString)
+                  });
                   if (!isLastStep) {
                     props.onStep(props.step + 1);
                   } else {
@@ -299,7 +323,6 @@ export default function AddPipelineForm(props) {
                   });
                 }
               }}
-              style={{ width: '100%' }}
             >
               {isLastStep && 'Submit'}
             </Button>
