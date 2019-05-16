@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { ReactComponent as IconAddPipeline } from 'images/add-pipeline.svg';
 import { ReactComponent as IconAddAlgorithm } from 'images/add-algorithm.svg';
 import { ReactComponent as IconAddDebug } from 'images/add-debug.svg';
+import { ReactComponent as IconLayers } from 'images/layers.svg';
 
 import { Layout, Icon, Menu } from 'antd';
 
@@ -16,12 +17,12 @@ const SiderLight = styled(Layout.Sider)`
 
 const StyledItem = styled(Menu.Item)`
   margin-left: -16px;
-  margin-top: 10px;
+  margin-top: 20px;
 `;
 
 const addMenuItems = items =>
   items.map(([name, component]) => (
-    <StyledItem key={name} style={{}}>
+    <StyledItem key={name}>
       <Icon
         type={component}
         component={component}
@@ -32,22 +33,14 @@ const addMenuItems = items =>
   ));
 
 export default function SidebarOperations({ onSelect }) {
-  const [selected, setSelected] = useState([]);
-
   return (
     <SiderLight theme="light" collapsed={true} collapsedWidth={60}>
-      <Menu
-        mode="vertical"
-        onSelect={i => {
-          onSelect(i.key);
-          setSelected([]);
-        }}
-        selectedKeys={selected}
-      >
+      <Menu mode="vertical" onSelect={i => onSelect(i.key)} selectedKeys={[]}>
         {addMenuItems([
           ['Add Pipeline', IconAddPipeline],
           ['Add Algorithm', IconAddAlgorithm],
-          ['Add Debug', IconAddDebug]
+          ['Add Debug', IconAddDebug],
+          ['Build Pipeline', IconLayers]
         ])}
       </Menu>
     </SiderLight>

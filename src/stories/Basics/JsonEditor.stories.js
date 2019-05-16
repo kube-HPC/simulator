@@ -11,38 +11,20 @@ import JsonEditor from 'components/dumb/JsonEditor.react';
 import JsonEditorModal from 'components/smart/JsonEditorModal.react';
 import template from 'config/template/addPipeline.template';
 
-import MonacoEditor from 'react-monaco-editor';
-
 const StyledCard = styled(Card)`
-  width: 40%;
+  width: 45%;
+  height: 65vh;
   margin: 0 auto;
 `;
 
-function MonacoContainer() {
-  const [value, setValue] = useState(stringify(template));
-  return (
-    <Card>
-      <MonacoEditor
-        width="800"
-        height="600"
-        language="json"
-        value={value}
-        onChange={setValue}
-      />
-    </Card>
-  );
-}
-
 storiesOf('Basics|JsonEditor/Default', module)
-  .add('Default', () => (
-    <JsonEditor value={stringify(template)} onChange={() => {}} />
-  ))
+  .add('Default', () => <JsonEditor value={stringify(template)} />)
   .add('Card', () => (
-    <StyledCard size="small" title="Json Editor">
-      <JsonEditor value={stringify(template)} onChange={() => {}} />
+    <StyledCard>
+      <JsonEditor width={'100%'} height={'60vh'} value={stringify(template)} />
     </StyledCard>
   ))
-  .add('Monaco Editor', () => <MonacoContainer />);
+  .add('Monaco Editor', () => <JsonEditor value={stringify(template)} />);
 
 storiesOf('Basics|JsonEditor/Modal', module).add('Default', () => (
   <JsonEditorModal

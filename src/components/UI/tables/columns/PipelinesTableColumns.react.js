@@ -64,13 +64,13 @@ const pipelinesTableColumns = props => [
     title: 'Pipeline Name',
     dataIndex: 'name',
     key: 'name',
-    width: '10%'
+    width: '20%'
   },
   {
     title: 'Cron Job',
     dataIndex: 'cron',
     key: 'cron',
-    width: '20%',
+    width: '30%',
     render: (_, record) => {
       const cronIsEnabled =
         record.hasOwnProperty('triggers') &&
@@ -133,7 +133,7 @@ const pipelinesTableColumns = props => [
     title: 'Pipeline Stats',
     dataIndex: 'status',
     key: 'status',
-    width: '10%',
+    width: '30%',
     render: (_, record) => {
       const { dataStats } = props;
       if (!dataStats || dataStats.length === 0) return;
@@ -158,6 +158,7 @@ const pipelinesTableColumns = props => [
     title: 'Action',
     dataIndex: 'action',
     key: 'action',
+    width: '30%',
     render: (_, record) => {
       const {
         storedPipelines,

@@ -44,20 +44,6 @@ export const STATUS = {
   inProgress: COLOR.lightGrey
 };
 
-// const STATUS = {
-//   bootstrap: '#2db7f5',
-//   ready: '#87d068',
-//   init: '#eeda13',
-//   working: '#838383',
-//   shutdown: '#87d068',
-//   error: '#f30',
-//   exit: '#f50',
-//   stop: '#ec8c16',
-//   count: '#2db7f5',
-//   failed: 'red',
-//   succeed: 'green'
-// };
-
 export const PRIORITY = {
   1: { color: STATUS.warning, name: 'Highest' },
   2: { color: STATUS.failed, name: 'High' },

@@ -48,11 +48,9 @@ function JobsTable({ dataSource, ...props }) {
           }}
         />
       )}
-      onExpand={(expanded, record) => {
-        if (expanded) {
-          props.getJaegerData(record.key);
-        }
-      }}
+      onExpand={(expanded, record) =>
+        expanded && props.getJaegerData(record.key)
+      }
     />
   );
 }

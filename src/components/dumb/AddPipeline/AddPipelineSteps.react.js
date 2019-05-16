@@ -17,6 +17,7 @@ function AddPipelineSteps(props) {
 
   return (
     <Card
+      bordered={false}
       title={
         <Steps progressDot current={step}>
           {steps.map(title => (
@@ -27,7 +28,7 @@ function AddPipelineSteps(props) {
     >
       <Row gutter={15} type="flex" justify="space-between">
         <Col span={24 - span}>
-          <Card>
+          <Card bordered={false}>
             <JsonView jsonObject={formData} />
           </Card>
         </Col>

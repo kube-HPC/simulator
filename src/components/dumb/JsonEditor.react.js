@@ -15,7 +15,7 @@ export default function JsonEditor({ width, height, ...props }) {
 }
 
 JsonEditor.propTypes = {
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
   value: PropTypes.string.isRequired,
   snippetEnabled: PropTypes.bool,
   showGutter: PropTypes.bool,

@@ -8,12 +8,11 @@ import driversTableColumns from 'components/UI/tables/columns/DriversTableColumn
 import JsonView from 'components/dumb/JsonView.react';
 import InfinityTable from 'components/UI/Layout/InfinityTable.react';
 
-function DriversTable({ init, ...props }) {
+function DriversTable({ init, dataSource, ...props }) {
   useEffect(() => {
     init();
   }, []);
 
-  const { dataSource } = props;
   return (
     <InfinityTable
       columns={driversTableColumns(props)}
@@ -28,7 +27,8 @@ function DriversTable({ init, ...props }) {
 }
 
 DriversTable.propTypes = {
-  init: PropTypes.func.isRequired
+  init: PropTypes.func.isRequired,
+  dataSource: PropTypes.array.isRequired
 };
 
 const mapStateToProps = state => ({

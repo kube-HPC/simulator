@@ -11,6 +11,7 @@
     "babel-plugin-import": "^1.9.1",
     "chart.js": "^2.7.3",
     "classnames": "^2.2.6",
+    "core-js": "3.0.0",
     "cronstrue": "^1.61.0",
     "dateformat": "^3.0.3",
     "dev": "^0.1.3",
@@ -20,6 +21,7 @@
     "draft-js-plugins-editor": "^2.1.1",
     "draft-js-static-toolbar-plugin": "^3.0.0",
     "file-saver": "^2.0.1",
+    "gg-editor": "^2.0.4",
     "http-proxy-middleware": "^0.19.1",
     "humanize-duration": "^3.18.0",
     "jaeger-react-trace-component": "^1.0.16",
@@ -66,7 +68,7 @@
     "build": "./dockerfile/build.sh simulator",
     "test-travis": "echo \"No test specified\"",
     "start:server": "node ./server/server.js",
-    "storybook": "NODE_PATH=src/ start-storybook"
+    "storybook": "NODE_PATH=src/ start-storybook --port 9001"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -85,7 +87,6 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.4.4",
     "@storybook/addon-actions": "^5.0.10",
     "@storybook/addon-links": "^5.0.10",
     "@storybook/addons": "^5.0.10",

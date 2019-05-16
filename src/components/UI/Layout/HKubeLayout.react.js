@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+
 import 'antd/dist/antd.css';
+import './HKubeLayout.css';
 
 import JobsTable from 'components/UI/tables/JobsTable.react';
 import WorkersTable from 'components/UI/tables/WorkersTable.react';
@@ -28,7 +30,7 @@ import { message, Layout } from 'antd';
 import { init } from 'actions/config.action.js';
 import { HCOLOR } from 'constants/colors';
 
-import './HKubeLayout.css';
+import BuildPipeline from 'components/UI/operations/BuildPipeline.react';
 
 const LayoutStyled = styled(Layout)`
   height: 100vh;
@@ -89,7 +91,8 @@ function HKubeLayout({ init, ...props }) {
   const operationSelector = {
     'Add Pipeline': <AddPipeline onSubmit={triggerVisible} />,
     'Add Algorithm': <AddAlgorithmForm onSubmit={triggerVisible} />,
-    'Add Debug': <AddDebug onSubmit={triggerVisible} />
+    'Add Debug': <AddDebug onSubmit={triggerVisible} />,
+    'Build Pipeline': <BuildPipeline onSubmit={triggerVisible} />
   };
 
   useEffect(() => {
@@ -117,7 +120,11 @@ function HKubeLayout({ init, ...props }) {
               setVisible(!visible);
             }}
           />
-          <DrawerContainer visible={visible} onClose={triggerVisible}>
+          <DrawerContainer
+            visible={visible}
+            onClose={triggerVisible}
+            operation={operation}
+          >
             {operationSelector[operation]}
           </DrawerContainer>
         </LayoutMargin>

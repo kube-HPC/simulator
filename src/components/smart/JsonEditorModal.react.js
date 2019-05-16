@@ -57,7 +57,12 @@ class JsonEditorModal extends Component {
           onOk={this.handleOk}
           onCancel={this.handleCancel}
           footer={[
-            <Button key={1} type="primary" size="default" onClick={this.handleOk}>
+            <Button
+              key={1}
+              type="primary"
+              size="default"
+              onClick={this.handleOk}
+            >
               {this.props.okText}
             </Button>,
             <Button key={2} onClick={this.handleReset}>
@@ -73,13 +78,16 @@ class JsonEditorModal extends Component {
           <Card>
             <JsonEditor
               value={this.userData}
+              width={'100%'}
               onChange={newPipe => {
                 this.isEditable = true;
                 this.userData = newPipe;
               }}
             />
           </Card>
-          <p style={{ marginTop: '1em', marginBottom: 'auto' }}>{this.props.hintText}</p>
+          <p style={{ marginTop: '1em', marginBottom: 'auto' }}>
+            {this.props.hintText}
+          </p>
         </Modal>
       </div>
     );
