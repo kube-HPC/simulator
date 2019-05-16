@@ -33,11 +33,16 @@ export const socketioMiddleware = ({ dispatch }) => next => action => {
       transports: ['websocket']
     });
 
-    // socket = io(action.payload.currentSelection.url, { path: action.payload.currentSelection.path, transports: ['websocket'] });
-    // /socket = io(action.payload.currentSelection.url, { transports: ['websocket'] });
     socket.on('connect', () => {
-      console.log(`connected...${socket.id}`);
+      console.log(`connected... ${socket.id}`);
     });
+
+    const events = ['connect_error', 'connect_timeout', 'error', 'reconnect', 'reconnect_attempt', 'reconnecting', 'reconnect_error', 'reconnect_failed']
+    events.forEach((e) => {
+      socket.on(e, (args) => {
+        console.log(`${e}, ${args}`);
+      });
+    })
 
     Object.keys(currentTopicRegisterd).forEach(act => {
       socket.on(currentTopicRegisterd[act].payload.topic, data => {
