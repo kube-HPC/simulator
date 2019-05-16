@@ -117,6 +117,8 @@ const jobsTableColumns = (
     key: 'details',
     width: '10%',
     render: (_, record) =>
+      record.status.data &&
+      record.status.data.states &&
       Object.entries(record.status.data.states.asMutable()).map(
         ([status, count]) => (
           <StatusTag key={status} status={status} count={count} />
