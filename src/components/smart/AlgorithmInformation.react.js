@@ -29,7 +29,7 @@ class AlgorithmInformation extends Component {
     const algorithmDetails =
       (this.props.sideBar.data &&
         this.props.algorithmTable.find(
-          a => a.key === this.props.sideBar.data.payload.algorithmName
+          a => a.name === this.props.sideBar.data.payload.algorithmName
         )) ||
       {};
     const { data } = this.props.sideBar;
@@ -54,7 +54,7 @@ class AlgorithmInformation extends Component {
         <Tabs.TabPane tab="Algorithm Details" key="2">
           <Card>
             <ReactJson
-              src={algorithmDetails.data}
+              src={algorithmDetails}
               name={false}
               iconStyle="square"
               displayDataTypes={false}

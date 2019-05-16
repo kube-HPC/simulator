@@ -150,13 +150,7 @@ class AlgorithmsTable extends Component {
         <Table
           size="middle"
           columns={this.columns}
-          dataSource={dataSource.asMutable().map((d) => {
-            const { memReadable, ...rest } = d;
-            return {
-              ...rest,
-              mem: d.memReadable
-            }
-          })}
+          dataSource={dataSource.asMutable()}
           pagination={paginationStyle}
           locale={{ emptyText: 'no data' }}
           onExpand={(expanded, record) => {
