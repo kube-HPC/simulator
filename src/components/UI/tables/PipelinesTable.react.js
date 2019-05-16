@@ -20,7 +20,7 @@ import pipelinesTableColumns from 'components/UI/tables/columns/PipelinesTableCo
 function PipelinesTable({ init, ...props }) {
   useEffect(() => {
     init();
-  }, []);
+  }, [init]);
 
   const { storedPipelines, pipelineReadme, getPipelineReadme } = props;
 
@@ -55,15 +55,9 @@ function PipelinesTable({ init, ...props }) {
 
 PipelinesTable.propTypes = {
   init: PropTypes.func.isRequired,
-  algorithms: PropTypes.array.isRequired,
   storedPipelines: PropTypes.array.isRequired,
-  dataStats: PropTypes.array,
-  execStoredPipe: PropTypes.func.isRequired,
-  deleteStoredPipeline: PropTypes.func.isRequired,
-  updateStoredPipeline: PropTypes.func.isRequired,
-  cronStop: PropTypes.func.isRequired,
-  cronStart: PropTypes.func.isRequired,
-  addPipe: PropTypes.func.isRequired
+  getPipelineReadme: PropTypes.func,
+  pipelineReadme: PropTypes.object
 };
 
 const mapStateToProps = state => ({

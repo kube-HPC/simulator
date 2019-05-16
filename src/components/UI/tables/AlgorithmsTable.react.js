@@ -17,7 +17,7 @@ import { stringify } from 'utils/string';
 function AlgorithmsTable({ init, ...props }) {
   useEffect(() => {
     init();
-  }, []);
+  }, [init]);
 
   const onSubmit = data => {
     const formData = new FormData();

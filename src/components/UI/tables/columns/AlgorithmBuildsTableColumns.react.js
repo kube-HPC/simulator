@@ -29,7 +29,7 @@ export const buildsTableColumns = props => [
     sorter: (a, b) => sorter(a.timestamp, b.timestamp),
     render: (_, record) =>
       Object.entries(record.statuses).map(([status, arr]) => (
-        <StatusTag status={status} count={arr.length} />
+        <StatusTag key={status} status={status} count={arr.length} />
       ))
   },
   {

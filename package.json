@@ -94,6 +94,7 @@
     "babel-cli": "^6.26.0",
     "babel-loader": "^8.0.4",
     "cron-parser": "^2.9.0",
+    "eslint-plugin-react-hooks": "^1.6.0",
     "react-app-rewired": "^2.1.3"
   }
 }

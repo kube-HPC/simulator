@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import styled from 'styled-components';
 
@@ -34,11 +35,7 @@ const getStatusFilter = () =>
 const sorter = (a, b) =>
   isNaN(a) && isNaN(b) ? (a || '').localeCompare(b || '') : a - b;
 
-const jobsTableColumns = (
-  stopPipeline,
-  execRawPipeline,
-  downloadStorageResults
-) => [
+const jobsTableColumns = props => [
   {
     title: 'Job ID',
     dataIndex: 'key',
@@ -186,8 +183,8 @@ const jobsTableColumns = (
             icon={isStopPipeline ? 'close' : 'redo'}
             onClick={() =>
               isStopPipeline
-                ? stopPipeline(record.key)
-                : execRawPipeline(record.pipeline)
+                ? props.stopPipeline(record.key)
+                : props.execRawPipeline(record.pipeline)
             }
           />
         </Tooltip>
@@ -206,7 +203,7 @@ const jobsTableColumns = (
             shape="circle"
             icon="download"
             onClick={() =>
-              downloadStorageResults(record.results.data.storageInfo.path)
+              props.downloadStorageResults(record.results.data.storageInfo.path)
             }
           />
         </Tooltip>

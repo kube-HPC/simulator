@@ -20,7 +20,7 @@ import JsonView from 'components/dumb/JsonView.react';
 function AlgorithmBuildsTable({ init, ...props }) {
   useEffect(() => {
     init();
-  }, []);
+  }, [init]);
 
   const { dataSource } = props;
 

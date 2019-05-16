@@ -18,36 +18,7 @@ const CardCenter = styled(Card)`
 function AddPipeline({ onSubmit, addPipeline }) {
   const [json, setJson] = useState(stringify(template));
 
-  return (
-    <Tabs>
-      <Tabs.TabPane tab="Wizard" key="1">
-        <AddPipelineSteps onSubmit={onSubmit} />
-      </Tabs.TabPane>
-      <Tabs.TabPane tab="Json Editor" key="2">
-        <CardCenter
-          actions={[
-            <Button
-              type="primary"
-              key="submit"
-              onClick={() => {
-                addPipeline(JSON.parse(json));
-                onSubmit();
-              }}
-            >
-              Submit
-            </Button>
-          ]}
-        >
-          <JsonEditor
-            width={'100%'}
-            height={'60vh'}
-            value={json}
-            onChange={setJson}
-          />
-        </CardCenter>
-      </Tabs.TabPane>
-    </Tabs>
-  );
+  return <AddPipelineSteps onSubmit={onSubmit} />;
 }
 
 AddPipeline.propTypes = {

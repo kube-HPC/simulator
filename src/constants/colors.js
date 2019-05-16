@@ -12,7 +12,7 @@ export const COLOR = {
   white: 'white',
   lightGrey: '#e8e8e8',
   grey: '#ccc',
-  darkGrey: '#838383',
+  darkGrey: '#bfbfbf21',
   lightGreen: '#87d068',
   yellow: '#eeda13',
   orange: '#ec8c16',
@@ -23,7 +23,8 @@ export const HCOLOR = {
   colorPrimary: COLOR.blue,
   colorAccent: COLOR.whiteHighlight,
   border: COLOR.lightGrey,
-  darkBorder: COLOR.grey
+  darkBorder: COLOR.grey,
+  background: COLOR.darkGrey
 };
 
 export const STATUS = {

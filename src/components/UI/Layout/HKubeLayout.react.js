@@ -98,7 +98,7 @@ function HKubeLayout({ init, ...props }) {
       duration: 5,
       maxCount: 3
     });
-  }, []);
+  }, [init]);
 
   return (
     <LayoutStyled>

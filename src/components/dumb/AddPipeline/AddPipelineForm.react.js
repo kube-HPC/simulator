@@ -13,7 +13,9 @@ import {
   Slider,
   Card,
   notification,
-  Icon
+  Icon,
+  Steps,
+  Divider
 } from 'antd';
 import cronstrue from 'cronstrue';
 import cronParser from 'cron-parser';
@@ -21,6 +23,8 @@ import cronParser from 'cron-parser';
 import DynamicForm from 'components/dumb/AddPipeline/DynamicForm.react';
 import { stringify, toUpperCaseFirstLetter } from 'utils/string';
 import JsonEditor from 'components/dumb/JsonEditor.react';
+import BottomContent from '../BottomContent.react';
+import JsonView from '../JsonView.react';
 
 const span = 6;
 const formItemLayout = {
@@ -40,6 +44,28 @@ const addPipelineOptions = pipelines =>
   ));
 
 const verbosityLevels = ['info', 'trace', 'debug', 'warn', 'error', 'critical'];
+const stepsTitles = ['Initial', 'Nodes', 'Side Effects', 'Triggers', 'Options'];
+
+const addCronContent = formData => {
+  let isLegalPattern = false;
+  let next = '';
+  let current = '';
+  try {
+    next = cronParser
+      .parseExpression(formData.triggers.cron.pattern)
+      .next()
+      .toString();
+    current = cronstrue.toString(formData.triggers.cron.pattern, {
+      use24HourTimeFormat: true
+    });
+    isLegalPattern = true;
+  } catch {
+    isLegalPattern = false;
+  }
+  return isLegalPattern
+    ? `${current}, Next Interval: ${next}`
+    : 'Invalid Pattern';
+};
 
 export default function AddPipelineForm(props) {
   const [formData, setFormData] = useState(props.formData);
@@ -47,31 +73,12 @@ export default function AddPipelineForm(props) {
     stringify(formData.flowInput)
   );
 
+  const [step, setStep] = useState(0);
+
   const onChangeTarget = (formData, t1, t2 = undefined) => c => {
     const value = c && c.target ? c.target.value : c;
     const targetKey = t2 ? { ...formData[t1], [t2]: value } : value;
     setFormData({ ...formData, [t1]: targetKey });
-  };
-
-  const addCronContent = formData => {
-    let isLegalPattern = false;
-    let next = '';
-    let current = '';
-    try {
-      next = cronParser
-        .parseExpression(formData.triggers.cron.pattern)
-        .next()
-        .toString();
-      current = cronstrue.toString(formData.triggers.cron.pattern, {
-        use24HourTimeFormat: true
-      });
-      isLegalPattern = true;
-    } catch {
-      isLegalPattern = false;
-    }
-    return isLegalPattern
-      ? `${current}, Next Interval: ${next}`
-      : 'Invalid Pattern';
   };
 
   const Initial = (
@@ -278,58 +285,92 @@ export default function AddPipelineForm(props) {
   );
 
   const steps = [Initial, Nodes, Hooks, Triggers, Options];
-  const isLastStep = props.step === steps.length - 1;
-  const isFirstStep = props.step === 0;
+  const isLastStep = step === steps.length - 1;
+  const isFirstStep = step === 0;
+
+  const [editorIsVisible, setEditorVisible] = useState(false);
 
   return (
-    <Form>
-      {steps[props.step]}
-      <Form.Item style={{ marginTop: '5%' }}>
-        <Row gutter={10} type="flex" justify="center">
-          <Col>
-            <Button
-              disabled={isFirstStep}
-              type="default"
-              icon="left"
-              onClick={() => {
-                props.onChange(formData);
-                props.onStep(props.step - 1);
-              }}
-            />
-          </Col>
-          <Col>
-            <Button
-              type="primary"
-              icon={!isLastStep ? 'right' : ''}
-              onClick={() => {
-                try {
-                  props.onChange({
-                    ...formData,
-                    flowInput: JSON.parse(flowInputString)
-                  });
-                  if (!isLastStep) {
-                    props.onStep(props.step + 1);
-                  } else {
-                    props.onSubmit(formData);
-                  }
-                } catch (e) {
-                  notification.config({
-                    placement: 'bottomRight'
-                  });
-                  notification.open({
-                    message: 'Flow Input Error',
-                    description: e.message,
-                    icon: <Icon type="warning" style={{ color: 'red' }} />
-                  });
-                }
-              }}
-            >
-              {isLastStep && 'Submit'}
-            </Button>
-          </Col>
-        </Row>
-      </Form.Item>
-    </Form>
+    <>
+      {editorIsVisible && (
+        <JsonEditor
+          width={'100%'}
+          height={'60vh'}
+          value={stringify(formData)}
+          onChange={c => setFormData(JSON.parse(c))}
+        />
+      )}
+      {!editorIsVisible && (
+        <>
+          <Row>
+            <Steps progressDot current={step}>
+              {stepsTitles.map(title => (
+                <Steps.Step key={title} title={title} />
+              ))}
+            </Steps>
+            <Divider />
+          </Row>
+          <Row type="flex" gutter={10}>
+            <Col span={8}>
+              <JsonView jsonObject={formData} />
+            </Col>
+            <Col span={16}>
+              <Form>{steps[step]}</Form>
+            </Col>
+          </Row>
+        </>
+      )}
+      <BottomContent>
+        <Button
+          type="primary"
+          key="submit"
+          onClick={() => {
+            setEditorVisible(prev => !prev);
+          }}
+        >
+          Edit as JSON
+        </Button>
+        {!editorIsVisible && (
+          <Button
+            disabled={isFirstStep}
+            type="default"
+            icon="left"
+            onClick={() => {
+              props.onChange(formData);
+              setStep(step - 1);
+            }}
+          />
+        )}
+        <Button
+          type="primary"
+          icon={!isLastStep && !editorIsVisible ? 'right' : ''}
+          onClick={() => {
+            try {
+              props.onChange({
+                ...formData,
+                flowInput: JSON.parse(flowInputString)
+              });
+              if (!isLastStep) {
+                setStep(step + 1);
+              } else {
+                props.onSubmit(formData);
+              }
+            } catch (e) {
+              notification.config({
+                placement: 'bottomRight'
+              });
+              notification.open({
+                message: 'Flow Input Error',
+                description: e.message,
+                icon: <Icon type="warning" style={{ color: 'red' }} />
+              });
+            }
+          }}
+        >
+          {(isLastStep || editorIsVisible) && 'Submit'}
+        </Button>
+      </BottomContent>
+    </>
   );
 }
 

@@ -1,20 +1,41 @@
 import React from 'react';
-import { Drawer } from 'antd';
+import { Drawer, Typography } from 'antd';
+
+const { Title, Paragraph, Text } = Typography;
 
 const width = {
-  Default: '120vh',
-  'Add Algorithm': '80vh',
-  'Add Debug': '20vh',
+  'Add Pipeline': '60%',
+  'Add Algorithm': '40%',
+  'Add Debug': '20%'
+};
+const title = {
+  'Add Algorithm': 'Add Algorithm',
+  'Add Debug': 'Add Debug'
+};
+const description = {
+  'Add Algorithm': (
+    <>
+      Algorithm <Text strong>descriptor</Text> to be added to the store.
+    </>
+  ),
+  'Add Debug': 'Add algorithm image for debugging.',
   'Build Pipeline': '50vh'
 };
 
-const DrawerContainer = ({ visible, onClose, children, operation }) => (
+const DrawerContainer = ({ children, operation, ...props }) => (
   <Drawer
-    width={width[operation] || width.Default}
+    width={width[operation]}
     placement="right"
-    visible={visible}
     closable={false}
-    onClose={onClose}
+    title={
+      title[operation] && (
+        <Typography>
+          <Title level={2}>{title[operation]}</Title>
+          <Paragraph>{description[operation]}</Paragraph>
+        </Typography>
+      )
+    }
+    {...props}
   >
     {children}
   </Drawer>

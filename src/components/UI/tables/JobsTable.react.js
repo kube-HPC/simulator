@@ -19,20 +19,14 @@ import InfinityTable from 'components/UI/Layout/InfinityTable.react';
 import TabSwitcher from 'components/dumb/TabSwitcher.react';
 import jobsTableColumns from 'components/UI/tables/columns/JobsTableColumns.react';
 
-function JobsTable({ dataSource, ...props }) {
+function JobsTable({ init, dataSource, ...props }) {
   useEffect(() => {
-    props.init();
-  }, []);
-
-  const { stopPipeline, execRawPipeline, downloadStorageResults } = props;
+    init();
+  }, [init]);
 
   return (
     <InfinityTable
-      columns={jobsTableColumns(
-        stopPipeline,
-        execRawPipeline,
-        downloadStorageResults
-      )}
+      columns={jobsTableColumns(props)}
       dataSource={dataSource}
       expandedRowRender={record => (
         <TabSwitcher
@@ -73,12 +67,9 @@ const tableDataSelector = createSelector(
 );
 
 JobsTable.propTypes = {
-  execRawPipeline: PropTypes.func.isRequired,
-  downloadStorageResults: PropTypes.func.isRequired,
   init: PropTypes.func.isRequired,
   getJaegerData: PropTypes.func.isRequired,
   dataSource: PropTypes.array.isRequired,
-  stopPipeline: PropTypes.func.isRequired,
   jaeger: PropTypes.object.isRequired
 };
 
