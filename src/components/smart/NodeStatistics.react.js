@@ -44,7 +44,7 @@ class NodeStatistics extends Component {
         style={{
           fontSize: '20px',
           width: '80%',
-          height: '80%',
+          height: '70vh',
           left: '10%',
           position: 'relative',
           top: '10%'
