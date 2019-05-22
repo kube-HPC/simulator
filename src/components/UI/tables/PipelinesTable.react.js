@@ -18,10 +18,6 @@ import InfinityTable from 'components/UI/Layout/InfinityTable.react';
 import pipelinesTableColumns from 'components/UI/tables/columns/PipelinesTableColumns.react';
 
 function PipelinesTable({ init, ...props }) {
-  useEffect(() => {
-    init();
-  }, [init]);
-
   const { storedPipelines, pipelineReadme, getPipelineReadme } = props;
 
   // Need to remove "nodes" key from each pipeline.

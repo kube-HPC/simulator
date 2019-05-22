@@ -11,10 +11,6 @@ import InfinityTable from '../Layout/InfinityTable.react';
 import JsonView from 'components/dumb/JsonView.react';
 
 function DebugTable({ init, ...props }) {
-  useEffect(() => {
-    init();
-  }, [init]);
-
   const { dataSource } = props;
 
   return (

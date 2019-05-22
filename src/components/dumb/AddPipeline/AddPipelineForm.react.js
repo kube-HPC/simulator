@@ -328,7 +328,7 @@ export default function AddPipelineForm(props) {
             setEditorVisible(prev => !prev);
           }}
         >
-          Edit as JSON
+          {editorIsVisible ? 'Edit as JSON' : 'Wizard'}
         </Button>
         {!editorIsVisible && (
           <Button

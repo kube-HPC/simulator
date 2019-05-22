@@ -9,10 +9,6 @@ import JsonView from 'components/dumb/JsonView.react';
 import InfinityTable from 'components/UI/Layout/InfinityTable.react';
 
 function DriversTable({ init, dataSource, ...props }) {
-  useEffect(() => {
-    init();
-  }, [init]);
-
   return (
     <InfinityTable
       columns={driversTableColumns(props)}

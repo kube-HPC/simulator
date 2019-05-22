@@ -15,10 +15,6 @@ import algorithmsTableColumns from 'components/UI/tables/columns/AlgorithmsTable
 import { stringify } from 'utils/string';
 
 function AlgorithmsTable({ init, ...props }) {
-  useEffect(() => {
-    init();
-  }, [init]);
-
   const onSubmit = data => {
     const formData = new FormData();
     formData.append('payload', stringify(data));

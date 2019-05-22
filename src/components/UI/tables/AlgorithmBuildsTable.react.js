@@ -18,10 +18,6 @@ import InfinityTable from '../Layout/InfinityTable.react';
 import JsonView from 'components/dumb/JsonView.react';
 
 function AlgorithmBuildsTable({ init, ...props }) {
-  useEffect(() => {
-    init();
-  }, [init]);
-
   const { dataSource } = props;
 
   const expandedRowRender = record => {

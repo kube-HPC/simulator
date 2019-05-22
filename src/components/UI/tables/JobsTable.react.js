@@ -20,9 +20,9 @@ import TabSwitcher from 'components/dumb/TabSwitcher.react';
 import jobsTableColumns from 'components/UI/tables/columns/JobsTableColumns.react';
 
 function JobsTable({ init, dataSource, ...props }) {
-  useEffect(() => {
-    init();
-  }, [init]);
+  // useEffect(() => {
+  //   init();
+  // }, [init]);
 
   return (
     <InfinityTable

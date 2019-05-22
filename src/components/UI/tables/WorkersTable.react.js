@@ -56,10 +56,6 @@ const expandedRowRender = (columns, dataSource) => record => {
 };
 
 function WorkersTable({ init, ...props }) {
-  useEffect(() => {
-    init();
-  }, [init]);
-
   const { dataSource, stats } = props;
 
   const statsMergedWithDefault =

@@ -27,7 +27,7 @@ import AddPipeline from 'components/UI/operations/AddPipeline.react';
 import AddDebug from 'components/UI/operations/AddDebug.react';
 
 import { message, Layout } from 'antd';
-import { init } from 'actions/config.action.js';
+import { init, socketInit } from 'actions/config.action.js';
 import { HCOLOR } from 'constants/colors';
 
 const LayoutStyled = styled(Layout)`
@@ -79,7 +79,7 @@ const tableSelector = {
   Memory: <NodeStatistics metric="mem" />
 };
 
-function HKubeLayout({ init, ...props }) {
+function HKubeLayout({ init, socketInit, ...props }) {
   const [table, setTable] = useState('Jobs');
   const [operation, setOperation] = useState('AddPipeline');
   const [visible, setVisible] = useState(false);
@@ -94,11 +94,12 @@ function HKubeLayout({ init, ...props }) {
 
   useEffect(() => {
     init();
+    socketInit();
     message.config({
       duration: 5,
       maxCount: 3
     });
-  }, [init]);
+  }, [init, socketInit]);
 
   return (
     <LayoutStyled>
@@ -147,5 +148,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { init }
+  { init, socketInit }
 )(HKubeLayout);
