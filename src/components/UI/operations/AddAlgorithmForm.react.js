@@ -16,9 +16,7 @@ import {
   Row,
   Col,
   Button,
-  Radio,
-  Card,
-  Typography
+  Radio
 } from 'antd';
 
 import parseUnit from 'parse-unit';

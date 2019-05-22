@@ -5,6 +5,7 @@
   "homepage": ".",
   "dependencies": {
     "@nivo/bar": "^0.52.1",
+    "ant-design-pro": "^2.3.2",
     "antd": "^3.17.0",
     "antd-table-infinity": "^1.1.2",
     "axios": "^0.18.0",
@@ -56,6 +57,7 @@
     "showdown": "^1.9.0",
     "socket.io-client": "^2.2.0",
     "styled-components": "^4.2.0",
+    "umi": "^2.6.17",
     "uuid": "^3.3.2",
     "vis": "^4.21.0"
   },

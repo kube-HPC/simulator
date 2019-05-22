@@ -25,6 +25,7 @@ import { stringify, toUpperCaseFirstLetter } from 'utils/string';
 import JsonEditor from 'components/dumb/JsonEditor.react';
 import BottomContent from '../BottomContent.react';
 import JsonView from '../JsonView.react';
+import addPipelineTemplate from 'config/template/addPipeline.template';
 
 const span = 6;
 const formItemLayout = {
@@ -81,9 +82,17 @@ export default function AddPipelineForm(props) {
     setFormData({ ...formData, [t1]: targetKey });
   };
 
+  const initialValidName = formData.name !== '';
+
   const Initial = (
     <div>
-      <Form.Item {...formItemLayout} label="Name" required={true}>
+      <Form.Item
+        {...formItemLayout}
+        label="Name"
+        required={true}
+        validateStatus={initialValidName ? 'success' : 'error'}
+        help={!initialValidName && 'Name cannot be empty'}
+      >
         <Input
           placeholder="Unique Identifier"
           value={formData.name}
@@ -122,16 +131,37 @@ export default function AddPipelineForm(props) {
     />
   );
 
+  const validateUrl = url => url === '' || 'http://' === url.substring(0, 7);
+
+  const validateHelp = (url, msg) => !validateUrl(url) && msg;
+
   const Hooks = (
     <div>
-      <Form.Item {...formItemLayout} label="Progress">
+      <Form.Item
+        {...formItemLayout}
+        label="Progress"
+        validateStatus={
+          validateUrl(formData.webhooks.progress) ? 'success' : 'error'
+        }
+        help={validateHelp(
+          formData.webhooks.progress,
+          'Must start with http://'
+        )}
+      >
         <Input
           placeholder="Progress Webhook URI"
           onChange={onChangeTarget(formData, 'webhooks', 'progress')}
           value={formData.webhooks.progress}
         />
       </Form.Item>
-      <Form.Item {...formItemLayout} label="Result">
+      <Form.Item
+        {...formItemLayout}
+        label="Result"
+        validateStatus={
+          validateUrl(formData.webhooks.result) ? 'success' : 'error'
+        }
+        help={validateHelp(formData.webhooks.result, 'Must start with http://')}
+      >
         <Input
           placeholder="Result Webhook URI"
           onChange={onChangeTarget(formData, 'webhooks', 'result')}
@@ -289,21 +319,25 @@ export default function AddPipelineForm(props) {
   const isFirstStep = step === 0;
 
   const [editorIsVisible, setEditorVisible] = useState(false);
-
+  const [editorValue, setEditorValue] = useState(
+    stringify(addPipelineTemplate)
+  );
   return (
-    <>
+    <div>
       {editorIsVisible && (
-        <JsonEditor
-          width={'100%'}
-          height={'60vh'}
-          value={stringify(formData)}
-          onChange={c => setFormData(JSON.parse(c))}
-        />
+        <Card style={{ overflow: 'scroll' }}>
+          <JsonEditor
+            width={'100%'}
+            height={'60vh'}
+            value={editorValue}
+            onChange={setEditorValue}
+          />
+        </Card>
       )}
       {!editorIsVisible && (
         <>
           <Row>
-            <Steps progressDot current={step}>
+            <Steps size="small" current={step}>
               {stepsTitles.map(title => (
                 <Steps.Step key={title} title={title} />
               ))}
@@ -315,46 +349,63 @@ export default function AddPipelineForm(props) {
               <JsonView jsonObject={formData} />
             </Col>
             <Col span={16}>
-              <Form>{steps[step]}</Form>
+              <Card>
+                <Form>{steps[step]}</Form>
+              </Card>
             </Col>
           </Row>
         </>
       )}
-      <BottomContent>
-        <Button
-          type="primary"
-          key="submit"
-          onClick={() => {
-            setEditorVisible(prev => !prev);
-          }}
-        >
-          {editorIsVisible ? 'Edit as JSON' : 'Wizard'}
-        </Button>
+      <BottomContent
+        extra={
+          <Button
+            type="primary"
+            key="submit"
+            onClick={() => {
+              setEditorVisible(prev => !prev);
+            }}
+          >
+            {!editorIsVisible ? 'Edit as JSON' : 'Edit with a Wizard'}
+          </Button>
+        }
+      >
         {!editorIsVisible && (
           <Button
             disabled={isFirstStep}
             type="default"
-            icon="left"
             onClick={() => {
               props.onChange(formData);
               setStep(step - 1);
             }}
-          />
+          >
+            <Icon type="left" />
+            Back
+          </Button>
         )}
         <Button
-          type="primary"
-          icon={!isLastStep && !editorIsVisible ? 'right' : ''}
+          type={isLastStep ? 'primary' : 'default'}
           onClick={() => {
             try {
-              props.onChange({
-                ...formData,
-                flowInput: JSON.parse(flowInputString)
-              });
-              if (!isLastStep) {
-                setStep(step + 1);
-              } else {
-                props.onSubmit(formData);
+              const needToSubmit = isLastStep || editorIsVisible;
+              if (!editorIsVisible) {
+                props.onChange({
+                  ...formData,
+                  flowInput: JSON.parse(flowInputString)
+                });
               }
+
+              if (needToSubmit) {
+                const urlStart = 'http://';
+                const { progress, result } = formData.webhooks;
+                if (progress === '') formData.webhooks.progress = urlStart;
+                if (result === '') formData.webhooks.result = urlStart;
+              }
+
+              needToSubmit
+                ? props.onSubmit(
+                    editorIsVisible ? JSON.parse(editorValue) : formData
+                  )
+                : setStep(step + 1);
             } catch (e) {
               notification.config({
                 placement: 'bottomRight'
@@ -367,10 +418,16 @@ export default function AddPipelineForm(props) {
             }
           }}
         >
-          {(isLastStep || editorIsVisible) && 'Submit'}
+          {isLastStep || editorIsVisible ? (
+            'Submit'
+          ) : (
+            <>
+              Next <Icon type="right" />
+            </>
+          )}
         </Button>
       </BottomContent>
-    </>
+    </div>
   );
 }
 

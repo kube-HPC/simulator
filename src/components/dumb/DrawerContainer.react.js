@@ -10,9 +10,16 @@ const width = {
 };
 const title = {
   'Add Algorithm': 'Add Algorithm',
-  'Add Debug': 'Add Debug'
+  'Add Debug': 'Add Debug',
+  'Add Pipeline': 'Add Pipeline'
 };
 const description = {
+  'Add Pipeline': (
+    <>
+      Build a <Text strong>pipeline</Text> through <Text code>Wizard</Text> or{' '}
+      <Text code>JSON Editor</Text> .
+    </>
+  ),
   'Add Algorithm': (
     <>
       Algorithm <Text strong>descriptor</Text> to be added to the store.

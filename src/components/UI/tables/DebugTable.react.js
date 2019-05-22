@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { Card } from 'antd';
 import { createSelector } from 'reselect';
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { init, addAlgorithm, deleteAlgorithm } from 'actions/debugTable.action';

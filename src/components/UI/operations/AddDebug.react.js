@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Input, Icon, Form, Button, Card, Typography } from 'antd';
+import { Input, Icon, Form, Button } from 'antd';
 
 import { addAlgorithm } from 'actions/debugTable.action';
 import template from 'config/template/algorithm-modal.template';

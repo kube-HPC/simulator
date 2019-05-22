@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 
-import 'antd/dist/antd.css';
 import './HKubeLayout.css';
 
 import JobsTable from 'components/UI/tables/JobsTable.react';

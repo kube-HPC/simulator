@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import groupby from 'lodash/groupBy';
 import { createSelector } from 'reselect';
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   init,
   cancelBuild,

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import PipelineTabSwitcher from 'components/dumb/PipelineTabSwitcher.react';

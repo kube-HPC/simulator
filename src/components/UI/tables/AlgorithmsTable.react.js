@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { createSelector } from 'reselect';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { getAlgorithmReadme } from 'actions/readme.action';
 import {
   init,
@@ -10,7 +10,7 @@ import {
 } from 'actions/algorithmTable.action';
 
 import AlgorithmTabSwitcher from 'components/dumb/AlgorithmTabSwitcher.react';
-import InfinityTable from '../Layout/InfinityTable.react';
+import InfinityTable from 'components/UI/Layout/InfinityTable.react';
 import algorithmsTableColumns from 'components/UI/tables/columns/AlgorithmsTableColumns.react';
 import { stringify } from 'utils/string';
 

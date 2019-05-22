@@ -40,21 +40,37 @@ function DynamicForm(props) {
     onChange({ ...formData });
   };
 
+  const validateName = name => (!(name !== '') ? 'error' : 'success');
+  const validateHelp = (name, msg) => !(name !== '') && msg;
+
   const formItems = getFieldValue('keys').map(i => {
     const inputs = nodes[i].input;
     return (
-      <Card key={i} style={{ marginBottom: '5px' }}>
+      <Card key={i} size="small" style={{ marginBottom: '10px' }}>
         <Row type="flex" gutter={10}>
           <Col span={22}>
             <Form.Item required={i === 0}>
-              <Form.Item {...formItemLayout} label="Node Name">
+              <Form.Item
+                {...formItemLayout}
+                label="Node Name"
+                validateStatus={validateName(nodes[i].nodeName)}
+                help={validateHelp(nodes[i].nodeName, 'Name cannot be empty')}
+              >
                 <Input
                   placeholder="Node Name"
                   value={nodes[i] ? nodes[i].nodeName : ''}
                   onChange={onChangeNode(formData, i, 'nodes', 'nodeName')}
                 />
               </Form.Item>
-              <Form.Item {...formItemLayout} label="Algorithm Name">
+              <Form.Item
+                {...formItemLayout}
+                label="Algorithm Name"
+                validateStatus={validateName(nodes[i].algorithmName)}
+                help={validateHelp(
+                  nodes[i].algorithmName,
+                  'Algorithm cannot be empty'
+                )}
+              >
                 <Select
                   placeholder="Select Algorithm Name"
                   onChange={onChangeNode(formData, i, 'nodes', 'algorithmName')}
@@ -77,11 +93,20 @@ function DynamicForm(props) {
                         />
                       </Col>
                       <Col span={2}>
-                        <Button type="danger" icon="minus" onClick={() => removeInput(i, index)} />
+                        <Button
+                          type="danger"
+                          icon="minus"
+                          onClick={() => removeInput(i, index)}
+                        />
                       </Col>
                     </Row>
                   ))}
-                <Button type="dashed" icon="plus" onClick={addInput(i)} style={{ width: '100%' }}>
+                <Button
+                  type="dashed"
+                  icon="plus"
+                  onClick={addInput(i)}
+                  style={{ width: '100%' }}
+                >
                   Add Input
                 </Button>
               </Form.Item>
@@ -121,7 +146,12 @@ function DynamicForm(props) {
   return (
     <div id={id}>
       <Form.Item required={true}>{formItems}</Form.Item>
-      <Button type="dashed" icon="plus" onClick={addNode} style={{ width: '100%' }}>
+      <Button
+        type="dashed"
+        icon="plus"
+        onClick={addNode}
+        style={{ width: '100%' }}
+      >
         Add Node
       </Button>
     </div>
@@ -132,7 +162,6 @@ DynamicForm.propTypes = {
   formData: PropTypes.object.isRequired,
   emptyData: PropTypes.object.isRequired,
   algorithms: PropTypes.array.isRequired,
-  pipelines: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
   formItemLayoutWithOutLabel: PropTypes.object.isRequired,
   formItemLayout: PropTypes.object.isRequired,

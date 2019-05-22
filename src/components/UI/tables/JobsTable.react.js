@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { connect } from 'react-redux';
 import { withState } from 'recompose';
@@ -20,10 +20,6 @@ import TabSwitcher from 'components/dumb/TabSwitcher.react';
 import jobsTableColumns from 'components/UI/tables/columns/JobsTableColumns.react';
 
 function JobsTable({ init, dataSource, ...props }) {
-  // useEffect(() => {
-  //   init();
-  // }, [init]);
-
   return (
     <InfinityTable
       columns={jobsTableColumns(props)}

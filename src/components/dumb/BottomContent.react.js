@@ -1,31 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Row, Col } from 'antd';
 import { HCOLOR } from 'constants/colors';
 
-const DivBottom = styled(Row)`
+import 'ant-design-pro/dist/ant-design-pro.css';
+import { FooterToolbar } from 'ant-design-pro';
+
+const FooterAbsolute = styled(FooterToolbar)`
   position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  border-top: 1px solid ${HCOLOR.border};
-  padding: 10px 16px;
   background: ${HCOLOR.background};
-  text-align: right;
-  margin-top: 10px;
 `;
 
-const marginButtons = buttons =>
-  buttons.map((button, i) => <Col key={i}>{button}</Col>);
+const Divider = styled.div`
+  height: 3vh;
+`;
 
-function BottomContent(props) {
+function BottomContent({ children, extra }) {
   return (
-    <DivBottom>
-      <Row type="flex" gutter={10} justify="end">
-        {marginButtons(React.Children.toArray(props.children))}
-      </Row>
-    </DivBottom>
+    <>
+      <Divider />
+      <FooterAbsolute style={{ position: 'absolute' }} extra={extra}>
+        {children}
+      </FooterAbsolute>
+    </>
   );
 }
 
