@@ -34,7 +34,12 @@ const addMenuItems = items =>
 export default function SidebarOperations({ onSelect }) {
   return (
     <SiderLight theme="light" collapsed={true} collapsedWidth={60}>
-      <Menu mode="vertical" onSelect={i => onSelect(i.key)} selectedKeys={[]}>
+      <Menu
+        mode="vertical"
+        onSelect={i => onSelect(i.key)}
+        selectedKeys={[]}
+        style={{ marginTop: '20%' }}
+      >
         {addMenuItems([
           ['Add Pipeline', IconAddPipeline],
           ['Add Algorithm', IconAddAlgorithm],

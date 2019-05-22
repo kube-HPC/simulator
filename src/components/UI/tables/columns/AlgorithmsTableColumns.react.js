@@ -1,9 +1,11 @@
 import React from 'react';
 
-import { Button, Modal, Row, Col, Badge } from 'antd';
+import { Button, Modal, Row, Col, Card } from 'antd';
 
 import { sorter, stringify } from 'utils/string';
-import JsonEditorModal from 'components/smart/JsonEditorModal.react';
+import JsonEditor from 'components/dumb/JsonEditor.react';
+import DrawerContainer from 'components/dumb/DrawerContainer.react';
+import Text from 'antd/lib/typography/Text';
 
 const deleteConfirmAction = (action, record) => {
   Modal.confirm({
@@ -62,22 +64,23 @@ const algorithmsTableColumns = props => [
     render: (_, record) => (
       <Row type="flex" justify="start" gutter={10}>
         <Col>
-          <JsonEditorModal
-            jsonTemplate={stringify(record)}
-            styledButton={(onClick, isEditable = false) => (
-              <Badge dot={isEditable}>
-                <Button
-                  type="edit"
-                  shape="circle"
-                  icon="edit"
-                  onClick={onClick}
-                />
-              </Badge>
+          <DrawerContainer
+            title={'Update Algorithm'}
+            description={
+              <>
+                Edit algorithm properties and <Text code>Update</Text>{' '}
+              </>
+            }
+            opener={onClick => (
+              <Button shape="circle" icon="edit" onClick={onClick} />
             )}
-            title={'Edit Algorithm'}
-            okText={'Update'}
-            action={props.onSubmit}
-          />
+            submitText={'Update'}
+            onSubmit={props.onSubmit}
+          >
+            <Card size="small">
+              <JsonEditor value={stringify(record)} />
+            </Card>
+          </DrawerContainer>
         </Col>
         <Col>
           <Button

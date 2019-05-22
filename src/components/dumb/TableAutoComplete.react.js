@@ -18,7 +18,10 @@ const options = data => {
       {group.children.map(opt => (
         <Option key={opt.title} value={opt.title}>
           {opt.title}
-          <span style={{ color: 'rgb(52, 152, 219)' }} className="certain-search-item-count">
+          <span
+            style={{ color: 'rgb(52, 152, 219)' }}
+            className="certain-search-item-count"
+          >
             ({opt.count})
           </span>
         </Option>

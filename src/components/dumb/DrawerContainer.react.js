@@ -1,51 +1,40 @@
-import React from 'react';
-import { Drawer, Typography } from 'antd';
+import React, { useState } from 'react';
+import { Drawer, Typography, Button } from 'antd';
+import BottomContent from './BottomContent.react';
 
-const { Title, Paragraph, Text } = Typography;
+const { Title, Paragraph } = Typography;
 
-const width = {
-  'Add Pipeline': '60%',
-  'Add Algorithm': '40%',
-  'Add Debug': '20%'
-};
-const title = {
-  'Add Algorithm': 'Add Algorithm',
-  'Add Debug': 'Add Debug',
-  'Add Pipeline': 'Add Pipeline'
-};
-const description = {
-  'Add Pipeline': (
+function DrawerContainer({ children, title, description, width, ...props }) {
+  const [visible, setVisible] = useState(false);
+
+  return (
     <>
-      Build a <Text strong>pipeline</Text> through <Text code>Wizard</Text> or{' '}
-      <Text code>JSON Editor</Text> .
+      <Drawer
+        visible={visible}
+        width={width || '80vh'}
+        placement="right"
+        closable={false}
+        onClose={() => setVisible(prev => !prev)}
+        title={
+          title && (
+            <Typography>
+              <Title level={2}>{title}</Title>
+              <Paragraph>{description}</Paragraph>
+            </Typography>
+          )
+        }
+        {...props}
+      >
+        {children}
+        <BottomContent>
+          <Button type="primary" onClick={props.onSubmit}>
+            {props.submitText}
+          </Button>
+        </BottomContent>
+      </Drawer>
+      {props.opener(setVisible)}
     </>
-  ),
-  'Add Algorithm': (
-    <>
-      Algorithm <Text strong>descriptor</Text> to be added to the store.
-    </>
-  ),
-  'Add Debug': 'Add algorithm image for debugging.',
-  'Build Pipeline': '50vh'
-};
-
-const DrawerContainer = ({ children, operation, ...props }) => (
-  <Drawer
-    width={width[operation]}
-    placement="right"
-    closable={false}
-    title={
-      title[operation] && (
-        <Typography>
-          <Title level={2}>{title[operation]}</Title>
-          <Paragraph>{description[operation]}</Paragraph>
-        </Typography>
-      )
-    }
-    {...props}
-  >
-    {children}
-  </Drawer>
-);
+  );
+}
 
 export default DrawerContainer;

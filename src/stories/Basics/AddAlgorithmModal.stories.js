@@ -6,7 +6,7 @@ import { storiesOf } from '@storybook/react';
 
 import AddAlgorithmForm from 'components/UI/operations/AddAlgorithmForm.react';
 import rootReducer from 'reducers/root.reducer';
-import DrawerContainer from 'components/dumb/DrawerContainer.react';
+import DrawerOperations from 'components/dumb/DrawerOperations.react';
 
 const store = createStore(rootReducer);
 
@@ -22,8 +22,8 @@ storiesOf('Basics|AddAlgorithmModal', module)
   ))
   .add('In Drawer', () => (
     <Provider store={store}>
-      <DrawerContainer visible={true} operation={'Add Algorithm'}>
+      <DrawerOperations visible={true} operation={'Add Algorithm'}>
         <AddAlgorithmForm />
-      </DrawerContainer>
+      </DrawerOperations>
     </Provider>
   ));

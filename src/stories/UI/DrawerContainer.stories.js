@@ -5,7 +5,7 @@ import { action } from '@storybook/addon-actions';
 import { Button } from 'antd';
 
 import AddPipeline from 'components/UI/operations/AddPipeline.react';
-import DrawerContainer from 'components/dumb/DrawerContainer.react';
+import DrawerOperations from 'components/dumb/DrawerOperations.react';
 
 const content = {
   algorithms: ['a1', 'a2'],
@@ -18,9 +18,9 @@ function DrawerAddPipeline() {
   return (
     <>
       <Button onClick={() => setVisible(!visible)}>Open Drawer</Button>
-      <DrawerContainer visible={visible} onClose={() => setVisible(!visible)}>
+      <DrawerOperations visible={visible} onClose={() => setVisible(!visible)}>
         <AddPipeline {...content} />
-      </DrawerContainer>
+      </DrawerOperations>
     </>
   );
 }

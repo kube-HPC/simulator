@@ -11,7 +11,7 @@ import AddPipelineForm from 'components/dumb/AddPipeline/AddPipelineForm.react';
 import addPipelineTemplate from 'config/template/addPipeline.template';
 
 import rootReducer from 'reducers/root.reducer';
-import DrawerContainer from 'components/dumb/DrawerContainer.react';
+import DrawerOperations from 'components/dumb/DrawerOperations.react';
 import AddPipelineReact from 'components/UI/operations/AddPipeline.react';
 
 const store = createStore(rootReducer);
@@ -46,9 +46,9 @@ function Container() {
 
 storiesOf('Basics|AddPipeline', module).add('Default', () => (
   <Provider store={store}>
-    <DrawerContainer visible={true} operation={'Add Pipeline'}>
+    <DrawerOperations visible={true} operation={'Add Pipeline'}>
       <AddPipelineReact onSubmit={() => {}} />
-    </DrawerContainer>
+    </DrawerOperations>
   </Provider>
 ));
 
