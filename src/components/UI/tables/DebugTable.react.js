@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { Card } from 'antd';
 import { createSelector } from 'reselect';
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { init, addAlgorithm, deleteAlgorithm } from 'actions/debugTable.action';
@@ -11,10 +11,6 @@ import InfinityTable from '../Layout/InfinityTable.react';
 import JsonView from 'components/dumb/JsonView.react';
 
 function DebugTable({ init, ...props }) {
-  useEffect(() => {
-    init();
-  }, []);
-
   const { dataSource } = props;
 
   return (

@@ -1,29 +1,14 @@
 import React from 'react';
-import styled from 'styled-components';
 
 import humanizeDuration from 'humanize-duration';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Moment from 'react-moment';
 import { toUpperCaseFirstLetter } from 'utils/string';
 
-import {
-  Icon,
-  notification,
-  Progress,
-  Tag,
-  Tooltip,
-  Button,
-  Row,
-  Col
-} from 'antd';
+import { Progress, Tag, Tooltip, Button, Row, Col } from 'antd';
 
 import { PRIORITY, STATUS } from 'constants/colors';
 import StatusTag from 'components/dumb/StatusTag.react';
-
-const IconWhite = styled(Icon)`
-  color: rgba(187, 180, 180, 0.75);
-  margin-right: 10px;
-`;
+import CopyEllipsis from 'components/dumb/CopyEllipsis.react';
 
 const getStatusFilter = () =>
   Object.keys(PRIORITY).map(k => ({
@@ -34,30 +19,13 @@ const getStatusFilter = () =>
 const sorter = (a, b) =>
   isNaN(a) && isNaN(b) ? (a || '').localeCompare(b || '') : a - b;
 
-const jobsTableColumns = (
-  stopPipeline,
-  execRawPipeline,
-  downloadStorageResults
-) => [
+const jobsTableColumns = props => [
   {
     title: 'Job ID',
     dataIndex: 'key',
     key: 'key',
     width: '15%',
-    render: (_, record) => (
-      <CopyToClipboard
-        text={`${record.key}`}
-        onCopy={() => notification.success({ message: 'Copied to clipboard' })}
-      >
-        <>
-          <IconWhite type="right" />
-          <Tooltip placement="top" title={record.key}>{`${record.key.substring(
-            0,
-            20
-          )} ...`}</Tooltip>
-        </>
-      </CopyToClipboard>
-    )
+    render: (_, record) => <CopyEllipsis text={record.key} />
   },
   {
     title: 'Pipeline Name',
@@ -186,8 +154,8 @@ const jobsTableColumns = (
             icon={isStopPipeline ? 'close' : 'redo'}
             onClick={() =>
               isStopPipeline
-                ? stopPipeline(record.key)
-                : execRawPipeline(record.pipeline)
+                ? props.stopPipeline(record.key)
+                : props.execRawPipeline(record.pipeline)
             }
           />
         </Tooltip>
@@ -206,7 +174,7 @@ const jobsTableColumns = (
             shape="circle"
             icon="download"
             onClick={() =>
-              downloadStorageResults(record.results.data.storageInfo.path)
+              props.downloadStorageResults(record.results.data.storageInfo.path)
             }
           />
         </Tooltip>

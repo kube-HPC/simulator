@@ -1,61 +1,41 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Tabs, Card, Button } from 'antd';
-import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import AddPipelineForm from 'components/dumb/AddPipeline/AddPipelineForm.react';
 
-import AddPipelineSteps from 'components/dumb/AddPipeline/AddPipelineSteps.react';
-import JsonEditor from 'components/dumb/JsonEditor.react';
 import template from 'config/template/addPipeline.template';
-import { stringify } from 'utils/string';
 import { addPipeline } from 'actions/addPipeline.action';
 
-const CardCenter = styled(Card)`
-  width: 100%;
-  margin: 0 auto;
-`;
-
-function AddPipeline({ onSubmit, addPipeline }) {
-  const [json, setJson] = useState(stringify(template));
+function AddPipeline(props) {
+  const [formData, setFormData] = useState(template);
 
   return (
-    <Tabs>
-      <Tabs.TabPane tab="Wizard" key="1">
-        <AddPipelineSteps onSubmit={onSubmit} />
-      </Tabs.TabPane>
-      <Tabs.TabPane tab="Json Editor" key="2">
-        <CardCenter
-          actions={[
-            <Button
-              type="primary"
-              key="submit"
-              onClick={() => {
-                addPipeline(JSON.parse(json));
-                onSubmit();
-              }}
-            >
-              Submit
-            </Button>
-          ]}
-        >
-          <JsonEditor
-            width={'100%'}
-            height={'60vh'}
-            value={json}
-            onChange={setJson}
-          />
-        </CardCenter>
-      </Tabs.TabPane>
-    </Tabs>
+    <AddPipelineForm
+      formData={formData}
+      algorithms={props.algorithms}
+      pipelines={props.storedPipelines.map(pipeline => pipeline.name)}
+      onSubmit={pipeline => {
+        props.addPipeline(pipeline);
+        props.onSubmit();
+      }}
+      onChange={setFormData}
+    />
   );
 }
 
 AddPipeline.propTypes = {
+  storedPipelines: PropTypes.object.isRequired,
+  algorithms: PropTypes.array.isRequired,
   addPipeline: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired
 };
 
+const mapStateToProps = state => ({
+  algorithms: state.algorithmTable.dataSource.map(tableRow => tableRow.name),
+  storedPipelines: state.storedPipeline.dataSource
+});
+
 export default connect(
-  () => {},
+  mapStateToProps,
   { addPipeline }
 )(AddPipeline);

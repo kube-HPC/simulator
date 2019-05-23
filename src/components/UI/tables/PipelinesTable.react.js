@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import PipelineTabSwitcher from 'components/dumb/PipelineTabSwitcher.react';
@@ -18,10 +18,6 @@ import InfinityTable from 'components/UI/Layout/InfinityTable.react';
 import pipelinesTableColumns from 'components/UI/tables/columns/PipelinesTableColumns.react';
 
 function PipelinesTable({ init, ...props }) {
-  useEffect(() => {
-    init();
-  }, []);
-
   const { storedPipelines, pipelineReadme, getPipelineReadme } = props;
 
   // Need to remove "nodes" key from each pipeline.
@@ -55,15 +51,9 @@ function PipelinesTable({ init, ...props }) {
 
 PipelinesTable.propTypes = {
   init: PropTypes.func.isRequired,
-  algorithms: PropTypes.array.isRequired,
   storedPipelines: PropTypes.array.isRequired,
-  dataStats: PropTypes.array,
-  execStoredPipe: PropTypes.func.isRequired,
-  deleteStoredPipeline: PropTypes.func.isRequired,
-  updateStoredPipeline: PropTypes.func.isRequired,
-  cronStop: PropTypes.func.isRequired,
-  cronStart: PropTypes.func.isRequired,
-  addPipe: PropTypes.func.isRequired
+  getPipelineReadme: PropTypes.func,
+  pipelineReadme: PropTypes.object
 };
 
 const mapStateToProps = state => ({

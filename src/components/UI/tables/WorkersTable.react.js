@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -24,43 +24,39 @@ const generateTab = (key, value) => (
   </Tabs.TabPane>
 );
 
+const expandedRowRender = (columns, dataSource) => record => {
+  const filteredDataSource = dataSource.filter(
+    d => d.algorithmName === record.algorithmName
+  );
+
+  return (
+    <InfinityTable
+      rowKey={record => record.algorithmName}
+      columns={columns}
+      dataSource={filteredDataSource}
+      expandedRowRender={record => {
+        const timer = {
+          workerStartingTime:
+            record.data.workerStartingTime &&
+            new Date(record.data.workerStartingTime).toLocaleString(),
+          jobCurrentTime:
+            record.data.jobCurrentTime &&
+            new Date(record.data.jobCurrentTime).toLocaleString()
+        };
+
+        return (
+          <Tabs defaultActiveKey="1">
+            {generateTab('JSON', record)}
+            {generateTab('Additional Details', timer)}
+          </Tabs>
+        );
+      }}
+    />
+  );
+};
+
 function WorkersTable({ init, ...props }) {
-  useEffect(() => {
-    init();
-  }, []);
-
   const { dataSource, stats } = props;
-
-  const expandedRowRender = (columns, dataSource) => record => {
-    const filteredDataSource = dataSource.filter(
-      d => d.algorithmName === record.algorithmName
-    );
-
-    return (
-      <InfinityTable
-        rowKey={record => record.algorithmName}
-        columns={columns}
-        dataSource={filteredDataSource}
-        expandedRowRender={record => {
-          const timer = {
-            workerStartingTime:
-              record.workerStartingTime &&
-              new Date(record.workerStartingTime).toLocaleString(),
-            jobCurrentTime:
-              record.jobCurrentTime &&
-              new Date(record.jobCurrentTime).toLocaleString()
-          };
-
-          return (
-            <Tabs defaultActiveKey="1">
-              {generateTab('JSON', record)}
-              {generateTab('Additional Details', timer)}
-            </Tabs>
-          );
-        }}
-      />
-    );
-  };
 
   const statsMergedWithDefault =
     stats &&

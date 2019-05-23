@@ -1,18 +1,12 @@
 import React from 'react';
 import { STATUS } from 'constants/colors';
 import { sorter } from 'utils/string';
-import { Tag, Icon, Progress, notification, Button } from 'antd';
+import { Tag, Progress, Button } from 'antd';
 import { toUpperCaseFirstLetter } from 'utils/string';
 import Moment from 'react-moment';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import humanizeDuration from 'humanize-duration';
 import StatusTag from 'components/dumb/StatusTag.react';
-import styled from 'styled-components';
-
-const IconWhite = styled(Icon)`
-  color: rgba(187, 180, 180, 0.75);
-  margin-right: 10px;
-`;
+import CopyEllipsis from 'components/dumb/CopyEllipsis.react';
 
 export const buildsTableColumns = props => [
   {
@@ -29,7 +23,7 @@ export const buildsTableColumns = props => [
     sorter: (a, b) => sorter(a.timestamp, b.timestamp),
     render: (_, record) =>
       Object.entries(record.statuses).map(([status, arr]) => (
-        <StatusTag status={status} count={arr.length} />
+        <StatusTag key={status} status={status} count={arr.length} />
       ))
   },
   {
@@ -56,17 +50,7 @@ export const nestedBuildTableColumns = props => [
     key: 'buildId',
     width: '15%',
     sorter: (a, b) => sorter(a.buildId, b.buildId),
-    render: (_, record) => (
-      <CopyToClipboard
-        text={`${record.buildId}`}
-        onCopy={() => notification.success({ message: 'Copied to clipboard' })}
-      >
-        <>
-          <IconWhite type="right" />
-          {`${record.buildId.substring(0, 15)}...`}
-        </>
-      </CopyToClipboard>
-    )
+    render: (_, record) => <CopyEllipsis text={record.buildId} />
   },
   {
     title: 'Env',

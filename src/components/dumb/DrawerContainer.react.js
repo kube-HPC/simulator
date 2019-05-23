@@ -1,23 +1,40 @@
-import React from 'react';
-import { Drawer } from 'antd';
+import React, { useState } from 'react';
+import { Drawer, Typography, Button } from 'antd';
+import BottomContent from './BottomContent.react';
 
-const width = {
-  Default: '120vh',
-  'Add Algorithm': '80vh',
-  'Add Debug': '20vh',
-  'Build Pipeline': '50vh'
-};
+const { Title, Paragraph } = Typography;
 
-const DrawerContainer = ({ visible, onClose, children, operation }) => (
-  <Drawer
-    width={width[operation] || width.Default}
-    placement="right"
-    visible={visible}
-    closable={false}
-    onClose={onClose}
-  >
-    {children}
-  </Drawer>
-);
+function DrawerContainer({ children, title, description, width, ...props }) {
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <>
+      <Drawer
+        visible={visible}
+        width={width || '80vh'}
+        placement="right"
+        closable={false}
+        onClose={() => setVisible(prev => !prev)}
+        title={
+          title && (
+            <Typography>
+              <Title level={2}>{title}</Title>
+              <Paragraph>{description}</Paragraph>
+            </Typography>
+          )
+        }
+        {...props}
+      >
+        {children}
+        <BottomContent>
+          <Button type="primary" onClick={props.onSubmit}>
+            {props.submitText}
+          </Button>
+        </BottomContent>
+      </Drawer>
+      {props.opener(setVisible)}
+    </>
+  );
+}
 
 export default DrawerContainer;

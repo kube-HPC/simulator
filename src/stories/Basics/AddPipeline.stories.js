@@ -1,16 +1,24 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import Sidebar from 'react-sidebar';
 import PropTypes from 'prop-types';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
 
-import AddPipelineSteps from 'components/dumb/AddPipeline/AddPipelineSteps.react';
+import AddPipeline from 'components/UI/operations/AddPipeline.react';
 import AddPipelineForm from 'components/dumb/AddPipeline/AddPipelineForm.react';
 import addPipelineTemplate from 'config/template/addPipeline.template';
 
+import rootReducer from 'reducers/root.reducer';
+import DrawerOperations from 'components/dumb/DrawerOperations.react';
+import AddPipelineReact from 'components/UI/operations/AddPipeline.react';
+
+const store = createStore(rootReducer);
+
 function AddPipelineContainer({ style }) {
   return (
-    <AddPipelineSteps
+    <AddPipeline
       algorithms={['a1', 'a2']}
       pipelines={['p1', 'p2']}
       onSubmit={action('click')}
@@ -22,6 +30,7 @@ function AddPipelineContainer({ style }) {
 function Container() {
   const [current, setCurrent] = useState(0);
   const [formData, setFormData] = useState(addPipelineTemplate);
+
   return (
     <AddPipelineForm
       formData={formData}
@@ -35,19 +44,13 @@ function Container() {
   );
 }
 
-storiesOf('Basics|AddPipeline/Form', module).add('Default', () => <Container />);
-
-storiesOf('Basics|AddPipeline/Steps', module)
-  .add('Default', () => <AddPipelineContainer />)
-  .add('Sidebar', () => (
-    <Sidebar
-      sidebar={<AddPipelineContainer style={{ width: '120vh' }} />}
-      pullRight={true}
-      docked={true}
-    >
-      <div />
-    </Sidebar>
-  ));
+storiesOf('Basics|AddPipeline', module).add('Default', () => (
+  <Provider store={store}>
+    <DrawerOperations visible={true} operation={'Add Pipeline'}>
+      <AddPipelineReact onSubmit={() => {}} />
+    </DrawerOperations>
+  </Provider>
+));
 
 AddPipelineContainer.propTypes = {
   style: PropTypes.object

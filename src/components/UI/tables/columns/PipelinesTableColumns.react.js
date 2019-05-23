@@ -8,15 +8,18 @@ import {
   Switch,
   Input,
   Popover,
-  Badge,
-  message
+  message,
+  Card
 } from 'antd';
 
 import cronParser from 'cron-parser';
 import cronstrue from 'cronstrue';
-import JsonEditorModal from 'components/smart/JsonEditorModal.react';
 import StatusTag from 'components/dumb/StatusTag.react';
 import { ReactComponent as PlayIconSvg } from 'images/play-icon.svg';
+import JsonEditor from 'components/dumb/JsonEditor.react';
+import DrawerContainer from 'components/dumb/DrawerContainer.react';
+import { stringify } from 'utils/string';
+import Text from 'antd/lib/typography/Text';
 
 const deleteConfirmAction = (action, record) => {
   Modal.confirm({
@@ -161,49 +164,44 @@ const pipelinesTableColumns = props => [
     width: '30%',
     render: (_, record) => {
       const {
-        storedPipelines,
+        // storedPipelines,
         execStoredPipe,
         deleteStoredPipeline,
         fixedDataSource,
         updateStoredPipeline
       } = props;
+
+      const currPipeline = fixedDataSource.find(p => p.name === record.name);
+
       return (
         <Row type="flex" justify="start" gutter={10}>
           <Col>
-            <JsonEditorModal
-              jsonTemplate={JSON.stringify(
-                fixedDataSource.find(p => p.name === record.name),
-                null,
-                2
-              )}
-              styledButton={(onClick, isEditable = false) => (
-                <Badge dot={isEditable}>
-                  <Button shape="circle" onClick={onClick}>
-                    <Icon component={PlayIconSvg} />
-                  </Button>
-                </Badge>
-              )}
-              title={'Execute Pipeline Editor'}
-              okText={'Execute'}
-              action={execStoredPipe}
-            />
+            <Button shape="circle" onClick={() => execStoredPipe(currPipeline)}>
+              <Icon component={PlayIconSvg} />
+            </Button>
           </Col>
           <Col>
-            <JsonEditorModal
-              jsonTemplate={JSON.stringify(
-                storedPipelines.find(p => p.name === record.name),
-                null,
-                2
+            <DrawerContainer
+              title={'Update Pipeline'}
+              description={
+                <>
+                  Edit pipeline properties and <Text code>Update</Text>{' '}
+                </>
+              }
+              opener={onClick => (
+                <Button shape="circle" icon="edit" onClick={onClick} />
               )}
-              styledButton={(onClick, isEditable = false) => (
-                <Badge dot={isEditable}>
-                  <Button shape="circle" icon="edit" onClick={onClick} />
-                </Badge>
-              )}
-              title={'Edit Pipeline Editor'}
-              okText={'Update'}
-              action={updateStoredPipeline}
-            />
+              submitText={'Update'}
+              onSubmit={updateStoredPipeline}
+            >
+              <Card size="small">
+                <JsonEditor
+                  value={stringify(
+                    fixedDataSource.find(p => p.name === record.name)
+                  )}
+                />
+              </Card>
+            </DrawerContainer>
           </Col>
           <Col>
             <Button

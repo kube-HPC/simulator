@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import groupby from 'lodash/groupBy';
 import { createSelector } from 'reselect';
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   init,
   cancelBuild,
@@ -18,10 +18,6 @@ import InfinityTable from '../Layout/InfinityTable.react';
 import JsonView from 'components/dumb/JsonView.react';
 
 function AlgorithmBuildsTable({ init, ...props }) {
-  useEffect(() => {
-    init();
-  }, []);
-
   const { dataSource } = props;
 
   const expandedRowRender = record => {

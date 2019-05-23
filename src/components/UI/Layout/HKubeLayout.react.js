@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 
-import 'antd/dist/antd.css';
 import './HKubeLayout.css';
 
 import JobsTable from 'components/UI/tables/JobsTable.react';
@@ -18,7 +17,7 @@ import NodeStatistics from 'components/smart/NodeStatistics.react';
 import TableAutoComplete from 'components/dumb/TableAutoComplete.react';
 
 import SideBarContainer from 'components/smart/SideBarContainer.react';
-import DrawerContainer from 'components/dumb/DrawerContainer.react';
+import DrawerOperations from 'components/dumb/DrawerOperations.react';
 
 import SidebarOperations from 'components/UI/Layout/SidebarOperations.react';
 import Sidebar from 'components/UI/Layout/Sidebar.react';
@@ -27,7 +26,7 @@ import AddPipeline from 'components/UI/operations/AddPipeline.react';
 import AddDebug from 'components/UI/operations/AddDebug.react';
 
 import { message, Layout } from 'antd';
-import { init } from 'actions/config.action.js';
+import { init, socketInit } from 'actions/config.action.js';
 import { HCOLOR } from 'constants/colors';
 
 const LayoutStyled = styled(Layout)`
@@ -54,11 +53,11 @@ const LayoutMargin = styled(Layout)`
 `;
 
 const HeaderStyled = styled(Layout.Header)`
-  && {
-    background: white;
-    border-bottom: 1pt solid ${HCOLOR.darkBorder};
-    text-align: center;
-  }
+  background: white;
+  border-bottom: 1pt solid ${HCOLOR.darkBorder};
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const ContentStyled = styled(Layout.Content)`
@@ -79,7 +78,7 @@ const tableSelector = {
   Memory: <NodeStatistics metric="mem" />
 };
 
-function HKubeLayout({ init, ...props }) {
+function HKubeLayout({ init, socketInit, ...props }) {
   const [table, setTable] = useState('Jobs');
   const [operation, setOperation] = useState('AddPipeline');
   const [visible, setVisible] = useState(false);
@@ -92,13 +91,17 @@ function HKubeLayout({ init, ...props }) {
     'Add Debug': <AddDebug onSubmit={triggerVisible} />
   };
 
-  useEffect(() => {
-    init();
-    message.config({
-      duration: 5,
-      maxCount: 3
-    });
-  }, []);
+  useEffect(
+    () => {
+      init();
+      socketInit();
+      message.config({
+        duration: 5,
+        maxCount: 3
+      });
+    },
+    [init, socketInit]
+  );
 
   return (
     <LayoutStyled>
@@ -117,13 +120,13 @@ function HKubeLayout({ init, ...props }) {
               setVisible(!visible);
             }}
           />
-          <DrawerContainer
+          <DrawerOperations
             visible={visible}
             onClose={triggerVisible}
             operation={operation}
           >
             {operationSelector[operation]}
-          </DrawerContainer>
+          </DrawerOperations>
         </LayoutMargin>
       </Layout>
     </LayoutStyled>
@@ -147,5 +150,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { init }
+  { init, socketInit }
 )(HKubeLayout);
