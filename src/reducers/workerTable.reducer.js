@@ -27,7 +27,7 @@ export default handleActions(
   {
     [actions.UPDATE_ROW_DATA_TABLE](state, { type, payload, meta, error }) {
       const data = (payload.discovery && payload.discovery.worker) || [];
-      const stats = get(payload, 'discovery.task-executor[0].data.actual', []);
+      const stats = get(payload, 'discovery.task-executor[0].actual', []);
       return state.merge({ dataSource: data, stats });
     }
   },

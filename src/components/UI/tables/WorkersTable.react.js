@@ -33,22 +33,22 @@ function WorkersTable({ init, ...props }) {
 
   const expandedRowRender = (columns, dataSource) => record => {
     const filteredDataSource = dataSource.filter(
-      d => d.data.algorithmName === record.algorithmName
+      d => d.algorithmName === record.algorithmName
     );
 
     return (
       <InfinityTable
-        rowKey={record => record.key}
+        rowKey={record => record.algorithmName}
         columns={columns}
         dataSource={filteredDataSource}
         expandedRowRender={record => {
           const timer = {
             workerStartingTime:
-              record.data.workerStartingTime &&
-              new Date(record.data.workerStartingTime).toLocaleString(),
+              record.workerStartingTime &&
+              new Date(record.workerStartingTime).toLocaleString(),
             jobCurrentTime:
-              record.data.jobCurrentTime &&
-              new Date(record.data.jobCurrentTime).toLocaleString()
+              record.jobCurrentTime &&
+              new Date(record.jobCurrentTime).toLocaleString()
           };
 
           return (

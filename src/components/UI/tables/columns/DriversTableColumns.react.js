@@ -6,69 +6,69 @@ import { sorter } from 'utils/string';
 const driversTableColumns = props => [
   {
     title: 'Job ID',
-    dataIndex: 'data.jobId',
+    dataIndex: 'jobId',
     key: 'jobId',
     width: '20%',
-    sorter: (a, b) => sorter(a.data.jobId, b.data.jobId)
+    sorter: (a, b) => sorter(a.jobId, b.jobId)
   },
   {
     title: 'Pod Name',
-    dataIndex: 'data.podName',
+    dataIndex: 'podName',
     key: 'podName',
     width: '20%',
-    onFilter: (value, record) => record.data.podName.includes(value),
-    sorter: (a, b) => sorter(a.data.podName, b.data.podName)
+    onFilter: (value, record) => record.podName.includes(value),
+    sorter: (a, b) => sorter(a.podName, b.podName)
   },
   {
     title: 'Pipeline',
-    dataIndex: 'data.pipelineName',
+    dataIndex: 'pipelineName',
     key: 'pipelineName',
     width: '15%'
   },
   {
     title: 'Driver State',
-    dataIndex: 'data.driverStatus',
+    dataIndex: 'driverStatus',
     width: '15%',
     key: 'driverStatus',
     render: (text, record) => (
       <span>
-        <Tag color={STATUS[record.data.driverStatus]}>
+        <Tag color={STATUS[record.driverStatus]}>
           {' '}
-          {record.data.driverStatus}
+          {record.driverStatus}
         </Tag>
       </span>
     ),
-    sorter: (a, b) => sorter(a.data.driverStatus, b.data.driverStatus)
+    sorter: (a, b) => sorter(a.driverStatus, b.driverStatus)
   },
   {
     title: 'Job State',
-    dataIndex: 'data.jobStatus',
+    dataIndex: 'jobStatus',
     width: '15%',
     key: 'jobStatus',
     render: (text, record) => (
       <span>
-        <Tag color={STATUS[record.data.jobStatus]}>
+        <Tag color={STATUS[record.jobStatus]}>
           {' '}
-          {record.data.jobStatus}
+          {record.jobStatus}
         </Tag>
       </span>
     ),
-    sorter: (a, b) => sorter(a.data.jobStatus, b.data.jobStatus)
+    sorter: (a, b) => sorter(a.jobStatus, b.jobStatus)
   },
   {
     title: 'Paused',
-    dataIndex: 'data.paused',
+    dataIndex: 'paused',
     width: '15%',
     key: 'paused',
     render: (text, record) => (
       <span>
-        <Tag color={record.data.paused ? 'red' : 'green'}>
+        <Tag color={record.paused ? 'red' : 'green'}>
           {' '}
-          {record.data.paused ? 'paused' : 'ready'}
+          {record.paused ? 'paused' : 'ready'}
         </Tag>
       </span>
     ),
-    sorter: (a, b) => sorter(a.data.paused, b.data.paused)
+    sorter: (a, b) => sorter(a.paused, b.paused)
   }
 ];
 

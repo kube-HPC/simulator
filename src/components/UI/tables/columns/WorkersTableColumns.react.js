@@ -11,15 +11,15 @@ const undefinedStateFilter = state => state || 'Creating';
 export const workersTableStats = () => [
   {
     title: '',
-    dataIndex: 'data.workerStatus',
+    dataIndex: 'workerStatus',
     width: '2%',
     key: 'workerStatusIcon',
     render: (_, record) => (
       <>
-        {record.data.workerPaused && (
+        {record.workerPaused && (
           <Icon type="pause-circle" theme="twoTone" twoToneColor="red" />
         )}
-        {record.data.hotWorker && (
+        {record.hotWorker && (
           <Icon type="fire" theme="filled" style={{ color: 'orange' }} />
         )}
       </>
@@ -27,36 +27,36 @@ export const workersTableStats = () => [
   },
   {
     title: 'Pod Name',
-    dataIndex: 'data.podName',
+    dataIndex: 'podName',
     key: 'podName',
-    onFilter: (value, record) => record.data.podName.includes(value)
+    onFilter: (value, record) => record.podName.includes(value)
   },
   {
     title: 'Worker State',
-    dataIndex: 'data.workerStatus',
+    dataIndex: 'workerStatus',
     width: '30%',
     key: 'workerStatus',
     render: (_, record) => {
       const title = toUpperCaseFirstLetter(
-        undefinedStateFilter(record.data.workerStatus)
+        undefinedStateFilter(record.workerStatus)
       );
       return (
         <>
-          <Tag color={STATUS[record.data.workerStatus]}>{title}</Tag>
-          <Tag color={STATUS[record.data.jobStatus]}>{`Jobs ${title}`}</Tag>
+          <Tag color={STATUS[record.workerStatus]}>{title}</Tag>
+          <Tag color={STATUS[record.jobStatus]}>{`Jobs ${title}`}</Tag>
         </>
       );
     }
   },
   {
     title: 'Job ID',
-    dataIndex: 'data.jobId',
+    dataIndex: 'jobId',
     width: '30%',
     key: 'jobId'
   },
   {
     title: 'View Logs',
-    dataIndex: 'data.logs',
+    dataIndex: 'logs',
     width: '10%',
     key: 'logs',
     render: () => <Button size="small" icon="read" />
