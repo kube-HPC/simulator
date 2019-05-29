@@ -179,14 +179,25 @@ const pipelinesTableColumns = props => [
       return (
         <Row type="flex" justify="start" gutter={10}>
           <Col>
-            <Tooltip placement="top" title={'Execute Pipeline'}>
-              <Button
-                shape="circle"
-                onClick={() => execStoredPipe(currPipeline)}
-              >
-                <Icon component={PlayIconSvg} />
-              </Button>
-            </Tooltip>
+            <DrawerEditor
+              title={'Run Stored Pipeline'}
+              description={
+                <>
+                  Start pipeline <Text code>execution</Text> when the name of
+                  the pipeline is known, all parameters in this action will be
+                  merged with the stored pipeline.
+                </>
+              }
+              opener={onClick => (
+                <Tooltip placement="top" title={'Run Stored Pipeline'}>
+                  <Button shape="circle" onClick={onClick}>
+                    <Icon component={PlayIconSvg} />
+                  </Button>
+                </Tooltip>
+              )}
+              valueString={stringify(currPipeline)}
+              onSubmit={execStoredPipe}
+            />
           </Col>
           <Col>
             <DrawerEditor
