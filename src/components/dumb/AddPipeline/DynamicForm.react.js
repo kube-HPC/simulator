@@ -1,8 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Input, Form, Select, Col, Row, Card } from 'antd';
+import {
+  Button,
+  Input,
+  Form,
+  Select,
+  Col,
+  Row,
+  Card,
+  notification,
+  Icon
+} from 'antd';
 
-export const removeNElement = (array, N) =>
+const removeNElement = (array, N) =>
   array.slice(0, N).concat(array.slice(N + 1, array.length));
 
 const selectOptions = algorithms =>
@@ -12,7 +22,41 @@ const selectOptions = algorithms =>
     </Select.Option>
   ));
 
+const inputOptions = [
+  'String',
+  'Numeric',
+  'Object',
+  'Array',
+  'Boolean',
+  'null'
+];
+
+const setInputOptions = () =>
+  inputOptions.map(option => (
+    <Select.Option key={option} value={option}>
+      {option}
+    </Select.Option>
+  ));
+
 const id = 'dynamic-form';
+
+const parseByOption = (option, value) => {
+  let out = value;
+  try {
+    out = option === `null` ? null : JSON.parse(value);
+  } catch (e) {
+    notification.config({
+      placement: 'bottomRight'
+    });
+    notification.open({
+      message: `Input is not of type ${option}`,
+      description: e.message,
+      icon: <Icon type="warning" style={{ color: 'red' }} />
+    });
+  } finally {
+    return out;
+  }
+};
 
 function DynamicForm(props) {
   const { formData, form, onChange } = props;
@@ -54,7 +98,10 @@ function DynamicForm(props) {
                 {...formItemLayout}
                 label="Node Name"
                 validateStatus={validateName(nodes[i].nodeName)}
-                help={validateHelp(nodes[i].nodeName, 'Name cannot be empty')}
+                help={validateHelp(
+                  nodes[i].nodeName,
+                  'Node Name cannot be empty'
+                )}
               >
                 <Input
                   placeholder="Node Name"
@@ -68,7 +115,7 @@ function DynamicForm(props) {
                 validateStatus={validateName(nodes[i].algorithmName)}
                 help={validateHelp(
                   nodes[i].algorithmName,
-                  'Algorithm cannot be empty'
+                  'Algorithm Name cannot be empty'
                 )}
               >
                 <Select
@@ -83,7 +130,7 @@ function DynamicForm(props) {
                 {inputs &&
                   inputs.map((value, index) => (
                     <Row key={`${i}_${index}`} gutter={10} type="flex">
-                      <Col span={22}>
+                      <Col span={16}>
                         <Input
                           value={value}
                           onChange={e => {
@@ -91,6 +138,21 @@ function DynamicForm(props) {
                             onChange({ ...formData });
                           }}
                         />
+                      </Col>
+                      <Col span={6}>
+                        <Select
+                          placeholder="Type"
+                          defaultValue={inputOptions[0]}
+                          onChange={option => {
+                            inputs[index] = parseByOption(
+                              option,
+                              inputs[index]
+                            );
+                            onChange({ ...formData });
+                          }}
+                        >
+                          {setInputOptions()}
+                        </Select>
                       </Col>
                       <Col span={2}>
                         <Button
