@@ -37,9 +37,11 @@ const expandedRowRender = (columns, dataSource) => record => {
       expandedRowRender={record => {
         const timer = {
           workerStartingTime:
+            record.data &&
             record.data.workerStartingTime &&
             new Date(record.data.workerStartingTime).toLocaleString(),
           jobCurrentTime:
+            record.data &&
             record.data.jobCurrentTime &&
             new Date(record.data.jobCurrentTime).toLocaleString()
         };

@@ -64,6 +64,7 @@ const ContentStyled = styled(Layout.Content)`
   background: white;
   min-height: auto;
   margin: 10px;
+  overflow: hidden;
 `;
 
 const tableSelector = {

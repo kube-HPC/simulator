@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { InfinityTable as Table } from 'antd-table-infinity';
-import { Spin } from 'antd';
+// import { InfinityTable as Table } from 'antd-table-infinity';
+import { Spin, Table } from 'antd';
 
 import { HCOLOR } from 'constants/colors';
 
@@ -22,6 +22,7 @@ export default function InfinityTable({ isLoading, dataSource, ...props }) {
       scroll={{ y: tableSize > 10 ? '88vh' : false }}
       size="middle"
       dataSource={dataSource || []}
+      pagination={{ pageSize: 15 }}
       {...props}
     />
   );

@@ -9,17 +9,16 @@ import {
   Input,
   Popover,
   message,
-  Card
+  Tooltip
 } from 'antd';
 
 import cronParser from 'cron-parser';
 import cronstrue from 'cronstrue';
 import StatusTag from 'components/dumb/StatusTag.react';
 import { ReactComponent as PlayIconSvg } from 'images/play-icon.svg';
-import JsonEditor from 'components/dumb/JsonEditor.react';
-import DrawerContainer from 'components/dumb/DrawerContainer.react';
 import { stringify } from 'utils/string';
 import Text from 'antd/lib/typography/Text';
+import DrawerEditor from 'components/dumb/DrawerEditor.react';
 
 const deleteConfirmAction = (action, record) => {
   Modal.confirm({
@@ -164,24 +163,33 @@ const pipelinesTableColumns = props => [
     width: '30%',
     render: (_, record) => {
       const {
-        // storedPipelines,
+        storedPipelines,
         execStoredPipe,
         deleteStoredPipeline,
         fixedDataSource,
         updateStoredPipeline
       } = props;
 
+      // http://hkube.io/spec/#tag/Execution/paths/~1exec~1stored/post
       const currPipeline = fixedDataSource.find(p => p.name === record.name);
+
+      // No description on exec pipeline
+      delete currPipeline.description;
 
       return (
         <Row type="flex" justify="start" gutter={10}>
           <Col>
-            <Button shape="circle" onClick={() => execStoredPipe(currPipeline)}>
-              <Icon component={PlayIconSvg} />
-            </Button>
+            <Tooltip placement="top" title={'Execute Pipeline'}>
+              <Button
+                shape="circle"
+                onClick={() => execStoredPipe(currPipeline)}
+              >
+                <Icon component={PlayIconSvg} />
+              </Button>
+            </Tooltip>
           </Col>
           <Col>
-            <DrawerContainer
+            <DrawerEditor
               title={'Update Pipeline'}
               description={
                 <>
@@ -189,19 +197,15 @@ const pipelinesTableColumns = props => [
                 </>
               }
               opener={onClick => (
-                <Button shape="circle" icon="edit" onClick={onClick} />
+                <Tooltip placement="top" title={'Edit Pipeline'}>
+                  <Button shape="circle" icon="edit" onClick={onClick} />
+                </Tooltip>
               )}
-              submitText={'Update'}
+              valueString={stringify(
+                storedPipelines.find(p => p.name === record.name)
+              )}
               onSubmit={updateStoredPipeline}
-            >
-              <Card size="small">
-                <JsonEditor
-                  value={stringify(
-                    fixedDataSource.find(p => p.name === record.name)
-                  )}
-                />
-              </Card>
-            </DrawerContainer>
+            />
           </Col>
           <Col>
             <Button

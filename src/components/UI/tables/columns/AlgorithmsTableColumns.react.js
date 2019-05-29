@@ -1,11 +1,10 @@
 import React from 'react';
 
-import { Button, Modal, Row, Col, Card } from 'antd';
+import { Button, Modal, Row, Col, Tooltip } from 'antd';
 
 import { sorter, stringify } from 'utils/string';
-import JsonEditor from 'components/dumb/JsonEditor.react';
-import DrawerContainer from 'components/dumb/DrawerContainer.react';
 import Text from 'antd/lib/typography/Text';
+import DrawerEditor from 'components/dumb/DrawerEditor.react';
 
 const deleteConfirmAction = (action, record) => {
   Modal.confirm({
@@ -64,7 +63,7 @@ const algorithmsTableColumns = props => [
     render: (_, record) => (
       <Row type="flex" justify="start" gutter={10}>
         <Col>
-          <DrawerContainer
+          <DrawerEditor
             title={'Update Algorithm'}
             description={
               <>
@@ -72,15 +71,14 @@ const algorithmsTableColumns = props => [
               </>
             }
             opener={onClick => (
-              <Button shape="circle" icon="edit" onClick={onClick} />
+              <Tooltip placement="top" title={'Update Algorithm'}>
+                <Button shape="circle" icon="edit" onClick={onClick} />
+              </Tooltip>
             )}
             submitText={'Update'}
+            valueString={stringify(record)}
             onSubmit={props.onSubmit}
-          >
-            <Card size="small">
-              <JsonEditor value={stringify(record)} />
-            </Card>
-          </DrawerContainer>
+          />
         </Col>
         <Col>
           <Button
