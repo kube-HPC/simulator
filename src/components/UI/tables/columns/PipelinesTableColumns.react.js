@@ -208,7 +208,7 @@ const pipelinesTableColumns = props => [
                 </>
               }
               opener={onClick => (
-                <Tooltip placement="top" title={'Edit Pipeline'}>
+                <Tooltip placement="top" title={'Update Pipeline'}>
                   <Button shape="circle" icon="edit" onClick={onClick} />
                 </Tooltip>
               )}

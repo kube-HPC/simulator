@@ -62,7 +62,7 @@
     "vis": "^4.21.0"
   },
   "scripts": {
-    "start": "PORT=9050 react-app-rewired start",
+    "start": "REACT_APP_VERSION=$npm_package_version PORT=9050 react-app-rewired start",
     "builder": "react-app-rewired --max_old_space_size=4096 build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",

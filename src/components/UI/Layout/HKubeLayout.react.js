@@ -58,6 +58,13 @@ const HeaderStyled = styled(Layout.Header)`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+`;
+
+const VersionAlignRight = styled.span`
+  position: absolute;
+  right: 1%;
+  color: ${HCOLOR.darkBorder};
 `;
 
 const ContentStyled = styled(Layout.Content)`
@@ -111,6 +118,9 @@ function HKubeLayout({ init, socketInit, ...props }) {
       <Layout>
         <HeaderStyled>
           <TableAutoComplete />
+          <VersionAlignRight>
+            {`${process.env.REACT_APP_VERSION}v`}
+          </VersionAlignRight>
         </HeaderStyled>
         <LayoutMargin>
           <ContentStyled>{tableSelector[table]}</ContentStyled>

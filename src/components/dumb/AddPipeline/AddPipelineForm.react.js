@@ -248,7 +248,10 @@ export default function AddPipelineForm(props) {
               min={0}
               max={100}
               value={formData.options.batchTolerance}
-              onChange={onChangeTarget(formData, 'options', 'batchTolerance')}
+              onChange={e =>
+                !isNaN(e) &&
+                onChangeTarget(formData, 'options', 'batchTolerance')(e)
+              }
             />
           </Col>
         </Row>
@@ -272,11 +275,10 @@ export default function AddPipelineForm(props) {
               min={0}
               max={10000}
               value={formData.options.concurrentPipelines}
-              onChange={onChangeTarget(
-                formData,
-                'options',
-                'concurrentPipelines'
-              )}
+              onChange={e =>
+                !isNaN(e) &&
+                onChangeTarget(formData, 'options', 'concurrentPipelines')(e)
+              }
             />
           </Col>
         </Row>
@@ -287,7 +289,9 @@ export default function AddPipelineForm(props) {
             <InputNumber
               min={1}
               value={formData.options.ttl}
-              onChange={onChangeTarget(formData, 'options', 'ttl')}
+              onChange={e =>
+                !isNaN(e) && onChangeTarget(formData, 'options', 'ttl')(e)
+              }
             />
           </Col>
           <Col />
