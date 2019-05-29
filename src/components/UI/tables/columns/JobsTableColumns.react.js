@@ -35,7 +35,7 @@ const jobsTableColumns = props => [
     sorter: (a, b) => sorter(a.key, b.key)
   },
   {
-    title: 'Pipeline Status',
+    title: 'Status',
     dataIndex: 'status.status',
     width: '10%',
     key: 'status',
