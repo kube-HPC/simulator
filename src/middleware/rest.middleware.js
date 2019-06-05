@@ -65,9 +65,9 @@ const setPath = ({ monitorBackend }) => {
   if (monitorBackend.useLocation) {
     _url = `${location.origin}${monitorBackend.path}`; //eslint-disable-line
   } else {
-    _url = `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}${
-      monitorBackend.path
-    }`;
+    _url = `${monitorBackend.schema}${monitorBackend.host}:${
+      monitorBackend.port
+    }${monitorBackend.path}`;
   }
 
   return _url;
@@ -153,9 +153,12 @@ export const restMiddleware = ({ dispatch }) => next => action => {
     }
     pending(dispatch, 'pending', action);
     axios
-      .delete(`${url}/${action.payload.url}/${action.payload.body.algorithmName}`, {
-        data: action.payload.body
-      })
+      .delete(
+        `${url}/${action.payload.url}/${action.payload.body.algorithmName}`,
+        {
+          data: action.payload.body
+        }
+      )
       .then(res => {
         success(dispatch, res.data, action);
       })

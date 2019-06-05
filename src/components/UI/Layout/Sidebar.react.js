@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useSpring, animated, config } from 'react-spring';
 
-import { ReactComponent as LogoSvg } from 'images/logoBordered.svg';
+import { ReactComponent as LogoSvg } from 'images/logo-fish.svg';
 import { ReactComponent as DebugIcon } from 'images/debug-icon.svg';
 import { ReactComponent as DriversIcon } from 'images/drivers-icon.svg';
 import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
@@ -14,13 +14,13 @@ import { ReactComponent as JobsIcon } from 'images/jobs-icon.svg';
 import { Row, Col, Tag, Layout, Icon, Menu } from 'antd';
 
 import { HCOLOR } from 'constants/colors';
+import AnimatedLogo from './Sidebar/AnimatedLogo.react';
 
 const IconLogo = styled(Icon)`
   && {
-    margin: 16px;
-    text-align: center;
-    font-size: 51px;
-    color: transparent;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 80px;
     width: -webkit-fill-available;
   }
 `;
@@ -110,9 +110,9 @@ export default function Sidebar({ onSelect, ...props }) {
       onCollapse={() => setCollapsed(!collapsed)}
       collapsed={collapsed}
     >
-      <RowCentered type="flex" style={{ background: 'transparent' }}>
+      <RowCentered type="flex">
         <ColCentered span={9}>
-          <IconLogo component={LogoSvg} />
+          <Icon component={LogoSvg} />
         </ColCentered>
 
         {collapsed ? (
