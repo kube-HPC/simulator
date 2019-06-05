@@ -112,7 +112,7 @@ export default function Sidebar({ onSelect, ...props }) {
     >
       <RowCentered type="flex">
         <ColCentered span={9}>
-          <Icon component={LogoSvg} />
+          <IconLogo component={LogoSvg} />
         </ColCentered>
 
         {collapsed ? (
