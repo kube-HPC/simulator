@@ -10,10 +10,12 @@ import { PRIORITY, STATUS } from 'constants/colors';
 import StatusTag from 'components/dumb/StatusTag.react';
 import CopyEllipsis from 'components/dumb/CopyEllipsis.react';
 
+const statuses = ['completed', 'failed', 'stopping', 'stopped'];
+
 const getStatusFilter = () =>
-  Object.keys(PRIORITY).map(k => ({
-    text: toUpperCaseFirstLetter(k),
-    value: k
+  statuses.map(status => ({
+    text: toUpperCaseFirstLetter(status),
+    value: status
   }));
 
 const sorter = (a, b) =>

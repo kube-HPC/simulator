@@ -197,6 +197,7 @@ const pipelinesTableColumns = props => [
               )}
               valueString={stringify(currPipeline)}
               onSubmit={execStoredPipe}
+              submitText={'Execute'}
             />
           </Col>
           <Col>
@@ -216,6 +217,7 @@ const pipelinesTableColumns = props => [
                 storedPipelines.find(p => p.name === record.name)
               )}
               onSubmit={updateStoredPipeline}
+              submitText={'Update'}
             />
           </Col>
           <Col>

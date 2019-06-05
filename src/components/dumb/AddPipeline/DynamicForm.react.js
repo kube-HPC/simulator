@@ -11,6 +11,7 @@ import {
   notification,
   Icon
 } from 'antd';
+import { stringify } from 'utils/string';
 
 const removeNElement = (array, N) =>
   array.slice(0, N).concat(array.slice(N + 1, array.length));
@@ -21,6 +22,11 @@ const selectOptions = algorithms =>
       {value}
     </Select.Option>
   ));
+
+const isObject = obj => {
+  const type = typeof obj;
+  return type === 'function' || (type === 'object' && !!obj);
+};
 
 const inputOptions = [
   'String',
@@ -132,7 +138,7 @@ function DynamicForm(props) {
                     <Row key={`${i}_${index}`} gutter={10} type="flex">
                       <Col span={16}>
                         <Input
-                          value={value}
+                          value={isObject(value) ? stringify(value) : value}
                           onChange={e => {
                             inputs[index] = e.target.value;
                             onChange({ ...formData });

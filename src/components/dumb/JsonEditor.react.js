@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import MonacoEditor from 'react-monaco-editor';
 
-export default function JsonEditor({ width, height, ...props }) {
+export default function JsonEditor({ width, height, isControlled, ...props }) {
   const [value, setValue] = useState(props.value);
   return (
     <MonacoEditor
@@ -11,9 +11,9 @@ export default function JsonEditor({ width, height, ...props }) {
       width={width || 800}
       height={height || 600}
       language="json"
-      value={value}
+      value={isControlled ? props.controlledValue : value}
       onChange={data => {
-        setValue(data);
+        isControlled ? props.setControlledValue(data) : setValue(data);
         props.onChange && props.onChange(data);
       }}
     />

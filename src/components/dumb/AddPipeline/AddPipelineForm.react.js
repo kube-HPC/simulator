@@ -69,7 +69,7 @@ const addCronContent = formData => {
 };
 
 export default function AddPipelineForm(props) {
-  const [formData, setFormData] = useState(props.formData);
+  const [formData, setFormData] = useState(addPipelineTemplate);
   const [flowInputString, setFlowInputString] = useState(
     stringify(formData.flowInput)
   );
@@ -136,7 +136,7 @@ export default function AddPipelineForm(props) {
   const validateHelp = (url, msg) => !validateUrl(url) && msg;
 
   const Hooks = (
-    <div>
+    <>
       <Form.Item
         {...formItemLayout}
         label="Progress"
@@ -180,7 +180,7 @@ export default function AddPipelineForm(props) {
           />
         </Card>
       </Form.Item>
-    </div>
+    </>
   );
 
   const triggersId = 'triggers-id';
@@ -333,8 +333,10 @@ export default function AddPipelineForm(props) {
           <JsonEditor
             width={'100%'}
             height={'60vh'}
-            value={editorValue}
             onChange={setEditorValue}
+            isControlled={true}
+            controlledValue={editorValue}
+            setControlledValue={setEditorValue}
           />
         </Card>
       )}
@@ -361,7 +363,7 @@ export default function AddPipelineForm(props) {
         </>
       )}
       <BottomContent
-        extra={
+        extra={[
           <Button
             type="primary"
             key="submit"
@@ -370,15 +372,41 @@ export default function AddPipelineForm(props) {
             }}
           >
             {!editorIsVisible ? 'Edit as JSON' : 'Edit with a Wizard'}
-          </Button>
-        }
+          </Button>,
+          <Popover
+            content={<div>Resets {editorIsVisible ? 'JSON' : 'Wizard'}</div>}
+          >
+            <Button
+              type="danger"
+              onClick={() => {
+                if (editorIsVisible)
+                  setEditorValue(stringify(addPipelineTemplate));
+                else {
+                  setFormData({
+                    ...addPipelineTemplate,
+                    nodes: [
+                      {
+                        nodeName: '',
+                        algorithmName: '',
+                        input: []
+                      }
+                    ]
+                  });
+                  setStep(0);
+                }
+              }}
+            >
+              Reset
+            </Button>
+          </Popover>
+        ]}
       >
         {!editorIsVisible && (
           <Button
             disabled={isFirstStep}
             type="default"
             onClick={() => {
-              props.onChange(formData);
+              setFormData(formData);
               setStep(step - 1);
             }}
           >
@@ -392,7 +420,7 @@ export default function AddPipelineForm(props) {
             try {
               const needToSubmit = isLastStep || editorIsVisible;
               if (!editorIsVisible) {
-                props.onChange({
+                setFormData({
                   ...formData,
                   flowInput: JSON.parse(flowInputString)
                 });

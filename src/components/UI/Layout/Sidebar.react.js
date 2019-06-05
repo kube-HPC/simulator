@@ -19,7 +19,7 @@ const IconLogo = styled(Icon)`
   && {
     margin: 16px;
     text-align: center;
-    font-size: 55px;
+    font-size: 51px;
     color: transparent;
     width: -webkit-fill-available;
   }

@@ -2,5 +2,5 @@
 
 > HKube dashboard, work in progress.
 
-- `yarn start`
-- `yarn run storybook`
+- `npm start`
+- `npm run storybook`

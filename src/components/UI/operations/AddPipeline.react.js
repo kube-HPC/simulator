@@ -1,24 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import AddPipelineForm from 'components/dumb/AddPipeline/AddPipelineForm.react';
 
-import template from 'config/template/addPipeline.template';
 import { addPipeline } from 'actions/addPipeline.action';
 
 function AddPipeline(props) {
-  const [formData, setFormData] = useState(template);
-
   return (
     <AddPipelineForm
-      formData={formData}
       algorithms={props.algorithms}
       pipelines={props.storedPipelines.map(pipeline => pipeline.name)}
       onSubmit={pipeline => {
         props.addPipeline(pipeline);
         props.onSubmit();
       }}
-      onChange={setFormData}
     />
   );
 }

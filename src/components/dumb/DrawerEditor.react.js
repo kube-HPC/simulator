@@ -12,7 +12,7 @@ function DrawerEditor({ children, valueString, onSubmit, ...props }) {
       title={props.title}
       description={props.description}
       opener={props.opener}
-      submitText={'Update'}
+      submitText={props.submitText || 'Submit'}
       onSubmit={() => {
         try {
           onSubmit(JSON.parse(value));
