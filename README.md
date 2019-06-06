@@ -28,13 +28,11 @@ The Dashboard follows two main concepts **Operations** and **Tables**.
 Actions which deploying data to HKube.
 Use Operations sidebar for adding `pipelines`, `algorithms` etc.
 
-![Add Algo](https://user-images.githubusercontent.com/27515937/59032095-1d3fa080-886e-11e9-91bc-73d0a49137d7.png)
-
-![Add Pipeline](https://user-images.githubusercontent.com/27515937/59032098-1e70cd80-886e-11e9-8ac5-bc72b742f6f9.png)
+![Add Pipeline](https://user-images.githubusercontent.com/27515937/59033654-d653aa00-8871-11e9-9707-bc4f92b35cfb.png)
 
 #### Tables
 
 View Tables for monitoring HKube data.
 Navigate Tables panel for viewing information about `pipelines` structures, `algorithm` info etc.
 
-![Jobs Graph](https://user-images.githubusercontent.com/27515937/59032299-a2c35080-886e-11e9-83cf-0fc4d0ab8d3c.png)
+![Jobs Graph](https://user-images.githubusercontent.com/27515937/59033644-d05dc900-8871-11e9-9a7f-f7011c32cff1.png)
