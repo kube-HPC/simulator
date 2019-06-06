@@ -1,22 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
-import { ReactComponent as Logo } from 'images/logo-no-shadow.svg';
-import { ReactComponent as LogoShadow } from 'images/logo-shadow.svg';
-import { animated, useSpring, interpolate } from 'react-spring';
+import { animated, useSpring } from 'react-spring';
+import { ReactComponent as Fish } from 'images/logo-no-shadow.svg';
 
-const CenteredLogo = styled.div`
-  margin-top: 20px;
+const Wrapper = styled.div`
   display: flex;
-  width: 70px;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  margin-left: 5px;
+  align-content: center;
 `;
 
-const CenterLogo = styled(animated.div)`
+const CenterItem = styled(animated.div)`
   align-self: center;
+  margin-top: 20px;
 `;
 
 const cycle = r =>
@@ -32,10 +29,45 @@ export default function AnimatedLogo() {
     reset: true
   });
 
+  const { x } = useSpring({
+    from: { x: 0 },
+    to: async next => {
+      while (1) await next({ x: 1 });
+    },
+    config: { duration: 3500 },
+    reset: true
+  });
+
   return (
-    <CenteredLogo>
-      <Logo />
-      <LogoShadow />
-    </CenteredLogo>
+    <Wrapper>
+      <CenterItem style={{ transform: radians.interpolate(cycle) }}>
+        <Fish />
+      </CenterItem>
+      <CenterItem>
+        <animated.svg
+          style={{
+            transform: x
+              .interpolate({
+                range: [0, 0.25, 0.45, 0.65, 1],
+                output: [0.85, 0.75, 0.85, 0.9, 0.85]
+              })
+              .interpolate(x => `scale(${x})`)
+          }}
+          width="100"
+          viewBox="0 0 789 130"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <ellipse
+            cx="394.5"
+            cy="64.502"
+            rx="394.5"
+            ry="64.5"
+            fill="black"
+            fill-opacity="0.19"
+          />
+        </animated.svg>
+      </CenterItem>
+    </Wrapper>
   );
 }
