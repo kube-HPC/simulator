@@ -1,6 +1,6 @@
 # [![BannerGithubSimulator](https://user-images.githubusercontent.com/27515937/59030338-62150880-8869-11e9-86f9-b6c1c72eaf19.png)](http://hkube.io)
 
-> Dashboard is a web-based HKube user interface.
+> Dashboard is a web-based [HKube](https://github.com/kube-HPC/hkube) user interface.
 
 ![DashboardPreview](https://user-images.githubusercontent.com/27515937/59031674-051b5180-886d-11e9-9806-ecce2e3ba8f0.png)
 
