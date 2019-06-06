@@ -9,6 +9,7 @@ import { Progress, Tag, Tooltip, Button, Row, Col } from 'antd';
 import { PRIORITY, STATUS } from 'constants/colors';
 import StatusTag from 'components/dumb/StatusTag.react';
 import CopyEllipsis from 'components/dumb/CopyEllipsis.react';
+import { Ellipsis } from 'ant-design-pro';
 
 const statuses = ['completed', 'failed', 'stopping', 'stopped'];
 
@@ -34,7 +35,12 @@ const jobsTableColumns = props => [
     dataIndex: 'status.pipeline',
     key: 'pipeline',
     width: '10%',
-    sorter: (a, b) => sorter(a.key, b.key)
+    sorter: (a, b) => sorter(a.key, b.key),
+    render: (_, record) => (
+      <Ellipsis length={20} tooltip>
+        {record.key}
+      </Ellipsis>
+    )
   },
   {
     title: 'Status',

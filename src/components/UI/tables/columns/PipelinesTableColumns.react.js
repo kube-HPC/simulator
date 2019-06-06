@@ -19,6 +19,7 @@ import { ReactComponent as PlayIconSvg } from 'images/play-icon.svg';
 import { stringify } from 'utils/string';
 import Text from 'antd/lib/typography/Text';
 import DrawerEditor from 'components/dumb/DrawerEditor.react';
+import { Ellipsis } from 'ant-design-pro';
 
 const deleteConfirmAction = (action, record) => {
   Modal.confirm({
@@ -66,7 +67,12 @@ const pipelinesTableColumns = props => [
     title: 'Pipeline Name',
     dataIndex: 'name',
     key: 'name',
-    width: '20%'
+    width: '20%',
+    render: (_, record) => (
+      <Ellipsis length={20} tooltip>
+        {record.key}
+      </Ellipsis>
+    )
   },
   {
     title: 'Cron Job',
