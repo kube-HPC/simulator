@@ -70,7 +70,7 @@ const pipelinesTableColumns = props => [
     width: '20%',
     render: (_, record) => (
       <Ellipsis length={20} tooltip>
-        {record.key}
+        {record.name}
       </Ellipsis>
     )
   },
