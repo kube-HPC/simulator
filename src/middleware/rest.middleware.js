@@ -51,7 +51,7 @@ const _formatError = payload => {
 };
 
 const _formatSuccess = payload => {
-  let content;
+  let content = 'OK';
   if (payload.messages) {
     content = payload.messages.join(', ');
   } else if (payload.message) {
@@ -67,7 +67,7 @@ const setPath = ({ monitorBackend }) => {
   } else {
     _url = `${monitorBackend.schema}${monitorBackend.host}:${
       monitorBackend.port
-    }${monitorBackend.path}`;
+      }${monitorBackend.path}`;
   }
 
   return _url;
