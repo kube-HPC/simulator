@@ -15,11 +15,11 @@ import {
 import cronParser from 'cron-parser';
 import cronstrue from 'cronstrue';
 import StatusTag from 'components/dumb/StatusTag.react';
+import { Ellipsis } from 'ant-design-pro';
 import { ReactComponent as PlayIconSvg } from 'images/play-icon.svg';
 import { stringify } from 'utils/string';
 import Text from 'antd/lib/typography/Text';
 import DrawerEditor from 'components/dumb/DrawerEditor.react';
-import { Ellipsis } from 'ant-design-pro';
 
 const deleteConfirmAction = (action, record) => {
   Modal.confirm({
@@ -169,17 +169,16 @@ const pipelinesTableColumns = props => [
     width: '30%',
     render: (_, record) => {
       const {
-        storedPipelines,
         execStoredPipe,
         deleteStoredPipeline,
-        fixedDataSource,
         updateStoredPipeline
       } = props;
 
       // http://hkube.io/spec/#tag/Execution/paths/~1exec~1stored/post
-      const currPipeline = fixedDataSource.find(p => p.name === record.name);
+      const currPipeline = { ...record };
 
-      // No description on exec pipeline
+      // No description and nodes on executing pipeline
+      delete currPipeline.nodes;
       delete currPipeline.description;
 
       return (
@@ -211,7 +210,7 @@ const pipelinesTableColumns = props => [
               title={'Update Pipeline'}
               description={
                 <>
-                  Edit pipeline properties and <Text code>Update</Text>{' '}
+                  Edit pipeline properties and <Text code>Update</Text>
                 </>
               }
               opener={onClick => (
@@ -219,9 +218,7 @@ const pipelinesTableColumns = props => [
                   <Button shape="circle" icon="edit" onClick={onClick} />
                 </Tooltip>
               )}
-              valueString={stringify(
-                storedPipelines.find(p => p.name === record.name)
-              )}
+              valueString={stringify(record)}
               onSubmit={updateStoredPipeline}
               submitText={'Update'}
             />

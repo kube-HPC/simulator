@@ -50,15 +50,10 @@ const _formatError = payload => {
   return content;
 };
 
-const _formatSuccess = payload => {
-  let content = 'OK';
-  if (payload.messages) {
-    content = payload.messages.join(', ');
-  } else if (payload.message) {
-    content = payload.message;
-  }
-  return content;
-};
+const _formatSuccess = payload =>
+  typeof payload === 'string'
+    ? payload.messages.join(', ')
+    : payload.message && 'OK';
 
 const setPath = ({ monitorBackend }) => {
   let _url;
@@ -67,7 +62,7 @@ const setPath = ({ monitorBackend }) => {
   } else {
     _url = `${monitorBackend.schema}${monitorBackend.host}:${
       monitorBackend.port
-      }${monitorBackend.path}`;
+    }${monitorBackend.path}`;
   }
 
   return _url;

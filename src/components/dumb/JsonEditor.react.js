@@ -11,9 +11,9 @@ export default function JsonEditor({ width, height, isControlled, ...props }) {
       width={width || 800}
       height={height || 600}
       language="json"
-      value={isControlled ? props.controlledValue : value}
+      value={isControlled ? props.value : value}
       onChange={data => {
-        isControlled ? props.setControlledValue(data) : setValue(data);
+        !isControlled && setValue(data);
         props.onChange && props.onChange(data);
       }}
     />

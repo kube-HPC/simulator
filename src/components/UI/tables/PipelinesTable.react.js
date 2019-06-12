@@ -1,10 +1,6 @@
 import { connect } from 'react-redux';
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import PipelineTabSwitcher from 'components/dumb/PipelineTabSwitcher.react';
-import { init } from 'actions/storedPipes.action';
-import { openModal } from 'actions/modal.action';
 import {
   execStoredPipe,
   deleteStoredPipeline,
@@ -16,22 +12,15 @@ import { addPipeline } from 'actions/addPipeline.action';
 import { getPipelineReadme } from 'actions/readme.action';
 import InfinityTable from 'components/UI/Layout/InfinityTable.react';
 import pipelinesTableColumns from 'components/UI/tables/columns/PipelinesTableColumns.react';
+import PipelineTabSwitcher from 'components/dumb/PipelineTabSwitcher.react';
 
-function PipelinesTable({ init, ...props }) {
+function PipelinesTable(props) {
   const { storedPipelines, pipelineReadme, getPipelineReadme } = props;
-
-  // Need to remove "nodes" key from each pipeline.
-  const fixedDataSource = [];
-  storedPipelines.forEach(p => {
-    const pipe = JSON.parse(JSON.stringify(p));
-    delete pipe.nodes;
-    fixedDataSource.push(pipe);
-  });
 
   return (
     <InfinityTable
-      dataSource={storedPipelines.asMutable()}
-      columns={pipelinesTableColumns({ ...props, fixedDataSource })}
+      dataSource={storedPipelines}
+      columns={pipelinesTableColumns(props)}
       onExpand={(expanded, record) => {
         if (expanded) getPipelineReadme(record.name);
       }}
@@ -50,30 +39,31 @@ function PipelinesTable({ init, ...props }) {
 }
 
 PipelinesTable.propTypes = {
-  init: PropTypes.func.isRequired,
   storedPipelines: PropTypes.array.isRequired,
+  addPipe: PropTypes.func.isRequired,
+  execStoredPipe: PropTypes.func.isRequired,
+  deleteStoredPipeline: PropTypes.func.isRequired,
+  updateStoredPipeline: PropTypes.func.isRequired,
+  cronStart: PropTypes.func.isRequired,
+  cronStop: PropTypes.func.isRequired,
   getPipelineReadme: PropTypes.func,
   pipelineReadme: PropTypes.object
 };
 
 const mapStateToProps = state => ({
-  algorithms: state.algorithmTable.dataSource,
   storedPipelines: state.storedPipeline.dataSource,
-  dataStats: state.storedPipeline.dataStats,
   pipelineReadme: state.pipelineReadme
 });
 
 export default connect(
   mapStateToProps,
   {
-    openModal,
-    init,
     addPipe: addPipeline,
     execStoredPipe,
     deleteStoredPipeline,
     updateStoredPipeline,
-    cronStop,
     cronStart,
+    cronStop,
     getPipelineReadme
   }
 )(PipelinesTable);

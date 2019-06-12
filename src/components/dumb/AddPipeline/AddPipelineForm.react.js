@@ -333,10 +333,9 @@ export default function AddPipelineForm(props) {
           <JsonEditor
             width={'100%'}
             height={'60vh'}
+            isControlled
+            value={editorValue}
             onChange={setEditorValue}
-            isControlled={true}
-            controlledValue={editorValue}
-            setControlledValue={setEditorValue}
           />
         </Card>
       )}

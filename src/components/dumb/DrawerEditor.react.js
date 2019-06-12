@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { notification, Icon, Card } from 'antd';
 
 import JsonEditor from 'components/dumb/JsonEditor.react';
@@ -6,6 +6,13 @@ import DrawerContainer from 'components/dumb/DrawerContainer.react';
 
 function DrawerEditor({ children, valueString, onSubmit, ...props }) {
   const [value, setValue] = useState(valueString);
+
+  useEffect(
+    () => {
+      setValue(valueString);
+    },
+    [valueString, setValue]
+  );
 
   return (
     <DrawerContainer
@@ -29,7 +36,7 @@ function DrawerEditor({ children, valueString, onSubmit, ...props }) {
       }}
     >
       <Card size="small">
-        <JsonEditor value={value} onChange={setValue} />
+        <JsonEditor isControlled value={value} onChange={setValue} />
       </Card>
     </DrawerContainer>
   );
