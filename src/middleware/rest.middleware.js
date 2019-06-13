@@ -31,7 +31,10 @@ const success = (dispatch, payload, action) => {
     meta: {
       message: {
         type: 'success', // 'success/error/warning'
-        content: _formatSuccess(payload)
+        content:
+          action.payload.actionType === 'GET_PIPELINE_README'
+            ? undefined
+            : _formatSuccess(payload)
       }
     },
     payload
@@ -50,10 +53,11 @@ const _formatError = payload => {
   return content;
 };
 
-const _formatSuccess = payload =>
-  typeof payload === 'string'
+const _formatSuccess = payload => {
+  return typeof payload === 'string'
     ? payload.messages.join(', ')
-    : payload.message && 'OK';
+    : payload.message || 'Success';
+};
 
 const setPath = ({ monitorBackend }) => {
   let _url;

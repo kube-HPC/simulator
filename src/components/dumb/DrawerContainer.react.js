@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Drawer, Typography, Button } from 'antd';
+import PropTypes from 'prop-types';
 import BottomContent from './BottomContent.react';
 
 const { Title, Paragraph } = Typography;
@@ -27,8 +28,14 @@ function DrawerContainer({ children, title, description, width, ...props }) {
       >
         {children}
         <BottomContent>
-          <Button type="primary" onClick={props.onSubmit}>
-            {props.submitText}
+          <Button
+            type="primary"
+            onClick={() => {
+              props.onSubmit();
+              !props.onSubmitClose && setVisible(false);
+            }}
+          >
+            {props.submitText || 'Submit'}
           </Button>
         </BottomContent>
       </Drawer>
@@ -36,5 +43,9 @@ function DrawerContainer({ children, title, description, width, ...props }) {
     </>
   );
 }
+
+DrawerContainer.propTypes = {
+  onSubmitClose: PropTypes.bool
+};
 
 export default DrawerContainer;

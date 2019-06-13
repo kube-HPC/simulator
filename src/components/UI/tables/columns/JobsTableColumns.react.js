@@ -38,7 +38,7 @@ const jobsTableColumns = props => [
     sorter: (a, b) => sorter(a.key, b.key),
     render: (_, record) => (
       <Ellipsis length={20} tooltip>
-        {record.key}
+        {record.pipeline.name}
       </Ellipsis>
     )
   },

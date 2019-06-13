@@ -7,24 +7,22 @@ const ScrollJsonView = styled(ReactJsonView)`
   overflow: scroll;
 `;
 
-export default function JsonView({ jsonObject, collapsed, style }) {
+export default function JsonView({ jsonObject, ...props }) {
   return (
     <ScrollJsonView
+      iconStyle="triangle"
       name={false}
-      src={jsonObject}
       displayDataTypes={false}
       displayObjectSize={false}
-      iconStyle="triangle"
+      collapsed="2"
       indentWidth="4"
-      collapsed={collapsed}
       enableClipboard={false}
-      style={style}
+      {...props}
+      src={jsonObject}
     />
   );
 }
 
 JsonView.propTypes = {
-  jsonObject: PropTypes.object.isRequired,
-  style: PropTypes.object,
-  collapsed: PropTypes.number
+  jsonObject: PropTypes.object
 };
