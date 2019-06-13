@@ -364,8 +364,8 @@ export default function AddPipelineForm(props) {
       <BottomContent
         extra={[
           <Button
+            key="editor"
             type="primary"
-            key="submit"
             onClick={() => {
               setEditorVisible(prev => !prev);
             }}
@@ -373,6 +373,7 @@ export default function AddPipelineForm(props) {
             {!editorIsVisible ? 'Edit as JSON' : 'Edit with a Wizard'}
           </Button>,
           <Popover
+            key="clear"
             content={<div>Resets {editorIsVisible ? 'JSON' : 'Wizard'}</div>}
           >
             <Button
@@ -402,6 +403,7 @@ export default function AddPipelineForm(props) {
       >
         {!editorIsVisible && (
           <Button
+            key="back"
             disabled={isFirstStep}
             type="default"
             onClick={() => {
@@ -414,6 +416,7 @@ export default function AddPipelineForm(props) {
           </Button>
         )}
         <Button
+          key="submit"
           type={isLastStep ? 'primary' : 'default'}
           onClick={() => {
             try {
@@ -463,5 +466,5 @@ export default function AddPipelineForm(props) {
 }
 
 AddPipelineForm.propTypes = {
-  formData: PropTypes.object.isRequired
+  formData: PropTypes.object
 };

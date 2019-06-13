@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
-import { sideBarOpen, sideBarClose } from '../../actions/sideBar.action';
+import { sideBarOpen, sideBarClose } from 'actions/sideBar.action';
 import { Card, Button } from 'antd';
 import { connect } from 'react-redux';
-import sideBarTypes from '../../constants/sideBarTypes';
-import 'react-mde/lib/styles/css/react-mde-all.css';
-import ReadmeViewerCodeHighlight from './ReadmeViewerCodeHighlight.react';
+import sideBarTypes from 'constants/sideBarTypes';
 
 const MdViewer = props => (
   <Card
@@ -31,20 +29,14 @@ const MdViewer = props => (
     }
   >
     <div>
-      <ReactMarkdown
-        source={props.readme}
-        renderers={{
-          code: ReadmeViewerCodeHighlight,
-          inlineCode: ReadmeViewerCodeHighlight
-        }}
-      />
+      <ReactMarkdown source={props.readme} />
     </div>
   </Card>
 );
 
 MdViewer.propTypes = {
   readme: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
+  name: PropTypes.string,
   readmeType: PropTypes.string,
   sideBarOpen: PropTypes.func.isRequired
 };

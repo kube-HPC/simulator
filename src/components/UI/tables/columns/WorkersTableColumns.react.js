@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Icon, Tag } from 'antd';
+import { Icon, Tag } from 'antd';
 
 import { STATUS } from 'constants/colors';
 import StatusTag from 'components/dumb/StatusTag.react';
@@ -53,13 +53,6 @@ export const workersTableStats = () => [
     dataIndex: 'jobId',
     width: '30%',
     key: 'jobId'
-  },
-  {
-    title: 'View Logs',
-    dataIndex: 'logs',
-    width: '10%',
-    key: 'logs',
-    render: () => <Button size="small" icon="read" />
   }
 ];
 

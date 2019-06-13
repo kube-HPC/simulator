@@ -34,8 +34,7 @@ const options = data => {
 
 const TableAutoComplete = props => (
   <InputTransparent
-    dropdownMatchSelectWidth={false}
-    dropdownStyle={{ width: 300 }}
+    dropdownMatchSelectWidth={true}
     dataSource={options(props.dataSource)}
     onSelect={props.updateFilter}
     onChange={props.updateFilter}

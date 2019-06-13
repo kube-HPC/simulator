@@ -4,11 +4,17 @@ import PropTypes from 'prop-types';
 import JobGraph from 'components/smart/JobGraph.react';
 import JsonView from 'components/dumb/JsonView.react';
 import Trace from 'jaeger-react-trace-component';
+import styled from 'styled-components';
+
+const OverflowedCard = styled(Card)`
+  overflow: auto;
+  height: 50vh;
+`;
 
 const generateTabs = tabs =>
   Object.entries(tabs).map(([key, value]) => (
     <Tabs.TabPane tab={key} key={key}>
-      <Card>{value}</Card>
+      <OverflowedCard>{value}</OverflowedCard>
     </Tabs.TabPane>
   ));
 

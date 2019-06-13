@@ -46,7 +46,7 @@ const jobsTableColumns = props => [
       <Button
         type="danger"
         shape="circle"
-        icon="close"
+        icon="delete"
         onClick={() => props.deleteAlgorithm(record.name)}
       />
     )

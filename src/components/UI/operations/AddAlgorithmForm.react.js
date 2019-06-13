@@ -113,12 +113,11 @@ function AddAlgorithmForm(props) {
 
   const buildTypes = {
     code: (
-      <div>
+      <>
         <Form.Item {...formItemLayout} label={schema.environment}>
           <Select
-            defaultValue={algoData.env}
             value={algoData.env}
-            onChange={v => (algoData.env = v)}
+            onChange={env => setAlgoData({ ...algoData, env })}
           >
             {insertEnvOptions(schema.env)}
           </Select>
@@ -145,7 +144,7 @@ function AddAlgorithmForm(props) {
             <p className="ant-upload-hint">Support for zip or tar.gz only</p>
           </Upload.Dragger>
         </Form.Item>
-      </div>
+      </>
     ),
     image: (
       <Form.Item {...formItemLayout} label={schema.image}>
@@ -264,7 +263,17 @@ function AddAlgorithmForm(props) {
         <Divider orientation="left">{schema.code}</Divider>
         {buildTypes[buildType]}
       </StyledForm>
-      <BottomContent>
+      <BottomContent
+        extra={[
+          <Button
+            type="danger"
+            key="clear"
+            onClick={() => setAlgoData(template)}
+          >
+            Clear
+          </Button>
+        ]}
+      >
         <Button key="Preview" disabled={true}>
           Preview
         </Button>
@@ -280,9 +289,7 @@ AddAlgorithmForm.propsTypes = {
   applyAlgorithm: PropTypes.func.isRequired
 };
 
-const mapStateToProps = () => {};
-
 export default connect(
-  mapStateToProps,
+  null,
   { applyAlgorithm }
 )(AddAlgorithmForm);

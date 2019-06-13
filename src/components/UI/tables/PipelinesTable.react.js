@@ -19,6 +19,7 @@ function PipelinesTable(props) {
 
   return (
     <InfinityTable
+      rowKey={pipeline => pipeline.name}
       dataSource={storedPipelines}
       columns={pipelinesTableColumns(props)}
       onExpand={(expanded, record) => {

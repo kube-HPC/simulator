@@ -13,7 +13,13 @@ const success = (dispatch, payload, action) => {
 };
 
 export const socketioMiddleware = ({ dispatch }) => next => action => {
-  if (![AT.SEND_TERMINAL_INPUT, AT.SOCKET_INIT, `${AT.GET_CONFIG}_SUCCESS`].includes(action.type)) {
+  if (
+    ![
+      AT.SEND_TERMINAL_INPUT,
+      AT.SOCKET_INIT,
+      `${AT.GET_CONFIG}_SUCCESS`
+    ].includes(action.type)
+  ) {
     return next(action);
   }
   if (action.type === `${AT.GET_CONFIG}_SUCCESS`) {
@@ -25,7 +31,9 @@ export const socketioMiddleware = ({ dispatch }) => next => action => {
     if (monitorBackend.useLocation) {
       url = location.origin; //eslint-disable-line
     } else {
-      url = `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}`;
+      url = `${monitorBackend.schema}${monitorBackend.host}:${
+        monitorBackend.port
+      }`;
     }
     // const url = `${location.protocol}//${location.hostname}:30010`;
     socket = io(url, {
@@ -37,12 +45,21 @@ export const socketioMiddleware = ({ dispatch }) => next => action => {
       console.log(`connected... ${socket.id}`);
     });
 
-    const events = ['connect_error', 'connect_timeout', 'error', 'reconnect', 'reconnect_attempt', 'reconnecting', 'reconnect_error', 'reconnect_failed']
-    events.forEach((e) => {
-      socket.on(e, (args) => {
-        console.log(`${e}, ${args}`);
+    const events = [
+      'connect_error',
+      'connect_timeout',
+      'error',
+      'reconnect',
+      'reconnect_attempt',
+      'reconnecting',
+      'reconnect_error',
+      'reconnect_failed'
+    ];
+    events.forEach(e => {
+      socket.on(e, args => {
+        // console.log(`${e}, ${args}`);
       });
-    })
+    });
 
     Object.keys(currentTopicRegisterd).forEach(act => {
       socket.on(currentTopicRegisterd[act].payload.topic, data => {
@@ -60,7 +77,11 @@ export const socketioMiddleware = ({ dispatch }) => next => action => {
       }
       currentTopicRegisterd[action.payload.topic] = action;
     } else {
-      console.warn(`socket middlware: trying to register topic ${action.payload.topic} twice `);
+      console.warn(
+        `socket middlware: trying to register topic ${
+          action.payload.topic
+        } twice `
+      );
     }
   } else {
     setTimeout(() => {
