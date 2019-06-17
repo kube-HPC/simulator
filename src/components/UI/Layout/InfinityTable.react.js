@@ -1,28 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-// import { InfinityTable as Table } from 'antd-table-infinity';
-import { Spin, Table } from 'antd';
-
-import { HCOLOR } from 'constants/colors';
-
-const StyledSpin = styled(Spin)`
-  text-align: center;
-  padding-top: 40;
-  padding-bottom: 40;
-  border: 1px solid ${HCOLOR.colorAccent};
-`;
+import { Table } from 'antd';
 
 export default function InfinityTable({ isLoading, dataSource, ...props }) {
-  const tableSize = (dataSource && dataSource.length) || 0;
   return (
     <Table
       key="InfinityTable"
-      loadingIndicator={<StyledSpin tip="Loading..." />}
-      scroll={{ y: tableSize > 10 ? '88vh' : false }}
       size="middle"
       dataSource={dataSource || []}
-      pagination={{ pageSize: 15 }}
+      pagination={{
+        showSizeChanger: true,
+        showQuickJumper: true,
+        size: 'small'
+      }}
       {...props}
     />
   );

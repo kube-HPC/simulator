@@ -1,25 +1,13 @@
 import React from 'react';
-import {
-  Button,
-  Row,
-  Col,
-  Modal,
-  Icon,
-  Switch,
-  Input,
-  Popover,
-  message,
-  Tooltip
-} from 'antd';
+import { Button, Row, Col, Modal, Icon, Tooltip } from 'antd';
 
-import cronParser from 'cron-parser';
-import cronstrue from 'cronstrue';
 import StatusTag from 'components/dumb/StatusTag.react';
 import { ReactComponent as PlayIconSvg } from 'images/play-icon.svg';
 import { stringify } from 'utils/string';
 import Text from 'antd/lib/typography/Text';
 import DrawerEditor from 'components/dumb/DrawerEditor.react';
-import { Ellipsis } from 'ant-design-pro';
+import SwitchCron from 'components/smart/SwitchCron.react';
+import CopyEllipsis from 'components/dumb/CopyEllipsis.react';
 
 const deleteConfirmAction = (action, record) => {
   Modal.confirm({
@@ -37,105 +25,27 @@ const deleteConfirmAction = (action, record) => {
   });
 };
 
-const revertCronTrigger = (
-  cronIsEnabled,
-  record,
-  cronExpr,
-  cronStart,
-  cronStop
-) => {
-  return () => {
-    const pipelineName = record.name;
-    cronIsEnabled
-      ? cronStop(pipelineName, cronExpr)
-      : cronStart(pipelineName, cronExpr);
-  };
-};
-
-const updateCronPattern = (pipeline, pattern, updateStoredPipeline) => {
-  try {
-    cronstrue.toString(pattern);
-    pipeline.triggers.cron.pattern = pattern;
-    updateStoredPipeline(pipeline);
-  } catch (errorMessage) {
-    message.error(errorMessage);
-  }
-};
-
 const pipelinesTableColumns = props => [
   {
     title: 'Pipeline Name',
     dataIndex: 'name',
     key: 'name',
     width: '20%',
-    render: (_, record) => (
-      <Ellipsis length={20} tooltip>
-        {record.name}
-      </Ellipsis>
-    )
+    render: (_, record) => <CopyEllipsis disabled text={record.name} />
   },
   {
     title: 'Cron Job',
     dataIndex: 'cron',
     key: 'cron',
     width: '30%',
-    render: (_, record) => {
-      const cronIsEnabled =
-        record.hasOwnProperty('triggers') &&
-        record.triggers.hasOwnProperty('cron') &&
-        record.triggers.cron.enabled;
-
-      const cronExpr = cronIsEnabled
-        ? record.triggers.cron.pattern
-        : '0 * * * *';
-
-      const interval = cronParser.parseExpression(cronExpr);
-
-      const { cronStart, cronStop, updateStoredPipeline } = props;
-
-      return (
-        <Row type="flex" justify="start" gutter={10}>
-          <Col>
-            <Switch
-              size="small"
-              checked={cronIsEnabled}
-              onChange={revertCronTrigger(
-                cronIsEnabled,
-                JSON.parse(JSON.stringify(record)),
-                cronExpr,
-                cronStart,
-                cronStop,
-                updateStoredPipeline
-              )}
-            />
-          </Col>
-          <Col>
-            <Popover
-              content={`${cronstrue.toString(cronExpr, {
-                use24HourTimeFormat: true
-              })}, Next Interval: ${interval.next().toString()}`}
-              trigger="focus"
-            >
-              <Input.Search
-                style={{ width: 160 }}
-                size="small"
-                disabled={!cronIsEnabled}
-                placeholder="Cron Expression"
-                enterButton={<Icon type="check" />}
-                defaultValue={cronExpr}
-                onSearch={pattern =>
-                  updateCronPattern(
-                    JSON.parse(JSON.stringify(record)),
-                    pattern,
-                    updateStoredPipeline
-                  )
-                }
-              />
-            </Popover>
-          </Col>
-        </Row>
-      );
-    }
+    render: (_, record) => (
+      <SwitchCron
+        pipeline={record}
+        cronStart={props.cronStart}
+        cronStop={props.cronStop}
+        updateStoredPipeline={props.updateStoredPipeline}
+      />
+    )
   },
   {
     title: 'Pipeline Stats',
@@ -169,17 +79,16 @@ const pipelinesTableColumns = props => [
     width: '30%',
     render: (_, record) => {
       const {
-        storedPipelines,
         execStoredPipe,
         deleteStoredPipeline,
-        fixedDataSource,
         updateStoredPipeline
       } = props;
 
       // http://hkube.io/spec/#tag/Execution/paths/~1exec~1stored/post
-      const currPipeline = fixedDataSource.find(p => p.name === record.name);
+      const currPipeline = { ...record };
 
-      // No description on exec pipeline
+      // No description and nodes on executing pipeline
+      delete currPipeline.nodes;
       delete currPipeline.description;
 
       return (
@@ -211,7 +120,7 @@ const pipelinesTableColumns = props => [
               title={'Update Pipeline'}
               description={
                 <>
-                  Edit pipeline properties and <Text code>Update</Text>{' '}
+                  Edit pipeline properties and <Text code>Update</Text>
                 </>
               }
               opener={onClick => (
@@ -219,9 +128,7 @@ const pipelinesTableColumns = props => [
                   <Button shape="circle" icon="edit" onClick={onClick} />
                 </Tooltip>
               )}
-              valueString={stringify(
-                storedPipelines.find(p => p.name === record.name)
-              )}
+              valueString={stringify(record)}
               onSubmit={updateStoredPipeline}
               submitText={'Update'}
             />

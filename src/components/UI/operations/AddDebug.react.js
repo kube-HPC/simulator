@@ -42,9 +42,7 @@ AddDebug.propsTypes = {
   onSubmit: PropTypes.func.isRequired
 };
 
-const mapStateToProps = () => {};
-
 export default connect(
-  mapStateToProps,
+  null,
   { addAlgorithm }
 )(AddDebug);

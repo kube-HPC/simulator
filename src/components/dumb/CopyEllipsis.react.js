@@ -10,15 +10,15 @@ const IconWhite = styled(Icon)`
   margin-right: 10px;
 `;
 
-export default function CopyEllipsis({ text }) {
+export default function CopyEllipsis({ text, disabled, length }) {
   return (
     <CopyToClipboard
       text={`${text}`}
       onCopy={() => notification.success({ message: 'Copied to clipboard' })}
     >
       <div>
-        <IconWhite type="right" />
-        <Ellipsis length={20} tooltip>
+        {!disabled && <IconWhite type="right" />}
+        <Ellipsis length={length || 20} tooltip>
           {text}
         </Ellipsis>
       </div>

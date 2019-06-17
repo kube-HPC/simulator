@@ -53,8 +53,8 @@ class AlgorithmTabSwitcher extends Component {
   }
 }
 AlgorithmTabSwitcher.propTypes = {
-  algorithmDetails: PropTypes.string.isRequired,
-  readme: PropTypes.string.isRequired
+  algorithmDetails: PropTypes.object,
+  readme: PropTypes.string
 };
 
 export default AlgorithmTabSwitcher;

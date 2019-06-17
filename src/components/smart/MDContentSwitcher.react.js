@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Radio } from 'antd';
 import MDEditor from './MDEditor.react';
-import ReadmeViewerCodeHighlight from '../dumb/ReadmeViewerCodeHighlight.react';
 import ReactMarkdown from 'react-markdown';
-import { postAlgorithmReadme, postPipelineReadme } from '../../actions/readme.action';
+import {
+  postAlgorithmReadme,
+  postPipelineReadme
+} from '../../actions/readme.action';
 
 class MDContentSwitcher extends Component {
   state = {
@@ -30,13 +32,7 @@ class MDContentSwitcher extends Component {
       this.state.defaultRadio === 'Edit' ? (
         <MDEditor data={this.state.mdData} onDataChange={this.onDataChange} />
       ) : (
-        <ReactMarkdown
-          source={this.state.mdData}
-          renderers={{
-            code: ReadmeViewerCodeHighlight,
-            inlineCode: ReadmeViewerCodeHighlight
-          }}
-        />
+        <ReactMarkdown source={this.state.mdData} />
       );
     return (
       <div style={{ marginTop: '20px' }}>
@@ -45,7 +41,10 @@ class MDContentSwitcher extends Component {
           style={{ left: '90%' }}
           onClick={() => {
             this.setState({ mdData: this.mdData });
-            if (this.props.readmeType && this.props.readmeType === 'algorithm') {
+            if (
+              this.props.readmeType &&
+              this.props.readmeType === 'algorithm'
+            ) {
               this.props.postAlgorithmReadme(this.props.name, this.mdData);
             } else {
               this.props.postPipelineReadme(this.props.name, this.mdData);

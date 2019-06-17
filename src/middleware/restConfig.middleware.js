@@ -39,10 +39,10 @@ export const restConfigMiddleware = ({ dispatch }) => next => action => {
         res
           .json()
           .then(data => {
-            console.log(data);
+            // console.log(data);
             success(dispatch, data, action);
           })
-          .catch(err => console.log(err));
+          .catch(err => console.error(err));
       })
       .catch(err => {
         reject(dispatch, err, action);

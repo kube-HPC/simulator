@@ -26,39 +26,31 @@ const pending = (dispatch, payload, action) => {
 };
 
 const success = (dispatch, payload, action) => {
+  const isShowMessageSuccess = {
+    EXEC_STORED_PIPE: 'Stored pipeline execution started, check Jobs table',
+    UPDATE_STORED_PIPELINE: 'Pipeline updated',
+    DELETE_STORED_PIPE: 'Pipeline deleted',
+    EXEC_RAW_PIPELINE: 'Raw pipeline execution started',
+    ADD_PIPE: `Pipeline ${payload.name} has been stored`,
+    ALGORITHM_APPLY: 'Algorithm Added',
+    ALGORITHM_ADD: 'Algorithm Added for debug',
+    CRON_START: 'Cron job started for selected pipeline',
+    CRON_STOP: 'Cron job disabled for selected pipeline'
+  };
   dispatch({
     type: `${action.payload.actionType}_SUCCESS`,
     meta: {
       message: {
         type: 'success', // 'success/error/warning'
-        content: _formatSuccess(payload)
+        content: isShowMessageSuccess[action.payload.actionType]
       }
     },
     payload
   });
 };
 
-const _formatError = payload => {
-  let content;
-  if (typeof payload === 'string') {
-    content = payload;
-  } else if (payload.message) {
-    content = payload.message;
-  } else {
-    content = 'Error';
-  }
-  return content;
-};
-
-const _formatSuccess = payload => {
-  let content = 'OK';
-  if (payload.messages) {
-    content = payload.messages.join(', ');
-  } else if (payload.message) {
-    content = payload.message;
-  }
-  return content;
-};
+const _formatError = payload =>
+  typeof payload === 'string' ? payload : payload.message || 'Error';
 
 const setPath = ({ monitorBackend }) => {
   let _url;
@@ -67,7 +59,7 @@ const setPath = ({ monitorBackend }) => {
   } else {
     _url = `${monitorBackend.schema}${monitorBackend.host}:${
       monitorBackend.port
-      }${monitorBackend.path}`;
+    }${monitorBackend.path}`;
   }
 
   return _url;

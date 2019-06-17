@@ -6,8 +6,6 @@ import { createSelector } from 'reselect';
 import { withState } from 'recompose';
 import { Tabs, Card } from 'antd';
 
-import { openModal } from 'actions/modal.action';
-import { init } from 'actions/workerTable.action';
 import InfinityTable from 'components/UI/Layout/InfinityTable.react';
 import defaultWorkerData from 'config/template/worker.template';
 import {
@@ -15,12 +13,18 @@ import {
   workersTableStats
 } from 'components/UI/tables/columns/WorkersTableColumns.react';
 import JsonView from 'components/dumb/JsonView.react';
+import styled from 'styled-components';
+
+const SmallCard = styled(Card)`
+  overflow: scroll;
+  height: 300px;
+`;
 
 const generateTab = (key, value) => (
   <Tabs.TabPane tab={key} key={key}>
-    <Card>
+    <SmallCard size="small">
       <JsonView jsonObject={value} />
-    </Card>
+    </SmallCard>
   </Tabs.TabPane>
 );
 
@@ -31,7 +35,7 @@ const expandedRowRender = (columns, dataSource) => record => {
 
   return (
     <InfinityTable
-      rowKey={record => record.algorithmName}
+      rowKey={record => record.podName}
       columns={columns}
       dataSource={filteredDataSource}
       expandedRowRender={record => {
@@ -57,7 +61,7 @@ const expandedRowRender = (columns, dataSource) => record => {
   );
 };
 
-function WorkersTable({ init, ...props }) {
+function WorkersTable(props) {
   const { dataSource, stats } = props;
 
   const statsMergedWithDefault =
@@ -65,17 +69,15 @@ function WorkersTable({ init, ...props }) {
     stats.stats &&
     stats.stats.map(algo => ({ ...defaultWorkerData, ...algo }));
   return (
-    <div>
-      <InfinityTable
-        rowKey={record => record.podName}
-        columns={workerTableColumns(props)}
-        dataSource={statsMergedWithDefault}
-        expandedRowRender={expandedRowRender(
-          workersTableStats(props),
-          dataSource
-        )}
-      />
-    </div>
+    <InfinityTable
+      rowKey={record => record.algorithmName}
+      columns={workerTableColumns(props)}
+      dataSource={statsMergedWithDefault}
+      expandedRowRender={expandedRowRender(
+        workersTableStats(props),
+        dataSource
+      )}
+    />
   );
 }
 
@@ -87,9 +89,8 @@ const tableDataSelector = createSelector(
 );
 
 WorkersTable.propTypes = {
-  init: PropTypes.func.isRequired,
-  dataSource: PropTypes.array.isRequired,
-  stats: PropTypes.array.isRequired
+  dataSource: PropTypes.array,
+  stats: PropTypes.object
 };
 
 const mapStateToProps = state => ({
@@ -101,7 +102,7 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { openModal, init }
+  null
 )(
   withState('isVisible', 'onPopoverClickVisible', {
     visible: false,

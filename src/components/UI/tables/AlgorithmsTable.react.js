@@ -14,7 +14,7 @@ import InfinityTable from 'components/UI/Layout/InfinityTable.react';
 import algorithmsTableColumns from 'components/UI/tables/columns/AlgorithmsTableColumns.react';
 import { stringify } from 'utils/string';
 
-function AlgorithmsTable({ init, ...props }) {
+function AlgorithmsTable(props) {
   const onSubmit = data => {
     const formData = new FormData();
     formData.append('payload', stringify(data));
@@ -25,7 +25,6 @@ function AlgorithmsTable({ init, ...props }) {
 
   return (
     <InfinityTable
-      size="middle"
       columns={algorithmsTableColumns({ ...props, onSubmit })}
       dataSource={dataSource.asMutable()}
       onExpand={(expanded, record) =>
@@ -56,7 +55,6 @@ const tableDataSelector = createSelector(
 
 AlgorithmsTable.propTypes = {
   dataSource: PropTypes.array.isRequired,
-  init: PropTypes.func.isRequired,
   getAlgorithmReadme: PropTypes.func.isRequired,
   applyAlgorithm: PropTypes.func.isRequired,
   deleteAlgorithmFromStore: PropTypes.func.isRequired,

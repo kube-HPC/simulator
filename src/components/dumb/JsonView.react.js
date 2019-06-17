@@ -3,28 +3,28 @@ import PropTypes from 'prop-types';
 import ReactJsonView from 'react-json-view';
 import styled from 'styled-components';
 
-const ScrollJsonView = styled(ReactJsonView)`
-  overflow: scroll;
+const ScrollJsonView = styled.div`
+  overflow: auto;
 `;
 
-export default function JsonView({ jsonObject, collapsed, style }) {
+export default function JsonView({ jsonObject, ...props }) {
   return (
-    <ScrollJsonView
-      name={false}
-      src={jsonObject}
-      displayDataTypes={false}
-      displayObjectSize={false}
-      iconStyle="triangle"
-      indentWidth="4"
-      collapsed={collapsed}
-      enableClipboard={false}
-      style={style}
-    />
+    <ScrollJsonView>
+      <ReactJsonView
+        iconStyle="triangle"
+        name={false}
+        displayDataTypes={false}
+        displayObjectSize={false}
+        collapsed="2"
+        indentWidth="4"
+        enableClipboard={false}
+        {...props}
+        src={jsonObject}
+      />
+    </ScrollJsonView>
   );
 }
 
 JsonView.propTypes = {
-  jsonObject: PropTypes.object.isRequired,
-  style: PropTypes.object,
-  collapsed: PropTypes.number
+  jsonObject: PropTypes.object
 };

@@ -7,7 +7,6 @@ import 'ant-design-pro/dist/ant-design-pro.css';
 import { FooterToolbar } from 'ant-design-pro';
 
 const FooterAbsolute = styled(FooterToolbar)`
-  position: absolute;
   background: ${HCOLOR.background};
 `;
 
@@ -27,7 +26,7 @@ function BottomContent({ children, extra }) {
 }
 
 BottomContent.propTypes = {
-  children: PropTypes.array
+  extra: PropTypes.array
 };
 
 export default BottomContent;
