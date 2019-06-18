@@ -45,7 +45,7 @@ const addPipelineOptions = pipelines =>
   ));
 
 const verbosityLevels = ['info', 'trace', 'debug', 'warn', 'error', 'critical'];
-const stepsTitles = ['Initial', 'Nodes', 'Side Effects', 'Triggers', 'Options'];
+const stepsTitles = ['Initial', 'Nodes', 'Webhooks', 'Triggers', 'Options'];
 
 const addCronContent = formData => {
   let isLegalPattern = false;
@@ -117,6 +117,18 @@ export default function AddPipelineForm(props) {
           }}
         />
       </Form.Item>
+      <Form.Item {...formItemLayout} label="Flow Input">
+        <Card>
+          <JsonEditor
+            width={'100%'}
+            height={'30vh'}
+            value={flowInputString}
+            onChange={setFlowInputString}
+            snippetEnabled={false}
+            showGutter={true}
+          />
+        </Card>
+      </Form.Item>
     </div>
   );
 
@@ -131,7 +143,9 @@ export default function AddPipelineForm(props) {
     />
   );
 
-  const validateUrl = url => url === '' || 'http://' === url.substring(0, 7);
+  const URL_REGEX = /^(f|ht)tps?:\/\//i;
+
+  const validateUrl = url => !url || URL_REGEX.test(url);
 
   const validateHelp = (url, msg) => !validateUrl(url) && msg;
 
@@ -143,10 +157,7 @@ export default function AddPipelineForm(props) {
         validateStatus={
           validateUrl(formData.webhooks.progress) ? 'success' : 'error'
         }
-        help={validateHelp(
-          formData.webhooks.progress,
-          'Must start with http://'
-        )}
+        help={validateHelp(formData.webhooks.progress, 'Must start with http://')}
       >
         <Input
           placeholder="Progress Webhook URI"
@@ -167,18 +178,6 @@ export default function AddPipelineForm(props) {
           onChange={onChangeTarget(formData, 'webhooks', 'result')}
           value={formData.webhooks.result}
         />
-      </Form.Item>
-      <Form.Item {...formItemLayout} label="Flow Input">
-        <Card>
-          <JsonEditor
-            width={'100%'}
-            height={'40vh'}
-            value={flowInputString}
-            onChange={setFlowInputString}
-            snippetEnabled={false}
-            showGutter={true}
-          />
-        </Card>
       </Form.Item>
     </>
   );
@@ -429,16 +428,22 @@ export default function AddPipelineForm(props) {
               }
 
               if (needToSubmit) {
-                const urlStart = 'http://';
                 const { progress, result } = formData.webhooks;
-                if (progress === '') formData.webhooks.progress = urlStart;
-                if (result === '') formData.webhooks.result = urlStart;
+                if (progress) {
+                  formData.webhooks.progress = progress
+                };
+                if (result) {
+                  formData.webhooks.result = result;
+                }
+                if (!progress && !result) {
+                  formData.webhooks = undefined;
+                }
               }
 
               needToSubmit
                 ? props.onSubmit(
-                    editorIsVisible ? JSON.parse(editorValue) : formData
-                  )
+                  editorIsVisible ? JSON.parse(editorValue) : formData
+                )
                 : setStep(step + 1);
             } catch (e) {
               notification.config({
@@ -455,10 +460,10 @@ export default function AddPipelineForm(props) {
           {isLastStep || editorIsVisible ? (
             'Submit'
           ) : (
-            <>
-              Next <Icon type="right" />
-            </>
-          )}
+              <>
+                Next <Icon type="right" />
+              </>
+            )}
         </Button>
       </BottomContent>
     </div>
