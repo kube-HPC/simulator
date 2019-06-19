@@ -8,7 +8,6 @@ import MDContentSwitcherReact from 'components/containers/md/MDContentSwitcher.r
 const MDViewer = props => (
   <Card
     size="small"
-    style={{ maxWidth: '80vw' }}
     title={props.name}
     extra={
       <DrawerContainer

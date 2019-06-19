@@ -3,6 +3,7 @@ const restHelper = action => {
   actionType[`${action}_SUCCESS`] = `${action}_SUCCESS`;
   actionType[`${action}_REJECT`] = `${action}_REJECT`;
 };
+
 const actionType = {
   SET_CHARTS: 'SET_CHARTS',
   ADD_LAYER: 'ADD_LAYER',
@@ -60,6 +61,7 @@ const actionType = {
   POST_PIPELINE_README: 'POST_PIPELINE_README',
   POST_ALGORITHM_README: 'POST_ALGORITHM_README'
 };
+
 restHelper(actionType.ALGORITHM_APPLY);
 restHelper(actionType.GET_CONFIG);
 restHelper(actionType.ALGORITHM_ADD);

@@ -148,7 +148,7 @@ HKubeLayout.propTypes = {
 
 const mapStateToProps = state => ({
   scriptsPath: state.serverSelection.currentSelection.scriptsPath,
-  jobsCount: (state.containerTable.dataSource || []).length,
+  jobsCount: (state.jobsTable.dataSource || []).length,
   driversCount: (state.driverTable.dataSource || []).length,
   algorithmsCount: (state.algorithmTable.dataSource || []).length,
   buildsCount: (state.algorithmBuildsTable.dataSource || []).length,

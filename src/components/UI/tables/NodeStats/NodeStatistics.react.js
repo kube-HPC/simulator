@@ -1,9 +1,6 @@
 import { connect } from 'react-redux';
-import { openModal } from '../../../../actions/modal.action';
-import { init } from '../../../../actions/workerTable.action';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withState } from 'recompose';
 import { ResponsiveBar } from '@nivo/bar';
 import { Empty } from 'antd';
 
@@ -186,14 +183,6 @@ class NodeStatistics extends Component {
   }
 }
 
-// const workerTable = (state) => state.workerTable.dataSource;
-// const stats = (state) => state.workerTable.stats;
-
-// const tableDataSelector = createSelector(
-//   [workerTable],
-//   (dataSource) => dataSource
-// );
-
 NodeStatistics.propTypes = {
   dataSource: PropTypes.object.isRequired,
   metric: PropTypes.string.isRequired
@@ -201,15 +190,9 @@ NodeStatistics.propTypes = {
 
 const mapStateToProps = state => ({
   dataSource: state.nodeStatistics.dataSource
-  //stats: stats(state),
 });
 
 export default connect(
   mapStateToProps,
-  { openModal, init }
-)(
-  withState('isVisible', 'onPopoverClickVisible', {
-    visible: false,
-    podName: ''
-  })(NodeStatistics)
-);
+  null
+)(NodeStatistics);

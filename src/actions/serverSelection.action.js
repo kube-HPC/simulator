@@ -1,5 +1,4 @@
 import actions from '../constants/actions';
-import topics from '../constants/topics';
 
 export const init = () => ({
   type: actions.REST_REQ,

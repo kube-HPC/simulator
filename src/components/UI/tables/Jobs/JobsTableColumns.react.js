@@ -10,6 +10,9 @@ import { PRIORITY, STATUS } from 'constants/colors';
 import StatusTag from 'components/containers/StatusTag.react';
 import CopyEllipsis from 'components/containers/CopyEllipsis.react';
 
+import { downloadStorageResults } from 'actions/jobs.action';
+import { execRawPipeline, stopPipeline } from 'actions/pipeline.action';
+
 const statuses = ['completed', 'failed', 'stopping', 'stopped'];
 
 const getStatusFilter = () =>
@@ -21,7 +24,7 @@ const getStatusFilter = () =>
 const sorter = (a, b) =>
   isNaN(a) && isNaN(b) ? (a || '').localeCompare(b || '') : a - b;
 
-const jobsTableColumns = props => [
+const jobsTableColumns = dispatch => [
   {
     title: 'Job ID',
     dataIndex: 'key',
@@ -157,8 +160,8 @@ const jobsTableColumns = props => [
             icon={isStopPipeline ? 'close' : 'redo'}
             onClick={() =>
               isStopPipeline
-                ? props.stopPipeline(record.key)
-                : props.execRawPipeline(record.pipeline)
+                ? dispatch(stopPipeline(record.key))
+                : dispatch(execRawPipeline(record.pipeline))
             }
           />
         </Tooltip>
@@ -177,7 +180,9 @@ const jobsTableColumns = props => [
             shape="circle"
             icon="download"
             onClick={() =>
-              props.downloadStorageResults(record.results.data.storageInfo.path)
+              dispatch(
+                downloadStorageResults(record.results.data.storageInfo.path)
+              )
             }
           />
         </Tooltip>

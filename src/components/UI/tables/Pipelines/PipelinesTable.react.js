@@ -6,9 +6,9 @@ import {
   deleteStoredPipeline,
   updateStoredPipeline,
   cronStart,
-  cronStop
-} from 'actions/storedPipes.action';
-import { addPipeline } from 'actions/addPipeline.action';
+  cronStop,
+  addPipeline
+} from 'actions/pipeline.action';
 import { getPipelineReadme } from 'actions/readme.action';
 import InfinityTable from 'components/UI/Layout/InfinityTable.react';
 import pipelinesTableColumns from 'components/UI/tables/Pipelines/PipelinesTableColumns.react';
@@ -41,7 +41,7 @@ function PipelinesTable(props) {
 
 PipelinesTable.propTypes = {
   storedPipelines: PropTypes.array.isRequired,
-  addPipe: PropTypes.func.isRequired,
+  addPipeline: PropTypes.func.isRequired,
   execStoredPipe: PropTypes.func.isRequired,
   deleteStoredPipeline: PropTypes.func.isRequired,
   updateStoredPipeline: PropTypes.func.isRequired,
@@ -59,7 +59,7 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   {
-    addPipe: addPipeline,
+    addPipeline,
     execStoredPipe,
     deleteStoredPipeline,
     updateStoredPipeline,

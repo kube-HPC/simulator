@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Card } from 'antd';
 import PropTypes from 'prop-types';
 import humanizeDuration from 'humanize-duration';
-import { downloadStorageResults } from '../../../../actions/containerTable.action';
+import { downloadStorageResults } from 'actions/jobs.action';
 import JsonView from '../../../containers/json/JsonView.react';
 
 class NodeInputOutput extends Component {

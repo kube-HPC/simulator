@@ -1,68 +1,47 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { createSelector } from 'reselect';
-import { getJaegerData } from 'actions/jaegerGetData.action';
+import { getJaegerData } from 'actions/jobs.action';
 
 import InfinityTable from 'components/UI/Layout/InfinityTable.react';
 import JobsTabSwitcher from 'components/UI/tables/Jobs/JobsTabSwitcher.react';
 import jobsTableColumns from 'components/UI/tables/Jobs/JobsTableColumns.react';
+import RowCard from 'components/containers/RowCard.react';
 
-function JobsTable({ init, dataSource, ...props }) {
+const tableDataSelector = createSelector(
+  state => state.jobsTable.dataSource,
+  state => state.autoCompleteFilter.filter,
+  (dataSource, filter) =>
+    dataSource && dataSource.asMutable().filter(row => row.key.includes(filter))
+);
+
+export default function JobsTable() {
+  const jaeger = useSelector(state => state.jaeger);
+  const dataSource = useSelector(state => tableDataSelector(state));
+  const dispatch = useDispatch();
+
   return (
     <InfinityTable
-      columns={jobsTableColumns(props)}
+      columns={jobsTableColumns(dispatch)}
       dataSource={dataSource}
       expandedRowRender={record => (
-        <JobsTabSwitcher
-          record={{
-            key: record.key,
-            graph: record.graph,
-            record: {
-              pipeline: record.pipeline,
-              status: record.status,
-              results: record.results
-            },
-            jaeger: props.jaeger[record.key] || null
-          }}
-        />
+        <RowCard>
+          <JobsTabSwitcher
+            record={{
+              key: record.key,
+              graph: record.graph,
+              record: {
+                pipeline: record.pipeline,
+                status: record.status,
+                results: record.results
+              },
+              jaeger: jaeger[record.key] || null
+            }}
+          />
+        </RowCard>
       )}
-      onExpand={(_, record) => props.getJaegerData(record.key)}
+      onExpand={(_, { key }) => dispatch(getJaegerData(key))}
     />
   );
 }
-
-const containerTable = state => state.containerTable.dataSource;
-
-const autoCompleteFilter = state => state.autoCompleteFilter.filter;
-
-const rowFilter = (raw, value) =>
-  Object.values(raw.status).find(data =>
-    data instanceof Object ? false : data.includes(value) ? true : false
-  );
-
-const tableDataSelector = createSelector(
-  containerTable,
-  autoCompleteFilter,
-  (containerTable, autoCompleteFilter) =>
-    containerTable &&
-    containerTable.asMutable().filter(row => rowFilter(row, autoCompleteFilter))
-);
-
-JobsTable.propTypes = {
-  getJaegerData: PropTypes.func.isRequired,
-  dataSource: PropTypes.array.isRequired,
-  jaeger: PropTypes.object.isRequired
-};
-
-const mapStateToProps = state => ({
-  dataSource: tableDataSelector(state),
-  jaeger: state.jaeger,
-  kubernetesLogs: state.kubernetesLogs
-});
-
-export default connect(
-  mapStateToProps,
-  { getJaegerData }
-)(JobsTable);

@@ -1,8 +1,8 @@
-import AT from '../constants/actions';
+import AT from 'constants/actions';
 import io from 'socket.io-client';
 
 let socket = null;
-const currentTopicRegisterd = {};
+const currentTopicRegistered = {};
 
 const success = (dispatch, payload, action) => {
   dispatch({
@@ -12,7 +12,7 @@ const success = (dispatch, payload, action) => {
   });
 };
 
-export const socketioMiddleware = ({ dispatch }) => next => action => {
+const socketMiddleware = ({ dispatch }) => next => action => {
   if (
     ![
       AT.SEND_TERMINAL_INPUT,
@@ -57,28 +57,28 @@ export const socketioMiddleware = ({ dispatch }) => next => action => {
     ];
     events.forEach(e => {
       socket.on(e, args => {
-        // console.log(`${e}, ${args}`);
+        console.log(`${e}, ${args}`);
       });
     });
 
-    Object.keys(currentTopicRegisterd).forEach(act => {
-      socket.on(currentTopicRegisterd[act].payload.topic, data => {
-        success(dispatch, data, currentTopicRegisterd[act]);
+    Object.keys(currentTopicRegistered).forEach(act => {
+      socket.on(currentTopicRegistered[act].payload.topic, data => {
+        success(dispatch, data, currentTopicRegistered[act]);
       });
     });
   }
   if (action.type === AT.SOCKET_INIT) {
     // verify if topic is already  registerd inorder to prevent duplicate registretion
-    if (!Object.keys(currentTopicRegisterd).includes(action.payload.topic)) {
+    if (!Object.keys(currentTopicRegistered).includes(action.payload.topic)) {
       if (socket != null) {
         socket.on(action.payload.topic, data => {
           success(dispatch, data, action);
         });
       }
-      currentTopicRegisterd[action.payload.topic] = action;
+      currentTopicRegistered[action.payload.topic] = action;
     } else {
       console.warn(
-        `socket middlware: trying to register topic ${
+        `socket middleware: trying to register topic ${
           action.payload.topic
         } twice `
       );
@@ -90,3 +90,5 @@ export const socketioMiddleware = ({ dispatch }) => next => action => {
   }
   return next(action);
 };
+
+export default socketMiddleware;

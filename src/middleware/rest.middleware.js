@@ -67,7 +67,7 @@ const setPath = ({ monitorBackend }) => {
   return _url;
 };
 
-export const restMiddleware = ({ dispatch }) => next => action => {
+const restMiddleware = ({ dispatch }) => next => action => {
   if (action.type === `${AT.GET_CONFIG}_SUCCESS`) {
     url = setPath(action.payload.config);
   } else if (
@@ -184,3 +184,5 @@ export const restMiddleware = ({ dispatch }) => next => action => {
     return next(action);
   }
 };
+
+export default restMiddleware;

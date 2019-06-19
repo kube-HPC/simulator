@@ -1,10 +1,12 @@
 import React from 'react';
-import { Tabs, Card } from 'antd';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
+
+import { Tabs, Card } from 'antd';
+
+import Trace from 'jaeger-react-trace-component';
 import JobGraph from 'components/UI/tables/Jobs/JobGraph.react';
 import JsonView from 'components/containers/json/JsonView.react';
-import Trace from 'jaeger-react-trace-component';
-import styled from 'styled-components';
 
 const OverflowedCard = styled(Card)`
   overflow: auto;

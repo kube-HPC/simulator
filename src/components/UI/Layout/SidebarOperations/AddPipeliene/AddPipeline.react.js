@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import AddPipelineForm from 'components/UI/Layout/SidebarOperations/AddPipeliene/AddPipelineForm.react';
 
-import { addPipeline } from 'actions/addPipeline.action';
+import { addPipeline } from 'actions/pipeline.action';
 
 function AddPipeline(props) {
   return (

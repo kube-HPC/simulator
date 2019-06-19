@@ -1,11 +1,20 @@
-import actions from '../constants/actions';
-import topics from '../constants/topics';
+import actions from 'constants/actions';
 
-export const init = () => ({
-  type: actions.SOCKET_INIT,
+export const addPipeline = pipe => ({
+  type: actions.REST_REQ_POST,
   payload: {
-    topic: topics.PROGRESS,
-    actionType: actions.UPDATE_ROW_DATA_TABLE
+    url: 'pipeline/add',
+    body: pipe,
+    actionType: actions.ADD_PIPE
+  }
+});
+
+export const stopPipeline = jobId => ({
+  type: actions.REST_REQ_POST,
+  payload: {
+    url: 'exec/stop',
+    body: { jobId },
+    actionType: actions.STOP_PIPELINE
   }
 });
 
@@ -53,3 +62,31 @@ export const cronStop = (name, pattern) => ({
     actionType: actions.CRON_STOP
   }
 });
+
+export const execRawPipeline = nominalPipeline => {
+  const {
+    jobId,
+    name,
+    flowInputOrig,
+    flowInput,
+    startTime,
+    lastRunResult,
+    ...rest
+  } = nominalPipeline;
+
+  const pipeline = {
+    name: name.startsWith('raw-') ? name.slice(4) : name,
+    flowInput: flowInputOrig,
+    ...rest
+  };
+
+  const action = {
+    type: actions.REST_REQ_POST,
+    payload: {
+      url: 'exec/raw',
+      body: pipeline,
+      actionType: actions.EXEC_RAW_PIPELINE
+    }
+  };
+  return action;
+};

@@ -67,14 +67,13 @@ const tableDataToAutoCompleteData = data => {
     }));
   });
 
-  const lastvidArr = [];
-  table.push({ title: 'lastVid', children: lastvidArr });
+  table.push({ title: 'lastVid', children: [] });
 
   return table;
 };
 
 const mapStateToProps = state => ({
-  dataSource: tableDataToAutoCompleteData(state.containerTable.dataSource)
+  dataSource: tableDataToAutoCompleteData(state.jobsTable.dataSource)
 });
 
 export default connect(

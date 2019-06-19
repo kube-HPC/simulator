@@ -29,6 +29,7 @@ function DrawerContainer({ children, title, description, width, ...props }) {
         {children}
         <BottomContent extra={props.extra}>
           <Button
+            disabled={!props.onSubmit}
             type="primary"
             onClick={() => {
               props.onSubmit();
@@ -47,7 +48,8 @@ function DrawerContainer({ children, title, description, width, ...props }) {
 DrawerContainer.propTypes = {
   onSubmitClose: PropTypes.bool,
   submitText: PropTypes.string,
-  extra: PropTypes.array
+  extra: PropTypes.array,
+  onSubmit: PropTypes.func
 };
 
 export default DrawerContainer;

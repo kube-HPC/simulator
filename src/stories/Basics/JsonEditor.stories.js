@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import { Card, Button } from 'antd';
+import React from 'react';
+import { Card } from 'antd';
 import styled from 'styled-components';
 
 import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
 
 import { stringify } from 'utils/string';
 

@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
-import containerTable from 'reducers/containerTable.reducer';
+
+import jobsTable from 'reducers/jobsTable.reducer';
 import workerTable from 'reducers/workerTable.reducer';
 import driverTable from 'reducers/driverTable.reducer';
 import debugTable from 'reducers/debugTable.reducer';
 import algorithmTable from 'reducers/algorithmTable.reducer';
 import algorithmBuildsTable from 'reducers/algorithmBuildsTable.reducer';
-import modal from 'reducers/modal.reducer';
 import ui from 'reducers/ui.reducer';
 import autoCompleteFilter from 'reducers/autoCompleteFilter.reducer';
 import serverSelection from 'reducers/serverSelection.reducer';
@@ -18,13 +18,12 @@ import algorithmReadme from 'reducers/algorithmReadme.reducer';
 
 const rootReducer = combineReducers({
   ui,
-  containerTable,
+  jobsTable,
   workerTable,
   driverTable,
   algorithmTable,
   algorithmBuildsTable,
   debugTable,
-  modal,
   autoCompleteFilter,
   serverSelection,
   storedPipeline,

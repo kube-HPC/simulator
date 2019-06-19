@@ -22,7 +22,7 @@ function PipelinesTabSwitcher({ pipelineDetails, readme }) {
         />
       </Tabs.TabPane>
       <Tabs.TabPane tab="JSON" key="2">
-        <Card title="Descriptor">
+        <Card size="small" title="Descriptor">
           <JsonView jsonObject={pipelineDetails} />
         </Card>
       </Tabs.TabPane>

@@ -1,37 +1,22 @@
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { Card } from 'antd';
 import React from 'react';
+import { useSelector } from 'react-redux';
 
-import { init } from 'actions/driverTable.action';
 import driversTableColumns from 'components/UI/tables/Drivers/DriversTableColumns.react';
 import JsonView from 'components/containers/json/JsonView.react';
 import InfinityTable from 'components/UI/Layout/InfinityTable.react';
+import RowCard from 'components/containers/RowCard.react';
 
-function DriversTable({ init, dataSource, ...props }) {
+export default function DriversTable(props) {
+  const dataSource = useSelector(state => state.driverTable.dataSource);
   return (
     <InfinityTable
       columns={driversTableColumns(props)}
-      dataSource={dataSource.asMutable()}
+      dataSource={dataSource}
       expandedRowRender={record => (
-        <Card title="Full details">
+        <RowCard title="Full details">
           <JsonView jsonObject={record} />
-        </Card>
+        </RowCard>
       )}
     />
   );
 }
-
-DriversTable.propTypes = {
-  init: PropTypes.func.isRequired,
-  dataSource: PropTypes.array.isRequired
-};
-
-const mapStateToProps = state => ({
-  dataSource: state.driverTable.dataSource
-});
-
-export default connect(
-  mapStateToProps,
-  { init }
-)(DriversTable);

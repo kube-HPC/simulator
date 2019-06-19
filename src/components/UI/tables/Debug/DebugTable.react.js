@@ -4,8 +4,7 @@ import { createSelector } from 'reselect';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { init, addAlgorithm, deleteAlgorithm } from 'actions/debugTable.action';
-import { openModal } from 'actions/modal.action';
+import { addAlgorithm, deleteAlgorithm } from 'actions/debugTable.action';
 import debugTableColumns from 'components/UI/tables/Debug/DebugTableColumns.react';
 import InfinityTable from '../../Layout/InfinityTable.react';
 import JsonView from 'components/containers/json/JsonView.react';
@@ -46,5 +45,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { openModal, init, addAlgorithm, deleteAlgorithm }
+  { addAlgorithm, deleteAlgorithm }
 )(DebugTable);
