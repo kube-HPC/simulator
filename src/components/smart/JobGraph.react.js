@@ -70,7 +70,7 @@ class JobGraph extends Component {
     super();
     this.network = null;
     this.events = {
-      select: () => {},
+      select: () => { },
       afterDrawing: () => {
         this.network.fit({
           animation: {

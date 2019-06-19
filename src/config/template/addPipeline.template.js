@@ -9,7 +9,6 @@ export default {
     }
   ],
   flowInput: {
-    files: {}
   },
   webhooks: {
     progress: '',

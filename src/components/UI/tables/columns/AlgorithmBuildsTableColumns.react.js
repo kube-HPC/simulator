@@ -130,7 +130,7 @@ export const nestedBuildTableColumns = props => [
     key: 'stop',
     width: '10%',
     render: (_, record) =>
-      record.status === 'pending' ? (
+      record.status !== 'completed' ? (
         <Button
           type="danger"
           shape="circle"

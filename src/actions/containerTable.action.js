@@ -10,13 +10,23 @@ export const init = () => ({
 });
 
 export const execRawPipeline = nominalPipeline => {
-  const { jobId, flowInputOrig, flowInput, startTime, lastRunResult, ...rest } = nominalPipeline;
-  let pipeline = {
+  const {
+    jobId,
+    name,
+    flowInputOrig,
+    flowInput,
+    startTime,
+    lastRunResult,
+    ...rest
+  } = nominalPipeline;
+
+  const pipeline = {
+    name: name.startsWith('raw-') ? name.slice(4) : name,
     flowInput: flowInputOrig,
     ...rest
   };
 
-  let action = {
+  const action = {
     type: actions.REST_REQ_POST,
     payload: {
       url: 'exec/raw',

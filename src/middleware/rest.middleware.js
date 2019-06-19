@@ -35,7 +35,9 @@ const success = (dispatch, payload, action) => {
     ALGORITHM_APPLY: 'Algorithm Added',
     ALGORITHM_ADD: 'Algorithm Added for debug',
     CRON_START: 'Cron job started for selected pipeline',
-    CRON_STOP: 'Cron job disabled for selected pipeline'
+    CRON_STOP: 'Cron job disabled for selected pipeline',
+    BUILD_STOP: 'Build has stopped',
+    BUILD_RERUN: 'Build rerun started'
   };
   dispatch({
     type: `${action.payload.actionType}_SUCCESS`,
