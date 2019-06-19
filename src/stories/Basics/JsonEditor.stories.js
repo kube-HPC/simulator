@@ -7,7 +7,7 @@ import { action } from '@storybook/addon-actions';
 
 import { stringify } from 'utils/string';
 
-import JsonEditor from 'components/dumb/JsonEditor.react';
+import JsonEditor from 'components/containers/json/JsonEditor.react';
 import template from 'config/template/addPipeline.template';
 
 const StyledCard = styled(Card)`

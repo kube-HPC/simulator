@@ -92,7 +92,9 @@ export const restMiddleware = ({ dispatch }) => next => action => {
         success(dispatch, res.data, action);
       })
       .catch(err => {
-        reject(dispatch, err.response.data.error, action);
+        const response =
+          err.response && err.response.data && err.response.data.error;
+        reject(dispatch, response, action);
       });
 
     return next(action);

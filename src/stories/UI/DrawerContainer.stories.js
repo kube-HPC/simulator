@@ -4,8 +4,8 @@ import { action } from '@storybook/addon-actions';
 
 import { Button } from 'antd';
 
-import AddPipeline from 'components/UI/operations/AddPipeline.react';
-import DrawerOperations from 'components/dumb/DrawerOperations.react';
+import AddPipeline from 'components/UI/Layout/SidebarOperations/AddPipeliene/AddPipeline.react';
+import DrawerOperations from 'components/containers/drawer/DrawerOperations.react';
 
 const content = {
   algorithms: ['a1', 'a2'],

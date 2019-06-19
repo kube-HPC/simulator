@@ -5,25 +5,24 @@ import { connect } from 'react-redux';
 
 import './HKubeLayout.css';
 
-import JobsTable from 'components/UI/tables/JobsTable.react';
-import WorkersTable from 'components/UI/tables/WorkersTable.react';
-import DebugTable from 'components/UI/tables/DebugTable.react';
-import AlgorithmBuildsTable from 'components/UI/tables/AlgorithmBuildsTable.react';
-import PipelinesTable from 'components/UI/tables/PipelinesTable.react';
-import DriversTable from 'components/UI/tables/DriversTable.react';
-import AlgorithmsTable from 'components/UI/tables/AlgorithmsTable.react';
+import JobsTable from 'components/UI/tables/Jobs/JobsTable.react';
+import WorkersTable from 'components/UI/tables/Workers/WorkersTable.react';
+import DebugTable from 'components/UI/tables/Debug/DebugTable.react';
+import AlgorithmBuildsTable from 'components/UI/tables/AlgorithmBuilds/AlgorithmBuildsTable.react';
+import PipelinesTable from 'components/UI/tables/Pipelines/PipelinesTable.react';
+import DriversTable from 'components/UI/tables/Drivers/DriversTable.react';
+import AlgorithmsTable from 'components/UI/tables/Algorithms/AlgorithmsTable.react';
 
-import NodeStatistics from 'components/smart/NodeStatistics.react';
-import TableAutoComplete from 'components/dumb/TableAutoComplete.react';
+import NodeStatistics from 'components/UI/tables/NodeStats/NodeStatistics.react';
+import TableAutoComplete from 'components/UI/Layout/TableAutoComplete.react';
 
-import SideBarContainer from 'components/smart/SideBarContainer.react';
-import DrawerOperations from 'components/dumb/DrawerOperations.react';
+import DrawerOperations from 'components/containers/drawer/DrawerOperations.react';
 
-import SidebarOperations from 'components/UI/Layout/SidebarOperations.react';
-import Sidebar from 'components/UI/Layout/Sidebar.react';
-import AddAlgorithmForm from 'components/UI/operations/AddAlgorithmForm.react';
-import AddPipeline from 'components/UI/operations/AddPipeline.react';
-import AddDebug from 'components/UI/operations/AddDebug.react';
+import SidebarOperations from 'components/UI/Layout/SidebarOperations/SidebarOperations.react';
+import Sidebar from 'components/UI/Layout/Sidebar/Sidebar.react';
+import AddAlgorithmForm from 'components/UI/Layout/SidebarOperations/AddAlgorithmForm.react';
+import AddPipeline from 'components/UI/Layout/SidebarOperations/AddPipeliene/AddPipeline.react';
+import AddDebug from 'components/UI/Layout/SidebarOperations/AddDebug.react';
 
 import { message, Layout } from 'antd';
 import { init, socketInit } from 'actions/config.action.js';
@@ -113,7 +112,6 @@ function HKubeLayout({ init, socketInit, ...props }) {
 
   return (
     <LayoutStyled>
-      <SideBarContainer open={false} />
       <Sidebar {...props} onSelect={setTable} />
       <Layout>
         <HeaderStyled>

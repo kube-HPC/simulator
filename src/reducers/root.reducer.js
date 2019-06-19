@@ -6,7 +6,6 @@ import debugTable from 'reducers/debugTable.reducer';
 import algorithmTable from 'reducers/algorithmTable.reducer';
 import algorithmBuildsTable from 'reducers/algorithmBuildsTable.reducer';
 import modal from 'reducers/modal.reducer';
-import sideBar from 'reducers/sideBar.reducer';
 import ui from 'reducers/ui.reducer';
 import autoCompleteFilter from 'reducers/autoCompleteFilter.reducer';
 import serverSelection from 'reducers/serverSelection.reducer';
@@ -26,7 +25,6 @@ const rootReducer = combineReducers({
   algorithmBuildsTable,
   debugTable,
   modal,
-  sideBar,
   autoCompleteFilter,
   serverSelection,
   storedPipeline,

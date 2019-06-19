@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import Sidebar from 'react-sidebar';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 
-import AddPipeline from 'components/UI/operations/AddPipeline.react';
-import AddPipelineForm from 'components/dumb/AddPipeline/AddPipelineForm.react';
-import addPipelineTemplate from 'config/template/addPipeline.template';
+import AddPipeline from 'components/UI/Layout/SidebarOperations/AddPipeliene/AddPipeline.react';
 
 import rootReducer from 'reducers/root.reducer';
-import DrawerOperations from 'components/dumb/DrawerOperations.react';
-import AddPipelineReact from 'components/UI/operations/AddPipeline.react';
+import DrawerOperations from 'components/containers/drawer/DrawerOperations.react';
+import AddPipelineReact from 'components/UI/Layout/SidebarOperations/AddPipeliene/AddPipeline.react';
 
 const store = createStore(rootReducer);
 
@@ -23,23 +20,6 @@ function AddPipelineContainer({ style }) {
       pipelines={['p1', 'p2']}
       onSubmit={action('click')}
       style={style}
-    />
-  );
-}
-
-function Container() {
-  const [current, setCurrent] = useState(0);
-  const [formData, setFormData] = useState(addPipelineTemplate);
-
-  return (
-    <AddPipelineForm
-      formData={formData}
-      algorithms={['a1', 'a2']}
-      pipelines={['p1', 'p2']}
-      onSubmit={action('click')}
-      onChange={setFormData}
-      onStep={setCurrent}
-      step={current}
     />
   );
 }

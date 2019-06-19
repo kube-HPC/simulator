@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 
-import AddPipeline from 'components/UI/operations/AddPipeline.react';
+import AddPipeline from 'components/UI/Layout/SidebarOperations/AddPipeliene/AddPipeline.react';
 
 const content = {
   algorithms: ['a1', 'a2'],
