@@ -47,6 +47,19 @@ const addPipelineOptions = pipelines =>
 const verbosityLevels = ['info', 'trace', 'debug', 'warn', 'error', 'critical'];
 const stepsTitles = ['Initial', 'Nodes', 'Webhooks', 'Triggers', 'Options'];
 
+const URL_REGEX = /^(f|ht)tps?:\/\//i;
+
+const SelectBefore = ({ value, setValue }) => {
+  return (
+    <Select value={value} onSelect={setValue} style={{ width: 90 }}>
+      <Select.Option value="http://">http://</Select.Option>
+      <Select.Option value="ftp://">ftp://</Select.Option>
+      <Select.Option value="https://">https://</Select.Option>
+      <Select.Option value="ftps://">ftps://</Select.Option>
+    </Select>
+  );
+};
+
 const addCronContent = formData => {
   let isLegalPattern = false;
   let next = '';
@@ -75,6 +88,10 @@ export default function AddPipelineForm(props) {
   );
 
   const [step, setStep] = useState(0);
+  const [selectedWebhook, setSelectedWebhook] = useState({
+    progress: 'http://',
+    result: 'http://'
+  });
 
   const onChangeTarget = (formData, t1, t2 = undefined) => c => {
     const value = c && c.target ? c.target.value : c;
@@ -143,40 +160,46 @@ export default function AddPipelineForm(props) {
     />
   );
 
-  const URL_REGEX = /^(f|ht)tps?:\/\//i;
-
-  const validateUrl = url => !url || URL_REGEX.test(url);
-
-  const validateHelp = (url, msg) => !validateUrl(url) && msg;
-
   const Hooks = (
     <>
-      <Form.Item
-        {...formItemLayout}
-        label="Progress"
-        validateStatus={
-          validateUrl(formData.webhooks.progress) ? 'success' : 'error'
-        }
-        help={validateHelp(formData.webhooks.progress, 'Must start with http://')}
-      >
+      <Form.Item {...formItemLayout} label="Progress">
         <Input
+          addonBefore={
+            <SelectBefore
+              value={selectedWebhook.progress}
+              setValue={progress =>
+                setSelectedWebhook(prev => ({ ...prev, progress }))
+              }
+            />
+          }
           placeholder="Progress Webhook URI"
-          onChange={onChangeTarget(formData, 'webhooks', 'progress')}
-          value={formData.webhooks.progress}
+          onChange={e => {
+            formData.webhooks.progress = `${selectedWebhook.progress}${
+              e.target.value
+            }`;
+            setFormData({ ...formData });
+          }}
+          value={formData.webhooks.progress.replace(URL_REGEX, '')}
         />
       </Form.Item>
-      <Form.Item
-        {...formItemLayout}
-        label="Result"
-        validateStatus={
-          validateUrl(formData.webhooks.result) ? 'success' : 'error'
-        }
-        help={validateHelp(formData.webhooks.result, 'Must start with http://')}
-      >
+      <Form.Item {...formItemLayout} label="Result">
         <Input
+          addonBefore={
+            <SelectBefore
+              value={selectedWebhook.result}
+              setValue={result =>
+                setSelectedWebhook(prev => ({ ...prev, result }))
+              }
+            />
+          }
           placeholder="Result Webhook URI"
-          onChange={onChangeTarget(formData, 'webhooks', 'result')}
-          value={formData.webhooks.result}
+          onChange={e => {
+            formData.webhooks.result = `${selectedWebhook.result}${
+              e.target.value
+            }`;
+            setFormData({ ...formData });
+          }}
+          value={formData.webhooks.result.replace(URL_REGEX, '')}
         />
       </Form.Item>
     </>
@@ -429,21 +452,21 @@ export default function AddPipelineForm(props) {
 
               if (needToSubmit) {
                 const { progress, result } = formData.webhooks;
-                if (progress) {
-                  formData.webhooks.progress = progress
-                };
-                if (result) {
-                  formData.webhooks.result = result;
-                }
-                if (!progress && !result) {
-                  formData.webhooks = undefined;
-                }
+                if (progress) formData.webhooks.progress = `${progress}`;
+                else delete formData.webhooks.progress;
+
+                if (result) formData.webhooks.result = `${result}`;
+                else delete formData.webhooks.result;
+
+                !formData.webhooks.progress &&
+                  !formData.webhooks.result &&
+                  delete formData.webhooks;
               }
 
               needToSubmit
                 ? props.onSubmit(
-                  editorIsVisible ? JSON.parse(editorValue) : formData
-                )
+                    editorIsVisible ? JSON.parse(editorValue) : formData
+                  )
                 : setStep(step + 1);
             } catch (e) {
               notification.config({
@@ -460,10 +483,10 @@ export default function AddPipelineForm(props) {
           {isLastStep || editorIsVisible ? (
             'Submit'
           ) : (
-              <>
-                Next <Icon type="right" />
-              </>
-            )}
+            <>
+              Next <Icon type="right" />
+            </>
+          )}
         </Button>
       </BottomContent>
     </div>

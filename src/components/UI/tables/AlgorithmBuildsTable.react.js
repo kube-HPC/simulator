@@ -3,18 +3,14 @@ import PropTypes from 'prop-types';
 import groupby from 'lodash/groupBy';
 import { createSelector } from 'reselect';
 import React from 'react';
-import {
-  init,
-  cancelBuild,
-  rerunBuild
-} from 'actions/algorithmBuildsTable.action';
+import { cancelBuild, rerunBuild } from 'actions/algorithmBuildsTable.action';
 
 import {
   buildsTableColumns,
   nestedBuildTableColumns
 } from 'components/UI/tables/columns/AlgorithmBuildsTableColumns.react';
 
-import InfinityTable from '../Layout/InfinityTable.react';
+import InfinityTable from 'components/UI/Layout/InfinityTable.react';
 import JsonView from 'components/dumb/JsonView.react';
 
 function AlgorithmBuildsTable({ init, ...props }) {
@@ -62,7 +58,6 @@ const tableDataSelector = createSelector(
 
 AlgorithmBuildsTable.propTypes = {
   dataSource: PropTypes.array.isRequired,
-  init: PropTypes.func.isRequired,
   cancelBuild: PropTypes.func.isRequired,
   rerunBuild: PropTypes.func.isRequired
 };
@@ -73,5 +68,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { init, cancelBuild, rerunBuild }
+  { cancelBuild, rerunBuild }
 )(AlgorithmBuildsTable);
