@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon, Input, AutoComplete } from 'antd';
 import { connect } from 'react-redux';
-import { updateFilter } from 'actions/autoCompleteFilter.action';
+import { autoCompleteFilter } from 'actions/layout.action';
 import styled from 'styled-components';
 
 const InputTransparent = styled(AutoComplete)`
@@ -78,5 +78,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { updateFilter }
+  { updateFilter: autoCompleteFilter }
 )(TableAutoComplete);

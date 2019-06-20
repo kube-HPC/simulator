@@ -1,77 +1,50 @@
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { createSelector } from 'reselect';
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { createSelector } from 'reselect';
+
 import { getAlgorithmReadme } from 'actions/readme.action';
-import {
-  init,
-  applyAlgorithm,
-  deleteAlgorithmFromStore
-} from 'actions/algorithmTable.action';
+import { applyAlgorithm, deleteAlgorithm } from 'actions/algorithm.action';
 
 import AlgorithmTabSwitcher from 'components/UI/tables/Algorithms/AlgorithmTabSwitcher.react';
 import InfinityTable from 'components/UI/Layout/InfinityTable.react';
 import algorithmsTableColumns from 'components/UI/tables/Algorithms/AlgorithmsTableColumns.react';
-import { stringify } from 'utils/string';
+import RowCard from 'components/containers/RowCard.react';
 
-function AlgorithmsTable(props) {
-  const onSubmit = data => {
-    const formData = new FormData();
-    formData.append('payload', stringify(data));
-    props.applyAlgorithm(formData);
-  };
+const tableDataSelector = createSelector(
+  state => state.algorithmTable.dataSource,
+  state => state.autoCompleteFilter.filter,
+  (dataSource, filter) =>
+    dataSource && dataSource.filter(row => row.name.includes(filter))
+);
 
-  const { dataSource, algorithmReadme } = props;
+function AlgorithmsTable() {
+  const dataSource = useSelector(state => tableDataSelector(state));
+  const algorithmReadme = useSelector(state => state.algorithmReadme);
+  const dispatch = useDispatch();
+
+  const onSubmit = data => dispatch(applyAlgorithm(data));
+  const onDelete = data => dispatch(deleteAlgorithm(data));
 
   return (
     <InfinityTable
-      columns={algorithmsTableColumns({ ...props, onSubmit })}
+      rowKey={record => record.name}
+      columns={algorithmsTableColumns({ onSubmit, onDelete })}
       dataSource={dataSource.asMutable()}
-      onExpand={(expanded, record) =>
-        expanded && props.getAlgorithmReadme(record.key)
-      }
+      onExpand={(_, record) => dispatch(getAlgorithmReadme(record.key))}
       expandedRowRender={record => (
-        <AlgorithmTabSwitcher
-          algorithmDetails={record}
-          readme={
-            algorithmReadme &&
-            algorithmReadme[record.key] &&
-            algorithmReadme[record.key].readme
-          }
-        />
+        <RowCard>
+          <AlgorithmTabSwitcher
+            algorithmDetails={record}
+            readme={
+              algorithmReadme &&
+              algorithmReadme[record.key] &&
+              algorithmReadme[record.key].readme
+            }
+          />
+        </RowCard>
       )}
     />
   );
 }
 
-const algorithmTable = state => state.algorithmTable.dataSource;
-const autoCompleteFilter = state => state.autoCompleteFilter.filter;
-
-const tableDataSelector = createSelector(
-  algorithmTable,
-  autoCompleteFilter,
-  algorithmTable => algorithmTable
-);
-
-AlgorithmsTable.propTypes = {
-  dataSource: PropTypes.array.isRequired,
-  getAlgorithmReadme: PropTypes.func.isRequired,
-  applyAlgorithm: PropTypes.func.isRequired,
-  deleteAlgorithmFromStore: PropTypes.func.isRequired,
-  algorithmReadme: PropTypes.object
-};
-
-const mapStateToProps = state => ({
-  dataSource: tableDataSelector(state),
-  algorithmReadme: state.algorithmReadme
-});
-
-export default connect(
-  mapStateToProps,
-  {
-    init,
-    applyAlgorithm,
-    deleteAlgorithmFromStore,
-    getAlgorithmReadme
-  }
-)(AlgorithmsTable);
+export default AlgorithmsTable;

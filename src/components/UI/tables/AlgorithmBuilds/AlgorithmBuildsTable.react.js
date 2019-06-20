@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import groupby from 'lodash/groupBy';
 import { createSelector } from 'reselect';
 import React from 'react';
-import { cancelBuild, rerunBuild } from 'actions/algorithmBuildsTable.action';
+import { cancelBuild, rerunBuild } from 'actions/builds.action';
 
 import {
   buildsTableColumns,

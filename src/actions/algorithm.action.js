@@ -1,13 +1,4 @@
-import actions from '../constants/actions';
-import topics from '../constants/topics';
-
-export const init = () => ({
-  type: actions.SOCKET_INIT,
-  payload: {
-    topic: topics.PROGRESS,
-    actionType: actions.UPDATE_ROW_DATA_TABLE
-  }
-});
+import actions from 'constants/actions';
 
 export const applyAlgorithm = formData => ({
   type: actions.REST_REQ_POST_FORM,
@@ -18,7 +9,7 @@ export const applyAlgorithm = formData => ({
   }
 });
 
-export const deleteAlgorithmFromStore = algorithmName => ({
+export const deleteAlgorithm = algorithmName => ({
   type: actions.REST_REQ_DELETE,
   payload: {
     url: 'store/algorithms',

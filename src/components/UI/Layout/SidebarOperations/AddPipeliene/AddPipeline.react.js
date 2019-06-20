@@ -19,10 +19,10 @@ function AddPipeline(props) {
 }
 
 AddPipeline.propTypes = {
-  storedPipelines: PropTypes.object.isRequired,
-  algorithms: PropTypes.array.isRequired,
-  addPipeline: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired
+  storedPipelines: PropTypes.array,
+  algorithms: PropTypes.array,
+  addPipeline: PropTypes.func,
+  onSubmit: PropTypes.func
 };
 
 const mapStateToProps = state => ({

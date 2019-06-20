@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 
-import './HKubeLayout.css';
+import 'components/UI/Layout/HKubeLayout.css';
 
 import JobsTable from 'components/UI/tables/Jobs/JobsTable.react';
 import WorkersTable from 'components/UI/tables/Workers/WorkersTable.react';
@@ -25,7 +25,7 @@ import AddPipeline from 'components/UI/Layout/SidebarOperations/AddPipeliene/Add
 import AddDebug from 'components/UI/Layout/SidebarOperations/AddDebug.react';
 
 import { message, Layout } from 'antd';
-import { init, socketInit } from 'actions/config.action.js';
+import { init, socketInit } from 'actions/layout.action';
 import { HCOLOR } from 'constants/colors';
 
 const LayoutStyled = styled(Layout)`
@@ -147,7 +147,6 @@ HKubeLayout.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  scriptsPath: state.serverSelection.currentSelection.scriptsPath,
   jobsCount: (state.jobsTable.dataSource || []).length,
   driversCount: (state.driverTable.dataSource || []).length,
   algorithmsCount: (state.algorithmTable.dataSource || []).length,

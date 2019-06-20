@@ -4,7 +4,7 @@ import { Icon, notification, Tag, Button } from 'antd';
 import { STATUS } from 'constants/colors';
 import { sorter } from 'utils/string';
 
-const jobsTableColumns = props => [
+const jobsTableColumns = ({ onDelete }) => [
   {
     title: 'Algorithm Name',
     dataIndex: 'name',
@@ -47,7 +47,7 @@ const jobsTableColumns = props => [
         type="danger"
         shape="circle"
         icon="delete"
-        onClick={() => props.deleteAlgorithm(record.name)}
+        onClick={() => onDelete(record.name)}
       />
     )
   }

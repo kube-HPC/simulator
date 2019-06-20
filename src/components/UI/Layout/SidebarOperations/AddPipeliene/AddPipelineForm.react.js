@@ -23,8 +23,8 @@ import cronParser from 'cron-parser';
 import DynamicForm from 'components/UI/Layout/SidebarOperations/AddPipeliene/AddPipelineFormDynamic.react';
 import { stringify, toUpperCaseFirstLetter } from 'utils/string';
 import JsonEditor from 'components/containers/json/JsonEditor.react';
-import BottomContent from '../../../../containers/drawer/BottomContent.react';
-import JsonView from '../../../../containers/json/JsonView.react';
+import BottomContent from 'components/containers/drawer/BottomContent.react';
+import JsonView from 'components/containers/json/JsonView.react';
 import addPipelineTemplate from 'config/template/addPipeline.template';
 
 const span = 6;
@@ -123,17 +123,6 @@ export default function AddPipelineForm(props) {
           onChange={onChangeTarget(formData, 'description')}
         />
       </Form.Item>
-      <Form.Item {...formItemLayout} label="Priority">
-        <InputNumber
-          min={1}
-          max={5}
-          value={formData.priority}
-          onChange={value => {
-            formData.priority = isNaN(value) ? 0 : value;
-            setFormData({ ...formData });
-          }}
-        />
-      </Form.Item>
       <Form.Item {...formItemLayout} label="Flow Input">
         <Card>
           <JsonEditor
@@ -160,7 +149,14 @@ export default function AddPipelineForm(props) {
     />
   );
 
-  const Hooks = (
+  if (formData.webhooks.progress)
+    formData.webhooks.progress.replace(URL_REGEX, '');
+  else formData.webhooks.progress = '';
+
+  if (formData.webhooks.result) formData.webhooks.result.replace(URL_REGEX, '');
+  else formData.webhooks.result = '';
+
+  const Webhooks = (
     <>
       <Form.Item {...formItemLayout} label="Progress">
         <Input
@@ -337,10 +333,21 @@ export default function AddPipelineForm(props) {
           ))}
         </Select>
       </Form.Item>
+      <Form.Item {...formItemLayout} label="Priority">
+        <InputNumber
+          min={1}
+          max={5}
+          value={formData.priority}
+          onChange={value => {
+            formData.priority = isNaN(value) ? 0 : value;
+            setFormData({ ...formData });
+          }}
+        />
+      </Form.Item>
     </div>
   );
 
-  const steps = [Initial, Nodes, Hooks, Triggers, Options];
+  const steps = [Initial, Nodes, Webhooks, Triggers, Options];
   const isLastStep = step === steps.length - 1;
   const isFirstStep = step === 0;
 

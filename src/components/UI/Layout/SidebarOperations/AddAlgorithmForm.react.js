@@ -22,7 +22,7 @@ import {
 import parseUnit from 'parse-unit';
 import PropTypes from 'prop-types';
 
-import { applyAlgorithm } from 'actions/algorithmTable.action';
+import { applyAlgorithm } from 'actions/algorithm.action';
 import BottomContent from 'components/containers/drawer/BottomContent.react';
 
 const Option = Select.Option;

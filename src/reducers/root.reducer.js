@@ -6,9 +6,7 @@ import driverTable from 'reducers/driverTable.reducer';
 import debugTable from 'reducers/debugTable.reducer';
 import algorithmTable from 'reducers/algorithmTable.reducer';
 import algorithmBuildsTable from 'reducers/algorithmBuildsTable.reducer';
-import ui from 'reducers/ui.reducer';
 import autoCompleteFilter from 'reducers/autoCompleteFilter.reducer';
-import serverSelection from 'reducers/serverSelection.reducer';
 import storedPipeline from 'reducers/storedPipeline.reducer';
 import jaeger from 'reducers/jaegerData.reducer';
 import kubernetesLogs from 'reducers/kubernetesLogs.reducer';
@@ -17,7 +15,6 @@ import pipelineReadme from 'reducers/pipelineReadme.reducer';
 import algorithmReadme from 'reducers/algorithmReadme.reducer';
 
 const rootReducer = combineReducers({
-  ui,
   jobsTable,
   workerTable,
   driverTable,
@@ -25,7 +22,6 @@ const rootReducer = combineReducers({
   algorithmBuildsTable,
   debugTable,
   autoCompleteFilter,
-  serverSelection,
   storedPipeline,
   jaeger,
   kubernetesLogs,

@@ -1,49 +1,40 @@
-import { connect } from 'react-redux';
-import { Card } from 'antd';
-import { createSelector } from 'reselect';
 import React from 'react';
-import PropTypes from 'prop-types';
+import { createSelector } from 'reselect';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { addAlgorithm, deleteAlgorithm } from 'actions/debugTable.action';
+import { deleteAlgorithm } from 'actions/debug.action';
+
 import debugTableColumns from 'components/UI/tables/Debug/DebugTableColumns.react';
-import InfinityTable from '../../Layout/InfinityTable.react';
+import InfinityTable from 'components/UI/Layout/InfinityTable.react';
 import JsonView from 'components/containers/json/JsonView.react';
+import RowCard from 'components/containers/RowCard.react';
 
-function DebugTable({ init, ...props }) {
-  const { dataSource } = props;
+const tableDataSelector = createSelector(
+  state => state.debugTable.dataSource,
+  state => state.autoCompleteFilter.filter,
+  (dataSource, filter) =>
+    dataSource && dataSource.filter(row => row.name.includes(filter))
+);
+
+function DebugTable() {
+  const dataSource = useSelector(state => tableDataSelector(state));
+
+  const dispatch = useDispatch();
+
+  const onDelete = data => dispatch(deleteAlgorithm(data));
 
   return (
     <InfinityTable
-      columns={debugTableColumns(props)}
-      dataSource={dataSource.asMutable()}
+      rowKey={record => record.name}
+      columns={debugTableColumns({ onDelete })}
+      dataSource={dataSource}
       expandedRowRender={record => (
-        <Card title="Full details">
+        <RowCard>
           <JsonView jsonObject={record} />
-        </Card>
+        </RowCard>
       )}
     />
   );
 }
 
-const debugTable = state => state.debugTable.dataSource;
-const autoCompleteFilter = state => state.autoCompleteFilter.filter;
-
-const tableDataSelector = createSelector(
-  debugTable,
-  autoCompleteFilter,
-  debugTable => debugTable
-);
-
-DebugTable.propTypes = {
-  init: PropTypes.func.isRequired,
-  dataSource: PropTypes.array.isRequired
-};
-
-const mapStateToProps = state => ({
-  dataSource: tableDataSelector(state)
-});
-
-export default connect(
-  mapStateToProps,
-  { addAlgorithm, deleteAlgorithm }
-)(DebugTable);
+export default DebugTable;

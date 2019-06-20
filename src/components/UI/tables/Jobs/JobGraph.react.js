@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { getKubernetesLogsData } from 'actions/kubernetesLog.action';
-import { getCaching } from 'actions/caching.action';
+import { getKubernetesLogsData, getCaching } from 'actions/jobs.action';
 
 import DrawerContainer from 'components/containers/drawer/DrawerContainer.react';
 import NodeInfo from 'components/UI/tables/Jobs/NodeInfo.react';

@@ -12,9 +12,12 @@ import CopyEllipsis from 'components/containers/CopyEllipsis.react';
 const deleteConfirmAction = (action, record) => {
   Modal.confirm({
     title: 'WARNING Deleting Pipeline',
-    content: `Are you sure you want to delete ${
-      record.name
-    }? Deleting Pipeline will Stop-ALL related Jobs and Executions`,
+    content: (
+      <>
+        Are you sure you want to delete {record.name}? Deleting Pipeline will
+        <Text strong> STOP-ALL</Text> related Jobs and Executions,
+      </>
+    ),
     okText: 'Confirm',
     okType: 'danger',
     cancelText: 'Cancel',

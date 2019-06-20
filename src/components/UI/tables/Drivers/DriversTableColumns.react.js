@@ -6,12 +6,12 @@ import CopyEllipsis from 'components/containers/CopyEllipsis.react';
 
 const driversTableColumns = props => [
   {
-    title: 'Job ID',
-    dataIndex: 'jobId',
-    key: 'jobId',
+    title: 'Driver ID',
+    dataIndex: 'driverId',
+    key: 'driverId',
     width: '15%',
-    sorter: (a, b) => sorter(a.jobId, b.jobId),
-    render: (_, record) => <CopyEllipsis text={record.jobId} />
+    sorter: (a, b) => sorter(a.driverId, b.driverId),
+    render: (_, record) => <CopyEllipsis text={record.driverId} />
   },
   {
     title: 'Pod Name',
@@ -33,10 +33,8 @@ const driversTableColumns = props => [
     dataIndex: 'driverStatus',
     width: '15%',
     key: 'driverStatus',
-    render: (text, record) => (
-      <span>
-        <Tag color={STATUS[record.driverStatus]}> {record.driverStatus}</Tag>
-      </span>
+    render: (_, record) => (
+      <Tag color={STATUS[record.driverStatus]}> {record.driverStatus}</Tag>
     ),
     sorter: (a, b) => sorter(a.driverStatus, b.driverStatus)
   },

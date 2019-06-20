@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Tabs, Card } from 'antd';
 import PropTypes from 'prop-types';
-import MDViewer from '../../../containers/md/MDViewer.react';
+
+import { Tabs } from 'antd';
+
+import MDViewer from 'components/containers/md/MDViewer.react';
+import JsonView from 'components/containers/json/JsonView.react';
 import DefaultMarkdown from 'config/template/readme.template.md';
-import JsonView from '../../../containers/json/JsonView.react';
 
 function PipelinesTabSwitcher({ pipelineDetails, readme }) {
   const [defaultReadme, setDefaultReadme] = useState('');
@@ -14,17 +16,15 @@ function PipelinesTabSwitcher({ pipelineDetails, readme }) {
   }, []);
   return (
     <Tabs defaultActiveKey="1">
-      <Tabs.TabPane tab="Description" key="1">
+      <Tabs.TabPane tab="JSON" key="1">
+        <JsonView jsonObject={pipelineDetails} />
+      </Tabs.TabPane>
+      <Tabs.TabPane tab="Description" key="2">
         <MDViewer
           name={pipelineDetails.name}
           readme={readme || defaultReadme}
           readmeType={'pipeline'}
         />
-      </Tabs.TabPane>
-      <Tabs.TabPane tab="JSON" key="2">
-        <Card size="small" title="Descriptor">
-          <JsonView jsonObject={pipelineDetails} />
-        </Card>
       </Tabs.TabPane>
     </Tabs>
   );

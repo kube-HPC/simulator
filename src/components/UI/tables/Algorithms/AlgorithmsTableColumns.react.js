@@ -9,8 +9,12 @@ import DrawerEditor from 'components/containers/drawer/DrawerEditor.react';
 const deleteConfirmAction = (action, record) => {
   Modal.confirm({
     title: 'WARNING Deleting Algorithm',
-    content:
-      'Deleting algorithm will DELETE-ALL related pipelines and STOP-ALL executions',
+    content: (
+      <>
+        Deleting algorithm will <Text strong>DELETE-ALL</Text> related pipelines
+        and <Text strong>STOP-ALL</Text> executions.
+      </>
+    ),
     okText: 'Confirm',
     okType: 'danger',
     cancelText: 'Cancel',
@@ -21,7 +25,7 @@ const deleteConfirmAction = (action, record) => {
   });
 };
 
-const algorithmsTableColumns = props => [
+const algorithmsTableColumns = ({ onSubmit, onDelete }) => [
   {
     title: 'Algorithm Name',
     dataIndex: 'name',
@@ -77,7 +81,7 @@ const algorithmsTableColumns = props => [
             )}
             submitText={'Update'}
             valueString={stringify(record)}
-            onSubmit={props.onSubmit}
+            onSubmit={onSubmit}
           />
         </Col>
         <Col>
@@ -85,9 +89,7 @@ const algorithmsTableColumns = props => [
             type="danger"
             shape="circle"
             icon="delete"
-            onClick={() =>
-              deleteConfirmAction(props.deleteAlgorithmFromStore, record)
-            }
+            onClick={() => deleteConfirmAction(onDelete, record)}
           />
         </Col>
       </Row>

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Input, Icon, Form, Button } from 'antd';
 
-import { addAlgorithm } from 'actions/debugTable.action';
+import { addAlgorithm } from 'actions/debug.action';
 import template from 'config/template/algorithm-modal.template';
 import BottomContent from 'components/containers/drawer/BottomContent.react';
 

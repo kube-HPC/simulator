@@ -1,5 +1,10 @@
-import actions from '../constants/actions';
-import topics from '../constants/topics';
+import actions from 'constants/actions';
+import topics from 'constants/topics';
+
+export const autoCompleteFilter = filter => ({
+  type: actions.UPDATE_FILTER,
+  payload: { filter }
+});
 
 export const socketInit = () => ({
   type: actions.SOCKET_INIT,

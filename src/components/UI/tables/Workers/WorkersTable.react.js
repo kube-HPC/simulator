@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 import { createSelector } from 'reselect';
 import { withState } from 'recompose';
@@ -13,7 +14,6 @@ import {
   workersTableStats
 } from 'components/UI/tables/Workers/WorkersTableColumns.react';
 import JsonView from 'components/containers/json/JsonView.react';
-import styled from 'styled-components';
 
 const SmallCard = styled(Card)`
   overflow: scroll;
@@ -95,9 +95,7 @@ WorkersTable.propTypes = {
 
 const mapStateToProps = state => ({
   dataSource: tableDataSelector(state),
-  stats: state.workerTable.stats,
-  scriptsPath: state.serverSelection.currentSelection.scriptsPath,
-  sshUser: state.serverSelection.currentSelection.user
+  stats: state.workerTable.stats
 });
 
 export default connect(

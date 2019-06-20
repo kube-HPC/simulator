@@ -1,11 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
+import { Tabs, Card } from 'antd';
+
+import { getKubernetesLogsData } from 'actions/jobs.action';
+
+import JsonView from 'components/containers/json/JsonView.react';
 import NodeLogs from './NodeLogs.react';
 import NodeInputOutput from './NodeInputOutput.react';
-import { getKubernetesLogsData } from 'actions/kubernetesLog.action';
-import { Tabs, Card } from 'antd';
-import { connect } from 'react-redux';
-import JsonView from 'components/containers/json/JsonView.react';
 
 function NodeInfo(props) {
   const { payload } = props;
