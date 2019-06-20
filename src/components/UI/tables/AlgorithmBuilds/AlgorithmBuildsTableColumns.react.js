@@ -105,6 +105,7 @@ export const nestedBuildsTableColumns = ({ onCancel, onRerun }) => [
     title: 'Progress',
     dataIndex: 'Progress',
     key: 'y',
+    width: '20%',
     render: (_, record) => {
       const failed = record.status === 'failed';
       const progress = (record.progress && parseInt(record.progress)) || 0;

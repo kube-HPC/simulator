@@ -29,21 +29,18 @@ const jobsTableColumns = dispatch => [
     title: 'Job ID',
     dataIndex: 'key',
     key: 'key',
-    width: '15%',
     render: (_, record) => <CopyEllipsis text={record.key} />
   },
   {
     title: 'Pipeline Name',
     dataIndex: 'status.pipeline',
     key: 'pipeline',
-    width: '10%',
     sorter: (a, b) => sorter(a.key, b.key),
     render: (_, record) => <CopyEllipsis disabled text={record.pipeline.name} />
   },
   {
     title: 'Status',
     dataIndex: 'status.status',
-    width: '10%',
     key: 'status',
     render: (_, record) => (
       <Tag color={STATUS[record.status && record.status.status]}>
@@ -59,7 +56,6 @@ const jobsTableColumns = dispatch => [
     title: 'Start Time',
     dataIndex: 'status.timestamp',
     key: 'Start timestamp',
-    width: '10%',
     sorter: (a, b) => a.pipeline.startTime - b.pipeline.startTime,
     render: (_, record) => (
       <Moment format="DD/MM/YY HH:mm:ss">
@@ -71,7 +67,6 @@ const jobsTableColumns = dispatch => [
     title: 'Running time',
     dataIndex: 'status.timestamp',
     key: 'timestamp',
-    width: '10%',
     render: (_, record) => (
       <span>
         {humanizeDuration(
@@ -89,7 +84,6 @@ const jobsTableColumns = dispatch => [
     title: 'Nodes Stats',
     dataIndex: 'status.data.details',
     key: 'details',
-    width: '10%',
     render: (_, record) =>
       record.status.data &&
       record.status.data.states &&
@@ -103,7 +97,6 @@ const jobsTableColumns = dispatch => [
     title: 'Priority',
     dataIndex: 'pipeline.priority',
     key: 'priority',
-    width: '5%',
     sorter: (a, b) => sorter(a.pipeline.priority, b.pipeline.priority),
     render: (_, record) => (
       <Tooltip placement="top" title={PRIORITY[record.pipeline.priority].name}>
@@ -145,7 +138,6 @@ const jobsTableColumns = dispatch => [
     title: 'Action',
     dataIndex: 'action',
     key: 'stop',
-    width: '15%',
     render: (_, record) => {
       const isStopPipeline =
         record.status.status === 'active' || record.status.status === 'pending';

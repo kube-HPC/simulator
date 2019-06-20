@@ -149,15 +149,16 @@ export default function AddPipelineForm(props) {
     />
   );
 
-  if (!formData.webhooks) formData.webhooks = { progress: '', result: '' };
-  else {
-    if (formData.webhooks.progress)
-      formData.webhooks.progress.replace(URL_REGEX, '');
-    else formData.webhooks.progress = '';
+  const webhooks = formData.webhooks;
 
-    if (formData.webhooks.result)
-      formData.webhooks.result.replace(URL_REGEX, '');
-    else formData.webhooks.result = '';
+  if (!webhooks) formData.webhooks = { progress: '', result: '' };
+  else {
+    webhooks.progress = webhooks.progress
+      ? webhooks.progress.replace(URL_REGEX, '')
+      : '';
+    webhooks.result = webhooks.result
+      ? webhooks.result.replace(URL_REGEX, '')
+      : '';
   }
 
   const Webhooks = (

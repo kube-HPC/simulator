@@ -12,7 +12,6 @@ export const workersTableStats = () => [
   {
     title: '',
     dataIndex: 'workerStatus',
-    width: '2%',
     key: 'workerStatusIcon',
     render: (_, record) => (
       <>
@@ -34,7 +33,6 @@ export const workersTableStats = () => [
   {
     title: 'Worker State',
     dataIndex: 'workerStatus',
-    width: '30%',
     key: 'workerStatus',
     render: (_, record) => {
       const title = toUpperCaseFirstLetter(
@@ -51,7 +49,6 @@ export const workersTableStats = () => [
   {
     title: 'Job ID',
     dataIndex: 'jobId',
-    width: '30%',
     key: 'jobId'
   }
 ];

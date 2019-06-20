@@ -4,12 +4,11 @@ import { STATUS } from 'constants/colors';
 import { sorter } from 'utils/string';
 import CopyEllipsis from 'components/containers/CopyEllipsis.react';
 
-const driversTableColumns = props => [
+const driversTableColumns = () => [
   {
     title: 'Driver ID',
     dataIndex: 'driverId',
     key: 'driverId',
-    width: '15%',
     sorter: (a, b) => sorter(a.driverId, b.driverId),
     render: (_, record) => <CopyEllipsis text={record.driverId} />
   },
@@ -17,7 +16,6 @@ const driversTableColumns = props => [
     title: 'Pod Name',
     dataIndex: 'podName',
     key: 'podName',
-    width: '20%',
     onFilter: (value, record) => record.podName.includes(value),
     sorter: (a, b) => sorter(a.podName, b.podName),
     render: (_, record) => <CopyEllipsis disabled text={record.podName} />
@@ -25,13 +23,11 @@ const driversTableColumns = props => [
   {
     title: 'Pipeline',
     dataIndex: 'pipelineName',
-    key: 'pipelineName',
-    width: '15%'
+    key: 'pipelineName'
   },
   {
     title: 'Driver State',
     dataIndex: 'driverStatus',
-    width: '15%',
     key: 'driverStatus',
     render: (_, record) => (
       <Tag color={STATUS[record.driverStatus]}> {record.driverStatus}</Tag>
@@ -41,7 +37,6 @@ const driversTableColumns = props => [
   {
     title: 'Job State',
     dataIndex: 'jobStatus',
-    width: '15%',
     key: 'jobStatus',
     render: (text, record) => (
       <span>
@@ -53,7 +48,6 @@ const driversTableColumns = props => [
   {
     title: 'Paused',
     dataIndex: 'paused',
-    width: '15%',
     key: 'paused',
     render: (text, record) => (
       <span>
