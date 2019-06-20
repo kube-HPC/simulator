@@ -41,7 +41,9 @@ export default function JobsTable() {
           />
         </CardRow>
       )}
-      onExpand={(_, { key }) => dispatch(getJaegerData(key))}
+      onExpand={(_, record) => {
+        dispatch(getJaegerData(record.pipeline.jobId));
+      }}
     />
   );
 }
