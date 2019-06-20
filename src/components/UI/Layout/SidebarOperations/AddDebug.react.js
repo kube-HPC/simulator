@@ -5,7 +5,7 @@ import { Input, Icon, Form, Button } from 'antd';
 
 import { addAlgorithm } from 'actions/debug.action';
 import template from 'config/template/algorithm-modal.template';
-import BottomContent from 'components/containers/drawer/BottomContent.react';
+import BottomContent from 'components/common/drawer/BottomContent.react';
 
 function AddDebug({ onSubmit, addAlgorithm }) {
   const [algoData, setAlgoData] = useState(template);

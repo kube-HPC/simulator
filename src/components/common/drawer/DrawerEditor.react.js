@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { notification, Icon, Card } from 'antd';
 
-import JsonEditor from 'components/containers/json/JsonEditor.react';
-import DrawerContainer from 'components/containers/drawer/DrawerContainer.react';
+import JsonEditor from 'components/common/json/JsonEditor.react';
+import DrawerContainer from 'components/common/drawer/DrawerContainer.react';
 
 function DrawerEditor({ children, valueString, onSubmit, ...props }) {
   const [value, setValue] = useState(valueString);

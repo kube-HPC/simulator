@@ -10,16 +10,16 @@ import {
   addPipeline
 } from 'actions/pipeline.action';
 import { getPipelineReadme } from 'actions/readme.action';
-import InfinityTable from 'components/UI/Layout/InfinityTable.react';
+import DynamicTable from 'components/UI/Layout/DynamicTable.react';
 import pipelinesTableColumns from 'components/UI/tables/Pipelines/PipelinesTableColumns.react';
 import PipelineTabSwitcher from 'components/UI/tables/Pipelines/PipelinesTabSwitcher.react';
-import CardRow from 'components/containers/CardRow.react';
+import CardRow from 'components/common/CardRow.react';
 
 function PipelinesTable(props) {
   const { storedPipelines, pipelineReadme, getPipelineReadme } = props;
 
   return (
-    <InfinityTable
+    <DynamicTable
       rowKey={pipeline => pipeline.name}
       dataSource={storedPipelines}
       columns={pipelinesTableColumns(props)}

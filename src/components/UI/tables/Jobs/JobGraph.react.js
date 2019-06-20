@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { getKubernetesLogsData, getCaching } from 'actions/jobs.action';
 
-import DrawerContainer from 'components/containers/drawer/DrawerContainer.react';
+import DrawerContainer from 'components/common/drawer/DrawerContainer.react';
 import NodeInfo from 'components/UI/tables/Jobs/NodeInfo.react';
 import VisGraph from 'components/UI/tables/Jobs/VisGraph.react';
 

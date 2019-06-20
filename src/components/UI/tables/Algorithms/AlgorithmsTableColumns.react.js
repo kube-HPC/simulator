@@ -4,7 +4,8 @@ import { Button, Modal, Row, Col, Tooltip } from 'antd';
 
 import { sorter, stringify } from 'utils/string';
 import Text from 'antd/lib/typography/Text';
-import DrawerEditor from 'components/containers/drawer/DrawerEditor.react';
+import DrawerEditor from 'components/common/drawer/DrawerEditor.react';
+import CopyEllipsis from 'components/common/CopyEllipsis.react';
 
 const deleteConfirmAction = (action, record) => {
   Modal.confirm({
@@ -30,14 +31,18 @@ const algorithmsTableColumns = ({ onSubmit, onDelete }) => [
     title: 'Algorithm Name',
     dataIndex: 'name',
     key: 'name',
-    sorter: (a, b) => sorter(a.name, b.name)
+    sorter: (a, b) => sorter(a.name, b.name),
+    render: (_, record) => <CopyEllipsis text={record.name} />
   },
   {
     title: 'Algorithm Image',
     dataIndex: 'algorithmImage',
     key: 'algorithmImage',
     onFilter: (value, record) => record.algorithmImage.includes(value),
-    sorter: (a, b) => sorter(a.algorithmImage, b.algorithmImage)
+    sorter: (a, b) => sorter(a.algorithmImage, b.algorithmImage),
+    render: (_, record) => (
+      <CopyEllipsis text={record.algorithmImage} length={30} />
+    )
   },
   {
     title: 'cpu',

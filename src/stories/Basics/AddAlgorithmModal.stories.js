@@ -6,7 +6,7 @@ import { storiesOf } from '@storybook/react';
 
 import AddAlgorithmForm from 'components/UI/Layout/SidebarOperations/AddAlgorithmForm.react';
 import rootReducer from 'reducers/root.reducer';
-import DrawerOperations from 'components/containers/drawer/DrawerOperations.react';
+import DrawerOperations from 'components/common/drawer/DrawerOperations.react';
 
 const store = createStore(rootReducer);
 

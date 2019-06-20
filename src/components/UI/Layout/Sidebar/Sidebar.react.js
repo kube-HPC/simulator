@@ -14,10 +14,10 @@ import { ReactComponent as JobsIcon } from 'images/jobs-icon.svg';
 
 import { Row, Col, Tag, Layout, Icon, Menu } from 'antd';
 
-import { HCOLOR } from 'constants/colors';
+import { LAYOUT_COLOR } from 'constants/colors';
 
 const SiderLight = styled(Layout.Sider)`
-  border-right: 1px solid ${HCOLOR.border};
+  border-right: 1px solid ${LAYOUT_COLOR.border};
 `;
 
 const setMenuItem = (component, title, count) => (
@@ -28,7 +28,7 @@ const setMenuItem = (component, title, count) => (
     </Col>
     {!isNaN(count) && (
       <Col>
-        <Tag style={{ color: HCOLOR.colorPrimary }}>{count}</Tag>
+        <Tag style={{ color: LAYOUT_COLOR.colorPrimary }}>{count}</Tag>
       </Col>
     )}
   </Row>

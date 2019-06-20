@@ -189,7 +189,7 @@ NodeStatistics.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  dataSource: state.nodeStatistics.dataSource
+  dataSource: state.nodeStats.dataSource
 });
 
 export default connect(

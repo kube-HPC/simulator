@@ -8,8 +8,7 @@ export default {
       input: []
     }
   ],
-  flowInput: {
-  },
+  flowInput: {},
   webhooks: {
     progress: '',
     result: ''
@@ -27,5 +26,5 @@ export default {
     progressVerbosityLevel: 'info',
     ttl: 3600
   },
-  priority: 1
+  priority: 3
 };

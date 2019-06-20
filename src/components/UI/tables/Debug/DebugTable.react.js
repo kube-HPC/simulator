@@ -5,9 +5,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { deleteAlgorithm } from 'actions/debug.action';
 
 import debugTableColumns from 'components/UI/tables/Debug/DebugTableColumns.react';
-import InfinityTable from 'components/UI/Layout/InfinityTable.react';
-import JsonView from 'components/containers/json/JsonView.react';
-import CardRow from 'components/containers/CardRow.react';
+import DynamicTable from 'components/UI/Layout/DynamicTable.react';
+import JsonView from 'components/common/json/JsonView.react';
+import CardRow from 'components/common/CardRow.react';
 
 const tableDataSelector = createSelector(
   state => state.debugTable.dataSource,
@@ -24,7 +24,7 @@ function DebugTable() {
   const onDelete = data => dispatch(deleteAlgorithm(data));
 
   return (
-    <InfinityTable
+    <DynamicTable
       rowKey={record => record.name}
       columns={debugTableColumns({ onDelete })}
       dataSource={dataSource}

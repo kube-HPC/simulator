@@ -16,7 +16,7 @@ import AlgorithmsTable from 'components/UI/tables/Algorithms/AlgorithmsTable.rea
 import NodeStatistics from 'components/UI/tables/NodeStats/NodeStatistics.react';
 import TableAutoComplete from 'components/UI/Layout/TableAutoComplete.react';
 
-import DrawerOperations from 'components/containers/drawer/DrawerOperations.react';
+import DrawerOperations from 'components/common/drawer/DrawerOperations.react';
 
 import SidebarOperations from 'components/UI/Layout/SidebarOperations/SidebarOperations.react';
 import Sidebar from 'components/UI/Layout/Sidebar/Sidebar.react';
@@ -26,7 +26,7 @@ import AddDebug from 'components/UI/Layout/SidebarOperations/AddDebug.react';
 
 import { message, Layout } from 'antd';
 import { init, socketInit } from 'actions/layout.action';
-import { HCOLOR } from 'constants/colors';
+import { LAYOUT_COLOR } from 'constants/colors';
 
 const LayoutStyled = styled(Layout)`
   height: 100vh;
@@ -41,7 +41,7 @@ const LayoutStyled = styled(Layout)`
   }
 
   .ant-layout-sider-light .ant-layout-sider-trigger {
-    border-right: 1px solid ${HCOLOR.border};
+    border-right: 1px solid ${LAYOUT_COLOR.border};
   }
 `;
 
@@ -53,7 +53,7 @@ const LayoutMargin = styled(Layout)`
 
 const HeaderStyled = styled(Layout.Header)`
   background: white;
-  border-bottom: 1pt solid ${HCOLOR.darkBorder};
+  border-bottom: 1pt solid ${LAYOUT_COLOR.darkBorder};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -63,7 +63,7 @@ const HeaderStyled = styled(Layout.Header)`
 const VersionAlignRight = styled.span`
   position: absolute;
   right: 1%;
-  color: ${HCOLOR.darkBorder};
+  color: ${LAYOUT_COLOR.darkBorder};
 `;
 
 const ContentStyled = styled(Layout.Content)`

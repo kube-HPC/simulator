@@ -4,7 +4,7 @@ import { Card } from 'antd';
 import PropTypes from 'prop-types';
 import humanizeDuration from 'humanize-duration';
 import { downloadStorageResults } from 'actions/jobs.action';
-import JsonView from '../../../containers/json/JsonView.react';
+import JsonView from '../../../common/json/JsonView.react';
 
 class NodeInputOutput extends Component {
   constructor() {
@@ -57,7 +57,12 @@ class NodeInputOutput extends Component {
       };
       items = (
         <Card>
-          <JsonView jsonObject={src} />
+          <JsonView
+            jsonObject={src}
+            onSelect={select => {
+              this.onSelect(select);
+            }}
+          />
         </Card>
       );
     }

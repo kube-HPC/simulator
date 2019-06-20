@@ -4,10 +4,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { createSelector } from 'reselect';
 import { getJaegerData } from 'actions/jobs.action';
 
-import InfinityTable from 'components/UI/Layout/InfinityTable.react';
+import DynamicTable from 'components/UI/Layout/DynamicTable.react';
 import JobsTabSwitcher from 'components/UI/tables/Jobs/JobsTabSwitcher.react';
 import jobsTableColumns from 'components/UI/tables/Jobs/JobsTableColumns.react';
-import CardRow from 'components/containers/CardRow.react';
+import CardRow from 'components/common/CardRow.react';
 
 const tableDataSelector = createSelector(
   state => state.jobsTable.dataSource,
@@ -17,12 +17,12 @@ const tableDataSelector = createSelector(
 );
 
 export default function JobsTable() {
-  const jaeger = useSelector(state => state.jaeger);
+  const jaeger = useSelector(state => state.jobsJaeger);
   const dataSource = useSelector(state => tableDataSelector(state));
   const dispatch = useDispatch();
 
   return (
-    <InfinityTable
+    <DynamicTable
       columns={jobsTableColumns(dispatch)}
       dataSource={dataSource}
       expandedRowRender={record => {

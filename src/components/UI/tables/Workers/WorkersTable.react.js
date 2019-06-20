@@ -1,30 +1,24 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-
 import { createSelector } from 'reselect';
 import { withState } from 'recompose';
 import { Tabs, Card } from 'antd';
 
-import InfinityTable from 'components/UI/Layout/InfinityTable.react';
+import DynamicTable from 'components/UI/Layout/DynamicTable.react';
 import defaultWorkerData from 'config/template/worker.template';
 import {
   workerTableColumns,
   workersTableStats
 } from 'components/UI/tables/Workers/WorkersTableColumns.react';
-import JsonView from 'components/containers/json/JsonView.react';
-
-const SmallCard = styled(Card)`
-  overflow: scroll;
-  height: 300px;
-`;
+import JsonView from 'components/common/json/JsonView.react';
+import CardRow from 'components/common/CardRow.react';
 
 const generateTab = (key, value) => (
   <Tabs.TabPane tab={key} key={key}>
-    <SmallCard size="small">
+    <Card size="small">
       <JsonView jsonObject={value} />
-    </SmallCard>
+    </Card>
   </Tabs.TabPane>
 );
 
@@ -34,30 +28,34 @@ const expandedRowRender = (columns, dataSource) => record => {
   );
 
   return (
-    <InfinityTable
-      rowKey={record => record.podName}
-      columns={columns}
-      dataSource={filteredDataSource}
-      expandedRowRender={record => {
-        const timer = {
-          workerStartingTime:
-            record.data &&
-            record.data.workerStartingTime &&
-            new Date(record.data.workerStartingTime).toLocaleString(),
-          jobCurrentTime:
-            record.data &&
-            record.data.jobCurrentTime &&
-            new Date(record.data.jobCurrentTime).toLocaleString()
-        };
+    <CardRow>
+      <DynamicTable
+        rowKey={record => record.podName}
+        columns={columns}
+        dataSource={filteredDataSource}
+        expandedRowRender={record => {
+          const timer = {
+            workerStartingTime:
+              record.data &&
+              record.data.workerStartingTime &&
+              new Date(record.data.workerStartingTime).toLocaleString(),
+            jobCurrentTime:
+              record.data &&
+              record.data.jobCurrentTime &&
+              new Date(record.data.jobCurrentTime).toLocaleString()
+          };
 
-        return (
-          <Tabs defaultActiveKey="1">
-            {generateTab('JSON', record)}
-            {generateTab('Additional Details', timer)}
-          </Tabs>
-        );
-      }}
-    />
+          return (
+            <CardRow>
+              <Tabs defaultActiveKey="1">
+                {generateTab('JSON', record)}
+                {generateTab('Additional Details', timer)}
+              </Tabs>
+            </CardRow>
+          );
+        }}
+      />
+    </CardRow>
   );
 };
 
@@ -69,7 +67,7 @@ function WorkersTable(props) {
     stats.stats &&
     stats.stats.map(algo => ({ ...defaultWorkerData, ...algo }));
   return (
-    <InfinityTable
+    <DynamicTable
       rowKey={record => record.algorithmName}
       columns={workerTableColumns(props)}
       dataSource={statsMergedWithDefault}

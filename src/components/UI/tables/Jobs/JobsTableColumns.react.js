@@ -7,8 +7,8 @@ import { toUpperCaseFirstLetter } from 'utils/string';
 import { Progress, Tag, Tooltip, Button, Row, Col } from 'antd';
 
 import { PRIORITY, STATUS } from 'constants/colors';
-import StatusTag from 'components/containers/StatusTag.react';
-import CopyEllipsis from 'components/containers/CopyEllipsis.react';
+import StatusTag from 'components/common/StatusTag.react';
+import CopyEllipsis from 'components/common/CopyEllipsis.react';
 
 import { downloadStorageResults } from 'actions/jobs.action';
 import { execRawPipeline, stopPipeline } from 'actions/pipeline.action';
@@ -42,15 +42,15 @@ const jobsTableColumns = dispatch => [
     title: 'Status',
     dataIndex: 'status.status',
     key: 'status',
+    sorter: (a, b) => sorter(a.status.status, b.status.status),
+    filterMultiple: true,
+    filters: getStatusFilter(),
+    onFilter: (value, record) => record.status.status === value,
     render: (_, record) => (
       <Tag color={STATUS[record.status && record.status.status]}>
         {toUpperCaseFirstLetter(record.status && record.status.status)}
       </Tag>
-    ),
-    sorter: (a, b) => sorter(a.status.status, b.status.status),
-    filterMultiple: true,
-    filters: getStatusFilter(),
-    onFilter: (value, record) => record.status.status === value
+    )
   },
   {
     title: 'Start Time',

@@ -6,7 +6,7 @@ import { Tabs, Card } from 'antd';
 
 import { getKubernetesLogsData } from 'actions/jobs.action';
 
-import JsonView from 'components/containers/json/JsonView.react';
+import JsonView from 'components/common/json/JsonView.react';
 import NodeLogs from './NodeLogs.react';
 import NodeInputOutput from './NodeInputOutput.react';
 
@@ -51,7 +51,7 @@ NodeInfo.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  logs: state.kubernetesLogs,
+  logs: state.jobsKubernetesLogs,
   algorithmTable: state.algorithmTable.dataSource
 });
 

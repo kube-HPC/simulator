@@ -11,9 +11,9 @@ import {
   nestedBuildsTableColumns
 } from 'components/UI/tables/AlgorithmBuilds/AlgorithmBuildsTableColumns.react';
 
-import InfinityTable from 'components/UI/Layout/InfinityTable.react';
-import JsonView from 'components/containers/json/JsonView.react';
-import CardRow from 'components/containers/CardRow.react';
+import DynamicTable from 'components/UI/Layout/DynamicTable.react';
+import JsonView from 'components/common/json/JsonView.react';
+import CardRow from 'components/common/CardRow.react';
 
 const tableDataSelector = createSelector(
   state => state.algorithmBuildsTable.dataSource,
@@ -36,7 +36,7 @@ function AlgorithmBuildsTable() {
 
     return (
       <CardRow>
-        <InfinityTable
+        <DynamicTable
           rowKey={record => record.buildId}
           columns={nestedBuildsTableColumns({ onCancel, onRerun })}
           dataSource={algorithms}
@@ -54,7 +54,7 @@ function AlgorithmBuildsTable() {
   }));
 
   return (
-    <InfinityTable
+    <DynamicTable
       rowKey={record => record.algorithmName}
       columns={buildsTableColumns({ dataSource })}
       dataSource={builds}

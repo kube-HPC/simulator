@@ -6,9 +6,9 @@ import { getAlgorithmReadme } from 'actions/readme.action';
 import { applyAlgorithm, deleteAlgorithm } from 'actions/algorithm.action';
 
 import AlgorithmTabSwitcher from 'components/UI/tables/Algorithms/AlgorithmTabSwitcher.react';
-import InfinityTable from 'components/UI/Layout/InfinityTable.react';
+import DynamicTable from 'components/UI/Layout/DynamicTable.react';
 import algorithmsTableColumns from 'components/UI/tables/Algorithms/AlgorithmsTableColumns.react';
-import CardRow from 'components/containers/CardRow.react';
+import CardRow from 'components/common/CardRow.react';
 import { stringify } from 'utils/string';
 
 const tableDataSelector = createSelector(
@@ -31,7 +31,7 @@ function AlgorithmsTable() {
   const onDelete = data => dispatch(deleteAlgorithm(data));
 
   return (
-    <InfinityTable
+    <DynamicTable
       rowKey={record => record.name}
       columns={algorithmsTableColumns({ onSubmit, onDelete })}
       dataSource={dataSource.asMutable()}

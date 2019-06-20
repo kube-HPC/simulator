@@ -1,13 +1,13 @@
 import React from 'react';
 import { Button, Row, Col, Modal, Icon, Tooltip } from 'antd';
 
-import StatusTag from 'components/containers/StatusTag.react';
+import StatusTag from 'components/common/StatusTag.react';
 import { ReactComponent as PlayIconSvg } from 'images/play-icon.svg';
 import { stringify } from 'utils/string';
 import Text from 'antd/lib/typography/Text';
-import DrawerEditor from 'components/containers/drawer/DrawerEditor.react';
+import DrawerEditor from 'components/common/drawer/DrawerEditor.react';
 import SwitchCron from 'components/UI/tables/Pipelines/SwitchCron.react';
-import CopyEllipsis from 'components/containers/CopyEllipsis.react';
+import CopyEllipsis from 'components/common/CopyEllipsis.react';
 
 const deleteConfirmAction = (action, record) => {
   Modal.confirm({
@@ -57,7 +57,6 @@ const pipelinesTableColumns = props => [
     width: '30%',
     render: (_, record) => {
       const { dataStats } = props;
-      if (!dataStats || dataStats.length === 0) return;
 
       // array flat one-liner
       const pipelineStats = [].concat(
@@ -70,9 +69,13 @@ const pipelinesTableColumns = props => [
         ]
       );
 
-      return pipelineStats.map(([status, count], i) => (
-        <StatusTag key={`${status}-${i}`} status={status} count={count} />
-      ));
+      return pipelineStats.length === 0 ? (
+        <StatusTag />
+      ) : (
+        pipelineStats.map(([status, count], i) => (
+          <StatusTag key={`${status}-${i}`} status={status} count={count} />
+        ))
+      );
     }
   },
   {

@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
 import { Card, Button } from 'antd';
-import DrawerContainer from 'components/containers/drawer/DrawerContainer.react';
-import MDContentSwitcherReact from 'components/containers/md/MDContentSwitcher.react';
+import DrawerContainer from 'components/common/drawer/DrawerContainer.react';
+import MDContentSwitcherReact from 'components/common/md/MDContentSwitcher.react';
 
 const MDViewer = props => (
   <Card

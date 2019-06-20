@@ -2,14 +2,14 @@ import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
 import actions from 'constants/actions';
 
-export default handleActions(
+export const nodeStats = handleActions(
   {
-    [actions.README_GET_PIPELINE_SUCCESS](
+    [actions.LAYOUT_UPDATE_ROW_DATA_TABLE](
       state,
       { type, payload, meta, error }
     ) {
-      return state.setIn([payload.name], payload);
+      return state.merge({ dataSource: payload.nodeStatistics });
     }
   },
-  Immutable.from({})
+  Immutable.from({ dataSource: [] })
 );

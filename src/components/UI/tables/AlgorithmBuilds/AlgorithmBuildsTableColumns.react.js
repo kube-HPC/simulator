@@ -4,8 +4,8 @@ import humanizeDuration from 'humanize-duration';
 
 import { Tag, Progress, Button } from 'antd';
 
-import StatusTag from 'components/containers/StatusTag.react';
-import CopyEllipsis from 'components/containers/CopyEllipsis.react';
+import StatusTag from 'components/common/StatusTag.react';
+import CopyEllipsis from 'components/common/CopyEllipsis.react';
 
 import { STATUS } from 'constants/colors';
 import { sorter } from 'utils/string';

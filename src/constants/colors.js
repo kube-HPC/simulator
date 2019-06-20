@@ -1,48 +1,41 @@
 export const COLOR = {
   blue: '#307fe6',
   blueLight: '#45a9ec',
-  red: '#e74c3c',
-  purple: '#9b59b6',
-  purpleHighlight: '#ac6ad7',
-  redHighlight: '#f85d4d',
-  green: '#1abc9c',
-  greenHighlight: '#2bcdad',
-  textBlue: '#307fe6',
-  whiteHighlight: '#ececec',
-  white: 'white',
-  lightGrey: '#e8e8e8',
+  darkGrey: '#0000006b',
   grey: '#ccc',
-  darkGrey: '#bfbfbf21',
   lightGreen: '#87d068',
-  yellow: '#eeda13',
+  lightGrey: '#e8e8e8',
   orange: '#ec8c16',
-  darkOrange: '#f50'
+  lightOrange: '#EAB675',
+  red: '#e74c3c',
+  transparentGrey: '#bfbfbf21',
+  yellow: '#eeda13'
 };
 
-export const HCOLOR = {
-  colorPrimary: COLOR.blue,
-  colorAccent: COLOR.whiteHighlight,
+export const LAYOUT_COLOR = {
+  background: COLOR.transparentGrey,
   border: COLOR.lightGrey,
-  darkBorder: COLOR.grey,
-  background: COLOR.darkGrey
+  colorPrimary: COLOR.blue,
+  darkBorder: COLOR.grey
 };
 
 export const STATUS = {
-  pending: COLOR.darkGrey,
-  bootstrap: COLOR.lightGreen,
-  ready: COLOR.lightGreen,
-  init: COLOR.lightGreen,
-  creating: COLOR.darkGrey,
-  completed: COLOR.lightGreen,
   active: COLOR.blueLight,
-  stopped: COLOR.orange,
-  failed: COLOR.darkOrange,
-  warning: COLOR.red,
-  succeed: COLOR.lightGreen,
-  skipped: COLOR.yellow,
+  bootstrap: COLOR.lightGreen,
+  completed: COLOR.lightGreen,
+  creating: COLOR.yellow,
+  failed: COLOR.red,
+  init: COLOR.lightGreen,
+  inProgress: COLOR.darkGrey,
+  pending: COLOR.darkGrey,
+  ready: COLOR.lightGreen,
   recovering: COLOR.darkGrey,
-  stalled: COLOR.lightGrey,
-  inProgress: COLOR.lightGrey
+  skipped: COLOR.yellow,
+  stalled: COLOR.darkGrey,
+  stopped: COLOR.orange,
+  stopping: COLOR.orange,
+  succeed: COLOR.lightGreen,
+  warning: COLOR.red
 };
 
 export const PRIORITY = {

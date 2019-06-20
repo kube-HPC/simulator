@@ -2,7 +2,7 @@ import React from 'react';
 import { Icon, Tag } from 'antd';
 
 import { STATUS } from 'constants/colors';
-import StatusTag from 'components/containers/StatusTag.react';
+import StatusTag from 'components/common/StatusTag.react';
 
 import { toUpperCaseFirstLetter } from 'utils/string';
 

@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import { Tabs } from 'antd';
 
-import MDViewer from 'components/containers/md/MDViewer.react';
-import JsonView from 'components/containers/json/JsonView.react';
+import MDViewer from 'components/common/md/MDViewer.react';
+import JsonView from 'components/common/json/JsonView.react';
 import DefaultMarkdown from 'config/template/readme.template.md';
 
 function AlgorithmTabSwitcher({ algorithmDetails, readme }) {
