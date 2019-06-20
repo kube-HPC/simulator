@@ -29,10 +29,10 @@ function JobsTabSwitcher({ record }) {
       />
     ),
     Trace: record.jaeger &&
-      Object.keys(record.jaeger[record.key].asMutable()).length !== 0 && (
+      Object.keys(record.jaeger[record.key]).length !== 0 && (
         <Trace trace={{ data: record.jaeger[record.key] }} />
       ),
-    JSON: <JsonView jsonObject={record.record} collapsed={2} />
+    JSON: <JsonView jsonObject={record.record} />
   };
 
   return <Tabs defaultActiveKey="1">{generateTabs(tabs)}</Tabs>;

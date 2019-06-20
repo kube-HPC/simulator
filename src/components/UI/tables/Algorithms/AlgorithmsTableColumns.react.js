@@ -30,22 +30,19 @@ const algorithmsTableColumns = ({ onSubmit, onDelete }) => [
     title: 'Algorithm Name',
     dataIndex: 'name',
     key: 'name',
-    width: '20%',
     sorter: (a, b) => sorter(a.name, b.name)
   },
   {
     title: 'Algorithm Image',
     dataIndex: 'algorithmImage',
     key: 'algorithmImage',
-    width: '20%',
     onFilter: (value, record) => record.algorithmImage.includes(value),
     sorter: (a, b) => sorter(a.algorithmImage, b.algorithmImage)
   },
   {
     title: 'cpu',
     dataIndex: 'cpu',
-    key: 'cpu',
-    width: '10%'
+    key: 'cpu'
   },
   {
     title: 'mem',
@@ -57,7 +54,6 @@ const algorithmsTableColumns = ({ onSubmit, onDelete }) => [
     title: 'minHotWorkers',
     dataIndex: 'minHotWorkers',
     key: 'minHotWorkers',
-    width: '10%',
     sorter: (a, b) => sorter(a.workerImage, b.workerImage)
   },
   {

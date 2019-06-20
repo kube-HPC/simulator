@@ -29,7 +29,7 @@ const actions = [
   'PIPELINE_START',
   'PIPELINE_STOP',
   'PIPELINE_UPDATE',
-  'README_ADD_GET_ALGORITHM',
+  'README_GET_ALGORITHM',
   'README_GET_PIPELINE',
   'README_POST_ALGORITHM',
   'README_POST_PIPELINE',
@@ -47,13 +47,15 @@ const actionType = actions.reduce(
   {}
 );
 
-restHelper(actionType.ALGORITHM_APPLY);
 restHelper(actionType.LAYOUT_GET_CONFIG);
+restHelper(actionType.JOBS_JAEGER);
+restHelper(actionType.JOBS_DOWNLOAD_RESULTS);
+restHelper(actionType.JOBS_KUBERNETES_LOGS);
+restHelper(actionType.ALGORITHM_APPLY);
 restHelper(actionType.ALGORITHM_DELETE);
 restHelper(actionType.README_GET_PIPELINE);
-restHelper(actionType.README_ADD_GET_ALGORITHM);
+restHelper(actionType.README_GET_ALGORITHM);
 restHelper(actionType.README_POST_PIPELINE);
 restHelper(actionType.README_POST_ALGORITHM);
-restHelper(actionType.JOBS_DOWNLOAD_RESULTS);
 
 export default actionType;
