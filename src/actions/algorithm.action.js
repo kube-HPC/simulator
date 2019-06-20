@@ -14,6 +14,6 @@ export const deleteAlgorithm = algorithmName => ({
   payload: {
     url: 'store/algorithms',
     body: { algorithmName },
-    actionType: actions.ALGORITHM_STORE_REMOVE
+    actionType: actions.ALGORITHM_DELETE
   }
 });

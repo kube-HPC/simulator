@@ -3,11 +3,12 @@ import dateformat from 'dateformat';
 import Immutable from 'seamless-immutable';
 import actions from 'constants/actions';
 
-const initialState = Immutable.from({ dataSource: [] });
-
 export default handleActions(
   {
-    [actions.UPDATE_ROW_DATA_TABLE](state, { type, payload, meta, error }) {
+    [actions.LAYOUT_UPDATE_ROW_DATA_TABLE](
+      state,
+      { type, payload, meta, error }
+    ) {
       const timedData = payload.jobs.map(d => {
         if (d.status) {
           d.status.timestamp = dateformat(
@@ -20,5 +21,5 @@ export default handleActions(
       return state.merge({ dataSource: timedData });
     }
   },
-  initialState
+  Immutable.from({ dataSource: [] })
 );

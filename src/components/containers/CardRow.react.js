@@ -7,7 +7,7 @@ const CenteredCard = styled(Card)`
   overflow: auto;
 `;
 
-export default function RowCard({ children, ...props }) {
+export default function CardRow({ children, ...props }) {
   return (
     <CenteredCard size="small" {...props}>
       {children}

@@ -1,25 +1,26 @@
 import React from 'react';
-import { STATUS } from 'constants/colors';
-import { sorter } from 'utils/string';
-import { Tag, Progress, Button } from 'antd';
-import { toUpperCaseFirstLetter } from 'utils/string';
 import Moment from 'react-moment';
 import humanizeDuration from 'humanize-duration';
+
+import { Tag, Progress, Button } from 'antd';
+
 import StatusTag from 'components/containers/StatusTag.react';
 import CopyEllipsis from 'components/containers/CopyEllipsis.react';
 
-export const buildsTableColumns = props => [
+import { STATUS } from 'constants/colors';
+import { sorter } from 'utils/string';
+import { toUpperCaseFirstLetter } from 'utils/string';
+
+export const buildsTableColumns = ({ dataSource }) => [
   {
     title: 'Algorithm Name',
     dataIndex: 'algorithmName',
     key: 'algorithmName',
-    width: '20%',
     sorter: (a, b) => sorter(a.algorithmName, b.algorithmName)
   },
   {
     title: 'Status',
     key: 'status',
-    width: '20%',
     sorter: (a, b) => sorter(a.timestamp, b.timestamp),
     render: (_, record) =>
       Object.entries(record.statuses).map(([status, arr]) => (
@@ -30,25 +31,24 @@ export const buildsTableColumns = props => [
     title: 'Builds',
     dataIndex: 'builds',
     key: 'builds',
-    width: '60%',
     render: (_, record) => (
       <StatusTag
         status={'Total Builds'}
         count={
-          props.dataSource.filter(d => d.algorithmName === record.algorithmName)
-            .length
+          dataSource.filter(
+            algorithm => algorithm.algorithmName === record.algorithmName
+          ).length
         }
       />
     )
   }
 ];
 
-export const nestedBuildTableColumns = props => [
+export const nestedBuildsTableColumns = ({ onCancel, onRerun }) => [
   {
     title: 'Build Id',
     dataIndex: 'buildId',
     key: 'buildId',
-    width: '15%',
     sorter: (a, b) => sorter(a.buildId, b.buildId),
     render: (_, record) => <CopyEllipsis text={record.buildId} />
   },
@@ -56,21 +56,18 @@ export const nestedBuildTableColumns = props => [
     title: 'Env',
     dataIndex: 'env',
     key: 'env',
-    width: '10%',
     sorter: (a, b) => sorter(a.env, b.env)
   },
   {
     title: 'Version',
     dataIndex: 'version',
     key: 'version',
-    width: '10%',
     sorter: (a, b) => sorter(a.version, b.version)
   },
   {
     title: 'Start Time',
     dataIndex: 'startTime',
     key: 'startTime',
-    width: '10%',
     sorter: (a, b) => sorter(a.startTime, b.startTime),
     render: (_, record) => (
       <Moment format="DD/MM/YY HH:mm:ss">{record.startTime}</Moment>
@@ -80,7 +77,6 @@ export const nestedBuildTableColumns = props => [
     title: 'Running time',
     dataIndex: 'timeTook',
     key: 'timeTook',
-    width: '10%',
     sorter: (a, b) => sorter(a.endTime, b.endTime),
     render: (_, record) => (
       <span>
@@ -98,9 +94,8 @@ export const nestedBuildTableColumns = props => [
   {
     title: 'Status',
     key: 'status',
-    width: '15%',
     sorter: (a, b) => sorter(a.status, b.status),
-    render: (text, record) => (
+    render: (_, record) => (
       <Tag color={STATUS[record.status]}>
         {toUpperCaseFirstLetter(record.status)}
       </Tag>
@@ -109,7 +104,6 @@ export const nestedBuildTableColumns = props => [
   {
     title: 'Progress',
     dataIndex: 'Progress',
-    width: '20%',
     key: 'y',
     render: (_, record) => {
       const failed = record.status === 'failed';
@@ -128,21 +122,20 @@ export const nestedBuildTableColumns = props => [
   {
     title: 'Actions',
     key: 'stop',
-    width: '10%',
     render: (_, record) =>
       record.status !== 'completed' ? (
         <Button
           type="danger"
           shape="circle"
           icon="close"
-          onClick={() => props.cancelBuild(record.buildId)}
+          onClick={() => onCancel(record.buildId)}
         />
       ) : (
         <Button
           type="default"
           shape="circle"
           icon="redo"
-          onClick={() => props.rerunBuild(record.buildId)}
+          onClick={() => onRerun(record.buildId)}
         />
       )
   }

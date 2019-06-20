@@ -1,6 +1,6 @@
 import actions from '../constants/actions';
 
-const _getReadme = (type,name,actionType) => ({
+const _getReadme = (type, name, actionType) => ({
   type: actions.REST_REQ,
   payload: {
     url: `/readme/${type}/${name}`,
@@ -8,17 +8,20 @@ const _getReadme = (type,name,actionType) => ({
   }
 });
 
-const _postReadme = (type,name,actionType,readme) => ({
+const _postReadme = (type, name, actionType, readme) => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: `readme/${type}/${name}`,
     actionType,
-    body: { readme,name },
+    body: { readme, name }
   }
 });
 
-
-export const  getPipelineReadme = (name)=> _getReadme('pipelines',name,actions.GET_PIPELINE_README)
-export const  getAlgorithmReadme = (name)=> _getReadme('algorithms',name,actions.GET_ALGORITHM_README)
-export const  postPipelineReadme = (name,readme)=> _postReadme('pipelines',name,actions.POST_PIPELINE_README,readme)
-export const  postAlgorithmReadme = (name,readme)=> _postReadme('algorithms',name,actions.POST_ALGORITHM_README,readme)
+export const getPipelineReadme = name =>
+  _getReadme('pipelines', name, actions.README_GET_PIPELINE);
+export const getAlgorithmReadme = name =>
+  _getReadme('algorithms', name, actions.README_ADD_GET_ALGORITHM);
+export const postPipelineReadme = (name, readme) =>
+  _postReadme('pipelines', name, actions.README_POST_PIPELINE, readme);
+export const postAlgorithmReadme = (name, readme) =>
+  _postReadme('algorithms', name, actions.README_POST_ALGORITHM, readme);

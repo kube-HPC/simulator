@@ -14,15 +14,11 @@ const success = (dispatch, payload, action) => {
 
 const socketMiddleware = ({ dispatch }) => next => action => {
   if (
-    ![
-      AT.SEND_TERMINAL_INPUT,
-      AT.SOCKET_INIT,
-      `${AT.GET_CONFIG}_SUCCESS`
-    ].includes(action.type)
+    ![AT.SOCKET_INIT, `${AT.LAYOUT_GET_CONFIG}_SUCCESS`].includes(action.type)
   ) {
     return next(action);
   }
-  if (action.type === `${AT.GET_CONFIG}_SUCCESS`) {
+  if (action.type === `${AT.LAYOUT_GET_CONFIG}_SUCCESS`) {
     if (socket) {
       socket.close();
     }
@@ -42,7 +38,7 @@ const socketMiddleware = ({ dispatch }) => next => action => {
     });
 
     socket.on('connect', () => {
-      console.log(`connected... ${socket.id}`);
+      console.log(`SOCKET Connected, id=${socket.id}`);
     });
 
     const events = [

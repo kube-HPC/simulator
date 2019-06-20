@@ -4,15 +4,15 @@ export const getJaegerData = jobId => ({
   type: actions.REST_REQ,
   payload: {
     url: `/jaeger?jobId=${jobId}`,
-    actionType: actions.JAEGER_REST
+    actionType: actions.JOBS_JAEGER
   }
 });
 
 export const downloadStorageResults = path => ({
-  type: actions.DOWNLOAD_REQ,
+  type: actions.JOBS_DOWNLOAD_REQ,
   payload: {
     url: `/download/results?path=${path}`,
-    actionType: actions.DOWNLOAD_RESULTS
+    actionType: actions.JOBS_DOWNLOAD_RESULTS
   }
 });
 
@@ -20,7 +20,7 @@ export const getKubernetesLogsData = podId => ({
   type: actions.REST_REQ,
   payload: {
     url: `/kubernetes/logs?podName=${podId}`,
-    actionType: actions.KUBERNETES_LOGS_REST
+    actionType: actions.JOBS_KUBERNETES_LOGS
   }
 });
 
@@ -29,6 +29,6 @@ export const getCaching = (jobId, nodeName) => ({
   payload: {
     url: 'exec/caching',
     body: { jobId, nodeName },
-    actionType: actions.EXEC_CACHING
+    actionType: actions.JOBS_EXEC_CACHING
   }
 });

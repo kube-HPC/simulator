@@ -1,33 +1,49 @@
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import groupby from 'lodash/groupBy';
-import { createSelector } from 'reselect';
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { createSelector } from 'reselect';
+
+import groupby from 'lodash/groupBy';
+
 import { cancelBuild, rerunBuild } from 'actions/builds.action';
 
 import {
   buildsTableColumns,
-  nestedBuildTableColumns
+  nestedBuildsTableColumns
 } from 'components/UI/tables/AlgorithmBuilds/AlgorithmBuildsTableColumns.react';
 
 import InfinityTable from 'components/UI/Layout/InfinityTable.react';
 import JsonView from 'components/containers/json/JsonView.react';
+import CardRow from 'components/containers/CardRow.react';
 
-function AlgorithmBuildsTable(props) {
-  const { dataSource } = props;
+const tableDataSelector = createSelector(
+  state => state.algorithmBuildsTable.dataSource,
+  state => state.autoCompleteFilter.filter,
+  (dataSource, filter) =>
+    dataSource && dataSource.filter(row => row.algorithmName.includes(filter))
+);
+
+function AlgorithmBuildsTable() {
+  const dataSource = useSelector(state => tableDataSelector(state));
+  const dispatch = useDispatch();
+
+  const onCancel = data => dispatch(cancelBuild(data));
+  const onRerun = data => dispatch(rerunBuild(data));
 
   const expandedRowRender = record => {
-    const algorithms = props.dataSource.filter(
-      d => d.algorithmName === record.algorithmName
+    const algorithms = dataSource.filter(
+      algorithm => algorithm.algorithmName === record.algorithmName
     );
 
     return (
-      <InfinityTable
-        rowKey={record => record.buildId}
-        columns={nestedBuildTableColumns(props)}
-        dataSource={algorithms}
-        expandedRowRender={record => <JsonView jsonObject={record} />}
-      />
+      <CardRow>
+        <InfinityTable
+          rowKey={record => record.buildId}
+          columns={nestedBuildsTableColumns({ onCancel, onRerun })}
+          dataSource={algorithms}
+          expandedRowRender={record => <JsonView jsonObject={record} />}
+          pagination={algorithms.length > 10 ? { size: 'small' } : false}
+        />
+      </CardRow>
     );
   };
 
@@ -40,30 +56,11 @@ function AlgorithmBuildsTable(props) {
   return (
     <InfinityTable
       rowKey={record => record.algorithmName}
-      columns={buildsTableColumns(props)}
+      columns={buildsTableColumns({ dataSource })}
       dataSource={builds}
       expandedRowRender={expandedRowRender}
     />
   );
 }
 
-const tableDataSelector = createSelector(
-  state => state.algorithmBuildsTable.dataSource,
-  state => state.autoCompleteFilter.filter,
-  algorithmBuildsTable => algorithmBuildsTable
-);
-
-AlgorithmBuildsTable.propTypes = {
-  dataSource: PropTypes.array.isRequired,
-  cancelBuild: PropTypes.func.isRequired,
-  rerunBuild: PropTypes.func.isRequired
-};
-
-const mapStateToProps = state => ({
-  dataSource: tableDataSelector(state)
-});
-
-export default connect(
-  mapStateToProps,
-  { cancelBuild, rerunBuild }
-)(AlgorithmBuildsTable);
+export default AlgorithmBuildsTable;

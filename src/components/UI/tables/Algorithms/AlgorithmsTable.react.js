@@ -8,7 +8,7 @@ import { applyAlgorithm, deleteAlgorithm } from 'actions/algorithm.action';
 import AlgorithmTabSwitcher from 'components/UI/tables/Algorithms/AlgorithmTabSwitcher.react';
 import InfinityTable from 'components/UI/Layout/InfinityTable.react';
 import algorithmsTableColumns from 'components/UI/tables/Algorithms/AlgorithmsTableColumns.react';
-import RowCard from 'components/containers/RowCard.react';
+import CardRow from 'components/containers/CardRow.react';
 
 const tableDataSelector = createSelector(
   state => state.algorithmTable.dataSource,
@@ -32,7 +32,7 @@ function AlgorithmsTable() {
       dataSource={dataSource.asMutable()}
       onExpand={(_, record) => dispatch(getAlgorithmReadme(record.key))}
       expandedRowRender={record => (
-        <RowCard>
+        <CardRow>
           <AlgorithmTabSwitcher
             algorithmDetails={record}
             readme={
@@ -41,7 +41,7 @@ function AlgorithmsTable() {
               algorithmReadme[record.key].readme
             }
           />
-        </RowCard>
+        </CardRow>
       )}
     />
   );

@@ -9,13 +9,11 @@ const jobsTableColumns = ({ onDelete }) => [
     title: 'Algorithm Name',
     dataIndex: 'name',
     key: 'name',
-    width: '40%',
     sorter: (a, b) => sorter(a.data.name, b.data.name)
   },
   {
     title: 'Path',
     key: 'path',
-    width: '40%',
     render: (_, record) => (
       <CopyToClipboard
         text={`${window.location.origin}/${record.data.path}`}
@@ -41,7 +39,6 @@ const jobsTableColumns = ({ onDelete }) => [
   {
     title: 'Stop',
     key: 'stop',
-    width: '20%',
     render: (_, record) => (
       <Button
         type="danger"

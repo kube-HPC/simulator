@@ -5,7 +5,7 @@ export const addAlgorithm = algorithmName => ({
   payload: {
     url: `debug/add`,
     body: { algorithmName },
-    actionType: actions.ALGORITHM_ADD
+    actionType: actions.DEBUG_ADD
   }
 });
 export const deleteAlgorithm = algorithmName => ({
@@ -13,6 +13,6 @@ export const deleteAlgorithm = algorithmName => ({
   payload: {
     url: `debug/delete`,
     body: { algorithmName },
-    actionType: actions.ALGORITHM_DELETE
+    actionType: actions.DEBUG_DELETE
   }
 });

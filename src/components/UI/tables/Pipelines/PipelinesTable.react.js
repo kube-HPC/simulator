@@ -13,7 +13,7 @@ import { getPipelineReadme } from 'actions/readme.action';
 import InfinityTable from 'components/UI/Layout/InfinityTable.react';
 import pipelinesTableColumns from 'components/UI/tables/Pipelines/PipelinesTableColumns.react';
 import PipelineTabSwitcher from 'components/UI/tables/Pipelines/PipelinesTabSwitcher.react';
-import RowCard from 'components/containers/RowCard.react';
+import CardRow from 'components/containers/CardRow.react';
 
 function PipelinesTable(props) {
   const { storedPipelines, pipelineReadme, getPipelineReadme } = props;
@@ -27,7 +27,7 @@ function PipelinesTable(props) {
         if (expanded) getPipelineReadme(record.name);
       }}
       expandedRowRender={record => (
-        <RowCard>
+        <CardRow>
           <PipelineTabSwitcher
             pipelineDetails={record}
             readme={
@@ -36,7 +36,7 @@ function PipelinesTable(props) {
               pipelineReadme[record.name].readme
             }
           />
-        </RowCard>
+        </CardRow>
       )}
     />
   );
@@ -56,7 +56,8 @@ PipelinesTable.propTypes = {
 
 const mapStateToProps = state => ({
   storedPipelines: state.storedPipeline.dataSource,
-  pipelineReadme: state.pipelineReadme
+  pipelineReadme: state.pipelineReadme,
+  dataStats: state.storedPipeline.dataStats
 });
 
 export default connect(

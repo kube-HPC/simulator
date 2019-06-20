@@ -7,7 +7,7 @@ import { getJaegerData } from 'actions/jobs.action';
 import InfinityTable from 'components/UI/Layout/InfinityTable.react';
 import JobsTabSwitcher from 'components/UI/tables/Jobs/JobsTabSwitcher.react';
 import jobsTableColumns from 'components/UI/tables/Jobs/JobsTableColumns.react';
-import RowCard from 'components/containers/RowCard.react';
+import CardRow from 'components/containers/CardRow.react';
 
 const tableDataSelector = createSelector(
   state => state.jobsTable.dataSource,
@@ -26,7 +26,7 @@ export default function JobsTable() {
       columns={jobsTableColumns(dispatch)}
       dataSource={dataSource}
       expandedRowRender={record => (
-        <RowCard>
+        <CardRow>
           <JobsTabSwitcher
             record={{
               key: record.key,
@@ -39,7 +39,7 @@ export default function JobsTable() {
               jaeger: jaeger[record.key] || null
             }}
           />
-        </RowCard>
+        </CardRow>
       )}
       onExpand={(_, { key }) => dispatch(getJaegerData(key))}
     />

@@ -7,7 +7,7 @@ import { deleteAlgorithm } from 'actions/debug.action';
 import debugTableColumns from 'components/UI/tables/Debug/DebugTableColumns.react';
 import InfinityTable from 'components/UI/Layout/InfinityTable.react';
 import JsonView from 'components/containers/json/JsonView.react';
-import RowCard from 'components/containers/RowCard.react';
+import CardRow from 'components/containers/CardRow.react';
 
 const tableDataSelector = createSelector(
   state => state.debugTable.dataSource,
@@ -29,9 +29,9 @@ function DebugTable() {
       columns={debugTableColumns({ onDelete })}
       dataSource={dataSource}
       expandedRowRender={record => (
-        <RowCard>
+        <CardRow>
           <JsonView jsonObject={record} />
-        </RowCard>
+        </CardRow>
       )}
     />
   );

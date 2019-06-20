@@ -33,7 +33,7 @@ function DrawerContainer({ children, title, description, width, ...props }) {
             type="primary"
             onClick={() => {
               props.onSubmit();
-              !props.onSubmitClose && setVisible(false);
+              setVisible(false);
             }}
           >
             {props.submitText || 'Submit'}
@@ -46,7 +46,6 @@ function DrawerContainer({ children, title, description, width, ...props }) {
 }
 
 DrawerContainer.propTypes = {
-  onSubmitClose: PropTypes.bool,
   submitText: PropTypes.string,
   extra: PropTypes.array,
   onSubmit: PropTypes.func
