@@ -1,6 +1,5 @@
 const successMsg = payload => ({
-  ALGORITHM_ADD: 'Algorithm Added for debug',
-  ALGORITHM_APPLY: 'Algorithm Added',
+  ALGORITHM_APPLY: 'Algorithm Applied',
   BUILD_RERUN: 'Build rerun started',
   BUILD_STOP: 'Build has stopped',
   CRON_START: 'Cron job started for selected pipeline',

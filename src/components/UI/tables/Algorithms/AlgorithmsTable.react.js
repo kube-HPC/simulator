@@ -9,6 +9,7 @@ import AlgorithmTabSwitcher from 'components/UI/tables/Algorithms/AlgorithmTabSw
 import InfinityTable from 'components/UI/Layout/InfinityTable.react';
 import algorithmsTableColumns from 'components/UI/tables/Algorithms/AlgorithmsTableColumns.react';
 import CardRow from 'components/containers/CardRow.react';
+import { stringify } from 'utils/string';
 
 const tableDataSelector = createSelector(
   state => state.algorithmTable.dataSource,
@@ -22,7 +23,11 @@ function AlgorithmsTable() {
   const algorithmReadme = useSelector(state => state.algorithmReadme);
   const dispatch = useDispatch();
 
-  const onSubmit = data => dispatch(applyAlgorithm(data));
+  const onSubmit = data => {
+    const formData = new FormData();
+    formData.append('payload', stringify(data));
+    dispatch(applyAlgorithm(formData));
+  };
   const onDelete = data => dispatch(deleteAlgorithm(data));
 
   return (

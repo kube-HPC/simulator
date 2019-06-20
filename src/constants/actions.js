@@ -5,7 +5,6 @@ const restHelper = action => {
 };
 
 const actions = [
-  'ALGORITHM_ADD',
   'ALGORITHM_APPLY',
   'ALGORITHM_DELETE',
   'ALGORITHM_STORE',
@@ -50,7 +49,6 @@ const actionType = actions.reduce(
 
 restHelper(actionType.ALGORITHM_APPLY);
 restHelper(actionType.LAYOUT_GET_CONFIG);
-restHelper(actionType.ALGORITHM_ADD);
 restHelper(actionType.ALGORITHM_DELETE);
 restHelper(actionType.README_GET_PIPELINE);
 restHelper(actionType.README_ADD_GET_ALGORITHM);
