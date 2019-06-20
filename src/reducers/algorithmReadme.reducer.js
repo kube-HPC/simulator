@@ -1,9 +1,13 @@
 import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
+import actions from 'constants/actions';
 
 export default handleActions(
   {
-    'GET_ALGORITHM_README_SUCCESS'(state, { type, payload, meta, error }) {
+    [actions.README_GET_ALGORITHM_SUCCESS](
+      state,
+      { type, payload, meta, error }
+    ) {
       return state.setIn([payload.name], payload);
     }
   },

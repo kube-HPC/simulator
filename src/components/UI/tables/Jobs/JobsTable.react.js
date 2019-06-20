@@ -25,24 +25,26 @@ export default function JobsTable() {
     <InfinityTable
       columns={jobsTableColumns(dispatch)}
       dataSource={dataSource}
-      expandedRowRender={record => (
-        <CardRow>
-          <JobsTabSwitcher
-            record={{
-              key: record.key,
-              graph: record.graph,
-              record: {
-                pipeline: record.pipeline,
-                status: record.status,
-                results: record.results
-              },
-              jaeger: jaeger[record.key] || null
-            }}
-          />
-        </CardRow>
-      )}
-      onExpand={(_, record) => {
-        dispatch(getJaegerData(record.pipeline.jobId));
+      expandedRowRender={record => {
+        return (
+          <CardRow>
+            <JobsTabSwitcher
+              record={{
+                key: record.key,
+                graph: record.graph,
+                record: {
+                  pipeline: record.pipeline,
+                  status: record.status,
+                  results: record.results
+                },
+                jaeger: jaeger[record.key] || null
+              }}
+            />
+          </CardRow>
+        );
+      }}
+      onExpand={(expanded, record) => {
+        expanded && dispatch(getJaegerData(record.pipeline.jobId));
       }}
     />
   );
