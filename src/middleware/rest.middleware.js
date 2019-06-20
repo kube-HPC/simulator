@@ -1,6 +1,7 @@
-import AT from '../constants/actions';
+import AT from 'constants/actions';
 import axios from 'axios';
 import FileSaver from 'file-saver';
+import successMsg from 'config/schema/success-messages.schema';
 
 let url = null;
 
@@ -26,25 +27,13 @@ const pending = (dispatch, payload, action) => {
 };
 
 const success = (dispatch, payload, action) => {
-  const isShowMessageSuccess = {
-    EXEC_STORED_PIPE: 'Stored pipeline execution started, check Jobs table',
-    UPDATE_STORED_PIPELINE: 'Pipeline updated',
-    DELETE_STORED_PIPE: 'Pipeline deleted',
-    EXEC_RAW_PIPELINE: 'Raw pipeline execution started',
-    ADD_PIPE: `Pipeline ${payload.name} has been stored`,
-    ALGORITHM_APPLY: 'Algorithm Added',
-    ALGORITHM_ADD: 'Algorithm Added for debug',
-    CRON_START: 'Cron job started for selected pipeline',
-    CRON_STOP: 'Cron job disabled for selected pipeline',
-    BUILD_STOP: 'Build has stopped',
-    BUILD_RERUN: 'Build rerun started'
-  };
+  const successMessage = successMsg(payload);
   dispatch({
     type: `${action.payload.actionType}_SUCCESS`,
     meta: {
       message: {
-        type: 'success', // 'success/error/warning'
-        content: isShowMessageSuccess[action.payload.actionType]
+        type: 'success',
+        content: successMessage[action.payload.actionType]
       }
     },
     payload
@@ -67,8 +56,8 @@ const setPath = ({ monitorBackend }) => {
   return _url;
 };
 
-export const restMiddleware = ({ dispatch }) => next => action => {
-  if (action.type === `${AT.GET_CONFIG}_SUCCESS`) {
+const restMiddleware = ({ dispatch }) => next => action => {
+  if (action.type === `${AT.LAYOUT_GET_CONFIG}_SUCCESS`) {
     url = setPath(action.payload.config);
   } else if (
     ![
@@ -77,7 +66,7 @@ export const restMiddleware = ({ dispatch }) => next => action => {
       AT.REST_REQ_POST_FORM,
       AT.REST_REQ_PUT,
       AT.REST_REQ_DELETE,
-      AT.DOWNLOAD_REQ
+      AT.JOBS_DOWNLOAD_REQ
     ].includes(action.type)
   ) {
     return next(action);
@@ -92,7 +81,9 @@ export const restMiddleware = ({ dispatch }) => next => action => {
         success(dispatch, res.data, action);
       })
       .catch(err => {
-        reject(dispatch, err.response.data.error, action);
+        const response =
+          err.response && err.response.data && err.response.data.error;
+        reject(dispatch, response, action);
       });
 
     return next(action);
@@ -161,7 +152,7 @@ export const restMiddleware = ({ dispatch }) => next => action => {
       });
 
     return next(action);
-  } else if (action.type === AT.DOWNLOAD_REQ) {
+  } else if (action.type === AT.JOBS_DOWNLOAD_REQ) {
     if (!url) {
       return next(action);
     }
@@ -182,3 +173,5 @@ export const restMiddleware = ({ dispatch }) => next => action => {
     return next(action);
   }
 };
+
+export default restMiddleware;

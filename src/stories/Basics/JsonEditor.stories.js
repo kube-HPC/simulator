@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
-import { Card, Button } from 'antd';
+import React from 'react';
+import { Card } from 'antd';
 import styled from 'styled-components';
 
 import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
 
 import { stringify } from 'utils/string';
 
-import JsonEditor from 'components/dumb/JsonEditor.react';
+import JsonEditor from 'components/containers/json/JsonEditor.react';
 import template from 'config/template/addPipeline.template';
 
 const StyledCard = styled(Card)`

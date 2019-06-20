@@ -4,7 +4,7 @@ import { storiesOf } from '@storybook/react';
 
 import { Layout } from 'antd';
 
-import Sidebar from 'components/UI/Layout/Sidebar.react';
+import Sidebar from 'components/UI/Layout/Sidebar/Sidebar.react';
 
 const LayoutStyled = styled(Layout)`
   height: 100vh;

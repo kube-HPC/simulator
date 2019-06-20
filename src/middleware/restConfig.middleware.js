@@ -26,7 +26,7 @@ const success = (dispatch, payload, action) => {
   }, 100);
 };
 
-export const restConfigMiddleware = ({ dispatch }) => next => action => {
+const restConfigMiddleware = ({ dispatch }) => next => action => {
   if (![AT.REST_REQ_CONFIG].includes(action.type)) {
     return next(action);
   }
@@ -49,7 +49,11 @@ export const restConfigMiddleware = ({ dispatch }) => next => action => {
         console.error('get config error');
       });
   } else {
-    // console.warn(`rest middlware: trying to register topic ${action.payload.topic} twice `)
+    console.warn(
+      `rest middleware: trying to register topic ${action.payload.topic} twice `
+    );
   }
   return next(action);
 };
+
+export default restConfigMiddleware;
