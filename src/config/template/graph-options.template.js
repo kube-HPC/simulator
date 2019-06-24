@@ -48,6 +48,9 @@ export default {
     batchRunning: {
       color: { background: '#eeda13', border: 'rgba(0,0,0,0.5)' }
     },
+    batchErrors: {
+      color: { background: '#ff9900', border: 'black' }
+    },
     notStarted: {
       color: { background: '#FF5441', border: 'rgba(0,0,0,0.5)' }
     },
