@@ -37,7 +37,8 @@ function JobGraph(props) {
           output: nodeData.output,
           error: node && node.error,
           startTime: nodeData.startTime,
-          endTime: nodeData.endTime
+          endTime: nodeData.endTime,
+          status: nodeData.status
         });
         toggle();
         props.getKubernetesLogsData(taskId);

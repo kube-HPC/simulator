@@ -12,7 +12,7 @@ export const COLOR = {
   white: 'white',
   lightGrey: '#e8e8e8',
   grey: '#ccc',
-  darkGrey: '#bfbfbf21',
+  darkGrey: '#bfbfbf',
   lightGreen: '#87d068',
   yellow: '#eeda13',
   orange: '#ec8c16',
@@ -29,10 +29,10 @@ export const HCOLOR = {
 
 export const STATUS = {
   pending: COLOR.darkGrey,
+  creating: COLOR.darkGrey,
   bootstrap: COLOR.lightGreen,
   ready: COLOR.lightGreen,
   init: COLOR.lightGreen,
-  creating: COLOR.darkGrey,
   completed: COLOR.lightGreen,
   active: COLOR.blueLight,
   stopped: COLOR.orange,
@@ -41,14 +41,14 @@ export const STATUS = {
   succeed: COLOR.lightGreen,
   skipped: COLOR.yellow,
   recovering: COLOR.darkGrey,
-  stalled: COLOR.lightGrey,
+  stalled: COLOR.redHighlight,
   inProgress: COLOR.lightGrey
 };
 
 export const PRIORITY = {
-  1: { color: STATUS.warning, name: 'Highest' },
-  2: { color: STATUS.failed, name: 'High' },
-  3: { color: STATUS.stopped, name: 'Medium' },
-  4: { color: STATUS.completed, name: 'Low' },
-  5: { color: STATUS.active, name: 'Lowest' }
+  1: { color: COLOR.red, name: 'Highest' },
+  2: { color: COLOR.darkOrange, name: 'High' },
+  3: { color: COLOR.orange, name: 'Medium' },
+  4: { color: COLOR.lightGreen, name: 'Low' },
+  5: { color: COLOR.blueLight, name: 'Lowest' }
 };

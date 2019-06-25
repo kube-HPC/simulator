@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Card, Tag } from 'antd';
+import { Card, Tag, Tooltip, Button, Row, Col } from 'antd';
 import PropTypes from 'prop-types';
 import humanizeDuration from 'humanize-duration';
 import { downloadStorageResults } from 'actions/jobs.action';
@@ -10,11 +10,6 @@ import { STATUS } from 'constants/colors';
 import { toUpperCaseFirstLetter } from 'utils/string';
 
 class NodeInputOutput extends Component {
-  constructor() {
-    super();
-    this.isAlreadySelected = false;
-    this.currentTaskId = null;
-  }
 
   onSelect(select) {
     if (
@@ -41,8 +36,10 @@ class NodeInputOutput extends Component {
         input: b.input,
         output: b.output && b.output.storageInfo,
         error: b.error,
-        status: b.startTime && b.error ? 'failed' : 'success',
-        duration: humanizeDuration(b.endTime - b.startTime)
+        status: b.status,
+        retries: b.retries || 0,
+        startTime: b.startTime,
+        endTime: b.endTime
       }));
     }
     else {
@@ -52,12 +49,14 @@ class NodeInputOutput extends Component {
         input: payload.input,
         output: payload.output && payload.output.storageInfo,
         error: payload.error,
-        status: payload.startTime && payload.error ? 'failed' : 'success',
-        duration: humanizeDuration(payload.endTime - payload.startTime)
+        status: payload.status,
+        retries: payload.retries || 0,
+        startTime: payload.startTime,
+        endTime: payload.endTime
       }];
     }
 
-    const statuses = ['success', 'failed'];
+    const statuses = ['active', 'succeed', 'failed'];
     const getStatusFilter = () =>
       statuses.map(status => ({
         text: toUpperCaseFirstLetter(status),
@@ -69,13 +68,13 @@ class NodeInputOutput extends Component {
         title: 'index',
         dataIndex: 'index',
         key: 'index',
-        width: '20%'
+        width: '10%'
       },
       {
         title: 'status',
         dataIndex: 'status',
         key: 'status',
-        width: '50%',
+        width: '20%',
         render: (_, record) => (
           <Tag color={STATUS[record.status]}>
             {toUpperCaseFirstLetter(record.status)}
@@ -90,6 +89,49 @@ class NodeInputOutput extends Component {
         dataIndex: 'duration',
         key: 'duration',
         width: '30%',
+        render: (_, record) => (
+          <span>
+            {humanizeDuration(
+              record.endTime
+                ? record.endTime - record.startTime
+                : Date.now() - (record.startTime),
+              {
+                maxDecimalPoints: 2
+              }
+            )}
+          </span>
+        )
+      },
+      {
+        title: 'retries',
+        dataIndex: 'retries',
+        key: 'retries',
+        width: '10%'
+      },
+      {
+        title: 'Results',
+        dataIndex: 'results',
+        key: 'results',
+        width: '30%',
+        render: (_, record) => {
+          const downloadAction = (
+            <Tooltip placement="top" title={'Download Results'}>
+              <Button
+                type="default"
+                disabled={!record.output}
+                shape="circle"
+                icon="download"
+                onClick={() => this.props.downloadStorageResults(record.output.path)}
+              />
+            </Tooltip>
+          );
+
+          return (
+            <Row type="flex" justify="start" gutter={10}>
+              <Col>{downloadAction}</Col>
+            </Row>
+          );
+        }
       }
     ]
 
@@ -100,7 +142,7 @@ class NodeInputOutput extends Component {
         expandedRowRender={record => {
           return (
             <Card>
-              <JsonView jsonObject={record} />
+              <JsonView jsonObject={record} onSelect={(p) => this.onSelect(p)} />
             </Card>
           );
         }}
