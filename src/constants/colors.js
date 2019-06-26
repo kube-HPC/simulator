@@ -20,28 +20,26 @@ export const LAYOUT_COLOR = {
 };
 
 export const STATUS = {
-  active: COLOR.blueLight,
   bootstrap: COLOR.lightGreen,
   completed: COLOR.lightGreen,
   creating: COLOR.yellow,
   failed: COLOR.red,
   init: COLOR.lightGreen,
-  inProgress: COLOR.darkGrey,
+  inProgress: COLOR.lightGrey,
   pending: COLOR.darkGrey,
   ready: COLOR.lightGreen,
   recovering: COLOR.darkGrey,
   skipped: COLOR.yellow,
-  stalled: COLOR.darkGrey,
+  stalled: COLOR.redHighlight,
   stopped: COLOR.orange,
   stopping: COLOR.orange,
-  succeed: COLOR.lightGreen,
-  warning: COLOR.red
+  succeed: COLOR.lightGreen
 };
 
 export const PRIORITY = {
-  1: { color: STATUS.warning, name: 'Highest' },
-  2: { color: STATUS.failed, name: 'High' },
-  3: { color: STATUS.stopped, name: 'Medium' },
-  4: { color: STATUS.completed, name: 'Low' },
-  5: { color: STATUS.active, name: 'Lowest' }
+  1: { color: COLOR.red, name: 'Highest' },
+  2: { color: COLOR.darkOrange, name: 'High' },
+  3: { color: COLOR.orange, name: 'Medium' },
+  4: { color: COLOR.lightGreen, name: 'Low' },
+  5: { color: COLOR.blueLight, name: 'Lowest' }
 };

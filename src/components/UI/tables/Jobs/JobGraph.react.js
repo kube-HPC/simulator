@@ -32,13 +32,13 @@ function JobGraph(props) {
           jobId: props.graph.jobId,
           nodeName,
           origInput: node && node.input,
-          batch:
-            (nodeData.batchTasks && nodeData.batchTasks.slice(0, 10)) || [],
+          batch: nodeData.batchTasks || [],
           input: nodeData.input,
           output: nodeData.output,
           error: node && node.error,
           startTime: nodeData.startTime,
-          endTime: nodeData.endTime
+          endTime: nodeData.endTime,
+          status: nodeData.status
         });
         toggle();
         props.getKubernetesLogsData(taskId);
@@ -112,8 +112,8 @@ function JobGraph(props) {
             getNetwork={initNetworkInstance}
           />
         ) : (
-          'Graph is not available'
-        )}
+            'Graph is not available'
+          )}
       </div>
     </>
   );
