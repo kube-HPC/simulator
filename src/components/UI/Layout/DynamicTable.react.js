@@ -16,9 +16,12 @@ export default function DynamicTable({ isLoading, dataSource, ...props }) {
         dataSource && dataSource.length < 10
           ? false
           : {
+              pageSize: 15,
               showSizeChanger: true,
               showQuickJumper: true,
-              size: 'small'
+              size: 'small',
+              showLessItems: true,
+              pageSizeOptions: ['10', '15', '20', '30', '40']
             }
       }
       {...props}
