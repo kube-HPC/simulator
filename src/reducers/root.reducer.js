@@ -1,32 +1,37 @@
 import { combineReducers } from 'redux';
 
-import jobsTable from 'reducers/jobsTable.reducer';
-import workerTable from 'reducers/workerTable.reducer';
-import driverTable from 'reducers/driverTable.reducer';
-import debugTable from 'reducers/debugTable.reducer';
-import algorithmTable from 'reducers/algorithmTable.reducer';
-import algorithmBuildsTable from 'reducers/algorithmBuildsTable.reducer';
-import autoCompleteFilter from 'reducers/autoCompleteFilter.reducer';
-import storedPipeline from 'reducers/storedPipeline.reducer';
-import jaeger from 'reducers/jaegerData.reducer';
-import kubernetesLogs from 'reducers/kubernetesLogs.reducer';
-import nodeStatistics from 'reducers/nodeStatistics.reducer';
-import pipelineReadme from 'reducers/pipelineReadme.reducer';
-import algorithmReadme from 'reducers/algorithmReadme.reducer';
-
-const rootReducer = combineReducers({
+import {
   jobsTable,
-  workerTable,
-  driverTable,
+  jobsJaeger,
+  jobsKubernetesLogs
+} from 'reducers/jobs.reducer';
+
+import { workerTable } from 'reducers/worker.reducer';
+import { driverTable } from 'reducers/driver.reducer';
+import { debugTable } from 'reducers/debug.reducer';
+
+import {
   algorithmTable,
   algorithmBuildsTable,
-  debugTable,
-  autoCompleteFilter,
-  storedPipeline,
-  jaeger,
-  kubernetesLogs,
-  nodeStatistics,
-  pipelineReadme,
   algorithmReadme
+} from 'reducers/algorithm.reducer';
+
+import { autoCompleteFilter } from 'reducers/layout.reducer';
+import { pipelineTable, pipelineReadme } from 'reducers/pipeline.reducer';
+import { nodeStats } from 'reducers/nodeStats.reducer';
+
+export default combineReducers({
+  algorithmBuildsTable,
+  algorithmReadme,
+  algorithmTable,
+  autoCompleteFilter,
+  debugTable,
+  driverTable,
+  jobsJaeger,
+  jobsKubernetesLogs,
+  jobsTable,
+  nodeStats,
+  pipelineReadme,
+  pipelineTable,
+  workerTable
 });
-export default rootReducer;

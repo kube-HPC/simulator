@@ -6,7 +6,7 @@ import { Tabs, Card } from 'antd';
 
 import Trace from 'jaeger-react-trace-component';
 import JobGraph from 'components/UI/tables/Jobs/JobGraph.react';
-import JsonView from 'components/containers/json/JsonView.react';
+import JsonView from 'components/common/json/JsonView.react';
 
 const OverflowedCard = styled(Card)`
   overflow: auto;

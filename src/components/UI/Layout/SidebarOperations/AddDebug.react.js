@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Input, Icon, Form, Button } from 'antd';
 
 import { addAlgorithm } from 'actions/debug.action';
 import template from 'config/template/algorithm-modal.template';
-import BottomContent from 'components/containers/drawer/BottomContent.react';
+import BottomContent from 'components/common/drawer/BottomContent.react';
 
-function AddDebug({ onSubmit, addAlgorithm }) {
+function AddDebug({ onSubmit }) {
   const [algoData, setAlgoData] = useState(template);
+
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -26,7 +28,7 @@ function AddDebug({ onSubmit, addAlgorithm }) {
           key="Submit"
           type="primary"
           onClick={() => {
-            addAlgorithm(algoData);
+            dispatch(addAlgorithm(algoData));
             onSubmit();
           }}
         >
@@ -38,11 +40,7 @@ function AddDebug({ onSubmit, addAlgorithm }) {
 }
 
 AddDebug.propsTypes = {
-  addAlgorithm: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired
 };
 
-export default connect(
-  null,
-  { addAlgorithm }
-)(AddDebug);
+export default AddDebug;

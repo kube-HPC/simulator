@@ -1,13 +1,21 @@
 import React from 'react';
 import { Button, Row, Col, Modal, Icon, Tooltip } from 'antd';
 
-import StatusTag from 'components/containers/StatusTag.react';
+import StatusTag from 'components/common/StatusTag.react';
 import { ReactComponent as PlayIconSvg } from 'images/play-icon.svg';
 import { stringify } from 'utils/string';
 import Text from 'antd/lib/typography/Text';
-import DrawerEditor from 'components/containers/drawer/DrawerEditor.react';
+import DrawerEditor from 'components/common/drawer/DrawerEditor.react';
 import SwitchCron from 'components/UI/tables/Pipelines/SwitchCron.react';
-import CopyEllipsis from 'components/containers/CopyEllipsis.react';
+import CopyEllipsis from 'components/common/CopyEllipsis.react';
+
+import {
+  execStoredPipe,
+  deleteStoredPipeline,
+  updateStoredPipeline,
+  cronStart,
+  cronStop
+} from 'actions/pipeline.action';
 
 const deleteConfirmAction = (action, record) => {
   Modal.confirm({
@@ -28,7 +36,7 @@ const deleteConfirmAction = (action, record) => {
   });
 };
 
-const pipelinesTableColumns = props => [
+const pipelinesTableColumns = ({ dispatch, dataStats }) => [
   {
     title: 'Pipeline Name',
     dataIndex: 'name',
@@ -44,9 +52,9 @@ const pipelinesTableColumns = props => [
     render: (_, record) => (
       <SwitchCron
         pipeline={record}
-        cronStart={props.cronStart}
-        cronStop={props.cronStop}
-        updateStoredPipeline={props.updateStoredPipeline}
+        cronStart={e => dispatch(cronStart(e))}
+        cronStop={e => dispatch(cronStop(e))}
+        updateStoredPipeline={e => dispatch(updateStoredPipeline(e))}
       />
     )
   },
@@ -56,9 +64,6 @@ const pipelinesTableColumns = props => [
     key: 'status',
     width: '30%',
     render: (_, record) => {
-      const { dataStats } = props;
-      if (!dataStats || dataStats.length === 0) return;
-
       // array flat one-liner
       const pipelineStats = [].concat(
         ...[
@@ -70,9 +75,13 @@ const pipelinesTableColumns = props => [
         ]
       );
 
-      return pipelineStats.map(([status, count], i) => (
-        <StatusTag key={`${status}-${i}`} status={status} count={count} />
-      ));
+      return pipelineStats.length === 0 ? (
+        <StatusTag />
+      ) : (
+        pipelineStats.map(([status, count], i) => (
+          <StatusTag key={`${status}-${i}`} status={status} count={count} />
+        ))
+      );
     }
   },
   {
@@ -81,12 +90,6 @@ const pipelinesTableColumns = props => [
     key: 'action',
     width: '30%',
     render: (_, record) => {
-      const {
-        execStoredPipe,
-        deleteStoredPipeline,
-        updateStoredPipeline
-      } = props;
-
       // http://hkube.io/spec/#tag/Execution/paths/~1exec~1stored/post
       const currPipeline = { ...record };
 
@@ -114,7 +117,7 @@ const pipelinesTableColumns = props => [
                 </Tooltip>
               )}
               valueString={stringify(currPipeline)}
-              onSubmit={execStoredPipe}
+              onSubmit={e => dispatch(execStoredPipe(e))}
               submitText={'Execute'}
             />
           </Col>
@@ -132,7 +135,7 @@ const pipelinesTableColumns = props => [
                 </Tooltip>
               )}
               valueString={stringify(record)}
-              onSubmit={updateStoredPipeline}
+              onSubmit={e => dispatch(updateStoredPipeline(e))}
               submitText={'Update'}
             />
           </Col>
@@ -141,7 +144,12 @@ const pipelinesTableColumns = props => [
               type="danger"
               shape="circle"
               icon="delete"
-              onClick={() => deleteConfirmAction(deleteStoredPipeline, record)}
+              onClick={() =>
+                deleteConfirmAction(
+                  e => dispatch(deleteStoredPipeline(e)),
+                  record
+                )
+              }
             />
           </Col>
         </Row>

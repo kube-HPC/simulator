@@ -8,10 +8,10 @@ import { ReactComponent as IconAddDebug } from 'images/add-debug.svg';
 
 import { Layout, Icon, Menu } from 'antd';
 
-import { HCOLOR } from 'constants/colors';
+import { LAYOUT_COLOR } from 'constants/colors';
 
 const SiderLight = styled(Layout.Sider)`
-  border-left: 1px solid ${HCOLOR.border};
+  border-left: 1px solid ${LAYOUT_COLOR.border};
 `;
 
 const StyledItem = styled(Menu.Item)`

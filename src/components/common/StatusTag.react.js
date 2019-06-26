@@ -7,8 +7,8 @@ import { STATUS } from 'constants/colors';
 
 function StatusTag({ status, count }) {
   return (
-    <Tooltip placement="top" title={toUpperCaseFirstLetter(status)}>
-      <Tag color={STATUS[status]}>{count}</Tag>
+    <Tooltip placement="top" title={status && toUpperCaseFirstLetter(status)}>
+      <Tag color={STATUS[status]}>{count || 0}</Tag>
     </Tooltip>
   );
 }

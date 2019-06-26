@@ -1,36 +1,33 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import AddPipelineForm from 'components/UI/Layout/SidebarOperations/AddPipeliene/AddPipelineForm.react';
 
 import { addPipeline } from 'actions/pipeline.action';
+import AddPipelineForm from 'components/UI/Layout/SidebarOperations/AddPipeliene/AddPipelineForm.react';
 
-function AddPipeline(props) {
+function AddPipeline({ onSubmit }) {
+  const dispatch = useDispatch();
+
+  const algorithms = useSelector(state =>
+    state.algorithmTable.dataSource.map(key => key.name)
+  );
+
+  const storedPipelines = useSelector(state => state.pipelineTable.dataSource);
+
   return (
     <AddPipelineForm
-      algorithms={props.algorithms}
-      pipelines={props.storedPipelines.map(pipeline => pipeline.name)}
+      algorithms={algorithms}
+      pipelines={storedPipelines.map(pipeline => pipeline.name)}
       onSubmit={pipeline => {
-        props.addPipeline(pipeline);
-        props.onSubmit();
+        dispatch(addPipeline(pipeline));
+        onSubmit();
       }}
     />
   );
 }
 
 AddPipeline.propTypes = {
-  storedPipelines: PropTypes.array,
-  algorithms: PropTypes.array,
-  addPipeline: PropTypes.func,
   onSubmit: PropTypes.func
 };
 
-const mapStateToProps = state => ({
-  algorithms: state.algorithmTable.dataSource.map(tableRow => tableRow.name),
-  storedPipelines: state.storedPipeline.dataSource
-});
-
-export default connect(
-  mapStateToProps,
-  { addPipeline }
-)(AddPipeline);
+export default AddPipeline;

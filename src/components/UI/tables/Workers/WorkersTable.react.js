@@ -1,30 +1,23 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-
 import { createSelector } from 'reselect';
-import { withState } from 'recompose';
 import { Tabs, Card } from 'antd';
 
-import InfinityTable from 'components/UI/Layout/InfinityTable.react';
+import DynamicTable from 'components/UI/Layout/DynamicTable.react';
 import defaultWorkerData from 'config/template/worker.template';
 import {
   workerTableColumns,
   workersTableStats
 } from 'components/UI/tables/Workers/WorkersTableColumns.react';
-import JsonView from 'components/containers/json/JsonView.react';
-
-const SmallCard = styled(Card)`
-  overflow: scroll;
-  height: 300px;
-`;
+import JsonView from 'components/common/json/JsonView.react';
+import CardRow from 'components/common/CardRow.react';
 
 const generateTab = (key, value) => (
   <Tabs.TabPane tab={key} key={key}>
-    <SmallCard size="small">
+    <Card size="small">
       <JsonView jsonObject={value} />
-    </SmallCard>
+    </Card>
   </Tabs.TabPane>
 );
 
@@ -34,76 +27,63 @@ const expandedRowRender = (columns, dataSource) => record => {
   );
 
   return (
-    <InfinityTable
-      rowKey={record => record.podName}
-      columns={columns}
-      dataSource={filteredDataSource}
-      expandedRowRender={record => {
-        const timer = {
-          workerStartingTime:
-            record.data &&
-            record.data.workerStartingTime &&
-            new Date(record.data.workerStartingTime).toLocaleString(),
-          jobCurrentTime:
-            record.data &&
-            record.data.jobCurrentTime &&
-            new Date(record.data.jobCurrentTime).toLocaleString()
-        };
+    <CardRow>
+      <DynamicTable
+        rowKey={record => record.podName}
+        columns={columns}
+        dataSource={filteredDataSource}
+        expandedRowRender={record => {
+          const timer = {
+            workerStartingTime:
+              record.data &&
+              record.data.workerStartingTime &&
+              new Date(record.data.workerStartingTime).toLocaleString(),
+            jobCurrentTime:
+              record.data &&
+              record.data.jobCurrentTime &&
+              new Date(record.data.jobCurrentTime).toLocaleString()
+          };
 
-        return (
-          <Tabs defaultActiveKey="1">
-            {generateTab('JSON', record)}
-            {generateTab('Additional Details', timer)}
-          </Tabs>
-        );
-      }}
-    />
+          return (
+            <CardRow>
+              <Tabs defaultActiveKey="1">
+                {generateTab('JSON', record)}
+                {generateTab('Additional Details', timer)}
+              </Tabs>
+            </CardRow>
+          );
+        }}
+      />
+    </CardRow>
   );
 };
 
-function WorkersTable(props) {
-  const { dataSource, stats } = props;
+const tableDataSelector = createSelector(
+  state => state.workerTable.dataSource,
+  dataSource => dataSource
+);
+
+function WorkersTable() {
+  const dataSource = useSelector(tableDataSelector);
+  const stats = useSelector(state => state.workerTable.stats);
 
   const statsMergedWithDefault =
     stats &&
     stats.stats &&
     stats.stats.map(algo => ({ ...defaultWorkerData, ...algo }));
   return (
-    <InfinityTable
+    <DynamicTable
       rowKey={record => record.algorithmName}
-      columns={workerTableColumns(props)}
+      columns={workerTableColumns()}
       dataSource={statsMergedWithDefault}
-      expandedRowRender={expandedRowRender(
-        workersTableStats(props),
-        dataSource
-      )}
+      expandedRowRender={expandedRowRender(workersTableStats(), dataSource)}
     />
   );
 }
-
-const workerTable = state => state.workerTable.dataSource;
-
-const tableDataSelector = createSelector(
-  [workerTable],
-  dataSource => dataSource
-);
 
 WorkersTable.propTypes = {
   dataSource: PropTypes.array,
   stats: PropTypes.object
 };
 
-const mapStateToProps = state => ({
-  dataSource: tableDataSelector(state),
-  stats: state.workerTable.stats
-});
-
-export default connect(
-  mapStateToProps,
-  null
-)(
-  withState('isVisible', 'onPopoverClickVisible', {
-    visible: false,
-    podName: ''
-  })(WorkersTable)
-);
+export default WorkersTable;

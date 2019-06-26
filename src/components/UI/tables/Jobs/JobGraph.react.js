@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { getKubernetesLogsData, getCaching } from 'actions/jobs.action';
 
-import DrawerContainer from 'components/containers/drawer/DrawerContainer.react';
+import DrawerContainer from 'components/common/drawer/DrawerContainer.react';
 import NodeInfo from 'components/UI/tables/Jobs/NodeInfo.react';
 import VisGraph from 'components/UI/tables/Jobs/VisGraph.react';
 
@@ -15,6 +14,8 @@ import Text from 'antd/lib/typography/Text';
 function JobGraph(props) {
   const [visible, setVisible] = useState(false);
   const [payload, setPayload] = useState(undefined);
+
+  const dispatch = useDispatch();
 
   const toggle = () => setVisible(prev => !prev);
   const initNetworkInstance = network => {
@@ -41,7 +42,7 @@ function JobGraph(props) {
           status: nodeData.status
         });
         toggle();
-        props.getKubernetesLogsData(taskId);
+        dispatch(getKubernetesLogsData(taskId));
       }
     });
   };
@@ -82,7 +83,7 @@ function JobGraph(props) {
         onClose={toggle}
         submitText={'Cache'}
         onSubmit={() =>
-          payload && props.getCaching(payload.jobId, payload.nodeName)
+          payload && dispatch(getCaching(payload.jobId, payload.nodeName))
         }
         title={'Node Information'}
         description={
@@ -96,7 +97,7 @@ function JobGraph(props) {
           <Button
             key="redo"
             icon="redo"
-            onClick={() => props.getKubernetesLogsData(payload.taskId)}
+            onClick={() => dispatch(getKubernetesLogsData(payload.taskId))}
           >
             Refresh
           </Button>
@@ -112,19 +113,11 @@ function JobGraph(props) {
             getNetwork={initNetworkInstance}
           />
         ) : (
-            'Graph is not available'
-          )}
+          'Graph is not available'
+        )}
       </div>
     </>
   );
 }
 
-JobGraph.propTypes = {
-  getCaching: PropTypes.func,
-  getKubernetesLogsData: PropTypes.func.isRequired
-};
-
-export default connect(
-  null,
-  { getKubernetesLogsData, getCaching }
-)(JobGraph);
+export default JobGraph;

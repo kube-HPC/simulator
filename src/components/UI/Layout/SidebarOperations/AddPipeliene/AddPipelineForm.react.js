@@ -22,9 +22,9 @@ import cronParser from 'cron-parser';
 
 import DynamicForm from 'components/UI/Layout/SidebarOperations/AddPipeliene/AddPipelineFormDynamic.react';
 import { stringify, toUpperCaseFirstLetter } from 'utils/string';
-import JsonEditor from 'components/containers/json/JsonEditor.react';
-import BottomContent from 'components/containers/drawer/BottomContent.react';
-import JsonView from 'components/containers/json/JsonView.react';
+import JsonEditor from 'components/common/json/JsonEditor.react';
+import BottomContent from 'components/common/drawer/BottomContent.react';
+import JsonView from 'components/common/json/JsonView.react';
 import addPipelineTemplate from 'config/template/addPipeline.template';
 
 const span = 6;

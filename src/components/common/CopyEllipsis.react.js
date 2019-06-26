@@ -3,7 +3,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { notification } from 'antd';
 import { Ellipsis } from 'ant-design-pro';
 
-export default function CopyEllipsis({ text, disabled, length }) {
+export default function CopyEllipsis({ text, length, children }) {
   return (
     <CopyToClipboard
       text={`${text}`}

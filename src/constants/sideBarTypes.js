@@ -1,5 +1,0 @@
-export default {
-  PIPELINE: 'PIPELINE',
-  ALGORITHM: 'ALGORITHM',
-  ADD_PIPELINE: 'ADD_PIPELINE'
-};

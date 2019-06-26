@@ -6,7 +6,7 @@ import { storiesOf } from '@storybook/react';
 
 import { stringify } from 'utils/string';
 
-import JsonEditor from 'components/containers/json/JsonEditor.react';
+import JsonEditor from 'components/common/json/JsonEditor.react';
 import template from 'config/template/addPipeline.template';
 
 const StyledCard = styled(Card)`

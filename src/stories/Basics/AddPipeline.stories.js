@@ -8,7 +8,7 @@ import { createStore } from 'redux';
 import AddPipeline from 'components/UI/Layout/SidebarOperations/AddPipeliene/AddPipeline.react';
 
 import rootReducer from 'reducers/root.reducer';
-import DrawerOperations from 'components/containers/drawer/DrawerOperations.react';
+import DrawerOperations from 'components/common/drawer/DrawerOperations.react';
 import AddPipelineReact from 'components/UI/Layout/SidebarOperations/AddPipeliene/AddPipeline.react';
 
 const store = createStore(rootReducer);

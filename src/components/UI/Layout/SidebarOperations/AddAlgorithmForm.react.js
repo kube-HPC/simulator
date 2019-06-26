@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
-
-import template from 'config/template/algorithm-modal.template';
-import schema from 'config/schema/algorithm-modal.schema';
-import { toUpperCaseFirstLetter } from 'utils/string';
+import { useDispatch } from 'react-redux';
+import parseUnit from 'parse-unit';
 import {
   Input,
   Icon,
@@ -19,11 +16,12 @@ import {
   Radio
 } from 'antd';
 
-import parseUnit from 'parse-unit';
-import PropTypes from 'prop-types';
-
 import { applyAlgorithm } from 'actions/algorithm.action';
-import BottomContent from 'components/containers/drawer/BottomContent.react';
+import BottomContent from 'components/common/drawer/BottomContent.react';
+
+import template from 'config/template/algorithm-modal.template';
+import schema from 'config/schema/algorithm-modal.schema';
+import { toUpperCaseFirstLetter } from 'utils/string';
 
 const Option = Select.Option;
 
@@ -80,6 +78,8 @@ function AddAlgorithmForm(props) {
   const [buildType, setBuildType] = useState('code');
   const [file, setFile] = useState(undefined);
 
+  const dispatch = useDispatch();
+
   const dragProps = {
     name: 'file',
     multiple: false,
@@ -107,7 +107,7 @@ function AddAlgorithmForm(props) {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('payload', JSON.stringify(algoData));
-    props.applyAlgorithm(formData);
+    dispatch(applyAlgorithm(formData));
     props.onSubmit();
   };
 
@@ -285,11 +285,4 @@ function AddAlgorithmForm(props) {
   );
 }
 
-AddAlgorithmForm.propsTypes = {
-  applyAlgorithm: PropTypes.func.isRequired
-};
-
-export default connect(
-  null,
-  { applyAlgorithm }
-)(AddAlgorithmForm);
+export default AddAlgorithmForm;

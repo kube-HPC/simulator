@@ -1,15 +1,17 @@
 import React from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Icon, notification, Tag, Button } from 'antd';
+import { notification, Tag, Button } from 'antd';
 import { STATUS } from 'constants/colors';
 import { sorter } from 'utils/string';
+import CopyEllipsis from 'components/common/CopyEllipsis.react';
 
 const jobsTableColumns = ({ onDelete }) => [
   {
     title: 'Algorithm Name',
     dataIndex: 'name',
     key: 'name',
-    sorter: (a, b) => sorter(a.data.name, b.data.name)
+    sorter: (a, b) => sorter(a.data.name, b.data.name),
+    render: (_, record) => <CopyEllipsis text={record.name} />
   },
   {
     title: 'Path',
@@ -24,13 +26,6 @@ const jobsTableColumns = ({ onDelete }) => [
         }
       >
         <Tag color={STATUS.active}>
-          <Icon
-            type="right"
-            style={{
-              color: 'rgba(255,255,255,.75)',
-              marginRight: '10px'
-            }}
-          />
           {`${window.location.origin}/${record.data.path}`}
         </Tag>
       </CopyToClipboard>

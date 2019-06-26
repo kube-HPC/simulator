@@ -6,24 +6,30 @@ const CustomExpandIcon = ({ expanded, onExpand, record }) => (
   <Icon type={expanded ? 'down' : 'right'} onClick={e => onExpand(record, e)} />
 );
 
-export default function InfinityTable({ isLoading, dataSource, ...props }) {
+export default function DynamicTable({ isLoading, dataSource, ...props }) {
   return (
     <Table
-      key="InfinityTable"
       size="middle"
       expandIcon={CustomExpandIcon}
       dataSource={dataSource || []}
-      pagination={{
-        showSizeChanger: true,
-        showQuickJumper: true,
-        size: 'small'
-      }}
+      pagination={
+        dataSource && dataSource.length < 10
+          ? false
+          : {
+              pageSize: 15,
+              showSizeChanger: true,
+              showQuickJumper: true,
+              size: 'small',
+              showLessItems: true,
+              pageSizeOptions: ['10', '15', '20', '30', '40']
+            }
+      }
       {...props}
     />
   );
 }
 
-InfinityTable.propTypes = {
+DynamicTable.propTypes = {
   dataSource: PropTypes.array.isRequired,
   columns: PropTypes.array.isRequired,
   isLoading: PropTypes.object,

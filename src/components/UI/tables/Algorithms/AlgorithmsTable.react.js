@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { createSelector } from 'reselect';
 
-import { getAlgorithmReadme } from 'actions/readme.action';
+import { getAlgorithmReadme, postAlgorithmReadme } from 'actions/readme.action';
 import { applyAlgorithm, deleteAlgorithm } from 'actions/algorithm.action';
 
 import AlgorithmTabSwitcher from 'components/UI/tables/Algorithms/AlgorithmTabSwitcher.react';
-import InfinityTable from 'components/UI/Layout/InfinityTable.react';
+import DynamicTable from 'components/UI/Layout/DynamicTable.react';
 import algorithmsTableColumns from 'components/UI/tables/Algorithms/AlgorithmsTableColumns.react';
-import CardRow from 'components/containers/CardRow.react';
+import CardRow from 'components/common/CardRow.react';
 import { stringify } from 'utils/string';
 
 const tableDataSelector = createSelector(
@@ -30,20 +30,27 @@ function AlgorithmsTable() {
   };
   const onDelete = data => dispatch(deleteAlgorithm(data));
 
+  const onSubmitReadme = useCallback(
+    (name, readme) => dispatch(postAlgorithmReadme(name, readme)),
+    [dispatch]
+  );
+
   return (
-    <InfinityTable
+    <DynamicTable
       rowKey={record => record.name}
       columns={algorithmsTableColumns({ onSubmit, onDelete })}
-      dataSource={dataSource.asMutable()}
-      onExpand={(_, record) => dispatch(getAlgorithmReadme(record.key))}
+      dataSource={dataSource}
+      onExpand={(_, record) => dispatch(getAlgorithmReadme(record.name))}
       expandedRowRender={record => (
         <CardRow>
           <AlgorithmTabSwitcher
             algorithmDetails={record}
+            onSubmit={onSubmitReadme}
             readme={
               algorithmReadme &&
               algorithmReadme[record.key] &&
-              algorithmReadme[record.key].readme
+              algorithmReadme[record.key].readme &&
+              algorithmReadme[record.key].readme.readme
             }
           />
         </CardRow>

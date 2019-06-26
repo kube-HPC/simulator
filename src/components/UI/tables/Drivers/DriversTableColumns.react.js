@@ -2,7 +2,7 @@ import React from 'react';
 import { Tag } from 'antd';
 import { STATUS } from 'constants/colors';
 import { sorter } from 'utils/string';
-import CopyEllipsis from 'components/containers/CopyEllipsis.react';
+import CopyEllipsis from 'components/common/CopyEllipsis.react';
 
 const driversTableColumns = () => [
   {
