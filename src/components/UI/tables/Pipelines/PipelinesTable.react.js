@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
-import React from 'react';
-import { getPipelineReadme } from 'actions/readme.action';
+import React, { useCallback } from 'react';
+import { getPipelineReadme, postPipelineReadme } from 'actions/readme.action';
 import DynamicTable from 'components/UI/Layout/DynamicTable.react';
 import pipelinesTableColumns from 'components/UI/tables/Pipelines/PipelinesTableColumns.react';
 import PipelineTabSwitcher from 'components/UI/tables/Pipelines/PipelinesTabSwitcher.react';
@@ -12,6 +12,11 @@ function PipelinesTable() {
   const dataStats = useSelector(state => state.pipelineTable.dataStats);
 
   const dispatch = useDispatch();
+
+  const onSubmitReadme = useCallback(
+    (name, readme) => dispatch(postPipelineReadme(name, readme)),
+    [dispatch]
+  );
 
   return (
     <DynamicTable
@@ -27,11 +32,13 @@ function PipelinesTable() {
       expandedRowRender={record => (
         <CardRow>
           <PipelineTabSwitcher
+            onSubmit={onSubmitReadme}
             pipelineDetails={record}
             readme={
               pipelineReadme &&
               pipelineReadme[record.name] &&
-              pipelineReadme[record.name].readme
+              pipelineReadme[record.name].readme &&
+              pipelineReadme[record.name].readme.readme
             }
           />
         </CardRow>

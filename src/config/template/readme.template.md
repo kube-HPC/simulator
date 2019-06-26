@@ -1,10 +1,8 @@
-# Pipeline Name
+# Description
 
-## Description
+Add a brief description.
 
-Pipeline description.
-
-## API Description
+# API Description
 
 Description about the expected input and output.
 
