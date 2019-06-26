@@ -1,8 +1,9 @@
 import React from 'react';
 import { Icon, Input, AutoComplete } from 'antd';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { autoCompleteFilter } from 'actions/layout.action';
 import styled from 'styled-components';
+import { COLOR } from 'constants/colors';
 
 const InputTransparent = styled(AutoComplete)`
   background: transparent;
@@ -19,7 +20,7 @@ const options = data => {
         <Option key={opt.title} value={opt.title}>
           {opt.title}
           <span
-            style={{ color: 'rgb(52, 152, 219)' }}
+            style={{ color:  COLOR.blueLight }}
             className="certain-search-item-count"
           >
             ({opt.count})
@@ -31,19 +32,6 @@ const options = data => {
 
   return obj;
 };
-
-const TableAutoComplete = props => (
-  <InputTransparent
-    dropdownMatchSelectWidth={true}
-    dataSource={options(props.dataSource)}
-    onSelect={props.updateFilter}
-    onChange={props.updateFilter}
-    optionLabelProp="value"
-    placeholder="Search in current table"
-  >
-    <Input suffix={<Icon type="search" />} />
-  </InputTransparent>
-);
 
 const tableDataToAutoCompleteData = data => {
   if (data[0] == null) {
@@ -72,11 +60,25 @@ const tableDataToAutoCompleteData = data => {
   return table;
 };
 
-const mapStateToProps = state => ({
-  dataSource: tableDataToAutoCompleteData(state.jobsTable.dataSource)
-});
+function TableAutoComplete() {
+  const dataSource = useSelector(state =>
+    tableDataToAutoCompleteData(state.jobsTable.dataSource)
+  );
 
-export default connect(
-  mapStateToProps,
-  { updateFilter: autoCompleteFilter }
-)(TableAutoComplete);
+  const dispatch = useDispatch();
+
+  return (
+    <InputTransparent
+      dropdownMatchSelectWidth={true}
+      dataSource={options(dataSource)}
+      onSelect={e => dispatch(autoCompleteFilter(e))}
+      onChange={e => dispatch(autoCompleteFilter(e))}
+      optionLabelProp="value"
+      placeholder="Search in current table"
+    >
+      <Input suffix={<Icon type="search" />} />
+    </InputTransparent>
+  );
+}
+
+export default TableAutoComplete;

@@ -9,6 +9,14 @@ import DrawerEditor from 'components/common/drawer/DrawerEditor.react';
 import SwitchCron from 'components/UI/tables/Pipelines/SwitchCron.react';
 import CopyEllipsis from 'components/common/CopyEllipsis.react';
 
+import {
+  execStoredPipe,
+  deleteStoredPipeline,
+  updateStoredPipeline,
+  cronStart,
+  cronStop
+} from 'actions/pipeline.action';
+
 const deleteConfirmAction = (action, record) => {
   Modal.confirm({
     title: 'WARNING Deleting Pipeline',
@@ -28,7 +36,7 @@ const deleteConfirmAction = (action, record) => {
   });
 };
 
-const pipelinesTableColumns = props => [
+const pipelinesTableColumns = ({ dispatch, dataStats }) => [
   {
     title: 'Pipeline Name',
     dataIndex: 'name',
@@ -44,9 +52,9 @@ const pipelinesTableColumns = props => [
     render: (_, record) => (
       <SwitchCron
         pipeline={record}
-        cronStart={props.cronStart}
-        cronStop={props.cronStop}
-        updateStoredPipeline={props.updateStoredPipeline}
+        cronStart={e => dispatch(cronStart(e))}
+        cronStop={e => dispatch(cronStop(e))}
+        updateStoredPipeline={e => dispatch(updateStoredPipeline(e))}
       />
     )
   },
@@ -56,8 +64,6 @@ const pipelinesTableColumns = props => [
     key: 'status',
     width: '30%',
     render: (_, record) => {
-      const { dataStats } = props;
-
       // array flat one-liner
       const pipelineStats = [].concat(
         ...[
@@ -84,12 +90,6 @@ const pipelinesTableColumns = props => [
     key: 'action',
     width: '30%',
     render: (_, record) => {
-      const {
-        execStoredPipe,
-        deleteStoredPipeline,
-        updateStoredPipeline
-      } = props;
-
       // http://hkube.io/spec/#tag/Execution/paths/~1exec~1stored/post
       const currPipeline = { ...record };
 
@@ -117,7 +117,7 @@ const pipelinesTableColumns = props => [
                 </Tooltip>
               )}
               valueString={stringify(currPipeline)}
-              onSubmit={execStoredPipe}
+              onSubmit={e => dispatch(execStoredPipe(e))}
               submitText={'Execute'}
             />
           </Col>
@@ -135,7 +135,7 @@ const pipelinesTableColumns = props => [
                 </Tooltip>
               )}
               valueString={stringify(record)}
-              onSubmit={updateStoredPipeline}
+              onSubmit={e => dispatch(updateStoredPipeline(e))}
               submitText={'Update'}
             />
           </Col>
@@ -144,7 +144,12 @@ const pipelinesTableColumns = props => [
               type="danger"
               shape="circle"
               icon="delete"
-              onClick={() => deleteConfirmAction(deleteStoredPipeline, record)}
+              onClick={() =>
+                deleteConfirmAction(
+                  e => dispatch(deleteStoredPipeline(e)),
+                  record
+                )
+              }
             />
           </Col>
         </Row>

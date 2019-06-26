@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 import { useSpring, animated, config } from 'react-spring';
 
 import { ReactComponent as LogoFish } from 'images/logo-fish.svg';
@@ -79,17 +80,27 @@ const TitleCenter = styled(LogoTitle)`
   align-self: flex-start;
 `;
 
-export default function Sidebar({ onSelect, ...props }) {
+export default function Sidebar({ onSelect }) {
   const [collapsed, setCollapsed] = useState(true);
 
+  const dataCount = useSelector(state => ({
+    jobsCount: (state.jobsTable.dataSource || []).length,
+    driversCount: (state.driverTable.dataSource || []).length,
+    algorithmsCount: (state.algorithmTable.dataSource || []).length,
+    buildsCount: (state.algorithmBuildsTable.dataSource || []).length,
+    pipelinesCount: (state.pipelineTable.dataSource || []).length,
+    workersCount: (state.workerTable.stats || { total: 0 }).total,
+    debugCount: (state.debugTable.dataSource || []).length
+  }));
+
   const menuItems = [
-    ['Jobs', JobsIcon, props.jobsCount],
-    ['Pipelines', PipelineIcon, props.pipelinesCount],
-    ['Workers', WorkerIcon, props.workersCount],
-    ['Drivers', DriversIcon, props.driversCount],
-    ['Algorithms', AlgorithmIcon, props.algorithmsCount],
-    ['Debug', DebugIcon, props.debugCount],
-    ['Builds', 'build', props.buildsCount]
+    ['Jobs', JobsIcon, dataCount.jobsCount],
+    ['Pipelines', PipelineIcon, dataCount.pipelinesCount],
+    ['Workers', WorkerIcon, dataCount.workersCount],
+    ['Drivers', DriversIcon, dataCount.driversCount],
+    ['Algorithms', AlgorithmIcon, dataCount.algorithmsCount],
+    ['Debug', DebugIcon, dataCount.debugCount],
+    ['Builds', 'build', dataCount.buildsCount]
   ];
 
   return (
@@ -122,12 +133,5 @@ export default function Sidebar({ onSelect, ...props }) {
 }
 
 Sidebar.propTypes = {
-  jobsCount: PropTypes.number,
-  pipelinesCount: PropTypes.number,
-  workersCount: PropTypes.number,
-  driversCount: PropTypes.number,
-  algorithmsCount: PropTypes.number,
-  debugCount: PropTypes.number,
-  buildsCount: PropTypes.number,
   onSelect: PropTypes.func.isRequired
 };

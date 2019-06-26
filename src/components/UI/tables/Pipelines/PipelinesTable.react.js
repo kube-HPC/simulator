@@ -1,30 +1,28 @@
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import React from 'react';
-import PropTypes from 'prop-types';
-import {
-  execStoredPipe,
-  deleteStoredPipeline,
-  updateStoredPipeline,
-  cronStart,
-  cronStop,
-  addPipeline
-} from 'actions/pipeline.action';
 import { getPipelineReadme } from 'actions/readme.action';
 import DynamicTable from 'components/UI/Layout/DynamicTable.react';
 import pipelinesTableColumns from 'components/UI/tables/Pipelines/PipelinesTableColumns.react';
 import PipelineTabSwitcher from 'components/UI/tables/Pipelines/PipelinesTabSwitcher.react';
 import CardRow from 'components/common/CardRow.react';
 
-function PipelinesTable(props) {
-  const { storedPipelines, pipelineReadme, getPipelineReadme } = props;
+function PipelinesTable() {
+  const storedPipelines = useSelector(state => state.pipelineTable.dataSource);
+  const pipelineReadme = useSelector(state => state.pipelineReadme);
+  const dataStats = useSelector(state => state.pipelineTable.dataStats);
+
+  const dispatch = useDispatch();
 
   return (
     <DynamicTable
       rowKey={pipeline => pipeline.name}
-      dataSource={storedPipelines}
-      columns={pipelinesTableColumns(props)}
+      dataSource={storedPipelines || []}
+      columns={pipelinesTableColumns({
+        dispatch,
+        dataStats: dataStats || []
+      })}
       onExpand={(expanded, record) => {
-        if (expanded) getPipelineReadme(record.name);
+        if (expanded) dispatch(getPipelineReadme(record.name));
       }}
       expandedRowRender={record => (
         <CardRow>
@@ -42,33 +40,4 @@ function PipelinesTable(props) {
   );
 }
 
-PipelinesTable.propTypes = {
-  storedPipelines: PropTypes.array.isRequired,
-  addPipeline: PropTypes.func.isRequired,
-  execStoredPipe: PropTypes.func.isRequired,
-  deleteStoredPipeline: PropTypes.func.isRequired,
-  updateStoredPipeline: PropTypes.func.isRequired,
-  cronStart: PropTypes.func.isRequired,
-  cronStop: PropTypes.func.isRequired,
-  getPipelineReadme: PropTypes.func,
-  pipelineReadme: PropTypes.object
-};
-
-const mapStateToProps = state => ({
-  storedPipelines: state.storedPipeline.dataSource,
-  pipelineReadme: state.pipelineReadme,
-  dataStats: state.storedPipeline.dataStats
-});
-
-export default connect(
-  mapStateToProps,
-  {
-    addPipeline,
-    execStoredPipe,
-    deleteStoredPipeline,
-    updateStoredPipeline,
-    cronStart,
-    cronStop,
-    getPipelineReadme
-  }
-)(PipelinesTable);
+export default PipelinesTable;

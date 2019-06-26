@@ -1,6 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { Tabs, Card } from 'antd';
 
@@ -10,17 +9,20 @@ import JsonView from 'components/common/json/JsonView.react';
 import NodeLogs from './NodeLogs.react';
 import NodeInputOutput from './NodeInputOutput.react';
 
-function NodeInfo(props) {
-  const { payload } = props;
+function NodeInfo({ payload }) {
+  const logs = useSelector(state => state.jobsKubernetesLogs);
+  const algorithmTable = useSelector(state => state.algorithmTable.dataSource);
 
   const algorithmDetails =
-    props.algorithmTable.find(a => a.name === payload.algorithmName) || {};
+    algorithmTable.find(a => a.name === payload.algorithmName) || {};
+
+  const dispatch = useDispatch();
 
   return (
     <Tabs defaultActiveKey="1">
       <Tabs.TabPane tab="Logs" key="1">
         <NodeLogs
-          log={props.logs.dataSource.asMutable()}
+          log={logs.dataSource.asMutable()}
           taskDetails={
             payload
               ? payload.batch && payload.batch.length
@@ -29,7 +31,7 @@ function NodeInfo(props) {
               : null
           }
           rerunLogs={(taskId = payload.taskId) =>
-            props.getKubernetesLogsData(taskId)
+            dispatch(getKubernetesLogsData(taskId))
           }
         />
       </Tabs.TabPane>
@@ -45,17 +47,4 @@ function NodeInfo(props) {
   );
 }
 
-NodeInfo.propTypes = {
-  logs: PropTypes.object,
-  algorithmTable: PropTypes.array
-};
-
-const mapStateToProps = state => ({
-  logs: state.jobsKubernetesLogs,
-  algorithmTable: state.algorithmTable.dataSource
-});
-
-export default connect(
-  mapStateToProps,
-  { getKubernetesLogsData }
-)(NodeInfo);
+export default NodeInfo;

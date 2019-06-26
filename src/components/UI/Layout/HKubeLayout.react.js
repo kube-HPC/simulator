@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import 'components/UI/Layout/HKubeLayout.css';
 
@@ -85,12 +84,14 @@ const tableSelector = {
   Memory: <NodeStatistics metric="mem" />
 };
 
-function HKubeLayout({ init, socketInit, ...props }) {
+function HKubeLayout() {
   const [table, setTable] = useState('Jobs');
   const [operation, setOperation] = useState('AddPipeline');
   const [visible, setVisible] = useState(false);
 
   const triggerVisible = () => setVisible(!visible);
+
+  const dispatch = useDispatch();
 
   const operationSelector = {
     'Add Pipeline': <AddPipeline onSubmit={triggerVisible} />,
@@ -100,19 +101,19 @@ function HKubeLayout({ init, socketInit, ...props }) {
 
   useEffect(
     () => {
-      init();
-      socketInit();
+      dispatch(init());
+      dispatch(socketInit());
       message.config({
         duration: 5,
         maxCount: 3
       });
     },
-    [init, socketInit]
+    [dispatch]
   );
 
   return (
     <LayoutStyled>
-      <Sidebar {...props} onSelect={setTable} />
+      <Sidebar onSelect={setTable} />
       <Layout>
         <HeaderStyled>
           <TableAutoComplete />
@@ -123,7 +124,6 @@ function HKubeLayout({ init, socketInit, ...props }) {
         <LayoutMargin>
           <ContentStyled>{tableSelector[table]}</ContentStyled>
           <SidebarOperations
-            {...props}
             onSelect={op => {
               setOperation(op);
               setVisible(!visible);
@@ -142,21 +142,4 @@ function HKubeLayout({ init, socketInit, ...props }) {
   );
 }
 
-HKubeLayout.propTypes = {
-  init: PropTypes.func.isRequired
-};
-
-const mapStateToProps = state => ({
-  jobsCount: (state.jobsTable.dataSource || []).length,
-  driversCount: (state.driverTable.dataSource || []).length,
-  algorithmsCount: (state.algorithmTable.dataSource || []).length,
-  buildsCount: (state.algorithmBuildsTable.dataSource || []).length,
-  pipelinesCount: (state.storedPipeline.dataSource || []).length,
-  workersCount: (state.workerTable.stats || { total: 0 }).total,
-  debugCount: (state.debugTable.dataSource || []).length
-});
-
-export default connect(
-  mapStateToProps,
-  { init, socketInit }
-)(HKubeLayout);
+export default HKubeLayout;

@@ -17,7 +17,7 @@ import {
 } from 'reducers/algorithm.reducer';
 
 import { autoCompleteFilter } from 'reducers/layout.reducer';
-import { storedPipeline, pipelineReadme } from 'reducers/pipeline.reducer';
+import { pipelineTable, pipelineReadme } from 'reducers/pipeline.reducer';
 import { nodeStats } from 'reducers/nodeStats.reducer';
 
 export default combineReducers({
@@ -32,6 +32,6 @@ export default combineReducers({
   jobsTable,
   nodeStats,
   pipelineReadme,
-  storedPipeline,
+  pipelineTable,
   workerTable
 });

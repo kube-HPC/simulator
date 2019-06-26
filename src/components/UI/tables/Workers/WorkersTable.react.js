@@ -1,8 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { createSelector } from 'reselect';
-import { withState } from 'recompose';
 import { Tabs, Card } from 'antd';
 
 import DynamicTable from 'components/UI/Layout/DynamicTable.react';
@@ -59,8 +58,14 @@ const expandedRowRender = (columns, dataSource) => record => {
   );
 };
 
-function WorkersTable(props) {
-  const { dataSource, stats } = props;
+const tableDataSelector = createSelector(
+  state => state.workerTable.dataSource,
+  dataSource => dataSource
+);
+
+function WorkersTable() {
+  const dataSource = useSelector(tableDataSelector);
+  const stats = useSelector(state => state.workerTable.stats);
 
   const statsMergedWithDefault =
     stats &&
@@ -69,39 +74,16 @@ function WorkersTable(props) {
   return (
     <DynamicTable
       rowKey={record => record.algorithmName}
-      columns={workerTableColumns(props)}
+      columns={workerTableColumns()}
       dataSource={statsMergedWithDefault}
-      expandedRowRender={expandedRowRender(
-        workersTableStats(props),
-        dataSource
-      )}
+      expandedRowRender={expandedRowRender(workersTableStats(), dataSource)}
     />
   );
 }
-
-const workerTable = state => state.workerTable.dataSource;
-
-const tableDataSelector = createSelector(
-  [workerTable],
-  dataSource => dataSource
-);
 
 WorkersTable.propTypes = {
   dataSource: PropTypes.array,
   stats: PropTypes.object
 };
 
-const mapStateToProps = state => ({
-  dataSource: tableDataSelector(state),
-  stats: state.workerTable.stats
-});
-
-export default connect(
-  mapStateToProps,
-  null
-)(
-  withState('isVisible', 'onPopoverClickVisible', {
-    visible: false,
-    podName: ''
-  })(WorkersTable)
-);
+export default WorkersTable;

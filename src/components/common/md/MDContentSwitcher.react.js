@@ -1,76 +1,68 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Button, Radio } from 'antd';
 import MDEditor from './MDEditor.react';
 import ReactMarkdown from 'react-markdown';
-import {
-  postAlgorithmReadme,
-  postPipelineReadme
-} from '../../../actions/readme.action';
+import { postAlgorithmReadme, postPipelineReadme } from 'actions/readme.action';
 
-class MDContentSwitcher extends Component {
-  state = {
+function MDContentSwitcher(props) {
+  const [value, setValue] = useState({
     defaultRadio: 'Edit',
-    mdData: ''
-  };
+    mdData: null
+  });
 
-  mdData = null;
+  useEffect(
+    () => {
+      setValue(prev => ({ ...prev, mdData: props.readme }));
+    },
+    [props.readme, setValue]
+  );
 
-  componentWillReceiveProps(nextProps) {
-    // This will erase any local state updates!
-    // Do not do this.
-    //this.setState({mdData:data})
-    this.setState({ mdData: nextProps.readme });
-  }
+  const onDataChange = data => (value.mdData = data);
 
-  onDataChange = data => (this.mdData = data);
-  onChange = e => {
-    this.setState({ defaultRadio: e.target.value, mdData: this.mdData });
-  };
-  render() {
-    const Comp =
-      this.state.defaultRadio === 'Edit' ? (
-        <MDEditor data={this.state.mdData} onDataChange={this.onDataChange} />
-      ) : (
-        <ReactMarkdown source={this.state.mdData} />
-      );
-    return (
-      <div style={{ marginTop: '20px' }}>
-        <Button
-          type="primary"
-          style={{ left: '90%' }}
-          onClick={() => {
-            this.setState({ mdData: this.mdData });
-            if (
-              this.props.readmeType &&
-              this.props.readmeType === 'algorithm'
-            ) {
-              this.props.postAlgorithmReadme(this.props.name, this.mdData);
-            } else {
-              this.props.postPipelineReadme(this.props.name, this.mdData);
-            }
-          }}
-        >
-          Save
-        </Button>
-        <span>
-          <Radio.Group
-            style={{ display: 'flex', justifyContent: 'center' }}
-            defaultValue={this.state.defaultRadio}
-            buttonStyle="solid"
-            onChange={this.onChange}
-          >
-            <Radio.Button value="Edit">Edit</Radio.Button>
-            <Radio.Button value="Preview">Preview</Radio.Button>
-          </Radio.Group>
-        </span>
-        <div style={{ marginLeft: '20px' }}>{Comp}</div>
-      </div>
+  const onChange = e =>
+    setValue({ defaultRadio: e.target.value, mdData: value.mdData });
+
+  const Comp =
+    value.defaultRadio === 'Edit' ? (
+      <MDEditor data={value.mdData} onDataChange={onDataChange} />
+    ) : (
+      <ReactMarkdown source={value.mdData} />
     );
-  }
+
+  const dispatch = useDispatch();
+
+  return (
+    <div style={{ marginTop: '20px' }}>
+      <Button
+        disabled
+        type="primary"
+        style={{ left: '90%' }}
+        onClick={() => {
+          setValue({ mdData: value.mdData });
+          if (props.readmeType && props.readmeType === 'algorithm') {
+            dispatch(postAlgorithmReadme(props.name, value.mdData));
+          } else {
+            dispatch(postPipelineReadme(props.name, value.mdData));
+          }
+        }}
+      >
+        Save
+      </Button>
+      <span>
+        <Radio.Group
+          style={{ display: 'flex', justifyContent: 'center' }}
+          defaultValue={value.defaultRadio}
+          buttonStyle="solid"
+          onChange={onChange}
+        >
+          <Radio.Button value="Edit">Edit</Radio.Button>
+          <Radio.Button value="Preview">Preview</Radio.Button>
+        </Radio.Group>
+      </span>
+      <div style={{ marginLeft: '20px' }}>{Comp}</div>
+    </div>
+  );
 }
 
-export default connect(
-  null,
-  { postAlgorithmReadme, postPipelineReadme }
-)(MDContentSwitcher);
+export default MDContentSwitcher;
