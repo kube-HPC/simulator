@@ -32,8 +32,8 @@ function PipelinesTable() {
       expandedRowRender={record => (
         <CardRow>
           <PipelineTabSwitcher
-            onSubmit={onSubmitReadme}
             pipelineDetails={record}
+            onSubmit={onSubmitReadme}
             readme={
               pipelineReadme &&
               pipelineReadme[record.name] &&
