@@ -1,3 +1,6 @@
+
+import { STATUS } from 'constants/colors';
+
 export default {
   physics: {
     enabled: false
@@ -40,7 +43,7 @@ export default {
   },
   groups: {
     batchCompleted: {
-      color: { background: '#87d068', border: 'black' }
+      color: { background: STATUS.completed, border: 'black' }
     },
     batchNotStarted: {
       color: { background: '#FF5441', border: 'black' }
@@ -48,10 +51,13 @@ export default {
     batchRunning: {
       color: { background: '#eeda13', border: 'rgba(0,0,0,0.5)' }
     },
+    batchErrors: {
+      color: { background: STATUS.failed, border: 'black' }
+    },
     notStarted: {
       color: { background: '#FF5441', border: 'rgba(0,0,0,0.5)' }
     },
-    completed: { color: '#87d068' },
+    completed: { color: STATUS.completed },
     source: {
       color: { border: 'white' }
     }
