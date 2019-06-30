@@ -1,12 +1,12 @@
-import { useSelector } from 'react-redux';
-import React from 'react';
-import PropTypes from 'prop-types';
-import { ResponsiveBar } from '@nivo/bar';
-import { Empty } from 'antd';
+import { useSelector } from "react-redux";
+import React from "react";
+import PropTypes from "prop-types";
+import { ResponsiveBar } from "@nivo/bar";
+import { Empty } from "antd";
 
 const metricToLabel = {
-  cpu: 'CPU',
-  mem: 'Memory'
+  cpu: "CPU",
+  mem: "Memory"
 };
 
 function NodeStatistics({ metric }) {
@@ -39,19 +39,19 @@ function NodeStatistics({ metric }) {
   const { data, legend } = adaptedData(dataSource, metric);
 
   return data === [] || legend === undefined ? (
-    <Empty style={{ marginTop: '20px' }} />
+    <Empty style={{ marginTop: "20px" }} />
   ) : (
     <div
       style={{
-        fontSize: '20px',
-        width: '80%',
-        height: '70vh',
-        left: '10%',
-        position: 'relative',
-        top: '10%'
+        fontSize: "20px",
+        width: "80%",
+        height: "70vh",
+        left: "10%",
+        position: "relative",
+        top: "10%"
       }}
     >
-      <div>{metricToLabel[this.props.metric]}</div>
+      <div>{metricToLabel[metric]}</div>
       <ResponsiveBar
         data={data}
         keys={legend}
@@ -60,17 +60,17 @@ function NodeStatistics({ metric }) {
           axis: {
             ticks: {
               line: {
-                stroke: 'green'
+                stroke: "green"
               },
               text: {
                 //fill: "#91d5ff",
-                fontSize: '12px',
-                marginRight: '10px'
+                fontSize: "12px",
+                marginRight: "10px"
               }
             },
             legend: {
               text: {
-                fontSize: '18px'
+                fontSize: "18px"
               }
             }
           }
@@ -88,19 +88,19 @@ function NodeStatistics({ metric }) {
         colorBy="id"
         defs={[
           {
-            id: 'dots',
-            type: 'patternDots',
-            background: 'inherit',
-            color: '#fff',
+            id: "dots",
+            type: "patternDots",
+            background: "inherit",
+            color: "#fff",
             size: 2,
             padding: 3,
             stagger: true
           },
           {
-            id: 'lines',
-            type: 'patternLines',
-            background: 'inherit',
-            color: '#fff',
+            id: "lines",
+            type: "patternLines",
+            background: "inherit",
+            color: "#fff",
             rotation: -45,
             lineWidth: 1,
             spacing: 10
@@ -109,15 +109,15 @@ function NodeStatistics({ metric }) {
         fill={[
           {
             match: {
-              id: 'free'
+              id: "free"
             },
-            id: 'dots'
+            id: "dots"
           },
           {
             match: {
-              id: 'reserved'
+              id: "reserved"
             },
-            id: 'lines'
+            id: "lines"
           }
         ]}
         borderColor="inherit:darker(1.6)"
@@ -125,7 +125,7 @@ function NodeStatistics({ metric }) {
           tickSize: 0,
           tickPadding: 4,
           tickRotation: 0,
-          legend: '',
+          legend: "",
           legendOffset: 100
         }}
         axisRight={null}
@@ -133,16 +133,16 @@ function NodeStatistics({ metric }) {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: 'size',
-          legendPosition: 'middle',
+          legend: "size",
+          legendPosition: "middle",
           legendOffset: 32
         }}
         axisLeft={{
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 50,
-          legend: 'nodes',
-          legendPosition: 'middle',
+          legend: "nodes",
+          legendPosition: "middle",
           legendOffset: -50
         }}
         enableGridY={false}
@@ -154,21 +154,21 @@ function NodeStatistics({ metric }) {
         motionDamping={27}
         legends={[
           {
-            dataFrom: 'keys',
-            anchor: 'bottom-right',
-            direction: 'column',
+            dataFrom: "keys",
+            anchor: "bottom-right",
+            direction: "column",
             justify: false,
             translateX: 120,
             translateY: -28,
             itemsSpacing: 2,
             itemWidth: 100,
             itemHeight: 20,
-            itemDirection: 'left-to-right',
+            itemDirection: "left-to-right",
             itemOpacity: 0.85,
             symbolSize: 20,
             effects: [
               {
-                on: 'hover',
+                on: "hover",
                 style: {
                   itemOpacity: 1
                 }

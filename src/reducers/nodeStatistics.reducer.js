@@ -1,8 +1,8 @@
-import { handleActions } from 'redux-actions';
-import Immutable from 'seamless-immutable';
-import actions from 'constants/actions';
+import { handleActions } from "redux-actions";
+import Immutable from "seamless-immutable";
+import actions from "constants/actions";
 
-export const nodeStats = handleActions(
+export const nodeStatistics = handleActions(
   {
     [actions.LAYOUT_UPDATE_ROW_DATA_TABLE](
       state,
