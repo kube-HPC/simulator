@@ -20,6 +20,7 @@ export const LAYOUT_COLOR = {
 };
 
 export const STATUS = {
+  active: COLOR.blueLight,
   bootstrap: COLOR.lightGreen,
   completed: COLOR.lightGreen,
   creating: COLOR.yellow,
@@ -30,7 +31,7 @@ export const STATUS = {
   ready: COLOR.lightGreen,
   recovering: COLOR.darkGrey,
   skipped: COLOR.yellow,
-  stalled: COLOR.redHighlight,
+  stalled: COLOR.red,
   stopped: COLOR.orange,
   stopping: COLOR.orange,
   succeed: COLOR.lightGreen

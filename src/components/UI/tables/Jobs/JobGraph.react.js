@@ -24,22 +24,17 @@ function JobGraph(props) {
         const nodeName = params.nodes[0];
         const nodeData = network.body.data.nodes._data[nodeName];
         const node = props.pipeline.nodes.find(n => n.nodeName === nodeName);
+        const jobId = props.pipeline.jobId;
         const taskId = nodeData.taskId
           ? nodeData.taskId
           : nodeData.batchTasks && nodeData.batchTasks[0].taskId;
         setPayload({
+          ...nodeData,
+          jobId,
           taskId,
-          algorithmName: nodeData.algorithmName,
-          jobId: props.graph.jobId,
           nodeName,
-          origInput: node && node.input,
-          batch: nodeData.batchTasks || [],
-          input: nodeData.input,
-          output: nodeData.output,
-          error: node && node.error,
-          startTime: nodeData.startTime,
-          endTime: nodeData.endTime,
-          status: nodeData.status
+          origInput: node.input,
+          batch: nodeData.batchTasks || []
         });
         toggle();
         dispatch(getKubernetesLogsData(taskId));
@@ -113,8 +108,8 @@ function JobGraph(props) {
             getNetwork={initNetworkInstance}
           />
         ) : (
-          'Graph is not available'
-        )}
+            'Graph is not available'
+          )}
       </div>
     </>
   );
