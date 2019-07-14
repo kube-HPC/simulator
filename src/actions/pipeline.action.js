@@ -18,6 +18,24 @@ export const stopPipeline = jobId => ({
   }
 });
 
+export const pausePipeline = jobId => ({
+  type: actions.REST_REQ_POST,
+  payload: {
+    url: 'exec/pause',
+    body: { jobId },
+    actionType: actions.PIPELINE_PAUSE
+  }
+});
+
+export const resumePipeline = jobId => ({
+  type: actions.REST_REQ_POST,
+  payload: {
+    url: 'exec/resume',
+    body: { jobId },
+    actionType: actions.PIPELINE_RESUME
+  }
+});
+
 export const execStoredPipe = pipeline => ({
   type: actions.REST_REQ_POST,
   payload: {

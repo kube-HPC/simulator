@@ -11,7 +11,7 @@ import StatusTag from 'components/common/StatusTag.react';
 import CopyEllipsis from 'components/common/CopyEllipsis.react';
 
 import { downloadStorageResults } from 'actions/jobs.action';
-import { execRawPipeline, stopPipeline } from 'actions/pipeline.action';
+import { execRawPipeline, stopPipeline, pausePipeline, resumePipeline } from 'actions/pipeline.action';
 
 const statuses = ['completed', 'failed', 'stopping', 'stopped'];
 
@@ -115,7 +115,7 @@ const jobsTableColumns = dispatch => [
       const failed = record.status && record.status.status === 'failed';
       const progress = parseInt(
         (record.status && record.status.data && record.status.data.progress) ||
-          0
+        0
       );
       return (
         <Progress
@@ -124,8 +124,8 @@ const jobsTableColumns = dispatch => [
             stopped || failed
               ? 'exception'
               : progress === 100
-              ? 'success'
-              : 'active'
+                ? 'success'
+                : 'active'
           }
           strokeColor={
             failed ? STATUS.failed : stopped ? STATUS.stopped : undefined
@@ -139,8 +139,10 @@ const jobsTableColumns = dispatch => [
     dataIndex: 'action',
     key: 'stop',
     render: (_, record) => {
-      const isStopPipeline =
-        record.status.status === 'active' || record.status.status === 'pending';
+      const status = record.status.status;
+      const isStopPipeline = status === 'active' || status === 'pending';
+      const isResumePipeline = status === 'paused';
+
       const stopAction = (
         <Tooltip
           placement="top"
@@ -159,6 +161,23 @@ const jobsTableColumns = dispatch => [
         </Tooltip>
       );
 
+      const pauseAction = (
+        <Tooltip
+          placement="top"
+          title={isResumePipeline ? 'Resume' : 'Pause'}
+        >
+          <Button
+            type='default'
+            shape="circle"
+            icon={isResumePipeline ? 'caret-right' : 'pause'}
+            onClick={() =>
+              isResumePipeline
+                ? dispatch(resumePipeline(record.key))
+                : dispatch(pausePipeline(record.key))
+            }
+          />
+        </Tooltip>
+      );
       const isDisabled = !(
         record.results &&
         record.results.data &&
@@ -183,6 +202,7 @@ const jobsTableColumns = dispatch => [
       return (
         <Row type="flex" justify="start" gutter={10}>
           <Col>{stopAction}</Col>
+          <Col>{pauseAction}</Col>
           <Col>{downloadAction}</Col>
         </Row>
       );
