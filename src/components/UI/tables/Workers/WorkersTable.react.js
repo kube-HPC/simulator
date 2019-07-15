@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { createSelector } from 'reselect';
 import { Tabs, Card } from 'antd';
 
 import DynamicTable from 'components/UI/Layout/DynamicTable.react';
@@ -58,13 +57,10 @@ const expandedRowRender = (columns, dataSource) => record => {
   );
 };
 
-const tableDataSelector = createSelector(
-  state => state.workerTable.dataSource,
-  dataSource => dataSource
-);
-
 function WorkersTable() {
-  const dataSource = useSelector(tableDataSelector);
+  const dataSource = useSelector(state =>
+    state.workerTable.dataSource.asMutable()
+  );
   const stats = useSelector(state => state.workerTable.stats);
 
   const statsMergedWithDefault =
@@ -75,7 +71,7 @@ function WorkersTable() {
     <DynamicTable
       rowKey={record => record.algorithmName}
       columns={workerTableColumns()}
-      dataSource={statsMergedWithDefault}
+      dataSource={statsMergedWithDefault.asMutable()}
       expandedRowRender={expandedRowRender(workersTableStats(), dataSource)}
     />
   );

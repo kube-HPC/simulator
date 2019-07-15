@@ -3,7 +3,7 @@ import { Button, Row, Col, Modal, Icon, Tooltip } from 'antd';
 
 import StatusTag from 'components/common/StatusTag.react';
 import { ReactComponent as PlayIconSvg } from 'images/play-icon.svg';
-import { stringify } from 'utils/string';
+import { stringify, sorter } from 'utils/string';
 import Text from 'antd/lib/typography/Text';
 import DrawerEditor from 'components/common/drawer/DrawerEditor.react';
 import SwitchCron from 'components/UI/tables/Pipelines/SwitchCron.react';
@@ -42,6 +42,7 @@ const pipelinesTableColumns = ({ dispatch, dataStats }) => [
     dataIndex: 'name',
     key: 'name',
     width: '20%',
+    sorter: (a, b) => sorter(a.name, b.name),
     render: (_, record) => <CopyEllipsis disabled text={record.name} />
   },
   {

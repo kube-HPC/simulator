@@ -12,7 +12,7 @@ import CardRow from 'components/common/CardRow.react';
 import { stringify } from 'utils/string';
 
 const tableDataSelector = createSelector(
-  state => state.algorithmTable.dataSource,
+  state => state.algorithmTable.dataSource.asMutable(),
   state => state.autoCompleteFilter.filter,
   (dataSource, filter) =>
     dataSource && dataSource.filter(row => row.name.includes(filter))

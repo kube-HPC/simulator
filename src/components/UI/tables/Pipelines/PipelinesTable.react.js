@@ -7,7 +7,9 @@ import PipelineTabSwitcher from 'components/UI/tables/Pipelines/PipelinesTabSwit
 import CardRow from 'components/common/CardRow.react';
 
 function PipelinesTable() {
-  const storedPipelines = useSelector(state => state.pipelineTable.dataSource);
+  const storedPipelines = useSelector(state =>
+    state.pipelineTable.dataSource.asMutable()
+  );
   const pipelineReadme = useSelector(state => state.pipelineReadme);
   const dataStats = useSelector(state => state.pipelineTable.dataStats);
 
