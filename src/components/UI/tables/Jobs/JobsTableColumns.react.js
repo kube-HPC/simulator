@@ -7,16 +7,29 @@ import { toUpperCaseFirstLetter } from 'utils/string';
 import { Progress, Tag, Tooltip, Button, Row, Col } from 'antd';
 
 import { PRIORITY, STATUS } from 'constants/colors';
+import { STATES } from 'constants/states';
 import StatusTag from 'components/common/StatusTag.react';
 import CopyEllipsis from 'components/common/CopyEllipsis.react';
 
 import { downloadStorageResults } from 'actions/jobs.action';
 import { execRawPipeline, stopPipeline, pausePipeline, resumePipeline } from 'actions/pipeline.action';
 
-const statuses = ['completed', 'failed', 'stopping', 'stopped'];
+const ActiveState = [STATES.PENDING, STATES.ACTIVE, STATES.RECOVERING];
+
+const canPauseOrResume = (state) => {
+  return canPause(state) || canResume(state);
+};
+
+const canPause = (state) => {
+  return ActiveState.includes(state);
+};
+
+const canResume = (state) => {
+  return state === STATES.PAUSED;
+};
 
 const getStatusFilter = () =>
-  statuses.map(status => ({
+  Object.values(STATES).map(status => ({
     text: toUpperCaseFirstLetter(status),
     value: status
   }));
@@ -111,8 +124,8 @@ const jobsTableColumns = dispatch => [
     dataIndex: 'Progress',
     width: '20%',
     render: (_, record) => {
-      const stopped = record.status && record.status.status === 'stopped';
-      const failed = record.status && record.status.status === 'failed';
+      const stopped = record.status && record.status.status === STATES.STOPPED;
+      const failed = record.status && record.status.status === STATES.FAILED;
       const progress = parseInt(
         (record.status && record.status.data && record.status.data.progress) ||
         0
@@ -140,14 +153,13 @@ const jobsTableColumns = dispatch => [
     key: 'stop',
     render: (_, record) => {
       const status = record.status.status;
-      const isStopPipeline = status === 'active' || status === 'pending';
-      const isResumePipeline = status === 'paused';
+      const isStopPipeline = status === STATES.ACTIVE || status === STATES.PENDING;
+      const isResumePipeline = canResume(status);
 
       const stopAction = (
         <Tooltip
           placement="top"
-          title={isStopPipeline ? 'Stop Pipeline' : 'Re-Run'}
-        >
+          title={isStopPipeline ? 'Stop Pipeline' : 'Re-Run'}>
           <Button
             type={isStopPipeline ? 'danger' : 'default'}
             shape="circle"
@@ -164,10 +176,10 @@ const jobsTableColumns = dispatch => [
       const pauseAction = (
         <Tooltip
           placement="top"
-          title={isResumePipeline ? 'Resume' : 'Pause'}
-        >
+          title={isResumePipeline ? 'Resume' : 'Pause'}>
           <Button
             type='default'
+            disabled={!(canPauseOrResume(status))}
             shape="circle"
             icon={isResumePipeline ? 'caret-right' : 'pause'}
             onClick={() =>

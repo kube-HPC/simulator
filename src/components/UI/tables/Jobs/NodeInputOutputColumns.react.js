@@ -4,10 +4,11 @@ import humanizeDuration from 'humanize-duration';
 
 import { downloadStorageResults } from 'actions/jobs.action';
 import { STATUS } from 'constants/colors';
+import { STATES } from 'constants/states';
 import { toUpperCaseFirstLetter } from 'utils/string';
 
 const getStatusFilter = () =>
-  ['active', 'succeed', 'failed'].map(status => ({
+  [STATES.ACTIVE, STATES.SUCCEED, STATES.FAILED].map(status => ({
     text: toUpperCaseFirstLetter(status),
     value: status
   }));
