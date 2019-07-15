@@ -5,7 +5,7 @@ import { Tabs, Button, Typography } from 'antd';
 
 import MDEditor from 'components/common/md/MDEditor.react';
 import DrawerContainer from 'components/common/drawer/DrawerContainer.react';
-import DrawerEditorMD from 'components/UI/tables/Pipelines/DrawerEditorMD.react';
+import DrawerEditorMD from 'components/common/drawer/DrawerEditorMD.react';
 import addPipelineTemplate from 'config/template/addPipeline.template';
 import { stringify } from 'utils/string';
 

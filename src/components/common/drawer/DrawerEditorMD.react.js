@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { notification, Icon, Card, Tabs } from 'antd';
 
 import { ReactComponent as CodeIcon } from 'images/code-icon.svg';
@@ -11,15 +10,13 @@ import { stringify } from 'utils/string';
 
 const tabs = { json: 'JSON', description: 'Description' };
 
-function DrawerEditorMD({ children, record, onSubmit, ...props }) {
-  const pipelineReadme = useSelector(state => state.pipelineReadme);
-
-  const readmeDefault =
-    pipelineReadme &&
-    pipelineReadme[record.name] &&
-    pipelineReadme[record.name].readme &&
-    pipelineReadme[record.name].readme.readme;
-
+function DrawerEditorMD({
+  children,
+  record,
+  onSubmit,
+  readmeDefault,
+  ...props
+}) {
   const [readme, setReadme] = useState('');
   const [value, setValue] = useState(stringify(record));
 
@@ -29,7 +26,7 @@ function DrawerEditorMD({ children, record, onSubmit, ...props }) {
       onSubmit={() => {
         try {
           onSubmit({
-            pipeline: JSON.parse(value),
+            value: JSON.parse(value),
             readme: readme || readmeDefault
           });
         } catch (e) {

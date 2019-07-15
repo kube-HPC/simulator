@@ -7,17 +7,7 @@ import DrawerEditor from 'components/common/drawer/DrawerEditor.react';
 import SwitchCron from 'components/UI/tables/Pipelines/SwitchCron.react';
 import CopyEllipsis from 'components/common/CopyEllipsis.react';
 import StatusTag from 'components/common/StatusTag.react';
-
-import {
-  execStoredPipe,
-  deleteStoredPipeline,
-  updateStoredPipeline,
-  cronStart,
-  cronStop
-} from 'actions/pipeline.action';
-import { postPipelineReadme, getPipelineReadme } from 'actions/readme.action';
-
-import DrawerEditorMD from 'components/UI/tables/Pipelines/DrawerEditorMD.react';
+import DrawerEditorMD from 'components/common/drawer/DrawerEditorMD.react';
 
 const deleteConfirmAction = (action, record) => {
   Modal.confirm({
@@ -39,7 +29,17 @@ const deleteConfirmAction = (action, record) => {
   });
 };
 
-const pipelinesTableColumns = ({ dispatch, dataStats }) => [
+const pipelinesTableColumns = ({
+  dataStats,
+  readmeDefault,
+  onSubmit,
+  cronStart,
+  cronStop,
+  updateStoredPipeline,
+  execStoredPipeline,
+  getPipelineReadme,
+  deleteStoredPipeline
+}) => [
   {
     title: 'Pipeline Name',
     dataIndex: 'name',
@@ -56,9 +56,9 @@ const pipelinesTableColumns = ({ dispatch, dataStats }) => [
     render: (_, record) => (
       <SwitchCron
         pipeline={record}
-        cronStart={e => dispatch(cronStart(e))}
-        cronStop={e => dispatch(cronStop(e))}
-        updateStoredPipeline={e => dispatch(updateStoredPipeline(e))}
+        cronStart={cronStart}
+        cronStop={cronStop}
+        updateStoredPipeline={updateStoredPipeline}
       />
     )
   },
@@ -122,13 +122,19 @@ const pipelinesTableColumns = ({ dispatch, dataStats }) => [
                 </Tooltip>
               )}
               valueString={stringify(currPipeline)}
-              onSubmit={e => dispatch(execStoredPipe(e))}
+              onSubmit={execStoredPipeline}
               submitText={'Execute'}
             />
           </Col>
           <Col>
             <DrawerEditorMD
               title={'Update Pipeline'}
+              readmeDefault={
+                readmeDefault &&
+                readmeDefault[record.name] &&
+                readmeDefault[record.name].readme &&
+                readmeDefault[record.name].readme.readme
+              }
               description={
                 <>
                   Edit pipeline properties and{' '}
@@ -141,17 +147,14 @@ const pipelinesTableColumns = ({ dispatch, dataStats }) => [
                     shape="circle"
                     icon="edit"
                     onClick={() => {
-                      dispatch(getPipelineReadme(record.name));
+                      getPipelineReadme(record);
                       setVisible(prev => !prev);
                     }}
                   />
                 </Tooltip>
               )}
               record={record}
-              onSubmit={({ pipeline, readme }) => {
-                dispatch(updateStoredPipeline(pipeline));
-                dispatch(postPipelineReadme(pipeline.name, readme));
-              }}
+              onSubmit={onSubmit}
               submitText={'Update'}
             />
           </Col>
@@ -160,12 +163,7 @@ const pipelinesTableColumns = ({ dispatch, dataStats }) => [
               type="danger"
               shape="circle"
               icon="delete"
-              onClick={() =>
-                deleteConfirmAction(
-                  e => dispatch(deleteStoredPipeline(e)),
-                  record
-                )
-              }
+              onClick={() => deleteConfirmAction(deleteStoredPipeline, record)}
             />
           </Col>
         </Row>

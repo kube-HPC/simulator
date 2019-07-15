@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Tabs, Card } from 'antd';
+import { Tabs } from 'antd';
 
 import DynamicTable from 'components/UI/Layout/DynamicTable.react';
 import defaultWorkerData from 'config/template/worker.template';

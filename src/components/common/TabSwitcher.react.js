@@ -18,11 +18,11 @@ const CenterMD = styled(ReactMarkdown)`
   margin: 1%;
 `;
 
-function PipelinesTabSwitcher({ pipelineDetails, readme }) {
+function TabSwitcher({ jsonObject, readme }) {
   return (
     <Tabs>
       <Tabs.TabPane tab="JSON" key="JSON">
-        <JsonView jsonObject={pipelineDetails} />
+        <JsonView jsonObject={jsonObject} />
       </Tabs.TabPane>
       <Tabs.TabPane tab="Description" key="Description">
         {readme ? (
@@ -45,9 +45,9 @@ function PipelinesTabSwitcher({ pipelineDetails, readme }) {
   );
 }
 
-PipelinesTabSwitcher.propTypes = {
-  pipelineDetails: PropTypes.object.isRequired,
+TabSwitcher.propTypes = {
+  jsonObject: PropTypes.object.isRequired,
   readme: PropTypes.string
 };
 
-export default PipelinesTabSwitcher;
+export default TabSwitcher;

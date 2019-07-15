@@ -1,4 +1,4 @@
-import actions from '../constants/actions';
+import actions from 'constants/actions';
 
 const _getReadme = (type, name, actionType) => ({
   type: actions.REST_REQ,

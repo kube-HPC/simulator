@@ -18,7 +18,7 @@ export const stopPipeline = jobId => ({
   }
 });
 
-export const execStoredPipe = pipeline => ({
+export const execStoredPipeline = pipeline => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: 'exec/stored',
