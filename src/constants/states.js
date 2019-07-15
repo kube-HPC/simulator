@@ -9,6 +9,7 @@ export const STATES = {
   FAILED: 'failed',
   STALLED: 'stalled',
   RECOVERING: 'recovering',
+  RESUMING: 'resuming',
   STOPPED: 'stopped',
   STOPPING: 'stopping',
   PAUSED: 'paused'

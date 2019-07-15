@@ -14,18 +14,22 @@ import CopyEllipsis from 'components/common/CopyEllipsis.react';
 import { downloadStorageResults } from 'actions/jobs.action';
 import { execRawPipeline, stopPipeline, pausePipeline, resumePipeline } from 'actions/pipeline.action';
 
-const ActiveState = [STATES.PENDING, STATES.ACTIVE, STATES.RECOVERING];
+const ActiveState = [STATES.PENDING, STATES.ACTIVE, STATES.RECOVERING, STATES.RESUMING];
 
 const canPauseOrResume = (state) => {
-  return canPause(state) || canResume(state);
+  return canPauseOrStop(state) || canResume(state);
 };
 
-const canPause = (state) => {
-  return ActiveState.includes(state);
+const canPauseOrStop = (state) => {
+  return isActive(state) || state === STATES.PAUSED;
 };
 
 const canResume = (state) => {
   return state === STATES.PAUSED;
+};
+
+const isActive = (state) => {
+  return ActiveState.includes(state);
 };
 
 const getStatusFilter = () =>
@@ -153,22 +157,31 @@ const jobsTableColumns = dispatch => [
     key: 'stop',
     render: (_, record) => {
       const status = record.status.status;
-      const isStopPipeline = status === STATES.ACTIVE || status === STATES.PENDING;
       const isResumePipeline = canResume(status);
+
+      const redoAction = (
+        <Tooltip
+          placement="top"
+          title="Re-Run">
+          <Button
+            type="default"
+            shape="circle"
+            icon="redo"
+            onClick={() => dispatch(execRawPipeline(record.pipeline))}
+          />
+        </Tooltip>
+      );
 
       const stopAction = (
         <Tooltip
           placement="top"
-          title={isStopPipeline ? 'Stop Pipeline' : 'Re-Run'}>
+          title="Stop Pipeline">
           <Button
-            type={isStopPipeline ? 'danger' : 'default'}
+            type="danger"
+            disabled={!canPauseOrStop(status)}
             shape="circle"
-            icon={isStopPipeline ? 'close' : 'redo'}
-            onClick={() =>
-              isStopPipeline
-                ? dispatch(stopPipeline(record.key))
-                : dispatch(execRawPipeline(record.pipeline))
-            }
+            icon="close"
+            onClick={() => dispatch(stopPipeline(record.key))}
           />
         </Tooltip>
       );
@@ -213,6 +226,7 @@ const jobsTableColumns = dispatch => [
 
       return (
         <Row type="flex" justify="start" gutter={10}>
+          <Col>{redoAction}</Col>
           <Col>{stopAction}</Col>
           <Col>{pauseAction}</Col>
           <Col>{downloadAction}</Col>
