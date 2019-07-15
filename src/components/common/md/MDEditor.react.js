@@ -14,8 +14,17 @@ export default function MDEditor({ data, onChange }) {
 
   const handleValueChange = value => {
     setValue(value);
-    onChange(value);
+    onChange && onChange(value);
   };
 
-  return <SimpleMDE value={value} onChange={handleValueChange} />;
+  return (
+    <SimpleMDE
+      value={value}
+      onChange={handleValueChange}
+      options={{
+        autofocus: true,
+        spellChecker: false
+      }}
+    />
+  );
 }

@@ -14,9 +14,9 @@ import CardRow from 'components/common/CardRow.react';
 
 const generateTab = (key, value) => (
   <Tabs.TabPane tab={key} key={key}>
-    <Card size="small">
+    <CardRow>
       <JsonView jsonObject={value} />
-    </Card>
+    </CardRow>
   </Tabs.TabPane>
 );
 
@@ -31,27 +31,11 @@ const expandedRowRender = (columns, dataSource) => record => {
         rowKey={record => record.podName}
         columns={columns}
         dataSource={filteredDataSource}
-        expandedRowRender={record => {
-          const timer = {
-            workerStartingTime:
-              record.data &&
-              record.data.workerStartingTime &&
-              new Date(record.data.workerStartingTime).toLocaleString(),
-            jobCurrentTime:
-              record.data &&
-              record.data.jobCurrentTime &&
-              new Date(record.data.jobCurrentTime).toLocaleString()
-          };
-
-          return (
-            <CardRow>
-              <Tabs defaultActiveKey="1">
-                {generateTab('JSON', record)}
-                {generateTab('Additional Details', timer)}
-              </Tabs>
-            </CardRow>
-          );
-        }}
+        expandedRowRender={record => (
+          <CardRow>
+            <Tabs>{generateTab('JSON', record)}</Tabs>
+          </CardRow>
+        )}
       />
     </CardRow>
   );

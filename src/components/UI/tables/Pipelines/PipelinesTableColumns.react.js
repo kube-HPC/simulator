@@ -1,13 +1,12 @@
 import React from 'react';
-import { Button, Row, Col, Modal, Icon, Tooltip } from 'antd';
+import { Button, Row, Col, Modal, Icon, Tooltip, Typography } from 'antd';
 
-import StatusTag from 'components/common/StatusTag.react';
 import { ReactComponent as PlayIconSvg } from 'images/play-icon.svg';
 import { stringify, sorter } from 'utils/string';
-import Text from 'antd/lib/typography/Text';
 import DrawerEditor from 'components/common/drawer/DrawerEditor.react';
 import SwitchCron from 'components/UI/tables/Pipelines/SwitchCron.react';
 import CopyEllipsis from 'components/common/CopyEllipsis.react';
+import StatusTag from 'components/common/StatusTag.react';
 
 import {
   execStoredPipe,
@@ -16,6 +15,9 @@ import {
   cronStart,
   cronStop
 } from 'actions/pipeline.action';
+import { postPipelineReadme, getPipelineReadme } from 'actions/readme.action';
+
+import DrawerEditorMD from 'components/UI/tables/Pipelines/DrawerEditorMD.react';
 
 const deleteConfirmAction = (action, record) => {
   Modal.confirm({
@@ -23,7 +25,8 @@ const deleteConfirmAction = (action, record) => {
     content: (
       <>
         Are you sure you want to delete {record.name}? Deleting Pipeline will
-        <Text strong> STOP-ALL</Text> related Jobs and Executions,
+        <Typography.Text strong> STOP-ALL</Typography.Text> related Jobs and
+        Executions,
       </>
     ),
     okText: 'Confirm',
@@ -105,9 +108,10 @@ const pipelinesTableColumns = ({ dispatch, dataStats }) => [
               title={'Run Stored Pipeline'}
               description={
                 <>
-                  Start pipeline <Text code>execution</Text> when the name of
-                  the pipeline is known, all parameters in this action will be
-                  merged with the stored pipeline.
+                  Start pipeline{' '}
+                  <Typography.Text code>execution</Typography.Text> when the
+                  name of the pipeline is known, all parameters in this action
+                  will be merged with the stored pipeline.
                 </>
               }
               opener={onClick => (
@@ -123,20 +127,31 @@ const pipelinesTableColumns = ({ dispatch, dataStats }) => [
             />
           </Col>
           <Col>
-            <DrawerEditor
+            <DrawerEditorMD
               title={'Update Pipeline'}
               description={
                 <>
-                  Edit pipeline properties and <Text code>Update</Text>
+                  Edit pipeline properties and{' '}
+                  <Typography.Text code>Update</Typography.Text>
                 </>
               }
-              opener={onClick => (
+              opener={setVisible => (
                 <Tooltip placement="top" title={'Update Pipeline'}>
-                  <Button shape="circle" icon="edit" onClick={onClick} />
+                  <Button
+                    shape="circle"
+                    icon="edit"
+                    onClick={() => {
+                      dispatch(getPipelineReadme(record.name));
+                      setVisible(prev => !prev);
+                    }}
+                  />
                 </Tooltip>
               )}
-              valueString={stringify(record)}
-              onSubmit={e => dispatch(updateStoredPipeline(e))}
+              record={record}
+              onSubmit={({ pipeline, readme }) => {
+                dispatch(updateStoredPipeline(pipeline));
+                dispatch(postPipelineReadme(pipeline.name, readme));
+              }}
               submitText={'Update'}
             />
           </Col>

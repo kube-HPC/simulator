@@ -41,7 +41,7 @@ export const workersTableStats = () => [
       return (
         <>
           <Tag color={STATUS[record.workerStatus]}>{title}</Tag>
-          <Tag color={STATUS[record.jobStatus]}>{`Jobs ${title}`}</Tag>
+          <Tag color={STATUS[record.jobStatus]}>{`Job ${title}`}</Tag>
         </>
       );
     }
