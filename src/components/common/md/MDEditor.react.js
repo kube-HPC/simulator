@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 
-export default function MDEditor({ data, onChange }) {
+export default function MDEditor({ data, onChange, onToggleFullScreen }) {
   const [value, setValue] = useState(data);
 
   useEffect(
@@ -23,7 +23,8 @@ export default function MDEditor({ data, onChange }) {
       onChange={handleValueChange}
       options={{
         autofocus: true,
-        spellChecker: false
+        spellChecker: false,
+        onToggleFullScreen
       }}
     />
   );

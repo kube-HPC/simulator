@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { notification, Icon, Card, Tabs } from 'antd';
 
 import { ReactComponent as CodeIcon } from 'images/code-icon.svg';
@@ -19,10 +19,19 @@ function DrawerEditorMD({
 }) {
   const [readme, setReadme] = useState('');
   const [value, setValue] = useState(stringify(record));
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
+  const onToggleFullScreen = useCallback(
+    () => {
+      setIsFullScreen(prev => !prev);
+    },
+    [setIsFullScreen]
+  );
 
   return (
     <DrawerContainer
       {...props}
+      isFullScreen={isFullScreen}
       onSubmit={() => {
         try {
           onSubmit({
@@ -64,7 +73,11 @@ function DrawerEditorMD({
           }
           key={tabs.description}
         >
-          <MDEditor data={readmeDefault} onChange={setReadme} />
+          <MDEditor
+            data={readmeDefault}
+            onChange={setReadme}
+            onToggleFullScreen={onToggleFullScreen}
+          />
         </Tabs.TabPane>
       </Tabs>
     </DrawerContainer>

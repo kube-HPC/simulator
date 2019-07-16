@@ -137,8 +137,9 @@ const pipelinesTableColumns = ({
               }
               description={
                 <>
-                  Edit pipeline properties and{' '}
-                  <Typography.Text code>Update</Typography.Text>
+                  Edit pipeline properties and description,{' '}
+                  <Typography.Text strong>submit</Typography.Text> changes with
+                  <Typography.Text code>Update</Typography.Text> button.
                 </>
               }
               opener={setVisible => (
