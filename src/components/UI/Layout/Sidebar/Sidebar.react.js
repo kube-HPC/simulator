@@ -21,6 +21,10 @@ const SiderLight = styled(Layout.Sider)`
   border-right: 1px solid ${LAYOUT_COLOR.border};
 `;
 
+const MenuMargin = styled(Menu)`
+margin-top: 10px;
+`;
+
 const setMenuItem = (component, title, count) => (
   <Row type="flex" justify="space-between" gutter={10}>
     <Col>
@@ -35,15 +39,13 @@ const setMenuItem = (component, title, count) => (
   </Row>
 );
 
+const IconStyle = { fontSize: 22, marginLeft: -2, marginRight: 20, marginTop: 2 };
+
 const addMenuItems = items =>
   items.map(([name, component, count]) => (
     <Menu.Item key={name}>
       {setMenuItem(
-        <Icon
-          type={component}
-          component={component}
-          style={{ fontSize: '20px' }}
-        />,
+        <Icon type={component} component={component} style={IconStyle} />,
         name,
         count
       )}
@@ -114,20 +116,20 @@ export default function Sidebar({ onSelect }) {
         <IconLogo component={LogoFish} />
         {!collapsed && <AnimatedTitle />}
       </FlexBox>
-      <Menu
+      <MenuMargin
         onSelect={i => onSelect(i.key)}
         defaultSelectedKeys={[menuItems[0][0]]}
       >
         {addMenuItems(menuItems)}
         <Menu.SubMenu
           title={setMenuItem(
-            <Icon type={'pie-chart'} style={{ fontSize: '20px' }} />,
+            <Icon type={'pie-chart'} style={IconStyle} />,
             'Cluster Stats'
           )}
         >
           {addMenuItems([['CPU', 'heat-map'], ['Memory', 'hdd']])}
         </Menu.SubMenu>
-      </Menu>
+      </MenuMargin>
     </SiderLight>
   );
 }

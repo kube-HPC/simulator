@@ -1,24 +1,24 @@
-import { combineReducers } from "redux";
+import { combineReducers } from 'redux';
 
 import {
   jobsTable,
   jobsJaeger,
   jobsKubernetesLogs
-} from "reducers/jobs.reducer";
+} from 'reducers/jobs.reducer';
 
-import { workerTable } from "reducers/worker.reducer";
-import { driverTable } from "reducers/driver.reducer";
-import { debugTable } from "reducers/debug.reducer";
+import { workerTable } from 'reducers/worker.reducer';
+import { driverTable } from 'reducers/driver.reducer';
+import { debugTable } from 'reducers/debug.reducer';
 
 import {
   algorithmTable,
   algorithmBuildsTable,
   algorithmReadme
-} from "reducers/algorithm.reducer";
+} from 'reducers/algorithm.reducer';
 
-import { autoCompleteFilter } from "reducers/layout.reducer";
-import { pipelineTable, pipelineReadme } from "reducers/pipeline.reducer";
-import { nodeStatistics } from "reducers/nodeStatistics.reducer";
+import { autoCompleteFilter } from 'reducers/layout.reducer';
+import { pipelineTable, pipelineReadme } from 'reducers/pipeline.reducer';
+import { nodeStatistics } from 'reducers/nodeStatistics.reducer';
 
 export default combineReducers({
   algorithmBuildsTable,

@@ -1,37 +1,38 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { useDispatch } from "react-redux";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
 
-import "components/UI/Layout/HKubeLayout.css";
+import 'components/UI/Layout/HKubeLayout.css';
 
-import JobsTable from "components/UI/tables/Jobs/JobsTable.react";
-import WorkersTable from "components/UI/tables/Workers/WorkersTable.react";
-import DebugTable from "components/UI/tables/Debug/DebugTable.react";
-import AlgorithmBuildsTable from "components/UI/tables/AlgorithmBuilds/AlgorithmBuildsTable.react";
-import PipelinesTable from "components/UI/tables/Pipelines/PipelinesTable.react";
-import DriversTable from "components/UI/tables/Drivers/DriversTable.react";
-import AlgorithmsTable from "components/UI/tables/Algorithms/AlgorithmsTable.react";
+import JobsTable from 'components/UI/tables/Jobs/JobsTable.react';
+import WorkersTable from 'components/UI/tables/Workers/WorkersTable.react';
+import DebugTable from 'components/UI/tables/Debug/DebugTable.react';
+import AlgorithmBuildsTable from 'components/UI/tables/AlgorithmBuilds/AlgorithmBuildsTable.react';
+import PipelinesTable from 'components/UI/tables/Pipelines/PipelinesTable.react';
+import DriversTable from 'components/UI/tables/Drivers/DriversTable.react';
+import AlgorithmsTable from 'components/UI/tables/Algorithms/AlgorithmsTable.react';
 
-import NodeStatistics from "components/UI/tables/NodeStats/NodeStatistics.react";
-import TableAutoComplete from "components/UI/Layout/TableAutoComplete.react";
+import NodeStatistics from 'components/UI/tables/NodeStats/NodeStatistics.react';
+import TableAutoComplete from 'components/UI/Layout/TableAutoComplete.react';
 
-import DrawerOperations from "components/common/drawer/DrawerOperations.react";
+import DrawerOperations from 'components/common/drawer/DrawerOperations.react';
 
-import SidebarOperations from "components/UI/Layout/SidebarOperations/SidebarOperations.react";
-import Sidebar from "components/UI/Layout/Sidebar/Sidebar.react";
-import AddAlgorithmForm from "components/UI/Layout/SidebarOperations/AddAlgorithmForm.react";
-import AddPipeline from "components/UI/Layout/SidebarOperations/AddPipeliene/AddPipeline.react";
-import AddDebug from "components/UI/Layout/SidebarOperations/AddDebug.react";
+import SidebarOperations from 'components/UI/Layout/SidebarOperations/SidebarOperations.react';
+import Sidebar from 'components/UI/Layout/Sidebar/Sidebar.react';
+import AddAlgorithmForm from 'components/UI/Layout/SidebarOperations/AddAlgorithmForm.react';
+import AddPipeline from 'components/UI/Layout/SidebarOperations/AddPipeliene/AddPipeline.react';
+import AddDebug from 'components/UI/Layout/SidebarOperations/AddDebug.react';
 
-import { message, Layout } from "antd";
-import { init, socketInit } from "actions/layout.action";
-import { LAYOUT_COLOR } from "constants/colors";
+import { message, Layout, Col, Icon } from 'antd';
+import { init, socketInit } from 'actions/layout.action';
+import { LAYOUT_COLOR } from 'constants/colors';
+import { Row } from 'antd/es/grid';
 
 const LayoutStyled = styled(Layout)`
   height: 100vh;
   * {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
 
   .ant-tooltip-inner {
@@ -72,6 +73,12 @@ const ContentStyled = styled(Layout.Content)`
   overflow: auto;
 `;
 
+const HoverIcon = styled(Icon)`
+  :hover {
+    color: black;
+  }
+`;
+
 const tableSelector = {
   Jobs: <JobsTable />,
   Pipelines: <PipelinesTable />,
@@ -85,8 +92,8 @@ const tableSelector = {
 };
 
 function HKubeLayout() {
-  const [table, setTable] = useState("Jobs");
-  const [operation, setOperation] = useState("AddPipeline");
+  const [table, setTable] = useState('Jobs');
+  const [operation, setOperation] = useState('AddPipeline');
   const [visible, setVisible] = useState(false);
 
   const triggerVisible = () => setVisible(!visible);
@@ -94,28 +101,49 @@ function HKubeLayout() {
   const dispatch = useDispatch();
 
   const operationSelector = {
-    "Add Pipeline": <AddPipeline onSubmit={triggerVisible} />,
-    "Add Algorithm": <AddAlgorithmForm onSubmit={triggerVisible} />,
-    "Add Debug": <AddDebug onSubmit={triggerVisible} />
+    'Add Pipeline': <AddPipeline onSubmit={triggerVisible} />,
+    'Add Algorithm': <AddAlgorithmForm onSubmit={triggerVisible} />,
+    'Add Debug': <AddDebug onSubmit={triggerVisible} />
   };
 
-  useEffect(() => {
-    dispatch(init());
-    dispatch(socketInit());
-    message.config({
-      duration: 5,
-      maxCount: 3
-    });
-  }, [dispatch]);
+  useEffect(
+    () => {
+      dispatch(init());
+      dispatch(socketInit());
+      message.config({
+        duration: 5,
+        maxCount: 3
+      });
+    },
+    [dispatch]
+  );
 
   return (
     <LayoutStyled>
       <Sidebar onSelect={setTable} />
       <Layout>
         <HeaderStyled>
-          <TableAutoComplete />
+          <TableAutoComplete table={table} />
           <VersionAlignRight>
-            {`${process.env.REACT_APP_VERSION}v`}
+            <Row type="flex" gutter={10} justify="end">
+              <Col>
+                <HoverIcon
+                  type="global"
+                  style={{ fontSize: 22 }}
+                  onClick={() => window.open('http://hkube.io/')}
+                />
+              </Col>
+              <Col>
+                <HoverIcon
+                  type="github"
+                  style={{ fontSize: 22 }}
+                  onClick={() =>
+                    window.open('https://github.com/kube-HPC/hkube')
+                  }
+                />
+              </Col>
+              <Col>{`${process.env.REACT_APP_VERSION}v`}</Col>
+            </Row>
           </VersionAlignRight>
         </HeaderStyled>
         <LayoutMargin>

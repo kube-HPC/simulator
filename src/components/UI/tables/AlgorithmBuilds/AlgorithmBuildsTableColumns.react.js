@@ -104,7 +104,7 @@ export const nestedBuildsTableColumns = ({ onCancel, onRerun }) => [
   {
     title: 'Progress',
     dataIndex: 'Progress',
-    key: 'y',
+    key: 'progress',
     width: '20%',
     render: (_, record) => {
       const failed = record.status === STATES.FAILED;
@@ -113,7 +113,11 @@ export const nestedBuildsTableColumns = ({ onCancel, onRerun }) => [
         <Progress
           percent={progress}
           status={
-            failed ? 'exception' : progress === 100 ? STATES.SUCCESS : STATES.ACTIVE
+            failed
+              ? 'exception'
+              : progress === 100
+              ? STATES.SUCCESS
+              : STATES.ACTIVE
           }
           strokeColor={failed ? STATUS.failed : undefined}
         />
@@ -132,12 +136,12 @@ export const nestedBuildsTableColumns = ({ onCancel, onRerun }) => [
           onClick={() => onCancel(record.buildId)}
         />
       ) : (
-          <Button
-            type="default"
-            shape="circle"
-            icon="redo"
-            onClick={() => onRerun(record.buildId)}
-          />
-        )
+        <Button
+          type="default"
+          shape="circle"
+          icon="redo"
+          onClick={() => onRerun(record.buildId)}
+        />
+      )
   }
 ];

@@ -3,78 +3,46 @@ import { Icon, Input, AutoComplete } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { autoCompleteFilter } from 'actions/layout.action';
 import styled from 'styled-components';
-import { COLOR } from 'constants/colors';
 
 const InputTransparent = styled(AutoComplete)`
   background: transparent;
   width: 600px;
 `;
 
-const Option = AutoComplete.Option;
-const OptGroup = AutoComplete.OptGroup;
-
-const options = data => {
-  const obj = data.map(group => (
-    <OptGroup key={group.title} label={<span>{group.title}</span>}>
-      {group.children.map(opt => (
-        <Option key={opt.title} value={opt.title}>
-          {opt.title}
-          <span
-            style={{ color:  COLOR.blueLight }}
-            className="certain-search-item-count"
-          >
-            ({opt.count})
-          </span>
-        </Option>
-      ))}
-    </OptGroup>
-  ));
-
-  return obj;
+const tableSelector = {
+  Jobs: 'jobsTable',
+  Pipelines: 'pipelineTable',
+  Workers: 'workerTable',
+  Drivers: 'driverTable',
+  Algorithms: 'algorithmTable',
+  Debug: 'debugTable',
+  Builds: 'algorithmBuildsTable'
+};
+const tableSearchBy = {
+  Jobs: job => job.key,
+  Pipelines: pipeline => pipeline.name,
+  Workers: algorithm => algorithm.algorithmName,
+  Drivers: driver => driver.driverId,
+  Algorithms: algorithm => algorithm.name,
+  Debug: algorithm => algorithm.name,
+  Builds: build => build.buildId
 };
 
-const tableDataToAutoCompleteData = data => {
-  if (data[0] == null) {
-    return [];
-  }
-  const table = Object.keys(data[0])
-    .filter(obj => typeof data[0][obj] !== 'object')
-    .map(o => ({ title: o, children: [] }));
+const getDataByTable = table => state =>
+  state[tableSelector[table]].dataSource.map(tableSearchBy[table]);
 
-  table.forEach(obj => {
-    const mapTypeToCountObj = data
-      .map(o => o[obj.title])
-      .reduce((prev, item) => {
-        if (item in prev) prev[item]++;
-        else prev[item] = 1;
-        return prev;
-      }, {});
-    obj.children = Object.keys(mapTypeToCountObj).map(key => ({
-      title: key,
-      count: mapTypeToCountObj[key]
-    }));
-  });
-
-  table.push({ title: 'lastVid', children: [] });
-
-  return table;
-};
-
-function TableAutoComplete() {
-  const dataSource = useSelector(state =>
-    tableDataToAutoCompleteData(state.jobsTable.dataSource)
-  );
-
+function TableAutoComplete({ table }) {
+  const tableData = useSelector(getDataByTable(table));
   const dispatch = useDispatch();
+  const filterData = e => dispatch(autoCompleteFilter(e));
 
   return (
     <InputTransparent
-      dropdownMatchSelectWidth={true}
-      dataSource={options(dataSource)}
-      onSelect={e => dispatch(autoCompleteFilter(e))}
-      onChange={e => dispatch(autoCompleteFilter(e))}
-      optionLabelProp="value"
+      dataSource={tableData}
+      onSearch={filterData}
+      onSelect={filterData}
       placeholder="Search in current table"
+      dropdownMatchSelectWidth={true}
     >
       <Input suffix={<Icon type="search" />} />
     </InputTransparent>

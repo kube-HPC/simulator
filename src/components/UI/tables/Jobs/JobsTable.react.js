@@ -18,7 +18,7 @@ const tableDataSelector = createSelector(
 
 export default function JobsTable() {
   const jaeger = useSelector(state => state.jobsJaeger);
-  const dataSource = useSelector(state => tableDataSelector(state));
+  const dataSource = useSelector(tableDataSelector);
   const dispatch = useDispatch();
 
   return (

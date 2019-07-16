@@ -44,7 +44,6 @@ const pipelinesTableColumns = ({
     title: 'Pipeline Name',
     dataIndex: 'name',
     key: 'name',
-    width: '20%',
     sorter: (a, b) => sorter(a.name, b.name),
     render: (_, record) => <CopyEllipsis disabled text={record.name} />
   },
@@ -52,7 +51,6 @@ const pipelinesTableColumns = ({
     title: 'Cron Job',
     dataIndex: 'cron',
     key: 'cron',
-    width: '30%',
     render: (_, record) => (
       <SwitchCron
         pipeline={record}
@@ -66,7 +64,6 @@ const pipelinesTableColumns = ({
     title: 'Pipeline Stats',
     dataIndex: 'status',
     key: 'status',
-    width: '30%',
     render: (_, record) => {
       // array flat one-liner
       const pipelineStats = [].concat(
@@ -92,7 +89,6 @@ const pipelinesTableColumns = ({
     title: 'Action',
     dataIndex: 'action',
     key: 'action',
-    width: '30%',
     render: (_, record) => {
       // http://hkube.io/spec/#tag/Execution/paths/~1exec~1stored/post
       const currPipeline = { ...record };
