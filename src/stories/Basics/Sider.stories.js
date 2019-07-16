@@ -45,4 +45,4 @@ function SiderContainer() {
   );
 }
 
-storiesOf('UI|Sider', module).add('Default', () => <SiderContainer />);
+storiesOf('BASICS|Sider', module).add('Default', () => <SiderContainer />);

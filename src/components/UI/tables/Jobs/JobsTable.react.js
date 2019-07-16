@@ -10,10 +10,10 @@ import jobsTableColumns from 'components/UI/tables/Jobs/JobsTableColumns.react';
 import CardRow from 'components/common/CardRow.react';
 
 const tableDataSelector = createSelector(
-  state => state.jobsTable.dataSource,
+  state => state.jobsTable.dataSource.asMutable(),
   state => state.autoCompleteFilter.filter,
   (dataSource, filter) =>
-    dataSource && dataSource.asMutable().filter(row => row.key.includes(filter))
+    dataSource && dataSource.filter(row => row.key.includes(filter))
 );
 
 export default function JobsTable() {

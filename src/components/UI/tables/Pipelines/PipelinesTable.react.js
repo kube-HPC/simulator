@@ -1,30 +1,30 @@
 import { useSelector, useDispatch } from 'react-redux';
-import React, { useCallback } from 'react';
-import { getPipelineReadme, postPipelineReadme } from 'actions/readme.action';
+import React from 'react';
+
+import { getPipelineReadme } from 'actions/readme.action';
+import usePipeline from 'hooks/usePipeline.react';
+
 import DynamicTable from 'components/UI/Layout/DynamicTable.react';
 import pipelinesTableColumns from 'components/UI/tables/Pipelines/PipelinesTableColumns.react';
-import PipelineTabSwitcher from 'components/UI/tables/Pipelines/PipelinesTabSwitcher.react';
+import PipelineTabSwitcher from 'components/common/TabSwitcher.react';
 import CardRow from 'components/common/CardRow.react';
 
 function PipelinesTable() {
-  const storedPipelines = useSelector(state => state.pipelineTable.dataSource);
-  const pipelineReadme = useSelector(state => state.pipelineReadme);
-  const dataStats = useSelector(state => state.pipelineTable.dataStats);
-
-  const dispatch = useDispatch();
-
-  const onSubmitReadme = useCallback(
-    (name, readme) => dispatch(postPipelineReadme(name, readme)),
-    [dispatch]
+  const storedPipelines = useSelector(state =>
+    state.pipelineTable.dataSource.asMutable()
   );
+  const readmeDefault = useSelector(state => state.pipelineReadme);
+  const dataStats = useSelector(state => state.pipelineTable.dataStats);
+  const dispatch = useDispatch();
 
   return (
     <DynamicTable
       rowKey={pipeline => pipeline.name}
       dataSource={storedPipelines || []}
       columns={pipelinesTableColumns({
-        dispatch,
-        dataStats: dataStats || []
+        ...usePipeline(),
+        dataStats: dataStats || [],
+        readmeDefault
       })}
       onExpand={(expanded, record) => {
         if (expanded) dispatch(getPipelineReadme(record.name));
@@ -32,13 +32,12 @@ function PipelinesTable() {
       expandedRowRender={record => (
         <CardRow>
           <PipelineTabSwitcher
-            pipelineDetails={record}
-            onSubmit={onSubmitReadme}
+            jsonObject={record}
             readme={
-              pipelineReadme &&
-              pipelineReadme[record.name] &&
-              pipelineReadme[record.name].readme &&
-              pipelineReadme[record.name].readme.readme
+              readmeDefault &&
+              readmeDefault[record.name] &&
+              readmeDefault[record.name].readme &&
+              readmeDefault[record.name].readme.readme
             }
           />
         </CardRow>

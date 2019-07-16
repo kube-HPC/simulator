@@ -15,11 +15,10 @@ const StyledCard = styled(Card)`
   margin: 0 auto;
 `;
 
-storiesOf('Basics|JsonEditor/Default', module)
+storiesOf('Basics|JsonEditor', module)
   .add('Default', () => <JsonEditor value={stringify(template)} />)
   .add('Card', () => (
     <StyledCard>
       <JsonEditor width={'100%'} height={'60vh'} value={stringify(template)} />
     </StyledCard>
-  ))
-  .add('Monaco Editor', () => <JsonEditor value={stringify(template)} />);
+  ));

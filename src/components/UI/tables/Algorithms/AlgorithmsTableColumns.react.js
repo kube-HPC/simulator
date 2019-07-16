@@ -1,19 +1,19 @@
 import React from 'react';
 
-import { Button, Modal, Row, Col, Tooltip } from 'antd';
+import { Button, Modal, Row, Col, Tooltip, Typography } from 'antd';
 
-import { sorter, stringify } from 'utils/string';
-import Text from 'antd/lib/typography/Text';
-import DrawerEditor from 'components/common/drawer/DrawerEditor.react';
+import { sorter } from 'utils/string';
 import CopyEllipsis from 'components/common/CopyEllipsis.react';
+import DrawerEditorMD from 'components/common/drawer/DrawerEditorMD.react';
 
 const deleteConfirmAction = (action, record) => {
   Modal.confirm({
     title: 'WARNING Deleting Algorithm',
     content: (
       <>
-        Deleting algorithm will <Text strong>DELETE-ALL</Text> related pipelines
-        and <Text strong>STOP-ALL</Text> executions.
+        Deleting algorithm will{' '}
+        <Typography.Text strong>DELETE-ALL</Typography.Text> related pipelines
+        and <Typography.Text strong>STOP-ALL</Typography.Text> executions.
       </>
     ),
     okText: 'Confirm',
@@ -26,7 +26,12 @@ const deleteConfirmAction = (action, record) => {
   });
 };
 
-const algorithmsTableColumns = ({ onSubmit, onDelete }) => [
+const algorithmsTableColumns = ({
+  onSubmit,
+  onDelete,
+  fetchReadme,
+  readmeDefault
+}) => [
   {
     title: 'Algorithm Name',
     dataIndex: 'name',
@@ -68,21 +73,36 @@ const algorithmsTableColumns = ({ onSubmit, onDelete }) => [
     render: (_, record) => (
       <Row type="flex" justify="start" gutter={10}>
         <Col>
-          <DrawerEditor
+          <DrawerEditorMD
             title={'Update Algorithm'}
             description={
               <>
-                Edit algorithm properties and <Text code>Update</Text>{' '}
+                Edit algorithm properties and description,{' '}
+                <Typography.Text strong>submit</Typography.Text> changes with
+                <Typography.Text code>Update</Typography.Text> button.
               </>
             }
-            opener={onClick => (
+            opener={setVisible => (
               <Tooltip placement="top" title={'Update Algorithm'}>
-                <Button shape="circle" icon="edit" onClick={onClick} />
+                <Button
+                  shape="circle"
+                  icon="edit"
+                  onClick={() => {
+                    fetchReadme(record);
+                    setVisible(prev => !prev);
+                  }}
+                />
               </Tooltip>
             )}
-            submitText={'Update'}
-            valueString={stringify(record)}
+            readmeDefault={
+              readmeDefault &&
+              readmeDefault[record.name] &&
+              readmeDefault[record.name].readme &&
+              readmeDefault[record.name].readme.readme
+            }
+            record={record}
             onSubmit={onSubmit}
+            submitText={'Update'}
           />
         </Col>
         <Col>

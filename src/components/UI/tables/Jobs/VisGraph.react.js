@@ -6,6 +6,8 @@ import vis from 'vis';
 import uuid from 'uuid';
 import PropTypes from 'prop-types';
 
+// TODO: Refactor this component
+
 class VisGraph extends Component {
   constructor(props) {
     super(props);
@@ -153,7 +155,6 @@ class VisGraph extends Component {
     this.Network.on('afterDrawing', () =>
       this.Network.fit({
         animation: {
-          duration: 400,
           easingFunction: 'linear'
         }
       })

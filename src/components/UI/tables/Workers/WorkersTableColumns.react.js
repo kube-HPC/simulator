@@ -4,7 +4,7 @@ import { Icon, Tag } from 'antd';
 import { STATUS } from 'constants/colors';
 import StatusTag from 'components/common/StatusTag.react';
 
-import { toUpperCaseFirstLetter } from 'utils/string';
+import { toUpperCaseFirstLetter, sorter } from 'utils/string';
 
 const undefinedStateFilter = state => state || 'Creating';
 
@@ -41,7 +41,7 @@ export const workersTableStats = () => [
       return (
         <>
           <Tag color={STATUS[record.workerStatus]}>{title}</Tag>
-          <Tag color={STATUS[record.jobStatus]}>{`Jobs ${title}`}</Tag>
+          <Tag color={STATUS[record.jobStatus]}>{`Job ${title}`}</Tag>
         </>
       );
     }
@@ -59,7 +59,8 @@ export const workerTableColumns = () => [
   {
     title: 'Algorithm Name',
     key: 'algorithmName',
-    dataIndex: 'algorithmName'
+    dataIndex: 'algorithmName',
+    sorter: (a, b) => sorter(a.algorithmName, b.algorithmName)
   },
   {
     title: 'Ready Count',

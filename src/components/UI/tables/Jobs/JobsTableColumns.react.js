@@ -2,7 +2,7 @@ import React from 'react';
 
 import humanizeDuration from 'humanize-duration';
 import Moment from 'react-moment';
-import { toUpperCaseFirstLetter } from 'utils/string';
+import { toUpperCaseFirstLetter, sorter } from 'utils/string';
 
 import { Progress, Tag, Tooltip, Button, Row, Col } from 'antd';
 
@@ -38,9 +38,6 @@ const getStatusFilter = () =>
     value: status
   }));
 
-const sorter = (a, b) =>
-  isNaN(a) && isNaN(b) ? (a || '').localeCompare(b || '') : a - b;
-
 const jobsTableColumns = dispatch => [
   {
     title: 'Job ID',
@@ -50,18 +47,18 @@ const jobsTableColumns = dispatch => [
   },
   {
     title: 'Pipeline Name',
-    dataIndex: 'status.pipeline',
+    dataIndex: 'pipeline.name',
     key: 'pipeline',
-    sorter: (a, b) => sorter(a.key, b.key),
+    sorter: (a, b) => sorter(a.pipeline.name, b.pipeline.name),
     render: (_, record) => <CopyEllipsis disabled text={record.pipeline.name} />
   },
   {
     title: 'Status',
     dataIndex: 'status.status',
     key: 'status',
-    sorter: (a, b) => sorter(a.status.status, b.status.status),
     filterMultiple: true,
     filters: getStatusFilter(),
+    sorter: (a, b) => sorter(a.status.status, b.status.status),
     onFilter: (value, record) => record.status.status === value,
     render: (_, record) => (
       <Tag color={STATUS[record.status && record.status.status]}>
