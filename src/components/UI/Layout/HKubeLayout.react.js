@@ -27,6 +27,7 @@ import { message, Layout, Col, Icon } from 'antd';
 import { init, socketInit } from 'actions/layout.action';
 import { LAYOUT_COLOR } from 'constants/colors';
 import { Row } from 'antd/es/grid';
+import UserGuide from './UserGuide.react';
 
 const LayoutStyled = styled(Layout)`
   height: 100vh;
@@ -95,6 +96,7 @@ function HKubeLayout() {
   const [table, setTable] = useState('Jobs');
   const [operation, setOperation] = useState('AddPipeline');
   const [visible, setVisible] = useState(false);
+  const [runGuide, setRunGuide] = useState(true);
 
   const triggerVisible = () => setVisible(!visible);
 
@@ -119,51 +121,61 @@ function HKubeLayout() {
   );
 
   return (
-    <LayoutStyled>
-      <Sidebar onSelect={setTable} />
-      <Layout>
-        <HeaderStyled>
-          <TableAutoComplete table={table} />
-          <VersionAlignRight>
-            <Row type="flex" gutter={10} justify="end">
-              <Col>
-                <HoverIcon
-                  type="global"
-                  style={{ fontSize: 22 }}
-                  onClick={() => window.open('http://hkube.io/')}
-                />
-              </Col>
-              <Col>
-                <HoverIcon
-                  type="github"
-                  style={{ fontSize: 22 }}
-                  onClick={() =>
-                    window.open('https://github.com/kube-HPC/hkube')
-                  }
-                />
-              </Col>
-              <Col>{`${process.env.REACT_APP_VERSION}v`}</Col>
-            </Row>
-          </VersionAlignRight>
-        </HeaderStyled>
-        <LayoutMargin>
-          <ContentStyled>{tableSelector[table]}</ContentStyled>
-          <SidebarOperations
-            onSelect={op => {
-              setOperation(op);
-              setVisible(!visible);
-            }}
-          />
-          <DrawerOperations
-            visible={visible}
-            onClose={triggerVisible}
-            operation={operation}
-          >
-            {operationSelector[operation]}
-          </DrawerOperations>
-        </LayoutMargin>
-      </Layout>
-    </LayoutStyled>
+    <>
+      <UserGuide run={runGuide} setRun={setRunGuide} />
+      <LayoutStyled>
+        <Sidebar className="sidebar" onSelect={setTable} />
+        <Layout>
+          <HeaderStyled>
+            <TableAutoComplete table={table} />
+            <VersionAlignRight>
+              <Row type="flex" gutter={10} justify="end">
+                <Col>
+                  <HoverIcon
+                    type="global"
+                    style={{ fontSize: 22 }}
+                    onClick={() => window.open('http://hkube.io/')}
+                  />
+                </Col>
+                <Col>
+                  <HoverIcon
+                    type="github"
+                    style={{ fontSize: 22 }}
+                    onClick={() =>
+                      window.open('https://github.com/kube-HPC/hkube')
+                    }
+                  />
+                </Col>
+                <Col>
+                  <HoverIcon
+                    type="question-circle"
+                    style={{ fontSize: 22 }}
+                    onClick={() => setRunGuide(true)}
+                  />
+                </Col>
+                <Col>{`${process.env.REACT_APP_VERSION}v`}</Col>
+              </Row>
+            </VersionAlignRight>
+          </HeaderStyled>
+          <LayoutMargin>
+            <ContentStyled>{tableSelector[table]}</ContentStyled>
+            <SidebarOperations
+              onSelect={op => {
+                setOperation(op);
+                setVisible(!visible);
+              }}
+            />
+            <DrawerOperations
+              visible={visible}
+              onClose={triggerVisible}
+              operation={operation}
+            >
+              {operationSelector[operation]}
+            </DrawerOperations>
+          </LayoutMargin>
+        </Layout>
+      </LayoutStyled>
+    </>
   );
 }
 

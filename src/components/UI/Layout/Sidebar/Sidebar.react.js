@@ -22,7 +22,7 @@ const SiderLight = styled(Layout.Sider)`
 `;
 
 const MenuMargin = styled(Menu)`
-margin-top: 10px;
+  margin-top: 10px;
 `;
 
 const setMenuItem = (component, title, count) => (
@@ -39,7 +39,12 @@ const setMenuItem = (component, title, count) => (
   </Row>
 );
 
-const IconStyle = { fontSize: 22, marginLeft: -2, marginRight: 20, marginTop: 2 };
+const IconStyle = {
+  fontSize: 22,
+  marginLeft: -2,
+  marginRight: 20,
+  marginTop: 2
+};
 
 const addMenuItems = items =>
   items.map(([name, component, count]) => (
@@ -82,7 +87,7 @@ const TitleCenter = styled(LogoTitle)`
   align-self: flex-start;
 `;
 
-export default function Sidebar({ onSelect }) {
+export default function Sidebar({ onSelect, ...props }) {
   const [collapsed, setCollapsed] = useState(true);
 
   const dataCount = useSelector(state => ({
@@ -107,6 +112,7 @@ export default function Sidebar({ onSelect }) {
 
   return (
     <SiderLight
+      {...props}
       theme="light"
       collapsible
       onCollapse={() => setCollapsed(!collapsed)}

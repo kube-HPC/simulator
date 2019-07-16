@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { storiesOf } from '@storybook/react';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
 
 import { Layout } from 'antd';
 
+import rootReducer from 'reducers/root.reducer';
 import Sidebar from 'components/UI/Layout/Sidebar/Sidebar.react';
 
 const LayoutStyled = styled(Layout)`
@@ -32,16 +35,20 @@ const props = {
   debugCount: 4
 };
 
+const store = createStore(rootReducer);
+
 function SiderContainer() {
   const [counter, setCounter] = useState(0);
 
   return (
-    <LayoutStyled>
-      <Sidebar {...props} onSelect={() => setCounter(counter + 1)} />
-      <LayoutCenter>
-        <StyledCounter>{counter}</StyledCounter>
-      </LayoutCenter>
-    </LayoutStyled>
+    <Provider store={store}>
+      <LayoutStyled>
+        <Sidebar {...props} onSelect={() => setCounter(counter + 1)} />
+        <LayoutCenter>
+          <StyledCounter>{counter}</StyledCounter>
+        </LayoutCenter>
+      </LayoutStyled>
+    </Provider>
   );
 }
 

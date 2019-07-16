@@ -4,7 +4,7 @@ import { storiesOf } from '@storybook/react';
 
 const { Header, Footer, Sider, Content } = Layout;
 
-storiesOf('Basics|Layout', module).add('Default', () => (
+storiesOf('Basics|Layout', module).add('Skeleton', () => (
   <Layout>
     <Sider>
       <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
