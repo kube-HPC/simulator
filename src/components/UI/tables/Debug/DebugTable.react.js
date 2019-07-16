@@ -10,7 +10,7 @@ import JsonView from 'components/common/json/JsonView.react';
 import CardRow from 'components/common/CardRow.react';
 
 const tableDataSelector = createSelector(
-  state => state.debugTable.dataSource,
+  state => state.debugTable.dataSource.asMutable(),
   state => state.autoCompleteFilter.filter,
   (dataSource, filter) =>
     dataSource && dataSource.filter(row => row.name.includes(filter))

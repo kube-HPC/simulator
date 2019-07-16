@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
-import actions from '../constants/actions';
+import actions from 'constants/actions';
 
 export const algorithmTable = handleActions(
   {

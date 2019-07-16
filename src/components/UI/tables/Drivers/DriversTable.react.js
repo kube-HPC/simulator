@@ -7,7 +7,9 @@ import DynamicTable from 'components/UI/Layout/DynamicTable.react';
 import CardRow from 'components/common/CardRow.react';
 
 export default function DriversTable() {
-  const dataSource = useSelector(state => state.driverTable.dataSource);
+  const dataSource = useSelector(state =>
+    state.driverTable.dataSource.asMutable()
+  );
   return (
     <DynamicTable
       rowKey={record => record.driverId}

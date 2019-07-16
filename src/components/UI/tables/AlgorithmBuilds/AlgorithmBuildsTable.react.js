@@ -16,14 +16,14 @@ import JsonView from 'components/common/json/JsonView.react';
 import CardRow from 'components/common/CardRow.react';
 
 const tableDataSelector = createSelector(
-  state => state.algorithmBuildsTable.dataSource,
+  state => state.algorithmBuildsTable.dataSource.asMutable(),
   state => state.autoCompleteFilter.filter,
   (dataSource, filter) =>
     dataSource && dataSource.filter(row => row.algorithmName.includes(filter))
 );
 
 function AlgorithmBuildsTable() {
-  const dataSource = useSelector(state => tableDataSelector(state));
+  const dataSource = useSelector(tableDataSelector);
   const dispatch = useDispatch();
 
   const onCancel = data => dispatch(cancelBuild(data));

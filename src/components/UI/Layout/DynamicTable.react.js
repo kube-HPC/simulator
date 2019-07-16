@@ -1,31 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
+
 import { Table, Icon } from 'antd';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 const CustomExpandIcon = ({ expanded, onExpand, record }) => (
   <Icon type={expanded ? 'down' : 'right'} onClick={e => onExpand(record, e)} />
 );
 
+const NoScrollTable = styled(Table)`
+  overflow: hidden;
+`;
+
+// TODO: Make infinity table
 export default function DynamicTable({ isLoading, dataSource, ...props }) {
   return (
-    <Table
-      size="middle"
-      expandIcon={CustomExpandIcon}
-      dataSource={dataSource || []}
-      pagination={
-        dataSource && dataSource.length < 10
-          ? false
-          : {
-              pageSize: 15,
-              showSizeChanger: true,
-              showQuickJumper: true,
-              size: 'small',
-              showLessItems: true,
-              pageSizeOptions: ['10', '15', '20', '30', '40']
-            }
-      }
-      {...props}
-    />
+    <Scrollbars autoHide>
+      <NoScrollTable
+        size="middle"
+        expandIcon={CustomExpandIcon}
+        dataSource={dataSource || []}
+        pagination={false}
+        {...props}
+      />
+    </Scrollbars>
   );
 }
 

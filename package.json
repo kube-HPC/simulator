@@ -26,6 +26,7 @@
     "react-addons-shallow-compare": "^15.6.2",
     "react-chartjs-2": "^2.7.4",
     "react-copy-to-clipboard": "^5.0.1",
+    "react-custom-scrollbars": "^4.2.1",
     "react-day-picker": "^7.2.4",
     "react-dom": "^16.8.6",
     "react-json-view": "^1.19.1",
