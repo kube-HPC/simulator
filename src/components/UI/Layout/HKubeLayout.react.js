@@ -128,9 +128,18 @@ function HKubeLayout() {
             <Row type="flex" gutter={10} justify="end">
               <Col>
                 <HoverIcon
-                  type="github"
+                  type="global"
                   style={{ fontSize: 22 }}
                   onClick={() => window.open('http://hkube.io/')}
+                />
+              </Col>
+              <Col>
+                <HoverIcon
+                  type="github"
+                  style={{ fontSize: 22 }}
+                  onClick={() =>
+                    window.open('https://github.com/kube-HPC/hkube')
+                  }
                 />
               </Col>
               <Col>{`${process.env.REACT_APP_VERSION}v`}</Col>
