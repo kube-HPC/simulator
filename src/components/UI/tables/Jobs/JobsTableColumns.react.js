@@ -215,7 +215,7 @@ const jobsTableColumns = dispatch => [
       );
 
       return (
-        <Row type="flex" justify="start" gutter={10}>
+        <Row type="flex" justify="space-between" gutter={10}>
           <Col>{redoAction}</Col>
           <Col>{stopAction}</Col>
           <Col>{pauseAction}</Col>

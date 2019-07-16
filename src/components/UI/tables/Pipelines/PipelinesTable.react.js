@@ -8,11 +8,17 @@ import DynamicTable from 'components/UI/Layout/DynamicTable.react';
 import pipelinesTableColumns from 'components/UI/tables/Pipelines/PipelinesTableColumns.react';
 import PipelineTabSwitcher from 'components/common/TabSwitcher.react';
 import CardRow from 'components/common/CardRow.react';
+import { createSelector } from 'reselect';
+
+const tableDataSelector = createSelector(
+  state => state.pipelineTable.dataSource.asMutable(),
+  state => state.autoCompleteFilter.filter,
+  (dataSource, filter) =>
+    dataSource && dataSource.filter(row => row.name.includes(filter))
+);
 
 function PipelinesTable() {
-  const storedPipelines = useSelector(state =>
-    state.pipelineTable.dataSource.asMutable()
-  );
+  const storedPipelines = useSelector(tableDataSelector);
   const readmeDefault = useSelector(state => state.pipelineReadme);
   const dataStats = useSelector(state => state.pipelineTable.dataStats);
   const dispatch = useDispatch();

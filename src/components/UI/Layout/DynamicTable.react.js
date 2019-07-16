@@ -9,29 +9,28 @@ const CustomExpandIcon = ({ expanded, onExpand, record }) => (
   <Icon type={expanded ? 'down' : 'right'} onClick={e => onExpand(record, e)} />
 );
 
-const NoScrollTable = styled(Table)`
+const TableScrollHidden = styled(Table)`
   overflow: hidden;
 `;
 
-// TODO: Make infinity table
-export default function DynamicTable({ isLoading, dataSource, ...props }) {
-  return (
-    <Scrollbars autoHide>
-      <NoScrollTable
-        size="middle"
-        expandIcon={CustomExpandIcon}
-        dataSource={dataSource || []}
-        pagination={false}
-        {...props}
-      />
-    </Scrollbars>
+export default function DynamicTable({
+  dataSource,
+  isInner = false,
+  ...props
+}) {
+  const table = (
+    <TableScrollHidden
+      {...props}
+      size="middle"
+      expandIcon={CustomExpandIcon}
+      dataSource={dataSource || []}
+      pagination={false}
+    />
   );
+
+  return isInner ? table : <Scrollbars autoHide>{table}</Scrollbars>;
 }
 
 DynamicTable.propTypes = {
-  dataSource: PropTypes.array.isRequired,
-  columns: PropTypes.array.isRequired,
-  isLoading: PropTypes.object,
-  handleFetch: PropTypes.func,
-  expandedRowRender: PropTypes.func
+  dataSource: PropTypes.array.isRequired
 };

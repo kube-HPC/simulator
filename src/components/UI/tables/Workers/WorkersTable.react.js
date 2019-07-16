@@ -11,6 +11,7 @@ import {
 } from 'components/UI/tables/Workers/WorkersTableColumns.react';
 import JsonView from 'components/common/json/JsonView.react';
 import CardRow from 'components/common/CardRow.react';
+import { createSelector } from 'reselect';
 
 const generateTab = (key, value) => (
   <Tabs.TabPane tab={key} key={key}>
@@ -41,10 +42,16 @@ const expandedRowRender = (columns, dataSource) => record => {
   );
 };
 
+const tableDataSelector = createSelector(
+  state => state.workerTable.dataSource.asMutable(),
+  state => state.autoCompleteFilter.filter,
+  (dataSource, filter) =>
+    dataSource &&
+    dataSource.filter(algorithm => algorithm.algorithmName.includes(filter))
+);
+
 function WorkersTable() {
-  const dataSource = useSelector(state =>
-    state.workerTable.dataSource.asMutable()
-  );
+  const dataSource = useSelector(tableDataSelector);
   const stats = useSelector(state => state.workerTable.stats);
 
   const statsMergedWithDefault =

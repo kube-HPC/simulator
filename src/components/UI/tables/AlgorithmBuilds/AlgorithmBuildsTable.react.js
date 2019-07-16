@@ -19,7 +19,7 @@ const tableDataSelector = createSelector(
   state => state.algorithmBuildsTable.dataSource.asMutable(),
   state => state.autoCompleteFilter.filter,
   (dataSource, filter) =>
-    dataSource && dataSource.filter(row => row.algorithmName.includes(filter))
+    dataSource && dataSource.filter(build => build.buildId.includes(filter))
 );
 
 function AlgorithmBuildsTable() {
@@ -30,18 +30,18 @@ function AlgorithmBuildsTable() {
   const onRerun = data => dispatch(rerunBuild(data));
 
   const expandedRowRender = record => {
-    const algorithms = dataSource.filter(
+    const algorithmsDataSource = dataSource.filter(
       algorithm => algorithm.algorithmName === record.algorithmName
     );
 
     return (
       <CardRow>
         <DynamicTable
+          isInner
           rowKey={record => record.buildId}
           columns={nestedBuildsTableColumns({ onCancel, onRerun })}
-          dataSource={algorithms}
+          dataSource={algorithmsDataSource}
           expandedRowRender={record => <JsonView jsonObject={record} />}
-          pagination={algorithms.length > 10 ? { size: 'small' } : false}
         />
       </CardRow>
     );

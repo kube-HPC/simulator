@@ -13,11 +13,12 @@ const tableDataSelector = createSelector(
   state => state.debugTable.dataSource.asMutable(),
   state => state.autoCompleteFilter.filter,
   (dataSource, filter) =>
-    dataSource && dataSource.filter(row => row.name.includes(filter))
+    dataSource &&
+    dataSource.filter(algorithm => algorithm.name.includes(filter))
 );
 
 function DebugTable() {
-  const dataSource = useSelector(state => tableDataSelector(state));
+  const dataSource = useSelector(tableDataSelector);
 
   const dispatch = useDispatch();
 
