@@ -7,16 +7,32 @@ import { toUpperCaseFirstLetter, sorter } from 'utils/string';
 import { Progress, Tag, Tooltip, Button, Row, Col } from 'antd';
 
 import { PRIORITY, STATUS } from 'constants/colors';
+import { STATES } from 'constants/states';
 import StatusTag from 'components/common/StatusTag.react';
 import CopyEllipsis from 'components/common/CopyEllipsis.react';
 
 import { downloadStorageResults } from 'actions/jobs.action';
-import { execRawPipeline, stopPipeline } from 'actions/pipeline.action';
+import {
+  execRawPipeline,
+  stopPipeline,
+  pausePipeline,
+  resumePipeline
+} from 'actions/pipeline.action';
 
-const statuses = ['completed', 'failed', 'stopping', 'stopped'];
+const ActiveState = [
+  STATES.PENDING,
+  STATES.ACTIVE,
+  STATES.RECOVERING,
+  STATES.RESUMING
+];
+
+const canPauseOrResume = state => canPauseOrStop(state) || canResume(state);
+const canPauseOrStop = state => isActive(state) || state === STATES.PAUSED;
+const canResume = state => state === STATES.PAUSED;
+const isActive = state => ActiveState.includes(state);
 
 const getStatusFilter = () =>
-  statuses.map(status => ({
+  Object.values(STATES).map(status => ({
     text: toUpperCaseFirstLetter(status),
     value: status
   }));
@@ -108,8 +124,8 @@ const jobsTableColumns = dispatch => [
     dataIndex: 'Progress',
     width: '20%',
     render: (_, record) => {
-      const stopped = record.status && record.status.status === 'stopped';
-      const failed = record.status && record.status.status === 'failed';
+      const stopped = record.status && record.status.status === STATES.STOPPED;
+      const failed = record.status && record.status.status === STATES.FAILED;
       const progress = parseInt(
         (record.status && record.status.data && record.status.data.progress) ||
           0
@@ -136,26 +152,47 @@ const jobsTableColumns = dispatch => [
     dataIndex: 'action',
     key: 'stop',
     render: (_, record) => {
-      const isStopPipeline =
-        record.status.status === 'active' || record.status.status === 'pending';
-      const stopAction = (
-        <Tooltip
-          placement="top"
-          title={isStopPipeline ? 'Stop Pipeline' : 'Re-Run'}
-        >
+      const status = record.status.status;
+      const isResumePipeline = canResume(status);
+
+      const redoAction = (
+        <Tooltip placement="top" title="Re-Run">
           <Button
-            type={isStopPipeline ? 'danger' : 'default'}
+            type="default"
             shape="circle"
-            icon={isStopPipeline ? 'close' : 'redo'}
-            onClick={() =>
-              isStopPipeline
-                ? dispatch(stopPipeline(record.key))
-                : dispatch(execRawPipeline(record.pipeline))
-            }
+            icon="redo"
+            onClick={() => dispatch(execRawPipeline(record.pipeline))}
           />
         </Tooltip>
       );
 
+      const stopAction = (
+        <Tooltip placement="top" title="Stop Pipeline">
+          <Button
+            type="danger"
+            disabled={!canPauseOrStop(status)}
+            shape="circle"
+            icon="close"
+            onClick={() => dispatch(stopPipeline(record.key))}
+          />
+        </Tooltip>
+      );
+
+      const pauseAction = (
+        <Tooltip placement="top" title={isResumePipeline ? 'Resume' : 'Pause'}>
+          <Button
+            type="default"
+            disabled={!canPauseOrResume(status)}
+            shape="circle"
+            icon={isResumePipeline ? 'caret-right' : 'pause'}
+            onClick={() =>
+              isResumePipeline
+                ? dispatch(resumePipeline(record.key))
+                : dispatch(pausePipeline(record.key))
+            }
+          />
+        </Tooltip>
+      );
       const isDisabled = !(
         record.results &&
         record.results.data &&
@@ -179,7 +216,9 @@ const jobsTableColumns = dispatch => [
 
       return (
         <Row type="flex" justify="start" gutter={10}>
+          <Col>{redoAction}</Col>
           <Col>{stopAction}</Col>
+          <Col>{pauseAction}</Col>
           <Col>{downloadAction}</Col>
         </Row>
       );

@@ -6,8 +6,8 @@ import { Tag, Progress, Button } from 'antd';
 
 import StatusTag from 'components/common/StatusTag.react';
 import CopyEllipsis from 'components/common/CopyEllipsis.react';
-
 import { STATUS } from 'constants/colors';
+import { STATES } from 'constants/states';
 import { sorter } from 'utils/string';
 import { toUpperCaseFirstLetter } from 'utils/string';
 
@@ -107,13 +107,13 @@ export const nestedBuildsTableColumns = ({ onCancel, onRerun }) => [
     key: 'y',
     width: '20%',
     render: (_, record) => {
-      const failed = record.status === 'failed';
+      const failed = record.status === STATES.FAILED;
       const progress = (record.progress && parseInt(record.progress)) || 0;
       return (
         <Progress
           percent={progress}
           status={
-            failed ? 'exception' : progress === 100 ? 'success' : 'active'
+            failed ? 'exception' : progress === 100 ? STATES.SUCCESS : STATES.ACTIVE
           }
           strokeColor={failed ? STATUS.failed : undefined}
         />
@@ -124,7 +124,7 @@ export const nestedBuildsTableColumns = ({ onCancel, onRerun }) => [
     title: 'Actions',
     key: 'stop',
     render: (_, record) =>
-      record.status !== 'completed' ? (
+      record.status !== STATES.COMPLETED ? (
         <Button
           type="danger"
           shape="circle"
@@ -132,12 +132,12 @@ export const nestedBuildsTableColumns = ({ onCancel, onRerun }) => [
           onClick={() => onCancel(record.buildId)}
         />
       ) : (
-        <Button
-          type="default"
-          shape="circle"
-          icon="redo"
-          onClick={() => onRerun(record.buildId)}
-        />
-      )
+          <Button
+            type="default"
+            shape="circle"
+            icon="redo"
+            onClick={() => onRerun(record.buildId)}
+          />
+        )
   }
 ];
