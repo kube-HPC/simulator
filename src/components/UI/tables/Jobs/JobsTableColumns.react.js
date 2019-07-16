@@ -39,9 +39,9 @@ const jobsTableColumns = dispatch => [
     title: 'Status',
     dataIndex: 'status.status',
     key: 'status',
-    sorter: (a, b) => sorter(a.status.status, b.status.status),
     filterMultiple: true,
     filters: getStatusFilter(),
+    sorter: (a, b) => sorter(a.status.status, b.status.status),
     onFilter: (value, record) => record.status.status === value,
     render: (_, record) => (
       <Tag color={STATUS[record.status && record.status.status]}>

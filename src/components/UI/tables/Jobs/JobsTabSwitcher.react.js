@@ -35,7 +35,7 @@ function JobsTabSwitcher({ record }) {
     JSON: <JsonView jsonObject={record.record} />
   };
 
-  return <Tabs defaultActiveKey="1">{generateTabs(tabs)}</Tabs>;
+  return <Tabs>{generateTabs(tabs)}</Tabs>;
 }
 
 JobsTabSwitcher.propTypes = {

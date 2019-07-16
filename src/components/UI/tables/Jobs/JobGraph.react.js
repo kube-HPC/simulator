@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
+import { Button, Typography } from 'antd';
+
 import { getKubernetesLogsData, getCaching } from 'actions/jobs.action';
 
 import DrawerContainer from 'components/common/drawer/DrawerContainer.react';
 import NodeInfo from 'components/UI/tables/Jobs/NodeInfo.react';
 import VisGraph from 'components/UI/tables/Jobs/VisGraph.react';
-
 import graphOptions from 'config/template/graph-options.template';
-import { Button } from 'antd';
-import Text from 'antd/lib/typography/Text';
+
+const { Text } = Typography;
 
 function JobGraph(props) {
   const [visible, setVisible] = useState(false);
@@ -108,8 +109,8 @@ function JobGraph(props) {
             getNetwork={initNetworkInstance}
           />
         ) : (
-            'Graph is not available'
-          )}
+          'Graph is not available'
+        )}
       </div>
     </>
   );
