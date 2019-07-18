@@ -29,15 +29,23 @@ const tableSearchBy = {
 };
 
 const getDataByTable = table => state =>
+  tableSelector[table] &&
   state[tableSelector[table]].dataSource.map(tableSearchBy[table]);
 
+// TODO: Change all tables name to const, ie: TABLE.CPU
+// TODO: write custom hook for tableSelector due to code duplication
+const disabledTable = ['CPU', 'Memory'];
+
 function TableAutoComplete({ table }) {
+  const isDisabled = disabledTable.includes(table);
+
   const tableData = useSelector(getDataByTable(table));
   const dispatch = useDispatch();
   const filterData = e => dispatch(autoCompleteFilter(e));
 
   return (
     <InputTransparent
+      disabled={isDisabled}
       dataSource={tableData}
       onSearch={filterData}
       onSelect={filterData}
