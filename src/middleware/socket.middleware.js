@@ -29,7 +29,7 @@ const socketMiddleware = ({ dispatch }) => next => action => {
     } else {
       url = `${monitorBackend.schema}${monitorBackend.host}:${
         monitorBackend.port
-      }`;
+        }`;
     }
     // const url = `${location.protocol}//${location.hostname}:30010`;
     socket = io(url, {
@@ -42,6 +42,7 @@ const socketMiddleware = ({ dispatch }) => next => action => {
     });
 
     const events = [
+      'disconnect',
       'connect_error',
       'connect_timeout',
       'error',
@@ -75,7 +76,7 @@ const socketMiddleware = ({ dispatch }) => next => action => {
     } else {
       console.warn(
         `socket middleware: trying to register topic ${
-          action.payload.topic
+        action.payload.topic
         } twice `
       );
     }
