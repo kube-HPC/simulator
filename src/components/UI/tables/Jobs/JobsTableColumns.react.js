@@ -80,6 +80,7 @@ const jobsTableColumns = dispatch => [
     title: 'Running time',
     dataIndex: 'status.timestamp',
     key: 'timestamp',
+    width: '10%',
     render: (_, record) => (
       <span>
         {humanizeDuration(

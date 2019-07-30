@@ -37,9 +37,9 @@ const addMenuItems = items =>
     </StyledItem>
   ));
 
-export default function SidebarOperations({ onSelect }) {
+export default function SidebarOperations({ onSelect, ...props }) {
   return (
-    <SiderLight theme="light" collapsed={true} collapsedWidth={60}>
+    <SiderLight {...props} theme="light" collapsed={true} collapsedWidth={60}>
       <Menu
         mode="vertical"
         onSelect={i => onSelect(i.key)}

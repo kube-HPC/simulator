@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
@@ -90,6 +90,13 @@ const TitleCenter = styled(LogoTitle)`
 export default function Sidebar({ onSelect, ...props }) {
   const [collapsed, setCollapsed] = useState(true);
 
+  useEffect(
+    () => {
+      setCollapsed(props.collapsed);
+    },
+    [props.collapsed, setCollapsed]
+  );
+
   const dataCount = useSelector(state => ({
     jobsCount: (state.jobsTable.dataSource || []).length,
     driversCount: (state.driverTable.dataSource || []).length,
@@ -114,7 +121,6 @@ export default function Sidebar({ onSelect, ...props }) {
     <SiderLight
       {...props}
       theme="light"
-      collapsible
       onCollapse={() => setCollapsed(!collapsed)}
       collapsed={collapsed}
     >

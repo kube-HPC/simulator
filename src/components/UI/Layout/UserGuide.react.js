@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Joyride, { STATUS } from 'react-joyride';
+import { LOCAL_STORAGE_KEYS } from 'constants/states';
 
 const FlexBox = styled.div`
   margin: 20px;
@@ -19,15 +20,22 @@ const FlexBox = styled.div`
 const steps = [
   {
     target: 'body',
-    content: <h2>Let's begin our journey!</h2>,
-    locale: { skip: <strong aria-label="skip">S-K-I-P</strong> },
+    content: <h2>Welcome to HKube</h2>,
+    locale: { skip: 'Skip' },
     run: false,
     placement: 'center'
   },
   {
-    target: '.sidebar',
+    title: 'Tables',
+    target: '.table-sidebar',
     content: 'This is the sidebar',
-    placement: 'center'
+    placement: 'right'
+  },
+  {
+    title: 'Operations',
+    target: '.operations-sidebar',
+    content: 'This is the operations sidebar',
+    placement: 'left'
   }
 ];
 
@@ -36,6 +44,10 @@ export default function UserGuide({ run, setRun }) {
     const { status } = data;
     const finishedStatuses = [STATUS.FINISHED, STATUS.SKIPPED];
     if (finishedStatuses.includes(status)) setRun(false);
+
+    if (status === STATUS.SKIPPED) {
+      localStorage.setItem(LOCAL_STORAGE_KEYS.USER_GUIDE, false);
+    }
   };
   return (
     <Joyride
@@ -45,8 +57,9 @@ export default function UserGuide({ run, setRun }) {
       continuous
       run={run}
       showSkipButton
-      scrollToFirstStep
       showProgress
+      disableScrollParentFix
+      disableScrolling
     />
   );
 }

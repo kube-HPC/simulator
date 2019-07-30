@@ -1,4 +1,3 @@
-
 export const STATES = {
   PENDING: 'pending',
   WAITING: 'waiting',
@@ -15,3 +14,6 @@ export const STATES = {
   PAUSED: 'paused'
 };
 
+export const LOCAL_STORAGE_KEYS = {
+  USER_GUIDE: 'userGuideVisible'
+};

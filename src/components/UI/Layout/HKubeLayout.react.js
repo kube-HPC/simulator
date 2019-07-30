@@ -23,54 +23,32 @@ import AddAlgorithmForm from 'components/UI/Layout/SidebarOperations/AddAlgorith
 import AddPipeline from 'components/UI/Layout/SidebarOperations/AddPipeliene/AddPipeline.react';
 import AddDebug from 'components/UI/Layout/SidebarOperations/AddDebug.react';
 
-import { message, Layout, Col, Icon } from 'antd';
+import { message, Layout, Col, Icon, Row } from 'antd';
 import { init, socketInit } from 'actions/layout.action';
 import { LAYOUT_COLOR } from 'constants/colors';
-import { Row } from 'antd/es/grid';
+
 import UserGuide from './UserGuide.react';
+import GlobalStyle from './GlobalStyle.styles';
+import { LOCAL_STORAGE_KEYS } from 'constants/states';
 
-const LayoutStyled = styled(Layout)`
+const LayoutFullHeight = styled(Layout)`
   height: 100vh;
-  * {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  }
-
-  .ant-tooltip-inner {
-    background-color: white;
-    color: black;
-  }
-
-  .ant-layout-sider-light .ant-layout-sider-trigger {
-    border-right: 1px solid ${LAYOUT_COLOR.border};
-  }
+  background: white;
 `;
 
-const LayoutMargin = styled(Layout)`
-  && {
-    background: white;
-  }
-`;
-
-const HeaderStyled = styled(Layout.Header)`
+const HeaderStretch = styled(Layout.Header)`
   background: white;
   border-bottom: 1pt solid ${LAYOUT_COLOR.darkBorder};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
+  padding-left: 10px;
+  padding-right: 10px;
 `;
 
-const VersionAlignRight = styled.span`
-  position: absolute;
-  right: 1%;
-  color: ${LAYOUT_COLOR.darkBorder};
+const RowCenter = styled(Row)`
+  align-items: center;
 `;
 
 const ContentStyled = styled(Layout.Content)`
-  background: white;
-  min-height: auto;
-  margin: 10px;
+  margin: 5px;
   overflow: auto;
 `;
 
@@ -92,13 +70,19 @@ const tableSelector = {
   Memory: <NodeStatistics metric="mem" />
 };
 
+const makeTrigger = setter => () => setter(prev => !prev);
+
 function HKubeLayout() {
   const [table, setTable] = useState('Jobs');
-  const [operation, setOperation] = useState('AddPipeline');
-  const [visible, setVisible] = useState(false);
-  const [runGuide, setRunGuide] = useState(true);
+  const [op, setOp] = useState('AddPipeline');
+  const [opVisible, setOpVisible] = useState(false);
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+  const [runGuide, setRunGuide] = useState(
+    localStorage.getItem(LOCAL_STORAGE_KEYS.USER_GUIDE)
+  );
 
-  const triggerVisible = () => setVisible(!visible);
+  const triggerVisible = makeTrigger(setOpVisible);
+  const triggerSideBarVisible = makeTrigger(setSidebarVisible);
 
   const dispatch = useDispatch();
 
@@ -122,14 +106,25 @@ function HKubeLayout() {
 
   return (
     <>
+      <GlobalStyle />
       <UserGuide run={runGuide} setRun={setRunGuide} />
-      <LayoutStyled>
-        <Sidebar className="sidebar" onSelect={setTable} />
+      <LayoutFullHeight>
+        <Sidebar
+          className="table-sidebar"
+          onSelect={setTable}
+          // collapsed means - not visible
+          collapsed={!sidebarVisible}
+        />
         <Layout>
-          <HeaderStyled>
-            <TableAutoComplete table={table} />
-            <VersionAlignRight>
-              <Row type="flex" gutter={10} justify="end">
+          <HeaderStretch>
+            <RowCenter type="flex" justify="space-between">
+              <HoverIcon
+                type={sidebarVisible ? 'menu-fold' : 'menu-unfold'}
+                style={{ fontSize: 22 }}
+                onClick={triggerSideBarVisible}
+              />
+              <TableAutoComplete table={table} />
+              <Row type="flex" gutter={10}>
                 <Col>
                   <HoverIcon
                     type="global"
@@ -155,26 +150,27 @@ function HKubeLayout() {
                 </Col>
                 <Col>{`${process.env.REACT_APP_VERSION}v`}</Col>
               </Row>
-            </VersionAlignRight>
-          </HeaderStyled>
-          <LayoutMargin>
+            </RowCenter>
+          </HeaderStretch>
+          <LayoutFullHeight>
             <ContentStyled>{tableSelector[table]}</ContentStyled>
             <SidebarOperations
+              className="operations-sidebar"
               onSelect={op => {
-                setOperation(op);
-                setVisible(!visible);
+                setOp(op);
+                setOpVisible(!opVisible);
               }}
             />
             <DrawerOperations
-              visible={visible}
+              visible={opVisible}
               onClose={triggerVisible}
-              operation={operation}
+              operation={op}
             >
-              {operationSelector[operation]}
+              {operationSelector[op]}
             </DrawerOperations>
-          </LayoutMargin>
+          </LayoutFullHeight>
         </Layout>
-      </LayoutStyled>
+      </LayoutFullHeight>
     </>
   );
 }
