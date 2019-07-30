@@ -2,21 +2,60 @@ import React, { useState } from 'react';
 import cronParser from 'cron-parser';
 import cronstrue from 'cronstrue';
 
-import { Row, Col, Icon, Switch, Input, Popover, message } from 'antd';
+import {
+  Row,
+  Col,
+  Icon,
+  Switch,
+  Input,
+  Popover,
+  message,
+  Typography
+} from 'antd';
+
+const { Text } = Typography;
+
+const DEFAULT_CRON_EXPR = '0 * * * *';
+const ERROR_CRON_EXPR = 'Invalid Cron Expression, fix it and press apply';
 
 export default function SwitchCron(props) {
   const { pipeline, cronStart, cronStop, updateStoredPipeline } = props;
+
   const cronIsEnabled =
     pipeline.triggers &&
     pipeline.triggers.cron &&
     pipeline.triggers.cron.enabled;
 
+  const patternIsPresent =
+    pipeline.triggers &&
+    pipeline.triggers.cron &&
+    !!pipeline.triggers.cron.pattern;
+
   const [loading, setLoading] = useState(false);
   const toggleLoading = () => setLoading(prev => !prev);
-  const cronExpr = cronIsEnabled ? pipeline.triggers.cron.pattern : '0 * * * *';
 
-  const interval = cronParser.parseExpression(cronExpr);
-  interval.next().toString();
+  let cronExpr = patternIsPresent
+    ? pipeline.triggers.cron.pattern
+    : DEFAULT_CRON_EXPR;
+
+  let renderTooltip = ERROR_CRON_EXPR;
+  try {
+    const interval = cronParser.parseExpression(cronExpr);
+
+    // ! cronstrue.toString throws error on invalid cronExpr
+    renderTooltip = (
+      <Text>
+        {cronstrue.toString(cronExpr, {
+          use24HourTimeFormat: true
+        })}
+        , Next Interval:<Text code>{interval.next().toString()}</Text>
+      </Text>
+    );
+  } catch (errorMessage) {
+    // No need,
+    // On error `renderToolTip` got default value.
+  }
+
   return (
     <Row type="flex" justify="start" gutter={10}>
       <Col>
@@ -36,12 +75,7 @@ export default function SwitchCron(props) {
         />
       </Col>
       <Col>
-        <Popover
-          content={`${cronstrue.toString(cronExpr, {
-            use24HourTimeFormat: true
-          })}, Next Interval: ${interval.next().toString()}`}
-          trigger="focus"
-        >
+        <Popover content={renderTooltip} trigger="focus">
           <Input.Search
             style={{ width: 160 }}
             size="small"
@@ -51,7 +85,7 @@ export default function SwitchCron(props) {
             defaultValue={cronExpr}
             onSearch={pattern => {
               try {
-                cronParser.parseExpression(cronExpr);
+                cronstrue.toString(pattern);
                 updateStoredPipeline({
                   ...pipeline,
                   triggers: {
@@ -60,7 +94,11 @@ export default function SwitchCron(props) {
                   }
                 });
               } catch (errorMessage) {
-                message.error(errorMessage.message);
+                message.error(
+                  `Cron Expression: ${ERROR_CRON_EXPR}, of ${
+                    pipeline.name
+                  } is Invalid`
+                );
               }
             }}
           />

@@ -13,8 +13,10 @@ import { getPipelineReadme, postPipelineReadme } from 'actions/readme.action';
 export default function usePipeline() {
   const dispatch = useDispatch();
 
-  const _cronStart = useCallback(e => dispatch(cronStart(e)), [dispatch]);
-  const _cronStop = useCallback(e => dispatch(cronStop(e)), [dispatch]);
+  const _cronStart = useCallback((e, p) => dispatch(cronStart(e, p)), [
+    dispatch
+  ]);
+  const _cronStop = useCallback((e, p) => dispatch(cronStop(e, p)), [dispatch]);
 
   const _updateStoredPipeline = useCallback(
     e => dispatch(updateStoredPipeline(e)),
