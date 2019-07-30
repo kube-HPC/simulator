@@ -4,6 +4,8 @@ import cronstrue from 'cronstrue';
 
 import { Row, Col, Icon, Switch, Input, Popover, message } from 'antd';
 
+const DEFAULT_CRON_EXPR = '0 * * * *';
+
 export default function SwitchCron(props) {
   const { pipeline, cronStart, cronStop, updateStoredPipeline } = props;
   const cronIsEnabled =
@@ -13,10 +15,17 @@ export default function SwitchCron(props) {
 
   const [loading, setLoading] = useState(false);
   const toggleLoading = () => setLoading(prev => !prev);
-  const cronExpr = cronIsEnabled ? pipeline.triggers.cron.pattern : '0 * * * *';
+  const cronExpr = cronIsEnabled
+    ? pipeline.triggers.cron.pattern
+    : DEFAULT_CRON_EXPR;
 
-  const interval = cronParser.parseExpression(cronExpr);
-  interval.next().toString();
+  let interval = undefined;
+  try {
+    interval = cronParser.parseExpression(cronExpr);
+    interval.next().toString();
+  } catch (errorMessage) {
+    message.error(errorMessage.message);
+  }
   return (
     <Row type="flex" justify="start" gutter={10}>
       <Col>
