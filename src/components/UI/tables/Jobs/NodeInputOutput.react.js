@@ -26,34 +26,35 @@ function NodeInputOutput({ payload }) {
   const dataSource =
     payload.batch && payload.batch.length > 0
       ? payload.batch.map(b => ({
-        index: b.batchIndex,
-        origInput: payload.origInput,
-        input: b.input,
-        output: b.output && b.output.storageInfo,
-        error: b.error,
-        prevErrors: b.prevErrors,
-        status: b.status,
-        retries: b.retries || 0,
-        startTime: b.startTime,
-        endTime: b.endTime
-      }))
-      : [
-        {
-          index: 1,
+          index: b.batchIndex,
           origInput: payload.origInput,
-          input: payload.input,
-          output: payload.output && payload.output.storageInfo,
-          error: payload.error,
-          prevErrors: payload.prevErrors,
-          status: payload.status,
-          retries: payload.retries || 0,
-          startTime: payload.startTime,
-          endTime: payload.endTime
-        }
-      ];
+          input: b.input,
+          output: b.output && b.output.storageInfo,
+          error: b.error,
+          prevErrors: b.prevErrors,
+          status: b.status,
+          retries: b.retries || 0,
+          startTime: b.startTime,
+          endTime: b.endTime
+        }))
+      : [
+          {
+            index: 1,
+            origInput: payload.origInput,
+            input: payload.input,
+            output: payload.output && payload.output.storageInfo,
+            error: payload.error,
+            prevErrors: payload.prevErrors,
+            status: payload.status,
+            retries: payload.retries || 0,
+            startTime: payload.startTime,
+            endTime: payload.endTime
+          }
+        ];
 
   return (
     <DynamicTable
+      isInner
       rowKey={record => record.index}
       columns={tableColumns(dispatch)}
       dataSource={dataSource}
