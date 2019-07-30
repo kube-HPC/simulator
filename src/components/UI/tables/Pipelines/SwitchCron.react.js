@@ -38,7 +38,7 @@ export default function SwitchCron(props) {
     ? pipeline.triggers.cron.pattern
     : DEFAULT_CRON_EXPR;
 
-  let renderTooltip = null;
+  let renderTooltip = ERROR_CRON_EXPR;
   try {
     const interval = cronParser.parseExpression(cronExpr);
 
@@ -52,7 +52,8 @@ export default function SwitchCron(props) {
       </Text>
     );
   } catch (errorMessage) {
-    // No need
+    // No need,
+    // On error `renderToolTip` got default value.
   }
 
   return (
