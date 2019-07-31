@@ -9,7 +9,8 @@ export const COLOR = {
   lightOrange: '#EAB675',
   red: '#e74c3c',
   transparentGrey: '#bfbfbf21',
-  yellow: '#eeda13'
+  yellow: '#eeda13',
+  white: 'white'
 };
 
 export const LAYOUT_COLOR = {

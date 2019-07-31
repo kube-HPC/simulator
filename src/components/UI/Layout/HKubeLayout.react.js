@@ -30,6 +30,7 @@ import { LAYOUT_COLOR } from 'constants/colors';
 import UserGuide from './UserGuide.react';
 import GlobalStyle from './GlobalStyle.styles';
 import { LOCAL_STORAGE_KEYS } from 'constants/states';
+import USER_GUIDE from 'constants/user-guide';
 
 const LayoutFullHeight = styled(Layout)`
   height: 100vh;
@@ -61,9 +62,9 @@ const HoverIcon = styled(Icon)`
 const tableSelector = {
   Jobs: <JobsTable />,
   Pipelines: <PipelinesTable />,
+  Algorithms: <AlgorithmsTable />,
   Workers: <WorkersTable />,
   Drivers: <DriversTable />,
-  Algorithms: <AlgorithmsTable />,
   Debug: <DebugTable />,
   Builds: <AlgorithmBuildsTable />,
   CPU: <NodeStatistics metric="cpu" />,
@@ -76,13 +77,11 @@ function HKubeLayout() {
   const [table, setTable] = useState('Jobs');
   const [op, setOp] = useState('AddPipeline');
   const [opVisible, setOpVisible] = useState(false);
-  const [sidebarVisible, setSidebarVisible] = useState(false);
-  const [runGuide, setRunGuide] = useState(
-    localStorage.getItem(LOCAL_STORAGE_KEYS.USER_GUIDE)
-  );
+  const [menuIsOpen, setMenuIsOpen] = useState(true);
+  const [runGuide, setRunGuide] = useState(true);
 
   const triggerVisible = makeTrigger(setOpVisible);
-  const triggerSideBarVisible = makeTrigger(setSidebarVisible);
+  const triggerMenuVisible = makeTrigger(setMenuIsOpen);
 
   const dispatch = useDispatch();
 
@@ -104,58 +103,73 @@ function HKubeLayout() {
     [dispatch]
   );
 
+  const userGuideCallbacks = {
+    tableMenu: triggerMenuVisible
+  };
+
   return (
     <>
       <GlobalStyle />
-      <UserGuide run={runGuide} setRun={setRunGuide} />
+      <UserGuide
+        run={runGuide}
+        setRun={setRunGuide}
+        callbacks={userGuideCallbacks}
+        menuIsOpen={menuIsOpen}
+      />
       <LayoutFullHeight>
         <Sidebar
-          className="table-sidebar"
+          className={USER_GUIDE.TABLES_SIDEBAR}
           onSelect={setTable}
           // collapsed means - not visible
-          collapsed={!sidebarVisible}
+          collapsed={!menuIsOpen}
         />
         <Layout>
           <HeaderStretch>
             <RowCenter type="flex" justify="space-between">
               <HoverIcon
-                type={sidebarVisible ? 'menu-fold' : 'menu-unfold'}
+                className={USER_GUIDE.TABLES_MENU_BUTTON}
+                type={menuIsOpen ? 'menu-fold' : 'menu-unfold'}
                 style={{ fontSize: 22 }}
-                onClick={triggerSideBarVisible}
+                onClick={triggerMenuVisible}
               />
               <TableAutoComplete table={table} />
-              <Row type="flex" gutter={10}>
-                <Col>
-                  <HoverIcon
-                    type="global"
-                    style={{ fontSize: 22 }}
-                    onClick={() => window.open('http://hkube.io/')}
-                  />
-                </Col>
-                <Col>
-                  <HoverIcon
-                    type="github"
-                    style={{ fontSize: 22 }}
-                    onClick={() =>
-                      window.open('https://github.com/kube-HPC/hkube')
-                    }
-                  />
-                </Col>
-                <Col>
-                  <HoverIcon
-                    type="question-circle"
-                    style={{ fontSize: 22 }}
-                    onClick={() => setRunGuide(true)}
-                  />
-                </Col>
-                <Col>{`${process.env.REACT_APP_VERSION}v`}</Col>
-              </Row>
+              <div>
+                <Row type="flex" gutter={10}>
+                  <Col>
+                    <HoverIcon
+                      type="global"
+                      style={{ fontSize: 22 }}
+                      onClick={() => window.open('http://hkube.io/')}
+                    />
+                  </Col>
+                  <Col>
+                    <HoverIcon
+                      type="github"
+                      style={{ fontSize: 22 }}
+                      onClick={() =>
+                        window.open('https://github.com/kube-HPC/hkube')
+                      }
+                    />
+                  </Col>
+                  <Col>
+                    <HoverIcon
+                      className={USER_GUIDE.CONTACT}
+                      type="question-circle"
+                      style={{ fontSize: 22 }}
+                      onClick={() => setRunGuide(true)}
+                    />
+                  </Col>
+                  <Col>{`${process.env.REACT_APP_VERSION}v`}</Col>
+                </Row>
+              </div>
             </RowCenter>
           </HeaderStretch>
           <LayoutFullHeight>
-            <ContentStyled>{tableSelector[table]}</ContentStyled>
+            <ContentStyled className={USER_GUIDE.TABLE}>
+              {tableSelector[table]}
+            </ContentStyled>
             <SidebarOperations
-              className="operations-sidebar"
+              className={USER_GUIDE.OP_SIDEBAR}
               onSelect={op => {
                 setOp(op);
                 setOpVisible(!opVisible);

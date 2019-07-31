@@ -110,9 +110,9 @@ export default function Sidebar({ onSelect, ...props }) {
   const menuItems = [
     ['Jobs', JobsIcon, dataCount.jobsCount],
     ['Pipelines', PipelineIcon, dataCount.pipelinesCount],
+    ['Algorithms', AlgorithmIcon, dataCount.algorithmsCount],
     ['Workers', WorkerIcon, dataCount.workersCount],
     ['Drivers', DriversIcon, dataCount.driversCount],
-    ['Algorithms', AlgorithmIcon, dataCount.algorithmsCount],
     ['Debug', DebugIcon, dataCount.debugCount],
     ['Builds', 'build', dataCount.buildsCount]
   ];
