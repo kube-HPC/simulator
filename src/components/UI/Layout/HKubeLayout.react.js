@@ -29,7 +29,6 @@ import { LAYOUT_COLOR } from 'constants/colors';
 
 import UserGuide from './UserGuide.react';
 import GlobalStyle from './GlobalStyle.styles';
-import { LOCAL_STORAGE_KEYS } from 'constants/states';
 import USER_GUIDE from 'constants/user-guide';
 
 const LayoutFullHeight = styled(Layout)`
@@ -59,6 +58,12 @@ const HoverIcon = styled(Icon)`
   }
 `;
 
+const UserGuidTableSpotlight = styled.div`
+  width: 86.5vw;
+  height: 41vh;
+  position: absolute;
+`;
+
 const tableSelector = {
   Jobs: <JobsTable />,
   Pipelines: <PipelinesTable />,
@@ -74,21 +79,26 @@ const tableSelector = {
 const makeTrigger = setter => () => setter(prev => !prev);
 
 function HKubeLayout() {
-  const [table, setTable] = useState('Jobs');
-  const [op, setOp] = useState('AddPipeline');
-  const [opVisible, setOpVisible] = useState(false);
-  const [menuIsOpen, setMenuIsOpen] = useState(true);
-  const [runGuide, setRunGuide] = useState(true);
+  // Table sidebar on Left
+  const [leftValue, setLeftValue] = useState('Jobs');
+  const [leftVisible, setLeftVisible] = useState(true);
 
-  const triggerVisible = makeTrigger(setOpVisible);
-  const triggerMenuVisible = makeTrigger(setMenuIsOpen);
+  // Operation Sidebar on Right
+  const [rightValue, setRightValue] = useState('AddPipeline');
+  const [rightVisible, setRightVisible] = useState(false);
+
+  // UserGuide
+  const [isUserGuideOn, setIsUserGuideOn] = useState(true);
+
+  const triggerRightVisible = makeTrigger(setRightVisible);
+  const triggerLeftVisible = makeTrigger(setLeftVisible);
 
   const dispatch = useDispatch();
 
   const operationSelector = {
-    'Add Pipeline': <AddPipeline onSubmit={triggerVisible} />,
-    'Add Algorithm': <AddAlgorithmForm onSubmit={triggerVisible} />,
-    'Add Debug': <AddDebug onSubmit={triggerVisible} />
+    'Add Pipeline': <AddPipeline onSubmit={triggerRightVisible} />,
+    'Add Algorithm': <AddAlgorithmForm onSubmit={triggerRightVisible} />,
+    'Add Debug': <AddDebug onSubmit={triggerRightVisible} />
   };
 
   useEffect(
@@ -103,36 +113,31 @@ function HKubeLayout() {
     [dispatch]
   );
 
-  const userGuideCallbacks = {
-    tableMenu: triggerMenuVisible
-  };
-
   return (
     <>
       <GlobalStyle />
       <UserGuide
-        run={runGuide}
-        setRun={setRunGuide}
-        callbacks={userGuideCallbacks}
-        menuIsOpen={menuIsOpen}
+        run={isUserGuideOn}
+        setRun={setIsUserGuideOn}
+        triggerLeftVisible={triggerLeftVisible}
       />
       <LayoutFullHeight>
         <Sidebar
           className={USER_GUIDE.TABLES_SIDEBAR}
-          onSelect={setTable}
+          onSelect={setLeftValue}
           // collapsed means - not visible
-          collapsed={!menuIsOpen}
+          collapsed={!leftVisible}
         />
         <Layout>
           <HeaderStretch>
             <RowCenter type="flex" justify="space-between">
               <HoverIcon
                 className={USER_GUIDE.TABLES_MENU_BUTTON}
-                type={menuIsOpen ? 'menu-fold' : 'menu-unfold'}
+                type={leftVisible ? 'menu-fold' : 'menu-unfold'}
                 style={{ fontSize: 22 }}
-                onClick={triggerMenuVisible}
+                onClick={triggerLeftVisible}
               />
-              <TableAutoComplete table={table} />
+              <TableAutoComplete table={leftValue} />
               <div>
                 <Row type="flex" gutter={10}>
                   <Col>
@@ -156,7 +161,7 @@ function HKubeLayout() {
                       className={USER_GUIDE.CONTACT}
                       type="question-circle"
                       style={{ fontSize: 22 }}
-                      onClick={() => setRunGuide(true)}
+                      onClick={() => setIsUserGuideOn(true)}
                     />
                   </Col>
                   <Col>{`${process.env.REACT_APP_VERSION}v`}</Col>
@@ -165,22 +170,21 @@ function HKubeLayout() {
             </RowCenter>
           </HeaderStretch>
           <LayoutFullHeight>
-            <ContentStyled className={USER_GUIDE.TABLE}>
-              {tableSelector[table]}
-            </ContentStyled>
+            <UserGuidTableSpotlight className={USER_GUIDE.TABLE} />
+            <ContentStyled>{tableSelector[leftValue]}</ContentStyled>
             <SidebarOperations
               className={USER_GUIDE.OP_SIDEBAR}
               onSelect={op => {
-                setOp(op);
-                setOpVisible(!opVisible);
+                setRightValue(op);
+                setRightVisible(!rightVisible);
               }}
             />
             <DrawerOperations
-              visible={opVisible}
-              onClose={triggerVisible}
-              operation={op}
+              visible={rightVisible}
+              onClose={triggerRightVisible}
+              operation={rightValue}
             >
-              {operationSelector[op]}
+              {operationSelector[rightValue]}
             </DrawerOperations>
           </LayoutFullHeight>
         </Layout>

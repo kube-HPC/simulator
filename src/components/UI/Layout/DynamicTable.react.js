@@ -24,7 +24,7 @@ export default function DynamicTable({
       size="middle"
       expandIcon={CustomExpandIcon}
       dataSource={dataSource || []}
-      pagination={false}
+      pagination={{ pageSize: 20 }}
     />
   );
 
