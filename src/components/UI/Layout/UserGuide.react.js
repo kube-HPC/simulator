@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import Joyride, { STATUS } from 'react-joyride';
+import Joyride, { EVENTS } from 'react-joyride';
 import { LOCAL_STORAGE_KEYS } from 'constants/states';
 import USER_GUIDE from 'constants/user-guide';
-import { Typography, Select, Button, Row, Col } from 'antd';
+import { Typography, Select, Button, Row, Col, Checkbox } from 'antd';
 import { COLOR } from 'constants/colors';
+import {
+  setLocalStorageItem,
+  getBooleanLocalStorageItem
+} from 'utils/localStorage';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -112,7 +116,7 @@ const fixedCSSClassNames = steps.map(step => ({
 
 const TooltipBody = styled.div`
   text-align: center;
-  background-color: #fff;
+  background-color: ${COLOR.white};
   min-width: 300px;
   max-width: 500px;
   position: relative;
@@ -127,12 +131,18 @@ const TooltipContent = styled.div`
 const TooltipFooter = styled(Row)`
   align-items: center;
   background-color: ${COLOR.transparentGrey};
-  padding: 10px;
-
-  * + * {
-    margin-left: 0.5rem;
-  }
+  padding: 12px;
 `;
+
+const RowCenter = styled(Row)`
+  align-items: center;
+`;
+
+const isRunOnStartupFromLocalStorage = getBooleanLocalStorageItem(
+  LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS
+);
+
+console.log(isRunOnStartupFromLocalStorage);
 
 const Tooltip = ({
   continuous,
@@ -144,6 +154,12 @@ const Tooltip = ({
   skipProps,
   tooltipProps
 }) => {
+  const [isRunOnStartup, setIsRunOnStartup] = useState(
+    isRunOnStartupFromLocalStorage
+  );
+
+  const toggle = () => setIsRunOnStartup(p => !p);
+
   return (
     <TooltipBody {...tooltipProps}>
       <TooltipContent>
@@ -152,17 +168,41 @@ const Tooltip = ({
       </TooltipContent>
       <TooltipFooter type="flex" justify="space-between">
         <Col>
-          {!isLastStep && (
-            <Button type="dashed" {...skipProps}>
-              Skip
-            </Button>
-          )}
+          <RowCenter type="flex" gutter={10}>
+            <Col>
+              {!isLastStep && (
+                <Button type="dashed" {...skipProps}>
+                  Skip
+                </Button>
+              )}
+            </Col>
+            <Col>
+              {index === 0 && (
+                <Checkbox
+                  checked={isRunOnStartup}
+                  onChange={e => {
+                    toggle();
+                    setLocalStorageItem(
+                      LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS,
+                      e.target.checked
+                    );
+                  }}
+                >
+                  Run on Startup
+                </Checkbox>
+              )}
+            </Col>
+          </RowCenter>
         </Col>
         <Col>
-          {index > 0 && <Button {...backProps}>Back</Button>}
-          <Button type="primary" {...primaryProps}>
-            {isLastStep ? 'Finish' : 'Next'}
-          </Button>
+          <RowCenter type="flex" gutter={10}>
+            <Col>{index > 0 && <Button {...backProps}>Back</Button>}</Col>
+            <Col>
+              <Button type="primary" {...primaryProps}>
+                {isLastStep ? 'Finish' : 'Next'}
+              </Button>
+            </Col>
+          </RowCenter>
         </Col>
       </TooltipFooter>
     </TooltipBody>
@@ -173,11 +213,14 @@ export default function UserGuide(props) {
   const { run, setRun, triggerLeftVisible } = props;
 
   const handleJoyrideCallback = data => {
-    const { status } = data;
-    const finishedStatuses = [STATUS.FINISHED, STATUS.SKIPPED];
+    const { type } = data;
 
-    if (finishedStatuses.includes(status)) {
-      localStorage.setItem(LOCAL_STORAGE_KEYS.USER_GUIDE, false);
+    // TODO: Remove on finish
+    // const finishedStatuses = [STATUS.FINISHED, STATUS.SKIPPED];
+    // const finishedActions = [ACTIONS.CLOSE, ACTIONS.SKIP];
+    const finishEvents = [EVENTS.TOUR_END];
+
+    if (finishEvents.includes(type)) {
       triggerLeftVisible();
       setRun(false);
     }

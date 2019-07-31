@@ -11,12 +11,9 @@ import AlgorithmBuildsTable from 'components/UI/tables/AlgorithmBuilds/Algorithm
 import PipelinesTable from 'components/UI/tables/Pipelines/PipelinesTable.react';
 import DriversTable from 'components/UI/tables/Drivers/DriversTable.react';
 import AlgorithmsTable from 'components/UI/tables/Algorithms/AlgorithmsTable.react';
-
 import NodeStatistics from 'components/UI/tables/NodeStats/NodeStatistics.react';
 import TableAutoComplete from 'components/UI/Layout/TableAutoComplete.react';
-
 import DrawerOperations from 'components/common/drawer/DrawerOperations.react';
-
 import SidebarOperations from 'components/UI/Layout/SidebarOperations/SidebarOperations.react';
 import Sidebar from 'components/UI/Layout/Sidebar/Sidebar.react';
 import AddAlgorithmForm from 'components/UI/Layout/SidebarOperations/AddAlgorithmForm.react';
@@ -27,9 +24,14 @@ import { message, Layout, Col, Icon, Row } from 'antd';
 import { init, socketInit } from 'actions/layout.action';
 import { LAYOUT_COLOR } from 'constants/colors';
 
-import UserGuide from './UserGuide.react';
-import GlobalStyle from './GlobalStyle.styles';
 import USER_GUIDE from 'constants/user-guide';
+import { LOCAL_STORAGE_KEYS } from 'constants/states';
+import GlobalStyle from './GlobalStyle.styles';
+import UserGuide from './UserGuide.react';
+import {
+  getBooleanLocalStorageItem,
+  setLocalStorageItem
+} from 'utils/localStorage';
 
 const LayoutFullHeight = styled(Layout)`
   height: 100vh;
@@ -78,20 +80,37 @@ const tableSelector = {
 
 const makeTrigger = setter => () => setter(prev => !prev);
 
+const leftIsVisibleFromStorage = getBooleanLocalStorageItem(
+  LOCAL_STORAGE_KEYS.LEFT_SIDEBAR_IS_VISIBLE
+);
+const isUserGuideOnFromStorage = getBooleanLocalStorageItem(
+  LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS
+);
+
 function HKubeLayout() {
   // Table sidebar on Left
   const [leftValue, setLeftValue] = useState('Jobs');
-  const [leftVisible, setLeftVisible] = useState(true);
+  const [leftVisible, setLeftVisible] = useState(leftIsVisibleFromStorage);
+
+  useEffect(
+    () => {
+      setLocalStorageItem(
+        LOCAL_STORAGE_KEYS.LEFT_SIDEBAR_IS_VISIBLE,
+        leftVisible
+      );
+    },
+    [leftVisible]
+  );
 
   // Operation Sidebar on Right
   const [rightValue, setRightValue] = useState('AddPipeline');
   const [rightVisible, setRightVisible] = useState(false);
 
   // UserGuide
-  const [isUserGuideOn, setIsUserGuideOn] = useState(true);
+  const [isUserGuideOn, setIsUserGuideOn] = useState(isUserGuideOnFromStorage);
 
-  const triggerRightVisible = makeTrigger(setRightVisible);
   const triggerLeftVisible = makeTrigger(setLeftVisible);
+  const triggerRightVisible = makeTrigger(setRightVisible);
 
   const dispatch = useDispatch();
 
@@ -125,7 +144,6 @@ function HKubeLayout() {
         <Sidebar
           className={USER_GUIDE.TABLES_SIDEBAR}
           onSelect={setLeftValue}
-          // collapsed means - not visible
           collapsed={!leftVisible}
         />
         <Layout>
@@ -161,7 +179,10 @@ function HKubeLayout() {
                       className={USER_GUIDE.CONTACT}
                       type="question-circle"
                       style={{ fontSize: 22 }}
-                      onClick={() => setIsUserGuideOn(true)}
+                      onClick={() => {
+                        setIsUserGuideOn(true);
+                        setLeftVisible(true);
+                      }}
                     />
                   </Col>
                   <Col>{`${process.env.REACT_APP_VERSION}v`}</Col>

@@ -16,6 +16,9 @@ const tableDataSelector = createSelector(
     dataSource && dataSource.filter(row => row.key.includes(filter))
 );
 
+const mockDataSource = [];
+const isGuideOn = false;
+
 export default function JobsTable() {
   const jaeger = useSelector(state => state.jobsJaeger);
   const dataSource = useSelector(tableDataSelector);
@@ -24,7 +27,7 @@ export default function JobsTable() {
   return (
     <DynamicTable
       columns={jobsTableColumns(dispatch)}
-      dataSource={dataSource}
+      dataSource={isGuideOn ? mockDataSource : dataSource}
       expandedRowRender={record => {
         return (
           <CardRow>
@@ -44,7 +47,9 @@ export default function JobsTable() {
         );
       }}
       onExpand={(expanded, record) => {
-        expanded && dispatch(getJaegerData(record.pipeline.jobId));
+        expanded &&
+          !isGuideOn &&
+          dispatch(getJaegerData(record.pipeline.jobId));
       }}
     />
   );
