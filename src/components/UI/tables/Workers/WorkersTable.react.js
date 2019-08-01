@@ -29,6 +29,7 @@ const expandedRowRender = (columns, dataSource) => record => {
   return (
     <CardRow>
       <DynamicTable
+        isInner
         rowKey={record => record.podName}
         columns={columns}
         dataSource={filteredDataSource}
