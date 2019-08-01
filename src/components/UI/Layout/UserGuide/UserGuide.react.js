@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
-import Joyride, { EVENTS } from 'react-joyride';
+import Joyride, { EVENTS, ACTIONS } from 'react-joyride';
 import LOCAL_STORAGE_KEYS from 'constants/local-storage';
 import { Typography, Button, Row, Col, Checkbox } from 'antd';
 import { COLOR } from 'constants/colors';
@@ -12,9 +12,7 @@ import {
   getBooleanLocalStorageItem
 } from 'utils/localStorage';
 
-import { userGuide } from 'reducers/userGuide.reducer';
 import userGuideSteps from './UserGuideSteps.react';
-import { triggerUserGuide } from 'actions/userGuide.action';
 import useUserGuide from 'hooks/useUserGuide.react';
 
 const TooltipBody = styled.div`
@@ -113,25 +111,23 @@ const Tooltip = ({
 
 export default function UserGuide({ triggerLeftVisible }) {
   const { isOn } = useSelector(state => state.userGuide);
-  const { triggerUserGuide, nextStep } = useUserGuide();
+  const { triggerUserGuide, changeStep } = useUserGuide();
 
   const handleJoyrideCallback = data => {
-    const { type } = data;
+    const { type, index, action } = data;
 
     // TODO: Remove on finish
     // const finishedStatuses = [STATUS.FINISHED, STATUS.SKIPPED];
-    // const finishedActions = [ACTIONS.CLOSE, ACTIONS.SKIP];
-    const finishEvents = [EVENTS.TOUR_END];
+    const stepAction = [ACTIONS.NEXT, ACTIONS.PREV, ACTIONS.INIT];
+    const finishTour = [EVENTS.TOUR_END];
 
-    const finishStep = [EVENTS.STEP_AFTER];
-
-    if (finishEvents.includes(type)) {
+    if (finishTour.includes(type)) {
       triggerLeftVisible();
       triggerUserGuide();
     }
 
-    if (finishStep.includes(type)) {
-      nextStep();
+    if (stepAction.includes(action) && type === EVENTS.STEP_BEFORE) {
+      changeStep(index);
     }
   };
 
@@ -140,6 +136,8 @@ export default function UserGuide({ triggerLeftVisible }) {
       callback={handleJoyrideCallback}
       steps={userGuideSteps}
       tooltipComponent={Tooltip}
+      // for dev
+      // stepIndex={userGuideSteps.length - 1}
       run={isOn}
       continuous
       showSkipButton

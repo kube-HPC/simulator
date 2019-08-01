@@ -7,11 +7,7 @@ import jobsTableColumns from 'components/UI/tables/Jobs/JobsTableColumns.react';
 import CardRow from 'components/common/CardRow.react';
 
 import useJobs from 'hooks/useJobs.react';
-import { jobsTableMock } from 'config/template/user-guide.template';
-import Immutable from 'seamless-immutable';
 import USER_GUIDE from 'constants/user-guide';
-
-const mockDataSource = Immutable(jobsTableMock);
 
 export default function JobsTable() {
   const { dataSource, dispatch, getJaegerData, jaeger } = useJobs();
@@ -20,7 +16,7 @@ export default function JobsTable() {
   return (
     <DynamicTable
       columns={jobsTableColumns({ dispatch, isGuideOn })}
-      dataSource={isGuideOn ? mockDataSource : dataSource}
+      dataSource={dataSource}
       expandedRowRender={record => {
         return (
           <CardRow className={isGuideOn && USER_GUIDE.TABLE_JOB.ROW_SELECT}>

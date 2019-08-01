@@ -3,13 +3,12 @@ import React from 'react';
 import USER_GUIDE from 'constants/user-guide';
 import { Typography, Select, Icon, Tag } from 'antd';
 import { COLOR_LAYOUT } from 'constants/colors';
-import TABLE_NAMES from 'constants/table-names';
 
 const { Title, Text, Paragraph } = Typography;
 
 const steps = [
   {
-    target: USER_GUIDE.CONTACT,
+    target: USER_GUIDE.WELCOME,
     title: (
       <>
         Welcome to HKube Dashboard!{' '}
@@ -112,7 +111,7 @@ const steps = [
     placement: 'left'
   },
   {
-    target: USER_GUIDE.TABLE_SELECT[TABLE_NAMES.JOBS],
+    target: USER_GUIDE.TABLE_JOB.MENU_SELECT,
     title: <>Jobs Table Tutorial</>,
     content: (
       <Paragraph>

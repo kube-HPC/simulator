@@ -1,7 +1,7 @@
-import TABLE_NAMES from './table-names';
+import TABLE_NAMES from 'constants/table-names';
 
 const USER_GUIDE = {
-  CONTACT: 'ug_contact',
+  WELCOME: 'ug_welcome',
   SIDEBAR_LEFT: 'ug_sidebar_left',
   SIDEBAR_LEFT_MENU_BUTTON: 'ug_sidebar_left_menu_button',
   SIDEBAR_RIGHT: 'ug_sidebar_right',
@@ -24,5 +24,18 @@ const USER_GUIDE = {
     ROW_SELECT: 'ug_job_row_select'
   }
 };
+
+const userGuideStepIndexes = [
+  USER_GUIDE.WELCOME,
+  USER_GUIDE.SIDEBAR_LEFT,
+  USER_GUIDE.TABLE,
+  USER_GUIDE.SIDEBAR_RIGHT,
+  USER_GUIDE.TABLE_JOB.MENU_SELECT,
+  USER_GUIDE.TABLE_JOB.ID_SELECT,
+  USER_GUIDE.TABLE_JOB.ACTIONS_SELECT,
+  USER_GUIDE.TABLE_JOB.ROW_SELECT
+];
+
+export { userGuideStepIndexes };
 
 export default USER_GUIDE;

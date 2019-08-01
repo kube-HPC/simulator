@@ -46,7 +46,7 @@ const jobsTableColumns = ({ dispatch, isGuideOn }) => [
     key: 'key',
     render: (_, record) => (
       <CopyEllipsis
-        className={isGuideOn && USER_GUIDE.TABLE_JOB.ID_SELECT}
+        className={isGuideOn ? USER_GUIDE.TABLE_JOB.ID_SELECT : ''}
         text={record.key}
       />
     )
@@ -233,7 +233,7 @@ const jobsTableColumns = ({ dispatch, isGuideOn }) => [
 
       return (
         <Row
-          className={isGuideOn && USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}
+          className={isGuideOn ? USER_GUIDE.TABLE_JOB.ACTIONS_SELECT : ''}
           type="flex"
           justify="space-between"
           gutter={10}
