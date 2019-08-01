@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tag } from 'antd';
-import { STATUS } from 'constants/colors';
+import { COLOR_PIPELINE_STATUS } from 'constants/colors';
 import { sorter } from 'utils/string';
 import CopyEllipsis from 'components/common/CopyEllipsis.react';
 
@@ -30,7 +30,7 @@ const driversTableColumns = () => [
     dataIndex: 'driverStatus',
     key: 'driverStatus',
     render: (_, record) => (
-      <Tag color={STATUS[record.driverStatus]}> {record.driverStatus}</Tag>
+      <Tag color={COLOR_PIPELINE_STATUS[record.driverStatus]}> {record.driverStatus}</Tag>
     ),
     sorter: (a, b) => sorter(a.driverStatus, b.driverStatus)
   },
@@ -40,7 +40,7 @@ const driversTableColumns = () => [
     key: 'jobStatus',
     render: (text, record) => (
       <span>
-        <Tag color={STATUS[record.jobStatus]}> {record.jobStatus}</Tag>
+        <Tag color={COLOR_PIPELINE_STATUS[record.jobStatus]}> {record.jobStatus}</Tag>
       </span>
     ),
     sorter: (a, b) => sorter(a.jobStatus, b.jobStatus)

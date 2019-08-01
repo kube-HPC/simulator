@@ -1,4 +1,4 @@
-import actions from 'constants/actions';
+import actions from 'constants/application-actions';
 
 export const getJaegerData = jobId => ({
   type: actions.REST_REQ,

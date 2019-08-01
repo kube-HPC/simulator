@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
-import { LAYOUT_COLOR } from 'constants/colors';
+import { COLOR_LAYOUT } from 'constants/colors';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -13,7 +13,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .ant-layout-sider-light .ant-layout-sider-trigger {
-    border-right: 1px solid ${LAYOUT_COLOR.border};
+    border-right: 1px solid ${COLOR_LAYOUT.border};
   }
 `;
 

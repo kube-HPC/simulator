@@ -6,8 +6,8 @@ import { Tag, Progress, Button } from 'antd';
 
 import StatusTag from 'components/common/StatusTag.react';
 import CopyEllipsis from 'components/common/CopyEllipsis.react';
-import { STATUS } from 'constants/colors';
-import { STATES } from 'constants/states';
+import { COLOR_PIPELINE_STATUS } from 'constants/colors';
+import PIPELINE_STATES from 'constants/pipeline-states';
 import { sorter } from 'utils/string';
 import { toUpperCaseFirstLetter } from 'utils/string';
 
@@ -96,7 +96,7 @@ export const nestedBuildsTableColumns = ({ onCancel, onRerun }) => [
     key: 'status',
     sorter: (a, b) => sorter(a.status, b.status),
     render: (_, record) => (
-      <Tag color={STATUS[record.status]}>
+      <Tag color={COLOR_PIPELINE_STATUS[record.status]}>
         {toUpperCaseFirstLetter(record.status)}
       </Tag>
     )
@@ -107,7 +107,7 @@ export const nestedBuildsTableColumns = ({ onCancel, onRerun }) => [
     key: 'progress',
     width: '20%',
     render: (_, record) => {
-      const failed = record.status === STATES.FAILED;
+      const failed = record.status === PIPELINE_STATES.FAILED;
       const progress = (record.progress && parseInt(record.progress)) || 0;
       return (
         <Progress
@@ -116,10 +116,10 @@ export const nestedBuildsTableColumns = ({ onCancel, onRerun }) => [
             failed
               ? 'exception'
               : progress === 100
-              ? STATES.SUCCESS
-              : STATES.ACTIVE
+              ? PIPELINE_STATES.SUCCESS
+              : PIPELINE_STATES.ACTIVE
           }
-          strokeColor={failed ? STATUS.failed : undefined}
+          strokeColor={failed ? COLOR_PIPELINE_STATUS.failed : undefined}
         />
       );
     }
@@ -128,7 +128,7 @@ export const nestedBuildsTableColumns = ({ onCancel, onRerun }) => [
     title: 'Actions',
     key: 'stop',
     render: (_, record) =>
-      record.status !== STATES.COMPLETED ? (
+      record.status !== PIPELINE_STATES.COMPLETED ? (
         <Button
           type="danger"
           shape="circle"

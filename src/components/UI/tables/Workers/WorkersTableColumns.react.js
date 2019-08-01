@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon, Tag } from 'antd';
 
-import { STATUS } from 'constants/colors';
+import { COLOR_PIPELINE_STATUS } from 'constants/colors';
 import StatusTag from 'components/common/StatusTag.react';
 
 import { toUpperCaseFirstLetter, sorter } from 'utils/string';
@@ -40,8 +40,8 @@ export const workersTableStats = () => [
       );
       return (
         <>
-          <Tag color={STATUS[record.workerStatus]}>{title}</Tag>
-          <Tag color={STATUS[record.jobStatus]}>{`Job ${title}`}</Tag>
+          <Tag color={COLOR_PIPELINE_STATUS[record.workerStatus]}>{title}</Tag>
+          <Tag color={COLOR_PIPELINE_STATUS[record.jobStatus]}>{`Job ${title}`}</Tag>
         </>
       );
     }

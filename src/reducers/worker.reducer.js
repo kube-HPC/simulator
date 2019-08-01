@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import { get } from 'lodash';
 import Immutable from 'seamless-immutable';
-import actions from 'constants/actions';
+import actions from 'constants/application-actions';
 
 export const workerTable = handleActions(
   {

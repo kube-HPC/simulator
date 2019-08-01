@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import { Table, Icon } from 'antd';
 import { Scrollbars } from 'react-custom-scrollbars';
+import USER_GUIDE from 'constants/user-guide';
 
 const CustomExpandIcon = ({ expanded, onExpand, record }) => (
   <Icon type={expanded ? 'down' : 'right'} onClick={e => onExpand(record, e)} />
@@ -18,13 +19,17 @@ export default function DynamicTable({
   isInner = false,
   ...props
 }) {
+  const tableDataSource = dataSource || [];
+
   const table = (
     <TableScrollHidden
       {...props}
+      className={USER_GUIDE.TABLE}
       size="middle"
       expandIcon={CustomExpandIcon}
-      dataSource={dataSource || []}
-      pagination={{ pageSize: 20 }}
+      // expandedRowKeys={[dataSource[dataSource.length - 1].key]}
+      dataSource={tableDataSource}
+      pagination={tableDataSource.length < 20 ? false : { pageSize: 20 }}
     />
   );
 

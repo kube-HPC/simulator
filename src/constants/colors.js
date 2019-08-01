@@ -13,14 +13,14 @@ export const COLOR = {
   white: 'white'
 };
 
-export const LAYOUT_COLOR = {
+export const COLOR_LAYOUT = {
   background: COLOR.transparentGrey,
   border: COLOR.lightGrey,
   colorPrimary: COLOR.blue,
   darkBorder: COLOR.grey
 };
 
-export const STATUS = {
+export const COLOR_PIPELINE_STATUS = {
   active: COLOR.blueLight,
   bootstrap: COLOR.lightGreen,
   completed: COLOR.lightGreen,
@@ -38,7 +38,7 @@ export const STATUS = {
   succeed: COLOR.lightGreen
 };
 
-export const PRIORITY = {
+export const COLOR_PRIORITY = {
   1: { color: COLOR.red, name: 'Highest' },
   2: { color: COLOR.darkOrange, name: 'High' },
   3: { color: COLOR.orange, name: 'Medium' },

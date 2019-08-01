@@ -15,10 +15,13 @@ import { ReactComponent as JobsIcon } from 'images/jobs-icon.svg';
 
 import { Row, Col, Tag, Layout, Icon, Menu } from 'antd';
 
-import { LAYOUT_COLOR } from 'constants/colors';
+import { COLOR_LAYOUT } from 'constants/colors';
+import USER_GUIDE from 'constants/user-guide';
+import TABLE_NAMES from 'constants/table-names';
+import { dataCountMock } from 'config/template/user-guide.template';
 
 const SiderLight = styled(Layout.Sider)`
-  border-right: 1px solid ${LAYOUT_COLOR.border};
+  border-right: 1px solid ${COLOR_LAYOUT.border};
 `;
 
 const MenuMargin = styled(Menu)`
@@ -33,7 +36,7 @@ const setMenuItem = (component, title, count) => (
     </Col>
     {!isNaN(count) && (
       <Col>
-        <Tag style={{ color: LAYOUT_COLOR.colorPrimary }}>{count}</Tag>
+        <Tag style={{ color: COLOR_LAYOUT.colorPrimary }}>{count}</Tag>
       </Col>
     )}
   </Row>
@@ -41,14 +44,12 @@ const setMenuItem = (component, title, count) => (
 
 const IconStyle = {
   fontSize: 22,
-  marginLeft: -2,
-  marginRight: 20,
   marginTop: 2
 };
 
 const addMenuItems = items =>
   items.map(([name, component, count]) => (
-    <Menu.Item key={name}>
+    <Menu.Item key={name} className={USER_GUIDE.TABLE_SELECT[name]}>
       {setMenuItem(
         <Icon type={component} component={component} style={IconStyle} />,
         name,
@@ -79,8 +80,10 @@ const FlexBox = styled.div`
 
 const IconLogo = styled(Icon)`
   && {
-    margin-bottom: 10px;
-    font-size: 81px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 70px;
   }
 `;
 const TitleCenter = styled(LogoTitle)`
@@ -97,7 +100,8 @@ export default function Sidebar({ onSelect, ...props }) {
     [props.collapsed, setCollapsed]
   );
 
-  const dataCount = useSelector(state => ({
+  // TODO: refactor here, "code smell"
+  const dataCountSource = useSelector(state => ({
     jobsCount: (state.jobsTable.dataSource || []).length,
     driversCount: (state.driverTable.dataSource || []).length,
     algorithmsCount: (state.algorithmTable.dataSource || []).length,
@@ -107,14 +111,17 @@ export default function Sidebar({ onSelect, ...props }) {
     debugCount: (state.debugTable.dataSource || []).length
   }));
 
+  // TODO: change here
+  const dataCount = true ? dataCountMock : dataCountSource;
+
   const menuItems = [
-    ['Jobs', JobsIcon, dataCount.jobsCount],
-    ['Pipelines', PipelineIcon, dataCount.pipelinesCount],
-    ['Algorithms', AlgorithmIcon, dataCount.algorithmsCount],
-    ['Workers', WorkerIcon, dataCount.workersCount],
-    ['Drivers', DriversIcon, dataCount.driversCount],
-    ['Debug', DebugIcon, dataCount.debugCount],
-    ['Builds', 'build', dataCount.buildsCount]
+    [TABLE_NAMES.JOBS, JobsIcon, dataCount.jobsCount],
+    [TABLE_NAMES.PIPELINES, PipelineIcon, dataCount.pipelinesCount],
+    [TABLE_NAMES.ALGORITHMS, AlgorithmIcon, dataCount.algorithmsCount],
+    [TABLE_NAMES.WORKERS, WorkerIcon, dataCount.workersCount],
+    [TABLE_NAMES.DRIVERS, DriversIcon, dataCount.driversCount],
+    [TABLE_NAMES.DEBUG, DebugIcon, dataCount.debugCount],
+    [TABLE_NAMES.BUILDS, 'build', dataCount.buildsCount]
   ];
 
   return (
@@ -139,7 +146,10 @@ export default function Sidebar({ onSelect, ...props }) {
             'Cluster Stats'
           )}
         >
-          {addMenuItems([['CPU', 'heat-map'], ['Memory', 'hdd']])}
+          {addMenuItems([
+            [TABLE_NAMES.CLUSTER_STATS.CPU, 'heat-map'],
+            [TABLE_NAMES.CLUSTER_STATS.MEMORY, 'hdd']
+          ])}
         </Menu.SubMenu>
       </MenuMargin>
     </SiderLight>

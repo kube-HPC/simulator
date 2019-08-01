@@ -1,6 +1,6 @@
-import actions from 'constants/actions';
+import actions from 'constants/application-actions';
 
-const SOCKET_TOPIC = 'PROGRESS'
+const SOCKET_TOPIC = 'PROGRESS';
 
 export const autoCompleteFilter = filter => ({
   type: actions.LAYOUT_UPDATE_FILTER,

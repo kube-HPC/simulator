@@ -3,15 +3,17 @@ import { Tag, Tooltip, Button, Row, Col } from 'antd';
 import humanizeDuration from 'humanize-duration';
 
 import { downloadStorageResults } from 'actions/jobs.action';
-import { STATUS } from 'constants/colors';
-import { STATES } from 'constants/states';
+import { COLOR_PIPELINE_STATUS } from 'constants/colors';
+import PIPELINE_STATES from 'constants/pipeline-states';
 import { toUpperCaseFirstLetter } from 'utils/string';
 
 const getStatusFilter = () =>
-  [STATES.ACTIVE, STATES.SUCCEED, STATES.FAILED].map(status => ({
-    text: toUpperCaseFirstLetter(status),
-    value: status
-  }));
+  [PIPELINE_STATES.ACTIVE, PIPELINE_STATES.SUCCEED, PIPELINE_STATES.FAILED].map(
+    status => ({
+      text: toUpperCaseFirstLetter(status),
+      value: status
+    })
+  );
 
 export default dispatch => [
   {
@@ -24,7 +26,7 @@ export default dispatch => [
     dataIndex: 'status',
     key: 'status',
     render: (_, record) => (
-      <Tag color={STATUS[record.status]}>
+      <Tag color={COLOR_PIPELINE_STATUS[record.status]}>
         {record.status && toUpperCaseFirstLetter(record.status)}
       </Tag>
     ),

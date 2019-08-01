@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import 'components/UI/Layout/HKubeLayout.css';
 
@@ -22,16 +22,17 @@ import AddDebug from 'components/UI/Layout/SidebarOperations/AddDebug.react';
 
 import { message, Layout, Col, Icon, Row } from 'antd';
 import { init, socketInit } from 'actions/layout.action';
-import { LAYOUT_COLOR } from 'constants/colors';
+import { COLOR_LAYOUT } from 'constants/colors';
 
 import USER_GUIDE from 'constants/user-guide';
-import { LOCAL_STORAGE_KEYS } from 'constants/states';
+import LOCAL_STORAGE_KEYS from 'constants/local-storage';
 import GlobalStyle from './GlobalStyle.styles';
-import UserGuide from './UserGuide.react';
+import UserGuide from './UserGuide/UserGuide.react';
 import {
   getBooleanLocalStorageItem,
   setLocalStorageItem
 } from 'utils/localStorage';
+import { triggerUserGuide } from 'actions/userGuide.action';
 
 const LayoutFullHeight = styled(Layout)`
   height: 100vh;
@@ -40,7 +41,7 @@ const LayoutFullHeight = styled(Layout)`
 
 const HeaderStretch = styled(Layout.Header)`
   background: white;
-  border-bottom: 1pt solid ${LAYOUT_COLOR.darkBorder};
+  border-bottom: 1pt solid ${COLOR_LAYOUT.darkBorder};
   padding-left: 10px;
   padding-right: 10px;
 `;
@@ -60,12 +61,6 @@ const HoverIcon = styled(Icon)`
   }
 `;
 
-const UserGuidTableSpotlight = styled.div`
-  width: 86.5vw;
-  height: 41vh;
-  position: absolute;
-`;
-
 const tableSelector = {
   Jobs: <JobsTable />,
   Pipelines: <PipelinesTable />,
@@ -82,9 +77,6 @@ const makeTrigger = setter => () => setter(prev => !prev);
 
 const leftIsVisibleFromStorage = getBooleanLocalStorageItem(
   LOCAL_STORAGE_KEYS.LEFT_SIDEBAR_IS_VISIBLE
-);
-const isUserGuideOnFromStorage = getBooleanLocalStorageItem(
-  LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS
 );
 
 function HKubeLayout() {
@@ -105,9 +97,6 @@ function HKubeLayout() {
   // Operation Sidebar on Right
   const [rightValue, setRightValue] = useState('AddPipeline');
   const [rightVisible, setRightVisible] = useState(false);
-
-  // UserGuide
-  const [isUserGuideOn, setIsUserGuideOn] = useState(isUserGuideOnFromStorage);
 
   const triggerLeftVisible = makeTrigger(setLeftVisible);
   const triggerRightVisible = makeTrigger(setRightVisible);
@@ -135,14 +124,10 @@ function HKubeLayout() {
   return (
     <>
       <GlobalStyle />
-      <UserGuide
-        run={isUserGuideOn}
-        setRun={setIsUserGuideOn}
-        triggerLeftVisible={triggerLeftVisible}
-      />
+      <UserGuide triggerLeftVisible={triggerLeftVisible} />
       <LayoutFullHeight>
         <Sidebar
-          className={USER_GUIDE.TABLES_SIDEBAR}
+          className={USER_GUIDE.SIDEBAR_LEFT}
           onSelect={setLeftValue}
           collapsed={!leftVisible}
         />
@@ -150,7 +135,7 @@ function HKubeLayout() {
           <HeaderStretch>
             <RowCenter type="flex" justify="space-between">
               <HoverIcon
-                className={USER_GUIDE.TABLES_MENU_BUTTON}
+                className={USER_GUIDE.SIDEBAR_LEFT_MENU_BUTTON}
                 type={leftVisible ? 'menu-fold' : 'menu-unfold'}
                 style={{ fontSize: 22 }}
                 onClick={triggerLeftVisible}
@@ -180,7 +165,7 @@ function HKubeLayout() {
                       type="question-circle"
                       style={{ fontSize: 22 }}
                       onClick={() => {
-                        setIsUserGuideOn(true);
+                        dispatch(triggerUserGuide());
                         setLeftVisible(true);
                       }}
                     />
@@ -191,10 +176,9 @@ function HKubeLayout() {
             </RowCenter>
           </HeaderStretch>
           <LayoutFullHeight>
-            <UserGuidTableSpotlight className={USER_GUIDE.TABLE} />
             <ContentStyled>{tableSelector[leftValue]}</ContentStyled>
             <SidebarOperations
-              className={USER_GUIDE.OP_SIDEBAR}
+              className={USER_GUIDE.SIDEBAR_RIGHT}
               onSelect={op => {
                 setRightValue(op);
                 setRightVisible(!rightVisible);
