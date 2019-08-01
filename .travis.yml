@@ -35,4 +35,6 @@ after_success:
     echo "creating temp docker image"
     docker login --username yehiyam --password ${DOCKER_HUB_PASS}
     PRIVATE_REGISTRY=docker.io/hkube npm run build
+    ./scripts/install.sh
+    ./scripts/deploy-staging.sh
   fi
