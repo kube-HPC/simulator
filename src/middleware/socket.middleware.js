@@ -1,4 +1,4 @@
-import AT from 'constants/actions';
+import AT from 'constants/application-actions';
 import io from 'socket.io-client';
 
 let socket = null;

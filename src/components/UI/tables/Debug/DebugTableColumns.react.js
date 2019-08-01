@@ -1,7 +1,7 @@
 import React from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { notification, Tag, Button } from 'antd';
-import { STATUS } from 'constants/colors';
+import { COLOR_PIPELINE_STATUS } from 'constants/colors';
 import { sorter } from 'utils/string';
 import CopyEllipsis from 'components/common/CopyEllipsis.react';
 
@@ -25,7 +25,7 @@ const jobsTableColumns = ({ onDelete }) => [
           })
         }
       >
-        <Tag color={STATUS.active}>
+        <Tag color={COLOR_PIPELINE_STATUS.active}>
           {`${window.location.origin}/${record.data.path}`}
         </Tag>
       </CopyToClipboard>

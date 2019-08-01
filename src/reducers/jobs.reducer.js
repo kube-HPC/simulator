@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import dateformat from 'dateformat';
 import Immutable from 'seamless-immutable';
-import actions from 'constants/actions';
+import actions from 'constants/application-actions';
 
 export const jobsTable = handleActions(
   {

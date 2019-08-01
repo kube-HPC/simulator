@@ -6,8 +6,8 @@ import { toUpperCaseFirstLetter, sorter } from 'utils/string';
 
 import { Progress, Tag, Tooltip, Button, Row, Col } from 'antd';
 
-import { PRIORITY, STATUS } from 'constants/colors';
-import { STATES } from 'constants/states';
+import { COLOR_PRIORITY, COLOR_PIPELINE_STATUS } from 'constants/colors';
+import PIPELINE_STATES from 'constants/pipeline-states';
 import StatusTag from 'components/common/StatusTag.react';
 import CopyEllipsis from 'components/common/CopyEllipsis.react';
 
@@ -18,31 +18,38 @@ import {
   pausePipeline,
   resumePipeline
 } from 'actions/pipeline.action';
+import USER_GUIDE from 'constants/user-guide';
 
 const ActiveState = [
-  STATES.PENDING,
-  STATES.ACTIVE,
-  STATES.RECOVERING,
-  STATES.RESUMING
+  PIPELINE_STATES.PENDING,
+  PIPELINE_STATES.ACTIVE,
+  PIPELINE_STATES.RECOVERING,
+  PIPELINE_STATES.RESUMING
 ];
 
 const canPauseOrResume = state => canPauseOrStop(state) || canResume(state);
-const canPauseOrStop = state => isActive(state) || state === STATES.PAUSED;
-const canResume = state => state === STATES.PAUSED;
+const canPauseOrStop = state =>
+  isActive(state) || state === PIPELINE_STATES.PAUSED;
+const canResume = state => state === PIPELINE_STATES.PAUSED;
 const isActive = state => ActiveState.includes(state);
 
 const getStatusFilter = () =>
-  Object.values(STATES).map(status => ({
+  Object.values(PIPELINE_STATES).map(status => ({
     text: toUpperCaseFirstLetter(status),
     value: status
   }));
 
-const jobsTableColumns = dispatch => [
+const jobsTableColumns = ({ dispatch, isGuideOn }) => [
   {
     title: 'Job ID',
     dataIndex: 'key',
     key: 'key',
-    render: (_, record) => <CopyEllipsis text={record.key} />
+    render: (_, record) => (
+      <CopyEllipsis
+        className={isGuideOn ? USER_GUIDE.TABLE_JOB.ID_SELECT : ''}
+        text={record.key}
+      />
+    )
   },
   {
     title: 'Pipeline Name',
@@ -60,7 +67,7 @@ const jobsTableColumns = dispatch => [
     sorter: (a, b) => sorter(a.status.status, b.status.status),
     onFilter: (value, record) => record.status.status === value,
     render: (_, record) => (
-      <Tag color={STATUS[record.status && record.status.status]}>
+      <Tag color={COLOR_PIPELINE_STATUS[record.status && record.status.status]}>
         {toUpperCaseFirstLetter(record.status && record.status.status)}
       </Tag>
     )
@@ -80,6 +87,7 @@ const jobsTableColumns = dispatch => [
     title: 'Running time',
     dataIndex: 'status.timestamp',
     key: 'timestamp',
+    width: '10%',
     render: (_, record) => (
       <span>
         {humanizeDuration(
@@ -112,9 +120,12 @@ const jobsTableColumns = dispatch => [
     key: 'priority',
     sorter: (a, b) => sorter(a.pipeline.priority, b.pipeline.priority),
     render: (_, record) => (
-      <Tooltip placement="top" title={PRIORITY[record.pipeline.priority].name}>
-        <Tag color={PRIORITY[record.pipeline.priority].color}>
-          {PRIORITY[record.pipeline.priority].name}
+      <Tooltip
+        placement="top"
+        title={COLOR_PRIORITY[record.pipeline.priority].name}
+      >
+        <Tag color={COLOR_PRIORITY[record.pipeline.priority].color}>
+          {COLOR_PRIORITY[record.pipeline.priority].name}
         </Tag>
       </Tooltip>
     )
@@ -124,8 +135,10 @@ const jobsTableColumns = dispatch => [
     dataIndex: 'Progress',
     width: '20%',
     render: (_, record) => {
-      const stopped = record.status && record.status.status === STATES.STOPPED;
-      const failed = record.status && record.status.status === STATES.FAILED;
+      const stopped =
+        record.status && record.status.status === PIPELINE_STATES.STOPPED;
+      const failed =
+        record.status && record.status.status === PIPELINE_STATES.FAILED;
       const progress = parseInt(
         (record.status && record.status.data && record.status.data.progress) ||
           0
@@ -141,7 +154,11 @@ const jobsTableColumns = dispatch => [
               : 'active'
           }
           strokeColor={
-            failed ? STATUS.failed : stopped ? STATUS.stopped : undefined
+            failed
+              ? COLOR_PIPELINE_STATUS.failed
+              : stopped
+              ? COLOR_PIPELINE_STATUS.stopped
+              : undefined
           }
         />
       );
@@ -215,7 +232,12 @@ const jobsTableColumns = dispatch => [
       );
 
       return (
-        <Row type="flex" justify="space-between" gutter={10}>
+        <Row
+          className={isGuideOn ? USER_GUIDE.TABLE_JOB.ACTIONS_SELECT : ''}
+          type="flex"
+          justify="space-between"
+          gutter={10}
+        >
           <Col>{redoAction}</Col>
           <Col>{stopAction}</Col>
           <Col>{pauseAction}</Col>

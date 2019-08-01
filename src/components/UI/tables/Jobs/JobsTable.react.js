@@ -1,33 +1,25 @@
 import React from 'react';
-
-import { useSelector, useDispatch } from 'react-redux';
-import { createSelector } from 'reselect';
-import { getJaegerData } from 'actions/jobs.action';
+import { useSelector } from 'react-redux';
 
 import DynamicTable from 'components/UI/Layout/DynamicTable.react';
 import JobsTabSwitcher from 'components/UI/tables/Jobs/JobsTabSwitcher.react';
 import jobsTableColumns from 'components/UI/tables/Jobs/JobsTableColumns.react';
 import CardRow from 'components/common/CardRow.react';
 
-const tableDataSelector = createSelector(
-  state => state.jobsTable.dataSource.asMutable(),
-  state => state.autoCompleteFilter.filter,
-  (dataSource, filter) =>
-    dataSource && dataSource.filter(row => row.key.includes(filter))
-);
+import useJobs from 'hooks/useJobs.react';
+import USER_GUIDE from 'constants/user-guide';
 
 export default function JobsTable() {
-  const jaeger = useSelector(state => state.jobsJaeger);
-  const dataSource = useSelector(tableDataSelector);
-  const dispatch = useDispatch();
+  const { dataSource, dispatch, getJaegerData, jaeger } = useJobs();
+  const { isOn: isGuideOn } = useSelector(state => state.userGuide);
 
   return (
     <DynamicTable
-      columns={jobsTableColumns(dispatch)}
+      columns={jobsTableColumns({ dispatch, isGuideOn })}
       dataSource={dataSource}
       expandedRowRender={record => {
         return (
-          <CardRow>
+          <CardRow className={isGuideOn && USER_GUIDE.TABLE_JOB.ROW_SELECT}>
             <JobsTabSwitcher
               record={{
                 key: record.key,
@@ -44,7 +36,8 @@ export default function JobsTable() {
         );
       }}
       onExpand={(expanded, record) => {
-        expanded && dispatch(getJaegerData(record.pipeline.jobId));
+        // Don't call api on guide mode
+        expanded && !isGuideOn && getJaegerData(record.pipeline.jobId);
       }}
     />
   );

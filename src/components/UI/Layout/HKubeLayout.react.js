@@ -11,66 +11,53 @@ import AlgorithmBuildsTable from 'components/UI/tables/AlgorithmBuilds/Algorithm
 import PipelinesTable from 'components/UI/tables/Pipelines/PipelinesTable.react';
 import DriversTable from 'components/UI/tables/Drivers/DriversTable.react';
 import AlgorithmsTable from 'components/UI/tables/Algorithms/AlgorithmsTable.react';
-
 import NodeStatistics from 'components/UI/tables/NodeStats/NodeStatistics.react';
 import TableAutoComplete from 'components/UI/Layout/TableAutoComplete.react';
-
 import DrawerOperations from 'components/common/drawer/DrawerOperations.react';
-
 import SidebarOperations from 'components/UI/Layout/SidebarOperations/SidebarOperations.react';
 import Sidebar from 'components/UI/Layout/Sidebar/Sidebar.react';
 import AddAlgorithmForm from 'components/UI/Layout/SidebarOperations/AddAlgorithmForm.react';
 import AddPipeline from 'components/UI/Layout/SidebarOperations/AddPipeliene/AddPipeline.react';
 import AddDebug from 'components/UI/Layout/SidebarOperations/AddDebug.react';
 
-import { message, Layout, Col, Icon } from 'antd';
+import { message, Layout, Col, Icon, Row } from 'antd';
 import { init, socketInit } from 'actions/layout.action';
-import { LAYOUT_COLOR } from 'constants/colors';
-import { Row } from 'antd/es/grid';
+import { COLOR_LAYOUT } from 'constants/colors';
 
-const LayoutStyled = styled(Layout)`
+import USER_GUIDE from 'constants/user-guide';
+import LOCAL_STORAGE_KEYS from 'constants/local-storage';
+import GlobalStyle from './GlobalStyle.styles';
+import UserGuide from './UserGuide/UserGuide.react';
+import {
+  getBooleanLocalStorageItem,
+  setLocalStorageItem
+} from 'utils/localStorage';
+import { triggerUserGuide } from 'actions/userGuide.action';
+import { LEFT_SIDEBAR_NAMES, RIGHT_SIDEBAR_NAMES } from 'constants/table-names';
+
+const LayoutFullHeight = styled(Layout)`
   height: 100vh;
-  * {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  }
-
-  .ant-tooltip-inner {
-    background-color: white;
-    color: black;
-  }
-
-  .ant-layout-sider-light .ant-layout-sider-trigger {
-    border-right: 1px solid ${LAYOUT_COLOR.border};
-  }
-`;
-
-const LayoutMargin = styled(Layout)`
-  && {
-    background: white;
-  }
-`;
-
-const HeaderStyled = styled(Layout.Header)`
   background: white;
-  border-bottom: 1pt solid ${LAYOUT_COLOR.darkBorder};
-  display: flex;
-  justify-content: center;
+`;
+
+const HeaderStretch = styled(Layout.Header)`
+  background: white;
+  border-bottom: 1pt solid ${COLOR_LAYOUT.darkBorder};
+  padding-left: 10px;
+  padding-right: 10px;
+`;
+
+const RowCenter = styled(Row)`
   align-items: center;
-  position: relative;
 `;
 
-const VersionAlignRight = styled.span`
-  position: absolute;
-  right: 1%;
-  color: ${LAYOUT_COLOR.darkBorder};
-`;
-
-const ContentStyled = styled(Layout.Content)`
-  background: white;
-  min-height: auto;
-  margin: 10px;
+const ContentMargin = styled(Layout.Content)`
+  padding: 8px;
   overflow: auto;
+`;
+
+const RowColoredIcons = styled(Row)`
+  color: ${COLOR_LAYOUT.darkBorder};
 `;
 
 const HoverIcon = styled(Icon)`
@@ -82,28 +69,51 @@ const HoverIcon = styled(Icon)`
 const tableSelector = {
   Jobs: <JobsTable />,
   Pipelines: <PipelinesTable />,
+  Algorithms: <AlgorithmsTable />,
   Workers: <WorkersTable />,
   Drivers: <DriversTable />,
-  Algorithms: <AlgorithmsTable />,
   Debug: <DebugTable />,
   Builds: <AlgorithmBuildsTable />,
   CPU: <NodeStatistics metric="cpu" />,
   Memory: <NodeStatistics metric="mem" />
 };
 
-function HKubeLayout() {
-  const [table, setTable] = useState('Jobs');
-  const [operation, setOperation] = useState('AddPipeline');
-  const [visible, setVisible] = useState(false);
+const makeTrigger = setter => () => setter(prev => !prev);
 
-  const triggerVisible = () => setVisible(!visible);
+const leftIsVisibleFromStorage = getBooleanLocalStorageItem(
+  LOCAL_STORAGE_KEYS.LEFT_SIDEBAR_IS_VISIBLE
+);
+
+function HKubeLayout() {
+  // Table sidebar on Left
+  const [leftValue, setLeftValue] = useState(LEFT_SIDEBAR_NAMES.JOBS);
+  const [leftVisible, setLeftVisible] = useState(leftIsVisibleFromStorage);
+
+  useEffect(
+    () => {
+      setLocalStorageItem(
+        LOCAL_STORAGE_KEYS.LEFT_SIDEBAR_IS_VISIBLE,
+        leftVisible
+      );
+    },
+    [leftVisible]
+  );
+
+  // Operation Sidebar on Right
+  const [rightValue, setRightValue] = useState(
+    RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM
+  );
+  const [rightVisible, setRightVisible] = useState(false);
+
+  const triggerLeftVisible = makeTrigger(setLeftVisible);
+  const triggerRightVisible = makeTrigger(setRightVisible);
 
   const dispatch = useDispatch();
 
   const operationSelector = {
-    'Add Pipeline': <AddPipeline onSubmit={triggerVisible} />,
-    'Add Algorithm': <AddAlgorithmForm onSubmit={triggerVisible} />,
-    'Add Debug': <AddDebug onSubmit={triggerVisible} />
+    'Add Pipeline': <AddPipeline onSubmit={triggerRightVisible} />,
+    'Add Algorithm': <AddAlgorithmForm onSubmit={triggerRightVisible} />,
+    'Add Debug': <AddDebug onSubmit={triggerRightVisible} />
   };
 
   useEffect(
@@ -119,51 +129,82 @@ function HKubeLayout() {
   );
 
   return (
-    <LayoutStyled>
-      <Sidebar onSelect={setTable} />
-      <Layout>
-        <HeaderStyled>
-          <TableAutoComplete table={table} />
-          <VersionAlignRight>
-            <Row type="flex" gutter={10} justify="end">
-              <Col>
-                <HoverIcon
-                  type="global"
-                  style={{ fontSize: 22 }}
-                  onClick={() => window.open('http://hkube.io/')}
-                />
-              </Col>
-              <Col>
-                <HoverIcon
-                  type="github"
-                  style={{ fontSize: 22 }}
-                  onClick={() =>
-                    window.open('https://github.com/kube-HPC/hkube')
-                  }
-                />
-              </Col>
-              <Col>{`${process.env.REACT_APP_VERSION}v`}</Col>
-            </Row>
-          </VersionAlignRight>
-        </HeaderStyled>
-        <LayoutMargin>
-          <ContentStyled>{tableSelector[table]}</ContentStyled>
-          <SidebarOperations
-            onSelect={op => {
-              setOperation(op);
-              setVisible(!visible);
-            }}
-          />
-          <DrawerOperations
-            visible={visible}
-            onClose={triggerVisible}
-            operation={operation}
-          >
-            {operationSelector[operation]}
-          </DrawerOperations>
-        </LayoutMargin>
-      </Layout>
-    </LayoutStyled>
+    <>
+      <GlobalStyle />
+      <UserGuide
+        triggerLeftVisible={triggerLeftVisible}
+        setLeftValue={setLeftValue}
+      />
+      <LayoutFullHeight>
+        <Sidebar
+          className={USER_GUIDE.SIDEBAR_LEFT}
+          selectedKeys={[leftValue]}
+          onSelect={setLeftValue}
+          collapsed={!leftVisible}
+        />
+        <Layout>
+          <HeaderStretch>
+            <RowCenter type="flex" justify="space-between">
+              <HoverIcon
+                className={USER_GUIDE.SIDEBAR_LEFT_MENU_BUTTON}
+                type={leftVisible ? 'menu-fold' : 'menu-unfold'}
+                style={{ fontSize: 22 }}
+                onClick={triggerLeftVisible}
+              />
+              <TableAutoComplete table={leftValue} />
+              <RowColoredIcons type="flex" gutter={10}>
+                <Col>
+                  <HoverIcon
+                    type="global"
+                    style={{ fontSize: 22 }}
+                    onClick={() => window.open('http://hkube.io/')}
+                  />
+                </Col>
+                <Col>
+                  <HoverIcon
+                    type="github"
+                    style={{ fontSize: 22 }}
+                    onClick={() =>
+                      window.open('https://github.com/kube-HPC/hkube')
+                    }
+                  />
+                </Col>
+                <Col>
+                  <HoverIcon
+                    className={USER_GUIDE.WELCOME}
+                    type="question-circle"
+                    style={{ fontSize: 22 }}
+                    onClick={() => {
+                      dispatch(triggerUserGuide());
+                      setLeftValue(LEFT_SIDEBAR_NAMES.JOBS);
+                      setLeftVisible(true);
+                    }}
+                  />
+                </Col>
+                <Col>{`${process.env.REACT_APP_VERSION}v`}</Col>
+              </RowColoredIcons>
+            </RowCenter>
+          </HeaderStretch>
+          <LayoutFullHeight>
+            <ContentMargin>{tableSelector[leftValue]}</ContentMargin>
+            <SidebarOperations
+              className={USER_GUIDE.SIDEBAR_RIGHT}
+              onSelect={op => {
+                setRightValue(op);
+                setRightVisible(!rightVisible);
+              }}
+            />
+            <DrawerOperations
+              visible={rightVisible}
+              onClose={triggerRightVisible}
+              operation={rightValue}
+            >
+              {operationSelector[rightValue]}
+            </DrawerOperations>
+          </LayoutFullHeight>
+        </Layout>
+      </LayoutFullHeight>
+    </>
   );
 }
 

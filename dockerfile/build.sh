@@ -9,7 +9,7 @@ fi
 echo npm_package_version=${npm_package_version}
 VERSION="v${npm_package_version}"
 if [ "${TRAVIS_PULL_REQUEST:-"false"}" != "false" ]; then
-  VERSION=${VERSION}-${TRAVIS_PULL_REQUEST_BRANCH}-${TRAVIS_JOB_NUMBER}
+  VERSION=${TRAVIS_PULL_REQUEST_BRANCH}
 fi
 TAG_VER="${IMAGE_NAME}:${VERSION}"
 

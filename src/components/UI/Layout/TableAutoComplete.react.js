@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { autoCompleteFilter } from 'actions/layout.action';
 import styled from 'styled-components';
 
-const InputTransparent = styled(AutoComplete)`
+const AutoCompleteTransparent = styled(AutoComplete)`
   background: transparent;
   width: 600px;
 `;
@@ -18,6 +18,7 @@ const tableSelector = {
   Debug: 'debugTable',
   Builds: 'algorithmBuildsTable'
 };
+
 const tableSearchBy = {
   Jobs: job => job.key,
   Pipelines: pipeline => pipeline.name,
@@ -44,7 +45,7 @@ function TableAutoComplete({ table }) {
   const filterData = e => dispatch(autoCompleteFilter(e));
 
   return (
-    <InputTransparent
+    <AutoCompleteTransparent
       disabled={isDisabled}
       dataSource={tableData}
       onSearch={filterData}
@@ -52,8 +53,8 @@ function TableAutoComplete({ table }) {
       placeholder="Search in current table"
       dropdownMatchSelectWidth={true}
     >
-      <Input suffix={<Icon type="search" />} />
-    </InputTransparent>
+      <Input allowClear suffix={<Icon type="search" />} />
+    </AutoCompleteTransparent>
   );
 }
 

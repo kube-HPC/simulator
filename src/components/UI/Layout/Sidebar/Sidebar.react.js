@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
@@ -15,14 +15,17 @@ import { ReactComponent as JobsIcon } from 'images/jobs-icon.svg';
 
 import { Row, Col, Tag, Layout, Icon, Menu } from 'antd';
 
-import { LAYOUT_COLOR } from 'constants/colors';
+import { COLOR_LAYOUT } from 'constants/colors';
+import USER_GUIDE from 'constants/user-guide';
+import { LEFT_SIDEBAR_NAMES } from 'constants/table-names';
+import { dataCountMock } from 'config/template/user-guide.template';
 
 const SiderLight = styled(Layout.Sider)`
-  border-right: 1px solid ${LAYOUT_COLOR.border};
+  border-right: 1px solid ${COLOR_LAYOUT.border};
 `;
 
 const MenuMargin = styled(Menu)`
-margin-top: 10px;
+  margin-top: 10px;
 `;
 
 const setMenuItem = (component, title, count) => (
@@ -33,17 +36,20 @@ const setMenuItem = (component, title, count) => (
     </Col>
     {!isNaN(count) && (
       <Col>
-        <Tag style={{ color: LAYOUT_COLOR.colorPrimary }}>{count}</Tag>
+        <Tag style={{ color: COLOR_LAYOUT.colorPrimary }}>{count}</Tag>
       </Col>
     )}
   </Row>
 );
 
-const IconStyle = { fontSize: 22, marginLeft: -2, marginRight: 20, marginTop: 2 };
+const IconStyle = {
+  fontSize: 22,
+  marginTop: 2
+};
 
 const addMenuItems = items =>
   items.map(([name, component, count]) => (
-    <Menu.Item key={name}>
+    <Menu.Item key={name} className={USER_GUIDE.TABLE_SELECT[name]}>
       {setMenuItem(
         <Icon type={component} component={component} style={IconStyle} />,
         name,
@@ -74,18 +80,26 @@ const FlexBox = styled.div`
 
 const IconLogo = styled(Icon)`
   && {
-    margin-bottom: 10px;
-    font-size: 81px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    font-size: 75px;
   }
 `;
 const TitleCenter = styled(LogoTitle)`
   align-self: flex-start;
 `;
 
-export default function Sidebar({ onSelect }) {
+export default function Sidebar({ onSelect, selectedKeys, ...props }) {
   const [collapsed, setCollapsed] = useState(true);
 
-  const dataCount = useSelector(state => ({
+  useEffect(
+    () => {
+      setCollapsed(props.collapsed);
+    },
+    [props.collapsed, setCollapsed]
+  );
+
+  const dataCountSource = useSelector(state => ({
     jobsCount: (state.jobsTable.dataSource || []).length,
     driversCount: (state.driverTable.dataSource || []).length,
     algorithmsCount: (state.algorithmTable.dataSource || []).length,
@@ -95,20 +109,24 @@ export default function Sidebar({ onSelect }) {
     debugCount: (state.debugTable.dataSource || []).length
   }));
 
+  const { isOn: isGuideOn } = useSelector(state => state.userGuide);
+
+  const dataCount = isGuideOn ? dataCountMock : dataCountSource;
+
   const menuItems = [
-    ['Jobs', JobsIcon, dataCount.jobsCount],
-    ['Pipelines', PipelineIcon, dataCount.pipelinesCount],
-    ['Workers', WorkerIcon, dataCount.workersCount],
-    ['Drivers', DriversIcon, dataCount.driversCount],
-    ['Algorithms', AlgorithmIcon, dataCount.algorithmsCount],
-    ['Debug', DebugIcon, dataCount.debugCount],
-    ['Builds', 'build', dataCount.buildsCount]
+    [LEFT_SIDEBAR_NAMES.JOBS, JobsIcon, dataCount.jobsCount],
+    [LEFT_SIDEBAR_NAMES.PIPELINES, PipelineIcon, dataCount.pipelinesCount],
+    [LEFT_SIDEBAR_NAMES.ALGORITHMS, AlgorithmIcon, dataCount.algorithmsCount],
+    [LEFT_SIDEBAR_NAMES.WORKERS, WorkerIcon, dataCount.workersCount],
+    [LEFT_SIDEBAR_NAMES.DRIVERS, DriversIcon, dataCount.driversCount],
+    [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, dataCount.debugCount],
+    [LEFT_SIDEBAR_NAMES.BUILDS, 'build', dataCount.buildsCount]
   ];
 
   return (
     <SiderLight
+      {...props}
       theme="light"
-      collapsible
       onCollapse={() => setCollapsed(!collapsed)}
       collapsed={collapsed}
     >
@@ -118,6 +136,7 @@ export default function Sidebar({ onSelect }) {
       </FlexBox>
       <MenuMargin
         onSelect={i => onSelect(i.key)}
+        selectedKeys={selectedKeys}
         defaultSelectedKeys={[menuItems[0][0]]}
       >
         {addMenuItems(menuItems)}
@@ -127,7 +146,10 @@ export default function Sidebar({ onSelect }) {
             'Cluster Stats'
           )}
         >
-          {addMenuItems([['CPU', 'heat-map'], ['Memory', 'hdd']])}
+          {addMenuItems([
+            [LEFT_SIDEBAR_NAMES.CLUSTER_STATS.CPU, 'heat-map'],
+            [LEFT_SIDEBAR_NAMES.CLUSTER_STATS.MEMORY, 'hdd']
+          ])}
         </Menu.SubMenu>
       </MenuMargin>
     </SiderLight>

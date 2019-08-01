@@ -1,5 +1,4 @@
-
-import { STATUS } from 'constants/colors';
+import { COLOR_PIPELINE_STATUS } from 'constants/colors';
 
 export default {
   physics: {
@@ -43,7 +42,7 @@ export default {
   },
   groups: {
     batchCompleted: {
-      color: { background: STATUS.completed, border: 'black' }
+      color: { background: COLOR_PIPELINE_STATUS.completed, border: 'black' }
     },
     batchNotStarted: {
       color: { background: '#FF5441', border: 'black' }
@@ -52,12 +51,12 @@ export default {
       color: { background: '#eeda13', border: 'rgba(0,0,0,0.5)' }
     },
     batchErrors: {
-      color: { background: STATUS.failed, border: 'black' }
+      color: { background: COLOR_PIPELINE_STATUS.failed, border: 'black' }
     },
     notStarted: {
       color: { background: '#FF5441', border: 'rgba(0,0,0,0.5)' }
     },
-    completed: { color: STATUS.completed },
+    completed: { color: COLOR_PIPELINE_STATUS.completed },
     source: {
       color: { border: 'white' }
     }

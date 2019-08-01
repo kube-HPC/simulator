@@ -1,4 +1,4 @@
-import actions from 'constants/actions';
+import actions from 'constants/application-actions';
 
 export const addPipeline = pipe => ({
   type: actions.REST_REQ_POST,

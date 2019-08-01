@@ -1,4 +1,4 @@
-import AT from 'constants/actions';
+import AT from 'constants/application-actions';
 import axios from 'axios';
 import FileSaver from 'file-saver';
 import successMsg from 'config/schema/success-messages.schema';
