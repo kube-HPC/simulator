@@ -1,6 +1,5 @@
 import actions from 'constants/application-actions';
-
-const SOCKET_TOPIC = 'PROGRESS';
+import TOPICS from 'constants/topics';
 
 export const autoCompleteFilter = filter => ({
   type: actions.LAYOUT_UPDATE_FILTER,
@@ -10,7 +9,7 @@ export const autoCompleteFilter = filter => ({
 export const socketInit = () => ({
   type: actions.SOCKET_INIT,
   payload: {
-    topic: SOCKET_TOPIC,
+    topic: TOPICS.PROGRESS,
     actionType: actions.LAYOUT_UPDATE_ROW_DATA_TABLE
   }
 });

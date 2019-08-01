@@ -17,7 +17,7 @@ import { Row, Col, Tag, Layout, Icon, Menu } from 'antd';
 
 import { COLOR_LAYOUT } from 'constants/colors';
 import USER_GUIDE from 'constants/user-guide';
-import TABLE_NAMES from 'constants/table-names';
+import { LEFT_SIDEBAR_NAMES } from 'constants/table-names';
 import { dataCountMock } from 'config/template/user-guide.template';
 
 const SiderLight = styled(Layout.Sider)`
@@ -82,15 +82,14 @@ const IconLogo = styled(Icon)`
   && {
     margin-bottom: 5px;
     margin-left: 5px;
-    margin-right: 5px;
-    font-size: 70px;
+    font-size: 75px;
   }
 `;
 const TitleCenter = styled(LogoTitle)`
   align-self: flex-start;
 `;
 
-export default function Sidebar({ onSelect, ...props }) {
+export default function Sidebar({ onSelect, selectedKeys, ...props }) {
   const [collapsed, setCollapsed] = useState(true);
 
   useEffect(
@@ -100,7 +99,6 @@ export default function Sidebar({ onSelect, ...props }) {
     [props.collapsed, setCollapsed]
   );
 
-  // TODO: refactor here, "code smell"
   const dataCountSource = useSelector(state => ({
     jobsCount: (state.jobsTable.dataSource || []).length,
     driversCount: (state.driverTable.dataSource || []).length,
@@ -111,17 +109,18 @@ export default function Sidebar({ onSelect, ...props }) {
     debugCount: (state.debugTable.dataSource || []).length
   }));
 
-  // TODO: change here
-  const dataCount = true ? dataCountMock : dataCountSource;
+  const { isOn: isGuideOn } = useSelector(state => state.userGuide);
+
+  const dataCount = isGuideOn ? dataCountMock : dataCountSource;
 
   const menuItems = [
-    [TABLE_NAMES.JOBS, JobsIcon, dataCount.jobsCount],
-    [TABLE_NAMES.PIPELINES, PipelineIcon, dataCount.pipelinesCount],
-    [TABLE_NAMES.ALGORITHMS, AlgorithmIcon, dataCount.algorithmsCount],
-    [TABLE_NAMES.WORKERS, WorkerIcon, dataCount.workersCount],
-    [TABLE_NAMES.DRIVERS, DriversIcon, dataCount.driversCount],
-    [TABLE_NAMES.DEBUG, DebugIcon, dataCount.debugCount],
-    [TABLE_NAMES.BUILDS, 'build', dataCount.buildsCount]
+    [LEFT_SIDEBAR_NAMES.JOBS, JobsIcon, dataCount.jobsCount],
+    [LEFT_SIDEBAR_NAMES.PIPELINES, PipelineIcon, dataCount.pipelinesCount],
+    [LEFT_SIDEBAR_NAMES.ALGORITHMS, AlgorithmIcon, dataCount.algorithmsCount],
+    [LEFT_SIDEBAR_NAMES.WORKERS, WorkerIcon, dataCount.workersCount],
+    [LEFT_SIDEBAR_NAMES.DRIVERS, DriversIcon, dataCount.driversCount],
+    [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, dataCount.debugCount],
+    [LEFT_SIDEBAR_NAMES.BUILDS, 'build', dataCount.buildsCount]
   ];
 
   return (
@@ -137,6 +136,7 @@ export default function Sidebar({ onSelect, ...props }) {
       </FlexBox>
       <MenuMargin
         onSelect={i => onSelect(i.key)}
+        selectedKeys={selectedKeys}
         defaultSelectedKeys={[menuItems[0][0]]}
       >
         {addMenuItems(menuItems)}
@@ -147,8 +147,8 @@ export default function Sidebar({ onSelect, ...props }) {
           )}
         >
           {addMenuItems([
-            [TABLE_NAMES.CLUSTER_STATS.CPU, 'heat-map'],
-            [TABLE_NAMES.CLUSTER_STATS.MEMORY, 'hdd']
+            [LEFT_SIDEBAR_NAMES.CLUSTER_STATS.CPU, 'heat-map'],
+            [LEFT_SIDEBAR_NAMES.CLUSTER_STATS.MEMORY, 'hdd']
           ])}
         </Menu.SubMenu>
       </MenuMargin>

@@ -1,4 +1,4 @@
-const TABLE_NAMES = {
+export const LEFT_SIDEBAR_NAMES = {
   JOBS: 'Jobs',
   PIPELINES: 'Pipelines',
   ALGORITHMS: 'Algorithms',
@@ -12,4 +12,8 @@ const TABLE_NAMES = {
   }
 };
 
-export default TABLE_NAMES;
+export const RIGHT_SIDEBAR_NAMES = {
+  ADD_PIPELINE: 'Add Pipeline',
+  ADD_ALGORITHM: 'Add Algorithm',
+  ADD_DEBUG: 'Add Debug'
+};

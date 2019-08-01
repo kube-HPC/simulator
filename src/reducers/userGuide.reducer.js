@@ -4,7 +4,7 @@ import actions from 'constants/application-actions';
 import LOCAL_STORAGE_KEYS from 'constants/local-storage';
 import { getBooleanLocalStorageItem } from 'utils/localStorage';
 
-const isOn = getBooleanLocalStorageItem(LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS);
+let isOn = getBooleanLocalStorageItem(LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS);
 
 const userGuideStatus = Immutable.from({
   stepIndex: 0,

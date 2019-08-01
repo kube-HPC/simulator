@@ -33,6 +33,7 @@ import {
   setLocalStorageItem
 } from 'utils/localStorage';
 import { triggerUserGuide } from 'actions/userGuide.action';
+import { LEFT_SIDEBAR_NAMES, RIGHT_SIDEBAR_NAMES } from 'constants/table-names';
 
 const LayoutFullHeight = styled(Layout)`
   height: 100vh;
@@ -50,9 +51,13 @@ const RowCenter = styled(Row)`
   align-items: center;
 `;
 
-const ContentStyled = styled(Layout.Content)`
-  margin: 5px;
+const ContentMargin = styled(Layout.Content)`
+  padding: 8px;
   overflow: auto;
+`;
+
+const RowColoredIcons = styled(Row)`
+  color: ${COLOR_LAYOUT.darkBorder};
 `;
 
 const HoverIcon = styled(Icon)`
@@ -81,7 +86,7 @@ const leftIsVisibleFromStorage = getBooleanLocalStorageItem(
 
 function HKubeLayout() {
   // Table sidebar on Left
-  const [leftValue, setLeftValue] = useState('Jobs');
+  const [leftValue, setLeftValue] = useState(LEFT_SIDEBAR_NAMES.JOBS);
   const [leftVisible, setLeftVisible] = useState(leftIsVisibleFromStorage);
 
   useEffect(
@@ -95,7 +100,9 @@ function HKubeLayout() {
   );
 
   // Operation Sidebar on Right
-  const [rightValue, setRightValue] = useState('AddPipeline');
+  const [rightValue, setRightValue] = useState(
+    RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM
+  );
   const [rightVisible, setRightVisible] = useState(false);
 
   const triggerLeftVisible = makeTrigger(setLeftVisible);
@@ -124,10 +131,14 @@ function HKubeLayout() {
   return (
     <>
       <GlobalStyle />
-      <UserGuide triggerLeftVisible={triggerLeftVisible} />
+      <UserGuide
+        triggerLeftVisible={triggerLeftVisible}
+        setLeftValue={setLeftValue}
+      />
       <LayoutFullHeight>
         <Sidebar
           className={USER_GUIDE.SIDEBAR_LEFT}
+          selectedKeys={[leftValue]}
           onSelect={setLeftValue}
           collapsed={!leftVisible}
         />
@@ -141,42 +152,41 @@ function HKubeLayout() {
                 onClick={triggerLeftVisible}
               />
               <TableAutoComplete table={leftValue} />
-              <div>
-                <Row type="flex" gutter={10}>
-                  <Col>
-                    <HoverIcon
-                      type="global"
-                      style={{ fontSize: 22 }}
-                      onClick={() => window.open('http://hkube.io/')}
-                    />
-                  </Col>
-                  <Col>
-                    <HoverIcon
-                      type="github"
-                      style={{ fontSize: 22 }}
-                      onClick={() =>
-                        window.open('https://github.com/kube-HPC/hkube')
-                      }
-                    />
-                  </Col>
-                  <Col>
-                    <HoverIcon
-                      className={USER_GUIDE.WELCOME}
-                      type="question-circle"
-                      style={{ fontSize: 22 }}
-                      onClick={() => {
-                        dispatch(triggerUserGuide());
-                        setLeftVisible(true);
-                      }}
-                    />
-                  </Col>
-                  <Col>{`${process.env.REACT_APP_VERSION}v`}</Col>
-                </Row>
-              </div>
+              <RowColoredIcons type="flex" gutter={10}>
+                <Col>
+                  <HoverIcon
+                    type="global"
+                    style={{ fontSize: 22 }}
+                    onClick={() => window.open('http://hkube.io/')}
+                  />
+                </Col>
+                <Col>
+                  <HoverIcon
+                    type="github"
+                    style={{ fontSize: 22 }}
+                    onClick={() =>
+                      window.open('https://github.com/kube-HPC/hkube')
+                    }
+                  />
+                </Col>
+                <Col>
+                  <HoverIcon
+                    className={USER_GUIDE.WELCOME}
+                    type="question-circle"
+                    style={{ fontSize: 22 }}
+                    onClick={() => {
+                      dispatch(triggerUserGuide());
+                      setLeftValue(LEFT_SIDEBAR_NAMES.JOBS);
+                      setLeftVisible(true);
+                    }}
+                  />
+                </Col>
+                <Col>{`${process.env.REACT_APP_VERSION}v`}</Col>
+              </RowColoredIcons>
             </RowCenter>
           </HeaderStretch>
           <LayoutFullHeight>
-            <ContentStyled>{tableSelector[leftValue]}</ContentStyled>
+            <ContentMargin>{tableSelector[leftValue]}</ContentMargin>
             <SidebarOperations
               className={USER_GUIDE.SIDEBAR_RIGHT}
               onSelect={op => {
