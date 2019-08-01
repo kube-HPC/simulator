@@ -1,0 +1,114 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: simulator-${TRAVIS_PULL_REQUEST_BRANCH}
+    core: "true"
+    group: hkube
+  name: simulator-${TRAVIS_PULL_REQUEST_BRANCH}
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simulator-${TRAVIS_PULL_REQUEST_BRANCH}
+  template:
+    metadata:
+      labels:
+        app: simulator-${TRAVIS_PULL_REQUEST_BRANCH}
+        group: hkube
+    spec:
+      containers:
+      - env:
+        - name: MONITOR_BACKEND_PATH
+          valueFrom:
+            configMapKeyRef:
+              key: MONITOR_BACKEND_PATH
+              name: simulator-configmap
+        - name: MONITOR_BACKEND_PATH_SOCKETIO
+          valueFrom:
+            configMapKeyRef:
+              key: MONITOR_BACKEND_PATH_SOCKETIO
+              name: simulator-configmap
+        - name: MONITOR_BACKEND_USE_LOCATION
+          valueFrom:
+            configMapKeyRef:
+              key: MONITOR_BACKEND_USE_LOCATION
+              name: simulator-configmap
+        - name: MONITOR_BACKEND_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: MONITOR_BACKEND_HOST
+              name: simulator-configmap
+        - name: MONITOR_BACKEND_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: MONITOR_BACKEND_PORT
+              name: simulator-configmap
+        - name: isSecure
+          valueFrom:
+            configMapKeyRef:
+              key: MONITOR_BACKEND_IS_SECURE
+              name: simulator-configmap
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        image: hkube/simulator:${TRAVIS_PULL_REQUEST_BRANCH}
+        imagePullPolicy: Always
+        name: simulator
+        ports:
+        - containerPort: 9050
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 100m
+            memory: 256Mi
+      nodeSelector:
+        core: "true"
+      restartPolicy: Always
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  labels:
+    app: simulator-${TRAVIS_PULL_REQUEST_BRANCH}
+    core: "true"
+    group: hkube
+    heritage: Tiller
+    release: hkube
+  name: simulator-${TRAVIS_PULL_REQUEST_BRANCH}
+  namespace: default
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: simulator-${TRAVIS_PULL_REQUEST_BRANCH}
+          servicePort: 9050
+        path: /hkube/simulator-${TRAVIS_PULL_REQUEST_BRANCH}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: 2019-07-24T09:12:55Z
+  labels:
+    app: simulator-${TRAVIS_PULL_REQUEST_BRANCH}
+    core: "true"
+    group: hkube
+  name: simulator-${TRAVIS_PULL_REQUEST_BRANCH}
+  namespace: default
+spec:
+  ports:
+  - port: 9050
+    protocol: TCP
+    targetPort: 9050
+  selector:
+    app: simulator-${TRAVIS_PULL_REQUEST_BRANCH}
