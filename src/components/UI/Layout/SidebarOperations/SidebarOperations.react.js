@@ -11,12 +11,7 @@ import { Layout, Icon, Menu } from 'antd';
 import { COLOR_LAYOUT } from 'constants/colors';
 
 const SiderLight = styled(Layout.Sider)`
-  border-left: 1px solid ${COLOR_LAYOUT.border};
-`;
-
-const StyledItem = styled(Menu.Item)`
-  margin-left: -16px;
-  margin-top: 20px;
+  border: none;
 `;
 
 const menuItems = [
@@ -27,22 +22,26 @@ const menuItems = [
 
 const addMenuItems = items =>
   items.map(([name, component]) => (
-    <StyledItem key={name}>
+    <Menu.Item key={name}>
       <Icon
         type={component}
         component={component}
-        style={{ fontSize: '25px' }}
+        style={{ fontSize: '25px', marginLeft: '-14px' }}
       />
       <span>{name}</span>
-    </StyledItem>
+    </Menu.Item>
   ));
 
-export default function SidebarOperations({ onSelect, ...props }) {
+export default function SidebarOperations({
+  selectedKeys,
+  onSelect,
+  ...props
+}) {
   return (
     <SiderLight {...props} theme="light" collapsed={true} collapsedWidth={60}>
       <Menu
         mode="vertical"
-        onSelect={i => onSelect(i.key)}
+        onSelect={({ key }) => onSelect(key)}
         style={{ marginTop: '20%' }}
         selectedKeys={[]}
       >

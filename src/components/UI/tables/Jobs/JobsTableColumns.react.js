@@ -9,7 +9,7 @@ import { Progress, Tag, Tooltip, Button, Row, Col } from 'antd';
 import { COLOR_PRIORITY, COLOR_PIPELINE_STATUS } from 'constants/colors';
 import PIPELINE_STATES from 'constants/pipeline-states';
 import StatusTag from 'components/common/StatusTag.react';
-import CopyEllipsis from 'components/common/CopyEllipsis.react';
+import Ellipsis from 'components/common/Ellipsis.react';
 
 import { downloadStorageResults } from 'actions/jobs.action';
 import {
@@ -44,10 +44,12 @@ const jobsTableColumns = ({ dispatch, isGuideOn }) => [
     title: 'Job ID',
     dataIndex: 'key',
     key: 'key',
-    render: (_, record) => (
-      <CopyEllipsis
+    width: '10%',
+    render: jobID => (
+      <Ellipsis
         className={isGuideOn ? USER_GUIDE.TABLE_JOB.ID_SELECT : ''}
-        text={record.key}
+        copyable
+        text={jobID}
       />
     )
   },
@@ -55,8 +57,9 @@ const jobsTableColumns = ({ dispatch, isGuideOn }) => [
     title: 'Pipeline Name',
     dataIndex: 'pipeline.name',
     key: 'pipeline',
+    width: '10%',
     sorter: (a, b) => sorter(a.pipeline.name, b.pipeline.name),
-    render: (_, record) => <CopyEllipsis disabled text={record.pipeline.name} />
+    render: pipelineName => <Ellipsis text={pipelineName} />
   },
   {
     title: 'Status',
@@ -64,11 +67,12 @@ const jobsTableColumns = ({ dispatch, isGuideOn }) => [
     key: 'status',
     filterMultiple: true,
     filters: getStatusFilter(),
+    width: '5%',
     sorter: (a, b) => sorter(a.status.status, b.status.status),
     onFilter: (value, record) => record.status.status === value,
-    render: (_, record) => (
-      <Tag color={COLOR_PIPELINE_STATUS[record.status && record.status.status]}>
-        {toUpperCaseFirstLetter(record.status && record.status.status)}
+    render: status => (
+      <Tag color={COLOR_PIPELINE_STATUS[status]}>
+        {toUpperCaseFirstLetter(status)}
       </Tag>
     )
   },
@@ -76,6 +80,7 @@ const jobsTableColumns = ({ dispatch, isGuideOn }) => [
     title: 'Start Time',
     dataIndex: 'status.timestamp',
     key: 'Start timestamp',
+    width: '10%',
     sorter: (a, b) => a.pipeline.startTime - b.pipeline.startTime,
     render: (_, record) => (
       <Moment format="DD/MM/YY HH:mm:ss">
@@ -105,6 +110,7 @@ const jobsTableColumns = ({ dispatch, isGuideOn }) => [
     title: 'Nodes Stats',
     dataIndex: 'status.data.details',
     key: 'details',
+    width: '10%',
     render: (_, record) =>
       record.status.data &&
       record.status.data.states &&
@@ -118,6 +124,7 @@ const jobsTableColumns = ({ dispatch, isGuideOn }) => [
     title: 'Priority',
     dataIndex: 'pipeline.priority',
     key: 'priority',
+    width: '5%',
     sorter: (a, b) => sorter(a.pipeline.priority, b.pipeline.priority),
     render: (_, record) => (
       <Tooltip
@@ -168,6 +175,8 @@ const jobsTableColumns = ({ dispatch, isGuideOn }) => [
     title: 'Action',
     dataIndex: 'action',
     key: 'stop',
+    width: '20%',
+    align: 'center',
     render: (_, record) => {
       const status = record.status.status;
       const isResumePipeline = canResume(status);
@@ -235,7 +244,7 @@ const jobsTableColumns = ({ dispatch, isGuideOn }) => [
         <Row
           className={isGuideOn ? USER_GUIDE.TABLE_JOB.ACTIONS_SELECT : ''}
           type="flex"
-          justify="space-between"
+          justify="center"
           gutter={10}
         >
           <Col>{redoAction}</Col>

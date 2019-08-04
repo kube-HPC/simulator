@@ -20,7 +20,7 @@ const TableScrollHidden = styled(Table)`
 const mockDataSource = Immutable(jobsTableMock);
 
 export default function DynamicTable(props) {
-  const { dataSource, isInner } = props;
+  const { dataSource, isInner, disablePagination } = props;
   const tableDataSource = dataSource || [];
 
   const { isOn: isGuideOn, stepIndex } = useSelector(state => state.userGuide);

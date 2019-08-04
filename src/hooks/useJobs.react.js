@@ -1,11 +1,12 @@
 import { useSelector } from 'react-redux';
 import { getJaegerData } from 'actions/jobs.action';
 import tableDataSelector from 'utils/tableDataSelector';
-import { sourcesNames } from 'reducers/root.reducer';
+import { STATE_SOURCES } from 'reducers/root.reducer';
 import useDispatchCallback from './useDispatchMemo.react';
 
-const dataSelector = tableDataSelector(sourcesNames.JOBS_TABLE, filter => row =>
-  row.key.includes(filter)
+const dataSelector = tableDataSelector(
+  STATE_SOURCES.JOBS_TABLE,
+  filter => row => row.key.includes(filter)
 );
 
 export default function useJobs() {

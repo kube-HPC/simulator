@@ -5,7 +5,7 @@ import { ReactComponent as PlayIconSvg } from 'images/play-icon.svg';
 import { stringify, sorter } from 'utils/string';
 import DrawerEditor from 'components/common/drawer/DrawerEditor.react';
 import SwitchCron from 'components/UI/tables/Pipelines/SwitchCron.react';
-import CopyEllipsis from 'components/common/CopyEllipsis.react';
+import Ellipsis from 'components/common/Ellipsis.react';
 import StatusTag from 'components/common/StatusTag.react';
 import DrawerEditorMD from 'components/common/drawer/DrawerEditorMD.react';
 
@@ -45,7 +45,7 @@ const pipelinesTableColumns = ({
     dataIndex: 'name',
     key: 'name',
     sorter: (a, b) => sorter(a.name, b.name),
-    render: (_, record) => <CopyEllipsis disabled text={record.name} />
+    render: name => <Ellipsis copyable text={name} />
   },
   {
     title: 'Cron Job',

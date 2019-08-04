@@ -7,7 +7,7 @@ import { createStore } from 'redux';
 import { Layout } from 'antd';
 
 import rootReducer from 'reducers/root.reducer';
-import Sidebar from 'components/UI/Layout/Sidebar/Sidebar.react';
+import SidebarLeft from 'components/UI/Layout/SidebarMainTables/SidebarLeft.react';
 
 const LayoutStyled = styled(Layout)`
   height: 100vh;
@@ -43,7 +43,7 @@ function SiderContainer() {
   return (
     <Provider store={store}>
       <LayoutStyled>
-        <Sidebar {...props} onSelect={() => setCounter(counter + 1)} />
+        <SidebarLeft {...props} onSelect={() => setCounter(counter + 1)} />
         <LayoutCenter>
           <StyledCounter>{counter}</StyledCounter>
         </LayoutCenter>

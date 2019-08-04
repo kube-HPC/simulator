@@ -89,7 +89,7 @@ const TitleCenter = styled(LogoTitle)`
   align-self: flex-start;
 `;
 
-export default function Sidebar({ onSelect, selectedKeys, ...props }) {
+export default function SidebarLeft({ onSelect, selectedKeys, ...props }) {
   const [collapsed, setCollapsed] = useState(true);
 
   useEffect(
@@ -119,7 +119,6 @@ export default function Sidebar({ onSelect, selectedKeys, ...props }) {
     [LEFT_SIDEBAR_NAMES.ALGORITHMS, AlgorithmIcon, dataCount.algorithmsCount],
     [LEFT_SIDEBAR_NAMES.WORKERS, WorkerIcon, dataCount.workersCount],
     [LEFT_SIDEBAR_NAMES.DRIVERS, DriversIcon, dataCount.driversCount],
-    [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, dataCount.debugCount],
     [LEFT_SIDEBAR_NAMES.BUILDS, 'build', dataCount.buildsCount]
   ];
 
@@ -135,9 +134,8 @@ export default function Sidebar({ onSelect, selectedKeys, ...props }) {
         {!collapsed && <AnimatedTitle />}
       </FlexBox>
       <MenuMargin
-        onSelect={i => onSelect(i.key)}
+        onSelect={({ key }) => onSelect(key)}
         selectedKeys={selectedKeys}
-        defaultSelectedKeys={[menuItems[0][0]]}
       >
         {addMenuItems(menuItems)}
         <Menu.SubMenu
@@ -156,6 +154,6 @@ export default function Sidebar({ onSelect, selectedKeys, ...props }) {
   );
 }
 
-Sidebar.propTypes = {
+SidebarLeft.propTypes = {
   onSelect: PropTypes.func.isRequired
 };

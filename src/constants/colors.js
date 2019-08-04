@@ -13,6 +13,15 @@ export const COLOR = {
   white: 'white'
 };
 
+export const SERVICE_COLOR = {
+  worker: COLOR.orange,
+  'monitor-service': COLOR.yellow,
+  'api-server': COLOR.red,
+  'pipeline-driver': COLOR.lightOrange,
+  'algorithm-queue': COLOR.lightGreen,
+  'pipeline-driver-queue': COLOR.blueLight
+};
+
 export const COLOR_LAYOUT = {
   background: COLOR.transparentGrey,
   border: COLOR.lightGrey,
