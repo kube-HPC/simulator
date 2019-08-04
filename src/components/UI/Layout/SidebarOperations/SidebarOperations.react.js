@@ -2,55 +2,37 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import { ReactComponent as IconAddPipeline } from 'images/no-fill/add-pipeline.svg';
-import { ReactComponent as IconAddAlgorithm } from 'images/no-fill/add-algorithm.svg';
-import { ReactComponent as IconAddDebug } from 'images/no-fill/add-debug.svg';
-
 import { Layout, Icon, Menu } from 'antd';
-
-import { COLOR_LAYOUT } from 'constants/colors';
 
 const SiderLight = styled(Layout.Sider)`
   border: none;
 `;
 
-const menuItems = [
-  ['Add Pipeline', IconAddPipeline],
-  ['Add Algorithm', IconAddAlgorithm],
-  ['Add Debug', IconAddDebug]
-];
+const centerIconStyle = { fontSize: '25px', marginLeft: '-14px' };
 
 const addMenuItems = items =>
-  items.map(([name, component]) => (
+  items.map(({ name, type, component }) => (
     <Menu.Item key={name}>
-      <Icon
-        type={component}
-        component={component}
-        style={{ fontSize: '25px', marginLeft: '-14px' }}
-      />
+      <Icon type={type} component={component} style={centerIconStyle} />
       <span>{name}</span>
     </Menu.Item>
   ));
 
-export default function SidebarOperations({
-  selectedKeys,
-  onSelect,
-  ...props
-}) {
-  return (
-    <SiderLight {...props} theme="light" collapsed={true} collapsedWidth={60}>
-      <Menu
-        mode="vertical"
-        onSelect={({ key }) => onSelect(key)}
-        style={{ marginTop: '20%' }}
-        selectedKeys={[]}
-      >
-        {addMenuItems(menuItems)}
-      </Menu>
-    </SiderLight>
-  );
-}
+const SidebarOperations = ({ selectedKeys, onSelect, menuItems, ...props }) => (
+  <SiderLight {...props} theme="light" collapsed={true} collapsedWidth={60}>
+    <Menu
+      mode="vertical"
+      onSelect={({ key }) => onSelect(key)}
+      style={{ marginTop: '20%' }}
+      selectedKeys={[]}
+    >
+      {addMenuItems(menuItems)}
+    </Menu>
+  </SiderLight>
+);
 
 SidebarOperations.propTypes = {
   onSelect: PropTypes.func.isRequired
 };
+
+export default SidebarOperations;

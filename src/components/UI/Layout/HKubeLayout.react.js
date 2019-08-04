@@ -21,25 +21,24 @@ import AddPipeline from 'components/UI/Layout/SidebarOperations/AddPipeliene/Add
 import AddDebug from 'components/UI/Layout/SidebarOperations/AddDebug.react';
 import ErrorLogsTable from 'components/UI/tables/ErrorLogs/ErrorLogsTable.react';
 
-import { message, Layout, Col, Icon, Row, Typography } from 'antd';
+import { message, Layout, Icon, Typography } from 'antd';
 import { init, socketInit } from 'actions/layout.action';
 import { COLOR_LAYOUT } from 'constants/colors';
 
 import USER_GUIDE from 'constants/user-guide';
 import LOCAL_STORAGE_KEYS from 'constants/local-storage';
-import GlobalStyle from '../../../styles/GlobalStyle.styles';
+import GlobalStyle from 'styles/GlobalStyle.styles';
 import UserGuide from './UserGuide/UserGuide.react';
 import {
   getBooleanLocalStorageItem,
   setLocalStorageItem
 } from 'utils/localStorage';
 import { triggerUserGuide } from 'actions/userGuide.action';
-import {
-  LEFT_SIDEBAR_NAMES,
-  RIGHT_TOP_SIDEBAR_NAMES,
-  RIGHT_BOTTOM_SIDEBAR_NAMES
-} from 'constants/table-names';
-import SidebarBottomRight from './SidebarBottomRight/SidebarBottomRight.react';
+import { LEFT_SIDEBAR_NAMES, RIGHT_SIDEBAR_NAMES } from 'constants/table-names';
+
+import { ReactComponent as IconAddPipeline } from 'images/no-fill/add-pipeline.svg';
+import { ReactComponent as IconAddAlgorithm } from 'images/no-fill/add-algorithm.svg';
+import { ReactComponent as IconAddDebug } from 'images/no-fill/add-debug.svg';
 
 const LayoutFullHeight = styled(Layout)`
   height: 100vh;
@@ -99,12 +98,33 @@ const tableSelector = {
   [LEFT_SIDEBAR_NAMES.DRIVERS]: <DriversTable />,
   [LEFT_SIDEBAR_NAMES.DEBUG]: <DebugTable />,
   [LEFT_SIDEBAR_NAMES.BUILDS]: <AlgorithmBuildsTable />,
-  [RIGHT_BOTTOM_SIDEBAR_NAMES.ERROR_LOGS]: <ErrorLogsTable />,
   [LEFT_SIDEBAR_NAMES.CLUSTER_STATS.CPU]: <NodeStatistics metric="cpu" />,
   [LEFT_SIDEBAR_NAMES.CLUSTER_STATS.MEMORY]: <NodeStatistics metric="mem" />
 };
 
-const makeTrigger = setter => () => setter(prev => !prev);
+const menuItems = [
+  {
+    name: 'Add Pipeline',
+    component: IconAddPipeline
+  },
+  {
+    name: 'Add Pipeline',
+    component: IconAddAlgorithm
+  },
+  {
+    name: 'Add Pipeline',
+    component: IconAddDebug
+  }
+];
+
+const menuBottomRightItems = [
+  {
+    name: 'Error Logs',
+    type: 'warning'
+  }
+];
+
+const makeToggle = setter => () => setter(prev => !prev);
 
 const leftCollapsedInitial = getBooleanLocalStorageItem(
   LOCAL_STORAGE_KEYS.LEFT_SIDEBAR_IS_VISIBLE
@@ -126,21 +146,30 @@ function HKubeLayout() {
   );
 
   // Operation Sidebar on Right
-  const [rightValue, setRightValue] = useState(
-    RIGHT_TOP_SIDEBAR_NAMES.ADD_ALGORITHM
+  const [drawerValue, setDrawerValue] = useState(
+    RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM
   );
 
-  const [rightTopVisible, setRightTopVisible] = useState(false);
+  const [drawerIsVisible, setDrawerIsVisible] = useState(false);
 
-  const triggerLeftVisible = makeTrigger(setLeftIsCollapsed);
-  const triggerRightTopVisible = makeTrigger(setRightTopVisible);
+  const toggleLeftVisible = makeToggle(setLeftIsCollapsed);
+  const toggleDrawerVisible = makeToggle(setDrawerIsVisible);
 
   const dispatch = useDispatch();
 
   const operationSelector = {
-    'Add Pipeline': <AddPipeline onSubmit={triggerRightTopVisible} />,
-    'Add Algorithm': <AddAlgorithmForm onSubmit={triggerRightTopVisible} />,
-    'Add Debug': <AddDebug onSubmit={triggerRightTopVisible} />
+    [RIGHT_SIDEBAR_NAMES.ADD_PIPELINE]: (
+      <AddPipeline onSubmit={toggleDrawerVisible} />
+    ),
+    [RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM]: (
+      <AddAlgorithmForm onSubmit={toggleDrawerVisible} />
+    ),
+    [RIGHT_SIDEBAR_NAMES.ADD_DEBUG]: (
+      <AddDebug onSubmit={toggleDrawerVisible} />
+    ),
+    [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: (
+      <ErrorLogsTable onSubmit={toggleDrawerVisible} />
+    )
   };
 
   useEffect(
@@ -155,11 +184,16 @@ function HKubeLayout() {
     [dispatch]
   );
 
+  const onSelectDrawer = selection => {
+    setDrawerValue(selection);
+    toggleDrawerVisible();
+  };
+
   return (
     <>
       <GlobalStyle />
       <UserGuide
-        triggerLeftVisible={triggerLeftVisible}
+        triggerLeftVisible={toggleLeftVisible}
         setLeftValue={setTableValue}
       />
       <LayoutFullHeight>
@@ -176,7 +210,7 @@ function HKubeLayout() {
                 className={USER_GUIDE.SIDEBAR_LEFT_MENU_BUTTON}
                 type={leftIsCollapsed ? 'menu-fold' : 'menu-unfold'}
                 style={{ fontSize: 22 }}
-                onClick={triggerLeftVisible}
+                onClick={toggleLeftVisible}
               />
               <TableAutoComplete table={tableValue} />
               <HelpBarFlex>
@@ -212,24 +246,21 @@ function HKubeLayout() {
               <SidebarOperations
                 className={USER_GUIDE.SIDEBAR_RIGHT}
                 selectedKeys={[tableValue]}
-                onSelect={op => {
-                  setRightValue(op);
-                  setRightTopVisible(!rightTopVisible);
-                }}
+                onSelect={onSelectDrawer}
+                menuItems={menuItems}
               />
-              <SidebarBottomRight
+              <SidebarOperations
                 selectedKeys={[tableValue]}
-                onSelect={selection => {
-                  setTableValue(selection);
-                }}
+                onSelect={onSelectDrawer}
+                menuItems={menuBottomRightItems}
               />
             </RightSidebarsFlex>
             <DrawerOperations
-              visible={rightTopVisible}
-              onClose={triggerRightTopVisible}
-              operation={rightValue}
+              visible={drawerIsVisible}
+              onClose={toggleDrawerVisible}
+              operation={drawerValue}
             >
-              {operationSelector[rightValue]}
+              {operationSelector[drawerValue]}
             </DrawerOperations>
           </LayoutFullHeight>
         </Layout>

@@ -12,12 +12,9 @@ export const LEFT_SIDEBAR_NAMES = {
   }
 };
 
-export const RIGHT_TOP_SIDEBAR_NAMES = {
+export const RIGHT_SIDEBAR_NAMES = {
   ADD_PIPELINE: 'Add Pipeline',
   ADD_ALGORITHM: 'Add Algorithm',
-  ADD_DEBUG: 'Add Debug'
-};
-
-export const RIGHT_BOTTOM_SIDEBAR_NAMES = {
+  ADD_DEBUG: 'Add Debug',
   ERROR_LOGS: 'Error Logs'
 };
