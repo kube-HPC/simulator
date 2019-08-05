@@ -1,10 +1,10 @@
 import React from 'react';
 
 import USER_GUIDE from 'constants/user-guide';
-import { Typography, Select, Icon, Tag, Divider } from 'antd';
+import { Typography, Icon, Tag, Divider } from 'antd';
 import { COLOR_LAYOUT } from 'constants/colors';
 
-const { Title, Text, Paragraph } = Typography;
+const { Text, Paragraph } = Typography;
 
 const steps = [
   {
@@ -27,8 +27,9 @@ const steps = [
           We use the <Text strong>Dashboard</Text> for deploying and monitoring
           user algorithms and pipelines.
         </Paragraph>
-        <Title level={4}>Pick a Tutorial</Title>
-        <Select defaultValue="introduction" style={{ width: '100%' }}>
+        {/* {// TODO: Add tutorial picker} */}
+        {/* <Title level={4}>Pick a Tutorial</Title> */}
+        {/* <Select defaultValue="introduction" style={{ width: '100%' }}>
           <Select.OptGroup label="Beginner">
             <Select.Option value="introduction">Introduction</Select.Option>
             <Select.Option value="addPipeline">Add Pipeline</Select.Option>
@@ -39,7 +40,7 @@ const steps = [
               Add Complex Pipeline
             </Select.Option>
           </Select.OptGroup>
-        </Select>
+        </Select> */}
       </>
     ),
     locale: { skip: 'Skip' },
