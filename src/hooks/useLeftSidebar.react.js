@@ -6,11 +6,10 @@ import {
   WorkersTable,
   DriversTable,
   DebugTable,
-  AlgorithmBuildsTable,
-  NodeStatistics
+  AlgorithmBuildsTable
 } from 'components/UI/tables';
 
-import { LEFT_SIDEBAR_NAMES } from 'constants/table-names';
+import { LEFT_SIDEBAR_NAMES } from 'constants/sidebar-names';
 import { getBooleanLSItem, setLSItem } from 'utils/localStorage';
 import LOCAL_STORAGE_KEYS from 'constants/local-storage';
 import { makeToggle } from 'utils/hooks';
@@ -22,9 +21,7 @@ const tableSelector = {
   [LEFT_SIDEBAR_NAMES.WORKERS]: <WorkersTable />,
   [LEFT_SIDEBAR_NAMES.DRIVERS]: <DriversTable />,
   [LEFT_SIDEBAR_NAMES.DEBUG]: <DebugTable />,
-  [LEFT_SIDEBAR_NAMES.BUILDS]: <AlgorithmBuildsTable />,
-  [LEFT_SIDEBAR_NAMES.CLUSTER_STATS.CPU]: <NodeStatistics metric="cpu" />,
-  [LEFT_SIDEBAR_NAMES.CLUSTER_STATS.MEMORY]: <NodeStatistics metric="mem" />
+  [LEFT_SIDEBAR_NAMES.BUILDS]: <AlgorithmBuildsTable />
 };
 
 const leftCollapsedInitial = getBooleanLSItem(

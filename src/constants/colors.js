@@ -49,7 +49,8 @@ export const SERVICE_COLOR = {
   },
   [SERVICES['algorithm-operator']]: {
     backgroundColor: '#ccdd2c'
-  }
+  },
+  undefined: COLOR.lightOrange
 };
 
 export const COLOR_LAYOUT = {

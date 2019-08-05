@@ -1,7 +1,7 @@
 import React from 'react';
 
 import USER_GUIDE from 'constants/user-guide';
-import { Typography, Select, Icon, Tag } from 'antd';
+import { Typography, Select, Icon, Tag, Divider } from 'antd';
 import { COLOR_LAYOUT } from 'constants/colors';
 
 const { Title, Text, Paragraph } = Typography;
@@ -57,7 +57,7 @@ const steps = [
     ),
     content: (
       <Paragraph>
-        We can switch between <Text strong>tables</Text> like{' '}
+        Switch between <Text strong>tables</Text> like{' '}
         <Text code>Pipelines</Text>,<Text code>Algorithms</Text> and
         <Text code>Jobs</Text>.<br />
         We can notice{' '}
@@ -65,6 +65,10 @@ const steps = [
           The Entries Count
         </Tag>
         for each table.
+        <Divider />
+        For example, there are currently{' '}
+        <Tag style={{ color: COLOR_LAYOUT.colorPrimary }}>3</Tag>
+        <Text strong>Jobs</Text> deployed.
       </Paragraph>
     ),
     placement: 'right-start',
@@ -82,17 +86,18 @@ const steps = [
     ),
     content: (
       <Paragraph>
-        Here we <Text strong>monitor</Text> our data!
+        <Text strong>Monitor</Text> your deployed data.
         <br />
         Each table has its <Text strong>own properties</Text> and{' '}
-        <Text strong>additional actions</Text>, we will dive into each table in
-        a moment! 🤗
+        <Text strong>additional actions</Text>.
+        <Divider />
+        We will dive into each table in a moment! 🤗
       </Paragraph>
     ),
     placement: 'bottom'
   },
   {
-    target: USER_GUIDE.SIDEBAR_RIGHT,
+    target: USER_GUIDE.SIDEBAR_TOP_RIGHT,
     title: (
       <>
         Operations Sidebar{' '}
@@ -103,12 +108,30 @@ const steps = [
     ),
     content: (
       <Paragraph>
-        Here we use actions which <Text strong>deploy</Text> data,
-        <br />
-        like <Text code>Add Pipeline</Text> and <Text code>Add Algorithm</Text>.
+        Use actions like <Text code>Add Pipeline</Text> and{' '}
+        <Text code>Add Algorithm</Text> to <Text strong>deploy</Text> data.
       </Paragraph>
     ),
     placement: 'left'
+  },
+  {
+    target: USER_GUIDE.SIDEBAR_BOTTOM_RIGHT,
+    title: (
+      <>
+        Status Sidebar{' '}
+        <span role="img" aria-label="Status">
+          🌡
+        </span>
+      </>
+    ),
+    content: (
+      <Paragraph>
+        Monitor cluster stats
+        <br /> by accessing <Text code>Errors Logs</Text> and{' '}
+        <Text code>Cluster Stats</Text>
+      </Paragraph>
+    ),
+    placement: 'top'
   },
   {
     target: USER_GUIDE.TABLE_JOB.MENU_SELECT,

@@ -4,7 +4,7 @@ import { ReactComponent as IconAddPipeline } from 'images/no-fill/add-pipeline.s
 import { ReactComponent as IconAddAlgorithm } from 'images/no-fill/add-algorithm.svg';
 import { ReactComponent as IconAddDebug } from 'images/no-fill/add-debug.svg';
 
-import { RIGHT_SIDEBAR_NAMES } from 'constants/table-names';
+import { RIGHT_SIDEBAR_NAMES } from 'constants/sidebar-names';
 import { makeToggle } from 'utils/hooks';
 
 import {
@@ -12,9 +12,10 @@ import {
   AddAlgorithmForm,
   AddDebug,
   ErrorLogsTable
-} from 'components/UI/Layout/SidebarOperations';
+} from 'components/UI/Layout/SidebarRight';
 
 import useErrorLogs from './useErrorLogs.react';
+import { NodeStatistics } from 'components/UI/tables';
 
 const menuItems = [
   {
@@ -48,16 +49,25 @@ const useRightSidebar = () => {
     [RIGHT_SIDEBAR_NAMES.ADD_DEBUG]: (
       <AddDebug onSubmit={toggleDrawerVisible} />
     ),
+    [RIGHT_SIDEBAR_NAMES.CPU]: <NodeStatistics metric="cpu" />,
+    [RIGHT_SIDEBAR_NAMES.MEMORY]: <NodeStatistics metric="mem" />,
     [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: <ErrorLogsTable />
   };
 
   const { totalNewWarnings, setIsCleared } = useErrorLogs();
-
   const menuBottomRightItems = [
     {
-      name: 'Error Logs',
+      name: RIGHT_SIDEBAR_NAMES.ERROR_LOGS,
       type: 'warning',
       count: totalNewWarnings
+    },
+    {
+      name: RIGHT_SIDEBAR_NAMES.CPU,
+      type: 'cluster'
+    },
+    {
+      name: RIGHT_SIDEBAR_NAMES.MEMORY,
+      type: 'hdd'
     }
   ];
 

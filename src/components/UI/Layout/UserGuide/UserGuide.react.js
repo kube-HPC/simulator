@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import Joyride, { EVENTS, ACTIONS } from 'react-joyride';
 
 import useUserGuide from 'hooks/useUserGuide.react';
-import { LEFT_SIDEBAR_NAMES } from 'constants/table-names';
+import { LEFT_SIDEBAR_NAMES } from 'constants/sidebar-names';
 import userGuideSteps from './UserGuideSteps.react';
 import UserGuideTooltip from './UserGuideTooltip.react';
 

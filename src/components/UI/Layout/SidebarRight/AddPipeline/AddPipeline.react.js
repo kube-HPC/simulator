@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { addPipeline } from 'actions/pipeline.action';
-import AddPipelineForm from 'components/UI/Layout/SidebarOperations/AddPipeline/AddPipelineForm.react';
+import AddPipelineForm from 'components/UI/Layout/SidebarRight/AddPipeline/AddPipelineForm.react';
 
 function AddPipeline({ onSubmit }) {
   const dispatch = useDispatch();

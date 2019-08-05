@@ -6,8 +6,8 @@ import 'styles/GlobalStyle.css';
 
 import TableAutoComplete from 'components/UI/Layout/TableAutoComplete.react';
 import DrawerOperations from 'components/common/drawer/DrawerOperations.react';
-import SidebarOperations from 'components/UI/Layout/SidebarOperations/SidebarOperations.react';
-import SidebarLeft from 'components/UI/Layout/SidebarMainTables/SidebarLeft.react';
+import SidebarOperations from 'components/UI/Layout/SidebarRight/SidebarRight.react';
+import SidebarLeft from 'components/UI/Layout/SidebarLeft/SidebarLeft.react';
 
 import { message, Layout, Icon, Typography } from 'antd';
 import { init, socketInit } from 'actions/layout.action';
@@ -17,7 +17,7 @@ import USER_GUIDE from 'constants/user-guide';
 import GlobalStyle from 'styles/GlobalStyle.styles';
 import UserGuide from './UserGuide/UserGuide.react';
 import { triggerUserGuide } from 'actions/userGuide.action';
-import { LEFT_SIDEBAR_NAMES } from 'constants/table-names';
+import { LEFT_SIDEBAR_NAMES } from 'constants/sidebar-names';
 
 import useLeftSidebar from 'hooks/useLeftSidebar.react';
 import useRightSidebar from 'hooks/useRightSidebar.react';
@@ -158,11 +158,12 @@ function HKubeLayout() {
             <ContentMargin>{tableSelector[tableValue]}</ContentMargin>
             <RightSidebarsFlex>
               <SidebarOperations
-                className={USER_GUIDE.SIDEBAR_RIGHT}
+                className={USER_GUIDE.SIDEBAR_TOP_RIGHT}
                 onSelect={onSelectDrawer}
                 menuItems={menuItems}
               />
               <SidebarOperations
+                className={USER_GUIDE.SIDEBAR_BOTTOM_RIGHT}
                 onSelect={onSelectDrawer}
                 menuItems={menuBottomRightItems}
               />

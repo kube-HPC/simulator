@@ -16,7 +16,7 @@ import { Row, Col, Tag, Layout, Icon, Menu } from 'antd';
 
 import { COLOR_LAYOUT } from 'constants/colors';
 import USER_GUIDE from 'constants/user-guide';
-import { LEFT_SIDEBAR_NAMES } from 'constants/table-names';
+import { LEFT_SIDEBAR_NAMES } from 'constants/sidebar-names';
 import { dataCountMock } from 'config/template/user-guide.template';
 
 const SiderLight = styled(Layout.Sider)`
@@ -137,17 +137,6 @@ export default function SidebarLeft({ onSelect, selectedKeys, ...props }) {
         selectedKeys={selectedKeys}
       >
         {addMenuItems(menuItems)}
-        <Menu.SubMenu
-          title={setMenuItem(
-            <Icon type={'pie-chart'} style={IconStyle} />,
-            'Cluster Stats'
-          )}
-        >
-          {addMenuItems([
-            [LEFT_SIDEBAR_NAMES.CLUSTER_STATS.CPU, 'heat-map'],
-            [LEFT_SIDEBAR_NAMES.CLUSTER_STATS.MEMORY, 'hdd']
-          ])}
-        </Menu.SubMenu>
       </MenuMargin>
     </SiderLight>
   );

@@ -5,7 +5,7 @@ import DynamicTable from 'components/UI/Layout/DynamicTable.react';
 import CardRow from 'components/common/CardRow.react';
 
 import useErrorLogs from 'hooks/useErrorLogs.react';
-import errorLogsTableColumns from 'components/UI/Layout/SidebarOperations/ErrorLogs/ErrorLogsTableColumns.react';
+import errorLogsTableColumns from 'components/UI/Layout/SidebarRight/ErrorLogs/ErrorLogsTableColumns.react';
 
 export default function ErrorLogsTable() {
   const { dataSource } = useErrorLogs();
@@ -13,7 +13,9 @@ export default function ErrorLogsTable() {
   return (
     <DynamicTable
       isInner
-      rowKey={({ timestamp, message }) => `${timestamp}-${message}`}
+      rowKey={({ type, podName, timestamp, message }) =>
+        `${type}-${podName}-${timestamp}-${message}`
+      }
       columns={errorLogsTableColumns()}
       dataSource={dataSource}
       expandedRowRender={record => (

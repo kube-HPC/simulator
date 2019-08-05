@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import Immutable from 'seamless-immutable';
 import { useSelector } from 'react-redux';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 import { Table, Icon } from 'antd';
-import { Scrollbars } from 'react-custom-scrollbars';
 import USER_GUIDE, { userGuideStepIndexes } from 'constants/user-guide';
 import { jobsTableMock } from 'config/template/user-guide.template';
-import Immutable from 'seamless-immutable';
 
 const CustomExpandIcon = ({ expanded, onExpand, record }) => (
   <Icon type={expanded ? 'down' : 'right'} onClick={e => onExpand(record, e)} />
@@ -19,8 +19,7 @@ const TableScrollHidden = styled(Table)`
 
 const mockDataSource = Immutable(jobsTableMock);
 
-export default function DynamicTable(props) {
-  const { dataSource, isInner } = props;
+const DynamicTable = ({ dataSource, isInner, ...props }) => {
   const tableDataSource = dataSource || [];
 
   const { isOn: isGuideOn, stepIndex } = useSelector(state => state.userGuide);
@@ -52,7 +51,9 @@ export default function DynamicTable(props) {
   );
 
   return isInner ? table : <Scrollbars autoHide>{table}</Scrollbars>;
-}
+};
+
+export default DynamicTable;
 
 DynamicTable.propTypes = {
   dataSource: PropTypes.array.isRequired

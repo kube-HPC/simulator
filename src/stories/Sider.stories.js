@@ -7,7 +7,7 @@ import { createStore } from 'redux';
 import { Layout } from 'antd';
 
 import rootReducer from 'reducers/root.reducer';
-import SidebarLeft from 'components/UI/Layout/SidebarMainTables/SidebarLeft.react';
+import SidebarLeft from 'components/UI/Layout/SidebarLeft/SidebarLeft.react';
 
 const LayoutStyled = styled(Layout)`
   height: 100vh;
