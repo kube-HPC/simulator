@@ -1,3 +1,5 @@
+import { SERVICES } from './services';
+
 export const COLOR = {
   blue: '#307fe6',
   blueLight: '#45a9ec',
@@ -14,12 +16,40 @@ export const COLOR = {
 };
 
 export const SERVICE_COLOR = {
-  worker: COLOR.orange,
-  'monitor-service': COLOR.yellow,
-  'api-server': COLOR.red,
-  'pipeline-driver': COLOR.lightOrange,
-  'algorithm-queue': COLOR.lightGreen,
-  'pipeline-driver-queue': COLOR.blueLight
+  [SERVICES.worker]: {
+    backgroundColor: '#da96e8'
+  },
+  [SERVICES['trigger-service']]: {
+    backgroundColor: '#c5def5'
+  },
+  [SERVICES['task-executor']]: {
+    backgroundColor: '#f9d0c4'
+  },
+  [SERVICES['resource-manager']]: {
+    backgroundColor: '#1d76db',
+    isLight: true
+  },
+  [SERVICES['resource-executor']]: {
+    backgroundColor: '#fbca04'
+  },
+  [SERVICES['pipeline-driver']]: {
+    backgroundColor: '#b712c9',
+    isLight: true
+  },
+  [SERVICES['api-server']]: {
+    backgroundColor: '#bfdadc'
+  },
+  [SERVICES['algorithm-queue']]: {
+    backgroundColor: '#5319e7',
+    isLight: true
+  },
+  [SERVICES['algorithm-builder']]: {
+    backgroundColor: '#006b75',
+    isLight: true
+  },
+  [SERVICES['algorithm-operator']]: {
+    backgroundColor: '#ccdd2c'
+  }
 };
 
 export const COLOR_LAYOUT = {

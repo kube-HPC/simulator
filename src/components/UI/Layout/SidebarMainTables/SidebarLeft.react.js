@@ -6,7 +6,6 @@ import { useSpring, animated, config } from 'react-spring';
 
 import { ReactComponent as LogoFish } from 'images/logo-fish.svg';
 import { ReactComponent as LogoTitle } from 'images/logo-title.svg';
-import { ReactComponent as DebugIcon } from 'images/debug-icon.svg';
 import { ReactComponent as DriversIcon } from 'images/drivers-icon.svg';
 import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
 import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';

@@ -20,7 +20,7 @@ import {
 import cronstrue from 'cronstrue';
 import cronParser from 'cron-parser';
 
-import DynamicForm from 'components/UI/Layout/SidebarOperations/AddPipeliene/AddPipelineFormDynamic.react';
+import DynamicForm from 'components/UI/Layout/SidebarOperations/AddPipeline/AddPipelineFormDynamic.react';
 import { stringify, toUpperCaseFirstLetter } from 'utils/string';
 import JsonEditor from 'components/common/json/JsonEditor.react';
 import BottomContent from 'components/common/drawer/BottomContent.react';

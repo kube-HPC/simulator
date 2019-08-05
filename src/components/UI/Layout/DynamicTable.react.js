@@ -20,7 +20,7 @@ const TableScrollHidden = styled(Table)`
 const mockDataSource = Immutable(jobsTableMock);
 
 export default function DynamicTable(props) {
-  const { dataSource, isInner, disablePagination } = props;
+  const { dataSource, isInner } = props;
   const tableDataSource = dataSource || [];
 
   const { isOn: isGuideOn, stepIndex } = useSelector(state => state.userGuide);
@@ -36,18 +36,18 @@ export default function DynamicTable(props) {
         : []
   };
 
-  const additionalProps = isGuideOn ? guideProps : {};
+  const userGuideProps = isGuideOn ? guideProps : {};
 
   const table = (
     <TableScrollHidden
-      {...props}
-      {...additionalProps}
+      {...userGuideProps}
       size="middle"
       expandIcon={CustomExpandIcon}
       dataSource={isGuideOn ? mockDataSource : tableDataSource}
       pagination={
         tableDataSource.length < 20 || isGuideOn ? false : { pageSize: 20 }
       }
+      {...props}
     />
   );
 

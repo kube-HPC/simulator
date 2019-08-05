@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import { Layout, Icon, Menu } from 'antd';
+import { Layout, Icon, Menu, Badge } from 'antd';
 
 const SiderLight = styled(Layout.Sider)`
   border: none;
@@ -11,14 +11,15 @@ const SiderLight = styled(Layout.Sider)`
 const centerIconStyle = { fontSize: '25px', marginLeft: '-14px' };
 
 const addMenuItems = items =>
-  items.map(({ name, type, component }) => (
-    <Menu.Item key={name}>
-      <Icon type={type} component={component} style={centerIconStyle} />
-      <span>{name}</span>
+  items.map(({ name, type, component, count }) => (
+    <Menu.Item key={name} title={name}>
+      <Badge count={count} overflowCount={100} offset={[0, 11]}>
+        <Icon type={type} component={component} style={centerIconStyle} />
+      </Badge>
     </Menu.Item>
   ));
 
-const SidebarOperations = ({ selectedKeys, onSelect, menuItems, ...props }) => (
+const SidebarOperations = ({ onSelect, menuItems, ...props }) => (
   <SiderLight {...props} theme="light" collapsed={true} collapsedWidth={60}>
     <Menu
       mode="vertical"

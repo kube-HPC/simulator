@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
 import { getJaegerData } from 'actions/jobs.action';
-import tableDataSelector from 'utils/tableDataSelector';
 import { STATE_SOURCES } from 'reducers/root.reducer';
 import useDispatchCallback from './useDispatchMemo.react';
+import { tableDataSelector } from 'utils/hooks';
 
 const dataSelector = tableDataSelector(
   STATE_SOURCES.JOBS_TABLE,

@@ -274,9 +274,6 @@ function AddAlgorithmForm(props) {
           </Button>
         ]}
       >
-        <Button key="Preview" disabled={true}>
-          Preview
-        </Button>
         <Button key="Submit" type="primary" onClick={onSubmit}>
           Submit
         </Button>

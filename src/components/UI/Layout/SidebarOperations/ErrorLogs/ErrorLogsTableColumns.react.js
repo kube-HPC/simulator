@@ -1,16 +1,12 @@
 import React from 'react';
-
-import humanizeDuration from 'humanize-duration';
 import Moment from 'react-moment';
-import { toUpperCaseFirstLetter, sorter } from 'utils/string';
+import { sorter } from 'utils/string';
 
-import { Progress, Tag, Tooltip, Button, Row, Col, Typography } from 'antd';
+import { Tag, Typography } from 'antd';
 
-import { COLOR_PRIORITY, COLOR_PIPELINE_STATUS } from 'constants/colors';
-import PIPELINE_STATES from 'constants/pipeline-states';
-import StatusTag from 'components/common/StatusTag.react';
 import Ellipsis from 'components/common/Ellipsis.react';
 import { SERVICE_COLOR } from 'constants/colors';
+import { SERVICES } from 'constants/services';
 
 const errorLogsTableColumns = () => [
   {
@@ -18,33 +14,40 @@ const errorLogsTableColumns = () => [
     dataIndex: 'serviceName',
     key: 'serviceName',
     width: '10%',
-    render: serviceName => (
-      <Tag color={SERVICE_COLOR[serviceName]}>
-        <Ellipsis text={toUpperCaseFirstLetter(serviceName)} />
-      </Tag>
-    )
+    sorter: (a, b) => sorter(a.serviceName, b.serviceName),
+    render: serviceName => {
+      const { backgroundColor, isLight } = SERVICE_COLOR[SERVICES[serviceName]];
+      return (
+        <Tag color={backgroundColor}>
+          <Ellipsis
+            style={{ color: isLight ? 'white' : 'black' }}
+            text={SERVICES[serviceName]}
+          />
+        </Tag>
+      );
+    }
   },
   {
     title: 'Pod Name',
     dataIndex: 'podName',
     key: 'podName',
     width: '10%',
-    render: podName => <Ellipsis copyable type="secondary" text={podName} />
+    render: podName => <Ellipsis copyable text={podName} />
   },
   {
     title: 'Message',
     dataIndex: 'message',
     key: 'message',
     render: message => (
-      <Ellipsis copyable type="secondary" strong text={message} />
+      <Typography.Paragraph strong>{message}</Typography.Paragraph>
     )
   },
   {
     title: 'Time Stamp',
     dataIndex: 'timestamp',
     key: 'timestamp',
-    width: '5%',
-    sorter: (a, b) => a.timestamp - b.timestamp,
+    width: '10%',
+    sorter: (a, b) => sorter(a.timestamp, b.timestamp),
     render: timestamp => (
       <Tag>
         <Moment format="DD/MM/YY HH:mm:ss">{timestamp}</Moment>

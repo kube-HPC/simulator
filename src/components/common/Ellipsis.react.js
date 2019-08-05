@@ -11,15 +11,17 @@ const Center = styled.div`
 
 const DEFAULT_LENGTH = 20;
 
-export default function Ellipsis({ text, length, copyable, type, ...props }) {
+const Ellipsis = ({ text, length, copyable, type, ellipsis, ...props }) => {
   const str = text ? text : '';
   const isOverlapped = str.length >= 20;
 
   const textComponent = (
     <Center>
-      <Tooltip title={isOverlapped && str}>
-        <Text type={type ? type : copyable && 'secondary'} {...props}>
-          {isOverlapped ? `${str.substring(0, DEFAULT_LENGTH)}...` : str}
+      <Tooltip title={isOverlapped && ellipsis && str}>
+        <Text ellipsis type={type ? type : copyable && 'secondary'} {...props}>
+          {isOverlapped && ellipsis
+            ? `${str.substring(0, DEFAULT_LENGTH)}...`
+            : str}
         </Text>
       </Tooltip>
     </Center>
@@ -37,4 +39,10 @@ export default function Ellipsis({ text, length, copyable, type, ...props }) {
   );
 
   return copyableComponent;
-}
+};
+
+export default Ellipsis;
+
+Ellipsis.defaultProps = {
+  ellipsis: true
+};

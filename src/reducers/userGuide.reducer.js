@@ -2,9 +2,9 @@ import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
 import actions from 'constants/application-actions';
 import LOCAL_STORAGE_KEYS from 'constants/local-storage';
-import { getBooleanLocalStorageItem } from 'utils/localStorage';
+import { getBooleanLSItem } from 'utils/localStorage';
 
-let isOn = getBooleanLocalStorageItem(LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS);
+let isOn = getBooleanLSItem(LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS);
 
 const userGuideStatus = Immutable.from({
   stepIndex: 0,

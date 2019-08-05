@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, Input, AutoComplete } from 'antd';
+import { Input, AutoComplete } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { autoCompleteFilter } from 'actions/layout.action';
 import styled from 'styled-components';

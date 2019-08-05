@@ -5,10 +5,7 @@ import LOCAL_STORAGE_KEYS from 'constants/local-storage';
 import { Typography, Button, Row, Col, Checkbox } from 'antd';
 import { COLOR } from 'constants/colors';
 
-import {
-  setLocalStorageItem,
-  getBooleanLocalStorageItem
-} from 'utils/localStorage';
+import { setLSItem, getBooleanLSItem } from 'utils/localStorage';
 
 const TooltipBody = styled.div`
   text-align: center;
@@ -37,9 +34,7 @@ const CheckboxUnClickable = styled(Checkbox)`
   pointer-events: none;
 `;
 
-const isOnFromLS = getBooleanLocalStorageItem(
-  LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS
-);
+const isOnFromLS = getBooleanLSItem(LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS);
 
 const UserGuideTooltip = ({
   continuous,
@@ -57,7 +52,7 @@ const UserGuideTooltip = ({
 
   useEffect(
     () => {
-      setLocalStorageItem(LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS, isRunOnStartup);
+      setLSItem(LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS, isRunOnStartup);
     },
     [isRunOnStartup]
   );
