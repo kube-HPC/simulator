@@ -11,9 +11,9 @@ const SiderLight = styled(Layout.Sider)`
 const centerIconStyle = { fontSize: '25px', marginLeft: '-14px' };
 
 const addMenuItems = items =>
-  items.map(({ name, type, component, count }) => (
+  items.map(({ name, type, component, count, status }) => (
     <Menu.Item key={name} title={name}>
-      <Badge count={count} overflowCount={100} offset={[0, 11]}>
+      <Badge status={status} count={count} overflowCount={100} offset={[0, 11]}>
         <Icon type={type} component={component} style={centerIconStyle} />
       </Badge>
     </Menu.Item>

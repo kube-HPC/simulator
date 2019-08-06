@@ -6,7 +6,7 @@ import { toUpperCaseFirstLetter, sorter } from 'utils/string';
 
 import { Progress, Tag, Tooltip, Button, Row, Col } from 'antd';
 
-import { COLOR_PRIORITY, COLOR_PIPELINE_STATUS } from 'constants/colors';
+import { COLOR_PRIORITY, COLOR_PIPELINE_STATUS } from 'styles/colors';
 import PIPELINE_STATES from 'constants/pipeline-states';
 import StatusTag from 'components/common/StatusTag.react';
 import Ellipsis from 'components/common/Ellipsis.react';

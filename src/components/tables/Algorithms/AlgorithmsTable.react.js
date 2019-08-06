@@ -9,17 +9,16 @@ import algorithmsTableColumns from 'components/tables/Algorithms/AlgorithmsTable
 import CardRow from 'components/common/CardRow.react';
 import TabSwitcher from 'components/common/TabSwitcher.react';
 import useAlgorithm from 'hooks/useAlgorithm.react';
+import { tableDataSelector } from 'utils/hooks';
+import { STATE_SOURCES } from 'reducers/root.reducer';
 
-const tableDataSelector = createSelector(
-  state => state.algorithmTable.dataSource.asMutable(),
-  state => state.autoCompleteFilter.filter,
-  (dataSource, filter) =>
-    dataSource && dataSource.filter(row => row.name.includes(filter))
+const dataSelector = tableDataSelector(
+  STATE_SOURCES.ALGORITHM_TABLE,
+  filter => record => record.name.includes(filter)
 );
 
-// TODO: Same table as pipeline
 function AlgorithmsTable() {
-  const dataSource = useSelector(state => tableDataSelector(state));
+  const dataSource = useSelector(dataSelector);
   const readmeDefault = useSelector(state => state.algorithmReadme);
   const dispatch = useDispatch();
 
@@ -31,19 +30,21 @@ function AlgorithmsTable() {
       onExpand={(expanded, record) => {
         if (expanded) dispatch(getAlgorithmReadme(record.name));
       }}
-      expandedRowRender={record => (
-        <CardRow>
-          <TabSwitcher
-            jsonObject={record}
-            readme={
-              readmeDefault &&
-              readmeDefault[record.key] &&
-              readmeDefault[record.key].readme &&
-              readmeDefault[record.key].readme.readme
-            }
-          />
-        </CardRow>
-      )}
+      expandedRowRender={record => {
+        // debugger;
+        return (
+          <CardRow>
+            <TabSwitcher
+              jsonObject={record}
+              readme={
+                readmeDefault &&
+                readmeDefault[record.name] &&
+                readmeDefault[record.name].readme
+              }
+            />
+          </CardRow>
+        );
+      }}
     />
   );
 }

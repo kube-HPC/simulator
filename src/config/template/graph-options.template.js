@@ -1,4 +1,4 @@
-import { COLOR_PIPELINE_STATUS } from 'constants/colors';
+import { COLOR_PIPELINE_STATUS, COLOR } from 'styles/colors';
 
 export default {
   physics: {
@@ -16,10 +16,15 @@ export default {
   },
   nodes: {
     shape: 'box',
-    size: 40,
+    color: {
+      border: COLOR.darkGrey,
+      highlight: {
+        border: 'black'
+      }
+    },
     font: {
-      size: 14,
-      color: 'rgba(0,0,0,0.5)'
+      size: 15,
+      color: COLOR.white
     },
     margin: {
       top: 15,
@@ -42,21 +47,41 @@ export default {
   },
   groups: {
     batchCompleted: {
-      color: { background: COLOR_PIPELINE_STATUS.completed, border: 'black' }
+      color: {
+        background: COLOR_PIPELINE_STATUS.completed
+      }
     },
     batchNotStarted: {
-      color: { background: '#FF5441', border: 'black' }
+      color: {
+        background: COLOR_PIPELINE_STATUS.pending
+      }
     },
     batchRunning: {
-      color: { background: '#eeda13', border: 'rgba(0,0,0,0.5)' }
+      color: {
+        background: COLOR_PIPELINE_STATUS.inProgress
+      }
     },
     batchErrors: {
-      color: { background: COLOR_PIPELINE_STATUS.failed, border: 'black' }
+      color: {
+        background: COLOR_PIPELINE_STATUS.failed
+      }
+    },
+    batchPreSchedule: {
+      color: {
+        background: COLOR_PIPELINE_STATUS.Preschedule
+      }
     },
     notStarted: {
-      color: { background: '#FF5441', border: 'rgba(0,0,0,0.5)' }
+      color: {
+        background: COLOR_PIPELINE_STATUS.pending
+      }
     },
-    completed: { color: COLOR_PIPELINE_STATUS.completed },
+    preSchedule: {
+      color: {
+        background: COLOR_PIPELINE_STATUS.Preschedule
+      }
+    },
+    completed: { color: { background: COLOR_PIPELINE_STATUS.completed } },
     source: {
       color: { border: 'white' }
     }

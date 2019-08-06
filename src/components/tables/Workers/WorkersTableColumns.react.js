@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon, Tag } from 'antd';
 
-import { COLOR_PIPELINE_STATUS } from 'constants/colors';
+import { COLOR_PIPELINE_STATUS } from 'styles/colors';
 import StatusTag from 'components/common/StatusTag.react';
 
 import { toUpperCaseFirstLetter, sorter } from 'utils/string';

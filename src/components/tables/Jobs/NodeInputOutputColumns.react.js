@@ -3,7 +3,7 @@ import { Tag, Tooltip, Button, Row, Col } from 'antd';
 import humanizeDuration from 'humanize-duration';
 
 import { downloadStorageResults } from 'actions/jobs.action';
-import { COLOR_PIPELINE_STATUS } from 'constants/colors';
+import { COLOR_PIPELINE_STATUS } from 'styles/colors';
 import PIPELINE_STATES from 'constants/pipeline-states';
 import { toUpperCaseFirstLetter } from 'utils/string';
 

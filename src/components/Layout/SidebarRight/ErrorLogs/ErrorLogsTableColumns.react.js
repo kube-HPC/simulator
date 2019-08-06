@@ -5,7 +5,7 @@ import { sorter } from 'utils/string';
 import { Tag, Typography } from 'antd';
 
 import Ellipsis from 'components/common/Ellipsis.react';
-import { SERVICE_COLOR } from 'constants/colors';
+import { SERVICE_COLOR } from 'styles/colors';
 import { SERVICES } from 'constants/services';
 
 const errorLogsTableColumns = () => [

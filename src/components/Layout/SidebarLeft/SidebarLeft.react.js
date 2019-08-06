@@ -14,7 +14,7 @@ import { ReactComponent as JobsIcon } from 'images/jobs-icon.svg';
 
 import { Row, Col, Tag, Layout, Icon, Menu } from 'antd';
 
-import { COLOR_LAYOUT } from 'constants/colors';
+import { COLOR_LAYOUT } from 'styles/colors';
 import USER_GUIDE from 'constants/user-guide';
 import { LEFT_SIDEBAR_NAMES } from 'constants/sidebar-names';
 import { dataCountMock } from 'config/template/user-guide.template';

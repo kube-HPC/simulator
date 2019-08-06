@@ -1,9 +1,10 @@
-import { SERVICES } from './services';
+import { SERVICES } from '../constants/services';
 
 export const COLOR = {
   blue: '#307fe6',
   blueLight: '#45a9ec',
-  darkGrey: '#0000006b',
+  blueDark: '#0031e5',
+  darkGrey: '#807c7c',
   grey: '#ccc',
   lightGreen: '#87d068',
   lightGrey: '#e8e8e8',
@@ -12,7 +13,8 @@ export const COLOR = {
   red: '#e74c3c',
   transparentGrey: '#bfbfbf21',
   yellow: '#eeda13',
-  white: 'white'
+  white: 'white',
+  pink: '#e543b4'
 };
 
 // View all services colors @ https://github.com/kube-HPC/hkube/labels
@@ -73,7 +75,7 @@ export const COLOR_PIPELINE_STATUS = {
   creating: COLOR.yellow,
   failed: COLOR.red,
   init: COLOR.lightGreen,
-  inProgress: COLOR.lightGrey,
+  inProgress: COLOR.yellow,
   pending: COLOR.darkGrey,
   ready: COLOR.lightGreen,
   recovering: COLOR.darkGrey,
@@ -81,7 +83,8 @@ export const COLOR_PIPELINE_STATUS = {
   stalled: COLOR.red,
   stopped: COLOR.orange,
   stopping: COLOR.orange,
-  succeed: COLOR.lightGreen
+  succeed: COLOR.lightGreen,
+  Preschedule: COLOR.blueDark
 };
 
 export const COLOR_PRIORITY = {

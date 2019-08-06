@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import LOCAL_STORAGE_KEYS from 'constants/local-storage';
 import { Typography, Button, Row, Col, Checkbox } from 'antd';
-import { COLOR } from 'constants/colors';
+import { COLOR } from 'styles/colors';
 
 import { setLSItem, getBooleanLSItem, getLSItem } from 'utils/localStorage';
 

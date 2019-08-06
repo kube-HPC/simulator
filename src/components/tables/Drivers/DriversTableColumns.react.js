@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tag } from 'antd';
-import { COLOR_PIPELINE_STATUS } from 'constants/colors';
+import { COLOR_PIPELINE_STATUS } from 'styles/colors';
 import { sorter } from 'utils/string';
 import Ellipsis from 'components/common/Ellipsis.react';
 

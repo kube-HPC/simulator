@@ -95,8 +95,7 @@ const algorithmsTableColumns = ({
             readmeDefault={
               readmeDefault &&
               readmeDefault[record.name] &&
-              readmeDefault[record.name].readme &&
-              readmeDefault[record.name].readme.readme
+              readmeDefault[record.name].readme
             }
             record={record}
             onSubmit={onSubmit}

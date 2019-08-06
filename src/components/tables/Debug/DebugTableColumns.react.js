@@ -1,7 +1,7 @@
 import React from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { notification, Tag, Button } from 'antd';
-import { COLOR_PIPELINE_STATUS } from 'constants/colors';
+import { COLOR_PIPELINE_STATUS } from 'styles/colors';
 import { sorter } from 'utils/string';
 import Ellipsis from 'components/common/Ellipsis.react';
 

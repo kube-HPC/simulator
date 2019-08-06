@@ -11,7 +11,7 @@ import SidebarLeft from 'components/Layout/SidebarLeft/SidebarLeft.react';
 
 import { message, Layout, Icon, Typography } from 'antd';
 import { init, socketInit } from 'actions/layout.action';
-import { COLOR_LAYOUT } from 'constants/colors';
+import { COLOR_LAYOUT } from 'styles/colors';
 
 import USER_GUIDE from 'constants/user-guide';
 import GlobalStyle from 'styles/GlobalStyle.styles';
