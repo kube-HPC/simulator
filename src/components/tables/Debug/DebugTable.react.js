@@ -4,8 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { deleteAlgorithm } from 'actions/debug.action';
 
-import debugTableColumns from 'components/UI/tables/Debug/DebugTableColumns.react';
-import DynamicTable from 'components/UI/Layout/DynamicTable.react';
+import debugTableColumns from 'components/tables/Debug/DebugTableColumns.react';
+import DynamicTable from 'components/Layout/DynamicTable.react';
 import JsonView from 'components/common/json/JsonView.react';
 import CardRow from 'components/common/CardRow.react';
 

@@ -3,12 +3,12 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
 
-import DynamicTable from 'components/UI/Layout/DynamicTable.react';
+import DynamicTable from 'components/Layout/DynamicTable.react';
 import defaultWorkerData from 'config/template/worker.template';
 import {
   workerTableColumns,
   workersTableStats
-} from 'components/UI/tables/Workers/WorkersTableColumns.react';
+} from 'components/tables/Workers/WorkersTableColumns.react';
 import JsonView from 'components/common/json/JsonView.react';
 import CardRow from 'components/common/CardRow.react';
 import { createSelector } from 'reselect';
@@ -56,14 +56,17 @@ function WorkersTable() {
   const stats = useSelector(state => state.workerTable.stats);
 
   const statsMergedWithDefault =
-    stats &&
-    stats.stats &&
-    stats.stats.map(algo => ({ ...defaultWorkerData, ...algo }));
+    (stats &&
+      stats.stats &&
+      stats.stats
+        .map(algo => ({ ...defaultWorkerData, ...algo }))
+        .asMutable()) ||
+    [];
   return (
     <DynamicTable
       rowKey={record => record.algorithmName}
       columns={workerTableColumns()}
-      dataSource={statsMergedWithDefault.asMutable()}
+      dataSource={statsMergedWithDefault}
       expandedRowRender={expandedRowRender(workersTableStats(), dataSource)}
     />
   );

@@ -4,8 +4,8 @@ import React from 'react';
 import { getPipelineReadme } from 'actions/readme.action';
 import usePipeline from 'hooks/usePipeline.react';
 
-import DynamicTable from 'components/UI/Layout/DynamicTable.react';
-import pipelinesTableColumns from 'components/UI/tables/Pipelines/PipelinesTableColumns.react';
+import DynamicTable from 'components/Layout/DynamicTable.react';
+import pipelinesTableColumns from 'components/tables/Pipelines/PipelinesTableColumns.react';
 import PipelineTabSwitcher from 'components/common/TabSwitcher.react';
 import CardRow from 'components/common/CardRow.react';
 import { createSelector } from 'reselect';

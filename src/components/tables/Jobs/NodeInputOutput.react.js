@@ -2,10 +2,10 @@ import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import DynamicTable from 'components/UI/Layout/DynamicTable.react';
+import DynamicTable from 'components/Layout/DynamicTable.react';
 import JsonView from 'components/common/json/JsonView.react';
 import CardRow from 'components/common/CardRow.react';
-import tableColumns from 'components/UI/tables/Jobs/NodeInputOutputColumns.react';
+import tableColumns from 'components/tables/Jobs/NodeInputOutputColumns.react';
 
 import { downloadStorageResults } from 'actions/jobs.action';
 

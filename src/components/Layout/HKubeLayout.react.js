@@ -4,10 +4,10 @@ import { useDispatch } from 'react-redux';
 
 import 'styles/GlobalStyle.css';
 
-import TableAutoComplete from 'components/UI/Layout/TableAutoComplete.react';
+import TableAutoComplete from 'components/Layout/TableAutoComplete.react';
 import DrawerOperations from 'components/common/drawer/DrawerOperations.react';
-import SidebarOperations from 'components/UI/Layout/SidebarRight/SidebarRight.react';
-import SidebarLeft from 'components/UI/Layout/SidebarLeft/SidebarLeft.react';
+import SidebarOperations from 'components/Layout/SidebarRight/SidebarRight.react';
+import SidebarLeft from 'components/Layout/SidebarLeft/SidebarLeft.react';
 
 import { message, Layout, Icon, Typography } from 'antd';
 import { init, socketInit } from 'actions/layout.action';

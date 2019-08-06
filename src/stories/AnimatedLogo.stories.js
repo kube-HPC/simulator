@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react';
 import { animated, useSpring } from 'react-spring';
 import styled from 'styled-components';
 
-import AnimatedLogo from 'components/UI/Layout/SidebarLeft/AnimatedLogo.react';
+import LoadingScreen from 'components/Layout/LoadingScreen.react';
 
 const Circle = styled(animated.div)`
   background: palevioletred;
@@ -39,5 +39,5 @@ function AnimateCircle() {
 }
 
 storiesOf('Basics|Animations', module)
-  .add('Logo', () => <AnimatedLogo />)
+  .add('Logo', () => <LoadingScreen />)
   .add('Circle', () => <AnimateCircle />);

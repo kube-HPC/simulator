@@ -4,7 +4,7 @@ import { Button, Row, Col, Modal, Icon, Tooltip, Typography } from 'antd';
 import { ReactComponent as PlayIconSvg } from 'images/play-icon.svg';
 import { stringify, sorter } from 'utils/string';
 import DrawerEditor from 'components/common/drawer/DrawerEditor.react';
-import SwitchCron from 'components/UI/tables/Pipelines/SwitchCron.react';
+import SwitchCron from 'components/tables/Pipelines/SwitchCron.react';
 import Ellipsis from 'components/common/Ellipsis.react';
 import StatusTag from 'components/common/StatusTag.react';
 import DrawerEditorMD from 'components/common/drawer/DrawerEditorMD.react';
