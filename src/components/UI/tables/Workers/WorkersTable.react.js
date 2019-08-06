@@ -56,14 +56,17 @@ function WorkersTable() {
   const stats = useSelector(state => state.workerTable.stats);
 
   const statsMergedWithDefault =
-    stats &&
-    stats.stats &&
-    stats.stats.map(algo => ({ ...defaultWorkerData, ...algo }));
+    (stats &&
+      stats.stats &&
+      stats.stats
+        .map(algo => ({ ...defaultWorkerData, ...algo }))
+        .asMutable()) ||
+    [];
   return (
     <DynamicTable
       rowKey={record => record.algorithmName}
       columns={workerTableColumns()}
-      dataSource={statsMergedWithDefault.asMutable()}
+      dataSource={statsMergedWithDefault}
       expandedRowRender={expandedRowRender(workersTableStats(), dataSource)}
     />
   );
