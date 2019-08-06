@@ -121,13 +121,15 @@ function HKubeLayout() {
           <HeaderStretch>
             <RowCenter type="flex" justify="space-between">
               <HoverIcon
-                className={USER_GUIDE.SIDEBAR_LEFT_MENU_BUTTON}
                 type={leftIsCollapsed ? 'menu-fold' : 'menu-unfold'}
                 style={{ fontSize: 22 }}
                 onClick={toggleLeftVisible}
               />
-              <TableAutoComplete table={tableValue} />
-              <HelpBarFlex>
+              <TableAutoComplete
+                table={tableValue}
+                className={USER_GUIDE.HEADER.AUTO_COMPLETE}
+              />
+              <HelpBarFlex className={USER_GUIDE.HEADER.SOCIALS}>
                 <HoverIcon
                   type="global"
                   style={{ fontSize: 22 }}

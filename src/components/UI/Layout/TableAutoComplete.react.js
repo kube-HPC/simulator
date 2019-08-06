@@ -33,18 +33,14 @@ const getDataByTable = table => state =>
   tableSelector[table] &&
   state[tableSelector[table]].dataSource.map(tableSearchBy[table]);
 
-const disabledTable = ['CPU', 'Memory'];
-
-function TableAutoComplete({ table }) {
-  const isDisabled = disabledTable.includes(table);
-
+function TableAutoComplete({ table, ...props }) {
   const tableData = useSelector(getDataByTable(table));
   const dispatch = useDispatch();
   const filterData = e => dispatch(autoCompleteFilter(e));
 
   return (
     <AutoCompleteTransparent
-      disabled={isDisabled}
+      {...props}
       dataSource={tableData}
       onSearch={filterData}
       onSelect={filterData}

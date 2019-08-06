@@ -20,13 +20,14 @@ const steps = [
     content: (
       <>
         <Paragraph>
-          HKube is a cloud-native open source framework to run distributed
-          pipeline of algorithms.
+          <Text strong>HKube</Text> is a cloud-native open source framework
+          which run distributed pipeline of algorithms.
         </Paragraph>
         <Paragraph>
-          We use the <Text strong>Dashboard</Text> for deploying and monitoring
-          user algorithms and pipelines.
+          The <Text strong>Dashboard</Text> supports every functionality{' '}
+          <Text strong>HKube</Text> has to offer.
         </Paragraph>
+
         {/* {// TODO: Add tutorial picker} */}
         {/* <Title level={4}>Pick a Tutorial</Title> */}
         {/* <Select defaultValue="introduction" style={{ width: '100%' }}>
@@ -47,6 +48,31 @@ const steps = [
     placement: 'center'
   },
   {
+    target: USER_GUIDE.HEADER.AUTO_COMPLETE,
+    title: <>Table Auto Complete</>,
+    content: (
+      <Paragraph>
+        The <Text strong>search-bar</Text> allows you to filter current table's
+        data.
+      </Paragraph>
+    ),
+    placement: 'bottom'
+  },
+  {
+    target: USER_GUIDE.HEADER.SOCIALS,
+    title: <>External Sources</>,
+    content: (
+      <Paragraph>
+        Visit <Text strong>HKube's</Text> <Text code>Website</Text> and{' '}
+        <Text code>Github</Text> repository.
+        <br />
+        You can run the tutorial any time by pressing{' '}
+        <Icon type="question-circle" />
+      </Paragraph>
+    ),
+    placement: 'bottom'
+  },
+  {
     target: USER_GUIDE.SIDEBAR_LEFT,
     title: (
       <>
@@ -58,16 +84,19 @@ const steps = [
     ),
     content: (
       <Paragraph>
-        Switch between <Text strong>tables</Text> like{' '}
-        <Text code>Pipelines</Text>,<Text code>Algorithms</Text> and
-        <Text code>Jobs</Text>.<br />
-        We can notice{' '}
+        The tables allow you to operate HKube.
+        <br />
+        Each table has its unique actions, like re-running{' '}
+        <Text code>Jobs</Text>, starting a <Text code>Pipeline</Text> and
+        updating <Text code>Algorithm</Text> resources. <br />
+        <Divider />
+        Notice the{' '}
         <Tag style={{ color: COLOR_LAYOUT.colorPrimary }}>
           The Entries Count
         </Tag>
         for each table.
-        <Divider />
-        For example, there are currently{' '}
+        <br />
+        <Text underline>For example</Text>, there are currently{' '}
         <Tag style={{ color: COLOR_LAYOUT.colorPrimary }}>3</Tag>
         <Text strong>Jobs</Text> deployed.
       </Paragraph>
@@ -75,6 +104,7 @@ const steps = [
     placement: 'right-start',
     spotlightPadding: 0
   },
+
   {
     target: USER_GUIDE.TABLE,
     title: (
@@ -86,14 +116,21 @@ const steps = [
       </>
     ),
     content: (
-      <Paragraph>
-        <Text strong>Monitor</Text> your deployed data.
-        <br />
-        Each table has its <Text strong>own properties</Text> and{' '}
-        <Text strong>additional actions</Text>.
-        <Divider />
-        We will dive into each table in a moment! 🤗
-      </Paragraph>
+      <>
+        <Paragraph>
+          <Text strong>Monitor</Text> your deployed data.
+          <br />
+          Each table has its <Text strong>own properties</Text> and{' '}
+          <Text strong>additional actions</Text>.<br />
+        </Paragraph>
+        <Paragraph>
+          <Text underline>For example</Text>, we can see the jobs{' '}
+          <Text code>Status</Text>, <Text code>Live Progress</Text>, job{' '}
+          <Text code>Re-Run</Text> and <Text code>Download</Text> its results.
+          <Divider />
+          We will dive into each table in a moment! 🤗
+        </Paragraph>
+      </>
     ),
     placement: 'bottom'
   },
@@ -109,8 +146,13 @@ const steps = [
     ),
     content: (
       <Paragraph>
-        Use actions like <Text code>Add Pipeline</Text> and{' '}
-        <Text code>Add Algorithm</Text> to <Text strong>deploy</Text> data.
+        The <Text code>Operations</Text> allows you to add data to{' '}
+        <Text strong>HKube</Text>.
+        <Divider />
+        <Text underline>For example</Text>, you can add a{' '}
+        <Text code>Pipeline</Text> an <Text code>Algorithm</Text> and even{' '}
+        <Text code>Debug</Text> your <Text strong>algorithm</Text> directly in
+        your own <Text strong>IDE</Text>.
       </Paragraph>
     ),
     placement: 'left'
@@ -127,9 +169,10 @@ const steps = [
     ),
     content: (
       <Paragraph>
-        Monitor cluster stats
-        <br /> by accessing <Text code>Errors Logs</Text> and{' '}
-        <Text code>Cluster Stats</Text>
+        Monitor <Text strong>HKube's</Text> stats.
+        <Divider />
+        <Text underline>For example</Text>, <Text code>Error logs</Text>
+        <Text code>CPU</Text> and <Text code>Memory</Text>
       </Paragraph>
     ),
     placement: 'top'
@@ -149,7 +192,7 @@ const steps = [
     title: <>Copy Important Entries</>,
     content: (
       <Paragraph>
-        Click on the <Text code>Job ID</Text>, it will copy its ID! 🤩
+        Click on the <Text code>Job ID</Text>, it will copy it! 🤩
       </Paragraph>
     ),
     spotlightClicks: true,
@@ -167,10 +210,9 @@ const steps = [
     ),
     content: (
       <Paragraph>
-        We have <Text strong>additional actions</Text> like{' '}
-        <Text code>Re-Run</Text>, <Text code>Cancel</Text>,{' '}
-        <Text code>Stop/Continue</Text> and <Text code>Download Results</Text>{' '}
-        for each entry!
+        Use <Text strong>additional actions</Text> like <Text code>Re-Run</Text>
+        , <Text code>Cancel</Text>, <Text code>Stop/Continue</Text> and{' '}
+        <Text code>Download Results</Text> for each entry!
       </Paragraph>
     ),
     placement: 'right'
@@ -184,9 +226,9 @@ const steps = [
         <Text code>
           <Icon type="right" />
         </Text>{' '}
-        we expended the row.
+        you can expend the row.
         <br />
-        We can inspect additional data like <Text code>Graph</Text>,{' '}
+        Inspect additional data like <Text code>Graph</Text>,{' '}
         <Text code>Trace</Text>, <Text code>JSON</Text> 🤘.
       </Paragraph>
     ),

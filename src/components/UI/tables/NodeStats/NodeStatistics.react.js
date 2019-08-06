@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ResponsiveBar } from '@nivo/bar';
 import styled from 'styled-components';
+import { COLOR } from 'constants/colors';
 
 const Container = styled.div`
   font-size: 20px;
@@ -47,16 +48,16 @@ function NodeStatistics({ metric }) {
           axis: {
             ticks: {
               line: {
-                stroke: 'green'
+                stroke: COLOR.darkGrey
               },
               text: {
-                fontSize: '12px',
+                fontSize: 16,
                 marginRight: '10px'
               }
             },
             legend: {
               text: {
-                fontSize: '18px'
+                fontSize: 16
               }
             }
           }
@@ -76,7 +77,7 @@ function NodeStatistics({ metric }) {
             id: 'dots',
             type: 'patternDots',
             background: 'inherit',
-            color: '#fff',
+            color: COLOR.white,
             size: 4,
             padding: 3,
             stagger: true
@@ -85,7 +86,7 @@ function NodeStatistics({ metric }) {
             id: 'lines',
             type: 'patternLines',
             background: 'inherit',
-            color: '#fff',
+            color: COLOR.white,
             rotation: -45,
             lineWidth: 1,
             spacing: 10
@@ -105,7 +106,7 @@ function NodeStatistics({ metric }) {
             id: 'lines'
           }
         ]}
-        borderColor="inherit:darker(1.6)"
+        borderColor={COLOR.grey}
         axisBottom={{
           tickSize: 5,
           tickPadding: 5,

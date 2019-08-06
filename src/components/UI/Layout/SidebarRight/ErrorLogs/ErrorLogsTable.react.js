@@ -18,6 +18,7 @@ export default function ErrorLogsTable() {
       }
       columns={errorLogsTableColumns()}
       dataSource={dataSource}
+      pagination={{ pageSize: 10 }}
       expandedRowRender={record => (
         <CardRow>
           <JsonView jsonObject={record} collapsed="1" />

@@ -2,6 +2,10 @@ import { LEFT_SIDEBAR_NAMES } from 'constants/sidebar-names';
 
 const USER_GUIDE = {
   WELCOME: 'ug_welcome',
+  HEADER: {
+    AUTO_COMPLETE: 'ug_autocomplete',
+    SOCIALS: 'ug_socials'
+  },
   SIDEBAR_LEFT: 'ug_sidebar_left',
   SIDEBAR_LEFT_MENU_BUTTON: 'ug_sidebar_left_menu_button',
   SIDEBAR_TOP_RIGHT: 'ug_sidebar_top_right',
@@ -26,6 +30,8 @@ const USER_GUIDE = {
 
 const userGuideStepIndexes = [
   USER_GUIDE.WELCOME,
+  USER_GUIDE.HEADER.AUTO_COMPLETE,
+  USER_GUIDE.HEADER.SOCIALS,
   USER_GUIDE.SIDEBAR_LEFT,
   USER_GUIDE.TABLE,
   USER_GUIDE.SIDEBAR_TOP_RIGHT,
