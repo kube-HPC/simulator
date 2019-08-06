@@ -3,12 +3,12 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
 
-import DynamicTable from 'components/UI/Layout/DynamicTable.react';
+import DynamicTable from 'components/Layout/DynamicTable.react';
 import defaultWorkerData from 'config/template/worker.template';
 import {
   workerTableColumns,
   workersTableStats
-} from 'components/UI/tables/Workers/WorkersTableColumns.react';
+} from 'components/tables/Workers/WorkersTableColumns.react';
 import JsonView from 'components/common/json/JsonView.react';
 import CardRow from 'components/common/CardRow.react';
 import { createSelector } from 'reselect';

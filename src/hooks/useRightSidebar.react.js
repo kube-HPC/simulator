@@ -12,10 +12,10 @@ import {
   AddAlgorithmForm,
   AddDebug,
   ErrorLogsTable
-} from 'components/UI/Layout/SidebarRight';
+} from 'components/Layout/SidebarRight';
 
 import useErrorLogs from './useErrorLogs.react';
-import { NodeStatistics } from 'components/UI/tables';
+import { NodeStatistics } from 'components/tables';
 
 const menuItems = [
   {

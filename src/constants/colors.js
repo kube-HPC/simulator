@@ -15,6 +15,7 @@ export const COLOR = {
   white: 'white'
 };
 
+// View all services colors @ https://github.com/kube-HPC/hkube/labels
 export const SERVICE_COLOR = {
   [SERVICES.worker]: {
     backgroundColor: '#da96e8'
@@ -36,6 +37,9 @@ export const SERVICE_COLOR = {
     backgroundColor: '#b712c9',
     isLight: true
   },
+  [SERVICES['pipeline-driver-queue']]: {
+    backgroundColor: '#0ec994'
+  },
   [SERVICES['api-server']]: {
     backgroundColor: '#bfdadc'
   },
@@ -50,8 +54,8 @@ export const SERVICE_COLOR = {
   [SERVICES['algorithm-operator']]: {
     backgroundColor: '#ccdd2c'
   },
-  undefined: {
-    backgroundColor: COLOR.lightOrange
+  default: {
+    backgroundColor: COLOR.orange
   }
 };
 

@@ -6,8 +6,8 @@ import { Button, Typography } from 'antd';
 import { getKubernetesLogsData, getCaching } from 'actions/jobs.action';
 
 import DrawerContainer from 'components/common/drawer/DrawerContainer.react';
-import NodeInfo from 'components/UI/tables/Jobs/NodeInfo.react';
-import VisGraph from 'components/UI/tables/Jobs/VisGraph.react';
+import NodeInfo from 'components/tables/Jobs/NodeInfo.react';
+import VisGraph from 'components/tables/Jobs/VisGraph.react';
 import graphOptions from 'config/template/graph-options.template';
 
 const { Text } = Typography;

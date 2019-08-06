@@ -4,8 +4,8 @@ import { createSelector } from 'reselect';
 
 import { getAlgorithmReadme } from 'actions/readme.action';
 
-import DynamicTable from 'components/UI/Layout/DynamicTable.react';
-import algorithmsTableColumns from 'components/UI/tables/Algorithms/AlgorithmsTableColumns.react';
+import DynamicTable from 'components/Layout/DynamicTable.react';
+import algorithmsTableColumns from 'components/tables/Algorithms/AlgorithmsTableColumns.react';
 import CardRow from 'components/common/CardRow.react';
 import TabSwitcher from 'components/common/TabSwitcher.react';
 import useAlgorithm from 'hooks/useAlgorithm.react';

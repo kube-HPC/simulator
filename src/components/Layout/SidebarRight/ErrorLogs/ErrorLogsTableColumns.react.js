@@ -16,7 +16,10 @@ const errorLogsTableColumns = () => [
     width: '10%',
     sorter: (a, b) => sorter(a.serviceName, b.serviceName),
     render: serviceName => {
-      const { backgroundColor, isLight } = SERVICE_COLOR[SERVICES[serviceName]];
+      const serviceColor =
+        SERVICE_COLOR[SERVICES[serviceName]] || SERVICE_COLOR.default;
+
+      const { backgroundColor, isLight } = serviceColor;
       return (
         <Tag color={backgroundColor}>
           <Ellipsis

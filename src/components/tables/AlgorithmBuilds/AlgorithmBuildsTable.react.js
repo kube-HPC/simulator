@@ -9,9 +9,9 @@ import { cancelBuild, rerunBuild } from 'actions/builds.action';
 import {
   buildsTableColumns,
   nestedBuildsTableColumns
-} from 'components/UI/tables/AlgorithmBuilds/AlgorithmBuildsTableColumns.react';
+} from 'components/tables/AlgorithmBuilds/AlgorithmBuildsTableColumns.react';
 
-import DynamicTable from 'components/UI/Layout/DynamicTable.react';
+import DynamicTable from 'components/Layout/DynamicTable.react';
 import JsonView from 'components/common/json/JsonView.react';
 import CardRow from 'components/common/CardRow.react';
 

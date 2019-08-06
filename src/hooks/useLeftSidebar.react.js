@@ -7,7 +7,7 @@ import {
   DriversTable,
   DebugTable,
   AlgorithmBuildsTable
-} from 'components/UI/tables';
+} from 'components/tables';
 
 import { LEFT_SIDEBAR_NAMES } from 'constants/sidebar-names';
 import { getBooleanLSItem, setLSItem } from 'utils/localStorage';

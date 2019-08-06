@@ -29,9 +29,8 @@ const socketMiddleware = ({ dispatch }) => next => action => {
     } else {
       url = `${monitorBackend.schema}${monitorBackend.host}:${
         monitorBackend.port
-        }`;
+      }`;
     }
-    // const url = `${location.protocol}//${location.hostname}:30010`;
     socket = io(url, {
       path: monitorBackend.socketIoPath,
       transports: ['websocket']
@@ -65,7 +64,7 @@ const socketMiddleware = ({ dispatch }) => next => action => {
     });
   }
   if (action.type === AT.SOCKET_INIT) {
-    // verify if topic is already  registerd inorder to prevent duplicate registretion
+    // verify if topic is already  registered in-order to prevent duplicate registration
     if (!Object.keys(currentTopicRegistered).includes(action.payload.topic)) {
       if (socket != null) {
         socket.on(action.payload.topic, data => {
@@ -76,7 +75,7 @@ const socketMiddleware = ({ dispatch }) => next => action => {
     } else {
       console.warn(
         `socket middleware: trying to register topic ${
-        action.payload.topic
+          action.payload.topic
         } twice `
       );
     }

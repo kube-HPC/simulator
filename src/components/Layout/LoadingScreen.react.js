@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { animated, useSpring } from 'react-spring';
 import { ReactComponent as Fish } from 'images/logo-no-shadow.svg';
 
-const Wrapper = styled.div`
+const CenterScreen = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -19,7 +19,7 @@ const CenterItem = styled(animated.div)`
 const cycle = r =>
   `translate3d(0, ${15 * Math.sin(r + (2 * Math.PI) / 1.6)}px, 0)`;
 
-export default function AnimatedLogo() {
+function LoadingScreen() {
   const { radians } = useSpring({
     to: async next => {
       while (1) await next({ radians: 2 * Math.PI });
@@ -39,7 +39,7 @@ export default function AnimatedLogo() {
   });
 
   return (
-    <Wrapper>
+    <CenterScreen>
       <CenterItem style={{ transform: radians.interpolate(cycle) }}>
         <Fish />
       </CenterItem>
@@ -64,10 +64,12 @@ export default function AnimatedLogo() {
             rx="394.5"
             ry="64.5"
             fill="black"
-            fill-opacity="0.19"
+            fillOpacity="0.19"
           />
         </animated.svg>
       </CenterItem>
-    </Wrapper>
+    </CenterScreen>
   );
 }
+
+export default LoadingScreen;

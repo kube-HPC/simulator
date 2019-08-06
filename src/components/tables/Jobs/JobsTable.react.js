@@ -1,9 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import DynamicTable from 'components/UI/Layout/DynamicTable.react';
-import JobsTabSwitcher from 'components/UI/tables/Jobs/JobsTabSwitcher.react';
-import jobsTableColumns from 'components/UI/tables/Jobs/JobsTableColumns.react';
+import DynamicTable from 'components/Layout/DynamicTable.react';
+import JobsTabSwitcher from 'components/tables/Jobs/JobsTabSwitcher.react';
+import jobsTableColumns from 'components/tables/Jobs/JobsTableColumns.react';
 import CardRow from 'components/common/CardRow.react';
 
 import useJobs from 'hooks/useJobs.react';
