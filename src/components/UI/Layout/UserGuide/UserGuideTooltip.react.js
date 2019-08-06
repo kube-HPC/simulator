@@ -5,10 +5,7 @@ import LOCAL_STORAGE_KEYS from 'constants/local-storage';
 import { Typography, Button, Row, Col, Checkbox } from 'antd';
 import { COLOR } from 'constants/colors';
 
-import {
-  setLocalStorageItem,
-  getBooleanLocalStorageItem
-} from 'utils/localStorage';
+import { setLSItem, getBooleanLSItem, getLSItem } from 'utils/localStorage';
 
 const TooltipBody = styled.div`
   text-align: center;
@@ -37,9 +34,11 @@ const CheckboxUnClickable = styled(Checkbox)`
   pointer-events: none;
 `;
 
-const isOnFromLS = getBooleanLocalStorageItem(
-  LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS
-);
+// When LS not available,
+// the default behavior is "Run on Startup" is un-checked.
+const isOnInitial = getLSItem(LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS)
+  ? getBooleanLSItem(LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS)
+  : false;
 
 const UserGuideTooltip = ({
   continuous,
@@ -51,13 +50,13 @@ const UserGuideTooltip = ({
   skipProps,
   tooltipProps
 }) => {
-  const [isRunOnStartup, setIsRunOnStartup] = useState(isOnFromLS);
+  const [isRunOnStartup, setIsRunOnStartup] = useState(isOnInitial);
 
   const toggle = () => setIsRunOnStartup(p => !p);
 
   useEffect(
     () => {
-      setLocalStorageItem(LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS, isRunOnStartup);
+      setLSItem(LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS, isRunOnStartup);
     },
     [isRunOnStartup]
   );

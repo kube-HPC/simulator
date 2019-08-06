@@ -5,15 +5,14 @@ export const LEFT_SIDEBAR_NAMES = {
   WORKERS: 'Workers',
   DRIVERS: 'Drivers',
   DEBUG: 'Debug',
-  BUILDS: 'Builds',
-  CLUSTER_STATS: {
-    CPU: 'CPU',
-    MEMORY: 'Memory'
-  }
+  BUILDS: 'Builds'
 };
 
 export const RIGHT_SIDEBAR_NAMES = {
   ADD_PIPELINE: 'Add Pipeline',
   ADD_ALGORITHM: 'Add Algorithm',
-  ADD_DEBUG: 'Add Debug'
+  ADD_DEBUG: 'Add Debug',
+  CPU: 'CPU',
+  MEMORY: 'Memory',
+  ERROR_LOGS: 'Error Logs'
 };

@@ -3,15 +3,15 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { notification, Tag, Button } from 'antd';
 import { COLOR_PIPELINE_STATUS } from 'constants/colors';
 import { sorter } from 'utils/string';
-import CopyEllipsis from 'components/common/CopyEllipsis.react';
+import Ellipsis from 'components/common/Ellipsis.react';
 
-const jobsTableColumns = ({ onDelete }) => [
+const debugTableColumns = ({ onDelete }) => [
   {
     title: 'Algorithm Name',
     dataIndex: 'name',
     key: 'name',
     sorter: (a, b) => sorter(a.data.name, b.data.name),
-    render: (_, record) => <CopyEllipsis text={record.name} />
+    render: name => <Ellipsis text={name} />
   },
   {
     title: 'Path',
@@ -45,4 +45,4 @@ const jobsTableColumns = ({ onDelete }) => [
   }
 ];
 
-export default jobsTableColumns;
+export default debugTableColumns;

@@ -5,7 +5,7 @@ import humanizeDuration from 'humanize-duration';
 import { Tag, Progress, Button } from 'antd';
 
 import StatusTag from 'components/common/StatusTag.react';
-import CopyEllipsis from 'components/common/CopyEllipsis.react';
+import Ellipsis from 'components/common/Ellipsis.react';
 import { COLOR_PIPELINE_STATUS } from 'constants/colors';
 import PIPELINE_STATES from 'constants/pipeline-states';
 import { sorter } from 'utils/string';
@@ -50,7 +50,7 @@ export const nestedBuildsTableColumns = ({ onCancel, onRerun }) => [
     dataIndex: 'buildId',
     key: 'buildId',
     sorter: (a, b) => sorter(a.buildId, b.buildId),
-    render: (_, record) => <CopyEllipsis text={record.buildId} />
+    render: buildId => <Ellipsis copyable type="secondary" text={buildId} />
   },
   {
     title: 'Env',

@@ -5,6 +5,7 @@ import { COLOR_PIPELINE_STATUS } from 'constants/colors';
 import StatusTag from 'components/common/StatusTag.react';
 
 import { toUpperCaseFirstLetter, sorter } from 'utils/string';
+import Ellipsis from 'components/common/Ellipsis.react';
 
 const undefinedStateFilter = state => state || 'Creating';
 
@@ -28,7 +29,8 @@ export const workersTableStats = () => [
     title: 'Pod Name',
     dataIndex: 'podName',
     key: 'podName',
-    onFilter: (value, record) => record.podName.includes(value)
+    onFilter: (value, record) => record.podName.includes(value),
+    render: podName => <Ellipsis copyable text={podName} />
   },
   {
     title: 'Worker State',
@@ -41,7 +43,9 @@ export const workersTableStats = () => [
       return (
         <>
           <Tag color={COLOR_PIPELINE_STATUS[record.workerStatus]}>{title}</Tag>
-          <Tag color={COLOR_PIPELINE_STATUS[record.jobStatus]}>{`Job ${title}`}</Tag>
+          <Tag
+            color={COLOR_PIPELINE_STATUS[record.jobStatus]}
+          >{`Job ${title}`}</Tag>
         </>
       );
     }
@@ -60,7 +64,8 @@ export const workerTableColumns = () => [
     title: 'Algorithm Name',
     key: 'algorithmName',
     dataIndex: 'algorithmName',
-    sorter: (a, b) => sorter(a.algorithmName, b.algorithmName)
+    sorter: (a, b) => sorter(a.algorithmName, b.algorithmName),
+    render: name => <Ellipsis text={name} />
   },
   {
     title: 'Ready Count',

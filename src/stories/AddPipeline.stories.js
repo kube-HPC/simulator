@@ -5,11 +5,11 @@ import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 
-import AddPipeline from 'components/UI/Layout/SidebarOperations/AddPipeliene/AddPipeline.react';
+import AddPipeline from 'components/UI/Layout/SidebarRight/AddPipeline/AddPipeline.react';
 
 import rootReducer from 'reducers/root.reducer';
 import DrawerOperations from 'components/common/drawer/DrawerOperations.react';
-import AddPipelineReact from 'components/UI/Layout/SidebarOperations/AddPipeliene/AddPipeline.react';
+import AddPipelineReact from 'components/UI/Layout/SidebarRight/AddPipeline/AddPipeline.react';
 
 const store = createStore(rootReducer);
 

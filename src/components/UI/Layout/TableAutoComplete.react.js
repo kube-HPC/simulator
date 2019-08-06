@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, Input, AutoComplete } from 'antd';
+import { Input, AutoComplete } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { autoCompleteFilter } from 'actions/layout.action';
 import styled from 'styled-components';
@@ -33,27 +33,21 @@ const getDataByTable = table => state =>
   tableSelector[table] &&
   state[tableSelector[table]].dataSource.map(tableSearchBy[table]);
 
-// TODO: Change all tables name to const, ie: TABLE.CPU
-// TODO: write custom hook for tableSelector due to code duplication
-const disabledTable = ['CPU', 'Memory'];
-
-function TableAutoComplete({ table }) {
-  const isDisabled = disabledTable.includes(table);
-
+function TableAutoComplete({ table, ...props }) {
   const tableData = useSelector(getDataByTable(table));
   const dispatch = useDispatch();
   const filterData = e => dispatch(autoCompleteFilter(e));
 
   return (
     <AutoCompleteTransparent
-      disabled={isDisabled}
+      {...props}
       dataSource={tableData}
       onSearch={filterData}
       onSelect={filterData}
       placeholder="Search in current table"
       dropdownMatchSelectWidth={true}
     >
-      <Input allowClear suffix={<Icon type="search" />} />
+      <Input.Search allowClear />
     </AutoCompleteTransparent>
   );
 }

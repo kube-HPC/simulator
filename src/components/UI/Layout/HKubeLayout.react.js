@@ -1,39 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 
-import 'components/UI/Layout/HKubeLayout.css';
+import 'styles/GlobalStyle.css';
 
-import JobsTable from 'components/UI/tables/Jobs/JobsTable.react';
-import WorkersTable from 'components/UI/tables/Workers/WorkersTable.react';
-import DebugTable from 'components/UI/tables/Debug/DebugTable.react';
-import AlgorithmBuildsTable from 'components/UI/tables/AlgorithmBuilds/AlgorithmBuildsTable.react';
-import PipelinesTable from 'components/UI/tables/Pipelines/PipelinesTable.react';
-import DriversTable from 'components/UI/tables/Drivers/DriversTable.react';
-import AlgorithmsTable from 'components/UI/tables/Algorithms/AlgorithmsTable.react';
-import NodeStatistics from 'components/UI/tables/NodeStats/NodeStatistics.react';
 import TableAutoComplete from 'components/UI/Layout/TableAutoComplete.react';
 import DrawerOperations from 'components/common/drawer/DrawerOperations.react';
-import SidebarOperations from 'components/UI/Layout/SidebarOperations/SidebarOperations.react';
-import Sidebar from 'components/UI/Layout/Sidebar/Sidebar.react';
-import AddAlgorithmForm from 'components/UI/Layout/SidebarOperations/AddAlgorithmForm.react';
-import AddPipeline from 'components/UI/Layout/SidebarOperations/AddPipeliene/AddPipeline.react';
-import AddDebug from 'components/UI/Layout/SidebarOperations/AddDebug.react';
+import SidebarOperations from 'components/UI/Layout/SidebarRight/SidebarRight.react';
+import SidebarLeft from 'components/UI/Layout/SidebarLeft/SidebarLeft.react';
 
-import { message, Layout, Col, Icon, Row } from 'antd';
+import { message, Layout, Icon, Typography } from 'antd';
 import { init, socketInit } from 'actions/layout.action';
 import { COLOR_LAYOUT } from 'constants/colors';
 
 import USER_GUIDE from 'constants/user-guide';
-import LOCAL_STORAGE_KEYS from 'constants/local-storage';
-import GlobalStyle from './GlobalStyle.styles';
+import GlobalStyle from 'styles/GlobalStyle.styles';
 import UserGuide from './UserGuide/UserGuide.react';
-import {
-  getBooleanLocalStorageItem,
-  setLocalStorageItem
-} from 'utils/localStorage';
 import { triggerUserGuide } from 'actions/userGuide.action';
-import { LEFT_SIDEBAR_NAMES, RIGHT_SIDEBAR_NAMES } from 'constants/table-names';
+import { LEFT_SIDEBAR_NAMES } from 'constants/sidebar-names';
+
+import useLeftSidebar from 'hooks/useLeftSidebar.react';
+import useRightSidebar from 'hooks/useRightSidebar.react';
 
 const LayoutFullHeight = styled(Layout)`
   height: 100vh;
@@ -42,12 +29,14 @@ const LayoutFullHeight = styled(Layout)`
 
 const HeaderStretch = styled(Layout.Header)`
   background: white;
-  border-bottom: 1pt solid ${COLOR_LAYOUT.darkBorder};
+  border-bottom: 1pt solid ${COLOR_LAYOUT.border};
   padding-left: 10px;
   padding-right: 10px;
 `;
 
-const RowCenter = styled(Row)`
+const RowCenter = styled.div`
+  display: flex;
+  justify-content: space-between;
   align-items: center;
 `;
 
@@ -56,65 +45,51 @@ const ContentMargin = styled(Layout.Content)`
   overflow: auto;
 `;
 
-const RowColoredIcons = styled(Row)`
-  color: ${COLOR_LAYOUT.darkBorder};
-`;
-
 const HoverIcon = styled(Icon)`
+  color: ${COLOR_LAYOUT.darkBorder};
   :hover {
     color: black;
   }
 `;
 
-const tableSelector = {
-  Jobs: <JobsTable />,
-  Pipelines: <PipelinesTable />,
-  Algorithms: <AlgorithmsTable />,
-  Workers: <WorkersTable />,
-  Drivers: <DriversTable />,
-  Debug: <DebugTable />,
-  Builds: <AlgorithmBuildsTable />,
-  CPU: <NodeStatistics metric="cpu" />,
-  Memory: <NodeStatistics metric="mem" />
-};
+const RightSidebarsFlex = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  border-left: 1px solid ${COLOR_LAYOUT.border};
+`;
 
-const makeTrigger = setter => () => setter(prev => !prev);
+const HeaderText = styled(Typography.Text)`
+  color: ${COLOR_LAYOUT.darkBorder};
+`;
 
-const leftIsVisibleFromStorage = getBooleanLocalStorageItem(
-  LOCAL_STORAGE_KEYS.LEFT_SIDEBAR_IS_VISIBLE
-);
+const HelpBarFlex = styled.div`
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  > ${HoverIcon}, ${HeaderText} {
+    margin-left: 10px;
+  }
+`;
 
 function HKubeLayout() {
-  // Table sidebar on Left
-  const [leftValue, setLeftValue] = useState(LEFT_SIDEBAR_NAMES.JOBS);
-  const [leftVisible, setLeftVisible] = useState(leftIsVisibleFromStorage);
+  const {
+    selector: tableSelector,
+    value: [tableValue, setTableValue],
+    isCollapsed: [leftIsCollapsed, setLeftIsCollapsed],
+    toggle: toggleLeftVisible
+  } = useLeftSidebar();
 
-  useEffect(
-    () => {
-      setLocalStorageItem(
-        LOCAL_STORAGE_KEYS.LEFT_SIDEBAR_IS_VISIBLE,
-        leftVisible
-      );
-    },
-    [leftVisible]
-  );
-
-  // Operation Sidebar on Right
-  const [rightValue, setRightValue] = useState(
-    RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM
-  );
-  const [rightVisible, setRightVisible] = useState(false);
-
-  const triggerLeftVisible = makeTrigger(setLeftVisible);
-  const triggerRightVisible = makeTrigger(setRightVisible);
+  const {
+    selector: operationSelector,
+    value: [drawerValue],
+    isCollapsed: [drawerIsVisible],
+    onSelect: onSelectDrawer,
+    toggle: toggleDrawerVisible,
+    menus: { menuBottomRightItems, menuItems }
+  } = useRightSidebar();
 
   const dispatch = useDispatch();
-
-  const operationSelector = {
-    'Add Pipeline': <AddPipeline onSubmit={triggerRightVisible} />,
-    'Add Algorithm': <AddAlgorithmForm onSubmit={triggerRightVisible} />,
-    'Add Debug': <AddDebug onSubmit={triggerRightVisible} />
-  };
 
   useEffect(
     () => {
@@ -132,74 +107,75 @@ function HKubeLayout() {
     <>
       <GlobalStyle />
       <UserGuide
-        triggerLeftVisible={triggerLeftVisible}
-        setLeftValue={setLeftValue}
+        triggerLeftVisible={toggleLeftVisible}
+        setLeftValue={setTableValue}
       />
       <LayoutFullHeight>
-        <Sidebar
+        <SidebarLeft
           className={USER_GUIDE.SIDEBAR_LEFT}
-          selectedKeys={[leftValue]}
-          onSelect={setLeftValue}
-          collapsed={!leftVisible}
+          selectedKeys={[tableValue]}
+          onSelect={setTableValue}
+          collapsed={!leftIsCollapsed}
         />
         <Layout>
           <HeaderStretch>
             <RowCenter type="flex" justify="space-between">
               <HoverIcon
-                className={USER_GUIDE.SIDEBAR_LEFT_MENU_BUTTON}
-                type={leftVisible ? 'menu-fold' : 'menu-unfold'}
+                type={leftIsCollapsed ? 'menu-fold' : 'menu-unfold'}
                 style={{ fontSize: 22 }}
-                onClick={triggerLeftVisible}
+                onClick={toggleLeftVisible}
               />
-              <TableAutoComplete table={leftValue} />
-              <RowColoredIcons type="flex" gutter={10}>
-                <Col>
-                  <HoverIcon
-                    type="global"
-                    style={{ fontSize: 22 }}
-                    onClick={() => window.open('http://hkube.io/')}
-                  />
-                </Col>
-                <Col>
-                  <HoverIcon
-                    type="github"
-                    style={{ fontSize: 22 }}
-                    onClick={() =>
-                      window.open('https://github.com/kube-HPC/hkube')
-                    }
-                  />
-                </Col>
-                <Col>
-                  <HoverIcon
-                    className={USER_GUIDE.WELCOME}
-                    type="question-circle"
-                    style={{ fontSize: 22 }}
-                    onClick={() => {
-                      dispatch(triggerUserGuide());
-                      setLeftValue(LEFT_SIDEBAR_NAMES.JOBS);
-                      setLeftVisible(true);
-                    }}
-                  />
-                </Col>
-                <Col>{`${process.env.REACT_APP_VERSION}v`}</Col>
-              </RowColoredIcons>
+              <TableAutoComplete
+                table={tableValue}
+                className={USER_GUIDE.HEADER.AUTO_COMPLETE}
+              />
+              <HelpBarFlex className={USER_GUIDE.HEADER.SOCIALS}>
+                <HoverIcon
+                  type="global"
+                  style={{ fontSize: 22 }}
+                  onClick={() => window.open('http://hkube.io/')}
+                />
+                <HoverIcon
+                  type="github"
+                  style={{ fontSize: 22 }}
+                  onClick={() =>
+                    window.open('https://github.com/kube-HPC/hkube')
+                  }
+                />
+                <HoverIcon
+                  className={USER_GUIDE.WELCOME}
+                  type="question-circle"
+                  style={{ fontSize: 22 }}
+                  onClick={() => {
+                    dispatch(triggerUserGuide());
+                    setTableValue(LEFT_SIDEBAR_NAMES.JOBS);
+                    setLeftIsCollapsed(true);
+                  }}
+                />
+                <HeaderText>{`${process.env.REACT_APP_VERSION}v`}</HeaderText>
+              </HelpBarFlex>
             </RowCenter>
           </HeaderStretch>
           <LayoutFullHeight>
-            <ContentMargin>{tableSelector[leftValue]}</ContentMargin>
-            <SidebarOperations
-              className={USER_GUIDE.SIDEBAR_RIGHT}
-              onSelect={op => {
-                setRightValue(op);
-                setRightVisible(!rightVisible);
-              }}
-            />
+            <ContentMargin>{tableSelector[tableValue]}</ContentMargin>
+            <RightSidebarsFlex>
+              <SidebarOperations
+                className={USER_GUIDE.SIDEBAR_TOP_RIGHT}
+                onSelect={onSelectDrawer}
+                menuItems={menuItems}
+              />
+              <SidebarOperations
+                className={USER_GUIDE.SIDEBAR_BOTTOM_RIGHT}
+                onSelect={onSelectDrawer}
+                menuItems={menuBottomRightItems}
+              />
+            </RightSidebarsFlex>
             <DrawerOperations
-              visible={rightVisible}
-              onClose={triggerRightVisible}
-              operation={rightValue}
+              visible={drawerIsVisible}
+              onClose={toggleDrawerVisible}
+              operation={drawerValue}
             >
-              {operationSelector[rightValue]}
+              {operationSelector[drawerValue]}
             </DrawerOperations>
           </LayoutFullHeight>
         </Layout>

@@ -41,7 +41,11 @@ function AlgorithmBuildsTable() {
           rowKey={record => record.buildId}
           columns={nestedBuildsTableColumns({ onCancel, onRerun })}
           dataSource={algorithmsDataSource}
-          expandedRowRender={record => <JsonView jsonObject={record} />}
+          expandedRowRender={record => (
+            <CardRow>
+              <JsonView jsonObject={record} collapsed="1" />
+            </CardRow>
+          )}
         />
       </CardRow>
     );

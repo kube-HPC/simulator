@@ -2,56 +2,44 @@ import { useSelector } from 'react-redux';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ResponsiveBar } from '@nivo/bar';
-import { Empty } from 'antd';
+import styled from 'styled-components';
+import { COLOR } from 'constants/colors';
 
-const metricToLabel = {
-  cpu: 'CPU',
-  mem: 'Memory'
+const Container = styled.div`
+  font-size: 20px;
+  height: 70vh;
+`;
+
+const adaptedData = (statistics, metric) => {
+  const statisticsForMetric =
+    statistics && statistics.find(statistic => statistic.metric === metric);
+  const data =
+    statisticsForMetric &&
+    statisticsForMetric.asMutable().results.map(res => {
+      const algorithms = {};
+      res &&
+        res.algorithmsData &&
+        res.algorithmsData
+          .asMutable()
+          .forEach(algorithm => (algorithms[algorithm.name] = algorithm.size));
+      return {
+        nodes: res.name,
+        ...algorithms
+      };
+    });
+  return {
+    data: data || [],
+    legend: statisticsForMetric && statisticsForMetric.legend
+  };
 };
 
+// ! https://nivo.rocks/bar/ customization
 function NodeStatistics({ metric }) {
-  const adaptedData = (statistics, metric) => {
-    const statisticsForMetric =
-      statistics && statistics.find(statistic => statistic.metric === metric);
-    const data =
-      statisticsForMetric &&
-      statisticsForMetric.asMutable().results.map(res => {
-        const algorithms = {};
-        res &&
-          res.algorithmsData &&
-          res.algorithmsData
-            .asMutable()
-            .forEach(
-              algorithm => (algorithms[algorithm.name] = algorithm.size)
-            );
-        return {
-          nodes: res.name,
-          ...algorithms
-        };
-      });
-    return {
-      data: data || [],
-      legend: statisticsForMetric && statisticsForMetric.legend
-    };
-  };
-
   const dataSource = useSelector(state => state.nodeStatistics.dataSource);
   const { data, legend } = adaptedData(dataSource, metric);
 
-  return data === [] || legend === undefined ? (
-    <Empty style={{ marginTop: '20px' }} />
-  ) : (
-    <div
-      style={{
-        fontSize: '20px',
-        width: '80%',
-        height: '70vh',
-        left: '10%',
-        position: 'relative',
-        top: '10%'
-      }}
-    >
-      <div>{metricToLabel[metric]}</div>
+  return (
+    <Container>
       <ResponsiveBar
         data={data}
         keys={legend}
@@ -60,26 +48,24 @@ function NodeStatistics({ metric }) {
           axis: {
             ticks: {
               line: {
-                stroke: 'green'
+                stroke: COLOR.darkGrey
               },
               text: {
-                //fill: "#91d5ff",
-                fontSize: '12px',
+                fontSize: 16,
                 marginRight: '10px'
               }
             },
             legend: {
               text: {
-                fontSize: '18px'
+                fontSize: 16
               }
             }
           }
         }}
         margin={{
-          top: 0,
-          right: 124,
-          bottom: 50,
-          left: 60
+          right: 120,
+          bottom: 120,
+          left: 120
         }}
         padding={0.1}
         borderWidth={1}
@@ -91,8 +77,8 @@ function NodeStatistics({ metric }) {
             id: 'dots',
             type: 'patternDots',
             background: 'inherit',
-            color: '#fff',
-            size: 2,
+            color: COLOR.white,
+            size: 4,
             padding: 3,
             stagger: true
           },
@@ -100,7 +86,7 @@ function NodeStatistics({ metric }) {
             id: 'lines',
             type: 'patternLines',
             background: 'inherit',
-            color: '#fff',
+            color: COLOR.white,
             rotation: -45,
             lineWidth: 1,
             spacing: 10
@@ -120,35 +106,25 @@ function NodeStatistics({ metric }) {
             id: 'lines'
           }
         ]}
-        borderColor="inherit:darker(1.6)"
-        axisTop={{
-          tickSize: 0,
-          tickPadding: 4,
-          tickRotation: 0,
-          legend: '',
-          legendOffset: 100
-        }}
-        axisRight={null}
+        borderColor={COLOR.grey}
         axisBottom={{
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: 'size',
+          legend: 'Size',
           legendPosition: 'middle',
-          legendOffset: 32
+          legendOffset: 50
         }}
         axisLeft={{
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 50,
-          legend: 'nodes',
+          legend: 'Nodes',
           legendPosition: 'middle',
-          legendOffset: -50
+          legendOffset: -90
         }}
-        enableGridY={false}
         labelSkipWidth={12}
         labelSkipHeight={12}
-        labelTextColor="inherit:darker(1.6)"
         animate={true}
         motionStiffness={165}
         motionDamping={27}
@@ -162,10 +138,10 @@ function NodeStatistics({ metric }) {
             translateY: -28,
             itemsSpacing: 2,
             itemWidth: 100,
-            itemHeight: 20,
+            itemHeight: 40,
             itemDirection: 'left-to-right',
             itemOpacity: 0.85,
-            symbolSize: 20,
+            symbolSize: 30,
             effects: [
               {
                 on: 'hover',
@@ -177,7 +153,7 @@ function NodeStatistics({ metric }) {
           }
         ]}
       />
-    </div>
+    </Container>
   );
 }
 

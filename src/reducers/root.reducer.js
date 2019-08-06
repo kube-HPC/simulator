@@ -19,7 +19,8 @@ import {
 import { autoCompleteFilter } from 'reducers/layout.reducer';
 import { pipelineTable, pipelineReadme } from 'reducers/pipeline.reducer';
 import { nodeStatistics } from 'reducers/nodeStatistics.reducer';
-import { userGuide } from 'reducers/userGuide.reducer';
+import userGuide from 'reducers/userGuide.reducer';
+import errorLogsTable from 'reducers/errorLogs.reducer';
 
 const dataSources = {
   algorithmBuildsTable,
@@ -28,6 +29,7 @@ const dataSources = {
   autoCompleteFilter,
   debugTable,
   driverTable,
+  errorLogsTable,
   jobsJaeger,
   jobsKubernetesLogs,
   jobsTable,
@@ -38,13 +40,16 @@ const dataSources = {
   workerTable
 };
 
-export const sourcesNames = {
+export default combineReducers(dataSources);
+
+export const STATE_SOURCES = {
   ALGORITHM_BUILDS_TABLE: 'algorithmBuildsTable',
   ALGORITHM_README: 'algorithmReadme',
   ALGORITHM_TABLE: 'algorithmTable',
   AUTO_COMPLETE_FILTER: 'autoCompleteFilter',
   DEBUG_TABLE: 'debugTable',
   DRIVER_TABLE: 'driverTable',
+  ERROR_LOGS_TABLE: 'errorLogsTable',
   JOBS_JAEGER: 'jobsJaeger',
   JOBS_KUBERNETES_LOGS: 'jobsKubernetesLogs',
   JOBS_TABLE: 'jobsTable',
@@ -54,5 +59,3 @@ export const sourcesNames = {
   WORKER_TABLE: 'workerTable',
   USER_GUIDE: 'userGuide'
 };
-
-export default combineReducers(dataSources);

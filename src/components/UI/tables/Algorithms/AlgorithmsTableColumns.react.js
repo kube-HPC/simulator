@@ -3,7 +3,7 @@ import React from 'react';
 import { Button, Modal, Row, Col, Tooltip, Typography } from 'antd';
 
 import { sorter } from 'utils/string';
-import CopyEllipsis from 'components/common/CopyEllipsis.react';
+import Ellipsis from 'components/common/Ellipsis.react';
 import DrawerEditorMD from 'components/common/drawer/DrawerEditorMD.react';
 
 const deleteConfirmAction = (action, record) => {
@@ -37,7 +37,7 @@ const algorithmsTableColumns = ({
     dataIndex: 'name',
     key: 'name',
     sorter: (a, b) => sorter(a.name, b.name),
-    render: (_, record) => <CopyEllipsis text={record.name} />
+    render: name => <Ellipsis text={name} />
   },
   {
     title: 'Algorithm Image',
@@ -45,9 +45,7 @@ const algorithmsTableColumns = ({
     key: 'algorithmImage',
     onFilter: (value, record) => record.algorithmImage.includes(value),
     sorter: (a, b) => sorter(a.algorithmImage, b.algorithmImage),
-    render: (_, record) => (
-      <CopyEllipsis text={record.algorithmImage} length={30} />
-    )
+    render: algorithmImage => <Ellipsis copyable text={algorithmImage} />
   },
   {
     title: 'cpu',

@@ -6,7 +6,6 @@ import { useSpring, animated, config } from 'react-spring';
 
 import { ReactComponent as LogoFish } from 'images/logo-fish.svg';
 import { ReactComponent as LogoTitle } from 'images/logo-title.svg';
-import { ReactComponent as DebugIcon } from 'images/debug-icon.svg';
 import { ReactComponent as DriversIcon } from 'images/drivers-icon.svg';
 import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
 import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
@@ -17,7 +16,7 @@ import { Row, Col, Tag, Layout, Icon, Menu } from 'antd';
 
 import { COLOR_LAYOUT } from 'constants/colors';
 import USER_GUIDE from 'constants/user-guide';
-import { LEFT_SIDEBAR_NAMES } from 'constants/table-names';
+import { LEFT_SIDEBAR_NAMES } from 'constants/sidebar-names';
 import { dataCountMock } from 'config/template/user-guide.template';
 
 const SiderLight = styled(Layout.Sider)`
@@ -89,7 +88,7 @@ const TitleCenter = styled(LogoTitle)`
   align-self: flex-start;
 `;
 
-export default function Sidebar({ onSelect, selectedKeys, ...props }) {
+export default function SidebarLeft({ onSelect, selectedKeys, ...props }) {
   const [collapsed, setCollapsed] = useState(true);
 
   useEffect(
@@ -119,7 +118,6 @@ export default function Sidebar({ onSelect, selectedKeys, ...props }) {
     [LEFT_SIDEBAR_NAMES.ALGORITHMS, AlgorithmIcon, dataCount.algorithmsCount],
     [LEFT_SIDEBAR_NAMES.WORKERS, WorkerIcon, dataCount.workersCount],
     [LEFT_SIDEBAR_NAMES.DRIVERS, DriversIcon, dataCount.driversCount],
-    [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, dataCount.debugCount],
     [LEFT_SIDEBAR_NAMES.BUILDS, 'build', dataCount.buildsCount]
   ];
 
@@ -135,27 +133,15 @@ export default function Sidebar({ onSelect, selectedKeys, ...props }) {
         {!collapsed && <AnimatedTitle />}
       </FlexBox>
       <MenuMargin
-        onSelect={i => onSelect(i.key)}
+        onSelect={({ key }) => onSelect(key)}
         selectedKeys={selectedKeys}
-        defaultSelectedKeys={[menuItems[0][0]]}
       >
         {addMenuItems(menuItems)}
-        <Menu.SubMenu
-          title={setMenuItem(
-            <Icon type={'pie-chart'} style={IconStyle} />,
-            'Cluster Stats'
-          )}
-        >
-          {addMenuItems([
-            [LEFT_SIDEBAR_NAMES.CLUSTER_STATS.CPU, 'heat-map'],
-            [LEFT_SIDEBAR_NAMES.CLUSTER_STATS.MEMORY, 'hdd']
-          ])}
-        </Menu.SubMenu>
       </MenuMargin>
     </SiderLight>
   );
 }
 
-Sidebar.propTypes = {
+SidebarLeft.propTypes = {
   onSelect: PropTypes.func.isRequired
 };
