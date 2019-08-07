@@ -7,6 +7,7 @@ import { useSpring, animated, config } from 'react-spring';
 import { ReactComponent as LogoFish } from 'images/logo-fish.svg';
 import { ReactComponent as LogoTitle } from 'images/logo-title.svg';
 import { ReactComponent as DriversIcon } from 'images/drivers-icon.svg';
+import { ReactComponent as DebugIcon } from 'images/debug-icon.svg';
 import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
 import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
 import { ReactComponent as AlgorithmIcon } from 'images/algorithm-icon.svg';
@@ -118,6 +119,7 @@ export default function SidebarLeft({ onSelect, selectedKeys, ...props }) {
     [LEFT_SIDEBAR_NAMES.ALGORITHMS, AlgorithmIcon, dataCount.algorithmsCount],
     [LEFT_SIDEBAR_NAMES.WORKERS, WorkerIcon, dataCount.workersCount],
     [LEFT_SIDEBAR_NAMES.DRIVERS, DriversIcon, dataCount.driversCount],
+    [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, dataCount.debugCount],
     [LEFT_SIDEBAR_NAMES.BUILDS, 'build', dataCount.buildsCount]
   ];
 
