@@ -8,7 +8,7 @@ import { LEFT_SIDEBAR_NAMES } from 'constants/sidebar-names';
 import userGuideSteps from './UserGuideSteps.react';
 import UserGuideTooltip from './UserGuideTooltip.react';
 
-export default function UserGuide({ triggerLeftVisible, setLeftValue }) {
+const UserGuide = ({ triggerLeftVisible, setLeftValue }) => {
   const { isOn } = useSelector(state => state.userGuide);
   const { triggerUserGuide, changeStep } = useUserGuide();
 
@@ -42,4 +42,6 @@ export default function UserGuide({ triggerLeftVisible, setLeftValue }) {
       disableOverlayClose
     />
   );
-}
+};
+
+export default UserGuide;

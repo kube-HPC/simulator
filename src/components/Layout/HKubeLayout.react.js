@@ -15,12 +15,12 @@ import { COLOR_LAYOUT } from 'styles/colors';
 
 import USER_GUIDE from 'constants/user-guide';
 import GlobalStyle from 'styles/GlobalStyle.styles';
-import UserGuide from './UserGuide/UserGuide.react';
 import { triggerUserGuide } from 'actions/userGuide.action';
 import { LEFT_SIDEBAR_NAMES } from 'constants/sidebar-names';
 
 import useLeftSidebar from 'hooks/useLeftSidebar.react';
 import useRightSidebar from 'hooks/useRightSidebar.react';
+import { UserGuide } from './UserGuide';
 
 const LayoutFullHeight = styled(Layout)`
   height: 100vh;

@@ -27,21 +27,6 @@ const steps = [
           The <Text strong>Dashboard</Text> supports every functionality{' '}
           <Text strong>HKube</Text> has to offer.
         </Paragraph>
-
-        {/* {// TODO: Add tutorial picker} */}
-        {/* <Title level={4}>Pick a Tutorial</Title> */}
-        {/* <Select defaultValue="introduction" style={{ width: '100%' }}>
-          <Select.OptGroup label="Beginner">
-            <Select.Option value="introduction">Introduction</Select.Option>
-            <Select.Option value="addPipeline">Add Pipeline</Select.Option>
-            <Select.Option value="addAlgorithm">Add Algorithm</Select.Option>
-          </Select.OptGroup>
-          <Select.OptGroup label="Intermediate">
-            <Select.Option value="complexPipeline">
-              Add Complex Pipeline
-            </Select.Option>
-          </Select.OptGroup>
-        </Select> */}
       </>
     ),
     locale: { skip: 'Skip' },

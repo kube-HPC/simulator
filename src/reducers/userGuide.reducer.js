@@ -14,7 +14,6 @@ const userGuideStatus = Immutable.from({
 const userGuide = handleActions(
   {
     [actions.USER_GUIDE_CHANGE_STEP](state, { payload }) {
-      console.log(payload);
       return state.merge({
         stepIndex: payload
       });
@@ -26,7 +25,7 @@ const userGuide = handleActions(
       });
     }
   },
-  Immutable.from(userGuideStatus)
+  userGuideStatus
 );
 
 export default userGuide;
