@@ -31,13 +31,13 @@ const deleteConfirmAction = (action, record) => {
 
 const pipelinesTableColumns = ({
   dataStats,
-  readmeDefault,
+  getPipelineReadme,
   onSubmit,
   cronStart,
   cronStop,
   updateStoredPipeline,
   execStoredPipeline,
-  getPipelineReadme,
+  updatePipelineReadme,
   deleteStoredPipeline
 }) => [
   {
@@ -119,18 +119,12 @@ const pipelinesTableColumns = ({
               )}
               valueString={stringify(currPipeline)}
               onSubmit={execStoredPipeline}
-              submitText={'Execute'}
             />
           </Col>
           <Col>
             <DrawerEditorMD
               title={'Update Pipeline'}
-              readmeDefault={
-                readmeDefault &&
-                readmeDefault[record.name] &&
-                readmeDefault[record.name].readme &&
-                readmeDefault[record.name].readme.readme
-              }
+              readmeDefault={getPipelineReadme(record)}
               description={
                 <>
                   Edit pipeline properties and description,{' '}
@@ -144,7 +138,7 @@ const pipelinesTableColumns = ({
                     shape="circle"
                     icon="edit"
                     onClick={() => {
-                      getPipelineReadme(record);
+                      updatePipelineReadme(record);
                       setVisible(prev => !prev);
                     }}
                   />
@@ -152,7 +146,7 @@ const pipelinesTableColumns = ({
               )}
               record={record}
               onSubmit={onSubmit}
-              submitText={'Update'}
+              // submitText={'Update'}
             />
           </Col>
           <Col>

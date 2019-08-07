@@ -13,12 +13,9 @@ export default function ErrorLogsTable() {
   return (
     <DynamicTable
       isInner
-      rowKey={({ type, podName, timestamp, message }) =>
-        `${type}-${podName}-${timestamp}-${message}`
-      }
+      rowKey={({ id }) => id}
       columns={errorLogsTableColumns()}
       dataSource={dataSource}
-      pagination={{ pageSize: 13 }}
       expandedRowRender={record => (
         <CardRow>
           <JsonView jsonObject={record} collapsed="1" />

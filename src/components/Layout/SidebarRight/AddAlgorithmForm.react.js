@@ -89,17 +89,6 @@ function AddAlgorithmForm(props) {
         setFile(file);
         onSuccess('OK');
       }, 0);
-    },
-    onChange(info) {
-      const status = info.file.status;
-      if (status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (status === 'done') {
-        console.log(`${info.file.name} file uploaded successfully.`);
-      } else if (status === 'error') {
-        console.log(`${info.file.name} file upload failed.`);
-      }
     }
   };
 
@@ -187,7 +176,7 @@ function AddAlgorithmForm(props) {
         <Divider orientation="left">{schema.resources}</Divider>
         <Form.Item {...formItemLayout} label={schema.cpu}>
           <InputNumber
-            min={1}
+            min={0.1}
             value={algoData.cpu}
             defaultValue={algoData.cpu}
             onChange={v => setAlgoData({ ...algoData, cpu: +v })}

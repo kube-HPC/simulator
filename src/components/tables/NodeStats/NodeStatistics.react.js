@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ResponsiveBar } from '@nivo/bar';
 import styled from 'styled-components';
-import { COLOR } from 'constants/colors';
+import { COLOR } from 'styles/colors';
 
 const Container = styled.div`
   font-size: 20px;

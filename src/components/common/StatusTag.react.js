@@ -3,7 +3,7 @@ import PropsTypes from 'prop-types';
 
 import { Tooltip, Tag } from 'antd';
 import { toUpperCaseFirstLetter } from 'utils/string';
-import { COLOR_PIPELINE_STATUS } from 'constants/colors';
+import { COLOR_PIPELINE_STATUS } from 'styles/colors';
 
 function StatusTag({ status, count }) {
   return (

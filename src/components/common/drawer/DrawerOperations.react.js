@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { Drawer, Typography } from 'antd';
 import { RIGHT_SIDEBAR_NAMES } from 'constants/sidebar-names';
-import { COLOR } from 'constants/colors';
+import { COLOR } from 'styles/colors';
 
 const { Title, Paragraph, Text } = Typography;
 

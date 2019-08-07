@@ -2,7 +2,7 @@ import React from 'react';
 
 import USER_GUIDE from 'constants/user-guide';
 import { Typography, Icon, Tag, Divider } from 'antd';
-import { COLOR_LAYOUT } from 'constants/colors';
+import { COLOR_LAYOUT } from 'styles/colors';
 
 const { Text, Paragraph } = Typography;
 
