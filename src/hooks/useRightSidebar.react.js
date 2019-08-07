@@ -51,7 +51,6 @@ const getColorStatus = stats => {
   const isWarningStatus = 0 < freePresents && freePresents <= 0.15;
   const isErrorStatus = freePresents === 0;
 
-  // debugger;
   return isWarningStatus ? 'warning' : isErrorStatus ? 'error' : '';
 };
 
