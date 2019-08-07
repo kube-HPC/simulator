@@ -30,7 +30,6 @@ function AlgorithmsTable() {
         if (expanded) dispatch(getAlgorithmReadme(record.name));
       }}
       expandedRowRender={record => {
-        // debugger;
         return (
           <CardRow>
             <TabSwitcher

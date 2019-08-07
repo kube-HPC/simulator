@@ -84,7 +84,7 @@ export const COLOR_PIPELINE_STATUS = {
   stopped: COLOR.orange,
   stopping: COLOR.orange,
   succeed: COLOR.lightGreen,
-  Preschedule: COLOR.blueDark
+  preschedule: COLOR.blueDark
 };
 
 export const COLOR_PRIORITY = {
