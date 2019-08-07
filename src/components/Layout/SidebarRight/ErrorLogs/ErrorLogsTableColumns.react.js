@@ -1,6 +1,6 @@
 import React from 'react';
 import Moment from 'react-moment';
-import { sorter } from 'utils/string';
+import { sorter, stringify } from 'utils/string';
 
 import { Tag, Typography } from 'antd';
 
@@ -42,7 +42,9 @@ const errorLogsTableColumns = () => [
     dataIndex: 'message',
     key: 'message',
     render: message => (
-      <Typography.Paragraph strong>{message}</Typography.Paragraph>
+      <Typography.Paragraph strong>
+        {typeof message === 'string' ? message : stringify(message)}
+      </Typography.Paragraph>
     )
   },
   {
