@@ -119,7 +119,6 @@ const pipelinesTableColumns = ({
               )}
               valueString={stringify(currPipeline)}
               onSubmit={execStoredPipeline}
-              submitText={'Execute'}
             />
           </Col>
           <Col>
@@ -147,7 +146,7 @@ const pipelinesTableColumns = ({
               )}
               record={record}
               onSubmit={onSubmit}
-              submitText={'Update'}
+              // submitText={'Update'}
             />
           </Col>
           <Col>

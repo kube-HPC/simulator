@@ -5,15 +5,22 @@ import BottomContent from './BottomContent.react';
 
 const { Title, Paragraph } = Typography;
 
-function DrawerContainer({
-  children,
-  title,
-  description,
-  width,
-  isFullScreen,
-  ...props
-}) {
+const DrawerContainer = ({ children, ...props }) => {
   const [visible, setVisible] = useState(false);
+
+  const {
+    title,
+    description,
+    width,
+    isFullScreen,
+    submitText,
+    opener,
+    onSubmit,
+    extra,
+    ...restProps
+  } = props;
+
+  const openerComponent = opener ? opener(setVisible) : null;
 
   return (
     <>
@@ -31,28 +38,28 @@ function DrawerContainer({
             </Typography>
           )
         }
-        {...props}
+        {...restProps}
       >
         {children}
         {!isFullScreen && (
-          <BottomContent extra={props.extra}>
+          <BottomContent extra={extra}>
             <Button
-              disabled={!props.onSubmit}
+              disabled={!onSubmit}
               type="primary"
               onClick={() => {
-                props.onSubmit();
+                onSubmit();
                 setVisible(false);
               }}
             >
-              {props.submitText || 'Submit'}
+              {submitText || 'Submit'}
             </Button>
           </BottomContent>
         )}
       </Drawer>
-      {props.opener && props.opener(setVisible)}
+      {openerComponent}
     </>
   );
-}
+};
 
 DrawerContainer.propTypes = {
   submitText: PropTypes.string,
