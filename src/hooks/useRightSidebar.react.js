@@ -48,9 +48,10 @@ const getColorStatus = stats => {
   const freeSize = algorithmsDataArr.flatMap(flatByFree).reduce(sumArr);
 
   const freePresents = freeSize / totalSize;
-  const isWarningStatus = 0 < freePresents && freePresents <= 100;
+  const isWarningStatus = 0 < freePresents && freePresents <= 0.15;
   const isErrorStatus = freePresents === 0;
 
+  // debugger;
   return isWarningStatus ? 'warning' : isErrorStatus ? 'error' : '';
 };
 
