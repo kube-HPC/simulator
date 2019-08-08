@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { isEqual } from 'lodash';
 
 import { Layout, Icon, Menu, Badge } from 'antd';
 
@@ -10,30 +11,41 @@ const SiderLight = styled(Layout.Sider)`
 
 const centerIconStyle = { fontSize: '25px', marginLeft: '-14px' };
 
+const MenuItem = React.memo(Menu.Item, isEqual);
+
 const addMenuItems = items =>
   items.map(({ name, type, component, count, status }) => (
-    <Menu.Item key={name} title={name}>
+    <MenuItem key={name} title={name}>
       <Badge status={status} count={count} overflowCount={100} offset={[0, 11]}>
         <Icon type={type} component={component} style={centerIconStyle} />
       </Badge>
-    </Menu.Item>
+    </MenuItem>
   ));
 
-const SidebarOperations = ({ onSelect, menuItems, ...props }) => (
-  <SiderLight {...props} theme="light" collapsed={true} collapsedWidth={60}>
-    <Menu
-      mode="vertical"
-      onSelect={({ key }) => onSelect(key)}
-      style={{ marginTop: '20%' }}
-      selectedKeys={[]}
-    >
-      {addMenuItems(menuItems)}
-    </Menu>
-  </SiderLight>
-);
+const topMargin = { marginTop: '20%' };
+const noItemSelect = [];
 
-SidebarOperations.propTypes = {
-  onSelect: PropTypes.func.isRequired
+const SidebarRight = ({ onSelect, menuItems, ...props }) => {
+  const menuSelect = useCallback(({ key }) => onSelect(key), [onSelect]);
+  const items = useMemo(() => addMenuItems(menuItems), [menuItems]);
+
+  return (
+    <SiderLight {...props} theme="light" collapsed={true} collapsedWidth={60}>
+      <Menu
+        mode="vertical"
+        onSelect={menuSelect}
+        style={topMargin}
+        selectedKeys={noItemSelect}
+      >
+        {items}
+      </Menu>
+    </SiderLight>
+  );
 };
 
-export default SidebarOperations;
+export default React.memo(SidebarRight, isEqual);
+// SidebarRight.whyDidYouRender = true;
+
+SidebarRight.propTypes = {
+  onSelect: PropTypes.func.isRequired
+};

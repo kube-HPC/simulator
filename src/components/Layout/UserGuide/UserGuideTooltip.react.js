@@ -72,27 +72,31 @@ const UserGuideTooltip = ({
       <TooltipFooter type="flex" justify="space-between">
         <Col>
           <RowCenter type="flex" gutter={10}>
-            <Col>
-              {!isLastStep && (
+            {!isLastStep && (
+              <Col>
                 <Button type="dashed" {...skipProps}>
                   Skip
                 </Button>
-              )}
-            </Col>
-            <Col>
-              {index === 0 && (
-                <Button type="dashed" onClick={() => toggle()}>
+              </Col>
+            )}
+            {index === 0 && (
+              <Col>
+                <Button type="dashed" onClick={toggle}>
                   <CheckboxUnClickable checked={isRunOnStartup}>
                     Run on Startup
                   </CheckboxUnClickable>
                 </Button>
-              )}
-            </Col>
+              </Col>
+            )}
           </RowCenter>
         </Col>
         <Col>
           <RowCenter type="flex" gutter={10}>
-            <Col>{index > 0 && <Button {...backProps}>Back</Button>}</Col>
+            {index > 0 && (
+              <Col>
+                <Button {...backProps}>Back</Button>
+              </Col>
+            )}
             <Col>
               <Button type="primary" {...primaryProps}>
                 {isLastStep ? 'Finish' : 'Next'}
@@ -106,3 +110,4 @@ const UserGuideTooltip = ({
 };
 
 export default UserGuideTooltip;
+// UserGuideTooltip.whyDidYouRender = true;

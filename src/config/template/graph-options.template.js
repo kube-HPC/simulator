@@ -68,7 +68,7 @@ export default {
     },
     batchPreSchedule: {
       color: {
-        background: COLOR_PIPELINE_STATUS.Preschedule
+        background: COLOR_PIPELINE_STATUS.preschedule
       }
     },
     notStarted: {
@@ -78,7 +78,7 @@ export default {
     },
     preSchedule: {
       color: {
-        background: COLOR_PIPELINE_STATUS.Preschedule
+        background: COLOR_PIPELINE_STATUS.preschedule
       }
     },
     completed: { color: { background: COLOR_PIPELINE_STATUS.completed } },

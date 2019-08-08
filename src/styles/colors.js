@@ -3,7 +3,7 @@ import { SERVICES } from '../constants/services';
 export const COLOR = {
   blue: '#307fe6',
   blueLight: '#45a9ec',
-  blueDark: '#0031e5',
+  cyan: '#98dbef',
   darkGrey: '#807c7c',
   grey: '#ccc',
   lightGreen: '#87d068',
@@ -84,7 +84,7 @@ export const COLOR_PIPELINE_STATUS = {
   stopped: COLOR.orange,
   stopping: COLOR.orange,
   succeed: COLOR.lightGreen,
-  Preschedule: COLOR.blueDark
+  preschedule: COLOR.cyan
 };
 
 export const COLOR_PRIORITY = {

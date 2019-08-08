@@ -5,13 +5,9 @@ import socketMiddleware from 'middleware/socket.middleware';
 import restConfigMiddleware from 'middleware/restConfig.middleware';
 import restMiddleware from 'middleware/rest.middleware';
 import messagesMiddleware from 'middleware/messages.middleware';
-
-const composeEnhancers =
-  process.env.NODE_ENV !== 'production' &&
-  typeof window === 'object' &&
-  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
-    : compose;
+import React from 'react';
+import whyDidYouRender from '@welldone-software/why-did-you-render';
+import { COLOR } from 'styles/colors';
 
 const middleware = [
   messagesMiddleware,
@@ -19,13 +15,23 @@ const middleware = [
   restConfigMiddleware,
   restMiddleware
 ];
+
 if (process.env.NODE_ENV === 'development') {
   middleware.unshift(createLogger({ collapsed: true }));
+  // whyDidYouRender(React, {
+  //   onlyLogs: true,
+  //   titleColor: COLOR.blueLight,
+  //   diffNameColor: COLOR.lightOrange,
+  //   diffPathColor: COLOR.lightGreen
+  // });
 }
+
+const composeEnhancers =
+  process.env.NODE_ENV === 'development' &&
+  typeof window === 'object' &&
+  (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose);
+
 const enhancer = composeEnhancers(applyMiddleware(...middleware));
-export const store = createStore(rootReducer, enhancer);
-if (process.env.NODE_ENV === 'development') {
-  window.store = store;
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
-}
+
+const store = createStore(rootReducer, enhancer);
 export default store;

@@ -9,7 +9,7 @@ import { Table, Icon } from 'antd';
 import USER_GUIDE, { userGuideStepIndexes } from 'constants/user-guide';
 import { jobsTableMock } from 'config/template/user-guide.template';
 
-const CustomExpandIcon = ({ expanded, onExpand, record }) => (
+const expandIcon = ({ expanded, onExpand, record }) => (
   <Icon type={expanded ? 'down' : 'right'} onClick={e => onExpand(record, e)} />
 );
 
@@ -17,43 +17,54 @@ const TableScrollHidden = styled(Table)`
   overflow: hidden;
 `;
 
-const mockDataSource = Immutable(jobsTableMock);
+const mockDataSource = Immutable.from(jobsTableMock);
+
+const expendIndex = userGuideStepIndexes.findIndex(
+  step => step === USER_GUIDE.TABLE_JOB.MENU_SELECT
+);
+
+const expandLast = expanded =>
+  expanded ? [mockDataSource[mockDataSource.length - 1].key] : [];
+
+const alwaysEqual = (a, b) => {
+  return a.stepIndex !== expendIndex && a.isOn === b.isOn;
+};
 
 const DynamicTable = ({ dataSource, isInner, ...props }) => {
-  const tableDataSource = dataSource || [];
+  const { isOn, stepIndex } = useSelector(
+    state => state.userGuide,
+    alwaysEqual
+  );
 
-  const { isOn: isGuideOn, stepIndex } = useSelector(state => state.userGuide);
-
-  const guideProps = {
-    className: USER_GUIDE.TABLE,
-    expandedRowKeys:
-      stepIndex >=
-      userGuideStepIndexes.findIndex(
-        step => step === USER_GUIDE.TABLE_JOB.MENU_SELECT
-      )
-        ? [mockDataSource[mockDataSource.length - 1].key]
-        : []
-  };
-
-  const userGuideProps = isGuideOn ? guideProps : {};
+  const tableDataSource = isOn ? mockDataSource : dataSource;
+  const expanded = stepIndex >= expendIndex;
+  const expandedRowKeys = isOn ? { expandedRowKeys: expandLast(expanded) } : {};
+  const pagination = tableDataSource.length < 20 ? false : { pageSize: 20 };
 
   const table = (
     <TableScrollHidden
-      {...userGuideProps}
-      size="middle"
-      expandIcon={CustomExpandIcon}
-      dataSource={isGuideOn ? mockDataSource : tableDataSource}
-      pagination={
-        tableDataSource.length < 20 || isGuideOn ? false : { pageSize: 20 }
-      }
       {...props}
+      {...expandedRowKeys}
+      className={USER_GUIDE.TABLE}
+      expandIcon={expandIcon}
+      dataSource={tableDataSource}
+      pagination={pagination}
+      size="middle"
     />
   );
 
   return isInner ? table : <Scrollbars autoHide>{table}</Scrollbars>;
 };
 
-export default DynamicTable;
+export default React.memo(DynamicTable);
+
+// TableScrollHidden.whyDidYouRender = true;
+// Table.whyDidYouRender = true;
+// DynamicTable.whyDidYouRender = true;
+
+DynamicTable.defaultProps = {
+  isInner: false
+};
 
 DynamicTable.propTypes = {
   dataSource: PropTypes.array.isRequired

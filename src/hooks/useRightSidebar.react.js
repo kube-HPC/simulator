@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 
 import { ReactComponent as IconAddPipeline } from 'images/no-fill/add-pipeline.svg';
@@ -6,7 +6,6 @@ import { ReactComponent as IconAddAlgorithm } from 'images/no-fill/add-algorithm
 import { ReactComponent as IconAddDebug } from 'images/no-fill/add-debug.svg';
 
 import { RIGHT_SIDEBAR_NAMES } from 'constants/sidebar-names';
-import { makeToggle } from 'utils/hooks';
 
 import {
   AddPipeline,
@@ -59,7 +58,9 @@ const useRightSidebar = () => {
     RIGHT_SIDEBAR_NAMES.ADD_PIPELINE
   );
   const [drawerIsVisible, setDrawerIsVisible] = useState(false);
-  const toggleDrawerVisible = makeToggle(setDrawerIsVisible);
+  const toggleDrawerVisible = useCallback(() => setDrawerIsVisible(p => !p), [
+    setDrawerIsVisible
+  ]);
 
   const operationSelector = {
     [RIGHT_SIDEBAR_NAMES.ADD_PIPELINE]: (
@@ -111,20 +112,22 @@ const useRightSidebar = () => {
     }
   ];
 
-  const onSelectDrawer = selection => {
-    if (selection === RIGHT_SIDEBAR_NAMES.ERROR_LOGS) {
-      setIsCleared(true);
-    }
-    setDrawerValue(selection);
-    toggleDrawerVisible();
-  };
+  const onSelectDrawer = useCallback(
+    selection => {
+      if (selection === RIGHT_SIDEBAR_NAMES.ERROR_LOGS) {
+        setIsCleared(true);
+      }
+      setDrawerValue(selection);
+      toggleDrawerVisible();
+    },
+    [setIsCleared, toggleDrawerVisible]
+  );
 
   return {
     selector: operationSelector,
     onSelect: onSelectDrawer,
     value: [drawerValue, setDrawerValue],
     isCollapsed: [drawerIsVisible, setDrawerIsVisible],
-    toggle: toggleDrawerVisible,
     menus: {
       menuBottomRightItems,
       menuItems

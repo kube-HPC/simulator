@@ -20,6 +20,8 @@ const generateTabs = tabs =>
     </Tabs.TabPane>
   ));
 
+const tabsAnimation = { inkBar: true, tabPane: false };
+
 function JobsTabSwitcher({ record }) {
   const tabs = {
     Graph: (
@@ -35,7 +37,7 @@ function JobsTabSwitcher({ record }) {
     JSON: <JsonView jsonObject={record.record} />
   };
 
-  return <Tabs>{generateTabs(tabs)}</Tabs>;
+  return <Tabs animated={tabsAnimation}>{generateTabs(tabs)}</Tabs>;
 }
 
 JobsTabSwitcher.propTypes = {

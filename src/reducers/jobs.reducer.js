@@ -1,24 +1,12 @@
 import { handleActions } from 'redux-actions';
-import dateformat from 'dateformat';
 import Immutable from 'seamless-immutable';
 import actions from 'constants/application-actions';
 
 export const jobsTable = handleActions(
   {
-    [actions.LAYOUT_UPDATE_ROW_DATA_TABLE](
-      state,
-      { type, payload, meta, error }
-    ) {
-      const timedData = payload.jobs.map(d => {
-        if (d.status) {
-          d.status.timestamp = dateformat(
-            d.status.timestamp,
-            'd/mm/yy, HH:MM:ss'
-          );
-        }
-        return d;
-      });
-      return state.merge({ dataSource: timedData });
+    [actions.LAYOUT_UPDATE_ROW_DATA_TABLE](currJobs, { payload }) {
+      const { jobs } = payload;
+      return Immutable.from({ dataSource: jobs });
     }
   },
   Immutable.from({ dataSource: [] })
@@ -26,7 +14,7 @@ export const jobsTable = handleActions(
 
 export const jobsJaeger = handleActions(
   {
-    [actions.JOBS_JAEGER_SUCCESS](state, { type, payload, meta, error }) {
+    [actions.JOBS_JAEGER_SUCCESS](state, { payload }) {
       return state.setIn([Object.keys(payload)[0]], payload);
     }
   },

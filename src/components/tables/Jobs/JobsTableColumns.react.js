@@ -114,11 +114,9 @@ const jobsTableColumns = ({ dispatch, isGuideOn }) => [
     render: (_, record) =>
       record.status.data &&
       record.status.data.states &&
-      Object.entries(record.status.data.states.asMutable()).map(
-        ([status, count]) => (
-          <StatusTag key={status} status={status} count={count} />
-        )
-      )
+      Object.entries(record.status.data.states).map(([status, count]) => (
+        <StatusTag key={status} status={status} count={count} />
+      ))
   },
   {
     title: 'Priority',

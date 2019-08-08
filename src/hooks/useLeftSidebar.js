@@ -12,7 +12,6 @@ import {
 import { LEFT_SIDEBAR_NAMES } from 'constants/sidebar-names';
 import { getBooleanLSItem, setLSItem } from 'utils/localStorage';
 import LOCAL_STORAGE_KEYS from 'constants/local-storage';
-import { makeToggle } from 'utils/hooks';
 
 const tableSelector = {
   [LEFT_SIDEBAR_NAMES.JOBS]: <JobsTable />,
@@ -24,9 +23,9 @@ const tableSelector = {
   [LEFT_SIDEBAR_NAMES.BUILDS]: <AlgorithmBuildsTable />
 };
 
-const leftCollapsedInitial = getBooleanLSItem(
-  LOCAL_STORAGE_KEYS.LEFT_SIDEBAR_IS_VISIBLE
-);
+const leftCollapsedInitial =
+  getBooleanLSItem(LOCAL_STORAGE_KEYS.LEFT_SIDEBAR_IS_VISIBLE) ||
+  getBooleanLSItem(LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS);
 
 const useLeftSidebar = () => {
   const [value, setValue] = useState(LEFT_SIDEBAR_NAMES.JOBS);
@@ -42,8 +41,7 @@ const useLeftSidebar = () => {
   return {
     value: [value, setValue],
     isCollapsed: [isCollapsed, setIsCollapsed],
-    selector: tableSelector,
-    toggle: makeToggle(setIsCollapsed)
+    selector: tableSelector
   };
 };
 

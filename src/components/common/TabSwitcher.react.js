@@ -18,9 +18,11 @@ const CenterMD = styled(ReactMarkdown)`
   margin: 1%;
 `;
 
+const tabsAnimation = { inkBar: true, tabPane: false };
+
 function TabSwitcher({ jsonObject, readme }) {
   return (
-    <Tabs>
+    <Tabs animated={tabsAnimation}>
       <Tabs.TabPane tab="JSON" key="JSON">
         <JsonView jsonObject={jsonObject} />
       </Tabs.TabPane>

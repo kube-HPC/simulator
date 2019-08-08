@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
@@ -12,6 +12,8 @@ import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
 import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
 import { ReactComponent as AlgorithmIcon } from 'images/algorithm-icon.svg';
 import { ReactComponent as JobsIcon } from 'images/jobs-icon.svg';
+
+import { isEqual } from 'lodash';
 
 import { Row, Col, Tag, Layout, Icon, Menu } from 'antd';
 
@@ -28,6 +30,8 @@ const MenuMargin = styled(Menu)`
   margin-top: 10px;
 `;
 
+const tagStyle = { color: COLOR_LAYOUT.colorPrimary };
+
 const setMenuItem = (component, title, count) => (
   <Row type="flex" justify="space-between" gutter={10}>
     <Col>
@@ -36,7 +40,7 @@ const setMenuItem = (component, title, count) => (
     </Col>
     {!isNaN(count) && (
       <Col>
-        <Tag style={{ color: COLOR_LAYOUT.colorPrimary }}>{count}</Tag>
+        <Tag style={tagStyle}>{count}</Tag>
       </Col>
     )}
   </Row>
@@ -89,7 +93,7 @@ const TitleCenter = styled(LogoTitle)`
   align-self: flex-start;
 `;
 
-export default function SidebarLeft({ onSelect, selectedKeys, ...props }) {
+const SidebarLeft = ({ onSelect, selectedKeys, ...props }) => {
   const [collapsed, setCollapsed] = useState(true);
 
   useEffect(
@@ -99,19 +103,22 @@ export default function SidebarLeft({ onSelect, selectedKeys, ...props }) {
     [props.collapsed, setCollapsed]
   );
 
-  const dataCountSource = useSelector(state => ({
-    jobsCount: (state.jobsTable.dataSource || []).length,
-    driversCount: (state.driverTable.dataSource || []).length,
-    algorithmsCount: (state.algorithmTable.dataSource || []).length,
-    buildsCount: (state.algorithmBuildsTable.dataSource || []).length,
-    pipelinesCount: (state.pipelineTable.dataSource || []).length,
-    workersCount: (state.workerTable.stats || { total: 0 }).total,
-    debugCount: (state.debugTable.dataSource || []).length
-  }));
+  const dataCountSource = useSelector(
+    state => ({
+      jobsCount: (state.jobsTable.dataSource || []).length,
+      driversCount: (state.driverTable.dataSource || []).length,
+      algorithmsCount: (state.algorithmTable.dataSource || []).length,
+      buildsCount: (state.algorithmBuildsTable.dataSource || []).length,
+      pipelinesCount: (state.pipelineTable.dataSource || []).length,
+      workersCount: (state.workerTable.stats || { total: 0 }).total,
+      debugCount: (state.debugTable.dataSource || []).length
+    }),
+    isEqual
+  );
 
-  const { isOn: isGuideOn } = useSelector(state => state.userGuide);
+  const { isOn } = useSelector(state => state.userGuide, () => true);
 
-  const dataCount = isGuideOn ? dataCountMock : dataCountSource;
+  const dataCount = isOn ? dataCountMock : dataCountSource;
 
   const menuItems = [
     [LEFT_SIDEBAR_NAMES.JOBS, JobsIcon, dataCount.jobsCount],
@@ -123,26 +130,31 @@ export default function SidebarLeft({ onSelect, selectedKeys, ...props }) {
     [LEFT_SIDEBAR_NAMES.BUILDS, 'build', dataCount.buildsCount]
   ];
 
+  const onMenuSelect = useCallback(({ key }) => onSelect(key), [onSelect]);
+  const items = useMemo(() => addMenuItems(menuItems), [menuItems]);
+  const onCollapse = useCallback(() => setCollapsed(p => !p), [setCollapsed]);
+
   return (
     <SiderLight
       {...props}
       theme="light"
-      onCollapse={() => setCollapsed(!collapsed)}
+      onCollapse={onCollapse}
       collapsed={collapsed}
     >
       <FlexBox>
         <IconLogo component={LogoFish} />
         {!collapsed && <AnimatedTitle />}
       </FlexBox>
-      <MenuMargin
-        onSelect={({ key }) => onSelect(key)}
-        selectedKeys={selectedKeys}
-      >
-        {addMenuItems(menuItems)}
+      <MenuMargin onSelect={onMenuSelect} selectedKeys={selectedKeys}>
+        {items}
       </MenuMargin>
     </SiderLight>
   );
-}
+};
+
+export default React.memo(SidebarLeft);
+
+// SidebarLeft.whyDidYouRender = true;
 
 SidebarLeft.propTypes = {
   onSelect: PropTypes.func.isRequired
