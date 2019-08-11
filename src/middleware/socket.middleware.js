@@ -13,9 +13,7 @@ const success = (dispatch, payload, action) => {
 };
 
 const socketMiddleware = ({ dispatch }) => next => action => {
-  if (
-    ![AT.SOCKET_INIT, `${AT.LAYOUT_GET_CONFIG}_SUCCESS`].includes(action.type)
-  ) {
+  if (![AT.SOCKET_INIT, `${AT.LAYOUT_GET_CONFIG}_SUCCESS`].includes(action.type)) {
     return next(action);
   }
   if (action.type === `${AT.LAYOUT_GET_CONFIG}_SUCCESS`) {
@@ -27,9 +25,7 @@ const socketMiddleware = ({ dispatch }) => next => action => {
     if (monitorBackend.useLocation) {
       url = location.origin; //eslint-disable-line
     } else {
-      url = `${monitorBackend.schema}${monitorBackend.host}:${
-        monitorBackend.port
-      }`;
+      url = `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}`;
     }
     socket = io(url, {
       path: monitorBackend.socketIoPath,
@@ -73,11 +69,7 @@ const socketMiddleware = ({ dispatch }) => next => action => {
       }
       currentTopicRegistered[action.payload.topic] = action;
     } else {
-      console.warn(
-        `socket middleware: trying to register topic ${
-          action.payload.topic
-        } twice `
-      );
+      console.warn(`socket middleware: trying to register topic ${action.payload.topic} twice `);
     }
   } else {
     setTimeout(() => {

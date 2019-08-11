@@ -4,11 +4,9 @@ import actions from 'constants/application-actions';
 
 export const nodeStatistics = handleActions(
   {
-    [actions.LAYOUT_UPDATE_ROW_DATA_TABLE](
-      state,
-      { type, payload, meta, error }
-    ) {
-      return state.merge({ dataSource: payload.nodeStatistics });
+    [actions.LAYOUT_UPDATE_ROW_DATA_TABLE](currState, { payload: nodeStatistics }) {
+      const validPayload = Array.isArray(nodeStatistics);
+      return validPayload ? Immutable.set(currState, 'dataSource', nodeStatistics) : currState;
     }
   },
   Immutable.from({ dataSource: [] })

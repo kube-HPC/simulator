@@ -15,8 +15,7 @@ const deleteConfirmAction = (action, record) => {
     content: (
       <>
         Are you sure you want to delete {record.name}? Deleting Pipeline will
-        <Typography.Text strong> STOP-ALL</Typography.Text> related Jobs and
-        Executions,
+        <Typography.Text strong> STOP-ALL</Typography.Text> related Jobs and Executions,
       </>
     ),
     okText: 'Confirm',
@@ -69,9 +68,7 @@ const pipelinesTableColumns = ({
       const pipelineStats = [].concat(
         ...[
           ...dataStats
-            .filter(
-              status => status.name === record.name && status.stats.length !== 0
-            )
+            .filter(status => status.name === record.name && status.stats.length !== 0)
             .map(pipeline => pipeline.stats)
         ]
       );
@@ -104,10 +101,9 @@ const pipelinesTableColumns = ({
               title={'Run Stored Pipeline'}
               description={
                 <>
-                  Start pipeline{' '}
-                  <Typography.Text code>execution</Typography.Text> when the
-                  name of the pipeline is known, all parameters in this action
-                  will be merged with the stored pipeline.
+                  Start pipeline <Typography.Text code>execution</Typography.Text> when the name of
+                  the pipeline is known, all parameters in this action will be merged with the
+                  stored pipeline.
                 </>
               }
               opener={onClick => (
@@ -151,7 +147,7 @@ const pipelinesTableColumns = ({
           </Col>
           <Col>
             <Button
-              type="danger"
+              type="dashed"
               shape="circle"
               icon="delete"
               onClick={() => deleteConfirmAction(deleteStoredPipeline, record)}

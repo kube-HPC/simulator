@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import 'styles/GlobalStyle.css';
 
@@ -9,9 +9,9 @@ import DrawerOperations from 'components/common/drawer/DrawerOperations.react';
 import SidebarRight from 'components/Layout/SidebarRight/SidebarRight.react';
 import SidebarLeft from 'components/Layout/SidebarLeft/SidebarLeft.react';
 
-import { message, Layout, Icon, Typography } from 'antd';
+import { message, Layout } from 'antd';
 import { init, socketInit } from 'actions/layout.action';
-import { COLOR_LAYOUT } from 'styles/colors';
+import { COLOR_LAYOUT, COLOR } from 'styles/colors';
 
 import USER_GUIDE from 'constants/user-guide';
 import GlobalStyle from 'styles/GlobalStyle.styles';
@@ -21,7 +21,7 @@ import { LEFT_SIDEBAR_NAMES } from 'constants/sidebar-names';
 import useLeftSidebar from 'hooks/useLeftSidebar';
 import useRightSidebar from 'hooks/useRightSidebar.react';
 import { UserGuide } from './UserGuide';
-import { HoverIcon } from 'components/common/index';
+import { HoverIcon, ErrorBoundary } from 'components/common/index';
 import { DarkHover } from 'components/common/HoverIcon.react';
 
 const LayoutFullHeight = styled(Layout)`
@@ -57,7 +57,18 @@ const HelpBar = styled(FlexBox)`
 
 const ContentMargin = styled(Layout.Content)`
   padding: 8px;
-  overflow: auto;
+
+  ::-webkit-scrollbar-track {
+    border: none;
+    background-color: none;
+  }
+  ::-webkit-scrollbar {
+    width: 1px;
+  }
+  ::-webkit-scrollbar-thumb {
+    border: 1px solid ${COLOR.darkGrey};
+    background-color: ${COLOR.darkGrey};
+  }
 `;
 
 const RightSidebarsFlex = styled.div`
@@ -76,6 +87,8 @@ const openWebsite = () => window.open('http://hkube.io/');
 const openGithub = () => window.open('https://github.com/kube-HPC/hkube');
 const appVersion = `${process.env.REACT_APP_VERSION}v`;
 
+const isOnEqual = (a, b) => a.isOn === b.isOn;
+
 function HKubeLayout() {
   const {
     selector: tableSelector,
@@ -83,10 +96,9 @@ function HKubeLayout() {
     isCollapsed: [leftIsCollapsed, setLeftIsCollapsed]
   } = useLeftSidebar();
 
-  const triggerLeftVisible = useCallback(
-    () => setLeftIsCollapsed(prev => !prev),
-    [setLeftIsCollapsed]
-  );
+  const triggerLeftVisible = useCallback(() => setLeftIsCollapsed(prev => !prev), [
+    setLeftIsCollapsed
+  ]);
 
   const setLeftValue = useCallback(setTableValue, [setTableValue]);
   const leftSelectedKeys = useMemo(() => [tableValue], [tableValue]);
@@ -110,10 +122,7 @@ function HKubeLayout() {
     menus: { menuBottomRightItems, menuItems }
   } = useRightSidebar();
 
-  const toggleDrawerVisible = useCallback(
-    () => setDrawerIsVisible(p => !p),
-    [setDrawerIsVisible]
-  );
+  const toggleDrawerVisible = useCallback(() => setDrawerIsVisible(p => !p), [setDrawerIsVisible]);
 
   useEffect(
     () => {
@@ -123,18 +132,17 @@ function HKubeLayout() {
     [dispatch]
   );
 
+  const { isOn } = useSelector(state => state.userGuide, isOnEqual);
+
   return (
-    <>
+    <ErrorBoundary>
       <GlobalStyle />
-      <UserGuide
-        triggerLeftVisible={triggerLeftVisible}
-        setLeftValue={setLeftValue}
-      />
+      {isOn && <UserGuide triggerLeftVisible={triggerLeftVisible} setLeftValue={setLeftValue} />}
       <LayoutFullHeight>
         <SidebarLeft
           className={USER_GUIDE.SIDEBAR_LEFT}
           selectedKeys={leftSelectedKeys}
-          onSelect={setTableValue}
+          onSelect={setLeftValue}
           collapsed={!leftIsCollapsed}
         />
         <Layout>
@@ -144,10 +152,7 @@ function HKubeLayout() {
                 type={leftIsCollapsed ? 'menu-fold' : 'menu-unfold'}
                 onClick={triggerLeftVisible}
               />
-              <TableAutoComplete
-                table={tableValue}
-                className={USER_GUIDE.HEADER.AUTO_COMPLETE}
-              />
+              <TableAutoComplete table={tableValue} className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
               <HelpBar className={USER_GUIDE.HEADER.SOCIALS}>
                 <HoverIcon type="global" onClick={openWebsite} />
                 <HoverIcon type="github" onClick={openGithub} />
@@ -180,20 +185,20 @@ function HKubeLayout() {
           </LayoutFullHeight>
         </Layout>
       </LayoutFullHeight>
-    </>
+    </ErrorBoundary>
   );
 }
 
-export default React.memo(HKubeLayout, () => true);
+export default React.memo(HKubeLayout);
 
 // HoverIcon.whyDidYouRender = true;
-DarkText.whyDidYouRender = true;
-Typography.Text.whyDidYouRender = true;
+// DarkText.whyDidYouRender = true;
+// Typography.Text.whyDidYouRender = true;
 // HelpBar.whyDidYouRender = true;
 // Header.whyDidYouRender = true;
 // Layout.whyDidYouRender = true;
 // HKubeLayout.whyDidYouRender = true;
-LayoutFullHeight.whyDidYourRender = true;
+// LayoutFullHeight.whyDidYourRender = true;
 // Layout.whyDidYourRender = true;
 // UserGuide.whyDidYourRender = true;
 // ContentMargin.whyDidYourRender = true;

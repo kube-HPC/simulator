@@ -11,6 +11,8 @@ render(
   document.getElementById('root')
 );
 
+HKubeLayout.whyDidYouRender = true;
+
 // webpack Hot Module Replacement API
 if (module.hot) {
   // keep in mind - here you are configuring HMR to accept CHILDREN MODULE

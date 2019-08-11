@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import { useSpring, animated, config } from 'react-spring';
+import { useSpring, animated } from 'react-spring';
 
 import { ReactComponent as LogoFish } from 'images/logo-fish.svg';
 import { ReactComponent as LogoTitle } from 'images/logo-title.svg';
@@ -22,7 +22,7 @@ import USER_GUIDE from 'constants/user-guide';
 import { LEFT_SIDEBAR_NAMES } from 'constants/sidebar-names';
 import { dataCountMock } from 'config/template/user-guide.template';
 
-const SiderLight = styled(Layout.Sider)`
+const Sider = styled(Layout.Sider)`
   border-right: 1px solid ${COLOR_LAYOUT.border};
 `;
 
@@ -51,20 +51,17 @@ const IconStyle = {
   marginTop: 2
 };
 
+const MenuItem = React.memo(Menu.Item, isEqual);
+
 const addMenuItems = items =>
   items.map(([name, component, count]) => (
-    <Menu.Item key={name} className={USER_GUIDE.TABLE_SELECT[name]}>
-      {setMenuItem(
-        <Icon type={component} component={component} style={IconStyle} />,
-        name,
-        count
-      )}
-    </Menu.Item>
+    <MenuItem key={name} className={USER_GUIDE.TABLE_SELECT[name]}>
+      {setMenuItem(<Icon type={component} component={component} style={IconStyle} />, name, count)}
+    </MenuItem>
   ));
 
 function AnimatedTitle() {
   const styledProps = useSpring({
-    config: config.slow,
     from: { opacity: 0 },
     opacity: 1
   });
@@ -93,6 +90,11 @@ const TitleCenter = styled(LogoTitle)`
   align-self: flex-start;
 `;
 
+const equalByGuideOn = (a, b) => a.isOn === b.isOn;
+
+const DEFAULT_VALUE = [];
+const EMPTY_WORKERS = { total: 0 };
+
 const SidebarLeft = ({ onSelect, selectedKeys, ...props }) => {
   const [collapsed, setCollapsed] = useState(true);
 
@@ -105,18 +107,18 @@ const SidebarLeft = ({ onSelect, selectedKeys, ...props }) => {
 
   const dataCountSource = useSelector(
     state => ({
-      jobsCount: (state.jobsTable.dataSource || []).length,
-      driversCount: (state.driverTable.dataSource || []).length,
-      algorithmsCount: (state.algorithmTable.dataSource || []).length,
-      buildsCount: (state.algorithmBuildsTable.dataSource || []).length,
-      pipelinesCount: (state.pipelineTable.dataSource || []).length,
-      workersCount: (state.workerTable.stats || { total: 0 }).total,
-      debugCount: (state.debugTable.dataSource || []).length
+      jobsCount: (state.jobsTable.dataSource || DEFAULT_VALUE).length,
+      driversCount: (state.driverTable.dataSource || DEFAULT_VALUE).length,
+      algorithmsCount: (state.algorithmTable.dataSource || DEFAULT_VALUE).length,
+      buildsCount: (state.algorithmBuildsTable.dataSource || DEFAULT_VALUE).length,
+      pipelinesCount: (state.pipelineTable.dataSource || DEFAULT_VALUE).length,
+      workersCount: (state.workerTable.stats || EMPTY_WORKERS).total,
+      debugCount: (state.debugTable.dataSource || DEFAULT_VALUE).length
     }),
     isEqual
   );
 
-  const { isOn } = useSelector(state => state.userGuide, () => true);
+  const { isOn } = useSelector(state => state.userGuide, equalByGuideOn);
 
   const dataCount = isOn ? dataCountMock : dataCountSource;
 
@@ -135,12 +137,7 @@ const SidebarLeft = ({ onSelect, selectedKeys, ...props }) => {
   const onCollapse = useCallback(() => setCollapsed(p => !p), [setCollapsed]);
 
   return (
-    <SiderLight
-      {...props}
-      theme="light"
-      onCollapse={onCollapse}
-      collapsed={collapsed}
-    >
+    <Sider {...props} theme="light" onCollapse={onCollapse} collapsed={collapsed}>
       <FlexBox>
         <IconLogo component={LogoFish} />
         {!collapsed && <AnimatedTitle />}
@@ -148,13 +145,11 @@ const SidebarLeft = ({ onSelect, selectedKeys, ...props }) => {
       <MenuMargin onSelect={onMenuSelect} selectedKeys={selectedKeys}>
         {items}
       </MenuMargin>
-    </SiderLight>
+    </Sider>
   );
 };
 
 export default React.memo(SidebarLeft);
-
-// SidebarLeft.whyDidYouRender = true;
 
 SidebarLeft.propTypes = {
   onSelect: PropTypes.func.isRequired

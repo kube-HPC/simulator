@@ -43,6 +43,7 @@ const getColorStatus = stats => {
   if (!(stats && stats.results)) return '';
   const { results } = stats;
   const algorithmsDataArr = results.map(r => r.algorithmsData);
+  console.log(results);
   const totalSize = algorithmsDataArr.flatMap(flatAllStats).reduce(sumArr);
   const freeSize = algorithmsDataArr.flatMap(flatByFree).reduce(sumArr);
 
@@ -78,7 +79,6 @@ const useRightSidebar = () => {
   };
 
   const { totalNewWarnings, setIsCleared } = useErrorLogs();
-
   const cpuStatusRef = useRef('');
   const memoryStatusRef = useRef('');
 
@@ -114,9 +114,7 @@ const useRightSidebar = () => {
 
   const onSelectDrawer = useCallback(
     selection => {
-      if (selection === RIGHT_SIDEBAR_NAMES.ERROR_LOGS) {
-        setIsCleared(true);
-      }
+      if (selection === RIGHT_SIDEBAR_NAMES.ERROR_LOGS) setIsCleared(true);
       setDrawerValue(selection);
       toggleDrawerVisible();
     },

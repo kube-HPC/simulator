@@ -2,14 +2,17 @@ import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
 import actions from 'constants/application-actions';
 
+const DEFAULT_VALUE = [];
+const initialValue = Immutable.from({ dataSource: DEFAULT_VALUE });
+
 export const jobsTable = handleActions(
   {
-    [actions.LAYOUT_UPDATE_ROW_DATA_TABLE](currJobs, { payload }) {
+    [actions.LAYOUT_UPDATE_ROW_DATA_TABLE](currJobs, { payload, error }) {
       const { jobs } = payload;
-      return Immutable.from({ dataSource: jobs });
+      return Immutable.from({ dataSource: jobs || DEFAULT_VALUE });
     }
   },
-  Immutable.from({ dataSource: [] })
+  initialValue
 );
 
 export const jobsJaeger = handleActions(
@@ -27,5 +30,5 @@ export const jobsKubernetesLogs = handleActions(
       return state.merge({ dataSource: payload });
     }
   },
-  Immutable.from({ dataSource: [] })
+  initialValue
 );

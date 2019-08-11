@@ -25,26 +25,24 @@ const addMenuItems = items =>
 const topMargin = { marginTop: '20%' };
 const noItemSelect = [];
 
+const MenuMemo = React.memo(Menu);
+
 const SidebarRight = ({ onSelect, menuItems, ...props }) => {
   const menuSelect = useCallback(({ key }) => onSelect(key), [onSelect]);
   const items = useMemo(() => addMenuItems(menuItems), [menuItems]);
 
   return (
     <SiderLight {...props} theme="light" collapsed={true} collapsedWidth={60}>
-      <Menu
-        mode="vertical"
-        onSelect={menuSelect}
-        style={topMargin}
-        selectedKeys={noItemSelect}
-      >
+      <MenuMemo mode="vertical" onSelect={menuSelect} style={topMargin} selectedKeys={noItemSelect}>
         {items}
-      </Menu>
+      </MenuMemo>
     </SiderLight>
   );
 };
 
 export default React.memo(SidebarRight, isEqual);
 // SidebarRight.whyDidYouRender = true;
+// Menu.whyDidYouRender = true;
 
 SidebarRight.propTypes = {
   onSelect: PropTypes.func.isRequired

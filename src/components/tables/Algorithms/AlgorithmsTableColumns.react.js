@@ -11,9 +11,8 @@ const deleteConfirmAction = (action, record) => {
     title: 'WARNING Deleting Algorithm',
     content: (
       <>
-        Deleting algorithm will{' '}
-        <Typography.Text strong>DELETE-ALL</Typography.Text> related pipelines
-        and <Typography.Text strong>STOP-ALL</Typography.Text> executions.
+        Deleting algorithm will <Typography.Text strong>DELETE-ALL</Typography.Text> related
+        pipelines and <Typography.Text strong>STOP-ALL</Typography.Text> executions.
       </>
     ),
     okText: 'Confirm',
@@ -26,12 +25,7 @@ const deleteConfirmAction = (action, record) => {
   });
 };
 
-const algorithmsTableColumns = ({
-  onSubmit,
-  onDelete,
-  fetchReadme,
-  readmeDefault
-}) => [
+const algorithmsTableColumns = ({ onSubmit, onDelete, fetchReadme, readmeDefault }) => [
   {
     title: 'Algorithm Name',
     dataIndex: 'name',
@@ -93,9 +87,7 @@ const algorithmsTableColumns = ({
               </Tooltip>
             )}
             readmeDefault={
-              readmeDefault &&
-              readmeDefault[record.name] &&
-              readmeDefault[record.name].readme
+              readmeDefault && readmeDefault[record.name] && readmeDefault[record.name].readme
             }
             record={record}
             onSubmit={onSubmit}
@@ -104,7 +96,7 @@ const algorithmsTableColumns = ({
         </Col>
         <Col>
           <Button
-            type="danger"
+            type="dashed"
             shape="circle"
             icon="delete"
             onClick={() => deleteConfirmAction(onDelete, record)}

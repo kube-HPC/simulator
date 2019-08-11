@@ -9,21 +9,16 @@ import React from 'react';
 import whyDidYouRender from '@welldone-software/why-did-you-render';
 import { COLOR } from 'styles/colors';
 
-const middleware = [
-  messagesMiddleware,
-  socketMiddleware,
-  restConfigMiddleware,
-  restMiddleware
-];
+const middleware = [messagesMiddleware, socketMiddleware, restConfigMiddleware, restMiddleware];
 
 if (process.env.NODE_ENV === 'development') {
   middleware.unshift(createLogger({ collapsed: true }));
-  // whyDidYouRender(React, {
-  //   onlyLogs: true,
-  //   titleColor: COLOR.blueLight,
-  //   diffNameColor: COLOR.lightOrange,
-  //   diffPathColor: COLOR.lightGreen
-  // });
+  whyDidYouRender(React, {
+    logOnDifferentValues: true,
+    titleColor: COLOR.blueLight,
+    diffNameColor: COLOR.lightOrange,
+    diffPathColor: COLOR.lightGreen
+  });
 }
 
 const composeEnhancers =
