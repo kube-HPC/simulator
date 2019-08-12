@@ -36,14 +36,12 @@ const menuItems = [
 const mapBySize = node => node.size;
 const sumArr = (total, curr) => total + curr;
 const flatAllStats = nodeArr => nodeArr.map(mapBySize);
-const flatByFree = nodeArr =>
-  nodeArr.filter(node => node.name === 'free').map(mapBySize);
+const flatByFree = nodeArr => nodeArr.filter(node => node.name === 'free').map(mapBySize);
 
 const getColorStatus = stats => {
   if (!(stats && stats.results)) return '';
   const { results } = stats;
   const algorithmsDataArr = results.map(r => r.algorithmsData);
-  console.log(results);
   const totalSize = algorithmsDataArr.flatMap(flatAllStats).reduce(sumArr);
   const freeSize = algorithmsDataArr.flatMap(flatByFree).reduce(sumArr);
 
@@ -55,24 +53,14 @@ const getColorStatus = stats => {
 };
 
 const useRightSidebar = () => {
-  const [drawerValue, setDrawerValue] = useState(
-    RIGHT_SIDEBAR_NAMES.ADD_PIPELINE
-  );
+  const [drawerValue, setDrawerValue] = useState(RIGHT_SIDEBAR_NAMES.ADD_PIPELINE);
   const [drawerIsVisible, setDrawerIsVisible] = useState(false);
-  const toggleDrawerVisible = useCallback(() => setDrawerIsVisible(p => !p), [
-    setDrawerIsVisible
-  ]);
+  const toggleDrawerVisible = useCallback(() => setDrawerIsVisible(p => !p), [setDrawerIsVisible]);
 
   const operationSelector = {
-    [RIGHT_SIDEBAR_NAMES.ADD_PIPELINE]: (
-      <AddPipeline onSubmit={toggleDrawerVisible} />
-    ),
-    [RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM]: (
-      <AddAlgorithmForm onSubmit={toggleDrawerVisible} />
-    ),
-    [RIGHT_SIDEBAR_NAMES.ADD_DEBUG]: (
-      <AddDebug onSubmit={toggleDrawerVisible} />
-    ),
+    [RIGHT_SIDEBAR_NAMES.ADD_PIPELINE]: <AddPipeline onSubmit={toggleDrawerVisible} />,
+    [RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM]: <AddAlgorithmForm onSubmit={toggleDrawerVisible} />,
+    [RIGHT_SIDEBAR_NAMES.ADD_DEBUG]: <AddDebug onSubmit={toggleDrawerVisible} />,
     [RIGHT_SIDEBAR_NAMES.CPU]: <NodeStatistics metric="cpu" />,
     [RIGHT_SIDEBAR_NAMES.MEMORY]: <NodeStatistics metric="mem" />,
     [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: <ErrorLogsTable />

@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
 import { Input, AutoComplete } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
-import { autoCompleteFilter } from 'actions/layout.action';
 import styled from 'styled-components';
 import { LEFT_SIDEBAR_NAMES } from 'constants/sidebar-names';
 import { STATE_SOURCES } from 'reducers/root.reducer';
 import { isEqual } from 'lodash';
+import { autoCompleteFilter } from 'actions/autoComplete.action';
 
 const AutoCompleteTransparent = styled(AutoComplete)`
   background: transparent;
@@ -37,7 +37,6 @@ const getDataByTable = table => state =>
 
 function TableAutoComplete({ table, ...props }) {
   const tableData = useSelector(getDataByTable(table), isEqual);
-
   const dispatch = useDispatch();
   const filterData = useCallback(e => dispatch(autoCompleteFilter(e)), [dispatch]);
 
@@ -55,7 +54,5 @@ function TableAutoComplete({ table, ...props }) {
   );
 }
 
-const areEqual = (prevProps, nextProps) => prevProps.table === nextProps.table;
-
-export default React.memo(TableAutoComplete, areEqual);
-AutoComplete.whyDidYouRender = true;
+const areEqualByTableName = (prevProps, nextProps) => prevProps.table === nextProps.table;
+export default React.memo(TableAutoComplete, areEqualByTableName);

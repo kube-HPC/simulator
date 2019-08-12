@@ -1,28 +1,25 @@
 import React, { useEffect, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import 'styles/GlobalStyle.css';
 
-import TableAutoComplete from 'components/Layout/TableAutoComplete.react';
-import DrawerOperations from 'components/common/drawer/DrawerOperations.react';
-import SidebarRight from 'components/Layout/SidebarRight/SidebarRight.react';
-import SidebarLeft from 'components/Layout/SidebarLeft/SidebarLeft.react';
-
 import { message, Layout } from 'antd';
-import { init, socketInit } from 'actions/layout.action';
-import { COLOR_LAYOUT, COLOR } from 'styles/colors';
-
 import USER_GUIDE from 'constants/user-guide';
-import GlobalStyle from 'styles/GlobalStyle.styles';
-import { triggerUserGuide } from 'actions/userGuide.action';
-import { LEFT_SIDEBAR_NAMES } from 'constants/sidebar-names';
+import { useRightSidebar, useLeftSidebar } from 'hooks';
+import {
+  SidebarLeft,
+  TableAutoComplete,
+  DrawerOperations,
+  SidebarRight,
+  LoadingScreen,
+  UserGuide,
+  Icons
+} from 'components';
 
-import useLeftSidebar from 'hooks/useLeftSidebar';
-import useRightSidebar from 'hooks/useRightSidebar.react';
-import { UserGuide } from './UserGuide';
-import { HoverIcon, ErrorBoundary } from 'components/common/index';
-import { DarkHover } from 'components/common/HoverIcon.react';
+import { init, socketInit, triggerUserGuide } from 'actions';
+import { LEFT_SIDEBAR_NAMES } from 'constants/sidebar-names';
+import { COLOR_LAYOUT, GlobalStyle, COLOR } from 'styles';
 
 const LayoutFullHeight = styled(Layout)`
   height: 100vh;
@@ -50,7 +47,7 @@ const DarkText = styled.span`
 `;
 
 const HelpBar = styled(FlexBox)`
-  > ${DarkHover}, ${DarkText} {
+  > ${Icons.DarkHoverStyle}, ${DarkText} {
     margin-left: 10px;
   }
 `;
@@ -87,9 +84,17 @@ const openWebsite = () => window.open('http://hkube.io/');
 const openGithub = () => window.open('https://github.com/kube-HPC/hkube');
 const appVersion = `${process.env.REACT_APP_VERSION}v`;
 
-const isOnEqual = (a, b) => a.isOn === b.isOn;
-
 function HKubeLayout() {
+  const dispatch = useDispatch();
+
+  useEffect(
+    () => {
+      dispatch(init());
+      dispatch(socketInit());
+    },
+    [dispatch]
+  );
+
   const {
     selector: tableSelector,
     value: [tableValue, setTableValue],
@@ -102,8 +107,6 @@ function HKubeLayout() {
 
   const setLeftValue = useCallback(setTableValue, [setTableValue]);
   const leftSelectedKeys = useMemo(() => [tableValue], [tableValue]);
-
-  const dispatch = useDispatch();
 
   const onGuideClick = useCallback(
     () => {
@@ -124,20 +127,11 @@ function HKubeLayout() {
 
   const toggleDrawerVisible = useCallback(() => setDrawerIsVisible(p => !p), [setDrawerIsVisible]);
 
-  useEffect(
-    () => {
-      dispatch(init());
-      dispatch(socketInit());
-    },
-    [dispatch]
-  );
-
-  const { isOn } = useSelector(state => state.userGuide, isOnEqual);
-
   return (
-    <ErrorBoundary>
+    <>
       <GlobalStyle />
-      {isOn && <UserGuide triggerLeftVisible={triggerLeftVisible} setLeftValue={setLeftValue} />}
+      <LoadingScreen />
+      <UserGuide triggerLeftVisible={triggerLeftVisible} setLeftValue={setLeftValue} />
       <LayoutFullHeight>
         <SidebarLeft
           className={USER_GUIDE.SIDEBAR_LEFT}
@@ -148,15 +142,15 @@ function HKubeLayout() {
         <Layout>
           <Header className={USER_GUIDE.WELCOME}>
             <FlexBox>
-              <HoverIcon
+              <Icons.Hover
                 type={leftIsCollapsed ? 'menu-fold' : 'menu-unfold'}
                 onClick={triggerLeftVisible}
               />
               <TableAutoComplete table={tableValue} className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
               <HelpBar className={USER_GUIDE.HEADER.SOCIALS}>
-                <HoverIcon type="global" onClick={openWebsite} />
-                <HoverIcon type="github" onClick={openGithub} />
-                <HoverIcon type="question-circle" onClick={onGuideClick} />
+                <Icons.Hover type="global" onClick={openWebsite} />
+                <Icons.Hover type="github" onClick={openGithub} />
+                <Icons.Hover type="question-circle" onClick={onGuideClick} />
                 <DarkText>{appVersion}</DarkText>
               </HelpBar>
             </FlexBox>
@@ -185,21 +179,8 @@ function HKubeLayout() {
           </LayoutFullHeight>
         </Layout>
       </LayoutFullHeight>
-    </ErrorBoundary>
+    </>
   );
 }
 
 export default React.memo(HKubeLayout);
-
-// HoverIcon.whyDidYouRender = true;
-// DarkText.whyDidYouRender = true;
-// Typography.Text.whyDidYouRender = true;
-// HelpBar.whyDidYouRender = true;
-// Header.whyDidYouRender = true;
-// Layout.whyDidYouRender = true;
-// HKubeLayout.whyDidYouRender = true;
-// LayoutFullHeight.whyDidYourRender = true;
-// Layout.whyDidYourRender = true;
-// UserGuide.whyDidYourRender = true;
-// ContentMargin.whyDidYourRender = true;
-// TableAutoComplete.whyDidYourRender = true;

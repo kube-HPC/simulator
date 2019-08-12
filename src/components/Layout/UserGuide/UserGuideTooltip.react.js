@@ -64,9 +64,7 @@ const UserGuideTooltip = ({
   return (
     <TooltipBody {...tooltipProps}>
       <TooltipContent>
-        {step.title && (
-          <Typography.Title level={3}>{step.title}</Typography.Title>
-        )}
+        {step.title && <Typography.Title level={3}>{step.title}</Typography.Title>}
         {step.content && <>{step.content}</>}
       </TooltipContent>
       <TooltipFooter type="flex" justify="space-between">
@@ -82,9 +80,7 @@ const UserGuideTooltip = ({
             {index === 0 && (
               <Col>
                 <Button type="dashed" onClick={toggle}>
-                  <CheckboxUnClickable checked={isRunOnStartup}>
-                    Run on Startup
-                  </CheckboxUnClickable>
+                  <CheckboxUnClickable checked={isRunOnStartup}>Run on Startup</CheckboxUnClickable>
                 </Button>
               </Col>
             )}
@@ -110,4 +106,3 @@ const UserGuideTooltip = ({
 };
 
 export default UserGuideTooltip;
-// UserGuideTooltip.whyDidYouRender = true;

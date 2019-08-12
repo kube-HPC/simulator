@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector, useDispatch, shallowEqual } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { getJaegerData as _getJaegerData } from 'actions/jobs.action';
 import { STATE_SOURCES } from 'reducers/root.reducer';
 import { tableDataSelector } from 'utils/hooks';
@@ -11,28 +11,24 @@ import jobsTableColumns from 'components/tables/Jobs/JobsTableColumns.react';
 import CardRow from 'components/common/CardRow.react';
 import USER_GUIDE from 'constants/user-guide';
 
-const dataSelector = tableDataSelector(
-  STATE_SOURCES.JOBS_TABLE,
-  filter => row => row.key.includes(filter)
+const dataSelector = tableDataSelector(STATE_SOURCES.JOBS_TABLE, filter => row =>
+  row.key.includes(filter)
 );
 
 export default function useJobs() {
   const { isOn } = useSelector(state => state.userGuide, isEqual);
   const dispatch = useDispatch();
 
-  const getJaegerData = useCallback(
-    record => dispatch(_getJaegerData(record)),
-    [dispatch]
-  );
+  const getJaegerData = useCallback(record => dispatch(_getJaegerData(record)), [dispatch]);
 
-  const columns = useMemo(
-    () => jobsTableColumns({ dispatch, isGuideOn: isOn }),
-    [dispatch, isOn]
-  );
+  const columns = useMemo(() => jobsTableColumns({ dispatch, isGuideOn: isOn }), [dispatch, isOn]);
 
-  const onExpand = useCallback((expanded, record) => {
-    expanded && getJaegerData(record.pipeline.jobId);
-  }, [getJaegerData]);
+  const onExpand = useCallback(
+    (expanded, record) => {
+      expanded && getJaegerData(record.pipeline.jobId);
+    },
+    [getJaegerData]
+  );
 
   const jaeger = useSelector(state => state.jobsJaeger);
   const expandedRowRender = useCallback(

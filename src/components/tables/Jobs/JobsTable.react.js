@@ -24,9 +24,7 @@ const JobsTable = () => {
   const { columns, dataSource, expandedRowRender, onExpand } = useJobs();
 
   const [currentPage, setCurrentPage] = useState(1);
-  const onChange = ({ current, ...rest }) => {
-    setCurrentPage(current);
-  };
+  const onChange = ({ current }) => setCurrentPage(current);
 
   const chunks = chunk(dataSource, DEFAULT_PAGE_SIZE);
   const pagination = { total: dataSource.length, pageSize: DEFAULT_PAGE_SIZE };

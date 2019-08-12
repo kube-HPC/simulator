@@ -4,10 +4,7 @@ import actions from 'constants/application-actions';
 
 export const debugTable = handleActions(
   {
-    [actions.LAYOUT_UPDATE_ROW_DATA_TABLE](
-      state,
-      { type, payload, meta, error }
-    ) {
+    [actions.SOCKET_GET_DATA](state, { type, payload, meta, error }) {
       return state.merge({ dataSource: payload.algorithmsForDebug });
     }
   },

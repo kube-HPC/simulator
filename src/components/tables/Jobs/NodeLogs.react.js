@@ -29,7 +29,6 @@ class NodeLogs extends Component {
           this.isAlreadySelected = true;
           this.currentTaskId = props.taskDetails[data.key].taskId;
           props.rerunLogs(this.currentTaskId);
-          console.log(props.taskDetails[data.key]);
         }}
       >
         {menu}
@@ -42,9 +41,7 @@ class NodeLogs extends Component {
         <li key={i} style={{ marginBottom: '4px' }}>
           <span style={{ color: '#eeda13' }}>{l.meta}</span>
           <span style={{ color: '#fff' }}>:: </span>
-          <span style={{ color: 'white', textIndent: '10px' }}>
-            {l.message}
-          </span>
+          <span style={{ color: 'white', textIndent: '10px' }}>{l.message}</span>
         </li>
       );
     });

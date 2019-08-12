@@ -28,8 +28,7 @@ const ActiveState = [
 ];
 
 const canPauseOrResume = state => canPauseOrStop(state) || canResume(state);
-const canPauseOrStop = state =>
-  isActive(state) || state === PIPELINE_STATES.PAUSED;
+const canPauseOrStop = state => isActive(state) || state === PIPELINE_STATES.PAUSED;
 const canResume = state => state === PIPELINE_STATES.PAUSED;
 const isActive = state => ActiveState.includes(state);
 
@@ -46,11 +45,7 @@ const jobsTableColumns = ({ dispatch, isGuideOn }) => [
     key: 'key',
     width: '10%',
     render: jobID => (
-      <Ellipsis
-        className={isGuideOn ? USER_GUIDE.TABLE_JOB.ID_SELECT : ''}
-        copyable
-        text={jobID}
-      />
+      <Ellipsis className={isGuideOn ? USER_GUIDE.TABLE_JOB.ID_SELECT : ''} copyable text={jobID} />
     )
   },
   {
@@ -64,16 +59,14 @@ const jobsTableColumns = ({ dispatch, isGuideOn }) => [
   {
     title: 'Status',
     dataIndex: 'status.status',
-    key: 'status',
+    key: 'job-status',
     filterMultiple: true,
     filters: getStatusFilter(),
     width: '5%',
     sorter: (a, b) => sorter(a.status.status, b.status.status),
     onFilter: (value, record) => record.status.status === value,
     render: status => (
-      <Tag color={COLOR_PIPELINE_STATUS[status]}>
-        {toUpperCaseFirstLetter(status)}
-      </Tag>
+      <Tag color={COLOR_PIPELINE_STATUS[status]}>{toUpperCaseFirstLetter(status)}</Tag>
     )
   },
   {
@@ -83,13 +76,11 @@ const jobsTableColumns = ({ dispatch, isGuideOn }) => [
     width: '10%',
     sorter: (a, b) => a.pipeline.startTime - b.pipeline.startTime,
     render: (_, record) => (
-      <Moment format="DD/MM/YY HH:mm:ss">
-        {record.pipeline && record.pipeline.startTime}
-      </Moment>
+      <Moment format="DD/MM/YY HH:mm:ss">{record.pipeline && record.pipeline.startTime}</Moment>
     )
   },
   {
-    title: 'Running time',
+    title: 'Running Time',
     dataIndex: 'status.timestamp',
     key: 'timestamp',
     width: '10%',
@@ -108,15 +99,19 @@ const jobsTableColumns = ({ dispatch, isGuideOn }) => [
   },
   {
     title: 'Nodes Stats',
-    dataIndex: 'status.data.details',
-    key: 'details',
-    width: '10%',
-    render: (_, record) =>
-      record.status.data &&
-      record.status.data.states &&
-      Object.entries(record.status.data.states).map(([status, count]) => (
-        <StatusTag key={status} status={status} count={count} />
-      ))
+    dataIndex: 'status',
+    key: 'node-status',
+    render: status => (
+      <Row type="flex" justify="center">
+        {status.data &&
+          status.data.states &&
+          Object.entries(status.data.states).map(([status, count]) => (
+            <Col key={status}>
+              <StatusTag status={status} count={count} />
+            </Col>
+          ))}
+      </Row>
+    )
   },
   {
     title: 'Priority',
@@ -125,10 +120,7 @@ const jobsTableColumns = ({ dispatch, isGuideOn }) => [
     width: '5%',
     sorter: (a, b) => sorter(a.pipeline.priority, b.pipeline.priority),
     render: (_, record) => (
-      <Tooltip
-        placement="top"
-        title={COLOR_PRIORITY[record.pipeline.priority].name}
-      >
+      <Tooltip placement="top" title={COLOR_PRIORITY[record.pipeline.priority].name}>
         <Tag color={COLOR_PRIORITY[record.pipeline.priority].color}>
           {COLOR_PRIORITY[record.pipeline.priority].name}
         </Tag>
@@ -138,26 +130,18 @@ const jobsTableColumns = ({ dispatch, isGuideOn }) => [
   {
     title: 'Progress',
     dataIndex: 'Progress',
+    key: 'progress',
     width: '20%',
     render: (_, record) => {
-      const stopped =
-        record.status && record.status.status === PIPELINE_STATES.STOPPED;
-      const failed =
-        record.status && record.status.status === PIPELINE_STATES.FAILED;
+      const stopped = record.status && record.status.status === PIPELINE_STATES.STOPPED;
+      const failed = record.status && record.status.status === PIPELINE_STATES.FAILED;
       const progress = parseInt(
-        (record.status && record.status.data && record.status.data.progress) ||
-          0
+        (record.status && record.status.data && record.status.data.progress) || 0
       );
       return (
         <Progress
           percent={progress}
-          status={
-            stopped || failed
-              ? 'exception'
-              : progress === 100
-              ? 'success'
-              : 'active'
-          }
+          status={stopped || failed ? 'exception' : progress === 100 ? 'success' : 'active'}
           strokeColor={
             failed
               ? COLOR_PIPELINE_STATUS.failed
@@ -171,9 +155,8 @@ const jobsTableColumns = ({ dispatch, isGuideOn }) => [
   },
   {
     title: 'Action',
-    dataIndex: 'action',
-    key: 'stop',
-    width: '20%',
+    key: 'action',
+    width: '15%',
     align: 'center',
     render: (_, record) => {
       const status = record.status.status;
@@ -229,11 +212,7 @@ const jobsTableColumns = ({ dispatch, isGuideOn }) => [
             disabled={isDisabled}
             shape="circle"
             icon="download"
-            onClick={() =>
-              dispatch(
-                downloadStorageResults(record.results.data.storageInfo.path)
-              )
-            }
+            onClick={() => dispatch(downloadStorageResults(record.results.data.storageInfo.path))}
           />
         </Tooltip>
       );

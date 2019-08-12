@@ -4,7 +4,8 @@ import actions from 'constants/application-actions';
 
 export const nodeStatistics = handleActions(
   {
-    [actions.LAYOUT_UPDATE_ROW_DATA_TABLE](currState, { payload: nodeStatistics }) {
+    [actions.SOCKET_GET_DATA](currState, { payload }) {
+      const { nodeStatistics } = payload;
       const validPayload = Array.isArray(nodeStatistics);
       return validPayload ? Immutable.set(currState, 'dataSource', nodeStatistics) : currState;
     }

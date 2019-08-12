@@ -1,75 +1,44 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
-import { animated, useSpring } from 'react-spring';
-import { ReactComponent as Fish } from 'images/logo-no-shadow.svg';
+import { animated } from 'react-spring';
+import { STATE_SOURCES } from 'reducers/root.reducer';
+import { COLOR, COLOR_LAYOUT } from 'styles/colors';
+import { Typography, Spin, Icon } from 'antd';
 
 const CenterScreen = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-content: center;
+  align-items: center;
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  z-index: 11;
+  background-color: ${COLOR_LAYOUT.backgroundOnModal};
 `;
 
 const CenterItem = styled(animated.div)`
-  align-self: center;
-  margin-top: 20px;
+  margin: 20px;
 `;
 
-const cycle = r =>
-  `translate3d(0, ${15 * Math.sin(r + (2 * Math.PI) / 1.6)}px, 0)`;
+const whiteFont = { color: COLOR.white };
+const antIcon = <Icon type="loading" style={{ fontSize: 100, color: 'white' }} spin />;
 
-function LoadingScreen() {
-  const { radians } = useSpring({
-    to: async next => {
-      while (1) await next({ radians: 2 * Math.PI });
-    },
-    from: { radians: 0 },
-    config: { duration: 3500 },
-    reset: true
-  });
-
-  const { x } = useSpring({
-    from: { x: 0 },
-    to: async next => {
-      while (1) await next({ x: 1 });
-    },
-    config: { duration: 3500 },
-    reset: true
-  });
+const LoadingScreen = () => {
+  const isConnected = useSelector(state => state[STATE_SOURCES.SOCKET_STATUS]);
 
   return (
-    <CenterScreen>
-      <CenterItem style={{ transform: radians.interpolate(cycle) }}>
-        <Fish />
-      </CenterItem>
-      <CenterItem>
-        <animated.svg
-          style={{
-            transform: x
-              .interpolate({
-                range: [0, 0.25, 0.45, 0.65, 1],
-                output: [0.85, 0.75, 0.85, 0.9, 0.85]
-              })
-              .interpolate(x => `scale(${x})`)
-          }}
-          width="100"
-          viewBox="0 0 789 130"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <ellipse
-            cx="394.5"
-            cy="64.502"
-            rx="394.5"
-            ry="64.5"
-            fill="black"
-            fillOpacity="0.19"
-          />
-        </animated.svg>
-      </CenterItem>
-    </CenterScreen>
+    !isConnected && (
+      <CenterScreen>
+        <CenterItem>
+          <Spin indicator={antIcon} />
+        </CenterItem>
+        <Typography.Title style={whiteFont}>Connecting to Socket...</Typography.Title>
+      </CenterScreen>
+    )
   );
-}
+};
 
 export default LoadingScreen;

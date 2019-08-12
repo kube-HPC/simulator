@@ -3,15 +3,16 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import store from './store';
 import HKubeLayout from 'components/Layout/HKubeLayout.react';
+import { ErrorBoundary } from 'components/common';
 
 render(
   <Provider store={store}>
-    <HKubeLayout />
+    <ErrorBoundary>
+      <HKubeLayout />
+    </ErrorBoundary>
   </Provider>,
   document.getElementById('root')
 );
-
-HKubeLayout.whyDidYouRender = true;
 
 // webpack Hot Module Replacement API
 if (module.hot) {

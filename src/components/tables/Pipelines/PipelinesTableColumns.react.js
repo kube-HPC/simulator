@@ -142,7 +142,6 @@ const pipelinesTableColumns = ({
               )}
               record={record}
               onSubmit={onSubmit}
-              // submitText={'Update'}
             />
           </Col>
           <Col>

@@ -22,8 +22,16 @@ import USER_GUIDE from 'constants/user-guide';
 import { LEFT_SIDEBAR_NAMES } from 'constants/sidebar-names';
 import { dataCountMock } from 'config/template/user-guide.template';
 
-const Sider = styled(Layout.Sider)`
+const Border = styled.div`
   border-right: 1px solid ${COLOR_LAYOUT.border};
+`;
+
+const Sider = styled(Layout.Sider)`
+  .ant-menu-inline,
+  .ant-menu-vertical,
+  .ant-menu-vertical-left {
+    border-right: none;
+  }
 `;
 
 const MenuMargin = styled(Menu)`
@@ -60,7 +68,7 @@ const addMenuItems = items =>
     </MenuItem>
   ));
 
-function AnimatedTitle() {
+const AnimatedTitle = () => {
   const styledProps = useSpring({
     from: { opacity: 0 },
     opacity: 1
@@ -70,7 +78,7 @@ function AnimatedTitle() {
       <TitleCenter width="110px" />
     </animated.div>
   );
-}
+};
 
 const FlexBox = styled.div`
   margin-top: 10px;
@@ -137,15 +145,17 @@ const SidebarLeft = ({ onSelect, selectedKeys, ...props }) => {
   const onCollapse = useCallback(() => setCollapsed(p => !p), [setCollapsed]);
 
   return (
-    <Sider {...props} theme="light" onCollapse={onCollapse} collapsed={collapsed}>
-      <FlexBox>
-        <IconLogo component={LogoFish} />
-        {!collapsed && <AnimatedTitle />}
-      </FlexBox>
-      <MenuMargin onSelect={onMenuSelect} selectedKeys={selectedKeys}>
-        {items}
-      </MenuMargin>
-    </Sider>
+    <Border>
+      <Sider {...props} theme="light" onCollapse={onCollapse} collapsed={collapsed}>
+        <FlexBox>
+          <IconLogo component={LogoFish} />
+          {!collapsed && <AnimatedTitle />}
+        </FlexBox>
+        <MenuMargin onSelect={onMenuSelect} selectedKeys={selectedKeys}>
+          {items}
+        </MenuMargin>
+      </Sider>
+    </Border>
   );
 };
 

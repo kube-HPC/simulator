@@ -41,8 +41,6 @@ const SidebarRight = ({ onSelect, menuItems, ...props }) => {
 };
 
 export default React.memo(SidebarRight, isEqual);
-// SidebarRight.whyDidYouRender = true;
-// Menu.whyDidYouRender = true;
 
 SidebarRight.propTypes = {
   onSelect: PropTypes.func.isRequired

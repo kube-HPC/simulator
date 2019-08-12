@@ -7,9 +7,9 @@ const initialValue = Immutable.from({ dataSource: DEFAULT_VALUE });
 
 export const jobsTable = handleActions(
   {
-    [actions.LAYOUT_UPDATE_ROW_DATA_TABLE](currJobs, { payload, error }) {
+    [actions.SOCKET_GET_DATA](currJobs, { payload }) {
       const { jobs } = payload;
-      return Immutable.from({ dataSource: jobs || DEFAULT_VALUE });
+      return Immutable.merge(jobsTable, { dataSource: jobs || DEFAULT_VALUE });
     }
   },
   initialValue

@@ -57,7 +57,7 @@ const setPath = ({ monitorBackend }) => {
 };
 
 const restMiddleware = ({ dispatch }) => next => action => {
-  if (action.type === `${AT.LAYOUT_GET_CONFIG}_SUCCESS`) {
+  if (action.type === `${AT.SOCKET_GET_CONFIG}_SUCCESS`) {
     url = setPath(action.payload.config);
   } else if (
     ![

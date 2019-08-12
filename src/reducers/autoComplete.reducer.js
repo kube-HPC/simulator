@@ -4,7 +4,7 @@ import actions from 'constants/application-actions';
 
 export const autoCompleteFilter = handleActions(
   {
-    [actions.LAYOUT_UPDATE_FILTER](state, { type, payload, meta, error }) {
+    [actions.AUTO_COMPLETE_UPDATE_FILTER](state, { type, payload, meta, error }) {
       return state.merge(payload);
     }
   },

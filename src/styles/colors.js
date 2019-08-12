@@ -14,7 +14,8 @@ export const COLOR = {
   transparentGrey: '#bfbfbf21',
   yellow: '#eeda13',
   white: 'white',
-  pink: '#e543b4'
+  pink: '#e543b4',
+  transparentBlack: '#00000073'
 };
 
 // View all services colors @ https://github.com/kube-HPC/hkube/labels
@@ -63,6 +64,7 @@ export const SERVICE_COLOR = {
 
 export const COLOR_LAYOUT = {
   background: COLOR.transparentGrey,
+  backgroundOnModal: COLOR.transparentBlack,
   border: COLOR.lightGrey,
   colorPrimary: COLOR.blue,
   darkBorder: COLOR.grey

@@ -39,7 +39,6 @@ const restConfigMiddleware = ({ dispatch }) => next => action => {
         res
           .json()
           .then(data => {
-            // console.log(data);
             success(dispatch, data, action);
           })
           .catch(err => console.error(err));

@@ -14,10 +14,10 @@ const userGuideInitialStatus = Immutable.from({
   isOn
 });
 
-const userGuide = handleActions(
+export const userGuide = handleActions(
   {
-    [actions.USER_GUIDE_CHANGE_STEP](userGuide, { payload }) {
-      return Immutable.set(userGuide, 'stepIndex', payload);
+    [actions.USER_GUIDE_CHANGE_STEP](userGuide, { stepIndex }) {
+      return Immutable.set(userGuide, 'stepIndex', stepIndex);
     },
     [actions.USER_GUIDE_TRIGGER](userGuide) {
       return Immutable.set(userGuideInitialStatus, 'isOn', !userGuide.isOn);
@@ -25,5 +25,3 @@ const userGuide = handleActions(
   },
   userGuideInitialStatus
 );
-
-export default userGuide;

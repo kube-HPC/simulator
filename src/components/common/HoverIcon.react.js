@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Icon } from 'antd';
 import { COLOR_LAYOUT } from 'styles/colors';
 
-export const DarkHover = styled(Icon)`
+const DarkHoverStyle = styled(Icon)`
   color: ${COLOR_LAYOUT.darkBorder};
   :hover {
     color: black;
@@ -13,8 +13,8 @@ export const DarkHover = styled(Icon)`
 
 const iconStyle = { fontSize: 22 };
 
-const HoverIcon = ({ type, onClick }) => (
-  <DarkHover type={type} style={iconStyle} onClick={onClick} />
+const Hover = ({ type, onClick }) => (
+  <DarkHoverStyle type={type} style={iconStyle} onClick={onClick} />
 );
 
-export default React.memo(HoverIcon);
+export default { Hover, DarkHoverStyle };
