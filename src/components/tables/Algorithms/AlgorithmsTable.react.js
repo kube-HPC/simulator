@@ -11,9 +11,8 @@ import useAlgorithm from 'hooks/useAlgorithm.react';
 import { tableDataSelector } from 'utils/hooks';
 import { STATE_SOURCES } from 'reducers/root.reducer';
 
-const dataSelector = tableDataSelector(
-  STATE_SOURCES.ALGORITHM_TABLE,
-  filter => record => record.name.includes(filter)
+const dataSelector = tableDataSelector(STATE_SOURCES.ALGORITHM_TABLE, filter => record =>
+  record.name.includes(filter)
 );
 
 function AlgorithmsTable() {
@@ -30,15 +29,12 @@ function AlgorithmsTable() {
         if (expanded) dispatch(getAlgorithmReadme(record.name));
       }}
       expandedRowRender={record => {
-        // debugger;
         return (
           <CardRow>
             <TabSwitcher
               jsonObject={record}
               readme={
-                readmeDefault &&
-                readmeDefault[record.name] &&
-                readmeDefault[record.name].readme
+                readmeDefault && readmeDefault[record.name] && readmeDefault[record.name].readme
               }
             />
           </CardRow>
