@@ -1,4 +1,4 @@
-import AT from 'constants/application-actions';
+import AT from 'const/application-actions';
 import io from 'socket.io-client';
 import { COLOR } from 'styles/colors';
 

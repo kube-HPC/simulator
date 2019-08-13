@@ -1,4 +1,4 @@
-import { SERVICES } from '../constants/services';
+import { SERVICES } from '../const/services';
 
 export const COLOR = {
   blue: '#307fe6',

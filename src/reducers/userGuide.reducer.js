@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
-import actions from 'constants/application-actions';
-import LOCAL_STORAGE_KEYS from 'constants/local-storage';
+import actions from 'const/application-actions';
+import LOCAL_STORAGE_KEYS from 'const/local-storage';
 import { getBooleanLSItem, getLSItem } from 'utils/localStorage';
 
 // When LS not available, show tutorial.

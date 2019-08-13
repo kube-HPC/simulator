@@ -1,4 +1,4 @@
-import actions from 'constants/application-actions';
+import actions from 'const/application-actions';
 
 export const changeStep = step => ({
   type: actions.USER_GUIDE_CHANGE_STEP,

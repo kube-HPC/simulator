@@ -11,17 +11,13 @@ function MDContentSwitcher(props) {
     mdData: null
   });
 
-  useEffect(
-    () => {
-      setValue(prev => ({ ...prev, mdData: props.readme }));
-    },
-    [props.readme, setValue]
-  );
+  useEffect(() => {
+    setValue(prev => ({ ...prev, mdData: props.readme }));
+  }, [props.readme, setValue]);
 
   const onDataChange = data => (value.mdData = data);
 
-  const onChange = e =>
-    setValue({ defaultRadio: e.target.value, mdData: value.mdData });
+  const onChange = e => setValue({ defaultRadio: e.target.value, mdData: value.mdData });
 
   const Comp =
     value.defaultRadio === 'Edit' ? (

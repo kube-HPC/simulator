@@ -1,5 +1,4 @@
-export const setLSItem = (str, object) =>
-  window.localStorage.setItem(str, object);
+export const setLSItem = (str, object) => window.localStorage.setItem(str, object);
 
 export const getLSItem = str => window.localStorage.getItem(str);
 

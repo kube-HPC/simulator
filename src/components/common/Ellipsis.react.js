@@ -19,9 +19,7 @@ const Ellipsis = ({ text, length, copyable, type, ellipsis, ...props }) => {
     <Center>
       <Tooltip title={isOverlapped && ellipsis && str}>
         <Text ellipsis type={type ? type : copyable && 'secondary'} {...props}>
-          {isOverlapped && ellipsis
-            ? `${str.substring(0, DEFAULT_LENGTH)}...`
-            : str}
+          {isOverlapped && ellipsis ? `${str.substring(0, DEFAULT_LENGTH)}...` : str}
         </Text>
       </Tooltip>
     </Center>

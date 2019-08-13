@@ -1,4 +1,4 @@
-import AT from '../constants/application-actions';
+import AT from '../const/application-actions';
 
 const reject = (dispatch, payload, action) => {
   dispatch({

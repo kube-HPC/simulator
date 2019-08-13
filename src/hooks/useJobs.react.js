@@ -1,15 +1,13 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getJaegerData as _getJaegerData } from 'actions/jobs.action';
-import { STATE_SOURCES } from 'reducers/root.reducer';
 import { tableDataSelector } from 'utils/hooks';
 import { useCallback, useMemo } from 'react';
 import { isEqual } from 'lodash';
 
-import JobsTabSwitcher from 'components/tables/Jobs/JobsTabSwitcher.react';
-import jobsTableColumns from 'components/tables/Jobs/JobsTableColumns.react';
 import CardRow from 'components/common/CardRow.react';
-import USER_GUIDE from 'constants/user-guide';
+import { STATE_SOURCES, USER_GUIDE } from 'const';
+import { JobsTabSwitcher, getJobsColumns } from 'components/Tables/Jobs';
 
 const dataSelector = tableDataSelector(STATE_SOURCES.JOBS_TABLE, filter => row =>
   row.key.includes(filter)
@@ -21,7 +19,7 @@ export default function useJobs() {
 
   const getJaegerData = useCallback(record => dispatch(_getJaegerData(record)), [dispatch]);
 
-  const columns = useMemo(() => jobsTableColumns({ dispatch, isGuideOn: isOn }), [dispatch, isOn]);
+  const columns = useMemo(() => getJobsColumns({ dispatch, isGuideOn: isOn }), [dispatch, isOn]);
 
   const onExpand = useCallback(
     (expanded, record) => {

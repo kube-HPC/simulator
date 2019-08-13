@@ -1,24 +1,21 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 
-import { ReactComponent as IconAddPipeline } from 'images/no-fill/add-pipeline.svg';
-import { ReactComponent as IconAddAlgorithm } from 'images/no-fill/add-algorithm.svg';
-import { ReactComponent as IconAddDebug } from 'images/no-fill/add-debug.svg';
-import { ReactComponent as IconRawFile } from 'images/raw.svg';
-
-import { RIGHT_SIDEBAR_NAMES } from 'constants/sidebar-names';
-
 import {
   AddPipeline,
   AddAlgorithmForm,
   AddDebug,
   ErrorLogsTable,
-  RunRawPipeline
-} from 'components/Layout/SidebarRight';
+  RunRawPipeline,
+  IconAddPipeline,
+  IconAddAlgorithm,
+  IconAddDebug,
+  IconRawFile
+} from 'components/Sidebar/SidebarRight';
 
-import { STATE_SOURCES } from 'reducers/root.reducer';
 import { useErrorLogs } from 'hooks';
 import { NodeStatistics } from 'components';
+import { STATE_SOURCES, RIGHT_SIDEBAR_NAMES } from 'const';
 
 const menuItems = [
   {
@@ -81,13 +78,10 @@ const useRightSidebar = () => {
     state => state[STATE_SOURCES.NODE_STATISTICS].dataSource
   );
 
-  useEffect(
-    () => {
-      cpuStatusRef.current = getColorStatus(cpuStats);
-      memoryStatusRef.current = getColorStatus(memoryStats);
-    },
-    [cpuStats, memoryStats]
-  );
+  useEffect(() => {
+    cpuStatusRef.current = getColorStatus(cpuStats);
+    memoryStatusRef.current = getColorStatus(memoryStats);
+  }, [cpuStats, memoryStats]);
 
   const menuBottomRightItems = [
     {

@@ -1,4 +1,4 @@
-import AT from 'constants/application-actions';
+import AT from 'const/application-actions';
 import axios from 'axios';
 import FileSaver from 'file-saver';
 import successMsg from 'config/schema/success-messages.schema';
@@ -48,9 +48,7 @@ const setPath = ({ monitorBackend }) => {
   if (monitorBackend.useLocation) {
     _url = `${location.origin}${monitorBackend.path}`; //eslint-disable-line
   } else {
-    _url = `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}${
-      monitorBackend.path
-    }`;
+    _url = `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}${monitorBackend.path}`;
   }
 
   return _url;

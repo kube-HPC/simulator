@@ -4,8 +4,8 @@ import { storiesOf } from '@storybook/react';
 import { Tabs, Button, Typography } from 'antd';
 
 import MDEditor from 'components/common/md/MDEditor.react';
-import DrawerContainer from 'components/common/drawer/DrawerContainer.react';
-import DrawerEditorMD from 'components/common/drawer/DrawerEditorMD.react';
+import DrawerContainer from 'components/Drawer/DrawerContainer.react';
+import DrawerEditorMD from 'components/Drawer/DrawerEditorMD.react';
 import addPipelineTemplate from 'config/template/addPipeline.template';
 import { stringify } from 'utils/string';
 
@@ -42,8 +42,7 @@ storiesOf('BASICS|Markdown', module)
       title={'Update Pipeline'}
       description={
         <>
-          Edit pipeline properties and{' '}
-          <Typography.Text code>Update</Typography.Text>
+          Edit pipeline properties and <Typography.Text code>Update</Typography.Text>
         </>
       }
       visible

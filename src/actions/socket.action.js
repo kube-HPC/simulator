@@ -1,5 +1,5 @@
-import actions from 'constants/application-actions';
-import TOPICS from 'constants/topics';
+import actions from 'const/application-actions';
+import TOPICS from 'const/topics';
 
 export const socketInit = () => ({
   type: actions.SOCKET_INIT,

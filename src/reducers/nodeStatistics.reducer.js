@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
-import actions from 'constants/application-actions';
+import actions from 'const/application-actions';
 
 export const nodeStatistics = handleActions(
   {

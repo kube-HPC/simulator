@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import actions from 'constants/application-actions';
+import actions from 'const/application-actions';
 
 export const socketStatus = handleActions(
   {
