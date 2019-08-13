@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Drawer, Typography, Button } from 'antd';
 import PropTypes from 'prop-types';
-import BottomContent from './BottomContent.react';
+import BottomContent from '../BottomContent.react';
 
 const { Title, Paragraph } = Typography;
 
@@ -32,10 +32,10 @@ const DrawerContainer = ({ children, ...props }) => {
         onClose={() => setVisible(prev => !prev)}
         title={
           title && (
-            <Typography>
+            <>
               <Title level={2}>{title}</Title>
               <Paragraph>{description}</Paragraph>
-            </Typography>
+            </>
           )
         }
         {...restProps}

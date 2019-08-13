@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { ReactComponent as IconAddPipeline } from 'images/no-fill/add-pipeline.svg';
 import { ReactComponent as IconAddAlgorithm } from 'images/no-fill/add-algorithm.svg';
 import { ReactComponent as IconAddDebug } from 'images/no-fill/add-debug.svg';
+import { ReactComponent as IconRawFile } from 'images/raw.svg';
 
 import { RIGHT_SIDEBAR_NAMES } from 'constants/sidebar-names';
 
@@ -11,12 +12,13 @@ import {
   AddPipeline,
   AddAlgorithmForm,
   AddDebug,
-  ErrorLogsTable
+  ErrorLogsTable,
+  RunRawPipeline
 } from 'components/Layout/SidebarRight';
 
-import useErrorLogs from './useErrorLogs.react';
-import { NodeStatistics } from 'components/tables';
 import { STATE_SOURCES } from 'reducers/root.reducer';
+import { useErrorLogs } from 'hooks';
+import { NodeStatistics } from 'components';
 
 const menuItems = [
   {
@@ -30,6 +32,10 @@ const menuItems = [
   {
     name: RIGHT_SIDEBAR_NAMES.ADD_DEBUG,
     component: IconAddDebug
+  },
+  {
+    name: RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE,
+    component: IconRawFile
   }
 ];
 
@@ -61,6 +67,7 @@ const useRightSidebar = () => {
     [RIGHT_SIDEBAR_NAMES.ADD_PIPELINE]: <AddPipeline onSubmit={toggleDrawerVisible} />,
     [RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM]: <AddAlgorithmForm onSubmit={toggleDrawerVisible} />,
     [RIGHT_SIDEBAR_NAMES.ADD_DEBUG]: <AddDebug onSubmit={toggleDrawerVisible} />,
+    [RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE]: <RunRawPipeline onSubmit={toggleDrawerVisible} />,
     [RIGHT_SIDEBAR_NAMES.CPU]: <NodeStatistics metric="cpu" />,
     [RIGHT_SIDEBAR_NAMES.MEMORY]: <NodeStatistics metric="mem" />,
     [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: <ErrorLogsTable />

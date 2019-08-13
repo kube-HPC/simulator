@@ -17,7 +17,7 @@ import {
 } from 'antd';
 
 import { applyAlgorithm } from 'actions/algorithm.action';
-import BottomContent from 'components/common/drawer/BottomContent.react';
+import BottomContent from 'components/common/BottomContent.react';
 
 import template from 'config/template/algorithm-modal.template';
 import schema from 'config/schema/algorithm-modal.schema';
@@ -104,10 +104,7 @@ function AddAlgorithmForm(props) {
     code: (
       <>
         <Form.Item {...formItemLayout} label={schema.environment}>
-          <Select
-            value={algoData.env}
-            onChange={env => setAlgoData({ ...algoData, env })}
-          >
+          <Select value={algoData.env} onChange={env => setAlgoData({ ...algoData, env })}>
             {insertEnvOptions(schema.env)}
           </Select>
         </Form.Item>
@@ -115,9 +112,7 @@ function AddAlgorithmForm(props) {
           <Input
             defaultValue={algoData.entryPoint}
             value={algoData.entryPoint}
-            onChange={e =>
-              setAlgoData({ ...algoData, entryPoint: e.target.value })
-            }
+            onChange={e => setAlgoData({ ...algoData, entryPoint: e.target.value })}
             prefix={<Icon type="login" style={{ color: 'rgba(0,0,0,.25)' }} />}
             placeholder="Insert Entry Point"
           />
@@ -140,12 +135,8 @@ function AddAlgorithmForm(props) {
         <Input
           className="input"
           value={algoData.algorithmImage}
-          onChange={e =>
-            setAlgoData({ ...algoData, algorithmImage: e.target.value })
-          }
-          prefix={
-            <Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }} />
-          }
+          onChange={e => setAlgoData({ ...algoData, algorithmImage: e.target.value })}
+          prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }} />}
           placeholder="Insert algorithm image"
         />
       </Form.Item>
@@ -225,9 +216,7 @@ function AddAlgorithmForm(props) {
           <InputNumber
             min={0}
             value={algoData.minHotWorkers}
-            onChange={minHotWorkers =>
-              setAlgoData({ ...algoData, minHotWorkers: minHotWorkers })
-            }
+            onChange={minHotWorkers => setAlgoData({ ...algoData, minHotWorkers: minHotWorkers })}
           />
         </Form.Item>
         <Form.Item {...formItemLayout} label={schema.options}>
@@ -254,11 +243,7 @@ function AddAlgorithmForm(props) {
       </StyledForm>
       <BottomContent
         extra={[
-          <Button
-            type="danger"
-            key="clear"
-            onClick={() => setAlgoData(template)}
-          >
+          <Button type="danger" key="clear" onClick={() => setAlgoData(template)}>
             Clear
           </Button>
         ]}

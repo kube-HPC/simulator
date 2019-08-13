@@ -13,7 +13,7 @@ import Ellipsis from 'components/common/Ellipsis.react';
 
 import { downloadStorageResults } from 'actions/jobs.action';
 import {
-  execRawPipeline,
+  rerunRawPipeline,
   stopPipeline,
   pausePipeline,
   resumePipeline
@@ -168,7 +168,7 @@ const jobsTableColumns = ({ dispatch, isGuideOn }) => [
             type="default"
             shape="circle"
             icon="redo"
-            onClick={() => dispatch(execRawPipeline(record.pipeline))}
+            onClick={() => dispatch(rerunRawPipeline(record.pipeline))}
           />
         </Tooltip>
       );
