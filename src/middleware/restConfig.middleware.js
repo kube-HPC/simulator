@@ -33,7 +33,7 @@ const restConfigMiddleware = ({ dispatch }) => next => action => {
 
   if (action.type === AT.REST_REQ_CONFIG) {
     pending(dispatch, 'pending', action);
-    fetch(`${location.href}${action.payload.url}`) //eslint-disable-line
+    fetch(`${location.origin}${location.pathname}${action.payload.url}`) //eslint-disable-line
       .then(res => {
         //eslint-disable-line
         res
