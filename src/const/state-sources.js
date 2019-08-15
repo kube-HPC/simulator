@@ -13,6 +13,6 @@ export default {
   PIPELINE_README: 'pipelineReadme',
   PIPELINE_TABLE: 'pipelineTable',
   WORKER_TABLE: 'workerTable',
-  SOCKET_STATUS: 'socketStatus',
+  CONNECTION_STATUS: 'connectionStatus',
   USER_GUIDE: 'userGuide'
 };

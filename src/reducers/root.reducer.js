@@ -11,7 +11,7 @@ import { algorithmTable, algorithmBuildsTable, algorithmReadme } from 'reducers/
 import { autoCompleteFilter } from 'reducers/autoComplete.reducer';
 import { pipelineTable, pipelineReadme } from 'reducers/pipeline.reducer';
 import { nodeStatistics } from 'reducers/nodeStatistics.reducer';
-import { socketStatus } from 'reducers/socket.reducer';
+import { connectionStatus } from 'reducers/connection.reducer';
 import { userGuide } from 'reducers/userGuide.reducer';
 import { errorLogsTable } from 'reducers/errorLogs.reducer';
 
@@ -30,7 +30,7 @@ const dataSources = {
   pipelineReadme,
   pipelineTable,
   userGuide,
-  socketStatus,
+  connectionStatus,
   workerTable
 };
 

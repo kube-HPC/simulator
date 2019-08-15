@@ -1,6 +1,7 @@
 import AT from 'const/application-actions';
 import io from 'socket.io-client';
 import { COLOR } from 'styles/colors';
+import { setConnectionStatus } from 'actions/connection.action';
 
 let socket = null;
 const currentTopicRegistered = {};
@@ -13,8 +14,8 @@ const success = (dispatch, payload, action) => {
   });
 };
 
-const toggleSocket = (dispatch, isConnected) =>
-  dispatch({ type: AT.SOCKET_TOGGLE_STATUS, isConnected });
+const changeConnectionStatus = (dispatch, { isSocketConnected, isDataAvailable }) =>
+  dispatch(setConnectionStatus({ isSocketConnected, isDataAvailable }));
 
 const connectionsEvents = {
   CONNECTION: 'connect',
@@ -58,24 +59,24 @@ const socketMiddleware = ({ dispatch }) => next => action => {
     Object.values(connectionsEvents).forEach(event => {
       socket.on(event, args => {
         event === connectionsEvents.CONNECTION ? connectLog() : console.info(`${event}, ${args}`);
-        toggleSocket(dispatch, true);
         isSocketConnected = true;
+        changeConnectionStatus(dispatch, { isSocketConnected });
       });
     });
 
     noConnectionEvents.forEach(e =>
       socket.on(e, args => {
         console.info(`${e}, ${args}`);
-        toggleSocket(dispatch, false);
-        isSocketConnected = true;
+        isSocketConnected = false;
+        changeConnectionStatus(dispatch, { isSocketConnected });
       })
     );
 
     Object.keys(currentTopicRegistered).forEach(act =>
       socket.on(currentTopicRegistered[act].payload.topic, data => {
         if (data && !isSocketConnected) {
-          toggleSocket(dispatch, true);
           isSocketConnected = true;
+          changeConnectionStatus(dispatch, { isSocketConnected });
         }
         success(dispatch, data, currentTopicRegistered[act]);
       })

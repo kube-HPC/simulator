@@ -1,16 +1,16 @@
 import React, { useEffect, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import 'styles/GlobalStyle.css';
 
-import { message, Layout } from 'antd';
+import { message, Layout, Tag, Icon, Typography, Col, Tooltip } from 'antd';
 import { useRightSidebar, useLeftSidebar } from 'hooks';
 
 import { init, socketInit, triggerUserGuide } from 'actions';
 import { COLOR_LAYOUT, GlobalStyle, COLOR } from 'styles';
-import { LEFT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
-import { Icons } from 'components/common';
+import { LEFT_SIDEBAR_NAMES, USER_GUIDE, STATE_SOURCES } from 'const';
+import { Icons, FlexRow } from 'components/common';
 
 import {
   UserGuide,
@@ -120,11 +120,15 @@ function Dashboard() {
   ]);
   const toggleDrawerVisible = useCallback(() => setDrawerIsVisible(p => !p), [setDrawerIsVisible]);
 
+  const { isDataAvailable, isSocketConnected } = useSelector(
+    state => state[STATE_SOURCES.CONNECTION_STATUS]
+  );
+
   return (
     <>
       <GlobalStyle />
-      <LoadingScreen />
       <UserGuide triggerLeftVisible={triggerLeftVisible} setLeftValue={setLeftValue} />
+      {!isDataAvailable && <LoadingScreen />}
       <LayoutFullHeight>
         <SidebarLeft
           className={USER_GUIDE.SIDEBAR_LEFT}
@@ -141,6 +145,20 @@ function Dashboard() {
               />
               <AutoComplete table={tableValue} className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
               <HelpBar className={USER_GUIDE.HEADER.SOCIALS}>
+                {!isSocketConnected && (
+                  <Tag color="orange">
+                    <Tooltip title="Reconnecting to Socket...">
+                      <FlexRow>
+                        <Col>
+                          <Typography.Text>Offline Mode</Typography.Text>
+                        </Col>
+                        <Col>
+                          <Icon type="disconnect" />
+                        </Col>
+                      </FlexRow>
+                    </Tooltip>
+                  </Tag>
+                )}
                 <Icons.Hover type="global" onClick={openWebsite} />
                 <Icons.Hover type="github" onClick={openGithub} />
                 <Icons.Hover type="question-circle" onClick={onGuideClick} />

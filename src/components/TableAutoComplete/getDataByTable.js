@@ -15,7 +15,7 @@ const tableSelector = {
     mapFunc: algorithm => algorithm.algorithmName
   },
   [LEFT_SIDEBAR_NAMES.DRIVERS]: {
-    sourceName: LEFT_SIDEBAR_NAMES.DRIVERS,
+    sourceName: STATE_SOURCES.DRIVER_TABLE,
     mapFunc: driver => driver.driverId
   },
   [LEFT_SIDEBAR_NAMES.ALGORITHMS]: {

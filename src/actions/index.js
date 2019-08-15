@@ -1,2 +1,2 @@
-export { init, socketInit } from 'actions/socket.action';
+export { init, socketInit } from 'actions/connection.action';
 export { triggerUserGuide, changeStep } from 'actions/userGuide.action';
