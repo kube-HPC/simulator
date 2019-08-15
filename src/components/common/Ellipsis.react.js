@@ -10,6 +10,7 @@ const Center = styled.div`
 `;
 
 const DEFAULT_LENGTH = 20;
+const onCopy = () => notification.success({ message: 'Copied to clipboard' });
 
 const Ellipsis = ({ text, length, copyable, type, ellipsis, ...props }) => {
   const str = text ? text : '';
@@ -26,10 +27,7 @@ const Ellipsis = ({ text, length, copyable, type, ellipsis, ...props }) => {
   );
 
   const copyableComponent = copyable ? (
-    <CopyToClipboard
-      text={str}
-      onCopy={() => notification.success({ message: 'Copied to clipboard' })}
-    >
+    <CopyToClipboard text={str} onCopy={onCopy}>
       {textComponent}
     </CopyToClipboard>
   ) : (

@@ -15,10 +15,11 @@ import { ReactComponent as JobsIcon } from 'images/jobs-icon.svg';
 
 import { isEqual } from 'lodash';
 
-import { Row, Col, Tag, Layout, Icon, Menu } from 'antd';
+import { Col, Tag, Layout, Icon, Menu } from 'antd';
 import { COLOR_LAYOUT } from 'styles';
 import { USER_GUIDE, LEFT_SIDEBAR_NAMES } from 'const';
 import { dataCountMock } from 'config';
+import { FlexRow } from 'components/common';
 
 const Border = styled.div`
   border-right: 1px solid ${COLOR_LAYOUT.border};
@@ -39,7 +40,7 @@ const MenuMargin = styled(Menu)`
 const tagStyle = { color: COLOR_LAYOUT.colorPrimary };
 
 const setMenuItem = (component, title, count) => (
-  <Row type="flex" justify="space-between" gutter={10}>
+  <FlexRow>
     <Col>
       {component}
       <span>{title}</span>
@@ -49,7 +50,7 @@ const setMenuItem = (component, title, count) => (
         <Tag style={tagStyle}>{count}</Tag>
       </Col>
     )}
-  </Row>
+  </FlexRow>
 );
 
 const IconStyle = {
@@ -57,13 +58,18 @@ const IconStyle = {
   marginTop: 2
 };
 
-const MenuItem = React.memo(Menu.Item, isEqual);
+const MenuItemMemo = React.memo(Menu.Item);
+const MemoIcon = React.memo(Icon);
 
 const addMenuItems = items =>
   items.map(([name, component, count]) => (
-    <MenuItem key={name} className={USER_GUIDE.TABLE_SELECT[name]}>
-      {setMenuItem(<Icon type={component} component={component} style={IconStyle} />, name, count)}
-    </MenuItem>
+    <MenuItemMemo key={name} className={USER_GUIDE.TABLE_SELECT[name]}>
+      {setMenuItem(
+        <MemoIcon type={component} component={component} style={IconStyle} />,
+        name,
+        count
+      )}
+    </MenuItemMemo>
   ));
 
 const AnimatedTitle = () => {
@@ -100,6 +106,9 @@ const equalByGuideOn = (a, b) => a.isOn === b.isOn;
 
 const DEFAULT_VALUE = [];
 const EMPTY_WORKERS = { total: 0 };
+
+const SidebarMemo = React.memo(Sider);
+const MenuMemo = React.memo(MenuMargin);
 
 const SidebarLeft = ({ onSelect, selectedKeys, ...props }) => {
   const [collapsed, setCollapsed] = useState(true);
@@ -141,15 +150,15 @@ const SidebarLeft = ({ onSelect, selectedKeys, ...props }) => {
 
   return (
     <Border>
-      <Sider {...props} theme="light" onCollapse={onCollapse} collapsed={collapsed}>
+      <SidebarMemo {...props} theme="light" onCollapse={onCollapse} collapsed={collapsed}>
         <FlexBox>
           <IconLogo component={LogoFish} />
           {!collapsed && <AnimatedTitle />}
         </FlexBox>
-        <MenuMargin onSelect={onMenuSelect} selectedKeys={selectedKeys}>
+        <MenuMemo onSelect={onMenuSelect} selectedKeys={selectedKeys}>
           {items}
-        </MenuMargin>
-      </Sider>
+        </MenuMemo>
+      </SidebarMemo>
     </Border>
   );
 };

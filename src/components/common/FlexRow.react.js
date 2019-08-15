@@ -4,6 +4,7 @@ import { Row } from 'antd';
 
 const FlexAligned = styled(Row)`
   align-items: center;
+  flex-direction: row;
 `;
 
 const FlexRow = ({ children, ...props }) => <FlexAligned {...props}>{children}</FlexAligned>;

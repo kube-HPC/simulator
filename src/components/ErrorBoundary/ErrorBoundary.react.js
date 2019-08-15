@@ -1,6 +1,7 @@
 import React from 'react';
-import { Result, Button, Typography, Row, Col, Card } from 'antd';
+import { Result, Button, Typography, Col, Collapse } from 'antd';
 import styled from 'styled-components';
+import { Icons, FlexRow } from 'components/common';
 
 const CenterPage = styled.div`
   display: flex;
@@ -9,7 +10,15 @@ const CenterPage = styled.div`
   height: 100vh;
 `;
 
+const CollapseFull = styled(Collapse)`
+  width: 100%;
+`;
+
 const { Paragraph, Text } = Typography;
+const { Panel } = Collapse;
+
+const reloadPage = () => window.location.reload();
+const openGithub = () => window.open('https://github.com/kube-HPC/hkube/issues');
 
 class ErrorBoundary extends React.Component {
   state = {
@@ -19,7 +28,6 @@ class ErrorBoundary extends React.Component {
   };
 
   static getDerivedStateFromError = error => {
-    // Update state so the next render will show the fallback UI.
     return { hasError: true };
   };
 
@@ -37,38 +45,35 @@ class ErrorBoundary extends React.Component {
           status="error"
           title="Oops... Something went wrong"
           subTitle={
-            <Paragraph>
-              Please <Text strong>refresh</Text> the page, you can report the error on{' '}
-              <a href="https://github.com/kube-HPC/hkube/issues">Github</a>
-            </Paragraph>
+            <FlexRow>
+              <Col>
+                <Paragraph style={{ marginBottom: 0 }}>
+                  Please <Text strong>refresh</Text> the page, you can report the error on{' '}
+                  <Text strong>Github</Text>
+                </Paragraph>
+              </Col>
+              <Col>
+                <Icons.Hover type="github" onClick={openGithub} />
+              </Col>
+            </FlexRow>
           }
           extra={[
-            <Button
-              type="primary"
-              icon="redo"
-              key="refresh"
-              onClick={() => window.location.reload()}
-            >
+            <Button type="primary" icon="redo" key="refresh" onClick={reloadPage}>
               Refresh
             </Button>
           ]}
         >
-          <Row type="flex" gutter={10}>
-            <Col style={{ width: '50%' }}>
-              <Card title={<>Error: {<Text code>{error.message}</Text>}</>}>
-                <Paragraph copyable type="secondary">
-                  {error.stack}
-                </Paragraph>
-              </Card>
-            </Col>
-            <Col style={{ width: '50%' }}>
-              <Card title={`Info`}>
-                <Paragraph copyable type="secondary">
-                  {info.componentStack}
-                </Paragraph>
-              </Card>
-            </Col>
-          </Row>
+          <CollapseFull>
+            <Panel header="Error Message" key="1">
+              <Paragraph copyable>{error.message}</Paragraph>
+            </Panel>
+            <Panel header="Error Stack" key="2">
+              <Paragraph copyable>{error.stack}</Paragraph>
+            </Panel>
+            <Panel header="Error info" key="3">
+              <Paragraph copyable>{info.componentStack}</Paragraph>
+            </Panel>
+          </CollapseFull>
         </Result>
       </CenterPage>
     ) : (

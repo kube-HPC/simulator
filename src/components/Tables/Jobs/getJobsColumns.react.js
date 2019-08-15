@@ -71,17 +71,14 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => [
   },
   {
     title: 'Start Time',
-    dataIndex: 'status.timestamp',
+    dataIndex: 'pipeline.startTime',
     key: 'Start timestamp',
     width: '10%',
     sorter: (a, b) => a.pipeline.startTime - b.pipeline.startTime,
-    render: (_, record) => (
-      <Moment format="DD/MM/YY HH:mm:ss">{record.pipeline && record.pipeline.startTime}</Moment>
-    )
+    render: startTime => <Moment format="DD/MM/YY HH:mm:ss">{startTime}</Moment>
   },
   {
     title: 'Running Time',
-    dataIndex: 'status.timestamp',
     key: 'timestamp',
     width: '10%',
     render: (_, record) => (
@@ -119,19 +116,17 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => [
     key: 'priority',
     width: '5%',
     sorter: (a, b) => sorter(a.pipeline.priority, b.pipeline.priority),
-    render: (_, record) => (
-      <Tooltip placement="top" title={COLOR_PRIORITY[record.pipeline.priority].name}>
-        <Tag color={COLOR_PRIORITY[record.pipeline.priority].color}>
-          {COLOR_PRIORITY[record.pipeline.priority].name}
-        </Tag>
+    render: priority => (
+      <Tooltip placement="top" title={COLOR_PRIORITY[priority].name}>
+        <Tag color={COLOR_PRIORITY[priority].color}>{COLOR_PRIORITY[priority].name}</Tag>
       </Tooltip>
     )
   },
   {
     title: 'Progress',
-    dataIndex: 'Progress',
     key: 'progress',
     width: '20%',
+    align: 'center',
     render: (_, record) => {
       const stopped = record.status && record.status.status === PIPELINE_STATES.STOPPED;
       const failed = record.status && record.status.status === PIPELINE_STATES.FAILED;

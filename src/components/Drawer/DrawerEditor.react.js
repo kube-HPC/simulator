@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { notification, Icon, Card } from 'antd';
-
-import JsonEditor from 'components/common/json/JsonEditor.react';
-import DrawerContainer from 'components/Drawer/DrawerContainer.react';
+import { DrawerContainer } from '.';
+import { JsonEditor } from 'components/common';
 
 const redIconStyle = { color: 'red' };
 
