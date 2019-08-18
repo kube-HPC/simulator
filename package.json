@@ -5,7 +5,6 @@
   "homepage": ".",
   "dependencies": {
     "@nivo/bar": "^0.52.1",
-    "@welldone-software/why-did-you-render": "^3.3.1",
     "antd": "^3.21.4",
     "axios": "^0.19.0",
     "core-js": "3.0.0",
@@ -80,6 +79,7 @@
     "@storybook/addon-links": "^5.1.9",
     "@storybook/addons": "^5.1.9",
     "@storybook/react": "^5.1.9",
+    "@welldone-software/why-did-you-render": "^3.3.3",
     "babel-cli": "^6.26.0",
     "babel-loader": "^8.0.5",
     "babel-plugin-import": "^1.11.2",

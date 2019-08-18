@@ -25,7 +25,6 @@ const DrawerContainer = ({ children, ...props }) => {
   return (
     <>
       <Drawer
-        {...restProps}
         visible={visible}
         width={width || '80vh'}
         placement="right"
@@ -39,6 +38,7 @@ const DrawerContainer = ({ children, ...props }) => {
             </>
           )
         }
+        {...restProps}
       >
         {children}
         {!isFullScreen && (
