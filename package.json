@@ -8,12 +8,9 @@
     "@welldone-software/why-did-you-render": "^3.3.1",
     "antd": "^3.21.4",
     "axios": "^0.19.0",
-    "chart.js": "^2.7.3",
-    "classnames": "^2.2.6",
     "core-js": "3.0.0",
     "cron-parser": "^2.9.0",
     "cronstrue": "^1.61.0",
-    "dateformat": "^3.0.3",
     "file-saver": "^2.0.1",
     "http-proxy-middleware": "^0.19.1",
     "humanize-duration": "^3.18.0",
@@ -24,21 +21,16 @@
     "parse-unit": "^1.0.1",
     "prop-types": "^15.6.2",
     "react": "^16.9.0",
-    "react-addons-shallow-compare": "^15.6.2",
-    "react-chartjs-2": "^2.7.4",
     "react-copy-to-clipboard": "^5.0.1",
-    "react-day-picker": "^7.2.4",
     "react-dom": "^16.9.0",
     "react-joyride": "^2.1.1",
     "react-json-view": "^1.19.1",
     "react-markdown": "^3.6.0",
-    "react-mde": "^7.4.1",
     "react-moment": "^0.8.4",
     "react-monaco-editor": "^0.25.1",
     "react-particles-js": "^2.7.0",
     "react-redux": "^7.1.0",
     "react-scripts": "^3.0.1",
-    "react-select": "^1.3.0",
     "react-simplemde-editor": "^4.0.3",
     "react-spring": "^8.0.18",
     "redux": "^3.7.2",
@@ -46,14 +38,13 @@
     "redux-logger": "^2.10.2",
     "reselect": "^2.5.4",
     "seamless-immutable": "^7.1.4",
-    "showdown": "^1.9.0",
     "socket.io-client": "^2.2.0",
     "styled-components": "^5.0.0-beta.8",
-    "umi": "^2.6.17",
     "uuid": "^3.3.2",
     "vis": "^4.21.0"
   },
   "scripts": {
+    "analyze": "npm run build; source-map-explorer 'build/static/js/*.js'",
     "start": "REACT_APP_VERSION=$npm_package_version PORT=9050 react-app-rewired start",
     "builder": "REACT_APP_VERSION=$npm_package_version react-app-rewired --max_old_space_size=4096 build",
     "test": "react-app-rewired test",
@@ -95,7 +86,8 @@
     "husky": "^3.0.3",
     "lint-staged": "^9.2.1",
     "prettier": "1.18.2",
-    "react-app-rewired": "^2.1.3"
+    "react-app-rewired": "^2.1.3",
+    "source-map-explorer": "^2.0.1"
   },
   "husky": {
     "hooks": {
@@ -104,7 +96,7 @@
   },
   "lint-staged": {
     "*.{js,css,json,md}": [
-      "prettier --write",
+      "prettier --write --single-quote",
       "git add"
     ]
   }
