@@ -17,11 +17,11 @@ const FooterAbsolute = styled.footer`
   border-top: 1px solid ${COLOR_LAYOUT.border};
   width: 100%;
   display: flex;
-  justify-content: ${({ extra }) => (extra ? 'space-between' : 'flex-end')};
+  justify-content: ${({ isFlexEnd }) => (isFlexEnd ? 'flex-end' : 'space-between')};
 `;
 
 const BottomContent = ({ children, extra, ...props }) => (
-  <FooterAbsolute extra={extra} {...props}>
+  <FooterAbsolute isFlexEnd={extra.length === 0} {...props}>
     {extra && (
       <FlexRow>
         {extra.map((value, key) => (
@@ -36,6 +36,10 @@ const BottomContent = ({ children, extra, ...props }) => (
     </FlexRow>
   </FooterAbsolute>
 );
+
+BottomContent.defaultProps = {
+  extra: []
+};
 
 BottomContent.propTypes = {
   extra: PropTypes.array

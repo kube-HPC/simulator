@@ -9,6 +9,9 @@ import MDEditor from 'components/common/md/MDEditor.react';
 import { stringify } from 'utils/string';
 
 const tabs = { json: 'JSON', description: 'Description' };
+notification.config({
+  placement: 'bottomRight'
+});
 
 function DrawerEditorMD({ children, record, onSubmit, readmeDefault, ...props }) {
   const [readme, setReadme] = useState('');
@@ -30,9 +33,6 @@ function DrawerEditorMD({ children, record, onSubmit, readmeDefault, ...props })
             readme: readme || readmeDefault
           });
         } catch (e) {
-          notification.config({
-            placement: 'bottomRight'
-          });
           notification.open({
             message: 'Error in Submitted Json',
             description: e.message,

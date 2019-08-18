@@ -4,7 +4,7 @@ import { usePipeline } from 'hooks';
 import { Table } from 'components';
 
 import { CardRow, TabSwitcherMD } from 'components/common';
-import generateColumns from './generateColumns.react';
+import getPipelineColumns from './getPipelineColumns.react';
 
 const PipelinesTable = () => {
   const props = usePipeline();
@@ -14,7 +14,7 @@ const PipelinesTable = () => {
     <Table
       rowKey={({ name }) => name}
       dataSource={storedPipelines}
-      columns={generateColumns(props)}
+      columns={getPipelineColumns(props)}
       onExpand={(expanded, record) => expanded && updatePipelineReadme(record)}
       expandedRowRender={record => (
         <CardRow>

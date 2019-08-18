@@ -31,7 +31,7 @@ const deleteConfirmAction = (action, record) => {
   });
 };
 
-const generateColumns = ({
+const getPipelineColumns = ({
   dataStats,
   getPipelineReadme,
   onSubmit,
@@ -157,4 +157,4 @@ const generateColumns = ({
   }
 ];
 
-export default generateColumns;
+export default getPipelineColumns;

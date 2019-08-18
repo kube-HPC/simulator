@@ -2,73 +2,79 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Button, Typography } from 'antd';
-
 import { getKubernetesLogsData, getCaching } from 'actions/jobs.action';
 
 import DrawerContainer from 'components/Drawer/DrawerContainer.react';
 import NodeInfo from 'components/Tables/Jobs/NodeInfo.react';
-import VisGraph from 'components/Tables/Jobs/VisGraph.react';
 import graphOptions from 'config/template/graph-options.template';
+import Graph from 'react-graph-vis';
 
 const { Text } = Typography;
 
-function JobGraph(props) {
+const findNodeName = nodeName => node => node.nodeName === nodeName;
+const adaptedGraph = {
+  edges: [],
+  nodes: []
+};
+
+const formatNode = n => {
+  const isBatch = n.extra && n.extra.batch;
+  const node = {
+    id: n.nodeName,
+    label: `${n.nodeName}${isBatch ? `-${n.extra.batch}` : ''}`
+  };
+  return { ...n, ...node };
+};
+
+const formatEdge = e => {
+  const edge = {
+    id: `${e.from}->${e.to}`
+  };
+  edge.dashes = e.group === 'waitAny' || e.group === 'AlgorithmExecution';
+  return { ...e, ...edge };
+};
+
+function JobGraph({ graph, ...props }) {
   const [visible, setVisible] = useState(false);
   const [payload, setPayload] = useState(undefined);
 
   const dispatch = useDispatch();
 
   const toggle = () => setVisible(prev => !prev);
-  const initNetworkInstance = network => {
-    network.on('click', params => {
-      if (params && params.nodes[0]) {
-        const nodeName = params.nodes[0];
-        const nodeData = network.body.data.nodes._data[nodeName];
-        const node = props.pipeline.nodes.find(n => n.nodeName === nodeName);
-        const jobId = props.pipeline.jobId;
-        const taskId = nodeData.taskId
+
+  const events = {
+    select: event => {
+      const {
+        nodes: [nodeName]
+      } = event;
+
+      if (!nodeName) return;
+
+      console.log(event);
+      const nodeData = graph.nodes.find(findNodeName(nodeName));
+      const node = props.pipeline.nodes.find(findNodeName(nodeName));
+      const jobId = props.pipeline.jobId;
+      const taskId =
+        nodeData && nodeData.taskId
           ? nodeData.taskId
           : nodeData.batchTasks && nodeData.batchTasks[0].taskId;
-        setPayload({
-          ...nodeData,
-          jobId,
-          taskId,
-          nodeName,
-          origInput: node.input,
-          batch: nodeData.batchTasks || []
-        });
-        toggle();
-        dispatch(getKubernetesLogsData(taskId));
-      }
-    });
-  };
 
-  const formatNode = n => {
-    const node = {
-      id: n.nodeName,
-      label: n.nodeName
-    };
-    if (n.extra && n.extra.batch) {
-      node.label = `${n.nodeName}-${n.extra.batch}`;
+      dispatch(getKubernetesLogsData(nodeData.taskId));
+
+      setPayload({
+        ...nodeData,
+        jobId,
+        taskId,
+        nodeName,
+        origInput: node.input,
+        batch: nodeData.batchTasks || []
+      });
+
+      toggle();
     }
-    return { ...n, ...node };
   };
 
-  const formatEdge = e => {
-    const edge = {
-      id: `${e.from}->${e.to}`
-    };
-    if (e.group === 'waitAny' || e.group === 'AlgorithmExecution') {
-      edge.dashes = true;
-    }
-    return { ...e, ...edge };
-  };
-
-  const { nodes, edges } = props.graph;
-  const adaptedGraph = {
-    edges: [],
-    nodes: []
-  };
+  const { nodes, edges } = graph;
   nodes && nodes.forEach(n => adaptedGraph.nodes.push(formatNode(n)));
   edges && edges.forEach(e => adaptedGraph.edges.push(formatEdge(e)));
 
@@ -98,13 +104,7 @@ function JobGraph(props) {
       >
         <NodeInfo payload={payload} />
       </DrawerContainer>
-      <div style={{ height: '600px' }}>
-        {props.graph ? (
-          <VisGraph graph={adaptedGraph} options={graphOptions} getNetwork={initNetworkInstance} />
-        ) : (
-          'Graph is not available'
-        )}
-      </div>
+      <Graph graph={adaptedGraph} options={graphOptions} events={events} />
     </>
   );
 }

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-
 import MonacoEditor from 'react-monaco-editor';
 
 export default function JsonEditor({ width, height, isControlled, ...props }) {

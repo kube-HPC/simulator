@@ -52,7 +52,7 @@ const RunRawPipeline = ({ onSubmit }) => {
         ]}
       >
         <Button type="primary" onClick={onSubmitClick}>
-          Execute Raw Pipeline
+          Execute
         </Button>
       </BottomContent>
     </>
