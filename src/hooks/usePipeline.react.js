@@ -61,8 +61,7 @@ export default function usePipeline() {
     getPipelineReadme: record =>
       pipelineReadme &&
       pipelineReadme[record.name] &&
-      pipelineReadme[record.name].readme &&
-      pipelineReadme[record.name].readme.readme,
+      pipelineReadme[record.name].readme,
     cronStart: _cronStart,
     cronStop: _cronStop,
     deleteStoredPipeline: _deleteStoredPipeline,

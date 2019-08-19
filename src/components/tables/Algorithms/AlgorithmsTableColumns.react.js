@@ -22,7 +22,7 @@ const deleteConfirmAction = (action, record) => {
     onOk() {
       action(record.name);
     },
-    onCancel() {}
+    onCancel() { }
   });
 };
 
@@ -32,87 +32,87 @@ const algorithmsTableColumns = ({
   fetchReadme,
   readmeDefault
 }) => [
-  {
-    title: 'Algorithm Name',
-    dataIndex: 'name',
-    key: 'name',
-    sorter: (a, b) => sorter(a.name, b.name),
-    render: name => <Ellipsis text={name} />
-  },
-  {
-    title: 'Algorithm Image',
-    dataIndex: 'algorithmImage',
-    key: 'algorithmImage',
-    onFilter: (value, record) => record.algorithmImage.includes(value),
-    sorter: (a, b) => sorter(a.algorithmImage, b.algorithmImage),
-    render: algorithmImage => <Ellipsis copyable text={algorithmImage} />
-  },
-  {
-    title: 'cpu',
-    dataIndex: 'cpu',
-    key: 'cpu'
-  },
-  {
-    title: 'mem',
-    dataIndex: 'mem',
-    key: 'mem',
-    width: '10%'
-  },
-  {
-    title: 'minHotWorkers',
-    dataIndex: 'minHotWorkers',
-    key: 'minHotWorkers',
-    sorter: (a, b) => sorter(a.workerImage, b.workerImage)
-  },
-  {
-    title: 'Action',
-    dataIndex: 'action',
-    key: 'action',
-    render: (_, record) => (
-      <Row type="flex" justify="start" gutter={10}>
-        <Col>
-          <DrawerEditorMD
-            title={'Update Algorithm'}
-            description={
-              <>
-                Edit algorithm properties and description,{' '}
-                <Typography.Text strong>submit</Typography.Text> changes with
+    {
+      title: 'Algorithm Name',
+      dataIndex: 'name',
+      key: 'name',
+      sorter: (a, b) => sorter(a.name, b.name),
+      render: name => <Ellipsis text={name} />
+    },
+    {
+      title: 'Algorithm Image',
+      dataIndex: 'algorithmImage',
+      key: 'algorithmImage',
+      onFilter: (value, record) => record.algorithmImage.includes(value),
+      sorter: (a, b) => sorter(a.algorithmImage, b.algorithmImage),
+      render: algorithmImage => <Ellipsis copyable text={algorithmImage} />
+    },
+    {
+      title: 'cpu',
+      dataIndex: 'cpu',
+      key: 'cpu'
+    },
+    {
+      title: 'mem',
+      dataIndex: 'mem',
+      key: 'mem',
+      width: '10%'
+    },
+    {
+      title: 'minHotWorkers',
+      dataIndex: 'minHotWorkers',
+      key: 'minHotWorkers',
+      sorter: (a, b) => sorter(a.workerImage, b.workerImage)
+    },
+    {
+      title: 'Action',
+      dataIndex: 'action',
+      key: 'action',
+      render: (_, record) => (
+        <Row type="flex" justify="start" gutter={10}>
+          <Col>
+            <DrawerEditorMD
+              title={'Update Algorithm'}
+              description={
+                <>
+                  Edit algorithm properties and description,{' '}
+                  <Typography.Text strong>submit</Typography.Text> changes with
                 <Typography.Text code>Update</Typography.Text> button.
               </>
-            }
-            opener={setVisible => (
-              <Tooltip placement="top" title={'Update Algorithm'}>
-                <Button
-                  shape="circle"
-                  icon="edit"
-                  onClick={() => {
-                    fetchReadme(record);
-                    setVisible(prev => !prev);
-                  }}
-                />
-              </Tooltip>
-            )}
-            readmeDefault={
-              readmeDefault &&
-              readmeDefault[record.name] &&
-              readmeDefault[record.name].readme
-            }
-            record={record}
-            onSubmit={onSubmit}
-            submitText={'Update'}
-          />
-        </Col>
-        <Col>
-          <Button
-            type="danger"
-            shape="circle"
-            icon="delete"
-            onClick={() => deleteConfirmAction(onDelete, record)}
-          />
-        </Col>
-      </Row>
-    )
-  }
-];
+              }
+              opener={setVisible => (
+                <Tooltip placement="top" title={'Update Algorithm'}>
+                  <Button
+                    shape="circle"
+                    icon="edit"
+                    onClick={() => {
+                      fetchReadme(record);
+                      setVisible(prev => !prev);
+                    }}
+                  />
+                </Tooltip>
+              )}
+              readmeDefault={
+                readmeDefault &&
+                readmeDefault[record.name] &&
+                readmeDefault[record.name].readme
+              }
+              record={record}
+              onSubmit={onSubmit}
+              submitText={'Update'}
+            />
+          </Col>
+          <Col>
+            <Button
+              type="danger"
+              shape="circle"
+              icon="delete"
+              onClick={() => deleteConfirmAction(onDelete, record)}
+            />
+          </Col>
+        </Row>
+      )
+    }
+  ];
 
 export default algorithmsTableColumns;
