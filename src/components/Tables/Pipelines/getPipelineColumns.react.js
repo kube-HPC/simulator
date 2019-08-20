@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Col, Modal, Icon, Tooltip, Typography } from 'antd';
+import { Button, Modal, Icon, Tooltip, Typography } from 'antd';
 
 import { ReactComponent as PlayIconSvg } from 'images/play-icon.svg';
 import { stringify, sorter } from 'utils/string';
@@ -8,7 +8,9 @@ import SwitchCron from 'components/Tables/Pipelines/SwitchCron.react';
 import Ellipsis from 'components/common/Ellipsis.react';
 import StatusTag from 'components/common/StatusTag.react';
 import DrawerEditorMD from 'components/Drawer/DrawerEditorMD.react';
-import { FlexRow } from 'components/common';
+import { FlexBox } from 'components/common';
+
+const { Text, Title, Paragraph } = Typography;
 
 const deleteConfirmAction = (action, record) => {
   Modal.confirm({
@@ -19,13 +21,10 @@ const deleteConfirmAction = (action, record) => {
         <Typography.Text strong> STOP-ALL</Typography.Text> related Jobs and Executions,
       </>
     ),
-    okText: 'Cancel',
-    okType: 'default',
-    cancelButtonProps: {
-      type: 'danger'
-    },
-    cancelText: 'Confirm',
-    onCancel() {
+    okText: 'Confirm',
+    okType: 'danger',
+    cancelText: 'Cancel',
+    onOk() {
       action(record.name);
     }
   });
@@ -94,19 +93,20 @@ const getPipelineColumns = ({
       const { nodes, description, ...currPipeline } = record;
 
       return (
-        <FlexRow justify="start">
-          <Col>
+        <FlexBox justify="flex-start">
+          <FlexBox.Item>
             <DrawerEditor
-              title={'Run Stored Pipeline'}
-              description={
+              title={
                 <>
-                  Start pipeline <Typography.Text code>execution</Typography.Text> when the name of
-                  the pipeline is known, all parameters in this action will be merged with the
-                  stored pipeline.
+                  <Title level={2}>Run Stored Pipeline</Title>
+                  <Paragraph>
+                    Start pipeline <Text code>execution</Text> when the name of the pipeline is
+                    known, all parameters in this action will be merged with the stored pipeline.
+                  </Paragraph>
                 </>
               }
               opener={onClick => (
-                <Tooltip placement="top" title={'Run Stored Pipeline'}>
+                <Tooltip title={'Run Stored Pipeline'}>
                   <Button shape="circle" onClick={onClick}>
                     <Icon component={PlayIconSvg} />
                   </Button>
@@ -114,21 +114,24 @@ const getPipelineColumns = ({
               )}
               valueString={stringify(currPipeline)}
               onSubmit={execStoredPipeline}
+              submitText="Run"
             />
-          </Col>
-          <Col>
+          </FlexBox.Item>
+          <FlexBox.Item>
             <DrawerEditorMD
-              title={'Update Pipeline'}
-              readmeDefault={getPipelineReadme(record)}
-              description={
+              title={
                 <>
-                  Edit pipeline properties and description,{' '}
-                  <Typography.Text strong>submit</Typography.Text> changes with
-                  <Typography.Text code>Update</Typography.Text> button.
+                  <Title level={2}>Update Pipeline</Title>
+                  <Paragraph>
+                    Edit pipeline properties and description,{' '}
+                    <Typography.Text strong>submit</Typography.Text> changes with
+                    <Typography.Text code>Update</Typography.Text> button.
+                  </Paragraph>
                 </>
               }
+              readmeDefault={getPipelineReadme(record)}
               opener={setVisible => (
-                <Tooltip placement="top" title={'Update Pipeline'}>
+                <Tooltip title={'Update Pipeline'}>
                   <Button
                     shape="circle"
                     icon="edit"
@@ -142,16 +145,18 @@ const getPipelineColumns = ({
               record={record}
               onSubmit={onSubmit}
             />
-          </Col>
-          <Col>
-            <Button
-              type="dashed"
-              shape="circle"
-              icon="delete"
-              onClick={() => deleteConfirmAction(deleteStoredPipeline, record)}
-            />
-          </Col>
-        </FlexRow>
+          </FlexBox.Item>
+          <FlexBox.Item>
+            <Tooltip title={'Delete Pipeline'}>
+              <Button
+                type="dashed"
+                shape="circle"
+                icon="delete"
+                onClick={() => deleteConfirmAction(deleteStoredPipeline, record)}
+              />
+            </Tooltip>
+          </FlexBox.Item>
+        </FlexBox>
       );
     }
   }

@@ -19,7 +19,7 @@ import { Col, Tag, Layout, Icon, Menu } from 'antd';
 import { COLOR_LAYOUT } from 'styles';
 import { USER_GUIDE, LEFT_SIDEBAR_NAMES } from 'const';
 import { dataCountMock } from 'config';
-import { FlexRow } from 'components/common';
+import { FlexBox } from 'components/common';
 
 const Border = styled.div`
   border-right: 1px solid ${COLOR_LAYOUT.border};
@@ -40,7 +40,7 @@ const MenuMargin = styled(Menu)`
 const tagStyle = { color: COLOR_LAYOUT.colorPrimary };
 
 const setMenuItem = (component, title, count) => (
-  <FlexRow>
+  <FlexBox>
     <Col>
       {component}
       <span>{title}</span>
@@ -50,7 +50,7 @@ const setMenuItem = (component, title, count) => (
         <Tag style={tagStyle}>{count}</Tag>
       </Col>
     )}
-  </FlexRow>
+  </FlexBox>
 );
 
 const IconStyle = {
@@ -84,13 +84,6 @@ const AnimatedTitle = () => {
   );
 };
 
-const FlexBox = styled.div`
-  margin-top: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-`;
-
 const IconLogo = styled(Icon)`
   && {
     margin-bottom: 5px;
@@ -100,6 +93,11 @@ const IconLogo = styled(Icon)`
 `;
 const TitleCenter = styled(LogoTitle)`
   align-self: flex-start;
+`;
+
+const LogoContainer = styled.div`
+  margin-top: 10px;
+  display: flex;
 `;
 
 const equalByGuideOn = (a, b) => a.isOn === b.isOn;
@@ -151,10 +149,10 @@ const SidebarLeft = ({ onSelect, selectedKeys, ...props }) => {
   return (
     <Border>
       <SidebarMemo {...props} theme="light" onCollapse={onCollapse} collapsed={collapsed}>
-        <FlexBox>
+        <LogoContainer>
           <IconLogo component={LogoFish} />
           {!collapsed && <AnimatedTitle />}
-        </FlexBox>
+        </LogoContainer>
         <MenuMemo onSelect={onMenuSelect} selectedKeys={selectedKeys}>
           {items}
         </MenuMemo>

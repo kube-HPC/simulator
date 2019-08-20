@@ -10,7 +10,7 @@ import { useRightSidebar, useLeftSidebar } from 'hooks';
 import { init, socketInit, triggerUserGuide } from 'actions';
 import { COLOR_LAYOUT, GlobalStyle, COLOR } from 'styles';
 import { LEFT_SIDEBAR_NAMES, USER_GUIDE, STATE_SOURCES } from 'const';
-import { Icons, FlexRow } from 'components/common';
+import { Icons, FlexBox } from 'components/common';
 
 import {
   UserGuide,
@@ -36,19 +36,13 @@ const Header = styled.div`
   padding-right: 10px;
 `;
 
-const FlexBox = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
 const DarkText = styled.span`
   color: ${COLOR_LAYOUT.darkBorder};
 `;
 
 const HelpBar = styled(FlexBox)`
   > ${Icons.DarkHoverStyle}, ${DarkText} {
-    margin-left: 10px;
+    margin-right: 10px;
   }
 `;
 
@@ -148,14 +142,14 @@ function Dashboard() {
                 {!isSocketConnected && (
                   <Tag color="orange">
                     <Tooltip title="Reconnecting to Socket...">
-                      <FlexRow>
+                      <FlexBox>
                         <Col>
                           <Typography.Text>Offline Mode</Typography.Text>
                         </Col>
                         <Col>
                           <Icon type="disconnect" />
                         </Col>
-                      </FlexRow>
+                      </FlexBox>
                     </Tooltip>
                   </Tag>
                 )}

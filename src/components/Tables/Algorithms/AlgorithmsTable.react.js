@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getAlgorithmReadme } from 'actions/readme.action';
 
 import Table from 'components/Table/Table.react';
-import algorithmsTableColumns from 'components/Tables/Algorithms/AlgorithmsTableColumns.react';
+import getAlgorithmColumns from 'components/Tables/Algorithms/getAlgorithmColumns.react';
 import Card from 'components/common/Card.react';
 import TabSwitcherMD from 'components/common/Tabs/TabSwitcherMD.react';
 import { tableDataSelector } from 'utils/hooks';
@@ -23,7 +23,7 @@ function AlgorithmsTable() {
   return (
     <Table
       rowKey={record => record.name}
-      columns={algorithmsTableColumns({ ...useAlgorithm(), readmeDefault })}
+      columns={getAlgorithmColumns({ ...useAlgorithm(), readmeDefault })}
       dataSource={dataSource}
       onExpand={(expanded, record) => {
         if (expanded) dispatch(getAlgorithmReadme(record.name));

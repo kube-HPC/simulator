@@ -5,14 +5,13 @@
   "homepage": ".",
   "dependencies": {
     "@nivo/bar": "^0.59.2",
-    "antd": "^3.21.4",
+    "antd": "^3.22.0",
     "axios": "^0.19.0",
     "cron-parser": "^2.13.0",
     "cronstrue": "^1.82.0",
     "file-saver": "^2.0.2",
     "humanize-duration": "^3.20.1",
     "jaeger-react-trace-component": "^1.0.16",
-    "jsonlint-mod": "^1.7.5",
     "lodash": "^4.17.15",
     "moment": "^2.22.2",
     "monaco-editor-webpack-plugin": "^1.7.0",
@@ -38,8 +37,7 @@
     "reselect": "^4.0.0",
     "seamless-immutable": "^7.1.4",
     "socket.io-client": "^2.2.0",
-    "styled-components": "^5.0.0-beta.6-ej4",
-    "uuid": "^3.3.2"
+    "styled-components": "^5.0.0-beta.6-ej4"
   },
   "scripts": {
     "analyze": "npm run build; source-map-explorer 'build/static/js/*.js'",
@@ -64,7 +62,10 @@
       "react-hooks",
       "jsx-a11y",
       "flowtype"
-    ]
+    ],
+    "rules": {
+      "react/display-name": 0
+    }
   },
   "prettier": {
     "printWidth": 100,

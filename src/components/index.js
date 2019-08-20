@@ -2,6 +2,7 @@ export { default as Dashboard } from './Dashboard/Dashboard.react';
 export { default as ErrorBoundary } from 'components/ErrorBoundary/ErrorBoundary.react';
 
 export { default as DrawerOperations } from 'components/Drawer/DrawerOperations.react';
+export { default as DrawerEditorMD } from 'components/Drawer/DrawerEditorMD.react';
 
 export { default as SidebarRight } from 'components/Sidebar/SidebarRight/SidebarRight.react';
 export { default as SidebarLeft } from 'components/Sidebar/SidebarLeft/SidebarLeft.react';

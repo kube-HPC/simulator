@@ -70,7 +70,7 @@ function NodeStatistics({ metric }) {
         padding={0.1}
         borderWidth={1}
         layout="horizontal"
-        colors="blues"
+        colors={{ scheme: 'blues' }}
         colorBy="id"
         defs={[
           {

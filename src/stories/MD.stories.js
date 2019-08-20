@@ -4,7 +4,7 @@ import { storiesOf } from '@storybook/react';
 import { Tabs, Button, Typography } from 'antd';
 
 import MDEditor from 'components/common/md/MDEditor.react';
-import DrawerContainer from 'components/Drawer/DrawerContainer.react';
+import Drawer from 'components/Drawer/Drawer.react';
 import DrawerEditorMD from 'components/Drawer/DrawerEditorMD.react';
 import addPipelineTemplate from 'config/template/addPipeline.template';
 import { stringify } from 'utils/string';
@@ -12,21 +12,21 @@ import { stringify } from 'utils/string';
 storiesOf('BASICS|Markdown', module)
   .add('Editor', () => <MDEditor />)
   .add('Drawer', () => (
-    <DrawerContainer visible={true}>
+    <Drawer visible={true}>
       <MDEditor />
-    </DrawerContainer>
+    </Drawer>
   ))
   .add('Tabs', () => (
     <Tabs
       tabBarExtraContent={
-        <DrawerContainer
+        <Drawer
           visible={true}
           opener={isVisible => {
             return <Button onClick={isVisible}>Open</Button>;
           }}
         >
           <MDEditor data={'Hello\nWorld'} />
-        </DrawerContainer>
+        </Drawer>
       }
     >
       <Tabs.TabPane tab="Tab1" key="Tab1">

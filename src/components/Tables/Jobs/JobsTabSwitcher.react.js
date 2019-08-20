@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Tabs, Card } from 'antd';
-
 import Trace from 'jaeger-react-trace-component';
-import JobGraph from 'components/Tables/Jobs/JobGraph.react';
-import JsonView from 'components/common/Json/JsonView.react';
+import { Tabs, Card, JsonView } from 'components/common';
+import { JobGraph } from '.';
 
 const generateTabs = tabs =>
   Object.entries(tabs).map(([key, value]) => (
@@ -30,7 +28,7 @@ function JobsTabSwitcher({ record }) {
 }
 
 JobsTabSwitcher.propTypes = {
-  record: PropTypes.object
+  record: PropTypes.object.isRequired
 };
 
 export default JobsTabSwitcher;

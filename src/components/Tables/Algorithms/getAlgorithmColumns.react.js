@@ -1,10 +1,11 @@
 import React from 'react';
 
-import { Button, Modal, Row, Col, Tooltip, Typography } from 'antd';
-
+import { Button, Modal, Tooltip, Typography, Tag } from 'antd';
 import { sorter } from 'utils/string';
-import Ellipsis from 'components/common/Ellipsis.react';
-import DrawerEditorMD from 'components/Drawer/DrawerEditorMD.react';
+import { DrawerEditorMD } from 'components';
+import { Ellipsis, FlexBox } from 'components/common';
+
+const { Paragraph, Title, Text } = Typography;
 
 const deleteConfirmAction = (action, record) => {
   Modal.confirm({
@@ -20,12 +21,11 @@ const deleteConfirmAction = (action, record) => {
     cancelText: 'Cancel',
     onOk() {
       action(record.name);
-    },
-    onCancel() {}
+    }
   });
 };
 
-const algorithmsTableColumns = ({ onSubmit, onDelete, fetchReadme, readmeDefault }) => [
+const getAlgorithmColumns = ({ onSubmit, onDelete, fetchReadme, readmeDefault }) => [
   {
     title: 'Algorithm Name',
     dataIndex: 'name',
@@ -42,36 +42,40 @@ const algorithmsTableColumns = ({ onSubmit, onDelete, fetchReadme, readmeDefault
     render: algorithmImage => <Ellipsis copyable text={algorithmImage} />
   },
   {
-    title: 'cpu',
+    title: 'CPU',
     dataIndex: 'cpu',
-    key: 'cpu'
+    key: 'cpu',
+    render: cpu => <Tag>{cpu}</Tag>
   },
   {
-    title: 'mem',
+    title: 'Mem',
     dataIndex: 'mem',
     key: 'mem',
-    width: '10%'
+    width: '10%',
+    render: mem => <Tag>{mem}</Tag>
   },
   {
-    title: 'minHotWorkers',
+    title: 'Min Hot Workers',
     dataIndex: 'minHotWorkers',
     key: 'minHotWorkers',
-    sorter: (a, b) => sorter(a.workerImage, b.workerImage)
+    sorter: (a, b) => sorter(a.workerImage, b.workerImage),
+    render: minHotWorkers => <Tag>{minHotWorkers}</Tag>
   },
   {
     title: 'Action',
     dataIndex: 'action',
     key: 'action',
     render: (_, record) => (
-      <Row type="flex" justify="start" gutter={10}>
-        <Col>
+      <FlexBox justify="start">
+        <FlexBox.Item>
           <DrawerEditorMD
-            title={'Update Algorithm'}
-            description={
+            title={
               <>
-                Edit algorithm properties and description,{' '}
-                <Typography.Text strong>submit</Typography.Text> changes with
-                <Typography.Text code>Update</Typography.Text> button.
+                <Title level={2}>Update Algorithm</Title>
+                <Paragraph>
+                  Edit algorithm properties and description, <Text strong>submit</Text> changes with
+                  <Text code>Update</Text> button.
+                </Paragraph>
               </>
             }
             opener={setVisible => (
@@ -93,18 +97,20 @@ const algorithmsTableColumns = ({ onSubmit, onDelete, fetchReadme, readmeDefault
             onSubmit={onSubmit}
             submitText={'Update'}
           />
-        </Col>
-        <Col>
-          <Button
-            type="dashed"
-            shape="circle"
-            icon="delete"
-            onClick={() => deleteConfirmAction(onDelete, record)}
-          />
-        </Col>
-      </Row>
+        </FlexBox.Item>
+        <FlexBox.Item>
+          <Tooltip title="Delete Algorithm">
+            <Button
+              type="dashed"
+              shape="circle"
+              icon="delete"
+              onClick={() => deleteConfirmAction(onDelete, record)}
+            />
+          </Tooltip>
+        </FlexBox.Item>
+      </FlexBox>
     )
   }
 ];
 
-export default algorithmsTableColumns;
+export default getAlgorithmColumns;

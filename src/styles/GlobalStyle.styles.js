@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
-import { COLOR_LAYOUT } from 'styles/colors';
+import { COLOR_LAYOUT, COLOR } from 'styles/colors';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -15,6 +15,23 @@ const GlobalStyle = createGlobalStyle`
   .ant-layout-sider-light .ant-layout-sider-trigger {
     border-right: 1px solid ${COLOR_LAYOUT.border};
   }
+
+  .ant-drawer-wrapper-body {
+    ::-webkit-scrollbar-track {
+      border: none;
+      background-color: none;
+    }
+    ::-webkit-scrollbar {
+      width: 7px;
+    }
+    ::-webkit-scrollbar-thumb {
+      border: 1px solid ${COLOR.grey};
+      background-color: ${COLOR.blueLight};
+    }
+
+    position: relative;
+  }
+
 `;
 
 export default GlobalStyle;

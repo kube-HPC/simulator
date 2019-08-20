@@ -2,38 +2,38 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { COLOR_LAYOUT } from 'styles/colors';
-import { Col } from 'antd';
-import { FlexRow } from '.';
+import { FlexBox } from '.';
 
-const FooterAbsolute = styled.footer`
+const FooterAbsolute = styled.div`
   background: ${COLOR_LAYOUT.background};
   position: absolute;
   right: 0;
-  bottom: 0;
-  z-index: 9;
+  bottom: 1px;
   height: 56px;
   padding: 0 24px;
   line-height: 56px;
-  border-top: 1px solid ${COLOR_LAYOUT.border};
   width: 100%;
-  display: flex;
-  justify-content: ${({ isFlexEnd }) => (isFlexEnd ? 'flex-end' : 'space-between')};
+  border-top: 1px solid ${COLOR_LAYOUT.border};
 `;
 
 const BottomContent = ({ children, extra, ...props }) => (
-  <FooterAbsolute isFlexEnd={extra.length === 0} {...props}>
-    {extra && (
-      <FlexRow>
-        {extra.map((value, key) => (
-          <Col key={key}>{value}</Col>
-        ))}
-      </FlexRow>
-    )}
-    <FlexRow>
-      {React.Children.map(children, (child, key) => (
-        <Col key={key}>{child}</Col>
-      ))}
-    </FlexRow>
+  <FooterAbsolute>
+    <FlexBox {...props}>
+      <FlexBox.Item>
+        <FlexBox>
+          {extra.map((value, key) => (
+            <FlexBox.Item key={key}>{value}</FlexBox.Item>
+          ))}
+        </FlexBox>
+      </FlexBox.Item>
+      <FlexBox.Item>
+        <FlexBox>
+          {React.Children.map(children, (child, key) => (
+            <FlexBox.Item key={key}>{child}</FlexBox.Item>
+          ))}
+        </FlexBox>
+      </FlexBox.Item>
+    </FlexBox>
   </FooterAbsolute>
 );
 
@@ -42,7 +42,8 @@ BottomContent.defaultProps = {
 };
 
 BottomContent.propTypes = {
-  extra: PropTypes.array
+  extra: PropTypes.array.isRequired,
+  children: PropTypes.node.isRequired
 };
 
 export default BottomContent;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Result, Button, Typography, Col, Collapse } from 'antd';
 import styled from 'styled-components';
-import { Icons, FlexRow } from 'components/common';
+import { Icons, FlexBox } from 'components/common';
 
 const CenterPage = styled.div`
   display: flex;
@@ -45,7 +45,7 @@ class ErrorBoundary extends React.Component {
           status="error"
           title="Oops... Something went wrong"
           subTitle={
-            <FlexRow>
+            <FlexBox>
               <Col>
                 <Paragraph style={{ marginBottom: 0 }}>
                   Please <Text strong>refresh</Text> the page, you can report the error on{' '}
@@ -55,7 +55,7 @@ class ErrorBoundary extends React.Component {
               <Col>
                 <Icons.Hover type="github" onClick={openGithub} />
               </Col>
-            </FlexRow>
+            </FlexBox>
           }
           extra={[
             <Button type="primary" icon="redo" key="refresh" onClick={reloadPage}>

@@ -1,33 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import styled from 'styled-components';
-import { Drawer, Typography } from 'antd';
-import { COLOR } from 'styles';
+import { Typography } from 'antd';
 import { rightSidebarContent } from './rightSidebarContent.react';
+import { Drawer } from '.';
 
 const { Title, Paragraph } = Typography;
-
-const DrawerCustomScrollbar = styled(Drawer)`
-  .ant-drawer-wrapper-body {
-    ::-webkit-scrollbar-track {
-      border: none;
-      background-color: none;
-    }
-    ::-webkit-scrollbar {
-      width: 7px;
-    }
-    ::-webkit-scrollbar-thumb {
-      border: 1px solid ${COLOR.grey};
-      background-color: ${COLOR.blueLight};
-    }
-  }
-`;
 
 const DrawerOperations = ({ children, operation, ...props }) => {
   const { title, description, width } = rightSidebarContent[operation];
   return (
-    <DrawerCustomScrollbar
+    <Drawer
       width={width}
       placement="right"
       closable={false}
@@ -40,7 +23,7 @@ const DrawerOperations = ({ children, operation, ...props }) => {
       {...props}
     >
       {children}
-    </DrawerCustomScrollbar>
+    </Drawer>
   );
 };
 export default DrawerOperations;

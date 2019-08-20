@@ -1,22 +1,24 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Row } from 'antd';
+import { Row, Col } from 'antd';
 
 const FlexAligned = styled(Row)`
   align-items: center;
   flex-direction: row;
 `;
 
-const FlexRow = ({ children, ...props }) => <FlexAligned {...props}>{children}</FlexAligned>;
+const FlexBox = ({ children, ...props }) => <FlexAligned {...props}>{children}</FlexAligned>;
 
-export default FlexRow;
+FlexBox.Item = Col;
 
-FlexRow.defaultProps = {
+FlexBox.defaultProps = {
   justify: 'space-between',
   type: 'flex',
   gutter: 10
 };
 
-FlexRow.propTypes = {
+FlexBox.propTypes = {
   ...Row.propTypes
 };
+
+export default FlexBox;

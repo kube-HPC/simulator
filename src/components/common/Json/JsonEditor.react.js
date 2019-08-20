@@ -7,8 +7,8 @@ export default function JsonEditor({ width, height, isControlled, ...props }) {
   return (
     <MonacoEditor
       {...props}
-      width={width || 800}
-      height={height || 600}
+      width={width}
+      height={height}
       language="json"
       value={isControlled ? props.value : value}
       onChange={data => {
@@ -19,10 +19,16 @@ export default function JsonEditor({ width, height, isControlled, ...props }) {
   );
 }
 
+JsonEditor.defaultProps = {
+  width: 800,
+  height: 600,
+  isControlled: false
+};
+
 JsonEditor.propTypes = {
+  width: PropTypes.number,
+  height: PropTypes.number,
+  isControlled: PropTypes.bool,
   onChange: PropTypes.func,
-  value: PropTypes.string.isRequired,
-  snippetEnabled: PropTypes.bool,
-  showGutter: PropTypes.bool,
-  style: PropTypes.object
+  value: PropTypes.string.isRequired
 };

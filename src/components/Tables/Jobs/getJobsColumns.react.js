@@ -17,7 +17,7 @@ import {
   resumePipeline
 } from 'actions/pipeline.action';
 
-import { FlexRow, Ellipsis, StatusTag } from 'components/common';
+import { FlexBox, Ellipsis, StatusTag } from 'components/common';
 import { USER_GUIDE, PIPELINE_STATES } from 'const';
 
 const ActiveState = [
@@ -99,7 +99,7 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => [
     dataIndex: 'status',
     key: 'node-status',
     render: status => (
-      <FlexRow justify="start" gutter={0}>
+      <FlexBox justify="start" gutter={0}>
         {status.data &&
           status.data.states &&
           Object.entries(status.data.states).map(([status, count]) => (
@@ -107,7 +107,7 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => [
               <StatusTag status={status} count={count} />
             </Col>
           ))}
-      </FlexRow>
+      </FlexBox>
     )
   },
   {

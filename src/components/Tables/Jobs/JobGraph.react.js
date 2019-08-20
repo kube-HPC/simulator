@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Button, Typography } from 'antd';
 import { getKubernetesLogsData, getCaching } from 'actions/jobs.action';
 
-import DrawerContainer from 'components/Drawer/DrawerContainer.react';
+import Drawer from 'components/Drawer/Drawer.react';
 import NodeInfo from 'components/Tables/Jobs/NodeInfo.react';
 import graphOptions from 'config/template/graph-options.template';
 import Graph from 'react-graph-vis';
@@ -91,10 +91,10 @@ function JobGraph({ graph, ...props }) {
 
   return (
     <>
-      <DrawerContainer
+      <Drawer
         visible={visible}
         onClose={toggle}
-        submitText={'Cache'}
+        submitText={'Get Cache'}
         onSubmit={() => payload && dispatch(getCaching(payload.jobId, payload.nodeName))}
         title={'Node Information'}
         description={
@@ -114,7 +114,7 @@ function JobGraph({ graph, ...props }) {
         ]}
       >
         <NodeInfo payload={payload} />
-      </DrawerContainer>
+      </Drawer>
       <GraphContainer>
         <Graph graph={adaptedGraph} options={graphOptions} events={events} />
       </GraphContainer>
