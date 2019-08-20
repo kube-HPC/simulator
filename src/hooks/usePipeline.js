@@ -37,10 +37,7 @@ export default function usePipeline() {
     dataSource,
     dataStats,
     getPipelineReadme: record =>
-      pipelineReadme &&
-      pipelineReadme[record.name] &&
-      pipelineReadme[record.name].readme &&
-      pipelineReadme[record.name].readme.readme,
+      pipelineReadme && pipelineReadme[record.name] && pipelineReadme[record.name].readme,
     cronStart: useCallback((e, p) => dispatch(cronStart(e, p)), [dispatch]),
     cronStop: useCallback((e, p) => dispatch(cronStop(e, p)), [dispatch]),
     deleteStoredPipeline: useCallback(e => dispatch(deleteStoredPipeline(e)), [dispatch]),
