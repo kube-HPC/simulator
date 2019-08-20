@@ -9,7 +9,7 @@ export const jobsTable = handleActions(
   {
     [actions.SOCKET_GET_DATA](currJobs, { payload }) {
       const { jobs } = payload;
-      return Immutable.merge(jobsTable, { dataSource: jobs || DEFAULT_VALUE });
+      return Immutable.from({ dataSource: jobs || DEFAULT_VALUE });
     }
   },
   initialValue

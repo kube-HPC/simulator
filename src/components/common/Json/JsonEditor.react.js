@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import MonacoEditor from 'react-monaco-editor';
 
-export default function JsonEditor({ width, height, isControlled, ...props }) {
+const JsonEditor = ({ width, height, isControlled, ...props }) => {
   const [value, setValue] = useState(props.value);
+
   return (
     <MonacoEditor
       {...props}
@@ -17,18 +18,21 @@ export default function JsonEditor({ width, height, isControlled, ...props }) {
       }}
     />
   );
-}
+};
 
 JsonEditor.defaultProps = {
-  width: 800,
-  height: 600,
+  width: '800',
+  height: '600',
   isControlled: false
 };
 
 JsonEditor.propTypes = {
-  width: PropTypes.number,
-  height: PropTypes.number,
+  width: PropTypes.string,
+  height: PropTypes.string,
   isControlled: PropTypes.bool,
   onChange: PropTypes.func,
-  value: PropTypes.string.isRequired
+  value: PropTypes.string.isRequired,
+  ...MonacoEditor.propTypes
 };
+
+export default JsonEditor;

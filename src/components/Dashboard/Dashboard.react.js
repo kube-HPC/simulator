@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import 'styles/GlobalStyle.css';
 
-import { message, Layout, Tag, Icon, Typography, Col, Tooltip } from 'antd';
+import { message, Layout, Tag, Icon, Typography, Tooltip } from 'antd';
 import { useRightSidebar, useLeftSidebar } from 'hooks';
 
 import { init, socketInit, triggerUserGuide } from 'actions';
@@ -143,12 +143,12 @@ function Dashboard() {
                   <Tag color="orange">
                     <Tooltip title="Reconnecting to Socket...">
                       <FlexBox>
-                        <Col>
+                        <FlexBox.Item>
                           <Typography.Text>Offline Mode</Typography.Text>
-                        </Col>
-                        <Col>
+                        </FlexBox.Item>
+                        <FlexBox.Item>
                           <Icon type="disconnect" />
-                        </Col>
+                        </FlexBox.Item>
                       </FlexBox>
                     </Tooltip>
                   </Tag>

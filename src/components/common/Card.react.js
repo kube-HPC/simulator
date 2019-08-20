@@ -2,17 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Card as AntCard } from 'antd';
-import styled from 'styled-components';
-
-const CenteredCard = styled(AntCard)`
-  margin-right: ${({ isMargin }) => (isMargin ? '50px' : 'none')};
-  overflow: auto;
-`;
 
 const Card = ({ children, isMargin, ...props }) => (
-  <CenteredCard size="small" isMargin={isMargin} {...props}>
+  <AntCard size="small" style={{ marginRight: isMargin ? '50px' : 'none' }} {...props}>
     {children}
-  </CenteredCard>
+  </AntCard>
 );
 
 Card.propTypes = {

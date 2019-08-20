@@ -17,7 +17,6 @@ const Drawer = ({ children, width, opener, ...props }) => {
         closable={false}
         width={width || '50vw'}
         onClose={onClose}
-        destroyOnClose
         {...props}
       >
         {children}
@@ -31,7 +30,7 @@ Drawer.defaultProps = {
 };
 
 Drawer.propTypes = {
-  opener: PropTypes.func.isRequired,
+  opener: PropTypes.func,
   ...AntDrawer.propTypes
 };
 

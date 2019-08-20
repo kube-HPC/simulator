@@ -11,7 +11,6 @@ import {
   Switch,
   Popover,
   Slider,
-  Card,
   notification,
   Icon,
   Steps,
@@ -26,6 +25,7 @@ import JsonEditor from 'components/common/Json/JsonEditor.react';
 import BottomContent from 'components/common/BottomContent.react';
 import JsonView from 'components/common/Json/JsonView.react';
 import addPipelineTemplate from 'config/template/addPipeline.template';
+import { Card } from 'components/common';
 
 const span = 6;
 const formItemLayout = {
@@ -127,7 +127,8 @@ export default function AddPipelineForm(props) {
             value={flowInputString}
             onChange={setFlowInputString}
             snippetEnabled={false}
-            showGutter={true}
+            showGutter={false}
+            isControlled
           />
         </Card>
       </Form.Item>
@@ -329,7 +330,7 @@ export default function AddPipelineForm(props) {
   return (
     <div>
       {editorIsVisible && (
-        <Card style={{ overflow: 'scroll' }}>
+        <Card>
           <JsonEditor
             width={'100%'}
             height={'60vh'}

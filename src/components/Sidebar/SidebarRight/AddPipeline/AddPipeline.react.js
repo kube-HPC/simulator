@@ -7,9 +7,7 @@ import AddPipelineForm from 'components/Sidebar/SidebarRight/AddPipeline/AddPipe
 
 function AddPipeline({ onSubmit }) {
   const dispatch = useDispatch();
-
   const algorithms = useSelector(state => state.algorithmTable.dataSource.map(key => key.name));
-
   const storedPipelines = useSelector(state => state.pipelineTable.dataSource);
 
   return (
