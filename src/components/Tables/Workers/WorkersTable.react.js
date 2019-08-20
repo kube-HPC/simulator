@@ -9,15 +9,15 @@ import {
   workerTableColumns,
   workersTableStats
 } from 'components/Tables/Workers/WorkersTableColumns.react';
-import JsonView from 'components/common/json/JsonView.react';
-import CardRow from 'components/common/CardRow.react';
+import JsonView from 'components/common/Json/JsonView.react';
+import Card from 'components/common/Card.react';
 import { createSelector } from 'reselect';
 
 const generateTab = (key, value) => (
   <Tabs.TabPane tab={key} key={key}>
-    <CardRow>
+    <Card>
       <JsonView jsonObject={value} />
-    </CardRow>
+    </Card>
   </Tabs.TabPane>
 );
 
@@ -25,19 +25,19 @@ const expandedRowRender = (columns, dataSource) => record => {
   const filteredDataSource = dataSource.filter(d => d.algorithmName === record.algorithmName);
 
   return (
-    <CardRow>
+    <Card>
       <Table
         isInner
         rowKey={record => record.podName}
         columns={columns}
         dataSource={filteredDataSource}
         expandedRowRender={record => (
-          <CardRow>
+          <Card>
             <Tabs>{generateTab('JSON', record)}</Tabs>
-          </CardRow>
+          </Card>
         )}
       />
-    </CardRow>
+    </Card>
   );
 };
 

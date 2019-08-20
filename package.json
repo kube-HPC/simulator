@@ -53,6 +53,19 @@
     "storybook": "NODE_PATH=src/ start-storybook --port 9001",
     "format": "prettier --write src/**/*.js"
   },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "eslint:recommended",
+      "plugin:react/recommended",
+      "prettier/react"
+    ],
+    "plugins": [
+      "react-hooks",
+      "jsx-a11y",
+      "flowtype"
+    ]
+  },
   "prettier": {
     "printWidth": 100,
     "singleQuote": true
@@ -80,10 +93,12 @@
     "babel-loader": "^8.0.6",
     "babel-plugin-import": "^1.12.0",
     "core-js": "^3.2.1",
+    "eslint-config-prettier": "^6.1.0",
     "http-proxy-middleware": "^0.19.1",
     "husky": "^3.0.4",
     "lint-staged": "^9.2.3",
     "prettier": "1.18.2",
+    "prettier-eslint": "^9.0.0",
     "react-app-rewired": "^2.1.3",
     "source-map-explorer": "^2.0.1"
   },

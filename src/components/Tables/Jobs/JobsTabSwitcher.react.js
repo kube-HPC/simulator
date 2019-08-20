@@ -4,7 +4,7 @@ import { Tabs, Card } from 'antd';
 
 import Trace from 'jaeger-react-trace-component';
 import JobGraph from 'components/Tables/Jobs/JobGraph.react';
-import JsonView from 'components/common/json/JsonView.react';
+import JsonView from 'components/common/Json/JsonView.react';
 
 const generateTabs = tabs =>
   Object.entries(tabs).map(([key, value]) => (

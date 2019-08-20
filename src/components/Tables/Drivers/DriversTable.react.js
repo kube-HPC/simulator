@@ -2,9 +2,9 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import driversTableColumns from 'components/Tables/Drivers/DriversTableColumns.react';
-import JsonView from 'components/common/json/JsonView.react';
+import JsonView from 'components/common/Json/JsonView.react';
 import Table from 'components/Table/Table.react';
-import CardRow from 'components/common/CardRow.react';
+import Card from 'components/common/Card.react';
 import { createSelector } from 'reselect';
 
 const tableDataSelector = createSelector(
@@ -22,9 +22,9 @@ export default function DriversTable() {
       columns={driversTableColumns()}
       dataSource={dataSource}
       expandedRowRender={record => (
-        <CardRow>
+        <Card>
           <JsonView jsonObject={record} />
-        </CardRow>
+        </Card>
       )}
     />
   );

@@ -1,18 +1,16 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import { useSelector, useDispatch } from 'react-redux';
-
-import { Tabs, Card } from 'antd';
-
+import { JsonView, Tabs } from 'components/common';
 import { getKubernetesLogsData } from 'actions/jobs.action';
-
-import JsonView from 'components/common/json/JsonView.react';
 import NodeLogs from './NodeLogs.react';
 import NodeInputOutput from './NodeInputOutput.react';
+import { Card } from 'antd';
 
-function NodeInfo({ payload }) {
+const NodeInfo = ({ payload }) => {
   const logs = useSelector(state => state.jobsKubernetesLogs);
   const algorithmTable = useSelector(state => state.algorithmTable.dataSource);
-
   const algorithmDetails = algorithmTable.find(a => a.name === payload.algorithmName) || {};
 
   const dispatch = useDispatch();
@@ -33,7 +31,7 @@ function NodeInfo({ payload }) {
         />
       </Tabs.TabPane>
       <Tabs.TabPane tab="Algorithm Details" key="2">
-        <Card>
+        <Card size="small">
           <JsonView jsonObject={algorithmDetails} />
         </Card>
       </Tabs.TabPane>
@@ -42,6 +40,10 @@ function NodeInfo({ payload }) {
       </Tabs.TabPane>
     </Tabs>
   );
-}
+};
+
+NodeInfo.propTypes = {
+  payload: PropTypes.object.isRequired
+};
 
 export default NodeInfo;

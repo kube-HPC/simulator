@@ -5,7 +5,7 @@ import { tableDataSelector } from 'utils/hooks';
 import { useCallback, useMemo } from 'react';
 import { isEqual } from 'lodash';
 
-import CardRow from 'components/common/CardRow.react';
+import Card from 'components/common/Card.react';
 import { STATE_SOURCES, USER_GUIDE } from 'const';
 import { JobsTabSwitcher, getJobsColumns } from 'components/Tables/Jobs';
 
@@ -31,7 +31,7 @@ export default function useJobs() {
   const jaeger = useSelector(state => state.jobsJaeger);
   const expandedRowRender = useCallback(
     record => (
-      <CardRow className={USER_GUIDE.TABLE_JOB.ROW_SELECT}>
+      <Card className={USER_GUIDE.TABLE_JOB.ROW_SELECT}>
         <JobsTabSwitcher
           record={{
             key: record.key,
@@ -44,7 +44,7 @@ export default function useJobs() {
             jaeger: jaeger[record.key] || null
           }}
         />
-      </CardRow>
+      </Card>
     ),
     [jaeger]
   );

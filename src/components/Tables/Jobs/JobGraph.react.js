@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
 
 import { Button, Typography } from 'antd';
 import { getKubernetesLogsData, getCaching } from 'actions/jobs.action';
@@ -11,18 +12,20 @@ import Graph from 'react-graph-vis';
 
 const { Text } = Typography;
 
+const GraphContainer = styled.div`
+  height: 500px;
+`;
+
 const findNodeName = nodeName => node => node.nodeName === nodeName;
-const adaptedGraph = {
-  edges: [],
-  nodes: []
-};
 
 const formatNode = n => {
-  const isBatch = n.extra && n.extra.batch;
   const node = {
     id: n.nodeName,
-    label: `${n.nodeName}${isBatch ? `-${n.extra.batch}` : ''}`
+    label: n.nodeName
   };
+  if (n.extra && n.extra.batch) {
+    node.label = `${n.nodeName}-${n.extra.batch}`;
+  }
   return { ...n, ...node };
 };
 
@@ -30,7 +33,9 @@ const formatEdge = e => {
   const edge = {
     id: `${e.from}->${e.to}`
   };
-  edge.dashes = e.group === 'waitAny' || e.group === 'AlgorithmExecution';
+  if (e.group === 'waitAny' || e.group === 'AlgorithmExecution') {
+    edge.dashes = true;
+  }
   return { ...e, ...edge };
 };
 
@@ -43,14 +48,13 @@ function JobGraph({ graph, ...props }) {
   const toggle = () => setVisible(prev => !prev);
 
   const events = {
-    select: event => {
+    selectNode: event => {
       const {
         nodes: [nodeName]
       } = event;
 
       if (!nodeName) return;
 
-      console.log(event);
       const nodeData = graph.nodes.find(findNodeName(nodeName));
       const node = props.pipeline.nodes.find(findNodeName(nodeName));
       const jobId = props.pipeline.jobId;
@@ -72,6 +76,13 @@ function JobGraph({ graph, ...props }) {
 
       toggle();
     }
+  };
+
+  // On every render define new Graph!
+  // Causes 'id already exists' on trying update the nodes.
+  const adaptedGraph = {
+    edges: [],
+    nodes: []
   };
 
   const { nodes, edges } = graph;
@@ -104,7 +115,9 @@ function JobGraph({ graph, ...props }) {
       >
         <NodeInfo payload={payload} />
       </DrawerContainer>
-      <Graph graph={adaptedGraph} options={graphOptions} events={events} />
+      <GraphContainer>
+        <Graph graph={adaptedGraph} options={graphOptions} events={events} />
+      </GraphContainer>
     </>
   );
 }

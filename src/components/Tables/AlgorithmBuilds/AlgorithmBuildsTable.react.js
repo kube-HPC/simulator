@@ -12,8 +12,8 @@ import {
 } from 'components/Tables/AlgorithmBuilds/AlgorithmBuildsTableColumns.react';
 
 import Table from 'components/Table/Table.react';
-import JsonView from 'components/common/json/JsonView.react';
-import CardRow from 'components/common/CardRow.react';
+import JsonView from 'components/common/Json/JsonView.react';
+import Card from 'components/common/Card.react';
 
 const tableDataSelector = createSelector(
   state => state.algorithmBuildsTable.dataSource.asMutable(),
@@ -34,19 +34,19 @@ function AlgorithmBuildsTable() {
     );
 
     return (
-      <CardRow>
+      <Card>
         <Table
           isInner
           rowKey={record => record.buildId}
           columns={nestedBuildsTableColumns({ onCancel, onRerun })}
           dataSource={algorithmsDataSource}
           expandedRowRender={record => (
-            <CardRow>
+            <Card>
               <JsonView jsonObject={record} collapsed="1" />
-            </CardRow>
+            </Card>
           )}
         />
-      </CardRow>
+      </Card>
     );
   };
 

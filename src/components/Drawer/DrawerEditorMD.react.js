@@ -3,7 +3,7 @@ import { notification, Icon, Card, Tabs } from 'antd';
 
 import { ReactComponent as CodeIcon } from 'images/code-icon.svg';
 
-import JsonEditor from 'components/common/json/JsonEditor.react';
+import JsonEditor from 'components/common/Json/JsonEditor.react';
 import DrawerContainer from 'components/Drawer/DrawerContainer.react';
 import MDEditor from 'components/common/md/MDEditor.react';
 import { stringify } from 'utils/string';

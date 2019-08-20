@@ -5,8 +5,8 @@ import { getAlgorithmReadme } from 'actions/readme.action';
 
 import Table from 'components/Table/Table.react';
 import algorithmsTableColumns from 'components/Tables/Algorithms/AlgorithmsTableColumns.react';
-import CardRow from 'components/common/CardRow.react';
-import TabSwitcherMD from 'components/common/TabSwitcherMD.react';
+import Card from 'components/common/Card.react';
+import TabSwitcherMD from 'components/common/Tabs/TabSwitcherMD.react';
 import { tableDataSelector } from 'utils/hooks';
 import { useAlgorithm } from 'hooks';
 import { STATE_SOURCES } from 'const';
@@ -30,14 +30,14 @@ function AlgorithmsTable() {
       }}
       expandedRowRender={record => {
         return (
-          <CardRow>
+          <Card>
             <TabSwitcherMD
               jsonObject={record}
               readme={
                 readmeDefault && readmeDefault[record.name] && readmeDefault[record.name].readme
               }
             />
-          </CardRow>
+          </Card>
         );
       }}
     />

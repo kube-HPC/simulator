@@ -2,12 +2,11 @@ import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import Table from 'components/Table/Table.react';
-import JsonView from 'components/common/json/JsonView.react';
-import CardRow from 'components/common/CardRow.react';
 import tableColumns from 'components/Tables/Jobs/NodeInputOutputColumns.react';
 
 import { downloadStorageResults } from 'actions/jobs.action';
+import { Table } from 'components';
+import { Card, JsonView } from 'components/common';
 
 function NodeInputOutput({ payload }) {
   const dispatch = useDispatch();
@@ -58,9 +57,9 @@ function NodeInputOutput({ payload }) {
       columns={tableColumns(dispatch)}
       dataSource={dataSource}
       expandedRowRender={record => (
-        <CardRow>
+        <Card>
           <JsonView jsonObject={record} onSelect={onSelect} />
-        </CardRow>
+        </Card>
       )}
     />
   );

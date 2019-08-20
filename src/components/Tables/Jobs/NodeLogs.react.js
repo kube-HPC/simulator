@@ -65,7 +65,8 @@ class NodeLogs extends Component {
             margin: '1%',
             overflowY: 'auto',
             overflowX: 'hidden',
-            height: '70vh'
+            height: '70vh',
+            listStyleType: 'none'
           }}
         >
           {logsTemplate}

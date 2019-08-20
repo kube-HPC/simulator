@@ -6,8 +6,8 @@ import { deleteAlgorithm } from 'actions/debug.action';
 
 import debugTableColumns from 'components/Tables/Debug/DebugTableColumns.react';
 import Table from 'components/Table/Table.react';
-import JsonView from 'components/common/json/JsonView.react';
-import CardRow from 'components/common/CardRow.react';
+import JsonView from 'components/common/Json/JsonView.react';
+import Card from 'components/common/Card.react';
 
 const tableDataSelector = createSelector(
   state => state.debugTable.dataSource.asMutable(),
@@ -29,9 +29,9 @@ function DebugTable() {
       columns={debugTableColumns({ onDelete })}
       dataSource={dataSource}
       expandedRowRender={record => (
-        <CardRow>
+        <Card>
           <JsonView jsonObject={record} />
-        </CardRow>
+        </Card>
       )}
     />
   );

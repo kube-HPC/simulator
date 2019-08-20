@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { isEqual } from 'lodash';
 
 import {
@@ -10,6 +9,7 @@ import {
   cronStop,
   cronStart
 } from 'actions/pipeline.action';
+
 import { getPipelineReadme, postPipelineReadme } from 'actions/readme.action';
 import { STATE_SOURCES } from 'const';
 import { tableDataSelector } from 'utils/hooks';
@@ -19,22 +19,11 @@ const dataSelector = tableDataSelector(STATE_SOURCES.PIPELINE_TABLE, filter => r
 );
 
 export default function usePipeline() {
-  const storedPipelines = useSelector(dataSelector, isEqual);
+  const dataSource = useSelector(dataSelector, isEqual);
   const dataStats = useSelector(state => state.pipelineTable.dataStats, isEqual);
   const pipelineReadme = useSelector(state => state.pipelineReadme, isEqual);
 
   const dispatch = useDispatch();
-
-  const _cronStart = useCallback((e, p) => dispatch(cronStart(e, p)), [dispatch]);
-  const _cronStop = useCallback((e, p) => dispatch(cronStop(e, p)), [dispatch]);
-
-  const _updateStoredPipeline = useCallback(e => dispatch(updateStoredPipeline(e)), [dispatch]);
-  const _execStoredPipeline = useCallback(e => dispatch(execStoredPipeline(e)), [dispatch]);
-  const _getPipelineReadme = useCallback(record => dispatch(getPipelineReadme(record.name)), [
-    dispatch
-  ]);
-
-  const _deleteStoredPipeline = useCallback(e => dispatch(deleteStoredPipeline(e)), [dispatch]);
 
   const _onSubmit = useCallback(
     ({ value, readme }) => {
@@ -45,19 +34,21 @@ export default function usePipeline() {
   );
 
   return {
-    storedPipelines,
+    dataSource,
     dataStats,
     getPipelineReadme: record =>
       pipelineReadme &&
       pipelineReadme[record.name] &&
       pipelineReadme[record.name].readme &&
       pipelineReadme[record.name].readme.readme,
-    cronStart: _cronStart,
-    cronStop: _cronStop,
-    deleteStoredPipeline: _deleteStoredPipeline,
-    execStoredPipeline: _execStoredPipeline,
-    updatePipelineReadme: _getPipelineReadme,
+    cronStart: useCallback((e, p) => dispatch(cronStart(e, p)), [dispatch]),
+    cronStop: useCallback((e, p) => dispatch(cronStop(e, p)), [dispatch]),
+    deleteStoredPipeline: useCallback(e => dispatch(deleteStoredPipeline(e)), [dispatch]),
+    execStoredPipeline: useCallback(e => dispatch(execStoredPipeline(e)), [dispatch]),
+    updatePipelineReadme: useCallback(record => dispatch(getPipelineReadme(record.name)), [
+      dispatch
+    ]),
     onSubmit: _onSubmit,
-    updateStoredPipeline: _updateStoredPipeline
+    updateStoredPipeline: useCallback(e => dispatch(updateStoredPipeline(e)), [dispatch])
   };
 }
