@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === 'development') {
 
 const composeEnhancers =
   process.env.NODE_ENV === 'development' && typeof window === 'object'
-    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
     : compose;
 
 const enhancer = composeEnhancers(applyMiddleware(...middleware));
