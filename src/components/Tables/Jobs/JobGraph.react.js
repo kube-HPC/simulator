@@ -71,9 +71,9 @@ function JobGraph({ graph, pipeline }) {
           ? nodeData.taskId
           : nodeData.batchTasks && nodeData.batchTasks[0].taskId;
       const podName =
-          nodeData && nodeData.podName
-            ? nodeData.podName
-            : nodeData.batchTasks && nodeData.batchTasks[0].podName;
+        nodeData && nodeData.podName
+          ? nodeData.podName
+          : nodeData.batchTasks && nodeData.batchTasks[0].podName;
 
       getLogs({ taskId, podName });
 
