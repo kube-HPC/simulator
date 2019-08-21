@@ -2,9 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import { Typography, Icon } from 'antd';
+import { Typography, Icon, Tabs } from 'antd';
 import ReactMarkdown from 'react-markdown';
-import Tabs from './Tabs.react';
 import { JsonView } from '..';
 
 const CenterText = styled.div`
@@ -18,11 +17,9 @@ const CenterMD = styled(ReactMarkdown)`
   margin: 1%;
 `;
 
-const tabsAnimation = { inkBar: true, tabPane: false };
-
 function TabSwitcherMD({ jsonObject, readme }) {
   return (
-    <Tabs animated={tabsAnimation}>
+    <Tabs>
       <Tabs.TabPane tab="JSON" key="JSON">
         <JsonView jsonObject={jsonObject} />
       </Tabs.TabPane>

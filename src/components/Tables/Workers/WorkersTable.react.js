@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Tabs } from 'antd';
 
 import Table from 'components/Table/Table.react';
 import defaultWorkerData from 'config/template/worker.template';
@@ -9,9 +8,8 @@ import {
   workerTableColumns,
   workersTableStats
 } from 'components/Tables/Workers/WorkersTableColumns.react';
-import JsonView from 'components/common/Json/JsonView.react';
-import Card from 'components/common/Card.react';
 import { createSelector } from 'reselect';
+import { Tabs, Card, JsonView } from 'components/common';
 
 const generateTab = (key, value) => (
   <Tabs.TabPane tab={key} key={key}>
