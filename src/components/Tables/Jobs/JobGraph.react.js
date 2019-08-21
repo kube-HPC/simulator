@@ -1,20 +1,33 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
 import { Button, Typography } from 'antd';
-import { getKubernetesLogsData, getCaching } from 'actions/jobs.action';
-
-import Drawer from 'components/Drawer/Drawer.react';
-import NodeInfo from 'components/Tables/Jobs/NodeInfo.react';
-import graphOptions from 'config/template/graph-options.template';
 import Graph from 'react-graph-vis';
 
-const { Text } = Typography;
+import { getKubernetesLogsData, getCaching } from 'actions/jobs.action';
+import graphOptions from 'config/template/graph-options.template';
+
+import { BottomContent } from 'components/common';
+import { Drawer } from 'components/Drawer';
+import { NodeInfo } from '.';
+
+const { Text, Title, Paragraph } = Typography;
 
 const GraphContainer = styled.div`
   height: 500px;
 `;
+
+const title = (
+  <>
+    <Title>Node Information</Title>
+    <Paragraph>
+      Check current node <Text code>Logs</Text>,<Text code>Algorithm Details</Text> and
+      <Text code>Input Output Info</Text>
+    </Paragraph>
+  </>
+);
 
 const findNodeName = nodeName => node => node.nodeName === nodeName;
 
@@ -39,7 +52,7 @@ const formatEdge = e => {
   return { ...e, ...edge };
 };
 
-function JobGraph({ graph, ...props }) {
+function JobGraph({ graph, pipeline }) {
   const [visible, setVisible] = useState(false);
   const [payload, setPayload] = useState(undefined);
 
@@ -56,14 +69,14 @@ function JobGraph({ graph, ...props }) {
       if (!nodeName) return;
 
       const nodeData = graph.nodes.find(findNodeName(nodeName));
-      const node = props.pipeline.nodes.find(findNodeName(nodeName));
-      const jobId = props.pipeline.jobId;
+      const node = pipeline.nodes.find(findNodeName(nodeName));
+      const jobId = pipeline.jobId;
       const taskId =
         nodeData && nodeData.taskId
           ? nodeData.taskId
           : nodeData.batchTasks && nodeData.batchTasks[0].taskId;
 
-      dispatch(getKubernetesLogsData(nodeData.taskId));
+      dispatch(getKubernetesLogsData(nodeData.taskId, nodeData.podName));
 
       setPayload({
         ...nodeData,
@@ -89,31 +102,27 @@ function JobGraph({ graph, ...props }) {
   nodes && nodes.forEach(n => adaptedGraph.nodes.push(formatNode(n)));
   edges && edges.forEach(e => adaptedGraph.edges.push(formatEdge(e)));
 
+  // const { taskId, podName } = payload;
+  // const onRefreshClick = () => dispatch(getKubernetesLogsData({taskId, podName}));
+
+  const onRefreshClick = () => dispatch(getKubernetesLogsData(payload.taskId));
+  const onSubmitClick = () => payload && dispatch(getCaching(payload.jobId, payload.nodeName));
+
   return (
     <>
-      <Drawer
-        visible={visible}
-        onClose={toggle}
-        submitText={'Get Cache'}
-        onSubmit={() => payload && dispatch(getCaching(payload.jobId, payload.nodeName))}
-        title={'Node Information'}
-        description={
-          <>
-            Check current node <Text code>Logs</Text>,<Text code>Algorithm Details</Text> and
-            <Text code>Input Output Info</Text>
-          </>
-        }
-        extra={[
-          <Button
-            key="redo"
-            icon="redo"
-            onClick={() => dispatch(getKubernetesLogsData(payload.taskId))}
-          >
-            Refresh
-          </Button>
-        ]}
-      >
+      <Drawer visible={visible} onClose={toggle} title={title}>
         <NodeInfo payload={payload} />
+        <BottomContent
+          extra={[
+            <Button key="redo" icon="redo" onClick={onRefreshClick}>
+              Refresh
+            </Button>
+          ]}
+        >
+          <Button type="primary" onClick={onSubmitClick}>
+            Get Cache
+          </Button>
+        </BottomContent>
       </Drawer>
       <GraphContainer>
         <Graph graph={adaptedGraph} options={graphOptions} events={events} />
@@ -122,4 +131,9 @@ function JobGraph({ graph, ...props }) {
   );
 }
 
-export default JobGraph;
+JobGraph.propTypes = {
+  graph: PropTypes.object.isRequired,
+  pipeline: PropTypes.object.isRequired
+};
+
+export default React.memo(JobGraph);

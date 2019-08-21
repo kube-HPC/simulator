@@ -7,13 +7,13 @@ import { JobGraph } from '.';
 const generateTabs = tabs =>
   Object.entries(tabs).map(([key, value]) => (
     <Tabs.TabPane tab={key} key={key}>
-      <Card size="small">{value}</Card>
+      <Card>{value}</Card>
     </Tabs.TabPane>
   ));
 
 const tabsAnimation = { inkBar: true, tabPane: false };
 
-function JobsTabSwitcher({ record }) {
+const JobsTabSwitcher = ({ record }) => {
   const tabs = {
     Graph: (
       <JobGraph graph={{ ...record.graph, jobId: record.key }} pipeline={record.record.pipeline} />
@@ -25,7 +25,7 @@ function JobsTabSwitcher({ record }) {
   };
 
   return <Tabs animated={tabsAnimation}>{generateTabs(tabs)}</Tabs>;
-}
+};
 
 JobsTabSwitcher.propTypes = {
   record: PropTypes.object.isRequired

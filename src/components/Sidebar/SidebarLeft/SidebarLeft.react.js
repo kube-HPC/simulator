@@ -15,7 +15,7 @@ import { ReactComponent as JobsIcon } from 'images/jobs-icon.svg';
 
 import { isEqual } from 'lodash';
 
-import { Col, Tag, Layout, Icon, Menu } from 'antd';
+import { Tag, Layout, Icon, Menu } from 'antd';
 import { COLOR_LAYOUT } from 'styles';
 import { USER_GUIDE, LEFT_SIDEBAR_NAMES } from 'const';
 import { dataCountMock } from 'config';
@@ -41,14 +41,14 @@ const tagStyle = { color: COLOR_LAYOUT.colorPrimary };
 
 const setMenuItem = (component, title, count) => (
   <FlexBox>
-    <Col>
+    <FlexBox.Item>
       {component}
       <span>{title}</span>
-    </Col>
+    </FlexBox.Item>
     {!isNaN(count) && (
-      <Col>
+      <FlexBox.Item>
         <Tag style={tagStyle}>{count}</Tag>
-      </Col>
+      </FlexBox.Item>
     )}
   </FlexBox>
 );
@@ -164,5 +164,7 @@ const SidebarLeft = ({ onSelect, selectedKeys, ...props }) => {
 export default React.memo(SidebarLeft);
 
 SidebarLeft.propTypes = {
-  onSelect: PropTypes.func.isRequired
+  onSelect: PropTypes.func.isRequired,
+  selectedKeys: PropTypes.array.isRequired,
+  collapsed: PropTypes.bool.isRequired
 };

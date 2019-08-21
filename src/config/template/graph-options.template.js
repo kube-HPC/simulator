@@ -1,19 +1,17 @@
 import { COLOR_PIPELINE_STATUS, COLOR } from 'styles/colors';
 
 export default {
-  autoResize: true,
-  physics: {
-    enabled: false
-  },
+  physics: false,
   layout: {
     hierarchical: {
       enabled: true,
       direction: 'LR',
-      sortMethod: 'directed'
+      sortMethod: 'directed',
+      nodeSpacing: 200
     }
   },
   interaction: {
-    hover: true
+    hover: false
   },
   nodes: {
     shape: 'box',
@@ -28,9 +26,7 @@ export default {
         background: COLOR.darkGrey
       }
     },
-    size: 30,
     font: {
-      size: 30,
       color: COLOR.white
     },
     margin: {

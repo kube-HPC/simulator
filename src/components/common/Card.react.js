@@ -10,8 +10,8 @@ const Card = ({ children, isMargin, ...props }) => (
 );
 
 Card.propTypes = {
-  isMargin: PropTypes.bool.isRequired,
-  children: PropTypes.node.isRequired
+  isMargin: PropTypes.bool,
+  children: PropTypes.node
 };
 
 Card.defaultProps = {

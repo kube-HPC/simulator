@@ -93,7 +93,7 @@ const getPipelineColumns = ({
       const { nodes, description, ...currPipeline } = record;
 
       return (
-        <FlexBox justify="flex-start">
+        <FlexBox justify="start">
           <FlexBox.Item>
             <DrawerEditor
               title={
