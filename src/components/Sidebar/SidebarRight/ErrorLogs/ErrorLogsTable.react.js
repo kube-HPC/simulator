@@ -1,14 +1,18 @@
 import React from 'react';
 
-import JsonView from 'components/common/Json/JsonView.react';
-import Table from 'components/Table/Table.react';
-import Card from 'components/common/Card.react';
-
-import errorLogsTableColumns from 'components/Sidebar/SidebarRight/ErrorLogs/ErrorLogsTableColumns.react';
 import { useErrorLogs } from 'hooks';
+import { Table } from 'components';
+import { Card, JsonView } from 'components/common';
+import errorLogsTableColumns from './ErrorLogsTableColumns.react';
 
-export default function ErrorLogsTable() {
+const ErrorLogsTable = () => {
   const { dataSource } = useErrorLogs();
+
+  const expandedRowRender = record => (
+    <Card isMargin>
+      <JsonView jsonObject={record} collapsed="1" />
+    </Card>
+  );
 
   return (
     <Table
@@ -16,11 +20,9 @@ export default function ErrorLogsTable() {
       rowKey={({ id }) => id}
       columns={errorLogsTableColumns()}
       dataSource={dataSource}
-      expandedRowRender={record => (
-        <Card>
-          <JsonView jsonObject={record} collapsed="1" />
-        </Card>
-      )}
+      expandedRowRender={expandedRowRender}
     />
   );
-}
+};
+
+export default React.memo(ErrorLogsTable);

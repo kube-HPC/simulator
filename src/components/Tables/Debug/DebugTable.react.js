@@ -1,13 +1,11 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { createSelector } from 'reselect';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { deleteAlgorithm } from 'actions/debug.action';
-
-import debugTableColumns from 'components/Tables/Debug/DebugTableColumns.react';
-import Table from 'components/Table/Table.react';
-import JsonView from 'components/common/Json/JsonView.react';
-import Card from 'components/common/Card.react';
+import { Table } from 'components';
+import debugTableColumns from './DebugTableColumns.react';
+import { Card, JsonView } from 'components/common';
 
 const tableDataSelector = createSelector(
   state => state.debugTable.dataSource.asMutable(),
@@ -16,25 +14,26 @@ const tableDataSelector = createSelector(
     dataSource && dataSource.filter(algorithm => algorithm.name.includes(filter))
 );
 
-function DebugTable() {
+const DebugTable = () => {
   const dataSource = useSelector(tableDataSelector);
 
   const dispatch = useDispatch();
+  const onDelete = useCallback(data => dispatch(deleteAlgorithm(data)), [dispatch]);
 
-  const onDelete = data => dispatch(deleteAlgorithm(data));
+  const expandedRowRender = record => (
+    <Card isMargin>
+      <JsonView jsonObject={record} />
+    </Card>
+  );
 
   return (
     <Table
-      rowKey={record => record.name}
+      rowKey={({ name }) => name}
       columns={debugTableColumns({ onDelete })}
       dataSource={dataSource}
-      expandedRowRender={record => (
-        <Card>
-          <JsonView jsonObject={record} />
-        </Card>
-      )}
+      expandedRowRender={expandedRowRender}
     />
   );
-}
+};
 
-export default DebugTable;
+export default React.memo(DebugTable);

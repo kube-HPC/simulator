@@ -6,6 +6,7 @@ import { Input, Icon, Form, Button } from 'antd';
 import { addAlgorithm } from 'actions/debug.action';
 import template from 'config/template/algorithm-modal.template';
 import BottomContent from 'components/common/BottomContent.react';
+import { DRAWER_SIZE } from 'const';
 
 function AddDebug({ onSubmit }) {
   const [algoData, setAlgoData] = useState(template);
@@ -23,7 +24,7 @@ function AddDebug({ onSubmit }) {
           />
         </Form.Item>
       </Form>
-      <BottomContent>
+      <BottomContent width={DRAWER_SIZE.ADD_DEBUG}>
         <Button
           key="Submit"
           type="primary"

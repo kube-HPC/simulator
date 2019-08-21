@@ -1,31 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactJsonView from 'react-json-view';
-import styled from 'styled-components';
-import { Card } from 'antd';
+import { Card } from '..';
 
-const ScrollJsonView = styled(Card)`
-  overflow: auto;
-`;
-
-export default function JsonView({ jsonObject, ...props }) {
-  return (
-    <ScrollJsonView size="small" bordered={false}>
-      <ReactJsonView
-        iconStyle="triangle"
-        name={false}
-        displayDataTypes={false}
-        displayObjectSize={false}
-        collapsed="2"
-        indentWidth="4"
-        enableClipboard={false}
-        {...props}
-        src={jsonObject}
-      />
-    </ScrollJsonView>
-  );
-}
+const JsonView = ({ jsonObject, ...props }) => (
+  <Card bordered={false}>
+    <ReactJsonView
+      iconStyle="triangle"
+      name={false}
+      displayDataTypes={false}
+      displayObjectSize={false}
+      collapsed="2"
+      indentWidth="4"
+      enableClipboard={false}
+      {...props}
+      src={jsonObject}
+    />
+  </Card>
+);
 
 JsonView.propTypes = {
   jsonObject: PropTypes.object
 };
+
+export default React.memo(JsonView);

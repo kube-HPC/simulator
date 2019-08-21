@@ -1,17 +1,25 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { Button, Card, notification, Icon } from 'antd';
+import { Button, notification, Icon } from 'antd';
 
 import { stringify } from 'utils';
 import { addPipelineTemplate } from 'config';
-import { BottomContent, JsonEditor } from 'components/common';
+import { BottomContent, JsonEditor, Card } from 'components/common';
 import { execRawPipeline } from 'actions/pipeline.action';
 
-const redIconStyle = { color: 'red' };
-
 const DEFAULT_VALUE = stringify(addPipelineTemplate);
-const warningIcon = <Icon type="warning" style={redIconStyle} />;
+const warningIcon = <Icon type="warning" style={{ color: 'red' }} />;
+
+notification.config({
+  placement: 'bottomRight'
+});
+
+const notificationOnOpenConfig = message => ({
+  message: 'Error in Submitted Json',
+  description: message,
+  icon: warningIcon
+});
 
 const RunRawPipeline = ({ onSubmit }) => {
   const [value, setValue] = useState(DEFAULT_VALUE);
@@ -25,20 +33,13 @@ const RunRawPipeline = ({ onSubmit }) => {
       dispatch(execRawPipeline(JSON.parse(value)));
       onSubmit();
     } catch ({ message }) {
-      notification.config({
-        placement: 'bottomRight'
-      });
-      notification.open({
-        message: 'Error in Submitted Json',
-        description: message,
-        icon: warningIcon
-      });
+      notification.open(notificationOnOpenConfig(message));
     }
   };
 
   return (
     <>
-      <Card size="small">
+      <Card>
         <JsonEditor isControlled value={value} onChange={setValue} />
       </Card>
       <BottomContent

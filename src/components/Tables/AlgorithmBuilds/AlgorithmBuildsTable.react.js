@@ -11,9 +11,8 @@ import {
   nestedBuildsTableColumns
 } from 'components/Tables/AlgorithmBuilds/AlgorithmBuildsTableColumns.react';
 
-import Table from 'components/Table/Table.react';
-import JsonView from 'components/common/Json/JsonView.react';
-import Card from 'components/common/Card.react';
+import { Card, JsonView } from 'components/common';
+import { Table } from 'components';
 
 const tableDataSelector = createSelector(
   state => state.algorithmBuildsTable.dataSource.asMutable(),
@@ -41,7 +40,7 @@ function AlgorithmBuildsTable() {
           columns={nestedBuildsTableColumns({ onCancel, onRerun })}
           dataSource={algorithmsDataSource}
           expandedRowRender={record => (
-            <Card>
+            <Card isMargin>
               <JsonView jsonObject={record} collapsed="1" />
             </Card>
           )}

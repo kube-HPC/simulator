@@ -1,4 +1,5 @@
 import { SERVICES } from '../const/services';
+import { PIPELINE_STATES } from 'const';
 
 export const COLOR = {
   blue: '#307fe6',
@@ -71,22 +72,22 @@ export const COLOR_LAYOUT = {
 };
 
 export const COLOR_PIPELINE_STATUS = {
-  active: COLOR.blueLight,
+  [PIPELINE_STATES.ACTIVE]: COLOR.blueLight,
   bootstrap: COLOR.lightGreen,
-  completed: COLOR.lightGreen,
+  [PIPELINE_STATES.COMPLETED]: COLOR.lightGreen,
   creating: COLOR.yellow,
-  failed: COLOR.red,
-  init: COLOR.lightGreen,
+  [PIPELINE_STATES.FAILED]: COLOR.red,
+  [PIPELINE_STATES.INIT]: COLOR.lightGreen,
   inProgress: COLOR.yellow,
-  pending: COLOR.darkGrey,
+  [PIPELINE_STATES.PENDING]: COLOR.darkGrey,
   ready: COLOR.lightGreen,
   recovering: COLOR.darkGrey,
   skipped: COLOR.yellow,
-  stalled: COLOR.red,
+  [PIPELINE_STATES.STALLED]: COLOR.red,
   stopped: COLOR.orange,
-  stopping: COLOR.orange,
-  succeed: COLOR.lightGreen,
-  preschedule: COLOR.cyan
+  [PIPELINE_STATES.STOPPING]: COLOR.orange,
+  [PIPELINE_STATES.SUCCEED]: COLOR.lightGreen,
+  [PIPELINE_STATES.PRESCHEDULE]: COLOR.cyan
 };
 
 export const COLOR_PRIORITY = {

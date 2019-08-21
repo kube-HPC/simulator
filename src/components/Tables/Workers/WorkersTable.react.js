@@ -2,14 +2,16 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import Table from 'components/Table/Table.react';
 import defaultWorkerData from 'config/template/worker.template';
 import {
-  workerTableColumns,
+  getWorkersColumns,
   workersTableStats
-} from 'components/Tables/Workers/WorkersTableColumns.react';
-import { createSelector } from 'reselect';
+} from 'components/Tables/Workers/getWorkersColumns.react';
+
 import { Tabs, Card, JsonView } from 'components/common';
+import { STATE_SOURCES } from 'const';
+import { tableDataSelector } from 'utils/hooks';
+import { Table } from 'components';
 
 const generateTab = (key, value) => (
   <Tabs.TabPane tab={key} key={key}>
@@ -23,14 +25,14 @@ const expandedRowRender = (columns, dataSource) => record => {
   const filteredDataSource = dataSource.filter(d => d.algorithmName === record.algorithmName);
 
   return (
-    <Card>
+    <Card isMargin>
       <Table
         isInner
         rowKey={record => record.podName}
         columns={columns}
         dataSource={filteredDataSource}
         expandedRowRender={record => (
-          <Card>
+          <Card isMargin>
             <Tabs>{generateTab('JSON', record)}</Tabs>
           </Card>
         )}
@@ -39,26 +41,21 @@ const expandedRowRender = (columns, dataSource) => record => {
   );
 };
 
-const tableDataSelector = createSelector(
-  state => state.workerTable.dataSource.asMutable(),
-  state => state.autoCompleteFilter.filter,
-  (dataSource, filter) =>
-    dataSource && dataSource.filter(algorithm => algorithm.algorithmName.includes(filter))
+const dataSelector = tableDataSelector(STATE_SOURCES.WORKER_TABLE, filter => row =>
+  row.algorithmName.includes(filter)
 );
 
 function WorkersTable() {
-  const dataSource = useSelector(tableDataSelector);
+  const dataSource = useSelector(dataSelector);
   const stats = useSelector(state => state.workerTable.stats);
 
   const statsMergedWithDefault =
-    (stats &&
-      stats.stats &&
-      stats.stats.map(algo => ({ ...defaultWorkerData, ...algo })).asMutable()) ||
-    [];
+    (stats && stats.stats && stats.stats.map(algo => ({ ...defaultWorkerData, ...algo }))) || [];
+
   return (
     <Table
       rowKey={record => record.algorithmName}
-      columns={workerTableColumns()}
+      columns={getWorkersColumns()}
       dataSource={statsMergedWithDefault}
       expandedRowRender={expandedRowRender(workersTableStats(), dataSource)}
     />

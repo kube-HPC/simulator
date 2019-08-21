@@ -6,19 +6,19 @@ import { FlexBox } from '.';
 
 const FooterAbsolute = styled.div`
   background: ${COLOR_LAYOUT.background};
-  position: absolute;
+  position: fixed;
   right: 0;
   bottom: 1px;
+  width: 100%;
   height: 56px;
   padding: 0 24px;
   line-height: 56px;
-  width: 100%;
   border-top: 1px solid ${COLOR_LAYOUT.border};
 `;
 
-const BottomContent = ({ children, extra, ...props }) => (
-  <FooterAbsolute>
-    <FlexBox {...props}>
+const BottomContent = ({ children, extra, width, ...props }) => (
+  <FooterAbsolute style={{ width: width || '50%' }} {...props}>
+    <FlexBox>
       <FlexBox.Item>
         <FlexBox>
           {extra.map((value, key) => (
@@ -43,7 +43,8 @@ BottomContent.defaultProps = {
 
 BottomContent.propTypes = {
   extra: PropTypes.array.isRequired,
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
+  width: PropTypes.string
 };
 
 export default BottomContent;

@@ -6,7 +6,6 @@ import { JsonView, Tabs, Card } from 'components/common';
 import { NodeLogs, NodeInputOutput } from '.';
 
 const DEFAULT_ALGORITHM = {};
-const DEFAULT_TASK_DETAILS = [];
 
 const NodeInfo = ({ payload }) => {
   const dataSource = useSelector(state =>
@@ -17,18 +16,15 @@ const NodeInfo = ({ payload }) => {
   const algorithmDetails =
     algorithmTable.find(a => a.name === payload.algorithmName) || DEFAULT_ALGORITHM;
 
-  const taskDetails = payload
-    ? payload.batch && payload.batch.length
+  const taskDetails =
+    payload && payload.batch && payload.batch.length > 0
       ? payload.batch
-      : [{ taskId: payload.taskId }]
-    : DEFAULT_TASK_DETAILS;
+      : [{ taskId: payload.taskId, podName: payload.podName }];
 
   return (
     <Tabs defaultActiveKey="1">
       <Tabs.TabPane tab="Logs" key="1">
-        <Card>
-          <NodeLogs dataSource={dataSource} taskDetails={taskDetails} />
-        </Card>
+        <NodeLogs dataSource={dataSource} taskDetails={taskDetails} />
       </Tabs.TabPane>
       <Tabs.TabPane tab="Algorithm Details" key="2">
         <Card>

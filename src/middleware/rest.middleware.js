@@ -40,8 +40,12 @@ const success = (dispatch, payload, action) => {
   });
 };
 
-const _formatError = payload =>
-  typeof payload === 'string' ? payload : payload.message || 'Error';
+const DEFAULT_ERROR_MSG = 'Unexpected Error';
+
+const _formatError = payload => {
+  if (!payload) return DEFAULT_ERROR_MSG;
+  return typeof payload === 'string' ? payload : payload.message || DEFAULT_ERROR_MSG;
+};
 
 const setPath = ({ monitorBackend }) => {
   let _url;

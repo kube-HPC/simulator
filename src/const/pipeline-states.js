@@ -1,5 +1,6 @@
 export default {
   ACTIVE: 'active',
+  INIT: 'init',
   COMPLETED: 'completed',
   FAILED: 'failed',
   PAUSED: 'paused',
@@ -11,5 +12,6 @@ export default {
   STOPPING: 'stopping',
   SUCCEED: 'succeed',
   SUCCESS: 'success',
-  WAITING: 'waiting'
+  WAITING: 'waiting',
+  PRESCHEDULE: 'preschedule'
 };

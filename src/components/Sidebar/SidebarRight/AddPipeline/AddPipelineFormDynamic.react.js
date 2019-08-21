@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Input, Form, Select, Col, Row, Card, notification, Icon } from 'antd';
+import { Button, Input, Form, Select, notification, Icon } from 'antd';
 import { stringify } from 'utils/string';
+import { Card, FlexBox } from 'components/common';
 
 const removeNElement = (array, N) => array.slice(0, N).concat(array.slice(N + 1, array.length));
 
@@ -78,9 +79,9 @@ function DynamicForm(props) {
   const formItems = getFieldValue('keys').map(i => {
     const inputs = nodes[i].input;
     return (
-      <Card key={i} size="small" style={{ marginBottom: '10px' }}>
-        <Row type="flex" gutter={10}>
-          <Col span={22}>
+      <Card key={i} style={{ marginBottom: '10px' }}>
+        <FlexBox>
+          <FlexBox.Item span={22}>
             <Form.Item required={i === 0}>
               <Form.Item
                 {...formItemLayout}
@@ -111,8 +112,8 @@ function DynamicForm(props) {
               <Form.Item {...formItemLayout} label="Input">
                 {inputs &&
                   inputs.map((value, index) => (
-                    <Row key={`${i}_${index}`} gutter={10} type="flex">
-                      <Col span={16}>
+                    <FlexBox key={`${i}_${index}`}>
+                      <FlexBox.Item span={16}>
                         <Input
                           value={isObject(value) ? stringify(value) : value}
                           onChange={e => {
@@ -120,8 +121,8 @@ function DynamicForm(props) {
                             onChange({ ...formData });
                           }}
                         />
-                      </Col>
-                      <Col span={6}>
+                      </FlexBox.Item>
+                      <FlexBox.Item span={6}>
                         <Select
                           placeholder="Type"
                           defaultValue={inputOptions[0]}
@@ -132,19 +133,19 @@ function DynamicForm(props) {
                         >
                           {setInputOptions()}
                         </Select>
-                      </Col>
-                      <Col span={2}>
+                      </FlexBox.Item>
+                      <FlexBox.Item span={2}>
                         <Button type="danger" icon="minus" onClick={() => removeInput(i, index)} />
-                      </Col>
-                    </Row>
+                      </FlexBox.Item>
+                    </FlexBox>
                   ))}
                 <Button type="dashed" icon="plus" onClick={addInput(i)} style={{ width: '100%' }}>
                   Add Input
                 </Button>
               </Form.Item>
             </Form.Item>
-          </Col>
-          <Col span={2}>
+          </FlexBox.Item>
+          <FlexBox.Item span={2}>
             {i === 0 ? (
               <div />
             ) : (
@@ -155,8 +156,8 @@ function DynamicForm(props) {
                 style={{ marginTop: '7.5%' }}
               />
             )}
-          </Col>
-        </Row>
+          </FlexBox.Item>
+        </FlexBox>
       </Card>
     );
   });

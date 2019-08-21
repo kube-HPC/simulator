@@ -26,6 +26,7 @@ import BottomContent from 'components/common/BottomContent.react';
 import JsonView from 'components/common/Json/JsonView.react';
 import addPipelineTemplate from 'config/template/addPipeline.template';
 import { Card } from 'components/common';
+import { DRAWER_SIZE } from 'const';
 
 const span = 6;
 const formItemLayout = {
@@ -363,6 +364,7 @@ export default function AddPipelineForm(props) {
         </>
       )}
       <BottomContent
+        width={DRAWER_SIZE.ADD_PIPELINE}
         extra={[
           <Button
             key="editor"

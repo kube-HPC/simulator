@@ -41,7 +41,7 @@ export default function useJobs() {
   const jaeger = useSelector(state => state.jobsJaeger);
   const expandedRowRender = useCallback(
     record => (
-      <Card className={USER_GUIDE.TABLE_JOB.ROW_SELECT}>
+      <Card isMargin className={USER_GUIDE.TABLE_JOB.ROW_SELECT}>
         <JobsTabSwitcher record={initialJobRecord({ record, jaeger })} />
       </Card>
     ),

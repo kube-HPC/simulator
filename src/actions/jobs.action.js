@@ -16,15 +16,15 @@ export const downloadStorageResults = path => ({
   }
 });
 
-export const getKubernetesLogsData = podId => ({
+export const getKubernetesLogsData = ({ podName, taskId }) => ({
   type: actions.REST_REQ,
   payload: {
-    url: `/kubernetes/logs?podName=${podId}`,
+    url: `/kubernetes/logs?podName=${podName}&taskId=${taskId}`,
     actionType: actions.JOBS_KUBERNETES_LOGS
   }
 });
 
-export const getCaching = (jobId, nodeName) => ({
+export const getCaching = ({ jobId, nodeName }) => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: 'exec/caching',

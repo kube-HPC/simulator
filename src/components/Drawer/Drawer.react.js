@@ -15,7 +15,7 @@ const Drawer = ({ children, width, opener, ...props }) => {
         visible={visible}
         placement="right"
         closable={false}
-        width={width || '50vw'}
+        width={width || '50%'}
         onClose={onClose}
         {...props}
       >

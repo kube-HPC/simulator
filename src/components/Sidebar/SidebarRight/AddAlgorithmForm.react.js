@@ -22,6 +22,7 @@ import BottomContent from 'components/common/BottomContent.react';
 import template from 'config/template/algorithm-modal.template';
 import schema from 'config/schema/algorithm-modal.schema';
 import { toUpperCaseFirstLetter } from 'utils/string';
+import { DRAWER_SIZE } from 'const';
 
 const Option = Select.Option;
 
@@ -140,6 +141,11 @@ function AddAlgorithmForm(props) {
           placeholder="Insert algorithm image"
         />
       </Form.Item>
+    ),
+    git: (
+      <Form.Item {...formItemLayout} label={schema.image}>
+        <Input placeholder="Insert algorithm image" />
+      </Form.Item>
     )
   };
 
@@ -242,6 +248,7 @@ function AddAlgorithmForm(props) {
         {buildTypes[buildType]}
       </StyledForm>
       <BottomContent
+        width={DRAWER_SIZE.ADD_ALGORITHM}
         extra={[
           <Button type="danger" key="clear" onClick={() => setAlgoData(template)}>
             Clear

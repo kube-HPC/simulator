@@ -2,12 +2,13 @@ import React from 'react';
 import { Typography } from 'antd';
 
 import { RIGHT_SIDEBAR_NAMES } from 'const/sidebar-names';
+import { DRAWER_SIZE } from 'const';
 
 const { Text } = Typography;
 
 export const rightSidebarContent = {
   [RIGHT_SIDEBAR_NAMES.ADD_PIPELINE]: {
-    width: '60%',
+    width: DRAWER_SIZE.ADD_PIPELINE,
     title: RIGHT_SIDEBAR_NAMES.ADD_PIPELINE,
     description: (
       <>
@@ -17,7 +18,7 @@ export const rightSidebarContent = {
     )
   },
   [RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM]: {
-    width: '40%',
+    width: DRAWER_SIZE.ADD_ALGORITHM,
     title: RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM,
     description: (
       <>
@@ -26,12 +27,12 @@ export const rightSidebarContent = {
     )
   },
   [RIGHT_SIDEBAR_NAMES.ADD_DEBUG]: {
-    width: '20%',
+    width: DRAWER_SIZE.ADD_DEBUG,
     title: RIGHT_SIDEBAR_NAMES.ADD_DEBUG,
     description: <>Add algorithm image for debugging.</>
   },
   [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: {
-    width: '70%',
+    width: DRAWER_SIZE.ERROR_LOGS,
     title: 'Cluster Error Logs',
     description: (
       <>
@@ -41,7 +42,7 @@ export const rightSidebarContent = {
     )
   },
   [RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE]: {
-    width: '50%',
+    width: DRAWER_SIZE.RUN_RAW_PIPELINE,
     title: RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE,
     description: (
       <>
@@ -58,7 +59,7 @@ export const rightSidebarContent = {
     )
   },
   [RIGHT_SIDEBAR_NAMES.CPU]: {
-    width: '60%',
+    width: DRAWER_SIZE.CPU,
     title: 'Cluster CPU Usage',
     description: (
       <>
@@ -67,7 +68,7 @@ export const rightSidebarContent = {
     )
   },
   [RIGHT_SIDEBAR_NAMES.MEMORY]: {
-    width: '60%',
+    width: DRAWER_SIZE.MEMORY,
     title: 'Cluster Memory Usage',
     description: (
       <>

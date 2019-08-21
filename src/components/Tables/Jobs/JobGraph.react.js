@@ -9,7 +9,7 @@ import Graph from 'react-graph-vis';
 import { getKubernetesLogsData, getCaching } from 'actions/jobs.action';
 import graphOptions from 'config/template/graph-options.template';
 
-import { BottomContent } from 'components/common';
+import { BottomContent, Card } from 'components/common';
 import { Drawer } from 'components/Drawer';
 import { NodeInfo } from '.';
 
@@ -34,31 +34,26 @@ const findNodeName = nodeName => node => node.nodeName === nodeName;
 const formatNode = n => {
   const node = {
     id: n.nodeName,
-    label: n.nodeName
+    label: n.extra && n.extra.batch ? `${n.nodeName}-${n.extra.batch}` : n.nodeName
   };
-  if (n.extra && n.extra.batch) {
-    node.label = `${n.nodeName}-${n.extra.batch}`;
-  }
   return { ...n, ...node };
 };
 
 const formatEdge = e => {
   const edge = {
-    id: `${e.from}->${e.to}`
+    id: `${e.from}->${e.to}`,
+    dashes: e.group === 'waitAny' || e.group === 'AlgorithmExecution'
   };
-  if (e.group === 'waitAny' || e.group === 'AlgorithmExecution') {
-    edge.dashes = true;
-  }
   return { ...e, ...edge };
 };
 
 function JobGraph({ graph, pipeline }) {
   const [visible, setVisible] = useState(false);
-  const [payload, setPayload] = useState(undefined);
+  const [payload, setPayload] = useState({ taskId: undefined });
 
   const dispatch = useDispatch();
-
-  const toggle = () => setVisible(prev => !prev);
+  const getLogs = ({ taskId, podName }) => dispatch(getKubernetesLogsData({ taskId, podName }));
+  const toggleVisible = () => setVisible(prev => !prev);
 
   const events = {
     selectNode: event => {
@@ -76,7 +71,9 @@ function JobGraph({ graph, pipeline }) {
           ? nodeData.taskId
           : nodeData.batchTasks && nodeData.batchTasks[0].taskId;
 
-      dispatch(getKubernetesLogsData(nodeData.taskId, nodeData.podName));
+      const podName = nodeData && nodeData.podName;
+
+      getLogs({ taskId, podName });
 
       setPayload({
         ...nodeData,
@@ -87,7 +84,7 @@ function JobGraph({ graph, pipeline }) {
         batch: nodeData.batchTasks || []
       });
 
-      toggle();
+      toggleVisible();
     }
   };
 
@@ -102,16 +99,16 @@ function JobGraph({ graph, pipeline }) {
   nodes && nodes.forEach(n => adaptedGraph.nodes.push(formatNode(n)));
   edges && edges.forEach(e => adaptedGraph.edges.push(formatEdge(e)));
 
-  // const { taskId, podName } = payload;
-  // const onRefreshClick = () => dispatch(getKubernetesLogsData({taskId, podName}));
-
-  const onRefreshClick = () => dispatch(getKubernetesLogsData(payload.taskId));
-  const onSubmitClick = () => payload && dispatch(getCaching(payload.jobId, payload.nodeName));
+  const { taskId, podName, jobId, nodeName } = payload;
+  const onRefreshClick = () => getLogs({ taskId, podName });
+  const onSubmitClick = () => payload && dispatch(getCaching({ jobId, nodeName }));
 
   return (
     <>
-      <Drawer visible={visible} onClose={toggle} title={title}>
-        <NodeInfo payload={payload} />
+      <Drawer visible={visible} onClose={toggleVisible} title={title}>
+        <Card>
+          <NodeInfo payload={payload} />
+        </Card>
         <BottomContent
           extra={[
             <Button key="redo" icon="redo" onClick={onRefreshClick}>

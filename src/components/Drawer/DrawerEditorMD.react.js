@@ -58,7 +58,7 @@ function DrawerEditorMD({ record, onSubmit, readmeDefault, submitText, ...props 
           }
           key={tabs.json}
         >
-          <Card size="small">
+          <Card>
             <JsonEditor isControlled value={value} onChange={setValue} />
           </Card>
         </Tabs.TabPane>

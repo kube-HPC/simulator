@@ -5,3 +5,4 @@ export { default as PIPELINE_STATES } from './pipeline-states';
 
 export { default as LOCAL_STORAGE_KEYS } from 'const/local-storage';
 export { default as actionType } from 'const/application-actions';
+export { default as DRAWER_SIZE } from 'const/drawer-size';
