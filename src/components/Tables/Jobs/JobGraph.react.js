@@ -136,4 +136,5 @@ JobGraph.propTypes = {
   pipeline: PropTypes.object.isRequired
 };
 
-export default React.memo(JobGraph);
+const isSameGraph = (a, b) => a.graph.timestamp === b.graph.timestamp;
+export default React.memo(JobGraph, isSameGraph);
