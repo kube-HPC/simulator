@@ -30,9 +30,7 @@ function NodeInfo({ payload }) {
                 : [{ taskId: payload.taskId }]
               : null
           }
-          rerunLogs={(taskId = payload.taskId) =>
-            dispatch(getKubernetesLogsData(taskId))
-          }
+          rerunLogs={(data) => dispatch(getKubernetesLogsData(data))}
         />
       </Tabs.TabPane>
       <Tabs.TabPane tab="Algorithm Details" key="2">

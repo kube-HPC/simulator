@@ -29,16 +29,20 @@ function JobGraph(props) {
         const taskId = nodeData.taskId
           ? nodeData.taskId
           : nodeData.batchTasks && nodeData.batchTasks[0].taskId;
+        const podName = nodeData.podName
+          ? nodeData.podName
+          : nodeData.batchTasks && nodeData.batchTasks[0].podName;
         setPayload({
           ...nodeData,
           jobId,
           taskId,
           nodeName,
+          podName,
           origInput: node.input,
           batch: nodeData.batchTasks || []
         });
         toggle();
-        dispatch(getKubernetesLogsData(taskId));
+        dispatch(getKubernetesLogsData({podName,taskId}));
       }
     });
   };

@@ -28,7 +28,8 @@ class NodeLogs extends Component {
         onClick={data => {
           this.isAlreadySelected = true;
           this.currentTaskId = props.taskDetails[data.key].taskId;
-          props.rerunLogs(this.currentTaskId);
+          const podName = props.taskDetails[data.key].podName;
+          props.rerunLogs({taskId: this.currentTaskId, podName});
           console.log(props.taskDetails[data.key]);
         }}
       >
