@@ -1,10 +1,14 @@
 export default {
+  DIVIDER: {
+    ADVANCED: 'Advanced',
+    RESOURCES: 'Resources'
+  },
   NAME: {
     label: 'Algorithm Name',
     field: 'name'
   },
   image: 'Algorithm Image',
-  RESOURCES: 'Resources',
+
   CPU: {
     label: 'CPU Usage',
     field: 'cpu'
@@ -15,20 +19,35 @@ export default {
   },
   MEMORY: {
     label: 'Memory Usage',
-    field: 'mem'
+    field: 'mem',
+    memoryTypes: ['Ki', 'M', 'Mi', 'Gi', 'm', 'K', 'G', 'T', 'Ti', 'P', 'Pi', 'E', 'Ei']
   },
-  advanced: 'Advanced',
-  minHotWorkers: 'Min Hot Workers',
-  code: 'Code',
-  options: 'Options',
-  environment: 'Environment',
-  entryPoint: 'Entry Point',
-  env: {
-    python: 'Python',
-    nodejs: 'Node.js',
-    jvm: 'JVM'
+
+  WORKERS: {
+    label: 'Min Hot Workers',
+    field: 'minHotWorkers'
   },
-  memoryType: ['Ki', 'M', 'Mi', 'Gi', 'm', 'K', 'G', 'T', 'Ti', 'P', 'Pi', 'E', 'Ei'],
+  BUILD_TYPES: {
+    CODE: {
+      ENVIRONMENT: {
+        label: 'Environment',
+        field: 'environment',
+        types: {
+          python: 'Python',
+          nodejs: 'Node.js',
+          jvm: 'JVM'
+        }
+      },
+      ENTRY_POINT: {
+        label: 'Entry Point',
+        field: 'entryPoint'
+      }
+    }
+  },
+  OPTIONS: {
+    label: 'Options',
+    field: 'options'
+  },
   branch: 'Branch',
   token: 'Token',
   repository: 'Repository'
