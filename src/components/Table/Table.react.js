@@ -7,9 +7,15 @@ import { Table as AntTable, Icon, Spin } from 'antd';
 import { USER_GUIDE, STATE_SOURCES } from 'const';
 import { setConnectionStatus } from 'actions/connection.action';
 
-const expandIcon = ({ expanded, onExpand, record }) => (
+const ExpandIcon = ({ expanded, onExpand, record }) => (
   <Icon type={expanded ? 'down' : 'right'} onClick={e => onExpand(record, e)} />
 );
+
+ExpandIcon.propTypes = {
+  expanded: PropTypes.bool.isRequired,
+  onExpand: PropTypes.func.isRequired,
+  record: PropTypes.object.isRequired
+};
 
 const antIcon = <Icon type="loading" style={{ fontSize: 40 }} spin />;
 Spin.setDefaultIndicator(antIcon);
@@ -43,7 +49,7 @@ const Table = ({ dataSource, ...props }) => {
     <AntTable
       loading={!dataSource}
       className={USER_GUIDE.TABLE}
-      expandIcon={expandIcon}
+      expandIcon={ExpandIcon}
       dataSource={dataSource}
       pagination={DEFAULT_PAGINATION}
       size="middle"

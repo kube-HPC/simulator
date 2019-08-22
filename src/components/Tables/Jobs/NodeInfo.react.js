@@ -7,9 +7,11 @@ import { NodeLogs, NodeInputOutput } from '.';
 
 const DEFAULT_ALGORITHM = {};
 
+const isSameLength = (a, b) => a.length === b.length;
+
 const NodeInfo = ({ payload }) => {
   const dataSource = useSelector(state =>
-    state.jobsKubernetesLogs.dataSource.map((value, key) => ({ key, ...value }))
+    state.jobsKubernetesLogs.dataSource.map((value, key) => ({ key, ...value }), isSameLength)
   );
 
   const algorithmTable = useSelector(state => state.algorithmTable.dataSource);
@@ -42,4 +44,4 @@ NodeInfo.propTypes = {
   payload: PropTypes.object
 };
 
-export default NodeInfo;
+export default React.memo(NodeInfo);

@@ -108,7 +108,7 @@ function JobGraph({ graph, pipeline }) {
 
   return (
     <>
-      <Drawer visible={visible} onClose={toggleVisible} title={title}>
+      <Drawer visible={visible} onClose={toggleVisible} title={title} destroyOnClose>
         <Card>
           <NodeInfo payload={payload} />
         </Card>

@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { getKubernetesLogsData } from 'actions/jobs.action';
 import { FlexBox } from 'components/common';
 import { COLOR_LOGGER } from 'styles/colors';
+import { toUpperCaseFirstLetter } from 'utils';
 
 const SelectFull = styled(Select)`
   width: 100%;
@@ -42,7 +43,9 @@ const renderItem = log => {
   return (
     <List.Item>
       <List.Item.Meta description={description} />
-      {log.timestamp && <Tag color={COLOR_LOGGER[log.level]}>{log.level}</Tag>}
+      {log.timestamp && (
+        <Tag color={COLOR_LOGGER[log.level]}>{toUpperCaseFirstLetter(log.level)}</Tag>
+      )}
     </List.Item>
   );
 };

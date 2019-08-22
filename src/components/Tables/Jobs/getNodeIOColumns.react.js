@@ -1,11 +1,10 @@
 import React from 'react';
-import { Tag, Tooltip, Button, Row, Col } from 'antd';
+import { Tag, Tooltip, Button } from 'antd';
 import humanizeDuration from 'humanize-duration';
 
-import { downloadStorageResults } from 'actions/jobs.action';
 import { COLOR_PIPELINE_STATUS } from 'styles/colors';
-import PIPELINE_STATES from 'const/pipeline-states';
 import { toUpperCaseFirstLetter } from 'utils/string';
+import { PIPELINE_STATES } from 'const';
 
 const getStatusFilter = () =>
   [PIPELINE_STATES.ACTIVE, PIPELINE_STATES.SUCCEED, PIPELINE_STATES.FAILED].map(status => ({
@@ -13,20 +12,19 @@ const getStatusFilter = () =>
     value: status
   }));
 
-export default dispatch => [
+const getNodeIOColumns = ({ downloadResult }) => [
   {
     title: 'index',
     dataIndex: 'index',
-    key: 'index'
+    key: 'index',
+    render: index => <Tag>{index}</Tag>
   },
   {
     title: 'status',
     dataIndex: 'status',
     key: 'status',
-    render: (_, record) => (
-      <Tag color={COLOR_PIPELINE_STATUS[record.status]}>
-        {record.status && toUpperCaseFirstLetter(record.status)}
-      </Tag>
+    render: status => (
+      <Tag color={COLOR_PIPELINE_STATUS[status]}>{status && toUpperCaseFirstLetter(status)}</Tag>
     ),
     filterMultiple: true,
     filters: getStatusFilter(),
@@ -37,39 +35,38 @@ export default dispatch => [
     dataIndex: 'duration',
     key: 'duration',
     render: (_, record) => (
-      <span>
+      <Tag>
         {humanizeDuration(
           record.endTime ? record.endTime - record.startTime : Date.now() - record.startTime,
           {
             maxDecimalPoints: 2
           }
         )}
-      </span>
+      </Tag>
     )
   },
   {
     title: 'retries',
     dataIndex: 'retries',
-    key: 'retries'
+    key: 'retries',
+    render: retries => <Tag>{retries}</Tag>
   },
   {
     title: 'Results',
     dataIndex: 'results',
     key: 'results',
     render: (_, record) => (
-      <Row type="flex" justify="start" gutter={10}>
-        <Col>
-          <Tooltip placement="top" title={'Download Results'}>
-            <Button
-              type="default"
-              disabled={!record.output}
-              shape="circle"
-              icon="download"
-              onClick={() => dispatch(downloadStorageResults(record.output.path))}
-            />
-          </Tooltip>
-        </Col>
-      </Row>
+      <Tooltip placement="top" title={'Download Results'}>
+        <Button
+          type="default"
+          disabled={!record.output}
+          shape="circle"
+          icon="download"
+          onClick={() => downloadResult(record.output.path)}
+        />
+      </Tooltip>
     )
   }
 ];
+
+export default getNodeIOColumns;

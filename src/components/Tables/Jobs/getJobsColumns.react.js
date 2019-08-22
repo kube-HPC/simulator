@@ -10,12 +10,7 @@ import { COLOR_PRIORITY, COLOR_PIPELINE_STATUS } from 'styles/colors';
 
 import { downloadStorageResults } from 'actions/jobs.action';
 
-import {
-  rerunRawPipeline,
-  stopPipeline
-  // pausePipeline,
-  // resumePipeline
-} from 'actions/pipeline.action';
+import { rerunRawPipeline, stopPipeline } from 'actions/pipeline.action';
 
 import { FlexBox, Ellipsis, StatusTag } from 'components/common';
 import { USER_GUIDE, PIPELINE_STATES } from 'const';
@@ -27,8 +22,6 @@ const ActiveState = [
   PIPELINE_STATES.RESUMING
 ];
 
-// const canPauseOrResume = state => canPauseOrStop(state) || canResume(state);
-// const canResume = state => state === PIPELINE_STATES.PAUSED;
 const canPauseOrStop = state => isActive(state) || state === PIPELINE_STATES.PAUSED;
 const isActive = state => ActiveState.includes(state);
 
@@ -44,9 +37,7 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => [
     dataIndex: 'key',
     key: 'key',
     width: '10%',
-    render: jobID => (
-      <Ellipsis className={isGuideOn ? USER_GUIDE.TABLE_JOB.ID_SELECT : ''} copyable text={jobID} />
-    )
+    render: jobID => <Ellipsis className={USER_GUIDE.TABLE_JOB.ID_SELECT} copyable text={jobID} />
   },
   {
     title: 'Pipeline Name',
@@ -75,14 +66,18 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => [
     key: 'Start timestamp',
     width: '10%',
     sorter: (a, b) => a.pipeline.startTime - b.pipeline.startTime,
-    render: startTime => <Moment format="DD/MM/YY HH:mm:ss">{startTime}</Moment>
+    render: startTime => (
+      <Tag>
+        <Moment format="DD/MM/YY HH:mm:ss">{startTime}</Moment>
+      </Tag>
+    )
   },
   {
     title: 'Running Time',
     key: 'timestamp',
     width: '10%',
     render: (_, record) => (
-      <span>
+      <Tag>
         {humanizeDuration(
           record.results
             ? record.results.timeTook * 1000
@@ -91,7 +86,7 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => [
             maxDecimalPoints: 2
           }
         )}
-      </span>
+      </Tag>
     )
   },
   {
@@ -103,9 +98,9 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => [
         {status.data &&
           status.data.states &&
           Object.entries(status.data.states).map(([status, count]) => (
-            <Col key={status}>
+            <FlexBox.Item key={status}>
               <StatusTag status={status} count={count} />
-            </Col>
+            </FlexBox.Item>
           ))}
       </FlexBox>
     )
@@ -155,8 +150,6 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => [
     align: 'center',
     render: (_, record) => {
       const status = record.status.status;
-      // const isResumePipeline = canResume(status);
-
       const redoAction = (
         <Tooltip placement="top" title="Re-Run">
           <Button
@@ -179,22 +172,6 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => [
           />
         </Tooltip>
       );
-
-      // const pauseAction = (
-      //   <Tooltip placement="top" title={isResumePipeline ? 'Resume' : 'Pause'}>
-      //     <Button
-      //       type="default"
-      //       disabled={!canPauseOrResume(status)}
-      //       shape="circle"
-      //       icon={isResumePipeline ? 'caret-right' : 'pause'}
-      //       onClick={() =>
-      //         isResumePipeline
-      //           ? dispatch(resumePipeline(record.key))
-      //           : dispatch(pausePipeline(record.key))
-      //       }
-      //     />
-      //   </Tooltip>
-      // );
       const isDisabled = !(
         record.results &&
         record.results.data &&
@@ -221,7 +198,6 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => [
         >
           <Col>{redoAction}</Col>
           <Col>{stopAction}</Col>
-          {/* <Col>{pauseAction}</Col> */}
           <Col>{downloadAction}</Col>
         </Row>
       );

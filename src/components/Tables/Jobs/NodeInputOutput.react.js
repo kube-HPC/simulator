@@ -2,14 +2,15 @@ import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import tableColumns from 'components/Tables/Jobs/NodeInputOutputColumns.react';
-
 import { downloadStorageResults } from 'actions/jobs.action';
 import { Table } from 'components';
 import { Card, JsonView } from 'components/common';
+import getNodeIOColumns from './getNodeIOColumns.react';
 
 function NodeInputOutput({ payload }) {
   const dispatch = useDispatch();
+
+  const downloadResult = useCallback(value => dispatch(downloadStorageResults(value)), [dispatch]);
 
   const onSelect = useCallback(
     select =>
@@ -17,8 +18,8 @@ function NodeInputOutput({ payload }) {
       (select.namespace.includes('input') || select.namespace.includes('output')) &&
       select.name === 'path' &&
       select.value &&
-      dispatch(downloadStorageResults(select.value)),
-    [dispatch]
+      downloadResult(select.value),
+    [downloadResult]
   );
 
   const dataSource =
@@ -52,9 +53,8 @@ function NodeInputOutput({ payload }) {
 
   return (
     <Table
-      isInner
-      rowKey={record => record.index}
-      columns={tableColumns(dispatch)}
+      rowKey={({ index }) => index}
+      columns={getNodeIOColumns({ downloadResult })}
       dataSource={dataSource}
       expandedRowRender={record => (
         <Card>

@@ -9,7 +9,6 @@ const FooterAbsolute = styled.div`
   position: fixed;
   right: 0;
   bottom: 1px;
-  width: 100%;
   height: 56px;
   padding: 0 24px;
   line-height: 56px;
@@ -17,7 +16,7 @@ const FooterAbsolute = styled.div`
 `;
 
 const BottomContent = ({ children, extra, width, ...props }) => (
-  <FooterAbsolute style={{ width: width || '50%' }} {...props}>
+  <FooterAbsolute style={{ width: width || '50vw' }} {...props}>
     <FlexBox>
       <FlexBox.Item>
         <FlexBox>
