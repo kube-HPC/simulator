@@ -82,6 +82,7 @@ function JobGraph({ graph, pipeline }) {
         jobId,
         taskId,
         nodeName,
+        podName,
         origInput: node.input,
         batch: nodeData.batchTasks || []
       });

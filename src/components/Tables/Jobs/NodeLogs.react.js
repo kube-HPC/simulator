@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { List, Select, Tag, Tooltip } from 'antd';
+import Moment from 'react-moment';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -46,7 +47,11 @@ const NodeLogs = ({ dataSource, taskDetails, ...props }) => {
 
   const renderItem = log => (
     <List.Item>
-      <List.Item.Meta title={log.meta} description={log.message} />
+      <div>
+        <Moment format="DD/MM/YY HH:mm:ss">{log.timestamp}</Moment>
+        {` ${log.level} : ${log.message}`}
+      </div>
+      {/* <List.Item.Meta title={log.meta} description={log.message} /> */}
     </List.Item>
   );
 
