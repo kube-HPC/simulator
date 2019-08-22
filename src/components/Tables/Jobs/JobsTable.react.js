@@ -31,7 +31,7 @@ const JobsTable = () => {
 
   const { isOn, stepIndex } = useSelector(state => state.userGuide, areSameOnIndex);
 
-  const tableDataSource = isOn ? mockDataSource : chunks[currentPage - 1];
+  const tableDataSource = isOn ? mockDataSource : chunks[currentPage - 1] || [];
   const expandedRowKeys = isOn ? { expandedRowKeys: expandLast(stepIndex) } : {};
 
   return (
@@ -48,4 +48,4 @@ const JobsTable = () => {
   );
 };
 
-export default JobsTable;
+export default React.memo(JobsTable);
