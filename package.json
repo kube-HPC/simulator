@@ -5,7 +5,7 @@
   "homepage": ".",
   "dependencies": {
     "@nivo/bar": "^0.59.2",
-    "antd": "^3.21.4",
+    "antd": "^3.22.0",
     "axios": "^0.19.0",
     "cron-parser": "^2.13.0",
     "cronstrue": "^1.82.0",
