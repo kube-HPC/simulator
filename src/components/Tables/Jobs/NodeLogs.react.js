@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { getKubernetesLogsData } from 'actions/jobs.action';
 import { FlexBox } from 'components/common';
-import { COLOR } from 'styles';
+import { COLOR_LOGGER } from 'styles/colors';
 
 const SelectFull = styled(Select)`
   width: 100%;
@@ -18,9 +18,7 @@ const OptionBox = ({ index, taskId }) => (
     <FlexBox.Item>
       <Tag>{index}</Tag>
     </FlexBox.Item>
-    <FlexBox.Item>
-      <Tag color={COLOR.blueLight}>{taskId}</Tag>
-    </FlexBox.Item>
+    <FlexBox.Item>{taskId}</FlexBox.Item>
   </FlexBox>
 );
 
@@ -29,9 +27,28 @@ OptionBox.propTypes = {
   taskId: PropTypes.string.isRequired
 };
 
+const renderItem = log => {
+  const description = (
+    <FlexBox justify="start">
+      {log.timestamp && (
+        <FlexBox.Item>
+          <Moment format="DD/MM/YY HH:mm:ss">{log.timestamp}</Moment>
+        </FlexBox.Item>
+      )}
+      <FlexBox.Item>{log.message}</FlexBox.Item>
+    </FlexBox>
+  );
+
+  return (
+    <List.Item>
+      <List.Item.Meta description={description} />
+      {log.timestamp && <Tag color={COLOR_LOGGER[log.level]}>{log.level}</Tag>}
+    </List.Item>
+  );
+};
+
 const NodeLogs = ({ dataSource, taskDetails, ...props }) => {
   const [currentTask, setCurrentTask] = useState(undefined);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -40,28 +57,19 @@ const NodeLogs = ({ dataSource, taskDetails, ...props }) => {
   }, [taskDetails]);
 
   const options = taskDetails.map((task, index) => (
-    <Select.Option key={index} value={task.taskId}>
+    <Select.Option key={index} value={index}>
       <OptionBox index={index + 1} taskId={task.taskId} />
     </Select.Option>
   ));
-
-  const renderItem = log => (
-    <List.Item>
-      <div>
-        <Moment format="DD/MM/YY HH:mm:ss">{log.timestamp}</Moment>
-        {` ${log.level} : ${log.message}`}
-      </div>
-      {/* <List.Item.Meta title={log.meta} description={log.message} /> */}
-    </List.Item>
-  );
 
   const header = (
     <Tooltip placement="topLeft" title={<OptionBox index="Index" taskId="Task ID" />}>
       <SelectFull
         value={currentTask}
-        onSelect={task => {
-          setCurrentTask(task);
-          dispatch(getKubernetesLogsData(task));
+        onSelect={index => {
+          const { taskId, podName } = taskDetails[index];
+          setCurrentTask(taskId);
+          dispatch(getKubernetesLogsData({ taskId, podName }));
         }}
       >
         {options}

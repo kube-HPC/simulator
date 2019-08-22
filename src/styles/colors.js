@@ -1,5 +1,5 @@
 import { SERVICES } from '../const/services';
-import { PIPELINE_STATES } from 'const';
+import { PIPELINE_STATES, LOGGER_LEVEL } from 'const';
 
 export const COLOR = {
   blue: '#307fe6',
@@ -88,6 +88,16 @@ export const COLOR_PIPELINE_STATUS = {
   [PIPELINE_STATES.STOPPING]: COLOR.orange,
   [PIPELINE_STATES.SUCCEED]: COLOR.lightGreen,
   [PIPELINE_STATES.PRESCHEDULE]: COLOR.cyan
+};
+
+export const COLOR_LOGGER = {
+  [LOGGER_LEVEL.INFO]: COLOR.blueLight,
+  [LOGGER_LEVEL.WARN]: COLOR.yellow,
+  [LOGGER_LEVEL.ERROR]: COLOR.red,
+  [LOGGER_LEVEL.CRITICAL]: COLOR.orange,
+  [LOGGER_LEVEL.DEBUG]: COLOR.lightGreen,
+  [LOGGER_LEVEL.TRACE]: COLOR.lightGrey,
+  [LOGGER_LEVEL.SILLY]: COLOR.grey
 };
 
 export const COLOR_PRIORITY = {

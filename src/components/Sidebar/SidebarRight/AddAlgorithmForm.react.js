@@ -2,27 +2,14 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import parseUnit from 'parse-unit';
-import {
-  Input,
-  Icon,
-  Select,
-  InputNumber,
-  Upload,
-  Divider,
-  Form,
-  Row,
-  Col,
-  Button,
-  Radio
-} from 'antd';
+
+import { Input, Icon, Select, InputNumber, Upload, Divider, Form, Button, Radio } from 'antd';
 
 import { applyAlgorithm } from 'actions/algorithm.action';
-import BottomContent from 'components/common/BottomContent.react';
-
-import template from 'config/template/algorithm-modal.template';
-import schema from 'config/schema/algorithm-modal.schema';
 import { toUpperCaseFirstLetter } from 'utils/string';
 import { DRAWER_SIZE } from 'const';
+import { FlexBox, BottomContent } from 'components/common';
+import { algorithmModalTemplate, algorithmModalSchema as schema } from 'config';
 
 const Option = Select.Option;
 
@@ -75,7 +62,7 @@ const StyledForm = styled(Form)`
 `;
 
 function AddAlgorithmForm(props) {
-  const [algoData, setAlgoData] = useState(template);
+  const [algoData, setAlgoData] = useState(algorithmModalTemplate);
   const [buildType, setBuildType] = useState('code');
   const [file, setFile] = useState(undefined);
 
@@ -188,8 +175,8 @@ function AddAlgorithmForm(props) {
           />
         </Form.Item>
         <Form.Item {...formItemLayout} label={schema.memory} labelAlign="left">
-          <Row type="flex" justify="start" gutter={4}>
-            <Col>
+          <FlexBox type="flex" justify="start" gutter={4}>
+            <FlexBox.Item>
               <InputNumber
                 min={1}
                 value={getMemValue(algoData.mem)}
@@ -198,8 +185,8 @@ function AddAlgorithmForm(props) {
                   setAlgoData({ ...algoData, mem: v + unit });
                 }}
               />
-            </Col>
-            <Col>
+            </FlexBox.Item>
+            <FlexBox.Item>
               <Select
                 value={getMemValue(algoData.mem, true)}
                 style={{ width: '90px' }}
@@ -214,14 +201,14 @@ function AddAlgorithmForm(props) {
                   </Option>
                 ))}
               </Select>
-            </Col>
-          </Row>
+            </FlexBox.Item>
+          </FlexBox>
         </Form.Item>
         <Divider orientation="left">{schema.advanced}</Divider>
         <Form.Item {...formItemLayout} label={schema.minHotWorkers}>
           <InputNumber
             min={0}
-            value={algoData.minHotWorkers}
+            value={Math.floor(algoData.minHotWorkers)}
             onChange={minHotWorkers => setAlgoData({ ...algoData, minHotWorkers: minHotWorkers })}
           />
         </Form.Item>
@@ -250,7 +237,7 @@ function AddAlgorithmForm(props) {
       <BottomContent
         width={DRAWER_SIZE.ADD_ALGORITHM}
         extra={[
-          <Button type="danger" key="clear" onClick={() => setAlgoData(template)}>
+          <Button type="danger" key="clear" onClick={() => setAlgoData(algorithmModalTemplate)}>
             Clear
           </Button>
         ]}

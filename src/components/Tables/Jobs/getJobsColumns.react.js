@@ -12,9 +12,9 @@ import { downloadStorageResults } from 'actions/jobs.action';
 
 import {
   rerunRawPipeline,
-  stopPipeline,
-  pausePipeline,
-  resumePipeline
+  stopPipeline
+  // pausePipeline,
+  // resumePipeline
 } from 'actions/pipeline.action';
 
 import { FlexBox, Ellipsis, StatusTag } from 'components/common';
@@ -27,9 +27,9 @@ const ActiveState = [
   PIPELINE_STATES.RESUMING
 ];
 
-const canPauseOrResume = state => canPauseOrStop(state) || canResume(state);
+// const canPauseOrResume = state => canPauseOrStop(state) || canResume(state);
+// const canResume = state => state === PIPELINE_STATES.PAUSED;
 const canPauseOrStop = state => isActive(state) || state === PIPELINE_STATES.PAUSED;
-const canResume = state => state === PIPELINE_STATES.PAUSED;
 const isActive = state => ActiveState.includes(state);
 
 const getStatusFilter = () =>
@@ -155,7 +155,7 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => [
     align: 'center',
     render: (_, record) => {
       const status = record.status.status;
-      const isResumePipeline = canResume(status);
+      // const isResumePipeline = canResume(status);
 
       const redoAction = (
         <Tooltip placement="top" title="Re-Run">
@@ -180,21 +180,21 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => [
         </Tooltip>
       );
 
-      const pauseAction = (
-        <Tooltip placement="top" title={isResumePipeline ? 'Resume' : 'Pause'}>
-          <Button
-            type="default"
-            disabled={!canPauseOrResume(status)}
-            shape="circle"
-            icon={isResumePipeline ? 'caret-right' : 'pause'}
-            onClick={() =>
-              isResumePipeline
-                ? dispatch(resumePipeline(record.key))
-                : dispatch(pausePipeline(record.key))
-            }
-          />
-        </Tooltip>
-      );
+      // const pauseAction = (
+      //   <Tooltip placement="top" title={isResumePipeline ? 'Resume' : 'Pause'}>
+      //     <Button
+      //       type="default"
+      //       disabled={!canPauseOrResume(status)}
+      //       shape="circle"
+      //       icon={isResumePipeline ? 'caret-right' : 'pause'}
+      //       onClick={() =>
+      //         isResumePipeline
+      //           ? dispatch(resumePipeline(record.key))
+      //           : dispatch(pausePipeline(record.key))
+      //       }
+      //     />
+      //   </Tooltip>
+      // );
       const isDisabled = !(
         record.results &&
         record.results.data &&
@@ -221,7 +221,7 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => [
         >
           <Col>{redoAction}</Col>
           <Col>{stopAction}</Col>
-          <Col>{pauseAction}</Col>
+          {/* <Col>{pauseAction}</Col> */}
           <Col>{downloadAction}</Col>
         </Row>
       );
