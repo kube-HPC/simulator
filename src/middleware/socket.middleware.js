@@ -14,8 +14,8 @@ const success = (dispatch, payload, action) => {
   });
 };
 
-const changeConnectionStatus = (dispatch, { isSocketConnected, isDataAvailable }) =>
-  dispatch(setConnectionStatus({ isSocketConnected, isDataAvailable }));
+const changeConnectionStatus = (dispatch, { isSocketConnected }) =>
+  dispatch(setConnectionStatus({ isSocketConnected }));
 
 const connectionsEvents = {
   CONNECTION: 'connect',

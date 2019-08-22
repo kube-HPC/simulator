@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { Table as AntTable, Icon, Spin } from 'antd';
-import { USER_GUIDE, STATE_SOURCES } from 'const';
+import { USER_GUIDE } from 'const';
 import { setConnectionStatus } from 'actions/connection.action';
 
 const ExpandIcon = ({ expanded, onExpand, record }) => (
@@ -26,24 +26,17 @@ const DEFAULT_PAGINATION = {
   showLessItems: true
 };
 
-const isEqualOnDataAvailable = (a, b) => a.isDataAvailable === b.isDataAvailable;
-
 let isDispatchedOnce = false;
 
 const Table = ({ dataSource, ...props }) => {
   const dispatch = useDispatch();
-
-  const { isDataAvailable: prevStatus } = useSelector(
-    state => state[STATE_SOURCES.CONNECTION_STATUS],
-    isEqualOnDataAvailable
-  );
 
   useEffect(() => {
     if (!isDispatchedOnce && dataSource) {
       isDispatchedOnce = true;
       dispatch(setConnectionStatus({ isDataAvailable: true }));
     }
-  }, [dataSource, dispatch, prevStatus]);
+  }, [dataSource, dispatch]);
 
   return (
     <AntTable
