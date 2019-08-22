@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import parseUnit from 'parse-unit';
+import PropTypes from 'prop-types';
 
 import { Input, Icon, Select, InputNumber, Upload, Divider, Form, Button, Radio } from 'antd';
 
@@ -9,7 +10,7 @@ import { applyAlgorithm } from 'actions/algorithm.action';
 import { toUpperCaseFirstLetter } from 'utils/string';
 import { DRAWER_SIZE } from 'const';
 import { FlexBox, BottomContent } from 'components/common';
-import { algorithmModalTemplate, algorithmModalSchema as schema } from 'config';
+import { algorithmModalTemplate as template, algorithmModalSchema as schema } from 'config';
 
 const Option = Select.Option;
 
@@ -37,10 +38,22 @@ const availableOptions = options =>
     .filter(([, value]) => value)
     .map(([key]) => key);
 
+const LABEL_SPAN = 5;
+
 const formItemLayout = {
-  labelCol: { span: 9 },
-  wrapperCol: { span: 15 },
+  labelCol: { span: LABEL_SPAN },
+  wrapperCol: { span: 24 - LABEL_SPAN },
   labelAlign: 'left'
+};
+
+const FormItem = ({ children, ...props }) => (
+  <Form.Item {...formItemLayout} {...props}>
+    {children}
+  </Form.Item>
+);
+
+FormItem.propTypes = {
+  children: PropTypes.node.isRequired
 };
 
 const getMemValue = (mem, isReturnUnit) => {
@@ -55,100 +68,42 @@ const insertRadioButtons = buildTypes =>
     </Radio.Button>
   ));
 
-const StyledForm = styled(Form)`
+const FormNoMargin = styled(Form)`
   .ant-form-item {
     margin-bottom: 0px;
   }
 `;
 
-function AddAlgorithmForm(props) {
-  const [algoData, setAlgoData] = useState(algorithmModalTemplate);
+const AddAlgorithmForm = ({ form }) => {
   const [buildType, setBuildType] = useState('code');
-  const [file, setFile] = useState(undefined);
 
-  const dispatch = useDispatch();
-
-  const dragProps = {
-    name: 'file',
-    multiple: false,
-    accept: '.zip,.tar.gz',
-    customRequest: ({ file, onSuccess }) => {
-      setTimeout(() => {
-        setFile(file);
-        onSuccess('OK');
-      }, 0);
-    }
-  };
-
-  const onSubmit = () => {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('payload', JSON.stringify(algoData));
-    dispatch(applyAlgorithm(formData));
-    props.onSubmit();
-  };
+  const { getFieldDecorator, validateFields } = form;
 
   const buildTypes = {
-    code: (
-      <>
-        <Form.Item {...formItemLayout} label={schema.environment}>
-          <Select value={algoData.env} onChange={env => setAlgoData({ ...algoData, env })}>
-            {insertEnvOptions(schema.env)}
-          </Select>
-        </Form.Item>
-        <Form.Item {...formItemLayout} label={schema.entryPoint}>
-          <Input
-            defaultValue={algoData.entryPoint}
-            value={algoData.entryPoint}
-            onChange={e => setAlgoData({ ...algoData, entryPoint: e.target.value })}
-            prefix={<Icon type="login" style={{ color: 'rgba(0,0,0,.25)' }} />}
-            placeholder="Insert Entry Point"
-          />
-        </Form.Item>
-        <Form.Item style={{ marginTop: '15px' }}>
-          <Upload.Dragger {...dragProps}>
-            <p className="ant-upload-drag-icon">
-              <Icon type="inbox" />
-            </p>
-            <p className="ant-upload-text">
-              Click or drag algorithm source code to this area to upload
-            </p>
-            <p className="ant-upload-hint">Support for zip or tar.gz only</p>
-          </Upload.Dragger>
-        </Form.Item>
-      </>
-    ),
-    image: (
-      <Form.Item {...formItemLayout} label={schema.image}>
-        <Input
-          className="input"
-          value={algoData.algorithmImage}
-          onChange={e => setAlgoData({ ...algoData, algorithmImage: e.target.value })}
-          prefix={<Icon type="share-alt" style={{ color: 'rgba(0,0,0,.25)' }} />}
-          placeholder="Insert algorithm image"
-        />
-      </Form.Item>
-    ),
-    git: (
-      <Form.Item {...formItemLayout} label={schema.image}>
-        <Input placeholder="Insert algorithm image" />
-      </Form.Item>
-    )
+    code: <FormItem label={schema.environment}></FormItem>,
+    image: <FormItem label={schema.image}></FormItem>,
+    git: <FormItem label={schema.image}></FormItem>
+  };
+
+  const onSubmit = e => {
+    e.preventDefault();
+    validateFields((err, values) => {
+      console.log(err);
+      if (!err) {
+        console.log('Received values of form: ', values);
+      }
+    });
   };
 
   return (
     <>
-      <StyledForm>
-        <Form.Item {...formItemLayout} label={schema.name}>
-          <Input
-            className="input"
-            value={algoData.name}
-            onChange={e => setAlgoData({ ...algoData, name: e.target.value })}
-            prefix={<Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }} />}
-            placeholder="Insert algorithm name"
-          />
-        </Form.Item>
-        <Form.Item {...formItemLayout} label="Build Type">
+      <FormNoMargin onSubmit={onSubmit}>
+        <FormItem label={schema.NAME.label}>
+          {getFieldDecorator(schema.NAME.field, {
+            rules: [{ required: true }]
+          })(<Input placeholder="Insert algorithm name" />)}
+        </FormItem>
+        <FormItem label="Build Type">
           <Radio.Group
             defaultValue={buildType}
             buttonStyle="solid"
@@ -156,98 +111,40 @@ function AddAlgorithmForm(props) {
           >
             {insertRadioButtons(buildTypes)}
           </Radio.Group>
-        </Form.Item>
-        <Divider orientation="left">{schema.resources}</Divider>
-        <Form.Item {...formItemLayout} label={schema.cpu}>
-          <InputNumber
-            min={0.1}
-            value={algoData.cpu}
-            defaultValue={algoData.cpu}
-            onChange={v => setAlgoData({ ...algoData, cpu: +v })}
-          />
-        </Form.Item>
-        <Form.Item {...formItemLayout} label={schema.gpu}>
-          <InputNumber
-            min={0}
-            value={algoData.gpu}
-            defaultValue={algoData.gpu}
-            onChange={v => setAlgoData({ ...algoData, gpu: +v })}
-          />
-        </Form.Item>
-        <Form.Item {...formItemLayout} label={schema.memory} labelAlign="left">
-          <FlexBox type="flex" justify="start" gutter={4}>
-            <FlexBox.Item>
-              <InputNumber
-                min={1}
-                value={getMemValue(algoData.mem)}
-                onChange={v => {
-                  const { unit } = _parseUnit(algoData.mem);
-                  setAlgoData({ ...algoData, mem: v + unit });
-                }}
-              />
-            </FlexBox.Item>
-            <FlexBox.Item>
-              <Select
-                value={getMemValue(algoData.mem, true)}
-                style={{ width: '90px' }}
-                onChange={v => {
-                  const { val } = _parseUnit(algoData.mem);
-                  setAlgoData({ ...algoData, mem: val + v });
-                }}
-              >
-                {schema.memoryType.map(value => (
-                  <Option key={value} value={value}>
-                    {value}
-                  </Option>
-                ))}
-              </Select>
-            </FlexBox.Item>
-          </FlexBox>
-        </Form.Item>
-        <Divider orientation="left">{schema.advanced}</Divider>
-        <Form.Item {...formItemLayout} label={schema.minHotWorkers}>
-          <InputNumber
-            min={0}
-            value={Math.floor(algoData.minHotWorkers)}
-            onChange={minHotWorkers => setAlgoData({ ...algoData, minHotWorkers: minHotWorkers })}
-          />
-        </Form.Item>
-        <Form.Item {...formItemLayout} label={schema.options}>
-          <Select
-            className="input"
-            defaultValue={availableOptions(algoData.options)}
-            mode="tags"
-            placeholder="Enable Options"
-            onSelect={key =>
-              setAlgoData({
-                ...algoData,
-                options: {
-                  ...algoData.options,
-                  [key]: !algoData.options[key]
-                }
-              })
-            }
-          >
-            {insertAlgorithmOptions(algoData.options)}
-          </Select>
-        </Form.Item>
-        <Divider orientation="left">{schema.code}</Divider>
-        {buildTypes[buildType]}
-      </StyledForm>
-      <BottomContent
-        width={DRAWER_SIZE.ADD_ALGORITHM}
-        extra={[
-          <Button type="danger" key="clear" onClick={() => setAlgoData(algorithmModalTemplate)}>
-            Clear
-          </Button>
-        ]}
-      >
-        <Button key="Submit" type="primary" onClick={onSubmit}>
-          Submit
-        </Button>
-      </BottomContent>
+        </FormItem>
+        <Divider orientation="left">{schema.RESOURCES}</Divider>
+        <FormItem label={schema.CPU.label}>
+          {getFieldDecorator(schema.CPU.field)(
+            <InputNumber min={0.1} defaultValue={template.cpu} />
+          )}
+        </FormItem>
+        <FormItem label={schema.GPU.label}>
+          {getFieldDecorator(schema.GPU.field)(<InputNumber min={0} defaultValue={template.gpu} />)}
+        </FormItem>
+
+        <BottomContent
+          width={DRAWER_SIZE.ADD_ALGORITHM}
+          extra={[
+            <Button type="danger" key="clear">
+              Clear
+            </Button>
+          ]}
+        >
+          <Form.Item>
+            <Button key="Submit" type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form.Item>
+        </BottomContent>
+      </FormNoMargin>
     </>
   );
-}
+};
 
-export default AddAlgorithmForm;
+export default React.memo(
+  Form.create({
+    validateMessages: {
+      name: 'Hello'
+    }
+  })(AddAlgorithmForm)
+);
