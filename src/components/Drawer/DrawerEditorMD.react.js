@@ -9,10 +9,6 @@ import { Drawer } from '.';
 
 const tabs = { json: 'JSON', description: 'Description' };
 
-notification.config({
-  placement: 'bottomRight'
-});
-
 const configNotificationOnOpen = description => ({
   message: 'Error in Submitted Json',
   description,

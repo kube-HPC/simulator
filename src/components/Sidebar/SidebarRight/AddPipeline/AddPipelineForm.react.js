@@ -444,9 +444,6 @@ export default function AddPipelineForm(props) {
                 ? props.onSubmit(editorIsVisible ? JSON.parse(editorValue) : formData)
                 : setStep(step + 1);
             } catch (e) {
-              notification.config({
-                placement: 'bottomRight'
-              });
               notification.open({
                 message: 'Flow Input Error',
                 description: e.message,

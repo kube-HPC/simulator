@@ -128,12 +128,12 @@ function AddAlgorithmForm(props) {
           placeholder="Insert algorithm image"
         />
       </Form.Item>
+    ),
+    git: (
+      <Form.Item {...formItemLayout} label={schema.image}>
+        <Input placeholder="Insert algorithm image" />
+      </Form.Item>
     )
-    // git: (
-    //   <Form.Item {...formItemLayout} label={schema.image}>
-    //     <Input placeholder="Insert algorithm image" />
-    //   </Form.Item>
-    // )
   };
 
   return (

@@ -11,10 +11,6 @@ import { execRawPipeline } from 'actions/pipeline.action';
 const DEFAULT_VALUE = stringify(addPipelineTemplate);
 const warningIcon = <Icon type="warning" style={{ color: 'red' }} />;
 
-notification.config({
-  placement: 'bottomRight'
-});
-
 const notificationOnOpenConfig = message => ({
   message: 'Error in Submitted Json',
   description: message,

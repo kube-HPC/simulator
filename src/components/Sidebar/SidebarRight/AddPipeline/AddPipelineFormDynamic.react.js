@@ -34,9 +34,6 @@ const parseByOption = (option, value) => {
   try {
     out = option === `null` ? null : JSON.parse(value);
   } catch (e) {
-    notification.config({
-      placement: 'bottomRight'
-    });
     notification.open({
       message: `Input is not of type ${option}`,
       description: e.message,

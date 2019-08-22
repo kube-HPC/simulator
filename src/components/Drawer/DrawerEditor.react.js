@@ -9,10 +9,6 @@ const configNotificationOnOpen = description => ({
   icon: <Icon type="warning" style={{ color: 'red' }} />
 });
 
-notification.config({
-  placement: 'bottomRight'
-});
-
 const DrawerEditor = ({ valueString, ...props }) => {
   const [value, setValue] = useState(valueString);
 
