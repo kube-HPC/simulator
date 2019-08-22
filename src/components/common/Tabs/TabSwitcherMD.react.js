@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import { Typography, Icon, Tabs } from 'antd';
+import { Typography, Icon } from 'antd';
 import ReactMarkdown from 'react-markdown';
-import { JsonView } from '..';
+import { JsonView, Tabs } from '..';
 
 const CenterText = styled.div`
   min-height: 30vh;
