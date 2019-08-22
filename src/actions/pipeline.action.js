@@ -1,4 +1,4 @@
-import actions from 'constants/application-actions';
+import actions from 'const/application-actions';
 
 export const addPipeline = pipe => ({
   type: actions.REST_REQ_POST,
@@ -81,7 +81,7 @@ export const cronStop = (name, pattern) => ({
   }
 });
 
-export const execRawPipeline = nominalPipeline => {
+export const rerunRawPipeline = nominalPipeline => {
   const {
     jobId,
     name,
@@ -108,3 +108,12 @@ export const execRawPipeline = nominalPipeline => {
   };
   return action;
 };
+
+export const execRawPipeline = pipeline => ({
+  type: actions.REST_REQ_POST,
+  payload: {
+    url: 'exec/raw',
+    body: pipeline,
+    actionType: actions.PIPELINE_START
+  }
+});

@@ -1,4 +1,4 @@
-import AT from 'constants/application-actions';
+import AT from 'const/application-actions';
 import axios from 'axios';
 import FileSaver from 'file-saver';
 import successMsg from 'config/schema/success-messages.schema';
@@ -40,24 +40,26 @@ const success = (dispatch, payload, action) => {
   });
 };
 
-const _formatError = payload =>
-  typeof payload === 'string' ? payload : payload.message || 'Error';
+const DEFAULT_ERROR_MSG = 'Unexpected Error';
+
+const _formatError = payload => {
+  if (!payload) return DEFAULT_ERROR_MSG;
+  return typeof payload === 'string' ? payload : payload.message || DEFAULT_ERROR_MSG;
+};
 
 const setPath = ({ monitorBackend }) => {
   let _url;
   if (monitorBackend.useLocation) {
     _url = `${location.origin}${monitorBackend.path}`; //eslint-disable-line
   } else {
-    _url = `${monitorBackend.schema}${monitorBackend.host}:${
-      monitorBackend.port
-    }${monitorBackend.path}`;
+    _url = `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}${monitorBackend.path}`;
   }
 
   return _url;
 };
 
 const restMiddleware = ({ dispatch }) => next => action => {
-  if (action.type === `${AT.LAYOUT_GET_CONFIG}_SUCCESS`) {
+  if (action.type === `${AT.SOCKET_GET_CONFIG}_SUCCESS`) {
     url = setPath(action.payload.config);
   } else if (
     ![
@@ -81,8 +83,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
         success(dispatch, res.data, action);
       })
       .catch(err => {
-        const response =
-          err.response && err.response.data && err.response.data.error;
+        const response = err.response && err.response.data && err.response.data.error;
         reject(dispatch, response, action);
       });
 
@@ -138,12 +139,9 @@ const restMiddleware = ({ dispatch }) => next => action => {
     }
     pending(dispatch, 'pending', action);
     axios
-      .delete(
-        `${url}/${action.payload.url}/${action.payload.body.algorithmName}`,
-        {
-          data: action.payload.body
-        }
-      )
+      .delete(`${url}/${action.payload.url}/${action.payload.body.algorithmName}`, {
+        data: action.payload.body
+      })
       .then(res => {
         success(dispatch, res.data, action);
       })

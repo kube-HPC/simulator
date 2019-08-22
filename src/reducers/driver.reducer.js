@@ -1,16 +1,12 @@
 import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
-import actions from 'constants/application-actions';
+import actions from 'const/application-actions';
 
 export const driverTable = handleActions(
   {
-    [actions.LAYOUT_UPDATE_ROW_DATA_TABLE](
-      state,
-      { type, payload, meta, error }
-    ) {
+    [actions.SOCKET_GET_DATA](state, { type, payload, meta, error }) {
       return state.merge({
-        dataSource:
-          (payload.discovery && payload.discovery['pipeline-driver']) || []
+        dataSource: (payload.discovery && payload.discovery['pipeline-driver']) || []
       });
     }
   },

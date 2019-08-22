@@ -1,14 +1,13 @@
 import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
-import actions from 'constants/application-actions';
+import actions from 'const/application-actions';
 
 export const algorithmTable = handleActions(
   {
-    [actions.LAYOUT_UPDATE_ROW_DATA_TABLE](
-      state,
-      { type, payload, meta, error }
-    ) {
-      return state.merge({ dataSource: payload.algorithms });
+    [actions.SOCKET_GET_DATA](currState, { payload }) {
+      const algorithms = payload.algorithms;
+      const isValidPayload = Array.isArray(algorithms);
+      return isValidPayload ? Immutable.set(currState, 'dataSource', algorithms) : currState;
     }
   },
   Immutable.from({ dataSource: [] })
@@ -16,11 +15,8 @@ export const algorithmTable = handleActions(
 
 export const algorithmBuildsTable = handleActions(
   {
-    [actions.LAYOUT_UPDATE_ROW_DATA_TABLE](
-      state,
-      { type, payload, meta, error }
-    ) {
-      return state.merge({ dataSource: payload.algorithmBuilds });
+    [actions.SOCKET_GET_DATA](state, { payload }) {
+      return Immutable.set(state, 'dataSource', payload.algorithmBuilds);
     }
   },
   Immutable.from({ dataSource: [], showModal: false })
@@ -28,10 +24,7 @@ export const algorithmBuildsTable = handleActions(
 
 export const algorithmReadme = handleActions(
   {
-    [actions.README_GET_ALGORITHM_SUCCESS](
-      state,
-      { type, payload, meta, error }
-    ) {
+    [actions.README_GET_ALGORITHM_SUCCESS](state, { payload }) {
       return state.setIn([payload.name], payload);
     }
   },

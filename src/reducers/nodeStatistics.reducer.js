@@ -1,14 +1,13 @@
 import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
-import actions from 'constants/application-actions';
+import actions from 'const/application-actions';
 
 export const nodeStatistics = handleActions(
   {
-    [actions.LAYOUT_UPDATE_ROW_DATA_TABLE](
-      state,
-      { type, payload, meta, error }
-    ) {
-      return state.merge({ dataSource: payload.nodeStatistics });
+    [actions.SOCKET_GET_DATA](currState, { payload }) {
+      const { nodeStatistics } = payload;
+      const validPayload = Array.isArray(nodeStatistics);
+      return validPayload ? Immutable.set(currState, 'dataSource', nodeStatistics) : currState;
     }
   },
   Immutable.from({ dataSource: [] })

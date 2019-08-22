@@ -1,19 +1,15 @@
 import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
-import actions from 'constants/application-actions';
+import actions from 'const/application-actions';
 
-const errorLogsTable = handleActions(
+const initialValue = Immutable.from({ dataSource: [] });
+
+export const errorLogsTable = handleActions(
   {
-    [actions.LAYOUT_UPDATE_ROW_DATA_TABLE](
-      state,
-      { type, payload, meta, error }
-    ) {
-      return state.merge({
-        dataSource: payload.logs || []
-      });
+    [actions.SOCKET_GET_DATA](currState, { payload }) {
+      const { logs } = payload;
+      return logs ? Immutable.set(currState, 'dataSource', logs) : currState;
     }
   },
-  Immutable.from({ dataSource: [] })
+  initialValue
 );
-
-export default errorLogsTable;

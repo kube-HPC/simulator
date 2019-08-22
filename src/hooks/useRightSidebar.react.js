@@ -1,23 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-
-import { ReactComponent as IconAddPipeline } from 'images/no-fill/add-pipeline.svg';
-import { ReactComponent as IconAddAlgorithm } from 'images/no-fill/add-algorithm.svg';
-import { ReactComponent as IconAddDebug } from 'images/no-fill/add-debug.svg';
-
-import { RIGHT_SIDEBAR_NAMES } from 'constants/sidebar-names';
-import { makeToggle } from 'utils/hooks';
 
 import {
   AddPipeline,
   AddAlgorithmForm,
   AddDebug,
-  ErrorLogsTable
-} from 'components/Layout/SidebarRight';
+  ErrorLogsTable,
+  RunRawPipeline,
+  IconAddPipeline,
+  IconAddAlgorithm,
+  IconAddDebug,
+  IconRawFile
+} from 'components/Sidebar/SidebarRight';
 
-import useErrorLogs from './useErrorLogs.react';
-import { NodeStatistics } from 'components/tables';
-import { STATE_SOURCES } from 'reducers/root.reducer';
+import { useErrorLogs } from 'hooks';
+import { NodeStatistics } from 'components';
+import { STATE_SOURCES, RIGHT_SIDEBAR_NAMES } from 'const';
 
 const menuItems = [
   {
@@ -31,14 +29,17 @@ const menuItems = [
   {
     name: RIGHT_SIDEBAR_NAMES.ADD_DEBUG,
     component: IconAddDebug
+  },
+  {
+    name: RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE,
+    component: IconRawFile
   }
 ];
 
 const mapBySize = node => node.size;
 const sumArr = (total, curr) => total + curr;
 const flatAllStats = nodeArr => nodeArr.map(mapBySize);
-const flatByFree = nodeArr =>
-  nodeArr.filter(node => node.name === 'free').map(mapBySize);
+const flatByFree = nodeArr => nodeArr.filter(node => node.name === 'free').map(mapBySize);
 
 const getColorStatus = stats => {
   if (!(stats && stats.results)) return '';
@@ -55,29 +56,21 @@ const getColorStatus = stats => {
 };
 
 const useRightSidebar = () => {
-  const [drawerValue, setDrawerValue] = useState(
-    RIGHT_SIDEBAR_NAMES.ADD_PIPELINE
-  );
+  const [drawerValue, setDrawerValue] = useState(RIGHT_SIDEBAR_NAMES.ADD_PIPELINE);
   const [drawerIsVisible, setDrawerIsVisible] = useState(false);
-  const toggleDrawerVisible = makeToggle(setDrawerIsVisible);
+  const toggleDrawerVisible = useCallback(() => setDrawerIsVisible(p => !p), [setDrawerIsVisible]);
 
   const operationSelector = {
-    [RIGHT_SIDEBAR_NAMES.ADD_PIPELINE]: (
-      <AddPipeline onSubmit={toggleDrawerVisible} />
-    ),
-    [RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM]: (
-      <AddAlgorithmForm onSubmit={toggleDrawerVisible} />
-    ),
-    [RIGHT_SIDEBAR_NAMES.ADD_DEBUG]: (
-      <AddDebug onSubmit={toggleDrawerVisible} />
-    ),
+    [RIGHT_SIDEBAR_NAMES.ADD_PIPELINE]: <AddPipeline onSubmit={toggleDrawerVisible} />,
+    [RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM]: <AddAlgorithmForm onSubmit={toggleDrawerVisible} />,
+    [RIGHT_SIDEBAR_NAMES.ADD_DEBUG]: <AddDebug onSubmit={toggleDrawerVisible} />,
+    [RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE]: <RunRawPipeline onSubmit={toggleDrawerVisible} />,
     [RIGHT_SIDEBAR_NAMES.CPU]: <NodeStatistics metric="cpu" />,
     [RIGHT_SIDEBAR_NAMES.MEMORY]: <NodeStatistics metric="mem" />,
     [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: <ErrorLogsTable />
   };
 
   const { totalNewWarnings, setIsCleared } = useErrorLogs();
-
   const cpuStatusRef = useRef('');
   const memoryStatusRef = useRef('');
 
@@ -85,13 +78,10 @@ const useRightSidebar = () => {
     state => state[STATE_SOURCES.NODE_STATISTICS].dataSource
   );
 
-  useEffect(
-    () => {
-      cpuStatusRef.current = getColorStatus(cpuStats);
-      memoryStatusRef.current = getColorStatus(memoryStats);
-    },
-    [cpuStats, memoryStats]
-  );
+  useEffect(() => {
+    cpuStatusRef.current = getColorStatus(cpuStats);
+    memoryStatusRef.current = getColorStatus(memoryStats);
+  }, [cpuStats, memoryStats]);
 
   const menuBottomRightItems = [
     {
@@ -111,20 +101,20 @@ const useRightSidebar = () => {
     }
   ];
 
-  const onSelectDrawer = selection => {
-    if (selection === RIGHT_SIDEBAR_NAMES.ERROR_LOGS) {
-      setIsCleared(true);
-    }
-    setDrawerValue(selection);
-    toggleDrawerVisible();
-  };
+  const onSelectDrawer = useCallback(
+    selection => {
+      if (selection === RIGHT_SIDEBAR_NAMES.ERROR_LOGS) setIsCleared(true);
+      setDrawerValue(selection);
+      toggleDrawerVisible();
+    },
+    [setIsCleared, toggleDrawerVisible]
+  );
 
   return {
     selector: operationSelector,
     onSelect: onSelectDrawer,
     value: [drawerValue, setDrawerValue],
     isCollapsed: [drawerIsVisible, setDrawerIsVisible],
-    toggle: toggleDrawerVisible,
     menus: {
       menuBottomRightItems,
       menuItems

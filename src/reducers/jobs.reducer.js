@@ -1,32 +1,23 @@
 import { handleActions } from 'redux-actions';
-import dateformat from 'dateformat';
 import Immutable from 'seamless-immutable';
-import actions from 'constants/application-actions';
+import actions from 'const/application-actions';
+
+const DEFAULT_VALUE = [];
+const initialValue = Immutable.from({ dataSource: DEFAULT_VALUE });
 
 export const jobsTable = handleActions(
   {
-    [actions.LAYOUT_UPDATE_ROW_DATA_TABLE](
-      state,
-      { type, payload, meta, error }
-    ) {
-      const timedData = payload.jobs.map(d => {
-        if (d.status) {
-          d.status.timestamp = dateformat(
-            d.status.timestamp,
-            'd/mm/yy, HH:MM:ss'
-          );
-        }
-        return d;
-      });
-      return state.merge({ dataSource: timedData });
+    [actions.SOCKET_GET_DATA](currJobs, { payload }) {
+      const { jobs } = payload;
+      return Immutable.from({ dataSource: jobs || DEFAULT_VALUE });
     }
   },
-  Immutable.from({ dataSource: [] })
+  initialValue
 );
 
 export const jobsJaeger = handleActions(
   {
-    [actions.JOBS_JAEGER_SUCCESS](state, { type, payload, meta, error }) {
+    [actions.JOBS_JAEGER_SUCCESS](state, { payload }) {
       return state.setIn([Object.keys(payload)[0]], payload);
     }
   },
@@ -39,5 +30,5 @@ export const jobsKubernetesLogs = handleActions(
       return state.merge({ dataSource: payload });
     }
   },
-  Immutable.from({ dataSource: [] })
+  initialValue
 );

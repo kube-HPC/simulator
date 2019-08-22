@@ -1,4 +1,4 @@
-import actions from 'constants/application-actions';
+import actions from 'const/application-actions';
 
 export const getJaegerData = jobId => ({
   type: actions.REST_REQ,
@@ -16,7 +16,7 @@ export const downloadStorageResults = path => ({
   }
 });
 
-export const getKubernetesLogsData = ({ podName, taskId } = {}) => ({
+export const getKubernetesLogsData = ({ podName, taskId }) => ({
   type: actions.REST_REQ,
   payload: {
     url: `/logs?podName=${podName}&taskId=${taskId}`,
@@ -24,7 +24,7 @@ export const getKubernetesLogsData = ({ podName, taskId } = {}) => ({
   }
 });
 
-export const getCaching = (jobId, nodeName) => ({
+export const getCaching = ({ jobId, nodeName }) => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: 'exec/caching',

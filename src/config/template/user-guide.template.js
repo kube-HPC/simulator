@@ -31,8 +31,7 @@ export const jobsTableMock = [
       pipeline: 'bool',
       data: {
         storageInfo: {
-          path:
-            'pub-hkube-results/bool:66998f79-545e-4e1f-985c-7453001a7be3.bool/result.json'
+          path: 'pub-hkube-results/bool:66998f79-545e-4e1f-985c-7453001a7be3.bool/result.json'
         }
       },
       status: 'completed',
@@ -47,11 +46,7 @@ export const jobsTableMock = [
           algorithmName: 'eval-alg',
           input: ['@flowInput.inputs'],
           extraData: {
-            code: [
-              '(input,require)=> {',
-              'const txt = input[0];',
-              'return txt;}'
-            ]
+            code: ['(input,require)=> {', 'const txt = input[0];', 'return txt;}']
           }
         }
       ],
@@ -230,8 +225,7 @@ export const jobsTableMock = [
       pipeline: 'simple',
       data: {
         storageInfo: {
-          path:
-            'pub-hkube-results/simple:c503934b-96cd-4c97-a076-36132f3fc7ba.simple/result.json'
+          path: 'pub-hkube-results/simple:c503934b-96cd-4c97-a076-36132f3fc7ba.simple/result.json'
         }
       },
       status: 'completed',

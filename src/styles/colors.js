@@ -1,9 +1,10 @@
-import { SERVICES } from '../constants/services';
+import { SERVICES } from '../const/services';
+import { PIPELINE_STATES, LOGGER_LEVEL } from 'const';
 
 export const COLOR = {
   blue: '#307fe6',
   blueLight: '#45a9ec',
-  blueDark: '#0031e5',
+  cyan: '#98dbef',
   darkGrey: '#807c7c',
   grey: '#ccc',
   lightGreen: '#87d068',
@@ -14,7 +15,8 @@ export const COLOR = {
   transparentGrey: '#bfbfbf21',
   yellow: '#eeda13',
   white: 'white',
-  pink: '#e543b4'
+  pink: '#e543b4',
+  transparentBlack: '#00000073'
 };
 
 // View all services colors @ https://github.com/kube-HPC/hkube/labels
@@ -63,28 +65,39 @@ export const SERVICE_COLOR = {
 
 export const COLOR_LAYOUT = {
   background: COLOR.transparentGrey,
+  backgroundOnModal: COLOR.transparentBlack,
   border: COLOR.lightGrey,
   colorPrimary: COLOR.blue,
   darkBorder: COLOR.grey
 };
 
 export const COLOR_PIPELINE_STATUS = {
-  active: COLOR.blueLight,
+  [PIPELINE_STATES.ACTIVE]: COLOR.blueLight,
   bootstrap: COLOR.lightGreen,
-  completed: COLOR.lightGreen,
+  [PIPELINE_STATES.COMPLETED]: COLOR.lightGreen,
   creating: COLOR.yellow,
-  failed: COLOR.red,
-  init: COLOR.lightGreen,
+  [PIPELINE_STATES.FAILED]: COLOR.red,
+  [PIPELINE_STATES.INIT]: COLOR.lightGreen,
   inProgress: COLOR.yellow,
-  pending: COLOR.darkGrey,
+  [PIPELINE_STATES.PENDING]: COLOR.darkGrey,
   ready: COLOR.lightGreen,
   recovering: COLOR.darkGrey,
   skipped: COLOR.yellow,
-  stalled: COLOR.red,
+  [PIPELINE_STATES.STALLED]: COLOR.red,
   stopped: COLOR.orange,
-  stopping: COLOR.orange,
-  succeed: COLOR.lightGreen,
-  preschedule: COLOR.blueDark
+  [PIPELINE_STATES.STOPPING]: COLOR.orange,
+  [PIPELINE_STATES.SUCCEED]: COLOR.lightGreen,
+  [PIPELINE_STATES.PRESCHEDULE]: COLOR.cyan
+};
+
+export const COLOR_LOGGER = {
+  [LOGGER_LEVEL.INFO]: COLOR.blueLight,
+  [LOGGER_LEVEL.WARN]: COLOR.yellow,
+  [LOGGER_LEVEL.ERROR]: COLOR.red,
+  [LOGGER_LEVEL.CRITICAL]: COLOR.orange,
+  [LOGGER_LEVEL.DEBUG]: COLOR.lightGreen,
+  [LOGGER_LEVEL.TRACE]: COLOR.lightGrey,
+  [LOGGER_LEVEL.SILLY]: COLOR.grey
 };
 
 export const COLOR_PRIORITY = {

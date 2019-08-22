@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react';
 import { animated, useSpring } from 'react-spring';
 import styled from 'styled-components';
 
-import LoadingScreen from 'components/Layout/LoadingScreen.react';
+import LoadingScreen from 'components/LoadingScreen/LoadingScreen.react';
 
 const Circle = styled(animated.div)`
   background: palevioletred;

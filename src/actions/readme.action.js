@@ -1,4 +1,4 @@
-import actions from 'constants/application-actions';
+import actions from 'const/application-actions';
 
 const _getReadme = (type, name, actionType) => ({
   type: actions.REST_REQ,
@@ -17,8 +17,7 @@ const _postReadme = (type, name, actionType, readme) => ({
   }
 });
 
-export const getPipelineReadme = name =>
-  _getReadme('pipelines', name, actions.README_GET_PIPELINE);
+export const getPipelineReadme = name => _getReadme('pipelines', name, actions.README_GET_PIPELINE);
 export const getAlgorithmReadme = name =>
   _getReadme('algorithms', name, actions.README_GET_ALGORITHM);
 export const postPipelineReadme = (name, readme) =>

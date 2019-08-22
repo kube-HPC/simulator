@@ -3,9 +3,9 @@ import { storiesOf } from '@storybook/react';
 
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
-import AddDebugReact from 'components/Layout/SidebarRight/AddDebug.react';
+import AddDebugReact from 'components/Sidebar/SidebarRight/AddDebug.react';
 import rootReducer from 'reducers/root.reducer';
-import DrawerOperations from 'components/common/drawer/DrawerOperations.react';
+import DrawerOperations from 'components/Drawer/DrawerOperations.react';
 
 const store = createStore(rootReducer);
 

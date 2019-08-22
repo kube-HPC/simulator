@@ -4,20 +4,16 @@ import { createStore } from 'redux';
 
 import { storiesOf } from '@storybook/react';
 
-import AddAlgorithmForm from 'components/Layout/SidebarRight/AddAlgorithmForm.react';
+import AddAlgorithmForm from 'components/Sidebar/SidebarRight/AddAlgorithmForm.react';
 import rootReducer from 'reducers/root.reducer';
-import DrawerOperations from 'components/common/drawer/DrawerOperations.react';
+import DrawerOperations from 'components/Drawer/DrawerOperations.react';
 
 const store = createStore(rootReducer);
 
 storiesOf('Basics|AddAlgorithmModal', module)
   .add('Default', () => (
     <Provider store={store}>
-      <AddAlgorithmForm
-        visible={true}
-        onSubmit={() => {}}
-        toggleVisible={() => {}}
-      />
+      <AddAlgorithmForm visible={true} onSubmit={() => {}} toggleVisible={() => {}} />
     </Provider>
   ))
   .add('In Drawer', () => (

@@ -1,12 +1,15 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import store from 'store';
-import HKubeLayout from 'components/Layout/HKubeLayout.react';
+import store from './store';
+import { ErrorBoundary } from 'components';
+import DashboardReact from './components/Dashboard/Dashboard.react';
 
 render(
   <Provider store={store}>
-    <HKubeLayout />
+    <ErrorBoundary>
+      <DashboardReact />
+    </ErrorBoundary>
   </Provider>,
   document.getElementById('root')
 );

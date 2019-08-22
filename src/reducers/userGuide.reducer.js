@@ -1,32 +1,27 @@
 import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
-import actions from 'constants/application-actions';
-import LOCAL_STORAGE_KEYS from 'constants/local-storage';
-import { getBooleanLSItem } from 'utils/localStorage';
+import actions from 'const/application-actions';
+import LOCAL_STORAGE_KEYS from 'const/local-storage';
+import { getBooleanLSItem, getLSItem } from 'utils/localStorage';
 
-let isOn = getBooleanLSItem(LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS);
+// When LS not available, show tutorial.
+const isOn = getLSItem(LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS)
+  ? getBooleanLSItem(LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS)
+  : true;
 
-const userGuideStatus = Immutable.from({
+const userGuideInitialStatus = Immutable.from({
   stepIndex: 0,
   isOn
 });
 
-const userGuide = handleActions(
+export const userGuide = handleActions(
   {
-    [actions.USER_GUIDE_CHANGE_STEP](state, { payload }) {
-      console.log(payload);
-      return state.merge({
-        stepIndex: payload
-      });
+    [actions.USER_GUIDE_CHANGE_STEP](userGuide, { stepIndex }) {
+      return Immutable.set(userGuide, 'stepIndex', stepIndex);
     },
-    [actions.USER_GUIDE_TRIGGER](state) {
-      return state.merge({
-        stepIndex: 0,
-        isOn: !state.isOn
-      });
+    [actions.USER_GUIDE_TRIGGER](userGuide) {
+      return Immutable.set(userGuideInitialStatus, 'isOn', !userGuide.isOn);
     }
   },
-  Immutable.from(userGuideStatus)
+  userGuideInitialStatus
 );
-
-export default userGuide;
