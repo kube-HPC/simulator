@@ -119,70 +119,73 @@ function Dashboard() {
   return (
     <>
       <GlobalStyle />
-      <UserGuide triggerLeftVisible={triggerLeftVisible} setLeftValue={setLeftValue} />
-      {!isDataAvailable && <LoadingScreen />}
-      {isDataAvailable && (
-        <LayoutFullHeight>
-          <SidebarLeft
-            className={USER_GUIDE.SIDEBAR_LEFT}
-            selectedKeys={leftSelectedKeys}
-            onSelect={setLeftValue}
-            collapsed={!leftIsCollapsed}
-          />
-          <Layout>
-            <Header className={USER_GUIDE.WELCOME}>
-              <FlexBox>
-                <Icons.Hover
-                  type={leftIsCollapsed ? 'menu-fold' : 'menu-unfold'}
-                  onClick={triggerLeftVisible}
-                />
-                <AutoComplete table={tableValue} className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
-                <HelpBar className={USER_GUIDE.HEADER.SOCIALS}>
-                  {!isSocketConnected && (
-                    <Tag color="orange">
-                      <Tooltip title="Reconnecting to Socket...">
-                        <FlexBox>
-                          <FlexBox.Item>
-                            <Typography.Text>Offline Mode</Typography.Text>
-                          </FlexBox.Item>
-                          <FlexBox.Item>
-                            <Icon type="disconnect" />
-                          </FlexBox.Item>
-                        </FlexBox>
-                      </Tooltip>
-                    </Tag>
-                  )}
-                  <Icons.Hover type="global" onClick={openWebsite} />
-                  <Icons.Hover type="github" onClick={openGithub} />
-                  <Icons.Hover type="question-circle" onClick={onGuideClick} />
-                  <DarkText>{appVersion}</DarkText>
-                </HelpBar>
-              </FlexBox>
-            </Header>
-            <LayoutFullHeight>
-              <ContentMargin>{tableSelector[tableValue]}</ContentMargin>
-              <RightSidebarsFlex>
-                <SidebarRight
-                  className={USER_GUIDE.SIDEBAR_TOP_RIGHT}
-                  onSelect={onSelectDrawer}
-                  menuItems={menuItems}
-                />
-                <SidebarRight
-                  className={USER_GUIDE.SIDEBAR_BOTTOM_RIGHT}
-                  onSelect={onSelectDrawer}
-                  menuItems={menuBottomRightItems}
-                />
-              </RightSidebarsFlex>
-              <DrawerOperations
-                visible={drawerIsVisible}
-                onClose={toggleDrawerVisible}
-                operation={drawerValue}
-              >
-                {operationSelector[drawerValue]}
-              </DrawerOperations>
-            </LayoutFullHeight>
-          </Layout>
-        </LayoutFullHeight>
+      {isDataAvailable ? (
+        <>
+          <UserGuide triggerLeftVisible={triggerLeftVisible} setLeftValue={setLeftValue} />
+          <LayoutFullHeight>
+            <SidebarLeft
+              className={USER_GUIDE.SIDEBAR_LEFT}
+              selectedKeys={leftSelectedKeys}
+              onSelect={setLeftValue}
+              collapsed={!leftIsCollapsed}
+            />
+            <Layout>
+              <Header className={USER_GUIDE.WELCOME}>
+                <FlexBox>
+                  <Icons.Hover
+                    type={leftIsCollapsed ? 'menu-fold' : 'menu-unfold'}
+                    onClick={triggerLeftVisible}
+                  />
+                  <AutoComplete table={tableValue} className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
+                  <HelpBar className={USER_GUIDE.HEADER.SOCIALS}>
+                    {!isSocketConnected && (
+                      <Tag color="orange">
+                        <Tooltip title="Reconnecting to Socket...">
+                          <FlexBox>
+                            <FlexBox.Item>
+                              <Typography.Text>Offline Mode</Typography.Text>
+                            </FlexBox.Item>
+                            <FlexBox.Item>
+                              <Icon type="disconnect" />
+                            </FlexBox.Item>
+                          </FlexBox>
+                        </Tooltip>
+                      </Tag>
+                    )}
+                    <Icons.Hover type="global" onClick={openWebsite} />
+                    <Icons.Hover type="github" onClick={openGithub} />
+                    <Icons.Hover type="question-circle" onClick={onGuideClick} />
+                    <DarkText>{appVersion}</DarkText>
+                  </HelpBar>
+                </FlexBox>
+              </Header>
+              <LayoutFullHeight>
+                <ContentMargin>{tableSelector[tableValue]}</ContentMargin>
+                <RightSidebarsFlex>
+                  <SidebarRight
+                    className={USER_GUIDE.SIDEBAR_TOP_RIGHT}
+                    onSelect={onSelectDrawer}
+                    menuItems={menuItems}
+                  />
+                  <SidebarRight
+                    className={USER_GUIDE.SIDEBAR_BOTTOM_RIGHT}
+                    onSelect={onSelectDrawer}
+                    menuItems={menuBottomRightItems}
+                  />
+                </RightSidebarsFlex>
+                <DrawerOperations
+                  visible={drawerIsVisible}
+                  onClose={toggleDrawerVisible}
+                  operation={drawerValue}
+                >
+                  {operationSelector[drawerValue]}
+                </DrawerOperations>
+              </LayoutFullHeight>
+            </Layout>
+          </LayoutFullHeight>
+        </>
+      ) : (
+        <LoadingScreen />
       )}
     </>
   );
