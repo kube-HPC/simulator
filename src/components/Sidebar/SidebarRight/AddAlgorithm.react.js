@@ -143,7 +143,7 @@ const getMemoryUnits = str => {
   return { value, unit };
 };
 
-const AddAlgorithm = ({ form, onSubmit }) => {
+const AddAlgorithm = ({ form }) => {
   const [buildType, setBuildType] = useState(schema.BUILD_TYPES.CODE.label);
   const [fileList, setFileList] = useState(undefined);
   const [mem, setMem] = useState(getMemoryUnits(template.mem));
@@ -167,7 +167,6 @@ const AddAlgorithm = ({ form, onSubmit }) => {
         formData.append('file', file);
         formData.append('payload', JSON.stringify(payload));
         dispatch(applyAlgorithm(formData));
-        onSubmit();
       }
     });
   };
@@ -251,8 +250,7 @@ const AddAlgorithm = ({ form, onSubmit }) => {
 };
 
 AddAlgorithm.propTypes = {
-  form: PropTypes.object.isRequired,
-  onSubmit: PropTypes.func.isRequired
+  form: PropTypes.object.isRequired
 };
 
 export default React.memo(Form.create({})(AddAlgorithm));

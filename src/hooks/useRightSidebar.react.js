@@ -61,10 +61,10 @@ const useRightSidebar = () => {
   const toggleDrawerVisible = useCallback(() => setDrawerIsVisible(p => !p), [setDrawerIsVisible]);
 
   const operationSelector = {
-    [RIGHT_SIDEBAR_NAMES.ADD_PIPELINE]: <AddPipeline onSubmit={toggleDrawerVisible} />,
-    [RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM]: <AddAlgorithm onSubmit={toggleDrawerVisible} />,
-    [RIGHT_SIDEBAR_NAMES.ADD_DEBUG]: <AddDebug onSubmit={toggleDrawerVisible} />,
-    [RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE]: <RunRawPipeline onSubmit={toggleDrawerVisible} />,
+    [RIGHT_SIDEBAR_NAMES.ADD_PIPELINE]: <AddPipeline />,
+    [RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM]: <AddAlgorithm />,
+    [RIGHT_SIDEBAR_NAMES.ADD_DEBUG]: <AddDebug />,
+    [RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE]: <RunRawPipeline />,
     [RIGHT_SIDEBAR_NAMES.CPU]: <NodeStatistics metric="cpu" />,
     [RIGHT_SIDEBAR_NAMES.MEMORY]: <NodeStatistics metric="mem" />,
     [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: <ErrorLogsTable />
