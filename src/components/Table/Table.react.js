@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Table as AntTable, Icon, Spin } from 'antd';
 import { USER_GUIDE } from 'const';
 
+
 const ExpandIcon = ({ expanded, onExpand, record }) => (
   <Icon type={expanded ? 'down' : 'right'} onClick={e => onExpand(record, e)} />
 );
