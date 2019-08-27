@@ -5,17 +5,14 @@ import driversTableColumns from 'components/Tables/Drivers/DriversTableColumns.r
 import JsonView from 'components/common/Json/JsonView.react';
 import Table from 'components/Table/Table.react';
 import Card from 'components/common/Card.react';
-import { createSelector } from 'reselect';
+import {} from 'utils';
+import { LEFT_SIDEBAR_NAMES } from 'const';
+import { tableFilterSelector } from 'utils/hooks';
 
-const tableDataSelector = createSelector(
-  state => state.driverTable.dataSource.asMutable(),
-  state => state.autoCompleteFilter.filter,
-  (dataSource, filter) =>
-    dataSource && dataSource.filter(driver => driver.driverId.includes(filter))
-);
+const dataSelector = tableFilterSelector(LEFT_SIDEBAR_NAMES.DRIVERS);
 
 export default function DriversTable() {
-  const dataSource = useSelector(tableDataSelector);
+  const dataSource = useSelector(dataSelector);
   return (
     <Table
       rowKey={record => record.driverId}

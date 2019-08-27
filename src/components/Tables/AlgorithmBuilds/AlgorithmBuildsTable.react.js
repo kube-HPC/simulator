@@ -1,27 +1,21 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { createSelector } from 'reselect';
 
 import groupby from 'lodash/groupBy';
 
 import { cancelBuild, rerunBuild } from 'actions/builds.action';
 
-import {
-  buildsTableColumns,
-  nestedBuildsTableColumns
-} from 'components/Tables/AlgorithmBuilds/AlgorithmBuildsTableColumns.react';
+import { buildsTableColumns, nestedBuildsTableColumns } from './AlgorithmBuildsTableColumns.react';
 
 import { Card, JsonView } from 'components/common';
 import { Table } from 'components';
+import { tableFilterSelector } from 'utils/hooks';
+import { LEFT_SIDEBAR_NAMES } from 'const';
 
-const tableDataSelector = createSelector(
-  state => state.algorithmBuildsTable.dataSource.asMutable(),
-  state => state.autoCompleteFilter.filter,
-  (dataSource, filter) => dataSource && dataSource.filter(build => build.buildId.includes(filter))
-);
+const dataSelector = tableFilterSelector(LEFT_SIDEBAR_NAMES.BUILDS);
 
 function AlgorithmBuildsTable() {
-  const dataSource = useSelector(tableDataSelector);
+  const dataSource = useSelector(dataSelector);
   const dispatch = useDispatch();
 
   const onCancel = data => dispatch(cancelBuild(data));

@@ -1,17 +1,15 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getJaegerData as _getJaegerData } from 'actions/jobs.action';
-import { tableDataSelector } from 'utils/hooks';
+import { tableFilterSelector } from 'utils/hooks';
 import { useCallback, useMemo } from 'react';
 import { isEqual } from 'lodash';
 
-import { STATE_SOURCES, USER_GUIDE } from 'const';
+import { USER_GUIDE, LEFT_SIDEBAR_NAMES } from 'const';
 import { JobsTabSwitcher, getJobsColumns } from 'components/Tables/Jobs';
 import { Card } from 'components/common';
 
-const dataSelector = tableDataSelector(STATE_SOURCES.JOBS_TABLE, filter => row =>
-  row.key.includes(filter)
-);
+const dataSelector = tableFilterSelector(LEFT_SIDEBAR_NAMES.JOBS);
 
 const initialJobRecord = ({ record, jaeger }) => ({
   key: record.key,

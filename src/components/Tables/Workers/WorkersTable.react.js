@@ -9,8 +9,8 @@ import {
 } from 'components/Tables/Workers/getWorkersColumns.react';
 
 import { Tabs, Card, JsonView } from 'components/common';
-import { STATE_SOURCES } from 'const';
-import { tableDataSelector } from 'utils/hooks';
+import { LEFT_SIDEBAR_NAMES } from 'const';
+import { tableFilterSelector } from 'utils/hooks';
 import { Table } from 'components';
 
 const generateTab = (key, value) => (
@@ -41,9 +41,7 @@ const expandedRowRender = (columns, dataSource) => record => {
   );
 };
 
-const dataSelector = tableDataSelector(STATE_SOURCES.WORKER_TABLE, filter => row =>
-  row.algorithmName.includes(filter)
-);
+const dataSelector = tableFilterSelector(LEFT_SIDEBAR_NAMES.WORKERS);
 
 function WorkersTable() {
   const dataSource = useSelector(dataSelector);

@@ -2,14 +2,14 @@ import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
 import actions from 'const/application-actions';
 
-const DEFAULT_VALUE = [];
+const DEFAULT_VALUE = undefined;
 const initialValue = Immutable.from({ dataSource: DEFAULT_VALUE });
 
 export const jobsTable = handleActions(
   {
     [actions.SOCKET_GET_DATA](currJobs, { payload }) {
       const { jobs } = payload;
-      return Immutable.from({ dataSource: jobs || DEFAULT_VALUE });
+      return Immutable.from({ dataSource: jobs });
     }
   },
   initialValue
