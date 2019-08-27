@@ -9,15 +9,10 @@ import { Input, Icon, Select, InputNumber, Upload, Divider, Form, Button, Radio 
 import { applyAlgorithm } from 'actions/algorithm.action';
 import { toUpperCaseFirstLetter } from 'utils/string';
 import { DRAWER_SIZE } from 'const';
-import { FlexBox, BottomContent } from 'components/common';
+import { BottomContent } from 'components/common';
 import { algorithmModalTemplate as template, algorithmModalSchema as schema } from 'config';
 
 const Option = Select.Option;
-
-const _parseUnit = obj => {
-  const [val, unit] = parseUnit(obj);
-  return { val, unit };
-};
 
 const insertAlgorithmOptions = options =>
   Object.entries(options).map(([key]) => (
@@ -33,13 +28,7 @@ const insertEnvOptions = options =>
     </Option>
   ));
 
-const availableOptions = options =>
-  Object.entries(options)
-    .filter(([, value]) => value)
-    .map(([key]) => key);
-
 const LABEL_SPAN = 5;
-
 const formItemLayout = {
   labelCol: { span: LABEL_SPAN },
   wrapperCol: { span: 24 - LABEL_SPAN },
@@ -53,11 +42,6 @@ const FormItem = ({ children, ...props }) => (
 );
 
 FormItem.propTypes = Form.Item.propTypes;
-
-const getMemValue = (mem, isReturnUnit) => {
-  const { val, unit } = _parseUnit(mem);
-  return isReturnUnit ? unit : val;
-};
 
 const insertRadioButtons = buildTypes =>
   Object.entries(buildTypes).map(([type]) => (
@@ -80,32 +64,34 @@ const FormDivider = ({ children, ...props }) => (
 
 FormDivider.propTypes = Divider.propTypes;
 
-const AddAlgorithmForm = ({ form }) => {
-  const [buildType, setBuildType] = useState('code');
-  const [file, setFile] = useState(undefined);
-
-  const { getFieldDecorator, validateFields } = form;
-
+const getBuildTypes = ({ getFieldDecorator, setFile }) => {
   const draggerProps = {
     name: 'file',
     multiple: false,
     accept: '.zip,.tar.gz',
     customRequest: ({ file, onSuccess }) => {
-      setFile(file);
-      onSuccess('OK');
+      setTimeout(() => {
+        setFile(file);
+        onSuccess('OK');
+      }, 0);
     }
   };
 
-  const buildTypes = {
+  const { CODE, IMAGE } = schema.BUILD_TYPES;
+
+  return {
     code: (
       <>
-        <FormItem label={schema.BUILD_TYPES.CODE.ENVIRONMENT.label}>
-          {getFieldDecorator(schema.BUILD_TYPES.CODE.ENVIRONMENT.field, {
+        <FormItem label={CODE.ENVIRONMENT.label}>
+          {getFieldDecorator(CODE.ENVIRONMENT.field, {
             initialValue: template.env
-          })(<Select>{insertEnvOptions(schema.BUILD_TYPES.CODE.ENVIRONMENT.types)}</Select>)}
+          })(<Select>{insertEnvOptions(CODE.ENVIRONMENT.types)}</Select>)}
         </FormItem>
-        <FormItem label={schema.BUILD_TYPES.CODE.ENTRY_POINT.label}>
-          <Input placeholder="Insert Entry Point" />
+        <FormItem label={CODE.ENTRY_POINT.label}>
+          {getFieldDecorator(CODE.ENTRY_POINT.field)(<Input placeholder="Insert Entry Point" />)}
+        </FormItem>
+        <FormItem label={CODE.VERSION.label}>
+          {getFieldDecorator(CODE.VERSION.field)(<Input placeholder="Insert Version" />)}
         </FormItem>
         <FormItem wrapperCol={null} style={{ marginTop: '15px' }}>
           <Upload.Dragger {...draggerProps}>
@@ -120,25 +106,68 @@ const AddAlgorithmForm = ({ form }) => {
         </FormItem>
       </>
     ),
-    image: <FormItem label={schema.image}></FormItem>,
-    git: <FormItem label={schema.image}></FormItem>
+    image: (
+      <FormItem label={IMAGE.label}>
+        {getFieldDecorator(IMAGE.field, {
+          initialValue: template.algorithmImage
+        })(<Input placeholder="Insert algorithm image" />)}
+      </FormItem>
+    )
+    // TODO: Next Feature
+    // ,git: (
+    //   <>
+    //     <FormItem label={GIT.REPOSITORY.label}>
+    //       {getFieldDecorator(GIT.REPOSITORY.field)(<Input placeholder="Enter Git Repository" />)}
+    //     </FormItem>
+    //     <FormItem label={GIT.BRANCH.label}>
+    //       {getFieldDecorator(GIT.BRANCH.field, {
+    //         initialValue: 'master'
+    //       })(<Input placeholder="Enter Branch" />)}
+    //     </FormItem>
+    //     <FormItem label={GIT.TOKEN.label}>
+    //       {getFieldDecorator(GIT.TOKEN.field)(<Input.Password placeholder="Enter Token" />)}
+    //     </FormItem>
+    //   </>
+    // )
   };
+};
 
-  const onSubmit = e => {
+const getMemoryUnits = str => {
+  const [value, unit] = parseUnit(str);
+  return { value, unit };
+};
+
+const AddAlgorithmForm = ({ form, onSubmit }) => {
+  const [buildType, setBuildType] = useState('code');
+  const [file, setFile] = useState(undefined);
+  const [mem, setMem] = useState(getMemoryUnits(template.mem));
+
+  const { getFieldDecorator, validateFields } = form;
+  const buildTypes = getBuildTypes({ getFieldDecorator, setFile });
+
+  const dispatch = useDispatch();
+  const onSubmitClick = e => {
     e.preventDefault();
     validateFields((err, values) => {
-      console.log(err);
       if (!err) {
-        console.log('Received values of form: ', values);
+        const formData = new FormData();
+        const options = values.options.reduce((acc, option) => ({ ...acc, [option]: true }), {});
+        const payload = { ...values, options, mem: `${mem.value}${mem.unit}` };
+        console.log('Submitted Values: ', { payload, file });
+
+        formData.append('file', file);
+        formData.append('payload', JSON.stringify(payload));
+        dispatch(applyAlgorithm(formData));
+        onSubmit();
       }
     });
   };
 
   return (
-    <FormNoMargin onSubmit={onSubmit}>
+    <FormNoMargin onSubmit={onSubmitClick}>
       <FormItem label={schema.NAME.label}>
         {getFieldDecorator(schema.NAME.field, {
-          rules: [{ required: true }]
+          rules: [{ required: true, message: 'Algorithm Name is Required' }]
         })(<Input placeholder="Insert Algorithm Name" />)}
       </FormItem>
       <FormItem label="Build Type">
@@ -162,22 +191,24 @@ const AddAlgorithmForm = ({ form }) => {
         })(<InputNumber min={0} />)}
       </FormItem>
       <FormItem label={schema.MEMORY.label} labelAlign="left">
-        <FlexBox justify="start">
-          <FlexBox.Item>
-            {getFieldDecorator(schema.MEMORY.field, {
-              initialValue: template.mem
-            })(<InputNumber min={1} />)}
-          </FlexBox.Item>
-          <FlexBox.Item>
-            <Select style={{ width: '90px' }}>
-              {schema.MEMORY.memoryTypes.map(value => (
-                <Option key={value} value={value}>
-                  {value}
-                </Option>
-              ))}
-            </Select>
-          </FlexBox.Item>
-        </FlexBox>
+        <Input.Group compact>
+          <InputNumber
+            min={1}
+            defaultValue={getMemoryUnits(template.mem).value}
+            onChange={value => setMem(prev => ({ ...prev, value }))}
+          />
+          <Select
+            style={{ width: '90px' }}
+            defaultValue={getMemoryUnits(template.mem).unit}
+            onSelect={unit => setMem(prev => ({ ...prev, unit }))}
+          >
+            {schema.MEMORY.memoryTypes.map(value => (
+              <Option key={value} value={value}>
+                {value}
+              </Option>
+            ))}
+          </Select>
+        </Input.Group>
       </FormItem>
       <FormDivider>{schema.DIVIDER.ADVANCED}</FormDivider>
       <FormItem label={schema.WORKERS.label}>
@@ -199,14 +230,7 @@ const AddAlgorithmForm = ({ form }) => {
       <FormDivider>{toUpperCaseFirstLetter(buildType)}</FormDivider>
       {buildTypes[buildType]}
 
-      <BottomContent
-        width={DRAWER_SIZE.ADD_ALGORITHM}
-        extra={[
-          <Button type="danger" key="clear">
-            Clear
-          </Button>
-        ]}
-      >
+      <BottomContent width={DRAWER_SIZE.ADD_ALGORITHM}>
         <Form.Item>
           <Button key="Submit" type="primary" htmlType="submit">
             Submit
@@ -217,10 +241,9 @@ const AddAlgorithmForm = ({ form }) => {
   );
 };
 
-export default React.memo(
-  Form.create({
-    validateMessages: {
-      name: 'Hello'
-    }
-  })(AddAlgorithmForm)
-);
+AddAlgorithmForm.propTypes = {
+  form: PropTypes.object.isRequired,
+  onSubmit: PropTypes.func.isRequired
+};
+
+export default React.memo(Form.create({})(AddAlgorithmForm));

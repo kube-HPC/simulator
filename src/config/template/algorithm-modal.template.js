@@ -1,6 +1,5 @@
 export default {
   name: '',
-  algorithmImage: '',
   env: 'python',
   cpu: 1,
   gpu: 0,

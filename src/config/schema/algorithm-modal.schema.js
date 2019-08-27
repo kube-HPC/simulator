@@ -7,8 +7,6 @@ export default {
     label: 'Algorithm Name',
     field: 'name'
   },
-  image: 'Algorithm Image',
-
   CPU: {
     label: 'CPU Usage',
     field: 'cpu'
@@ -22,7 +20,6 @@ export default {
     field: 'mem',
     memoryTypes: ['Ki', 'M', 'Mi', 'Gi', 'm', 'K', 'G', 'T', 'Ti', 'P', 'Pi', 'E', 'Ei']
   },
-
   WORKERS: {
     label: 'Min Hot Workers',
     field: 'minHotWorkers'
@@ -41,14 +38,36 @@ export default {
       ENTRY_POINT: {
         label: 'Entry Point',
         field: 'entryPoint'
+      },
+      DRAGGER: {
+        field: 'dragger'
+      },
+      VERSION: {
+        label: 'Version',
+        field: 'version'
+      }
+    },
+    IMAGE: {
+      label: 'Algorithm Image',
+      field: 'algorithmImage'
+    },
+    GIT: {
+      REPOSITORY: {
+        label: 'Repository',
+        field: 'repository'
+      },
+      BRANCH: {
+        label: 'Branch',
+        field: 'branch'
+      },
+      TOKEN: {
+        label: 'Token',
+        field: 'token'
       }
     }
   },
   OPTIONS: {
     label: 'Options',
     field: 'options'
-  },
-  branch: 'Branch',
-  token: 'Token',
-  repository: 'Repository'
+  }
 };
