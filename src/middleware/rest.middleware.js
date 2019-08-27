@@ -28,6 +28,7 @@ const pending = (dispatch, payload, action) => {
 
 const success = (dispatch, payload, action) => {
   const successMessage = successMsg(payload);
+  debugger;
   dispatch({
     type: `${action.payload.actionType}_SUCCESS`,
     meta: {

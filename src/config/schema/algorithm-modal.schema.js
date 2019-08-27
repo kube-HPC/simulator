@@ -28,7 +28,7 @@ export default {
     CODE: {
       ENVIRONMENT: {
         label: 'Environment',
-        field: 'environment',
+        field: 'env',
         types: {
           python: 'Python',
           nodejs: 'Node.js',
