@@ -6,18 +6,18 @@ import PropTypes from 'prop-types';
 
 import { Input, Icon, Select, InputNumber, Upload, Divider, Form, Button, Radio } from 'antd';
 
-import { applyAlgorithm } from 'actions/algorithm.action';
-import { toUpperCaseFirstLetter } from 'utils/string';
 import { DRAWER_SIZE } from 'const';
 import { BottomContent } from 'components/common';
 import { algorithmModalTemplate as template, algorithmModalSchema as schema } from 'config';
+import { toUpperCaseFirstLetter } from 'utils';
+import { applyAlgorithm } from 'actions';
 
 const Option = Select.Option;
 
 const insertAlgorithmOptions = options =>
-  Object.entries(options).map(([key]) => (
-    <Option key={key.toString()} value={key}>
-      {toUpperCaseFirstLetter(key)}
+  options.map((option, key) => (
+    <Option key={key} value={option}>
+      {toUpperCaseFirstLetter(option)}
     </Option>
   ));
 
@@ -64,7 +64,7 @@ const FormDivider = ({ children, ...props }) => (
 
 FormDivider.propTypes = Divider.propTypes;
 
-const getBuildTypes = ({ getFieldDecorator, setFile }) => {
+const getBuildTypes = ({ getFieldDecorator, file, setFile }) => {
   const draggerProps = {
     name: 'file',
     multiple: false,
@@ -74,7 +74,8 @@ const getBuildTypes = ({ getFieldDecorator, setFile }) => {
         setFile(file);
         onSuccess('OK');
       }, 0);
-    }
+    },
+    fileList: file ? [file] : []
   };
 
   const { CODE, IMAGE } = schema.BUILD_TYPES;
@@ -84,8 +85,12 @@ const getBuildTypes = ({ getFieldDecorator, setFile }) => {
       <>
         <FormItem label={CODE.ENVIRONMENT.label}>
           {getFieldDecorator(CODE.ENVIRONMENT.field, {
-            initialValue: template.env
-          })(<Select>{insertEnvOptions(CODE.ENVIRONMENT.types)}</Select>)}
+            rules: [{ required: true, message: 'Environment required' }]
+          })(
+            <Select placeholder="Pick Environment">
+              {insertEnvOptions(CODE.ENVIRONMENT.types)}
+            </Select>
+          )}
         </FormItem>
         <FormItem label={CODE.ENTRY_POINT.label}>
           {getFieldDecorator(CODE.ENTRY_POINT.field)(<Input placeholder="Insert Entry Point" />)}
@@ -137,13 +142,13 @@ const getMemoryUnits = str => {
   return { value, unit };
 };
 
-const AddAlgorithmForm = ({ form, onSubmit }) => {
+const AddAlgorithm = ({ form, onSubmit }) => {
   const [buildType, setBuildType] = useState('code');
   const [file, setFile] = useState(undefined);
   const [mem, setMem] = useState(getMemoryUnits(template.mem));
 
   const { getFieldDecorator, validateFields } = form;
-  const buildTypes = getBuildTypes({ getFieldDecorator, setFile });
+  const buildTypes = getBuildTypes({ getFieldDecorator, file, setFile });
 
   const dispatch = useDispatch();
   const onSubmitClick = e => {
@@ -223,7 +228,7 @@ const AddAlgorithmForm = ({ form, onSubmit }) => {
             .map(([key]) => key)
         })(
           <Select mode="tags" placeholder="Enable Options">
-            {insertAlgorithmOptions(template.options)}
+            {insertAlgorithmOptions(schema.OPTIONS.types)}
           </Select>
         )}
       </FormItem>
@@ -241,9 +246,9 @@ const AddAlgorithmForm = ({ form, onSubmit }) => {
   );
 };
 
-AddAlgorithmForm.propTypes = {
+AddAlgorithm.propTypes = {
   form: PropTypes.object.isRequired,
   onSubmit: PropTypes.func.isRequired
 };
 
-export default React.memo(Form.create({})(AddAlgorithmForm));
+export default React.memo(Form.create({})(AddAlgorithm));

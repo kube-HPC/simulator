@@ -31,8 +31,7 @@ export default {
         field: 'env',
         types: {
           python: 'Python',
-          nodejs: 'Node.js',
-          jvm: 'JVM'
+          nodejs: 'Node.js'
         }
       },
       ENTRY_POINT: {
@@ -68,6 +67,7 @@ export default {
   },
   OPTIONS: {
     label: 'Options',
-    field: 'options'
+    field: 'options',
+    types: ['debug']
   }
 };

@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 import {
   AddPipeline,
-  AddAlgorithmForm,
+  AddAlgorithm,
   AddDebug,
   ErrorLogsTable,
   RunRawPipeline,
@@ -62,7 +62,7 @@ const useRightSidebar = () => {
 
   const operationSelector = {
     [RIGHT_SIDEBAR_NAMES.ADD_PIPELINE]: <AddPipeline onSubmit={toggleDrawerVisible} />,
-    [RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM]: <AddAlgorithmForm onSubmit={toggleDrawerVisible} />,
+    [RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM]: <AddAlgorithm onSubmit={toggleDrawerVisible} />,
     [RIGHT_SIDEBAR_NAMES.ADD_DEBUG]: <AddDebug onSubmit={toggleDrawerVisible} />,
     [RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE]: <RunRawPipeline onSubmit={toggleDrawerVisible} />,
     [RIGHT_SIDEBAR_NAMES.CPU]: <NodeStatistics metric="cpu" />,
