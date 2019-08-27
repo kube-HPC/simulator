@@ -26,6 +26,7 @@ export default {
   },
   BUILD_TYPES: {
     CODE: {
+      label: 'Code',
       ENVIRONMENT: {
         label: 'Environment',
         field: 'env',
@@ -47,10 +48,14 @@ export default {
       }
     },
     IMAGE: {
-      label: 'Algorithm Image',
-      field: 'algorithmImage'
+      label: 'Image',
+      ALGORITHM_IMAGE: {
+        label: 'Algorithm Image',
+        field: 'algorithmImage'
+      }
     },
     GIT: {
+      label: 'Git',
       REPOSITORY: {
         label: 'Repository',
         field: 'repository'

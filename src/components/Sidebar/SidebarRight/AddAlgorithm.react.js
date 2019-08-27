@@ -44,9 +44,9 @@ const FormItem = ({ children, ...props }) => (
 FormItem.propTypes = Form.Item.propTypes;
 
 const insertRadioButtons = buildTypes =>
-  Object.entries(buildTypes).map(([type]) => (
-    <Radio.Button key={type} value={type}>
-      {toUpperCaseFirstLetter(type)}
+  Object.keys(buildTypes).map(key => (
+    <Radio.Button key={key} value={key}>
+      {toUpperCaseFirstLetter(key)}
     </Radio.Button>
   ));
 
@@ -64,28 +64,29 @@ const FormDivider = ({ children, ...props }) => (
 
 FormDivider.propTypes = Divider.propTypes;
 
-const getBuildTypes = ({ getFieldDecorator, file, setFile }) => {
+const getBuildTypes = ({ buildType, getFieldDecorator, fileList, setFileList }) => {
   const draggerProps = {
     name: 'file',
     multiple: false,
     accept: '.zip,.tar.gz',
     customRequest: ({ file, onSuccess }) => {
       setTimeout(() => {
-        setFile(file);
+        setFileList([file]);
         onSuccess('OK');
       }, 0);
     },
-    fileList: file ? [file] : []
+    fileList,
+    onRemove: () => setFileList([])
   };
 
   const { CODE, IMAGE } = schema.BUILD_TYPES;
 
   return {
-    code: (
+    [CODE.label]: (
       <>
         <FormItem label={CODE.ENVIRONMENT.label}>
           {getFieldDecorator(CODE.ENVIRONMENT.field, {
-            rules: [{ required: true, message: 'Environment required' }]
+            rules: [{ required: buildType === CODE.label, message: 'Environment required' }]
           })(
             <Select placeholder="Pick Environment">
               {insertEnvOptions(CODE.ENVIRONMENT.types)}
@@ -111,10 +112,10 @@ const getBuildTypes = ({ getFieldDecorator, file, setFile }) => {
         </FormItem>
       </>
     ),
-    image: (
-      <FormItem label={IMAGE.label}>
-        {getFieldDecorator(IMAGE.field, {
-          initialValue: template.algorithmImage
+    [IMAGE.label]: (
+      <FormItem label={IMAGE.ALGORITHM_IMAGE.label}>
+        {getFieldDecorator(IMAGE.ALGORITHM_IMAGE.field, {
+          rules: [{ required: buildType === IMAGE.label, message: 'Image URL required' }]
         })(<Input placeholder="Insert algorithm image" />)}
       </FormItem>
     )
@@ -143,22 +144,25 @@ const getMemoryUnits = str => {
 };
 
 const AddAlgorithm = ({ form, onSubmit }) => {
-  const [buildType, setBuildType] = useState('code');
-  const [file, setFile] = useState(undefined);
+  const [buildType, setBuildType] = useState(schema.BUILD_TYPES.CODE.label);
+  const [fileList, setFileList] = useState(undefined);
   const [mem, setMem] = useState(getMemoryUnits(template.mem));
 
   const { getFieldDecorator, validateFields } = form;
-  const buildTypes = getBuildTypes({ getFieldDecorator, file, setFile });
+  const buildTypes = getBuildTypes({ buildType, getFieldDecorator, fileList, setFileList });
 
   const dispatch = useDispatch();
   const onSubmitClick = e => {
     e.preventDefault();
     validateFields((err, values) => {
+      console.log('err', err);
       if (!err) {
         const formData = new FormData();
         const options = values.options.reduce((acc, option) => ({ ...acc, [option]: true }), {});
         const payload = { ...values, options, mem: `${mem.value}${mem.unit}` };
-        console.log('Submitted Values: ', { payload, file });
+        console.log('Submitted Values: ', { payload, file: fileList });
+
+        const [file] = fileList;
 
         formData.append('file', file);
         formData.append('payload', JSON.stringify(payload));

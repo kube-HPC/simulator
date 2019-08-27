@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Immutable from 'seamless-immutable';
 
 import { Table as AntTable, Icon, Spin } from 'antd';
 import { USER_GUIDE } from 'const';
@@ -23,17 +24,21 @@ const DEFAULT_PAGINATION = {
   showLessItems: true
 };
 
-const Table = ({ dataSource, ...props }) => (
-  <AntTable
-    loading={!dataSource}
-    className={USER_GUIDE.TABLE}
-    expandIcon={ExpandIcon}
-    dataSource={dataSource}
-    pagination={DEFAULT_PAGINATION}
-    size="middle"
-    {...props}
-  />
-);
+const Table = ({ dataSource, ...props }) => {
+  const tableSource = Immutable.isImmutable(dataSource) ? dataSource.asMutable() : dataSource;
+  return (
+    <AntTable
+      loading={!dataSource}
+      className={USER_GUIDE.TABLE}
+      expandIcon={ExpandIcon}
+      // Cannot sort immutable entries.
+      dataSource={tableSource}
+      pagination={DEFAULT_PAGINATION}
+      size="middle"
+      {...props}
+    />
+  );
+};
 
 export default React.memo(Table);
 
