@@ -38,7 +38,7 @@ after_success:
     {
       "ref":"${TRAVIS_PULL_REQUEST_BRANCH}", "environment":"qa","auto_merge":false, "required_contexts":[]
     }
-    EOF
+EOF
     )
     DEPLOYMENT_ID=$(echo $RES | grep -oP '"id": \K(.*)(?=,)' ~/res.json | head -n 1)
     echo created deployment with id ${DEPLOYMENT_ID}
@@ -48,7 +48,7 @@ after_success:
       "state":"in_progress",
       "log_url": "${TRAVIS_BUILD_WEB_URL}"
     }
-    EOF
+EOF
     PRIVATE_REGISTRY=docker.io/hkube npm run build
     ./scripts/install.sh
     ./scripts/deploy-staging.sh
