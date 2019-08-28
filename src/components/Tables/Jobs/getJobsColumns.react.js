@@ -90,7 +90,7 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => [
     dataIndex: 'status',
     key: 'node-status',
     render: status => (
-      <FlexBox justify="start" gutter={0}>
+      <FlexBox justify="start" gutter={0} style={{ flexWrap: 'nowrap' }}>
         {status.data &&
           status.data.states &&
           Object.entries(status.data.states).map(([status, count]) => (
