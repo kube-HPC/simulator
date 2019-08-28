@@ -9,5 +9,5 @@ RES=$(curl -X POST https://api.github.com/repos/${TRAVIS_REPO_SLUG}/deployments 
 EOF
 )
 echo "$RES" > /tmp/res.json
-export DEPLOYMENT_ID=$(grep -oP '"id": \K(.*)(?=,)' /tmp/res.json | head -n 1)
+DEPLOYMENT_ID=$(grep -oP '"id": \K(.*)(?=,)' /tmp/res.json | head -n 1)
 echo $DEPLOYMENT_ID
