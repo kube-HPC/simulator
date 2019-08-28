@@ -10,7 +10,7 @@ import {
 
 import { Tabs, Card, JsonView } from 'components/common';
 import { LEFT_SIDEBAR_NAMES } from 'const';
-import { tableFilterSelector } from 'utils/hooks';
+import { tableFilterSelector } from 'utils/tableSelector';
 import { Table } from 'components';
 
 const generateTab = (key, value) => (

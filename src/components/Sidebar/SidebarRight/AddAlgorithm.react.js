@@ -145,7 +145,7 @@ const getMemoryUnits = str => {
 
 const AddAlgorithm = ({ form }) => {
   const [buildType, setBuildType] = useState(schema.BUILD_TYPES.CODE.label);
-  const [fileList, setFileList] = useState(undefined);
+  const [fileList, setFileList] = useState([]);
   const [mem, setMem] = useState(getMemoryUnits(template.mem));
 
   const { getFieldDecorator, validateFields } = form;
@@ -155,16 +155,14 @@ const AddAlgorithm = ({ form }) => {
   const onSubmitClick = e => {
     e.preventDefault();
     validateFields((err, values) => {
-      console.log('err', err);
       if (!err) {
         const formData = new FormData();
         const options = values.options.reduce((acc, option) => ({ ...acc, [option]: true }), {});
         const payload = { ...values, options, mem: `${mem.value}${mem.unit}` };
-        console.log('Submitted Values: ', { payload, file: fileList });
-
         const [file] = fileList;
 
-        formData.append('file', file);
+        if (buildType === schema.BUILD_TYPES.CODE.label) formData.append('file', file);
+
         formData.append('payload', JSON.stringify(payload));
         dispatch(applyAlgorithm(formData));
       }

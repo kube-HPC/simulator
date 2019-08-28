@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getJaegerData as _getJaegerData } from 'actions/jobs.action';
-import { tableFilterSelector } from 'utils/hooks';
+import { tableFilterSelector } from 'utils/tableSelector';
 import { useCallback, useMemo } from 'react';
 import { isEqual } from 'lodash';
 

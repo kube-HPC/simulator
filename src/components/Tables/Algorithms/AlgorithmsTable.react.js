@@ -7,7 +7,7 @@ import Table from 'components/Table/Table.react';
 import getAlgorithmColumns from 'components/Tables/Algorithms/getAlgorithmColumns.react';
 import Card from 'components/common/Card.react';
 import TabSwitcherMD from 'components/common/Tabs/TabSwitcherMD.react';
-import { tableFilterSelector } from 'utils/hooks';
+import { tableFilterSelector } from 'utils/tableSelector';
 import { useAlgorithm } from 'hooks';
 import { LEFT_SIDEBAR_NAMES } from 'const';
 

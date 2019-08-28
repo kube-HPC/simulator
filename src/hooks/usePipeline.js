@@ -12,7 +12,7 @@ import {
 
 import { getPipelineReadme, postPipelineReadme } from 'actions/readme.action';
 import { LEFT_SIDEBAR_NAMES } from 'const';
-import { tableFilterSelector } from 'utils/hooks';
+import { tableFilterSelector } from 'utils/tableSelector';
 
 const dataSelector = tableFilterSelector(LEFT_SIDEBAR_NAMES.PIPELINES);
 
