@@ -6,14 +6,14 @@ const initialValue = Immutable.from({ isDataAvailable: false, isSocketConnected:
 
 export const connectionStatus = handleActions(
   {
-    [actionType.CONNECTION_STATUS_CHANGE](currStatus, { connectionStatus }) {
-      const { isSocketConnected, isDataAvailable } = connectionStatus;
-      const { isSocketConnected: prevSocketStatus, isDataAvailable: prevDataStatus } = currStatus;
+    [actionType.CONNECTION_STATUS_CHANGE](prevStatus, { connectionStatus }) {
+      const { isSocketConnected: currSocket, isDataAvailable: currData } = connectionStatus;
+      const { isSocketConnected: prevSocket, isDataAvailable: prevData } = prevStatus;
 
-      return Immutable.from({
-        isSocketConnected: isSocketConnected || prevSocketStatus,
-        isDataAvailable: isDataAvailable || prevDataStatus
-      });
+      const isSocketConnected = currSocket === undefined ? prevSocket : currSocket;
+      const isDataAvailable = currData === undefined ? prevData : currData;
+
+      return Immutable.from({ isSocketConnected, isDataAvailable });
     }
   },
   initialValue
