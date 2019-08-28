@@ -34,7 +34,30 @@ after_success:
     echo "version skiped!"
     echo "creating temp docker image"
     docker login --username yehiyam --password ${DOCKER_HUB_PASS}
+    RES=$(curl -X POST https://api.github.com/repos/kube-HPC/${TRAVIS_REPO_SLUG}/deployments -H "Authorization: token ${GH_TOKEN}" -H "Content-Type: text/json; charset=utf-8" -H "Accept: application/vnd.github.flash-preview+json" -d @- <<EOF
+    {
+      "ref":"${TRAVIS_PULL_REQUEST_BRANCH}", "environment":"qa","auto_merge":false, "required_contexts":[]
+    }
+    EOF
+    )
+    DEPLOYMENT_ID=$(echo $RES | grep -oP '"id": \K(.*)(?=,)' ~/res.json | head -n 1)
+    echo created deployment with id ${DEPLOYMENT_ID}
+    curl -X POST https://api.github.com/repos/kube-HPC/${TRAVIS_REPO_SLUG}/deployments/${DEPLOYMENT_ID}/statuses -H "Authorization: token ${GH_TOKEN}" -H "Content-Type: text/json; charset=utf-8" -H "Accept: application/vnd.github.flash-preview+json" -H "Accept: application/vnd.github.ant-man-preview+json" -d @- <<EOF
+    {
+      "environment":"qa",
+      "state":"in_progress",
+      "log_url": "${TRAVIS_BUILD_WEB_URL}"
+    }
+    EOF
     PRIVATE_REGISTRY=docker.io/hkube npm run build
     ./scripts/install.sh
     ./scripts/deploy-staging.sh
+    curl -X POST https://api.github.com/repos/kube-HPC/${TRAVIS_REPO_SLUG}/deployments/${DEPLOYMENT_ID}/statuses -H "Authorization: token ${GH_TOKEN}" -H "Content-Type: text/json; charset=utf-8" -H "Accept: application/vnd.github.flash-preview+json" -H "Accept: application/vnd.github.ant-man-preview+json" -d @- <<EOF
+    {
+      "environment":"qa",
+      "state":"success",
+      "log_url": "${TRAVIS_BUILD_WEB_URL}",
+      "environment_url":"https://${KUBERNETES_MASTER_IP}/hkube/simulator-${TRAVIS_PULL_REQUEST_BRANCH}/"
+    }
+    EOF
   fi
