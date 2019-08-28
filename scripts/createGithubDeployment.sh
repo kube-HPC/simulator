@@ -8,4 +8,4 @@ RES=$(curl -X POST https://api.github.com/repos/kube-HPC/${TRAVIS_REPO_SLUG}/dep
 }
 EOF
 )
-export DEPLOYMENT_ID=$(echo $RES | grep -oP '"id": \K(.*)(?=,)' ~/res.json | head -n 1)
+export DEPLOYMENT_ID=$(echo $RES | grep -oP '"id": \K(.*)(?=,)' | head -n 1)
