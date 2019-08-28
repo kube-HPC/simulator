@@ -1,11 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-
-import { useDispatch } from 'react-redux';
+import Immutable from 'seamless-immutable';
 
 import { Table as AntTable, Icon, Spin } from 'antd';
 import { USER_GUIDE } from 'const';
-import { setConnectionStatus } from 'actions/connection.action';
 
 const ExpandIcon = ({ expanded, onExpand, record }) => (
   <Icon type={expanded ? 'down' : 'right'} onClick={e => onExpand(record, e)} />
@@ -26,24 +24,15 @@ const DEFAULT_PAGINATION = {
   showLessItems: true
 };
 
-let isDispatchedOnce = false;
-
 const Table = ({ dataSource, ...props }) => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (!isDispatchedOnce && dataSource) {
-      isDispatchedOnce = true;
-      dispatch(setConnectionStatus({ isDataAvailable: true }));
-    }
-  }, [dataSource, dispatch]);
-
+  const tableSource = Immutable.isImmutable(dataSource) ? dataSource.asMutable() : dataSource;
   return (
     <AntTable
       loading={!dataSource}
       className={USER_GUIDE.TABLE}
       expandIcon={ExpandIcon}
-      dataSource={dataSource}
+      // Cannot sort immutable entries.
+      dataSource={tableSource}
       pagination={DEFAULT_PAGINATION}
       size="middle"
       {...props}

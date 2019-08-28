@@ -8,10 +8,11 @@ import template from 'config/template/algorithm-modal.template';
 import BottomContent from 'components/common/BottomContent.react';
 import { DRAWER_SIZE } from 'const';
 
-function AddDebug({ onSubmit }) {
+function AddDebug() {
   const [algoData, setAlgoData] = useState(template);
 
   const dispatch = useDispatch();
+  const onSubmit = () => dispatch(addAlgorithm(algoData));
 
   return (
     <>
@@ -25,14 +26,7 @@ function AddDebug({ onSubmit }) {
         </Form.Item>
       </Form>
       <BottomContent width={DRAWER_SIZE.ADD_DEBUG}>
-        <Button
-          key="Submit"
-          type="primary"
-          onClick={() => {
-            dispatch(addAlgorithm(algoData));
-            onSubmit();
-          }}
-        >
+        <Button key="Submit" type="primary" onClick={onSubmit}>
           Confirm
         </Button>
       </BottomContent>

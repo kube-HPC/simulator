@@ -17,8 +17,6 @@ FlexBox.defaultProps = {
   gutter: 10
 };
 
-FlexBox.propTypes = {
-  ...Row.propTypes
-};
+FlexBox.propTypes = Row.propTypes;
 
 export default FlexBox;

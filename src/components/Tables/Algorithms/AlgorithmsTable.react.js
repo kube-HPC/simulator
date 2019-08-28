@@ -7,13 +7,11 @@ import Table from 'components/Table/Table.react';
 import getAlgorithmColumns from 'components/Tables/Algorithms/getAlgorithmColumns.react';
 import Card from 'components/common/Card.react';
 import TabSwitcherMD from 'components/common/Tabs/TabSwitcherMD.react';
-import { tableDataSelector } from 'utils/hooks';
+import { tableFilterSelector } from 'utils/tableSelector';
 import { useAlgorithm } from 'hooks';
-import { STATE_SOURCES } from 'const';
+import { LEFT_SIDEBAR_NAMES } from 'const';
 
-const dataSelector = tableDataSelector(STATE_SOURCES.ALGORITHM_TABLE, filter => record =>
-  record.name.includes(filter)
-);
+const dataSelector = tableFilterSelector(LEFT_SIDEBAR_NAMES.ALGORITHMS);
 
 function AlgorithmsTable() {
   const dataSource = useSelector(dataSelector);

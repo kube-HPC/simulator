@@ -11,12 +11,10 @@ import {
 } from 'actions/pipeline.action';
 
 import { getPipelineReadme, postPipelineReadme } from 'actions/readme.action';
-import { STATE_SOURCES } from 'const';
-import { tableDataSelector } from 'utils/hooks';
+import { LEFT_SIDEBAR_NAMES } from 'const';
+import { tableFilterSelector } from 'utils/tableSelector';
 
-const dataSelector = tableDataSelector(STATE_SOURCES.PIPELINE_TABLE, filter => record =>
-  record.name.includes(filter)
-);
+const dataSelector = tableFilterSelector(LEFT_SIDEBAR_NAMES.PIPELINES);
 
 export default function usePipeline() {
   const dataSource = useSelector(dataSelector, isEqual);

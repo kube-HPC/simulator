@@ -2,16 +2,12 @@ import React from 'react';
 
 import humanizeDuration from 'humanize-duration';
 import Moment from 'react-moment';
+
 import { toUpperCaseFirstLetter, sorter } from 'utils/string';
-
 import { Progress, Tag, Tooltip, Button, Row, Col } from 'antd';
-
 import { COLOR_PRIORITY, COLOR_PIPELINE_STATUS } from 'styles/colors';
-
 import { downloadStorageResults } from 'actions/jobs.action';
-
 import { rerunRawPipeline, stopPipeline } from 'actions/pipeline.action';
-
 import { FlexBox, Ellipsis, StatusTag } from 'components/common';
 import { USER_GUIDE, PIPELINE_STATES } from 'const';
 
@@ -94,7 +90,7 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => [
     dataIndex: 'status',
     key: 'node-status',
     render: status => (
-      <FlexBox justify="start" gutter={0}>
+      <FlexBox justify="start" gutter={0} style={{ flexWrap: 'nowrap' }}>
         {status.data &&
           status.data.states &&
           Object.entries(status.data.states).map(([status, count]) => (

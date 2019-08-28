@@ -1,15 +1,15 @@
 import React, { useEffect, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import 'styles/GlobalStyle.css';
 
 import { message, Layout, Tag, Icon, Typography, Tooltip } from 'antd';
-import { useRightSidebar, useLeftSidebar } from 'hooks';
+import { useRightSidebar, useLeftSidebar, useConnectionStatus } from 'hooks';
 
 import { init, socketInit, triggerUserGuide } from 'actions';
 import { COLOR_LAYOUT, GlobalStyle, COLOR } from 'styles';
-import { LEFT_SIDEBAR_NAMES, USER_GUIDE, STATE_SOURCES } from 'const';
+import { LEFT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
 import { Icons, FlexBox } from 'components/common';
 
 import {
@@ -114,76 +114,79 @@ function Dashboard() {
   ]);
   const toggleDrawerVisible = useCallback(() => setDrawerIsVisible(p => !p), [setDrawerIsVisible]);
 
-  const { isDataAvailable, isSocketConnected } = useSelector(
-    state => state[STATE_SOURCES.CONNECTION_STATUS]
-  );
+  const { isDataAvailable, isSocketConnected } = useConnectionStatus();
 
   return (
     <>
       <GlobalStyle />
-      <UserGuide triggerLeftVisible={triggerLeftVisible} setLeftValue={setLeftValue} />
-      {!isDataAvailable && <LoadingScreen />}
-      <LayoutFullHeight>
-        <SidebarLeft
-          className={USER_GUIDE.SIDEBAR_LEFT}
-          selectedKeys={leftSelectedKeys}
-          onSelect={setLeftValue}
-          collapsed={!leftIsCollapsed}
-        />
-        <Layout>
-          <Header className={USER_GUIDE.WELCOME}>
-            <FlexBox>
-              <Icons.Hover
-                type={leftIsCollapsed ? 'menu-fold' : 'menu-unfold'}
-                onClick={triggerLeftVisible}
-              />
-              <AutoComplete table={tableValue} className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
-              <HelpBar className={USER_GUIDE.HEADER.SOCIALS}>
-                {!isSocketConnected && (
-                  <Tag color="orange">
-                    <Tooltip title="Reconnecting to Socket...">
-                      <FlexBox>
-                        <FlexBox.Item>
-                          <Typography.Text>Offline Mode</Typography.Text>
-                        </FlexBox.Item>
-                        <FlexBox.Item>
-                          <Icon type="disconnect" />
-                        </FlexBox.Item>
-                      </FlexBox>
-                    </Tooltip>
-                  </Tag>
-                )}
-                <Icons.Hover type="global" onClick={openWebsite} />
-                <Icons.Hover type="github" onClick={openGithub} />
-                <Icons.Hover type="question-circle" onClick={onGuideClick} />
-                <DarkText>{appVersion}</DarkText>
-              </HelpBar>
-            </FlexBox>
-          </Header>
+      {isDataAvailable ? (
+        <>
+          <UserGuide triggerLeftVisible={triggerLeftVisible} setLeftValue={setLeftValue} />
           <LayoutFullHeight>
-            <ContentMargin>{tableSelector[tableValue]}</ContentMargin>
-            <RightSidebarsFlex>
-              <SidebarRight
-                className={USER_GUIDE.SIDEBAR_TOP_RIGHT}
-                onSelect={onSelectDrawer}
-                menuItems={menuItems}
-              />
-              <SidebarRight
-                className={USER_GUIDE.SIDEBAR_BOTTOM_RIGHT}
-                onSelect={onSelectDrawer}
-                menuItems={menuBottomRightItems}
-              />
-            </RightSidebarsFlex>
-            <DrawerOperations
-              visible={drawerIsVisible}
-              onClose={toggleDrawerVisible}
-              operation={drawerValue}
-            >
-              {operationSelector[drawerValue]}
-            </DrawerOperations>
+            <SidebarLeft
+              className={USER_GUIDE.SIDEBAR_LEFT}
+              selectedKeys={leftSelectedKeys}
+              onSelect={setLeftValue}
+              collapsed={!leftIsCollapsed}
+            />
+            <Layout>
+              <Header className={USER_GUIDE.WELCOME}>
+                <FlexBox>
+                  <Icons.Hover
+                    type={leftIsCollapsed ? 'menu-fold' : 'menu-unfold'}
+                    onClick={triggerLeftVisible}
+                  />
+                  <AutoComplete table={tableValue} className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
+                  <HelpBar className={USER_GUIDE.HEADER.SOCIALS}>
+                    {!isSocketConnected && (
+                      <Tag color="orange">
+                        <Tooltip title="Reconnecting to Socket...">
+                          <FlexBox>
+                            <FlexBox.Item>
+                              <Typography.Text>Offline Mode</Typography.Text>
+                            </FlexBox.Item>
+                            <FlexBox.Item>
+                              <Icon type="disconnect" />
+                            </FlexBox.Item>
+                          </FlexBox>
+                        </Tooltip>
+                      </Tag>
+                    )}
+                    <Icons.Hover type="global" onClick={openWebsite} />
+                    <Icons.Hover type="github" onClick={openGithub} />
+                    <Icons.Hover type="question-circle" onClick={onGuideClick} />
+                    <DarkText>{appVersion}</DarkText>
+                  </HelpBar>
+                </FlexBox>
+              </Header>
+              <LayoutFullHeight>
+                <ContentMargin>{tableSelector[tableValue]}</ContentMargin>
+                <RightSidebarsFlex>
+                  <SidebarRight
+                    className={USER_GUIDE.SIDEBAR_TOP_RIGHT}
+                    onSelect={onSelectDrawer}
+                    menuItems={menuItems}
+                  />
+                  <SidebarRight
+                    className={USER_GUIDE.SIDEBAR_BOTTOM_RIGHT}
+                    onSelect={onSelectDrawer}
+                    menuItems={menuBottomRightItems}
+                  />
+                </RightSidebarsFlex>
+                <DrawerOperations
+                  visible={drawerIsVisible}
+                  onClose={toggleDrawerVisible}
+                  operation={drawerValue}
+                >
+                  {operationSelector[drawerValue]}
+                </DrawerOperations>
+              </LayoutFullHeight>
+            </Layout>
           </LayoutFullHeight>
-        </Layout>
-      </LayoutFullHeight>
+        </>
+      ) : (
+        <LoadingScreen />
+      )}
     </>
   );
 }

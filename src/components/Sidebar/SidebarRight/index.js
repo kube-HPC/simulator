@@ -1,4 +1,4 @@
-export { default as AddAlgorithmForm } from './AddAlgorithmForm.react';
+export { default as AddAlgorithm } from './AddAlgorithm.react';
 export { default as AddPipeline } from './AddPipeline/AddPipeline.react';
 export { default as AddDebug } from './AddDebug.react';
 

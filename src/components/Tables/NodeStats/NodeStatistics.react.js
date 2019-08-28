@@ -15,13 +15,11 @@ const adaptedData = (statistics, metric) => {
     statistics && statistics.find(statistic => statistic.metric === metric);
   const data =
     statisticsForMetric &&
-    statisticsForMetric.asMutable().results.map(res => {
+    statisticsForMetric.results.map(res => {
       const algorithms = {};
       res &&
         res.algorithmsData &&
-        res.algorithmsData
-          .asMutable()
-          .forEach(algorithm => (algorithms[algorithm.name] = algorithm.size));
+        res.algorithmsData.forEach(algorithm => (algorithms[algorithm.name] = algorithm.size));
       return {
         nodes: res.name,
         ...algorithms

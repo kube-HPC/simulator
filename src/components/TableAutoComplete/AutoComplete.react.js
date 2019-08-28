@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { Input, AutoComplete as AntAutoComplete } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
@@ -28,6 +29,11 @@ function AutoComplete({ table, ...props }) {
     </AutoCompleteLong>
   );
 }
+
+AutoComplete.propTypes = {
+  table: PropTypes.string.isRequired,
+  ...AntAutoComplete.propTypes
+};
 
 const areEqualByTableName = (prevProps, nextProps) => prevProps.table === nextProps.table;
 export default React.memo(AutoComplete, areEqualByTableName);

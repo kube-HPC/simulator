@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { Button, notification, Icon } from 'antd';
 
@@ -17,7 +16,7 @@ const notificationOnOpenConfig = message => ({
   icon: warningIcon
 });
 
-const RunRawPipeline = ({ onSubmit }) => {
+const RunRawPipeline = () => {
   const [value, setValue] = useState(DEFAULT_VALUE);
   const dispatch = useDispatch();
 
@@ -27,7 +26,6 @@ const RunRawPipeline = ({ onSubmit }) => {
   const onSubmitClick = () => {
     try {
       dispatch(execRawPipeline(JSON.parse(value)));
-      onSubmit();
     } catch ({ message }) {
       notification.open(notificationOnOpenConfig(message));
     }
@@ -54,10 +52,6 @@ const RunRawPipeline = ({ onSubmit }) => {
       </BottomContent>
     </>
   );
-};
-
-RunRawPipeline.propsTypes = {
-  onSubmit: PropTypes.func.isRequired
 };
 
 export default RunRawPipeline;
