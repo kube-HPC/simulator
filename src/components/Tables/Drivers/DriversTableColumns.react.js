@@ -9,28 +9,32 @@ const driversTableColumns = () => [
     title: 'Pipeline',
     dataIndex: 'pipelineName',
     key: 'pipelineName',
-    width: '10%',
+    width: '20%',
     sorter: (a, b) => sorter(a.pipelineName, b.pipelineName),
     render: pipelineName => (
-      <Ellipsis type={!pipelineName && 'warning'} text={pipelineName || 'Not Assigned'} />
+      <Ellipsis
+        type={!pipelineName && 'warning'}
+        length={30}
+        text={pipelineName || 'Not Assigned'}
+      />
     )
   },
   {
-    title: 'Driver ID',
-    dataIndex: 'driverId',
-    key: 'driverId',
-    width: '10%',
-    sorter: (a, b) => sorter(a.driverId, b.driverId),
-    render: driverId => <Ellipsis copyable text={driverId} />
+    title: 'Job ID',
+    dataIndex: 'jobId',
+    key: 'jobId',
+    width: '20%',
+    sorter: (a, b) => sorter(a.jobId, b.jobId),
+    render: jobId => <Ellipsis length={30} copyable text={jobId} />
   },
   {
     title: 'Pod Name',
     dataIndex: 'podName',
     key: 'podName',
-    width: '10%',
+    width: '20%',
     onFilter: (value, record) => record.podName.includes(value),
     sorter: (a, b) => sorter(a.podName, b.podName),
-    render: podName => <Ellipsis copyable text={podName} />
+    render: podName => <Ellipsis copyable length={30} text={podName} />
   },
   {
     title: 'Driver State',
