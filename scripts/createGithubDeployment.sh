@@ -1,4 +1,4 @@
-RES=$(curl -X POST https://api.github.com/repos/kube-HPC/${TRAVIS_REPO_SLUG}/deployments \
+RES=$(curl -X POST https://api.github.com/repos/${TRAVIS_REPO_SLUG}/deployments \
      -H "Authorization: token ${GH_TOKEN}" \
      -H "Content-Type: text/json; charset=utf-8" \
      -H "Accept: application/vnd.github.flash-preview+json" \
@@ -8,4 +8,6 @@ RES=$(curl -X POST https://api.github.com/repos/kube-HPC/${TRAVIS_REPO_SLUG}/dep
 }
 EOF
 )
-export DEPLOYMENT_ID=$(echo $RES | grep -oP '"id": \K(.*)(?=,)' | head -n 1)
+echo "$RES" > /tmp/res.json
+export DEPLOYMENT_ID=$(grep -oP '"id": \K(.*)(?=,)' /tmp/res.json | head -n 1)
+echo $DEPLOYMENT_ID
