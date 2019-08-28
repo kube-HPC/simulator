@@ -34,7 +34,7 @@ after_success:
     echo "version skipped!"
     echo "creating temp docker image"
     docker login --username yehiyam --password ${DOCKER_HUB_PASS}
-    DEPLOYMENT_ID=$(./scripts/createGithubDeployment.sh)
+    export DEPLOYMENT_ID=$(./scripts/createGithubDeployment.sh)
     echo created deployment with id ${DEPLOYMENT_ID}
     STATUS=in_progress ./scripts/updateDeploymentStatus.sh
     PRIVATE_REGISTRY=docker.io/hkube npm run build
