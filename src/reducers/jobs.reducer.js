@@ -15,10 +15,10 @@ export const jobsTable = handleActions(
 export const jobsJaeger = handleActions(
   {
     [actions.JOBS_JAEGER_SUCCESS](state, { payload }) {
-      return state.setIn([Object.keys(payload)[0]], payload);
+      return { dataSource: payload };
     }
   },
-  Immutable.from({})
+  { dataSource: {} }
 );
 
 export const jobsKubernetesLogs = handleActions(

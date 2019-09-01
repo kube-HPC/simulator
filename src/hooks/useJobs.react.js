@@ -19,7 +19,7 @@ const initialJobRecord = ({ record, jaeger }) => ({
     status: record.status,
     results: record.results
   },
-  jaeger: jaeger[record.key] || null
+  jaeger: jaeger && jaeger.dataSource
 });
 
 export default function useJobs() {
