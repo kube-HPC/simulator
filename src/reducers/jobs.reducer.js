@@ -1,6 +1,7 @@
 import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
 import actions from 'const/application-actions';
+import transformTraceData from 'components/Jaeger/transformTraceData';
 
 export const jobsTable = handleActions(
   {
@@ -15,10 +16,11 @@ export const jobsTable = handleActions(
 export const jobsJaeger = handleActions(
   {
     [actions.JOBS_JAEGER_SUCCESS](state, { payload }) {
-      return { dataSource: payload };
+      const jaeger = (payload && payload.data && payload.data[0]) || {};
+      return state.merge({ dataSource: transformTraceData(jaeger) });
     }
   },
-  { dataSource: {} }
+  Immutable.from({ dataSource: {} })
 );
 
 export const jobsKubernetesLogs = handleActions(
