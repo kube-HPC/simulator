@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getJaegerData as _getJaegerData } from 'actions/jobs.action';
 import { tableFilterSelector } from 'utils/tableSelector';
 import { useCallback, useMemo } from 'react';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 
 import { USER_GUIDE, LEFT_SIDEBAR_NAMES } from 'const';
 import { JobsTabSwitcher, getJobsColumns } from 'components/Tables/Jobs';
