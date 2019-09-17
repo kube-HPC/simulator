@@ -3,13 +3,16 @@ import { createLogger } from 'redux-logger';
 import rootReducer from 'reducers/root.reducer';
 import socketMiddleware from 'middleware/socket.middleware';
 import restConfigMiddleware from 'middleware/restConfig.middleware';
-import restMiddleware from 'middleware/rest.middleware';
+//import restMiddleware from 'middleware/rest.middleware';
 import messagesMiddleware from 'middleware/messages.middleware';
+import createSagaMiddleware from 'redux-saga';
 import React from 'react';
 import whyDidYouRender from '@welldone-software/why-did-you-render';
 import { COLOR } from 'styles/colors';
 
-const middleware = [messagesMiddleware, socketMiddleware, restConfigMiddleware, restMiddleware];
+export const sagaMiddleware = createSagaMiddleware();
+
+const middleware = [messagesMiddleware, socketMiddleware, restConfigMiddleware, sagaMiddleware];
 
 if (process.env.NODE_ENV === 'development') {
   middleware.unshift(createLogger({ collapsed: true }));
