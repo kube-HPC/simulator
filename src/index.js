@@ -1,9 +1,12 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import store from './store';
+import store, { sagaMiddleware } from './store';
+import { rootSaga } from './sagas';
 import { ErrorBoundary } from 'components';
 import DashboardReact from './components/Dashboard/Dashboard.react';
+
+sagaMiddleware.run(rootSaga);
 
 render(
   <Provider store={store}>
