@@ -30,7 +30,7 @@ after_success:
     docker login --username yehiyam --password ${DOCKER_HUB_PASS}
     PRIVATE_REGISTRY=docker.io/hkube npm run build
     curl -X POST -H 'accept:application/json'  -H "authorization:token ${TRAVIS_API_TOKEN}" -H 'content-type:application/json' -H 'travis-api-version:3' -d "{\"request\":{\"branch\":\"master\",\"message\":\"triggered by ${TRAVIS_REPO_SLUG}\"}}" "https://api.travis-ci.org/repo/kube-HPC%2Frelease-manager/requests"
-  else
+  elif [ ! -z "$DOCKER_HUB_PASS" ]; then
     echo "version skipped!"
     echo "creating temp docker image"
     docker login --username yehiyam --password ${DOCKER_HUB_PASS}
@@ -41,4 +41,6 @@ after_success:
     ./scripts/install.sh
     ./scripts/deploy-staging.sh
     STATUS=success ./scripts/updateDeploymentStatus.sh
+  else
+    echo "version skipped!"
   fi
