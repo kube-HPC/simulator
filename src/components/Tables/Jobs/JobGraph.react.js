@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
@@ -56,11 +56,8 @@ function JobGraph({ graph, pipeline }) {
   const toggleVisible = () => setVisible(prev => !prev);
 
   const events = {
-    selectNode: event => {
-      const {
-        nodes: [nodeName]
-      } = event;
-
+    click: ({ nodes }) => {
+      const [nodeName] = nodes;
       if (!nodeName) return;
 
       const nodeData = graph.nodes.find(findNodeName(nodeName));
