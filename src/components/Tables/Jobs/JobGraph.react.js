@@ -51,8 +51,6 @@ function JobGraph({ graph, pipeline }) {
   const [visible, setVisible] = useState(false);
   const [payload, setPayload] = useState({ taskId: undefined });
 
-  const graphRef = useRef();
-
   const dispatch = useDispatch();
   const getLogs = ({ taskId, podName }) => dispatch(getKubernetesLogsData({ taskId, podName }));
   const toggleVisible = () => setVisible(prev => !prev);
@@ -124,7 +122,7 @@ function JobGraph({ graph, pipeline }) {
         </BottomContent>
       </Drawer>
       <GraphContainer>
-        <Graph ref={graphRef} graph={adaptedGraph} options={graphOptions} events={events} />
+        <Graph graph={adaptedGraph} options={graphOptions} events={events} />
       </GraphContainer>
     </>
   );
