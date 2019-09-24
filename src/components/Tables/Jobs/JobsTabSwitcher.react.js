@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import Trace from 'jaeger-react-trace-component';
 import { Tabs, Card, JsonView } from 'components/common';
 import { JobGraph } from '.';
-import { Button, notification, Icon, Spin } from 'antd';
+import { Button, notification, Icon, Spin, Result } from 'antd';
 import axios from 'axios';
 import { STATE_SOURCES } from 'const';
 import { transformTraceData } from 'utils';
@@ -21,7 +21,7 @@ const CenterDiv = styled.div`
 const configNotificationOnOpen = description => ({
   message: 'Error fetching Trace data',
   description,
-  icon: <Icon type="error" style={{ color: 'red' }} />
+  icon: <Icon type="warning" style={{ color: 'red' }} />
 });
 
 const generateTabs = tabs =>
@@ -43,9 +43,9 @@ const fetchTraceData = ({ url, jobId, callback }) =>
     })
     .then(({ data }) => {
       const [traceData] = data.data;
-      callback(transformTraceData(traceData));
+      callback(transformTraceData(traceData || {}));
     })
-    .catch(message => notification.open(configNotificationOnOpen(message)));
+    .catch(e => notification.open(configNotificationOnOpen(e.message)));
 
 const JobsTabSwitcher = ({ record }) => {
   const [traceData, setTraceData] = useState(undefined);
@@ -62,26 +62,29 @@ const JobsTabSwitcher = ({ record }) => {
     if (!traceData) fetchTrace();
   }, [fetchTrace, traceData]);
 
-  const tabs = {
-    [TABS.GRAPH]: (
-      <JobGraph graph={{ ...record.graph, jobId: record.key }} pipeline={record.record.pipeline} />
-    ),
-    [TABS.TRACE]: traceData ? (
-      <Trace trace={{ data: traceData }} />
-    ) : (
-      <CenterDiv>
-        <Spin size="large" tip="Fetching Trace Data 🔎..." />
-      </CenterDiv>
-    ),
-    [TABS.JSON]: <JsonView jsonObject={record.record} />
-  };
-
   const onRefreshClick = () => setTraceData(undefined);
-  const tabBarExtraContent = currentTab === TABS.TRACE && (
+  const refreshButton = currentTab === TABS.TRACE && (
     <Button onClick={onRefreshClick} icon="redo">
       Refresh
     </Button>
   );
+
+  const tabs = {
+    [TABS.GRAPH]: (
+      <JobGraph graph={{ ...record.graph, jobId: record.key }} pipeline={record.record.pipeline} />
+    ),
+    [TABS.TRACE]:
+      traceData === null ? (
+        <Result status="warning" title="No such trace has been found." />
+      ) : traceData ? (
+        <Trace trace={{ data: traceData }} />
+      ) : (
+        <CenterDiv>
+          <Spin size="large" tip="Fetching Trace Data 🔎..." />
+        </CenterDiv>
+      ),
+    [TABS.JSON]: <JsonView jsonObject={record.record} />
+  };
 
   const onTabClick = tabKey => tabKey === TABS.TRACE && fetchTrace();
 
@@ -89,7 +92,7 @@ const JobsTabSwitcher = ({ record }) => {
     <Tabs
       activeKey={currentTab}
       animated={tabsAnimation}
-      tabBarExtraContent={tabBarExtraContent}
+      tabBarExtraContent={refreshButton}
       onChange={setCurrentTab}
       onTabClick={onTabClick}
     >

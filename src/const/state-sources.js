@@ -6,7 +6,6 @@ export default {
   DEBUG_TABLE: 'debugTable',
   DRIVER_TABLE: 'driverTable',
   ERROR_LOGS_TABLE: 'errorLogsTable',
-  JOBS_JAEGER: 'jobsJaeger',
   JOBS_KUBERNETES_LOGS: 'jobsKubernetesLogs',
   JOBS_TABLE: 'jobsTable',
   NODE_STATISTICS: 'nodeStatistics',
