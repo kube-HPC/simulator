@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import { jobsTable, jobsJaeger, jobsKubernetesLogs } from 'reducers/jobs.reducer';
+import { jobsTable, jobsKubernetesLogs } from 'reducers/jobs.reducer';
 
 import { workerTable } from 'reducers/worker.reducer';
 import { driverTable } from 'reducers/driver.reducer';
@@ -23,7 +23,6 @@ const dataSources = {
   debugTable,
   driverTable,
   errorLogsTable,
-  jobsJaeger,
   jobsKubernetesLogs,
   jobsTable,
   nodeStatistics,
