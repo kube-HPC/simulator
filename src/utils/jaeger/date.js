@@ -1,5 +1,3 @@
-
-
 import moment from 'moment';
 import _ from 'lodash';
 
@@ -22,18 +20,18 @@ export const DEFAULT_MS_PRECISION = Math.log10(ONE_MILLISECOND);
  * @return {number} 0-100 percentage
  */
 export function getPercentageOfDuration(duration, totalDuration) {
-    return duration / totalDuration * 100;
+  return (duration / totalDuration) * 100;
 }
 
 const quantizeDuration = (duration, floatPrecision, conversionFactor) =>
-    toFloatPrecision(duration / conversionFactor, floatPrecision) * conversionFactor;
+  toFloatPrecision(duration / conversionFactor, floatPrecision) * conversionFactor;
 
 /**
  * @param {number} duration (in microseconds)
  * @return {string} formatted, unit-labelled string with time in milliseconds
  */
 export function formatDate(duration) {
-    return moment(duration / ONE_MILLISECOND).format(STANDARD_DATE_FORMAT);
+  return moment(duration / ONE_MILLISECOND).format(STANDARD_DATE_FORMAT);
 }
 
 /**
@@ -41,7 +39,7 @@ export function formatDate(duration) {
  * @return {string} formatted, unit-labelled string with time in milliseconds
  */
 export function formatTime(duration) {
-    return moment(duration / ONE_MILLISECOND).format(STANDARD_TIME_FORMAT);
+  return moment(duration / ONE_MILLISECOND).format(STANDARD_TIME_FORMAT);
 }
 
 /**
@@ -49,7 +47,7 @@ export function formatTime(duration) {
  * @return {string} formatted, unit-labelled string with time in milliseconds
  */
 export function formatDatetime(duration) {
-    return moment(duration / ONE_MILLISECOND).format(STANDARD_DATETIME_FORMAT);
+  return moment(duration / ONE_MILLISECOND).format(STANDARD_DATETIME_FORMAT);
 }
 
 /**
@@ -57,8 +55,8 @@ export function formatDatetime(duration) {
  * @return {string} formatted, unit-labelled string with time in milliseconds
  */
 export function formatMillisecondTime(duration) {
-    const targetDuration = quantizeDuration(duration, DEFAULT_MS_PRECISION, ONE_MILLISECOND);
-    return `${moment.duration(targetDuration / ONE_MILLISECOND).asMilliseconds()}ms`;
+  const targetDuration = quantizeDuration(duration, DEFAULT_MS_PRECISION, ONE_MILLISECOND);
+  return `${moment.duration(targetDuration / ONE_MILLISECOND).asMilliseconds()}ms`;
 }
 
 /**
@@ -66,8 +64,8 @@ export function formatMillisecondTime(duration) {
  * @return {string} formatted, unit-labelled string with time in seconds
  */
 export function formatSecondTime(duration) {
-    const targetDuration = quantizeDuration(duration, DEFAULT_MS_PRECISION, ONE_SECOND);
-    return `${moment.duration(targetDuration / ONE_MILLISECOND).asSeconds()}s`;
+  const targetDuration = quantizeDuration(duration, DEFAULT_MS_PRECISION, ONE_SECOND);
+  return `${moment.duration(targetDuration / ONE_MILLISECOND).asSeconds()}s`;
 }
 
 /**
@@ -78,38 +76,36 @@ export function formatSecondTime(duration) {
  * 1000μs => 1ms
  */
 export function formatDuration(duration, inputUnit = 'microseconds') {
-    let d = duration;
-    if (inputUnit === 'microseconds') {
-        d = duration / 1000;
-    }
-    let units = 'ms';
-    if (d >= 1000) {
-        units = 's';
-        d /= 1000;
-    }
-    return _.round(d, 2) + units;
+  let d = duration;
+  if (inputUnit === 'microseconds') {
+    d = duration / 1000;
+  }
+  let units = 'ms';
+  if (d >= 1000) {
+    units = 's';
+    d /= 1000;
+  }
+  return _.round(d, 2) + units;
 }
 
 export function formatRelativeDate(value) {
-    const m = !(value instanceof moment) ? moment(value) : value;
-    const dt = new Date();
-    if (dt.getFullYear() !== m.year()) {
-        return m.format('MMM D, YYYY');
-    }
-    const mMonth = m.month();
-    const mDate = m.date();
-    const date = dt.getDate();
-    if (mMonth === dt.getMonth() && mDate === date) {
-        return TODAY;
-    }
-    dt.setDate(date - 1);
-    if (mMonth === dt.getMonth() && mDate === dt.getDate()) {
-        return YESTERDAY;
-    }
-    return m.format('MMM D');
+  const m = !(value instanceof moment) ? moment(value) : value;
+  const dt = new Date();
+  if (dt.getFullYear() !== m.year()) {
+    return m.format('MMM D, YYYY');
+  }
+  const mMonth = m.month();
+  const mDate = m.date();
+  const date = dt.getDate();
+  if (mMonth === dt.getMonth() && mDate === date) {
+    return TODAY;
+  }
+  dt.setDate(date - 1);
+  if (mMonth === dt.getMonth() && mDate === dt.getDate()) {
+    return YESTERDAY;
+  }
+  return m.format('MMM D');
 }
-
-
 
 // WEBPACK FOOTER //
 // ./src/utils/date.js
