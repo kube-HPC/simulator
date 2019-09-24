@@ -1,13 +1,5 @@
 import actions from 'const/application-actions';
 
-export const getJaegerData = jobId => ({
-  type: actions.REST_REQ,
-  payload: {
-    url: `/jaeger?jobId=${jobId}`,
-    actionType: actions.JOBS_JAEGER
-  }
-});
-
 export const downloadStorageResults = path => ({
   type: actions.JOBS_DOWNLOAD_REQ,
   payload: {

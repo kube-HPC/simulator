@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import { jobsTable, jobsJaeger, jobsKubernetesLogs } from 'reducers/jobs.reducer';
+import { jobsTable, jobsKubernetesLogs } from 'reducers/jobs.reducer';
 
 import { workerTable } from 'reducers/worker.reducer';
 import { driverTable } from 'reducers/driver.reducer';
@@ -11,7 +11,7 @@ import { algorithmTable, algorithmBuildsTable, algorithmReadme } from 'reducers/
 import { autoCompleteFilter } from 'reducers/autoComplete.reducer';
 import { pipelineTable, pipelineReadme } from 'reducers/pipeline.reducer';
 import { nodeStatistics } from 'reducers/nodeStatistics.reducer';
-import { connectionStatus } from 'reducers/connection.reducer';
+import { connectionStatus, socketURL } from 'reducers/connection.reducer';
 import { userGuide } from 'reducers/userGuide.reducer';
 import { errorLogsTable } from 'reducers/errorLogs.reducer';
 
@@ -23,7 +23,6 @@ const dataSources = {
   debugTable,
   driverTable,
   errorLogsTable,
-  jobsJaeger,
   jobsKubernetesLogs,
   jobsTable,
   nodeStatistics,
@@ -31,6 +30,7 @@ const dataSources = {
   pipelineTable,
   userGuide,
   connectionStatus,
+  socketURL,
   workerTable
 };
 

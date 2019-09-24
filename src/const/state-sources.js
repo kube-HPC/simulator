@@ -6,7 +6,6 @@ export default {
   DEBUG_TABLE: 'debugTable',
   DRIVER_TABLE: 'driverTable',
   ERROR_LOGS_TABLE: 'errorLogsTable',
-  JOBS_JAEGER: 'jobsJaeger',
   JOBS_KUBERNETES_LOGS: 'jobsKubernetesLogs',
   JOBS_TABLE: 'jobsTable',
   NODE_STATISTICS: 'nodeStatistics',
@@ -14,5 +13,6 @@ export default {
   PIPELINE_TABLE: 'pipelineTable',
   WORKER_TABLE: 'workerTable',
   CONNECTION_STATUS: 'connectionStatus',
-  USER_GUIDE: 'userGuide'
+  USER_GUIDE: 'userGuide',
+  SOCKET_URL: 'socketURL'
 };

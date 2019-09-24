@@ -4,6 +4,15 @@ import { actionType } from 'const';
 
 const initialValue = Immutable.from({ isDataAvailable: false, isSocketConnected: false });
 
+export const socketURL = handleActions(
+  {
+    [actionType.SOCKET_SET_URL](prevUrl, { url }) {
+      return Immutable.from(url);
+    }
+  },
+  Immutable.from('')
+);
+
 export const connectionStatus = handleActions(
   {
     [actionType.CONNECTION_STATUS_CHANGE](prevStatus, { connectionStatus }) {

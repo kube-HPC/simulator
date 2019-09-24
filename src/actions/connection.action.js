@@ -23,3 +23,5 @@ export const setConnectionStatus = ({ isDataAvailable, isSocketConnected }) => (
   type: actions.CONNECTION_STATUS_CHANGE,
   connectionStatus: { isDataAvailable, isSocketConnected }
 });
+
+export const setSocketURL = ({ socketURL }) => ({ type: actions.SOCKET_SET_URL, socketURL });

@@ -3,7 +3,10 @@ import axios from 'axios';
 import FileSaver from 'file-saver';
 import successMsg from 'config/schema/success-messages.schema';
 
-let url = null;
+const setPath = ({ monitorBackend }) =>
+  monitorBackend.useLocation
+    ? `${location.origin}${monitorBackend.path}` // eslint-disable-line
+    : `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}${monitorBackend.path}`;
 
 const reject = (dispatch, payload, action) => {
   dispatch({
@@ -40,27 +43,18 @@ const success = (dispatch, payload, action) => {
   });
 };
 
-const DEFAULT_ERROR_MSG = 'Unexpected Error';
-
 const _formatError = payload => {
   if (!payload) return DEFAULT_ERROR_MSG;
   return typeof payload === 'string' ? payload : payload.message || DEFAULT_ERROR_MSG;
 };
 
-const setPath = ({ monitorBackend }) => {
-  let _url;
-  if (monitorBackend.useLocation) {
-    _url = `${location.origin}${monitorBackend.path}`; //eslint-disable-line
-  } else {
-    _url = `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}${monitorBackend.path}`;
-  }
-
-  return _url;
-};
+const DEFAULT_ERROR_MSG = 'Unexpected Error';
+let SOCKET_URL = null;
 
 const restMiddleware = ({ dispatch }) => next => action => {
   if (action.type === `${AT.SOCKET_GET_CONFIG}_SUCCESS`) {
-    url = setPath(action.payload.config);
+    SOCKET_URL = setPath(action.payload.config);
+    SOCKET_URL && dispatch({ type: AT.SOCKET_SET_URL, url: SOCKET_URL });
   } else if (
     ![
       AT.REST_REQ,
@@ -73,12 +67,12 @@ const restMiddleware = ({ dispatch }) => next => action => {
   ) {
     return next(action);
   } else if (action.type === AT.REST_REQ) {
-    if (!url) {
+    if (!SOCKET_URL) {
       return next(action);
     }
     pending(dispatch, 'pending', action);
     axios
-      .get(`${url}${action.payload.url}`)
+      .get(`${SOCKET_URL}${action.payload.url}`)
       .then(res => {
         success(dispatch, res.data, action);
       })
@@ -89,12 +83,12 @@ const restMiddleware = ({ dispatch }) => next => action => {
 
     return next(action);
   } else if (action.type === AT.REST_REQ_POST) {
-    if (!url) {
+    if (!SOCKET_URL) {
       return next(action);
     }
     pending(dispatch, 'pending', action);
     axios
-      .post(`${url}/${action.payload.url}`, action.payload.body)
+      .post(`${SOCKET_URL}/${action.payload.url}`, action.payload.body)
       .then(res => {
         success(dispatch, res.data, action);
       })
@@ -104,12 +98,12 @@ const restMiddleware = ({ dispatch }) => next => action => {
 
     return next(action);
   } else if (action.type === AT.REST_REQ_POST_FORM) {
-    if (!url) {
+    if (!SOCKET_URL) {
       return next(action);
     }
     pending(dispatch, 'pending', action);
     axios
-      .post(`${url}/${action.payload.url}`, action.payload.formData)
+      .post(`${SOCKET_URL}/${action.payload.url}`, action.payload.formData)
       .then(res => {
         success(dispatch, res.data, action);
       })
@@ -119,12 +113,12 @@ const restMiddleware = ({ dispatch }) => next => action => {
 
     return next(action);
   } else if (action.type === AT.REST_REQ_PUT) {
-    if (!url) {
+    if (!SOCKET_URL) {
       return next(action);
     }
     pending(dispatch, 'pending', action);
     axios
-      .put(`${url}/${action.payload.url}`, action.payload.body)
+      .put(`${SOCKET_URL}/${action.payload.url}`, action.payload.body)
       .then(res => {
         success(dispatch, res.data, action);
       })
@@ -134,12 +128,12 @@ const restMiddleware = ({ dispatch }) => next => action => {
 
     return next(action);
   } else if (action.type === AT.REST_REQ_DELETE) {
-    if (!url) {
+    if (!SOCKET_URL) {
       return next(action);
     }
     pending(dispatch, 'pending', action);
     axios
-      .delete(`${url}/${action.payload.url}/${action.payload.body.algorithmName}`, {
+      .delete(`${SOCKET_URL}/${action.payload.url}/${action.payload.body.algorithmName}`, {
         data: action.payload.body
       })
       .then(res => {
@@ -151,12 +145,12 @@ const restMiddleware = ({ dispatch }) => next => action => {
 
     return next(action);
   } else if (action.type === AT.JOBS_DOWNLOAD_REQ) {
-    if (!url) {
+    if (!SOCKET_URL) {
       return next(action);
     }
     pending(dispatch, 'pending', action);
     axios
-      .get(`${url}${action.payload.url}`, {
+      .get(`${SOCKET_URL}${action.payload.url}`, {
         responseType: 'blob',
         timeout: 30000
       })

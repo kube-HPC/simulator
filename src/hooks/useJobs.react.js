@@ -1,6 +1,5 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getJaegerData as _getJaegerData } from 'actions/jobs.action';
 import { tableFilterSelector } from 'utils/tableSelector';
 import { useCallback, useMemo } from 'react';
 import { isEqual } from 'lodash';
@@ -19,22 +18,14 @@ const initialJobRecord = ({ record, jaeger }) => ({
     status: record.status,
     results: record.results
   },
-  jaeger: jaeger[record.key] || null
+  jaeger: jaeger && jaeger.dataSource
 });
 
 export default function useJobs() {
   const { isOn } = useSelector(state => state.userGuide, isEqual);
   const dispatch = useDispatch();
 
-  const getJaegerData = useCallback(jobsId => dispatch(_getJaegerData(jobsId)), [dispatch]);
   const columns = useMemo(() => getJobsColumns({ dispatch, isGuideOn: isOn }), [dispatch, isOn]);
-
-  const onExpand = useCallback(
-    (expanded, record) => {
-      expanded && getJaegerData(record.pipeline.jobId);
-    },
-    [getJaegerData]
-  );
 
   const jaeger = useSelector(state => state.jobsJaeger);
   const expandedRowRender = useCallback(
@@ -51,7 +42,6 @@ export default function useJobs() {
   return {
     dataSource,
     columns,
-    expandedRowRender,
-    onExpand
+    expandedRowRender
   };
 }
