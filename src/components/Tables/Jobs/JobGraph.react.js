@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
@@ -51,16 +51,15 @@ function JobGraph({ graph, pipeline }) {
   const [visible, setVisible] = useState(false);
   const [payload, setPayload] = useState({ taskId: undefined });
 
+  const graphRef = useRef();
+
   const dispatch = useDispatch();
   const getLogs = ({ taskId, podName }) => dispatch(getKubernetesLogsData({ taskId, podName }));
   const toggleVisible = () => setVisible(prev => !prev);
 
   const events = {
-    selectNode: event => {
-      const {
-        nodes: [nodeName]
-      } = event;
-
+    click: ({ nodes }) => {
+      const [nodeName] = nodes;
       if (!nodeName) return;
 
       const nodeData = graph.nodes.find(findNodeName(nodeName));
@@ -125,7 +124,7 @@ function JobGraph({ graph, pipeline }) {
         </BottomContent>
       </Drawer>
       <GraphContainer>
-        <Graph graph={adaptedGraph} options={graphOptions} events={events} />
+        <Graph ref={graphRef} graph={adaptedGraph} options={graphOptions} events={events} />
       </GraphContainer>
     </>
   );
