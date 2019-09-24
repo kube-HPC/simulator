@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
 import actions from 'const/application-actions';
-import transformTraceData from 'components/Jaeger/transformTraceData';
+import transformTraceData from 'utils/jaeger/transformTraceData';
 
 export const jobsTable = handleActions(
   {

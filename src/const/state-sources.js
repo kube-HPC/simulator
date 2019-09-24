@@ -14,5 +14,6 @@ export default {
   PIPELINE_TABLE: 'pipelineTable',
   WORKER_TABLE: 'workerTable',
   CONNECTION_STATUS: 'connectionStatus',
-  USER_GUIDE: 'userGuide'
+  USER_GUIDE: 'userGuide',
+  SOCKET_URL: 'socketURL'
 };
