@@ -8,15 +8,15 @@ const FlexFixed = styled(FlexBox)`
   background: ${COLOR_LAYOUT.background};
   position: fixed;
   right: 0;
-  bottom: 1px;
+  bottom: 0px;
   height: 56px;
   padding: 0 24px;
   line-height: 56px;
   border-top: 1px solid ${COLOR_LAYOUT.border};
 `;
 
-const BottomContent = ({ children, extra, width, ...props }) => (
-  <FlexFixed style={{ width: width || '50%', ...props }}>
+const BottomContent = ({ children, extra, width }) => (
+  <FlexFixed style={{ width, marginRight: 0, marginLeft: 0 }}>
     <FlexBox.Item>
       <FlexBox>
         {extra.map((value, key) => (
@@ -35,7 +35,8 @@ const BottomContent = ({ children, extra, width, ...props }) => (
 );
 
 BottomContent.defaultProps = {
-  extra: []
+  extra: [],
+  width: '50vw'
 };
 
 BottomContent.propTypes = {

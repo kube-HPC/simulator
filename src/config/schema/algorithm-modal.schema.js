@@ -56,17 +56,31 @@ export default {
     },
     GIT: {
       label: 'Git',
+      field: 'gitRepository',
       REPOSITORY: {
         label: 'Repository',
-        field: 'repository'
+        field: 'repository',
+        placeholder: 'Enter Git Repository URL'
       },
       BRANCH: {
         label: 'Branch',
-        field: 'branch'
+        field: 'branch',
+        placeholder: 'Enter Branch'
       },
       TOKEN: {
         label: 'Token',
-        field: 'token'
+        field: 'token',
+        placeholder: 'Enter Token'
+      },
+      TAG: {
+        label: 'Tag',
+        field: 'tag',
+        placeholder: 'Enter Tag'
+      },
+      GIT_KIND: {
+        label: 'Git Kind',
+        field: 'gitKind',
+        placeholder: 'Enter Git Kind'
       }
     }
   },

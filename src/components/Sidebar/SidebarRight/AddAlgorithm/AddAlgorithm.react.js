@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
-import parseUnit from 'parse-unit';
+
 import PropTypes from 'prop-types';
 
 import { Input, Icon, Select, InputNumber, Upload, Divider, Form, Button, Radio } from 'antd';
@@ -11,6 +11,8 @@ import { BottomContent } from 'components/common';
 import { algorithmModalTemplate as template, algorithmModalSchema as schema } from 'config';
 import { toUpperCaseFirstLetter } from 'utils';
 import { applyAlgorithm } from 'actions';
+import MemoryField from './MemoryField.react';
+import GitBuildType from './GitBuildType.react';
 
 const Option = Select.Option;
 
@@ -64,6 +66,8 @@ const FormDivider = ({ children, ...props }) => (
 
 FormDivider.propTypes = Divider.propTypes;
 
+const { CODE, IMAGE, GIT } = schema.BUILD_TYPES;
+
 const getBuildTypes = ({ buildType, getFieldDecorator, fileList, setFileList }) => {
   const draggerProps = {
     name: 'file',
@@ -78,8 +82,6 @@ const getBuildTypes = ({ buildType, getFieldDecorator, fileList, setFileList }) 
     fileList,
     onRemove: () => setFileList([])
   };
-
-  const { CODE, IMAGE } = schema.BUILD_TYPES;
 
   return {
     [CODE.label]: (
@@ -118,53 +120,37 @@ const getBuildTypes = ({ buildType, getFieldDecorator, fileList, setFileList }) 
           rules: [{ required: buildType === IMAGE.label, message: 'Image URL required' }]
         })(<Input placeholder="Insert algorithm image" />)}
       </FormItem>
+    ),
+    [GIT.label]: (
+      <FormItem>{getFieldDecorator(GIT.field)(<GitBuildType FormItem={FormItem} />)}</FormItem>
     )
-    // TODO: Next Feature
-    // ,git: (
-    //   <>
-    //     <FormItem label={GIT.REPOSITORY.label}>
-    //       {getFieldDecorator(GIT.REPOSITORY.field)(<Input placeholder="Enter Git Repository" />)}
-    //     </FormItem>
-    //     <FormItem label={GIT.BRANCH.label}>
-    //       {getFieldDecorator(GIT.BRANCH.field, {
-    //         initialValue: 'master'
-    //       })(<Input placeholder="Enter Branch" />)}
-    //     </FormItem>
-    //     <FormItem label={GIT.TOKEN.label}>
-    //       {getFieldDecorator(GIT.TOKEN.field)(<Input.Password placeholder="Enter Token" />)}
-    //     </FormItem>
-    //   </>
-    // )
   };
-};
-
-const getMemoryUnits = str => {
-  const [value, unit] = parseUnit(str);
-  return { value, unit };
 };
 
 const AddAlgorithm = ({ form }) => {
   const [buildType, setBuildType] = useState(schema.BUILD_TYPES.CODE.label);
   const [fileList, setFileList] = useState([]);
-  const [mem, setMem] = useState(getMemoryUnits(template.mem));
 
   const { getFieldDecorator, validateFields } = form;
   const buildTypes = getBuildTypes({ buildType, getFieldDecorator, fileList, setFileList });
 
   const dispatch = useDispatch();
+
   const onSubmitClick = e => {
     e.preventDefault();
     validateFields((err, values) => {
+      console.log('values', values.mem);
       if (!err) {
         const formData = new FormData();
         const options = values.options.reduce((acc, option) => ({ ...acc, [option]: true }), {});
-        const payload = { ...values, options, mem: `${mem.value}${mem.unit}` };
+        const payload = { ...values, options };
         const [file] = fileList;
 
         if (buildType === schema.BUILD_TYPES.CODE.label) formData.append('file', file);
 
         formData.append('payload', JSON.stringify(payload));
-        dispatch(applyAlgorithm(formData));
+        console.log(payload);
+        // dispatch(applyAlgorithm(formData));
       }
     });
   };
@@ -197,24 +183,17 @@ const AddAlgorithm = ({ form }) => {
         })(<InputNumber min={0} />)}
       </FormItem>
       <FormItem label={schema.MEMORY.label} labelAlign="left">
-        <Input.Group compact>
-          <InputNumber
-            min={1}
-            defaultValue={getMemoryUnits(template.mem).value}
-            onChange={value => setMem(prev => ({ ...prev, value }))}
-          />
-          <Select
-            style={{ width: '90px' }}
-            defaultValue={getMemoryUnits(template.mem).unit}
-            onSelect={unit => setMem(prev => ({ ...prev, unit }))}
-          >
+        {getFieldDecorator(schema.MEMORY.field, {
+          initialValue: template.mem
+        })(
+          <MemoryField>
             {schema.MEMORY.memoryTypes.map(value => (
               <Option key={value} value={value}>
                 {value}
               </Option>
             ))}
-          </Select>
-        </Input.Group>
+          </MemoryField>
+        )}
       </FormItem>
       <FormDivider>{schema.DIVIDER.ADVANCED}</FormDivider>
       <FormItem label={schema.WORKERS.label}>
@@ -235,7 +214,6 @@ const AddAlgorithm = ({ form }) => {
       </FormItem>
       <FormDivider>{toUpperCaseFirstLetter(buildType)}</FormDivider>
       {buildTypes[buildType]}
-
       <BottomContent width={DRAWER_SIZE.ADD_ALGORITHM}>
         <Form.Item>
           <Button key="Submit" type="primary" htmlType="submit">

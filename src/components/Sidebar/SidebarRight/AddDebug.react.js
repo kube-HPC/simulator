@@ -4,12 +4,12 @@ import { useDispatch } from 'react-redux';
 import { Input, Icon, Form, Button } from 'antd';
 
 import { addAlgorithm } from 'actions/debug.action';
-import template from 'config/template/algorithm-modal.template';
-import BottomContent from 'components/common/BottomContent.react';
 import { DRAWER_SIZE } from 'const';
+import { BottomContent } from 'components/common';
+import { algorithmModalTemplate } from 'config';
 
 function AddDebug() {
-  const [algoData, setAlgoData] = useState(template);
+  const [algoData, setAlgoData] = useState(algorithmModalTemplate);
 
   const dispatch = useDispatch();
   const onSubmit = () => dispatch(addAlgorithm(algoData));
