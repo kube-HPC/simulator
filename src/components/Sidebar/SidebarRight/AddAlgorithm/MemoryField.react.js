@@ -5,7 +5,7 @@ import parseUnit from 'parse-unit';
 
 const selectStyle = { width: '90px' };
 
-const MemoryField = React.forwardRef(({ onChange, children, value }) => {
+const MemoryField = React.forwardRef(({ onChange, children, value }, ref) => {
   const [numberInitial, unitInitial] = parseUnit(value);
 
   const [number, setNumber] = useState(numberInitial);
@@ -33,8 +33,8 @@ const MemoryField = React.forwardRef(({ onChange, children, value }) => {
 
 MemoryField.propTypes = {
   children: PropTypes.node,
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired
+  onChange: PropTypes.func,
+  value: PropTypes.string
 };
 
 export default MemoryField;

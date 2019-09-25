@@ -1,92 +1,111 @@
 export default {
+  BUILD_TYPES: {
+    CODE: {
+      DRAGGER: {
+        field: 'dragger'
+      },
+      ENTRY_POINT: {
+        field: 'entryPoint',
+        label: 'Entry Point'
+      },
+      ENVIRONMENT: {
+        field: 'env',
+        label: 'Environment',
+        types: {
+          nodejs: 'Node.js',
+          python: 'Python'
+        }
+      },
+      label: 'Code',
+      VERSION: {
+        field: 'version',
+        label: 'Version'
+      }
+    },
+    GIT: {
+      BRANCH: {
+        field: 'branch',
+        label: 'Branch',
+        placeholder: 'Enter Branch'
+      },
+      COMMIT: {
+        field: 'commit',
+        ID: {
+          field: 'id',
+          label: 'ID',
+          placeholder: 'Enter Commit ID'
+        },
+        label: 'Commit Details',
+        MESSAGE: {
+          field: 'message',
+          label: 'Message',
+          placeholder: 'Enter Commit Message'
+        },
+        TIMESTAMP: {
+          field: 'timestamp',
+          label: 'Time Stamp',
+          placeholder: 'Enter Commit Time Stamp'
+        }
+      },
+      field: 'gitRepository',
+      GIT_KIND: {
+        field: 'gitKind',
+        label: 'Git Kind',
+        placeholder: 'Enter Git Kind'
+      },
+      label: 'Git',
+      TAG: {
+        field: 'tag',
+        label: 'Tag',
+        placeholder: 'Enter Tag'
+      },
+      TOKEN: {
+        field: 'token',
+        label: 'Token',
+        placeholder: 'Enter Token'
+      },
+      URL: {
+        field: 'url',
+        label: 'URL',
+        placeholder: 'Enter Git Repository URL'
+      }
+    },
+    IMAGE: {
+      ALGORITHM_IMAGE: {
+        field: 'algorithmImage',
+        label: 'Algorithm Image'
+      },
+      label: 'Image'
+    }
+  },
+  CPU: {
+    field: 'cpu',
+    label: 'CPU Usage'
+  },
   DIVIDER: {
     ADVANCED: 'Advanced',
     RESOURCES: 'Resources'
   },
-  NAME: {
-    label: 'Algorithm Name',
-    field: 'name'
-  },
-  CPU: {
-    label: 'CPU Usage',
-    field: 'cpu'
-  },
   GPU: {
-    label: 'GPU Usage',
-    field: 'gpu'
+    field: 'gpu',
+    label: 'GPU Usage'
   },
   MEMORY: {
-    label: 'Memory Usage',
     field: 'mem',
+    label: 'Memory Usage',
     memoryTypes: ['Ki', 'M', 'Mi', 'Gi', 'm', 'K', 'G', 'T', 'Ti', 'P', 'Pi', 'E', 'Ei']
   },
-  WORKERS: {
-    label: 'Min Hot Workers',
-    field: 'minHotWorkers'
-  },
-  BUILD_TYPES: {
-    CODE: {
-      label: 'Code',
-      ENVIRONMENT: {
-        label: 'Environment',
-        field: 'env',
-        types: {
-          python: 'Python',
-          nodejs: 'Node.js'
-        }
-      },
-      ENTRY_POINT: {
-        label: 'Entry Point',
-        field: 'entryPoint'
-      },
-      DRAGGER: {
-        field: 'dragger'
-      },
-      VERSION: {
-        label: 'Version',
-        field: 'version'
-      }
-    },
-    IMAGE: {
-      label: 'Image',
-      ALGORITHM_IMAGE: {
-        label: 'Algorithm Image',
-        field: 'algorithmImage'
-      }
-    },
-    GIT: {
-      label: 'Git',
-      field: 'gitRepository',
-      REPOSITORY: {
-        label: 'Repository',
-        field: 'repository',
-        placeholder: 'Enter Git Repository URL'
-      },
-      BRANCH: {
-        label: 'Branch',
-        field: 'branch',
-        placeholder: 'Enter Branch'
-      },
-      TOKEN: {
-        label: 'Token',
-        field: 'token',
-        placeholder: 'Enter Token'
-      },
-      TAG: {
-        label: 'Tag',
-        field: 'tag',
-        placeholder: 'Enter Tag'
-      },
-      GIT_KIND: {
-        label: 'Git Kind',
-        field: 'gitKind',
-        placeholder: 'Enter Git Kind'
-      }
-    }
+  NAME: {
+    field: 'name',
+    label: 'Algorithm Name'
   },
   OPTIONS: {
-    label: 'Options',
     field: 'options',
+    label: 'Options',
     types: ['debug']
+  },
+  WORKERS: {
+    field: 'minHotWorkers',
+    label: 'Min Hot Workers'
   }
 };
