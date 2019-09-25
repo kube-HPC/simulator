@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { notification, Icon, Button } from 'antd';
 import { Drawer } from '.';
-import { JsonEditor, BottomContent, Card } from 'components/common';
+import { BottomContent, Card, JsonEditor } from 'components/common';
 
 const configNotificationOnOpen = description => ({
   message: 'Error in Submitted Json',
@@ -47,6 +48,14 @@ const DrawerEditor = ({ valueString, ...props }) => {
       </BottomContent>
     </Drawer>
   );
+};
+
+DrawerEditor.propTypes = {
+  valueString: PropTypes.string,
+  title: PropTypes.element,
+  opener: PropTypes.func,
+  submitText: PropTypes.string,
+  onSubmit: PropTypes.func
 };
 
 export default DrawerEditor;

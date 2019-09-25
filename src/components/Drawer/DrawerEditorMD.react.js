@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { notification, Icon, Button } from 'antd';
 
 import { ReactComponent as CodeIcon } from 'images/code-icon.svg';
@@ -80,6 +81,13 @@ function DrawerEditorMD({ record, onSubmit, readmeDefault, submitText, ...props 
     </Drawer>
   );
 }
+
+DrawerEditorMD.propTypes = {
+  submitText: PropTypes.string,
+  readmeDefault: PropTypes.string,
+  onSubmit: PropTypes.func,
+  record: PropTypes.object
+};
 
 DrawerEditorMD.defaultProps = {
   submitText: 'Submit'

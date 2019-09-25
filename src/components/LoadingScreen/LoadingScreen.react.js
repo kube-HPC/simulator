@@ -41,7 +41,7 @@ const duration = { duration: 3500 };
 const fadeIn = { opacity: 1, from: { opacity: 0 }, config: { duration: 3000 } };
 const moveRepeat = {
   to: async next => {
-    while (1) await next({ radians: 2 * Math.PI });
+    for (;;) await next({ radians: 2 * Math.PI });
   },
   from: { radians: 0 },
   config: duration,
@@ -50,7 +50,7 @@ const moveRepeat = {
 const resize = {
   from: { x: 0 },
   to: async next => {
-    while (1) await next({ x: 1 });
+    for (;;) await next({ x: 1 });
   },
   config: duration,
   reset: true

@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import { Result, Button, Typography, Col, Collapse } from 'antd';
 import styled from 'styled-components';
 import { Icons, FlexBox } from 'components/common';
@@ -81,5 +83,9 @@ class ErrorBoundary extends React.Component {
     );
   }
 }
+
+ErrorBoundary.propTypes = {
+  children: PropTypes.node
+};
 
 export default ErrorBoundary;

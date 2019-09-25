@@ -1,17 +1,18 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, lazy } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
 import { Button, Typography } from 'antd';
-import Graph from 'react-graph-vis';
 
 import { getKubernetesLogsData, getCaching } from 'actions/jobs.action';
 import graphOptions from 'config/template/graph-options.template';
 
-import { BottomContent, Card } from 'components/common';
+import { BottomContent, Card, Fallback } from 'components/common';
 import { Drawer } from 'components/Drawer';
 import { NodeInfo } from '.';
+
+const Graph = lazy(() => import('react-graph-vis'));
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -123,7 +124,9 @@ function JobGraph({ graph, pipeline }) {
         </BottomContent>
       </Drawer>
       <GraphContainer>
-        <Graph graph={adaptedGraph} options={graphOptions} events={events} />
+        <Fallback>
+          <Graph graph={adaptedGraph} options={graphOptions} events={events} />
+        </Fallback>
       </GraphContainer>
     </>
   );
