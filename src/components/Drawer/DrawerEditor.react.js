@@ -33,6 +33,7 @@ const DrawerEditor = ({ valueString, ...props }) => {
       <Card>
         <JsonEditor isControlled value={value} onChange={setValue} />
       </Card>
+      <BottomContent.Divider />
       <BottomContent
         extra={[
           <Button key="clear" type="danger" onClick={onClearClick}>

@@ -109,6 +109,7 @@ function JobGraph({ graph, pipeline }) {
         <Card>
           <NodeInfo payload={payload} />
         </Card>
+        <BottomContent.Divider />
         <BottomContent
           extra={[
             <Button key="redo" icon="redo" onClick={onRefreshClick}>

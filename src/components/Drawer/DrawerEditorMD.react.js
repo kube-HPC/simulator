@@ -71,6 +71,7 @@ function DrawerEditorMD({ record, onSubmit, readmeDefault, submitText, ...props 
         </Tabs.TabPane>
       </Tabs>
 
+      <BottomContent.Divider />
       <BottomContent extra={bottomExtra}>
         <Button type="primary" onClick={onSubmitClick}>
           {submitText}

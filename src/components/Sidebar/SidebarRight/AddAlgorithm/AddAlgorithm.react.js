@@ -88,7 +88,7 @@ const AddAlgorithm = ({ form }) => {
           initialValue: template.mem
         })(
           <MemoryField>
-            {schema.MEMORY.memoryTypes.map(value => (
+            {schema.MEMORY.types.map(value => (
               <Option key={value} value={value}>
                 {value}
               </Option>
@@ -115,6 +115,7 @@ const AddAlgorithm = ({ form }) => {
       </FormItem>
       <FormDivider>{toUpperCaseFirstLetter(buildType)}</FormDivider>
       {buildTypes[buildType]}
+      <BottomContent.Divider />
       <BottomContent width={DRAWER_SIZE.ADD_ALGORITHM}>
         <Button key="Submit" type="primary" htmlType="submit">
           Submit

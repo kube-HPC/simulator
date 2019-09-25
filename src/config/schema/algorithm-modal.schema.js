@@ -10,6 +10,7 @@ export default {
       },
       ENVIRONMENT: {
         field: 'env',
+        placeholder: 'Pick Environment',
         label: 'Environment',
         types: {
           nodejs: 'Node.js',
@@ -50,8 +51,9 @@ export default {
       field: 'gitRepository',
       GIT_KIND: {
         field: 'gitKind',
-        label: 'Git Kind',
-        placeholder: 'Enter Git Kind'
+        label: 'Git Host',
+        placeholder: 'Pick Git Host',
+        types: ['github', 'gitlab', 'none']
       },
       label: 'Git',
       TAG: {
@@ -93,7 +95,7 @@ export default {
   MEMORY: {
     field: 'mem',
     label: 'Memory Usage',
-    memoryTypes: ['Ki', 'M', 'Mi', 'Gi', 'm', 'K', 'G', 'T', 'Ti', 'P', 'Pi', 'E', 'Ei']
+    types: ['Ki', 'M', 'Mi', 'Gi', 'm', 'K', 'G', 'T', 'Ti', 'P', 'Pi', 'E', 'Ei']
   },
   NAME: {
     field: 'name',

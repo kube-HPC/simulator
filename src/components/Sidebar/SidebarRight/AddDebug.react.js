@@ -25,6 +25,7 @@ function AddDebug() {
           />
         </Form.Item>
       </Form>
+      <BottomContent.Divider />
       <BottomContent width={DRAWER_SIZE.ADD_DEBUG}>
         <Button key="Submit" type="primary" onClick={onSubmit}>
           Confirm

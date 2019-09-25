@@ -3,6 +3,7 @@ import { FormItem, FormDivider } from './FormElements.react';
 import { Input, Upload, Icon, Select } from 'antd';
 
 import { algorithmModalTemplate as template, algorithmModalSchema as schema } from 'config';
+import { toUpperCaseFirstLetter } from 'utils';
 
 const mutateFields = ({ target, obj }) =>
   Object.fromEntries(
@@ -24,7 +25,14 @@ const GIT = { ...gitMutatedShallowFields, COMMIT };
 const insertEnvOptions = options =>
   Object.entries(options).map(([key, value]) => (
     <Select.Option key={key} value={key}>
-      {value}
+      {toUpperCaseFirstLetter(value)}
+    </Select.Option>
+  ));
+
+const insertGitKindOptions = options =>
+  options.map((type, key) => (
+    <Select.Option key={key} value={type}>
+      {toUpperCaseFirstLetter(type)}
     </Select.Option>
   ));
 
@@ -50,7 +58,7 @@ const getBuildTypes = ({ buildType, getFieldDecorator, fileList, setFileList }) 
           {getFieldDecorator(CODE.ENVIRONMENT.field, {
             rules: [{ required: buildType === CODE.label, message: 'Environment required' }]
           })(
-            <Select placeholder="Pick Environment">
+            <Select placeholder={CODE.ENVIRONMENT.placeholder}>
               {insertEnvOptions(CODE.ENVIRONMENT.types)}
             </Select>
           )}
@@ -105,9 +113,11 @@ const getBuildTypes = ({ buildType, getFieldDecorator, fileList, setFileList }) 
           })(<Input.Password placeholder={GIT.TOKEN.placeholder} />)}
         </FormItem>
         <FormItem label={GIT.GIT_KIND.label}>
-          {getFieldDecorator(GIT.GIT_KIND.field, {
-            initialValue: template.gitRepository.gitKind
-          })(<Input placeholder={GIT.GIT_KIND.placeholder} />)}
+          {getFieldDecorator(GIT.GIT_KIND.field)(
+            <Select placeholder={GIT.GIT_KIND.placeholder}>
+              {insertGitKindOptions(GIT.GIT_KIND.types)}
+            </Select>
+          )}
         </FormItem>
         <FormDivider>{GIT.COMMIT.label}</FormDivider>
         <FormItem label={GIT.COMMIT.ID.label}>

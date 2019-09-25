@@ -15,6 +15,13 @@ const FlexFixed = styled(FlexBox)`
   border-top: 1px solid ${COLOR_LAYOUT.border};
 `;
 
+const Divider = () => (
+  <>
+    <br />
+    <br />
+  </>
+);
+
 const BottomContent = ({ children, extra, width }) => (
   <FlexFixed style={{ width, marginRight: 0, marginLeft: 0 }}>
     <FlexBox.Item>
@@ -33,6 +40,8 @@ const BottomContent = ({ children, extra, width }) => (
     </FlexBox.Item>
   </FlexFixed>
 );
+
+BottomContent.Divider = Divider;
 
 BottomContent.defaultProps = {
   extra: [],
