@@ -6,10 +6,10 @@ import { Input, Icon, Form, Button } from 'antd';
 import { addAlgorithm } from 'actions/debug.action';
 import { DRAWER_SIZE } from 'const';
 import { BottomContent } from 'components/common';
-import { algorithmModalTemplate } from 'config';
+import template from 'config/template/algorithm-modal.template';
 
 function AddDebug() {
-  const [algoData, setAlgoData] = useState(algorithmModalTemplate);
+  const [algoData, setAlgoData] = useState(template);
 
   const dispatch = useDispatch();
   const onSubmit = () => dispatch(addAlgorithm(algoData));
