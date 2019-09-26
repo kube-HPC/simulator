@@ -36,6 +36,7 @@ const RunRawPipeline = () => {
       <Card>
         <JsonEditor isControlled value={value} onChange={setValue} />
       </Card>
+      <BottomContent.Divider />
       <BottomContent
         extra={[
           <Button type="danger" key="clear" onClick={onClear}>

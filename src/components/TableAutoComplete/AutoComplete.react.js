@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Input, AutoComplete as AntAutoComplete } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { autoCompleteFilter } from 'actions/autoComplete.action';
 import getDataByTable from './getDataByTable';
 

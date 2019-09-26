@@ -13,7 +13,7 @@ import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
 import { ReactComponent as AlgorithmIcon } from 'images/algorithm-icon.svg';
 import { ReactComponent as JobsIcon } from 'images/jobs-icon.svg';
 
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 
 import { Tag, Layout, Icon, Menu } from 'antd';
 import { COLOR_LAYOUT } from 'styles';

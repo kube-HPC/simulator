@@ -363,6 +363,7 @@ export default function AddPipelineForm(props) {
           </Row>
         </>
       )}
+      <BottomContent.Divider />
       <BottomContent
         width={DRAWER_SIZE.ADD_PIPELINE}
         extra={[

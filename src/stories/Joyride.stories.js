@@ -25,7 +25,7 @@ function JoyrideContainer() {
   const steps = [
     {
       run: false,
-      content: <h2>Let's begin our journey!</h2>,
+      content: <h2>Let&apos;s begin our journey!</h2>,
       locale: { skip: <strong aria-label="skip">S-K-I-P</strong> },
       placement: 'center',
       target: 'body'
@@ -40,15 +40,11 @@ function JoyrideContainer() {
     }
   ];
 
-  const handleJoyrideCallback = data => {
-    const { status, type } = data;
-
+  const handleJoyrideCallback = ({ status }) => {
     const finishedStatuses = [STATUS.FINISHED, STATUS.SKIPPED];
-
-    if (finishedStatuses.includes(status)) {
-      setRun(false);
-    }
+    if (finishedStatuses.includes(status)) setRun(false);
   };
+
   return (
     <>
       <Joyride

@@ -4,9 +4,9 @@ import { useDispatch } from 'react-redux';
 import { Input, Icon, Form, Button } from 'antd';
 
 import { addAlgorithm } from 'actions/debug.action';
-import template from 'config/template/algorithm-modal.template';
-import BottomContent from 'components/common/BottomContent.react';
 import { DRAWER_SIZE } from 'const';
+import { BottomContent } from 'components/common';
+import template from 'config/template/algorithm-modal.template';
 
 function AddDebug() {
   const [algoData, setAlgoData] = useState(template);
@@ -25,6 +25,7 @@ function AddDebug() {
           />
         </Form.Item>
       </Form>
+      <BottomContent.Divider />
       <BottomContent width={DRAWER_SIZE.ADD_DEBUG}>
         <Button key="Submit" type="primary" onClick={onSubmit}>
           Confirm

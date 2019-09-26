@@ -1,5 +1,5 @@
 import moment from 'moment';
-import _ from 'lodash';
+import round from 'lodash/round';
 
 import { toFloatPrecision } from './number';
 
@@ -85,7 +85,7 @@ export function formatDuration(duration, inputUnit = 'microseconds') {
     units = 's';
     d /= 1000;
   }
-  return _.round(d, 2) + units;
+  return round(d, 2) + units;
 }
 
 export function formatRelativeDate(value) {

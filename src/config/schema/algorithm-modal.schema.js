@@ -1,78 +1,115 @@
-export default {
+const addAlgorithmSchema = {
+  BUILD_TYPES: {
+    CODE: {
+      DRAGGER: {
+        field: 'dragger'
+      },
+      ENTRY_POINT: {
+        field: 'entryPoint',
+        label: 'Entry Point'
+      },
+      ENVIRONMENT: {
+        field: 'env',
+        placeholder: 'Pick Environment',
+        label: 'Environment',
+        types: {
+          nodejs: 'Node.js',
+          python: 'Python'
+        }
+      },
+      label: 'Code',
+      VERSION: {
+        field: 'version',
+        label: 'Version'
+      }
+    },
+    GIT: {
+      BRANCH: {
+        field: 'gitRepository.branchName',
+        label: 'Branch',
+        placeholder: 'Enter Branch'
+      },
+      COMMIT: {
+        field: 'gitRepository.commit',
+        ID: {
+          field: 'id',
+          label: 'Commit ID',
+          placeholder: 'Enter Commit ID'
+        },
+        label: 'Commit Details',
+        MESSAGE: {
+          field: 'gitRepository.message',
+          label: 'Message',
+          placeholder: 'Enter Commit Message'
+        },
+        TIMESTAMP: {
+          field: 'gitRepository.timestamp',
+          label: 'Time Stamp',
+          placeholder: 'Enter Commit Time Stamp'
+        }
+      },
+      field: 'gitRepository',
+      GIT_KIND: {
+        field: 'gitRepository.gitKind',
+        label: 'Git Host',
+        placeholder: 'Pick Git Host',
+        types: ['github', 'gitlab', 'none']
+      },
+      label: 'Git',
+      TAG: {
+        field: 'gitRepository.tag',
+        label: 'Tag',
+        placeholder: 'Enter Tag'
+      },
+      TOKEN: {
+        field: 'gitRepository.token',
+        label: 'Token',
+        placeholder: 'Enter Token'
+      },
+      URL: {
+        field: 'gitRepository.url',
+        label: 'URL',
+        placeholder: 'Enter Git Repository URL'
+      }
+    },
+    IMAGE: {
+      ALGORITHM_IMAGE: {
+        field: 'algorithmImage',
+        label: 'Algorithm Image'
+      },
+      label: 'Image'
+    }
+  },
+  CPU: {
+    field: 'cpu',
+    label: 'CPU Usage'
+  },
   DIVIDER: {
     ADVANCED: 'Advanced',
     RESOURCES: 'Resources'
   },
-  NAME: {
-    label: 'Algorithm Name',
-    field: 'name'
-  },
-  CPU: {
-    label: 'CPU Usage',
-    field: 'cpu'
-  },
   GPU: {
-    label: 'GPU Usage',
-    field: 'gpu'
+    field: 'gpu',
+    label: 'GPU Usage'
   },
   MEMORY: {
-    label: 'Memory Usage',
     field: 'mem',
-    memoryTypes: ['Ki', 'M', 'Mi', 'Gi', 'm', 'K', 'G', 'T', 'Ti', 'P', 'Pi', 'E', 'Ei']
+    label: 'Memory Usage',
+    types: ['Ki', 'M', 'Mi', 'Gi', 'm', 'K', 'G', 'T', 'Ti', 'P', 'Pi', 'E', 'Ei']
   },
-  WORKERS: {
-    label: 'Min Hot Workers',
-    field: 'minHotWorkers'
-  },
-  BUILD_TYPES: {
-    CODE: {
-      label: 'Code',
-      ENVIRONMENT: {
-        label: 'Environment',
-        field: 'env',
-        types: {
-          python: 'Python',
-          nodejs: 'Node.js'
-        }
-      },
-      ENTRY_POINT: {
-        label: 'Entry Point',
-        field: 'entryPoint'
-      },
-      DRAGGER: {
-        field: 'dragger'
-      },
-      VERSION: {
-        label: 'Version',
-        field: 'version'
-      }
-    },
-    IMAGE: {
-      label: 'Image',
-      ALGORITHM_IMAGE: {
-        label: 'Algorithm Image',
-        field: 'algorithmImage'
-      }
-    },
-    GIT: {
-      label: 'Git',
-      REPOSITORY: {
-        label: 'Repository',
-        field: 'repository'
-      },
-      BRANCH: {
-        label: 'Branch',
-        field: 'branch'
-      },
-      TOKEN: {
-        label: 'Token',
-        field: 'token'
-      }
-    }
+  NAME: {
+    field: 'name',
+    label: 'Algorithm Name'
   },
   OPTIONS: {
-    label: 'Options',
     field: 'options',
+    label: 'Options',
     types: ['debug']
+  },
+  WORKERS: {
+    field: 'minHotWorkers',
+    label: 'Min Hot Workers'
   }
 };
+
+export default addAlgorithmSchema;

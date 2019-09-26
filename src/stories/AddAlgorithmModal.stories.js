@@ -4,7 +4,7 @@ import { createStore } from 'redux';
 
 import { storiesOf } from '@storybook/react';
 
-import AddAlgorithm from 'components/Sidebar/SidebarRight/AddAlgorithm.react';
+import AddAlgorithm from 'components/Sidebar/SidebarRight/AddAlgorithm/AddAlgorithm.react';
 import rootReducer from 'reducers/root.reducer';
 import DrawerOperations from 'components/Drawer/DrawerOperations.react';
 

@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { get } from 'lodash';
+import get from 'lodash/get';
 import Immutable from 'seamless-immutable';
 import actions from 'const/application-actions';
 
