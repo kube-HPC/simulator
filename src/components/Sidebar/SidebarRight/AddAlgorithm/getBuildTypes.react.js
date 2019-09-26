@@ -16,9 +16,9 @@ const insertEnvOptions = options =>
     </Select.Option>
   ));
 
-const insertGitKindOptions = options =>
+const insertGitKindOptions = ({ options, predicate }) =>
   options.map((type, key) => (
-    <Select.Option key={key} value={type}>
+    <Select.Option key={key} value={type} disabled={predicate(type)}>
       {toUpperCaseFirstLetter(type)}
     </Select.Option>
   ));
@@ -108,7 +108,10 @@ const getBuildTypes = ({ buildType, getFieldDecorator, fileList, setFileList }) 
         <FormItem label={GIT.GIT_KIND.label}>
           {getFieldDecorator(GIT.GIT_KIND.field)(
             <Select placeholder={GIT.GIT_KIND.placeholder}>
-              {insertGitKindOptions(GIT.GIT_KIND.types)}
+              {insertGitKindOptions({
+                options: GIT.GIT_KIND.types,
+                predicate: v => v === 'gitlab'
+              })}
             </Select>
           )}
         </FormItem>
