@@ -1,7 +1,7 @@
 import * as filters from './../actions/filters.action';
 import reducer from './../reducers/filters.reducer';
 import expect from 'expect';
-import { generateMessage, isEquivalent } from './common';
+import { generateMessage } from './common';
 import { createStore } from 'redux';
 
 generateMessage.info('started filters test');

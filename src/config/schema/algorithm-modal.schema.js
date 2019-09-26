@@ -1,4 +1,4 @@
-export default {
+const addAlgorithmSchema = {
   BUILD_TYPES: {
     CODE: {
       DRAGGER: {
@@ -25,49 +25,49 @@ export default {
     },
     GIT: {
       BRANCH: {
-        field: 'branch',
+        field: 'gitRepository.branchName',
         label: 'Branch',
         placeholder: 'Enter Branch'
       },
       COMMIT: {
-        field: 'commit',
+        field: 'gitRepository.commit',
         ID: {
           field: 'id',
-          label: 'ID',
+          label: 'Commit ID',
           placeholder: 'Enter Commit ID'
         },
         label: 'Commit Details',
         MESSAGE: {
-          field: 'message',
+          field: 'gitRepository.message',
           label: 'Message',
           placeholder: 'Enter Commit Message'
         },
         TIMESTAMP: {
-          field: 'timestamp',
+          field: 'gitRepository.timestamp',
           label: 'Time Stamp',
           placeholder: 'Enter Commit Time Stamp'
         }
       },
       field: 'gitRepository',
       GIT_KIND: {
-        field: 'gitKind',
+        field: 'gitRepository.gitKind',
         label: 'Git Host',
         placeholder: 'Pick Git Host',
         types: ['github', 'gitlab', 'none']
       },
       label: 'Git',
       TAG: {
-        field: 'tag',
+        field: 'gitRepository.tag',
         label: 'Tag',
         placeholder: 'Enter Tag'
       },
       TOKEN: {
-        field: 'token',
+        field: 'gitRepository.token',
         label: 'Token',
         placeholder: 'Enter Token'
       },
       URL: {
-        field: 'url',
+        field: 'gitRepository.url',
         label: 'URL',
         placeholder: 'Enter Git Repository URL'
       }
@@ -111,3 +111,5 @@ export default {
     label: 'Min Hot Workers'
   }
 };
+
+export default addAlgorithmSchema;

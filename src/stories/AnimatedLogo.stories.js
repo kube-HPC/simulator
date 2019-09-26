@@ -19,7 +19,7 @@ function AnimateCircle() {
   const { x } = useSpring({
     from: { x: 0 },
     to: async next => {
-      while (1) await next({ x: 1 });
+      for (;;) await next({ x: 1 });
     },
     config: { duration: 3500 },
     reset: true

@@ -1,4 +1,4 @@
-export default {
+const addAlgorithmTemplate = {
   name: '',
   cpu: 1,
   gpu: 0,
@@ -17,6 +17,8 @@ export default {
     branchName: 'master',
     tag: '',
     token: '',
-    gitKind: ''
+    gitKind: 'github'
   }
 };
+
+export default addAlgorithmTemplate;

@@ -1,26 +1,13 @@
 import React from 'react';
-import { FormItem, FormDivider } from './FormElements.react';
+import { FormItem } from './FormElements.react';
 import { Input, Upload, Icon, Select } from 'antd';
 
-import { algorithmModalTemplate as template, algorithmModalSchema as schema } from 'config';
+import schema from 'config/schema/algorithm-modal.schema';
+
 import { toUpperCaseFirstLetter } from 'utils';
+import InputValidate from './InputValidate.react';
 
-const mutateFields = ({ target, obj }) =>
-  Object.fromEntries(
-    Object.entries(obj).map(([key, value]) => [
-      key,
-      value.field ? { ...value, field: `${target}.${value.field}` } : value
-    ])
-  );
-
-const { CODE, IMAGE, GIT: GIT_SOURCE } = schema.BUILD_TYPES;
-const gitMutatedShallowFields = mutateFields({ target: GIT_SOURCE.field, obj: GIT_SOURCE });
-const COMMIT = mutateFields({
-  target: gitMutatedShallowFields.COMMIT.field,
-  obj: gitMutatedShallowFields.COMMIT
-});
-
-const GIT = { ...gitMutatedShallowFields, COMMIT };
+const { CODE, IMAGE, GIT } = schema.BUILD_TYPES;
 
 const insertEnvOptions = options =>
   Object.entries(options).map(([key, value]) => (
@@ -35,6 +22,9 @@ const insertGitKindOptions = options =>
       {toUpperCaseFirstLetter(type)}
     </Select.Option>
   ));
+
+const draggerMarginTop = { marginTop: 15 };
+const beforeSelect = ['https://', 'http://'];
 
 const getBuildTypes = ({ buildType, getFieldDecorator, fileList, setFileList }) => {
   const draggerProps = {
@@ -69,7 +59,7 @@ const getBuildTypes = ({ buildType, getFieldDecorator, fileList, setFileList }) 
         <FormItem label={CODE.VERSION.label}>
           {getFieldDecorator(CODE.VERSION.field)(<Input placeholder="Insert Version" />)}
         </FormItem>
-        <FormItem wrapperCol={null} style={{ marginTop: '15px' }}>
+        <FormItem wrapperCol={null} style={draggerMarginTop}>
           <Upload.Dragger {...draggerProps}>
             <p className="ant-upload-drag-icon">
               <Icon type="inbox" />
@@ -90,27 +80,30 @@ const getBuildTypes = ({ buildType, getFieldDecorator, fileList, setFileList }) 
       </FormItem>
     ),
     [GIT.label]: (
+      // https://regex101.com/r/bQAO0J/1
       <>
         <FormItem label={GIT.URL.label}>
           {getFieldDecorator(GIT.URL.field, {
-            initialValue: template.gitRepository.url,
-            rules: [{ required: buildType === GIT.label, message: 'GIT URL required' }]
-          })(<Input placeholder={GIT.URL.placeholder} />)}
+            rules: [
+              {
+                required: buildType === GIT.label,
+                message: 'GIT URL required'
+              }
+            ]
+          })(
+            <InputValidate before={beforeSelect} after=".git" placeholder={GIT.URL.placeholder} />
+          )}
         </FormItem>
         <FormItem label={GIT.BRANCH.label}>
-          {getFieldDecorator(GIT.BRANCH.field, {
-            initialValue: template.gitRepository.branchName
-          })(<Input placeholder={GIT.BRANCH.placeholder} />)}
+          {getFieldDecorator(GIT.BRANCH.field)(<Input placeholder={GIT.BRANCH.placeholder} />)}
         </FormItem>
         <FormItem label={GIT.TAG.label}>
-          {getFieldDecorator(GIT.TAG.field, {
-            initialValue: template.gitRepository.tag
-          })(<Input placeholder={GIT.TAG.placeholder} />)}
+          {getFieldDecorator(GIT.TAG.field)(<Input placeholder={GIT.TAG.placeholder} />)}
         </FormItem>
         <FormItem label={GIT.TOKEN.label}>
-          {getFieldDecorator(GIT.TOKEN.field, {
-            initialValue: template.gitRepository.token
-          })(<Input.Password placeholder={GIT.TOKEN.placeholder} />)}
+          {getFieldDecorator(GIT.TOKEN.field)(
+            <Input.Password placeholder={GIT.TOKEN.placeholder} />
+          )}
         </FormItem>
         <FormItem label={GIT.GIT_KIND.label}>
           {getFieldDecorator(GIT.GIT_KIND.field)(
@@ -119,22 +112,10 @@ const getBuildTypes = ({ buildType, getFieldDecorator, fileList, setFileList }) 
             </Select>
           )}
         </FormItem>
-        <FormDivider>{GIT.COMMIT.label}</FormDivider>
         <FormItem label={GIT.COMMIT.ID.label}>
-          {getFieldDecorator(GIT.COMMIT.ID.field, {
-            initialValue: template.gitRepository.commit.id,
-            rules: [{ required: buildType === GIT.label, message: 'GIT ID required' }]
-          })(<Input placeholder={GIT.COMMIT.ID.placeholder} />)}
-        </FormItem>
-        <FormItem label={GIT.COMMIT.TIMESTAMP.label}>
-          {getFieldDecorator(GIT.COMMIT.TIMESTAMP.field, {
-            initialValue: template.gitRepository.commit.timestamp
-          })(<Input placeholder={GIT.COMMIT.TIMESTAMP.placeholder} />)}
-        </FormItem>
-        <FormItem label={GIT.COMMIT.MESSAGE.label}>
-          {getFieldDecorator(GIT.COMMIT.MESSAGE.field, {
-            initialValue: template.gitRepository.commit.message
-          })(<Input placeholder={GIT.COMMIT.MESSAGE.placeholder} />)}
+          {getFieldDecorator(GIT.COMMIT.ID.field)(
+            <Input placeholder={GIT.COMMIT.ID.placeholder} />
+          )}
         </FormItem>
       </>
     )

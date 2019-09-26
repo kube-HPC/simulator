@@ -1,26 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { useDispatch } from 'react-redux';
-
 import PropTypes from 'prop-types';
 
 import { Input, Select, InputNumber, Form, Button, Radio } from 'antd';
 
 import { DRAWER_SIZE } from 'const';
 import { BottomContent } from 'components/common';
-import { algorithmModalTemplate as template, algorithmModalSchema as schema } from 'config';
-import { toUpperCaseFirstLetter } from 'utils';
+import { toUpperCaseFirstLetter, mapObjValues } from 'utils';
 import { applyAlgorithm } from 'actions';
 import MemoryField from './MemoryField.react';
 import { FormItem, FormNoMargin, FormDivider } from './FormElements.react';
 import getBuildTypes from './getBuildTypes.react';
 
-const Option = Select.Option;
+// Direct import for auto-complete
+import schema from 'config/schema/algorithm-modal.schema';
+import template from 'config/template/algorithm-modal.template';
 
 const insertAlgorithmOptions = options =>
   options.map((option, key) => (
-    <Option key={key} value={option}>
+    <Select.Option key={key} value={option}>
       {toUpperCaseFirstLetter(option)}
-    </Option>
+    </Select.Option>
   ));
 
 const insertRadioButtons = buildTypes =>
@@ -36,8 +36,14 @@ const AddAlgorithm = ({ form }) => {
 
   const { getFieldDecorator, validateFields } = form;
   const buildTypes = getBuildTypes({ buildType, getFieldDecorator, fileList, setFileList });
-
   const dispatch = useDispatch();
+
+  const isEmpty = v =>
+    v === undefined ||
+    v === '' ||
+    v === null ||
+    (typeof v === 'object' && !Object.entries(v).length);
+  const isNotEmpty = v => !isEmpty(v);
 
   const onSubmit = e => {
     e.preventDefault();
@@ -49,10 +55,10 @@ const AddAlgorithm = ({ form }) => {
       const [file] = fileList;
 
       if (buildType === schema.BUILD_TYPES.CODE.label) formData.append('file', file);
+      const payloadFiltered = mapObjValues({ obj: payload, predicate: isNotEmpty });
 
-      formData.append('payload', JSON.stringify(payload));
-      console.log(payload);
-      // dispatch(applyAlgorithm(formData));
+      formData.append('payload', JSON.stringify(payloadFiltered));
+      dispatch(applyAlgorithm(formData));
     });
   };
 
@@ -67,40 +73,32 @@ const AddAlgorithm = ({ form }) => {
         <Radio.Group
           defaultValue={buildType}
           buttonStyle="solid"
-          onChange={v => setBuildType(v.target.value)}
+          onChange={e => setBuildType(e.target.value)}
         >
           {insertRadioButtons(buildTypes)}
         </Radio.Group>
       </FormItem>
       <FormDivider>{schema.DIVIDER.RESOURCES}</FormDivider>
       <FormItem label={schema.CPU.label}>
-        {getFieldDecorator(schema.CPU.field, {
-          initialValue: template.cpu
-        })(<InputNumber min={0.1} />)}
+        {getFieldDecorator(schema.CPU.field)(<InputNumber min={0.1} />)}
       </FormItem>
       <FormItem label={schema.GPU.label}>
-        {getFieldDecorator(schema.GPU.field, {
-          initialValue: template.gpu
-        })(<InputNumber min={0} />)}
+        {getFieldDecorator(schema.GPU.field)(<InputNumber min={0} />)}
       </FormItem>
       <FormItem label={schema.MEMORY.label} labelAlign="left">
-        {getFieldDecorator(schema.MEMORY.field, {
-          initialValue: template.mem
-        })(
+        {getFieldDecorator(schema.MEMORY.field)(
           <MemoryField>
             {schema.MEMORY.types.map(value => (
-              <Option key={value} value={value}>
+              <Select.Option key={value} value={value}>
                 {value}
-              </Option>
+              </Select.Option>
             ))}
           </MemoryField>
         )}
       </FormItem>
       <FormDivider>{schema.DIVIDER.ADVANCED}</FormDivider>
       <FormItem label={schema.WORKERS.label}>
-        {getFieldDecorator(schema.WORKERS.field, {
-          initialValue: template.minHotWorkers
-        })(<InputNumber min={0} />)}
+        {getFieldDecorator(schema.WORKERS.field)(<InputNumber min={0} />)}
       </FormItem>
       <FormItem label={schema.OPTIONS.label}>
         {getFieldDecorator(schema.OPTIONS.field, {
@@ -129,4 +127,13 @@ AddAlgorithm.propTypes = {
   form: PropTypes.object.isRequired
 };
 
-export default React.memo(Form.create()(AddAlgorithm));
+const mapPropsToFields = () => {
+  const mapper = value => Form.createFormField({ value });
+  return mapObjValues({ obj: template, mapper });
+};
+
+export default memo(
+  Form.create({
+    mapPropsToFields
+  })(AddAlgorithm)
+);
