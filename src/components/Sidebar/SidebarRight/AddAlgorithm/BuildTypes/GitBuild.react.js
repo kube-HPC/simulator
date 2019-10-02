@@ -5,8 +5,11 @@ import { Select, Input } from 'antd';
 import { toUpperCaseFirstLetter } from 'utils';
 import addAlgorithmSchema from 'config/schema/addAlgorithm.schema';
 import { InputAddon } from 'components/common';
+import SelectEnvOptions from '../SelectEnvOptions.react';
 
-const { GIT } = addAlgorithmSchema.BUILD_TYPES;
+const {
+  GIT: { URL, BRANCH, COMMIT, ENTRY_POINT, ENVIRONMENT, GIT_KIND, TAG, TOKEN }
+} = addAlgorithmSchema.BUILD_TYPES;
 
 const insertGitKindOptions = ({ options, predicate }) =>
   options.map((type, key) => (
@@ -15,49 +18,61 @@ const insertGitKindOptions = ({ options, predicate }) =>
     </Select.Option>
   ));
 
-const beforeSelect = ['https://', 'http://'];
+const {
+  addOns: { before, after }
+} = URL;
 
-const GitBuild = ({ buildType, getFieldDecorator }) => (
+const GitBuild = ({ required, getFieldDecorator }) => (
   <>
-    <FormItem label={GIT.URL.label}>
-      {getFieldDecorator(GIT.URL.field, {
+    <FormItem label={URL.label}>
+      {getFieldDecorator(URL.field, {
         rules: [
           {
-            required: buildType === GIT.field,
-            message: 'GIT URL required'
+            required,
+            message: URL.message
           }
         ]
-      })(<InputAddon before={beforeSelect} after=".git" placeholder={GIT.URL.placeholder} />)}
+      })(<InputAddon before={before} after={after} placeholder={URL.placeholder} />)}
     </FormItem>
-    <FormItem label={GIT.BRANCH.label}>
-      {getFieldDecorator(GIT.BRANCH.field)(<Input placeholder={GIT.BRANCH.placeholder} />)}
+    <FormItem label={BRANCH.label}>
+      {getFieldDecorator(BRANCH.field)(<Input placeholder={BRANCH.placeholder} />)}
     </FormItem>
-    <FormItem label={GIT.TAG.label}>
-      {getFieldDecorator(GIT.TAG.field)(<Input placeholder={GIT.TAG.placeholder} />)}
+    <FormItem label={TAG.label}>
+      {getFieldDecorator(TAG.field)(<Input placeholder={TAG.placeholder} />)}
     </FormItem>
-    <FormItem label={GIT.TOKEN.label}>
-      {getFieldDecorator(GIT.TOKEN.field)(<Input.Password placeholder={GIT.TOKEN.placeholder} />)}
+    <FormItem label={TOKEN.label}>
+      {getFieldDecorator(TOKEN.field)(<Input.Password placeholder={TOKEN.placeholder} />)}
     </FormItem>
-    <FormItem label={GIT.GIT_KIND.label}>
-      {getFieldDecorator(GIT.GIT_KIND.field)(
-        <Select placeholder={GIT.GIT_KIND.placeholder}>
+    <FormItem label={GIT_KIND.label}>
+      {getFieldDecorator(GIT_KIND.field)(
+        <Select placeholder={GIT_KIND.placeholder}>
           {insertGitKindOptions({
-            options: GIT.GIT_KIND.types,
+            options: GIT_KIND.types,
             // Currently not supported
             predicate: v => v === 'gitlab'
           })}
         </Select>
       )}
     </FormItem>
-    <FormItem label={GIT.COMMIT.ID.label}>
-      {getFieldDecorator(GIT.COMMIT.ID.field)(<Input placeholder={GIT.COMMIT.ID.placeholder} />)}
+    <FormItem label={COMMIT.ID.label}>
+      {getFieldDecorator(COMMIT.ID.field)(<Input placeholder={COMMIT.ID.placeholder} />)}
+    </FormItem>
+    <FormItem label={ENVIRONMENT.label}>
+      {getFieldDecorator(ENVIRONMENT.field, {
+        rules: [{ required, message: ENVIRONMENT.message }]
+      })(<SelectEnvOptions placeholder={ENVIRONMENT.placeholder} />)}
+    </FormItem>
+    <FormItem label={ENTRY_POINT.label}>
+      {getFieldDecorator(ENTRY_POINT.field, {
+        rules: [{ required, message: ENTRY_POINT.message }]
+      })(<Input placeholder={ENTRY_POINT.placeholder} />)}
     </FormItem>
   </>
 );
 
 GitBuild.propTypes = {
-  getFieldDecorator: PropTypes.func.isRequired,
-  buildType: PropTypes.string.isRequired
+  required: PropTypes.bool.isRequired,
+  getFieldDecorator: PropTypes.func.isRequired
 };
 
 export default GitBuild;

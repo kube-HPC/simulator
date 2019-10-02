@@ -1,5 +1,6 @@
 const addAlgorithmTemplate = {
   main: {
+    type: 'Code',
     name: '',
     cpu: 1,
     gpu: 0,
@@ -7,7 +8,10 @@ const addAlgorithmTemplate = {
     minHotWorkers: 0,
     options: {
       debug: false
-    }
+    },
+    algorithmEnv: '',
+    workerEnv: '',
+    nodeSelector: ''
   },
   code: {
     env: undefined,
@@ -18,6 +22,8 @@ const addAlgorithmTemplate = {
     algorithmImage: ''
   },
   gitRepository: {
+    env: undefined,
+    entryPoint: '',
     url: '',
     commit: {
       id: '',

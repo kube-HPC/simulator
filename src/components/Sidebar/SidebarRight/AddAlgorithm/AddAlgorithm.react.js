@@ -19,6 +19,9 @@ import { CodeBuild, ImageBuild, GitBuild } from './BuildTypes';
 const { MAIN, BUILD_TYPES } = schema;
 
 // #region helpers
+const toReadableBuildType = buildType =>
+  toUpperCaseFirstLetter(buildType === BUILD_TYPES.GIT.field ? 'GIT' : buildType);
+
 const insertAlgorithmOptions = options =>
   options.map((option, key) => (
     <Select.Option key={key} value={option}>
@@ -29,7 +32,7 @@ const insertAlgorithmOptions = options =>
 const insertRadioButtons = buildTypes =>
   Object.keys(buildTypes).map(key => (
     <Radio.Button key={key} value={key}>
-      {key === BUILD_TYPES.GIT.field ? 'Git' : toUpperCaseFirstLetter(key)}
+      {toReadableBuildType(key)}
     </Radio.Button>
   ));
 
@@ -41,14 +44,17 @@ const mainAdvancedOptions = Object.entries(template.main.options)
   .filter(([, isAvailable]) => isAvailable)
   .map(([key]) => key);
 
-const getBuildTypes = props => {
+const getBuildTypes = ({ buildType, ...props }) => {
   const { CODE, IMAGE, GIT } = BUILD_TYPES;
+  const isRequired = type => type === buildType;
   return {
-    [CODE.field]: <CodeBuild {...props} />,
-    [IMAGE.field]: <ImageBuild {...props} />,
-    [GIT.field]: <GitBuild {...props} />
+    [CODE.field]: <CodeBuild required={isRequired(CODE.field)} {...props} />,
+    [IMAGE.field]: <ImageBuild required={isRequired(IMAGE.field)} {...props} />,
+    [GIT.field]: <GitBuild required={isRequired(GIT.field)} {...props} />
   };
 };
+
+const lowCaseNumberRegex = /^[a-z0-9]+$/;
 
 // #endregion
 
@@ -60,7 +66,6 @@ const AddAlgorithm = ({ form, onSubmit }) => {
   const { getFieldDecorator, validateFields } = form;
 
   const buildTypes = getBuildTypes({ buildType, getFieldDecorator, fileList, setFileList });
-
   const dispatch = useDispatch();
 
   const onFormSubmit = e => {
@@ -68,14 +73,18 @@ const AddAlgorithm = ({ form, onSubmit }) => {
     validateFields((err, formObject) => {
       if (err) return;
 
+      // Reduce selected options to boolean entry
       const options = formObject.main.options.reduce(
         (acc, option) => ({ ...acc, [option]: true }),
         {}
       );
 
+      // On GIT build type, env & entryPoint are on the top object's keys level
+      const { env, entryPoint, ...rest } = formObject[buildType];
+
       const payload =
         buildType === BUILD_TYPES.GIT.field
-          ? { ...formObject.main, options, [BUILD_TYPES.GIT.field]: formObject[buildType] }
+          ? { ...formObject.main, options, [BUILD_TYPES.GIT.field]: rest, env, entryPoint }
           : { ...formObject.main, options, ...formObject[buildType] };
 
       const formData = new FormData();
@@ -100,11 +109,11 @@ const AddAlgorithm = ({ form, onSubmit }) => {
           rules: [
             {
               required: true,
-              message: 'Algorithm Name must be lower cased.',
-              pattern: /^[a-z0-9]+$/
+              message: MAIN.NAME.message,
+              pattern: lowCaseNumberRegex
             }
           ]
-        })(<Input placeholder="Insert Algorithm Name" />)}
+        })(<Input placeholder={MAIN.NAME.placeholder} />)}
       </FormItem>
       <FormItem label="Build Type">
         <Radio.Group
@@ -141,12 +150,12 @@ const AddAlgorithm = ({ form, onSubmit }) => {
         {getFieldDecorator(MAIN.OPTIONS.field, {
           initialValue: mainAdvancedOptions
         })(
-          <Select mode="tags" placeholder="Enable Options">
+          <Select mode="tags" placeholder={MAIN.OPTIONS.placeholder}>
             {insertAlgorithmOptions(MAIN.OPTIONS.types)}
           </Select>
         )}
       </FormItem>
-      <FormDivider>{toUpperCaseFirstLetter(buildType)}</FormDivider>
+      <FormDivider>{toReadableBuildType(buildType)}</FormDivider>
       {buildTypes[buildType]}
       <BottomContent.Divider />
       <BottomContent width={DRAWER_SIZE.ADD_ALGORITHM}>
@@ -163,10 +172,12 @@ AddAlgorithm.propTypes = {
   onSubmit: PropTypes.func
 };
 
-const mapPropsToFields = () => {
-  const mapper = value => Form.createFormField({ value });
-  return mapObjValues({ obj: template, mapper });
+AddAlgorithm.defaultProps = {
+  onSubmit: () => {}
 };
+
+const mapper = value => Form.createFormField({ value });
+const mapPropsToFields = () => mapObjValues({ obj: template, mapper });
 
 export default memo(
   Form.create({

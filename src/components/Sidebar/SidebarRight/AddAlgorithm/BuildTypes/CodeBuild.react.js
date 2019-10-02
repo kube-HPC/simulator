@@ -1,19 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormItem } from '../FormElements.react';
-import { Select, Input, Upload, Icon } from 'antd';
-import { toUpperCaseFirstLetter } from 'utils';
-import addAlgorithmSchema from 'config/schema/addAlgorithm.schema';
+import { Input, Upload, Icon } from 'antd';
+import schema from 'config/schema/addAlgorithm.schema';
+import SelectEnvOptions from '../SelectEnvOptions.react';
 
-const { CODE } = addAlgorithmSchema.BUILD_TYPES;
-
-const insertEnvOptions = options =>
-  Object.entries(options).map(([key, value]) => (
-    <Select.Option key={key} value={key}>
-      {toUpperCaseFirstLetter(value)}
-    </Select.Option>
-  ));
-
+// #region helpers
 const setDraggerProps = ({ fileList, setFileList }) => ({
   name: 'file',
   multiple: false,
@@ -40,23 +32,26 @@ const DefaultDrop = () => (
     <p className="ant-upload-hint">Support for zip or tar.gz only</p>
   </>
 );
+// #endregion
 
-const CodeBuild = ({ buildType, getFieldDecorator, fileList, setFileList }) => (
+const {
+  CODE: { ENVIRONMENT, ENTRY_POINT, VERSION }
+} = schema.BUILD_TYPES;
+
+const CodeBuild = ({ required, getFieldDecorator, fileList, setFileList }) => (
   <>
-    <FormItem label={CODE.ENVIRONMENT.label}>
-      {getFieldDecorator(CODE.ENVIRONMENT.field, {
-        rules: [{ required: buildType === CODE.field, message: 'Environment required' }]
-      })(
-        <Select placeholder={CODE.ENVIRONMENT.placeholder}>
-          {insertEnvOptions(CODE.ENVIRONMENT.types)}
-        </Select>
-      )}
+    <FormItem label={ENVIRONMENT.label}>
+      {getFieldDecorator(ENVIRONMENT.field, {
+        rules: [{ required, message: ENVIRONMENT.message }]
+      })(<SelectEnvOptions placeholder={ENVIRONMENT.placeholder} />)}
     </FormItem>
-    <FormItem label={CODE.ENTRY_POINT.label}>
-      {getFieldDecorator(CODE.ENTRY_POINT.field)(<Input placeholder="Insert Entry Point" />)}
+    <FormItem label={ENTRY_POINT.label}>
+      {getFieldDecorator(ENTRY_POINT.field, {
+        rules: [{ required, message: ENTRY_POINT.message }]
+      })(<Input placeholder={ENTRY_POINT.placeholder} />)}
     </FormItem>
-    <FormItem label={CODE.VERSION.label}>
-      {getFieldDecorator(CODE.VERSION.field)(<Input placeholder="Insert Version" />)}
+    <FormItem label={VERSION.label}>
+      {getFieldDecorator(VERSION.field)(<Input placeholder={VERSION.placeholder} />)}
     </FormItem>
     <FormItem wrapperCol={null} style={draggerMarginTop}>
       <Upload.Dragger {...setDraggerProps({ fileList, setFileList })}>
@@ -68,7 +63,7 @@ const CodeBuild = ({ buildType, getFieldDecorator, fileList, setFileList }) => (
 
 CodeBuild.propTypes = {
   getFieldDecorator: PropTypes.func.isRequired,
-  buildType: PropTypes.string.isRequired,
+  required: PropTypes.bool.isRequired,
   setFileList: PropTypes.func.isRequired,
   fileList: PropTypes.array.isRequired
 };

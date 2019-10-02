@@ -3,21 +3,23 @@ import PropTypes from 'prop-types';
 import { Input } from 'antd';
 
 import { FormItem } from '../FormElements.react';
-import addAlgorithmSchema from 'config/schema/addAlgorithm.schema';
+import schema from 'config/schema/addAlgorithm.schema';
 
-const { IMAGE } = addAlgorithmSchema.BUILD_TYPES;
+const {
+  IMAGE: { ALGORITHM_IMAGE }
+} = schema.BUILD_TYPES;
 
-const ImageBuild = ({ buildType, getFieldDecorator }) => (
-  <FormItem label={IMAGE.ALGORITHM_IMAGE.label}>
-    {getFieldDecorator(IMAGE.ALGORITHM_IMAGE.field, {
-      rules: [{ required: buildType === IMAGE.field, message: 'Image URL required' }]
-    })(<Input placeholder="Insert URL" />)}
+const ImageBuild = ({ required, getFieldDecorator }) => (
+  <FormItem label={ALGORITHM_IMAGE.label}>
+    {getFieldDecorator(ALGORITHM_IMAGE.field, {
+      rules: [{ required, message: ALGORITHM_IMAGE.message }]
+    })(<Input placeholder={ALGORITHM_IMAGE.placeholder} />)}
   </FormItem>
 );
 
 ImageBuild.propTypes = {
   getFieldDecorator: PropTypes.func.isRequired,
-  buildType: PropTypes.string.isRequired
+  required: PropTypes.bool.isRequired
 };
 
 export default ImageBuild;

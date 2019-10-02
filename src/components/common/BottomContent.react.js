@@ -5,7 +5,7 @@ import { COLOR_LAYOUT } from 'styles/colors';
 import FlexBox from './FlexBox.react';
 
 const FlexFixed = styled(FlexBox)`
-  background: ${COLOR_LAYOUT.background};
+  background: white;
   position: fixed;
   right: 0;
   bottom: 0px;

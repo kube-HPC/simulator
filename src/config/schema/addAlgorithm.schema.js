@@ -1,4 +1,8 @@
 const addAlgorithmSchema = {
+  ENV_TYPES: {
+    nodejs: 'Node.js',
+    python: 'Python'
+  },
   BUILD_TYPES: {
     CODE: {
       DRAGGER: {
@@ -6,22 +10,22 @@ const addAlgorithmSchema = {
       },
       ENTRY_POINT: {
         field: 'code.entryPoint',
-        label: 'Entry Point'
+        label: 'Entry Point',
+        placeholder: 'Insert Entry Point',
+        message: 'Entry Point is required'
       },
       ENVIRONMENT: {
         field: 'code.env',
         placeholder: 'Pick Environment',
         label: 'Environment',
-        types: {
-          nodejs: 'Node.js',
-          python: 'Python'
-        }
+        message: 'Environment is required'
       },
       label: 'Code',
       field: 'code',
       VERSION: {
         field: 'code.version',
-        label: 'Version'
+        label: 'Version',
+        placeholder: 'Insert Version'
       }
     },
     GIT: {
@@ -70,13 +74,32 @@ const addAlgorithmSchema = {
       URL: {
         field: 'gitRepository.url',
         label: 'URL',
-        placeholder: 'Enter Git Repository URL'
+        addOns: {
+          before: ['https://', 'http://'],
+          after: '.git'
+        },
+        placeholder: 'Enter Git Repository URL',
+        message: 'GIT URL required'
+      },
+      ENTRY_POINT: {
+        field: 'gitRepository.entryPoint',
+        label: 'Entry Point',
+        placeholder: 'Insert Entry Point',
+        message: 'Entry Point is required'
+      },
+      ENVIRONMENT: {
+        field: 'gitRepository.env',
+        placeholder: 'Pick Environment',
+        label: 'Environment',
+        message: 'Environment is required'
       }
     },
     IMAGE: {
       ALGORITHM_IMAGE: {
         field: 'image.algorithmImage',
-        label: 'Algorithm Image'
+        label: 'Algorithm Image',
+        placeholder: 'Insert URL',
+        message: 'Image URL required'
       },
       label: 'Image',
       field: 'image'
@@ -103,11 +126,14 @@ const addAlgorithmSchema = {
     },
     NAME: {
       field: 'main.name',
-      label: 'Algorithm Name'
+      label: 'Algorithm Name',
+      placeholder: 'Insert Algorithm Name',
+      message: 'Lower cased letters and numbers are only allowed in Algorithm Name.'
     },
     OPTIONS: {
       field: 'main.options',
       label: 'Options',
+      placeholder: 'Enable Options',
       types: ['debug']
     },
     WORKERS: {
