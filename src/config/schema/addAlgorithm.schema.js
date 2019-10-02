@@ -2,14 +2,14 @@ const addAlgorithmSchema = {
   BUILD_TYPES: {
     CODE: {
       DRAGGER: {
-        field: 'dragger'
+        field: 'code.dragger'
       },
       ENTRY_POINT: {
-        field: 'entryPoint',
+        field: 'code.entryPoint',
         label: 'Entry Point'
       },
       ENVIRONMENT: {
-        field: 'env',
+        field: 'code.env',
         placeholder: 'Pick Environment',
         label: 'Environment',
         types: {
@@ -18,8 +18,9 @@ const addAlgorithmSchema = {
         }
       },
       label: 'Code',
+      field: 'code',
       VERSION: {
-        field: 'version',
+        field: 'code.version',
         label: 'Version'
       }
     },
@@ -74,41 +75,45 @@ const addAlgorithmSchema = {
     },
     IMAGE: {
       ALGORITHM_IMAGE: {
-        field: 'algorithmImage',
+        field: 'image.algorithmImage',
         label: 'Algorithm Image'
       },
-      label: 'Image'
+      label: 'Image',
+      field: 'image'
     }
   },
-  CPU: {
-    field: 'cpu',
-    label: 'CPU Usage'
-  },
-  DIVIDER: {
-    ADVANCED: 'Advanced',
-    RESOURCES: 'Resources'
-  },
-  GPU: {
-    field: 'gpu',
-    label: 'GPU Usage'
-  },
-  MEMORY: {
-    field: 'mem',
-    label: 'Memory Usage',
-    types: ['Ki', 'M', 'Mi', 'Gi', 'm', 'K', 'G', 'T', 'Ti', 'P', 'Pi', 'E', 'Ei']
-  },
-  NAME: {
-    field: 'name',
-    label: 'Algorithm Name'
-  },
-  OPTIONS: {
-    field: 'options',
-    label: 'Options',
-    types: ['debug']
-  },
-  WORKERS: {
-    field: 'minHotWorkers',
-    label: 'Min Hot Workers'
+  MAIN: {
+    field: 'main',
+    CPU: {
+      field: 'main.cpu',
+      label: 'CPU Usage'
+    },
+    DIVIDER: {
+      ADVANCED: 'Advanced',
+      RESOURCES: 'Resources'
+    },
+    GPU: {
+      field: 'main.gpu',
+      label: 'GPU Usage'
+    },
+    MEMORY: {
+      field: 'main.mem',
+      label: 'Memory Usage',
+      types: ['Ki', 'M', 'Mi', 'Gi', 'm', 'K', 'G', 'T', 'Ti', 'P', 'Pi', 'E', 'Ei']
+    },
+    NAME: {
+      field: 'main.name',
+      label: 'Algorithm Name'
+    },
+    OPTIONS: {
+      field: 'main.options',
+      label: 'Options',
+      types: ['debug']
+    },
+    WORKERS: {
+      field: 'main.minHotWorkers',
+      label: 'Min Hot Workers'
+    }
   }
 };
 

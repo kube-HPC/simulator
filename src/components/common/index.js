@@ -13,3 +13,4 @@ export { default as JsonView } from 'components/common/Json/JsonView.react';
 export { default as Tabs } from 'components/common/Tabs/Tabs.react';
 export { default as MDEditor } from 'components/common/md/MDEditor.react';
 export { default as Fallback } from 'components/common/Fallback.react';
+export { default as InputAddon } from 'components/common/InputAddon.react';

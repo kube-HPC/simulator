@@ -6,7 +6,7 @@ import { Input, Icon, Form, Button } from 'antd';
 import { addAlgorithm } from 'actions/debug.action';
 import { DRAWER_SIZE } from 'const';
 import { BottomContent } from 'components/common';
-import template from 'config/template/algorithm-modal.template';
+import template from 'config/template/addAlgorithm.template';
 
 function AddDebug() {
   const [algoData, setAlgoData] = useState(template);

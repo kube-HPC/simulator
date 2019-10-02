@@ -10,12 +10,15 @@ import { toUpperCaseFirstLetter, mapObjValues } from 'utils';
 import { applyAlgorithm } from 'actions';
 import MemoryField from './MemoryField.react';
 import { FormItem, FormNoMargin, FormDivider } from './FormElements.react';
-import getBuildTypes from './getBuildTypes.react';
 
 // Direct import for auto-complete
-import schema from 'config/schema/algorithm-modal.schema';
-import template from 'config/template/algorithm-modal.template';
+import schema from 'config/schema/addAlgorithm.schema';
+import template from 'config/template/addAlgorithm.template';
+import { CodeBuild, ImageBuild, GitBuild } from './BuildTypes';
 
+const { MAIN, BUILD_TYPES } = schema;
+
+// #region helpers
 const insertAlgorithmOptions = options =>
   options.map((option, key) => (
     <Select.Option key={key} value={option}>
@@ -26,47 +29,81 @@ const insertAlgorithmOptions = options =>
 const insertRadioButtons = buildTypes =>
   Object.keys(buildTypes).map(key => (
     <Radio.Button key={key} value={key}>
-      {toUpperCaseFirstLetter(key)}
+      {key === BUILD_TYPES.GIT.field ? 'Git' : toUpperCaseFirstLetter(key)}
     </Radio.Button>
   ));
 
-const AddAlgorithm = ({ form }) => {
-  const [buildType, setBuildType] = useState(schema.BUILD_TYPES.CODE.label);
+const isEmpty = v =>
+  v === undefined || v === '' || v === null || (typeof v === 'object' && !Object.entries(v).length);
+const isNotEmpty = v => !isEmpty(v);
+
+const mainAdvancedOptions = Object.entries(template.main.options)
+  .filter(([, isAvailable]) => isAvailable)
+  .map(([key]) => key);
+
+const getBuildTypes = props => {
+  const { CODE, IMAGE, GIT } = BUILD_TYPES;
+  return {
+    [CODE.field]: <CodeBuild {...props} />,
+    [IMAGE.field]: <ImageBuild {...props} />,
+    [GIT.field]: <GitBuild {...props} />
+  };
+};
+
+// #endregion
+
+const AddAlgorithm = ({ form, onSubmit }) => {
+  const [buildType, setBuildType] = useState(BUILD_TYPES.CODE.field);
   const [fileList, setFileList] = useState([]);
 
+  // Injected from Form.create
   const { getFieldDecorator, validateFields } = form;
+
   const buildTypes = getBuildTypes({ buildType, getFieldDecorator, fileList, setFileList });
+
   const dispatch = useDispatch();
 
-  const isEmpty = v =>
-    v === undefined ||
-    v === '' ||
-    v === null ||
-    (typeof v === 'object' && !Object.entries(v).length);
-  const isNotEmpty = v => !isEmpty(v);
-
-  const onSubmit = e => {
+  const onFormSubmit = e => {
     e.preventDefault();
-    validateFields((err, values) => {
+    validateFields((err, formObject) => {
       if (err) return;
+
+      const options = formObject.main.options.reduce(
+        (acc, option) => ({ ...acc, [option]: true }),
+        {}
+      );
+
+      const payload =
+        buildType === BUILD_TYPES.GIT.field
+          ? { ...formObject.main, options, [BUILD_TYPES.GIT.field]: formObject[buildType] }
+          : { ...formObject.main, options, ...formObject[buildType] };
+
       const formData = new FormData();
-      const options = values.options.reduce((acc, option) => ({ ...acc, [option]: true }), {});
-      const payload = { ...values, options };
-      const [file] = fileList;
+      if (buildType === BUILD_TYPES.CODE.field) {
+        const [file] = fileList;
+        formData.append('file', file);
+      }
 
-      if (buildType === schema.BUILD_TYPES.CODE.label) formData.append('file', file);
       const payloadFiltered = mapObjValues({ obj: payload, predicate: isNotEmpty });
-
       formData.append('payload', JSON.stringify(payloadFiltered));
+
       dispatch(applyAlgorithm(formData));
+
+      onSubmit({ formData, payload: payloadFiltered });
     });
   };
 
   return (
-    <FormNoMargin onSubmit={onSubmit}>
-      <FormItem label={schema.NAME.label}>
-        {getFieldDecorator(schema.NAME.field, {
-          rules: [{ required: true, message: 'Algorithm Name is Required' }]
+    <FormNoMargin onSubmit={onFormSubmit}>
+      <FormItem label={MAIN.NAME.label}>
+        {getFieldDecorator(MAIN.NAME.field, {
+          rules: [
+            {
+              required: true,
+              message: 'Algorithm Name must be lower cased.',
+              pattern: /^[a-z0-9]+$/
+            }
+          ]
         })(<Input placeholder="Insert Algorithm Name" />)}
       </FormItem>
       <FormItem label="Build Type">
@@ -78,17 +115,17 @@ const AddAlgorithm = ({ form }) => {
           {insertRadioButtons(buildTypes)}
         </Radio.Group>
       </FormItem>
-      <FormDivider>{schema.DIVIDER.RESOURCES}</FormDivider>
-      <FormItem label={schema.CPU.label}>
-        {getFieldDecorator(schema.CPU.field)(<InputNumber min={0.1} />)}
+      <FormDivider>{MAIN.DIVIDER.RESOURCES}</FormDivider>
+      <FormItem label={MAIN.CPU.label}>
+        {getFieldDecorator(MAIN.CPU.field)(<InputNumber min={0.1} />)}
       </FormItem>
-      <FormItem label={schema.GPU.label}>
-        {getFieldDecorator(schema.GPU.field)(<InputNumber min={0} />)}
+      <FormItem label={MAIN.GPU.label}>
+        {getFieldDecorator(MAIN.GPU.field)(<InputNumber min={0} />)}
       </FormItem>
-      <FormItem label={schema.MEMORY.label} labelAlign="left">
-        {getFieldDecorator(schema.MEMORY.field)(
+      <FormItem label={MAIN.MEMORY.label} labelAlign="left">
+        {getFieldDecorator(MAIN.MEMORY.field)(
           <MemoryField>
-            {schema.MEMORY.types.map(value => (
+            {MAIN.MEMORY.types.map(value => (
               <Select.Option key={value} value={value}>
                 {value}
               </Select.Option>
@@ -96,18 +133,16 @@ const AddAlgorithm = ({ form }) => {
           </MemoryField>
         )}
       </FormItem>
-      <FormDivider>{schema.DIVIDER.ADVANCED}</FormDivider>
-      <FormItem label={schema.WORKERS.label}>
-        {getFieldDecorator(schema.WORKERS.field)(<InputNumber min={0} />)}
+      <FormDivider>{MAIN.DIVIDER.ADVANCED}</FormDivider>
+      <FormItem label={MAIN.WORKERS.label}>
+        {getFieldDecorator(MAIN.WORKERS.field)(<InputNumber min={0} />)}
       </FormItem>
-      <FormItem label={schema.OPTIONS.label}>
-        {getFieldDecorator(schema.OPTIONS.field, {
-          initialValue: Object.entries(template.options)
-            .filter(([, isAvailable]) => isAvailable)
-            .map(([key]) => key)
+      <FormItem label={MAIN.OPTIONS.label}>
+        {getFieldDecorator(MAIN.OPTIONS.field, {
+          initialValue: mainAdvancedOptions
         })(
           <Select mode="tags" placeholder="Enable Options">
-            {insertAlgorithmOptions(schema.OPTIONS.types)}
+            {insertAlgorithmOptions(MAIN.OPTIONS.types)}
           </Select>
         )}
       </FormItem>
@@ -124,7 +159,8 @@ const AddAlgorithm = ({ form }) => {
 };
 
 AddAlgorithm.propTypes = {
-  form: PropTypes.object.isRequired
+  form: PropTypes.object.isRequired,
+  onSubmit: PropTypes.func
 };
 
 const mapPropsToFields = () => {
