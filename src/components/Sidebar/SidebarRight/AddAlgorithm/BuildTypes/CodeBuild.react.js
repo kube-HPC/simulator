@@ -1,9 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { FormItem } from '../FormElements.react';
-import { Input, Upload, Icon } from 'antd';
+import { Input, Upload, Icon, Alert, Typography } from 'antd';
 import schema from 'config/schema/addAlgorithm.schema';
 import SelectEnvOptions from '../SelectEnvOptions.react';
+import { FlexBox } from 'components/common';
+import { COLOR } from 'styles';
 
 // #region helpers
 const setDraggerProps = ({ fileList, setFileList }) => ({
@@ -20,18 +23,10 @@ const setDraggerProps = ({ fileList, setFileList }) => ({
   onRemove: () => setFileList([])
 });
 
-const draggerMarginTop = { marginTop: 15 };
+const marginTop = { marginTop: 15 };
+const inboxStyle = { fontSize: 50, color: COLOR.blueLight };
 
-// https://codesandbox.io/s/g653p
-const DefaultDrop = () => (
-  <>
-    <p className="ant-upload-drag-icon">
-      <Icon type="inbox" />
-    </p>
-    <p className="ant-upload-text">Click or drag algorithm source code to this area to upload</p>
-    <p className="ant-upload-hint">Support for zip or tar.gz only</p>
-  </>
-);
+const { Text } = Typography;
 // #endregion
 
 const {
@@ -53,9 +48,22 @@ const CodeBuild = ({ required, getFieldDecorator, fileList, setFileList }) => (
     <FormItem label={VERSION.label}>
       {getFieldDecorator(VERSION.field)(<Input placeholder={VERSION.placeholder} />)}
     </FormItem>
-    <FormItem wrapperCol={null} style={draggerMarginTop}>
+    <FormItem wrapperCol={null} style={marginTop}>
       <Upload.Dragger {...setDraggerProps({ fileList, setFileList })}>
-        <DefaultDrop />
+        <Icon type="inbox" style={inboxStyle} />
+        <br />
+        <Text>Click or drag Algorithm Source code to this area to upload</Text>
+        <br />
+        <Text type="secondary">Support for zip or tar.gz only</Text>
+        <FlexBox justify="center" style={marginTop}>
+          <FlexBox.Item>
+            <Alert
+              message={`File ${fileList.length ? 'Uploaded' : 'Required'}`}
+              type={fileList.length ? 'info' : 'error'}
+              showIcon
+            />
+          </FlexBox.Item>
+        </FlexBox>
       </Upload.Dragger>
     </FormItem>
   </>

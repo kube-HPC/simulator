@@ -71,7 +71,7 @@ const AddAlgorithm = ({ form, onSubmit }) => {
   const onFormSubmit = e => {
     e.preventDefault();
     validateFields((err, formObject) => {
-      if (err) return;
+      if (err || !fileList.length) return;
 
       // Reduce selected options to boolean entry
       const options = formObject.main.options.reduce(
@@ -88,10 +88,7 @@ const AddAlgorithm = ({ form, onSubmit }) => {
           : { ...formObject.main, options, ...formObject[buildType] };
 
       const formData = new FormData();
-      if (buildType === BUILD_TYPES.CODE.field) {
-        const [file] = fileList;
-        formData.append('file', file);
-      }
+      if (buildType === BUILD_TYPES.CODE.field) formData.append('file', fileList);
 
       const payloadFiltered = mapObjValues({ obj: payload, predicate: isNotEmpty });
       formData.append('payload', JSON.stringify(payloadFiltered));

@@ -58,7 +58,7 @@ const addAlgorithmSchema = {
         field: 'gitRepository.gitKind',
         label: 'Git Host',
         placeholder: 'Pick Git Host',
-        types: ['github', 'gitlab', 'none']
+        types: ['github', 'gitlab']
       },
       label: 'Git',
       TAG: {

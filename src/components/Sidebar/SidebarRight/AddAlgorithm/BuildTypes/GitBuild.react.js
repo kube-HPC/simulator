@@ -22,16 +22,13 @@ const {
   addOns: { before, after }
 } = URL;
 
+const defaultGitHost = 'github';
+
 const GitBuild = ({ required, getFieldDecorator }) => (
   <>
     <FormItem label={URL.label}>
       {getFieldDecorator(URL.field, {
-        rules: [
-          {
-            required,
-            message: URL.message
-          }
-        ]
+        rules: [{ required, message: URL.message }]
       })(<InputAddon before={before} after={after} placeholder={URL.placeholder} />)}
     </FormItem>
     <FormItem label={BRANCH.label}>
@@ -45,12 +42,9 @@ const GitBuild = ({ required, getFieldDecorator }) => (
     </FormItem>
     <FormItem label={GIT_KIND.label}>
       {getFieldDecorator(GIT_KIND.field)(
-        <Select placeholder={GIT_KIND.placeholder}>
-          {insertGitKindOptions({
-            options: GIT_KIND.types,
-            // Currently not supported
-            predicate: v => v === 'gitlab'
-          })}
+        // Only supporting github build for now
+        <Select placeholder={GIT_KIND.placeholder} value={defaultGitHost}>
+          {insertGitKindOptions({ options: GIT_KIND.types, predicate: v => v !== defaultGitHost })}
         </Select>
       )}
     </FormItem>
