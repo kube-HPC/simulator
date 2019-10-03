@@ -19,6 +19,6 @@ storiesOf('Basics|JsonEditor', module)
   .add('Default', () => <JsonEditor value={stringify(template)} />)
   .add('Card', () => (
     <StyledCard>
-      <JsonEditor width={'100%'} height={'60vh'} value={stringify(template)} />
+      <JsonEditor height={'60vh'} value={stringify(template)} />
     </StyledCard>
   ));

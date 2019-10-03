@@ -59,7 +59,7 @@ const CodeBuild = ({ required, getFieldDecorator, fileList, setFileList }) => (
           <FlexBox.Item>
             <Alert
               message={`File ${fileList.length ? 'Uploaded' : 'Required'}`}
-              type={fileList.length ? 'info' : 'error'}
+              type={fileList.length ? 'info' : 'warning'}
               showIcon
             />
           </FlexBox.Item>

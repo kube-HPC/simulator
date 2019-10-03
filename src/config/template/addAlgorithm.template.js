@@ -1,25 +1,11 @@
 const addAlgorithmTemplate = {
-  main: {
-    type: 'Code',
-    name: '',
-    cpu: 1,
-    gpu: 0,
-    mem: '256Mi',
-    minHotWorkers: 0,
-    options: {
-      debug: false
-    },
-    algorithmEnv: '',
-    workerEnv: '',
-    nodeSelector: ''
-  },
-  code: {
-    env: undefined,
-    entryPoint: '',
-    version: ''
-  },
-  image: {
-    algorithmImage: ''
+  name: '',
+  cpu: 1,
+  gpu: 0,
+  mem: '256Mi',
+  minHotWorkers: 0,
+  options: {
+    debug: false
   },
   gitRepository: {
     env: undefined,

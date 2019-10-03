@@ -9,6 +9,25 @@ import DrawerEditorMD from 'components/Drawer/DrawerEditorMD.react';
 import addPipelineTemplate from 'config/template/addPipeline.template';
 import { stringify } from 'utils/string';
 
+const DrawerEditorContainer = () => {
+  return (
+    <>
+      <DrawerEditorMD
+        title={'Update Pipeline'}
+        description={
+          <>
+            Edit pipeline properties and <Typography.Text code>Update</Typography.Text>
+          </>
+        }
+        valueString={stringify(addPipelineTemplate)}
+        onSubmit={console.log}
+        submitText={'Update'}
+        opener={setVisible => <Button onClick={setVisible}>Open Drawer</Button>}
+      />
+    </>
+  );
+};
+
 storiesOf('BASICS|Markdown', module)
   .add('Editor', () => <MDEditor />)
   .add('Drawer', () => (
@@ -37,17 +56,4 @@ storiesOf('BASICS|Markdown', module)
       </Tabs.TabPane>
     </Tabs>
   ))
-  .add('DrawerEditorMD', () => (
-    <DrawerEditorMD
-      title={'Update Pipeline'}
-      description={
-        <>
-          Edit pipeline properties and <Typography.Text code>Update</Typography.Text>
-        </>
-      }
-      visible
-      valueString={stringify(addPipelineTemplate)}
-      onSubmit={e => console.log(e)}
-      submitText={'Update'}
-    />
-  ));
+  .add('DrawerEditorMD', () => <DrawerEditorContainer />);

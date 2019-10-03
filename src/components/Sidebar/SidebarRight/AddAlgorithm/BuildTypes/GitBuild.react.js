@@ -41,9 +41,11 @@ const GitBuild = ({ required, getFieldDecorator }) => (
       {getFieldDecorator(TOKEN.field)(<Input.Password placeholder={TOKEN.placeholder} />)}
     </FormItem>
     <FormItem label={GIT_KIND.label}>
-      {getFieldDecorator(GIT_KIND.field)(
+      {getFieldDecorator(GIT_KIND.field, {
+        initialValue: defaultGitHost
+      })(
         // Only supporting github build for now
-        <Select placeholder={GIT_KIND.placeholder} value={defaultGitHost}>
+        <Select placeholder={GIT_KIND.placeholder}>
           {insertGitKindOptions({ options: GIT_KIND.types, predicate: v => v !== defaultGitHost })}
         </Select>
       )}

@@ -1,28 +1,29 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Input, Icon, Form, Button } from 'antd';
 
 import { addAlgorithm } from 'actions/debug.action';
 import { DRAWER_SIZE } from 'const';
 import { BottomContent } from 'components/common';
-import template from 'config/template/addAlgorithm.template';
 
-function AddDebug() {
-  const [algoData, setAlgoData] = useState(template);
-
+function AddDebug({ form }) {
+  const { getFieldDecorator, validateFields } = form;
   const dispatch = useDispatch();
-  const onSubmit = () => dispatch(addAlgorithm(algoData));
+  const onSubmit = e => {
+    e.preventDefault();
+    validateFields((err, formObject) => {
+      if (err) return;
+      dispatch(addAlgorithm(formObject.debugImage));
+    });
+  };
 
   return (
     <>
-      <Form>
-        <Form.Item>
-          <Input
-            onChange={e => setAlgoData(e.target.value)}
-            prefix={<Icon type="share-alt" />}
-            placeholder="Algorithm"
-          />
+      <Form onSubmit={onSubmit} layout="vertical">
+        <Form.Item label="Image URL">
+          {getFieldDecorator('debugImage')(
+            <Input prefix={<Icon type="share-alt" />} placeholder="Algorithm" />
+          )}
         </Form.Item>
       </Form>
       <BottomContent.Divider />
@@ -35,8 +36,6 @@ function AddDebug() {
   );
 }
 
-AddDebug.propsTypes = {
-  onSubmit: PropTypes.func.isRequired
-};
+AddDebug.propTypes = Form.propTypes;
 
-export default AddDebug;
+export default Form.create()(AddDebug);

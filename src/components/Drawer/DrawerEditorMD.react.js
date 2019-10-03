@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+
 import { notification, Icon, Button } from 'antd';
 
 import { ReactComponent as CodeIcon } from 'images/code-icon.svg';
 
 import { stringify } from 'utils/string';
-import { BottomContent, Tabs, Card, MDEditor, JsonEditor } from 'components/common';
+import { Tabs, Card, MDEditor, JsonEditor } from 'components/common';
 import { Drawer } from '.';
 
 const tabs = { json: 'JSON', description: 'Description' };
@@ -43,8 +44,17 @@ function DrawerEditorMD({ record, onSubmit, readmeDefault, submitText, ...props 
         ]
       : [];
 
+  const bottomContent = {
+    body: (
+      <Button type="primary" onClick={onSubmitClick}>
+        {submitText}
+      </Button>
+    ),
+    extra: bottomExtra
+  };
+
   return (
-    <Drawer {...props} onSubmit={onSubmitClick}>
+    <Drawer {...props} onSubmit={onSubmitClick} bottomContent={bottomContent}>
       <Tabs activeKey={activeKey} onChange={setActiveKey}>
         <Tabs.TabPane
           tab={
@@ -56,7 +66,7 @@ function DrawerEditorMD({ record, onSubmit, readmeDefault, submitText, ...props 
           key={tabs.json}
         >
           <Card>
-            <JsonEditor isControlled value={value} onChange={setValue} />
+            <JsonEditor value={value} onChange={setValue} />
           </Card>
         </Tabs.TabPane>
         <Tabs.TabPane
@@ -71,13 +81,6 @@ function DrawerEditorMD({ record, onSubmit, readmeDefault, submitText, ...props 
           <MDEditor data={readmeDefault} onChange={setReadme} />
         </Tabs.TabPane>
       </Tabs>
-
-      <BottomContent.Divider />
-      <BottomContent extra={bottomExtra}>
-        <Button type="primary" onClick={onSubmitClick}>
-          {submitText}
-        </Button>
-      </BottomContent>
     </Drawer>
   );
 }
