@@ -27,10 +27,14 @@ const InputValidate = forwardRef(({ before, after, placeholder, onChange }, ref)
   const [selectAfter, setSelectAfter] = useState(initialByType(after));
 
   const [inputValue, setInputValue] = useState();
-  const onInputChange = e => setInputValue(e.target.value);
+  const onInputChange = e => {
+    const value = e.target.value;
+    const trimmed = value.replace(/http(s?):\/\//, '').replace(/\.git/, '');
+    setInputValue(trimmed);
+  };
 
   useEffect(() => {
-    inputValue && onChange(`${selectBefore}${inputValue}${after}`);
+    if (inputValue) onChange(`${selectBefore}${inputValue}${after}`);
   }, [after, inputValue, onChange, selectBefore]);
 
   const addonBefore = Addon({ state: selectBefore, options: before, callback: setSelectBefore });
