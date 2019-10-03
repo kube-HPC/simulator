@@ -65,7 +65,11 @@ const addMenuItems = items =>
   items.map(([name, component, count]) => (
     <MenuItemMemo key={name} className={USER_GUIDE.TABLE_SELECT[name]}>
       {setMenuItem(
-        <MemoIcon type={component} component={component} style={IconStyle} />,
+        <MemoIcon
+          type={component}
+          component={typeof component === 'string' ? null : component}
+          style={IconStyle}
+        />,
         name,
         count
       )}
