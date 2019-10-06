@@ -4,6 +4,7 @@ import { Button, Modal, Tooltip, Typography, Tag } from 'antd';
 import { sorter } from 'utils/string';
 import { DrawerEditorMD } from 'components';
 import { Ellipsis, FlexBox } from 'components/common';
+import getReadmeSource from './utils';
 
 const { Paragraph, Title, Text } = Typography;
 
@@ -25,7 +26,7 @@ const deleteConfirmAction = (action, record) => {
   });
 };
 
-const getAlgorithmColumns = ({ onSubmit, onDelete, fetchReadme, readmeDefault }) => [
+const getAlgorithmColumns = ({ onSubmit, onDelete, fetchReadme, readmeDict }) => [
   {
     title: 'Algorithm Name',
     dataIndex: 'name',
@@ -90,9 +91,7 @@ const getAlgorithmColumns = ({ onSubmit, onDelete, fetchReadme, readmeDefault })
                 />
               </Tooltip>
             )}
-            readmeDefault={
-              readmeDefault && readmeDefault[record.name] && readmeDefault[record.name].readme
-            }
+            readmeDefault={getReadmeSource({ name: record.name, readmeDict })}
             record={record}
             onSubmit={onSubmit}
             submitText={'Update'}

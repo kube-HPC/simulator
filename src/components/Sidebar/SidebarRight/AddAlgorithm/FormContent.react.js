@@ -1,0 +1,185 @@
+import React, { useState, memo } from 'react';
+import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { Input, Select, InputNumber, Form, Button, Radio } from 'antd';
+
+import { DRAWER_SIZE } from 'const';
+import { BottomContent } from 'components/common';
+import { toUpperCaseFirstLetter, mapObjValues } from 'utils';
+import { applyAlgorithm } from 'actions';
+import MemoryField from './MemoryField.react';
+import { FormItem, FormNoMargin, FormDivider } from './FormElements.react';
+
+// Direct import for auto-complete
+import schema from 'config/schema/addAlgorithm.schema';
+import formTemplate from 'config/template/addAlgorithmForm.template';
+import { CodeBuild, ImageBuild, GitBuild } from './BuildTypes';
+
+// #region  Helpers
+const { MAIN, BUILD_TYPES } = schema;
+const lowCaseNumberRegex = /^[a-z0-9]+$/;
+
+const mainAdvancedOptions = Object.entries(formTemplate.main.options)
+  .filter(([, isAvailable]) => isAvailable)
+  .map(([key]) => key);
+
+const insertAlgorithmOptions = options =>
+  options.map((option, key) => (
+    <Select.Option key={key} value={option}>
+      {toUpperCaseFirstLetter(option)}
+    </Select.Option>
+  ));
+
+const insertRadioButtons = buildTypes =>
+  Object.keys(buildTypes).map(key => (
+    <Radio.Button key={key} value={key}>
+      {toReadableBuildType(key)}
+    </Radio.Button>
+  ));
+
+const toReadableBuildType = buildType =>
+  toUpperCaseFirstLetter(buildType === BUILD_TYPES.GIT.field ? 'GIT' : buildType);
+
+const isEmpty = v =>
+  v === undefined || v === '' || v === null || (typeof v === 'object' && !Object.entries(v).length);
+const isNotEmpty = v => !isEmpty(v);
+
+const getBuildTypes = ({ buildType, ...props }) => {
+  const { CODE, IMAGE, GIT } = BUILD_TYPES;
+  const isRequired = type => type === buildType;
+  return {
+    [CODE.field]: <CodeBuild required={isRequired(CODE.field)} {...props} />,
+    [IMAGE.field]: <ImageBuild required={isRequired(IMAGE.field)} {...props} />,
+    [GIT.field]: <GitBuild required={isRequired(GIT.field)} {...props} />
+  };
+};
+// #endregion
+
+const FormContent = ({ form, onToggle, onSubmit }) => {
+  const [fileList, setFileList] = useState([]);
+  const [buildType, setBuildType] = useState(BUILD_TYPES.CODE.field);
+
+  const onBuildTypeChange = e => setBuildType(e.target.value);
+
+  // Injected from Form.create
+  const { getFieldDecorator, validateFields } = form;
+
+  // #region  Submit Handle
+  const dispatch = useDispatch();
+  const buildTypes = getBuildTypes({ buildType, getFieldDecorator, fileList, setFileList });
+
+  const onFormSubmit = e => {
+    e.preventDefault();
+
+    validateFields((err, formObject) => {
+      if (err || (buildType === BUILD_TYPES.CODE.field && !fileList.length)) return;
+
+      // Reduce selected options to boolean entry
+      const options = formObject.main.options.reduce(
+        (acc, option) => ({ ...acc, [option]: true }),
+        {}
+      );
+
+      // On GIT build type, env & entryPoint are on the top object's keys level
+      const { env, entryPoint, ...rest } = formObject[buildType];
+
+      const payload =
+        buildType === BUILD_TYPES.GIT.field
+          ? { ...formObject.main, options, [BUILD_TYPES.GIT.field]: rest, env, entryPoint }
+          : { ...formObject.main, options, ...formObject[buildType] };
+
+      const formData = new FormData();
+      if (buildType === BUILD_TYPES.CODE.field) formData.append('file', fileList);
+
+      const payloadFiltered = mapObjValues({ obj: payload, predicate: isNotEmpty });
+      formData.append('payload', JSON.stringify(payloadFiltered));
+
+      dispatch(applyAlgorithm(formData));
+
+      onSubmit({ formData, payload: payloadFiltered });
+    });
+  };
+  // #endregion
+
+  return (
+    <FormNoMargin onSubmit={onFormSubmit}>
+      <FormItem label={MAIN.NAME.label}>
+        {getFieldDecorator(MAIN.NAME.field, {
+          rules: [
+            {
+              required: true,
+              message: MAIN.NAME.message,
+              pattern: lowCaseNumberRegex
+            }
+          ]
+        })(<Input placeholder={MAIN.NAME.placeholder} />)}
+      </FormItem>
+      <FormItem label="Build Type">
+        <Radio.Group defaultValue={buildType} buttonStyle="solid" onChange={onBuildTypeChange}>
+          {insertRadioButtons(buildTypes)}
+        </Radio.Group>
+      </FormItem>
+      <FormDivider>{MAIN.DIVIDER.RESOURCES}</FormDivider>
+      <FormItem label={MAIN.CPU.label}>
+        {getFieldDecorator(MAIN.CPU.field)(<InputNumber min={0.1} />)}
+      </FormItem>
+      <FormItem label={MAIN.GPU.label}>
+        {getFieldDecorator(MAIN.GPU.field)(<InputNumber min={0} />)}
+      </FormItem>
+      <FormItem label={MAIN.MEMORY.label} labelAlign="left">
+        {getFieldDecorator(MAIN.MEMORY.field)(
+          <MemoryField>
+            {MAIN.MEMORY.types.map(value => (
+              <Select.Option key={value} value={value}>
+                {value}
+              </Select.Option>
+            ))}
+          </MemoryField>
+        )}
+      </FormItem>
+      <FormDivider>{MAIN.DIVIDER.ADVANCED}</FormDivider>
+      <FormItem label={MAIN.WORKERS.label}>
+        {getFieldDecorator(MAIN.WORKERS.field)(<InputNumber min={0} />)}
+      </FormItem>
+      <FormItem label={MAIN.OPTIONS.label}>
+        {getFieldDecorator(MAIN.OPTIONS.field, {
+          initialValue: mainAdvancedOptions
+        })(
+          <Select mode="tags" placeholder={MAIN.OPTIONS.placeholder}>
+            {insertAlgorithmOptions(MAIN.OPTIONS.types)}
+          </Select>
+        )}
+      </FormItem>
+      <FormDivider>{toReadableBuildType(buildType)}</FormDivider>
+      {buildTypes[buildType]}
+      <BottomContent.Divider />
+      <BottomContent
+        width={DRAWER_SIZE.ADD_ALGORITHM}
+        extra={[
+          <Button key="editor" onClick={onToggle}>
+            Editor View
+          </Button>
+        ]}
+      >
+        <Button key="Submit" type="primary" htmlType="submit">
+          Submit
+        </Button>
+      </BottomContent>
+    </FormNoMargin>
+  );
+};
+
+FormContent.propTypes = {
+  form: PropTypes.object.isRequired,
+  onToggle: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func
+};
+
+FormContent.defaultProps = {
+  onSubmit: () => {}
+};
+
+const mapper = value => Form.createFormField({ value });
+const mapPropsToFields = () => mapObjValues({ obj: formTemplate, mapper });
+
+export default memo(Form.create({ mapPropsToFields })(FormContent));

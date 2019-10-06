@@ -1,42 +1,37 @@
-import React, { useState, lazy } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Fallback } from '..';
+import { ControlledEditor } from '@monaco-editor/react';
 
-const MonacoEditor = lazy(() => import('react-monaco-editor'));
+// const { ControlledEditor: MonacoEditor } = lazy(() => import('@monaco-editor/react'));
 
-const JsonEditor = ({ width, height, isControlled, ...props }) => {
-  const [value, setValue] = useState(props.value);
+const JsonEditor = ({ onChange, value: controlledValue, ...props }) => {
+  const [value, setValue] = useState(controlledValue);
+  const handleEditorChange = (_, value) => setValue(value);
+
+  useEffect(() => {
+    onChange(value);
+  }, [onChange, value]);
+
+  useEffect(() => {
+    setValue(controlledValue);
+  }, [controlledValue]);
 
   return (
     <Fallback>
-      <MonacoEditor
-        {...props}
-        width={width}
-        height={height}
-        language="json"
-        value={isControlled ? props.value : value}
-        onChange={data => {
-          !isControlled && setValue(data);
-          props.onChange && props.onChange(data);
-        }}
-      />
+      <ControlledEditor {...props} language="json" value={value} onChange={handleEditorChange} />
     </Fallback>
   );
 };
 
 JsonEditor.defaultProps = {
-  width: '800',
-  height: '600',
-  isControlled: false
+  height: '60vh',
+  onChange: () => {}
 };
 
 JsonEditor.propTypes = {
-  width: PropTypes.string,
-  height: PropTypes.string,
-  isControlled: PropTypes.bool,
   onChange: PropTypes.func,
-  value: PropTypes.string.isRequired,
-  ...MonacoEditor.propTypes
+  ...ControlledEditor.propTypes
 };
 
 export default JsonEditor;

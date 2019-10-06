@@ -4,23 +4,21 @@ import styled from 'styled-components';
 import { COLOR_LAYOUT } from 'styles/colors';
 import FlexBox from './FlexBox.react';
 
+const DEFAULT_HEIGHT = '3.5rem';
+
 const FlexFixed = styled(FlexBox)`
-  background: ${COLOR_LAYOUT.background};
-  position: fixed;
-  right: 0;
-  bottom: 0px;
-  height: 56px;
+  background: white;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: ${DEFAULT_HEIGHT};
   padding: 0 24px;
-  line-height: 56px;
   border-top: 1px solid ${COLOR_LAYOUT.border};
 `;
 
-const Divider = () => (
-  <>
-    <br />
-    <br />
-  </>
-);
+const Divider = styled.div`
+  height: ${DEFAULT_HEIGHT};
+`;
 
 const BottomContent = ({ children, extra, width }) => (
   <FlexFixed style={{ width, marginRight: 0, marginLeft: 0 }}>
@@ -42,6 +40,7 @@ const BottomContent = ({ children, extra, width }) => (
 );
 
 BottomContent.Divider = Divider;
+BottomContent.DefaultHeight = DEFAULT_HEIGHT;
 
 BottomContent.defaultProps = {
   extra: [],

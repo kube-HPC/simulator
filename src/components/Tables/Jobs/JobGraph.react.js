@@ -8,7 +8,7 @@ import { Button, Typography } from 'antd';
 import { getKubernetesLogsData, getCaching } from 'actions/jobs.action';
 import graphOptions from 'config/template/graph-options.template';
 
-import { BottomContent, Card, Fallback } from 'components/common';
+import { Card, Fallback } from 'components/common';
 import { Drawer } from 'components/Drawer';
 import { NodeInfo } from '.';
 
@@ -104,24 +104,31 @@ function JobGraph({ graph, pipeline }) {
   const onRefreshClick = () => getLogs({ taskId, podName });
   const onSubmitClick = () => payload && dispatch(getCaching({ jobId, nodeName }));
 
+  const bottomContent = {
+    body: (
+      <Button type="primary" onClick={onSubmitClick}>
+        Get Cache
+      </Button>
+    ),
+    extra: [
+      <Button key="redo" icon="redo" onClick={onRefreshClick}>
+        Refresh
+      </Button>
+    ]
+  };
+
   return (
     <>
-      <Drawer visible={visible} onClose={toggleVisible} title={title} destroyOnClose>
+      <Drawer
+        visible={visible}
+        onClose={toggleVisible}
+        title={title}
+        destroyOnClose
+        bottomContent={bottomContent}
+      >
         <Card>
           <NodeInfo payload={payload} />
         </Card>
-        <BottomContent.Divider />
-        <BottomContent
-          extra={[
-            <Button key="redo" icon="redo" onClick={onRefreshClick}>
-              Refresh
-            </Button>
-          ]}
-        >
-          <Button type="primary" onClick={onSubmitClick}>
-            Get Cache
-          </Button>
-        </BottomContent>
       </Drawer>
       <GraphContainer>
         <Fallback>

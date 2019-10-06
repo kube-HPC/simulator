@@ -34,7 +34,7 @@ const RunRawPipeline = () => {
   return (
     <>
       <Card>
-        <JsonEditor isControlled value={value} onChange={setValue} />
+        <JsonEditor value={value} onChange={setValue} />
       </Card>
       <BottomContent.Divider />
       <BottomContent

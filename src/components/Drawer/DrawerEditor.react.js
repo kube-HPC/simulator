@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { notification, Icon, Button } from 'antd';
 import { Drawer } from '.';
-import { BottomContent, Card, JsonEditor } from 'components/common';
+import { Card, JsonEditor } from 'components/common';
 
 const configNotificationOnOpen = description => ({
   message: 'Error in Submitted Json',
@@ -29,23 +29,24 @@ const DrawerEditor = ({ valueString, ...props }) => {
     }
   };
 
+  const bottomContent = {
+    body: (
+      <Button type="primary" onClick={onSubmitClick}>
+        {submitText || 'Submit'}
+      </Button>
+    ),
+    extra: [
+      <Button key="clear" type="danger" onClick={onClearClick}>
+        Clear
+      </Button>
+    ]
+  };
+
   return (
-    <Drawer title={title} opener={opener} onSubmit={onSubmitClick}>
+    <Drawer title={title} opener={opener} onSubmit={onSubmitClick} bottomContent={bottomContent}>
       <Card>
         <JsonEditor isControlled value={value} onChange={setValue} />
       </Card>
-      <BottomContent.Divider />
-      <BottomContent
-        extra={[
-          <Button key="clear" type="danger" onClick={onClearClick}>
-            Clear
-          </Button>
-        ]}
-      >
-        <Button type="primary" onClick={onSubmitClick}>
-          {submitText || 'Submit'}
-        </Button>
-      </BottomContent>
     </Drawer>
   );
 };

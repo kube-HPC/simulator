@@ -2,44 +2,37 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { getAlgorithmReadme } from 'actions/readme.action';
+import { Table } from 'components';
 
-import Table from 'components/Table/Table.react';
-import getAlgorithmColumns from 'components/Tables/Algorithms/getAlgorithmColumns.react';
-import Card from 'components/common/Card.react';
-import TabSwitcherMD from 'components/common/Tabs/TabSwitcherMD.react';
-import { tableFilterSelector } from 'utils/tableSelector';
 import { useAlgorithm } from 'hooks';
 import { LEFT_SIDEBAR_NAMES } from 'const';
 
+import getAlgorithmColumns from './getAlgorithmColumns.react';
+import { tableFilterSelector } from 'utils/tableSelector';
+import AlgorithmsTabs from './AlgorithmsTabs.react';
+import getReadmeSource from './utils';
+
 const dataSelector = tableFilterSelector(LEFT_SIDEBAR_NAMES.ALGORITHMS);
 
-function AlgorithmsTable() {
+const AlgorithmsTable = () => {
   const dataSource = useSelector(dataSelector);
-  const readmeDefault = useSelector(state => state.algorithmReadme);
+  const readmeDict = useSelector(state => state.algorithmReadme);
   const dispatch = useDispatch();
+
+  const onExpand = (isExpanded, record) => isExpanded && dispatch(getAlgorithmReadme(record.name));
+  const expandedRowRender = record => (
+    <AlgorithmsTabs record={record} source={getReadmeSource({ name: record.name, readmeDict })} />
+  );
 
   return (
     <Table
       rowKey={record => record.name}
-      columns={getAlgorithmColumns({ ...useAlgorithm(), readmeDefault })}
+      columns={getAlgorithmColumns({ ...useAlgorithm(), readmeDict })}
       dataSource={dataSource}
-      onExpand={(expanded, record) => {
-        if (expanded) dispatch(getAlgorithmReadme(record.name));
-      }}
-      expandedRowRender={record => {
-        return (
-          <Card>
-            <TabSwitcherMD
-              jsonObject={record}
-              readme={
-                readmeDefault && readmeDefault[record.name] && readmeDefault[record.name].readme
-              }
-            />
-          </Card>
-        );
-      }}
+      onExpand={onExpand}
+      expandedRowRender={expandedRowRender}
     />
   );
-}
+};
 
 export default AlgorithmsTable;

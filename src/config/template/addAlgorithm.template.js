@@ -8,6 +8,8 @@ const addAlgorithmTemplate = {
     debug: false
   },
   gitRepository: {
+    env: undefined,
+    entryPoint: '',
     url: '',
     commit: {
       id: '',

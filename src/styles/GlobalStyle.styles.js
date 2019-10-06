@@ -29,7 +29,6 @@ const GlobalStyle = createGlobalStyle`
       background-color: ${COLOR.blueLight};
     }
 
-    position: relative;
   }
 
 `;

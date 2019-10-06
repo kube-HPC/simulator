@@ -20,7 +20,7 @@ export const tableSelector = {
   [LEFT_SIDEBAR_NAMES.DRIVERS]: {
     sourceName: STATE_SOURCES.DRIVER_TABLE,
     mapFunc: driver => driver.podName,
-    predicate: filter => driver => driver.podName.includes(filter)
+    predicate: filter => driver => driver.podName && driver.podName.includes(filter)
   },
   [LEFT_SIDEBAR_NAMES.ALGORITHMS]: {
     sourceName: STATE_SOURCES.ALGORITHM_TABLE,
