@@ -4,8 +4,7 @@ export const LEFT_SIDEBAR_NAMES = {
   ALGORITHMS: 'Algorithms',
   WORKERS: 'Workers',
   DRIVERS: 'Drivers',
-  DEBUG: 'Debug',
-  BUILDS: 'Builds'
+  DEBUG: 'Debug'
 };
 
 export const RIGHT_SIDEBAR_NAMES = {

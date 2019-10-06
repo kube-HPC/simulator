@@ -4,45 +4,13 @@ import humanizeDuration from 'humanize-duration';
 
 import { Tag, Progress, Button } from 'antd';
 
-import StatusTag from 'components/common/StatusTag.react';
 import Ellipsis from 'components/common/Ellipsis.react';
 import { COLOR_PIPELINE_STATUS } from 'styles/colors';
 import PIPELINE_STATES from 'const/pipeline-states';
 import { sorter } from 'utils/string';
 import { toUpperCaseFirstLetter } from 'utils/string';
 
-export const buildsTableColumns = ({ dataSource }) => [
-  {
-    title: 'Algorithm Name',
-    dataIndex: 'algorithmName',
-    key: 'algorithmName',
-    sorter: (a, b) => sorter(a.algorithmName, b.algorithmName)
-  },
-  {
-    title: 'Status',
-    key: 'status',
-    sorter: (a, b) => sorter(a.timestamp, b.timestamp),
-    render: (_, record) =>
-      Object.entries(record.statuses).map(([status, arr]) => (
-        <StatusTag key={status} status={status} count={arr.length} />
-      ))
-  },
-  {
-    title: 'Builds',
-    dataIndex: 'builds',
-    key: 'builds',
-    render: (_, record) => (
-      <StatusTag
-        status={'Total Builds'}
-        count={
-          dataSource.filter(algorithm => algorithm.algorithmName === record.algorithmName).length
-        }
-      />
-    )
-  }
-];
-
-export const nestedBuildsTableColumns = ({ onCancel, onRerun }) => [
+const getBuildsTableColumns = ({ onCancel, onRerun }) => [
   {
     title: 'Build Id',
     dataIndex: 'buildId',
@@ -134,3 +102,5 @@ export const nestedBuildsTableColumns = ({ onCancel, onRerun }) => [
       )
   }
 ];
+
+export default getBuildsTableColumns;

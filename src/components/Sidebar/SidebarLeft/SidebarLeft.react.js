@@ -124,7 +124,6 @@ const SidebarLeft = ({ onSelect, selectedKeys, ...props }) => {
       jobsCount: (state.jobsTable.dataSource || DEFAULT_VALUE).length,
       driversCount: (state.driverTable.dataSource || DEFAULT_VALUE).length,
       algorithmsCount: (state.algorithmTable.dataSource || DEFAULT_VALUE).length,
-      buildsCount: (state.algorithmBuildsTable.dataSource || DEFAULT_VALUE).length,
       pipelinesCount: (state.pipelineTable.dataSource || DEFAULT_VALUE).length,
       workersCount: (state.workerTable.stats || EMPTY_WORKERS).total,
       debugCount: (state.debugTable.dataSource || DEFAULT_VALUE).length
@@ -142,8 +141,7 @@ const SidebarLeft = ({ onSelect, selectedKeys, ...props }) => {
     [LEFT_SIDEBAR_NAMES.ALGORITHMS, AlgorithmIcon, dataCount.algorithmsCount],
     [LEFT_SIDEBAR_NAMES.WORKERS, WorkerIcon, dataCount.workersCount],
     [LEFT_SIDEBAR_NAMES.DRIVERS, DriversIcon, dataCount.driversCount],
-    [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, dataCount.debugCount],
-    [LEFT_SIDEBAR_NAMES.BUILDS, 'build', dataCount.buildsCount]
+    [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, dataCount.debugCount]
   ];
 
   const onMenuSelect = useCallback(({ key }) => onSelect(key), [onSelect]);

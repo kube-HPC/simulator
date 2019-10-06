@@ -31,11 +31,6 @@ export const tableSelector = {
     sourceName: STATE_SOURCES.DEBUG_TABLE,
     mapFunc: algorithm => algorithm.name,
     predicate: filter => algorithm => algorithm.name.includes(filter)
-  },
-  [LEFT_SIDEBAR_NAMES.BUILDS]: {
-    sourceName: STATE_SOURCES.ALGORITHM_BUILDS_TABLE,
-    mapFunc: build => build.buildId,
-    predicate: filter => build => build.buildId.includes(filter)
   }
 };
 
