@@ -9,6 +9,7 @@ import { BottomContent } from 'components/common';
 function AddDebug({ form }) {
   const { getFieldDecorator, validateFields } = form;
   const dispatch = useDispatch();
+
   const onSubmit = e => {
     e.preventDefault();
     validateFields((err, formObject) => {

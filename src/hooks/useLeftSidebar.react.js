@@ -8,7 +8,6 @@ import {
   AlgorithmsTable,
   DriversTable,
   DebugTable,
-  AlgorithmBuildsTable,
   WorkersTable
 } from 'components/Tables';
 
@@ -18,8 +17,7 @@ const tableSelector = {
   [LEFT_SIDEBAR_NAMES.ALGORITHMS]: <AlgorithmsTable />,
   [LEFT_SIDEBAR_NAMES.WORKERS]: <WorkersTable />,
   [LEFT_SIDEBAR_NAMES.DRIVERS]: <DriversTable />,
-  [LEFT_SIDEBAR_NAMES.DEBUG]: <DebugTable />,
-  [LEFT_SIDEBAR_NAMES.BUILDS]: <AlgorithmBuildsTable />
+  [LEFT_SIDEBAR_NAMES.DEBUG]: <DebugTable />
 };
 
 const leftCollapsedInitial =

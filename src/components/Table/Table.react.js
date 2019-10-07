@@ -40,9 +40,13 @@ const Table = ({ dataSource, ...props }) => {
   );
 };
 
-export default React.memo(Table);
+Table.defaultProps = {
+  dataSource: []
+};
 
 Table.propTypes = {
   dataSource: PropTypes.array,
   ...AntTable.propTypes
 };
+
+export default React.memo(Table);
