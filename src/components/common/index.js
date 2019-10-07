@@ -14,3 +14,4 @@ export { default as Tabs } from 'components/common/Tabs/Tabs.react';
 export { default as MDEditor } from 'components/common/md/MDEditor.react';
 export { default as Fallback } from 'components/common/Fallback.react';
 export { default as InputAddon } from 'components/common/InputAddon.react';
+export { default as Form } from 'components/common/Form.react';

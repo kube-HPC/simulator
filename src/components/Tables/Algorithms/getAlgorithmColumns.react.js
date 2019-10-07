@@ -71,7 +71,7 @@ const getAlgorithmColumns = ({ onSubmit, onDelete, fetchReadme, getReadme }) => 
     title: 'CPU',
     dataIndex: 'cpu',
     key: 'cpu',
-    render: cpu => <Tag>{cpu}</Tag>
+    render: cpu => <Tag>{cpu || 'No CPU Assigned'}</Tag>
   },
   {
     title: 'Mem',

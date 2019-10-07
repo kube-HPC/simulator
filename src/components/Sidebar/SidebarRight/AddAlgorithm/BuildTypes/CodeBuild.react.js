@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { FormItem } from '../FormElements.react';
 import { Input, Upload, Icon, Alert, Typography } from 'antd';
 import schema from 'config/schema/addAlgorithm.schema';
 import SelectEnvOptions from '../SelectEnvOptions.react';
-import { FlexBox } from 'components/common';
+import { FlexBox, Form } from 'components/common';
 import { COLOR } from 'styles';
 
 // #region helpers
@@ -35,20 +34,20 @@ const {
 
 const CodeBuild = ({ required, getFieldDecorator, fileList, setFileList }) => (
   <>
-    <FormItem label={ENVIRONMENT.label}>
+    <Form.Item label={ENVIRONMENT.label}>
       {getFieldDecorator(ENVIRONMENT.field, {
         rules: [{ required, message: ENVIRONMENT.message }]
       })(<SelectEnvOptions placeholder={ENVIRONMENT.placeholder} />)}
-    </FormItem>
-    <FormItem label={ENTRY_POINT.label}>
+    </Form.Item>
+    <Form.Item label={ENTRY_POINT.label}>
       {getFieldDecorator(ENTRY_POINT.field, {
         rules: [{ required, message: ENTRY_POINT.message }]
       })(<Input placeholder={ENTRY_POINT.placeholder} />)}
-    </FormItem>
-    <FormItem label={VERSION.label}>
+    </Form.Item>
+    <Form.Item label={VERSION.label}>
       {getFieldDecorator(VERSION.field)(<Input placeholder={VERSION.placeholder} />)}
-    </FormItem>
-    <FormItem wrapperCol={null} style={marginTop}>
+    </Form.Item>
+    <Form.Item wrapperCol={null} style={marginTop}>
       <Upload.Dragger {...setDraggerProps({ fileList, setFileList })}>
         <Icon type="inbox" style={inboxStyle} />
         <br />
@@ -65,7 +64,7 @@ const CodeBuild = ({ required, getFieldDecorator, fileList, setFileList }) => (
           </FlexBox.Item>
         </FlexBox>
       </Upload.Dragger>
-    </FormItem>
+    </Form.Item>
   </>
 );
 

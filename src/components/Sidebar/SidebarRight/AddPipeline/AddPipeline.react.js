@@ -1,23 +1,24 @@
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { addPipeline } from 'actions/pipeline.action';
-import AddPipelineForm from 'components/Sidebar/SidebarRight/AddPipeline/AddPipelineForm.react';
+import { STATE_SOURCES } from 'const';
+import AddPipelineWizard from './AddPipelineWizard.react';
 
-function AddPipeline() {
+const algorithmNamesSelector = state =>
+  state[STATE_SOURCES.ALGORITHM_TABLE].dataSource.map(({ name }) => name);
+
+const pipelineNamesSelector = state =>
+  state[STATE_SOURCES.PIPELINE_TABLE].dataSource.map(({ name }) => name);
+
+const AddPipeline = () => {
   const dispatch = useDispatch();
-  const algorithms = useSelector(state => state.algorithmTable.dataSource.map(key => key.name));
-  const storedPipelines = useSelector(state => state.pipelineTable.dataSource);
 
-  return (
-    <AddPipelineForm
-      algorithms={algorithms}
-      pipelines={storedPipelines.map(pipeline => pipeline.name)}
-      onSubmit={pipeline => {
-        dispatch(addPipeline(pipeline));
-      }}
-    />
-  );
-}
+  const algorithms = useSelector(algorithmNamesSelector);
+  const pipelines = useSelector(pipelineNamesSelector);
+  const onSubmit = useCallback(pipeline => dispatch(addPipeline(pipeline)), [dispatch]);
 
-export default AddPipeline;
+  return <AddPipelineWizard algorithms={algorithms} pipelines={pipelines} onSubmit={onSubmit} />;
+};
+
+export default memo(AddPipeline);

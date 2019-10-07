@@ -1,7 +1,6 @@
 import React, { useState, useCallback, memo } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 
 import { Button } from 'antd';
 
@@ -10,19 +9,12 @@ import { BottomContent, Card, JsonEditor } from 'components/common';
 import { stringify } from 'utils';
 import { applyAlgorithm } from 'actions';
 
-// Direct import for auto-complete
-
 import { addAlgorithmTemplate } from 'config';
 import FormContent from './FormContent.react';
 import handleParsing from 'utils/handleParsing';
-
-// #region helpers
-const Display = styled.div`
-  display: ${({ isVisible }) => (isVisible ? 'block' : 'none')};
-`;
+import { Display } from 'styles';
 
 const DEFAULT_EDITOR_VALUE = stringify(addAlgorithmTemplate);
-// #endregion
 
 const AddAlgorithm = ({ onSubmit }) => {
   // #region  Editor State

@@ -7,3 +7,4 @@ export {
 } from 'styles/colors';
 
 export { default as GlobalStyle } from 'styles/GlobalStyle.styles';
+export { default as Display } from 'styles/Display.styles';

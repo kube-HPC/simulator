@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormItem } from '../FormElements.react';
 import { Select, Input } from 'antd';
 import { toUpperCaseFirstLetter } from 'utils';
 import addAlgorithmSchema from 'config/schema/addAlgorithm.schema';
-import { InputAddon } from 'components/common';
+import { InputAddon, Form } from 'components/common';
 import SelectEnvOptions from '../SelectEnvOptions.react';
 
 const {
@@ -26,21 +25,21 @@ const defaultGitHost = 'github';
 
 const GitBuild = ({ required, getFieldDecorator }) => (
   <>
-    <FormItem label={URL.label}>
+    <Form.Item label={URL.label}>
       {getFieldDecorator(URL.field, {
         rules: [{ required, message: URL.message }]
       })(<InputAddon before={before} after={after} placeholder={URL.placeholder} />)}
-    </FormItem>
-    <FormItem label={BRANCH.label}>
+    </Form.Item>
+    <Form.Item label={BRANCH.label}>
       {getFieldDecorator(BRANCH.field)(<Input placeholder={BRANCH.placeholder} />)}
-    </FormItem>
-    <FormItem label={TAG.label}>
+    </Form.Item>
+    <Form.Item label={TAG.label}>
       {getFieldDecorator(TAG.field)(<Input placeholder={TAG.placeholder} />)}
-    </FormItem>
-    <FormItem label={TOKEN.label}>
+    </Form.Item>
+    <Form.Item label={TOKEN.label}>
       {getFieldDecorator(TOKEN.field)(<Input.Password placeholder={TOKEN.placeholder} />)}
-    </FormItem>
-    <FormItem label={GIT_KIND.label}>
+    </Form.Item>
+    <Form.Item label={GIT_KIND.label}>
       {getFieldDecorator(GIT_KIND.field, {
         initialValue: defaultGitHost
       })(
@@ -49,20 +48,20 @@ const GitBuild = ({ required, getFieldDecorator }) => (
           {insertGitKindOptions({ options: GIT_KIND.types, predicate: v => v !== defaultGitHost })}
         </Select>
       )}
-    </FormItem>
-    <FormItem label={COMMIT.ID.label}>
+    </Form.Item>
+    <Form.Item label={COMMIT.ID.label}>
       {getFieldDecorator(COMMIT.ID.field)(<Input placeholder={COMMIT.ID.placeholder} />)}
-    </FormItem>
-    <FormItem label={ENVIRONMENT.label}>
+    </Form.Item>
+    <Form.Item label={ENVIRONMENT.label}>
       {getFieldDecorator(ENVIRONMENT.field, {
         rules: [{ required, message: ENVIRONMENT.message }]
       })(<SelectEnvOptions placeholder={ENVIRONMENT.placeholder} />)}
-    </FormItem>
-    <FormItem label={ENTRY_POINT.label}>
+    </Form.Item>
+    <Form.Item label={ENTRY_POINT.label}>
       {getFieldDecorator(ENTRY_POINT.field, {
         rules: [{ required, message: ENTRY_POINT.message }]
       })(<Input placeholder={ENTRY_POINT.placeholder} />)}
-    </FormItem>
+    </Form.Item>
   </>
 );
 
