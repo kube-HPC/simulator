@@ -3,8 +3,7 @@ import React from 'react';
 import { Button, Modal, Tooltip, Typography, Tag } from 'antd';
 import { sorter } from 'utils/string';
 import { DrawerEditorMD } from 'components';
-import { Ellipsis, FlexBox } from 'components/common';
-import { COLOR_PIPELINE_STATUS } from 'styles';
+import { Ellipsis, FlexBox, StatusTag } from 'components/common';
 
 const { Paragraph, Title, Text } = Typography;
 
@@ -44,10 +43,29 @@ const getAlgorithmColumns = ({ onSubmit, onDelete, fetchReadme, getReadme }) => 
       algorithmImage ? <Ellipsis copyable text={algorithmImage} /> : <Tag>No Image</Tag>
   },
   {
-    title: 'Total Builds',
+    title: 'Builds Stats',
     dataIndex: 'builds',
     key: 'builds',
-    render: builds => <Tag color={COLOR_PIPELINE_STATUS.ready}>{builds.length}</Tag>
+    render: builds => {
+      const statusCounter = builds
+        .map(build => build.status)
+        .reduce((acc, curr) => ({ ...acc, [curr]: 1 + (acc[curr] || 0) }), {});
+
+      const entries = Object.entries(statusCounter);
+      const hasStats = entries.length !== 0;
+
+      return hasStats ? (
+        <FlexBox justify="start" gutter={0} style={{ flexWrap: 'nowrap' }}>
+          {Object.entries(statusCounter).map(([status, count]) => (
+            <FlexBox.Item key={status}>
+              <StatusTag status={status} count={count} />
+            </FlexBox.Item>
+          ))}
+        </FlexBox>
+      ) : (
+        <Tag>No Builds</Tag>
+      );
+    }
   },
   {
     title: 'CPU',
@@ -60,7 +78,7 @@ const getAlgorithmColumns = ({ onSubmit, onDelete, fetchReadme, getReadme }) => 
     dataIndex: 'mem',
     key: 'mem',
     width: '10%',
-    render: mem => <Tag>{mem}</Tag>
+    render: mem => <Tag>{mem || 'No Memory Specified'}</Tag>
   },
   {
     title: 'Min Hot Workers',
