@@ -1,43 +1,10 @@
 import React from 'react';
-import { storiesOf } from '@storybook/react';
-import { animated, useSpring } from 'react-spring';
-import styled from 'styled-components';
 
 import LoadingScreen from 'components/LoadingScreen/LoadingScreen.react';
+import SECTIONS from './sections';
 
-const Circle = styled(animated.div)`
-  background: palevioletred;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  border-radius: 50px;
-  width: 50px;
-  height: 50px;
-`;
+export default {
+  title: `${SECTIONS.COMMON}|Loading Screen`
+};
 
-function AnimateCircle() {
-  const { x } = useSpring({
-    from: { x: 0 },
-    to: async next => {
-      for (;;) await next({ x: 1 });
-    },
-    config: { duration: 3500 },
-    reset: true
-  });
-  return (
-    <Circle
-      style={{
-        transform: x
-          .interpolate({
-            range: [0, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 1],
-            output: [1, 2, 3, 4, 5, 4, 2, 1]
-          })
-          .interpolate(x => `scale(${x})`)
-      }}
-    />
-  );
-}
-
-storiesOf('Basics|Animations', module)
-  .add('Logo', () => <LoadingScreen />)
-  .add('Circle', () => <AnimateCircle />);
+export const Loading_Screen = () => <LoadingScreen />;

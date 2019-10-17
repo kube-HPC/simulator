@@ -7,7 +7,9 @@ import { Initial, Nodes, Webhooks, Triggers, Options } from './Steps';
 import { Form } from 'components/common';
 import { Display } from 'styles';
 
-const AddAlgorithmForm = ({ onSubmit, form, isLastStep }) => {
+const steps = [Initial, Nodes, Webhooks, Triggers, Options];
+
+const AddAlgorithmForm = ({ onSubmit, form, isLastStep, step }) => {
   const { validateFields } = form;
 
   const onFormSubmit = e => {
@@ -21,11 +23,11 @@ const AddAlgorithmForm = ({ onSubmit, form, isLastStep }) => {
 
   return (
     <Form onSubmit={onFormSubmit}>
-      <Initial {...form} />
-      <Nodes />
-      <Webhooks />
-      <Triggers />
-      <Options />
+      {steps.map((Step, index) => (
+        <Display key={index} isVisible={step === index}>
+          <Step {...form} />
+        </Display>
+      ))}
     </Form>
   );
 };
@@ -33,7 +35,8 @@ const AddAlgorithmForm = ({ onSubmit, form, isLastStep }) => {
 AddAlgorithmForm.propTypes = {
   form: PropTypes.object.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  isLastStep: PropTypes.bool.isRequired
+  isLastStep: PropTypes.bool.isRequired,
+  step: PropTypes.number.isRequired
 };
 
 export default Form.create()(AddAlgorithmForm);

@@ -1,10 +1,18 @@
-import { configure, addParameters } from '@storybook/react';
+import { configure, addParameters, addDecorator } from '@storybook/react';
 import 'antd/dist/antd.css';
 
-function loadStories() {
-  const req = require.context('stories', true, /\.stories\.js$/);
-  req.keys().forEach(filename => req(filename));
-}
+import React from 'react';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import rootReducer from 'reducers/root.reducer';
+
+const store = createStore(rootReducer);
+
+addDecorator(S => (
+  <Provider store={store}>
+    <S />
+  </Provider>
+));
 
 addParameters({
   options: {
@@ -13,4 +21,4 @@ addParameters({
   }
 });
 
-configure(loadStories, module);
+configure(require.context('../src', true, /\.stories\.js$/), module);

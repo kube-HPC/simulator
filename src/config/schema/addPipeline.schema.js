@@ -1,6 +1,20 @@
 const addPipelineSchema = {
   INITIAL: {
-    label: 'Initial'
+    label: 'Initial',
+    NAME: {
+      label: 'Name',
+      field: 'name',
+      placeholder: 'Unique Identifier'
+    },
+    DESCRIPTION: {
+      label: 'Description',
+      field: 'description',
+      placeholder: 'Pipeline Description'
+    },
+    FLOW_INPUT: {
+      label: 'Flow Input',
+      field: 'flowInput'
+    }
   },
   NODES: {
     label: 'Nodes'

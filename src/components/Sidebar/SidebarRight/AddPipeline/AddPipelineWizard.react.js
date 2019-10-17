@@ -70,15 +70,15 @@ const AddPipelineWizard = ({ algorithms, pipelines, onSubmit }) => {
             </Card>
           </FlexItemStart>
           <FlexItemGrow as={FlexItemStart}>
-            <AddPipelineForm onSubmit={onSubmit} isLastStep={isLastStep} />
+            <AddPipelineForm onSubmit={onSubmit} isLastStep={isLastStep} step={step} />
           </FlexItemGrow>
         </FlexBox>
-      </Display>
 
-      <BottomContent.Divider />
-      <StepsBottom type="navigation" size="small" current={step} onChange={setStep}>
-        {steps}
-      </StepsBottom>
+        <BottomContent.Divider />
+        <StepsBottom type="navigation" size="small" current={step} onChange={setStep}>
+          {steps}
+        </StepsBottom>
+      </Display>
 
       <BottomContent.Divider />
       <BottomContent

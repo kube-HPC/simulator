@@ -2,16 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Card, JsonEditor } from 'components/common';
 import { Input } from 'antd';
+import addPipelineSchema from 'config/schema/addPipeline.schema';
+
+const { NAME, DESCRIPTION, FLOW_INPUT } = addPipelineSchema.INITIAL;
 
 const Initial = ({ required, getFieldDecorator, fileList, setFileList }) => (
   <>
-    <Form.Item label="Name">
-      <Input placeholder="Unique Identifier" />
+    <Form.Item label={NAME.label} required>
+      {getFieldDecorator(NAME.field)(<Input placeholder={NAME.placeholder} />)}
     </Form.Item>
-    <Form.Item label="Description">
-      <Input.TextArea placeholder="Pipeline Description" />
+    <Form.Item label={DESCRIPTION.label}>
+      <Input.TextArea placeholder={DESCRIPTION.placeholder} />
     </Form.Item>
-    <Form.Item label="Flow Input">
+    <Form.Item label={FLOW_INPUT.label}>
       <Card>
         <JsonEditor />
       </Card>
