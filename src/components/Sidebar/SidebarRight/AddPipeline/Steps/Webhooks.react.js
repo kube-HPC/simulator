@@ -4,7 +4,7 @@ import { Form, InputAddon } from 'components/common';
 
 const webHooksOptions = ['http://', 'ftp://', 'https://', 'ftps://'];
 
-const Webhooks = ({ required, getFieldDecorator, fileList, setFileList }) => (
+const Webhooks = ({ getFieldDecorator }) => (
   <>
     <Form.Item label="Progress">
       <InputAddon before={webHooksOptions} />
@@ -16,10 +16,7 @@ const Webhooks = ({ required, getFieldDecorator, fileList, setFileList }) => (
 );
 
 Webhooks.propTypes = {
-  getFieldDecorator: PropTypes.func.isRequired,
-  required: PropTypes.bool.isRequired,
-  setFileList: PropTypes.func.isRequired,
-  fileList: PropTypes.array.isRequired
+  getFieldDecorator: PropTypes.func.isRequired
 };
 
 export default Webhooks;

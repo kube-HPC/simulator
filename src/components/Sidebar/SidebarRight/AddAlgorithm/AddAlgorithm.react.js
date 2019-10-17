@@ -15,8 +15,9 @@ import handleParsing from 'utils/handleParsing';
 import { Display } from 'styles';
 
 const DEFAULT_EDITOR_VALUE = stringify(addAlgorithmTemplate);
+const noop = () => {};
 
-const AddAlgorithm = ({ onSubmit }) => {
+const AddAlgorithm = ({ onSubmit = noop }) => {
   // #region  Editor State
   const [editorIsVisible, setEditorIsVisible] = useState(false);
   const [editorValue, setEditorValue] = useState(DEFAULT_EDITOR_VALUE);
@@ -76,10 +77,6 @@ const AddAlgorithm = ({ onSubmit }) => {
 
 AddAlgorithm.propTypes = {
   onSubmit: PropTypes.func
-};
-
-AddAlgorithm.defaultProps = {
-  onSubmit: () => {}
 };
 
 export default memo(AddAlgorithm);

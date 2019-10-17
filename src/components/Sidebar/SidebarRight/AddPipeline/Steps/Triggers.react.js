@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Form } from 'components/common';
 import { Select, Switch, Popover, Input } from 'antd';
 
-const Triggers = ({ required, getFieldDecorator, fileList, setFileList }) => (
+const Triggers = ({ getFieldDecorator }) => (
   <>
     <Form.Item label="Cron">
       <Popover content={'pattern'} trigger="focus">
@@ -22,10 +22,7 @@ const Triggers = ({ required, getFieldDecorator, fileList, setFileList }) => (
 );
 
 Triggers.propTypes = {
-  getFieldDecorator: PropTypes.func.isRequired,
-  required: PropTypes.bool.isRequired,
-  setFileList: PropTypes.func.isRequired,
-  fileList: PropTypes.array.isRequired
+  getFieldDecorator: PropTypes.func.isRequired
 };
 
 export default Triggers;

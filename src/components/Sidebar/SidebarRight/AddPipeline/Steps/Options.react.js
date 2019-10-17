@@ -10,7 +10,7 @@ const SPAN_REST = 24 - SPAN;
 const levelOptions = ['info', 'trace', 'debug', 'warn', 'error', 'critical'];
 const smallSelectStyle = { width: '90px' };
 
-const Options = ({ required, getFieldDecorator, fileList, setFileList }) => (
+const Options = ({ getFieldDecorator }) => (
   <>
     <Form.Item label="Batch Tolerance">
       <FlexBox>
@@ -51,10 +51,7 @@ const Options = ({ required, getFieldDecorator, fileList, setFileList }) => (
 );
 
 Options.propTypes = {
-  getFieldDecorator: PropTypes.func.isRequired,
-  required: PropTypes.bool.isRequired,
-  setFileList: PropTypes.func.isRequired,
-  fileList: PropTypes.array.isRequired
+  getFieldDecorator: PropTypes.func.isRequired
 };
 
 export default Options;

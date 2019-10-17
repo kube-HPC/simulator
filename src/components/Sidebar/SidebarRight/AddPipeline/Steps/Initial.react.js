@@ -1,32 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Card, JsonEditor } from 'components/common';
+import { Form } from 'components/common';
 import { Input } from 'antd';
 import addPipelineSchema from 'config/schema/addPipeline.schema';
 
-const { NAME, DESCRIPTION, FLOW_INPUT } = addPipelineSchema.INITIAL;
+const { NAME, DESCRIPTION } = addPipelineSchema.INITIAL;
 
-const Initial = ({ required, getFieldDecorator, fileList, setFileList }) => (
+const Initial = ({ getFieldDecorator }) => (
   <>
-    <Form.Item label={NAME.label} required>
+    <Form.Item label={NAME.label} required={NAME.required}>
       {getFieldDecorator(NAME.field)(<Input placeholder={NAME.placeholder} />)}
     </Form.Item>
     <Form.Item label={DESCRIPTION.label}>
-      <Input.TextArea placeholder={DESCRIPTION.placeholder} />
+      {getFieldDecorator(DESCRIPTION.field)(
+        <Input.TextArea placeholder={DESCRIPTION.placeholder} />
+      )}
     </Form.Item>
-    <Form.Item label={FLOW_INPUT.label}>
+    {/* <Form.Item label={FLOW_INPUT.label}>
       <Card>
         <JsonEditor />
       </Card>
-    </Form.Item>
+    </Form.Item> */}
   </>
 );
 
 Initial.propTypes = {
-  getFieldDecorator: PropTypes.func.isRequired,
-  required: PropTypes.bool.isRequired,
-  setFileList: PropTypes.func.isRequired,
-  fileList: PropTypes.array.isRequired
+  getFieldDecorator: PropTypes.func.isRequired
 };
 
 export default Initial;

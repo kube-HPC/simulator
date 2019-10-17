@@ -4,7 +4,8 @@ const addPipelineSchema = {
     NAME: {
       label: 'Name',
       field: 'name',
-      placeholder: 'Unique Identifier'
+      placeholder: 'Unique Identifier',
+      required: true
     },
     DESCRIPTION: {
       label: 'Description',

@@ -25,6 +25,7 @@ const JsonEditor = ({ onChange, value: controlledValue, ...props }) => {
 };
 
 JsonEditor.defaultProps = {
+  value: '',
   height: '60vh',
   onChange: () => {}
 };

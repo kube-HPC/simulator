@@ -12,7 +12,7 @@ const ButtonGroupCenter = styled(Button.Group)`
 
 const inputOptions = ['String', 'Numeric', 'Object', 'Array', 'Boolean', 'null'];
 
-const Nodes = ({ required, getFieldDecorator, fileList, setFileList }) => {
+const Nodes = ({ getFieldDecorator }) => {
   const InputSelect = <InputAddon after={inputOptions} />;
   return (
     <>
@@ -62,10 +62,7 @@ const Nodes = ({ required, getFieldDecorator, fileList, setFileList }) => {
 };
 
 Nodes.propTypes = {
-  getFieldDecorator: PropTypes.func.isRequired,
-  required: PropTypes.bool.isRequired,
-  setFileList: PropTypes.func.isRequired,
-  fileList: PropTypes.array.isRequired
+  getFieldDecorator: PropTypes.func.isRequired
 };
 
 export default Nodes;

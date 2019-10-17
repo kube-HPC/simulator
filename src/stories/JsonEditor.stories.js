@@ -22,3 +22,4 @@ export const InCard = () => (
     <JsonEditor height={'60vh'} value={stringify(template)} />
   </StyledCard>
 );
+export const Empty = () => <JsonEditor />;
