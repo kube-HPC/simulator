@@ -18,7 +18,25 @@ const addPipelineSchema = {
     }
   },
   NODES: {
-    label: 'Nodes'
+    field: 'nodes',
+    label: 'Nodes',
+    NAME: {
+      label: 'Node Name',
+      field: 'nodeName',
+      placeholder: 'Node Name'
+    },
+    ALGORITHM: {
+      label: 'Algorithm Name',
+      field: 'algorithmName',
+      placeholder: 'Select Algorithm Name'
+    },
+    INPUT: {
+      label: 'Input',
+      field: 'input',
+      placeholder: 'Enter a VALID JSON type',
+      tooltip: 'Warning: You entered not a valid JSON type',
+      types: ['String', 'Numeric', 'Object', 'Array', 'Boolean', 'null']
+    }
   },
   WEBHOOKS: {
     label: 'Webhooks'

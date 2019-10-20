@@ -1,13 +1,7 @@
 export default {
   name: '',
   description: '',
-  nodes: [
-    {
-      nodeName: '',
-      algorithmName: '',
-      input: []
-    }
-  ],
+  nodes: [],
   flowInput: {},
   webhooks: {
     progress: '',

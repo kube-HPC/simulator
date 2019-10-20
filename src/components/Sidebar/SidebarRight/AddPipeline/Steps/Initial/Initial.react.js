@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'components/common';
 import { Input } from 'antd';
-import addPipelineSchema from 'config/schema/addPipeline.schema';
+import schema from 'config/schema/addPipeline.schema';
+import FlowInput from './FlowInput.react';
 
-const { NAME, DESCRIPTION } = addPipelineSchema.INITIAL;
+const { NAME, DESCRIPTION, FLOW_INPUT } = schema.INITIAL;
 
 const Initial = ({ getFieldDecorator }) => (
   <>
@@ -16,11 +17,9 @@ const Initial = ({ getFieldDecorator }) => (
         <Input.TextArea placeholder={DESCRIPTION.placeholder} />
       )}
     </Form.Item>
-    {/* <Form.Item label={FLOW_INPUT.label}>
-      <Card>
-        <JsonEditor />
-      </Card>
-    </Form.Item> */}
+    <Form.Item label={FLOW_INPUT.label}>
+      {getFieldDecorator(FLOW_INPUT.field)(<FlowInput />)}
+    </Form.Item>
   </>
 );
 

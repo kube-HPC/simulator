@@ -41,7 +41,7 @@ const toReadableBuildType = buildType =>
 
 const isEmpty = v =>
   v === undefined || v === '' || v === null || (typeof v === 'object' && !Object.entries(v).length);
-const isNotEmpty = v => !isEmpty(v);
+const isNotEmpty = ({ value }) => !isEmpty(value);
 
 const getBuildTypes = ({ buildType, ...props }) => {
   const { CODE, IMAGE, GIT } = BUILD_TYPES;
@@ -178,7 +178,7 @@ FormContent.defaultProps = {
   onSubmit: () => {}
 };
 
-const mapper = value => Form.createFormField({ value });
+const mapper = ({ value }) => Form.createFormField({ value });
 const mapPropsToFields = () => mapObjValues({ obj: formTemplate, mapper });
 
 export default memo(Form.create({ mapPropsToFields })(FormContent));

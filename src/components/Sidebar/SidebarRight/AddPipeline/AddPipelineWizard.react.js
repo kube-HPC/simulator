@@ -32,11 +32,13 @@ const FlexItemGrow = styled(FlexBox.Item)`
   flex-grow: 1;
 `;
 
-const mapper = value => Form.createFormField({ value });
-const mapPropsToFields = () => mapObjValues({ obj: formTemplate, mapper });
+const mapper = ({ key, value }) =>
+  Form.createFormField({ value: key === 'flowInput' ? stringify(value) : value });
+const mapPredicate = ({ key }) => key === 'flowInput';
+const mapPropsToFields = () => mapObjValues({ obj: formTemplate, mapper, mapPredicate });
 
 const AddPipelineWizard = ({ algorithms, pipelines, onSubmit }) => {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(1);
   const [isEditorVisible, toggle] = useReducer(visible => !visible, false);
   const [editorValue, setEditorValue] = useState(INITIAL_EDITOR_VALUE);
   const [jsonViewObj, setJsonViewObj] = useState(formTemplate);
@@ -49,10 +51,10 @@ const AddPipelineWizard = ({ algorithms, pipelines, onSubmit }) => {
   const onDefault = () => setEditorValue(INITIAL_EDITOR_VALUE);
   const onClear = () => setEditorValue('');
 
-  const onValuesChange = useCallback(
-    (_, changedValues) => setJsonViewObj(prevObj => ({ ...prevObj, ...changedValues })),
-    []
-  );
+  const onValuesChange = useCallback((_, changedValues) => {
+    console.log(changedValues);
+    setJsonViewObj(prevObj => ({ ...prevObj, ...changedValues }));
+  }, []);
 
   // 1. Inject antd `form` object and callbacks.
   // 2. Memoize the returned component from Form.create
@@ -107,7 +109,7 @@ const AddPipelineWizard = ({ algorithms, pipelines, onSubmit }) => {
           </Display>
         ]}
       >
-        <Display isVisible={isEditorVisible}>
+        <Display isVisible={!isEditorVisible}>
           <Button disabled={!step} onClick={onPrevClick}>
             <Icon type="left" />
             Back

@@ -7,12 +7,14 @@ const configNotificationOnOpen = description => ({
   icon: <Icon type="warning" style={{ color: 'red' }} />
 });
 
-const handleParsing = ({ src, onSuccess }) => {
+const noop = () => {};
+
+const handleParsing = ({ src, onSuccess = noop, onFail }) => {
   try {
     const parsed = JSON.parse(src);
     onSuccess({ src, parsed });
   } catch ({ message }) {
-    notification.open(configNotificationOnOpen(message));
+    onFail ? onFail() : notification.open(configNotificationOnOpen(message));
   }
 };
 
