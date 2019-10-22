@@ -15,7 +15,7 @@ import formTemplate from 'config/template/addPipelineForm.template';
 const steps = Object.values(schema).map(({ label }) => <Steps.Step key={label} title={label} />);
 
 const INITIAL_EDITOR_VALUE = stringify(addPipelineTemplate);
-const SPACE_BETWEEN = 30;
+const SPACE_BETWEEN = 20;
 
 const StepsBottom = styled(Steps)`
   position: absolute;
@@ -30,6 +30,7 @@ const FlexItemStart = styled(FlexBox.Item)`
 
 const FlexItemGrow = styled(FlexBox.Item)`
   flex-grow: 1;
+  width: min-content;
 `;
 
 const mapper = ({ key, value }) =>
@@ -52,7 +53,7 @@ const AddPipelineWizard = ({ algorithms, pipelines, onSubmit }) => {
   const onClear = () => setEditorValue('');
 
   const onValuesChange = useCallback((_, changedValues) => {
-    console.log(changedValues);
+    console.log('what changed', changedValues);
     setJsonViewObj(prevObj => ({ ...prevObj, ...changedValues }));
   }, []);
 
@@ -76,7 +77,7 @@ const AddPipelineWizard = ({ algorithms, pipelines, onSubmit }) => {
         <FlexBox gutter={SPACE_BETWEEN}>
           <FlexItemStart>
             <Card>
-              <JsonView jsonObject={jsonViewObj} />
+              <JsonView jsonObject={jsonViewObj} collapsed={undefined} />
             </Card>
           </FlexItemStart>
           <FlexItemGrow as={FlexItemStart}>

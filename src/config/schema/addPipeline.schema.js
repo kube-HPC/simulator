@@ -22,7 +22,7 @@ const addPipelineSchema = {
     label: 'Nodes',
     NAME: {
       label: 'Node Name',
-      field: 'nodeName',
+      field: 'name',
       placeholder: 'Node Name'
     },
     ALGORITHM: {
@@ -39,7 +39,15 @@ const addPipelineSchema = {
     }
   },
   WEBHOOKS: {
-    label: 'Webhooks'
+    label: 'Webhooks',
+    PROGRESS: {
+      label: 'Progress',
+      field: 'progress'
+    },
+    RESULT: {
+      label: 'Result',
+      field: 'result'
+    }
   },
   TRIGGERS: {
     label: 'Triggers'
