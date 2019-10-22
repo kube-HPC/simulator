@@ -39,7 +39,7 @@ const mapPredicate = ({ key }) => key === 'flowInput';
 const mapPropsToFields = () => mapObjValues({ obj: formTemplate, mapper, mapPredicate });
 
 const AddPipelineWizard = ({ algorithms, pipelines, onSubmit }) => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(2);
   const [isEditorVisible, toggle] = useReducer(visible => !visible, false);
   const [editorValue, setEditorValue] = useState(INITIAL_EDITOR_VALUE);
   const [jsonViewObj, setJsonViewObj] = useState(formTemplate);

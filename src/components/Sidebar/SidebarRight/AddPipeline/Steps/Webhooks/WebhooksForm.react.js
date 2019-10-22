@@ -8,7 +8,7 @@ const webHooksOptions = ['http://', 'ftp://', 'https://', 'ftps://'];
 
 const { RESULT, PROGRESS } = schema.WEBHOOKS;
 
-const Webhooks = ({ getFieldDecorator }) => (
+const WebhooksForm = ({ form: { getFieldDecorator } }) => (
   <>
     <Form.Item label={PROGRESS.label}>
       {getFieldDecorator(PROGRESS.field)(<InputAddon before={webHooksOptions} />)}
@@ -19,8 +19,8 @@ const Webhooks = ({ getFieldDecorator }) => (
   </>
 );
 
-Webhooks.propTypes = {
-  getFieldDecorator: PropTypes.func.isRequired
+WebhooksForm.propTypes = {
+  form: PropTypes.object.isRequired
 };
 
-export default Webhooks;
+export default WebhooksForm;

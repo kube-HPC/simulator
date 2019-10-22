@@ -40,6 +40,7 @@ const addPipelineSchema = {
   },
   WEBHOOKS: {
     label: 'Webhooks',
+    field: 'webhooks',
     PROGRESS: {
       label: 'Progress',
       field: 'progress'
