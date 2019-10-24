@@ -55,11 +55,13 @@ const addPipelineSchema = {
     field: 'triggers',
     CRON: {
       label: 'Cron',
+      field: 'triggers.cron',
       fields: {
         PATTERN: 'triggers.cron.pattern',
         ENABLED: 'triggers.cron.enabled'
       },
-      placeholder: 'Pattern'
+      placeholder: 'Pattern',
+      errorMessage: 'Invalid Cron Expression'
     },
     PIPELINES: {
       label: 'Pipelines',

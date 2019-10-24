@@ -11,7 +11,7 @@ import AddPipelineForm from './AddPipelineForm.react';
 import { Display } from 'styles';
 import { addPipelineTemplate } from 'config';
 import { stringify, mapObjValues } from 'utils';
-import { merge } from 'lodash';
+import { mergeWith } from 'lodash';
 // #endregion
 
 // #region  Styling
@@ -40,13 +40,20 @@ const SPACE_BETWEEN = 20;
 const innerClasses = ['flowInput'];
 
 const mapper = ({ key, value }) =>
-  Form.createFormField({ value: key === 'flowInput' ? stringify(value) : value });
+  Form.createFormField({ value: innerClasses.includes(key) ? stringify(value) : value });
 const mapPredicate = ({ key }) => innerClasses.includes(key);
 const mapPropsToFields = () => mapObjValues({ obj: addPipelineTemplate, mapper, mapPredicate });
+
+// Customizer for lodash merge.
+const mergeMapper = (objValue, srcValue) => {
+  if (Array.isArray(objValue)) {
+    return srcValue;
+  }
+};
 // #endregion
 
 const AddPipelineWizard = ({ algorithms, pipelines, onSubmit }) => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(3);
   const [isEditorVisible, toggle] = useReducer(visible => !visible, false);
   const [editorValue, setEditorValue] = useState(INITIAL_EDITOR_VALUE);
   const [jsonViewObj, setJsonViewObj] = useState(addPipelineTemplate);
@@ -60,7 +67,8 @@ const AddPipelineWizard = ({ algorithms, pipelines, onSubmit }) => {
   const onClear = () => setEditorValue('');
 
   const onValuesChange = useCallback(
-    (_, changedValues) => setJsonViewObj(prevObj => ({ ...merge(prevObj, changedValues) })),
+    (_, changedValues) =>
+      setJsonViewObj(prevObj => ({ ...mergeWith(prevObj, changedValues, mergeMapper) })),
     []
   );
 
@@ -138,4 +146,4 @@ AddPipelineWizard.propTypes = {
   onSubmit: PropTypes.func.isRequired
 };
 
-export default AddPipelineWizard;
+export default memo(AddPipelineWizard);

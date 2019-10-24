@@ -1,6 +1,6 @@
 const removeLast = arr => {
-  const [, ...rest] = arr.reverse();
-  return rest;
+  arr.pop();
+  return [...arr];
 };
 
 export { removeLast };

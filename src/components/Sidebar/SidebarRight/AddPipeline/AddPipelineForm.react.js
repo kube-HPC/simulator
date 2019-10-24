@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createContext } from 'react';
 import PropTypes from 'prop-types';
 
 import { Initial, Nodes, Webhooks, Triggers, Options } from './Steps';
@@ -7,8 +7,10 @@ import { Display } from 'styles';
 
 const steps = [Initial, Nodes, Webhooks, Triggers, Options];
 
+export const FormContext = createContext();
+
 const AddPipelineForm = ({ onSubmit, form, isLastStep, step }) => {
-  const { validateFields } = form;
+  const { validateFields, getFieldDecorator } = form;
 
   const onFormSubmit = e => {
     e.preventDefault();
@@ -19,13 +21,17 @@ const AddPipelineForm = ({ onSubmit, form, isLastStep, step }) => {
     });
   };
 
+  const formStore = { getFieldDecorator };
+
   return (
     <Form onSubmit={onFormSubmit}>
-      {steps.map((Step, index) => (
-        <Display key={index} isVisible={step === index}>
-          <Step {...form} />
-        </Display>
-      ))}
+      <FormContext.Provider value={formStore}>
+        {steps.map((Step, index) => (
+          <Display key={index} isVisible={step === index}>
+            <Step {...form} />
+          </Display>
+        ))}
+      </FormContext.Provider>
     </Form>
   );
 };

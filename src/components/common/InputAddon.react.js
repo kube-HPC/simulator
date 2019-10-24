@@ -23,10 +23,10 @@ const initialByType = target => () => {
   return first;
 };
 
-const InputAddon = forwardRef(({ before = '', after = '', onChange, placeholder }, ref) => {
+const InputAddon = forwardRef(({ before = '', after = '', onChange, placeholder, value }, ref) => {
   const [selectBefore, setSelectBefore] = useState(initialByType(before));
   const [selectAfter, setSelectAfter] = useState(initialByType(after));
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState(value);
 
   const onInputChange = useCallback(({ target: { value } }) => setInputValue(value), []);
 
@@ -86,6 +86,7 @@ InputAddon.propTypes = {
   after: arrayOrStringType,
   placeholder: PropTypes.string,
   onChange: PropTypes.func,
+  value: PropTypes.string.isRequired,
   beforeReplaceRgx: PropTypes.object,
   afterReplaceRgx: PropTypes.object
 };
