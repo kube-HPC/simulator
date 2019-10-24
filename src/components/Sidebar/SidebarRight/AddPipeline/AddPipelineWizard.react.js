@@ -65,15 +65,16 @@ const AddPipelineWizard = () => {
   const [isSubmit, setIsSubmit] = useState(false);
 
   const dispatch = useDispatch();
-
   const isLastStep = isEditorVisible || step === steps.length - 1;
 
   useEffect(() => {
-    step === steps.length && setIsSubmit(true);
+    setIsSubmit(step === steps.length - 1);
   }, [isEditorVisible, step]);
 
   // TODO: send to reducer
-  const onNextClick = () => !isSubmit && setStep(prevStep => prevStep + 1);
+  const onNextClick = () => {
+    isSubmit ? dispatch(addPipeline(jsonViewObj)) : setStep(prevStep => prevStep + 1);
+  };
 
   const onEditorSubmit = () => {
     const onSuccess = ({ parsed }) => dispatch(addPipeline(parsed));
