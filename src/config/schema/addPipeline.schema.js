@@ -43,18 +43,55 @@ const addPipelineSchema = {
     field: 'webhooks',
     PROGRESS: {
       label: 'Progress',
-      field: 'progress'
+      field: 'webhooks.progress'
     },
     RESULT: {
       label: 'Result',
-      field: 'result'
+      field: 'webhooks.result'
     }
   },
   TRIGGERS: {
-    label: 'Triggers'
+    label: 'Triggers',
+    field: 'triggers',
+    CRON: {
+      label: 'Cron',
+      fields: {
+        PATTERN: 'triggers.cron.pattern',
+        ENABLED: 'triggers.cron.enabled'
+      },
+      placeholder: 'Pattern'
+    },
+    PIPELINES: {
+      label: 'Pipelines',
+      field: 'triggers.pipelines',
+      placeholder: 'Pick pipelines to activate upon result'
+    }
   },
   OPTIONS: {
-    label: 'Options'
+    label: 'Options',
+    field: 'options',
+    TOLERANCE: {
+      label: 'Batch Tolerance',
+      field: 'options.batchTolerance'
+    },
+    CONCURRENT: {
+      label: 'Concurrent',
+      field: 'options.concurrentPipelines'
+    },
+    VERBOSITY_LEVEL: {
+      label: 'Verbosity Level',
+      field: 'options.progressVerbosityLevel',
+      types: ['info', 'trace', 'debug', 'warn', 'error', 'critical']
+    },
+    TTL: {
+      label: 'TTL',
+      field: 'options.ttl'
+    },
+    // Note that Priority on the top level and not under options.
+    PRIORITY: {
+      label: 'Priority',
+      field: 'priority'
+    }
   }
 };
 

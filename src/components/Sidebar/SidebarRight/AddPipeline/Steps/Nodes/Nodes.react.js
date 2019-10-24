@@ -26,17 +26,15 @@ const Nodes = ({ getFieldDecorator, setFieldsValue }) => {
   }, [nodes, setFieldsValue]);
 
   const onAddNode = () => {
+    // Note the closure on id
     const id = nodes.length;
-    const onValuesChange = (_, changedValues) => {
-      const [key] = Object.keys(changedValues);
 
+    const onValuesChange = (_, __, allValues) => {
       setNodes(prev => {
         // Changing the key "name" to "nodeName",
         // thats because "nodeName" is used by React when querying the dom.
-        const changedValue =
-          key === NODES.NAME.field ? { nodeName: changedValues.name } : { ...changedValues };
-
-        prev[id].value = { ...prev[id].value, ...changedValue };
+        const { name, ...rest } = allValues;
+        prev[id].value = { ...rest, nodeName: name };
 
         return [...prev];
       });

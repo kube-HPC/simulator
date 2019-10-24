@@ -1,3 +1,4 @@
+// #region  Imports
 import React, { memo, useState, useReducer, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -10,13 +11,10 @@ import AddPipelineForm from './AddPipelineForm.react';
 import { Display } from 'styles';
 import { addPipelineTemplate } from 'config';
 import { stringify, mapObjValues } from 'utils';
-import formTemplate from 'config/template/addPipelineForm.template';
+import { merge } from 'lodash';
+// #endregion
 
-const steps = Object.values(schema).map(({ label }) => <Steps.Step key={label} title={label} />);
-
-const INITIAL_EDITOR_VALUE = stringify(addPipelineTemplate);
-const SPACE_BETWEEN = 20;
-
+// #region  Styling
 const StepsBottom = styled(Steps)`
   position: absolute;
   bottom: ${BottomContent.DefaultHeight};
@@ -32,17 +30,26 @@ const FlexItemGrow = styled(FlexBox.Item)`
   flex-grow: 1;
   width: min-content;
 `;
+// #endregion
+
+// #region  Helpers
+const steps = Object.values(schema).map(({ label }) => <Steps.Step key={label} title={label} />);
+const INITIAL_EDITOR_VALUE = stringify(addPipelineTemplate);
+const SPACE_BETWEEN = 20;
+
+const innerClasses = ['flowInput'];
 
 const mapper = ({ key, value }) =>
   Form.createFormField({ value: key === 'flowInput' ? stringify(value) : value });
-const mapPredicate = ({ key }) => key === 'flowInput';
-const mapPropsToFields = () => mapObjValues({ obj: formTemplate, mapper, mapPredicate });
+const mapPredicate = ({ key }) => innerClasses.includes(key);
+const mapPropsToFields = () => mapObjValues({ obj: addPipelineTemplate, mapper, mapPredicate });
+// #endregion
 
 const AddPipelineWizard = ({ algorithms, pipelines, onSubmit }) => {
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(1);
   const [isEditorVisible, toggle] = useReducer(visible => !visible, false);
   const [editorValue, setEditorValue] = useState(INITIAL_EDITOR_VALUE);
-  const [jsonViewObj, setJsonViewObj] = useState(formTemplate);
+  const [jsonViewObj, setJsonViewObj] = useState(addPipelineTemplate);
 
   const isLastStep = isEditorVisible || step === steps.length - 1;
 
@@ -52,16 +59,16 @@ const AddPipelineWizard = ({ algorithms, pipelines, onSubmit }) => {
   const onDefault = () => setEditorValue(INITIAL_EDITOR_VALUE);
   const onClear = () => setEditorValue('');
 
-  const onValuesChange = useCallback((_, changedValues) => {
-    console.log('what changed', changedValues);
-    setJsonViewObj(prevObj => ({ ...prevObj, ...changedValues }));
-  }, []);
+  const onValuesChange = useCallback(
+    (_, changedValues) => setJsonViewObj(prevObj => ({ ...merge(prevObj, changedValues) })),
+    []
+  );
 
   // 1. Inject antd `form` object and callbacks.
   // 2. Memoize the returned component from Form.create
   //    against unnecessary re-renders due to callbacks.
   // 3. Memoize the whole value to not lose component's state on re-render.
-  const AddPipelineInjected = useMemo(
+  const FormInjected = useMemo(
     () => memo(Form.create({ mapPropsToFields, onValuesChange })(AddPipelineForm)),
     [onValuesChange]
   );
@@ -81,7 +88,7 @@ const AddPipelineWizard = ({ algorithms, pipelines, onSubmit }) => {
             </Card>
           </FlexItemStart>
           <FlexItemGrow as={FlexItemStart}>
-            <AddPipelineInjected onSubmit={onSubmit} isLastStep={isLastStep} step={step} />
+            <FormInjected onSubmit={onSubmit} isLastStep={isLastStep} step={step} />
           </FlexItemGrow>
         </FlexBox>
 
@@ -131,4 +138,4 @@ AddPipelineWizard.propTypes = {
   onSubmit: PropTypes.func.isRequired
 };
 
-export default memo(AddPipelineWizard);
+export default AddPipelineWizard;
