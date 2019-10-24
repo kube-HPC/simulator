@@ -1,10 +1,10 @@
 import actions from 'const/application-actions';
 
-export const addPipeline = pipe => ({
+export const addPipeline = pipeline => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: 'pipeline/add',
-    body: pipe,
+    body: pipeline,
     actionType: actions.PIPELINE_ADD
   }
 });

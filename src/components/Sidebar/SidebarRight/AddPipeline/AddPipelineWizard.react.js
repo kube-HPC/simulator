@@ -1,7 +1,8 @@
 // #region  Imports
-import React, { memo, useState, useReducer, useCallback, useMemo } from 'react';
-import PropTypes from 'prop-types';
+import React, { memo, useState, useReducer, useCallback, useMemo, useEffect } from 'react';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { addPipeline } from 'actions/pipeline.action';
 
 import { FlexBox, JsonView, BottomContent, JsonEditor, Card, Form } from 'components/common';
 import { Steps, Button, Icon } from 'antd';
@@ -10,7 +11,7 @@ import schema from 'config/schema/addPipeline.schema';
 import AddPipelineForm from './AddPipelineForm.react';
 import { Display } from 'styles';
 import { addPipelineTemplate } from 'config';
-import { stringify, mapObjValues } from 'utils';
+import { stringify, mapObjValues, tryParse } from 'utils';
 import { mergeWith } from 'lodash';
 // #endregion
 
@@ -33,7 +34,9 @@ const FlexItemGrow = styled(FlexBox.Item)`
 // #endregion
 
 // #region  Helpers
-const steps = Object.values(schema).map(({ label }) => <Steps.Step key={label} title={label} />);
+const steps = Object.values(schema)
+  .filter(({ label }) => label)
+  .map(({ label }) => <Steps.Step key={label} title={label} />);
 const INITIAL_EDITOR_VALUE = stringify(addPipelineTemplate);
 const SPACE_BETWEEN = 20;
 
@@ -52,16 +55,31 @@ const mergeMapper = (objValue, srcValue) => {
 };
 // #endregion
 
-const AddPipelineWizard = ({ algorithms, pipelines, onSubmit }) => {
-  const [step, setStep] = useState(3);
+const AddPipelineWizard = () => {
+  const [step, setStep] = useState(0);
+
   const [isEditorVisible, toggle] = useReducer(visible => !visible, false);
   const [editorValue, setEditorValue] = useState(INITIAL_EDITOR_VALUE);
   const [jsonViewObj, setJsonViewObj] = useState(addPipelineTemplate);
 
+  const [isSubmit, setIsSubmit] = useState(false);
+
+  const dispatch = useDispatch();
+
   const isLastStep = isEditorVisible || step === steps.length - 1;
 
+  useEffect(() => {
+    step === steps.length && setIsSubmit(true);
+  }, [isEditorVisible, step]);
+
   // TODO: send to reducer
-  const onNextClick = () => setStep(prevStep => prevStep + 1);
+  const onNextClick = () => !isSubmit && setStep(prevStep => prevStep + 1);
+
+  const onEditorSubmit = () => {
+    const onSuccess = ({ parsed }) => dispatch(addPipeline(parsed));
+    tryParse({ src: editorValue, onSuccess });
+  };
+
   const onPrevClick = () => setStep(prevStep => prevStep - 1);
   const onDefault = () => setEditorValue(INITIAL_EDITOR_VALUE);
   const onClear = () => setEditorValue('');
@@ -96,7 +114,7 @@ const AddPipelineWizard = ({ algorithms, pipelines, onSubmit }) => {
             </Card>
           </FlexItemStart>
           <FlexItemGrow as={FlexItemStart}>
-            <FormInjected onSubmit={onSubmit} isLastStep={isLastStep} step={step} />
+            <FormInjected isSubmit={isSubmit} step={step} />
           </FlexItemGrow>
         </FlexBox>
 
@@ -131,19 +149,18 @@ const AddPipelineWizard = ({ algorithms, pipelines, onSubmit }) => {
             Back
           </Button>
         </Display>
-        <Button type={isLastStep ? 'primary' : 'default'} onClick={onNextClick}>
+        <Button
+          type={isLastStep ? 'primary' : 'default'}
+          onClick={isEditorVisible ? onEditorSubmit : onNextClick}
+          form={schema.ID}
+          htmlType="submit"
+        >
           {isLastStep ? 'Submit' : 'Next'}
           <Icon type={isLastStep ? 'check' : 'right'} />
         </Button>
       </BottomContent>
     </>
   );
-};
-
-AddPipelineWizard.propTypes = {
-  algorithms: PropTypes.array.isRequired,
-  pipelines: PropTypes.array.isRequired,
-  onSubmit: PropTypes.func.isRequired
 };
 
 export default memo(AddPipelineWizard);

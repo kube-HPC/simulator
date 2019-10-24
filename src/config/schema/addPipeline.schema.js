@@ -1,4 +1,5 @@
 const addPipelineSchema = {
+  ID: 'add-pipeline',
   INITIAL: {
     label: 'Initial',
     NAME: {

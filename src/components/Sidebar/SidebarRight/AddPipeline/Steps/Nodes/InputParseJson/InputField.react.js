@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import { Input, Icon, Tooltip } from 'antd';
-import { handleParsing } from 'utils';
+import { tryParse } from 'utils';
 
 const InputField = ({ placeholder, onChange, tooltip }) => {
   const [isValid, setIsValid] = useState(true);
@@ -14,7 +14,7 @@ const InputField = ({ placeholder, onChange, tooltip }) => {
         onChange(parsed);
         setIsValid(true);
       };
-      handleParsing({ src, onSuccess, onFail });
+      tryParse({ src, onSuccess, onFail });
     },
     [onChange]
   );

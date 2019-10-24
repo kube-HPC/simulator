@@ -11,7 +11,7 @@ import { applyAlgorithm } from 'actions';
 
 import { addAlgorithmTemplate } from 'config';
 import FormContent from './FormContent.react';
-import handleParsing from 'utils/handleParsing';
+import tryParse from 'utils/handleParsing';
 import { Display } from 'styles';
 
 const DEFAULT_EDITOR_VALUE = stringify(addAlgorithmTemplate);
@@ -39,7 +39,7 @@ const AddAlgorithm = ({ onSubmit = noop }) => {
     apply(formData);
   };
 
-  const onEditorSubmit = () => handleParsing({ src: editorValue, onSuccess });
+  const onEditorSubmit = () => tryParse({ src: editorValue, onSuccess });
   // #endregion
 
   return (

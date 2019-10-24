@@ -9,7 +9,7 @@ const configNotificationOnOpen = description => ({
 
 const noop = () => {};
 
-const handleParsing = ({ src, onSuccess = noop, onFail }) => {
+const tryParse = ({ src, onSuccess = noop, onFail }) => {
   try {
     const parsed = JSON.parse(src);
     onSuccess({ src, parsed });
@@ -18,4 +18,4 @@ const handleParsing = ({ src, onSuccess = noop, onFail }) => {
   }
 };
 
-export default handleParsing;
+export default tryParse;

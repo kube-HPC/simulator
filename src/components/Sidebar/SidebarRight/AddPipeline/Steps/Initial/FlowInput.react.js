@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, JsonEditor, FlexBox } from 'components/common';
 import { Button } from 'antd';
-import { handleParsing } from 'utils';
+import { tryParse } from 'utils';
 import styled from 'styled-components';
 
 const BlockItem = styled(FlexBox.Item)`
@@ -17,7 +17,7 @@ const FlowInput = React.forwardRef(({ onChange, value: initial }, ref) => {
   const [value, setValue] = useState(initial);
   const onApply = () => {
     const onSuccess = ({ parsed }) => onChange(parsed);
-    handleParsing({ src: value, onSuccess: onSuccess });
+    tryParse({ src: value, onSuccess: onSuccess });
   };
   return (
     <Card>

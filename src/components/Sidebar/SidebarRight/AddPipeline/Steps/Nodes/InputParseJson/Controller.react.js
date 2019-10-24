@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import { Button } from 'antd';
-import InputField from './Input.react';
+import InputField from './InputField.react';
 import { removeLast } from '../helpers';
 
 const ButtonGroupCenter = styled(Button.Group)`

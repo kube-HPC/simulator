@@ -1,30 +1,35 @@
 import React, { createContext } from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 
 import { Initial, Nodes, Webhooks, Triggers, Options } from './Steps';
 import { Form } from 'components/common';
 import { Display } from 'styles';
+import { addPipeline } from 'actions/pipeline.action';
+import schema from 'config/schema/addPipeline.schema';
 
 const steps = [Initial, Nodes, Webhooks, Triggers, Options];
 
 export const FormContext = createContext();
 
-const AddPipelineForm = ({ onSubmit, form, isLastStep, step }) => {
+const AddPipelineForm = ({ form, step, isSubmit }) => {
   const { validateFields, getFieldDecorator } = form;
+  const dispatch = useDispatch();
 
-  const onFormSubmit = e => {
+  const onSubmit = e => {
     e.preventDefault();
+    if (!isSubmit) return;
 
-    if (!isLastStep) return;
     validateFields((err, formObject) => {
-      onSubmit();
+      console.log(formObject);
+      dispatch(addPipeline(formObject));
     });
   };
 
   const formStore = { getFieldDecorator };
 
   return (
-    <Form onSubmit={onFormSubmit}>
+    <Form onSubmit={onSubmit} id={schema.ID}>
       <FormContext.Provider value={formStore}>
         {steps.map((Step, index) => (
           <Display key={index} isVisible={step === index}>
@@ -38,8 +43,7 @@ const AddPipelineForm = ({ onSubmit, form, isLastStep, step }) => {
 
 AddPipelineForm.propTypes = {
   form: PropTypes.object.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  isLastStep: PropTypes.bool.isRequired,
+  isSubmit: PropTypes.bool.isRequired,
   step: PropTypes.number.isRequired
 };
 
