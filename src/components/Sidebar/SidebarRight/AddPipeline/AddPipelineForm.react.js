@@ -9,9 +9,10 @@ const steps = [Initial, Nodes, Webhooks, Triggers, Options];
 
 export const FormContext = createContext();
 
-const AddPipelineForm = ({ form, step, isSubmit }) => {
-  const { getFieldDecorator } = form;
-  const formStore = { getFieldDecorator };
+const AddPipelineForm = ({ form, step }) => {
+  const { getFieldDecorator, setFieldsValue } = form;
+
+  const formStore = { getFieldDecorator, setFieldsValue };
 
   return (
     <Form>
@@ -28,7 +29,6 @@ const AddPipelineForm = ({ form, step, isSubmit }) => {
 
 AddPipelineForm.propTypes = {
   form: PropTypes.object.isRequired,
-  isSubmit: PropTypes.bool.isRequired,
   step: PropTypes.number.isRequired
 };
 

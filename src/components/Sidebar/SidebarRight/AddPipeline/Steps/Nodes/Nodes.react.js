@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { useState, useEffect, memo, useContext } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button } from 'antd';
@@ -7,6 +7,7 @@ import { Form } from 'components/common';
 import addPipelineSchema from 'config/schema/addPipeline.schema';
 import NodeForm from './NodeForm.react';
 import { removeLast } from './helpers';
+import { FormContext } from '../../AddPipelineForm.react';
 
 const ButtonGroupCenter = styled(Button.Group)`
   display: flex;
@@ -17,8 +18,11 @@ const ButtonGroupCenter = styled(Button.Group)`
 const { NODES } = addPipelineSchema;
 const EMPTY_INITIAL = [];
 
-const Nodes = ({ getFieldDecorator, setFieldsValue }) => {
+const Nodes = () => {
   const [nodes, setNodes] = useState(EMPTY_INITIAL);
+
+  const { getFieldDecorator, setFieldsValue } = useContext(FormContext);
+
   getFieldDecorator(NODES.field, { initialValue: nodes });
 
   useEffect(() => {
