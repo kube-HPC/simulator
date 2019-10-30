@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, memo } from 'react';
+import React, { createContext, memo } from 'react';
 import PropTypes from 'prop-types';
 
 import { Initial, Nodes, Options } from './Steps';
@@ -11,14 +11,7 @@ export const FormContext = createContext();
 
 const AddPipelineForm = ({ form, step }) => {
   const { getFieldDecorator, setFieldsValue, validateFields } = form;
-  const formStore = { getFieldDecorator, setFieldsValue };
-
-  useEffect(() => {
-    validateFields((err, values) => {
-      console.log(err);
-      console.log(values);
-    });
-  }, [validateFields]);
+  const formStore = { getFieldDecorator, setFieldsValue, validateFields };
 
   return (
     <Form>

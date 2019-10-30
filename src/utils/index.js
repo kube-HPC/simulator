@@ -8,3 +8,4 @@ export { default as transformTraceData } from './jaeger/transformTraceData';
 
 export { default as mapObjValues } from './mapObjValues';
 export { default as tryParse } from './handleParsing';
+export { default as notification } from './notification';

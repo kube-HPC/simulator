@@ -12,7 +12,7 @@ const Initial = () => {
 
   return (
     <>
-      <Form.Item label={NAME.label} hasFeedback>
+      <Form.Item label={NAME.label} required={NAME.required} hasFeedback>
         {getFieldDecorator(NAME.field, {
           rules: [{ required: true, message: NAME.message }]
         })(<InputAddon placeholder={NAME.placeholder} />)}

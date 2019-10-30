@@ -11,7 +11,7 @@ import schema from 'config/schema/addPipeline.schema';
 import AddPipelineForm from './AddPipelineForm.react';
 import { Display } from 'styles';
 import { addPipelineTemplate } from 'config';
-import { stringify, mapObjValues, tryParse } from 'utils';
+import { stringify, mapObjValues, tryParse, notification } from 'utils';
 import { mergeWith } from 'lodash';
 // #endregion
 
@@ -54,6 +54,7 @@ const mergeMapper = (objValue, srcValue) => {
     return srcValue;
   }
 };
+
 // #endregion
 
 const AddPipeline = () => {
@@ -74,9 +75,17 @@ const AddPipeline = () => {
     setIsSubmit(step === steps.length - 1);
   }, [isEditorVisible, step]);
 
-  const onNextClick = () => {
-    isSubmit ? dispatchPipeline(jsonViewObj) : setStep(prevStep => prevStep + 1);
-  };
+  const onNextClick = useCallback(() => {
+    const isValidPipeline =
+      !jsonViewObj.name ||
+      !jsonViewObj.nodes.every(({ nodeName, algorithmName }) => nodeName && algorithmName);
+
+    isSubmit
+      ? isValidPipeline
+        ? notification({ message: 'Empty Required Field!' })
+        : dispatchPipeline(jsonViewObj)
+      : setStep(prevStep => prevStep + 1);
+  }, [dispatchPipeline, isSubmit, jsonViewObj]);
 
   const onEditorSubmit = () =>
     tryParse({ src: editorValue, onSuccess: ({ parsed }) => dispatchPipeline(parsed) });

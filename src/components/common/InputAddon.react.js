@@ -45,8 +45,10 @@ const InputAddon = forwardRef(({ before = '', after = '', onChange, placeholder,
   }, [after, before, inputValue, selectAfter, selectBefore]);
 
   useEffect(() => {
-    setInputValue(inputValue.replace(selectBefore, '').replace(selectAfter, ''));
-    onChange(`${selectBefore}${inputValue}${after}`);
+    if (inputValue !== undefined) {
+      setInputValue(inputValue.replace(selectBefore, '').replace(selectAfter, ''));
+      onChange(`${selectBefore}${inputValue}${after}`);
+    }
   }, [after, inputValue, onChange, selectAfter, selectBefore]);
 
   const addonBefore = useMemo(
