@@ -45,10 +45,8 @@ const InputAddon = forwardRef(({ before = '', after = '', onChange, placeholder,
   }, [after, before, inputValue, selectAfter, selectBefore]);
 
   useEffect(() => {
-    if (inputValue !== undefined) {
-      setInputValue(inputValue.replace(selectBefore, '').replace(selectAfter, ''));
-      onChange(`${selectBefore}${inputValue}${after}`);
-    }
+    setInputValue(inputValue.replace(selectBefore, '').replace(selectAfter, ''));
+    onChange(`${selectBefore}${inputValue}${after}`);
   }, [after, inputValue, onChange, selectAfter, selectBefore]);
 
   const addonBefore = useMemo(
@@ -70,24 +68,6 @@ const InputAddon = forwardRef(({ before = '', after = '', onChange, placeholder,
     />
   );
 });
-
-const TextArea = forwardRef(({ value, onChange }, ref) => {
-  const [inputValue, setInputValue] = useState(value);
-  const onInputChange = useCallback(({ target: { value } }) => setInputValue(value), []);
-
-  useEffect(() => {
-    onChange(inputValue);
-  }, [inputValue, onChange]);
-
-  return <Input.TextArea value={inputValue} onChange={onInputChange} />;
-});
-
-TextArea.propTypes = {
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func
-};
-
-InputAddon.TextArea = TextArea;
 
 const arrayOrStringType = PropTypes.oneOfType([PropTypes.array, PropTypes.string]);
 

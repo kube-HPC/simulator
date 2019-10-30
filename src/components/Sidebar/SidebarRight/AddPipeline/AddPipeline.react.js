@@ -9,7 +9,7 @@ import { Steps, Button, Icon } from 'antd';
 import { DRAWER_SIZE } from 'const';
 import schema from 'config/schema/addPipeline.schema';
 import AddPipelineForm from './AddPipelineForm.react';
-import { Display } from 'styles';
+import { Display, COLOR_LAYOUT } from 'styles';
 import { addPipelineTemplate } from 'config';
 import { stringify, mapObjValues, tryParse, notification } from 'utils';
 import { mergeWith } from 'lodash';
@@ -17,6 +17,7 @@ import { mergeWith } from 'lodash';
 
 // #region  Styling
 const StepsBottom = styled(Steps)`
+  border-top: 1px solid ${COLOR_LAYOUT.border};
   position: absolute;
   bottom: ${BottomContent.DefaultHeight};
   left: 0;
@@ -54,27 +55,23 @@ const mergeMapper = (objValue, srcValue) => {
     return srcValue;
   }
 };
-
 // #endregion
 
 const AddPipeline = () => {
   const [step, setStep] = useState(0);
-
   const [isEditorVisible, toggle] = useReducer(visible => !visible, false);
   const [editorValue, setEditorValue] = useState(INITIAL_EDITOR_VALUE);
   const [jsonViewObj, setJsonViewObj] = useState(addPipelineTemplate);
 
-  const [isSubmit, setIsSubmit] = useState(false);
-
   const dispatch = useDispatch();
-  const isLastStep = isEditorVisible || step === steps.length - 1;
-
   const dispatchPipeline = useCallback(value => dispatch(addPipeline(value)), [dispatch]);
 
+  const [isSubmit, setIsSubmit] = useState(false);
   useEffect(() => {
     setIsSubmit(step === steps.length - 1);
   }, [isEditorVisible, step]);
 
+  // #region Bottom Buttons
   const onNextClick = useCallback(() => {
     const isValidPipeline =
       !jsonViewObj.name ||
@@ -84,16 +81,18 @@ const AddPipeline = () => {
       ? isValidPipeline
         ? notification({ message: 'Empty Required Field!' })
         : dispatchPipeline(jsonViewObj)
-      : setStep(prevStep => prevStep + 1);
+      : setStep(s => s + 1);
   }, [dispatchPipeline, isSubmit, jsonViewObj]);
 
   const onEditorSubmit = () =>
     tryParse({ src: editorValue, onSuccess: ({ parsed }) => dispatchPipeline(parsed) });
 
-  const onPrevClick = () => setStep(prevStep => prevStep - 1);
+  const onPrevClick = () => setStep(s => s - 1);
   const onDefault = () => setEditorValue(INITIAL_EDITOR_VALUE);
   const onClear = () => setEditorValue('');
+  // #endregion
 
+  // #region Form Control
   const onValuesChange = useCallback(
     (_, changedValues) =>
       setJsonViewObj(prevObj => ({ ...mergeWith(prevObj, changedValues, mergeMapper) })),
@@ -109,6 +108,9 @@ const AddPipeline = () => {
     [onValuesChange]
   );
 
+  const isLastStep = isEditorVisible || step === steps.length - 1;
+  // #endregion
+
   return (
     <>
       <Display isVisible={isEditorVisible}>
@@ -118,12 +120,12 @@ const AddPipeline = () => {
       </Display>
       <Display isVisible={!isEditorVisible}>
         <FlexBox gutter={SPACE_BETWEEN}>
-          <FlexItemStart>
+          <FlexItemStart span={10}>
             <Card>
               <JsonView jsonObject={jsonViewObj} collapsed={undefined} />
             </Card>
           </FlexItemStart>
-          <FlexItemGrow as={FlexItemStart}>
+          <FlexItemGrow as={FlexItemStart} span={14}>
             <FormInjected isSubmit={isSubmit} step={step} />
           </FlexItemGrow>
         </FlexBox>

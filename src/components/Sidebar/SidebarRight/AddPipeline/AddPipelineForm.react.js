@@ -10,8 +10,8 @@ const steps = [Initial, Nodes, Options];
 export const FormContext = createContext();
 
 const AddPipelineForm = ({ form, step }) => {
-  const { getFieldDecorator, setFieldsValue, validateFields } = form;
-  const formStore = { getFieldDecorator, setFieldsValue, validateFields };
+  const { getFieldDecorator, setFieldsValue } = form;
+  const formStore = { getFieldDecorator, setFieldsValue };
 
   return (
     <Form>

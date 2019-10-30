@@ -26,12 +26,14 @@ const addPipelineSchema = {
       label: 'Node Name',
       field: 'name',
       placeholder: 'Node Name',
-      message: 'Node name is required'
+      message: 'Node name is required',
+      required: true
     },
     ALGORITHM: {
       label: 'Algorithm Name',
       field: 'algorithmName',
-      placeholder: 'Select Algorithm Name'
+      placeholder: 'Select Algorithm Name',
+      required: true
     },
     INPUT: {
       label: 'Input',
