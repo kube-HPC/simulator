@@ -34,9 +34,10 @@ const FlexItemGrow = styled(FlexBox.Item)`
 // #endregion
 
 // #region  Helpers
-const steps = Object.values(schema)
-  .filter(({ label }) => label)
-  .map(({ label }) => <Steps.Step key={label} title={label} />);
+const steps = ['Initial', 'Nodes', 'Options'].map(label => (
+  <Steps.Step key={label} title={label} />
+));
+
 const INITIAL_EDITOR_VALUE = stringify(addPipelineTemplate);
 const SPACE_BETWEEN = 20;
 
@@ -73,7 +74,6 @@ const AddPipeline = () => {
     setIsSubmit(step === steps.length - 1);
   }, [isEditorVisible, step]);
 
-  // TODO: send to reducer
   const onNextClick = () => {
     isSubmit ? dispatchPipeline(jsonViewObj) : setStep(prevStep => prevStep + 1);
   };

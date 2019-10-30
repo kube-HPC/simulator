@@ -21,10 +21,12 @@ const NodeForm = ({ form: { getFieldDecorator }, id }) => {
       <Form.Divider>
         <Typography.Text code>{`Node ${id}`}</Typography.Text>
       </Form.Divider>
-      <Form.Item required label={NAME.label}>
-        {getFieldDecorator(NAME.field)(<Input placeholder={NAME.placeholder} />)}
+      <Form.Item required label={NAME.label} hasFeedback>
+        {getFieldDecorator(NAME.field, {
+          rules: [{ required: true, message: NAME.message }]
+        })(<Input placeholder={NAME.placeholder} />)}
       </Form.Item>
-      <Form.Item required label={ALGORITHM.label}>
+      <Form.Item required label={ALGORITHM.label} hasFeedback>
         {getFieldDecorator(ALGORITHM.field)(
           <Select placeholder={ALGORITHM.placeholder}>
             {algorithms.map(algorithm => (

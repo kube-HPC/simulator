@@ -5,7 +5,7 @@ import cronstrue from 'cronstrue';
 import { Popover, Typography, Icon, Input, Switch } from 'antd';
 import addPipelineSchema from 'config/schema/addPipeline.schema';
 
-import { FormContext } from '../../AddPipelineForm.react';
+import { FormContext } from '../../../AddPipelineForm.react';
 
 const { Text } = Typography;
 const { errorMessage, fields } = addPipelineSchema.TRIGGERS.CRON;

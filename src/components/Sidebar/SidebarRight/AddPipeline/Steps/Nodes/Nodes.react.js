@@ -1,5 +1,4 @@
 import React, { useState, useEffect, memo, useContext } from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button } from 'antd';
 
@@ -78,11 +77,6 @@ const Nodes = () => {
       </ButtonGroupCenter>
     </>
   );
-};
-
-Nodes.propTypes = {
-  getFieldDecorator: PropTypes.func.isRequired,
-  setFieldsValue: PropTypes.func.isRequired
 };
 
 export default memo(Nodes);

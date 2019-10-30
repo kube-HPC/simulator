@@ -6,6 +6,8 @@ import addPipelineSchema from 'config/schema/addPipeline.schema';
 import SliderNumber from './SliderNumber.react';
 import { toUpperCaseFirstLetter } from 'utils';
 import { FormContext } from '../../AddPipelineForm.react';
+import Webhooks from './Webhooks.react';
+import Triggers from './Triggers/Triggers.react';
 
 const smallSelectStyle = { width: '90px' };
 
@@ -16,6 +18,11 @@ const Options = () => {
 
   return (
     <>
+      <Form.Divider>Webhooks</Form.Divider>
+      <Webhooks />
+      <Form.Divider>Triggers</Form.Divider>
+      <Triggers />
+      <Form.Divider>Advanced Options</Form.Divider>
       <Form.Item label={TOLERANCE.label}>
         {getFieldDecorator(TOLERANCE.field)(<SliderNumber />)}
       </Form.Item>

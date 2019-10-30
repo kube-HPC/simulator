@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 
 import { Form, InputAddon } from 'components/common';
 import schema from 'config/schema/addPipeline.schema';
-import { FormContext } from '../AddPipelineForm.react';
+import { FormContext } from '../../AddPipelineForm.react';
 
 const webHooksOptions = ['http://', 'ftp://', 'https://', 'ftps://'];
 

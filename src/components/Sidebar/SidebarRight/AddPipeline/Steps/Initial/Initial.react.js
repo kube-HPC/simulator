@@ -1,8 +1,6 @@
-import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
-import { Input } from 'antd';
+import React, { useContext, memo } from 'react';
 
-import { Form } from 'components/common';
+import { Form, InputAddon } from 'components/common';
 import schema from 'config/schema/addPipeline.schema';
 import FlowInput from './FlowInput.react';
 import { FormContext } from '../../AddPipelineForm.react';
@@ -14,13 +12,13 @@ const Initial = () => {
 
   return (
     <>
-      <Form.Item label={NAME.label} required={NAME.required}>
-        {getFieldDecorator(NAME.field)(<Input placeholder={NAME.placeholder} />)}
+      <Form.Item label={NAME.label} hasFeedback>
+        {getFieldDecorator(NAME.field, {
+          rules: [{ required: true, message: NAME.message }]
+        })(<InputAddon placeholder={NAME.placeholder} />)}
       </Form.Item>
       <Form.Item label={DESCRIPTION.label}>
-        {getFieldDecorator(DESCRIPTION.field)(
-          <Input.TextArea placeholder={DESCRIPTION.placeholder} />
-        )}
+        {getFieldDecorator(DESCRIPTION.field)(<InputAddon placeholder={DESCRIPTION.placeholder} />)}
       </Form.Item>
       <Form.Item label={FLOW_INPUT.label}>
         {getFieldDecorator(FLOW_INPUT.field)(<FlowInput />)}
@@ -29,8 +27,4 @@ const Initial = () => {
   );
 };
 
-Initial.propTypes = {
-  getFieldDecorator: PropTypes.func.isRequired
-};
-
-export default Initial;
+export default memo(Initial);

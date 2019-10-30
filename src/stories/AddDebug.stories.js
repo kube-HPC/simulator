@@ -1,5 +1,5 @@
 import React from 'react';
-import AddDebugReact from 'components/Sidebar/SidebarRight/AddDebug.react';
+import AddDebugReact from 'components/Sidebar/SidebarRight/AddDebug/AddDebug.react';
 import DrawerOperations from 'components/Drawer/DrawerOperations.react';
 import SECTIONS from './sections';
 

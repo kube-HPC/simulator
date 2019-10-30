@@ -6,7 +6,8 @@ const addPipelineSchema = {
       label: 'Name',
       field: 'name',
       placeholder: 'Unique Identifier',
-      required: true
+      required: true,
+      message: 'Pipeline name is required'
     },
     DESCRIPTION: {
       label: 'Description',
@@ -24,7 +25,8 @@ const addPipelineSchema = {
     NAME: {
       label: 'Node Name',
       field: 'name',
-      placeholder: 'Node Name'
+      placeholder: 'Node Name',
+      message: 'Node name is required'
     },
     ALGORITHM: {
       label: 'Algorithm Name',

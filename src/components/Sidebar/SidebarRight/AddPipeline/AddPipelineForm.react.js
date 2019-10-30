@@ -1,25 +1,31 @@
-import React, { createContext } from 'react';
+import React, { createContext, useEffect, memo } from 'react';
 import PropTypes from 'prop-types';
 
-import { Initial, Nodes, Webhooks, Triggers, Options } from './Steps';
+import { Initial, Nodes, Options } from './Steps';
 import { Form } from 'components/common';
 import { Display } from 'styles';
 
-const steps = [Initial, Nodes, Webhooks, Triggers, Options];
+const steps = [Initial, Nodes, Options];
 
 export const FormContext = createContext();
 
 const AddPipelineForm = ({ form, step }) => {
-  const { getFieldDecorator, setFieldsValue } = form;
-
+  const { getFieldDecorator, setFieldsValue, validateFields } = form;
   const formStore = { getFieldDecorator, setFieldsValue };
+
+  useEffect(() => {
+    validateFields((err, values) => {
+      console.log(err);
+      console.log(values);
+    });
+  }, [validateFields]);
 
   return (
     <Form>
       <FormContext.Provider value={formStore}>
         {steps.map((Step, index) => (
           <Display key={index} isVisible={step === index}>
-            <Step {...form} />
+            <Step />
           </Display>
         ))}
       </FormContext.Provider>
@@ -32,4 +38,4 @@ AddPipelineForm.propTypes = {
   step: PropTypes.number.isRequired
 };
 
-export default AddPipelineForm;
+export default memo(AddPipelineForm);
