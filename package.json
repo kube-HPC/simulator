@@ -62,6 +62,7 @@
     "jaeger-react-trace-component": "^1.0.16",
     "lodash": "^4.17.15",
     "moment": "^2.22.2",
+    "object.fromentries": "^2.0.1",
     "parse-unit": "^1.0.1",
     "prop-types": "^15.7.2",
     "react": "^16.10.1",

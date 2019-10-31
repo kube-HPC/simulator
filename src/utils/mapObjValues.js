@@ -1,3 +1,9 @@
+import fromEntries from 'object.fromentries';
+
+if (!Object.fromEntries) {
+  fromEntries.shim();
+}
+
 const isObject = obj => typeof obj === 'object' && obj !== null;
 const identity = ({ value }) => value;
 const noFilter = () => true;
