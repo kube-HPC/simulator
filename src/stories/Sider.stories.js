@@ -2,7 +2,7 @@ import { Layout } from 'antd';
 import SidebarLeft from 'components/Sidebar/SidebarLeft/SidebarLeft.react';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import SECTIONS from './sections';
+import { SB_SECTIONS } from 'const';
 
 const LayoutStyled = styled(Layout)`
   height: 100vh;
@@ -44,7 +44,7 @@ function SiderContainer() {
 }
 
 export default {
-  title: `${SECTIONS.LEFT}|Sider`
+  title: `${SB_SECTIONS.LEFT}|Sider`
 };
 
 export const Sider = () => <SiderContainer />;

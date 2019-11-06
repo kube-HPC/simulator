@@ -1,10 +1,10 @@
 import React from 'react';
 import AddDebugReact from 'components/Sidebar/SidebarRight/AddDebug/AddDebug.react';
 import DrawerOperations from 'components/Drawer/DrawerOperations.react';
-import SECTIONS from './sections';
+import { SB_SECTIONS } from 'const';
 
 export default {
-  title: `${SECTIONS.RIGHT}|Add Debug`
+  title: `${SB_SECTIONS.RIGHT}|Add Debug`
 };
 
 export const InDrawer = () => (

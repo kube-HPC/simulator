@@ -1,11 +1,11 @@
 import { Icon, Layout, Menu } from 'antd';
 import React from 'react';
-import SECTIONS from './sections';
+import { SB_SECTIONS } from 'const';
 
 const { Header, Footer, Sider, Content } = Layout;
 
 export default {
-  title: `${SECTIONS.PLAYGROUND}|Layout Skeleton`
+  title: `${SB_SECTIONS.PLAYGROUND}|Layout Skeleton`
 };
 
 export const Default = () => (

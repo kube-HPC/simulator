@@ -5,7 +5,7 @@ import { Input, Select, InputNumber, Button, Radio } from 'antd';
 
 import { DRAWER_SIZE } from 'const';
 import { BottomContent, Form } from 'components/common';
-import { toUpperCaseFirstLetter, mapObjValues } from 'utils';
+import { toUpperCaseFirstLetter, mapObjValues, notification } from 'utils';
 import { applyAlgorithm } from 'actions';
 import MemoryField from './MemoryField.react';
 
@@ -71,7 +71,10 @@ const FormContent = ({ form, onToggle, onSubmit }) => {
     e.preventDefault();
 
     validateFields((err, formObject) => {
-      if (err || (buildType === BUILD_TYPES.CODE.field && !fileList.length)) return;
+      if (err || (buildType === BUILD_TYPES.CODE.field && !fileList.length)) {
+        notification({ message: 'Error', description: err || 'Please provide a file!' });
+        return;
+      }
 
       // Reduce selected options to boolean entry
       const options = formObject.main.options.reduce(
@@ -88,7 +91,8 @@ const FormContent = ({ form, onToggle, onSubmit }) => {
           : { ...formObject.main, options, ...formObject[buildType] };
 
       const formData = new FormData();
-      if (buildType === BUILD_TYPES.CODE.field) formData.append('file', fileList);
+      const [file] = fileList;
+      if (buildType === BUILD_TYPES.CODE.field) formData.append('file', file);
 
       const payloadFiltered = mapObjValues({ obj: payload, predicate: isNotEmpty });
       formData.append('payload', JSON.stringify(payloadFiltered));
