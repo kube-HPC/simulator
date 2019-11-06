@@ -5,10 +5,10 @@ import DrawerEditorMD from 'components/Drawer/DrawerEditorMD.react';
 import addPipelineTemplate from 'config/template/addPipeline.template';
 import React from 'react';
 import { stringify } from 'utils/string';
-import SECTIONS from './sections';
+import { SB_SECTIONS } from 'const';
 
 export default {
-  title: `${SECTIONS.COMMON}|Markdown Editor`
+  title: `${SB_SECTIONS.COMMON}|Markdown Editor`
 };
 
 export const Default = () => <MDEditor />;

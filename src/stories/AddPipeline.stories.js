@@ -1,10 +1,10 @@
 import React from 'react';
 import DrawerOperations from 'components/Drawer/DrawerOperations.react';
 import AddPipeline from 'components/Sidebar/SidebarRight/AddPipeline/AddPipeline.react';
-import SECTIONS from './sections';
+import { SB_SECTIONS } from 'const';
 
 export default {
-  title: `${SECTIONS.RIGHT}|Add Pipeline`
+  title: `${SB_SECTIONS.RIGHT}|Add Pipeline`
 };
 
 export const InDrawer = () => (

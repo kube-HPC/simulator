@@ -1,10 +1,10 @@
 import React from 'react';
 
 import LoadingScreen from 'components/LoadingScreen/LoadingScreen.react';
-import SECTIONS from './sections';
+import { SB_SECTIONS } from 'const';
 
 export default {
-  title: `${SECTIONS.COMMON}|Loading Screen`
+  title: `${SB_SECTIONS.COMMON}|Loading Screen`
 };
 
 export const Loading_Screen = () => <LoadingScreen />;

@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import Joyride, { STATUS } from 'react-joyride';
 import styled from 'styled-components';
-import SECTIONS from './sections';
+import { SB_SECTIONS } from 'const';
 
 const FlexBox = styled.div`
   margin: 20px;
@@ -78,7 +78,7 @@ function JoyrideContainer() {
 }
 
 export default {
-  title: `${SECTIONS.PLAYGROUND}|Joyride`
+  title: `${SB_SECTIONS.PLAYGROUND}|Joyride`
 };
 
 export const Example = () => <JoyrideContainer />;

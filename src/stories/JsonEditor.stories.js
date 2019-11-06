@@ -4,7 +4,7 @@ import template from 'config/template/addPipeline.template';
 import React from 'react';
 import styled from 'styled-components';
 import { stringify } from 'utils/string';
-import SECTIONS from './sections';
+import { SB_SECTIONS } from 'const';
 
 const StyledCard = styled(Card)`
   width: 45%;
@@ -13,7 +13,7 @@ const StyledCard = styled(Card)`
 `;
 
 export default {
-  title: `${SECTIONS.COMMON}|Json Editor`
+  title: `${SB_SECTIONS.COMMON}|Json Editor`
 };
 
 export const Default = () => <JsonEditor value={stringify(template)} />;

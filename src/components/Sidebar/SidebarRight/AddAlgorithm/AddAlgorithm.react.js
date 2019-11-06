@@ -32,10 +32,10 @@ const AddAlgorithm = ({ onSubmit = noop }) => {
   const dispatch = useDispatch();
   const apply = useCallback(payload => dispatch(applyAlgorithm(payload)), [dispatch]);
 
-  const onSuccess = ({ src, parsed }) => {
+  const onSuccess = ({ src }) => {
     const formData = new FormData();
     formData.append('payload', src);
-    onSubmit({ payload: parsed });
+    onSubmit({ payload: src });
     apply(formData);
   };
 

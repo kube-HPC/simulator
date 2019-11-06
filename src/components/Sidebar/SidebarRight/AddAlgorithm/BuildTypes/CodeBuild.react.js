@@ -1,3 +1,4 @@
+// #region imports
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -6,8 +7,24 @@ import schema from 'config/schema/addAlgorithm.schema';
 import SelectEnvOptions from '../SelectEnvOptions.react';
 import { FlexBox, Form } from 'components/common';
 import { COLOR } from 'styles';
+import { notification } from 'utils';
+// #endregion
 
 // #region helpers
+const toStatusMessage = fileName => ({
+  done: `${fileName} uploaded successfully`,
+  error: `${fileName} upload failed`,
+  removed: `File ${fileName} removed`
+});
+
+const STATUS_TYPE = {
+  done: notification.TYPES.SUCCESS,
+  error: notification.TYPES.ERROR,
+  removed: notification.TYPES.INFO
+};
+
+const isNotify = status => status === 'done' || status === 'error' || status === 'removed';
+
 const setDraggerProps = ({ fileList, setFileList }) => ({
   name: 'file',
   multiple: false,
@@ -15,11 +32,20 @@ const setDraggerProps = ({ fileList, setFileList }) => ({
   customRequest: ({ file, onSuccess }) => {
     setTimeout(() => {
       setFileList([file]);
-      onSuccess('OK');
+      onSuccess(file.name);
     }, 0);
   },
   fileList,
-  onRemove: () => setFileList([])
+  onChange(info) {
+    const { status, response: fileName } = info.file;
+    if (isNotify(status)) {
+      notification({ message: toStatusMessage(fileName)[status], type: STATUS_TYPE[status] });
+    }
+
+    if (status === 'removed') {
+      setFileList([]);
+    }
+  }
 });
 
 const marginTop = { marginTop: 15 };
