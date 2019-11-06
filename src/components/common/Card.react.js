@@ -6,11 +6,10 @@ import { Card as AntCard } from 'antd';
 
 const CardOverflow = styled(AntCard)`
   overflow: auto;
-  margin-right: ${({ ismargin }) => (ismargin ? '50px' : 'none')};
 `;
 
 const Card = ({ children, isMargin = false, ...props }) => (
-  <CardOverflow size="small" ismargin={isMargin} {...props}>
+  <CardOverflow size="small" style={{ marginRight: isMargin ? '50px' : 'none' }} {...props}>
     {children}
   </CardOverflow>
 );

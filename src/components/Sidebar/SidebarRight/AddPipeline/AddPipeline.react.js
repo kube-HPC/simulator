@@ -1,5 +1,5 @@
 // #region  Imports
-import React, { memo, useState, useReducer, useCallback, useMemo, useEffect } from 'react';
+import React, { memo, useState, useReducer, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { addPipeline } from 'actions/pipeline.action';
@@ -55,6 +55,8 @@ const mergeMapper = (objValue, srcValue) => {
     return srcValue;
   }
 };
+
+const JSON_VIEW_SPAN = 10;
 // #endregion
 
 const AddPipeline = () => {
@@ -66,23 +68,20 @@ const AddPipeline = () => {
   const dispatch = useDispatch();
   const dispatchPipeline = useCallback(value => dispatch(addPipeline(value)), [dispatch]);
 
-  const [isSubmit, setIsSubmit] = useState(false);
-  useEffect(() => {
-    setIsSubmit(step === steps.length - 1);
-  }, [isEditorVisible, step]);
-
   // #region Bottom Buttons
   const onNextClick = useCallback(() => {
     const isValidPipeline =
       !jsonViewObj.name ||
       !jsonViewObj.nodes.every(({ nodeName, algorithmName }) => nodeName && algorithmName);
 
+    const isSubmit = step === steps.length - 1;
+
     isSubmit
       ? isValidPipeline
         ? notification({ message: 'Empty Required Field!' })
         : dispatchPipeline(jsonViewObj)
       : setStep(s => s + 1);
-  }, [dispatchPipeline, isSubmit, jsonViewObj]);
+  }, [dispatchPipeline, jsonViewObj, step]);
 
   const onEditorSubmit = () =>
     tryParse({ src: editorValue, onSuccess: ({ parsed }) => dispatchPipeline(parsed) });
@@ -120,13 +119,13 @@ const AddPipeline = () => {
       </Display>
       <Display isVisible={!isEditorVisible}>
         <FlexBox gutter={SPACE_BETWEEN}>
-          <FlexItemStart span={10}>
+          <FlexItemStart span={JSON_VIEW_SPAN}>
             <Card>
               <JsonView jsonObject={jsonViewObj} collapsed={undefined} />
             </Card>
           </FlexItemStart>
-          <FlexItemGrow as={FlexItemStart} span={14}>
-            <FormInjected isSubmit={isSubmit} step={step} />
+          <FlexItemGrow as={FlexItemStart} span={24 - JSON_VIEW_SPAN}>
+            <FormInjected step={step} />
           </FlexItemGrow>
         </FlexBox>
 
