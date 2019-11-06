@@ -1,10 +1,14 @@
+import { Icon, Layout, Menu } from 'antd';
 import React from 'react';
-import { Layout, Menu, Icon } from 'antd';
-import { storiesOf } from '@storybook/react';
+import SECTIONS from './sections';
 
 const { Header, Footer, Sider, Content } = Layout;
 
-storiesOf('Basics|Layout', module).add('Skeleton', () => (
+export default {
+  title: `${SECTIONS.PLAYGROUND}|Layout Skeleton`
+};
+
+export const Default = () => (
   <Layout>
     <Sider>
       <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
@@ -30,4 +34,4 @@ storiesOf('Basics|Layout', module).add('Skeleton', () => (
       <Footer>Footer</Footer>
     </Layout>
   </Layout>
-));
+);

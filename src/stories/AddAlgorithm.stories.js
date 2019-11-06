@@ -1,20 +1,14 @@
 import React, { useState, useReducer } from 'react';
-import PropTypes from 'prop-types';
 
-import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-import { storiesOf } from '@storybook/react';
-import rootReducer from 'reducers/root.reducer';
 import { JsonView } from 'components/common';
 import { AddAlgorithm } from 'components/Sidebar/SidebarRight';
 import { DrawerOperations } from 'components';
 import { Button } from 'antd';
+import SECTIONS from './sections';
 
-const store = createStore(rootReducer);
-
-const Container = ({ initial }) => {
+const Container = () => {
   const [value, setValue] = useState({ note: 'Submit First' });
-  const [isOpen, toggle] = useReducer(prev => !prev, initial);
+  const [isOpen, toggle] = useReducer(prev => !prev, true);
 
   return (
     <>
@@ -27,16 +21,8 @@ const Container = ({ initial }) => {
   );
 };
 
-Container.propTypes = {
-  initial: PropTypes.bool
+export default {
+  title: `${SECTIONS.RIGHT}|Add Algorithm`
 };
 
-Container.defaultProps = {
-  initial: false
-};
-
-storiesOf('Basics|AddAlgorithm', module).add('In Drawer', () => (
-  <Provider store={store}>
-    <Container initial={true} />
-  </Provider>
-));
+export const InDrawer = () => <Container initial={true} />;

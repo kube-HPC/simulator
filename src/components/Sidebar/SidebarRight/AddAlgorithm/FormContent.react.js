@@ -1,14 +1,13 @@
 import React, { useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { Input, Select, InputNumber, Form, Button, Radio } from 'antd';
+import { Input, Select, InputNumber, Button, Radio } from 'antd';
 
 import { DRAWER_SIZE } from 'const';
-import { BottomContent } from 'components/common';
+import { BottomContent, Form } from 'components/common';
 import { toUpperCaseFirstLetter, mapObjValues } from 'utils';
 import { applyAlgorithm } from 'actions';
 import MemoryField from './MemoryField.react';
-import { FormItem, FormNoMargin, FormDivider } from './FormElements.react';
 
 // Direct import for auto-complete
 import schema from 'config/schema/addAlgorithm.schema';
@@ -42,7 +41,7 @@ const toReadableBuildType = buildType =>
 
 const isEmpty = v =>
   v === undefined || v === '' || v === null || (typeof v === 'object' && !Object.entries(v).length);
-const isNotEmpty = v => !isEmpty(v);
+const isNotEmpty = ({ value }) => !isEmpty(value);
 
 const getBuildTypes = ({ buildType, ...props }) => {
   const { CODE, IMAGE, GIT } = BUILD_TYPES;
@@ -102,8 +101,8 @@ const FormContent = ({ form, onToggle, onSubmit }) => {
   // #endregion
 
   return (
-    <FormNoMargin onSubmit={onFormSubmit}>
-      <FormItem label={MAIN.NAME.label}>
+    <Form onSubmit={onFormSubmit}>
+      <Form.Item label={MAIN.NAME.label}>
         {getFieldDecorator(MAIN.NAME.field, {
           rules: [
             {
@@ -113,20 +112,20 @@ const FormContent = ({ form, onToggle, onSubmit }) => {
             }
           ]
         })(<Input placeholder={MAIN.NAME.placeholder} />)}
-      </FormItem>
-      <FormItem label="Build Type">
+      </Form.Item>
+      <Form.Item label="Build Type">
         <Radio.Group defaultValue={buildType} buttonStyle="solid" onChange={onBuildTypeChange}>
           {insertRadioButtons(buildTypes)}
         </Radio.Group>
-      </FormItem>
-      <FormDivider>{MAIN.DIVIDER.RESOURCES}</FormDivider>
-      <FormItem label={MAIN.CPU.label}>
+      </Form.Item>
+      <Form.Divider>{MAIN.DIVIDER.RESOURCES}</Form.Divider>
+      <Form.Item label={MAIN.CPU.label}>
         {getFieldDecorator(MAIN.CPU.field)(<InputNumber min={0.1} />)}
-      </FormItem>
-      <FormItem label={MAIN.GPU.label}>
+      </Form.Item>
+      <Form.Item label={MAIN.GPU.label}>
         {getFieldDecorator(MAIN.GPU.field)(<InputNumber min={0} />)}
-      </FormItem>
-      <FormItem label={MAIN.MEMORY.label} labelAlign="left">
+      </Form.Item>
+      <Form.Item label={MAIN.MEMORY.label} labelAlign="left">
         {getFieldDecorator(MAIN.MEMORY.field)(
           <MemoryField>
             {MAIN.MEMORY.types.map(value => (
@@ -136,12 +135,12 @@ const FormContent = ({ form, onToggle, onSubmit }) => {
             ))}
           </MemoryField>
         )}
-      </FormItem>
-      <FormDivider>{MAIN.DIVIDER.ADVANCED}</FormDivider>
-      <FormItem label={MAIN.WORKERS.label}>
+      </Form.Item>
+      <Form.Divider>{MAIN.DIVIDER.ADVANCED}</Form.Divider>
+      <Form.Item label={MAIN.WORKERS.label}>
         {getFieldDecorator(MAIN.WORKERS.field)(<InputNumber min={0} />)}
-      </FormItem>
-      <FormItem label={MAIN.OPTIONS.label}>
+      </Form.Item>
+      <Form.Item label={MAIN.OPTIONS.label}>
         {getFieldDecorator(MAIN.OPTIONS.field, {
           initialValue: mainAdvancedOptions
         })(
@@ -149,8 +148,8 @@ const FormContent = ({ form, onToggle, onSubmit }) => {
             {insertAlgorithmOptions(MAIN.OPTIONS.types)}
           </Select>
         )}
-      </FormItem>
-      <FormDivider>{toReadableBuildType(buildType)}</FormDivider>
+      </Form.Item>
+      <Form.Divider>{toReadableBuildType(buildType)}</Form.Divider>
       {buildTypes[buildType]}
       <BottomContent.Divider />
       <BottomContent
@@ -165,7 +164,7 @@ const FormContent = ({ form, onToggle, onSubmit }) => {
           Submit
         </Button>
       </BottomContent>
-    </FormNoMargin>
+    </Form>
   );
 };
 
@@ -179,7 +178,7 @@ FormContent.defaultProps = {
   onSubmit: () => {}
 };
 
-const mapper = value => Form.createFormField({ value });
+const mapper = ({ value }) => Form.createFormField({ value });
 const mapPropsToFields = () => mapObjValues({ obj: formTemplate, mapper });
 
 export default memo(Form.create({ mapPropsToFields })(FormContent));

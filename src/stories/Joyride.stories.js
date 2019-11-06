@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { storiesOf } from '@storybook/react';
 import Joyride, { STATUS } from 'react-joyride';
 import styled from 'styled-components';
+import SECTIONS from './sections';
 
 const FlexBox = styled.div`
   margin: 20px;
@@ -77,4 +77,8 @@ function JoyrideContainer() {
   );
 }
 
-storiesOf('BASICS|Joyride', module).add('Example', () => <JoyrideContainer />);
+export default {
+  title: `${SECTIONS.PLAYGROUND}|Joyride`
+};
+
+export const Example = () => <JoyrideContainer />;

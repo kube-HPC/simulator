@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { notification, Typography, Tooltip } from 'antd';
+import { Typography, Tooltip } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { notification } from 'utils';
 
 const { Text } = Typography;
 
@@ -10,7 +11,9 @@ const Center = styled.div`
 `;
 
 const DEFAULT_LENGTH = 20;
-const onCopy = () => notification.success({ message: 'Copied to clipboard' });
+
+const onCopy = () =>
+  notification({ message: 'Copied to clipboard', type: notification.TYPES.SUCCESS });
 
 const Ellipsis = ({ text, length, copyable, type, ellipsis, ...props }) => {
   const textLength = length || DEFAULT_LENGTH;

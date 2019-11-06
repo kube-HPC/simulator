@@ -105,7 +105,7 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => [
     title: 'Priority',
     dataIndex: 'pipeline.priority',
     key: 'priority',
-    width: '5%',
+    width: '6%',
     sorter: (a, b) => sorter(a.pipeline.priority, b.pipeline.priority),
     render: priority => (
       <Tooltip placement="top" title={COLOR_PRIORITY[priority].name}>

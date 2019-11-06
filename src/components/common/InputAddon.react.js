@@ -1,6 +1,7 @@
-import React, { useState, forwardRef, useEffect, memo } from 'react';
+import React, { useState, forwardRef, useEffect, memo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Input, Select } from 'antd';
+import { useMemo } from 'react';
 
 const selectWidth = { width: 90 };
 
@@ -22,23 +23,40 @@ const initialByType = target => () => {
   return first;
 };
 
-const InputValidate = forwardRef(({ before, after, placeholder, onChange }, ref) => {
+const InputAddon = forwardRef(({ before = '', after = '', onChange, placeholder, value }, ref) => {
   const [selectBefore, setSelectBefore] = useState(initialByType(before));
   const [selectAfter, setSelectAfter] = useState(initialByType(after));
+  const [inputValue, setInputValue] = useState(value);
 
-  const [inputValue, setInputValue] = useState();
-  const onInputChange = e => {
-    const value = e.target.value;
-    const trimmed = value.replace(/http(s?):\/\//, '').replace(/\.git/, '');
-    setInputValue(trimmed);
-  };
+  const onInputChange = useCallback(({ target: { value } }) => setInputValue(value), []);
 
   useEffect(() => {
-    if (inputValue) onChange(`${selectBefore}${inputValue}${after}`);
-  }, [after, inputValue, onChange, selectBefore]);
+    if (Array.isArray(before)) {
+      const index = before.findIndex(value => inputValue.startsWith(value));
+      index >= 0 && setSelectBefore(before[index]);
+    }
+  }, [after, before, inputValue, selectAfter, selectBefore]);
 
-  const addonBefore = Addon({ state: selectBefore, options: before, callback: setSelectBefore });
-  const addonAfter = Addon({ state: selectAfter, options: after, callback: setSelectAfter });
+  useEffect(() => {
+    if (Array.isArray(after)) {
+      const index = after.findIndex(value => inputValue.endsWith(value));
+      index >= 0 && setSelectAfter(after[index]);
+    }
+  }, [after, before, inputValue, selectAfter, selectBefore]);
+
+  useEffect(() => {
+    setInputValue(inputValue.replace(selectBefore, '').replace(selectAfter, ''));
+    onChange(`${selectBefore}${inputValue}${after}`);
+  }, [after, inputValue, onChange, selectAfter, selectBefore]);
+
+  const addonBefore = useMemo(
+    () => Addon({ state: selectBefore, options: before, callback: setSelectBefore }),
+    [before, selectBefore]
+  );
+  const addonAfter = useMemo(
+    () => Addon({ state: selectAfter, options: after, callback: setSelectAfter }),
+    [after, selectAfter]
+  );
 
   return (
     <Input
@@ -59,15 +77,18 @@ Addon.propTypes = {
   callback: PropTypes.func.isRequired
 };
 
-InputValidate.defaultProps = {
+InputAddon.defaultProps = {
   onChange: () => {}
 };
 
-InputValidate.propTypes = {
+InputAddon.propTypes = {
   before: arrayOrStringType,
   after: arrayOrStringType,
   placeholder: PropTypes.string,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  value: PropTypes.string.isRequired,
+  beforeReplaceRgx: PropTypes.object,
+  afterReplaceRgx: PropTypes.object
 };
 
-export default memo(InputValidate);
+export default memo(InputAddon);

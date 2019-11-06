@@ -34,11 +34,13 @@ export const tableSelector = {
   }
 };
 
+export const dataSelector = sourceName => state => state[sourceName].dataSource;
+
 export const tableFilterSelector = table => {
   const { sourceName, predicate } = tableSelector[table];
 
   return createSelector(
-    state => state[sourceName].dataSource,
+    dataSelector(sourceName),
     state => state.autoCompleteFilter.filter,
     (dataSource, filter) => dataSource && dataSource.filter(predicate(filter))
   );

@@ -2,19 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Input } from 'antd';
 
-import { FormItem } from '../FormElements.react';
 import schema from 'config/schema/addAlgorithm.schema';
+import { Form } from 'components/common';
 
 const {
   IMAGE: { ALGORITHM_IMAGE }
 } = schema.BUILD_TYPES;
 
 const ImageBuild = ({ required, getFieldDecorator }) => (
-  <FormItem label={ALGORITHM_IMAGE.label}>
+  <Form.Item label={ALGORITHM_IMAGE.label}>
     {getFieldDecorator(ALGORITHM_IMAGE.field, {
       rules: [{ required, message: ALGORITHM_IMAGE.message }]
     })(<Input placeholder={ALGORITHM_IMAGE.placeholder} />)}
-  </FormItem>
+  </Form.Item>
 );
 
 ImageBuild.propTypes = {
