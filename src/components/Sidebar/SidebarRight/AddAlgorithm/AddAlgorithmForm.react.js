@@ -54,7 +54,7 @@ const getBuildTypes = ({ buildType, ...props }) => {
 };
 // #endregion
 
-const FormContent = ({ form, onToggle, onSubmit }) => {
+const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
   const [fileList, setFileList] = useState([]);
   const [buildType, setBuildType] = useState(BUILD_TYPES.CODE.field);
 
@@ -82,13 +82,23 @@ const FormContent = ({ form, onToggle, onSubmit }) => {
         {}
       );
 
-      // On GIT build type, env & entryPoint are on the top object's keys level
-      const { env, entryPoint, ...rest } = formObject[buildType];
+      // #region From Form-Object to Schema
+      // On GIT build type:
+      // [ env, entryPoint, baseImage ] are on the top object's keys level
+      const { env, entryPoint, baseImage, ...rest } = formObject[buildType];
 
       const payload =
         buildType === BUILD_TYPES.GIT.field
-          ? { ...formObject.main, options, [BUILD_TYPES.GIT.field]: rest, env, entryPoint }
+          ? {
+              ...formObject.main,
+              options,
+              [BUILD_TYPES.GIT.field]: rest,
+              env,
+              entryPoint,
+              baseImage
+            }
           : { ...formObject.main, options, ...formObject[buildType] };
+      // #endregion
 
       const formData = new FormData();
       const [file] = fileList;
@@ -172,17 +182,17 @@ const FormContent = ({ form, onToggle, onSubmit }) => {
   );
 };
 
-FormContent.propTypes = {
+AddAlgorithmForm.propTypes = {
   form: PropTypes.object.isRequired,
   onToggle: PropTypes.func.isRequired,
   onSubmit: PropTypes.func
 };
 
-FormContent.defaultProps = {
+AddAlgorithmForm.defaultProps = {
   onSubmit: () => {}
 };
 
 const mapper = ({ value }) => Form.createFormField({ value });
 const mapPropsToFields = () => mapObjValues({ obj: formTemplate, mapper });
 
-export default memo(Form.create({ mapPropsToFields })(FormContent));
+export default memo(Form.create({ mapPropsToFields })(AddAlgorithmForm));

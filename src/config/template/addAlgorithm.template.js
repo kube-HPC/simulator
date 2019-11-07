@@ -4,6 +4,7 @@ const addAlgorithmTemplate = {
   gpu: 0,
   mem: '256Mi',
   minHotWorkers: 0,
+  baseImage: '',
   options: {
     debug: false
   },

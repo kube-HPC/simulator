@@ -25,51 +25,61 @@ const addAlgorithmSchema = {
       VERSION: {
         field: 'code.version',
         label: 'Version',
-        placeholder: 'Insert Version'
+        placeholder: '(Optional) Insert Version'
+      },
+      BASE_IMAGE: {
+        field: 'code.baseImage',
+        label: 'Base Image',
+        placeholder: '(Optional) Docker Image Name'
       }
     },
     GIT: {
+      BASE_IMAGE: {
+        field: 'gitRepository.baseImage',
+        label: 'Base Image',
+        placeholder: '(Optional) Docker Image Name'
+      },
       BRANCH: {
         field: 'gitRepository.branchName',
         label: 'Branch',
-        placeholder: 'Enter Branch'
+        placeholder: '(Optional) Branch'
       },
       COMMIT: {
         field: 'gitRepository.commit',
         ID: {
           field: 'id',
           label: 'Commit ID',
-          placeholder: 'Enter Commit ID'
+          placeholder: '(Optional) Commit ID'
         },
         label: 'Commit Details',
         MESSAGE: {
           field: 'gitRepository.message',
           label: 'Message',
-          placeholder: 'Enter Commit Message'
+          placeholder: '(Optional) Enter Commit Message'
         },
         TIMESTAMP: {
           field: 'gitRepository.timestamp',
           label: 'Time Stamp',
-          placeholder: 'Enter Commit Time Stamp'
+          placeholder: '(Optional) Enter Commit Time Stamp'
         }
       },
       field: 'gitRepository',
       GIT_KIND: {
         field: 'gitRepository.gitKind',
         label: 'Git Host',
-        placeholder: 'Pick Git Host',
+        placeholder: '(Optional) Git Host',
         types: ['github', 'gitlab']
       },
       label: 'Git',
       TAG: {
         field: 'gitRepository.tag',
         label: 'Tag',
-        placeholder: 'Enter Tag'
+        placeholder: '(Optional) Tag'
       },
       TOKEN: {
         field: 'gitRepository.token',
         label: 'Token',
-        placeholder: 'Enter Token'
+        placeholder: '(Optional) Token'
       },
       URL: {
         field: 'gitRepository.url',
@@ -133,7 +143,7 @@ const addAlgorithmSchema = {
     OPTIONS: {
       field: 'main.options',
       label: 'Options',
-      placeholder: 'Enable Options',
+      placeholder: '(Optional) Enable Options',
       types: ['debug']
     },
     WORKERS: {
