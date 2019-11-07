@@ -24,7 +24,7 @@ const DEFAULT_PAGINATION = {
   showLessItems: true
 };
 
-const Table = ({ dataSource, ...props }) => {
+const Table = ({ dataSource = [], ...props }) => {
   const tableSource = Immutable.isImmutable(dataSource) ? dataSource.asMutable() : dataSource;
   return (
     <AntTable
@@ -38,10 +38,6 @@ const Table = ({ dataSource, ...props }) => {
       {...props}
     />
   );
-};
-
-Table.defaultProps = {
-  dataSource: []
 };
 
 Table.propTypes = {
