@@ -3,7 +3,7 @@ import { Table } from 'components';
 import { useAlgorithm } from 'hooks';
 
 import getAlgorithmColumns from './getAlgorithmColumns.react';
-import AlgorithmsTabs from './AlgorithmsTabs.react';
+import AlgorithmsTabs from './Tabs/AlgorithmsTabs.react';
 
 const AlgorithmsTable = () => {
   const algorithmActions = useAlgorithm();
