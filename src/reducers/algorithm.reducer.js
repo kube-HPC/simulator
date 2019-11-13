@@ -30,3 +30,12 @@ export const algorithmReadme = handleActions(
   },
   Immutable.from({}),
 );
+
+export const algorithmVersions = handleActions(
+  {
+    [actions.ALGORITHM_GET_VERSIONS](state, { payload }) {
+      return state.setIn([payload.name], payload);
+    },
+  },
+  Immutable.from({}),
+);

@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'components';
 import getVersionsColumns from './getVersionsColumns.react';
+import { useDispatch } from 'react-redux';
+import { getAlgorithmVersions } from 'actions/algorithm.action';
+// import { STATE_SOURCES } from 'const';
 
 // #region mock
 const mock = [
@@ -12,10 +15,10 @@ const mock = [
     mem: '1Gi',
     options: {
       debug: false,
-      pending: false
+      pending: false,
     },
     minHotWorkers: 0,
-    type: 'Image'
+    type: 'Image',
   },
   {
     name: 'eval-alg',
@@ -24,10 +27,10 @@ const mock = [
     mem: '1Gi',
     options: {
       debug: false,
-      pending: false
+      pending: false,
     },
     minHotWorkers: 0,
-    type: 'Image'
+    type: 'Image',
   },
   {
     name: 'eval-alg',
@@ -36,10 +39,10 @@ const mock = [
     mem: '1Gi',
     options: {
       debug: false,
-      pending: false
+      pending: false,
     },
     minHotWorkers: 0,
-    type: 'Image'
+    type: 'Image',
   },
   {
     name: 'eval-alg',
@@ -50,21 +53,30 @@ const mock = [
     minHotWorkers: 0,
     options: {
       debug: false,
-      pending: false
-    }
-  }
+      pending: false,
+    },
+  },
 ];
 // #endregion
 
 const noop = () => {};
 
-const VersionsTable = ({ currentVersion = 'hkube/algorunner' }) => {
+const VersionsTable = ({ algorithmName, currentVersion }) => {
   const columns = getVersionsColumns({ onDelete: noop, onVersionApply: noop, currentVersion });
+  const dispatch = useDispatch();
+
+  // const dataSource = useSelector(state => state[STATE_SOURCES.ALGORITHM_VERSIONS]);
+
+  useEffect(() => {
+    dispatch(getAlgorithmVersions(algorithmName));
+  }, [dispatch, algorithmName]);
+
   return <Table expandIcon={undefined} dataSource={mock} columns={columns} />;
 };
 
 VersionsTable.propTypes = {
-  currentVersion: PropTypes.string.isRequired
+  algorithmName: PropTypes.string.isRequired,
+  currentVersion: PropTypes.string.isRequired,
 };
 
 export default VersionsTable;

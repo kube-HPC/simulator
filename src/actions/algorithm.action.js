@@ -17,3 +17,11 @@ export const deleteAlgorithm = algorithmName => ({
     actionType: actions.ALGORITHM_DELETE,
   },
 });
+
+export const getAlgorithmVersions = algorithmName => ({
+  type: actions.REST_REQ_GET,
+  payload: {
+    url: `versions/algorithms/${algorithmName}`,
+    actionType: actions.ALGORITHM_GET_VERSIONS,
+  },
+});

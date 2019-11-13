@@ -17,7 +17,7 @@ const IDs = {
   JSON: 'JSON',
   DESCRIPTION: 'Description',
   BUILDS: 'Builds',
-  BUILDS_HISTORY: 'Builds History'
+  BUILDS_HISTORY: 'Builds History',
 };
 
 const EmptyMarkdown = () => (
@@ -39,7 +39,7 @@ const AlgorithmsTabs = ({ record: { builds, ...algorithm }, readme }) => (
     <Tabs>
       <Tabs.TabPane tab={IDs.VERSIONS} key={IDs.VERSIONS}>
         <Card>
-          <VersionsTable />
+          <VersionsTable algorithmName={algorithm.name} currentVersion={algorithm.algorithmImage} />
         </Card>
       </Tabs.TabPane>
       <Tabs.TabPane tab={IDs.DESCRIPTION} key={IDs.DESCRIPTION}>
@@ -59,7 +59,7 @@ const AlgorithmsTabs = ({ record: { builds, ...algorithm }, readme }) => (
 
 AlgorithmsTabs.propTypes = {
   record: PropTypes.object.isRequired,
-  readme: PropTypes.string
+  readme: PropTypes.string,
 };
 
 export default AlgorithmsTabs;
