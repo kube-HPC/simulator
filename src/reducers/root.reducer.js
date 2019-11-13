@@ -31,7 +31,7 @@ const dataSources = {
   userGuide,
   connectionStatus,
   socketURL,
-  workerTable
+  workerTable,
 };
 
 export default combineReducers(dataSources);

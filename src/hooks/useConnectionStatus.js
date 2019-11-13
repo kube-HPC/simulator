@@ -8,7 +8,7 @@ let isDispatchedOnce = false;
 
 export default function useConnectionStatus() {
   const { isDataAvailable, isSocketConnected } = useSelector(
-    state => state[STATE_SOURCES.CONNECTION_STATUS]
+    state => state[STATE_SOURCES.CONNECTION_STATUS],
   );
 
   const dispatch = useDispatch();

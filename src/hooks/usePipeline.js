@@ -7,7 +7,7 @@ import {
   execStoredPipeline,
   deleteStoredPipeline,
   cronStop,
-  cronStart
+  cronStart,
 } from 'actions/pipeline.action';
 
 import { getPipelineReadme, postPipelineReadme } from 'actions/readme.action';
@@ -28,7 +28,7 @@ export default function usePipeline() {
       dispatch(updateStoredPipeline(value));
       dispatch(postPipelineReadme(value.name, readme));
     },
-    [dispatch]
+    [dispatch],
   );
 
   return {
@@ -41,9 +41,9 @@ export default function usePipeline() {
     deleteStoredPipeline: useCallback(e => dispatch(deleteStoredPipeline(e)), [dispatch]),
     execStoredPipeline: useCallback(e => dispatch(execStoredPipeline(e)), [dispatch]),
     updatePipelineReadme: useCallback(record => dispatch(getPipelineReadme(record.name)), [
-      dispatch
+      dispatch,
     ]),
     onSubmit: _onSubmit,
-    updateStoredPipeline: useCallback(e => dispatch(updateStoredPipeline(e)), [dispatch])
+    updateStoredPipeline: useCallback(e => dispatch(updateStoredPipeline(e)), [dispatch]),
   };
 }

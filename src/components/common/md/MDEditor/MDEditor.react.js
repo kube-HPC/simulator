@@ -1,7 +1,7 @@
 import React, { useState, useEffect, lazy } from 'react';
 import PropTypes from 'prop-types';
 import 'easymde/dist/easymde.min.css';
-import Fallback from '../Fallback.react';
+import Fallback from '../../Fallback.react';
 
 const SimpleMDE = lazy(() => import('react-simplemde-editor'));
 
@@ -24,7 +24,7 @@ const MDEditor = ({ data, onChange }) => {
         onChange={handleValueChange}
         options={{
           autofocus: true,
-          spellChecker: false
+          spellChecker: false,
         }}
       />
     </Fallback>
@@ -33,12 +33,12 @@ const MDEditor = ({ data, onChange }) => {
 
 MDEditor.defaultProps = {
   data: '',
-  onChange: () => {}
+  onChange: () => {},
 };
 
 MDEditor.propTypes = {
   data: PropTypes.string.isRequired,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
 };
 
 export default MDEditor;

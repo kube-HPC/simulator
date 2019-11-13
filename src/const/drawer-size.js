@@ -5,5 +5,5 @@ export default {
   CPU: '60vw',
   MEMORY: '60vw',
   ERROR_LOGS: '70vw',
-  RUN_RAW_PIPELINE: '50vw'
+  RUN_RAW_PIPELINE: '50vw',
 };

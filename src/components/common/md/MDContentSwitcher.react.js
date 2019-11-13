@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { Button, Radio } from 'antd';
-import MDEditor from './MDEditor.react';
+import MDEditor from './MDEditor/MDEditor.react';
 import ReactMarkdown from 'react-markdown';
 import { postAlgorithmReadme, postPipelineReadme } from 'actions/readme.action';
 
-function MDContentSwitcher(props) {
+function MDContentSwitcher({ readme, name, readmeType }) {
   const [value, setValue] = useState({
     defaultRadio: 'Edit',
-    mdData: null
+    mdData: null,
   });
 
   useEffect(() => {
-    setValue(prev => ({ ...prev, mdData: props.readme }));
-  }, [props.readme, setValue]);
+    setValue(prev => ({ ...prev, mdData: readme }));
+  }, [readme, setValue]);
 
   const onDataChange = data => (value.mdData = data);
 
@@ -36,13 +37,12 @@ function MDContentSwitcher(props) {
         style={{ left: '90%' }}
         onClick={() => {
           setValue({ mdData: value.mdData });
-          if (props.readmeType && props.readmeType === 'algorithm') {
-            dispatch(postAlgorithmReadme(props.name, value.mdData));
+          if (readmeType && readmeType === 'algorithm') {
+            dispatch(postAlgorithmReadme(name, value.mdData));
           } else {
-            dispatch(postPipelineReadme(props.name, value.mdData));
+            dispatch(postPipelineReadme(name, value.mdData));
           }
-        }}
-      >
+        }}>
         Save
       </Button>
       <span>
@@ -50,8 +50,7 @@ function MDContentSwitcher(props) {
           style={{ display: 'flex', justifyContent: 'center' }}
           defaultValue={value.defaultRadio}
           buttonStyle="solid"
-          onChange={onChange}
-        >
+          onChange={onChange}>
           <Radio.Button value="Edit">Edit</Radio.Button>
           <Radio.Button value="Preview">Preview</Radio.Button>
         </Radio.Group>
@@ -60,5 +59,11 @@ function MDContentSwitcher(props) {
     </div>
   );
 }
+
+MDContentSwitcher.propTypes = {
+  name: PropTypes.string,
+  readmeType: PropTypes.string,
+  readme: PropTypes.string,
+};
 
 export default MDContentSwitcher;

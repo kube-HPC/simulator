@@ -10,7 +10,7 @@ const success = (dispatch, payload, action) => {
   dispatch({
     type: action.payload.actionType,
     meta: action.meta,
-    payload
+    payload,
   });
 };
 
@@ -19,13 +19,13 @@ const changeConnectionStatus = (dispatch, { isSocketConnected }) =>
 
 const connectionsEvents = {
   CONNECTION: 'connect',
-  RECONNECT: 'reconnect'
+  RECONNECT: 'reconnect',
 };
 
 const connectLog = () =>
   console.log(
     `%cSOCKET Connected, id=${socket.id}`,
-    `background: ${COLOR.grey}; color: ${COLOR.blue}`
+    `background: ${COLOR.grey}; color: ${COLOR.blue}`,
   );
 
 const noConnectionEvents = [
@@ -36,14 +36,16 @@ const noConnectionEvents = [
   'reconnect_attempt',
   'reconnecting',
   'reconnect_error',
-  'reconnect_failed'
+  'reconnect_failed',
 ];
 
 let isSocketConnected = false;
 
 const socketMiddleware = ({ dispatch }) => next => action => {
   if (action.type === `${AT.SOCKET_GET_CONFIG}_SUCCESS`) {
-    if (socket) socket.close();
+    if (socket) {
+      socket.close();
+    }
 
     const { monitorBackend } = action.payload.config;
 
@@ -53,7 +55,7 @@ const socketMiddleware = ({ dispatch }) => next => action => {
 
     socket = io(url, {
       path: monitorBackend.socketIoPath,
-      transports: ['websocket']
+      transports: ['websocket'],
     });
 
     Object.values(connectionsEvents).forEach(event => {
@@ -69,7 +71,7 @@ const socketMiddleware = ({ dispatch }) => next => action => {
         console.info(`${e}, ${args}`);
         isSocketConnected = false;
         changeConnectionStatus(dispatch, { isSocketConnected });
-      })
+      }),
     );
 
     Object.keys(currentTopicRegistered).forEach(act =>
@@ -79,7 +81,7 @@ const socketMiddleware = ({ dispatch }) => next => action => {
           changeConnectionStatus(dispatch, { isSocketConnected });
         }
         success(dispatch, data, currentTopicRegistered[act]);
-      })
+      }),
     );
   }
   if (action.type === AT.SOCKET_INIT) {
@@ -87,7 +89,9 @@ const socketMiddleware = ({ dispatch }) => next => action => {
     if (Object.keys(currentTopicRegistered).includes(action.payload.topic)) {
       console.warn(`socket middleware: trying to register topic ${action.payload.topic} twice `);
     } else {
-      if (socket !== null) socket.on(action.payload.topic, data => success(dispatch, data, action));
+      if (socket !== null) {
+        socket.on(action.payload.topic, data => success(dispatch, data, action));
+      }
       currentTopicRegistered[action.payload.topic] = action;
     }
   }

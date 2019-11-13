@@ -1,3 +1,3 @@
 export default {
-  PROGRESS: 'PROGRESS'
+  PROGRESS: 'PROGRESS',
 };

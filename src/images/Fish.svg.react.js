@@ -140,8 +140,7 @@ const Fish = () => (
         y1="426.283"
         x2="310.296"
         y2="893.569"
-        gradientUnits="userSpaceOnUse"
-      >
+        gradientUnits="userSpaceOnUse">
         <stop offset="0.0267148" stopColor="white" />
         <stop offset="0.984415" stopColor="#FBFF30" stopOpacity="0" />
       </linearGradient>
@@ -151,8 +150,7 @@ const Fish = () => (
         y1="499.758"
         x2="359.937"
         y2="909.876"
-        gradientUnits="userSpaceOnUse"
-      >
+        gradientUnits="userSpaceOnUse">
         <stop offset="0.0267148" stopColor="#FEFEFE" />
         <stop offset="0.984415" stopColor="#FBFF30" stopOpacity="0" />
       </linearGradient>
@@ -162,8 +160,7 @@ const Fish = () => (
         y1="564.702"
         x2="788.726"
         y2="633.084"
-        gradientUnits="userSpaceOnUse"
-      >
+        gradientUnits="userSpaceOnUse">
         <stop stopColor="#E2A0A0" />
         <stop offset="1" stopColor="#E2A0A0" stopOpacity="0" />
       </linearGradient>

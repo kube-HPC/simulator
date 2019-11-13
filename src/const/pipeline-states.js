@@ -13,5 +13,5 @@ export default {
   SUCCEED: 'succeed',
   SUCCESS: 'success',
   WAITING: 'waiting',
-  PRESCHEDULE: 'preschedule'
+  PRESCHEDULE: 'preschedule',
 };

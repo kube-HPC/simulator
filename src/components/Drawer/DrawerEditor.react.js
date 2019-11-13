@@ -7,7 +7,7 @@ import { Card, JsonEditor } from 'components/common';
 const configNotificationOnOpen = description => ({
   message: 'Error in Submitted Json',
   description,
-  icon: <Icon type="warning" style={{ color: 'red' }} />
+  icon: <Icon type="warning" style={{ color: 'red' }} />,
 });
 
 const DrawerEditor = ({ valueString, ...props }) => {
@@ -38,8 +38,8 @@ const DrawerEditor = ({ valueString, ...props }) => {
     extra: [
       <Button key="clear" type="danger" onClick={onClearClick}>
         Clear
-      </Button>
-    ]
+      </Button>,
+    ],
   };
 
   return (
@@ -56,7 +56,7 @@ DrawerEditor.propTypes = {
   title: PropTypes.element,
   opener: PropTypes.func,
   submitText: PropTypes.string,
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
 };
 
 export default DrawerEditor;

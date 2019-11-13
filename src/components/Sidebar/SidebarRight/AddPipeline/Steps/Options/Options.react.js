@@ -5,7 +5,7 @@ import { Form } from 'components/common';
 import addPipelineSchema from 'config/schema/addPipeline.schema';
 import SliderNumber from './SliderNumber.react';
 import { toUpperCaseFirstLetter } from 'utils';
-import { FormContext } from '../../AddPipelineForm.react';
+import { FormContext } from '../../Form/AddPipelineForm.react';
 import Webhooks from './Webhooks.react';
 import Triggers from './Triggers/Triggers.react';
 
@@ -38,7 +38,7 @@ const Options = () => {
                 {toUpperCaseFirstLetter(option)}
               </Select.Option>
             ))}
-          </Select>
+          </Select>,
         )}
       </Form.Item>
       <Form.Item label={PRIORITY.label}>

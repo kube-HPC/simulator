@@ -5,5 +5,5 @@ export default {
   INFO: 'info',
   WARN: 'warning',
   ERROR: 'error',
-  CRITICAL: 'critical'
+  CRITICAL: 'critical',
 };

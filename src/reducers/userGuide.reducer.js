@@ -11,7 +11,7 @@ const isOn = getLSItem(LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS)
 
 const userGuideInitialStatus = Immutable.from({
   stepIndex: 0,
-  isOn
+  isOn,
 });
 
 export const userGuide = handleActions(
@@ -21,7 +21,7 @@ export const userGuide = handleActions(
     },
     [actions.USER_GUIDE_TRIGGER](userGuide) {
       return Immutable.set(userGuideInitialStatus, 'isOn', !userGuide.isOn);
-    }
+    },
   },
-  userGuideInitialStatus
+  userGuideInitialStatus,
 );

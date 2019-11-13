@@ -4,7 +4,7 @@ export const LEFT_SIDEBAR_NAMES = {
   ALGORITHMS: 'Algorithms',
   WORKERS: 'Workers',
   DRIVERS: 'Drivers',
-  DEBUG: 'Debug'
+  DEBUG: 'Debug',
 };
 
 export const RIGHT_SIDEBAR_NAMES = {
@@ -14,5 +14,5 @@ export const RIGHT_SIDEBAR_NAMES = {
   RUN_RAW_PIPELINE: 'Run Raw Pipeline',
   CPU: 'CPU',
   MEMORY: 'Memory',
-  ERROR_LOGS: 'Error Logs'
+  ERROR_LOGS: 'Error Logs',
 };

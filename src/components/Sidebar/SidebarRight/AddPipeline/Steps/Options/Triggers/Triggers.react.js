@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { Form } from 'components/common';
 import addPipelineSchema from 'config/schema/addPipeline.schema';
 import CronInput from './CronInput.react';
-import { FormContext } from '../../../AddPipelineForm.react';
+import { FormContext } from '../../../Form/AddPipelineForm.react';
 import { STATE_SOURCES } from 'const';
 
 const { CRON, PIPELINES } = addPipelineSchema.TRIGGERS;
@@ -30,7 +30,7 @@ const Triggers = () => {
                 {pipeline}
               </Select.Option>
             ))}
-          </Select>
+          </Select>,
         )}
       </Form.Item>
     </>

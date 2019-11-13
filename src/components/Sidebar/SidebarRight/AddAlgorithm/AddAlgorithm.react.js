@@ -67,9 +67,8 @@ const AddAlgorithm = ({ onSubmit = noop }) => {
             </Button>,
             <Button key="clear" type="danger" onClick={onClear}>
               Clear
-            </Button>
-          ]}
-        >
+            </Button>,
+          ]}>
           <Button key="Submit" type="primary" onClick={onEditorSubmit}>
             Submit
           </Button>
@@ -80,7 +79,7 @@ const AddAlgorithm = ({ onSubmit = noop }) => {
 };
 
 AddAlgorithm.propTypes = {
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
 };
 
 export default memo(AddAlgorithm);

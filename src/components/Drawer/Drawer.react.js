@@ -1,17 +1,44 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
-
 import { Drawer as AntDrawer } from 'antd';
 import { BottomContent } from 'components/common';
+import styled from 'styled-components';
 
-const Drawer = ({ children, opener, bottomContent, ...props }) => {
-  const [visible, setVisible] = useState(false);
-  const onClose = () => setVisible(prev => !prev);
+const noop = () => {};
+
+const DrawerPadding = styled(AntDrawer)`
+  .ant-drawer-wrapper-body {
+    display: flex;
+    flex-direction: column;
+    height: inherit;
+    justify-content: start;
+  }
+
+  .ant-drawer-body {
+    position: relative;
+    flex-grow: 1;
+  }
+`;
+
+const Drawer = ({
+  children,
+  opener = noop,
+  bottomContent = undefined,
+  width = '50vw',
+  ...props
+}) => {
+  const [visible, toggle] = useReducer(prev => !prev, false);
 
   return (
     <>
-      {opener(setVisible)}
-      <AntDrawer visible={visible} placement="right" closable={false} onClose={onClose} {...props}>
+      {opener(toggle)}
+      <DrawerPadding
+        visible={visible}
+        width={width}
+        placement="right"
+        closable={false}
+        onClose={toggle}
+        {...props}>
         {children}
         {bottomContent && (
           <>
@@ -19,20 +46,16 @@ const Drawer = ({ children, opener, bottomContent, ...props }) => {
             <BottomContent extra={bottomContent.extra}>{bottomContent.body}</BottomContent>
           </>
         )}
-      </AntDrawer>
+      </DrawerPadding>
     </>
   );
 };
 
-Drawer.defaultProps = {
-  opener: () => null,
-  bottomContent: undefined,
-  width: '50vw'
-};
-
 Drawer.propTypes = {
   opener: PropTypes.func,
-  ...AntDrawer.propTypes
+  bottomContent: PropTypes.object,
+  width: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
+  ...AntDrawer.propTypes,
 };
 
 export default Drawer;

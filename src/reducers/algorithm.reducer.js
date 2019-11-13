@@ -8,25 +8,25 @@ export const algorithmTable = handleActions(
       const algorithms = payload.algorithms;
       const isValidPayload = Array.isArray(algorithms);
       return isValidPayload ? Immutable.set(currState, 'dataSource', algorithms) : currState;
-    }
+    },
   },
-  Immutable.from({ dataSource: [] })
+  Immutable.from({ dataSource: [] }),
 );
 
 export const algorithmBuildsTable = handleActions(
   {
     [actions.SOCKET_GET_DATA](state, { payload }) {
       return Immutable.set(state, 'dataSource', payload.algorithmBuilds);
-    }
+    },
   },
-  Immutable.from({ dataSource: [], showModal: false })
+  Immutable.from({ dataSource: [], showModal: false }),
 );
 
 export const algorithmReadme = handleActions(
   {
     [actions.README_GET_ALGORITHM_SUCCESS](state, { payload }) {
       return state.setIn([payload.name], payload);
-    }
+    },
   },
-  Immutable.from({})
+  Immutable.from({}),
 );

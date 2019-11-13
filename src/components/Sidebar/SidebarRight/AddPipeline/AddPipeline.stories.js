@@ -4,7 +4,7 @@ import AddPipeline from 'components/Sidebar/SidebarRight/AddPipeline/AddPipeline
 import { SB_SECTIONS } from 'const';
 
 export default {
-  title: `${SB_SECTIONS.RIGHT}|Add Pipeline`
+  title: `${SB_SECTIONS.RIGHT}|Add Pipeline`,
 };
 
 export const InDrawer = () => (

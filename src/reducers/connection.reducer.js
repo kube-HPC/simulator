@@ -8,9 +8,9 @@ export const socketURL = handleActions(
   {
     [actionType.SOCKET_SET_URL](prevUrl, { url }) {
       return Immutable.from(url);
-    }
+    },
   },
-  Immutable.from('')
+  Immutable.from(''),
 );
 
 export const connectionStatus = handleActions(
@@ -23,7 +23,7 @@ export const connectionStatus = handleActions(
       const isDataAvailable = currData === undefined ? prevData : currData;
 
       return Immutable.from({ isSocketConnected, isDataAvailable });
-    }
+    },
   },
-  initialValue
+  initialValue,
 );

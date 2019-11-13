@@ -4,9 +4,9 @@ import actions from 'const/application-actions';
 
 export const autoCompleteFilter = handleActions(
   {
-    [actions.AUTO_COMPLETE_UPDATE_FILTER](state, { type, payload, meta, error }) {
+    [actions.AUTO_COMPLETE_UPDATE_FILTER](state, { payload }) {
       return state.merge(payload);
-    }
+    },
   },
-  Immutable.from({ filter: '' })
+  Immutable.from({ filter: '' }),
 );

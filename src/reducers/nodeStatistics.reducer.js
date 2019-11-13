@@ -8,7 +8,7 @@ export const nodeStatistics = handleActions(
       const { nodeStatistics } = payload;
       const validPayload = Array.isArray(nodeStatistics);
       return validPayload ? Immutable.set(currState, 'dataSource', nodeStatistics) : currState;
-    }
+    },
   },
-  Immutable.from({ dataSource: [] })
+  Immutable.from({ dataSource: [] }),
 );

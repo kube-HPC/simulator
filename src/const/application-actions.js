@@ -1,9 +1,3 @@
-const restHelper = action => {
-  actionType[`${action}_PENDING`] = `${action}_PENDING`;
-  actionType[`${action}_SUCCESS`] = `${action}_SUCCESS`;
-  actionType[`${action}_REJECT`] = `${action}_REJECT`;
-};
-
 const actionType = {
   ALGORITHM_APPLY: 'ALGORITHM_APPLY',
   ALGORITHM_DELETE: 'ALGORITHM_DELETE',
@@ -44,7 +38,13 @@ const actionType = {
   CONNECTION_STATUS_CHANGE: 'CONNECTION_STATUS_CHANGE',
   SOCKET_INIT: 'SOCKET_INIT',
   USER_GUIDE_CHANGE_STEP: 'USER_GUIDE_CHANGE_STEP',
-  USER_GUIDE_TRIGGER: 'USER_GUIDE_TRIGGER'
+  USER_GUIDE_TRIGGER: 'USER_GUIDE_TRIGGER',
+};
+
+const restHelper = action => {
+  actionType[`${action}_PENDING`] = `${action}_PENDING`;
+  actionType[`${action}_SUCCESS`] = `${action}_SUCCESS`;
+  actionType[`${action}_REJECT`] = `${action}_REJECT`;
 };
 
 restHelper(actionType.SOCKET_GET_CONFIG);

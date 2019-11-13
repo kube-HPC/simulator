@@ -14,7 +14,7 @@ FlexBox.Item = Col;
 FlexBox.defaultProps = {
   justify: 'space-between',
   type: 'flex',
-  gutter: 10
+  gutter: 10,
 };
 
 FlexBox.propTypes = Row.propTypes;

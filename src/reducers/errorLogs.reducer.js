@@ -9,7 +9,7 @@ export const errorLogsTable = handleActions(
     [actions.SOCKET_GET_DATA](currState, { payload }) {
       const { logs } = payload;
       return logs ? Immutable.set(currState, 'dataSource', logs) : currState;
-    }
+    },
   },
-  initialValue
+  initialValue,
 );

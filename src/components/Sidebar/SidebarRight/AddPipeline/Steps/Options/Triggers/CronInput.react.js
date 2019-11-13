@@ -5,12 +5,12 @@ import cronstrue from 'cronstrue';
 import { Popover, Typography, Icon, Input, Switch } from 'antd';
 import addPipelineSchema from 'config/schema/addPipeline.schema';
 
-import { FormContext } from '../../../AddPipelineForm.react';
+import { FormContext } from '../../../Form/AddPipelineForm.react';
 
 const { Text } = Typography;
 const { errorMessage, fields } = addPipelineSchema.TRIGGERS.CRON;
 
-const CronInput = forwardRef((_, ref) => {
+const CronInput = forwardRef(() => {
   const [readablePattern, setReadablePattern] = useState(undefined);
   const { getFieldDecorator } = useContext(FormContext);
 
@@ -51,7 +51,7 @@ const CronInput = forwardRef((_, ref) => {
   return (
     <Popover content={content} trigger="focus">
       {getFieldDecorator(fields.PATTERN, { normalize })(
-        <Input addonBefore={addonBefore} addonAfter={addonAfter} />
+        <Input addonBefore={addonBefore} addonAfter={addonAfter} />,
       )}
     </Popover>
   );

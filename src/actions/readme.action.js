@@ -4,8 +4,8 @@ const _getReadme = (type, name, actionType) => ({
   type: actions.REST_REQ,
   payload: {
     url: `/readme/${type}/${name}`,
-    actionType
-  }
+    actionType,
+  },
 });
 
 const _postReadme = (type, name, actionType, readme) => ({
@@ -13,8 +13,8 @@ const _postReadme = (type, name, actionType, readme) => ({
   payload: {
     url: `readme/${type}/${name}`,
     actionType,
-    body: { readme, name }
-  }
+    body: { readme, name },
+  },
 });
 
 export const getPipelineReadme = name => _getReadme('pipelines', name, actions.README_GET_PIPELINE);

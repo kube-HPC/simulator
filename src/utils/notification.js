@@ -4,7 +4,7 @@ const TYPES = {
   SUCCESS: 'success',
   INFO: 'info',
   WARNING: 'warning',
-  ERROR: 'error'
+  ERROR: 'error',
 };
 
 const msg = 'Something Went Wrong!';
@@ -12,7 +12,7 @@ const msg = 'Something Went Wrong!';
 const notification = ({ message = msg, description, type = TYPES.ERROR }) =>
   notificationAntd[type]({
     message,
-    description
+    description,
   });
 
 notification.TYPES = TYPES;

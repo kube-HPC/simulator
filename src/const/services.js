@@ -14,5 +14,6 @@ export const SERVICES = {
   'resource-executor': 'Resource Executor',
   'task-executor': 'Task Executor',
   'trigger-service': 'Trigger Service',
-  worker: 'Worker'
+  worker: 'Worker',
+  'caching-service': 'Caching Service',
 };

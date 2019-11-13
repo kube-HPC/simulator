@@ -14,5 +14,5 @@ export default {
   WORKER_TABLE: 'workerTable',
   CONNECTION_STATUS: 'connectionStatus',
   USER_GUIDE: 'userGuide',
-  SOCKET_URL: 'socketURL'
+  SOCKET_URL: 'socketURL',
 };

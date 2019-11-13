@@ -5,8 +5,8 @@ export const addPipeline = pipeline => ({
   payload: {
     url: 'pipeline/add',
     body: pipeline,
-    actionType: actions.PIPELINE_ADD
-  }
+    actionType: actions.PIPELINE_ADD,
+  },
 });
 
 export const stopPipeline = jobId => ({
@@ -14,8 +14,8 @@ export const stopPipeline = jobId => ({
   payload: {
     url: 'exec/stop',
     body: { jobId },
-    actionType: actions.PIPELINE_STOP
-  }
+    actionType: actions.PIPELINE_STOP,
+  },
 });
 
 export const pausePipeline = jobId => ({
@@ -23,8 +23,8 @@ export const pausePipeline = jobId => ({
   payload: {
     url: 'exec/pause',
     body: { jobId },
-    actionType: actions.PIPELINE_PAUSE
-  }
+    actionType: actions.PIPELINE_PAUSE,
+  },
 });
 
 export const resumePipeline = jobId => ({
@@ -32,8 +32,8 @@ export const resumePipeline = jobId => ({
   payload: {
     url: 'exec/resume',
     body: { jobId },
-    actionType: actions.PIPELINE_RESUME
-  }
+    actionType: actions.PIPELINE_RESUME,
+  },
 });
 
 export const execStoredPipeline = pipeline => ({
@@ -41,8 +41,8 @@ export const execStoredPipeline = pipeline => ({
   payload: {
     url: 'exec/stored',
     body: pipeline,
-    actionType: actions.PIPELINE_START
-  }
+    actionType: actions.PIPELINE_START,
+  },
 });
 
 export const deleteStoredPipeline = pipelineName => ({
@@ -50,8 +50,8 @@ export const deleteStoredPipeline = pipelineName => ({
   payload: {
     url: 'store/pipelines',
     body: { pipelineName },
-    actionType: actions.PIPELINE_DELETE
-  }
+    actionType: actions.PIPELINE_DELETE,
+  },
 });
 
 export const updateStoredPipeline = pipeline => ({
@@ -59,8 +59,8 @@ export const updateStoredPipeline = pipeline => ({
   payload: {
     url: 'store/pipelines',
     body: pipeline,
-    actionType: actions.PIPELINE_UPDATE
-  }
+    actionType: actions.PIPELINE_UPDATE,
+  },
 });
 
 export const cronStart = (name, pattern) => ({
@@ -68,8 +68,8 @@ export const cronStart = (name, pattern) => ({
   payload: {
     url: 'cron/start',
     body: { name, pattern },
-    actionType: actions.PIPELINE_CRON_START
-  }
+    actionType: actions.PIPELINE_CRON_START,
+  },
 });
 
 export const cronStop = (name, pattern) => ({
@@ -77,11 +77,14 @@ export const cronStop = (name, pattern) => ({
   payload: {
     url: 'cron/stop',
     body: { name, pattern },
-    actionType: actions.PIPELINE_CRON_STOP
-  }
+    actionType: actions.PIPELINE_CRON_STOP,
+  },
 });
 
 export const rerunRawPipeline = nominalPipeline => {
+  /* eslint-disable no-unused-vars */
+
+  // Destruct all unused values
   const {
     jobId,
     name,
@@ -95,7 +98,7 @@ export const rerunRawPipeline = nominalPipeline => {
   const pipeline = {
     name: name.startsWith('raw-') ? name.slice(4) : name,
     flowInput: flowInputOrig,
-    ...rest
+    ...rest,
   };
 
   const action = {
@@ -103,8 +106,8 @@ export const rerunRawPipeline = nominalPipeline => {
     payload: {
       url: 'exec/raw',
       body: pipeline,
-      actionType: actions.PIPELINE_START
-    }
+      actionType: actions.PIPELINE_START,
+    },
   };
   return action;
 };
@@ -114,6 +117,6 @@ export const execRawPipeline = pipeline => ({
   payload: {
     url: 'exec/raw',
     body: pipeline,
-    actionType: actions.PIPELINE_START
-  }
+    actionType: actions.PIPELINE_START,
+  },
 });

@@ -5,8 +5,8 @@ export const applyAlgorithm = formData => ({
   payload: {
     url: 'store/algorithms/apply',
     formData,
-    actionType: actions.ALGORITHM_APPLY
-  }
+    actionType: actions.ALGORITHM_APPLY,
+  },
 });
 
 export const deleteAlgorithm = algorithmName => ({
@@ -14,6 +14,6 @@ export const deleteAlgorithm = algorithmName => ({
   payload: {
     url: 'store/algorithms',
     body: { algorithmName },
-    actionType: actions.ALGORITHM_DELETE
-  }
+    actionType: actions.ALGORITHM_DELETE,
+  },
 });

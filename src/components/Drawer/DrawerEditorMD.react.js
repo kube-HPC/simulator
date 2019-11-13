@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-
 import { notification, Icon, Button } from 'antd';
-
 import { ReactComponent as CodeIcon } from 'images/code-icon.svg';
-
 import { stringify } from 'utils/string';
 import { Tabs, Card, MDEditor, JsonEditor } from 'components/common';
 import { Drawer } from '.';
@@ -14,10 +11,12 @@ const tabs = { json: 'JSON', description: 'Description' };
 const configNotificationOnOpen = description => ({
   message: 'Error in Submitted Json',
   description,
-  icon: <Icon type="warning" style={{ color: 'red' }} />
+  icon: <Icon type="warning" style={{ color: 'red' }} />,
 });
 
-function DrawerEditorMD({ record, onSubmit, readmeDefault, submitText, ...props }) {
+const noop = () => {};
+
+function DrawerEditorMD({ record, onSubmit = noop, readmeDefault, submitText, ...props }) {
   const [readme, setReadme] = useState('');
   const [value, setValue] = useState(stringify(record));
   const [activeKey, setActiveKey] = useState(tabs.json);
@@ -28,7 +27,7 @@ function DrawerEditorMD({ record, onSubmit, readmeDefault, submitText, ...props 
     try {
       onSubmit({
         value: JSON.parse(value),
-        readme: readme || readmeDefault
+        readme: readme || readmeDefault,
       });
     } catch ({ message }) {
       notification.open(configNotificationOnOpen(message));
@@ -38,10 +37,10 @@ function DrawerEditorMD({ record, onSubmit, readmeDefault, submitText, ...props 
   const bottomExtra =
     activeKey === tabs.json
       ? [
-          <Button key="clear" type="danger" onClick={onClearClick}>
+        <Button key="clear" type="danger" onClick={onClearClick}>
             Clear
-          </Button>
-        ]
+        </Button>,
+      ]
       : [];
 
   const bottomContent = {
@@ -50,7 +49,7 @@ function DrawerEditorMD({ record, onSubmit, readmeDefault, submitText, ...props 
         {submitText}
       </Button>
     ),
-    extra: bottomExtra
+    extra: bottomExtra,
   };
 
   return (
@@ -63,8 +62,7 @@ function DrawerEditorMD({ record, onSubmit, readmeDefault, submitText, ...props 
               {tabs.json}
             </span>
           }
-          key={tabs.json}
-        >
+          key={tabs.json}>
           <Card>
             <JsonEditor value={value} onChange={setValue} />
           </Card>
@@ -76,8 +74,7 @@ function DrawerEditorMD({ record, onSubmit, readmeDefault, submitText, ...props 
               {tabs.description}
             </span>
           }
-          key={tabs.description}
-        >
+          key={tabs.description}>
           <MDEditor data={readmeDefault} onChange={setReadme} />
         </Tabs.TabPane>
       </Tabs>
@@ -89,11 +86,11 @@ DrawerEditorMD.propTypes = {
   submitText: PropTypes.string,
   readmeDefault: PropTypes.string,
   onSubmit: PropTypes.func,
-  record: PropTypes.object
+  record: PropTypes.object,
 };
 
 DrawerEditorMD.defaultProps = {
-  submitText: 'Submit'
+  submitText: 'Submit',
 };
 
 export default DrawerEditorMD;

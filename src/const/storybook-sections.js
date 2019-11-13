@@ -4,8 +4,8 @@ const SECTIONS = {
   PLAYGROUND: 'Playground',
   COMMON: 'Common',
   TABLES: {
-    ALGORITHMS: 'Tables|Algorithms'
-  }
+    ALGORITHMS: 'Tables|Algorithms',
+  },
 };
 
 export default SECTIONS;
