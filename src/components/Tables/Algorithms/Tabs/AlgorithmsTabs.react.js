@@ -6,7 +6,7 @@ import { Typography, Icon } from 'antd';
 import ReactMarkdown from 'react-markdown';
 import { Tabs, JsonView, Card, FlexBox } from 'components/common';
 import AlgorithmBuildsTable from '../AlgorithmBuildsTable.react';
-import { VersionsTable } from '../Versions';
+// import { VersionsTable } from '../Versions';
 
 const FlexBoxMinHeight = styled(FlexBox)`
   min-height: 30vh;
@@ -37,11 +37,12 @@ const EmptyMarkdown = () => (
 const AlgorithmsTabs = ({ record: { builds, ...algorithm }, readme }) => (
   <Card isMargin>
     <Tabs>
-      <Tabs.TabPane tab={IDs.VERSIONS} key={IDs.VERSIONS}>
+      {/* Need to add implementation */}
+      {/* <Tabs.TabPane tab={IDs.VERSIONS} key={IDs.VERSIONS}>
         <Card>
           <VersionsTable algorithmName={algorithm.name} currentVersion={algorithm.algorithmImage} />
         </Card>
-      </Tabs.TabPane>
+      </Tabs.TabPane> */}
       <Tabs.TabPane tab={IDs.DESCRIPTION} key={IDs.DESCRIPTION}>
         <Card>{readme ? <ReactMarkdown source={readme} /> : <EmptyMarkdown />}</Card>
       </Tabs.TabPane>

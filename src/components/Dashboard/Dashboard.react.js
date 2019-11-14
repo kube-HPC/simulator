@@ -43,7 +43,7 @@ const HelpBar = styled(FlexBox)`
 `;
 
 const ContentMargin = styled(Layout.Content)`
-  padding: 4px;
+  padding: 10px;
 
   ::-webkit-scrollbar-track {
     border: none;
