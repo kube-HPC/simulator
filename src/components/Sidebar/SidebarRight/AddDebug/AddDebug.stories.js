@@ -4,7 +4,7 @@ import DrawerOperations from 'components/Drawer/DrawerOperations.react';
 import { SB_SECTIONS } from 'const';
 
 export default {
-  title: `${SB_SECTIONS.RIGHT}|Add Debug`
+  title: `${SB_SECTIONS.RIGHT}|Add Debug`,
 };
 
 export const InDrawer = () => (

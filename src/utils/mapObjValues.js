@@ -18,7 +18,7 @@ const mapObjValues = ({
   obj,
   predicate = noFilter,
   mapper = identity,
-  mapPredicate = noPredicate
+  mapPredicate = noPredicate,
 }) =>
   isObject(obj) &&
   Object.fromEntries(
@@ -27,8 +27,8 @@ const mapObjValues = ({
       .map(([key, value]) =>
         mapPredicate({ key, value }) || !isObject(value)
           ? [key, mapper({ key, value })]
-          : [key, mapObjValues({ obj: value, predicate, mapper })]
-      )
+          : [key, mapObjValues({ obj: value, predicate, mapper })],
+      ),
   );
 
 export default mapObjValues;

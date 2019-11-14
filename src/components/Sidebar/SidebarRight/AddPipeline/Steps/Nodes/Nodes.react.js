@@ -6,7 +6,7 @@ import { Form } from 'components/common';
 import addPipelineSchema from 'config/schema/addPipeline.schema';
 import NodeForm from './NodeForm.react';
 import { removeLast } from './helpers';
-import { FormContext } from '../../AddPipelineForm.react';
+import { FormContext } from '../../Form/AddPipelineForm.react';
 
 const ButtonGroupCenter = styled(Button.Group)`
   display: flex;
@@ -47,7 +47,7 @@ const Nodes = () => {
 
     const newNode = {
       component: <DynamicForm key={id} id={id} />,
-      value: {}
+      value: {},
     };
 
     setNodes(prev => [...prev, newNode]);

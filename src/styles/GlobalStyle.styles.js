@@ -16,21 +16,27 @@ const GlobalStyle = createGlobalStyle`
     border-right: 1px solid ${COLOR_LAYOUT.border};
   }
 
-  .ant-drawer-wrapper-body {
-    ::-webkit-scrollbar-track {
-      border: none;
-      background-color: none;
-    }
-    ::-webkit-scrollbar {
-      width: 7px;
-    }
-    ::-webkit-scrollbar-thumb {
-      border: 1px solid ${COLOR.grey};
-      background-color: ${COLOR.blueLight};
-    }
-
+  .ant-table-fixed-header .ant-table-scroll .ant-table-header {
+    overflow: hidden !important;
+    margin-bottom: 0px !important;
   }
 
+  .ansi-view-class {
+  white-space: pre-line;
+}
+
+  ::-webkit-scrollbar-track {
+    border: none;
+    background-color: none;
+  }
+  ::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border: 1px solid ${COLOR.grey};
+    background-color: ${COLOR.blueLight};
+  }
 `;
 
 export default GlobalStyle;

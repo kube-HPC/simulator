@@ -14,11 +14,11 @@ export const pipelineTable = handleActions(
 
       return Immutable.merge(currState, {
         dataSource: isValidSource ? payload.pipelines : DEFAULT_EMPTY,
-        dataStats: isValidStats ? payload.pipelinesStats : DEFAULT_EMPTY
+        dataStats: isValidStats ? payload.pipelinesStats : DEFAULT_EMPTY,
       });
-    }
+    },
   },
-  initialValue
+  initialValue,
 );
 
 export const pipelineReadme = handleActions(
@@ -26,7 +26,7 @@ export const pipelineReadme = handleActions(
     [actions.README_GET_PIPELINE_SUCCESS](currState, { payload }) {
       const { name } = payload;
       return Immutable.set(currState, [name], payload);
-    }
+    },
   },
-  Immutable.from({})
+  Immutable.from({}),
 );

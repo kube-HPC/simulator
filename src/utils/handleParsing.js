@@ -4,7 +4,7 @@ import { Icon, notification } from 'antd';
 const configNotificationOnOpen = description => ({
   message: 'Error in Submitted Json',
   description,
-  icon: <Icon type="warning" style={{ color: 'red' }} />
+  icon: <Icon type="warning" style={{ color: 'red' }} />,
 });
 
 const noop = () => {};

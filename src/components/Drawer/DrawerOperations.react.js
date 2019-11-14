@@ -20,8 +20,7 @@ const DrawerOperations = ({ children, operation, ...props }) => {
           <Paragraph>{description}</Paragraph>
         </>
       }
-      {...props}
-    >
+      {...props}>
       {children}
     </Drawer>
   );
@@ -30,5 +29,5 @@ export default DrawerOperations;
 
 DrawerOperations.propTypes = {
   operation: PropTypes.string.isRequired,
-  ...Drawer.propTypes
+  ...Drawer.propTypes,
 };

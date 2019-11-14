@@ -26,7 +26,7 @@ const deleteConfirmAction = (action, record) => {
     cancelText: 'Cancel',
     onOk() {
       action(record.name);
-    }
+    },
   });
 };
 
@@ -39,127 +39,138 @@ const getPipelineColumns = ({
   updateStoredPipeline,
   execStoredPipeline,
   updatePipelineReadme,
-  deleteStoredPipeline
-}) => [
-  {
-    title: 'Pipeline Name',
-    dataIndex: 'name',
-    key: 'name',
-    sorter: (a, b) => sorter(a.name, b.name),
-    render: name => <Ellipsis copyable text={name} />
-  },
-  {
-    title: 'Cron Job',
-    dataIndex: 'cron',
-    key: 'cron',
-    render: (_, record) => (
-      <SwitchCron
-        pipeline={record}
-        cronStart={cronStart}
-        cronStop={cronStop}
-        updateStoredPipeline={updateStoredPipeline}
-      />
-    )
-  },
-  {
-    title: 'Pipeline Stats',
-    dataIndex: 'status',
-    key: 'status',
-    render: (_, record) => {
-      // array flat one-liner
-      const pipelineStats = [].concat(
-        ...[
-          ...dataStats
-            .filter(status => status.name === record.name && status.stats.length !== 0)
-            .map(pipeline => pipeline.stats)
-        ]
-      );
+  deleteStoredPipeline,
+}) => {
+  const Cron = (_, record) => (
+    <SwitchCron
+      pipeline={record}
+      cronStart={cronStart}
+      cronStop={cronStop}
+      updateStoredPipeline={updateStoredPipeline}
+    />
+  );
 
-      return pipelineStats.length === 0 ? (
-        <StatusTag count={0} />
-      ) : (
-        pipelineStats.map(([status, count], i) => (
-          <StatusTag key={`${status}-${i}`} status={status} count={count} />
-        ))
-      );
-    }
-  },
-  {
-    title: 'Action',
-    dataIndex: 'action',
-    key: 'action',
-    render: (_, record) => {
-      // http://hkube.io/spec/#tag/Execution/paths/~1exec~1stored/post
-      const { nodes, description, ...currPipeline } = record;
+  const PipelineName = name => <Ellipsis copyable text={name} />;
 
-      return (
-        <FlexBox justify="start">
-          <FlexBox.Item>
-            <DrawerEditor
-              title={
-                <>
-                  <Title level={2}>Run Stored Pipeline</Title>
-                  <Paragraph>
-                    Start pipeline <Text code>execution</Text> when the name of the pipeline is
-                    known, all parameters in this action will be merged with the stored pipeline.
-                  </Paragraph>
-                </>
-              }
-              opener={onClick => (
-                <Tooltip title={'Run Stored Pipeline'}>
-                  <Button shape="circle" onClick={onClick}>
-                    <Icon component={PlayIconSvg} />
-                  </Button>
-                </Tooltip>
-              )}
-              valueString={stringify(currPipeline)}
-              onSubmit={execStoredPipeline}
-              submitText="Run"
+  const PipelineStats = (_, record) => {
+    // array flat one-liner
+    const pipelineStats = [].concat(
+      ...[
+        ...dataStats
+          .filter(status => status.name === record.name && status.stats.length !== 0)
+          .map(pipeline => pipeline.stats),
+      ],
+    );
+
+    return pipelineStats.length === 0 ? (
+      <StatusTag count={0} />
+    ) : (
+      pipelineStats.map(([status, count], i) => (
+        <StatusTag key={`${status}-${i}`} status={status} count={count} />
+      ))
+    );
+  };
+
+  const Action = (_, record) => {
+    // http://hkube.io/spec/#tag/Execution/paths/~1exec~1stored/post
+    // eslint-disable-next-line
+    const { nodes, description, ...currPipeline } = record;
+
+    return (
+      <FlexBox justify="start">
+        <FlexBox.Item>
+          <DrawerEditor
+            title={
+              <>
+                <Title level={2}>Run Stored Pipeline</Title>
+                <Paragraph>
+                  Start pipeline <Text code>execution</Text> when the name of the pipeline is known,
+                  all parameters in this action will be merged with the stored pipeline.
+                </Paragraph>
+              </>
+            }
+            opener={onClick => (
+              <Tooltip title={'Run Stored Pipeline'}>
+                <Button shape="circle" onClick={onClick}>
+                  <Icon component={PlayIconSvg} />
+                </Button>
+              </Tooltip>
+            )}
+            valueString={stringify(currPipeline)}
+            onSubmit={execStoredPipeline}
+            submitText="Run"
+          />
+        </FlexBox.Item>
+        <FlexBox.Item>
+          <DrawerEditorMD
+            title={
+              <>
+                <Title level={2}>Update Pipeline</Title>
+                <Paragraph>
+                  Edit pipeline properties and description,{' '}
+                  <Typography.Text strong>submit</Typography.Text> changes with
+                  <Typography.Text code>Update</Typography.Text> button.
+                </Paragraph>
+              </>
+            }
+            readmeDefault={getPipelineReadme(record)}
+            opener={setVisible => (
+              <Tooltip title={'Update Pipeline'}>
+                <Button
+                  shape="circle"
+                  icon="edit"
+                  onClick={() => {
+                    updatePipelineReadme(record);
+                    setVisible(prev => !prev);
+                  }}
+                />
+              </Tooltip>
+            )}
+            record={record}
+            onSubmit={onSubmit}
+          />
+        </FlexBox.Item>
+        <FlexBox.Item>
+          <Tooltip title={'Delete Pipeline'}>
+            <Button
+              type="dashed"
+              shape="circle"
+              icon="delete"
+              onClick={() => deleteConfirmAction(deleteStoredPipeline, record)}
             />
-          </FlexBox.Item>
-          <FlexBox.Item>
-            <DrawerEditorMD
-              title={
-                <>
-                  <Title level={2}>Update Pipeline</Title>
-                  <Paragraph>
-                    Edit pipeline properties and description,{' '}
-                    <Typography.Text strong>submit</Typography.Text> changes with
-                    <Typography.Text code>Update</Typography.Text> button.
-                  </Paragraph>
-                </>
-              }
-              readmeDefault={getPipelineReadme(record)}
-              opener={setVisible => (
-                <Tooltip title={'Update Pipeline'}>
-                  <Button
-                    shape="circle"
-                    icon="edit"
-                    onClick={() => {
-                      updatePipelineReadme(record);
-                      setVisible(prev => !prev);
-                    }}
-                  />
-                </Tooltip>
-              )}
-              record={record}
-              onSubmit={onSubmit}
-            />
-          </FlexBox.Item>
-          <FlexBox.Item>
-            <Tooltip title={'Delete Pipeline'}>
-              <Button
-                type="dashed"
-                shape="circle"
-                icon="delete"
-                onClick={() => deleteConfirmAction(deleteStoredPipeline, record)}
-              />
-            </Tooltip>
-          </FlexBox.Item>
-        </FlexBox>
-      );
-    }
-  }
-];
+          </Tooltip>
+        </FlexBox.Item>
+      </FlexBox>
+    );
+  };
+
+  return [
+    {
+      title: 'Pipeline Name',
+      dataIndex: 'name',
+      key: 'name',
+      sorter: (a, b) => sorter(a.name, b.name),
+      render: PipelineName,
+    },
+    {
+      title: 'Cron Job',
+      dataIndex: 'cron',
+      key: 'cron',
+      render: Cron,
+    },
+    {
+      title: 'Pipeline Stats',
+      dataIndex: 'status',
+      key: 'status',
+      render: PipelineStats,
+    },
+    {
+      title: 'Action',
+      dataIndex: 'action',
+      key: 'action',
+      render: Action,
+    },
+  ];
+};
 
 export default getPipelineColumns;

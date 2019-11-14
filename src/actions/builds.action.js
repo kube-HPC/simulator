@@ -5,8 +5,8 @@ export const cancelBuild = buildId => ({
   payload: {
     url: 'builds/stop',
     body: { buildId },
-    actionType: actions.BUILD_STOP
-  }
+    actionType: actions.BUILD_STOP,
+  },
 });
 
 export const rerunBuild = buildId => ({
@@ -14,6 +14,6 @@ export const rerunBuild = buildId => ({
   payload: {
     url: 'builds/rerun',
     body: { buildId },
-    actionType: actions.BUILD_RERUN
-  }
+    actionType: actions.BUILD_RERUN,
+  },
 });

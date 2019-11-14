@@ -1,14 +1,14 @@
 import { Button, Typography } from 'antd';
-import MDEditor from 'components/common/md/MDEditor.react';
+import MDEditor from 'components/common/md/MDEditor/MDEditor.react';
 import Drawer from 'components/Drawer/Drawer.react';
-import DrawerEditorMD from 'components/Drawer/DrawerEditorMD.react';
 import addPipelineTemplate from 'config/template/addPipeline.template';
 import React from 'react';
 import { stringify } from 'utils/string';
 import { SB_SECTIONS } from 'const';
+import { DrawerEditorMD } from 'components';
 
 export default {
-  title: `${SB_SECTIONS.COMMON}|Markdown Editor`
+  title: `${SB_SECTIONS.COMMON}|Markdown Editor`,
 };
 
 export const Default = () => <MDEditor />;
@@ -28,7 +28,6 @@ export const DrawerEditorComponent = () => (
       </>
     }
     valueString={stringify(addPipelineTemplate)}
-    onSubmit={console.log}
     submitText={'Update'}
     opener={setVisible => <Button onClick={setVisible}>Open Drawer</Button>}
   />

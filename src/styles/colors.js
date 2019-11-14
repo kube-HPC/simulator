@@ -16,51 +16,55 @@ export const COLOR = {
   yellow: '#eeda13',
   white: 'white',
   pink: '#e543b4',
-  transparentBlack: '#00000073'
+  transparentBlack: '#00000073',
 };
 
 // View all services colors @ https://github.com/kube-HPC/hkube/labels
 export const SERVICE_COLOR = {
   [SERVICES.worker]: {
-    backgroundColor: '#da96e8'
+    backgroundColor: '#da96e8',
   },
   [SERVICES['trigger-service']]: {
-    backgroundColor: '#c5def5'
+    backgroundColor: '#c5def5',
   },
   [SERVICES['task-executor']]: {
-    backgroundColor: '#f9d0c4'
+    backgroundColor: '#f9d0c4',
   },
   [SERVICES['resource-manager']]: {
     backgroundColor: '#1d76db',
-    isLight: true
+    isLight: true,
   },
   [SERVICES['resource-executor']]: {
-    backgroundColor: '#fbca04'
+    backgroundColor: '#fbca04',
   },
   [SERVICES['pipeline-driver']]: {
     backgroundColor: '#b712c9',
-    isLight: true
+    isLight: true,
   },
   [SERVICES['pipeline-driver-queue']]: {
-    backgroundColor: '#0ec994'
+    backgroundColor: '#0ec994',
   },
   [SERVICES['api-server']]: {
-    backgroundColor: '#bfdadc'
+    backgroundColor: '#bfdadc',
   },
   [SERVICES['algorithm-queue']]: {
     backgroundColor: '#5319e7',
-    isLight: true
+    isLight: true,
   },
   [SERVICES['algorithm-builder']]: {
     backgroundColor: '#006b75',
-    isLight: true
+    isLight: true,
   },
   [SERVICES['algorithm-operator']]: {
-    backgroundColor: '#ccdd2c'
+    backgroundColor: '#ccdd2c',
+  },
+  [SERVICES['caching-service']]: {
+    backgroundColor: '#b70949',
+    isLight: true,
   },
   default: {
-    backgroundColor: COLOR.orange
-  }
+    backgroundColor: COLOR.orange,
+  },
 };
 
 export const COLOR_LAYOUT = {
@@ -68,7 +72,7 @@ export const COLOR_LAYOUT = {
   backgroundOnModal: COLOR.transparentBlack,
   border: COLOR.lightGrey,
   colorPrimary: COLOR.blue,
-  darkBorder: COLOR.grey
+  darkBorder: COLOR.grey,
 };
 
 export const COLOR_PIPELINE_STATUS = {
@@ -87,7 +91,7 @@ export const COLOR_PIPELINE_STATUS = {
   stopped: COLOR.orange,
   [PIPELINE_STATES.STOPPING]: COLOR.orange,
   [PIPELINE_STATES.SUCCEED]: COLOR.lightGreen,
-  [PIPELINE_STATES.PRESCHEDULE]: COLOR.cyan
+  [PIPELINE_STATES.PRESCHEDULE]: COLOR.cyan,
 };
 
 export const COLOR_LOGGER = {
@@ -97,7 +101,7 @@ export const COLOR_LOGGER = {
   [LOGGER_LEVEL.CRITICAL]: COLOR.orange,
   [LOGGER_LEVEL.DEBUG]: COLOR.lightGreen,
   [LOGGER_LEVEL.TRACE]: COLOR.lightGrey,
-  [LOGGER_LEVEL.SILLY]: COLOR.grey
+  [LOGGER_LEVEL.SILLY]: COLOR.grey,
 };
 
 export const COLOR_PRIORITY = {
@@ -105,5 +109,5 @@ export const COLOR_PRIORITY = {
   2: { color: COLOR.darkOrange, name: 'High' },
   3: { color: COLOR.orange, name: 'Medium' },
   4: { color: COLOR.lightGreen, name: 'Low' },
-  5: { color: COLOR.blueLight, name: 'Lowest' }
+  5: { color: COLOR.blueLight, name: 'Lowest' },
 };

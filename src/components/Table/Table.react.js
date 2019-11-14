@@ -12,7 +12,7 @@ const ExpandIcon = ({ expanded, onExpand, record }) => (
 ExpandIcon.propTypes = {
   expanded: PropTypes.bool.isRequired,
   onExpand: PropTypes.func.isRequired,
-  record: PropTypes.object.isRequired
+  record: PropTypes.object.isRequired,
 };
 
 const antIcon = <Icon type="loading" style={{ fontSize: 40 }} spin />;
@@ -21,10 +21,10 @@ Spin.setDefaultIndicator(antIcon);
 const DEFAULT_PAGINATION = {
   defaultPageSize: 20,
   hideOnSinglePage: true,
-  showLessItems: true
+  showLessItems: true,
 };
 
-const Table = ({ dataSource, ...props }) => {
+const Table = ({ dataSource = [], ...props }) => {
   const tableSource = Immutable.isImmutable(dataSource) ? dataSource.asMutable() : dataSource;
   return (
     <AntTable
@@ -40,13 +40,9 @@ const Table = ({ dataSource, ...props }) => {
   );
 };
 
-Table.defaultProps = {
-  dataSource: []
-};
-
 Table.propTypes = {
   dataSource: PropTypes.array,
-  ...AntTable.propTypes
+  ...AntTable.propTypes,
 };
 
 export default React.memo(Table);

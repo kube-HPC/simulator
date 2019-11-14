@@ -5,17 +5,19 @@ import { Typography, Icon } from 'antd';
 
 import ReactMarkdown from 'react-markdown';
 import { Tabs, JsonView, Card, FlexBox } from 'components/common';
-import AlgorithmBuildsTable from './AlgorithmBuildsTable.react';
+import AlgorithmBuildsTable from '../AlgorithmBuildsTable.react';
+// import { VersionsTable } from '../Versions';
 
 const FlexBoxMinHeight = styled(FlexBox)`
   min-height: 30vh;
 `;
 
 const IDs = {
+  VERSIONS: 'Versions',
   JSON: 'JSON',
   DESCRIPTION: 'Description',
   BUILDS: 'Builds',
-  BUILDS_HISTORY: 'Builds History'
+  BUILDS_HISTORY: 'Builds History',
 };
 
 const EmptyMarkdown = () => (
@@ -35,6 +37,12 @@ const EmptyMarkdown = () => (
 const AlgorithmsTabs = ({ record: { builds, ...algorithm }, readme }) => (
   <Card isMargin>
     <Tabs>
+      {/* Need to add implementation */}
+      {/* <Tabs.TabPane tab={IDs.VERSIONS} key={IDs.VERSIONS}>
+        <Card>
+          <VersionsTable algorithmName={algorithm.name} currentVersion={algorithm.algorithmImage} />
+        </Card>
+      </Tabs.TabPane> */}
       <Tabs.TabPane tab={IDs.DESCRIPTION} key={IDs.DESCRIPTION}>
         <Card>{readme ? <ReactMarkdown source={readme} /> : <EmptyMarkdown />}</Card>
       </Tabs.TabPane>
@@ -52,7 +60,7 @@ const AlgorithmsTabs = ({ record: { builds, ...algorithm }, readme }) => (
 
 AlgorithmsTabs.propTypes = {
   record: PropTypes.object.isRequired,
-  readme: PropTypes.string
+  readme: PropTypes.string,
 };
 
 export default AlgorithmsTabs;

@@ -7,7 +7,7 @@ import { InputAddon, Form } from 'components/common';
 import SelectEnvOptions from '../SelectEnvOptions.react';
 
 const {
-  GIT: { URL, BRANCH, COMMIT, ENTRY_POINT, ENVIRONMENT, GIT_KIND, TAG, TOKEN }
+  GIT: { URL, BRANCH, COMMIT, ENTRY_POINT, ENVIRONMENT, GIT_KIND, TAG, TOKEN, BASE_IMAGE }
 } = addAlgorithmSchema.BUILD_TYPES;
 
 const insertGitKindOptions = ({ options, predicate }) =>
@@ -61,6 +61,9 @@ const GitBuild = ({ required, getFieldDecorator }) => (
       {getFieldDecorator(ENTRY_POINT.field, {
         rules: [{ required, message: ENTRY_POINT.message }]
       })(<Input placeholder={ENTRY_POINT.placeholder} />)}
+    </Form.Item>
+    <Form.Item label={BASE_IMAGE.label}>
+      {getFieldDecorator(BASE_IMAGE.field)(<Input placeholder={BASE_IMAGE.placeholder} />)}
     </Form.Item>
   </>
 );

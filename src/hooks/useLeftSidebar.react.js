@@ -8,7 +8,7 @@ import {
   AlgorithmsTable,
   DriversTable,
   DebugTable,
-  WorkersTable
+  WorkersTable,
 } from 'components/Tables';
 
 const tableSelector = {
@@ -17,7 +17,7 @@ const tableSelector = {
   [LEFT_SIDEBAR_NAMES.ALGORITHMS]: <AlgorithmsTable />,
   [LEFT_SIDEBAR_NAMES.WORKERS]: <WorkersTable />,
   [LEFT_SIDEBAR_NAMES.DRIVERS]: <DriversTable />,
-  [LEFT_SIDEBAR_NAMES.DEBUG]: <DebugTable />
+  [LEFT_SIDEBAR_NAMES.DEBUG]: <DebugTable />,
 };
 
 const leftCollapsedInitial =
@@ -35,7 +35,7 @@ const useLeftSidebar = () => {
   return {
     value: [value, setValue],
     isCollapsed: [isCollapsed, setIsCollapsed],
-    selector: tableSelector
+    selector: tableSelector,
   };
 };
 

@@ -1,7 +1,7 @@
 import React, { createContext, memo } from 'react';
 import PropTypes from 'prop-types';
 
-import { Initial, Nodes, Options } from './Steps';
+import { Initial, Nodes, Options } from '../Steps';
 import { Form } from 'components/common';
 import { Display } from 'styles';
 
@@ -28,7 +28,7 @@ const AddPipelineForm = ({ form, step }) => {
 
 AddPipelineForm.propTypes = {
   form: PropTypes.object.isRequired,
-  step: PropTypes.number.isRequired
+  step: PropTypes.number.isRequired,
 };
 
 export default memo(AddPipelineForm);

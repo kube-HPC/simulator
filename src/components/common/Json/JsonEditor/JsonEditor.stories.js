@@ -1,10 +1,10 @@
 import { Card } from 'antd';
-import JsonEditor from 'components/common/Json/JsonEditor.react';
 import template from 'config/template/addPipeline.template';
 import React from 'react';
 import styled from 'styled-components';
 import { stringify } from 'utils/string';
 import { SB_SECTIONS } from 'const';
+import JsonEditor from './JsonEditor.react';
 
 const StyledCard = styled(Card)`
   width: 45%;
@@ -13,7 +13,7 @@ const StyledCard = styled(Card)`
 `;
 
 export default {
-  title: `${SB_SECTIONS.COMMON}|Json Editor`
+  title: `${SB_SECTIONS.COMMON}|Json Editor`,
 };
 
 export const Default = () => <JsonEditor value={stringify(template)} />;

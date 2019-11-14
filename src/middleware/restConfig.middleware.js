@@ -4,7 +4,7 @@ const reject = (dispatch, payload, action) => {
   dispatch({
     type: `${action.payload.actionType}_REJECT`,
     meta: action.meta,
-    payload
+    payload,
   });
 };
 
@@ -12,7 +12,7 @@ const pending = (dispatch, payload, action) => {
   dispatch({
     type: `${action.payload.actionType}_PENDING`,
     meta: action.meta,
-    payload
+    payload,
   });
 };
 
@@ -21,7 +21,7 @@ const success = (dispatch, payload, action) => {
     dispatch({
       type: `${action.payload.actionType}_SUCCESS`,
       meta: action.meta,
-      payload
+      payload,
     });
   }, 100);
 };

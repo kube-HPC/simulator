@@ -41,11 +41,11 @@ const AlgorithmBuildsTable = ({ builds }) => {
 };
 
 AlgorithmBuildsTable.defaultProps = {
-  builds: []
+  builds: [],
 };
 
 AlgorithmBuildsTable.propTypes = {
-  builds: PropTypes.array
+  builds: PropTypes.array,
 };
 
 export default AlgorithmBuildsTable;

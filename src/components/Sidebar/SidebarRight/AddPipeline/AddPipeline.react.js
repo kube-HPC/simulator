@@ -8,20 +8,16 @@ import { FlexBox, JsonView, BottomContent, JsonEditor, Card, Form } from 'compon
 import { Steps, Button, Icon } from 'antd';
 import { DRAWER_SIZE } from 'const';
 import schema from 'config/schema/addPipeline.schema';
-import AddPipelineForm from './AddPipelineForm.react';
-import { Display, COLOR_LAYOUT } from 'styles';
+import AddPipelineForm from './Form/AddPipelineForm.react';
+import { Display, BottomPosition } from 'styles';
 import { addPipelineTemplate } from 'config';
 import { stringify, mapObjValues, tryParse, notification } from 'utils';
 import { mergeWith } from 'lodash';
 // #endregion
 
 // #region  Styling
-const StepsBottom = styled(Steps)`
-  border-top: 1px solid ${COLOR_LAYOUT.border};
-  position: absolute;
+const StepsBottom = styled.div`
   bottom: ${BottomContent.DefaultHeight};
-  left: 0;
-  background-color: white;
 `;
 
 const FlexItemStart = styled(FlexBox.Item)`
@@ -40,7 +36,6 @@ const steps = ['Initial', 'Nodes', 'Options'].map(label => (
 ));
 
 const INITIAL_EDITOR_VALUE = stringify(addPipelineTemplate);
-const SPACE_BETWEEN = 20;
 
 const innerClasses = ['flowInput'];
 
@@ -56,7 +51,8 @@ const mergeMapper = (objValue, srcValue) => {
   }
 };
 
-const JSON_VIEW_SPAN = 10;
+const JSON_VIEW_SPAN = 8;
+
 // #endregion
 
 const AddPipeline = () => {
@@ -95,7 +91,7 @@ const AddPipeline = () => {
   const onValuesChange = useCallback(
     (_, changedValues) =>
       setJsonViewObj(prevObj => ({ ...mergeWith(prevObj, changedValues, mergeMapper) })),
-    []
+    [],
   );
 
   // 1. Inject antd `form` object and callbacks.
@@ -104,7 +100,7 @@ const AddPipeline = () => {
   // 3. Memoize the whole value to not lose component's state on re-render.
   const FormInjected = useMemo(
     () => memo(Form.create({ mapPropsToFields, onValuesChange })(AddPipelineForm)),
-    [onValuesChange]
+    [onValuesChange],
   );
 
   const isLastStep = isEditorVisible || step === steps.length - 1;
@@ -118,7 +114,7 @@ const AddPipeline = () => {
         </Card>
       </Display>
       <Display isVisible={!isEditorVisible}>
-        <FlexBox gutter={SPACE_BETWEEN}>
+        <FlexBox>
           <FlexItemStart span={JSON_VIEW_SPAN}>
             <Card>
               <JsonView jsonObject={jsonViewObj} collapsed={undefined} />
@@ -130,8 +126,10 @@ const AddPipeline = () => {
         </FlexBox>
 
         <BottomContent.Divider />
-        <StepsBottom type="navigation" size="small" current={step} onChange={setStep}>
-          {steps}
+        <StepsBottom as={BottomPosition}>
+          <Steps type="navigation" size="small" current={step} onChange={setStep}>
+            {steps}
+          </Steps>
         </StepsBottom>
       </Display>
 
@@ -151,9 +149,8 @@ const AddPipeline = () => {
             <Button type="danger" onClick={onClear}>
               Clear
             </Button>
-          </Display>
-        ]}
-      >
+          </Display>,
+        ]}>
         <Display isVisible={!isEditorVisible}>
           <Button disabled={!step} onClick={onPrevClick}>
             <Icon type="left" />
@@ -164,8 +161,7 @@ const AddPipeline = () => {
           type={isLastStep ? 'primary' : 'default'}
           onClick={isEditorVisible ? onEditorSubmit : onNextClick}
           form={schema.ID}
-          htmlType="submit"
-        >
+          htmlType="submit">
           {isLastStep ? 'Submit' : 'Next'}
           <Icon type={isLastStep ? 'check' : 'right'} />
         </Button>

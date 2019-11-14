@@ -10,7 +10,7 @@ import {
   IconAddPipeline,
   IconAddAlgorithm,
   IconAddDebug,
-  IconRawFile
+  IconRawFile,
 } from 'components/Sidebar/SidebarRight';
 
 import { useErrorLogs } from 'hooks';
@@ -20,20 +20,20 @@ import { STATE_SOURCES, RIGHT_SIDEBAR_NAMES } from 'const';
 const menuItems = [
   {
     name: RIGHT_SIDEBAR_NAMES.ADD_PIPELINE,
-    component: IconAddPipeline
+    component: IconAddPipeline,
   },
   {
     name: RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM,
-    component: IconAddAlgorithm
+    component: IconAddAlgorithm,
   },
   {
     name: RIGHT_SIDEBAR_NAMES.ADD_DEBUG,
-    component: IconAddDebug
+    component: IconAddDebug,
   },
   {
     name: RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE,
-    component: IconRawFile
-  }
+    component: IconRawFile,
+  },
 ];
 
 const mapBySize = node => node.size;
@@ -42,7 +42,9 @@ const flatAllStats = nodeArr => nodeArr.map(mapBySize);
 const flatByFree = nodeArr => nodeArr.filter(node => node.name === 'free').map(mapBySize);
 
 const getColorStatus = stats => {
-  if (!(stats && stats.results)) return '';
+  if (!(stats && stats.results)) {
+    return '';
+  }
   const { results } = stats;
   const algorithmsDataArr = results.map(r => r.algorithmsData);
   const totalSize = algorithmsDataArr.flatMap(flatAllStats).reduce(sumArr);
@@ -67,7 +69,7 @@ const useRightSidebar = () => {
     [RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE]: <RunRawPipeline />,
     [RIGHT_SIDEBAR_NAMES.CPU]: <NodeStatistics metric="cpu" />,
     [RIGHT_SIDEBAR_NAMES.MEMORY]: <NodeStatistics metric="mem" />,
-    [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: <ErrorLogsTable />
+    [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: <ErrorLogsTable />,
   };
 
   const { totalNewWarnings, setIsCleared } = useErrorLogs();
@@ -75,7 +77,7 @@ const useRightSidebar = () => {
   const memoryStatusRef = useRef('');
 
   const [cpuStats, memoryStats] = useSelector(
-    state => state[STATE_SOURCES.NODE_STATISTICS].dataSource
+    state => state[STATE_SOURCES.NODE_STATISTICS].dataSource,
   );
 
   useEffect(() => {
@@ -87,27 +89,29 @@ const useRightSidebar = () => {
     {
       name: RIGHT_SIDEBAR_NAMES.ERROR_LOGS,
       type: 'warning',
-      count: totalNewWarnings
+      count: totalNewWarnings,
     },
     {
       name: RIGHT_SIDEBAR_NAMES.CPU,
       type: 'cluster',
-      status: cpuStatusRef.current
+      status: cpuStatusRef.current,
     },
     {
       name: RIGHT_SIDEBAR_NAMES.MEMORY,
       type: 'hdd',
-      status: memoryStatusRef.current
-    }
+      status: memoryStatusRef.current,
+    },
   ];
 
   const onSelectDrawer = useCallback(
     selection => {
-      if (selection === RIGHT_SIDEBAR_NAMES.ERROR_LOGS) setIsCleared(true);
+      if (selection === RIGHT_SIDEBAR_NAMES.ERROR_LOGS) {
+        setIsCleared(true);
+      }
       setDrawerValue(selection);
       toggleDrawerVisible();
     },
-    [setIsCleared, toggleDrawerVisible]
+    [setIsCleared, toggleDrawerVisible],
   );
 
   return {
@@ -117,8 +121,8 @@ const useRightSidebar = () => {
     isCollapsed: [drawerIsVisible, setDrawerIsVisible],
     menus: {
       menuBottomRightItems,
-      menuItems
-    }
+      menuItems,
+    },
   };
 };
 

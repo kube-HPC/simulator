@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { tableFilterSelector } from 'utils/tableSelector';
-import { useCallback, useMemo } from 'react';
 import isEqual from 'lodash/isEqual';
 
 import { USER_GUIDE, LEFT_SIDEBAR_NAMES } from 'const';
@@ -16,9 +15,9 @@ const initialJobRecord = ({ record, jaeger }) => ({
   record: {
     pipeline: record.pipeline,
     status: record.status,
-    results: record.results
+    results: record.results,
   },
-  jaeger: jaeger && jaeger.dataSource
+  jaeger: jaeger && jaeger.dataSource,
 });
 
 export default function useJobs() {
@@ -34,7 +33,7 @@ export default function useJobs() {
         <JobsTabSwitcher record={initialJobRecord({ record, jaeger })} />
       </Card>
     ),
-    [jaeger]
+    [jaeger],
   );
 
   const dataSource = useSelector(dataSelector);
@@ -42,6 +41,6 @@ export default function useJobs() {
   return {
     dataSource,
     columns,
-    expandedRowRender
+    expandedRowRender,
   };
 }

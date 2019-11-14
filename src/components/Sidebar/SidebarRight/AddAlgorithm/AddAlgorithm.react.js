@@ -10,7 +10,7 @@ import { stringify } from 'utils';
 import { applyAlgorithm } from 'actions';
 
 import { addAlgorithmTemplate } from 'config';
-import FormContent from './FormContent.react';
+import AddAlgorithmForm from './AddAlgorithmForm.react';
 import tryParse from 'utils/handleParsing';
 import { Display } from 'styles';
 
@@ -45,7 +45,11 @@ const AddAlgorithm = ({ onSubmit = noop }) => {
   return (
     <>
       <Display isVisible={!editorIsVisible}>
-        <FormContent isVisible={!editorIsVisible} onToggle={toggleEditor} onSubmit={onSubmit} />
+        <AddAlgorithmForm
+          isVisible={!editorIsVisible}
+          onToggle={toggleEditor}
+          onSubmit={onSubmit}
+        />
       </Display>
       <Display isVisible={editorIsVisible}>
         <Card>
@@ -63,9 +67,8 @@ const AddAlgorithm = ({ onSubmit = noop }) => {
             </Button>,
             <Button key="clear" type="danger" onClick={onClear}>
               Clear
-            </Button>
-          ]}
-        >
+            </Button>,
+          ]}>
           <Button key="Submit" type="primary" onClick={onEditorSubmit}>
             Submit
           </Button>
@@ -76,7 +79,7 @@ const AddAlgorithm = ({ onSubmit = noop }) => {
 };
 
 AddAlgorithm.propTypes = {
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
 };
 
 export default memo(AddAlgorithm);

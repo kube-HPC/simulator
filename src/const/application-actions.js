@@ -1,13 +1,8 @@
-const restHelper = action => {
-  actionType[`${action}_PENDING`] = `${action}_PENDING`;
-  actionType[`${action}_SUCCESS`] = `${action}_SUCCESS`;
-  actionType[`${action}_REJECT`] = `${action}_REJECT`;
-};
-
 const actionType = {
   ALGORITHM_APPLY: 'ALGORITHM_APPLY',
   ALGORITHM_DELETE: 'ALGORITHM_DELETE',
   ALGORITHM_STORE: 'ALGORITHM_STORE',
+  ALGORITHM_GET_VERSIONS: 'ALGORITHM_GET_VERSIONS',
   AUTO_COMPLETE_UPDATE_FILTER: 'AUTO_COMPLETE_UPDATE_FILTER',
   BUILD_RERUN: 'BUILD_RERUN',
   BUILD_STOP: 'BUILD_STOP',
@@ -37,6 +32,7 @@ const actionType = {
   REST_REQ_POST_FORM: 'REST_REQ_POST_FORM',
   REST_REQ_POST: 'REST_REQ_POST',
   REST_REQ_PUT: 'REST_REQ_PUT',
+  REST_REQ_GET: 'REST_REQ_GET',
   REST_REQ: 'REST_REQ',
   SOCKET_GET_CONFIG: 'SOCKET_GET_CONFIG',
   SOCKET_GET_DATA: 'SOCKET_GET_DATA',
@@ -44,7 +40,13 @@ const actionType = {
   CONNECTION_STATUS_CHANGE: 'CONNECTION_STATUS_CHANGE',
   SOCKET_INIT: 'SOCKET_INIT',
   USER_GUIDE_CHANGE_STEP: 'USER_GUIDE_CHANGE_STEP',
-  USER_GUIDE_TRIGGER: 'USER_GUIDE_TRIGGER'
+  USER_GUIDE_TRIGGER: 'USER_GUIDE_TRIGGER',
+};
+
+const restHelper = action => {
+  actionType[`${action}_PENDING`] = `${action}_PENDING`;
+  actionType[`${action}_SUCCESS`] = `${action}_SUCCESS`;
+  actionType[`${action}_REJECT`] = `${action}_REJECT`;
 };
 
 restHelper(actionType.SOCKET_GET_CONFIG);

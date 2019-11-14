@@ -8,16 +8,25 @@ const setPath = ({ monitorBackend }) =>
     ? `${location.origin}${monitorBackend.path}` // eslint-disable-line
     : `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}${monitorBackend.path}`;
 
+const DEFAULT_ERROR_MSG = 'Unexpected Error';
+
+const _formatError = payload => {
+  if (!payload) {
+    return DEFAULT_ERROR_MSG;
+  }
+  return typeof payload === 'string' ? payload : payload.message || DEFAULT_ERROR_MSG;
+};
+
 const reject = (dispatch, payload, action) => {
   dispatch({
     type: `${action.payload.actionType}_REJECT`,
     meta: {
       message: {
         type: 'error',
-        content: _formatError(payload)
-      }
+        content: _formatError(payload),
+      },
     },
-    payload
+    payload,
   });
 };
 
@@ -25,7 +34,7 @@ const pending = (dispatch, payload, action) => {
   dispatch({
     type: `${action.payload.actionType}_PENDING`,
     meta: action.meta,
-    payload
+    payload,
   });
 };
 
@@ -36,19 +45,13 @@ const success = (dispatch, payload, action) => {
     meta: {
       message: {
         type: 'success',
-        content: successMessage[action.payload.actionType]
-      }
+        content: successMessage[action.payload.actionType],
+      },
     },
-    payload
+    payload,
   });
 };
 
-const _formatError = payload => {
-  if (!payload) return DEFAULT_ERROR_MSG;
-  return typeof payload === 'string' ? payload : payload.message || DEFAULT_ERROR_MSG;
-};
-
-const DEFAULT_ERROR_MSG = 'Unexpected Error';
 let SOCKET_URL = null;
 
 const restMiddleware = ({ dispatch }) => next => action => {
@@ -62,7 +65,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
       AT.REST_REQ_POST_FORM,
       AT.REST_REQ_PUT,
       AT.REST_REQ_DELETE,
-      AT.JOBS_DOWNLOAD_REQ
+      AT.JOBS_DOWNLOAD_REQ,
     ].includes(action.type)
   ) {
     return next(action);
@@ -134,7 +137,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
     pending(dispatch, 'pending', action);
     axios
       .delete(`${SOCKET_URL}/${action.payload.url}/${action.payload.body.algorithmName}`, {
-        data: action.payload.body
+        data: action.payload.body,
       })
       .then(res => {
         success(dispatch, res.data, action);
@@ -152,7 +155,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
     axios
       .get(`${SOCKET_URL}${action.payload.url}`, {
         responseType: 'blob',
-        timeout: 30000
+        timeout: 30000,
       })
       .then(res => {
         FileSaver.saveAs(res.data, 'results.json');

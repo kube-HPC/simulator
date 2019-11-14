@@ -55,7 +55,7 @@ const { Text } = Typography;
 // #endregion
 
 const {
-  CODE: { ENVIRONMENT, ENTRY_POINT, VERSION }
+  CODE: { ENVIRONMENT, ENTRY_POINT, VERSION, BASE_IMAGE }
 } = schema.BUILD_TYPES;
 
 const CodeBuild = ({ required, getFieldDecorator, fileList, setFileList }) => (
@@ -72,6 +72,9 @@ const CodeBuild = ({ required, getFieldDecorator, fileList, setFileList }) => (
     </Form.Item>
     <Form.Item label={VERSION.label}>
       {getFieldDecorator(VERSION.field)(<Input placeholder={VERSION.placeholder} />)}
+    </Form.Item>
+    <Form.Item label={BASE_IMAGE.label}>
+      {getFieldDecorator(BASE_IMAGE.field)(<Input placeholder={BASE_IMAGE.placeholder} />)}
     </Form.Item>
     <Form.Item wrapperCol={null} style={marginTop}>
       <Upload.Dragger {...setDraggerProps({ fileList, setFileList })}>

@@ -21,7 +21,7 @@ const useAlgorithm = () => {
       dispatch(applyAlgorithm(formData));
       dispatch(postAlgorithmReadme(value.name, readme));
     },
-    [dispatch]
+    [dispatch],
   );
 
   const onDelete = useCallback(data => dispatch(deleteAlgorithm(data)), [dispatch]);
@@ -37,7 +37,7 @@ const useAlgorithm = () => {
   // Merged Source with builds
   const dataSource = algorithmSource.map(source => ({
     ...source,
-    builds: buildsSource.filter(({ algorithmName }) => algorithmName === source.name)
+    builds: buildsSource.filter(({ algorithmName }) => algorithmName === source.name),
   }));
   // #endregion
 
@@ -46,7 +46,7 @@ const useAlgorithm = () => {
     fetchReadme,
     getReadme,
     onDelete,
-    onSubmit
+    onSubmit,
   };
 };
 

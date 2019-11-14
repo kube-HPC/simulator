@@ -1,0 +1,5 @@
+// https://github.com/storybookjs/storybook/issues/4741#issuecomment-437085226
+{
+  "presets": ["@babel/preset-env", "@babel/preset-react"],
+  "plugins": ["@babel/plugin-syntax-dynamic-import"]
+}

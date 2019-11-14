@@ -1,7 +1,10 @@
+// Depends on root.reducer.js
+
 export default {
   ALGORITHM_BUILDS_TABLE: 'algorithmBuildsTable',
   ALGORITHM_README: 'algorithmReadme',
   ALGORITHM_TABLE: 'algorithmTable',
+  ALGORITHM_VERSIONS: 'algorithmVersions',
   AUTO_COMPLETE_FILTER: 'autoCompleteFilter',
   DEBUG_TABLE: 'debugTable',
   DRIVER_TABLE: 'driverTable',
@@ -14,5 +17,5 @@ export default {
   WORKER_TABLE: 'workerTable',
   CONNECTION_STATUS: 'connectionStatus',
   USER_GUIDE: 'userGuide',
-  SOCKET_URL: 'socketURL'
+  SOCKET_URL: 'socketURL',
 };

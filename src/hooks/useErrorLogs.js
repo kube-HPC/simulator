@@ -37,6 +37,6 @@ export default function useErrorLogs() {
   return {
     dataSource,
     totalNewWarnings,
-    setIsCleared
+    setIsCleared,
   };
 }

@@ -4,7 +4,7 @@ export const USER_GUIDE = {
   WELCOME: 'ug_welcome',
   HEADER: {
     AUTO_COMPLETE: 'ug_autocomplete',
-    SOCIALS: 'ug_socials'
+    SOCIALS: 'ug_socials',
   },
   SIDEBAR_LEFT: 'ug_sidebar_left',
   SIDEBAR_LEFT_MENU_BUTTON: 'ug_sidebar_left_menu_button',
@@ -18,14 +18,14 @@ export const USER_GUIDE = {
     [LEFT_SIDEBAR_NAMES.WORKERS]: `ug_${LEFT_SIDEBAR_NAMES.WORKERS}`,
     [LEFT_SIDEBAR_NAMES.DRIVERS]: `ug_${LEFT_SIDEBAR_NAMES.DRIVERS}`,
     [LEFT_SIDEBAR_NAMES.DEBUG]: `ug_${LEFT_SIDEBAR_NAMES.DEBUG}`,
-    [LEFT_SIDEBAR_NAMES.BUILDS]: `ug_${LEFT_SIDEBAR_NAMES.BUILDS}`
+    [LEFT_SIDEBAR_NAMES.BUILDS]: `ug_${LEFT_SIDEBAR_NAMES.BUILDS}`,
   },
   TABLE_JOB: {
     MENU_SELECT: `ug_${LEFT_SIDEBAR_NAMES.JOBS}`,
     ID_SELECT: 'ug_job_table_id_select',
     ACTIONS_SELECT: 'ug_job_actions_select',
-    ROW_SELECT: 'ug_job_row_select'
-  }
+    ROW_SELECT: 'ug_job_row_select',
+  },
 };
 
 export const userGuideStepIndexes = [
@@ -39,5 +39,5 @@ export const userGuideStepIndexes = [
   USER_GUIDE.TABLE_JOB.MENU_SELECT,
   USER_GUIDE.TABLE_JOB.ID_SELECT,
   USER_GUIDE.TABLE_JOB.ACTIONS_SELECT,
-  USER_GUIDE.TABLE_JOB.ROW_SELECT
+  USER_GUIDE.TABLE_JOB.ROW_SELECT,
 ];

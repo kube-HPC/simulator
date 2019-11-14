@@ -16,26 +16,6 @@
     "prettify": "prettier --write src/**/*.js",
     "lint:fix": "eslint src/**/*.js --fix"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "eslint:recommended",
-      "plugin:react/recommended",
-      "prettier/react"
-    ],
-    "plugins": [
-      "react-hooks",
-      "jsx-a11y",
-      "flowtype"
-    ],
-    "rules": {
-      "react/display-name": 0
-    }
-  },
-  "prettier": {
-    "printWidth": 100,
-    "singleQuote": true
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -50,7 +30,7 @@
     ]
   },
   "dependencies": {
-    "@monaco-editor/react": "^1.2.3",
+    "@monaco-editor/react": "^2.3.0",
     "@nivo/bar": "^0.59.2",
     "ansi-to-react": "^5.1.0",
     "antd": "^3.24.2",
@@ -89,25 +69,22 @@
   "devDependencies": {
     "@dennisvash/eslint-config": "^1.1.0",
     "@dennisvash/prettier-config": "^1.0.0",
-    "@storybook/addon-actions": "^5.2.5",
-    "@storybook/addon-links": "^5.2.5",
-    "@storybook/addons": "^5.2.5",
-    "@storybook/react": "^5.2.5",
-    "babel-cli": "^6.26.0",
+    "@storybook/addon-actions": "^5.2.6",
+    "@storybook/addon-links": "^5.2.6",
+    "@storybook/addons": "^5.2.6",
+    "@storybook/react": "^5.2.6",
     "babel-eslint": "^10.0.3",
-    "babel-loader": "^8.0.6",
-    "babel-plugin-import": "^1.12.0",
-    "core-js": "^3.2.1",
     "eslint": "^6.6.0",
     "eslint-config-prettier": "^6.5.0",
-    "http-proxy-middleware": "^0.19.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.16.0",
+    "http-proxy-middleware": "^0.20.0",
     "husky": "^3.0.9",
-    "lint-staged": "^9.4.1",
-    "prettier": "^1.18.2",
+    "lint-staged": "^9.4.2",
+    "prettier": "^1.19.1",
     "prettier-eslint": "^9.0.0",
-    "pretty-quick": "^2.0.0",
-    "redux-logger": "^3.0.6",
-    "source-map-explorer": "^2.1.0"
+    "pretty-quick": "^2.0.1",
+    "redux-logger": "^3.0.6"
   },
   "husky": {
     "hooks": {

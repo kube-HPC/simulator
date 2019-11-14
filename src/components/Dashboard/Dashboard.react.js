@@ -1,25 +1,21 @@
-import React, { useEffect, useCallback, useMemo } from 'react';
-import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
-
-import 'styles/GlobalStyle.css';
-
-import { message, Layout, Tag, Icon, Typography, Tooltip } from 'antd';
-import { useRightSidebar, useLeftSidebar, useConnectionStatus } from 'hooks';
-
 import { init, socketInit, triggerUserGuide } from 'actions';
-import { COLOR_LAYOUT, GlobalStyle, COLOR } from 'styles';
-import { LEFT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
-import { Icons, FlexBox } from 'components/common';
-
+import { Icon, Layout, message, Tag, Tooltip, Typography } from 'antd';
+import 'antd/dist/antd.css';
 import {
-  UserGuide,
-  SidebarLeft,
-  SidebarRight,
   AutoComplete,
   DrawerOperations,
-  LoadingScreen
+  LoadingScreen,
+  SidebarLeft,
+  SidebarRight,
+  UserGuide,
 } from 'components';
+import { FlexBox, Icons } from 'components/common';
+import { LEFT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
+import { useConnectionStatus, useLeftSidebar, useRightSidebar } from 'hooks';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
+import { COLOR, COLOR_LAYOUT, GlobalStyle } from 'styles';
 
 const LayoutFullHeight = styled(Layout)`
   height: 100vh;
@@ -47,7 +43,7 @@ const HelpBar = styled(FlexBox)`
 `;
 
 const ContentMargin = styled(Layout.Content)`
-  padding: 8px;
+  padding: 10px;
 
   ::-webkit-scrollbar-track {
     border: none;
@@ -71,7 +67,7 @@ const RightSidebarsFlex = styled.div`
 
 message.config({
   duration: 5,
-  maxCount: 3
+  maxCount: 3,
 });
 
 const openWebsite = () => window.open('http://hkube.io/');
@@ -89,7 +85,7 @@ function Dashboard() {
   const {
     selector: tableSelector,
     value: [tableValue, setTableValue],
-    isCollapsed: [leftIsCollapsed, setLeftIsCollapsed]
+    isCollapsed: [leftIsCollapsed, setLeftIsCollapsed],
   } = useLeftSidebar();
 
   const {
@@ -97,7 +93,7 @@ function Dashboard() {
     value: [drawerValue],
     isCollapsed: [drawerIsVisible, setDrawerIsVisible],
     onSelect: onSelectDrawer,
-    menus: { menuBottomRightItems, menuItems }
+    menus: { menuBottomRightItems, menuItems },
   } = useRightSidebar();
 
   const setLeftValue = useCallback(setTableValue, [setTableValue]);
@@ -110,11 +106,13 @@ function Dashboard() {
   }, [dispatch, setLeftIsCollapsed, setTableValue]);
 
   const triggerLeftVisible = useCallback(() => setLeftIsCollapsed(prev => !prev), [
-    setLeftIsCollapsed
+    setLeftIsCollapsed,
   ]);
   const toggleDrawerVisible = useCallback(() => setDrawerIsVisible(p => !p), [setDrawerIsVisible]);
 
   const { isDataAvailable, isSocketConnected } = useConnectionStatus();
+
+  const drawerRef = useRef();
 
   return (
     <>
@@ -174,10 +172,10 @@ function Dashboard() {
                   />
                 </RightSidebarsFlex>
                 <DrawerOperations
+                  ref={drawerRef}
                   visible={drawerIsVisible}
                   onClose={toggleDrawerVisible}
-                  operation={drawerValue}
-                >
+                  operation={drawerValue}>
                   {operationSelector[drawerValue]}
                 </DrawerOperations>
               </LayoutFullHeight>

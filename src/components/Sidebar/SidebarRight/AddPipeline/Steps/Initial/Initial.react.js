@@ -3,7 +3,7 @@ import React, { useContext, memo } from 'react';
 import { Form, InputAddon } from 'components/common';
 import schema from 'config/schema/addPipeline.schema';
 import FlowInput from './FlowInput.react';
-import { FormContext } from '../../AddPipelineForm.react';
+import { FormContext } from '../../Form/AddPipelineForm.react';
 
 const { NAME, DESCRIPTION, FLOW_INPUT } = schema.INITIAL;
 
@@ -14,7 +14,7 @@ const Initial = () => {
     <>
       <Form.Item label={NAME.label} required={NAME.required} hasFeedback>
         {getFieldDecorator(NAME.field, {
-          rules: [{ required: true, message: NAME.message }]
+          rules: [{ required: true, message: NAME.message }],
         })(<InputAddon placeholder={NAME.placeholder} />)}
       </Form.Item>
       <Form.Item label={DESCRIPTION.label}>
