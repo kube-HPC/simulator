@@ -1,6 +1,6 @@
 {
   "name": "simulator",
-  "version": "1.2.7",
+  "version": "1.2.10",
   "private": true,
   "homepage": ".",
   "scripts": {
@@ -32,6 +32,7 @@
   "dependencies": {
     "@monaco-editor/react": "^2.3.0",
     "@nivo/bar": "^0.59.2",
+    "ansi-to-react": "^5.1.0",
     "antd": "^3.24.2",
     "axios": "^0.19.0",
     "cron-parser": "^2.13.0",
