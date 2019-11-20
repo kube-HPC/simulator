@@ -21,7 +21,7 @@ const onCopy = () =>
   notification({ message: 'Task ID Copied to clipboard', type: notification.TYPES.SUCCESS });
 
 const OptionBox = ({ index, taskId }) => (
-  <FlexBox>
+  <FlexBox justify="start">
     <FlexBox.Item>
       <Tag>{index}</Tag>
     </FlexBox.Item>
