@@ -11,7 +11,7 @@ const isSameLength = (a, b) => a.length === b.length;
 
 const NodeInfo = ({ payload }) => {
   const dataSource = useSelector(state =>
-    state.jobsKubernetesLogs.dataSource.map((value, key) => ({ key, ...value }), isSameLength)
+    state.jobsKubernetesLogs.dataSource.map((value, key) => ({ key, ...value }), isSameLength),
   );
 
   const algorithmTable = useSelector(state => state.algorithmTable.dataSource);
@@ -41,7 +41,7 @@ const NodeInfo = ({ payload }) => {
 };
 
 NodeInfo.propTypes = {
-  payload: PropTypes.object
+  payload: PropTypes.object,
 };
 
 export default React.memo(NodeInfo);

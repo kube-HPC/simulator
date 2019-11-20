@@ -21,10 +21,6 @@ const GlobalStyle = createGlobalStyle`
     margin-bottom: 0px !important;
   }
 
-  .ansi-view-class {
-  white-space: pre-line;
-}
-
   ::-webkit-scrollbar-track {
     border: none;
     background-color: none;
