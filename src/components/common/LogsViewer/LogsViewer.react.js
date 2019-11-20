@@ -8,14 +8,15 @@ import { COLOR_LOGGER, COLOR } from 'styles/colors';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import moment from 'moment';
 import Ansi from 'ansi-to-react';
+import { Empty } from 'antd';
 
 const onCopy = () =>
   notification({ message: 'Log Line Copied to clipboard', type: notification.TYPES.SUCCESS });
 
 const Container = styled.div`
-  background-color: black;
+  background-color: ${({ isValid }) => (isValid ? 'black' : 'transparent')};
   padding: 10px;
-  color: white;
+  color: ${({ isValid }) => (isValid ? 'white' : 'black')};
   white-space: pre-line;
 `;
 
@@ -39,12 +40,12 @@ const Timestamp = styled.span`
 `;
 
 const Tag = styled.div`
-  background-color: ${({ color }) => color};
-  color: black;
+  background-color: #373737;
   border-radius: 4px;
 `;
 
 const TagText = styled.span`
+  color: ${({ color }) => color};
   padding: 5px;
 `;
 
@@ -70,8 +71,8 @@ const toTableEntries = (log, index) => (
         </Timestamp>
         <Message>{log.message}</Message>
       </ItemWrapper>
-      <Tag color={COLOR_LOGGER[log.level]}>
-        <TagText>{toUpperCaseFirstLetter(log.level)}</TagText>
+      <Tag>
+        <TagText color={COLOR_LOGGER[log.level]}>{toUpperCaseFirstLetter(log.level)}</TagText>
       </Tag>
     </LogLine>
   </CopyToClipboard>
@@ -90,11 +91,21 @@ const toBuildEntries = (log, index) => (
   </CopyToClipboard>
 );
 
-const LogsViewer = ({ dataSource, isBuild = false }) => (
-  <Container>
-    {isBuild ? dataSource.split('\n').map(toBuildEntries) : dataSource.map(toTableEntries)}
-  </Container>
-);
+const LogsViewer = ({ dataSource, isBuild = false }) => {
+  const [first] = dataSource;
+  const isValid = isBuild || (first && first.level);
+  return (
+    <Container isValid={isValid}>
+      {isBuild ? (
+        dataSource.split('\n').map(toBuildEntries)
+      ) : isValid ? (
+        dataSource.map(toTableEntries)
+      ) : (
+        <Empty description="No valid logs for current pod" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      )}
+    </Container>
+  );
+};
 
 LogsViewer.propTypes = {
   dataSource: PropTypes.array.isRequired,

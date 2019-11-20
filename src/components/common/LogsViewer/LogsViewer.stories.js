@@ -9,3 +9,4 @@ export default {
 
 export const NodeLog = () => <LogsViewer dataSource={mockData} />;
 export const BuildLog = () => <LogsViewer dataSource={buildLog} isBuild />;
+export const Empty = () => <LogsViewer dataSource={[]} />;
