@@ -21,7 +21,7 @@ const CenterDiv = styled.div`
 const configNotificationOnOpen = description => ({
   message: 'Error fetching Trace data',
   description,
-  icon: <Icon type="warning" style={{ color: 'red' }} />
+  icon: <Icon type="warning" style={{ color: 'red' }} />,
 });
 
 const generateTabs = tabs =>
@@ -38,8 +38,8 @@ const fetchTraceData = ({ url, jobId, callback }) =>
   axios
     .get(`${url}/jaeger`, {
       params: {
-        jobId
-      }
+        jobId,
+      },
     })
     .then(({ data }) => {
       const [traceData] = data.data;
@@ -55,11 +55,13 @@ const JobsTabSwitcher = ({ record }) => {
 
   const fetchTrace = useCallback(
     () => fetchTraceData({ url: socketURL, jobId: record.key, callback: setTraceData }),
-    [record.key, socketURL]
+    [record.key, socketURL],
   );
 
   useEffect(() => {
-    if (!traceData) fetchTrace();
+    if (!traceData) {
+      fetchTrace();
+    }
   }, [fetchTrace, traceData]);
 
   const onRefreshClick = () => setTraceData(undefined);
@@ -83,7 +85,7 @@ const JobsTabSwitcher = ({ record }) => {
           <Spin size="large" tip="Fetching Trace Data 🔎..." />
         </CenterDiv>
       ),
-    [TABS.JSON]: <JsonView jsonObject={record.record} />
+    [TABS.JSON]: <JsonView jsonObject={record.record} />,
   };
 
   const onTabClick = tabKey => tabKey === TABS.TRACE && fetchTrace();
@@ -94,15 +96,14 @@ const JobsTabSwitcher = ({ record }) => {
       animated={tabsAnimation}
       tabBarExtraContent={refreshButton}
       onChange={setCurrentTab}
-      onTabClick={onTabClick}
-    >
+      onTabClick={onTabClick}>
       {generateTabs(tabs)}
     </Tabs>
   );
 };
 
 JobsTabSwitcher.propTypes = {
-  record: PropTypes.object.isRequired
+  record: PropTypes.object.isRequired,
 };
 
 export default JobsTabSwitcher;
