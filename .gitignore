@@ -15,3 +15,4 @@ build
 npm-debug.log
 .vscode
 .nyc_output
+.editorconfig
