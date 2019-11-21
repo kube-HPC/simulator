@@ -20,7 +20,8 @@ const CenterDiv = styled.div`
 `;
 
 const Wrapper = styled.div`
-  max-width: 50vw;
+  max-height: 40vh;
+  overflow: auto;
 `;
 
 const configNotificationOnOpen = description => ({
