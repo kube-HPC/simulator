@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
@@ -58,17 +58,6 @@ const JobsTabSwitcher = ({ record }) => {
 
   const socketURL = useSelector(state => state[STATE_SOURCES.SOCKET_URL]);
 
-  const fetchTrace = useCallback(
-    () => fetchTraceData({ url: socketURL, jobId: record.key, callback: setTraceData }),
-    [record.key, socketURL],
-  );
-
-  useEffect(() => {
-    if (!traceData) {
-      fetchTrace();
-    }
-  }, [fetchTrace, traceData]);
-
   const onRefreshClick = () => setTraceData(undefined);
   const refreshButton = currentTab === TABS.TRACE && (
     <Button onClick={onRefreshClick} icon="redo">
@@ -102,7 +91,9 @@ const JobsTabSwitcher = ({ record }) => {
     [TABS.JSON]: <JsonView jsonObject={record.record} />,
   };
 
-  const onTabClick = tabKey => tabKey === TABS.TRACE && fetchTrace();
+  const onTabClick = tabKey =>
+    tabKey === TABS.TRACE &&
+    fetchTraceData({ url: socketURL, jobId: record.key, callback: setTraceData });
 
   return (
     <Tabs
