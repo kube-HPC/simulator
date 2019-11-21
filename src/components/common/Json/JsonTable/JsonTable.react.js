@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { Descriptions } from 'antd';
 import styled from 'styled-components';
 
-const Wrapper = styled(Descriptions)`
-  max-width: 80vw;
+const DescriptionOverflow = styled(Descriptions)`
   .ant-descriptions-view {
     overflow: auto;
   }
@@ -14,7 +13,7 @@ const isPureObject = obj => !Array.isArray(obj) && typeof obj === 'object' && ob
 
 const recursionStep = value =>
   isPureObject(value) ? (
-    <Descriptions column={1} bordered>
+    <Descriptions column={Object.keys(value).length} bordered colon={false} layout="vertical">
       {objToTable(value)}
     </Descriptions>
   ) : Array.isArray(value) ? (
@@ -32,9 +31,14 @@ function objToTable(obj) {
 }
 
 const JsonTable = ({ jsonObject }) => (
-  <Wrapper column={Object.keys(jsonObject).length} bordered size="small">
+  <DescriptionOverflow
+    column={Object.keys(jsonObject).length}
+    bordered
+    size="small"
+    layout="vertical"
+    colon={false}>
     {objToTable(jsonObject)}
-  </Wrapper>
+  </DescriptionOverflow>
 );
 
 JsonTable.propTypes = {

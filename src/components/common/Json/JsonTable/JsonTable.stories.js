@@ -1,7 +1,7 @@
 import React from 'react';
 import { SB_SECTIONS } from 'const';
 import JsonTable from './JsonTable.react';
-import { addPipelineTemplate } from 'config';
+import { addPipelineTemplate, pipelineMock } from 'config';
 import addAlgorithmSchema from 'config/schema/addAlgorithm.schema';
 
 export default {
@@ -10,3 +10,4 @@ export default {
 
 export const AddPipelineTemplate = () => <JsonTable jsonObject={addPipelineTemplate} />;
 export const AddAlgorithmSchema = () => <JsonTable jsonObject={addAlgorithmSchema} />;
+export const PipelineExample = () => <JsonTable jsonObject={pipelineMock} />;

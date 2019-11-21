@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 
 import Trace from 'jaeger-react-trace-component';
-import { Tabs, Card, JsonView } from 'components/common';
+import { Tabs, Card, JsonView, FlexBox } from 'components/common';
 import { JobGraph } from '.';
 import { Button, notification, Icon, Spin, Result } from 'antd';
 import axios from 'axios';
@@ -19,6 +19,10 @@ const CenterDiv = styled.div`
   align-items: center;
 `;
 
+const Wrapper = styled.div`
+  max-width: 50vw;
+`;
+
 const configNotificationOnOpen = description => ({
   message: 'Error fetching Trace data',
   description,
@@ -30,7 +34,7 @@ const TABS = { GRAPH: 'Graph', TRACE: 'Trace', JSON_TABLE: 'JSON Table', JSON: '
 const generateTabs = tabs =>
   Object.entries(tabs).map(([key, value]) => (
     <Tabs.TabPane tab={key} key={key}>
-      <Card bordered={key !== TABS.JSON_TABLE}>{value}</Card>
+      {key === TABS.JSON_TABLE ? value : <Card>{value}</Card>}
     </Tabs.TabPane>
   ));
 
@@ -85,7 +89,15 @@ const JobsTabSwitcher = ({ record }) => {
           <Spin size="large" tip="Fetching Trace Data 🔎..." />
         </CenterDiv>
       ),
-    [TABS.JSON_TABLE]: <JsonTable jsonObject={record.record} />,
+    [TABS.JSON_TABLE]: (
+      <FlexBox justify="center">
+        <FlexBox.Item>
+          <Wrapper>
+            <JsonTable jsonObject={record.record} />
+          </Wrapper>
+        </FlexBox.Item>
+      </FlexBox>
+    ),
     [TABS.JSON]: <JsonView jsonObject={record.record} />,
   };
 

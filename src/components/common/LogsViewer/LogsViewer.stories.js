@@ -1,7 +1,7 @@
 import React from 'react';
 import { SB_SECTIONS } from 'const';
 import LogsViewer from './LogsViewer.react';
-import { mockData, buildLog } from 'config/template/buildLogsMock';
+import { mockData, buildLog } from 'config/mock/buildLogsMock';
 
 export default {
   title: `${SB_SECTIONS.COMMON}|Logs Viewer`,
