@@ -13,7 +13,7 @@ export { default as Card } from 'components/common/Card.react';
 
 export { default as Icons } from 'components/common/HoverIcon.react';
 
-export { default as JsonView } from 'components/common/Json/JsonView.react';
+export { default as JsonView } from 'components/common/Json/JsonView/JsonView.react';
 
 export { default as Tabs } from 'components/common/Tabs/Tabs.react';
 

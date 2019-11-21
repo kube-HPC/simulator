@@ -6,7 +6,7 @@ const addAlgorithmTemplate = {
   minHotWorkers: 0,
   baseImage: '',
   options: {
-    debug: false
+    debug: false,
   },
   gitRepository: {
     env: undefined,
@@ -15,13 +15,13 @@ const addAlgorithmTemplate = {
     commit: {
       id: '',
       timestamp: '',
-      message: ''
+      message: '',
     },
     branchName: 'master',
     tag: '',
     token: '',
-    gitKind: 'github'
-  }
+    gitKind: 'github',
+  },
 };
 
 export default addAlgorithmTemplate;

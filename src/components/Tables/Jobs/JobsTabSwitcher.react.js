@@ -10,6 +10,7 @@ import { Button, notification, Icon, Spin, Result } from 'antd';
 import axios from 'axios';
 import { STATE_SOURCES } from 'const';
 import { transformTraceData } from 'utils';
+import JsonTable from 'components/common/Json/JsonTable/JsonTable.react';
 
 const CenterDiv = styled.div`
   height: 200px;
@@ -24,15 +25,14 @@ const configNotificationOnOpen = description => ({
   icon: <Icon type="warning" style={{ color: 'red' }} />,
 });
 
+const TABS = { GRAPH: 'Graph', TRACE: 'Trace', JSON_TABLE: 'JSON Table', JSON: 'JSON' };
+
 const generateTabs = tabs =>
   Object.entries(tabs).map(([key, value]) => (
     <Tabs.TabPane tab={key} key={key}>
-      <Card>{value}</Card>
+      <Card bordered={key !== TABS.JSON_TABLE}>{value}</Card>
     </Tabs.TabPane>
   ));
-
-const tabsAnimation = { inkBar: true, tabPane: false };
-const TABS = { GRAPH: 'Graph', TRACE: 'Trace', JSON: 'JSON' };
 
 const fetchTraceData = ({ url, jobId, callback }) =>
   axios
@@ -85,6 +85,7 @@ const JobsTabSwitcher = ({ record }) => {
           <Spin size="large" tip="Fetching Trace Data 🔎..." />
         </CenterDiv>
       ),
+    [TABS.JSON_TABLE]: <JsonTable jsonObject={record.record} />,
     [TABS.JSON]: <JsonView jsonObject={record.record} />,
   };
 
@@ -93,7 +94,6 @@ const JobsTabSwitcher = ({ record }) => {
   return (
     <Tabs
       activeKey={currentTab}
-      animated={tabsAnimation}
       tabBarExtraContent={refreshButton}
       onChange={setCurrentTab}
       onTabClick={onTabClick}>

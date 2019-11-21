@@ -7,19 +7,19 @@ const addAlgorithmTemplateForm = {
     mem: '256Mi',
     minHotWorkers: 0,
     options: {
-      debug: false
+      debug: false,
     },
     algorithmEnv: '',
     workerEnv: '',
-    nodeSelector: ''
+    nodeSelector: '',
   },
   code: {
     env: undefined,
     entryPoint: '',
-    version: ''
+    version: '',
   },
   image: {
-    algorithmImage: ''
+    algorithmImage: '',
   },
   gitRepository: {
     env: undefined,
@@ -28,13 +28,13 @@ const addAlgorithmTemplateForm = {
     commit: {
       id: '',
       timestamp: '',
-      message: ''
+      message: '',
     },
     branchName: 'master',
     tag: '',
     token: '',
-    gitKind: 'github'
-  }
+    gitKind: 'github',
+  },
 };
 
 export default addAlgorithmTemplateForm;

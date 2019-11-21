@@ -1,35 +1,40 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Card from 'components/common/Card.react';
+import { Descriptions } from 'antd';
+import styled from 'styled-components';
+
+const Wrapper = styled(Descriptions)`
+  max-width: 80vw;
+  .ant-descriptions-view {
+    overflow: auto;
+  }
+`;
 
 const isPureObject = obj => !Array.isArray(obj) && typeof obj === 'object' && obj !== null;
 
 const recursionStep = value =>
   isPureObject(value) ? (
-    objToTable(value)
+    <Descriptions column={1} bordered>
+      {objToTable(value)}
+    </Descriptions>
   ) : Array.isArray(value) ? (
     value.map(recursionStep)
   ) : (
-    <td>{value}</td>
+    value
   );
 
 function objToTable(obj) {
-  return (
-    <tbody>
-      {Object.entries(obj).map(([key, value]) => (
-        <tr key={key}>
-          <th>{key}</th>
-          <tr>{recursionStep(value)}</tr>
-        </tr>
-      ))}
-    </tbody>
-  );
+  return Object.entries(obj).map(([key, value]) => (
+    <Descriptions.Item key={key} label={key}>
+      {recursionStep(value)}
+    </Descriptions.Item>
+  ));
 }
 
 const JsonTable = ({ jsonObject }) => (
-  <Card>
-    <table>{objToTable(jsonObject)}</table>
-  </Card>
+  <Wrapper column={Object.keys(jsonObject).length} bordered size="small">
+    {objToTable(jsonObject)}
+  </Wrapper>
 );
 
 JsonTable.propTypes = {

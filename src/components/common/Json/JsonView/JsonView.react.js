@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactJsonView from 'react-json-view';
-import { Card } from '..';
+import { Card } from 'components/common';
 
 const JsonView = ({ jsonObject, ...props }) => (
   <Card bordered={false}>
@@ -20,7 +20,7 @@ const JsonView = ({ jsonObject, ...props }) => (
 );
 
 JsonView.propTypes = {
-  jsonObject: PropTypes.object
+  jsonObject: PropTypes.object,
 };
 
 export default React.memo(JsonView);

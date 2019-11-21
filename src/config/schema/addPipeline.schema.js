@@ -7,17 +7,17 @@ const addPipelineSchema = {
       field: 'name',
       placeholder: 'Unique Identifier',
       required: true,
-      message: 'Pipeline name is required'
+      message: 'Pipeline name is required',
     },
     DESCRIPTION: {
       label: 'Description',
       field: 'description',
-      placeholder: 'Pipeline Description'
+      placeholder: 'Pipeline Description',
     },
     FLOW_INPUT: {
       label: 'Flow Input',
-      field: 'flowInput'
-    }
+      field: 'flowInput',
+    },
   },
   NODES: {
     field: 'nodes',
@@ -27,33 +27,33 @@ const addPipelineSchema = {
       field: 'name',
       placeholder: 'Node Name',
       message: 'Node name is required',
-      required: true
+      required: true,
     },
     ALGORITHM: {
       label: 'Algorithm Name',
       field: 'algorithmName',
       placeholder: 'Select Algorithm Name',
-      required: true
+      required: true,
     },
     INPUT: {
       label: 'Input',
       field: 'input',
       placeholder: 'Enter a VALID JSON type',
       tooltip: 'Warning: You entered not a valid JSON type',
-      types: ['String', 'Numeric', 'Object', 'Array', 'Boolean', 'null']
-    }
+      types: ['String', 'Numeric', 'Object', 'Array', 'Boolean', 'null'],
+    },
   },
   WEBHOOKS: {
     label: 'Webhooks',
     field: 'webhooks',
     PROGRESS: {
       label: 'Progress',
-      field: 'webhooks.progress'
+      field: 'webhooks.progress',
     },
     RESULT: {
       label: 'Result',
-      field: 'webhooks.result'
-    }
+      field: 'webhooks.result',
+    },
   },
   TRIGGERS: {
     label: 'Triggers',
@@ -63,43 +63,43 @@ const addPipelineSchema = {
       field: 'triggers.cron',
       fields: {
         PATTERN: 'triggers.cron.pattern',
-        ENABLED: 'triggers.cron.enabled'
+        ENABLED: 'triggers.cron.enabled',
       },
       placeholder: 'Pattern',
-      errorMessage: 'Invalid Cron Expression'
+      errorMessage: 'Invalid Cron Expression',
     },
     PIPELINES: {
       label: 'Pipelines',
       field: 'triggers.pipelines',
-      placeholder: 'Pick pipelines to activate upon result'
-    }
+      placeholder: 'Pick pipelines to activate upon result',
+    },
   },
   OPTIONS: {
     label: 'Options',
     field: 'options',
     TOLERANCE: {
       label: 'Batch Tolerance',
-      field: 'options.batchTolerance'
+      field: 'options.batchTolerance',
     },
     CONCURRENT: {
       label: 'Concurrent',
-      field: 'options.concurrentPipelines'
+      field: 'options.concurrentPipelines',
     },
     VERBOSITY_LEVEL: {
       label: 'Verbosity Level',
       field: 'options.progressVerbosityLevel',
-      types: ['info', 'trace', 'debug', 'warn', 'error', 'critical']
+      types: ['info', 'trace', 'debug', 'warn', 'error', 'critical'],
     },
     TTL: {
       label: 'TTL',
-      field: 'options.ttl'
+      field: 'options.ttl',
     },
     // Note that Priority on the top level and not under options.
     PRIORITY: {
       label: 'Priority',
-      field: 'priority'
-    }
-  }
+      field: 'priority',
+    },
+  },
 };
 
 export default addPipelineSchema;
