@@ -8,10 +8,6 @@ export default {
 };
 
 export const Pipeline = () => <JsonTable obj={pipelineMock} />;
-export const PipelineVertical = () => (
-  <JsonTable obj={pipelineMock} layout={JsonTable.LAYOUT.VERTICAL} />
-);
+export const PipelineVertical = () => <JsonTable obj={pipelineMock} vertical />;
 export const Algorithm = () => <JsonTable obj={algorithmMock} />;
-export const AlgorithmVertical = () => (
-  <JsonTable obj={algorithmMock} layout={JsonTable.LAYOUT.VERTICAL} />
-);
+export const AlgorithmVertical = () => <JsonTable obj={algorithmMock} vertical />;

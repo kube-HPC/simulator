@@ -16,3 +16,4 @@ export { default as Form } from 'components/common/Form.react';
 export { default as LogsViewer } from 'components/common/LogsViewer/LogsViewer.react';
 export { default as Descriptions } from 'components/common/Descriptions.react';
 export { default as JsonTable } from 'components/common/Json/JsonTable/JsonTable.react';
+export { default as JsonSwitch } from 'components/common/Json/JsonSwitch/JsonSwitch.react';
