@@ -6,7 +6,7 @@ import { Ellipsis, FlexBox } from 'components/common';
 
 const { Text } = Typography;
 
-const deleteConfirmAction = (action, { name }) => {
+const deleteConfirmAction = (action, { name, algorithmImage }) => {
   Modal.confirm({
     title: 'Deleting Algorithm Version',
     content: (
@@ -19,12 +19,12 @@ const deleteConfirmAction = (action, { name }) => {
     iconType: 'warning',
     cancelText: 'Cancel',
     onOk() {
-      action(name);
+      action({ name, algorithmImage });
     }
   });
 };
 
-const currentConfirmAction = (action, { name }) => {
+const currentConfirmAction = (action, { name, algorithmImage }) => {
   Modal.confirm({
     title: 'Change Algorithm Version',
     content: (
@@ -36,7 +36,7 @@ const currentConfirmAction = (action, { name }) => {
     okType: 'primary',
     cancelText: 'Cancel',
     onOk() {
-      action(name);
+      action({ name, image: algorithmImage });
     }
   });
 };
@@ -58,8 +58,8 @@ const getVersionsColumns = ({ onDelete, onVersionApply, currentVersion }) => [
           strong={isCurrentVersion}
         />
       ) : (
-        <Tag>No Image</Tag>
-      );
+          <Tag>No Image</Tag>
+        );
     }
   },
   {

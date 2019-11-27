@@ -3,7 +3,7 @@ import actions from 'const/application-actions';
 export const downloadStorageResults = path => ({
   type: actions.JOBS_DOWNLOAD_REQ,
   payload: {
-    url: `/download/results?path=${path}`,
+    url: `download/results?path=${path}`,
     actionType: actions.JOBS_DOWNLOAD_RESULTS,
   },
 });
@@ -11,7 +11,7 @@ export const downloadStorageResults = path => ({
 export const getKubernetesLogsData = ({ podName, taskId }) => ({
   type: actions.REST_REQ,
   payload: {
-    url: `/logs?podName=${podName}&taskId=${taskId}`,
+    url: `logs?podName=${podName}&taskId=${taskId}`,
     actionType: actions.JOBS_KUBERNETES_LOGS,
   },
 });

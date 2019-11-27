@@ -17,7 +17,14 @@ const _formatError = payload => {
   return typeof payload === 'string' ? payload : payload.message || DEFAULT_ERROR_MSG;
 };
 
+const ignoreActions = [AT.README_GET_ALGORITHM, AT.README_GET_PIPELINE];
+
+const _ignoreError = actionType => ignoreActions.includes(actionType);
+
 const reject = (dispatch, payload, action) => {
+  if (_ignoreError(action.payload.actionType)) {
+    return;
+  }
   dispatch({
     type: `${action.payload.actionType}_REJECT`,
     meta: {
@@ -54,6 +61,8 @@ const success = (dispatch, payload, action) => {
 
 let SOCKET_URL = null;
 
+const createUrl = url => `${SOCKET_URL}/${url}`;
+
 const restMiddleware = ({ dispatch }) => next => action => {
   if (action.type === `${AT.SOCKET_GET_CONFIG}_SUCCESS`) {
     SOCKET_URL = setPath(action.payload.config);
@@ -75,7 +84,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
     }
     pending(dispatch, 'pending', action);
     axios
-      .get(`${SOCKET_URL}${action.payload.url}`)
+      .get(createUrl(action.payload.url))
       .then(res => {
         success(dispatch, res.data, action);
       })
@@ -91,7 +100,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
     }
     pending(dispatch, 'pending', action);
     axios
-      .post(`${SOCKET_URL}/${action.payload.url}`, action.payload.body)
+      .post(createUrl(action.payload.url), action.payload.body)
       .then(res => {
         success(dispatch, res.data, action);
       })
@@ -106,7 +115,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
     }
     pending(dispatch, 'pending', action);
     axios
-      .post(`${SOCKET_URL}/${action.payload.url}`, action.payload.formData)
+      .post(createUrl(action.payload.url), action.payload.formData)
       .then(res => {
         success(dispatch, res.data, action);
       })
@@ -121,7 +130,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
     }
     pending(dispatch, 'pending', action);
     axios
-      .put(`${SOCKET_URL}/${action.payload.url}`, action.payload.body)
+      .put(createUrl(action.payload.url), action.payload.body)
       .then(res => {
         success(dispatch, res.data, action);
       })
@@ -136,7 +145,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
     }
     pending(dispatch, 'pending', action);
     axios
-      .delete(`${SOCKET_URL}/${action.payload.url}/${action.payload.body.algorithmName}`, {
+      .delete(createUrl(action.payload.url), {
         data: action.payload.body,
       })
       .then(res => {
@@ -153,7 +162,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
     }
     pending(dispatch, 'pending', action);
     axios
-      .get(`${SOCKET_URL}${action.payload.url}`, {
+      .get(createUrl(action.payload.url), {
         responseType: 'blob',
         timeout: 30000,
       })
