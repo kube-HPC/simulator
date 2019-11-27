@@ -3,7 +3,7 @@ import actions from 'const/application-actions';
 export const addPipeline = pipeline => ({
   type: actions.REST_REQ_POST,
   payload: {
-    url: 'pipeline/add',
+    url: 'store/pipelines',
     body: pipeline,
     actionType: actions.PIPELINE_ADD,
   },
@@ -22,7 +22,7 @@ export const pausePipeline = jobId => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: 'exec/pause',
-    body: { jobId },
+    body: { jobId, reason: 'Request from simulator, Algorithms-tab Delete action' },
     actionType: actions.PIPELINE_PAUSE,
   },
 });
@@ -48,8 +48,7 @@ export const execStoredPipeline = pipeline => ({
 export const deleteStoredPipeline = pipelineName => ({
   type: actions.REST_REQ_DELETE,
   payload: {
-    url: 'store/pipelines',
-    body: { pipelineName },
+    url: `store/pipelines/${pipelineName}`,
     actionType: actions.PIPELINE_DELETE,
   },
 });

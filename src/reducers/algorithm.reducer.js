@@ -33,9 +33,9 @@ export const algorithmReadme = handleActions(
 
 export const algorithmVersions = handleActions(
   {
-    [actions.ALGORITHM_GET_VERSIONS](state, { payload }) {
-      return state.setIn([payload.name], payload);
+    [actions.ALGORITHM_GET_VERSIONS_SUCCESS](state, { payload }) {
+      return Immutable.set(state, 'dataSource', payload);
     },
   },
-  Immutable.from({}),
+  Immutable.from({ dataSource: [] }),
 );
