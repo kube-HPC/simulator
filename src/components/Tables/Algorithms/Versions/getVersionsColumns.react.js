@@ -6,7 +6,7 @@ import { Ellipsis, FlexBox } from 'components/common';
 
 const { Text } = Typography;
 
-const deleteConfirmAction = (action, { name }) => {
+const deleteConfirmAction = (action, { name, algorithmImage }) => {
   Modal.confirm({
     title: 'Deleting Algorithm Version',
     content: (
@@ -19,12 +19,12 @@ const deleteConfirmAction = (action, { name }) => {
     iconType: 'warning',
     cancelText: 'Cancel',
     onOk() {
-      action(name);
-    }
+      action({ name, algorithmImage });
+    },
   });
 };
 
-const currentConfirmAction = (action, { name }) => {
+const currentConfirmAction = (action, { name, algorithmImage }) => {
   Modal.confirm({
     title: 'Change Algorithm Version',
     content: (
@@ -36,94 +36,105 @@ const currentConfirmAction = (action, { name }) => {
     okType: 'primary',
     cancelText: 'Cancel',
     onOk() {
-      action(name);
-    }
+      action({ name, image: algorithmImage });
+    },
   });
 };
 
-const getVersionsColumns = ({ onDelete, onVersionApply, currentVersion }) => [
-  {
-    title: 'Algorithm Version',
-    dataIndex: 'algorithmImage',
-    key: 'algorithmImage',
-    onFilter: (value, record) => record.algorithmImage.includes(value),
-    sorter: (a, b) => sorter(a.algorithmImage, b.algorithmImage),
-    render: algorithmImage => {
-      const isCurrentVersion = currentVersion === algorithmImage;
-      return algorithmImage ? (
-        <Ellipsis
-          copyable
-          text={algorithmImage}
-          underline={isCurrentVersion}
-          strong={isCurrentVersion}
-        />
-      ) : (
-        <Tag>No Image</Tag>
-      );
-    }
-  },
-  {
-    title: 'CPU',
-    dataIndex: 'cpu',
-    key: 'cpu',
-    render: cpu => <Tag>{cpu || 'No CPU Assigned'}</Tag>
-  },
-  {
-    title: 'Mem',
-    dataIndex: 'mem',
-    key: 'mem',
-    render: mem => <Tag>{mem || 'No Memory Specified'}</Tag>
-  },
-  {
-    title: 'Min Hot Workers',
-    dataIndex: 'minHotWorkers',
-    key: 'minHotWorkers',
-    sorter: (a, b) => sorter(a.workerImage, b.workerImage),
-    render: minHotWorkers => <Tag>{minHotWorkers}</Tag>
-  },
-  {
-    title: 'Type',
-    dataIndex: 'type',
-    key: 'type',
-    sorter: (a, b) => sorter(a.type, b.type),
-    render: type => <Tag>{type}</Tag>
-  },
-  {
-    title: 'Action',
-    dataIndex: 'action',
-    key: 'action',
-    render: (_, record) => {
-      const { algorithmImage } = record;
-      const isCurrentVersion = currentVersion === algorithmImage;
+const Cpu = cpu => <Tag>{cpu || 'No CPU Assigned'}</Tag>;
+const Mem = mem => <Tag>{mem || 'No Memory Specified'}</Tag>;
+const MinHotWorkers = minHotWorkers => <Tag>{minHotWorkers}</Tag>;
+const Type = type => <Tag>{type}</Tag>;
 
-      return (
-        <FlexBox justify="start">
-          <FlexBox.Item>
-            <Tooltip title={`${isCurrentVersion ? 'Already on' : 'Update to'} current version`}>
-              <Button
-                type={isCurrentVersion ? 'primary' : 'dashed'}
-                shape="circle"
-                icon="check"
-                disabled={isCurrentVersion}
-                onClick={() => currentConfirmAction(onVersionApply, record)}
-              />
-            </Tooltip>
-          </FlexBox.Item>
-          <FlexBox.Item>
-            <Tooltip title={`${isCurrentVersion ? `Can't remove used` : `Remove current`} version`}>
-              <Button
-                type="dashed"
-                shape="circle"
-                icon="delete"
-                disabled={isCurrentVersion}
-                onClick={() => deleteConfirmAction(onDelete, record)}
-              />
-            </Tooltip>
-          </FlexBox.Item>
-        </FlexBox>
-      );
-    }
-  }
-];
+const getVersionsColumns = ({ onDelete, onVersionApply, currentVersion }) => {
+  const AlgorithmVersion = algorithmImage => {
+    const isCurrentVersion = currentVersion === algorithmImage;
+    return algorithmImage ? (
+      <Ellipsis
+        copyable
+        text={algorithmImage}
+        underline={isCurrentVersion}
+        strong={isCurrentVersion}
+      />
+    ) : (
+      <Tag>No Image</Tag>
+    );
+  };
+
+  const Action = (_, record) => {
+    const { algorithmImage } = record;
+    const isCurrentVersion = currentVersion === algorithmImage;
+
+    return (
+      <FlexBox justify="start">
+        <FlexBox.Item>
+          <Tooltip title={`${isCurrentVersion ? 'Already on' : 'Update to'} current version`}>
+            <Button
+              type={isCurrentVersion ? 'primary' : 'dashed'}
+              shape="circle"
+              icon="check"
+              disabled={isCurrentVersion}
+              onClick={() => currentConfirmAction(onVersionApply, record)}
+            />
+          </Tooltip>
+        </FlexBox.Item>
+        <FlexBox.Item>
+          <Tooltip title={`${isCurrentVersion ? `Can't remove used` : `Remove current`} version`}>
+            <Button
+              type="dashed"
+              shape="circle"
+              icon="delete"
+              disabled={isCurrentVersion}
+              onClick={() => deleteConfirmAction(onDelete, record)}
+            />
+          </Tooltip>
+        </FlexBox.Item>
+      </FlexBox>
+    );
+  };
+
+  return [
+    {
+      title: 'Algorithm Version',
+      dataIndex: 'algorithmImage',
+      key: 'algorithmImage',
+      onFilter: (value, record) => record.algorithmImage.includes(value),
+      sorter: (a, b) => sorter(a.algorithmImage, b.algorithmImage),
+      render: AlgorithmVersion,
+    },
+    {
+      title: 'CPU',
+      dataIndex: 'cpu',
+      key: 'cpu',
+      render: Cpu,
+    },
+    {
+      title: 'Mem',
+      dataIndex: 'mem',
+      key: 'mem',
+      render: Mem,
+    },
+    {
+      title: 'Min Hot Workers',
+      dataIndex: 'minHotWorkers',
+      key: 'minHotWorkers',
+      sorter: (a, b) => sorter(a.workerImage, b.workerImage),
+      render: MinHotWorkers,
+    },
+    {
+      title: 'Type',
+      dataIndex: 'type',
+      key: 'type',
+      sorter: (a, b) => sorter(a.type, b.type),
+      render: Type,
+    },
+    {
+      title: 'Action',
+      dataIndex: 'action',
+      key: 'action',
+      render: Action,
+    },
+  ];
+};
 
 export default getVersionsColumns;

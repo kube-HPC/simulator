@@ -13,7 +13,7 @@ const isPureObject = obj => !Array.isArray(obj) && typeof obj === 'object' && ob
 
 const recursionStep = value =>
   isPureObject(value) ? (
-    <Descriptions column={1} bordered colon={false}>
+    <Descriptions column={Object.values(value).length} bordered colon={false} layout="vertical">
       {objToTable(value)}
     </Descriptions>
   ) : Array.isArray(value) ? (
@@ -31,7 +31,7 @@ function objToTable(obj) {
 }
 
 const JsonTable = ({ jsonObject }) => (
-  <DescriptionOverflow column={1} bordered size="small" colon={false}>
+  <DescriptionOverflow column={1} bordered size="small" colon={false} layout="vertical">
     {objToTable(jsonObject)}
   </DescriptionOverflow>
 );

@@ -58,5 +58,6 @@ restHelper(actionType.README_GET_PIPELINE);
 restHelper(actionType.README_GET_ALGORITHM);
 restHelper(actionType.README_POST_PIPELINE);
 restHelper(actionType.README_POST_ALGORITHM);
+restHelper(actionType.ALGORITHM_GET_VERSIONS);
 
 export default actionType;
