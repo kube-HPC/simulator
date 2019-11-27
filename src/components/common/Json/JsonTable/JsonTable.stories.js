@@ -1,27 +1,17 @@
 import React from 'react';
 import { SB_SECTIONS } from 'const';
 import JsonTable from './JsonTable.react';
-import { addPipelineTemplate, pipelineMock } from 'config';
-import addAlgorithmSchema from 'config/schema/addAlgorithm.schema';
+import { pipelineMock, algorithmMock } from 'config/mock';
 
 export default {
   title: `${SB_SECTIONS.COMMON}|Json Table`,
 };
 
-const algo = {
-  name: 'yellow-alg',
-  algorithmImage: 'hkube/algorithm-example-python',
-  cpu: 1,
-  mem: '256Mi',
-  options: {
-    debug: false,
-    pending: false,
-  },
-  minHotWorkers: 0,
-  type: 'Image',
-};
-
-export const AddPipelineTemplate = () => <JsonTable jsonObject={addPipelineTemplate} />;
-export const AddAlgorithmSchema = () => <JsonTable jsonObject={addAlgorithmSchema} />;
-export const PipelineExample = () => <JsonTable jsonObject={pipelineMock} />;
-export const AlgoExample = () => <JsonTable jsonObject={algo} />;
+export const Pipeline = () => <JsonTable obj={pipelineMock} />;
+export const PipelineVertical = () => (
+  <JsonTable obj={pipelineMock} layout={JsonTable.LAYOUT.VERTICAL} />
+);
+export const Algorithm = () => <JsonTable obj={algorithmMock} />;
+export const AlgorithmVertical = () => (
+  <JsonTable obj={algorithmMock} layout={JsonTable.LAYOUT.VERTICAL} />
+);

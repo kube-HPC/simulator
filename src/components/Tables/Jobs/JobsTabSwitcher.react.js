@@ -4,13 +4,12 @@ import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 
 import Trace from 'jaeger-react-trace-component';
-import { Tabs, Card, JsonView, FlexBox } from 'components/common';
+import { Tabs, Card, JsonView, FlexBox, JsonTable } from 'components/common';
 import { JobGraph } from '.';
 import { Button, notification, Icon, Spin, Result } from 'antd';
 import axios from 'axios';
 import { STATE_SOURCES } from 'const';
 import { transformTraceData } from 'utils';
-import JsonTable from 'components/common/Json/JsonTable/JsonTable.react';
 
 const CenterDiv = styled.div`
   height: 200px;
@@ -83,7 +82,7 @@ const JobsTabSwitcher = ({ record }) => {
       <FlexBox justify="center">
         <FlexBox.Item>
           <Wrapper>
-            <JsonTable jsonObject={record.record} />
+            <JsonTable obj={record.record} />
           </Wrapper>
         </FlexBox.Item>
       </FlexBox>

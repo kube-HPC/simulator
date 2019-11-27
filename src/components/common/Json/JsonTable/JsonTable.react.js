@@ -1,43 +1,51 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Descriptions } from 'antd';
-import styled from 'styled-components';
+import { Descriptions } from 'components/common';
 
-const DescriptionOverflow = styled(Descriptions)`
-  .ant-descriptions-view {
-    overflow: auto;
-  }
-`;
+const HORIZONTAL = Descriptions.LAYOUT.HORIZONTAL;
 
+// Helpers
 const isPureObject = obj => !Array.isArray(obj) && typeof obj === 'object' && obj !== null;
+const getTotalColumns = ({ obj, layout }) => (layout === HORIZONTAL ? 1 : Object.keys(obj).length);
 
-const recursionStep = value =>
-  isPureObject(value) ? (
-    <Descriptions column={Object.values(value).length} bordered colon={false} layout="vertical">
-      {objToTable(value)}
+// Recursion Step
+const RenderItemByValueType = ({ obj, layout }) =>
+  isPureObject(obj) ? (
+    <Descriptions column={getTotalColumns({ obj: obj, layout })}>
+      {objToItem({ obj: obj })}
     </Descriptions>
-  ) : Array.isArray(value) ? (
-    value.map(recursionStep)
+  ) : Array.isArray(obj) ? (
+    obj.map(RenderItemByValueType)
   ) : (
-    value
+    String(obj)
   );
 
-function objToTable(obj) {
+RenderItemByValueType.propTypes = {
+  obj: PropTypes.object,
+  layout: PropTypes.string,
+};
+
+// Item
+function objToItem({ obj, layout }) {
   return Object.entries(obj).map(([key, value]) => (
     <Descriptions.Item key={key} label={key}>
-      {recursionStep(value)}
+      {RenderItemByValueType({ obj: value, layout })}
     </Descriptions.Item>
   ));
 }
 
-const JsonTable = ({ jsonObject }) => (
-  <DescriptionOverflow column={1} bordered size="small" colon={false} layout="vertical">
-    {objToTable(jsonObject)}
-  </DescriptionOverflow>
+// Entry
+const JsonTable = ({ obj, layout = HORIZONTAL }) => (
+  <Descriptions column={getTotalColumns({ obj, layout })} layout={layout}>
+    {objToItem({ obj, layout })}
+  </Descriptions>
 );
 
+JsonTable.LAYOUT = Descriptions.LAYOUT;
+
 JsonTable.propTypes = {
-  jsonObject: PropTypes.object,
+  obj: PropTypes.object,
+  layout: PropTypes.string,
 };
 
 export default JsonTable;
