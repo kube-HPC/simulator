@@ -1,19 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Descriptions } from 'components/common';
+import styled from 'styled-components';
 
 // Helpers
 const isPureObject = obj => !Array.isArray(obj) && typeof obj === 'object' && obj !== null;
 const getTotalColumns = ({ obj, vertical }) => (vertical ? Object.keys(obj).length : 1);
 
+const Margin = styled(Descriptions)`
+  margin-top: ${({ isMargin }) => (isMargin ? '8px' : 'none')};
+`;
+
 // Recursion Step
-const RenderItemByValueType = ({ obj, vertical }) =>
+const RenderItemByValueType = ({ obj, vertical, isMargin = false }) =>
   isPureObject(obj) ? (
-    <Descriptions column={getTotalColumns({ obj: obj, vertical })} vertical={vertical}>
-      {objToItem({ obj: obj })}
-    </Descriptions>
+    <>
+      <Margin
+        column={getTotalColumns({ obj: obj, vertical })}
+        vertical={vertical}
+        isMargin={isMargin}>
+        {objToItem({ obj: obj })}
+      </Margin>
+    </>
   ) : Array.isArray(obj) ? (
-    obj.map(RenderItemByValueType)
+    <>
+      {obj.map((value, i) =>
+        RenderItemByValueType({ obj: value, vertical, isMargin: i !== 0 || i === obj.length - 1 }),
+      )}
+    </>
   ) : (
     String(obj)
   );
@@ -21,6 +35,7 @@ const RenderItemByValueType = ({ obj, vertical }) =>
 RenderItemByValueType.propTypes = {
   obj: PropTypes.object,
   vertical: PropTypes.bool,
+  isMargin: PropTypes.bool,
 };
 
 // Item

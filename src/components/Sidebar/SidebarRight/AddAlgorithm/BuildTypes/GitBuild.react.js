@@ -7,10 +7,10 @@ import { InputAddon, Form } from 'components/common';
 import SelectEnvOptions from '../SelectEnvOptions.react';
 
 const {
-  GIT: { URL, BRANCH, COMMIT, ENTRY_POINT, ENVIRONMENT, GIT_KIND, TAG, TOKEN, BASE_IMAGE }
+  GIT: { URL, BRANCH, COMMIT, ENTRY_POINT, ENVIRONMENT, GIT_KIND, TAG, TOKEN, BASE_IMAGE },
 } = addAlgorithmSchema.BUILD_TYPES;
 
-const insertGitKindOptions = ({ options, predicate }) =>
+const insertGitKindOptions = ({ options, predicate = () => {} }) =>
   options.map((type, key) => (
     <Select.Option key={key} value={type} disabled={predicate(type)}>
       {toUpperCaseFirstLetter(type)}
@@ -18,7 +18,7 @@ const insertGitKindOptions = ({ options, predicate }) =>
   ));
 
 const {
-  addOns: { before, after }
+  addOns: { before, after },
 } = URL;
 
 const defaultGitHost = 'github';
@@ -27,7 +27,7 @@ const GitBuild = ({ required, getFieldDecorator }) => (
   <>
     <Form.Item label={URL.label}>
       {getFieldDecorator(URL.field, {
-        rules: [{ required, message: URL.message }]
+        rules: [{ required, message: URL.message }],
       })(<InputAddon before={before} after={after} placeholder={URL.placeholder} />)}
     </Form.Item>
     <Form.Item label={BRANCH.label}>
@@ -41,12 +41,12 @@ const GitBuild = ({ required, getFieldDecorator }) => (
     </Form.Item>
     <Form.Item label={GIT_KIND.label}>
       {getFieldDecorator(GIT_KIND.field, {
-        initialValue: defaultGitHost
+        initialValue: defaultGitHost,
       })(
         // Only supporting github build for now
         <Select placeholder={GIT_KIND.placeholder}>
-          {insertGitKindOptions({ options: GIT_KIND.types, predicate: v => v !== defaultGitHost })}
-        </Select>
+          {insertGitKindOptions({ options: GIT_KIND.types })}
+        </Select>,
       )}
     </Form.Item>
     <Form.Item label={COMMIT.ID.label}>
@@ -54,12 +54,12 @@ const GitBuild = ({ required, getFieldDecorator }) => (
     </Form.Item>
     <Form.Item label={ENVIRONMENT.label}>
       {getFieldDecorator(ENVIRONMENT.field, {
-        rules: [{ required, message: ENVIRONMENT.message }]
+        rules: [{ required, message: ENVIRONMENT.message }],
       })(<SelectEnvOptions placeholder={ENVIRONMENT.placeholder} />)}
     </Form.Item>
     <Form.Item label={ENTRY_POINT.label}>
       {getFieldDecorator(ENTRY_POINT.field, {
-        rules: [{ required, message: ENTRY_POINT.message }]
+        rules: [{ required, message: ENTRY_POINT.message }],
       })(<Input placeholder={ENTRY_POINT.placeholder} />)}
     </Form.Item>
     <Form.Item label={BASE_IMAGE.label}>
@@ -70,7 +70,7 @@ const GitBuild = ({ required, getFieldDecorator }) => (
 
 GitBuild.propTypes = {
   required: PropTypes.bool.isRequired,
-  getFieldDecorator: PropTypes.func.isRequired
+  getFieldDecorator: PropTypes.func.isRequired,
 };
 
 export default GitBuild;

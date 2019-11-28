@@ -21,6 +21,10 @@ const GlobalStyle = createGlobalStyle`
     margin-bottom: 0px !important;
   }
 
+  .ant-table table {
+    border-collapse: collapse;
+  }
+
   ::-webkit-scrollbar-track {
     border: none;
     background-color: none;

@@ -29,15 +29,15 @@ const insertAlgorithmOptions = options =>
     </Select.Option>
   ));
 
+const toReadableBuildType = buildType =>
+  toUpperCaseFirstLetter(buildType === BUILD_TYPES.GIT.field ? 'GIT' : buildType);
+
 const insertRadioButtons = buildTypes =>
   Object.keys(buildTypes).map(key => (
     <Radio.Button key={key} value={key}>
       {toReadableBuildType(key)}
     </Radio.Button>
   ));
-
-const toReadableBuildType = buildType =>
-  toUpperCaseFirstLetter(buildType === BUILD_TYPES.GIT.field ? 'GIT' : buildType);
 
 const isEmpty = v =>
   v === undefined || v === '' || v === null || (typeof v === 'object' && !Object.entries(v).length);
@@ -49,7 +49,7 @@ const getBuildTypes = ({ buildType, ...props }) => {
   return {
     [CODE.field]: <CodeBuild required={isRequired(CODE.field)} {...props} />,
     [IMAGE.field]: <ImageBuild required={isRequired(IMAGE.field)} {...props} />,
-    [GIT.field]: <GitBuild required={isRequired(GIT.field)} {...props} />
+    [GIT.field]: <GitBuild required={isRequired(GIT.field)} {...props} />,
   };
 };
 // #endregion
@@ -79,7 +79,7 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
       // Reduce selected options to boolean entry
       const options = formObject.main.options.reduce(
         (acc, option) => ({ ...acc, [option]: true }),
-        {}
+        {},
       );
 
       // #region From Form-Object to Schema
@@ -90,19 +90,21 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
       const payload =
         buildType === BUILD_TYPES.GIT.field
           ? {
-              ...formObject.main,
-              options,
-              [BUILD_TYPES.GIT.field]: rest,
-              env,
-              entryPoint,
-              baseImage
-            }
+            ...formObject.main,
+            options,
+            [BUILD_TYPES.GIT.field]: rest,
+            env,
+            entryPoint,
+            baseImage,
+          }
           : { ...formObject.main, options, ...formObject[buildType] };
       // #endregion
 
       const formData = new FormData();
       const [file] = fileList;
-      if (buildType === BUILD_TYPES.CODE.field) formData.append('file', file);
+      if (buildType === BUILD_TYPES.CODE.field) {
+        formData.append('file', file);
+      }
 
       const payloadFiltered = mapObjValues({ obj: payload, predicate: isNotEmpty });
       formData.append('payload', JSON.stringify(payloadFiltered));
@@ -122,9 +124,9 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
             {
               required: true,
               message: MAIN.NAME.message,
-              pattern: lowCaseNumberRegex
-            }
-          ]
+              pattern: lowCaseNumberRegex,
+            },
+          ],
         })(<Input placeholder={MAIN.NAME.placeholder} />)}
       </Form.Item>
       <Form.Item label="Build Type">
@@ -147,7 +149,7 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
                 {value}
               </Select.Option>
             ))}
-          </MemoryField>
+          </MemoryField>,
         )}
       </Form.Item>
       <Form.Divider>{MAIN.DIVIDER.ADVANCED}</Form.Divider>
@@ -156,11 +158,11 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
       </Form.Item>
       <Form.Item label={MAIN.OPTIONS.label}>
         {getFieldDecorator(MAIN.OPTIONS.field, {
-          initialValue: mainAdvancedOptions
+          initialValue: mainAdvancedOptions,
         })(
           <Select mode="tags" placeholder={MAIN.OPTIONS.placeholder}>
             {insertAlgorithmOptions(MAIN.OPTIONS.types)}
-          </Select>
+          </Select>,
         )}
       </Form.Item>
       <Form.Divider>{toReadableBuildType(buildType)}</Form.Divider>
@@ -171,9 +173,8 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
         extra={[
           <Button key="editor" onClick={onToggle}>
             Editor View
-          </Button>
-        ]}
-      >
+          </Button>,
+        ]}>
         <Button key="Submit" type="primary" htmlType="submit">
           Submit
         </Button>
@@ -185,11 +186,11 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
 AddAlgorithmForm.propTypes = {
   form: PropTypes.object.isRequired,
   onToggle: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
 };
 
 AddAlgorithmForm.defaultProps = {
-  onSubmit: () => {}
+  onSubmit: () => {},
 };
 
 const mapper = ({ value }) => Form.createFormField({ value });

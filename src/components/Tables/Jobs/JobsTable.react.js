@@ -13,7 +13,7 @@ const DEFAULT_PAGE_SIZE = 20;
 const mockDataSource = Immutable.from(jobsTableMock);
 
 const expendIndex = userGuideStepIndexes.findIndex(
-  step => step === USER_GUIDE.TABLE_JOB.MENU_SELECT
+  step => step === USER_GUIDE.TABLE_JOB.MENU_SELECT,
 );
 
 const expandLast = stepIndex =>
