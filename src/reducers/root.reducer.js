@@ -6,12 +6,7 @@ import { workerTable } from 'reducers/worker.reducer';
 import { driverTable } from 'reducers/driver.reducer';
 import { debugTable } from 'reducers/debug.reducer';
 
-import {
-  algorithmTable,
-  algorithmBuildsTable,
-  algorithmReadme,
-  algorithmVersions,
-} from 'reducers/algorithm.reducer';
+import { algorithmTable, algorithmBuildsTable, algorithmReadme } from 'reducers/algorithm.reducer';
 
 import { autoCompleteFilter } from 'reducers/autoComplete.reducer';
 import { pipelineTable, pipelineReadme } from 'reducers/pipeline.reducer';
@@ -24,7 +19,6 @@ const dataSources = {
   algorithmBuildsTable,
   algorithmReadme,
   algorithmTable,
-  algorithmVersions,
   autoCompleteFilter,
   debugTable,
   driverTable,
