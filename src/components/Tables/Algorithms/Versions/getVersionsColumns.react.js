@@ -3,6 +3,7 @@ import React from 'react';
 import { Button, Modal, Tooltip, Typography, Tag } from 'antd';
 import { sorter } from 'utils/string';
 import { Ellipsis, FlexBox } from 'components/common';
+import { COLOR_PIPELINE_STATUS } from 'styles';
 
 const { Text } = Typography;
 
@@ -46,16 +47,11 @@ const Mem = mem => <Tag>{mem || 'No Memory Specified'}</Tag>;
 const MinHotWorkers = minHotWorkers => <Tag>{minHotWorkers}</Tag>;
 const Type = type => <Tag>{type}</Tag>;
 
-const getVersionsColumns = ({ onDelete, onVersionApply, currentVersion }) => {
+const getVersionsColumns = ({ onDelete, onApply, currentVersion }) => {
   const AlgorithmVersion = algorithmImage => {
     const isCurrentVersion = currentVersion === algorithmImage;
     return algorithmImage ? (
-      <Ellipsis
-        copyable
-        text={algorithmImage}
-        underline={isCurrentVersion}
-        strong={isCurrentVersion}
-      />
+      <Ellipsis copyable ellipsis={false} text={algorithmImage} strong={isCurrentVersion} />
     ) : (
       <Tag>No Image</Tag>
     );
@@ -65,7 +61,9 @@ const getVersionsColumns = ({ onDelete, onVersionApply, currentVersion }) => {
     const { algorithmImage } = record;
     const isCurrentVersion = currentVersion === algorithmImage;
 
-    return (
+    return isCurrentVersion ? (
+      <Tag color={COLOR_PIPELINE_STATUS.ready}>Current Version</Tag>
+    ) : (
       <FlexBox justify="start">
         <FlexBox.Item>
           <Tooltip title={`${isCurrentVersion ? 'Already on' : 'Update to'} current version`}>
@@ -74,7 +72,7 @@ const getVersionsColumns = ({ onDelete, onVersionApply, currentVersion }) => {
               shape="circle"
               icon="check"
               disabled={isCurrentVersion}
-              onClick={() => currentConfirmAction(onVersionApply, record)}
+              onClick={() => currentConfirmAction(onApply, record)}
             />
           </Tooltip>
         </FlexBox.Item>

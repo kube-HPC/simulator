@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { JsonTable, JsonView, Tabs } from 'components/common';
 import { Button } from 'antd';
-import { notification } from 'utils';
+import { notification, stringify } from 'utils';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled from 'styled-components';
 
@@ -20,7 +20,7 @@ const onCopy = () =>
 
 const JsonSwitch = ({ obj }) => {
   const extra = (
-    <CopyToClipboard text={obj} onCopy={onCopy}>
+    <CopyToClipboard text={stringify(obj)} onCopy={onCopy}>
       <Button type="dashed">Copy</Button>
     </CopyToClipboard>
   );

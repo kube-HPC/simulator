@@ -12,9 +12,7 @@ const AlgorithmsTable = () => {
 
   const onExpand = (isExpanded, { name }) => isExpanded && fetchReadme(name);
 
-  const expandedRowRender = record => (
-    <AlgorithmsTabs record={record} readme={getReadme(record.name)} />
-  );
+  const expandedRowRender = record => <AlgorithmsTabs record={record} getReadme={getReadme} />;
 
   return (
     <Table

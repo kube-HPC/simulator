@@ -35,28 +35,36 @@ const EmptyMarkdown = () => (
   </FlexBoxMinHeight>
 );
 
-const AlgorithmsTabs = ({ record: { builds, ...algorithm }, readme }) => (
-  <Card isMargin>
-    <Tabs>
-      <Tabs.TabPane tab={IDs.VERSIONS} key={IDs.VERSIONS}>
-        <VersionsTable algorithmName={algorithm.name} currentVersion={algorithm.algorithmImage} />
-      </Tabs.TabPane>
-      <Tabs.TabPane tab={IDs.BUILDS} key={IDs.BUILDS}>
-        <AlgorithmBuildsTable builds={builds} />
-      </Tabs.TabPane>
-      <Tabs.TabPane tab={IDs.JSON} key={IDs.JSON}>
-        <JsonSwitch obj={algorithm} />
-      </Tabs.TabPane>
-      <Tabs.TabPane tab={IDs.DESCRIPTION} key={IDs.DESCRIPTION}>
-        <Card>{readme ? <ReactMarkdown source={readme} /> : <EmptyMarkdown />}</Card>
-      </Tabs.TabPane>
-    </Tabs>
-  </Card>
-);
+const AlgorithmsTabs = ({ record: { builds, ...algorithm }, readme, getReadme }) => {
+  const onTabClick = tab => {
+    if (tab === IDs.DESCRIPTION) {
+      getReadme(algorithm.name);
+    }
+  };
+  return (
+    <Card isMargin>
+      <Tabs onTabClick={onTabClick}>
+        <Tabs.TabPane tab={IDs.VERSIONS} key={IDs.VERSIONS}>
+          <VersionsTable algorithmName={algorithm.name} currentVersion={algorithm.algorithmImage} />
+        </Tabs.TabPane>
+        <Tabs.TabPane tab={IDs.BUILDS} key={IDs.BUILDS}>
+          <AlgorithmBuildsTable builds={builds} />
+        </Tabs.TabPane>
+        <Tabs.TabPane tab={IDs.JSON} key={IDs.JSON}>
+          <JsonSwitch obj={algorithm} />
+        </Tabs.TabPane>
+        <Tabs.TabPane tab={IDs.DESCRIPTION} key={IDs.DESCRIPTION}>
+          <Card>{readme ? <ReactMarkdown source={readme} /> : <EmptyMarkdown />}</Card>
+        </Tabs.TabPane>
+      </Tabs>
+    </Card>
+  );
+};
 
 AlgorithmsTabs.propTypes = {
   record: PropTypes.object.isRequired,
   readme: PropTypes.string,
+  getReadme: PropTypes.func.isRequired,
 };
 
 export default AlgorithmsTabs;

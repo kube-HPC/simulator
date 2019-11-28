@@ -12,7 +12,7 @@ export const deleteAlgorithmVersion = ({ name, algorithmImage }) => ({
   type: actions.REST_REQ_DELETE,
   payload: {
     url: `versions/algorithms/${name}/${encodeURIComponent(algorithmImage)}`,
-    actionType: '',
+    actionType: actions.ALGORITHM_DELETE_VERSIONS,
   },
 });
 
@@ -21,6 +21,6 @@ export const applyAlgorithmVersion = ({ name, image }) => ({
   payload: {
     url: `versions/algorithms/apply`,
     body: { name, image },
-    actionType: '',
+    actionType: actions.ALGORITHM_APPLY_VERSIONS,
   },
 });

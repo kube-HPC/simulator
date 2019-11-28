@@ -1,27 +1,52 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'components';
 import getVersionsColumns from './getVersionsColumns.react';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  getAlgorithmVersions,
-  deleteAlgorithmVersion,
-  applyAlgorithmVersion,
-} from 'actions/versions.action';
+import { useSelector } from 'react-redux';
 import { STATE_SOURCES } from 'const';
+import { JsonSwitch, Card } from 'components/common';
+import axios from 'axios';
+import { notification } from 'utils';
+
+const errorNotification = ({ message }) => notification({ message });
+
+const fetchVersion = ({ url, algorithmName, callback }) =>
+  axios
+    .get(`${url}/versions/algorithms/${algorithmName}`)
+    .then(({ data }) => {
+      callback(data);
+    })
+    .catch(errorNotification);
+
+const applyVersion = ({ url }) => ({ name, image }) =>
+  axios.post(`${url}/versions/algorithms/apply`, { name, image }).catch(errorNotification);
+
+const deleteVersion = ({ url }) => ({ name, algorithmImage }) =>
+  axios
+    .delete(`${url}/versions/algorithms/${name}/${encodeURIComponent(algorithmImage)}`)
+    .catch(errorNotification);
+
+const DEFAULT_INITIAL = [];
 
 const VersionsTable = ({ algorithmName, currentVersion }) => {
-  const dispatch = useDispatch();
-  const onDelete = data => dispatch(deleteAlgorithmVersion(data));
-  const onVersionApply = data => dispatch(applyAlgorithmVersion(data));
-  const columns = getVersionsColumns({ onDelete, onVersionApply, currentVersion });
-  const dataSource = useSelector(state => state[STATE_SOURCES.ALGORITHM_VERSIONS].dataSource);
+  const [dataSource, setDataSource] = useState(DEFAULT_INITIAL);
+
+  const socketURL = useSelector(state => state[STATE_SOURCES.SOCKET_URL]);
+  const onApply = applyVersion({ url: socketURL });
+  const onDelete = deleteVersion({ url: socketURL });
+  const columns = getVersionsColumns({ currentVersion, onApply, onDelete });
 
   useEffect(() => {
-    dispatch(getAlgorithmVersions(algorithmName));
-  }, [dispatch, algorithmName]);
+    fetchVersion({ url: socketURL, algorithmName, callback: setDataSource });
+  }, [algorithmName]);
 
-  return <Table expandIcon={undefined} dataSource={dataSource || []} columns={columns} />;
+  const expandedRowRender = record => (
+    <Card isMargin>
+      <JsonSwitch obj={record} />
+    </Card>
+  );
+
+  return <Table expandedRowRender={expandedRowRender} dataSource={dataSource} columns={columns} />;
 };
 
 VersionsTable.propTypes = {
