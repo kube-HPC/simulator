@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Form as AntdForm, Divider as AntdDivider } from 'antd';
 
@@ -6,7 +7,7 @@ const DEFAULT_SPAN = 5;
 const formItemLayout = {
   labelCol: { span: DEFAULT_SPAN },
   wrapperCol: { span: 24 - DEFAULT_SPAN },
-  labelAlign: 'left'
+  labelAlign: 'left',
 };
 
 const Form = styled(AntdForm)`
@@ -15,17 +16,27 @@ const Form = styled(AntdForm)`
   }
 `;
 
-Form.Item = ({ children, ...props }) => (
+const FormWrapper = ({ children, ...props }) => (
   <AntdForm.Item {...formItemLayout} {...props}>
     {children}
   </AntdForm.Item>
 );
 
-Form.Divider = ({ children, ...props }) => (
+FormWrapper.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+Form.Item = FormWrapper;
+
+const DividerWrapper = ({ children, ...props }) => (
   <AntdDivider orientation="left" {...props}>
     {children}
   </AntdDivider>
 );
+
+DividerWrapper.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+Form.Divider = DividerWrapper;
 
 Form.Item.propTypes = AntdForm.Item.propTypes;
 Form.Divider.propTypes = AntdDivider.propTypes;

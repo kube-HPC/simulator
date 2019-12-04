@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Descriptions } from 'components/common';
 import styled from 'styled-components';
+import { Typography } from 'antd';
+
+const { Text } = Typography;
 
 // Helpers
 const isPureObject = obj => !Array.isArray(obj) && typeof obj === 'object' && obj !== null;
@@ -41,7 +44,7 @@ RenderItemByValueType.propTypes = {
 // Item
 function objToItem({ obj, vertical }) {
   return Object.entries(obj).map(([key, value]) => (
-    <Descriptions.Item key={key} label={key}>
+    <Descriptions.Item key={key} label={<Text strong>{key}</Text>}>
       {RenderItemByValueType({ obj: value, vertical })}
     </Descriptions.Item>
   ));

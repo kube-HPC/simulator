@@ -1,5 +1,5 @@
 import { Button, Typography } from 'antd';
-import MDEditor from 'components/common/md/MDEditor/MDEditor.react';
+import MDEditor from 'components/common/Markdown/MDEditor/MDEditor.react';
 import Drawer from 'components/Drawer/Drawer.react';
 import addPipelineTemplate from 'config/template/addPipeline.template';
 import React from 'react';
