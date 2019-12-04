@@ -1,15 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import MarkdownViewer from 'components/common/Markdown/MarkdownViewer/MarkdownViewer.react';
-import { useAlgorithmReadme } from 'hooks';
 import { Card } from 'antd';
+import { useAlgorithmReadme } from 'hooks';
+import { MarkdownViewer } from 'components/common';
+
+const config = { message: 'Update Algorithm' };
 
 const AlgorithmMarkdown = ({ algorithmName }) => {
   const { source } = useAlgorithmReadme(algorithmName);
-
   return (
     <Card>
-      <MarkdownViewer source={source} />
+      <MarkdownViewer source={source} config={config} />
     </Card>
   );
 };

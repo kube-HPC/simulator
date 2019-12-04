@@ -12,7 +12,7 @@ const AlgorithmsTable = () => {
   return (
     <Table
       rowKey={({ name }) => name}
-      columns={getAlgorithmColumns(rest)}
+      columns={getAlgorithmColumns({ ...rest })}
       dataSource={dataSource}
       expandedRowRender={expandedRowRender}
     />

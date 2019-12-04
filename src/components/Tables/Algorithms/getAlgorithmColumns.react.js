@@ -60,6 +60,8 @@ const getAlgorithmColumns = ({ onSubmit, onDelete, fetchReadme, getReadme }) => 
     // Don't use builds
     // eslint-disable-next-line
     const { builds, ...algorithm } = record;
+    const readmeDefault = getReadme(algorithm.name);
+
     return (
       <FlexBox justify="start">
         <FlexBox.Item>
@@ -85,7 +87,7 @@ const getAlgorithmColumns = ({ onSubmit, onDelete, fetchReadme, getReadme }) => 
                 />
               </Tooltip>
             )}
-            readmeDefault={getReadme(algorithm.name)}
+            readmeDefault={readmeDefault}
             record={algorithm}
             onSubmit={onSubmit}
             submitText={'Update'}

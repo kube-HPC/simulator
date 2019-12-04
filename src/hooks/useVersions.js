@@ -1,10 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { notification, fetchVersion } from 'utils';
+import { notification } from 'utils';
 import { STATE_SOURCES } from 'const';
 import axios from 'axios';
 
 const errorNotification = ({ message }) => notification({ message });
+
+const fetchVersion = ({ url, algorithmName, callback }) =>
+  axios
+    .get(`${url}/versions/algorithms/${algorithmName}`)
+    .then(({ data }) => {
+      callback(data);
+    })
+    .catch(errorNotification);
 
 const applyVersion = ({ url }) => ({ name, image }) =>
   axios.post(`${url}/versions/algorithms/apply`, { name, image }).catch(errorNotification);

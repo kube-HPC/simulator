@@ -8,7 +8,7 @@ import { SB_SECTIONS } from 'const';
 import { DrawerEditorMD } from 'components';
 
 export default {
-  title: `${SB_SECTIONS.COMMON}|Markdown Editor`,
+  title: `${SB_SECTIONS.MARKDOWN}Markdown Editor`,
 };
 
 export const Default = () => <MDEditor />;

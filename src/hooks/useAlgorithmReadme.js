@@ -1,21 +1,30 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAlgorithmReadme } from 'actions/readme.action';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { notification } from 'utils';
+import { STATE_SOURCES } from 'const';
+import axios from 'axios';
 
-const useAlgorithmReadme = algorithmReadme => {
-  const readmeDict = useSelector(state => state.algorithmReadme);
-  const getReadme = name => readmeDict && readmeDict[name] && readmeDict[name].readme;
+const errorNotification = ({ message }) => notification({ message });
 
-  const dispatch = useDispatch();
+const fetch = ({ url, name, callback }) =>
+  axios.get(`${url}/readme/algorithms/${name}`).then(({ data: { readme } }) => {
+    callback(readme);
+  });
+
+const apply = ({ url, name }) => () =>
+  axios.put(`${url}/readme/algorithms/${name}`).catch(errorNotification);
+
+const useAlgorithmReadme = name => {
+  const [source, setSource] = useState(undefined);
+  const url = useSelector(state => state[STATE_SOURCES.SOCKET_URL]);
 
   useEffect(() => {
-    dispatch(getAlgorithmReadme(algorithmReadme));
+    fetch({ url, name, callback: setSource });
   }, []);
 
-  const source = getReadme(algorithmReadme);
   return {
-    fetch,
     source,
+    apply: apply({ url, name }),
   };
 };
 

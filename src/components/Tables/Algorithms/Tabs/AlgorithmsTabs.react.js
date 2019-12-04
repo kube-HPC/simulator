@@ -7,10 +7,9 @@ import AlgorithmMarkdown from './AlgorithmMarkdown/AlgorithmMarkdown.react';
 
 const TABS = {
   VERSIONS: 'Versions',
+  BUILDS: 'Builds',
   JSON: 'JSON',
   DESCRIPTION: 'Description',
-  BUILDS: 'Builds',
-  BUILDS_HISTORY: 'Builds History',
 };
 
 const AlgorithmsTabs = ({ record: { builds, ...algorithm } }) => {
