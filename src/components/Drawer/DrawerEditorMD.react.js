@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Icon, Button } from 'antd';
 import { ReactComponent as CodeIcon } from 'images/code-icon.svg';
 import { stringify } from 'utils/string';
-import { Tabs, Card, MDEditor, JsonEditor } from 'components/common';
+import { Tabs, Card, MdEditor, JsonEditor } from 'components/common';
 import { Drawer } from '.';
 import { notification } from 'utils';
 
@@ -11,7 +11,14 @@ const tabs = { json: 'JSON', description: 'Description' };
 
 const noop = () => {};
 
-function DrawerEditorMD({ record, onSubmit = noop, readmeDefault, submitText, ...props }) {
+const errorNotification = message =>
+  notification({
+    message: 'Error in Submitted Json',
+    description: message,
+    type: notification.TYPES.ERROR,
+  });
+
+function DrawerEditorMD({ record, onSubmit = noop, submitText = 'Submit', ...props }) {
   const defaultValue = stringify(record);
 
   const [readme, setReadme] = useState('');
@@ -25,14 +32,10 @@ function DrawerEditorMD({ record, onSubmit = noop, readmeDefault, submitText, ..
     try {
       onSubmit({
         value: JSON.parse(value),
-        readme: readme || readmeDefault,
+        readme: readme,
       });
     } catch ({ message }) {
-      notification({
-        message: 'Error in Submitted Json',
-        description: message,
-        type: notification.TYPES.ERROR,
-      });
+      errorNotification(message);
     }
   };
 
@@ -80,7 +83,7 @@ function DrawerEditorMD({ record, onSubmit = noop, readmeDefault, submitText, ..
             </span>
           }
           key={tabs.description}>
-          <MDEditor data={readmeDefault} onChange={setReadme} />
+          <MdEditor value={readme} onChange={setReadme} />
         </Tabs.TabPane>
       </Tabs>
     </Drawer>
@@ -92,10 +95,6 @@ DrawerEditorMD.propTypes = {
   readmeDefault: PropTypes.string,
   onSubmit: PropTypes.func,
   record: PropTypes.object,
-};
-
-DrawerEditorMD.defaultProps = {
-  submitText: 'Submit',
 };
 
 export default DrawerEditorMD;

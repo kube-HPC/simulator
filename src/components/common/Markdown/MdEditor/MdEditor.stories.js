@@ -1,5 +1,5 @@
 import { Button, Typography } from 'antd';
-import MDEditor from 'components/common/Markdown/MDEditor/MDEditor.react';
+import MdEditor from 'components/common/Markdown/MdEditor/MdEditor.react';
 import Drawer from 'components/Drawer/Drawer.react';
 import addPipelineTemplate from 'config/template/addPipeline.template';
 import React from 'react';
@@ -11,11 +11,16 @@ export default {
   title: `${SB_SECTIONS.MARKDOWN}Markdown Editor`,
 };
 
-export const Default = () => <MDEditor />;
+const source = `An **example** of writing a _markdown_`;
+
+const config = { message: 'Update Algorithm' };
+
+export const Default = () => <MdEditor value={source} />;
+export const Empty = () => <MdEditor value={undefined} config={config} />;
 
 export const InDrawer = () => (
   <Drawer visible={true}>
-    <MDEditor />
+    <MdEditor value={source} />
   </Drawer>
 );
 

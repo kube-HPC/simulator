@@ -11,12 +11,15 @@ const expandedRowRender = record => (
   </Card>
 );
 
+const rowKey = ({ name }) => name;
+
 const VersionsTable = ({ algorithmName, currentVersion, isFetch }) => {
   const { dataSource, onApply, onDelete } = useVersions({ algorithmName, isFetch });
   const columns = getVersionsColumns({ currentVersion, onApply, onDelete });
 
   return (
     <Table
+      rowKey={rowKey}
       loading={!dataSource}
       expandedRowRender={expandedRowRender}
       dataSource={dataSource}

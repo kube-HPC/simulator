@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { notification } from 'utils';
 import { STATE_SOURCES } from 'const';
@@ -6,25 +5,38 @@ import axios from 'axios';
 
 const errorNotification = ({ message }) => notification({ message });
 
-const fetch = ({ url, name, callback }) =>
-  axios.get(`${url}/readme/algorithms/${name}`).then(({ data: { readme } }) => {
-    callback(readme);
-  });
+const URL = ({ url, name }) => `${url}/readme/algorithms/${name}`;
 
-const apply = ({ url, name }) => () =>
-  axios.put(`${url}/readme/algorithms/${name}`).catch(errorNotification);
+const fetch = url => ({ name, callback }) =>
+  axios
+    .get(URL({ url, name }))
+    .then(({ data: { readme } }) => {
+      callback(readme);
+    })
+    // Catch but don't use
+    .catch(() => {});
 
-const useAlgorithmReadme = name => {
-  const [source, setSource] = useState(undefined);
+const asyncFetch = url => async ({ name }) => {
+  const {
+    data: { readme },
+  } = await axios.get(URL({ url, name }));
+  return readme;
+};
+
+const apply = url => ({ name, formData }) => () =>
+  axios.put(URL({ url, name }), formData).catch(errorNotification);
+
+const post = url => ({ name, formData }) =>
+  axios.post(URL({ url, name }), formData).catch(errorNotification);
+
+const useAlgorithmReadme = () => {
   const url = useSelector(state => state[STATE_SOURCES.SOCKET_URL]);
 
-  useEffect(() => {
-    fetch({ url, name, callback: setSource });
-  }, []);
-
   return {
-    source,
-    apply: apply({ url, name }),
+    fetch: fetch(url),
+    asyncFetch: asyncFetch(url),
+    apply: apply(url),
+    post: post(url),
   };
 };
 

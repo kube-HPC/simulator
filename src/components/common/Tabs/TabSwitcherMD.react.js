@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import { Typography, Icon } from 'antd';
-import ReactMarkdown from 'react-markdown';
 import { Tabs, JsonSwitch } from '..';
+import MdEditor from 'react-markdown-editor-lite';
 
 const CenterText = styled.div`
   min-height: 30vh;
@@ -13,7 +13,7 @@ const CenterText = styled.div`
   justify-content: center;
 `;
 
-const CenterMD = styled(ReactMarkdown)`
+const CenterMD = styled(MdEditor)`
   margin: 5px;
 `;
 

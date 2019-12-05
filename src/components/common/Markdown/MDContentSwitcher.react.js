@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { Button, Radio } from 'antd';
-import MDEditor from './MDEditor/MDEditor.react';
+import MdEditor from './MdEditor/MdEditor.react';
 import ReactMarkdown from 'react-markdown';
 import { postAlgorithmReadme, postPipelineReadme } from 'actions/readme.action';
 
@@ -22,7 +22,7 @@ function MDContentSwitcher({ readme, name, readmeType }) {
 
   const Comp =
     value.defaultRadio === 'Edit' ? (
-      <MDEditor data={value.mdData} onDataChange={onDataChange} />
+      <MdEditor data={value.mdData} onDataChange={onDataChange} />
     ) : (
       <ReactMarkdown source={value.mdData} />
     );

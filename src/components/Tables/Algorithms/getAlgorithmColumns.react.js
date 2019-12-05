@@ -55,40 +55,36 @@ const Image = algorithmImage =>
 
 const Name = name => <Ellipsis text={name} />;
 
-const getAlgorithmColumns = ({ onSubmit, onDelete, fetchReadme, getReadme }) => {
+const opener = setVisible => (
+  <Tooltip placement="top" title={'Update Algorithm'}>
+    <Button shape="circle" icon="edit" onClick={() => setVisible(prev => !prev)} />
+  </Tooltip>
+);
+
+const title = (
+  <>
+    <Title level={2}>Update Algorithm</Title>
+    <Paragraph>
+      Edit algorithm properties and description, <Text strong>submit</Text> changes with
+      <Text code>Update</Text> button.
+    </Paragraph>
+  </>
+);
+
+const getAlgorithmColumns = ({ onSubmit, onDelete, fetchReadme }) => {
   const Action = (_, record) => {
     // Don't use builds
     // eslint-disable-next-line
     const { builds, ...algorithm } = record;
-    const readmeDefault = getReadme(algorithm.name);
 
     return (
       <FlexBox justify="start">
         <FlexBox.Item>
           <DrawerEditorMD
-            title={
-              <>
-                <Title level={2}>Update Algorithm</Title>
-                <Paragraph>
-                  Edit algorithm properties and description, <Text strong>submit</Text> changes with
-                  <Text code>Update</Text> button.
-                </Paragraph>
-              </>
-            }
-            opener={setVisible => (
-              <Tooltip placement="top" title={'Update Algorithm'}>
-                <Button
-                  shape="circle"
-                  icon="edit"
-                  onClick={() => {
-                    fetchReadme(algorithm.name);
-                    setVisible(prev => !prev);
-                  }}
-                />
-              </Tooltip>
-            )}
-            readmeDefault={readmeDefault}
+            title={title}
+            opener={opener}
             record={algorithm}
+            fetch={fetchReadme}
             onSubmit={onSubmit}
             submitText={'Update'}
           />

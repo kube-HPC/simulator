@@ -6,13 +6,13 @@ import getAlgorithmColumns from './getAlgorithmColumns.react';
 import AlgorithmsTabs from './Tabs/AlgorithmsTabs.react';
 
 const AlgorithmsTable = () => {
-  const { dataSource, ...rest } = useAlgorithm();
+  const { dataSource, ...actions } = useAlgorithm();
   const expandedRowRender = record => <AlgorithmsTabs record={record} />;
 
   return (
     <Table
       rowKey={({ name }) => name}
-      columns={getAlgorithmColumns({ ...rest })}
+      columns={getAlgorithmColumns(actions)}
       dataSource={dataSource}
       expandedRowRender={expandedRowRender}
     />

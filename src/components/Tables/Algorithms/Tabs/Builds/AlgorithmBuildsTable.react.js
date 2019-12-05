@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import getBuildsTableColumns from './getBuildsTableColumns.react';
+import getBuildsTableColumns from '../../getBuildsTableColumns.react';
 
 const IDs = {
   LOGS: 'Logs',
