@@ -36,7 +36,7 @@ const AlgorithmsTable = () => {
       />
       <Table
         rowKey={({ name }) => name}
-        columns={getAlgorithmColumns({ ...actions, toggle, setAlgorithm })}
+        columns={getAlgorithmColumns({ toggle, setAlgorithm, ...actions })}
         dataSource={dataSource}
         expandedRowRender={expandedRowRender}
       />

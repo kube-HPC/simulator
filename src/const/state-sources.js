@@ -2,7 +2,6 @@
 
 export default {
   ALGORITHM_BUILDS_TABLE: 'algorithmBuildsTable',
-  ALGORITHM_README: 'algorithmReadme',
   ALGORITHM_TABLE: 'algorithmTable',
   ALGORITHM_VERSIONS: 'algorithmVersions',
   AUTO_COMPLETE_FILTER: 'autoCompleteFilter',
@@ -12,7 +11,6 @@ export default {
   JOBS_KUBERNETES_LOGS: 'jobsKubernetesLogs',
   JOBS_TABLE: 'jobsTable',
   NODE_STATISTICS: 'nodeStatistics',
-  PIPELINE_README: 'pipelineReadme',
   PIPELINE_TABLE: 'pipelineTable',
   WORKER_TABLE: 'workerTable',
   CONNECTION_STATUS: 'connectionStatus',

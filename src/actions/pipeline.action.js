@@ -36,7 +36,7 @@ export const resumePipeline = jobId => ({
   },
 });
 
-export const execStoredPipeline = pipeline => ({
+export const execStored = pipeline => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: 'exec/stored',
@@ -45,7 +45,7 @@ export const execStoredPipeline = pipeline => ({
   },
 });
 
-export const deleteStoredPipeline = pipelineName => ({
+export const deleteStored = pipelineName => ({
   type: actions.REST_REQ_DELETE,
   payload: {
     url: `store/pipelines/${pipelineName}`,
@@ -53,7 +53,7 @@ export const deleteStoredPipeline = pipelineName => ({
   },
 });
 
-export const updateStoredPipeline = pipeline => ({
+export const updateStored = pipeline => ({
   type: actions.REST_REQ_PUT,
   payload: {
     url: 'store/pipelines',

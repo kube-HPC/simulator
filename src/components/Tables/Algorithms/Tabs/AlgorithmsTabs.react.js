@@ -4,7 +4,7 @@ import { Tabs, Card, JsonSwitch, MdEditor } from 'components/common';
 import AlgorithmBuildsTable from './Builds/AlgorithmBuildsTable.react';
 import { VersionsTable } from './Versions';
 import { Button } from 'antd';
-import { useAlgorithmReadme } from 'hooks';
+import { useReadme } from 'hooks';
 
 const TABS = {
   VERSIONS: 'Versions',
@@ -19,7 +19,7 @@ const AlgorithmsTabs = ({ record: { builds, ...algorithm } }) => {
 
   const { name } = algorithm;
 
-  const { asyncFetch, post } = useAlgorithmReadme();
+  const { asyncFetch, post } = useReadme(useReadme.TYPES.ALGORITHM);
 
   const onApply = () => {
     post({ name, readme });
