@@ -15,12 +15,8 @@ const Card = ({ children, isMargin = false, ...props }) => (
 );
 
 Card.propTypes = {
+  children: PropTypes.node.isRequired,
   isMargin: PropTypes.bool,
-  children: PropTypes.node
-};
-
-Card.defaultProps = {
-  isMargin: false
 };
 
 export default Card;

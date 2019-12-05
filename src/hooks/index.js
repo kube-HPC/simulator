@@ -5,3 +5,5 @@ export { default as useAlgorithm } from 'hooks/useAlgorithm';
 export { default as useJobs } from 'hooks/useJobs.react';
 export { default as usePipeline } from 'hooks/usePipeline';
 export { default as useConnectionStatus } from 'hooks/useConnectionStatus';
+export { default as useVersions } from 'hooks/useVersions';
+export { default as useAlgorithmReadme } from 'hooks/useAlgorithmReadme';

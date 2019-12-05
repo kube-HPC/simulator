@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs as AntTabs } from 'antd';
 
-const tabsAnimation = { inkBar: true, tabPane: false };
+const tabsAnimation = { inkBar: false, tabPane: false };
 
 const Tabs = ({ children, ...props }) => (
   <AntTabs animated={tabsAnimation} {...props}>

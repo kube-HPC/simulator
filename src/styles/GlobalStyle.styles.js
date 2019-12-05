@@ -21,16 +21,17 @@ const GlobalStyle = createGlobalStyle`
     margin-bottom: 0px !important;
   }
 
-  .ansi-view-class {
-  white-space: pre-line;
-}
+  .ant-table table {
+    border-collapse: collapse;
+  }
 
   ::-webkit-scrollbar-track {
     border: none;
     background-color: none;
   }
   ::-webkit-scrollbar {
-    width: 7px;
+    width: 10px;
+    height: 10px;
   }
 
   ::-webkit-scrollbar-thumb {

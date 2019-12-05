@@ -180,6 +180,7 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => {
       title: 'Nodes Stats',
       dataIndex: 'status',
       key: 'node-status',
+      width: '11%',
       render: NodeStats,
     },
     {

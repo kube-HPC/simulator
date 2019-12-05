@@ -1,6 +1,6 @@
 import { message } from 'antd';
 
-export default store => next => action => {
+export default () => next => action => {
   /**
    * @{param} action.meta.message - used to decide if the middleware should be used
    * @{param} action.meta.message.type - success or error

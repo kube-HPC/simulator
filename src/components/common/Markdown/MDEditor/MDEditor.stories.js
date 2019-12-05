@@ -1,5 +1,5 @@
 import { Button, Typography } from 'antd';
-import MDEditor from 'components/common/md/MDEditor/MDEditor.react';
+import MDEditor from 'components/common/Markdown/MDEditor/MDEditor.react';
 import Drawer from 'components/Drawer/Drawer.react';
 import addPipelineTemplate from 'config/template/addPipeline.template';
 import React from 'react';
@@ -8,7 +8,7 @@ import { SB_SECTIONS } from 'const';
 import { DrawerEditorMD } from 'components';
 
 export default {
-  title: `${SB_SECTIONS.COMMON}|Markdown Editor`,
+  title: `${SB_SECTIONS.MARKDOWN}Markdown Editor`,
 };
 
 export const Default = () => <MDEditor />;

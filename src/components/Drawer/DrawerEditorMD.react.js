@@ -1,27 +1,25 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { notification, Icon, Button } from 'antd';
+import { Icon, Button } from 'antd';
 import { ReactComponent as CodeIcon } from 'images/code-icon.svg';
 import { stringify } from 'utils/string';
 import { Tabs, Card, MDEditor, JsonEditor } from 'components/common';
 import { Drawer } from '.';
+import { notification } from 'utils';
 
 const tabs = { json: 'JSON', description: 'Description' };
-
-const configNotificationOnOpen = description => ({
-  message: 'Error in Submitted Json',
-  description,
-  icon: <Icon type="warning" style={{ color: 'red' }} />,
-});
 
 const noop = () => {};
 
 function DrawerEditorMD({ record, onSubmit = noop, readmeDefault, submitText, ...props }) {
+  const defaultValue = stringify(record);
+
   const [readme, setReadme] = useState('');
-  const [value, setValue] = useState(stringify(record));
+  const [value, setValue] = useState(defaultValue);
   const [activeKey, setActiveKey] = useState(tabs.json);
 
   const onClearClick = () => setValue('');
+  const onDefaultClick = () => setValue(defaultValue);
 
   const onSubmitClick = () => {
     try {
@@ -30,7 +28,11 @@ function DrawerEditorMD({ record, onSubmit = noop, readmeDefault, submitText, ..
         readme: readme || readmeDefault,
       });
     } catch ({ message }) {
-      notification.open(configNotificationOnOpen(message));
+      notification({
+        message: 'Error in Submitted Json',
+        description: message,
+        type: notification.TYPES.ERROR,
+      });
     }
   };
 
@@ -39,6 +41,9 @@ function DrawerEditorMD({ record, onSubmit = noop, readmeDefault, submitText, ..
       ? [
         <Button key="clear" type="danger" onClick={onClearClick}>
             Clear
+        </Button>,
+        <Button key="clear" type="dashed" onClick={onDefaultClick}>
+            Default
         </Button>,
       ]
       : [];

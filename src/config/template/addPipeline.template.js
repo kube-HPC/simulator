@@ -5,26 +5,26 @@ export default {
     {
       nodeName: '',
       algorithmName: '',
-      input: []
-    }
+      input: [],
+    },
   ],
   flowInput: {},
   webhooks: {
     progress: '',
-    result: ''
+    result: '',
   },
   triggers: {
     cron: {
       pattern: '0 * * * *',
-      enabled: false
+      enabled: false,
     },
-    pipelines: []
+    pipelines: [],
   },
   options: {
     batchTolerance: 100,
     concurrentPipelines: 10,
     progressVerbosityLevel: 'info',
-    ttl: 3600
+    ttl: 3600,
   },
-  priority: 3
+  priority: 3,
 };

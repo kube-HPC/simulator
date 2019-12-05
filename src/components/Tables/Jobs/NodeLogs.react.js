@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { List, Select, Tag, Tooltip, Button } from 'antd';
-import Moment from 'react-moment';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-
-import { useDispatch } from 'react-redux';
 import { getKubernetesLogsData } from 'actions/jobs.action';
+import { Button, Select, Tag, Tooltip } from 'antd';
 import { FlexBox } from 'components/common';
-import { COLOR_LOGGER } from 'styles/colors';
-import { toUpperCaseFirstLetter, notification } from 'utils';
-
+import LogsViewer from 'components/common/LogsViewer/LogsViewer.react';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
+import { notification } from 'utils';
 
 const SelectFull = styled(Select)`
   width: 100%;
@@ -24,7 +21,7 @@ const onCopy = () =>
   notification({ message: 'Task ID Copied to clipboard', type: notification.TYPES.SUCCESS });
 
 const OptionBox = ({ index, taskId }) => (
-  <FlexBox>
+  <FlexBox justify="start">
     <FlexBox.Item>
       <Tag>{index}</Tag>
     </FlexBox.Item>
@@ -34,32 +31,10 @@ const OptionBox = ({ index, taskId }) => (
 
 OptionBox.propTypes = {
   index: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  taskId: PropTypes.string.isRequired
+  taskId: PropTypes.string.isRequired,
 };
 
-const renderItem = log => {
-  const description = (
-    <FlexBox justify="start">
-      {log.timestamp && (
-        <FlexBox.Item>
-          <Moment format="DD/MM/YY HH:mm:ss">{log.timestamp}</Moment>
-        </FlexBox.Item>
-      )}
-      <FlexBox.Item>{log.message}</FlexBox.Item>
-    </FlexBox>
-  );
-
-  return (
-    <List.Item>
-      <List.Item.Meta description={description} />
-      {log.timestamp && (
-        <Tag color={COLOR_LOGGER[log.level]}>{toUpperCaseFirstLetter(log.level)}</Tag>
-      )}
-    </List.Item>
-  );
-};
-
-const NodeLogs = ({ dataSource, taskDetails, ...props }) => {
+const NodeLogs = ({ dataSource, taskDetails }) => {
   const [currentTask, setCurrentTask] = useState(undefined);
   const dispatch = useDispatch();
 
@@ -74,35 +49,36 @@ const NodeLogs = ({ dataSource, taskDetails, ...props }) => {
     </Select.Option>
   ));
 
-  const header = (
-    <FlexBox justify="start">
-      <ItemGrow>
-        <Tooltip placement="topLeft" title={<OptionBox index="Index" taskId="Task ID" />}>
-          <SelectFull
-            value={currentTask}
-            onSelect={index => {
-              const { taskId, podName } = taskDetails[index];
-              setCurrentTask(taskId);
-              dispatch(getKubernetesLogsData({ taskId, podName }));
-            }}
-          >
-            {options}
-          </SelectFull>
-        </Tooltip>
-      </ItemGrow>
-      <FlexBox.Item>
-        <CopyToClipboard text={currentTask} onCopy={onCopy}>
-          <Button icon="copy">Copy Task ID to Clipboard</Button>
-        </CopyToClipboard>
-      </FlexBox.Item>
-    </FlexBox>
+  return (
+    <>
+      <FlexBox justify="start">
+        <ItemGrow>
+          <Tooltip placement="topLeft" title={<OptionBox index="Index" taskId="Task ID" />}>
+            <SelectFull
+              value={currentTask}
+              onSelect={index => {
+                const { taskId, podName } = taskDetails[index];
+                setCurrentTask(taskId);
+                dispatch(getKubernetesLogsData({ taskId, podName }));
+              }}>
+              {options}
+            </SelectFull>
+          </Tooltip>
+        </ItemGrow>
+        <FlexBox.Item>
+          <CopyToClipboard text={currentTask} onCopy={onCopy}>
+            <Button icon="copy">Copy Task ID to Clipboard</Button>
+          </CopyToClipboard>
+        </FlexBox.Item>
+      </FlexBox>
+      <br />
+      <LogsViewer dataSource={dataSource} />
+    </>
   );
-
-  return <List dataSource={dataSource} renderItem={renderItem} header={header} />;
 };
 
 NodeLogs.propTypes = {
   dataSource: PropTypes.array.isRequired,
-  taskDetails: PropTypes.array.isRequired
+  taskDetails: PropTypes.array.isRequired,
 };
 export default NodeLogs;

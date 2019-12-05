@@ -1,5 +1,9 @@
 {
   "extends": "@dennisvash/eslint-config/react",
+  "env": {
+    "browser": true,
+    "node": true
+  },
   "rules": {
     "no-console": "off"
   }
