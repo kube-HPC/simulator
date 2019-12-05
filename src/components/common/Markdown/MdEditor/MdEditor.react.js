@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import MdEditorReact from 'react-markdown-editor-lite';
 import MarkdownIt from 'markdown-it';
+import { readmeTemplate } from 'config';
 
 const parser = new MarkdownIt();
 const renderHtml = text => parser.render(text);
 const noop = () => {};
 
-const MdEditor = ({ value: initialValue = '', onChange = noop }) => {
+const MdEditor = ({ value: initialValue = readmeTemplate, onChange = noop }) => {
   const handleValueChange = ({ text }) => {
     onChange(text);
   };
