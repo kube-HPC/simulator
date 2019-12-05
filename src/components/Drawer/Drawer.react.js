@@ -52,10 +52,10 @@ const Drawer = ({
 };
 
 Drawer.propTypes = {
+  ...AntDrawer.propTypes,
   opener: PropTypes.func,
   bottomContent: PropTypes.object,
   width: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
-  ...AntDrawer.propTypes,
 };
 
 export default Drawer;

@@ -1,20 +1,13 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Button, notification, Icon } from 'antd';
+import { Button } from 'antd';
 
-import { stringify } from 'utils';
+import { stringify, notification } from 'utils';
 import { addPipelineTemplate } from 'config';
 import { BottomContent, JsonEditor, Card } from 'components/common';
 import { execRawPipeline } from 'actions/pipeline.action';
 
 const DEFAULT_VALUE = stringify(addPipelineTemplate);
-const warningIcon = <Icon type="warning" style={{ color: 'red' }} />;
-
-const notificationOnOpenConfig = message => ({
-  message: 'Error in Submitted Json',
-  description: message,
-  icon: warningIcon
-});
 
 const RunRawPipeline = () => {
   const [value, setValue] = useState(DEFAULT_VALUE);
@@ -26,8 +19,8 @@ const RunRawPipeline = () => {
   const onSubmitClick = () => {
     try {
       dispatch(execRawPipeline(JSON.parse(value)));
-    } catch ({ message }) {
-      notification.open(notificationOnOpenConfig(message));
+    } catch ({ message: description }) {
+      notification({ message: 'Error in Submitted Json', description });
     }
   };
 
@@ -44,9 +37,8 @@ const RunRawPipeline = () => {
           </Button>,
           <Button key="default" onClick={onDefault}>
             Default
-          </Button>
-        ]}
-      >
+          </Button>,
+        ]}>
         <Button type="primary" onClick={onSubmitClick}>
           Execute
         </Button>

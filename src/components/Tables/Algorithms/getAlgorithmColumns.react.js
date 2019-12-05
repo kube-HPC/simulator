@@ -1,9 +1,9 @@
 import React from 'react';
 
 import { Button, Modal, Tooltip, Typography, Tag } from 'antd';
-import { sorter } from 'utils/string';
-import { DrawerEditorMD } from 'components';
+import { sorter, stringify } from 'utils/string';
 import { Ellipsis, FlexBox, StatusTag } from 'components/common';
+import DrawerEditor from 'components/Drawer/DrawerEditor/DrawerEditor.react';
 
 const { Paragraph, Title, Text } = Typography;
 
@@ -56,14 +56,14 @@ const Image = algorithmImage =>
 const Name = name => <Ellipsis text={name} />;
 
 const opener = setVisible => (
-  <Tooltip placement="top" title={'Update Algorithm'}>
+  <Tooltip placement="top" title={'Edit Algorithm'}>
     <Button shape="circle" icon="edit" onClick={() => setVisible(prev => !prev)} />
   </Tooltip>
 );
 
 const title = (
   <>
-    <Title level={2}>Update Algorithm</Title>
+    <Title level={2}>Edit Algorithm</Title>
     <Paragraph>
       Edit algorithm properties and description, <Text strong>submit</Text> changes with
       <Text code>Update</Text> button.
@@ -71,37 +71,29 @@ const title = (
   </>
 );
 
-const getAlgorithmColumns = ({ onSubmit, onDelete, fetchReadme }) => {
-  const Action = (_, record) => {
-    // Don't use builds
-    // eslint-disable-next-line
-    const { builds, ...algorithm } = record;
-
-    return (
-      <FlexBox justify="start">
-        <FlexBox.Item>
-          <DrawerEditorMD
-            title={title}
-            opener={opener}
-            record={algorithm}
-            fetch={fetchReadme}
-            onSubmit={onSubmit}
-            submitText={'Update'}
+const getAlgorithmColumns = ({ onSubmit, onDelete }) => {
+  const Action = (_, { builds, ...algorithm }) => (
+    <FlexBox justify="start">
+      <FlexBox.Item>
+        <DrawerEditor
+          value={stringify(algorithm)}
+          title={title}
+          opener={opener}
+          onSubmit={onSubmit}
+        />
+      </FlexBox.Item>
+      <FlexBox.Item>
+        <Tooltip title="Delete Algorithm">
+          <Button
+            type="dashed"
+            shape="circle"
+            icon="delete"
+            onClick={() => deleteConfirmAction(onDelete, { builds, ...algorithm })}
           />
-        </FlexBox.Item>
-        <FlexBox.Item>
-          <Tooltip title="Delete Algorithm">
-            <Button
-              type="dashed"
-              shape="circle"
-              icon="delete"
-              onClick={() => deleteConfirmAction(onDelete, record)}
-            />
-          </Tooltip>
-        </FlexBox.Item>
-      </FlexBox>
-    );
-  };
+        </Tooltip>
+      </FlexBox.Item>
+    </FlexBox>
+  );
 
   return [
     {

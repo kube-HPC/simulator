@@ -26,8 +26,11 @@ const asyncFetch = url => async ({ name }) => {
 const apply = url => ({ name, formData }) => () =>
   axios.put(URL({ url, name }), formData).catch(errorNotification);
 
-const post = url => ({ name, formData }) =>
+const post = url => ({ name, readme }) => {
+  const formData = new FormData();
+  formData.append('README.md', new File([new Blob([readme])], 'README.md'));
   axios.post(URL({ url, name }), formData).catch(errorNotification);
+};
 
 const useAlgorithmReadme = () => {
   const url = useSelector(state => state[STATE_SOURCES.SOCKET_URL]);

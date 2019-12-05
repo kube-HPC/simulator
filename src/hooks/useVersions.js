@@ -32,7 +32,7 @@ const useVersions = ({ algorithmName, isFetch }) => {
     if (isFetch) {
       fetchVersion({ url: socketURL, algorithmName, callback: setDataSource });
     }
-  }, [algorithmName, isFetch]);
+  }, [algorithmName, isFetch, socketURL]);
 
   return {
     dataSource,

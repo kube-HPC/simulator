@@ -19,21 +19,19 @@ const AlgorithmsTabs = ({ record: { builds, ...algorithm } }) => {
 
   const { name } = algorithm;
 
-  const { asyncFetch, apply } = useAlgorithmReadme();
+  const { asyncFetch, post } = useAlgorithmReadme();
 
   const onApply = () => {
-    const formData = new FormData();
-    formData.append('README.md', new File([new Blob([readme])], 'README.md'));
-    apply({ name, formData });
+    post({ name, readme });
   };
 
   const onTabClick = tab => {
     if (tab === TABS.DESCRIPTION) {
-      const fetch = async () => {
+      const fetchReadme = async () => {
         const readme = await asyncFetch({ name });
         setReadme(readme);
       };
-      fetch();
+      fetchReadme();
     }
   };
 

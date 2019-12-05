@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import MdEditorReact from 'react-markdown-editor-lite';
 import MarkdownIt from 'markdown-it';
@@ -8,14 +8,7 @@ const renderHtml = text => parser.render(text);
 const noop = () => {};
 
 const MdEditor = ({ value: initialValue = '', onChange = noop }) => {
-  const [value, setValue] = useState(initialValue);
-
-  useEffect(() => {
-    setValue(value);
-  }, [initialValue]);
-
   const handleValueChange = ({ text }) => {
-    setValue(text);
     onChange(text);
   };
 
