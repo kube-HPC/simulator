@@ -20,14 +20,20 @@ const title = (
 );
 
 const AlgorithmsTable = () => {
-  const { dataSource, ...actions } = useAlgorithm();
+  const { dataSource, onSubmit, ...actions } = useAlgorithm();
   const expandedRowRender = record => <AlgorithmsTabs record={record} />;
   const [visible, toggle] = useReducer(prev => !prev, false);
   const [algorithm, setAlgorithm] = useState(undefined);
 
   return (
     <>
-      <DrawerEditor visible={visible} title={title} value={stringify(algorithm)} onClose={toggle} />
+      <DrawerEditor
+        visible={visible}
+        title={title}
+        value={stringify(algorithm)}
+        onClose={toggle}
+        onSubmit={onSubmit}
+      />
       <Table
         rowKey={({ name }) => name}
         columns={getAlgorithmColumns({ ...actions, toggle, setAlgorithm })}

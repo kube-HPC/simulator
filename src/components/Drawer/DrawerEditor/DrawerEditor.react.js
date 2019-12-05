@@ -24,7 +24,7 @@ const DrawerEditor = ({
 
   const onSubmitClick = () => {
     try {
-      onSubmit(JSON.parse(value));
+      onSubmit(value);
     } catch ({ message: description }) {
       notification({ message: 'Error in Submitted Json', description });
     }
