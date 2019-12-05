@@ -3,6 +3,7 @@ const SECTIONS = {
   LEFT: 'Left Sidebar',
   PLAYGROUND: 'Playground',
   COMMON: 'Common',
+  JSON: 'Common|Json/',
   MARKDOWN: 'Common|Markdown/',
   DRAWER: 'Drawer|',
   TABLES: {

@@ -1,11 +1,8 @@
 import React from 'react';
 
 import { Button, Modal, Tooltip, Typography, Tag } from 'antd';
-import { sorter, stringify } from 'utils/string';
+import { sorter } from 'utils/string';
 import { Ellipsis, FlexBox, StatusTag } from 'components/common';
-import DrawerEditor from 'components/Drawer/DrawerEditor/DrawerEditor.react';
-
-const { Paragraph, Title, Text } = Typography;
 
 const deleteConfirmAction = (action, { name }) => {
   Modal.confirm({
@@ -55,32 +52,20 @@ const Image = algorithmImage =>
 
 const Name = name => <Ellipsis text={name} />;
 
-const opener = setVisible => (
-  <Tooltip placement="top" title={'Edit Algorithm'}>
-    <Button shape="circle" icon="edit" onClick={() => setVisible(prev => !prev)} />
-  </Tooltip>
-);
-
-const title = (
-  <>
-    <Title level={2}>Edit Algorithm</Title>
-    <Paragraph>
-      Edit algorithm properties and description, <Text strong>submit</Text> changes with
-      <Text code>Update</Text> button.
-    </Paragraph>
-  </>
-);
-
-const getAlgorithmColumns = ({ onSubmit, onDelete }) => {
+const getAlgorithmColumns = ({ onDelete, toggle, setAlgorithm }) => {
   const Action = (_, { builds, ...algorithm }) => (
     <FlexBox justify="start">
       <FlexBox.Item>
-        <DrawerEditor
-          value={stringify(algorithm)}
-          title={title}
-          opener={opener}
-          onSubmit={onSubmit}
-        />
+        <Tooltip placement="top" title={'Edit Algorithm'}>
+          <Button
+            shape="circle"
+            icon="edit"
+            onClick={() => {
+              toggle();
+              setAlgorithm(algorithm);
+            }}
+          />
+        </Tooltip>
       </FlexBox.Item>
       <FlexBox.Item>
         <Tooltip title="Delete Algorithm">

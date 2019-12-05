@@ -11,7 +11,6 @@ const DrawerEditor = ({
   opener = () => {},
   submitText = 'Submit',
   onSubmit,
-  visible,
   ...props
 }) => {
   const [value, setValue] = useState(initial);
@@ -50,7 +49,6 @@ const DrawerEditor = ({
   return (
     <Drawer
       title={title}
-      visible={visible}
       opener={opener}
       onSubmit={onSubmitClick}
       bottomContent={bottomContent}

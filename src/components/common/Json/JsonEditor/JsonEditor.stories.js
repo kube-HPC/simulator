@@ -13,7 +13,7 @@ const StyledCard = styled(Card)`
 `;
 
 export default {
-  title: `${SB_SECTIONS.COMMON}|Json Editor`,
+  title: `${SB_SECTIONS.JSON}Json Editor`,
 };
 
 export const Default = () => <JsonEditor value={stringify(template)} />;

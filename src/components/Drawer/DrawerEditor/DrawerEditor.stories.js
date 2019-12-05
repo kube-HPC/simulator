@@ -12,6 +12,4 @@ const title = <span>Title</span>;
 const value = 'Example';
 
 export const Default = () => <DrawerEditor value={value} opener={opener} title={title} />;
-export const Open = () => (
-  <DrawerEditor value={value} opener={opener} title={title} visible={true} />
-);
+export const Open = () => <DrawerEditor value={value} title={title} visible={true} />;

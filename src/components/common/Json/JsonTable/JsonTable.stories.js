@@ -4,7 +4,7 @@ import JsonTable from './JsonTable.react';
 import { pipelineMock, algorithmMock } from 'config/mock';
 
 export default {
-  title: `${SB_SECTIONS.COMMON}|Json Table`,
+  title: `${SB_SECTIONS.JSON}Json Table`,
 };
 
 export const Pipeline = () => <JsonTable obj={pipelineMock} />;

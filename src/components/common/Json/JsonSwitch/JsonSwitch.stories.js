@@ -5,7 +5,7 @@ import JsonSwitch from './JsonSwitch.react';
 import { algorithmMock } from 'config/mock';
 
 export default {
-  title: `${SB_SECTIONS.COMMON}|Json Switch`,
+  title: `${SB_SECTIONS.JSON}Json Switch`,
 };
 
 export const Default = () => <JsonSwitch obj={algorithmMock} />;
