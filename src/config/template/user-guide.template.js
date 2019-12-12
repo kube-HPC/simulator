@@ -106,7 +106,7 @@ export const jobsTableMock = [
           startTime: 1564582890794,
           endTime: 1564582890864,
           group: 'completed',
-          batchTasks: null
+          batch: null
         }
       ]
     }
@@ -198,7 +198,7 @@ export const jobsTableMock = [
             batch: '2/5'
           },
           group: 'batchErrors',
-          batchTasks: null
+          batch: null
         }
       ]
     }
@@ -324,7 +324,7 @@ export const jobsTableMock = [
           startTime: 1564582288499,
           endTime: 1564582288707,
           group: 'completed',
-          batchTasks: null
+          batch: null
         },
         {
           taskId: 'yellow:yellow-alg:f9d4d30b-51ce-4589-9a4a-bbc30130c582',
@@ -352,7 +352,7 @@ export const jobsTableMock = [
           startTime: 1564582327802,
           endTime: 1564582328007,
           group: 'completed',
-          batchTasks: null
+          batch: null
         },
         {
           taskId: 'black:black-alg:1e83fb5f-4542-48bd-97d0-b860186710fb',
@@ -376,7 +376,7 @@ export const jobsTableMock = [
           startTime: 1564582366891,
           endTime: 1564582366979,
           group: 'completed',
-          batchTasks: null
+          batch: null
         }
       ]
     }

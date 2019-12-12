@@ -2,15 +2,12 @@ import React, { useState, lazy } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-
 import { Button, Typography } from 'antd';
-
 import { getKubernetesLogsData, getCaching } from 'actions/jobs.action';
 import graphOptions from 'config/template/graph-options.template';
-
 import { Card, Fallback } from 'components/common';
 import { Drawer } from 'components/Drawer';
-import { NodeInfo } from '.';
+import { NodeInfo, GraphType } from '.';
 
 const Graph = lazy(() => import('react-graph-vis'));
 
@@ -32,20 +29,81 @@ const title = (
 
 const findNodeName = nodeName => node => node.nodeName === nodeName;
 
-const formatNode = n => {
-  const node = {
-    id: n.nodeName,
-    label: n.extra && n.extra.batch ? `${n.nodeName}-${n.extra.batch}` : n.nodeName
+const singleStatus = s => {
+  if (s === GraphType.STATUS.SKIPPED) {
+    return GraphType.STATUS.SKIPPED;
+  }
+  if (s === GraphType.STATUS.SUCCEED) {
+    return GraphType.STATUS.COMPLETED;
+  }
+  if (s === GraphType.STATUS.FAILED) {
+    return GraphType.STATUS.FAILED;
+  }
+  if (s === GraphType.STATUS.CREATING || s === GraphType.STATUS.PENDING) {
+    return GraphType.STATUS.NOT_STARTED;
+  }
+  return GraphType.STATUS.RUNNING;
+};
+
+const handleSingle = n => {
+  const node = { ...n };
+  node.group = singleStatus(n.status);
+  return node;
+};
+
+const handleBatch = n => {
+  const calculatedNode = {
+    nodeName: n.nodeName,
+    algorithmName: n.algorithmName,
+    extra: {},
+    group: GraphType.BATCH.NOT_STARTED,
   };
-  return { ...n, ...node };
+  let completed = 0;
+  let group = null;
+  if (n.batchInfo.completed === n.batchInfo.total) {
+    completed = n.batchInfo.total;
+    group = GraphType.BATCH.COMPLETED;
+  }
+  else if (n.batchInfo.idle === n.batchInfo.total) {
+    completed = 0;
+    group = GraphType.BATCH.NOT_STARTED;
+  }
+  else {
+    completed = n.batchInfo.running + n.batchInfo.completed;
+    group = GraphType.BATCH.RUNNING;
+  }
+  if (n.batchInfo.errors > 0) {
+    group = GraphType.BATCH.ERRORS;
+  }
+  calculatedNode.extra.batch = `${completed}/${n.batchInfo.total}`;
+  calculatedNode.group = group;
+  return calculatedNode;
+};
+
+const handleNode = n => {
+  if (!n.batchInfo) {
+    return handleSingle(n);
+  }
+  return handleBatch(n);
+};
+
+const formatNode = n => {
+  const fn = handleNode(n);
+  const node = {
+    id: fn.nodeName,
+    label: fn.extra && fn.extra.batch ? `${fn.nodeName}-${fn.extra.batch}` : fn.nodeName,
+  };
+  return { ...fn, ...node };
 };
 
 const formatEdge = e => {
+  const { edges, ...rest } = e;
+  const group = edges[0];
   const edge = {
     id: `${e.from}->${e.to}`,
-    dashes: e.group === 'waitAny' || e.group === 'AlgorithmExecution'
+    dashes: group === 'waitAny' || group === 'AlgorithmExecution',
   };
-  return { ...e, ...edge };
+  return { ...rest, ...edge, group };
 };
 
 function JobGraph({ graph, pipeline }) {
@@ -67,11 +125,11 @@ function JobGraph({ graph, pipeline }) {
       const taskId =
         nodeData && nodeData.taskId
           ? nodeData.taskId
-          : nodeData.batchTasks && nodeData.batchTasks[0].taskId;
+          : nodeData.batch && nodeData.batch[0].taskId;
       const podName =
         nodeData && nodeData.podName
           ? nodeData.podName
-          : nodeData.batchTasks && nodeData.batchTasks[0].podName;
+          : nodeData.batch && nodeData.batch[0].podName;
 
       getLogs({ taskId, podName });
 
@@ -82,18 +140,18 @@ function JobGraph({ graph, pipeline }) {
         nodeName,
         podName,
         origInput: node.input,
-        batch: nodeData.batchTasks || []
+        batch: nodeData.batch || [],
       });
 
       toggleVisible();
-    }
+    },
   };
 
   // On every render define new Graph!
   // Causes 'id already exists' on trying update the nodes.
   const adaptedGraph = {
     edges: [],
-    nodes: []
+    nodes: [],
   };
 
   const { nodes, edges } = graph;
