@@ -59,24 +59,24 @@ const getColorStatus = stats => {
   return isWarningStatus ? 'warning' : isErrorStatus ? 'error' : '';
 };
 
-const operationSelector = {
-  [RIGHT_SIDEBAR_NAMES.ADD_PIPELINE]: <AddPipeline />,
-  [RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM]: <AddAlgorithm />,
-  [RIGHT_SIDEBAR_NAMES.ADD_DEBUG]: <AddDebug />,
-  [RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE]: <RunRawPipeline />,
-  [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: <ErrorLogsTable />,
-  [RIGHT_SIDEBAR_NAMES.CPU]: <NodeStatistics metric="cpu" />,
-  [RIGHT_SIDEBAR_NAMES.MEMORY]: <NodeStatistics metric="mem" />,
-};
-
 const useRightSidebar = () => {
   const { totalNewWarnings, setIsCleared } = useErrorLogs();
   const cpuStatusRef = useRef('');
   const memoryStatusRef = useRef('');
 
-  const [cpuStats, memoryStats] = useSelector(
-    state => state[STATE_SOURCES.NODE_STATISTICS].dataSource,
-  );
+  const operationSelector = {
+    [RIGHT_SIDEBAR_NAMES.ADD_PIPELINE]: <AddPipeline />,
+    [RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM]: <AddAlgorithm />,
+    [RIGHT_SIDEBAR_NAMES.ADD_DEBUG]: <AddDebug />,
+    [RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE]: <RunRawPipeline />,
+    [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: <ErrorLogsTable />,
+    [RIGHT_SIDEBAR_NAMES.CPU]: <NodeStatistics metric="cpu" />,
+    [RIGHT_SIDEBAR_NAMES.MEMORY]: <NodeStatistics metric="mem" />,
+  };
+
+  const {
+    dataSource: [cpuStats, memoryStats],
+  } = useSelector(state => state[STATE_SOURCES.NODE_STATISTICS]);
 
   useEffect(() => {
     cpuStatusRef.current = getColorStatus(cpuStats);

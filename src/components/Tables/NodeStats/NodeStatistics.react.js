@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { ResponsiveBar } from '@nivo/bar';
 import styled from 'styled-components';
 import { COLOR } from 'styles/colors';
+import { STATE_SOURCES } from 'const';
 
 const Container = styled.div`
   font-size: 20px;
@@ -33,7 +34,7 @@ const adaptedData = (statistics, metric) => {
 
 // https://nivo.rocks/bar/ customization
 const NodeStatistics = ({ metric }) => {
-  const dataSource = useSelector(state => state.nodeStatistics.dataSource);
+  const { dataSource } = useSelector(state => state[STATE_SOURCES.NODE_STATISTICS]);
   const { data, legend } = adaptedData(dataSource, metric);
 
   return (

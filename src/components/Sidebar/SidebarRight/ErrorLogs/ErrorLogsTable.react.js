@@ -2,21 +2,20 @@ import React from 'react';
 
 import { useErrorLogs } from 'hooks';
 import { Table } from 'components';
-import { Card, JsonView } from 'components/common';
+import { JsonSwitch, Card } from 'components/common';
 import errorLogsTableColumns from './ErrorLogsTableColumns.react';
 
 const ErrorLogsTable = () => {
   const { dataSource } = useErrorLogs();
 
   const expandedRowRender = record => (
-    <Card isMargin>
-      <JsonView jsonObject={record} collapsed="1" />
+    <Card>
+      <JsonSwitch obj={record} />
     </Card>
   );
 
   return (
     <Table
-      isInner
       rowKey={({ id }) => id}
       columns={errorLogsTableColumns()}
       dataSource={dataSource}
