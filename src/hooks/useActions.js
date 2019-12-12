@@ -7,6 +7,7 @@ import {
   execRawPipeline,
   drawerOpen,
   drawerToggle,
+  toggleViewType,
 } from 'actions';
 import fromEntries from 'object.fromentries';
 
@@ -14,7 +15,15 @@ if (!Object.fromEntries) {
   fromEntries.shim();
 }
 
-const actions = { init, socketInit, triggerUserGuide, execRawPipeline, drawerOpen, drawerToggle };
+const actions = {
+  init,
+  socketInit,
+  triggerUserGuide,
+  execRawPipeline,
+  drawerOpen,
+  drawerToggle,
+  toggleViewType,
+};
 
 const useActions = () => {
   const dispatch = useDispatch();

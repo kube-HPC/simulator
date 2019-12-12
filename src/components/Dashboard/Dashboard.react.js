@@ -1,26 +1,16 @@
-import { Icon, Layout, message, Tag, Tooltip, Typography } from 'antd';
-import { AutoComplete, LoadingScreen, SidebarLeft, SidebarRight, UserGuide } from 'components';
-import { FlexBox, Icons } from 'components/common';
-import { LEFT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
-import { useConnectionStatus, useLeftSidebar, useActions } from 'hooks';
-import React, { useCallback, useEffect } from 'react';
+import { Layout, message } from 'antd';
+import { LoadingScreen, SidebarLeft, SidebarRight, UserGuide } from 'components';
+import { USER_GUIDE } from 'const';
+import { useActions, useConnectionStatus, useLeftSidebar } from 'hooks';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { COLOR, COLOR_LAYOUT, GlobalStyle, Header } from 'styles';
-import DashboardDrawer from './DashboardDrawer.react';
+import { COLOR, COLOR_LAYOUT, GlobalStyle } from 'styles';
+import DashboardDrawer from './Drawer/DashboardDrawer.react';
+import Header from './Header/Header.react';
 
 const LayoutFullHeight = styled(Layout)`
   height: 100vh;
   background: white;
-`;
-
-const DarkText = styled.span`
-  color: ${COLOR_LAYOUT.darkBorder};
-`;
-
-const HelpBar = styled(FlexBox)`
-  > ${Icons.DarkHoverStyle}, ${DarkText} {
-    margin-right: 10px;
-  }
 `;
 
 const ContentMargin = styled(Layout.Content)`
@@ -34,7 +24,7 @@ const ContentMargin = styled(Layout.Content)`
   }
 `;
 
-const RightSidebarsFlex = styled.div`
+const RightContainer = styled.div`
   display: flex;
   justify-content: space-between;
   flex-direction: column;
@@ -46,86 +36,37 @@ message.config({
   maxCount: 3,
 });
 
-const openWebsite = () => window.open('http://hkube.io/');
-const openGithub = () => window.open('https://github.com/kube-HPC/hkube');
-const appVersion = `${process.env.REACT_APP_VERSION}v`;
-
 const Dashboard = () => {
-  const { init, socketInit, triggerUserGuide } = useActions();
+  const { init, socketInit } = useActions();
 
   useEffect(() => {
     init();
     socketInit();
   }, [init, socketInit]);
 
+  const { isDataAvailable } = useConnectionStatus();
   const {
-    selector: tableSelector,
-    value: [tableValue, setTableValue],
-    isCollapsed: [leftIsCollapsed, setLeftIsCollapsed],
+    selector,
+    value: [tableValue],
   } = useLeftSidebar();
-
-  const onGuideClick = useCallback(() => {
-    triggerUserGuide();
-    setTableValue(LEFT_SIDEBAR_NAMES.JOBS);
-    setLeftIsCollapsed(true);
-  }, [setLeftIsCollapsed, setTableValue, triggerUserGuide]);
-
-  const triggerLeftVisible = useCallback(() => setLeftIsCollapsed(prev => !prev), [
-    setLeftIsCollapsed,
-  ]);
-
-  const { isDataAvailable, isSocketConnected } = useConnectionStatus();
 
   return (
     <>
       <GlobalStyle />
       {isDataAvailable ? (
         <>
-          <UserGuide triggerLeftVisible={triggerLeftVisible} setLeftValue={setTableValue} />
+          <UserGuide />
           <DashboardDrawer />
           <LayoutFullHeight>
-            <SidebarLeft
-              className={USER_GUIDE.SIDEBAR_LEFT}
-              selectedKeys={tableValue}
-              onSelect={setTableValue}
-              collapsed={!leftIsCollapsed}
-            />
+            <SidebarLeft className={USER_GUIDE.SIDEBAR_LEFT} />
             <Layout>
-              <Header className={USER_GUIDE.WELCOME}>
-                <FlexBox>
-                  <Icons.Hover
-                    type={leftIsCollapsed ? 'menu-fold' : 'menu-unfold'}
-                    onClick={triggerLeftVisible}
-                  />
-                  <AutoComplete table={tableValue} className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
-                  <HelpBar className={USER_GUIDE.HEADER.SOCIALS}>
-                    {!isSocketConnected && (
-                      <Tag color="orange">
-                        <Tooltip title="Reconnecting to Socket...">
-                          <FlexBox>
-                            <FlexBox.Item>
-                              <Typography.Text>Offline Mode</Typography.Text>
-                            </FlexBox.Item>
-                            <FlexBox.Item>
-                              <Icon type="disconnect" />
-                            </FlexBox.Item>
-                          </FlexBox>
-                        </Tooltip>
-                      </Tag>
-                    )}
-                    <Icons.Hover type="global" onClick={openWebsite} />
-                    <Icons.Hover type="github" onClick={openGithub} />
-                    <Icons.Hover type="question-circle" onClick={onGuideClick} />
-                    <DarkText>{appVersion}</DarkText>
-                  </HelpBar>
-                </FlexBox>
-              </Header>
+              <Header />
               <LayoutFullHeight>
-                <ContentMargin>{tableSelector[tableValue]}</ContentMargin>
-                <RightSidebarsFlex>
+                <ContentMargin>{selector[tableValue]}</ContentMargin>
+                <RightContainer>
                   <SidebarRight className={USER_GUIDE.SIDEBAR_TOP_RIGHT} isTop />
                   <SidebarRight className={USER_GUIDE.SIDEBAR_BOTTOM_RIGHT} />
-                </RightSidebarsFlex>
+                </RightContainer>
               </LayoutFullHeight>
             </Layout>
           </LayoutFullHeight>

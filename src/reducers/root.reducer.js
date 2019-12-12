@@ -16,11 +16,13 @@ import { userGuide } from 'reducers/userGuide.reducer';
 import { errorLogsTable } from 'reducers/errorLogs.reducer';
 
 import { drawer } from 'reducers/drawer.reducer';
+import { viewType } from 'reducers/viewType.reducer';
 
 const store = {
   algorithmBuildsTable,
   algorithmTable,
   autoCompleteFilter,
+  connectionStatus,
   debugTable,
   drawer,
   driverTable,
@@ -29,9 +31,9 @@ const store = {
   jobsTable,
   nodeStatistics,
   pipelineTable,
-  userGuide,
-  connectionStatus,
   socketURL,
+  userGuide,
+  viewType,
   workerTable,
 };
 

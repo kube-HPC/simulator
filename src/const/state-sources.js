@@ -17,4 +17,5 @@ export default {
   USER_GUIDE: 'userGuide',
   SOCKET_URL: 'socketURL',
   DRAWER: 'drawer',
+  VIEW_TYPE: 'viewType',
 };
