@@ -2,6 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Layout, Icon, Menu, Badge } from 'antd';
+import { useRightSidebar } from 'hooks';
 
 const SiderLight = styled(Layout.Sider)`
   border: none;
@@ -27,12 +28,17 @@ const addMenuItems = items =>
 const topMargin = { marginTop: '20%' };
 const noItemSelect = [];
 
-const SidebarRight = ({ onSelect, menuItems, ...props }) => {
+const SidebarRight = ({ isTop = false, className }) => {
+  const {
+    onSelect,
+    menus: { top, bottom },
+  } = useRightSidebar();
+
   const menuSelect = useCallback(({ key }) => onSelect(key), [onSelect]);
-  const items = useMemo(() => addMenuItems(menuItems), [menuItems]);
+  const items = useMemo(() => addMenuItems(isTop ? top : bottom), []);
 
   return (
-    <SiderMemo {...props} theme="light" collapsed={true} collapsedWidth={60}>
+    <SiderMemo className={className} theme="light" collapsed={true} collapsedWidth={60}>
       <MenuMemo mode="vertical" onSelect={menuSelect} style={topMargin} selectedKeys={noItemSelect}>
         {items}
       </MenuMemo>
@@ -40,10 +46,10 @@ const SidebarRight = ({ onSelect, menuItems, ...props }) => {
   );
 };
 
-export default React.memo(SidebarRight);
-
 SidebarRight.propTypes = {
-  onSelect: PropTypes.func.isRequired,
-  menuItems: PropTypes.array.isRequired,
+  isTop: PropTypes.bool,
+  className: PropTypes.string,
   ...Layout.Sider.propTypes,
 };
+
+export default React.memo(SidebarRight);

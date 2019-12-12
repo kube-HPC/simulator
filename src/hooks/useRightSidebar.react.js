@@ -17,7 +17,7 @@ import { useErrorLogs } from 'hooks';
 import { NodeStatistics } from 'components';
 import { STATE_SOURCES, RIGHT_SIDEBAR_NAMES } from 'const';
 import { drawerOpen } from 'actions';
-import { rightSidebarContent } from 'components/Drawer';
+import { CONTENT_CONFIG } from 'components/Drawer';
 
 const top = [
   {
@@ -108,7 +108,7 @@ const useRightSidebar = () => {
       if (selection === RIGHT_SIDEBAR_NAMES.ERROR_LOGS) {
         setIsCleared(true);
       }
-      const { width } = rightSidebarContent[selection];
+      const { width } = CONTENT_CONFIG[selection];
 
       const content = {
         width,

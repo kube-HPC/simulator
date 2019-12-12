@@ -7,19 +7,14 @@ import { drawerToggle } from 'actions';
 const DashboardDrawer = () => {
   const {
     isVisible,
-    content: { width, title, body, footer },
+    content: { body, footer, ...props },
   } = useSelector(state => state[STATE_SOURCES.DRAWER]);
 
   const dispatch = useDispatch();
   const onClose = useCallback(() => dispatch(drawerToggle()), []);
 
   return (
-    <Drawer
-      width={width}
-      visible={isVisible}
-      title={title}
-      onClose={onClose}
-      bottomContent={footer}>
+    <Drawer {...props} visible={isVisible} onClose={onClose} bottomContent={footer}>
       {body}
     </Drawer>
   );

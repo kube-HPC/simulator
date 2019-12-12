@@ -3,7 +3,7 @@ import { Icon, Layout, message, Tag, Tooltip, Typography } from 'antd';
 import { AutoComplete, LoadingScreen, SidebarLeft, SidebarRight, UserGuide } from 'components';
 import { FlexBox, Icons } from 'components/common';
 import { LEFT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
-import { useConnectionStatus, useLeftSidebar, useRightSidebar } from 'hooks';
+import { useConnectionStatus, useLeftSidebar } from 'hooks';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
@@ -81,11 +81,6 @@ const Dashboard = () => {
     isCollapsed: [leftIsCollapsed, setLeftIsCollapsed],
   } = useLeftSidebar();
 
-  const {
-    onSelect,
-    menus: { top, bottom },
-  } = useRightSidebar();
-
   const setLeftValue = useCallback(setTableValue, [setTableValue]);
   const leftSelectedKeys = useMemo(() => [tableValue], [tableValue]);
 
@@ -147,16 +142,8 @@ const Dashboard = () => {
               <LayoutFullHeight>
                 <ContentMargin>{tableSelector[tableValue]}</ContentMargin>
                 <RightSidebarsFlex>
-                  <SidebarRight
-                    className={USER_GUIDE.SIDEBAR_TOP_RIGHT}
-                    onSelect={onSelect}
-                    menuItems={top}
-                  />
-                  <SidebarRight
-                    className={USER_GUIDE.SIDEBAR_BOTTOM_RIGHT}
-                    onSelect={onSelect}
-                    menuItems={bottom}
-                  />
+                  <SidebarRight className={USER_GUIDE.SIDEBAR_TOP_RIGHT} isTop />
+                  <SidebarRight className={USER_GUIDE.SIDEBAR_BOTTOM_RIGHT} />
                 </RightSidebarsFlex>
               </LayoutFullHeight>
             </Layout>
