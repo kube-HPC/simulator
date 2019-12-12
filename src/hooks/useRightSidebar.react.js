@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useRef, useCallback, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 
 import {
   AddPipeline,
@@ -16,8 +16,8 @@ import {
 import { useErrorLogs } from 'hooks';
 import { NodeStatistics } from 'components';
 import { STATE_SOURCES, RIGHT_SIDEBAR_NAMES } from 'const';
-import { drawerOpen } from 'actions';
 import { CONTENT_CONFIG } from 'components/Drawer';
+import useActions from './useActions';
 
 const top = [
   {
@@ -64,15 +64,18 @@ const useRightSidebar = () => {
   const cpuStatusRef = useRef('');
   const memoryStatusRef = useRef('');
 
-  const operationSelector = {
-    [RIGHT_SIDEBAR_NAMES.ADD_PIPELINE]: <AddPipeline />,
-    [RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM]: <AddAlgorithm />,
-    [RIGHT_SIDEBAR_NAMES.ADD_DEBUG]: <AddDebug />,
-    [RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE]: <RunRawPipeline />,
-    [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: <ErrorLogsTable />,
-    [RIGHT_SIDEBAR_NAMES.CPU]: <NodeStatistics metric="cpu" />,
-    [RIGHT_SIDEBAR_NAMES.MEMORY]: <NodeStatistics metric="mem" />,
-  };
+  const operationSelector = useMemo(
+    () => ({
+      [RIGHT_SIDEBAR_NAMES.ADD_PIPELINE]: <AddPipeline />,
+      [RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM]: <AddAlgorithm />,
+      [RIGHT_SIDEBAR_NAMES.ADD_DEBUG]: <AddDebug />,
+      [RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE]: <RunRawPipeline />,
+      [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: <ErrorLogsTable />,
+      [RIGHT_SIDEBAR_NAMES.CPU]: <NodeStatistics metric="cpu" />,
+      [RIGHT_SIDEBAR_NAMES.MEMORY]: <NodeStatistics metric="mem" />,
+    }),
+    [],
+  );
 
   const {
     dataSource: [cpuStats, memoryStats],
@@ -101,7 +104,7 @@ const useRightSidebar = () => {
     },
   ];
 
-  const dispatch = useDispatch();
+  const { drawerOpen } = useActions();
 
   const onSelectDrawer = useCallback(
     selection => {
@@ -114,9 +117,9 @@ const useRightSidebar = () => {
         width,
         body: operationSelector[selection],
       };
-      dispatch(drawerOpen(content));
+      drawerOpen(content);
     },
-    [setIsCleared],
+    [setIsCleared, drawerOpen, operationSelector],
   );
 
   return {

@@ -4,14 +4,17 @@ import { Provider } from 'react-redux';
 import store from './store';
 import { ErrorBoundary } from 'components';
 import DashboardReact from './components/Dashboard/Dashboard.react';
+import { ReusableProvider } from 'reusable';
 
 render(
   <Provider store={store}>
-    <ErrorBoundary>
-      <DashboardReact />
-    </ErrorBoundary>
+    <ReusableProvider>
+      <ErrorBoundary>
+        <DashboardReact />
+      </ErrorBoundary>
+    </ReusableProvider>
   </Provider>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
 
 // webpack Hot Module Replacement API

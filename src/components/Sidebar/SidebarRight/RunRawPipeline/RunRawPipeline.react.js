@@ -1,24 +1,22 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { Button } from 'antd';
-
-import { stringify, notification } from 'utils';
+import { BottomContent, Card, JsonEditor } from 'components/common';
 import { addPipelineTemplate } from 'config';
-import { BottomContent, JsonEditor, Card } from 'components/common';
-import { execRawPipeline } from 'actions/pipeline.action';
+import { useActions } from 'hooks';
+import React, { useState } from 'react';
+import { notification, stringify } from 'utils';
 
 const DEFAULT_VALUE = stringify(addPipelineTemplate);
 
 const RunRawPipeline = () => {
   const [value, setValue] = useState(DEFAULT_VALUE);
-  const dispatch = useDispatch();
+  const { execRawPipeline } = useActions();
 
   const onClear = () => setValue('');
   const onDefault = () => setValue(DEFAULT_VALUE);
 
   const onSubmitClick = () => {
     try {
-      dispatch(execRawPipeline(JSON.parse(value)));
+      execRawPipeline(JSON.parse(value));
     } catch ({ message: description }) {
       notification({ message: 'Error in Submitted Json', description });
     }

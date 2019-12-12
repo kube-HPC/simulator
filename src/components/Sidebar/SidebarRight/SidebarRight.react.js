@@ -35,7 +35,7 @@ const SidebarRight = ({ isTop = false, className }) => {
   } = useRightSidebar();
 
   const menuSelect = useCallback(({ key }) => onSelect(key), [onSelect]);
-  const items = useMemo(() => addMenuItems(isTop ? top : bottom), []);
+  const items = useMemo(() => addMenuItems(isTop ? top : bottom), [isTop, top, bottom]);
 
   return (
     <SiderMemo className={className} theme="light" collapsed={true} collapsedWidth={60}>

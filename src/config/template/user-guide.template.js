@@ -5,144 +5,45 @@ export const dataCountMock = {
   driversCount: 2,
   jobsCount: 3,
   pipelinesCount: 42,
-  workersCount: 6
+  workersCount: 6,
 };
 
 export const jobsTableMock = [
   {
-    key: 'bool:66998f79-545e-4e1f-985c-7453001a7be3.bool',
+    key: 'evalerror:d6bca9ba-dc02-4ed7-b8e1-26387b888a3d',
     status: {
-      timestamp: '31/07/19, 17:21:31',
-      jobId: 'bool:66998f79-545e-4e1f-985c-7453001a7be3.bool',
-      pipeline: 'bool',
-      data: {
-        progress: 100,
-        details: '100% completed, 1 succeed',
-        states: {
-          succeed: 1
-        }
-      },
-      status: 'completed',
-      level: 'info'
-    },
-    results: {
-      timestamp: '2019-07-31T14:21:30.935Z',
-      jobId: 'bool:66998f79-545e-4e1f-985c-7453001a7be3.bool',
-      pipeline: 'bool',
-      data: {
-        storageInfo: {
-          path: 'pub-hkube-results/bool:66998f79-545e-4e1f-985c-7453001a7be3.bool/result.json'
-        }
-      },
-      status: 'completed',
-      timeTook: 1.371
-    },
-    pipeline: {
-      jobId: 'bool:66998f79-545e-4e1f-985c-7453001a7be3.bool',
-      name: 'bool',
-      nodes: [
-        {
-          nodeName: 'trueFalse',
-          algorithmName: 'eval-alg',
-          input: ['@flowInput.inputs'],
-          extraData: {
-            code: ['(input,require)=> {', 'const txt = input[0];', 'return txt;}']
-          }
-        }
-      ],
-      options: {
-        ttl: 3600,
-        batchTolerance: 60,
-        progressVerbosityLevel: 'debug'
-      },
-      priority: 3,
-      flowInput: {
-        metadata: {
-          'flowInput.inputs': {
-            type: 'object'
-          }
-        },
-        storageInfo: {
-          path:
-            'pub-hkube/bool:66998f79-545e-4e1f-985c-7453001a7be3.bool/bool:66998f79-545e-4e1f-985c-7453001a7be3.bool'
-        }
-      },
-      flowInputOrig: {
-        inputs: {
-          name: 'hkube',
-          type: 'type1',
-          prop: ['prop1', 'prop2', 'prop3', 4, 7, 89.022, -987]
-        }
-      },
-      startTime: 1564582889550,
-      lastRunResult: {
-        timestamp: '2019-07-31T14:21:20.914Z',
-        status: 'completed',
-        timeTook: 0.718
-      }
-    },
-    graph: {
-      edges: [],
-      nodes: [
-        {
-          taskId: 'trueFalse:eval-alg:ec31b1f9-317f-47ae-95d9-0928eec7cc13',
-          input: [
-            {
-              path:
-                'pub-hkube/bool:66998f79-545e-4e1f-985c-7453001a7be3.bool/bool:66998f79-545e-4e1f-985c-7453001a7be3.bool'
-            }
-          ],
-          output: {
-            metadata: {},
-            storageInfo: {
-              path:
-                'pub-hkube/bool:66998f79-545e-4e1f-985c-7453001a7be3.bool/trueFalse:eval-alg:ec31b1f9-317f-47ae-95d9-0928eec7cc13'
-            }
-          },
-          status: 'succeed',
-          prevErrors: [],
-          nodeName: 'trueFalse',
-          algorithmName: 'eval-alg',
-          startTime: 1564582890794,
-          endTime: 1564582890864,
-          group: 'completed',
-          batch: null
-        }
-      ]
-    }
-  },
-  {
-    key: 'evalerror:3f0b61c2-a06f-422e-a8c2-02dc359fb201.evalerror',
-    status: {
-      timestamp: '31/07/19, 17:17:57',
-      jobId: 'evalerror:3f0b61c2-a06f-422e-a8c2-02dc359fb201.evalerror',
+      timestamp: '2019-12-12T13:16:43.230Z',
+      jobId: 'evalerror:d6bca9ba-dc02-4ed7-b8e1-26387b888a3d',
+      status: 'failed',
+      level: 'error',
       pipeline: 'evalerror',
       data: {
         progress: 40,
-        details: '40% completed, 1 succeed, 1 failed, 3 creating',
+        details: '40% completed, 1 creating, 1 failed, 2 active, 1 succeed',
         states: {
-          succeed: 1,
+          creating: 1,
           failed: 1,
-          creating: 3
-        }
+          active: 2,
+          succeed: 1,
+        },
       },
-      status: 'failed',
       error:
         '1/5 (20%) failed tasks, batch tolerance is 0%, error: Error: failed to eval code: eval error, dont know what to do',
-      level: 'error'
+      nodeName: 'nodeerror',
     },
     results: {
-      timestamp: '2019-07-31T14:17:56.724Z',
-      jobId: 'evalerror:3f0b61c2-a06f-422e-a8c2-02dc359fb201.evalerror',
+      timestamp: '2019-12-12T13:16:47.509Z',
+      jobId: 'evalerror:d6bca9ba-dc02-4ed7-b8e1-26387b888a3d',
       pipeline: 'evalerror',
       data: null,
       status: 'failed',
       error:
         '1/5 (20%) failed tasks, batch tolerance is 0%, error: Error: failed to eval code: eval error, dont know what to do',
-      timeTook: 2.431
+      nodeName: 'nodeerror',
+      timeTook: 4.418,
     },
     pipeline: {
-      jobId: 'evalerror:3f0b61c2-a06f-422e-a8c2-02dc359fb201.evalerror',
+      jobId: 'evalerror:d6bca9ba-dc02-4ed7-b8e1-26387b888a3d',
       name: 'evalerror',
       nodes: [
         {
@@ -153,232 +54,333 @@ export const jobsTableMock = [
             code: [
               '(input,require) => {',
               'if (input[0]>10){',
-              "throw new Error ('eval error, dont know what to do');}",
+              'throw new Error (\'eval error, dont know what to do\');}',
               'else{',
-              'return 100}}'
-            ]
-          }
-        }
+              'return 100}}',
+            ],
+          },
+        },
       ],
       options: {
         ttl: 3600,
         batchTolerance: 0,
-        progressVerbosityLevel: 'debug'
+        progressVerbosityLevel: 'debug',
       },
       priority: 3,
       flowInput: {
         metadata: {
           'flowInput.nums': {
             type: 'array',
-            size: 5
-          }
+            size: 5,
+          },
         },
         storageInfo: {
           path:
-            'pub-hkube/evalerror:3f0b61c2-a06f-422e-a8c2-02dc359fb201.evalerror/evalerror:3f0b61c2-a06f-422e-a8c2-02dc359fb201.evalerror'
-        }
+            'pub-hkube/evalerror:d6bca9ba-dc02-4ed7-b8e1-26387b888a3d/evalerror:d6bca9ba-dc02-4ed7-b8e1-26387b888a3d',
+        },
       },
       flowInputOrig: {
-        nums: [1, 24, 3, 4, 5]
+        nums: [1, 24, 3, 4, 5],
       },
-      startTime: 1564582674211,
+      startTime: 1576156603091,
       lastRunResult: {
-        timestamp: '2019-07-31T14:17:38.256Z',
+        timestamp: '2019-12-12T13:16:25.310Z',
         status: 'completed',
-        timeTook: 2.161
-      }
+        timeTook: 7.48,
+      },
     },
     graph: {
+      jobId: 'evalerror:d6bca9ba-dc02-4ed7-b8e1-26387b888a3d',
+      timestamp: 1576156609301,
       edges: [],
       nodes: [
         {
           nodeName: 'nodeerror',
           algorithmName: 'eval-alg',
-          extra: {
-            batch: '2/5'
+          batch: [
+            {
+              taskId: 'nodeerror:eval-alg:0cbe1986-0b59-4c34-952a-1fa43566209f',
+              input: [
+                {
+                  path:
+                    'pub-hkube/evalerror:d6bca9ba-dc02-4ed7-b8e1-26387b888a3d/evalerror:d6bca9ba-dc02-4ed7-b8e1-26387b888a3d',
+                },
+              ],
+              podName: 'eval-alg-29e989e5-051e-4682-89de-5927e58ad7ad-gfhzk',
+              status: 'failed',
+              error: 'Error: failed to eval code: eval error, dont know what to do',
+              prevErrors: [],
+              batchIndex: 2,
+              startTime: 1576156607394,
+              endTime: 1576156607451,
+            },
+            {
+              taskId: 'nodeerror:eval-alg:1c7ab376-5c93-4c98-8028-12573414443d',
+              input: [
+                {
+                  path:
+                    'pub-hkube/evalerror:d6bca9ba-dc02-4ed7-b8e1-26387b888a3d/evalerror:d6bca9ba-dc02-4ed7-b8e1-26387b888a3d',
+                },
+              ],
+              status: 'creating',
+              prevErrors: [],
+              batchIndex: 1,
+            },
+            {
+              taskId: 'nodeerror:eval-alg:56e63bf4-f76e-4ad9-a2b9-4fdbea9b570f',
+              input: [
+                {
+                  path:
+                    'pub-hkube/evalerror:d6bca9ba-dc02-4ed7-b8e1-26387b888a3d/evalerror:d6bca9ba-dc02-4ed7-b8e1-26387b888a3d',
+                },
+              ],
+              podName: 'eval-alg-6b8bb76c-008b-4cd3-8dfc-c4b0dbe511ac-km4mr',
+              status: 'active',
+              prevErrors: [],
+              batchIndex: 3,
+              startTime: 1576156607394,
+            },
+            {
+              taskId: 'nodeerror:eval-alg:c7d1ede2-4c64-4bec-ab67-908d4d0a82e0',
+              input: [
+                {
+                  path:
+                    'pub-hkube/evalerror:d6bca9ba-dc02-4ed7-b8e1-26387b888a3d/evalerror:d6bca9ba-dc02-4ed7-b8e1-26387b888a3d',
+                },
+              ],
+              podName: 'eval-alg-5ebaf7ad-761e-4ae6-9f37-67c3dd2fb46e-hgd6p',
+              status: 'active',
+              prevErrors: [],
+              batchIndex: 4,
+              startTime: 1576156607395,
+            },
+            {
+              taskId: 'nodeerror:eval-alg:dc2dc25a-b90b-4ca8-95b2-c0f96730fa63',
+              input: [
+                {
+                  path:
+                    'pub-hkube/evalerror:d6bca9ba-dc02-4ed7-b8e1-26387b888a3d/evalerror:d6bca9ba-dc02-4ed7-b8e1-26387b888a3d',
+                },
+              ],
+              output: {
+                metadata: {},
+                storageInfo: {
+                  path:
+                    'pub-hkube/evalerror:d6bca9ba-dc02-4ed7-b8e1-26387b888a3d/nodeerror:eval-alg:dc2dc25a-b90b-4ca8-95b2-c0f96730fa63',
+                },
+              },
+              podName: 'eval-alg-1bdeb10c-8f9c-458e-a697-d2985f024ee8-jnw89',
+              status: 'succeed',
+              prevErrors: [],
+              batchIndex: 5,
+              startTime: 1576156606636,
+              endTime: 1576156607445,
+            },
+          ],
+          batchInfo: {
+            idle: 1,
+            completed: 2,
+            errors: 1,
+            running: 2,
+            total: 5,
           },
-          group: 'batchErrors',
-          batch: null
-        }
-      ]
-    }
+        },
+      ],
+    },
   },
   {
-    key: 'simple:c503934b-96cd-4c97-a076-36132f3fc7ba.simple',
+    key: 'evalerror:4396e0ac-eff6-4657-8980-8977159a1093',
     status: {
-      timestamp: '31/07/19, 17:12:47',
-      jobId: 'simple:c503934b-96cd-4c97-a076-36132f3fc7ba.simple',
-      pipeline: 'simple',
+      timestamp: '2019-12-12T13:16:43.109Z',
+      jobId: 'evalerror:4396e0ac-eff6-4657-8980-8977159a1093',
+      status: 'stopped',
+      level: 'info',
+      pipeline: 'evalerror',
       data: {
-        progress: 100,
-        details: '100% completed, 3 succeed',
+        progress: 80,
+        details: '80% completed, 3 succeed, 1 failed, 1 active',
         states: {
-          succeed: 3
-        }
+          succeed: 3,
+          failed: 1,
+          active: 1,
+        },
       },
-      status: 'completed',
-      level: 'info'
+      error:
+        '1/5 (20%) failed tasks, batch tolerance is 0%, error: Error: failed to eval code: eval error, dont know what to do',
+      nodeName: 'nodeerror',
+      reason: 'requested by user',
     },
     results: {
-      timestamp: '2019-07-31T14:12:47.061Z',
-      jobId: 'simple:c503934b-96cd-4c97-a076-36132f3fc7ba.simple',
-      pipeline: 'simple',
-      data: {
-        storageInfo: {
-          path: 'pub-hkube-results/simple:c503934b-96cd-4c97-a076-36132f3fc7ba.simple/result.json'
-        }
-      },
+      timestamp: '2019-12-12T13:16:48.962Z',
+      jobId: 'evalerror:4396e0ac-eff6-4657-8980-8977159a1093',
+      pipeline: 'evalerror',
+      data: null,
       status: 'completed',
-      timeTook: 100.985
+      reason: 'requested by user',
+      timeTook: 6.066,
     },
     pipeline: {
-      jobId: 'simple:c503934b-96cd-4c97-a076-36132f3fc7ba.simple',
-      name: 'simple',
+      jobId: 'evalerror:4396e0ac-eff6-4657-8980-8977159a1093',
+      name: 'evalerror',
       nodes: [
         {
-          nodeName: 'green',
-          algorithmName: 'green-alg',
-          input: ['@flowInput.files.link']
+          nodeName: 'nodeerror',
+          algorithmName: 'eval-alg',
+          input: ['#@flowInput.nums'],
+          extraData: {
+            code: [
+              '(input,require) => {',
+              'if (input[0]>10){',
+              'throw new Error (\'eval error, dont know what to do\');}',
+              'else{',
+              'return 100}}',
+            ],
+          },
         },
-        {
-          nodeName: 'yellow',
-          algorithmName: 'yellow-alg',
-          input: ['@green']
-        },
-        {
-          nodeName: 'black',
-          algorithmName: 'black-alg',
-          input: ['@yellow']
-        }
       ],
+      options: {
+        ttl: 3600,
+        batchTolerance: 0,
+        progressVerbosityLevel: 'debug',
+      },
+      priority: 3,
       flowInput: {
         metadata: {
-          'flowInput.files.link': {
-            type: 'string'
-          }
+          'flowInput.nums': {
+            type: 'array',
+            size: 5,
+          },
         },
         storageInfo: {
           path:
-            'pub-hkube/simple:c503934b-96cd-4c97-a076-36132f3fc7ba.simple/simple:c503934b-96cd-4c97-a076-36132f3fc7ba.simple'
-        }
+            'pub-hkube/evalerror:4396e0ac-eff6-4657-8980-8977159a1093/evalerror:4396e0ac-eff6-4657-8980-8977159a1093',
+        },
       },
-      options: {
-        batchTolerance: 100,
-        progressVerbosityLevel: 'debug',
-        ttl: 3600
-      },
-      webhooks: {
-        progress: 'http://localhost:3003/webhook/progress',
-        result: 'http://localhost:3003/webhook/result'
-      },
-      priority: 3,
       flowInputOrig: {
-        files: {
-          link: 'links-1'
-        }
+        nums: [1, 24, 3, 4, 5],
       },
-      startTime: 1564582266069,
+      startTime: 1576156602896,
       lastRunResult: {
-        timestamp: '2019-07-31T14:02:43.725Z',
-        status: 'stopped',
-        timeTook: 0.002
-      }
+        timestamp: '2019-12-12T13:16:25.310Z',
+        status: 'completed',
+        timeTook: 7.48,
+      },
     },
     graph: {
-      edges: [
-        {
-          from: 'green',
-          to: 'yellow',
-          group: 'none'
-        },
-        {
-          from: 'yellow',
-          to: 'black',
-          group: 'none'
-        }
-      ],
+      jobId: 'evalerror:4396e0ac-eff6-4657-8980-8977159a1093',
+      timestamp: 1576156607697,
+      edges: [],
       nodes: [
         {
-          taskId: 'green:green-alg:3490712a-6d0b-4cd0-9101-efb6ff052a7f',
-          input: [
+          nodeName: 'nodeerror',
+          algorithmName: 'eval-alg',
+          batch: [
             {
-              path:
-                'pub-hkube/simple:c503934b-96cd-4c97-a076-36132f3fc7ba.simple/simple:c503934b-96cd-4c97-a076-36132f3fc7ba.simple'
-            }
-          ],
-          output: {
-            metadata: {
-              green: {
-                type: 'number'
-              }
+              taskId: 'nodeerror:eval-alg:95e75754-e3ce-4bf9-8c8c-07b45576632b',
+              input: [
+                {
+                  path:
+                    'pub-hkube/evalerror:4396e0ac-eff6-4657-8980-8977159a1093/evalerror:4396e0ac-eff6-4657-8980-8977159a1093',
+                },
+              ],
+              podName: 'eval-alg-6c53d56e-5624-4944-8405-cf778e6daff2-49pbs',
+              status: 'failed',
+              error: 'Error: failed to eval code: eval error, dont know what to do',
+              prevErrors: [],
+              batchIndex: 2,
+              startTime: 1576156605654,
+              endTime: 1576156605753,
             },
-            storageInfo: {
-              path:
-                'pub-hkube/simple:c503934b-96cd-4c97-a076-36132f3fc7ba.simple/green:green-alg:3490712a-6d0b-4cd0-9101-efb6ff052a7f'
-            }
-          },
-          status: 'succeed',
-          prevErrors: [],
-          nodeName: 'green',
-          algorithmName: 'green-alg',
-          startTime: 1564582288499,
-          endTime: 1564582288707,
-          group: 'completed',
-          batch: null
-        },
-        {
-          taskId: 'yellow:yellow-alg:f9d4d30b-51ce-4589-9a4a-bbc30130c582',
-          input: [
             {
-              path:
-                'pub-hkube/simple:c503934b-96cd-4c97-a076-36132f3fc7ba.simple/green:green-alg:3490712a-6d0b-4cd0-9101-efb6ff052a7f'
-            }
-          ],
-          output: {
-            metadata: {
-              yellow: {
-                type: 'number'
-              }
+              taskId: 'nodeerror:eval-alg:0a1661d3-8932-4ea2-835b-17c60ab3719d',
+              input: [
+                {
+                  path:
+                    'pub-hkube/evalerror:4396e0ac-eff6-4657-8980-8977159a1093/evalerror:4396e0ac-eff6-4657-8980-8977159a1093',
+                },
+              ],
+              output: {
+                metadata: {},
+                storageInfo: {
+                  path:
+                    'pub-hkube/evalerror:4396e0ac-eff6-4657-8980-8977159a1093/nodeerror:eval-alg:0a1661d3-8932-4ea2-835b-17c60ab3719d',
+                },
+              },
+              podName: 'eval-alg-c7d19c20-bdc4-42f9-931e-e69cc041731d-sckj4',
+              status: 'succeed',
+              prevErrors: [],
+              batchIndex: 1,
+              startTime: 1576156605337,
+              endTime: 1576156605689,
             },
-            storageInfo: {
-              path:
-                'pub-hkube/simple:c503934b-96cd-4c97-a076-36132f3fc7ba.simple/yellow:yellow-alg:f9d4d30b-51ce-4589-9a4a-bbc30130c582'
-            }
-          },
-          status: 'succeed',
-          prevErrors: [],
-          nodeName: 'yellow',
-          algorithmName: 'yellow-alg',
-          startTime: 1564582327802,
-          endTime: 1564582328007,
-          group: 'completed',
-          batch: null
-        },
-        {
-          taskId: 'black:black-alg:1e83fb5f-4542-48bd-97d0-b860186710fb',
-          input: [
             {
-              path:
-                'pub-hkube/simple:c503934b-96cd-4c97-a076-36132f3fc7ba.simple/yellow:yellow-alg:f9d4d30b-51ce-4589-9a4a-bbc30130c582'
-            }
+              taskId: 'nodeerror:eval-alg:3400c858-ddac-4e74-99f4-bfd1096e00bf',
+              input: [
+                {
+                  path:
+                    'pub-hkube/evalerror:4396e0ac-eff6-4657-8980-8977159a1093/evalerror:4396e0ac-eff6-4657-8980-8977159a1093',
+                },
+              ],
+              output: {
+                metadata: {},
+                storageInfo: {
+                  path:
+                    'pub-hkube/evalerror:4396e0ac-eff6-4657-8980-8977159a1093/nodeerror:eval-alg:3400c858-ddac-4e74-99f4-bfd1096e00bf',
+                },
+              },
+              podName: 'eval-alg-80945c88-123a-4d4a-8ebb-a551749d73ee-r57vg',
+              status: 'succeed',
+              prevErrors: [],
+              batchIndex: 3,
+              startTime: 1576156605226,
+              endTime: 1576156605316,
+            },
+            {
+              taskId: 'nodeerror:eval-alg:402e18c1-596a-4719-a1eb-b786c9a07488',
+              input: [
+                {
+                  path:
+                    'pub-hkube/evalerror:4396e0ac-eff6-4657-8980-8977159a1093/evalerror:4396e0ac-eff6-4657-8980-8977159a1093',
+                },
+              ],
+              podName: 'eval-alg-873e98e7-b7df-4931-a1f7-088acf46bf37-66c99',
+              status: 'active',
+              prevErrors: [],
+              batchIndex: 4,
+              startTime: 1576156605654,
+            },
+            {
+              taskId: 'nodeerror:eval-alg:85374527-c7c6-4270-82bb-06c8771c301b',
+              input: [
+                {
+                  path:
+                    'pub-hkube/evalerror:4396e0ac-eff6-4657-8980-8977159a1093/evalerror:4396e0ac-eff6-4657-8980-8977159a1093',
+                },
+              ],
+              output: {
+                metadata: {},
+                storageInfo: {
+                  path:
+                    'pub-hkube/evalerror:4396e0ac-eff6-4657-8980-8977159a1093/nodeerror:eval-alg:85374527-c7c6-4270-82bb-06c8771c301b',
+                },
+              },
+              podName: 'eval-alg-e44e515c-de60-4b49-9525-8b8d82563d4f-k5rll',
+              status: 'succeed',
+              prevErrors: [],
+              batchIndex: 5,
+              startTime: 1576156605212,
+              endTime: 1576156605271,
+            },
           ],
-          output: {
-            metadata: {},
-            storageInfo: {
-              path:
-                'pub-hkube/simple:c503934b-96cd-4c97-a076-36132f3fc7ba.simple/black:black-alg:1e83fb5f-4542-48bd-97d0-b860186710fb'
-            }
+          batchInfo: {
+            idle: 0,
+            completed: 4,
+            errors: 1,
+            running: 1,
+            total: 5,
           },
-          status: 'succeed',
-          prevErrors: [],
-          nodeName: 'black',
-          algorithmName: 'black-alg',
-          startTime: 1564582366891,
-          endTime: 1564582366979,
-          group: 'completed',
-          batch: null
-        }
-      ]
-    }
-  }
+        },
+      ],
+    },
+  },
 ];

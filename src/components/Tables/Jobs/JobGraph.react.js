@@ -109,7 +109,7 @@ const JobGraph = ({ graph, pipeline }) => {
   const dispatch = useDispatch();
   const getLogs = useCallback(
     ({ taskId, podName }) => dispatch(getKubernetesLogsData({ taskId, podName })),
-    [],
+    [dispatch],
   );
 
   const events = {
