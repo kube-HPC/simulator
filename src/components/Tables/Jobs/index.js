@@ -6,3 +6,4 @@ export { default as NodeInputOutput } from './NodeInputOutput.react';
 export { default as NodeInfo } from './NodeInfo.react';
 
 export { default as JobGraph } from './JobGraph.react';
+export { default as GraphType } from './graphType';

@@ -85,6 +85,7 @@ export default {
       }
     },
     completed: { color: { background: COLOR_PIPELINE_STATUS.completed } },
+    failed: { color: { background: COLOR_PIPELINE_STATUS.failed } },
     source: {
       color: { border: 'white' }
     }
