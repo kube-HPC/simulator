@@ -1,8 +1,8 @@
-import React, { useCallback, memo } from 'react';
+import React, { memo } from 'react';
 import { Drawer } from 'components/Drawer';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { STATE_SOURCES } from 'const';
-import { drawerToggle } from 'actions';
+import { useActions } from 'hooks';
 
 const DashboardDrawer = () => {
   const {
@@ -10,11 +10,10 @@ const DashboardDrawer = () => {
     content: { body, footer, ...props },
   } = useSelector(state => state[STATE_SOURCES.DRAWER]);
 
-  const dispatch = useDispatch();
-  const onClose = useCallback(() => dispatch(drawerToggle()), []);
+  const { drawerToggle } = useActions();
 
   return (
-    <Drawer {...props} visible={isVisible} onClose={onClose} bottomContent={footer}>
+    <Drawer {...props} visible={isVisible} onClose={drawerToggle} bottomContent={footer}>
       {body}
     </Drawer>
   );

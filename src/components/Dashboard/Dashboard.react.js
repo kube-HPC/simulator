@@ -1,11 +1,9 @@
-import { init, socketInit, triggerUserGuide } from 'actions';
 import { Icon, Layout, message, Tag, Tooltip, Typography } from 'antd';
 import { AutoComplete, LoadingScreen, SidebarLeft, SidebarRight, UserGuide } from 'components';
 import { FlexBox, Icons } from 'components/common';
 import { LEFT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
-import { useConnectionStatus, useLeftSidebar } from 'hooks';
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
+import { useConnectionStatus, useLeftSidebar, useActions } from 'hooks';
+import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { COLOR, COLOR_LAYOUT, GlobalStyle } from 'styles';
 import DashboardDrawer from './DashboardDrawer.react';
@@ -68,12 +66,12 @@ const openGithub = () => window.open('https://github.com/kube-HPC/hkube');
 const appVersion = `${process.env.REACT_APP_VERSION}v`;
 
 const Dashboard = () => {
-  const dispatch = useDispatch();
+  const { init, socketInit, triggerUserGuide } = useActions();
 
   useEffect(() => {
-    dispatch(init());
-    dispatch(socketInit());
-  }, [dispatch]);
+    init();
+    socketInit();
+  }, [init, socketInit]);
 
   const {
     selector: tableSelector,
@@ -81,18 +79,16 @@ const Dashboard = () => {
     isCollapsed: [leftIsCollapsed, setLeftIsCollapsed],
   } = useLeftSidebar();
 
-  const setLeftValue = useCallback(setTableValue, [setTableValue]);
-  const leftSelectedKeys = useMemo(() => [tableValue], [tableValue]);
-
   const onGuideClick = useCallback(() => {
-    dispatch(triggerUserGuide());
+    triggerUserGuide();
     setTableValue(LEFT_SIDEBAR_NAMES.JOBS);
     setLeftIsCollapsed(true);
-  }, [dispatch, setLeftIsCollapsed, setTableValue]);
+  }, [setLeftIsCollapsed, setTableValue, triggerUserGuide]);
 
   const triggerLeftVisible = useCallback(() => setLeftIsCollapsed(prev => !prev), [
     setLeftIsCollapsed,
   ]);
+
   const { isDataAvailable, isSocketConnected } = useConnectionStatus();
 
   return (
@@ -100,13 +96,13 @@ const Dashboard = () => {
       <GlobalStyle />
       {isDataAvailable ? (
         <>
-          <UserGuide triggerLeftVisible={triggerLeftVisible} setLeftValue={setLeftValue} />
+          <UserGuide triggerLeftVisible={triggerLeftVisible} setLeftValue={setTableValue} />
           <DashboardDrawer />
           <LayoutFullHeight>
             <SidebarLeft
               className={USER_GUIDE.SIDEBAR_LEFT}
-              selectedKeys={leftSelectedKeys}
-              onSelect={setLeftValue}
+              selectedKeys={tableValue}
+              onSelect={setTableValue}
               collapsed={!leftIsCollapsed}
             />
             <Layout>
