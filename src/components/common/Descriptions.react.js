@@ -31,7 +31,7 @@ Descriptions.Item = AntdDescription.Item;
 
 Descriptions.propTypes = {
   className: PropTypes.string,
-  vertical: PropTypes.string,
+  vertical: PropTypes.bool,
   column: PropTypes.number,
   children: PropTypes.node.isRequired,
 };

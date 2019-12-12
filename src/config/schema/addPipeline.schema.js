@@ -71,7 +71,7 @@ const addPipelineSchema = {
     PIPELINES: {
       label: 'Pipelines',
       field: 'triggers.pipelines',
-      placeholder: 'Pick pipelines to activate upon result',
+      placeholder: 'Pick Pipelines to Trigger Current One',
     },
   },
   OPTIONS: {

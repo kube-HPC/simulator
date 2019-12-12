@@ -4,7 +4,7 @@ import humanizeDuration from 'humanize-duration';
 import Moment from 'react-moment';
 
 import { toUpperCaseFirstLetter, sorter } from 'utils/string';
-import { Progress, Tag, Tooltip, Button, Row, Col } from 'antd';
+import { Progress, Tag, Tooltip, Button } from 'antd';
 import { COLOR_PRIORITY, COLOR_PIPELINE_STATUS } from 'styles/colors';
 import { downloadStorageResults } from 'actions/jobs.action';
 import { rerunRawPipeline, stopPipeline } from 'actions/pipeline.action';
@@ -123,15 +123,14 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => {
     );
 
     return (
-      <Row
+      <FlexBox
         className={isGuideOn ? USER_GUIDE.TABLE_JOB.ACTIONS_SELECT : ''}
-        type="flex"
         justify="center"
         gutter={10}>
-        <Col>{redoAction}</Col>
-        <Col>{stopAction}</Col>
-        <Col>{downloadAction}</Col>
-      </Row>
+        <FlexBox.Item>{redoAction}</FlexBox.Item>
+        <FlexBox.Item>{stopAction}</FlexBox.Item>
+        <FlexBox.Item>{downloadAction}</FlexBox.Item>
+      </FlexBox>
     );
   };
 

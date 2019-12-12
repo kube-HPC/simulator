@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Tabs, Card, JsonSwitch } from 'components/common';
-import AlgorithmBuildsTable from '../AlgorithmBuildsTable.react';
-import { VersionsTable } from '../Versions';
-import AlgorithmMarkdown from './AlgorithmMarkdown/AlgorithmMarkdown.react';
+import { Tabs, Card, JsonSwitch, MdEditor } from 'components/common';
+import AlgorithmBuildsTable from './Builds/AlgorithmBuildsTable.react';
+import { VersionsTable } from './Versions';
+import { Button } from 'antd';
+import { useReadme } from 'hooks';
 
 const TABS = {
   VERSIONS: 'Versions',
@@ -14,10 +15,33 @@ const TABS = {
 
 const AlgorithmsTabs = ({ record: { builds, ...algorithm } }) => {
   const [activeKey, setActiveKey] = useState(TABS.VERSIONS);
+  const [readme, setReadme] = useState();
+
+  const { name } = algorithm;
+
+  const { asyncFetch, post } = useReadme(useReadme.TYPES.ALGORITHM);
+
+  const onApply = () => {
+    post({ name, readme });
+  };
+
+  const onTabClick = tab => {
+    if (tab === TABS.DESCRIPTION) {
+      const fetchReadme = async () => {
+        const readme = await asyncFetch({ name });
+        setReadme(readme);
+      };
+      fetchReadme();
+    }
+  };
 
   return (
     <Card isMargin>
-      <Tabs activeKey={activeKey} onChange={setActiveKey}>
+      <Tabs
+        onTabClick={onTabClick}
+        activeKey={activeKey}
+        onChange={setActiveKey}
+        extra={activeKey === TABS.DESCRIPTION && <Button onClick={onApply}>Apply Markdown</Button>}>
         <Tabs.TabPane tab={TABS.VERSIONS} key={TABS.VERSIONS}>
           <VersionsTable
             algorithmName={algorithm.name}
@@ -32,7 +56,7 @@ const AlgorithmsTabs = ({ record: { builds, ...algorithm } }) => {
           <JsonSwitch obj={algorithm} />
         </Tabs.TabPane>
         <Tabs.TabPane tab={TABS.DESCRIPTION} key={TABS.DESCRIPTION}>
-          <AlgorithmMarkdown algorithmName={algorithm.name} />
+          <MdEditor value={readme} onChange={setReadme} />
         </Tabs.TabPane>
       </Tabs>
     </Card>

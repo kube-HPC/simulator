@@ -6,27 +6,28 @@ import { workerTable } from 'reducers/worker.reducer';
 import { driverTable } from 'reducers/driver.reducer';
 import { debugTable } from 'reducers/debug.reducer';
 
-import { algorithmTable, algorithmBuildsTable, algorithmReadme } from 'reducers/algorithm.reducer';
+import { algorithmTable, algorithmBuildsTable } from 'reducers/algorithm.reducer';
 
 import { autoCompleteFilter } from 'reducers/autoComplete.reducer';
-import { pipelineTable, pipelineReadme } from 'reducers/pipeline.reducer';
+import { pipelineTable } from 'reducers/pipeline.reducer';
 import { nodeStatistics } from 'reducers/nodeStatistics.reducer';
 import { connectionStatus, socketURL } from 'reducers/connection.reducer';
 import { userGuide } from 'reducers/userGuide.reducer';
 import { errorLogsTable } from 'reducers/errorLogs.reducer';
 
-const dataSources = {
+import { drawer } from 'reducers/drawer.reducer';
+
+const store = {
   algorithmBuildsTable,
-  algorithmReadme,
   algorithmTable,
   autoCompleteFilter,
   debugTable,
+  drawer,
   driverTable,
   errorLogsTable,
   jobsKubernetesLogs,
   jobsTable,
   nodeStatistics,
-  pipelineReadme,
   pipelineTable,
   userGuide,
   connectionStatus,
@@ -34,4 +35,4 @@ const dataSources = {
   workerTable,
 };
 
-export default combineReducers(dataSources);
+export default combineReducers(store);

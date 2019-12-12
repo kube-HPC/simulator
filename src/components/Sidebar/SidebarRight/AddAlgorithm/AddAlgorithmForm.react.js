@@ -16,7 +16,9 @@ import { CodeBuild, ImageBuild, GitBuild } from './BuildTypes';
 
 // #region  Helpers
 const { MAIN, BUILD_TYPES } = schema;
-const lowCaseNumberRegex = /^[a-z0-9]+$/;
+
+// https://github.com/kube-HPC/hkube/blob/master/core/api-server/lib/consts/regex.js
+const ALGO_REGEX = /^[a-z0-9][-a-z0-9\\.]*[a-z0-9]$/;
 
 const mainAdvancedOptions = Object.entries(formTemplate.main.options)
   .filter(([, isAvailable]) => isAvailable)
@@ -124,7 +126,7 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
             {
               required: true,
               message: MAIN.NAME.message,
-              pattern: lowCaseNumberRegex,
+              pattern: ALGO_REGEX,
             },
           ],
         })(<Input placeholder={MAIN.NAME.placeholder} />)}

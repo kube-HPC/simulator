@@ -5,7 +5,7 @@ import { addPipelineTemplate } from 'config';
 import addAlgorithmSchema from 'config/schema/addAlgorithm.schema';
 
 export default {
-  title: `${SB_SECTIONS.COMMON}|Json View`,
+  title: `${SB_SECTIONS.JSON}Json View`,
 };
 
 export const AddPipelineTemplate = () => <JsonView jsonObject={addPipelineTemplate} />;

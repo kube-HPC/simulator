@@ -15,10 +15,11 @@ const Margin = styled(Descriptions)`
 `;
 
 // Recursion Step
-const RenderItemByValueType = ({ obj, vertical, isMargin = false }) =>
+const RenderItemByValueType = ({ obj, vertical, isMargin = false, key }) =>
   isPureObject(obj) ? (
     <>
       <Margin
+        key={key}
         column={getTotalColumns({ obj: obj, vertical })}
         vertical={vertical}
         isMargin={isMargin}>
@@ -28,7 +29,12 @@ const RenderItemByValueType = ({ obj, vertical, isMargin = false }) =>
   ) : Array.isArray(obj) ? (
     <>
       {obj.map((value, i) =>
-        RenderItemByValueType({ obj: value, vertical, isMargin: i !== 0 || i === obj.length - 1 }),
+        RenderItemByValueType({
+          obj: value,
+          vertical,
+          isMargin: i !== 0 || i === obj.length - 1,
+          key: i,
+        }),
       )}
     </>
   ) : (
@@ -39,13 +45,14 @@ RenderItemByValueType.propTypes = {
   obj: PropTypes.object,
   vertical: PropTypes.bool,
   isMargin: PropTypes.bool,
+  key: PropTypes.oneOf([PropTypes.string, PropTypes.number]),
 };
 
 // Item
 function objToItem({ obj, vertical }) {
   return Object.entries(obj).map(([key, value]) => (
     <Descriptions.Item key={key} label={<Text strong>{key}</Text>}>
-      {RenderItemByValueType({ obj: value, vertical })}
+      {RenderItemByValueType({ obj: value, vertical, key })}
     </Descriptions.Item>
   ));
 }

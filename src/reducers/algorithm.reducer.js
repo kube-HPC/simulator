@@ -21,12 +21,3 @@ export const algorithmBuildsTable = handleActions(
   },
   Immutable.from({ dataSource: [], showModal: false }),
 );
-
-export const algorithmReadme = handleActions(
-  {
-    [actions.README_GET_ALGORITHM_SUCCESS](state, { payload }) {
-      return state.setIn([payload.name], payload);
-    },
-  },
-  Immutable.from({}),
-);

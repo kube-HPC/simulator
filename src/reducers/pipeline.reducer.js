@@ -20,13 +20,3 @@ export const pipelineTable = handleActions(
   },
   initialValue,
 );
-
-export const pipelineReadme = handleActions(
-  {
-    [actions.README_GET_PIPELINE_SUCCESS](currState, { payload }) {
-      const { name } = payload;
-      return Immutable.set(currState, [name], payload);
-    },
-  },
-  Immutable.from({}),
-);

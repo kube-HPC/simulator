@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { ControlledEditor } from '@monaco-editor/react';
-import Fallback from 'components/common/Fallback.react';
 
 const JsonEditor = ({
   onChange = () => {},
@@ -21,15 +20,13 @@ const JsonEditor = ({
   }, [controlledValue]);
 
   return (
-    <Fallback>
-      <ControlledEditor
-        {...props}
-        height={height}
-        language="json"
-        value={value}
-        onChange={handleEditorChange}
-      />
-    </Fallback>
+    <ControlledEditor
+      {...props}
+      height={height}
+      language="json"
+      value={value}
+      onChange={handleEditorChange}
+    />
   );
 };
 

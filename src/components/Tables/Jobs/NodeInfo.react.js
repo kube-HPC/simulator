@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useSelector } from 'react-redux';
-import { JsonView, Tabs, Card } from 'components/common';
+import { Tabs, JsonSwitch } from 'components/common';
 import { NodeLogs, NodeInputOutput } from '.';
 
 const DEFAULT_ALGORITHM = {};
@@ -29,9 +29,7 @@ const NodeInfo = ({ payload }) => {
         <NodeLogs dataSource={dataSource} taskDetails={taskDetails} />
       </Tabs.TabPane>
       <Tabs.TabPane tab="Algorithm Details" key="2">
-        <Card>
-          <JsonView jsonObject={algorithmDetails} />
-        </Card>
+        <JsonSwitch obj={algorithmDetails} />
       </Tabs.TabPane>
       <Tabs.TabPane tab="Input Output Details" key="3">
         <NodeInputOutput payload={payload} />
