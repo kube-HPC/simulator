@@ -9,7 +9,6 @@ const DarkHoverStyle = styled(Icon)`
   :hover {
     color: black;
   }
-  cursor: pointer;
 `;
 
 const iconStyle = { fontSize: 22 };
