@@ -23,8 +23,7 @@ function AutoComplete({ table, ...props }) {
       onSearch={filterData}
       onSelect={filterData}
       placeholder="Search in current table 🎉"
-      dropdownMatchSelectWidth={true}
-    >
+      dropdownMatchSelectWidth={true}>
       <Input.Search allowClear />
     </AutoCompleteLong>
   );
@@ -32,7 +31,7 @@ function AutoComplete({ table, ...props }) {
 
 AutoComplete.propTypes = {
   table: PropTypes.string.isRequired,
-  ...AntAutoComplete.propTypes
+  ...AntAutoComplete.propTypes,
 };
 
 const areEqualByTableName = (prevProps, nextProps) => prevProps.table === nextProps.table;

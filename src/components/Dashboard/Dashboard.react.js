@@ -5,22 +5,12 @@ import { LEFT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
 import { useConnectionStatus, useLeftSidebar, useActions } from 'hooks';
 import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
-import { COLOR, COLOR_LAYOUT, GlobalStyle } from 'styles';
+import { COLOR, COLOR_LAYOUT, GlobalStyle, Header } from 'styles';
 import DashboardDrawer from './DashboardDrawer.react';
 
 const LayoutFullHeight = styled(Layout)`
   height: 100vh;
   background: white;
-`;
-
-const Header = styled.div`
-  height: 64px;
-  padding: 0 50px;
-  line-height: 64px;
-  background: white;
-  border-bottom: 1pt solid ${COLOR_LAYOUT.border};
-  padding-left: 10px;
-  padding-right: 10px;
 `;
 
 const DarkText = styled.span`
@@ -34,18 +24,13 @@ const HelpBar = styled(FlexBox)`
 `;
 
 const ContentMargin = styled(Layout.Content)`
-  padding: 10px;
-
-  ::-webkit-scrollbar-track {
-    border: none;
-    background-color: none;
-  }
+  padding: 5px;
   ::-webkit-scrollbar {
     width: 1px;
+    margin-left: 1px;
   }
   ::-webkit-scrollbar-thumb {
     border: 1px solid ${COLOR.darkGrey};
-    background-color: ${COLOR.darkGrey};
   }
 `;
 
