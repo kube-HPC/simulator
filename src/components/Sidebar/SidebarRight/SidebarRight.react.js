@@ -45,5 +45,5 @@ export default React.memo(SidebarRight);
 SidebarRight.propTypes = {
   onSelect: PropTypes.func.isRequired,
   menuItems: PropTypes.array.isRequired,
-  ...Layout.Sider.propTypes
+  ...Layout.Sider.propTypes,
 };

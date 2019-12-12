@@ -6,7 +6,7 @@ import { DRAWER_SIZE } from 'const';
 
 const { Text } = Typography;
 
-export const rightSidebarContent = {
+const rightSidebarContent = {
   [RIGHT_SIDEBAR_NAMES.ADD_PIPELINE]: {
     width: DRAWER_SIZE.ADD_PIPELINE,
     title: RIGHT_SIDEBAR_NAMES.ADD_PIPELINE,
@@ -15,7 +15,7 @@ export const rightSidebarContent = {
         Build a <Text strong>pipeline</Text> through <Text code>Wizard</Text> or{' '}
         <Text code>JSON Editor</Text> .
       </>
-    )
+    ),
   },
   [RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM]: {
     width: DRAWER_SIZE.ADD_ALGORITHM,
@@ -24,12 +24,12 @@ export const rightSidebarContent = {
       <>
         Algorithm <Text strong>descriptor</Text> to be added to the store.
       </>
-    )
+    ),
   },
   [RIGHT_SIDEBAR_NAMES.ADD_DEBUG]: {
     width: DRAWER_SIZE.ADD_DEBUG,
     title: RIGHT_SIDEBAR_NAMES.ADD_DEBUG,
-    description: <>Add algorithm image for debugging.</>
+    description: <>Add algorithm image for debugging.</>,
   },
   [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: {
     width: DRAWER_SIZE.ERROR_LOGS,
@@ -39,7 +39,7 @@ export const rightSidebarContent = {
         Build a <Text strong>pipeline</Text> through <Text code>Wizard</Text> or{' '}
         <Text code>JSON Editor</Text> .
       </>
-    )
+    ),
   },
   [RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE]: {
     width: DRAWER_SIZE.RUN_RAW_PIPELINE,
@@ -50,13 +50,12 @@ export const rightSidebarContent = {
         <a
           href="http://hkube.io/spec/#tag/Execution/paths/~1exec~1raw/post"
           target="_blank"
-          rel="noopener noreferrer"
-        >
+          rel="noopener noreferrer">
           HKube Spec
         </a>{' '}
         for additional information.
       </>
-    )
+    ),
   },
   [RIGHT_SIDEBAR_NAMES.CPU]: {
     width: DRAWER_SIZE.CPU,
@@ -65,7 +64,7 @@ export const rightSidebarContent = {
       <>
         Hover the <Text code>Nodes</Text> for an additional information.
       </>
-    )
+    ),
   },
   [RIGHT_SIDEBAR_NAMES.MEMORY]: {
     width: DRAWER_SIZE.MEMORY,
@@ -74,6 +73,8 @@ export const rightSidebarContent = {
       <>
         Hover the <Text code>Nodes</Text> for an additional information.
       </>
-    )
-  }
+    ),
+  },
 };
+
+export default rightSidebarContent;

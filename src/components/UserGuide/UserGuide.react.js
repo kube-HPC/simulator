@@ -23,13 +23,16 @@ const UserGuide = ({ triggerLeftVisible, setLeftValue }) => {
     data => {
       const { type, index, action } = data;
 
-      if (type === EVENTS.TOUR_START) setLeftValue(LEFT_SIDEBAR_NAMES.JOBS);
-      else if (type === EVENTS.TOUR_END) {
+      if (type === EVENTS.TOUR_START) {
+        setLeftValue(LEFT_SIDEBAR_NAMES.JOBS);
+      } else if (type === EVENTS.TOUR_END) {
         triggerLeftVisible();
         trigger();
-      } else if (stepAction.includes(action) && type === EVENTS.STEP_BEFORE) changeStep(index);
+      } else if (stepAction.includes(action) && type === EVENTS.STEP_BEFORE) {
+        changeStep(index);
+      }
     },
-    [changeStep, setLeftValue, trigger, triggerLeftVisible]
+    [changeStep, setLeftValue, trigger, triggerLeftVisible],
   );
 
   return (

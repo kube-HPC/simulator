@@ -9,7 +9,7 @@ import { Card } from 'components/common';
 
 const dataSelector = tableFilterSelector(LEFT_SIDEBAR_NAMES.JOBS);
 
-const initialJobRecord = ({ record, jaeger }) => ({
+const initialJobRecord = ({ record }) => ({
   key: record.key,
   graph: record.graph,
   record: {
@@ -17,23 +17,20 @@ const initialJobRecord = ({ record, jaeger }) => ({
     status: record.status,
     results: record.results,
   },
-  jaeger: jaeger && jaeger.dataSource,
 });
 
-export default function useJobs() {
+const useJobs = () => {
   const { isOn } = useSelector(state => state.userGuide, isEqual);
   const dispatch = useDispatch();
-
   const columns = useMemo(() => getJobsColumns({ dispatch, isGuideOn: isOn }), [dispatch, isOn]);
 
-  const jaeger = useSelector(state => state.jobsJaeger);
   const expandedRowRender = useCallback(
     record => (
       <Card isMargin className={USER_GUIDE.TABLE_JOB.ROW_SELECT}>
-        <JobsTabSwitcher record={initialJobRecord({ record, jaeger })} />
+        <JobsTabSwitcher record={initialJobRecord({ record })} />
       </Card>
     ),
-    [jaeger],
+    [],
   );
 
   const dataSource = useSelector(dataSelector);
@@ -43,4 +40,6 @@ export default function useJobs() {
     columns,
     expandedRowRender,
   };
-}
+};
+
+export default useJobs;

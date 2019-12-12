@@ -22,17 +22,17 @@ const adaptedData = (statistics, metric) => {
         res.algorithmsData.forEach(algorithm => (algorithms[algorithm.name] = algorithm.size));
       return {
         nodes: res.name,
-        ...algorithms
+        ...algorithms,
       };
     });
   return {
     data: data || [],
-    legend: statisticsForMetric && statisticsForMetric.legend
+    legend: statisticsForMetric && statisticsForMetric.legend,
   };
 };
 
-// ! https://nivo.rocks/bar/ customization
-function NodeStatistics({ metric }) {
+// https://nivo.rocks/bar/ customization
+const NodeStatistics = ({ metric }) => {
   const dataSource = useSelector(state => state.nodeStatistics.dataSource);
   const { data, legend } = adaptedData(dataSource, metric);
 
@@ -46,24 +46,24 @@ function NodeStatistics({ metric }) {
           axis: {
             ticks: {
               line: {
-                stroke: COLOR.darkGrey
+                stroke: COLOR.darkGrey,
               },
               text: {
                 fontSize: 16,
-                marginRight: '10px'
-              }
+                marginRight: '10px',
+              },
             },
             legend: {
               text: {
-                fontSize: 16
-              }
-            }
-          }
+                fontSize: 16,
+              },
+            },
+          },
         }}
         margin={{
           right: 120,
           bottom: 120,
-          left: 120
+          left: 120,
         }}
         padding={0.1}
         borderWidth={1}
@@ -78,7 +78,7 @@ function NodeStatistics({ metric }) {
             color: COLOR.white,
             size: 4,
             padding: 3,
-            stagger: true
+            stagger: true,
           },
           {
             id: 'lines',
@@ -87,22 +87,22 @@ function NodeStatistics({ metric }) {
             color: COLOR.white,
             rotation: -45,
             lineWidth: 1,
-            spacing: 10
-          }
+            spacing: 10,
+          },
         ]}
         fill={[
           {
             match: {
-              id: 'free'
+              id: 'free',
             },
-            id: 'dots'
+            id: 'dots',
           },
           {
             match: {
-              id: 'reserved'
+              id: 'reserved',
             },
-            id: 'lines'
-          }
+            id: 'lines',
+          },
         ]}
         borderColor={COLOR.grey}
         axisBottom={{
@@ -111,7 +111,7 @@ function NodeStatistics({ metric }) {
           tickRotation: 0,
           legend: 'Size',
           legendPosition: 'middle',
-          legendOffset: 50
+          legendOffset: 50,
         }}
         axisLeft={{
           tickSize: 5,
@@ -119,7 +119,7 @@ function NodeStatistics({ metric }) {
           tickRotation: 50,
           legend: 'Nodes',
           legendPosition: 'middle',
-          legendOffset: -90
+          legendOffset: -90,
         }}
         labelSkipWidth={12}
         labelSkipHeight={12}
@@ -144,19 +144,19 @@ function NodeStatistics({ metric }) {
               {
                 on: 'hover',
                 style: {
-                  itemOpacity: 1
-                }
-              }
-            ]
-          }
+                  itemOpacity: 1,
+                },
+              },
+            ],
+          },
         ]}
       />
     </Container>
   );
-}
+};
 
 NodeStatistics.propTypes = {
-  metric: PropTypes.string.isRequired
+  metric: PropTypes.string.isRequired,
 };
 
 export default NodeStatistics;

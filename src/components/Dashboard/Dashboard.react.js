@@ -1,21 +1,14 @@
 import { init, socketInit, triggerUserGuide } from 'actions';
 import { Icon, Layout, message, Tag, Tooltip, Typography } from 'antd';
-import 'antd/dist/antd.css';
-import {
-  AutoComplete,
-  DrawerOperations,
-  LoadingScreen,
-  SidebarLeft,
-  SidebarRight,
-  UserGuide,
-} from 'components';
+import { AutoComplete, LoadingScreen, SidebarLeft, SidebarRight, UserGuide } from 'components';
 import { FlexBox, Icons } from 'components/common';
 import { LEFT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
 import { useConnectionStatus, useLeftSidebar, useRightSidebar } from 'hooks';
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { COLOR, COLOR_LAYOUT, GlobalStyle } from 'styles';
+import DashboardDrawer from './DashboardDrawer.react';
 
 const LayoutFullHeight = styled(Layout)`
   height: 100vh;
@@ -74,7 +67,7 @@ const openWebsite = () => window.open('http://hkube.io/');
 const openGithub = () => window.open('https://github.com/kube-HPC/hkube');
 const appVersion = `${process.env.REACT_APP_VERSION}v`;
 
-function Dashboard() {
+const Dashboard = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -89,11 +82,8 @@ function Dashboard() {
   } = useLeftSidebar();
 
   const {
-    selector: operationSelector,
-    value: [drawerValue],
-    isCollapsed: [drawerIsVisible, setDrawerIsVisible],
-    onSelect: onSelectDrawer,
-    menus: { menuBottomRightItems, menuItems },
+    onSelect,
+    menus: { top, bottom },
   } = useRightSidebar();
 
   const setLeftValue = useCallback(setTableValue, [setTableValue]);
@@ -108,11 +98,7 @@ function Dashboard() {
   const triggerLeftVisible = useCallback(() => setLeftIsCollapsed(prev => !prev), [
     setLeftIsCollapsed,
   ]);
-  const toggleDrawerVisible = useCallback(() => setDrawerIsVisible(p => !p), [setDrawerIsVisible]);
-
   const { isDataAvailable, isSocketConnected } = useConnectionStatus();
-
-  const drawerRef = useRef();
 
   return (
     <>
@@ -120,6 +106,7 @@ function Dashboard() {
       {isDataAvailable ? (
         <>
           <UserGuide triggerLeftVisible={triggerLeftVisible} setLeftValue={setLeftValue} />
+          <DashboardDrawer />
           <LayoutFullHeight>
             <SidebarLeft
               className={USER_GUIDE.SIDEBAR_LEFT}
@@ -162,22 +149,15 @@ function Dashboard() {
                 <RightSidebarsFlex>
                   <SidebarRight
                     className={USER_GUIDE.SIDEBAR_TOP_RIGHT}
-                    onSelect={onSelectDrawer}
-                    menuItems={menuItems}
+                    onSelect={onSelect}
+                    menuItems={top}
                   />
                   <SidebarRight
                     className={USER_GUIDE.SIDEBAR_BOTTOM_RIGHT}
-                    onSelect={onSelectDrawer}
-                    menuItems={menuBottomRightItems}
+                    onSelect={onSelect}
+                    menuItems={bottom}
                   />
                 </RightSidebarsFlex>
-                <DrawerOperations
-                  ref={drawerRef}
-                  visible={drawerIsVisible}
-                  onClose={toggleDrawerVisible}
-                  operation={drawerValue}>
-                  {operationSelector[drawerValue]}
-                </DrawerOperations>
               </LayoutFullHeight>
             </Layout>
           </LayoutFullHeight>
@@ -187,6 +167,6 @@ function Dashboard() {
       )}
     </>
   );
-}
+};
 
 export default Dashboard;

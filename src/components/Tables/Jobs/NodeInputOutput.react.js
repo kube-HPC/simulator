@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 
 import { downloadStorageResults } from 'actions/jobs.action';
 import { Table } from 'components';
-import { Card, JsonView } from 'components/common';
+import { Card, JsonSwitch } from 'components/common';
 import getNodeIOColumns from './getNodeIOColumns.react';
 
-function NodeInputOutput({ payload }) {
+const NodeInputOutput = ({ payload }) => {
   const dispatch = useDispatch();
 
   const downloadResult = useCallback(value => dispatch(downloadStorageResults(value)), [dispatch]);
@@ -58,12 +58,12 @@ function NodeInputOutput({ payload }) {
       dataSource={dataSource}
       expandedRowRender={record => (
         <Card>
-          <JsonView jsonObject={record} onSelect={onSelect} />
+          <JsonSwitch obj={record} onSelect={onSelect} />
         </Card>
       )}
     />
   );
-}
+};
 
 NodeInputOutput.propTypes = {
   payload: PropTypes.object.isRequired,

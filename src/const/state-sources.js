@@ -16,4 +16,5 @@ export default {
   CONNECTION_STATUS: 'connectionStatus',
   USER_GUIDE: 'userGuide',
   SOCKET_URL: 'socketURL',
+  DRAWER: 'drawer',
 };

@@ -1,13 +1,13 @@
-import React, { useState, lazy } from 'react';
+import { drawerOpen } from 'actions';
+import { getCaching, getKubernetesLogsData } from 'actions/jobs.action';
+import { Button, Typography } from 'antd';
+import { Card, Fallback } from 'components/common';
+import graphOptions from 'config/template/graph-options.template';
 import PropTypes from 'prop-types';
+import React, { lazy, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { Button, Typography } from 'antd';
-import { getKubernetesLogsData, getCaching } from 'actions/jobs.action';
-import graphOptions from 'config/template/graph-options.template';
-import { Card, Fallback } from 'components/common';
-import { Drawer } from 'components/Drawer';
-import { NodeInfo, GraphType } from '.';
+import { GraphType, NodeInfo } from '.';
 
 const Graph = lazy(() => import('react-graph-vis'));
 
@@ -29,6 +29,7 @@ const title = (
 
 const findNodeName = nodeName => node => node.nodeName === nodeName;
 
+// TODO: FIX to dictionary
 const singleStatus = s => {
   if (s === GraphType.STATUS.SKIPPED) {
     return GraphType.STATUS.SKIPPED;
@@ -63,12 +64,10 @@ const handleBatch = n => {
   if (n.batchInfo.completed === n.batchInfo.total) {
     completed = n.batchInfo.total;
     group = GraphType.BATCH.COMPLETED;
-  }
-  else if (n.batchInfo.idle === n.batchInfo.total) {
+  } else if (n.batchInfo.idle === n.batchInfo.total) {
     completed = 0;
     group = GraphType.BATCH.NOT_STARTED;
-  }
-  else {
+  } else {
     completed = n.batchInfo.running + n.batchInfo.completed;
     group = GraphType.BATCH.RUNNING;
   }
@@ -106,26 +105,25 @@ const formatEdge = e => {
   return { ...rest, ...edge, group };
 };
 
-function JobGraph({ graph, pipeline }) {
-  const [visible, setVisible] = useState(false);
-  const [payload, setPayload] = useState({ taskId: undefined });
-
+const JobGraph = ({ graph, pipeline }) => {
   const dispatch = useDispatch();
-  const getLogs = ({ taskId, podName }) => dispatch(getKubernetesLogsData({ taskId, podName }));
-  const toggleVisible = () => setVisible(prev => !prev);
+  const getLogs = useCallback(
+    ({ taskId, podName }) => dispatch(getKubernetesLogsData({ taskId, podName })),
+    [],
+  );
 
   const events = {
     click: ({ nodes }) => {
       const [nodeName] = nodes;
-      if (!nodeName) return;
+      if (!nodeName) {
+        return;
+      }
 
       const nodeData = graph.nodes.find(findNodeName(nodeName));
       const node = pipeline.nodes.find(findNodeName(nodeName));
       const jobId = pipeline.jobId;
       const taskId =
-        nodeData && nodeData.taskId
-          ? nodeData.taskId
-          : nodeData.batch && nodeData.batch[0].taskId;
+        nodeData && nodeData.taskId ? nodeData.taskId : nodeData.batch && nodeData.batch[0].taskId;
       const podName =
         nodeData && nodeData.podName
           ? nodeData.podName
@@ -133,7 +131,7 @@ function JobGraph({ graph, pipeline }) {
 
       getLogs({ taskId, podName });
 
-      setPayload({
+      const payload = {
         ...nodeData,
         jobId,
         taskId,
@@ -141,9 +139,31 @@ function JobGraph({ graph, pipeline }) {
         podName,
         origInput: node.input,
         batch: nodeData.batch || [],
-      });
+      };
 
-      toggleVisible();
+      const body = (
+        <Card>
+          <NodeInfo payload={payload} />
+        </Card>
+      );
+
+      const onRefreshClick = () => getLogs({ taskId, podName });
+      const onSubmitClick = () => payload && dispatch(getCaching({ jobId, nodeName }));
+
+      const footer = {
+        body: (
+          <Button type="primary" onClick={onSubmitClick}>
+            Get Cache
+          </Button>
+        ),
+        extra: [
+          <Button key="redo" icon="redo" onClick={onRefreshClick}>
+            Refresh
+          </Button>,
+        ],
+      };
+
+      dispatch(drawerOpen({ title, body, footer }));
     },
   };
 
@@ -158,48 +178,18 @@ function JobGraph({ graph, pipeline }) {
   nodes && nodes.forEach(n => adaptedGraph.nodes.push(formatNode(n)));
   edges && edges.forEach(e => adaptedGraph.edges.push(formatEdge(e)));
 
-  const { taskId, podName, jobId, nodeName } = payload;
-  const onRefreshClick = () => getLogs({ taskId, podName });
-  const onSubmitClick = () => payload && dispatch(getCaching({ jobId, nodeName }));
-
-  const bottomContent = {
-    body: (
-      <Button type="primary" onClick={onSubmitClick}>
-        Get Cache
-      </Button>
-    ),
-    extra: [
-      <Button key="redo" icon="redo" onClick={onRefreshClick}>
-        Refresh
-      </Button>
-    ]
-  };
-
   return (
-    <>
-      <Drawer
-        visible={visible}
-        onClose={toggleVisible}
-        title={title}
-        destroyOnClose
-        bottomContent={bottomContent}
-      >
-        <Card>
-          <NodeInfo payload={payload} />
-        </Card>
-      </Drawer>
-      <GraphContainer>
-        <Fallback>
-          <Graph graph={adaptedGraph} options={graphOptions} events={events} />
-        </Fallback>
-      </GraphContainer>
-    </>
+    <GraphContainer>
+      <Fallback>
+        <Graph graph={adaptedGraph} options={graphOptions} events={events} />
+      </Fallback>
+    </GraphContainer>
   );
-}
+};
 
 JobGraph.propTypes = {
   graph: PropTypes.object.isRequired,
-  pipeline: PropTypes.object.isRequired
+  pipeline: PropTypes.object.isRequired,
 };
 
 const isSameGraph = (a, b) => a.graph.timestamp === b.graph.timestamp;

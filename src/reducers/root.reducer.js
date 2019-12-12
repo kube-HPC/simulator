@@ -15,11 +15,14 @@ import { connectionStatus, socketURL } from 'reducers/connection.reducer';
 import { userGuide } from 'reducers/userGuide.reducer';
 import { errorLogsTable } from 'reducers/errorLogs.reducer';
 
-const dataSources = {
+import { drawer } from 'reducers/drawer.reducer';
+
+const store = {
   algorithmBuildsTable,
   algorithmTable,
   autoCompleteFilter,
   debugTable,
+  drawer,
   driverTable,
   errorLogsTable,
   jobsKubernetesLogs,
@@ -32,4 +35,4 @@ const dataSources = {
   workerTable,
 };
 
-export default combineReducers(dataSources);
+export default combineReducers(store);
