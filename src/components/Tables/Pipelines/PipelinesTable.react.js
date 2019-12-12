@@ -4,10 +4,10 @@ import { usePipeline } from 'hooks';
 import { Table } from 'components';
 
 import getPipelineColumns from './getPipelineColumns.react';
-import PipelineTabs from './Tabs/PipelineTabs.react';
-import DrawerEditor from 'components/Drawer/DrawerEditor/DrawerEditor.react';
+import PipelineTabs from './PipelineTabs.react';
 import { Typography } from 'antd';
 import { stringify } from 'utils';
+import { DrawerEditor } from 'components/Drawer';
 
 const { Text, Title, Paragraph } = Typography;
 

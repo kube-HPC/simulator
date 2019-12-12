@@ -30,7 +30,7 @@ const PipelineTabs = ({ record }) => {
         fetchReadme();
       }
     },
-    [name],
+    [name, asyncFetch],
   );
 
   return (
