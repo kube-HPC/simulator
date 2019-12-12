@@ -6,6 +6,7 @@ import isEqual from 'lodash/isEqual';
 import { USER_GUIDE, LEFT_SIDEBAR_NAMES } from 'const';
 import { JobsTabSwitcher, getJobsColumns } from 'components/Tables/Jobs';
 import { Card } from 'components/common';
+import { createStore } from 'reusable';
 
 const dataSelector = tableFilterSelector(LEFT_SIDEBAR_NAMES.JOBS);
 
@@ -42,4 +43,4 @@ const useJobs = () => {
   };
 };
 
-export default useJobs;
+export default createStore(useJobs);

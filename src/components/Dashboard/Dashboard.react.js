@@ -1,12 +1,14 @@
 import { Layout, message } from 'antd';
 import { LoadingScreen, SidebarLeft, SidebarRight, UserGuide } from 'components';
-import { USER_GUIDE } from 'const';
+import { USER_GUIDE, STATE_SOURCES } from 'const';
 import { useActions, useConnectionStatus, useLeftSidebar } from 'hooks';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { COLOR, COLOR_LAYOUT, GlobalStyle } from 'styles';
 import DashboardDrawer from './Drawer/DashboardDrawer.react';
 import Header from './Header/Header.react';
+import { useSelector } from 'react-redux';
+import GridView from 'components/GridView/GridView.react';
 
 const LayoutFullHeight = styled(Layout)`
   height: 100vh;
@@ -50,6 +52,8 @@ const Dashboard = () => {
     value: [tableValue],
   } = useLeftSidebar();
 
+  const { isTableView } = useSelector(state => state[STATE_SOURCES.VIEW_TYPE]);
+
   return (
     <>
       <GlobalStyle />
@@ -62,7 +66,7 @@ const Dashboard = () => {
             <Layout>
               <Header />
               <LayoutFullHeight>
-                <ContentMargin>{selector[tableValue]}</ContentMargin>
+                <ContentMargin>{!isTableView ? selector[tableValue] : <GridView />}</ContentMargin>
                 <RightContainer>
                   <SidebarRight className={USER_GUIDE.SIDEBAR_TOP_RIGHT} isTop />
                   <SidebarRight className={USER_GUIDE.SIDEBAR_BOTTOM_RIGHT} />

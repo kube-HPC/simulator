@@ -8,7 +8,7 @@ import { Progress, Tag, Tooltip, Button } from 'antd';
 import { COLOR_PRIORITY, COLOR_PIPELINE_STATUS } from 'styles/colors';
 import { downloadStorageResults } from 'actions/jobs.action';
 import { rerunRawPipeline, stopPipeline } from 'actions/pipeline.action';
-import { FlexBox, Ellipsis, StatusTag } from 'components/common';
+import { FlexBox, Ellipsis, StatusTag, ProgressStatus } from 'components/common';
 import { USER_GUIDE, PIPELINE_STATES } from 'const';
 
 const ActiveState = [
@@ -34,9 +34,9 @@ const StartTime = startTime => (
     <Moment format="DD/MM/YY HH:mm:ss">{startTime}</Moment>
   </Tag>
 );
-const Status = status => (
-  <Tag color={COLOR_PIPELINE_STATUS[status]}>{toUpperCaseFirstLetter(status)}</Tag>
-);
+
+const Status = status => <ProgressStatus status={status} />;
+
 const RunningTime = (_, record) => (
   <Tag>
     {humanizeDuration(
