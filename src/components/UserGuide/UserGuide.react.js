@@ -38,7 +38,7 @@ const UserGuide = () => {
         changeStep(index);
       }
     },
-    [changeStep, setLeftValue, trigger],
+    [changeStep, setLeftValue, trigger, toggle],
   );
 
   return (

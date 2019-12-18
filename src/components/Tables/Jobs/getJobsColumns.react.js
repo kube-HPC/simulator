@@ -1,15 +1,14 @@
 import React from 'react';
 
-import humanizeDuration from 'humanize-duration';
-import Moment from 'react-moment';
-
 import { toUpperCaseFirstLetter, sorter } from 'utils/string';
-import { Progress, Tag, Tooltip, Button } from 'antd';
-import { COLOR_PRIORITY, COLOR_PIPELINE_STATUS } from 'styles/colors';
+import { Tag, Tooltip, Button } from 'antd';
+import { COLOR_PRIORITY } from 'styles/colors';
 import { downloadStorageResults } from 'actions/jobs.action';
 import { rerunRawPipeline, stopPipeline } from 'actions/pipeline.action';
 import { FlexBox, Ellipsis, StatusTag, ProgressStatus } from 'components/common';
 import { USER_GUIDE, PIPELINE_STATES } from 'const';
+import JobProgress from './JobProgress.react';
+import JobTime from './JobTime.react';
 
 const ActiveState = [
   PIPELINE_STATES.PENDING,
@@ -29,26 +28,10 @@ const getStatusFilter = () =>
 
 const Id = jobID => <Ellipsis className={USER_GUIDE.TABLE_JOB.ID_SELECT} copyable text={jobID} />;
 const Name = pipelineName => <Ellipsis text={pipelineName} />;
-const StartTime = startTime => (
-  <Tag>
-    <Moment format="DD/MM/YY HH:mm:ss">{startTime}</Moment>
-  </Tag>
-);
+const StartTime = (startTime, { results }) => <JobTime startTime={startTime} results={results} />;
 
 const Status = status => <ProgressStatus status={status} />;
 
-const RunningTime = (_, record) => (
-  <Tag>
-    {humanizeDuration(
-      record.results
-        ? record.results.timeTook * 1000
-        : Date.now() - (record.pipeline && record.pipeline.startTime),
-      {
-        maxDecimalPoints: 2,
-      },
-    )}
-  </Tag>
-);
 const NodeStats = status => (
   <FlexBox justify="start" gutter={0} style={{ flexWrap: 'nowrap' }}>
     {status.data &&
@@ -67,22 +50,7 @@ const Priority = priority => (
   </Tooltip>
 );
 
-const JobProgress = (_, record) => {
-  const stopped = record.status && record.status.status === PIPELINE_STATES.STOPPED;
-  const failed = record.status && record.status.status === PIPELINE_STATES.FAILED;
-  const progress = parseInt(
-    (record.status && record.status.data && record.status.data.progress) || 0,
-  );
-  return (
-    <Progress
-      percent={progress}
-      status={stopped || failed ? 'exception' : progress === 100 ? 'success' : 'active'}
-      strokeColor={
-        failed ? COLOR_PIPELINE_STATUS.failed : stopped ? COLOR_PIPELINE_STATUS.stopped : undefined
-      }
-    />
-  );
-};
+const Progress = (_, record) => <JobProgress {...record} />;
 
 const getJobsColumns = ({ dispatch, isGuideOn }) => {
   const Action = (_, record) => {
@@ -165,15 +133,9 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => {
       title: 'Start Time',
       dataIndex: 'pipeline.startTime',
       key: 'Start timestamp',
-      width: '10%',
+      width: '15%',
       sorter: (a, b) => a.pipeline.startTime - b.pipeline.startTime,
       render: StartTime,
-    },
-    {
-      title: 'Running Time',
-      key: 'timestamp',
-      width: '10%',
-      render: RunningTime,
     },
     {
       title: 'Nodes Stats',
@@ -193,9 +155,9 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => {
     {
       title: 'Progress',
       key: 'progress',
-      width: '20%',
+      width: '25%',
       align: 'center',
-      render: JobProgress,
+      render: Progress,
     },
     {
       title: 'Action',

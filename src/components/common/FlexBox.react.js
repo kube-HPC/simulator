@@ -3,11 +3,15 @@ import styled from 'styled-components';
 import { Row, Col } from 'antd';
 
 const FlexAligned = styled(Row)`
-  align-items: center;
-  flex-direction: row;
+  align-items: ${({ align = 'center' }) => align};
+  flex-direction: ${({ direction = 'row' }) => direction};
 `;
 
-const FlexBox = ({ children, ...props }) => <FlexAligned {...props}>{children}</FlexAligned>;
+const FlexBox = ({ children, justify, align, gutter, ...props }) => (
+  <FlexAligned justify={justify} align={align} gutter={gutter} {...props}>
+    {children}
+  </FlexAligned>
+);
 
 FlexBox.Item = Col;
 
