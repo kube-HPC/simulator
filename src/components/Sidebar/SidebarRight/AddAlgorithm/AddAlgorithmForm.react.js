@@ -1,18 +1,17 @@
 import React, { useState, memo } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
 import { Input, Select, InputNumber, Button, Radio } from 'antd';
 
 import { DRAWER_SIZE } from 'const';
 import { BottomContent, Form } from 'components/common';
 import { toUpperCaseFirstLetter, mapObjValues, notification } from 'utils';
-import { applyAlgorithm } from 'actions';
 import MemoryField from './MemoryField.react';
 
 // Direct import for auto-complete
 import schema from 'config/schema/addAlgorithm.schema';
 import formTemplate from 'config/template/addAlgorithmForm.template';
 import { CodeBuild, ImageBuild, GitBuild } from './BuildTypes';
+import { useActions } from 'hooks';
 
 // #region  Helpers
 const { MAIN, BUILD_TYPES } = schema;
@@ -66,8 +65,9 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
   const { getFieldDecorator, validateFields } = form;
 
   // #region  Submit Handle
-  const dispatch = useDispatch();
   const buildTypes = getBuildTypes({ buildType, getFieldDecorator, fileList, setFileList });
+
+  const { applyAlgorithm } = useActions();
 
   const onFormSubmit = e => {
     e.preventDefault();
@@ -111,7 +111,7 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
       const payloadFiltered = mapObjValues({ obj: payload, predicate: isNotEmpty });
       formData.append('payload', JSON.stringify(payloadFiltered));
 
-      dispatch(applyAlgorithm(formData));
+      applyAlgorithm(formData);
 
       onSubmit({ formData, payload: payloadFiltered });
     });

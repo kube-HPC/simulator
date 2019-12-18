@@ -1,35 +1,11 @@
 import { createStore } from 'reusable';
 import { useDispatch } from 'react-redux';
-import {
-  init,
-  socketInit,
-  triggerUserGuide,
-  execRawPipeline,
-  drawerOpen,
-  drawerToggle,
-  toggleViewType,
-  rerunRawPipeline,
-  stopPipeline,
-  downloadStorageResults,
-} from 'actions';
+import actions from 'actions';
 import fromEntries from 'object.fromentries';
 
 if (!Object.fromEntries) {
   fromEntries.shim();
 }
-
-const actions = {
-  init,
-  socketInit,
-  triggerUserGuide,
-  execRawPipeline,
-  drawerOpen,
-  drawerToggle,
-  toggleViewType,
-  rerunRawPipeline,
-  stopPipeline,
-  downloadStorageResults,
-};
 
 const useActions = () => {
   const dispatch = useDispatch();

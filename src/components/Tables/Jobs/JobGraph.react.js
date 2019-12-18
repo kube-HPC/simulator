@@ -1,13 +1,11 @@
-import { drawerOpen } from 'actions';
-import { getCaching, getKubernetesLogsData } from 'actions/jobs.action';
 import { Button, Typography } from 'antd';
 import { Card, Fallback } from 'components/common';
 import graphOptions from 'config/template/graph-options.template';
 import PropTypes from 'prop-types';
-import React, { lazy, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { lazy } from 'react';
 import styled from 'styled-components';
 import { GraphType, NodeInfo } from '.';
+import { useActions } from 'hooks';
 
 const Graph = lazy(() => import('react-graph-vis'));
 
@@ -106,11 +104,7 @@ const formatEdge = e => {
 };
 
 const JobGraph = ({ graph, pipeline }) => {
-  const dispatch = useDispatch();
-  const getLogs = useCallback(
-    ({ taskId, podName }) => dispatch(getKubernetesLogsData({ taskId, podName })),
-    [dispatch],
-  );
+  const { drawerOpen, getKubernetesLogsData: getLogs, getCaching } = useActions();
 
   const events = {
     click: ({ nodes }) => {
@@ -148,7 +142,7 @@ const JobGraph = ({ graph, pipeline }) => {
       );
 
       const onRefreshClick = () => getLogs({ taskId, podName });
-      const onSubmitClick = () => payload && dispatch(getCaching({ jobId, nodeName }));
+      const onSubmitClick = () => payload && getCaching({ jobId, nodeName });
 
       const footer = {
         body: (
@@ -163,7 +157,7 @@ const JobGraph = ({ graph, pipeline }) => {
         ],
       };
 
-      dispatch(drawerOpen({ title, body, footer }));
+      drawerOpen({ title, body, footer });
     },
   };
 

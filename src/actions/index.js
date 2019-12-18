@@ -1,7 +1,25 @@
-export { init, socketInit } from 'actions/connection.action';
-export { triggerUserGuide, changeStep } from 'actions/userGuide.action';
-export { applyAlgorithm, deleteAlgorithm } from 'actions/algorithm.action';
-export { toggle as drawerToggle, open as drawerOpen } from 'actions/drawer.action';
-export { execRawPipeline, rerunRawPipeline, stopPipeline } from 'actions/pipeline.action';
-export { toggle as toggleViewType } from 'actions/viewType.action';
-export { downloadStorageResults } from 'actions/jobs.action';
+import { applyAlgorithm, deleteAlgorithm } from 'actions/algorithm.action';
+import { init, socketInit } from 'actions/connection.action';
+import { open as drawerOpen, toggle as drawerToggle } from 'actions/drawer.action';
+import { downloadStorageResults } from 'actions/jobs.action';
+import { execRawPipeline, rerunRawPipeline, stopPipeline } from 'actions/pipeline.action';
+import { changeStep, triggerUserGuide } from 'actions/userGuide.action';
+import { toggle as toggleViewType } from 'actions/viewType.action';
+
+const actions = {
+  applyAlgorithm,
+  changeStep,
+  deleteAlgorithm,
+  downloadStorageResults,
+  drawerOpen,
+  drawerToggle,
+  execRawPipeline,
+  init,
+  rerunRawPipeline,
+  socketInit,
+  stopPipeline,
+  toggleViewType,
+  triggerUserGuide,
+};
+
+export default actions;

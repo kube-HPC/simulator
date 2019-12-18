@@ -16,11 +16,12 @@ const isActive = state => ActiveState.includes(state);
 const canPauseOrStop = state => isActive(state) || state === PIPELINE_STATES.PAUSED;
 
 const JobActions = ({ key, pipeline, status, results, className }) => {
-  const { rerunRawPipeline, stopPipeline, downloadStorageResults } = useActions();
+  const { rerunRawPipeline, stopPipeline, downloadStorageResults, drawerOpen } = useActions();
 
   const onReRun = () => rerunRawPipeline(pipeline);
   const onStop = () => stopPipeline(key);
   const onDownload = () => downloadStorageResults(results.data.storageInfo.path);
+  const onMoreInfo = () => drawerOpen({ body: 'hello' });
 
   const isDownloadDisabled = !(results && results.data && results.data.storageInfo);
 
@@ -49,7 +50,7 @@ const JobActions = ({ key, pipeline, status, results, className }) => {
           />
         </Tooltip>
         <Tooltip placement="top" title="More Info">
-          <Button type="default" shape="circle" icon="ellipsis" onClick={onStop} />
+          <Button type="default" shape="circle" icon="ellipsis" onClick={onMoreInfo} />
         </Tooltip>
       </FlexBox.Auto>
     </div>
