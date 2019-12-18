@@ -8,24 +8,24 @@ import { GraphType } from '.';
 const Graph = lazy(() => import('react-graph-vis'));
 
 const GraphContainer = styled.div`
-  height: 400px;
+  pointer-events: none;
+  min-height: 100px;
 `;
 
-const singleStatus = s => {
-  if (s === GraphType.STATUS.SKIPPED) {
-    return GraphType.STATUS.SKIPPED;
-  }
-  if (s === GraphType.STATUS.SUCCEED) {
-    return GraphType.STATUS.COMPLETED;
-  }
-  if (s === GraphType.STATUS.FAILED) {
-    return GraphType.STATUS.FAILED;
-  }
-  if (s === GraphType.STATUS.CREATING || s === GraphType.STATUS.PENDING) {
-    return GraphType.STATUS.NOT_STARTED;
-  }
-  return GraphType.STATUS.RUNNING;
-};
+const { STATUS } = GraphType;
+
+const sameStatus = [STATUS.SKIPPED, STATUS.FAILED];
+const completedStatus = [STATUS.SUCCEED];
+const notStartedStatus = [STATUS.CREATING, STATUS.PENDING];
+
+const singleStatus = status =>
+  completedStatus.includes(status)
+    ? STATUS.COMPLETED
+    : notStartedStatus.includes(status)
+      ? STATUS.NOT_STARTED
+      : sameStatus.includes(status)
+        ? status
+        : STATUS.RUNNING;
 
 const handleSingle = n => {
   const node = { ...n };
@@ -94,9 +94,9 @@ const JobGraphCard = ({ graph }) => {
     nodes: [],
   };
 
-  const { nodes, edges } = graph;
-  nodes && nodes.forEach(n => adaptedGraph.nodes.push(formatNode(n)));
-  edges && edges.forEach(e => adaptedGraph.edges.push(formatEdge(e)));
+  const { nodes = [], edges = [] } = graph;
+  nodes.forEach(n => adaptedGraph.nodes.push(formatNode(n)));
+  edges.forEach(e => adaptedGraph.edges.push(formatEdge(e)));
 
   return (
     <GraphContainer>
