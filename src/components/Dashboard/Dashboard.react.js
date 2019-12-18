@@ -16,7 +16,7 @@ const LayoutFullHeight = styled(Layout)`
 `;
 
 const ContentMargin = styled(Layout.Content)`
-  padding: 5px;
+  padding: 10px;
   ::-webkit-scrollbar {
     width: 1px;
     margin-left: 1px;

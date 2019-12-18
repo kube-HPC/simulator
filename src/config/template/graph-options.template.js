@@ -1,6 +1,6 @@
 import { COLOR_PIPELINE_STATUS, COLOR } from 'styles/colors';
 
-const graphOptions = {
+const defaultOptions = {
   physics: false,
   layout: {
     hierarchical: {
@@ -93,7 +93,7 @@ const graphOptions = {
 };
 
 const cardOptions = {
-  ...graphOptions,
+  ...defaultOptions,
   autoResize: false,
   configure: {
     enabled: false,
@@ -113,5 +113,4 @@ const cardOptions = {
   clickToUse: true,
 };
 
-export { cardOptions };
-export default graphOptions;
+export { cardOptions, defaultOptions };

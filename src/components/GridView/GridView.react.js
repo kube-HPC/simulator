@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 const Container = styled(Card)`
   & .ant-card-body {
-    padding: 8px;
+    padding: 5px;
   }
 `;
 

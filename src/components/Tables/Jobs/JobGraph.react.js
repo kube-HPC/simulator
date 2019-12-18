@@ -1,6 +1,6 @@
 import { Button, Typography } from 'antd';
 import { Card, Fallback } from 'components/common';
-import graphOptions from 'config/template/graph-options.template';
+import { defaultOptions } from 'config/template/graph-options.template';
 import PropTypes from 'prop-types';
 import React, { lazy } from 'react';
 import styled from 'styled-components';
@@ -175,7 +175,7 @@ const JobGraph = ({ graph, pipeline }) => {
   return (
     <GraphContainer>
       <Fallback>
-        <Graph graph={adaptedGraph} options={graphOptions} events={events} />
+        <Graph graph={adaptedGraph} options={defaultOptions} events={events} />
       </Fallback>
     </GraphContainer>
   );

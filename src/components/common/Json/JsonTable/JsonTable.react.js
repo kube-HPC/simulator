@@ -58,8 +58,8 @@ function objToItem({ obj, vertical }) {
 }
 
 // Entry
-const JsonTable = ({ obj, vertical = false }) => (
-  <Descriptions column={getTotalColumns({ obj, vertical })} vertical={vertical}>
+const JsonTable = ({ obj, vertical = false, ...props }) => (
+  <Descriptions column={getTotalColumns({ obj, vertical })} vertical={vertical} {...props}>
     {objToItem({ obj, vertical })}
   </Descriptions>
 );

@@ -34,7 +34,7 @@ const useJobs = () => {
     [],
   );
 
-  const dataSource = useSelector(dataSelector);
+  const dataSource = useSelector(dataSelector, isEqual);
 
   return {
     dataSource,

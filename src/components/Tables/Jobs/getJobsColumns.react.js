@@ -6,7 +6,7 @@ import { COLOR_PRIORITY } from 'styles/colors';
 import { sorter, toUpperCaseFirstLetter } from 'utils/string';
 import JobStats from './JobNodeStats.react';
 import JobProgress from './JobProgress.react';
-import JobActions from './JobsActions.react';
+import JobActions from './JobActions.react';
 import JobTime from './JobTime.react';
 
 const getStatusFilter = () =>
@@ -26,10 +26,7 @@ const Priority = priority => (
   </Tooltip>
 );
 const Progress = (_, record) => <JobProgress {...record} />;
-const Action = (_, record) => {
-  const { key, pipeline, status, results } = record;
-  return <JobActions key={key} pipeline={pipeline} status={status.status} results={results} />;
-};
+const Action = (_, job) => <JobActions job={job} />;
 
 const getJobsColumns = () => [
   {

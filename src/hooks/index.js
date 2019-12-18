@@ -8,3 +8,5 @@ export { default as useConnectionStatus } from 'hooks/useConnectionStatus';
 export { default as useVersions } from 'hooks/useVersions';
 export { default as useReadme } from 'hooks/useReadme';
 export { default as useActions } from 'hooks/useActions';
+export { default as useNodeInfo } from 'hooks/useNodeInfo';
+export { default as useTraceData } from 'hooks/useTraceData';

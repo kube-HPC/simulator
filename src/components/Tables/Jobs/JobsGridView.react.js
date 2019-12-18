@@ -5,8 +5,9 @@ import JobProgress from './JobProgress.react';
 import JobTime from './JobTime.react';
 import styled from 'styled-components';
 import JobGraphCard from './JobGraphCard.react';
-import JobActions from './JobsActions.react';
+import JobActions from './JobActions.react';
 import JobStats from './JobNodeStats.react';
+import { cardOptions } from 'config/template/graph-options.template';
 
 const gridStyle = {
   width: '25%',
@@ -34,8 +35,8 @@ const Container = styled(FlexBox.Auto)`
 `;
 
 const toGrid = dataSource =>
-  dataSource.map(item => {
-    const { key, pipeline, status, results, graph } = item;
+  dataSource.map(job => {
+    const { key, pipeline, status, results, graph } = job;
     const { jobId, name, startTime } = pipeline;
 
     const title = (
@@ -62,8 +63,8 @@ const toGrid = dataSource =>
     return (
       <GridItem key={key} style={gridStyle}>
         <Meta avatar={progress} title={title} description={description} />
-        <JobGraphCard graph={{ ...graph, jobId: key }} pipeline={{ pipeline, status, results }} />
-        <ActionsHidden key={key} pipeline={pipeline} status={status.status} results={results} />
+        <JobGraphCard graph={{ ...graph, jobId: key }} options={cardOptions} isMinified />
+        <ActionsHidden job={job} />
       </GridItem>
     );
   });

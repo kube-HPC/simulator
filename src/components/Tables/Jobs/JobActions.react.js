@@ -1,9 +1,10 @@
 import { Button, Tooltip } from 'antd';
 import { FlexBox } from 'components/common';
-import { PIPELINE_STATES, USER_GUIDE } from 'const';
+import { PIPELINE_STATES, USER_GUIDE, DRAWER_SIZE } from 'const';
 import { useActions } from 'hooks';
 import PropTypes from 'prop-types';
 import React from 'react';
+import JobInfo from './JobInfo.react';
 
 const ActiveState = [
   PIPELINE_STATES.PENDING,
@@ -15,13 +16,16 @@ const ActiveState = [
 const isActive = state => ActiveState.includes(state);
 const canPauseOrStop = state => isActive(state) || state === PIPELINE_STATES.PAUSED;
 
-const JobActions = ({ key, pipeline, status, results, className }) => {
+const JobActions = ({ job, className }) => {
+  const { key, pipeline, status, results } = job;
   const { rerunRawPipeline, stopPipeline, downloadStorageResults, drawerOpen } = useActions();
 
   const onReRun = () => rerunRawPipeline(pipeline);
   const onStop = () => stopPipeline(key);
   const onDownload = () => downloadStorageResults(results.data.storageInfo.path);
-  const onMoreInfo = () => drawerOpen({ body: 'hello' });
+
+  const body = <JobInfo job={job} />;
+  const onMoreInfo = () => drawerOpen({ title: pipeline.name, body, width: DRAWER_SIZE.JOB_INFO });
 
   const isDownloadDisabled = !(results && results.data && results.data.storageInfo);
 
@@ -59,10 +63,7 @@ const JobActions = ({ key, pipeline, status, results, className }) => {
 
 JobActions.propTypes = {
   className: PropTypes.string.isRequired,
-  key: PropTypes.string.isRequired,
-  pipeline: PropTypes.object.isRequired,
-  results: PropTypes.object.isRequired,
-  status: PropTypes.string.isRequired,
+  job: PropTypes.object.isRequired,
 };
 
 export default JobActions;
