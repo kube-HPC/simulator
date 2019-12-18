@@ -105,6 +105,7 @@ const cardOptions = {
     navigationButtons: false,
     selectable: false,
     hoverConnectedEdges: false,
+    hover: false,
   },
   physics: {
     enabled: false,

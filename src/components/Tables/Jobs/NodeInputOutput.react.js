@@ -22,34 +22,27 @@ const NodeInputOutput = ({ payload }) => {
     [downloadResult],
   );
 
+  const mapTask = task => ({
+    index: task.batchIndex || 1,
+    origInput: task.origInput,
+    input: task.input,
+    output: task.output && task.output.storageInfo,
+    error: task.error,
+    prevErrors: task.prevErrors,
+    status: task.status,
+    podName: task.podName,
+    retries: task.retries || 0,
+    startTime: task.startTime,
+    endTime: task.endTime,
+  });
+
   const dataSource =
     payload.batch && payload.batch.length > 0
       ? payload.batch.map(b => ({
-        index: b.batchIndex,
+        ...mapTask(b),
         origInput: payload.origInput,
-        input: b.input,
-        output: b.output && b.output.storageInfo,
-        error: b.error,
-        prevErrors: b.prevErrors,
-        status: b.status,
-        retries: b.retries || 0,
-        startTime: b.startTime,
-        endTime: b.endTime,
       }))
-      : [
-        {
-          index: 1,
-          origInput: payload.origInput,
-          input: payload.input,
-          output: payload.output && payload.output.storageInfo,
-          error: payload.error,
-          prevErrors: payload.prevErrors,
-          status: payload.status,
-          retries: payload.retries || 0,
-          startTime: payload.startTime,
-          endTime: payload.endTime,
-        },
-      ];
+      : [mapTask(payload)];
 
   return (
     <Table
