@@ -28,6 +28,10 @@ const HelpBar = styled(FlexBox)`
   }
 `;
 
+const ActionsBar = styled(FlexBox)`
+  padding: 0px 5px;
+`;
+
 const openWebsite = () => window.open('http://hkube.io/');
 const openGithub = () => window.open('https://github.com/kube-HPC/hkube');
 const appVersion = `${process.env.REACT_APP_VERSION}v`;
@@ -55,7 +59,7 @@ const Header = () => {
   return (
     <Container className={USER_GUIDE.WELCOME}>
       <FlexBox>
-        <FlexBox>
+        <ActionsBar>
           <FlexBox.Item>
             <Icons.Hover
               type={leftIsCollapsed ? 'menu-fold' : 'menu-unfold'}
@@ -65,7 +69,7 @@ const Header = () => {
           <FlexBox.Item>
             <ViewType />
           </FlexBox.Item>
-        </FlexBox>
+        </ActionsBar>
         <AutoComplete table={tableValue} className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
         <HelpBar className={USER_GUIDE.HEADER.SOCIALS}>
           {!isSocketConnected && (

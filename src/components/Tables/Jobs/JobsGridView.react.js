@@ -1,11 +1,12 @@
-import React, { Children } from 'react';
-import PropTypes from 'prop-types';
+import React, { memo } from 'react';
 import { useJobs } from 'hooks';
 import { Card, Ellipsis, ProgressStatus, FlexBox } from 'components/common';
 import JobProgress from './JobProgress.react';
 import JobTime from './JobTime.react';
 import styled from 'styled-components';
 import JobGraphCard from './JobGraphCard.react';
+import JobActions from './JobsActions.react';
+import JobStats from './JobNodeStats.react';
 
 const gridStyle = {
   width: '25%',
@@ -13,23 +14,22 @@ const gridStyle = {
 
 const { Meta, Grid } = Card;
 
+const ActionsHidden = styled(JobActions)``;
+
 const GridItem = styled(Grid)`
-  cursor: pointer;
+  ${ActionsHidden} {
+    transition: all 0.3s;
+    opacity: 0;
+  }
+  &:hover,
+  &:focus {
+    ${ActionsHidden} {
+      opacity: 1;
+    }
+  }
 `;
 
-const CardFlex = ({ children, ...props }) => (
-  <FlexBox direction="column" {...props}>
-    {Children.map(children, (item, i) => (
-      <FlexBox.Item key={i}>{item}</FlexBox.Item>
-    ))}
-  </FlexBox>
-);
-
-CardFlex.propTypes = {
-  children: PropTypes.node.isRequired,
-};
-
-const Container = styled(CardFlex)`
+const Container = styled(FlexBox.Auto)`
   width: 80px;
 `;
 
@@ -38,11 +38,18 @@ const toGrid = dataSource =>
     const { key, pipeline, status, results, graph } = item;
     const { jobId, name, startTime } = pipeline;
 
+    const title = (
+      <FlexBox.Auto>
+        {name}
+        <JobStats status={status} />
+      </FlexBox.Auto>
+    );
+
     const description = (
-      <CardFlex justify="start" align="start" gutter={[0, 5]}>
-        <Ellipsis text={jobId} copyable />
+      <FlexBox.Auto justify="start" align="start" gutter={[0, 5]}>
+        <Ellipsis text={jobId} copyable length={35} />
         <JobTime results={results} startTime={startTime} />
-      </CardFlex>
+      </FlexBox.Auto>
     );
 
     const progress = (
@@ -54,8 +61,9 @@ const toGrid = dataSource =>
 
     return (
       <GridItem key={key} style={gridStyle}>
-        <Meta avatar={progress} title={name} description={description} />
+        <Meta avatar={progress} title={title} description={description} />
         <JobGraphCard graph={{ ...graph, jobId: key }} pipeline={{ pipeline, status, results }} />
+        <ActionsHidden key={key} pipeline={pipeline} status={status.status} results={results} />
       </GridItem>
     );
   });
@@ -65,4 +73,4 @@ const JobsGridView = () => {
   return <>{toGrid(dataSource)}</>;
 };
 
-export default JobsGridView;
+export default memo(JobsGridView);

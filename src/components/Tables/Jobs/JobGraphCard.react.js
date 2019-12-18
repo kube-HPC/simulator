@@ -9,7 +9,7 @@ const Graph = lazy(() => import('react-graph-vis'));
 
 const GraphContainer = styled.div`
   pointer-events: none;
-  min-height: 100px;
+  height: 200px;
 `;
 
 const { STATUS } = GraphType;
@@ -18,7 +18,7 @@ const sameStatus = [STATUS.SKIPPED, STATUS.FAILED];
 const completedStatus = [STATUS.SUCCEED];
 const notStartedStatus = [STATUS.CREATING, STATUS.PENDING];
 
-const singleStatus = status =>
+const toStatus = status =>
   completedStatus.includes(status)
     ? STATUS.COMPLETED
     : notStartedStatus.includes(status)
@@ -29,7 +29,7 @@ const singleStatus = status =>
 
 const handleSingle = n => {
   const node = { ...n };
-  node.group = singleStatus(n.status);
+  node.group = toStatus(n.status);
   return node;
 };
 
@@ -60,12 +60,7 @@ const handleBatch = n => {
   return calculatedNode;
 };
 
-const handleNode = n => {
-  if (!n.batchInfo) {
-    return handleSingle(n);
-  }
-  return handleBatch(n);
-};
+const handleNode = n => (!n.batchInfo ? handleSingle(n) : handleBatch(n));
 
 const formatNode = n => {
   const fn = handleNode(n);

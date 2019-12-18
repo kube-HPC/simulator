@@ -8,6 +8,9 @@ import {
   drawerOpen,
   drawerToggle,
   toggleViewType,
+  rerunRawPipeline,
+  stopPipeline,
+  downloadStorageResults,
 } from 'actions';
 import fromEntries from 'object.fromentries';
 
@@ -23,6 +26,9 @@ const actions = {
   drawerOpen,
   drawerToggle,
   toggleViewType,
+  rerunRawPipeline,
+  stopPipeline,
+  downloadStorageResults,
 };
 
 const useActions = () => {
