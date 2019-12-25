@@ -4,8 +4,10 @@ import { useSelector } from 'react-redux';
 import chunk from 'lodash/chunk';
 import Immutable from 'seamless-immutable';
 
-import { useJobs } from 'hooks';
-import { userGuideStepIndexes, USER_GUIDE } from 'const';
+import JobInfo from './JobInfo.react';
+
+import { useJobs, useActions } from 'hooks';
+import { userGuideStepIndexes, USER_GUIDE, DRAWER_SIZE } from 'const';
 import { jobsTableMock } from 'config';
 import { Table } from 'components';
 
@@ -16,12 +18,10 @@ const expendIndex = userGuideStepIndexes.findIndex(
   step => step === USER_GUIDE.TABLE_JOB.MENU_SELECT,
 );
 
-const expandLast = stepIndex =>
-  stepIndex >= expendIndex ? [mockDataSource[mockDataSource.length - 1].key] : [];
 const areSameOnIndex = (a, b) => a.stepIndex !== expendIndex && a.isOn === b.isOn;
 
 const JobsTable = () => {
-  const { columns, dataSource, expandedRowRender } = useJobs();
+  const { columns, dataSource } = useJobs();
 
   const [currentPage, setCurrentPage] = useState(1);
   const onChange = ({ current }) => setCurrentPage(current);
@@ -29,20 +29,31 @@ const JobsTable = () => {
   const chunks = chunk(dataSource, DEFAULT_PAGE_SIZE);
   const pagination = { total: dataSource.length, pageSize: DEFAULT_PAGE_SIZE };
 
-  const { isOn, stepIndex } = useSelector(state => state.userGuide, areSameOnIndex);
+  const { isOn } = useSelector(state => state.userGuide, areSameOnIndex);
 
   const tableDataSource = isOn ? mockDataSource : chunks[currentPage - 1] || [];
-  const expandedRowKeys = isOn ? { expandedRowKeys: expandLast(stepIndex) } : {};
+
+  const { drawerOpen } = useActions();
+
+  const onRow = job => ({
+    onDoubleClick: () => {
+      const {
+        pipeline: { name },
+      } = job;
+      const body = <JobInfo job={job} />;
+      drawerOpen({ title: name, body, width: DRAWER_SIZE.JOB_INFO });
+    },
+  });
 
   return (
     <Table
+      onRow={onRow}
       current={currentPage}
       onChange={onChange}
+      expandIcon={false}
       columns={columns}
       dataSource={tableDataSource}
-      expandedRowRender={expandedRowRender}
       pagination={pagination}
-      {...expandedRowKeys}
     />
   );
 };
