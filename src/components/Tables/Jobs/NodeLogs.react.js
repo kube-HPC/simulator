@@ -7,6 +7,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled from 'styled-components';
 import { notification } from 'utils';
 import { useActions } from 'hooks';
+import { useSelector } from 'react-redux';
 
 const SelectFull = styled(Select)`
   width: 100%;
@@ -33,14 +34,20 @@ OptionBox.propTypes = {
   taskId: PropTypes.string.isRequired,
 };
 
-const NodeLogs = ({ dataSource, taskDetails }) => {
-  const [currentTask, setCurrentTask] = useState(undefined);
+const NodeLogs = ({ taskDetails }) => {
+  const logs = useSelector(state =>
+    state.jobsKubernetesLogs.dataSource.map((value, key) => ({ key, ...value })),
+  );
 
+  const [currentTask, setCurrentTask] = useState(undefined);
   const { getKubernetesLogsData } = useActions();
 
   useEffect(() => {
     const [task] = taskDetails;
-    setCurrentTask(task.taskId);
+    const { taskId, podName } = task;
+
+    setCurrentTask(taskId);
+    getKubernetesLogsData({ taskId, podName });
   }, [taskDetails]);
 
   const options = taskDetails.map((task, index) => (
@@ -72,7 +79,7 @@ const NodeLogs = ({ dataSource, taskDetails }) => {
         </FlexBox.Item>
       </FlexBox>
       <br />
-      <LogsViewer dataSource={dataSource} />
+      <LogsViewer dataSource={logs} />
     </>
   );
 };

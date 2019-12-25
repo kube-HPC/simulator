@@ -8,3 +8,5 @@ export { default as actionType } from 'const/application-actions';
 export { default as DRAWER_SIZE } from 'const/drawer-size';
 export { default as LOGGER_LEVEL } from 'const/logger-level';
 export { default as SB_SECTIONS } from 'const/storybook-sections';
+
+export { default as GRAPH_TYPES } from 'const/graph-types.js';

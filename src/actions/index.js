@@ -4,7 +4,7 @@ import { open as drawerOpen, toggle as drawerToggle } from 'actions/drawer.actio
 import { downloadStorageResults, getKubernetesLogsData, getCaching } from 'actions/jobs.action';
 import { execRawPipeline, rerunRawPipeline, stopPipeline } from 'actions/pipeline.action';
 import { changeStep, triggerUserGuide } from 'actions/userGuide.action';
-import { toggle as toggleViewType } from 'actions/viewType.action';
+import { toggle as toggleViewType, firstLoad } from 'actions/viewType.action';
 
 const actions = {
   applyAlgorithm,
@@ -22,6 +22,7 @@ const actions = {
   triggerUserGuide,
   getKubernetesLogsData,
   getCaching,
+  firstLoad,
 };
 
 export default actions;

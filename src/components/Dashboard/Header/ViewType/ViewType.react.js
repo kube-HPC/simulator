@@ -7,10 +7,11 @@ import { useActions } from 'hooks';
 
 const ViewType = () => {
   const { isTableView } = useSelector(state => state[STATE_SOURCES.VIEW_TYPE]);
-  const { toggleViewType } = useActions();
+  const { toggleViewType, firstLoad } = useActions();
   const onClick = e => {
     e.preventDefault();
     toggleViewType();
+    firstLoad();
   };
   return <Icons.Hover onClick={onClick} component={isTableView ? IconCardView : IconListView} />;
 };

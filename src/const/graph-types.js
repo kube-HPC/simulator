@@ -1,4 +1,4 @@
-export default {
+const GRAPH_TYPES = {
   STATUS: {
     NOT_STARTED: 'notStarted',
     RUNNING: 'running',
@@ -26,3 +26,5 @@ export default {
     NONE: 'none',
   },
 };
+
+export default GRAPH_TYPES;

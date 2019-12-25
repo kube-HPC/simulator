@@ -1,11 +1,11 @@
 import { Button } from 'antd';
 import { Card, JsonSwitch, Tabs } from 'components/common';
-import { useTraceData } from 'hooks';
+import { useDrawer, useTraceData } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { memo, useState } from 'react';
+import styled from 'styled-components';
 import JobGraphCard from './JobGraphCard.react';
 import Trace from './Trace.react';
-import styled from 'styled-components';
 
 const TABS = { GRAPH: 'Graph', TRACE: 'Trace', JSON: 'JSON' };
 const NoCard = [TABS.GRAPH];
@@ -28,13 +28,14 @@ const options = {
 };
 
 const FullGraph = styled(JobGraphCard)`
-  height: 300px;
+  width: 100%;
 `;
 
 const JobInfo = ({ job }) => {
   const { key, graph, pipeline } = job;
   const [currentTab, setCurrentTab] = useState(TABS.GRAPH);
   const { traceData, fetch, reset } = useTraceData();
+  const { isVisible } = useDrawer();
 
   const refreshButton = currentTab === TABS.TRACE && (
     <Button onClick={reset} icon="redo">
@@ -43,7 +44,7 @@ const JobInfo = ({ job }) => {
   );
 
   const tabs = {
-    [TABS.GRAPH]: <FullGraph graph={{ ...graph, jobId: key }} pipeline={pipeline} />,
+    [TABS.GRAPH]: isVisible && <FullGraph graph={{ ...graph, jobId: key }} pipeline={pipeline} />,
     [TABS.TRACE]: <Trace data={traceData} />,
     [TABS.JSON]: <JsonSwitch obj={job} options={options} />,
   };

@@ -52,7 +52,7 @@ const Dashboard = () => {
     value: [tableValue],
   } = useLeftSidebar();
 
-  const { isTableView } = useSelector(state => state[STATE_SOURCES.VIEW_TYPE]);
+  const { isTableView, loadedOnce } = useSelector(state => state[STATE_SOURCES.VIEW_TYPE]);
 
   useLocalStorage({ isTableView });
 
@@ -69,9 +69,11 @@ const Dashboard = () => {
               <Header />
               <LayoutFullHeight>
                 <ContentMargin>
-                  <Display hidden={isTableView}>
-                    <GridView />
-                  </Display>
+                  {loadedOnce && (
+                    <Display isVisible={!isTableView}>
+                      <GridView />
+                    </Display>
+                  )}
                   <Display isVisible={isTableView}>{selector[tableValue]}</Display>
                 </ContentMargin>
                 <RightContainer>

@@ -19,7 +19,7 @@ const ColFull = styled(Col)`
   width: ${({ full }) => (full ? '100%' : 'fit-content')};
 `;
 
-const Item = ({ children, className, full, ...props }) => (
+const Item = ({ children, className, full = false, ...props }) => (
   <ColFull className={className} full={full} {...props}>
     {children}
   </ColFull>

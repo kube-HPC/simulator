@@ -25,7 +25,9 @@ const JobActions = ({ job, className }) => {
   const onDownload = () => downloadStorageResults(results.data.storageInfo.path);
 
   const body = <JobInfo job={job} />;
-  const onMoreInfo = () => drawerOpen({ title: pipeline.name, body, width: DRAWER_SIZE.JOB_INFO });
+  const onMoreInfo = () => {
+    drawerOpen({ title: pipeline.name, body, width: DRAWER_SIZE.JOB_INFO });
+  };
 
   const isDownloadDisabled = !(results && results.data && results.data.storageInfo);
 

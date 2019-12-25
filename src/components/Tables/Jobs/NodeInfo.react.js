@@ -14,13 +14,7 @@ const OverflowContainer = styled.div`
   overflow: auto;
 `;
 
-const isSameLength = (a, b) => a.length === b.length;
-
 const NodeInfo = ({ node }) => {
-  const dataSource = useSelector(state =>
-    state.jobsKubernetesLogs.dataSource.map((value, key) => ({ key, ...value }), isSameLength),
-  );
-
   const algorithmTable = useSelector(state => state.algorithmTable.dataSource);
   const algorithmDetails =
     algorithmTable.find(a => a.name === node.algorithmName) || DEFAULT_ALGORITHM;
@@ -33,7 +27,7 @@ const NodeInfo = ({ node }) => {
   return node ? (
     <Tabs defaultActiveKey="1">
       <Tabs.TabPane tab="Logs" key="1">
-        <NodeLogs dataSource={dataSource} taskDetails={taskDetails} />
+        <NodeLogs taskDetails={taskDetails} />
       </Tabs.TabPane>
       <Tabs.TabPane tab="Algorithm Details" key="2">
         <OverflowContainer>
