@@ -6,8 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled from 'styled-components';
 import { notification } from 'utils';
-import { useActions } from 'hooks';
-import { useSelector } from 'react-redux';
+import { useLogs } from 'hooks';
 
 const SelectFull = styled(Select)`
   width: 100%;
@@ -35,20 +34,16 @@ OptionBox.propTypes = {
 };
 
 const NodeLogs = ({ taskDetails }) => {
-  const logs = useSelector(state =>
-    state.jobsKubernetesLogs.dataSource.map((value, key) => ({ key, ...value })),
-  );
-
+  const { logs, getLogs } = useLogs();
   const [currentTask, setCurrentTask] = useState(undefined);
-  const { getKubernetesLogsData } = useActions();
 
   useEffect(() => {
     const [task] = taskDetails;
     const { taskId, podName } = task;
 
     setCurrentTask(taskId);
-    getKubernetesLogsData({ taskId, podName });
-  }, [taskDetails, getKubernetesLogsData]);
+    getLogs({ taskId, podName });
+  }, [taskDetails, getLogs]);
 
   const options = taskDetails.map((task, index) => (
     <Select.Option key={index} value={index}>
@@ -66,7 +61,7 @@ const NodeLogs = ({ taskDetails }) => {
               onSelect={index => {
                 const { taskId, podName } = taskDetails[index];
                 setCurrentTask(taskId);
-                getKubernetesLogsData({ taskId, podName });
+                getLogs({ taskId, podName });
               }}>
               {options}
             </SelectFull>

@@ -8,23 +8,30 @@ const notStartedStatus = [STATUS.CREATING, STATUS.PENDING];
 
 export const findNodeName = nodeName => node => node.nodeName === nodeName;
 
-export const singleStatus = s => {
-  if (s === STATUS.SKIPPED) {
-    return STATUS.SKIPPED;
-  }
-  if (s === STATUS.SUCCEED) {
-    return STATUS.COMPLETED;
-  }
-  if (s === STATUS.FAILED) {
-    return STATUS.FAILED;
-  }
-  if (s === STATUS.CREATING || s === STATUS.PENDING) {
-    return STATUS.NOT_STARTED;
-  }
-  return STATUS.RUNNING;
+export const nodeFinder = ({ graph, pipeline }) => nodeName => {
+  const nodeData = graph.nodes.find(findNodeName(nodeName));
+  const node = pipeline.nodes.find(findNodeName(nodeName));
+  const { jobId } = pipeline;
+
+  const taskId =
+    nodeData && nodeData.taskId ? nodeData.taskId : nodeData.batch && nodeData.batch[0].taskId;
+  const podName =
+    nodeData && nodeData.podName ? nodeData.podName : nodeData.batch && nodeData.batch[0].podName;
+
+  const payload = {
+    ...nodeData,
+    jobId,
+    taskId,
+    nodeName,
+    podName,
+    origInput: node.input,
+    batch: nodeData.batch || [],
+  };
+
+  return payload;
 };
 
-export const toStatus = status =>
+const toStatus = status =>
   completedStatus.includes(status)
     ? STATUS.COMPLETED
     : notStartedStatus.includes(status)
@@ -33,9 +40,9 @@ export const toStatus = status =>
         ? status
         : STATUS.RUNNING;
 
-export const handleSingle = node => ({ ...node, group: toStatus(node.status) });
+const handleSingle = node => ({ ...node, group: toStatus(node.status) });
 
-export const handleBatch = ({ nodeName, algorithmName, batchInfo }) => {
+const handleBatch = ({ nodeName, algorithmName, batchInfo }) => {
   const { completed, total, idle, running, errors } = batchInfo;
   let _completed = 0;
   let group = null;
@@ -62,7 +69,7 @@ export const handleBatch = ({ nodeName, algorithmName, batchInfo }) => {
   };
 };
 
-export const handleNode = n => (!n.batchInfo ? handleSingle(n) : handleBatch(n));
+const handleNode = n => (!n.batchInfo ? handleSingle(n) : handleBatch(n));
 
 export const formatNode = n => {
   const fn = handleNode(n);

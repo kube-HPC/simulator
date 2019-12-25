@@ -2,6 +2,7 @@ import { createStore } from 'reusable';
 import { useDispatch } from 'react-redux';
 import actions from 'actions';
 import fromEntries from 'object.fromentries';
+import { useCallback } from 'react';
 
 if (!Object.fromEntries) {
   fromEntries.shim();
@@ -9,7 +10,7 @@ if (!Object.fromEntries) {
 
 const useActions = () => {
   const dispatch = useDispatch();
-  const createDispatch = action => params => dispatch(action(params));
+  const createDispatch = useCallback(action => params => dispatch(action(params)), [dispatch]);
   const objectMapped = Object.entries(actions).map(([key, value]) => [key, createDispatch(value)]);
   const dispatcher = Object.fromEntries(objectMapped);
 

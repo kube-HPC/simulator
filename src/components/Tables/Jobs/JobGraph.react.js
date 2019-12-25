@@ -27,7 +27,7 @@ const title = (
 );
 
 const JobGraph = ({ graph, pipeline }) => {
-  const { drawerOpen, getKubernetesLogsData: getLogs, getCaching } = useActions();
+  const { drawerOpen, getKubernetesLogsData, getCaching } = useActions();
 
   const events = {
     click: ({ nodes }) => {
@@ -46,7 +46,7 @@ const JobGraph = ({ graph, pipeline }) => {
           ? nodeData.podName
           : nodeData.batch && nodeData.batch[0].podName;
 
-      getLogs({ taskId, podName });
+      getKubernetesLogsData({ taskId, podName });
 
       const payload = {
         ...nodeData,
@@ -64,7 +64,7 @@ const JobGraph = ({ graph, pipeline }) => {
         </Card>
       );
 
-      const onRefreshClick = () => getLogs({ taskId, podName });
+      const onRefreshClick = () => getKubernetesLogsData({ taskId, podName });
       const onSubmitClick = () => payload && getCaching({ jobId, nodeName });
 
       const footer = {
