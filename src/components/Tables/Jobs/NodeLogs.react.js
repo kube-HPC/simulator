@@ -48,7 +48,7 @@ const NodeLogs = ({ taskDetails }) => {
 
     setCurrentTask(taskId);
     getKubernetesLogsData({ taskId, podName });
-  }, [taskDetails]);
+  }, [taskDetails, getKubernetesLogsData]);
 
   const options = taskDetails.map((task, index) => (
     <Select.Option key={index} value={index}>

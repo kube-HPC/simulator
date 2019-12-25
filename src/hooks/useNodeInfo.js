@@ -40,7 +40,7 @@ const useNodeInfo = ({ graph, pipeline }) => {
       const payload = findNodeByName(nodeName);
       setNode(payload);
     }
-  }, []);
+  }, [findNodeByName, pipeline]);
 
   const events = {
     click: ({ nodes }) => {

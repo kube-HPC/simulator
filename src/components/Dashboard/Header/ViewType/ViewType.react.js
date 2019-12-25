@@ -5,13 +5,16 @@ import { useViewType } from 'hooks';
 
 const ViewType = () => {
   const { isTableView, toggleViewType, firstLoad, loadedOnce } = useViewType();
-  const onClick = useCallback(e => {
-    e.preventDefault();
-    toggleViewType();
-    if (!loadedOnce) {
-      firstLoad();
-    }
-  }, []);
+  const onClick = useCallback(
+    e => {
+      e.preventDefault();
+      toggleViewType();
+      if (!loadedOnce) {
+        firstLoad();
+      }
+    },
+    [firstLoad, loadedOnce, toggleViewType],
+  );
   return <Icons.Hover onClick={onClick} component={isTableView ? IconCardView : IconListView} />;
 };
 
