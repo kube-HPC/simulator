@@ -1,13 +1,19 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Immutable from 'seamless-immutable';
-
-import { Table as AntTable, Icon, Spin } from 'antd';
+import { Icon, Spin, Table as AntTable } from 'antd';
 import { USER_GUIDE } from 'const';
+import PropTypes from 'prop-types';
+import React from 'react';
+import Immutable from 'seamless-immutable';
+import styled from 'styled-components';
 
 const ExpandIcon = ({ expanded, onExpand, record }) => (
   <Icon type={expanded ? 'down' : 'right'} onClick={e => onExpand(record, e)} />
 );
+
+const TableWhite = styled(AntTable)`
+  .ant-table-thead > tr > th {
+    background: none;
+  }
+`;
 
 ExpandIcon.propTypes = {
   expanded: PropTypes.bool.isRequired,
@@ -27,7 +33,7 @@ const DEFAULT_PAGINATION = {
 const Table = ({ dataSource = [], ...props }) => {
   const tableSource = Immutable.isImmutable(dataSource) ? dataSource.asMutable() : dataSource;
   return (
-    <AntTable
+    <TableWhite
       loading={!dataSource}
       className={USER_GUIDE.TABLE}
       expandIcon={ExpandIcon}

@@ -1,18 +1,17 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { IconCardView, IconListView } from 'components/Icons';
 import { Icons } from 'components/common';
-import { useSelector } from 'react-redux';
-import { STATE_SOURCES } from 'const';
-import { useActions } from 'hooks';
+import { useViewType } from 'hooks';
 
 const ViewType = () => {
-  const { isTableView } = useSelector(state => state[STATE_SOURCES.VIEW_TYPE]);
-  const { toggleViewType, firstLoad } = useActions();
-  const onClick = e => {
+  const { isTableView, toggleViewType, firstLoad, loadedOnce } = useViewType();
+  const onClick = useCallback(e => {
     e.preventDefault();
     toggleViewType();
-    firstLoad();
-  };
+    if (!loadedOnce) {
+      firstLoad();
+    }
+  }, []);
   return <Icons.Hover onClick={onClick} component={isTableView ? IconCardView : IconListView} />;
 };
 

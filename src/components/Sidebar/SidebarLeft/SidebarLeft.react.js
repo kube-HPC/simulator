@@ -20,7 +20,7 @@ import { COLOR_LAYOUT } from 'styles';
 import { USER_GUIDE, LEFT_SIDEBAR_NAMES } from 'const';
 import { dataCountMock } from 'config';
 import { FlexBox } from 'components/common';
-import { useLeftSidebar } from 'hooks';
+import { useLeftSidebar, useActions, useViewType } from 'hooks';
 
 const Border = styled.div`
   border-right: 1px solid ${COLOR_LAYOUT.border};
@@ -141,7 +141,15 @@ const SidebarLeft = ({ className }) => {
     isCollapsed: [collapsed, toggle],
   } = useLeftSidebar();
 
-  const onSelect = ({ key }) => setTableValue(key);
+  const { isTableView } = useViewType();
+  const { toggleViewType } = useActions();
+
+  const onSelect = ({ key }) => {
+    if (!isTableView) {
+      toggleViewType();
+    }
+    setTableValue(key);
+  };
 
   return (
     <Border>

@@ -5,7 +5,7 @@ import { ControlledEditor } from '@monaco-editor/react';
 const JsonEditor = ({
   onChange = () => {},
   value: controlledValue = '',
-  height = '80vh',
+  height = '60vh',
   ...props
 }) => {
   const [value, setValue] = useState(controlledValue);

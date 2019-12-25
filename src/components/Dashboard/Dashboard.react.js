@@ -1,13 +1,18 @@
 import { Layout, message } from 'antd';
 import { LoadingScreen, SidebarLeft, SidebarRight, UserGuide } from 'components';
-import { USER_GUIDE, STATE_SOURCES } from 'const';
-import { useActions, useConnectionStatus, useLeftSidebar, useLocalStorage } from 'hooks';
+import { USER_GUIDE } from 'const';
+import {
+  useActions,
+  useConnectionStatus,
+  useLeftSidebar,
+  useLocalStorage,
+  useViewType,
+} from 'hooks';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { COLOR, COLOR_LAYOUT, GlobalStyle, Display } from 'styles';
 import DashboardDrawer from './Drawer/DashboardDrawer.react';
 import Header from './Header/Header.react';
-import { useSelector } from 'react-redux';
 import GridView from 'components/GridView/GridView.react';
 
 const LayoutFullHeight = styled(Layout)`
@@ -16,7 +21,7 @@ const LayoutFullHeight = styled(Layout)`
 `;
 
 const ContentMargin = styled(Layout.Content)`
-  padding: 10px;
+  padding: 5px;
   ::-webkit-scrollbar {
     width: 1px;
     margin-left: 1px;
@@ -52,7 +57,7 @@ const Dashboard = () => {
     value: [tableValue],
   } = useLeftSidebar();
 
-  const { isTableView, loadedOnce } = useSelector(state => state[STATE_SOURCES.VIEW_TYPE]);
+  const { isTableView, loadedOnce } = useViewType();
 
   useLocalStorage({ isTableView });
 

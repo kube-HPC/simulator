@@ -13,7 +13,6 @@ import { toUpperCaseFirstLetter } from 'utils';
 
 const gridStyle = {
   width: '25%',
-  height: '320px',
 };
 
 const { Meta, Grid } = Card;
@@ -49,11 +48,13 @@ const toGrid = dataSource =>
 
     const title = (
       <FlexBox.Auto>
-        <FlexBox.Auto>
-          {types.map(type => (
-            <Tag key={type}>{toUpperCaseFirstLetter(type)}</Tag>
-          ))}
-          {name}
+        <FlexBox.Auto direction="column" justify="start" align="start">
+          <Ellipsis text={name} />
+          <FlexBox.Auto justify="start">
+            {types.map(type => (
+              <Tag key={type}>{toUpperCaseFirstLetter(type)}</Tag>
+            ))}
+          </FlexBox.Auto>
         </FlexBox.Auto>
         <JobStats status={status} />
       </FlexBox.Auto>

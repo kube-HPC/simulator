@@ -32,7 +32,7 @@ const FullGraph = styled(JobGraphCard)`
 `;
 
 const JobInfo = ({ job }) => {
-  const { key, graph, pipeline } = job;
+  const { key, graph, pipeline, ...rest } = job;
   const [currentTab, setCurrentTab] = useState(TABS.GRAPH);
   const { traceData, fetch, reset } = useTraceData();
   const { isVisible } = useDrawer();
@@ -43,10 +43,11 @@ const JobInfo = ({ job }) => {
     </Button>
   );
 
+  const json = { pipeline, ...rest };
   const tabs = {
     [TABS.GRAPH]: isVisible && <FullGraph graph={{ ...graph, jobId: key }} pipeline={pipeline} />,
     [TABS.TRACE]: <Trace data={traceData} />,
-    [TABS.JSON]: <JsonSwitch obj={job} options={options} />,
+    [TABS.JSON]: <JsonSwitch obj={json} options={options} />,
   };
 
   const onTabClick = tabKey => tabKey === TABS.TRACE && fetch({ jobId: key });
