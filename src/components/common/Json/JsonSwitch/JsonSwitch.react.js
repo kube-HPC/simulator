@@ -20,7 +20,8 @@ const onCopy = () =>
 
 const EMPTY = {};
 
-const JsonSwitch = ({ obj, options: { view = EMPTY, table = EMPTY } }) => {
+const JsonSwitch = ({ obj, options = EMPTY }) => {
+  const { view = EMPTY, table = EMPTY } = options;
   const extra = (
     <CopyToClipboard text={stringify(obj)} onCopy={onCopy}>
       <Button type="dashed">Copy</Button>

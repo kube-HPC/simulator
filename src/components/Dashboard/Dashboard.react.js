@@ -1,10 +1,10 @@
 import { Layout, message } from 'antd';
 import { LoadingScreen, SidebarLeft, SidebarRight, UserGuide } from 'components';
 import { USER_GUIDE, STATE_SOURCES } from 'const';
-import { useActions, useConnectionStatus, useLeftSidebar } from 'hooks';
+import { useActions, useConnectionStatus, useLeftSidebar, useLocalStorage } from 'hooks';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { COLOR, COLOR_LAYOUT, GlobalStyle } from 'styles';
+import { COLOR, COLOR_LAYOUT, GlobalStyle, Display } from 'styles';
 import DashboardDrawer from './Drawer/DashboardDrawer.react';
 import Header from './Header/Header.react';
 import { useSelector } from 'react-redux';
@@ -54,6 +54,8 @@ const Dashboard = () => {
 
   const { isTableView } = useSelector(state => state[STATE_SOURCES.VIEW_TYPE]);
 
+  useLocalStorage({ isTableView });
+
   return (
     <>
       <GlobalStyle />
@@ -66,7 +68,12 @@ const Dashboard = () => {
             <Layout>
               <Header />
               <LayoutFullHeight>
-                <ContentMargin>{!isTableView ? selector[tableValue] : <GridView />}</ContentMargin>
+                <ContentMargin>
+                  <Display hidden={isTableView}>
+                    <GridView />
+                  </Display>
+                  <Display isVisible={isTableView}>{selector[tableValue]}</Display>
+                </ContentMargin>
                 <RightContainer>
                   <SidebarRight className={USER_GUIDE.SIDEBAR_TOP_RIGHT} isTop />
                   <SidebarRight className={USER_GUIDE.SIDEBAR_BOTTOM_RIGHT} />

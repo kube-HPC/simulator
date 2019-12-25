@@ -8,9 +8,12 @@ import JobGraphCard from './JobGraphCard.react';
 import JobActions from './JobActions.react';
 import JobStats from './JobNodeStats.react';
 import { cardOptions } from 'config/template/graph-options.template';
+import { Tag } from 'antd';
+import { toUpperCaseFirstLetter } from 'utils';
 
 const gridStyle = {
   width: '25%',
+  height: '320px',
 };
 
 const { Meta, Grid } = Card;
@@ -18,6 +21,9 @@ const { Meta, Grid } = Card;
 const ActionsHidden = styled(JobActions)``;
 
 const GridItem = styled(Grid)`
+  .ant-card-meta {
+    margin: 0px;
+  }
   ${ActionsHidden} {
     transition: all 0.3s;
     opacity: 0;
@@ -39,9 +45,16 @@ const toGrid = dataSource =>
     const { key, pipeline, status, results, graph } = job;
     const { jobId, name, startTime } = pipeline;
 
+    const { types } = pipeline;
+
     const title = (
       <FlexBox.Auto>
-        {name}
+        <FlexBox.Auto>
+          {types.map(type => (
+            <Tag key={type}>{toUpperCaseFirstLetter(type)}</Tag>
+          ))}
+          {name}
+        </FlexBox.Auto>
         <JobStats status={status} />
       </FlexBox.Auto>
     );
@@ -71,7 +84,7 @@ const toGrid = dataSource =>
 
 const JobsGridView = () => {
   const { dataSource } = useJobs();
-  return <>{toGrid(dataSource)}</>;
+  return <>{toGrid(dataSource.slice(0, 10))}</>;
 };
 
 export default memo(JobsGridView);

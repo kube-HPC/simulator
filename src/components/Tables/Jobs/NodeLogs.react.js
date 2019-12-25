@@ -1,13 +1,12 @@
-import { getKubernetesLogsData } from 'actions/jobs.action';
 import { Button, Select, Tag, Tooltip } from 'antd';
 import { FlexBox } from 'components/common';
 import LogsViewer from 'components/common/LogsViewer/LogsViewer.react';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { notification } from 'utils';
+import { useActions } from 'hooks';
 
 const SelectFull = styled(Select)`
   width: 100%;
@@ -36,7 +35,8 @@ OptionBox.propTypes = {
 
 const NodeLogs = ({ dataSource, taskDetails }) => {
   const [currentTask, setCurrentTask] = useState(undefined);
-  const dispatch = useDispatch();
+
+  const { getKubernetesLogsData } = useActions();
 
   useEffect(() => {
     const [task] = taskDetails;
@@ -59,7 +59,7 @@ const NodeLogs = ({ dataSource, taskDetails }) => {
               onSelect={index => {
                 const { taskId, podName } = taskDetails[index];
                 setCurrentTask(taskId);
-                dispatch(getKubernetesLogsData({ taskId, podName }));
+                getKubernetesLogsData({ taskId, podName });
               }}>
               {options}
             </SelectFull>

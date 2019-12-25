@@ -1,4 +1,4 @@
-import { Fallback } from 'components/common';
+import { Fallback, FlexBox, Card } from 'components/common';
 import { defaultOptions } from 'config/template/graph-options.template';
 import PropTypes from 'prop-types';
 import React, { lazy } from 'react';
@@ -6,13 +6,14 @@ import styled from 'styled-components';
 import GraphType from './graphType';
 import { NodeInfo } from '.';
 import { useNodeInfo } from 'hooks';
+import { Empty } from 'antd';
 
 const Graph = lazy(() => import('react-graph-vis'));
 
 const GraphContainer = styled.div`
-  pointer-events: ${({ isMinified }) => (isMinified ? 'all' : 'none')};
-  max-width: 40vw;
-  min-height: 100px;
+  pointer-events: ${({ isMinified }) => (!isMinified ? 'all' : 'none')};
+  max-width: ${({ isMinified }) => (!isMinified ? `100%` : `40vw`)};
+  min-height: 120px;
 `;
 
 const { STATUS } = GraphType;
@@ -101,14 +102,26 @@ const JobGraphCard = ({
   const { node, events } = useNodeInfo({ graph, pipeline });
 
   return (
-    <>
-      <GraphContainer isMinified={isMinified} className={className}>
-        <Fallback>
-          <Graph graph={adaptedGraph} options={options} events={events} />
-        </Fallback>
-      </GraphContainer>
-      {!isMinified && <NodeInfo node={node} />}
-    </>
+    <FlexBox direction="column">
+      <FlexBox.Item>
+        <GraphContainer isMinified={isMinified} className={className}>
+          {adaptedGraph.nodes.length === 0 ? (
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+          ) : (
+            <Fallback>
+              <Graph graph={adaptedGraph} options={options} events={events} />
+            </Fallback>
+          )}
+        </GraphContainer>
+      </FlexBox.Item>
+      <FlexBox.Item full>
+        {!isMinified && (
+          <Card>
+            <NodeInfo node={node} />
+          </Card>
+        )}
+      </FlexBox.Item>
+    </FlexBox>
   );
 };
 
@@ -120,6 +133,6 @@ JobGraphCard.propTypes = {
   className: PropTypes.string,
 };
 
-const isSameGraph = (a, b) => a.status.timestamp === b.status.timestamp;
+const isSameGraph = (a, b) => (a.graph && b.graph ? a.graph.timestamp === b.graph.timestamp : true);
 
 export default React.memo(JobGraphCard, isSameGraph);

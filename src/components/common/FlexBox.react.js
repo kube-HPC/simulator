@@ -15,7 +15,19 @@ const FlexBox = ({ children, justify, align, gutter, ...props }) => (
 
 FlexBox.propTypes = Row.propTypes;
 
-FlexBox.Item = Col;
+const ColFull = styled(Col)`
+  width: ${({ full }) => (full ? '100%' : 'fit-content')};
+`;
+
+const Item = ({ children, className, full, ...props }) => (
+  <ColFull className={className} full={full} {...props}>
+    {children}
+  </ColFull>
+);
+
+Item.propTypes = Col.propTypes;
+
+FlexBox.Item = Item;
 
 FlexBox.defaultProps = {
   justify: 'space-between',

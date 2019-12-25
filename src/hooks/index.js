@@ -10,3 +10,4 @@ export { default as useReadme } from 'hooks/useReadme';
 export { default as useActions } from 'hooks/useActions';
 export { default as useNodeInfo } from 'hooks/useNodeInfo';
 export { default as useTraceData } from 'hooks/useTraceData';
+export { default as useLocalStorage } from 'hooks/useLocalStorage';

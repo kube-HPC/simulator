@@ -7,12 +7,17 @@ import JobGraphCard from './JobGraphCard.react';
 import Trace from './Trace.react';
 import styled from 'styled-components';
 
-const TABS = { GRAPH: 'Graph', TRACE: 'Trace', JSON_TABLE: 'JSON Table', JSON: 'JSON' };
+const TABS = { GRAPH: 'Graph', TRACE: 'Trace', JSON: 'JSON' };
+const NoCard = [TABS.GRAPH];
+
+const OverflowContainer = styled(Card)`
+  height: 80vh;
+`;
 
 const generateTabs = tabs =>
   Object.entries(tabs).map(([key, value]) => (
     <Tabs.TabPane tab={key} key={key}>
-      {key === TABS.JSON ? value : <Card>{value}</Card>}
+      {NoCard.includes(key) ? value : <OverflowContainer>{value}</OverflowContainer>}
     </Tabs.TabPane>
   ));
 
@@ -40,11 +45,7 @@ const JobInfo = ({ job }) => {
   const tabs = {
     [TABS.GRAPH]: <FullGraph graph={{ ...graph, jobId: key }} pipeline={pipeline} />,
     [TABS.TRACE]: <Trace data={traceData} />,
-    [TABS.JSON]: (
-      <Card>
-        <JsonSwitch obj={job} options={options} />
-      </Card>
-    ),
+    [TABS.JSON]: <JsonSwitch obj={job} options={options} />,
   };
 
   const onTabClick = tabKey => tabKey === TABS.TRACE && fetch({ jobId: key });
@@ -64,6 +65,4 @@ JobInfo.propTypes = {
   job: PropTypes.object.isRequired,
 };
 
-const areSameJobs = (a, b) => a.status.timestamp === b.status.timestamp;
-
-export default memo(JobInfo, areSameJobs);
+export default memo(JobInfo);

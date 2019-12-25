@@ -12,7 +12,7 @@ const JobTime = ({ results, startTime }) => (
     <Moment format="DD/MM/YY HH:mm:ss">{startTime}</Moment>{' '}
     <Text strong>
       {HumanizeDuration(results ? results.timeTook * 1000 : Date.now() - startTime, {
-        maxDecimalPoints: 2,
+        round: true,
       })}
     </Text>
   </Tag>
