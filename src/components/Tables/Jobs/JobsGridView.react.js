@@ -84,7 +84,7 @@ const toGrid = dataSource =>
 
 const JobsGridView = () => {
   const { dataSource } = useJobs();
-  return <>{toGrid(dataSource.slice(0, 10))}</>;
+  return <>{toGrid(dataSource)}</>;
 };
 
 export default memo(JobsGridView);
