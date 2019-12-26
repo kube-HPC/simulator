@@ -40,7 +40,7 @@ const JobActions = ({ job, className }) => {
         <Tooltip placement="top" title="Stop Pipeline">
           <Button
             type="danger"
-            disabled={!canPauseOrStop(status)}
+            disabled={!canPauseOrStop(status.status)}
             shape="circle"
             icon="close"
             onClick={onStop}

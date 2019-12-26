@@ -1,6 +1,7 @@
 import { COLOR_PIPELINE_STATUS, COLOR } from 'styles/colors';
 
 const defaultOptions = {
+  height: `400px`,
   physics: false,
   layout: {
     hierarchical: {
@@ -94,6 +95,7 @@ const defaultOptions = {
 
 const cardOptions = {
   ...defaultOptions,
+  height: `200px`,
   autoResize: false,
   configure: {
     enabled: false,

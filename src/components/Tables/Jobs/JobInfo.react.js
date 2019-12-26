@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Button, Empty } from 'antd';
 import { Card, JsonSwitch, Tabs } from 'components/common';
 import { useDrawer, useTraceData } from 'hooks';
 import PropTypes from 'prop-types';
@@ -45,7 +45,13 @@ const JobInfo = ({ job }) => {
 
   const json = { pipeline, ...rest };
   const tabs = {
-    [TABS.GRAPH]: isVisible && <FullGraph graph={{ ...graph, jobId: key }} pipeline={pipeline} />,
+    [TABS.GRAPH]: graph ? (
+      isVisible && <FullGraph graph={{ ...graph, jobId: key }} pipeline={pipeline} />
+    ) : (
+      <Card>
+        <Empty />
+      </Card>
+    ),
     [TABS.TRACE]: <Trace data={traceData} />,
     [TABS.JSON]: <JsonSwitch obj={json} options={options} />,
   };

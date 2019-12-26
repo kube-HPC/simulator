@@ -14,7 +14,14 @@ const GraphContainer = styled.div`
   pointer-events: ${({ isMinified }) => (!isMinified ? 'all' : 'none')};
   max-width: ${({ isMinified }) => (!isMinified ? `100%` : `40vw`)};
   width: 100%;
-  min-height: 120px;
+`;
+
+const EmptyHeight = styled(Empty)`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 136px;
 `;
 
 const JobGraphCard = ({
@@ -35,19 +42,20 @@ const JobGraphCard = ({
   nodes.forEach(n => adaptedGraph.nodes.push(formatNode(n)));
   edges.forEach(e => adaptedGraph.edges.push(formatEdge(e)));
 
-  const { node, events } = useNodeInfo({ graph, pipeline });
   const isValidGraph = adaptedGraph.nodes.length !== 0;
+
+  const { node, events } = useNodeInfo({ graph, pipeline });
 
   return (
     <FlexBox direction="column" className={className}>
-      <FlexBox.Item>
+      <FlexBox.Item full={!isValidGraph}>
         <GraphContainer isMinified={isMinified}>
           {isValidGraph ? (
             <Fallback>
               <Graph graph={adaptedGraph} options={options} events={events} />
             </Fallback>
           ) : (
-            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            <EmptyHeight image={Empty.PRESENTED_IMAGE_SIMPLE} />
           )}
         </GraphContainer>
       </FlexBox.Item>
