@@ -12,7 +12,7 @@ export const applyAlgorithm = formData => ({
 export const deleteAlgorithm = algorithmName => ({
   type: actions.REST_REQ_DELETE,
   payload: {
-    url: `store/algorithms/${algorithmName}`,
+    url: `store/algorithms/${algorithmName}?force=true`,
     actionType: actions.ALGORITHM_DELETE,
   },
 });

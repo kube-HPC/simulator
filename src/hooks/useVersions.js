@@ -19,7 +19,7 @@ const applyVersion = ({ url }) => ({ name, image }) =>
 
 const deleteVersion = ({ url }) => ({ name, algorithmImage }) =>
   axios
-    .delete(`${url}/versions/algorithms/${name}?image=${algorithmImage}`)
+    .delete(`${url}/versions/algorithms/${name}?image=${encodeURIComponent(algorithmImage)}`)
     .catch(errorNotification);
 
 const useVersions = ({ algorithmName, isFetch }) => {

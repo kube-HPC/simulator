@@ -86,16 +86,15 @@ export const rerunRawPipeline = nominalPipeline => {
   // Destruct all unused values
   const {
     jobId,
-    name,
     flowInputOrig,
     flowInput,
     startTime,
     lastRunResult,
+    types,
     ...rest
   } = nominalPipeline;
 
   const pipeline = {
-    name: name.startsWith('raw-') ? name.slice(4) : name,
     flowInput: flowInputOrig,
     ...rest,
   };
