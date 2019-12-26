@@ -1,89 +1,30 @@
-import { Button, Typography } from 'antd';
-import { Card, Fallback } from 'components/common';
+import { Fallback, FlexBox, Card } from 'components/common';
 import { defaultOptions } from 'config/template/graph-options.template';
 import PropTypes from 'prop-types';
 import React, { lazy } from 'react';
 import styled from 'styled-components';
+import { useNodeInfo } from 'hooks';
+import { Empty } from 'antd';
 import { NodeInfo } from '.';
-import { useActions } from 'hooks';
-import { findNodeName, formatNode, formatEdge } from 'utils';
+import { formatNode, formatEdge } from 'utils';
 
 const Graph = lazy(() => import('react-graph-vis'));
 
-const { Text, Title, Paragraph } = Typography;
-
 const GraphContainer = styled.div`
-  height: 500px;
+  pointer-events: ${({ isMinified }) => (!isMinified ? 'all' : 'none')};
+  max-width: ${({ isMinified }) => (!isMinified ? `100%` : `40vw`)};
+  width: 100%;
 `;
 
-const title = (
-  <>
-    <Title>Node Information</Title>
-    <Paragraph>
-      Check current node <Text code>Logs</Text>,<Text code>Algorithm Details</Text> and
-      <Text code>Input Output Info</Text>
-    </Paragraph>
-  </>
-);
+const EmptyHeight = styled(Empty)`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 136px;
+`;
 
-const JobGraph = ({ graph, pipeline }) => {
-  const { drawerOpen, getKubernetesLogsData, getCaching } = useActions();
-
-  const events = {
-    click: ({ nodes }) => {
-      const [nodeName] = nodes;
-      if (!nodeName) {
-        return;
-      }
-
-      const nodeData = graph.nodes.find(findNodeName(nodeName));
-      const node = pipeline.nodes.find(findNodeName(nodeName));
-      const jobId = pipeline.jobId;
-      const taskId =
-        nodeData && nodeData.taskId ? nodeData.taskId : nodeData.batch && nodeData.batch[0].taskId;
-      const podName =
-        nodeData && nodeData.podName
-          ? nodeData.podName
-          : nodeData.batch && nodeData.batch[0].podName;
-
-      getKubernetesLogsData({ taskId, podName });
-
-      const payload = {
-        ...nodeData,
-        jobId,
-        taskId,
-        nodeName,
-        podName,
-        origInput: node.input,
-        batch: nodeData.batch || [],
-      };
-
-      const body = (
-        <Card>
-          <NodeInfo payload={payload} />
-        </Card>
-      );
-
-      const onRefreshClick = () => getKubernetesLogsData({ taskId, podName });
-      const onSubmitClick = () => payload && getCaching({ jobId, nodeName });
-
-      const footer = {
-        body: (
-          <Button type="primary" onClick={onSubmitClick}>
-            Get Cache
-          </Button>
-        ),
-        extra: [
-          <Button key="redo" icon="redo" onClick={onRefreshClick}>
-            Refresh
-          </Button>,
-        ],
-      };
-
-      drawerOpen({ title, body, footer });
-    },
-  };
-
+const JobGraph = ({ graph, pipeline, options = defaultOptions, isMinified = false, className }) => {
   // On every render define new Graph!
   // Causes 'id already exists' on trying update the nodes.
   const adaptedGraph = {
@@ -91,23 +32,46 @@ const JobGraph = ({ graph, pipeline }) => {
     nodes: [],
   };
 
-  const { nodes, edges } = graph;
-  nodes && nodes.forEach(n => adaptedGraph.nodes.push(formatNode(n)));
-  edges && edges.forEach(e => adaptedGraph.edges.push(formatEdge(e)));
+  const { nodes = [], edges = [] } = graph;
+  nodes.forEach(n => adaptedGraph.nodes.push(formatNode(n)));
+  edges.forEach(e => adaptedGraph.edges.push(formatEdge(e)));
+
+  const isValidGraph = adaptedGraph.nodes.length !== 0;
+
+  const { node, events } = useNodeInfo({ graph, pipeline });
 
   return (
-    <GraphContainer>
-      <Fallback>
-        <Graph graph={adaptedGraph} options={defaultOptions} events={events} />
-      </Fallback>
-    </GraphContainer>
+    <FlexBox direction="column" className={className}>
+      <FlexBox.Item full>
+        <GraphContainer isMinified={isMinified}>
+          {isValidGraph ? (
+            <Fallback>
+              <Graph graph={adaptedGraph} options={options} events={events} />
+            </Fallback>
+          ) : (
+            <EmptyHeight image={Empty.PRESENTED_IMAGE_SIMPLE} />
+          )}
+        </GraphContainer>
+      </FlexBox.Item>
+      <FlexBox.Item full>
+        {!isMinified && isValidGraph && (
+          <Card>
+            <NodeInfo node={node} jobId={graph.jobId} />
+          </Card>
+        )}
+      </FlexBox.Item>
+    </FlexBox>
   );
 };
 
 JobGraph.propTypes = {
   graph: PropTypes.object.isRequired,
   pipeline: PropTypes.object.isRequired,
+  options: PropTypes.object,
+  isMinified: PropTypes.bool,
+  className: PropTypes.string,
 };
 
-const isSameGraph = (a, b) => a.graph.timestamp === b.graph.timestamp;
+const isSameGraph = (a, b) => (a.graph && b.graph ? a.graph.timestamp === b.graph.timestamp : true);
+
 export default React.memo(JobGraph, isSameGraph);

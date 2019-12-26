@@ -4,7 +4,7 @@ import { useDrawer, useTraceData } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { memo, useState } from 'react';
 import styled from 'styled-components';
-import JobGraphCard from './JobGraphCard.react';
+import JobGraph from './JobGraph.react';
 import Trace from './Trace.react';
 
 const TABS = { GRAPH: 'Graph', TRACE: 'Trace', JSON: 'JSON' };
@@ -27,7 +27,7 @@ const options = {
   },
 };
 
-const FullGraph = styled(JobGraphCard)`
+const FullGraph = styled(JobGraph)`
   width: 100%;
 `;
 

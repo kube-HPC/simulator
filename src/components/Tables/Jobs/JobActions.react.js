@@ -1,6 +1,6 @@
 import { Button, Tooltip } from 'antd';
 import { FlexBox } from 'components/common';
-import { PIPELINE_STATES, USER_GUIDE, DRAWER_SIZE } from 'const';
+import { DRAWER_SIZE, PIPELINE_STATES, USER_GUIDE } from 'const';
 import { useActions } from 'hooks';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -25,6 +25,7 @@ const JobActions = ({ job, className }) => {
   const onDownload = () => downloadStorageResults(results.data.storageInfo.path);
 
   const body = <JobInfo job={job} />;
+
   const onMoreInfo = () => {
     drawerOpen({ title: pipeline.name, body, width: DRAWER_SIZE.JOB_INFO });
   };

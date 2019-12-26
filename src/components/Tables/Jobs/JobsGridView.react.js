@@ -4,7 +4,7 @@ import { Card, Ellipsis, ProgressStatus, FlexBox } from 'components/common';
 import JobProgress from './JobProgress.react';
 import JobTime from './JobTime.react';
 import styled from 'styled-components';
-import JobGraphCard from './JobGraphCard.react';
+import JobGraph from './JobGraph.react';
 import JobActions from './JobActions.react';
 import JobStats from './JobNodeStats.react';
 import { cardOptions } from 'config/template/graph-options.template';
@@ -77,7 +77,7 @@ const toGrid = dataSource =>
     return (
       <GridItem key={key} style={gridStyle}>
         <Meta avatar={progress} title={title} description={description} />
-        <JobGraphCard graph={{ ...graph, jobId: key }} options={cardOptions} isMinified />
+        <JobGraph graph={{ ...graph, jobId: key }} options={cardOptions} isMinified />
         <ActionsHidden job={job} />
       </GridItem>
     );
