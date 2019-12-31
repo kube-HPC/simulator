@@ -7,19 +7,19 @@ import { toUpperCaseFirstLetter, sorter } from 'utils/string';
 import { Progress, Tag, Tooltip, Button } from 'antd';
 import { COLOR_PRIORITY, COLOR_PIPELINE_STATUS } from 'styles/colors';
 import { downloadStorageResults } from 'actions/jobs.action';
-import { rerunRawPipeline, stopPipeline } from 'actions/pipeline.action';
+import { rerunRawPipeline, stopPipeline, pausePipeline, resumePipeline } from 'actions/pipeline.action';
 import { FlexBox, Ellipsis, StatusTag } from 'components/common';
 import { USER_GUIDE, PIPELINE_STATES } from 'const';
 
 const ActiveState = [
   PIPELINE_STATES.PENDING,
   PIPELINE_STATES.ACTIVE,
-  PIPELINE_STATES.RECOVERING,
-  PIPELINE_STATES.RESUMING,
+  PIPELINE_STATES.RESUMED,
 ];
 
 const isActive = state => ActiveState.includes(state);
 const canPauseOrStop = state => isActive(state) || state === PIPELINE_STATES.PAUSED;
+const canPause = state => isActive(state);
 
 const getStatusFilter = () =>
   Object.values(PIPELINE_STATES).map(status => ({
@@ -109,6 +109,19 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => {
         />
       </Tooltip>
     );
+
+    const pauseAction = (
+      <Tooltip placement="top" title={canPause(status) ? 'Pause Pipeline' : 'Resume Pipeline'}>
+        <Button
+          type="default"
+          disabled={!canPauseOrStop(status)}
+          shape="circle"
+          icon={canPause(status) ? 'pause' : 'caret-right'}
+          onClick={() => dispatch(canPause(status) ? pausePipeline(record.key) : resumePipeline(record.key))}
+        />
+      </Tooltip>
+    );
+
     const isDisabled = !(record.results && record.results.data && record.results.data.storageInfo);
     const downloadAction = (
       <Tooltip placement="top" title={'Download Results'}>
@@ -129,6 +142,7 @@ const getJobsColumns = ({ dispatch, isGuideOn }) => {
         gutter={10}>
         <FlexBox.Item>{redoAction}</FlexBox.Item>
         <FlexBox.Item>{stopAction}</FlexBox.Item>
+        <FlexBox.Item>{pauseAction}</FlexBox.Item>
         <FlexBox.Item>{downloadAction}</FlexBox.Item>
       </FlexBox>
     );
