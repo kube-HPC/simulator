@@ -6,7 +6,7 @@ export default {
   PAUSED: 'paused',
   PENDING: 'pending',
   RECOVERING: 'recovering',
-  RESUMING: 'resuming',
+  RESUMED: 'resumed',
   STALLED: 'stalled',
   STOPPED: 'stopped',
   STOPPING: 'stopping',

@@ -13,7 +13,7 @@ export const stopPipeline = jobId => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: 'exec/stop',
-    body: { jobId },
+    body: { jobId, reason: 'Request from simulator, Algorithms-tab Delete action' },
     actionType: actions.PIPELINE_STOP,
   },
 });
@@ -22,7 +22,7 @@ export const pausePipeline = jobId => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: 'exec/pause',
-    body: { jobId, reason: 'Request from simulator, Algorithms-tab Delete action' },
+    body: { jobId },
     actionType: actions.PIPELINE_PAUSE,
   },
 });
