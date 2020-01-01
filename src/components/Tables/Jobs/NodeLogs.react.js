@@ -45,7 +45,7 @@ const NodeLogs = ({ taskDetails, onChange }) => {
       setCurrentTask(taskId);
       getLogs({ taskId, podName });
     }
-  }, [taskDetails, getLogs]);
+  }, [currentTask, taskDetails, getLogs]);
 
   const options = taskDetails.map((task, index) => (
     <Select.Option key={index} value={index}>
