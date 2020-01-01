@@ -13,7 +13,6 @@ import JobTime from './JobTime.react';
 
 const gridStyle = {
   width: '25%',
-  height: 500,
 };
 
 const { Meta, Grid } = Card;
@@ -42,7 +41,7 @@ const TagsContainer = styled.div`
   justify-content: flex-start;
   flex-wrap: wrap;
   .ant-tag {
-    margin: 1px;
+    margin-right: 2px;
   }
 `;
 
@@ -61,23 +60,21 @@ const toGrid = dataSource =>
 
     const title = (
       <FlexBox.Auto>
-        <FlexBox.Auto direction="column" justify="start" align="start">
-          <Ellipsis text={name} />
-          <TagsContainer>
-            {types ? (
-              types.map(type => <Tag key={type}>{toUpperCaseFirstLetter(type)}</Tag>)
-            ) : (
-              <Tag>No Type</Tag>
-            )}
-          </TagsContainer>
-        </FlexBox.Auto>
+        <Ellipsis text={name} />
         <JobStats status={status} />
       </FlexBox.Auto>
     );
 
     const description = (
-      <FlexBox.Auto justify="start" align="start" gutter={[0, 5]}>
+      <FlexBox.Auto justify="start" align="start" gutter={[0, 5]} direction="column">
         <Ellipsis text={jobId} copyable length={35} />
+        <TagsContainer>
+          {types ? (
+            types.map(type => <Tag key={type}>{toUpperCaseFirstLetter(type)}</Tag>)
+          ) : (
+            <Tag>No Type</Tag>
+          )}
+        </TagsContainer>
         <JobTime results={results} startTime={startTime} />
       </FlexBox.Auto>
     );
@@ -102,7 +99,7 @@ const toGrid = dataSource =>
 
 const JobsGridView = () => {
   const { dataSource } = useJobs();
-  return <>{toGrid(dataSource)}</>;
+  return <>{toGrid(dataSource.slice(0, 5))}</>;
 };
 
 export default memo(JobsGridView);

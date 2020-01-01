@@ -1,5 +1,6 @@
 import { Layout, message } from 'antd';
 import { LoadingScreen, SidebarLeft, SidebarRight, UserGuide } from 'components';
+import GridView from 'components/GridView/GridView.react';
 import { USER_GUIDE } from 'const';
 import {
   useActions,
@@ -10,10 +11,9 @@ import {
 } from 'hooks';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { COLOR, COLOR_LAYOUT, GlobalStyle, Display } from 'styles';
+import { COLOR, COLOR_LAYOUT, Display, GlobalStyle } from 'styles';
 import DashboardDrawer from './Drawer/DashboardDrawer.react';
 import Header from './Header/Header.react';
-import GridView from 'components/GridView/GridView.react';
 
 const LayoutFullHeight = styled(Layout)`
   height: 100vh;

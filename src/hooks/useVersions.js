@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { notification } from 'utils';
 import { STATE_SOURCES } from 'const';
@@ -28,9 +28,14 @@ const useVersions = ({ algorithmName, isFetch }) => {
   const onApply = applyVersion({ url: socketURL });
   const onDelete = deleteVersion({ url: socketURL });
 
+  const fetch = useCallback(
+    () => fetchVersion({ url: socketURL, algorithmName, callback: setDataSource }),
+    [algorithmName],
+  );
+
   useEffect(() => {
     if (isFetch) {
-      fetchVersion({ url: socketURL, algorithmName, callback: setDataSource });
+      fetch();
     }
   }, [algorithmName, isFetch, socketURL]);
 
@@ -38,6 +43,7 @@ const useVersions = ({ algorithmName, isFetch }) => {
     dataSource,
     onApply,
     onDelete,
+    fetch,
   };
 };
 

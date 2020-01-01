@@ -66,9 +66,11 @@ const Header = () => {
               onClick={triggerLeftVisible}
             />
           </FlexBox.Item>
-          <FlexBox.Item>
-            <ViewType />
-          </FlexBox.Item>
+          {tableValue === LEFT_SIDEBAR_NAMES.JOBS && (
+            <FlexBox.Item>
+              <ViewType />
+            </FlexBox.Item>
+          )}
         </ActionsBar>
         <AutoComplete table={tableValue} className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
         <HelpBar className={USER_GUIDE.HEADER.SOCIALS}>
