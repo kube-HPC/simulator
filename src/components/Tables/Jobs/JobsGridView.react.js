@@ -13,6 +13,7 @@ import JobTime from './JobTime.react';
 
 const gridStyle = {
   width: '25%',
+  height: 500,
 };
 
 const { Meta, Grid } = Card;
@@ -35,8 +36,22 @@ const GridItem = styled(Grid)`
   }
 `;
 
+const TagsContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  .ant-tag {
+    margin: 1px;
+  }
+`;
+
 const Container = styled(FlexBox.Auto)`
   width: 80px;
+`;
+
+const FlexContainer = styled(FlexBox.Auto)`
+  height: 100%;
 `;
 
 const toGrid = dataSource =>
@@ -48,13 +63,13 @@ const toGrid = dataSource =>
       <FlexBox.Auto>
         <FlexBox.Auto direction="column" justify="start" align="start">
           <Ellipsis text={name} />
-          <FlexBox.Auto justify="start">
+          <TagsContainer>
             {types ? (
               types.map(type => <Tag key={type}>{toUpperCaseFirstLetter(type)}</Tag>)
             ) : (
               <Tag>No Type</Tag>
             )}
-          </FlexBox.Auto>
+          </TagsContainer>
         </FlexBox.Auto>
         <JobStats status={status} />
       </FlexBox.Auto>
@@ -76,9 +91,11 @@ const toGrid = dataSource =>
 
     return (
       <GridItem key={key} style={gridStyle}>
-        <Meta avatar={progress} title={title} description={description} />
-        <JobGraph graph={{ ...graph, jobId: key }} options={cardOptions} isMinified />
-        <ActionsHidden job={job} />
+        <FlexContainer justify="center">
+          <Meta avatar={progress} title={title} description={description} />
+          <JobGraph graph={{ ...graph, jobId: key }} options={cardOptions} isMinified />
+          <ActionsHidden job={job} />
+        </FlexContainer>
       </GridItem>
     );
   });
