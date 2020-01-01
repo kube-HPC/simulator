@@ -81,14 +81,14 @@ const getJobsColumns = () => [
   {
     title: 'Progress',
     key: 'progress',
-    width: '25%',
+    width: '20%',
     align: 'center',
     render: Progress,
   },
   {
     title: 'Action',
     key: 'action',
-    width: '15%',
+    width: '20%',
     align: 'center',
     render: Action,
   },
