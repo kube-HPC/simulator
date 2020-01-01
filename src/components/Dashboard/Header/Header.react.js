@@ -7,6 +7,7 @@ import { useLeftSidebar, useConnectionStatus, useActions } from 'hooks';
 import { COLOR_LAYOUT } from 'styles';
 import { AutoComplete } from 'components';
 import ViewType from './ViewType/ViewType.react';
+import TypeSelect from './TypeSelect/TypeSelect.react';
 
 const Container = styled.div`
   height: 64px;
@@ -72,7 +73,10 @@ const Header = () => {
             </FlexBox.Item>
           )}
         </ActionsBar>
-        <AutoComplete table={tableValue} className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
+        <FlexBox.Auto>
+          <TypeSelect />
+          <AutoComplete table={tableValue} className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
+        </FlexBox.Auto>
         <HelpBar className={USER_GUIDE.HEADER.SOCIALS}>
           {!isSocketConnected && (
             <Tag color="orange">
