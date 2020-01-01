@@ -8,6 +8,11 @@ import {
   rerunRawPipeline,
   resumePipeline,
   stopPipeline,
+  cronStart,
+  cronStop,
+  deleteStored,
+  updateStored,
+  execStored,
 } from 'actions/pipeline.action';
 import { changeStep, triggerUserGuide } from 'actions/userGuide.action';
 import { firstLoad, toggle as toggleViewType } from 'actions/viewType.action';
@@ -15,11 +20,15 @@ import { firstLoad, toggle as toggleViewType } from 'actions/viewType.action';
 const actions = {
   applyAlgorithm,
   changeStep,
+  cronStart,
+  cronStop,
   deleteAlgorithm,
+  deleteStored,
   downloadStorageResults,
   drawerOpen,
   drawerToggle,
   execRawPipeline,
+  execStored,
   firstLoad,
   getCaching,
   getKubernetesLogsData,
@@ -31,6 +40,7 @@ const actions = {
   stopPipeline,
   toggleViewType,
   triggerUserGuide,
+  updateStored,
 };
 
 export default actions;
