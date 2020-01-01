@@ -1,11 +1,10 @@
-import { getKubernetesLogsData } from 'actions/jobs.action';
 import { Button, Select, Tag, Tooltip } from 'antd';
 import { FlexBox } from 'components/common';
 import LogsViewer from 'components/common/LogsViewer/LogsViewer.react';
+import { useLogs } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { notification } from 'utils';
 
@@ -34,14 +33,19 @@ OptionBox.propTypes = {
   taskId: PropTypes.string.isRequired,
 };
 
-const NodeLogs = ({ dataSource, taskDetails }) => {
+const NodeLogs = ({ taskDetails, onChange }) => {
+  const { logs, getLogs } = useLogs();
   const [currentTask, setCurrentTask] = useState(undefined);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     const [task] = taskDetails;
-    setCurrentTask(task.taskId);
-  }, [taskDetails]);
+    const { taskId, podName } = task;
+
+    if (taskId !== currentTask) {
+      setCurrentTask(taskId);
+      getLogs({ taskId, podName });
+    }
+  }, [currentTask, taskDetails, getLogs]);
 
   const options = taskDetails.map((task, index) => (
     <Select.Option key={index} value={index}>
@@ -58,8 +62,9 @@ const NodeLogs = ({ dataSource, taskDetails }) => {
               value={currentTask}
               onSelect={index => {
                 const { taskId, podName } = taskDetails[index];
+                onChange(index);
                 setCurrentTask(taskId);
-                dispatch(getKubernetesLogsData({ taskId, podName }));
+                getLogs({ taskId, podName });
               }}>
               {options}
             </SelectFull>
@@ -72,7 +77,7 @@ const NodeLogs = ({ dataSource, taskDetails }) => {
         </FlexBox.Item>
       </FlexBox>
       <br />
-      <LogsViewer dataSource={dataSource} />
+      <LogsViewer dataSource={logs} />
     </>
   );
 };
@@ -80,5 +85,6 @@ const NodeLogs = ({ dataSource, taskDetails }) => {
 NodeLogs.propTypes = {
   dataSource: PropTypes.array.isRequired,
   taskDetails: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 export default NodeLogs;

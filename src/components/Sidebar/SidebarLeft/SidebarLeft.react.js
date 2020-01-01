@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
@@ -20,6 +20,7 @@ import { COLOR_LAYOUT } from 'styles';
 import { USER_GUIDE, LEFT_SIDEBAR_NAMES } from 'const';
 import { dataCountMock } from 'config';
 import { FlexBox } from 'components/common';
+import { useLeftSidebar, useActions, useViewType } from 'hooks';
 
 const Border = styled.div`
   border-right: 1px solid ${COLOR_LAYOUT.border};
@@ -55,7 +56,7 @@ const setMenuItem = (component, title, count) => (
 
 const IconStyle = {
   fontSize: 22,
-  marginTop: 2
+  marginTop: 2,
 };
 
 const MenuItemMemo = React.memo(Menu.Item);
@@ -71,7 +72,7 @@ const addMenuItems = items =>
           style={IconStyle}
         />,
         name,
-        count
+        count,
       )}
     </MenuItemMemo>
   ));
@@ -79,7 +80,7 @@ const addMenuItems = items =>
 const AnimatedTitle = () => {
   const styledProps = useSpring({
     from: { opacity: 0 },
-    opacity: 1
+    opacity: 1,
   });
   return (
     <animated.div style={styledProps}>
@@ -112,27 +113,18 @@ const EMPTY_WORKERS = { total: 0 };
 const SidebarMemo = React.memo(Sider);
 const MenuMemo = React.memo(MenuMargin);
 
-const SidebarLeft = ({ onSelect, selectedKeys, ...props }) => {
-  const [collapsed, setCollapsed] = useState(true);
+const sidebarSelector = state => ({
+  jobsCount: (state.jobsTable.dataSource || DEFAULT_VALUE).length,
+  driversCount: (state.driverTable.dataSource || DEFAULT_VALUE).length,
+  algorithmsCount: (state.algorithmTable.dataSource || DEFAULT_VALUE).length,
+  pipelinesCount: (state.pipelineTable.dataSource || DEFAULT_VALUE).length,
+  workersCount: (state.workerTable.stats || EMPTY_WORKERS).total,
+  debugCount: (state.debugTable.dataSource || DEFAULT_VALUE).length,
+});
 
-  useEffect(() => {
-    setCollapsed(props.collapsed);
-  }, [props.collapsed, setCollapsed]);
-
-  const dataCountSource = useSelector(
-    state => ({
-      jobsCount: (state.jobsTable.dataSource || DEFAULT_VALUE).length,
-      driversCount: (state.driverTable.dataSource || DEFAULT_VALUE).length,
-      algorithmsCount: (state.algorithmTable.dataSource || DEFAULT_VALUE).length,
-      pipelinesCount: (state.pipelineTable.dataSource || DEFAULT_VALUE).length,
-      workersCount: (state.workerTable.stats || EMPTY_WORKERS).total,
-      debugCount: (state.debugTable.dataSource || DEFAULT_VALUE).length
-    }),
-    isEqual
-  );
-
+const SidebarLeft = ({ className }) => {
+  const dataCountSource = useSelector(sidebarSelector, isEqual);
   const { isOn } = useSelector(state => state.userGuide, equalByGuideOn);
-
   const dataCount = isOn ? dataCountMock : dataCountSource;
 
   const menuItems = [
@@ -141,22 +133,33 @@ const SidebarLeft = ({ onSelect, selectedKeys, ...props }) => {
     [LEFT_SIDEBAR_NAMES.ALGORITHMS, AlgorithmIcon, dataCount.algorithmsCount],
     [LEFT_SIDEBAR_NAMES.WORKERS, WorkerIcon, dataCount.workersCount],
     [LEFT_SIDEBAR_NAMES.DRIVERS, DriversIcon, dataCount.driversCount],
-    [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, dataCount.debugCount]
+    [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, dataCount.debugCount],
   ];
 
-  const onMenuSelect = useCallback(({ key }) => onSelect(key), [onSelect]);
-  const items = useMemo(() => addMenuItems(menuItems), [menuItems]);
-  const onCollapse = useCallback(() => setCollapsed(p => !p), [setCollapsed]);
+  const {
+    value: [value, setTableValue],
+    isCollapsed: [collapsed, toggle],
+  } = useLeftSidebar();
+
+  const { isTableView } = useViewType();
+  const { toggleViewType } = useActions();
+
+  const onSelect = ({ key }) => {
+    if (!isTableView) {
+      toggleViewType();
+    }
+    setTableValue(key);
+  };
 
   return (
     <Border>
-      <SidebarMemo {...props} theme="light" onCollapse={onCollapse} collapsed={collapsed}>
+      <SidebarMemo className={className} theme="light" onCollapse={toggle} collapsed={collapsed}>
         <LogoContainer>
           <IconLogo component={LogoFish} />
           {!collapsed && <AnimatedTitle />}
         </LogoContainer>
-        <MenuMemo onSelect={onMenuSelect} selectedKeys={selectedKeys}>
-          {items}
+        <MenuMemo onSelect={onSelect} selectedKeys={[value]}>
+          {addMenuItems(menuItems)}
         </MenuMemo>
       </SidebarMemo>
     </Border>
@@ -166,7 +169,5 @@ const SidebarLeft = ({ onSelect, selectedKeys, ...props }) => {
 export default React.memo(SidebarLeft);
 
 SidebarLeft.propTypes = {
-  onSelect: PropTypes.func.isRequired,
-  selectedKeys: PropTypes.array.isRequired,
-  collapsed: PropTypes.bool.isRequired
+  className: PropTypes.string.isRequired,
 };

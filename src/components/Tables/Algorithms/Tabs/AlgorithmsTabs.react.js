@@ -4,7 +4,7 @@ import { Tabs, Card, JsonSwitch, MdEditor } from 'components/common';
 import AlgorithmBuildsTable from './Builds/AlgorithmBuildsTable.react';
 import { VersionsTable } from './Versions';
 import { Button } from 'antd';
-import { useReadme } from 'hooks';
+import { useReadme, useVersions } from 'hooks';
 
 const TABS = {
   VERSIONS: 'Versions',
@@ -21,6 +21,8 @@ const AlgorithmsTabs = ({ record: { builds, ...algorithm } }) => {
 
   const { asyncFetch, post } = useReadme(useReadme.TYPES.ALGORITHM);
 
+  const { fetch } = useVersions({ algorithmName: algorithm.name });
+
   const onApply = () => {
     post({ name, readme });
   };
@@ -35,13 +37,20 @@ const AlgorithmsTabs = ({ record: { builds, ...algorithm } }) => {
     }
   };
 
+  const extra =
+    activeKey === TABS.DESCRIPTION ? (
+      <Button onClick={onApply} icon="check">
+        Apply Markdown
+      </Button>
+    ) : activeKey === TABS.VERSIONS ? (
+      <Button onClick={fetch} icon="redo">
+        Refresh
+      </Button>
+    ) : null;
+
   return (
     <Card isMargin>
-      <Tabs
-        onTabClick={onTabClick}
-        activeKey={activeKey}
-        onChange={setActiveKey}
-        extra={activeKey === TABS.DESCRIPTION && <Button onClick={onApply}>Apply Markdown</Button>}>
+      <Tabs onTabClick={onTabClick} activeKey={activeKey} onChange={setActiveKey} extra={extra}>
         <Tabs.TabPane tab={TABS.VERSIONS} key={TABS.VERSIONS}>
           <VersionsTable
             algorithmName={algorithm.name}

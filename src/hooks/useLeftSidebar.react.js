@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 
 import { LOCAL_STORAGE_KEYS, LEFT_SIDEBAR_NAMES } from 'const';
 import { getBooleanLSItem, setLSItem } from 'utils';
@@ -10,6 +10,7 @@ import {
   DebugTable,
   WorkersTable,
 } from 'components/Tables';
+import { createStore } from 'reusable';
 
 const tableSelector = {
   [LEFT_SIDEBAR_NAMES.JOBS]: <JobsTable />,
@@ -26,7 +27,7 @@ const leftCollapsedInitial =
 
 const useLeftSidebar = () => {
   const [value, setValue] = useState(LEFT_SIDEBAR_NAMES.JOBS);
-  const [isCollapsed, setIsCollapsed] = useState(leftCollapsedInitial);
+  const [isCollapsed, toggle] = useReducer(p => !p, leftCollapsedInitial);
 
   useEffect(() => {
     setLSItem(LOCAL_STORAGE_KEYS.LEFT_SIDEBAR_IS_VISIBLE, isCollapsed);
@@ -34,9 +35,9 @@ const useLeftSidebar = () => {
 
   return {
     value: [value, setValue],
-    isCollapsed: [isCollapsed, setIsCollapsed],
+    isCollapsed: [isCollapsed, toggle],
     selector: tableSelector,
   };
 };
 
-export default useLeftSidebar;
+export default createStore(useLeftSidebar);

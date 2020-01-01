@@ -36,8 +36,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
   ::-webkit-scrollbar-thumb {
-    border: 1px solid ${COLOR.grey};
-    background-color: ${COLOR.blueLight};
+    border: 0.5px solid ${COLOR.grey};
+    background-color: ${COLOR_LAYOUT.border};
   }
 `;
 

@@ -4,6 +4,7 @@ const SECTIONS = {
   PLAYGROUND: 'Playground',
   COMMON: 'Common',
   JSON: 'Common|Json/',
+  ICONS: 'Icons|',
   MARKDOWN: 'Common|Markdown/',
   DRAWER: 'Drawer|',
   TABLES: {

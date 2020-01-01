@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Result, Button, Typography, Col, Collapse } from 'antd';
+import { Result, Button, Typography, Collapse } from 'antd';
 import styled from 'styled-components';
 import { Icons, FlexBox } from 'components/common';
 
@@ -26,12 +26,10 @@ class ErrorBoundary extends React.Component {
   state = {
     hasError: false,
     error: { message: '', stack: '' },
-    info: { componentStack: '' }
+    info: { componentStack: '' },
   };
 
-  static getDerivedStateFromError = error => {
-    return { hasError: true };
-  };
+  static getDerivedStateFromError = () => ({ hasError: true });
 
   componentDidCatch = (error, info) => {
     this.setState({ error, info });
@@ -48,32 +46,37 @@ class ErrorBoundary extends React.Component {
           title="Oops... Something went wrong"
           subTitle={
             <FlexBox>
-              <Col>
+              <FlexBox.Item>
                 <Paragraph style={{ marginBottom: 0 }}>
                   Please <Text strong>refresh</Text> the page, you can report the error on{' '}
                   <Text strong>Github</Text>
                 </Paragraph>
-              </Col>
-              <Col>
+              </FlexBox.Item>
+              <FlexBox.Item>
                 <Icons.Hover type="github" onClick={openGithub} />
-              </Col>
+              </FlexBox.Item>
             </FlexBox>
           }
           extra={[
             <Button type="primary" icon="redo" key="refresh" onClick={reloadPage}>
               Refresh
-            </Button>
-          ]}
-        >
+            </Button>,
+          ]}>
           <CollapseFull>
             <Panel header="Error Message" key="1">
-              <Paragraph copyable>{error.message}</Paragraph>
+              <Paragraph copyable>
+                <pre>{error.message}</pre>
+              </Paragraph>
             </Panel>
             <Panel header="Error Stack" key="2">
-              <Paragraph copyable>{error.stack}</Paragraph>
+              <Paragraph copyable>
+                <pre>{error.stack}</pre>
+              </Paragraph>
             </Panel>
             <Panel header="Error info" key="3">
-              <Paragraph copyable>{info.componentStack}</Paragraph>
+              <Paragraph copyable>
+                <pre>{info.componentStack}</pre>
+              </Paragraph>
             </Panel>
           </CollapseFull>
         </Result>
@@ -85,7 +88,7 @@ class ErrorBoundary extends React.Component {
 }
 
 ErrorBoundary.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 export default ErrorBoundary;

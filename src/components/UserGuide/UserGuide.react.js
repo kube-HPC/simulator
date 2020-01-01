@@ -7,12 +7,18 @@ import { triggerUserGuide, changeStep as _changeStep } from 'actions/userGuide.a
 import { LEFT_SIDEBAR_NAMES } from 'const/sidebar-names';
 import userGuideSteps from './UserGuideSteps.react';
 import UserGuideTooltip from './UserGuideTooltip.react';
+import { useLeftSidebar } from 'hooks';
 
 const stepAction = [ACTIONS.NEXT, ACTIONS.PREV, ACTIONS.INIT, ACTIONS.UPDATE];
 
 const isOnEqual = (a, b) => a.isOn === b.isOn;
 
-const UserGuide = ({ triggerLeftVisible, setLeftValue }) => {
+const UserGuide = () => {
+  const {
+    value: [, setLeftValue],
+    isCollapsed: [, toggle],
+  } = useLeftSidebar();
+
   const { isOn } = useSelector(state => state.userGuide, isOnEqual);
   const dispatch = useDispatch();
 
@@ -26,13 +32,13 @@ const UserGuide = ({ triggerLeftVisible, setLeftValue }) => {
       if (type === EVENTS.TOUR_START) {
         setLeftValue(LEFT_SIDEBAR_NAMES.JOBS);
       } else if (type === EVENTS.TOUR_END) {
-        triggerLeftVisible();
+        toggle();
         trigger();
       } else if (stepAction.includes(action) && type === EVENTS.STEP_BEFORE) {
         changeStep(index);
       }
     },
-    [changeStep, setLeftValue, trigger, triggerLeftVisible],
+    [changeStep, setLeftValue, trigger, toggle],
   );
 
   return (

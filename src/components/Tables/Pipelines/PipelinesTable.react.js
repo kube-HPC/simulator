@@ -48,7 +48,7 @@ const PipelinesTable = () => {
         title={isExecution ? titleExecution : title}
         value={stringify(isExecution ? execPipeline : pipeline)}
         onClose={toggle}
-        onSubmit={isExecution ? execute : update}
+        onSubmit={isExecution ? e => execute(JSON.parse(e)) : p => update(JSON.parse(p))}
         submitText={isExecution ? 'Run' : 'Submit'}
       />
       <Table

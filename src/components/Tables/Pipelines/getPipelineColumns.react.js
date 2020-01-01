@@ -1,7 +1,6 @@
 import React from 'react';
-import { Button, Modal, Icon, Tooltip, Typography } from 'antd';
+import { Button, Modal, Tooltip, Typography } from 'antd';
 
-import { ReactComponent as PlayIconSvg } from 'images/play-icon.svg';
 import { sorter } from 'utils/string';
 import { FlexBox, Ellipsis, StatusTag } from 'components/common';
 import SwitchCron from './SwitchCron.react';
@@ -29,22 +28,13 @@ const PipelineName = name => <Ellipsis copyable text={name} />;
 const getPipelineColumns = ({
   dataStats,
   setExecPipeline,
-  cronStart,
-  cronStop,
   update,
   remove,
   setPipeline,
   setIsExecution,
   toggle,
 }) => {
-  const Cron = (_, record) => (
-    <SwitchCron
-      pipeline={record}
-      cronStart={cronStart}
-      cronStop={cronStop}
-      updateStoredPipeline={update}
-    />
-  );
+  const Cron = (_, record) => <SwitchCron pipeline={record} update={update} />;
 
   const PipelineStats = (_, record) => {
     // array flat one-liner
@@ -71,23 +61,26 @@ const getPipelineColumns = ({
     // eslint-disable-next-line
     const { nodes, description, ...currPipeline } = record;
 
+    // eslint-disable-next-line
+    const { triggers, ...noTriggersPipeline } = currPipeline;
+
     return (
       <FlexBox justify="start">
         <FlexBox.Item>
-          <Tooltip title={'Execute Pipeline'}>
+          <Tooltip title="Execute Pipeline">
             <Button
               shape="circle"
+              icon="caret-right"
               onClick={() => {
                 setIsExecution(true);
                 toggle();
-                setExecPipeline(currPipeline);
-              }}>
-              <Icon component={PlayIconSvg} />
-            </Button>
+                setExecPipeline(noTriggersPipeline);
+              }}
+            />
           </Tooltip>
         </FlexBox.Item>
         <FlexBox.Item>
-          <Tooltip title={'Update Pipeline'}>
+          <Tooltip title="Update Pipeline">
             <Button
               shape="circle"
               icon="edit"
@@ -100,7 +93,7 @@ const getPipelineColumns = ({
           </Tooltip>
         </FlexBox.Item>
         <FlexBox.Item>
-          <Tooltip title={'Delete Pipeline'}>
+          <Tooltip title="Delete Pipeline">
             <Button
               type="dashed"
               shape="circle"

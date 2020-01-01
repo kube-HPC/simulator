@@ -42,9 +42,7 @@ const NodeInputOutput = ({ payload }) => {
         ...mapTask(b),
         origInput: payload.origInput,
       }))
-      : [
-        mapTask(payload),
-      ];
+      : [mapTask(payload)];
 
   return (
     <Table
