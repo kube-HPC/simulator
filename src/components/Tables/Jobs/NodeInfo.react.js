@@ -1,12 +1,12 @@
-import React from 'react';
+import { Button, Empty } from 'antd';
+import { FlexBox, JsonSwitch, Tabs } from 'components/common';
+import { STATE_SOURCES } from 'const';
+import { useActions, useLogs } from 'hooks';
 import PropTypes from 'prop-types';
-
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Tabs, JsonSwitch, FlexBox } from 'components/common';
-import { NodeLogs, NodeInputOutput } from '.';
-import { Empty, Button } from 'antd';
 import styled from 'styled-components';
-import { useActions } from 'hooks';
+import { NodeInputOutput, NodeLogs } from '.';
 
 const DEFAULT_ALGORITHM = {};
 
@@ -15,23 +15,27 @@ const OverflowContainer = styled.div`
   overflow: auto;
 `;
 
+const getTaskDetails = node =>
+  node && node.batch && node.batch.length > 0
+    ? node.batch
+    : [{ taskId: node.taskId, podName: node.podName }];
+
+const algorithmDetailsSelector = node => state =>
+  state[STATE_SOURCES.ALGORITHM_TABLE].dataSource.find(a => a.name === node.algorithmName) ||
+  DEFAULT_ALGORITHM;
+
 const NodeInfo = ({ node, jobId }) => {
-  const algorithmTable = useSelector(state => state.algorithmTable.dataSource);
-  const algorithmDetails =
-    algorithmTable.find(a => a.name === node.algorithmName) || DEFAULT_ALGORITHM;
-
-  const { getKubernetesLogsData, getCaching } = useActions();
-
-  const taskDetails =
-    node && node.batch && node.batch.length > 0
-      ? node.batch
-      : [{ taskId: node.taskId, podName: node.podName }];
+  const algorithmDetails = useSelector(algorithmDetailsSelector(node));
+  const [index, setIndex] = useState(0);
+  const { getCaching } = useActions();
+  const { getLogs } = useLogs();
+  const taskDetails = getTaskDetails(node);
 
   const onRunNode = () => node && getCaching({ jobId, nodeName: node.nodeName });
 
   const onRefresh = () => {
-    const [{ taskId, podName }] = taskDetails;
-    getKubernetesLogsData({ taskId, podName });
+    const { taskId, podName } = taskDetails[index];
+    getLogs({ taskId, podName });
   };
 
   const extra = (
@@ -48,7 +52,7 @@ const NodeInfo = ({ node, jobId }) => {
   return node ? (
     <Tabs defaultActiveKey="1" extra={extra}>
       <Tabs.TabPane tab="Logs" key="1">
-        <NodeLogs taskDetails={taskDetails} />
+        <NodeLogs taskDetails={taskDetails} onChange={setIndex} />
       </Tabs.TabPane>
       <Tabs.TabPane tab="Algorithm Details" key="2">
         <OverflowContainer>

@@ -23,10 +23,7 @@ const fetch = ({ url, callback }) => ({ jobId }) =>
 const useTraceData = () => {
   const [traceData, setTraceData] = useState(undefined);
   const url = useSelector(state => state[STATE_SOURCES.SOCKET_URL]);
-
-  const reset = () => setTraceData(undefined);
-
-  return { traceData, fetch: fetch({ url, callback: setTraceData }), reset };
+  return { traceData, fetch: fetch({ url, callback: setTraceData }) };
 };
 
 export default useTraceData;

@@ -1,12 +1,12 @@
 import { Button, Select, Tag, Tooltip } from 'antd';
 import { FlexBox } from 'components/common';
 import LogsViewer from 'components/common/LogsViewer/LogsViewer.react';
+import { useLogs } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled from 'styled-components';
 import { notification } from 'utils';
-import { useLogs } from 'hooks';
 
 const SelectFull = styled(Select)`
   width: 100%;
@@ -33,7 +33,7 @@ OptionBox.propTypes = {
   taskId: PropTypes.string.isRequired,
 };
 
-const NodeLogs = ({ taskDetails }) => {
+const NodeLogs = ({ taskDetails, onChange }) => {
   const { logs, getLogs } = useLogs();
   const [currentTask, setCurrentTask] = useState(undefined);
 
@@ -41,8 +41,10 @@ const NodeLogs = ({ taskDetails }) => {
     const [task] = taskDetails;
     const { taskId, podName } = task;
 
-    setCurrentTask(taskId);
-    getLogs({ taskId, podName });
+    if (taskId !== currentTask) {
+      setCurrentTask(taskId);
+      getLogs({ taskId, podName });
+    }
   }, [taskDetails, getLogs]);
 
   const options = taskDetails.map((task, index) => (
@@ -60,6 +62,7 @@ const NodeLogs = ({ taskDetails }) => {
               value={currentTask}
               onSelect={index => {
                 const { taskId, podName } = taskDetails[index];
+                onChange(index);
                 setCurrentTask(taskId);
                 getLogs({ taskId, podName });
               }}>
@@ -82,5 +85,6 @@ const NodeLogs = ({ taskDetails }) => {
 NodeLogs.propTypes = {
   dataSource: PropTypes.array.isRequired,
   taskDetails: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 export default NodeLogs;

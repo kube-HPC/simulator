@@ -34,16 +34,17 @@ const FullGraph = styled(JobGraph)`
 const JobInfo = ({ job }) => {
   const { key, graph, pipeline, ...rest } = job;
   const [currentTab, setCurrentTab] = useState(TABS.GRAPH);
-  const { traceData, fetch, reset } = useTraceData();
+  const { traceData, fetch } = useTraceData();
   const { isVisible } = useDrawer();
 
   const refreshButton = currentTab === TABS.TRACE && (
-    <Button onClick={reset} icon="redo">
+    <Button onClick={() => fetch({ jobId: key })} icon="redo">
       Refresh
     </Button>
   );
 
   const json = { pipeline, ...rest };
+
   const tabs = {
     [TABS.GRAPH]: graph ? (
       isVisible && <FullGraph graph={{ ...graph, jobId: key }} pipeline={pipeline} />
