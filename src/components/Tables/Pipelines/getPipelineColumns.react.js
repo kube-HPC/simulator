@@ -61,6 +61,9 @@ const getPipelineColumns = ({
     // eslint-disable-next-line
     const { nodes, description, ...currPipeline } = record;
 
+    // eslint-disable-next-line
+    const { triggers, ...noTriggersPipeline } = currPipeline;
+
     return (
       <FlexBox justify="start">
         <FlexBox.Item>
@@ -71,7 +74,7 @@ const getPipelineColumns = ({
               onClick={() => {
                 setIsExecution(true);
                 toggle();
-                setExecPipeline(currPipeline);
+                setExecPipeline(noTriggersPipeline);
               }}
             />
           </Tooltip>
