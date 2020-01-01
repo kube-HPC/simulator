@@ -1,5 +1,5 @@
 import { Tag, Tooltip } from 'antd';
-import { Ellipsis, ProgressStatus } from 'components/common';
+import { Ellipsis, ProgressStatus, FlexBox } from 'components/common';
 import { PIPELINE_STATES, USER_GUIDE } from 'const';
 import React from 'react';
 import { COLOR_PRIORITY } from 'styles/colors';
@@ -8,6 +8,7 @@ import JobStats from './JobNodeStats.react';
 import JobProgress from './JobProgress.react';
 import JobActions from './JobActions.react';
 import JobTime from './JobTime.react';
+import styled from 'styled-components';
 
 const getStatusFilter = () =>
   Object.values(PIPELINE_STATES).map(status => ({
@@ -25,8 +26,21 @@ const Priority = priority => (
     <Tag color={COLOR_PRIORITY[priority].color}>{COLOR_PRIORITY[priority].name}</Tag>
   </Tooltip>
 );
-const Progress = (_, record) => <JobProgress {...record} />;
-const Action = (_, job) => <JobActions job={job} />;
+
+const ItemGrow = styled(FlexBox.Item)`
+  flex-grow: 1;
+`;
+
+const Progress = (_, job) => (
+  <FlexBox>
+    <ItemGrow>
+      <JobProgress {...job} />
+    </ItemGrow>
+    <FlexBox.Item>
+      <JobActions job={job} />
+    </FlexBox.Item>
+  </FlexBox>
+);
 
 const getJobsColumns = () => [
   {
@@ -84,13 +98,6 @@ const getJobsColumns = () => [
     width: '20%',
     align: 'center',
     render: Progress,
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    width: '20%',
-    align: 'center',
-    render: Action,
   },
 ];
 

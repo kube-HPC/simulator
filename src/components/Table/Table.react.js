@@ -13,6 +13,22 @@ const TableWhite = styled(AntTable)`
   .ant-table-thead > tr > th {
     background: none;
   }
+  .ant-table-row {
+    .${USER_GUIDE.TABLE_JOB.ACTIONS_SELECT} {
+      transition: all 0.5s;
+      opacity: 0;
+      height: 32px;
+      overflow: hidden;
+      width: 0;
+    }
+    &:hover,
+    &:focus {
+      .${USER_GUIDE.TABLE_JOB.ACTIONS_SELECT} {
+        opacity: 1;
+        width: fit-content;
+      }
+    }
+  }
 `;
 
 ExpandIcon.propTypes = {
