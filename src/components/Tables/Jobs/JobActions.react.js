@@ -6,19 +6,28 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import JobInfo from './JobInfo.react';
 
-const ActiveState = [
-  PIPELINE_STATES.PENDING,
-  PIPELINE_STATES.ACTIVE,
-  PIPELINE_STATES.RECOVERING,
-  PIPELINE_STATES.RESUMING,
-];
+const ActiveState = [PIPELINE_STATES.PENDING, PIPELINE_STATES.ACTIVE, PIPELINE_STATES.RESUMED];
 
 const isActive = state => ActiveState.includes(state);
 const canPauseOrStop = state => isActive(state) || state === PIPELINE_STATES.PAUSED;
+const canPause = state => isActive(state);
 
 const JobActions = ({ job, className }) => {
-  const { key, pipeline, status, results } = job;
-  const { rerunRawPipeline, stopPipeline, downloadStorageResults, drawerOpen } = useActions();
+  const {
+    key,
+    pipeline,
+    status: { status },
+    results,
+  } = job;
+
+  const {
+    rerunRawPipeline,
+    stopPipeline,
+    downloadStorageResults,
+    drawerOpen,
+    pausePipeline,
+    resumePipeline,
+  } = useActions();
 
   const onReRun = () => rerunRawPipeline(pipeline);
   const onStop = () => stopPipeline(key);
@@ -41,10 +50,19 @@ const JobActions = ({ job, className }) => {
         <Tooltip placement="top" title="Stop Pipeline">
           <Button
             type="danger"
-            disabled={!canPauseOrStop(status.status)}
+            disabled={!canPauseOrStop(status)}
             shape="circle"
             icon="close"
             onClick={onStop}
+          />
+        </Tooltip>
+        <Tooltip placement="top" title={canPause(status) ? 'Pause Pipeline' : 'Resume Pipeline'}>
+          <Button
+            type="default"
+            disabled={!canPauseOrStop(status)}
+            shape="circle"
+            icon={canPause(status) ? 'pause' : 'caret-right'}
+            onClick={() => (canPause(status) ? pausePipeline(key) : resumePipeline(key))}
           />
         </Tooltip>
         <Tooltip placement="top" title="Download Results">

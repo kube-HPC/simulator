@@ -1,15 +1,15 @@
-import React, { memo } from 'react';
+import { Tag } from 'antd';
+import { Card, Ellipsis, FlexBox, ProgressStatus } from 'components/common';
+import { cardOptions } from 'config/template/graph-options.template';
 import { useJobs } from 'hooks';
-import { Card, Ellipsis, ProgressStatus, FlexBox } from 'components/common';
+import React, { memo } from 'react';
+import styled from 'styled-components';
+import { toUpperCaseFirstLetter } from 'utils';
+import JobActions from './JobActions.react';
+import JobGraph from './JobGraph.react';
+import JobStats from './JobNodeStats.react';
 import JobProgress from './JobProgress.react';
 import JobTime from './JobTime.react';
-import styled from 'styled-components';
-import JobGraph from './JobGraph.react';
-import JobActions from './JobActions.react';
-import JobStats from './JobNodeStats.react';
-import { cardOptions } from 'config/template/graph-options.template';
-import { Tag } from 'antd';
-import { toUpperCaseFirstLetter } from 'utils';
 
 const gridStyle = {
   width: '25%',
@@ -42,18 +42,18 @@ const Container = styled(FlexBox.Auto)`
 const toGrid = dataSource =>
   dataSource.map(job => {
     const { key, pipeline, status, results, graph } = job;
-    const { jobId, name, startTime } = pipeline;
-
-    const { types } = pipeline;
+    const { jobId, name, startTime, types } = pipeline;
 
     const title = (
       <FlexBox.Auto>
         <FlexBox.Auto direction="column" justify="start" align="start">
           <Ellipsis text={name} />
           <FlexBox.Auto justify="start">
-            {types.map(type => (
-              <Tag key={type}>{toUpperCaseFirstLetter(type)}</Tag>
-            ))}
+            {types ? (
+              types.map(type => <Tag key={type}>{toUpperCaseFirstLetter(type)}</Tag>)
+            ) : (
+              <Tag>No Type</Tag>
+            )}
           </FlexBox.Auto>
         </FlexBox.Auto>
         <JobStats status={status} />
@@ -85,7 +85,7 @@ const toGrid = dataSource =>
 
 const JobsGridView = () => {
   const { dataSource } = useJobs();
-  return <>{toGrid(dataSource)}</>;
+  return <>{toGrid(dataSource.slice(0, 5))}</>;
 };
 
 export default memo(JobsGridView);
