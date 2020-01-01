@@ -11,9 +11,10 @@ const JobsTable = () => {
   const onRow = job => ({
     onDoubleClick: () => {
       const {
+        key,
         pipeline: { name },
       } = job;
-      const body = <JobInfo job={job} />;
+      const body = <JobInfo jobId={key} />;
       drawerOpen({ title: name, body, width: DRAWER_SIZE.JOB_INFO });
     },
   });

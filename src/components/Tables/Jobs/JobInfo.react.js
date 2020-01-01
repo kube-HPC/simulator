@@ -1,6 +1,6 @@
 import { Button, Empty } from 'antd';
 import { Card, JsonSwitch, Tabs } from 'components/common';
-import { useDrawer, useTraceData } from 'hooks';
+import { useDrawer, useTraceData, useJobs } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { memo, useState } from 'react';
 import styled from 'styled-components';
@@ -31,7 +31,11 @@ const FullGraph = styled(JobGraph)`
   width: 100%;
 `;
 
-const JobInfo = ({ job }) => {
+const JobInfo = ({ jobId }) => {
+  const { dataSource } = useJobs();
+
+  const job = dataSource.find(({ key }) => jobId === key);
+
   const { key, graph, pipeline, ...rest } = job;
   const [currentTab, setCurrentTab] = useState(TABS.GRAPH);
   const { traceData, fetch } = useTraceData();
@@ -71,7 +75,7 @@ const JobInfo = ({ job }) => {
 };
 
 JobInfo.propTypes = {
-  job: PropTypes.object.isRequired,
+  jobId: PropTypes.string.isRequired,
 };
 
 export default memo(JobInfo);
