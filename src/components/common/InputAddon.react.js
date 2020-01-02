@@ -31,7 +31,7 @@ const initialByType = target => () => {
 };
 
 const InputAddon = forwardRef(
-  ({ before = ``, after = ``, onChange = () => {}, placeholder, value }) => {
+  ({ before = '', after = '', onChange = () => {}, placeholder, value }) => {
     const [selectBefore, setSelectBefore] = useState(initialByType(before));
     const [selectAfter, setSelectAfter] = useState(initialByType(after));
     const [inputValue, setInputValue] = useState(value);
@@ -40,7 +40,8 @@ const InputAddon = forwardRef(
 
     useEffect(() => {
       if (Array.isArray(before)) {
-        const index = before.findIndex(value => inputValue && inputValue.startsWith(value));
+        const currValue = inputValue || '';
+        const index = before.findIndex(value => currValue.startsWith(value));
         index >= 0 && setSelectBefore(before[index]);
       }
     }, [after, before, inputValue, selectAfter, selectBefore]);
@@ -53,9 +54,11 @@ const InputAddon = forwardRef(
     }, [after, before, inputValue, selectAfter, selectBefore]);
 
     useEffect(() => {
-      setInputValue(inputValue.replace(selectBefore, ``).replace(selectAfter, ``));
-      onChange(`${selectBefore}${inputValue}${after}`);
-    }, [after, inputValue, onChange, selectAfter, selectBefore]);
+      const beforeValue = selectBefore || initialByType(before);
+      const value = inputValue || '';
+      setInputValue(value.replace(beforeValue, '').replace(beforeValue, ''));
+      onChange(`${beforeValue}${value}${after}`);
+    }, [after, before, inputValue, onChange, selectAfter, selectBefore]);
 
     const addonBefore = useMemo(
       () => Addon({ state: selectBefore, options: before, callback: setSelectBefore }),
