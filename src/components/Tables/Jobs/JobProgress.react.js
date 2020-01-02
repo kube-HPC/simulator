@@ -13,7 +13,7 @@ const JobProgress = ({ status, type, width }) => {
       type={type}
       width={width}
       percent={percent}
-      status={percent === 100 && 'success'}
+      status={percent === 100 && `success`}
       strokeColor={
         failed ? COLOR_PIPELINE_STATUS.failed : stopped ? COLOR_PIPELINE_STATUS.stopped : undefined
       }

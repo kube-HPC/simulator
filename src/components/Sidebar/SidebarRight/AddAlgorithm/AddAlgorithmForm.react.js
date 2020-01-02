@@ -31,7 +31,7 @@ const insertAlgorithmOptions = options =>
   ));
 
 const toReadableBuildType = buildType =>
-  toUpperCaseFirstLetter(buildType === BUILD_TYPES.GIT.field ? 'GIT' : buildType);
+  toUpperCaseFirstLetter(buildType === BUILD_TYPES.GIT.field ? `GIT` : buildType);
 
 const insertRadioButtons = buildTypes =>
   Object.keys(buildTypes).map(key => (
@@ -41,7 +41,7 @@ const insertRadioButtons = buildTypes =>
   ));
 
 const isEmpty = v =>
-  v === undefined || v === '' || v === null || (typeof v === 'object' && !Object.entries(v).length);
+  v === undefined || v === `` || v === null || (typeof v === `object` && !Object.entries(v).length);
 const isNotEmpty = ({ value }) => !isEmpty(value);
 
 const getBuildTypes = ({ buildType, ...props }) => {
@@ -74,7 +74,7 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
 
     validateFields((err, formObject) => {
       if (err || (buildType === BUILD_TYPES.CODE.field && !fileList.length)) {
-        notification({ message: 'Error', description: err || 'Please provide a file!' });
+        notification({ message: `Error`, description: err || `Please provide a file!` });
         return;
       }
 
@@ -105,11 +105,11 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
       const formData = new FormData();
       const [file] = fileList;
       if (buildType === BUILD_TYPES.CODE.field) {
-        formData.append('file', file);
+        formData.append(`file`, file);
       }
 
       const payloadFiltered = mapObjValues({ obj: payload, predicate: isNotEmpty });
-      formData.append('payload', JSON.stringify(payloadFiltered));
+      formData.append(`payload`, JSON.stringify(payloadFiltered));
 
       applyAlgorithm(formData);
 

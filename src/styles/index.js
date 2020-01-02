@@ -4,6 +4,8 @@ export {
   SERVICE_COLOR,
   COLOR_PIPELINE_STATUS,
   COLOR_PRIORITY,
+  COLOR_PIPELINE_TYPES,
+  COLOR_LOGGER,
 } from 'styles/colors';
 
 export { default as GlobalStyle } from 'styles/GlobalStyle.styles';

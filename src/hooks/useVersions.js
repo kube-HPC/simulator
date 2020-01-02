@@ -30,14 +30,14 @@ const useVersions = ({ algorithmName, isFetch }) => {
 
   const fetch = useCallback(
     () => fetchVersion({ url: socketURL, algorithmName, callback: setDataSource }),
-    [algorithmName],
+    [algorithmName, socketURL],
   );
 
   useEffect(() => {
     if (isFetch) {
       fetch();
     }
-  }, [algorithmName, isFetch, socketURL]);
+  }, [algorithmName, fetch, isFetch, socketURL]);
 
   return {
     dataSource,

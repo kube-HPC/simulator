@@ -8,5 +8,5 @@ export const autoCompleteFilter = handleActions(
       return state.merge(payload);
     },
   },
-  Immutable.from({ filter: '' }),
+  Immutable.from({ filter: `` }),
 );

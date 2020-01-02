@@ -6,7 +6,7 @@ export const driverTable = handleActions(
   {
     [actions.SOCKET_GET_DATA](state, { payload }) {
       return state.merge({
-        dataSource: (payload.discovery && payload.discovery['pipeline-driver']) || [],
+        dataSource: (payload.discovery && payload.discovery[`pipeline-driver`]) || [],
       });
     },
   },

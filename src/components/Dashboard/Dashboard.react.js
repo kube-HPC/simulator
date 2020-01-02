@@ -1,7 +1,7 @@
 import { Layout, message } from 'antd';
 import { LoadingScreen, SidebarLeft, SidebarRight, UserGuide } from 'components';
 import GridView from 'components/GridView/GridView.react';
-import { USER_GUIDE } from 'const';
+import { USER_GUIDE, LOCAL_STORAGE_KEYS } from 'const';
 import {
   useActions,
   useConnectionStatus,
@@ -20,11 +20,14 @@ const LayoutFullHeight = styled(Layout)`
   background: white;
 `;
 
+const Wrapper = styled.div`
+  transition: all 0.5s;
+`;
+
 const ContentMargin = styled(Layout.Content)`
-  padding: 5px;
+  padding: 2px 8px;
   ::-webkit-scrollbar {
     width: 1px;
-    margin-left: 1px;
   }
   ::-webkit-scrollbar-thumb {
     border: 1px solid ${COLOR.darkGrey};
@@ -59,7 +62,7 @@ const Dashboard = () => {
 
   const { isTableView, loadedOnce } = useViewType();
 
-  useLocalStorage({ isTableView });
+  useLocalStorage({ value: isTableView, key: LOCAL_STORAGE_KEYS.IS_TABLE_VIEW });
 
   return (
     <>
@@ -68,26 +71,28 @@ const Dashboard = () => {
         <>
           <UserGuide />
           <DashboardDrawer />
-          <LayoutFullHeight>
-            <SidebarLeft className={USER_GUIDE.SIDEBAR_LEFT} />
-            <Layout>
-              <Header />
-              <LayoutFullHeight>
-                <ContentMargin>
-                  {loadedOnce && (
-                    <Display isVisible={!isTableView}>
-                      <GridView />
-                    </Display>
-                  )}
-                  <Display isVisible={isTableView}>{selector[tableValue]}</Display>
-                </ContentMargin>
-                <RightContainer>
-                  <SidebarRight className={USER_GUIDE.SIDEBAR_TOP_RIGHT} isTop />
-                  <SidebarRight className={USER_GUIDE.SIDEBAR_BOTTOM_RIGHT} />
-                </RightContainer>
-              </LayoutFullHeight>
-            </Layout>
-          </LayoutFullHeight>
+          <Wrapper>
+            <LayoutFullHeight>
+              <SidebarLeft className={USER_GUIDE.SIDEBAR_LEFT} />
+              <Layout>
+                <Header />
+                <LayoutFullHeight>
+                  <ContentMargin>
+                    {loadedOnce && (
+                      <Display isVisible={!isTableView}>
+                        <GridView />
+                      </Display>
+                    )}
+                    <Display isVisible={isTableView}>{selector[tableValue]}</Display>
+                  </ContentMargin>
+                  <RightContainer>
+                    <SidebarRight className={USER_GUIDE.SIDEBAR_TOP_RIGHT} isTop />
+                    <SidebarRight className={USER_GUIDE.SIDEBAR_BOTTOM_RIGHT} />
+                  </RightContainer>
+                </LayoutFullHeight>
+              </Layout>
+            </LayoutFullHeight>
+          </Wrapper>
         </>
       ) : (
         <LoadingScreen />

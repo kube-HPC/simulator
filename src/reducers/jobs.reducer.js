@@ -2,6 +2,8 @@ import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
 import actions from 'const/application-actions';
 
+const initialValue = Immutable.from({ dataSource: [] });
+
 export const jobsTable = handleActions(
   {
     [actions.SOCKET_GET_DATA](currJobs, { payload }) {
@@ -18,5 +20,5 @@ export const jobsKubernetesLogs = handleActions(
       return state.merge({ dataSource: payload });
     },
   },
-  Immutable.from({ dataSource: [] }),
+  initialValue,
 );

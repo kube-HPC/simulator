@@ -2,16 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FlexBox, StatusTag } from 'components/common';
 
-const JobStats = ({ status }) => (
-  <FlexBox justify="start" gutter={0} style={{ flexWrap: 'nowrap' }}>
-    {status.data &&
-      status.data.states &&
+const style = { flexWrap: `nowrap` };
+
+const hasStatus = status => status.data && status.data.states;
+
+const JobStats = ({ status, ...props }) => (
+  <FlexBox.Auto justify="center" gutter={0} style={style} {...props}>
+    {hasStatus(status) ? (
       Object.entries(status.data.states).map(([status, count]) => (
-        <FlexBox.Item key={status}>
-          <StatusTag status={status} count={count} />
-        </FlexBox.Item>
-      ))}
-  </FlexBox>
+        <StatusTag key={status} status={status} count={count} />
+      ))
+    ) : (
+      <StatusTag count={null} />
+    )}
+  </FlexBox.Auto>
 );
 
 JobStats.propTypes = {

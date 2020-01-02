@@ -3,7 +3,7 @@ import actions from 'const/application-actions';
 export const addPipeline = pipeline => ({
   type: actions.REST_REQ_POST,
   payload: {
-    url: 'store/pipelines',
+    url: `store/pipelines`,
     body: pipeline,
     actionType: actions.PIPELINE_ADD,
   },
@@ -12,8 +12,8 @@ export const addPipeline = pipeline => ({
 export const stopPipeline = jobId => ({
   type: actions.REST_REQ_POST,
   payload: {
-    url: 'exec/stop',
-    body: { jobId, reason: 'Request from simulator, Algorithms-tab Delete action' },
+    url: `exec/stop`,
+    body: { jobId, reason: `Request from simulator, Algorithms-tab Delete action` },
     actionType: actions.PIPELINE_STOP,
   },
 });
@@ -21,7 +21,7 @@ export const stopPipeline = jobId => ({
 export const pausePipeline = jobId => ({
   type: actions.REST_REQ_POST,
   payload: {
-    url: 'exec/pause',
+    url: `exec/pause`,
     body: { jobId },
     actionType: actions.PIPELINE_PAUSE,
   },
@@ -30,7 +30,7 @@ export const pausePipeline = jobId => ({
 export const resumePipeline = jobId => ({
   type: actions.REST_REQ_POST,
   payload: {
-    url: 'exec/resume',
+    url: `exec/resume`,
     body: { jobId },
     actionType: actions.PIPELINE_RESUME,
   },
@@ -39,7 +39,7 @@ export const resumePipeline = jobId => ({
 export const execStored = pipeline => ({
   type: actions.REST_REQ_POST,
   payload: {
-    url: 'exec/stored',
+    url: `exec/stored`,
     body: pipeline,
     actionType: actions.PIPELINE_START,
   },
@@ -56,7 +56,7 @@ export const deleteStored = pipelineName => ({
 export const updateStored = pipeline => ({
   type: actions.REST_REQ_PUT,
   payload: {
-    url: 'store/pipelines',
+    url: `store/pipelines`,
     body: pipeline,
     actionType: actions.PIPELINE_UPDATE,
   },
@@ -65,7 +65,7 @@ export const updateStored = pipeline => ({
 export const cronStart = (name, pattern) => ({
   type: actions.REST_REQ_POST,
   payload: {
-    url: 'cron/start',
+    url: `cron/start`,
     body: { name, pattern },
     actionType: actions.PIPELINE_CRON_START,
   },
@@ -74,7 +74,7 @@ export const cronStart = (name, pattern) => ({
 export const cronStop = (name, pattern) => ({
   type: actions.REST_REQ_POST,
   payload: {
-    url: 'cron/stop',
+    url: `cron/stop`,
     body: { name, pattern },
     actionType: actions.PIPELINE_CRON_STOP,
   },
@@ -102,7 +102,7 @@ export const rerunRawPipeline = nominalPipeline => {
   const action = {
     type: actions.REST_REQ_POST,
     payload: {
-      url: 'exec/raw',
+      url: `exec/raw`,
       body: pipeline,
       actionType: actions.PIPELINE_START,
     },
@@ -113,7 +113,7 @@ export const rerunRawPipeline = nominalPipeline => {
 export const execRawPipeline = pipeline => ({
   type: actions.REST_REQ_POST,
   payload: {
-    url: 'exec/raw',
+    url: `exec/raw`,
     body: pipeline,
     actionType: actions.PIPELINE_START,
   },
