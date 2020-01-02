@@ -1,65 +1,76 @@
 import { SERVICES } from '../const/services';
 import { PIPELINE_STATES, LOGGER_LEVEL } from 'const';
+import { pipelineTypes as TYPES } from '@hkube/consts';
 
 export const COLOR = {
-  blue: '#307fe6',
-  blueLight: '#45a9ec',
-  cyan: '#98dbef',
-  darkGrey: '#807c7c',
-  grey: '#ccc',
-  lightGreen: '#87d068',
-  lightGrey: '#e8e8e8',
-  orange: '#ec8c16',
-  lightOrange: '#EAB675',
-  red: '#e74c3c',
-  transparentGrey: '#bfbfbf21',
-  yellow: '#eeda13',
-  white: 'white',
-  pink: '#e543b4',
-  transparentBlack: '#00000073',
+  blue: `#307fe6`,
+  blueLight: `#45a9ec`,
+  cyan: `#98dbef`,
+  darkGrey: `#807c7c`,
+  grey: `#ccc`,
+  lightGreen: `#87d068`,
+  lightGrey: `#e8e8e8`,
+  orange: `#ec8c16`,
+  lightOrange: `#EAB675`,
+  red: `#e74c3c`,
+  transparentGrey: `#bfbfbf21`,
+  yellow: `#eeda13`,
+  white: `white`,
+  pink: `#e543b4`,
+  transparentBlack: `#00000073`,
+};
+
+export const COLOR_PIPELINE_TYPES = {
+  [TYPES.CACHING]: `#b712c9`,
+  [TYPES.CRON]: `#c5def5`,
+  [TYPES.INTERNAL]: `#f9d0c4`,
+  [TYPES.RAW]: `#0ec994`,
+  [TYPES.STORED]: `#da96e8`,
+  [TYPES.SUB_PIPELINE]: `#006b75`,
+  [TYPES.TENSORBOARD]: `#ccdd2c`,
 };
 
 // View all services colors @ https://github.com/kube-HPC/hkube/labels
 export const SERVICE_COLOR = {
   [SERVICES.worker]: {
-    backgroundColor: '#da96e8',
+    backgroundColor: `#da96e8`,
   },
-  [SERVICES['trigger-service']]: {
-    backgroundColor: '#c5def5',
+  [SERVICES[`trigger-service`]]: {
+    backgroundColor: `#c5def5`,
   },
-  [SERVICES['task-executor']]: {
-    backgroundColor: '#f9d0c4',
+  [SERVICES[`task-executor`]]: {
+    backgroundColor: `#f9d0c4`,
   },
-  [SERVICES['resource-manager']]: {
-    backgroundColor: '#1d76db',
+  [SERVICES[`resource-manager`]]: {
+    backgroundColor: `#1d76db`,
     isLight: true,
   },
-  [SERVICES['resource-executor']]: {
-    backgroundColor: '#fbca04',
+  [SERVICES[`resource-executor`]]: {
+    backgroundColor: `#fbca04`,
   },
-  [SERVICES['pipeline-driver']]: {
-    backgroundColor: '#b712c9',
+  [SERVICES[`pipeline-driver`]]: {
+    backgroundColor: `#b712c9`,
     isLight: true,
   },
-  [SERVICES['pipeline-driver-queue']]: {
-    backgroundColor: '#0ec994',
+  [SERVICES[`pipeline-driver-queue`]]: {
+    backgroundColor: `#0ec994`,
   },
-  [SERVICES['api-server']]: {
-    backgroundColor: '#bfdadc',
+  [SERVICES[`api-server`]]: {
+    backgroundColor: `#bfdadc`,
   },
-  [SERVICES['algorithm-queue']]: {
-    backgroundColor: '#5319e7',
+  [SERVICES[`algorithm-queue`]]: {
+    backgroundColor: `#5319e7`,
     isLight: true,
   },
-  [SERVICES['algorithm-builder']]: {
-    backgroundColor: '#006b75',
+  [SERVICES[`algorithm-builder`]]: {
+    backgroundColor: `#006b75`,
     isLight: true,
   },
-  [SERVICES['algorithm-operator']]: {
-    backgroundColor: '#ccdd2c',
+  [SERVICES[`algorithm-operator`]]: {
+    backgroundColor: `#ccdd2c`,
   },
-  [SERVICES['caching-service']]: {
-    backgroundColor: '#b70949',
+  [SERVICES[`caching-service`]]: {
+    backgroundColor: `#b70949`,
     isLight: true,
   },
   default: {
@@ -105,9 +116,9 @@ export const COLOR_LOGGER = {
 };
 
 export const COLOR_PRIORITY = {
-  1: { color: COLOR.red, name: 'Highest' },
-  2: { color: COLOR.darkOrange, name: 'High' },
-  3: { color: COLOR.orange, name: 'Medium' },
-  4: { color: COLOR.lightGreen, name: 'Low' },
-  5: { color: COLOR.blueLight, name: 'Lowest' },
+  1: { color: COLOR.red, name: `Highest` },
+  2: { color: COLOR.darkOrange, name: `High` },
+  3: { color: COLOR.orange, name: `Medium` },
+  4: { color: COLOR.lightGreen, name: `Low` },
+  5: { color: COLOR.blueLight, name: `Lowest` },
 };

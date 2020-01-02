@@ -1,13 +1,10 @@
 import { useEffect } from 'react';
-import { LOCAL_STORAGE_KEYS } from 'const';
-import { setLSItem } from 'utils';
+import { setLsItem } from 'utils';
 
-const { IS_TABLE_VIEW: IS_GRID_VIEW } = LOCAL_STORAGE_KEYS;
-
-const useLocalStorage = ({ isTableView }) => {
+const useLocalStorage = ({ value, key }) => {
   useEffect(() => {
-    setLSItem(IS_GRID_VIEW, isTableView);
-  }, [isTableView]);
+    setLsItem(key, value);
+  }, [value, key]);
 };
 
 export default useLocalStorage;

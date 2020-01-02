@@ -2,12 +2,12 @@ import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { USER_GUIDE, LEFT_SIDEBAR_NAMES } from 'const';
 import { FlexBox, Icons } from 'components/common';
-import { Tag, Tooltip, Typography, Icon } from 'antd';
+import { Tag, Tooltip, Typography, Icon, Popover } from 'antd';
 import { useLeftSidebar, useConnectionStatus, useActions } from 'hooks';
 import { COLOR_LAYOUT } from 'styles';
 import { AutoComplete } from 'components';
 import ViewType from './ViewType/ViewType.react';
-import TypeSelect from './TypeSelect/TypeSelect.react';
+import TypesSelect from './TypesSelect/TypeSelect.react';
 
 const Container = styled.div`
   height: 64px;
@@ -33,8 +33,8 @@ const ActionsBar = styled(FlexBox)`
   padding: 0px 5px;
 `;
 
-const openWebsite = () => window.open('http://hkube.io/');
-const openGithub = () => window.open('https://github.com/kube-HPC/hkube');
+const openWebsite = () => window.open(`http://hkube.io/`);
+const openGithub = () => window.open(`https://github.com/kube-HPC/hkube`);
 const appVersion = `${process.env.REACT_APP_VERSION}v`;
 
 const Header = () => {
@@ -63,7 +63,7 @@ const Header = () => {
         <ActionsBar>
           <FlexBox.Item>
             <Icons.Hover
-              type={leftIsCollapsed ? 'menu-fold' : 'menu-unfold'}
+              type={leftIsCollapsed ? `menu-fold` : `menu-unfold`}
               onClick={triggerLeftVisible}
             />
           </FlexBox.Item>
@@ -74,7 +74,6 @@ const Header = () => {
           )}
         </ActionsBar>
         <FlexBox.Auto>
-          <TypeSelect />
           <AutoComplete table={tableValue} className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
         </FlexBox.Auto>
         <HelpBar className={USER_GUIDE.HEADER.SOCIALS}>
@@ -92,6 +91,9 @@ const Header = () => {
               </Tooltip>
             </Tag>
           )}
+          <Popover content={<TypesSelect />} placement="bottomRight">
+            <Icons.Hover type="tool" />
+          </Popover>
           <Icons.Hover type="global" onClick={openWebsite} />
           <Icons.Hover type="github" onClick={openGithub} />
           <Icons.Hover type="question-circle" onClick={onGuideClick} />

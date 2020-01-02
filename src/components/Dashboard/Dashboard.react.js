@@ -1,7 +1,7 @@
 import { Layout, message } from 'antd';
 import { LoadingScreen, SidebarLeft, SidebarRight, UserGuide } from 'components';
 import GridView from 'components/GridView/GridView.react';
-import { USER_GUIDE } from 'const';
+import { USER_GUIDE, LOCAL_STORAGE_KEYS } from 'const';
 import {
   useActions,
   useConnectionStatus,
@@ -59,7 +59,7 @@ const Dashboard = () => {
 
   const { isTableView, loadedOnce } = useViewType();
 
-  useLocalStorage({ isTableView });
+  useLocalStorage({ value: isTableView, key: LOCAL_STORAGE_KEYS.IS_TABLE_VIEW });
 
   return (
     <>

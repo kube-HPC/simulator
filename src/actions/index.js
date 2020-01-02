@@ -16,6 +16,7 @@ import {
 } from 'actions/pipeline.action';
 import { changeStep, triggerUserGuide } from 'actions/userGuide.action';
 import { firstLoad, toggle as toggleViewType } from 'actions/viewType.action';
+import { filterByType } from 'actions/filter.action';
 
 const actions = {
   applyAlgorithm,
@@ -29,6 +30,7 @@ const actions = {
   drawerToggle,
   execRawPipeline,
   execStored,
+  filterByType,
   firstLoad,
   getCaching,
   getKubernetesLogsData,

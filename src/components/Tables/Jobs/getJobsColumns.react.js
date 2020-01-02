@@ -9,6 +9,7 @@ import JobProgress from './JobProgress.react';
 import JobActions from './JobActions.react';
 import JobTime from './JobTime.react';
 import styled from 'styled-components';
+import JobTypes from './JobTypes.react';
 
 const getStatusFilter = () =>
   Object.values(PIPELINE_STATES).map(status => ({
@@ -27,6 +28,8 @@ const Priority = priority => (
   </Tooltip>
 );
 
+const Types = types => <JobTypes types={types} />;
+
 const ItemGrow = styled(FlexBox.Item)`
   flex-grow: 1;
 `;
@@ -44,59 +47,66 @@ const Progress = (_, job) => (
 
 const getJobsColumns = () => [
   {
-    title: 'Job ID',
-    dataIndex: 'key',
-    key: 'key',
-    width: '10%',
+    title: `Job ID`,
+    dataIndex: `key`,
+    key: `key`,
+    width: `10%`,
     render: Id,
   },
   {
-    title: 'Pipeline Name',
-    dataIndex: 'pipeline.name',
-    key: 'pipeline',
-    width: '10%',
+    title: `Pipeline Name`,
+    dataIndex: `pipeline.name`,
+    key: `pipeline`,
+    width: `5%`,
     sorter: (a, b) => sorter(a.pipeline.name, b.pipeline.name),
     render: Name,
   },
   {
-    title: 'Status',
-    dataIndex: 'status.status',
-    key: 'job-status',
+    title: `Pipeline Types`,
+    dataIndex: `pipeline.types`,
+    key: `types`,
+    width: `10%`,
+    render: Types,
+  },
+  {
+    title: `Status`,
+    dataIndex: `status.status`,
+    key: `job-status`,
     filterMultiple: true,
     filters: getStatusFilter(),
-    width: '8%',
+    width: `8%`,
     sorter: (a, b) => sorter(a.status.status, b.status.status),
     onFilter: (value, record) => record.status.status === value,
     render: Status,
   },
   {
-    title: 'Start Time',
-    dataIndex: 'pipeline.startTime',
-    key: 'Start timestamp',
-    width: '15%',
+    title: `Start Time`,
+    dataIndex: `pipeline.startTime`,
+    key: `Start timestamp`,
+    width: `15%`,
     sorter: (a, b) => a.pipeline.startTime - b.pipeline.startTime,
     render: StartTime,
   },
   {
-    title: 'Nodes Stats',
-    dataIndex: 'status',
-    key: 'node-status',
-    width: '11%',
+    title: `Nodes Stats`,
+    dataIndex: `status`,
+    key: `node-status`,
+    width: `11%`,
     render: Stats,
   },
   {
-    title: 'Priority',
-    dataIndex: 'pipeline.priority',
-    key: 'priority',
-    width: '6%',
+    title: `Priority`,
+    dataIndex: `pipeline.priority`,
+    key: `priority`,
+    width: `6%`,
     sorter: (a, b) => sorter(a.pipeline.priority, b.pipeline.priority),
     render: Priority,
   },
   {
-    title: 'Progress',
-    key: 'progress',
-    width: '20%',
-    align: 'center',
+    title: `Progress`,
+    key: `progress`,
+    width: `20%`,
+    align: `center`,
     render: Progress,
   },
 ];

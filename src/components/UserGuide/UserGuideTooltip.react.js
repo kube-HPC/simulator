@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-
+import { Button, Checkbox, Col, Row, Typography } from 'antd';
 import LOCAL_STORAGE_KEYS from 'const/local-storage';
-import { Typography, Button, Row, Col, Checkbox } from 'antd';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import { COLOR } from 'styles/colors';
-
-import { setLSItem, getBooleanLSItem, getLSItem } from 'utils/localStorage';
+import { getBooleanLSItem, getLsItem, setLsItem } from 'utils/localStorage';
 
 const TooltipBody = styled.div`
   text-align: center;
@@ -36,26 +35,25 @@ const CheckboxUnClickable = styled(Checkbox)`
 
 // When LS not available,
 // the default behavior is "Run on Startup" is un-checked.
-const isOnInitial = getLSItem(LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS)
+const isOnInitial = getLsItem(LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS)
   ? getBooleanLSItem(LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS)
   : false;
 
 const UserGuideTooltip = ({
-  continuous,
   index,
   isLastStep,
   step,
   backProps,
   primaryProps,
   skipProps,
-  tooltipProps
+  tooltipProps,
 }) => {
   const [isRunOnStartup, setIsRunOnStartup] = useState(isOnInitial);
 
   const toggle = () => setIsRunOnStartup(p => !p);
 
   useEffect(() => {
-    setLSItem(LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS, isRunOnStartup);
+    setLsItem(LOCAL_STORAGE_KEYS.USER_GUIDE_STATUS, isRunOnStartup);
   }, [isRunOnStartup]);
 
   return (
@@ -92,7 +90,7 @@ const UserGuideTooltip = ({
             )}
             <Col>
               <Button type="primary" {...primaryProps}>
-                {isLastStep ? 'Finish' : 'Next'}
+                {isLastStep ? `Finish` : `Next`}
               </Button>
             </Col>
           </RowCenter>
@@ -100,6 +98,16 @@ const UserGuideTooltip = ({
       </TooltipFooter>
     </TooltipBody>
   );
+};
+
+UserGuideTooltip.propTypes = {
+  index: PropTypes.number.isRequired,
+  isLastStep: PropTypes.bool.isRequired,
+  step: PropTypes.number.isRequired,
+  backProps: PropTypes.object.isRequired,
+  primaryProps: PropTypes.object.isRequired,
+  skipProps: PropTypes.object.isRequired,
+  tooltipProps: PropTypes.object.isRequired,
 };
 
 export default UserGuideTooltip;

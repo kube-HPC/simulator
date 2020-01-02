@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useReducer } from 'react';
 
 import { LOCAL_STORAGE_KEYS, LEFT_SIDEBAR_NAMES } from 'const';
-import { getBooleanLSItem, setLSItem } from 'utils';
+import { getBooleanLSItem, setLsItem } from 'utils';
 import {
   JobsTable,
   PipelinesTable,
@@ -30,7 +30,7 @@ const useLeftSidebar = () => {
   const [isCollapsed, toggle] = useReducer(p => !p, leftCollapsedInitial);
 
   useEffect(() => {
-    setLSItem(LOCAL_STORAGE_KEYS.LEFT_SIDEBAR_IS_VISIBLE, isCollapsed);
+    setLsItem(LOCAL_STORAGE_KEYS.LEFT_SIDEBAR_IS_VISIBLE, isCollapsed);
   }, [isCollapsed]);
 
   return {
