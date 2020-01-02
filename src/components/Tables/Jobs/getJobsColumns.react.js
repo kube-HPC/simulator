@@ -22,7 +22,7 @@ const StartTime = (startTime, { results }) => <JobTime startTime={startTime} res
 const Status = status => <ProgressStatus status={status} />;
 const Stats = status => <JobStats status={status} />;
 const Priority = priority => <JobPriority priority={priority} />;
-const Types = types => <JobTypes types={types} />;
+const Types = types => <JobTypes types={types} fullName={false} />;
 
 const ItemGrow = styled(FlexBox.Item)`
   flex-grow: 1;

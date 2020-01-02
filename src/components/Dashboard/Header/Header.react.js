@@ -73,9 +73,7 @@ const Header = () => {
             </FlexBox.Item>
           )}
         </ActionsBar>
-        <FlexBox.Auto>
-          <AutoComplete table={tableValue} className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
-        </FlexBox.Auto>
+        <AutoComplete table={tableValue} className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
         <HelpBar className={USER_GUIDE.HEADER.SOCIALS}>
           {!isSocketConnected && (
             <Tag color="orange">

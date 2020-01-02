@@ -1,18 +1,17 @@
-import { Tag } from 'antd';
 import { Card, Ellipsis, FlexBox, ProgressStatus } from 'components/common';
 import { cardOptions } from 'config/template/graph-options.template';
 import { useJobs } from 'hooks';
 import React, { memo } from 'react';
 import styled from 'styled-components';
-import { toUpperCaseFirstLetter } from 'utils';
 import JobActions from './JobActions.react';
 import JobGraph from './JobGraph.react';
 import JobStats from './JobNodeStats.react';
 import JobProgress from './JobProgress.react';
 import JobTime from './JobTime.react';
+import JobTypes from './JobTypes.react';
 
 const gridStyle = {
-  width: '25%',
+  width: `25%`,
 };
 
 const { Meta, Grid } = Card;
@@ -35,16 +34,6 @@ const GridItem = styled(Grid)`
   }
 `;
 
-const TagsContainer = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  .ant-tag {
-    margin-right: 2px;
-  }
-`;
-
 const Container = styled(FlexBox.Auto)`
   width: 80px;
 `;
@@ -61,35 +50,28 @@ const toGrid = dataSource =>
     const title = (
       <FlexBox.Auto>
         <Ellipsis text={name} />
-        <JobStats status={status} />
+        <JobTypes types={types} />
       </FlexBox.Auto>
     );
 
     const description = (
-      <FlexBox.Auto justify="start" align="start" gutter={[0, 5]} direction="column">
-        <Ellipsis text={jobId} copyable length={35} />
-        <TagsContainer>
-          {types ? (
-            types.map(type => <Tag key={type}>{toUpperCaseFirstLetter(type)}</Tag>)
-          ) : (
-            <Tag>No Type</Tag>
-          )}
-        </TagsContainer>
-        <JobTime results={results} startTime={startTime} />
+      <FlexBox.Auto>
+        <Container direction="column" gutter={[0, 10]}>
+          <JobProgress status={status} type="circle" width={40} />
+          <ProgressStatus status={status.status} />
+        </Container>
+        <FlexBox.Auto justify="start" align="start" gutter={[0, 5]} direction="column">
+          <Ellipsis text={jobId} copyable length={35} />
+          <JobTime results={results} startTime={startTime} />
+          <JobStats status={status} />
+        </FlexBox.Auto>
       </FlexBox.Auto>
-    );
-
-    const progress = (
-      <Container direction="column" gutter={[0, 10]}>
-        <JobProgress status={status} type="circle" width={40} />
-        <ProgressStatus status={status.status} />
-      </Container>
     );
 
     return (
       <GridItem key={key} style={gridStyle}>
-        <FlexContainer justify="center">
-          <Meta avatar={progress} title={title} description={description} />
+        <FlexContainer justify="center" direction="column">
+          <Meta title={title} description={description} />
           <JobGraph graph={{ ...graph, jobId: key }} options={cardOptions} isMinified />
           <ActionsHidden job={job} />
         </FlexContainer>
@@ -99,7 +81,7 @@ const toGrid = dataSource =>
 
 const JobsGridView = () => {
   const { dataSource } = useJobs();
-  return <>{toGrid(dataSource)}</>;
+  return toGrid(dataSource);
 };
 
 export default memo(JobsGridView);

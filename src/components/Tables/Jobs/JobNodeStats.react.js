@@ -4,16 +4,18 @@ import { FlexBox, StatusTag } from 'components/common';
 
 const style = { flexWrap: `nowrap` };
 
-const JobStats = ({ status }) => (
-  <FlexBox justify="center" gutter={0} style={style}>
-    {status.data &&
-      status.data.states &&
+const hasStatus = status => status.data && status.data.states;
+
+const JobStats = ({ status, ...props }) => (
+  <FlexBox.Auto justify="center" gutter={0} style={style} {...props}>
+    {hasStatus(status) ? (
       Object.entries(status.data.states).map(([status, count]) => (
-        <FlexBox.Item key={status}>
-          <StatusTag status={status} count={count} />
-        </FlexBox.Item>
-      ))}
-  </FlexBox>
+        <StatusTag key={status} status={status} count={count} />
+      ))
+    ) : (
+      <StatusTag count={null} />
+    )}
+  </FlexBox.Auto>
 );
 
 JobStats.propTypes = {

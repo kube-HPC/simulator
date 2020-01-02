@@ -21,13 +21,13 @@ export const COLOR = {
 };
 
 export const COLOR_PIPELINE_TYPES = {
-  [TYPES.CACHING]: `#307FE6`,
-  [TYPES.CRON]: `#00C6E5`,
-  [TYPES.INTERNAL]: `#00DFB7`,
-  [TYPES.RAW]: `#FFE3A3`,
+  [TYPES.CACHING]: `#0065E5`,
+  [TYPES.CRON]: `#C657D0`,
+  [TYPES.INTERNAL]: `#FF5CA2`,
+  [TYPES.RAW]: `#FF8974`,
   [TYPES.STORED]: `#00A7F9`,
-  [TYPES.SUB_PIPELINE]: `#F9F871`,
-  [TYPES.TENSORBOARD]: `#8CF188`,
+  [TYPES.SUB_PIPELINE]: `#FFC25A`,
+  [TYPES.TENSORBOARD]: `#87d068`,
 };
 
 // View all services colors @ https://github.com/kube-HPC/hkube/labels

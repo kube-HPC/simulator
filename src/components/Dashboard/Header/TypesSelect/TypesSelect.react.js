@@ -8,7 +8,7 @@ import { useFilters } from 'hooks';
 const { Option } = AntSelect;
 
 const Select = styled(AntSelect)`
-  width: 600px;
+  width: 700px;
 `;
 
 const types = Object.values(pipelineTypes);
@@ -21,6 +21,7 @@ const TypesSelect = () => {
       value={value}
       onChange={onChange}
       mode="multiple"
+      allowClear
       placeholder="Filter By Pipeline Types">
       {types.map(type => (
         <Option key={type}>{toUpperCaseFirstLetter(type)}</Option>

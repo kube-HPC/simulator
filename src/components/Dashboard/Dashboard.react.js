@@ -25,7 +25,7 @@ const Wrapper = styled.div`
 `;
 
 const ContentMargin = styled(Layout.Content)`
-  padding: 5px;
+  padding: 2px 8px;
   ::-webkit-scrollbar {
     width: 1px;
   }

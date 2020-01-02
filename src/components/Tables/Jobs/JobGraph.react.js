@@ -1,16 +1,17 @@
 import { Empty } from 'antd';
-import { Card, FlexBox } from 'components/common';
+import { Card, FlexBox, Fallback } from 'components/common';
 import { defaultOptions } from 'config/template/graph-options.template';
 import { useNodeInfo } from 'hooks';
 import PropTypes from 'prop-types';
-import React from 'react';
-import Graph from 'react-graph-vis';
+import React, { lazy } from 'react';
 import styled from 'styled-components';
 import { formatEdge, formatNode } from 'utils';
 import { NodeInfo } from '.';
 
+const Graph = lazy(() => import(`react-graph-vis`));
+
 const GraphContainer = styled.div`
-  pointer-events: ${({ isMinified }) => (!isMinified ? 'all' : 'none')};
+  pointer-events: ${({ isMinified }) => (!isMinified ? `all` : `none`)};
   max-width: ${({ isMinified }) => (!isMinified ? `100%` : `40vw`)};
   width: 100%;
 `;
@@ -44,7 +45,9 @@ const JobGraph = ({ graph, pipeline, options = defaultOptions, isMinified = fals
       <FlexBox.Item full>
         <GraphContainer isMinified={isMinified}>
           {isValidGraph ? (
-            <Graph graph={adaptedGraph} options={options} events={events} />
+            <Fallback>
+              <Graph graph={adaptedGraph} options={options} events={events} />
+            </Fallback>
           ) : (
             <EmptyHeight image={Empty.PRESENTED_IMAGE_SIMPLE} />
           )}
