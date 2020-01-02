@@ -20,7 +20,7 @@ const AddAlgorithm = ({ onSubmit = noop }) => {
 
   const toggleEditor = () => setEditorIsVisible(prev => !prev);
 
-  const onClear = () => setEditorValue('');
+  const onClear = () => setEditorValue(``);
   const onDefault = () => setEditorValue(DEFAULT_EDITOR_VALUE);
 
   const { applyAlgorithm } = useActions();
@@ -31,7 +31,7 @@ const AddAlgorithm = ({ onSubmit = noop }) => {
 
   const onSuccess = ({ src }) => {
     const formData = new FormData();
-    formData.append('payload', src);
+    formData.append(`payload`, src);
     onSubmit({ payload: src });
     apply(formData);
   };
