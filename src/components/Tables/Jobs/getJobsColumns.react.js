@@ -1,14 +1,13 @@
-import { Tag, Tooltip } from 'antd';
-import { Ellipsis, ProgressStatus, FlexBox } from 'components/common';
+import { Ellipsis, FlexBox, ProgressStatus } from 'components/common';
 import { PIPELINE_STATES, USER_GUIDE } from 'const';
 import React from 'react';
-import { COLOR_PRIORITY } from 'styles/colors';
-import { sorter, toUpperCaseFirstLetter } from 'utils/string';
-import JobStats from './JobNodeStats.react';
-import JobProgress from './JobProgress.react';
-import JobActions from './JobActions.react';
-import JobTime from './JobTime.react';
 import styled from 'styled-components';
+import { sorter, toUpperCaseFirstLetter } from 'utils/string';
+import JobActions from './JobActions.react';
+import JobStats from './JobNodeStats.react';
+import JobPriority from './JobPriority.react';
+import JobProgress from './JobProgress.react';
+import JobTime from './JobTime.react';
 import JobTypes from './JobTypes.react';
 
 const getStatusFilter = () =>
@@ -22,12 +21,7 @@ const Name = pipelineName => <Ellipsis text={pipelineName} />;
 const StartTime = (startTime, { results }) => <JobTime startTime={startTime} results={results} />;
 const Status = status => <ProgressStatus status={status} />;
 const Stats = status => <JobStats status={status} />;
-const Priority = priority => (
-  <Tooltip placement="top" title={COLOR_PRIORITY[priority].name}>
-    <Tag color={COLOR_PRIORITY[priority].color}>{COLOR_PRIORITY[priority].name}</Tag>
-  </Tooltip>
-);
-
+const Priority = priority => <JobPriority priority={priority} />;
 const Types = types => <JobTypes types={types} />;
 
 const ItemGrow = styled(FlexBox.Item)`
@@ -57,16 +51,43 @@ const getJobsColumns = () => [
     title: `Pipeline Name`,
     dataIndex: `pipeline.name`,
     key: `pipeline`,
-    width: `5%`,
+    width: `10%`,
     sorter: (a, b) => sorter(a.pipeline.name, b.pipeline.name),
     render: Name,
+  },
+  {
+    title: `Start Time`,
+    dataIndex: `pipeline.startTime`,
+    key: `Start timestamp`,
+    width: `10%`,
+    sorter: (a, b) => a.pipeline.startTime - b.pipeline.startTime,
+    render: StartTime,
   },
   {
     title: `Pipeline Types`,
     dataIndex: `pipeline.types`,
     key: `types`,
+    align: `center`,
     width: `10%`,
     render: Types,
+  },
+  {
+    title: `Priority`,
+    dataIndex: `pipeline.priority`,
+    key: `priority`,
+    align: `center`,
+    width: `5%`,
+    sorter: (a, b) => sorter(a.pipeline.priority, b.pipeline.priority),
+    render: Priority,
+  },
+
+  {
+    title: `Nodes Stats`,
+    dataIndex: `status`,
+    key: `node-status`,
+    align: `center`,
+    width: `10%`,
+    render: Stats,
   },
   {
     title: `Status`,
@@ -75,39 +96,16 @@ const getJobsColumns = () => [
     filterMultiple: true,
     filters: getStatusFilter(),
     width: `8%`,
+    align: `center`,
     sorter: (a, b) => sorter(a.status.status, b.status.status),
     onFilter: (value, record) => record.status.status === value,
     render: Status,
   },
   {
-    title: `Start Time`,
-    dataIndex: `pipeline.startTime`,
-    key: `Start timestamp`,
-    width: `15%`,
-    sorter: (a, b) => a.pipeline.startTime - b.pipeline.startTime,
-    render: StartTime,
-  },
-  {
-    title: `Nodes Stats`,
-    dataIndex: `status`,
-    key: `node-status`,
-    width: `11%`,
-    render: Stats,
-  },
-  {
-    title: `Priority`,
-    dataIndex: `pipeline.priority`,
-    key: `priority`,
-    width: `6%`,
-    sorter: (a, b) => sorter(a.pipeline.priority, b.pipeline.priority),
-    render: Priority,
-  },
-  {
     title: `Progress`,
     key: `progress`,
-    width: `20%`,
-    align: `center`,
     render: Progress,
+    align: `center`,
   },
 ];
 

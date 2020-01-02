@@ -10,7 +10,7 @@ export const socketURL = handleActions(
       return Immutable.from(url);
     },
   },
-  Immutable.from(''),
+  Immutable.from(``),
 );
 
 export const connectionStatus = handleActions(

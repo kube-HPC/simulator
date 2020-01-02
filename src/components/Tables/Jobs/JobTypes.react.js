@@ -6,7 +6,7 @@ import { FlexBox } from 'components/common';
 import { toUpperCaseFirstLetter as toUpper } from 'utils';
 
 const JobTypes = ({ types }) => (
-  <FlexBox.Auto justify="start" gutter={0}>
+  <FlexBox.Auto justify="center" gutter={0}>
     {types.map(type => (
       <Tooltip key={type} placement="top" title={toUpper(type)}>
         <Tag color={COLOR_PIPELINE_TYPES[type]}>{toUpper(type.slice(0, 2))}</Tag>

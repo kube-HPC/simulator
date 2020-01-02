@@ -14,10 +14,14 @@ const Select = styled(AntSelect)`
 const types = Object.values(pipelineTypes);
 
 const TypesSelect = () => {
-  const { value, set } = useFilters();
+  const { value, set: onChange } = useFilters();
 
   return (
-    <Select value={value} onChange={set} mode="multiple" placeholder="Filter By Pipeline Types">
+    <Select
+      value={value}
+      onChange={onChange}
+      mode="multiple"
+      placeholder="Filter By Pipeline Types">
       {types.map(type => (
         <Option key={type}>{toUpperCaseFirstLetter(type)}</Option>
       ))}

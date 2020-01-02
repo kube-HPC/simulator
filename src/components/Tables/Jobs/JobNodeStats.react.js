@@ -2,8 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FlexBox, StatusTag } from 'components/common';
 
+const style = { flexWrap: `nowrap` };
+
 const JobStats = ({ status }) => (
-  <FlexBox justify="start" gutter={0} style={{ flexWrap: 'nowrap' }}>
+  <FlexBox justify="center" gutter={0} style={style}>
     {status.data &&
       status.data.states &&
       Object.entries(status.data.states).map(([status, count]) => (

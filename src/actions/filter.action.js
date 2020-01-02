@@ -1,6 +1,6 @@
 import actions from 'const/application-actions';
 
-export const filterByType = types => ({
+export const filterByType = payload => ({
   type: actions.FILTER_TYPES,
-  types,
+  payload,
 });

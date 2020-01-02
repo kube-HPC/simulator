@@ -7,7 +7,7 @@ import { useLeftSidebar, useConnectionStatus, useActions } from 'hooks';
 import { COLOR_LAYOUT } from 'styles';
 import { AutoComplete } from 'components';
 import ViewType from './ViewType/ViewType.react';
-import TypesSelect from './TypesSelect/TypeSelect.react';
+import TypesSelect from './TypesSelect/TypesSelect.react';
 
 const Container = styled.div`
   height: 64px;
