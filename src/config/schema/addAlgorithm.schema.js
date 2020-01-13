@@ -144,7 +144,7 @@ const addAlgorithmSchema = {
       field: 'main.options',
       label: 'Options',
       placeholder: '(Optional) Enable Options',
-      types: ['debug'],
+      types: ['debug', 'binary'],
     },
     WORKERS: {
       field: 'main.minHotWorkers',
