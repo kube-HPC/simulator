@@ -42,7 +42,7 @@ const toStatus = status =>
 
 const handleSingle = node => ({ ...node, group: toStatus(node.status) });
 
-const handleBatch = ({ nodeName, algorithmName, batchInfo, level }) => {
+const handleBatch = ({ nodeName, algorithmName, batchInfo, level = 0 }) => {
   const { completed, total, idle, running, errors } = batchInfo;
   let _completed = 0;
   let group = null;
