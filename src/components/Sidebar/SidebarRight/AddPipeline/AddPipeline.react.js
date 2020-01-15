@@ -1,12 +1,11 @@
-import { addPipeline } from 'actions/pipeline.action';
 import { Button, Icon, Steps } from 'antd';
 import { BottomContent, Card, FlexBox, Form, JsonEditor, JsonView } from 'components/common';
-import { addPipelineTemplate } from 'config';
 import schema from 'config/schema/addPipeline.schema';
+import addPipelineTemplate from 'config/template/addPipeline.template';
 import { DRAWER_SIZE } from 'const';
+import { useActions } from 'hooks';
 import { mergeWith } from 'lodash';
 import React, { memo, useCallback, useMemo, useReducer, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { BottomPosition, Display } from 'styles';
 import { mapObjValues, notification, stringify, tryParse } from 'utils';
@@ -61,8 +60,7 @@ const AddPipeline = () => {
   const [editorValue, setEditorValue] = useState(INITIAL_EDITOR_VALUE);
   const [jsonViewObj, setJsonViewObj] = useState(addPipelineTemplate);
 
-  const dispatch = useDispatch();
-  const dispatchPipeline = useCallback(value => dispatch(addPipeline(value)), [dispatch]);
+  const { addPipeline } = useActions();
 
   // #region Bottom Buttons
   const onNextClick = useCallback(() => {
@@ -75,12 +73,12 @@ const AddPipeline = () => {
     isSubmit
       ? isValidPipeline
         ? notification({ message: 'Empty Required Field!' })
-        : dispatchPipeline(jsonViewObj)
+        : addPipeline(jsonViewObj)
       : setStep(s => s + 1);
-  }, [dispatchPipeline, jsonViewObj, step]);
+  }, [addPipeline, jsonViewObj, step]);
 
   const onEditorSubmit = () =>
-    tryParse({ src: editorValue, onSuccess: ({ parsed }) => dispatchPipeline(parsed) });
+    tryParse({ src: editorValue, onSuccess: ({ parsed }) => addPipeline(parsed) });
 
   const onPrevClick = () => setStep(s => s - 1);
   const onDefault = () => setEditorValue(INITIAL_EDITOR_VALUE);
@@ -88,11 +86,9 @@ const AddPipeline = () => {
   // #endregion
 
   // #region Form Control
-  const onValuesChange = useCallback(
-    (_, changedValues) =>
-      setJsonViewObj(prevObj => ({ ...mergeWith(prevObj, changedValues, mergeMapper) })),
-    [],
-  );
+  const onValuesChange = useCallback((_, changedValues) => {
+    setJsonViewObj(prevObj => ({ ...mergeWith(prevObj, changedValues, mergeMapper) }));
+  }, []);
 
   // 1. Inject antd `form` object and callbacks.
   // 2. Memoize the returned component from Form.create

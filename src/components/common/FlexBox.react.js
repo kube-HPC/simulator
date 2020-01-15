@@ -1,4 +1,5 @@
 import { Col, Row } from 'antd';
+import PropTypes from 'prop-types';
 import React, { Children } from 'react';
 import styled from 'styled-components';
 
@@ -25,7 +26,11 @@ const Item = ({ children, className, full = false, ...props }) => (
   </ColFull>
 );
 
-Item.propTypes = Col.propTypes;
+Item.propTypes = {
+  ...Col.propTypes,
+  className: PropTypes.string,
+  full: PropTypes.bool,
+};
 
 FlexBox.Item = Item;
 
