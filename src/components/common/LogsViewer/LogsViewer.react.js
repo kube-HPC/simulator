@@ -1,14 +1,14 @@
-import React from 'react';
-import Moment from 'react-moment';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { FlexBox } from 'components/common';
-import { toUpperCaseFirstLetter, notification } from 'utils';
-import { COLOR_LOGGER, COLOR } from 'styles/colors';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import moment from 'moment';
 import Ansi from 'ansi-to-react';
 import { Empty } from 'antd';
+import { FlexBox } from 'components/common';
+import moment from 'moment';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import Moment from 'react-moment';
+import styled from 'styled-components';
+import { COLOR, COLOR_LOGGER } from 'styles/colors';
+import { notification, toUpperCaseFirstLetter } from 'utils';
 
 const onCopy = () =>
   notification({ message: 'Log Line Copied to clipboard', type: notification.TYPES.SUCCESS });
@@ -18,6 +18,7 @@ const Container = styled.div`
   padding: 10px;
   color: ${({ isValid }) => (isValid ? 'white' : 'black')};
   white-space: pre-line;
+  max-height: 400px;
 `;
 
 const ItemWrapper = styled.div`

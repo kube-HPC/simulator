@@ -58,24 +58,24 @@ const AddPipeline = () => {
   const [step, setStep] = useState(0);
   const [isEditorVisible, toggle] = useReducer(visible => !visible, false);
   const [editorValue, setEditorValue] = useState(INITIAL_EDITOR_VALUE);
-  const [jsonViewObj, setJsonViewObj] = useState(addPipelineTemplate);
+  const [pipeline, setPipeline] = useState(addPipelineTemplate);
 
   const { addPipeline } = useActions();
 
   // #region Bottom Buttons
   const onNextClick = useCallback(() => {
     const isValidPipeline =
-      !jsonViewObj.name ||
-      !jsonViewObj.nodes.every(({ nodeName, algorithmName }) => nodeName && algorithmName);
+      !pipeline.name ||
+      !pipeline.nodes.every(({ nodeName, algorithmName }) => nodeName && algorithmName);
 
     const isSubmit = step === steps.length - 1;
 
     isSubmit
       ? isValidPipeline
         ? notification({ message: 'Empty Required Field!' })
-        : addPipeline(jsonViewObj)
+        : addPipeline(pipeline)
       : setStep(s => s + 1);
-  }, [addPipeline, jsonViewObj, step]);
+  }, [addPipeline, pipeline, step]);
 
   const onEditorSubmit = () =>
     tryParse({ src: editorValue, onSuccess: ({ parsed }) => addPipeline(parsed) });
@@ -87,7 +87,7 @@ const AddPipeline = () => {
 
   // #region Form Control
   const onValuesChange = useCallback((_, changedValues) => {
-    setJsonViewObj(prevObj => ({ ...mergeWith(prevObj, changedValues, mergeMapper) }));
+    setPipeline(prevObj => ({ ...mergeWith(prevObj, changedValues, mergeMapper) }));
   }, []);
 
   // 1. Inject antd `form` object and callbacks.
@@ -113,7 +113,7 @@ const AddPipeline = () => {
         <Container gutter={15}>
           <FlexItemStart>
             <Card>
-              <JsonView jsonObject={jsonViewObj} collapsed={undefined} />
+              <JsonView jsonObject={pipeline} collapsed={undefined} />
             </Card>
           </FlexItemStart>
           <FlexItemGrow as={FlexItemStart}>

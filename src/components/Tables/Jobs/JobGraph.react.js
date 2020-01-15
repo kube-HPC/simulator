@@ -1,5 +1,5 @@
 import { Empty } from 'antd';
-import { Card, FlexBox, Fallback } from 'components/common';
+import { Card, Fallback, FlexBox } from 'components/common';
 import { defaultOptions } from 'config/template/graph-options.template';
 import { useNodeInfo } from 'hooks';
 import PropTypes from 'prop-types';
@@ -53,7 +53,7 @@ const JobGraph = ({ graph, pipeline, options = defaultOptions, isMinified = fals
           )}
         </GraphContainer>
       </FlexBox.Item>
-      <FlexBox.Item full>
+      <FlexBox.Item full grow>
         {!isMinified && isValidGraph && (
           <Card>
             <NodeInfo node={node} jobId={graph.jobId} />
