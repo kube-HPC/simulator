@@ -53,7 +53,7 @@ const JobGraph = ({ graph, pipeline, options = defaultOptions, isMinified = fals
           )}
         </GraphContainer>
       </FlexBox.Item>
-      <FlexBox.Item full grow>
+      <FlexBox.Item full>
         {!isMinified && isValidGraph && (
           <Card>
             <NodeInfo node={node} jobId={graph.jobId} />
@@ -66,7 +66,7 @@ const JobGraph = ({ graph, pipeline, options = defaultOptions, isMinified = fals
 
 JobGraph.propTypes = {
   graph: PropTypes.object.isRequired,
-  pipeline: PropTypes.object.isRequired,
+  pipeline: PropTypes.object,
   options: PropTypes.object,
   isMinified: PropTypes.bool,
   className: PropTypes.string,

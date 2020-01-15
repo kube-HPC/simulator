@@ -60,7 +60,7 @@ const toGrid = dataSource =>
           <JobProgress status={status} type="circle" width={40} />
           <ProgressStatus status={status.status} />
         </Container>
-        <FlexBox.Auto justify="start" align="start" gutter={[0, 5]} direction="column">
+        <FlexBox.Auto justify="start" align="top" gutter={[0, 5]} direction="column">
           <Ellipsis text={jobId} copyable length={35} />
           <JobTime results={results} startTime={startTime} />
           <JobStats status={status} />

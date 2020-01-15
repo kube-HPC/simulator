@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useReducer } from 'react';
-
-import { LOCAL_STORAGE_KEYS, LEFT_SIDEBAR_NAMES } from 'const';
-import { getBooleanLSItem, setLsItem } from 'utils';
 import {
+  AlgorithmsTable,
+  DebugTable,
+  DriversTable,
   JobsTable,
   PipelinesTable,
-  AlgorithmsTable,
-  DriversTable,
-  DebugTable,
   WorkersTable,
 } from 'components/Tables';
+import { LEFT_SIDEBAR_NAMES, LOCAL_STORAGE_KEYS } from 'const';
+import { useLocalStorage } from 'hooks';
+import React, { useReducer, useState } from 'react';
 import { createStore } from 'reusable';
+import { getBooleanLSItem } from 'utils';
 
 const tableSelector = {
   [LEFT_SIDEBAR_NAMES.JOBS]: <JobsTable />,
@@ -29,9 +29,7 @@ const useLeftSidebar = () => {
   const [value, setValue] = useState(LEFT_SIDEBAR_NAMES.JOBS);
   const [isCollapsed, toggle] = useReducer(p => !p, leftCollapsedInitial);
 
-  useEffect(() => {
-    setLsItem(LOCAL_STORAGE_KEYS.LEFT_SIDEBAR_IS_VISIBLE, isCollapsed);
-  }, [isCollapsed]);
+  useLocalStorage({ value: isCollapsed, key: LOCAL_STORAGE_KEYS.LEFT_SIDEBAR_IS_VISIBLE });
 
   return {
     value: [value, setValue],

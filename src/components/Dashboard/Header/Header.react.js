@@ -1,13 +1,13 @@
+import { Icon, Popover, Tag, Tooltip, Typography } from 'antd';
+import { AutoComplete } from 'components';
+import { FlexBox, Icons } from 'components/common';
+import { LEFT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
+import { useActions, useConnectionStatus, useLeftSidebar } from 'hooks';
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
-import { USER_GUIDE, LEFT_SIDEBAR_NAMES } from 'const';
-import { FlexBox, Icons } from 'components/common';
-import { Tag, Tooltip, Typography, Icon, Popover } from 'antd';
-import { useLeftSidebar, useConnectionStatus, useActions } from 'hooks';
-import { COLOR_LAYOUT } from 'styles';
-import { AutoComplete } from 'components';
-import ViewType from './ViewType/ViewType.react';
+import { COLOR_LAYOUT, Display } from 'styles';
 import TypesSelect from './TypesSelect/TypesSelect.react';
+import ViewType from './ViewType/ViewType.react';
 
 const Container = styled.div`
   height: 64px;
@@ -67,11 +67,11 @@ const Header = () => {
               onClick={triggerLeftVisible}
             />
           </FlexBox.Item>
-          {tableValue === LEFT_SIDEBAR_NAMES.JOBS && (
-            <FlexBox.Item>
+          <FlexBox.Item>
+            <Display hidden={tableValue !== LEFT_SIDEBAR_NAMES.JOBS}>
               <ViewType />
-            </FlexBox.Item>
-          )}
+            </Display>
+          </FlexBox.Item>
         </ActionsBar>
         <AutoComplete table={tableValue} className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
         <HelpBar className={USER_GUIDE.HEADER.SOCIALS}>
