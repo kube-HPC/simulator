@@ -83,7 +83,6 @@ const NodeLogs = ({ taskDetails, onChange }) => {
 };
 
 NodeLogs.propTypes = {
-  dataSource: PropTypes.array.isRequired,
   taskDetails: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
 };

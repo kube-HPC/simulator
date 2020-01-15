@@ -1,8 +1,7 @@
-import React from 'react';
 import { Button, Modal, Tooltip, Typography } from 'antd';
-
+import { Ellipsis, FlexBox, StatusTag } from 'components/common';
+import React from 'react';
 import { sorter } from 'utils/string';
-import { FlexBox, Ellipsis, StatusTag } from 'components/common';
 import SwitchCron from './SwitchCron.react';
 
 const deleteConfirmAction = (action, record) => {
@@ -25,15 +24,7 @@ const deleteConfirmAction = (action, record) => {
 
 const PipelineName = name => <Ellipsis copyable text={name} />;
 
-const getPipelineColumns = ({
-  dataStats,
-  setExecPipeline,
-  update,
-  remove,
-  setPipeline,
-  setIsExecution,
-  toggle,
-}) => {
+const getPipelineColumns = ({ dataStats, update, remove, execute }) => {
   const Cron = (_, record) => <SwitchCron pipeline={record} update={update} />;
 
   const PipelineStats = (_, record) => {
@@ -68,28 +59,12 @@ const getPipelineColumns = ({
       <FlexBox justify="start">
         <FlexBox.Item>
           <Tooltip title="Execute Pipeline">
-            <Button
-              shape="circle"
-              icon="caret-right"
-              onClick={() => {
-                setIsExecution(true);
-                toggle();
-                setExecPipeline(noTriggersPipeline);
-              }}
-            />
+            <Button shape="circle" icon="caret-right" onClick={() => execute(noTriggersPipeline)} />
           </Tooltip>
         </FlexBox.Item>
         <FlexBox.Item>
           <Tooltip title="Update Pipeline">
-            <Button
-              shape="circle"
-              icon="edit"
-              onClick={() => {
-                setIsExecution(false);
-                toggle();
-                setPipeline(record);
-              }}
-            />
+            <Button shape="circle" icon="edit" onClick={() => execute(record)} />
           </Tooltip>
         </FlexBox.Item>
         <FlexBox.Item>

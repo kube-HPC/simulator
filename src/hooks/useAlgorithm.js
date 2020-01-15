@@ -1,26 +1,26 @@
-import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
-import { applyAlgorithm, deleteAlgorithm } from 'actions/algorithm.action';
-import { tableFilterSelector } from 'utils';
 import { LEFT_SIDEBAR_NAMES, STATE_SOURCES } from 'const';
+import { useDrawerEditor } from 'hooks';
+import { useCallback } from 'react';
+import { useSelector } from 'react-redux';
+import { stringify, tableFilterSelector } from 'utils';
+import useActions from './useActions';
 
 const dataSelector = tableFilterSelector(LEFT_SIDEBAR_NAMES.ALGORITHMS);
 const buildsSelector = state => state[STATE_SOURCES.ALGORITHM_BUILDS_TABLE].dataSource;
 
 const useAlgorithm = () => {
-  const dispatch = useDispatch();
+  const { applyAlgorithm, deleteAlgorithm } = useActions();
 
   const onSubmit = useCallback(
     value => {
       const formData = new FormData();
       formData.append('payload', value);
-      dispatch(applyAlgorithm(formData));
+      applyAlgorithm(formData);
     },
-    [dispatch],
+    [applyAlgorithm],
   );
 
-  const onDelete = useCallback(data => dispatch(deleteAlgorithm(data)), [dispatch]);
+  const { open } = useDrawerEditor({ onSubmit });
 
   const algorithmSource = useSelector(dataSelector);
   const buildsSource = useSelector(buildsSelector);
@@ -33,8 +33,8 @@ const useAlgorithm = () => {
 
   return {
     dataSource,
-    onDelete,
-    onSubmit,
+    onDelete: deleteAlgorithm,
+    open: value => open(stringify(value)),
   };
 };
 
