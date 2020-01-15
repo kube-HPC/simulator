@@ -1,6 +1,6 @@
+import { Col, Row } from 'antd';
 import React, { Children } from 'react';
 import styled from 'styled-components';
-import { Row, Col } from 'antd';
 
 const FlexAligned = styled(Row)`
   align-items: ${({ align = 'center' }) => align};
@@ -20,7 +20,7 @@ const ColFull = styled(Col)`
 `;
 
 const Item = ({ children, className, full = false, ...props }) => (
-  <ColFull className={className} full={full} {...props}>
+  <ColFull className={className} full={full ? full : undefined} {...props}>
     {children}
   </ColFull>
 );

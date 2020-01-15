@@ -10,7 +10,7 @@ const JobPriority = ({ priority }) => (
 );
 
 JobPriority.propTypes = {
-  priority: PropTypes.string.isRequired,
+  priority: PropTypes.number.isRequired,
 };
 
 export default JobPriority;

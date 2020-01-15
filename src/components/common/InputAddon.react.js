@@ -1,6 +1,6 @@
-import React, { useState, forwardRef, useEffect, memo, useCallback, useMemo } from 'react';
-import PropTypes from 'prop-types';
 import { Input, Select } from 'antd';
+import PropTypes from 'prop-types';
+import React, { forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react';
 
 const selectWidth = { width: 90 };
 
@@ -31,7 +31,7 @@ const initialByType = target => () => {
 };
 
 const InputAddon = forwardRef(
-  ({ before = '', after = '', onChange = () => {}, placeholder, value }) => {
+  ({ before = '', after = '', onChange = () => {}, placeholder, value }, ref) => {
     const [selectBefore, setSelectBefore] = useState(initialByType(before));
     const [selectAfter, setSelectAfter] = useState(initialByType(after));
     const [inputValue, setInputValue] = useState(value);
@@ -71,6 +71,7 @@ const InputAddon = forwardRef(
 
     return (
       <Input
+        ref={ref}
         value={inputValue}
         onChange={onInputChange}
         addonBefore={addonBefore}

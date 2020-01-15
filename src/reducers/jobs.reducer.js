@@ -1,6 +1,6 @@
+import actions from 'const/application-actions';
 import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
-import actions from 'const/application-actions';
 
 const initialValue = Immutable.from({ dataSource: [] });
 
@@ -8,7 +8,7 @@ export const jobsTable = handleActions(
   {
     [actions.SOCKET_GET_DATA](currJobs, { payload }) {
       const { jobs } = payload;
-      return Immutable.from({ dataSource: jobs });
+      return Immutable.from({ dataSource: jobs.slice(0, 5) });
     },
   },
   Immutable.from({ dataSource: undefined }),

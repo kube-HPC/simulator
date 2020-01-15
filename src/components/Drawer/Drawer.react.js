@@ -1,7 +1,7 @@
-import React, { useReducer } from 'react';
-import PropTypes from 'prop-types';
 import { Drawer as AntDrawer } from 'antd';
 import { BottomContent } from 'components/common';
+import PropTypes from 'prop-types';
+import React, { useReducer } from 'react';
 import styled from 'styled-components';
 
 const noop = () => {};
@@ -55,7 +55,7 @@ Drawer.propTypes = {
   ...AntDrawer.propTypes,
   opener: PropTypes.func,
   bottomContent: PropTypes.object,
-  width: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };
 
 export default Drawer;

@@ -1,19 +1,16 @@
-// #region  Imports
-import React, { memo, useState, useReducer, useCallback, useMemo } from 'react';
-import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
 import { addPipeline } from 'actions/pipeline.action';
-
-import { FlexBox, JsonView, BottomContent, JsonEditor, Card, Form } from 'components/common';
-import { Steps, Button, Icon } from 'antd';
-import { DRAWER_SIZE } from 'const';
-import schema from 'config/schema/addPipeline.schema';
-import AddPipelineForm from './Form/AddPipelineForm.react';
-import { Display, BottomPosition } from 'styles';
+import { Button, Icon, Steps } from 'antd';
+import { BottomContent, Card, FlexBox, Form, JsonEditor, JsonView } from 'components/common';
 import { addPipelineTemplate } from 'config';
-import { stringify, mapObjValues, tryParse, notification } from 'utils';
+import schema from 'config/schema/addPipeline.schema';
+import { DRAWER_SIZE } from 'const';
 import { mergeWith } from 'lodash';
-// #endregion
+import React, { memo, useCallback, useMemo, useReducer, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
+import { BottomPosition, Display } from 'styles';
+import { mapObjValues, notification, stringify, tryParse } from 'utils';
+import AddPipelineForm from './Form/AddPipelineForm.react';
 
 // #region  Styling
 const StepsBottom = styled.div`
@@ -22,11 +19,17 @@ const StepsBottom = styled.div`
 
 const FlexItemStart = styled(FlexBox.Item)`
   align-self: flex-start;
+  width: 40%;
+  height: 80vh;
 `;
 
 const FlexItemGrow = styled(FlexBox.Item)`
   flex-grow: 1;
   width: min-content;
+`;
+
+const Container = styled(FlexBox)`
+  max-height: 100%;
 `;
 // #endregion
 
@@ -50,9 +53,6 @@ const mergeMapper = (objValue, srcValue) => {
     return srcValue;
   }
 };
-
-const JSON_VIEW_SPAN = 8;
-
 // #endregion
 
 const AddPipeline = () => {
@@ -114,16 +114,16 @@ const AddPipeline = () => {
         </Card>
       </Display>
       <Display isVisible={!isEditorVisible}>
-        <FlexBox>
-          <FlexItemStart span={JSON_VIEW_SPAN}>
+        <Container gutter={15}>
+          <FlexItemStart>
             <Card>
               <JsonView jsonObject={jsonViewObj} collapsed={undefined} />
             </Card>
           </FlexItemStart>
-          <FlexItemGrow as={FlexItemStart} span={24 - JSON_VIEW_SPAN}>
+          <FlexItemGrow as={FlexItemStart}>
             <FormInjected step={step} />
           </FlexItemGrow>
-        </FlexBox>
+        </Container>
 
         <BottomContent.Divider />
         <StepsBottom as={BottomPosition}>

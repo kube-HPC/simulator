@@ -17,7 +17,7 @@ const ProgressStatus = ({ status }) => (
 );
 
 ProgressStatus.propTypes = {
-  status: PropTypes.number.isRequired,
+  status: PropTypes.string.isRequired,
 };
 
 export default ProgressStatus;

@@ -1,5 +1,5 @@
 export default {
-  ADD_PIPELINE: `55vw`,
+  ADD_PIPELINE: `60vw`,
   ADD_ALGORITHM: `40vw`,
   ADD_DEBUG: '20vw',
   RUN_RAW_PIPELINE: `40vw`,
