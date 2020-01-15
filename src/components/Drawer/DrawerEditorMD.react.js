@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { Icon, Button } from 'antd';
+import { Button, Icon } from 'antd';
+import { Card, JsonEditor, MdEditor, Tabs } from 'components/common';
 import { ReactComponent as CodeIcon } from 'images/code-icon.svg';
-import { stringify } from 'utils/string';
-import { Tabs, Card, MdEditor, JsonEditor } from 'components/common';
-import { Drawer } from '.';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { notification } from 'utils';
+import { stringify } from 'utils/string';
+import { Drawer } from '.';
 
-const tabs = { json: 'JSON', description: 'Description' };
+const TABS = { INFO: 'Information', DESC: 'Description' };
 
 const noop = () => {};
 
@@ -23,7 +23,7 @@ function DrawerEditorMD({ record, onSubmit = noop, submitText = 'Submit', ...pro
 
   const [readme, setReadme] = useState('');
   const [value, setValue] = useState(defaultValue);
-  const [activeKey, setActiveKey] = useState(tabs.json);
+  const [activeKey, setActiveKey] = useState(TABS.INFO);
 
   const onClearClick = () => setValue('');
   const onDefaultClick = () => setValue(defaultValue);
@@ -40,7 +40,7 @@ function DrawerEditorMD({ record, onSubmit = noop, submitText = 'Submit', ...pro
   };
 
   const bottomExtra =
-    activeKey === tabs.json
+    activeKey === TABS.INFO
       ? [
         <Button key="clear" type="danger" onClick={onClearClick}>
             Clear
@@ -67,10 +67,10 @@ function DrawerEditorMD({ record, onSubmit = noop, submitText = 'Submit', ...pro
           tab={
             <span>
               <Icon component={CodeIcon} />
-              {tabs.json}
+              {TABS.INFO}
             </span>
           }
-          key={tabs.json}>
+          key={TABS.INFO}>
           <Card>
             <JsonEditor value={value} onChange={setValue} />
           </Card>
@@ -79,10 +79,10 @@ function DrawerEditorMD({ record, onSubmit = noop, submitText = 'Submit', ...pro
           tab={
             <span>
               <Icon type="file-markdown" />
-              {tabs.description}
+              {TABS.DESC}
             </span>
           }
-          key={tabs.description}>
+          key={TABS.DESC}>
           <MdEditor value={readme} onChange={setReadme} />
         </Tabs.TabPane>
       </Tabs>

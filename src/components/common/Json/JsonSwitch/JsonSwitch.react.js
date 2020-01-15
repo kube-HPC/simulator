@@ -1,10 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { JsonTable, JsonView, Tabs } from 'components/common';
 import { Button } from 'antd';
-import { notification, stringify } from 'utils';
+import { JsonTable, JsonView, Tabs } from 'components/common';
+import PropTypes from 'prop-types';
+import React from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled from 'styled-components';
+import { notification, stringify } from 'utils';
 
 const TABS = {
   JSON: 'JSON',

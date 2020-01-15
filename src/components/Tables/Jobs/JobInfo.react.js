@@ -1,13 +1,13 @@
 import { Button, Empty } from 'antd';
 import { Card, JsonSwitch, Tabs } from 'components/common';
-import { useDrawer, useTraceData, useJobs } from 'hooks';
+import { useDrawer, useJobs, useTraceData } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { memo, useState } from 'react';
 import styled from 'styled-components';
 import JobGraph from './JobGraph.react';
 import Trace from './Trace.react';
 
-const TABS = { GRAPH: 'Graph', TRACE: 'Trace', JSON: 'JSON' };
+const TABS = { GRAPH: 'Graph', TRACE: 'Trace', INFO: 'Information' };
 const NoCard = [TABS.GRAPH];
 
 const OverflowContainer = styled(Card)`
@@ -36,7 +36,7 @@ const JobInfo = ({ jobId }) => {
 
   const job = dataSource.find(({ key }) => jobId === key);
 
-  const { key, graph, pipeline, ...rest } = job;
+  const { key, graph, pipeline } = job;
   const [currentTab, setCurrentTab] = useState(TABS.GRAPH);
   const { traceData, fetch } = useTraceData();
   const { isVisible } = useDrawer();
@@ -47,8 +47,6 @@ const JobInfo = ({ jobId }) => {
     </Button>
   );
 
-  const json = { pipeline, ...rest };
-
   const tabs = {
     [TABS.GRAPH]: graph ? (
       isVisible && <FullGraph graph={{ ...graph, jobId: key }} pipeline={pipeline} />
@@ -58,7 +56,7 @@ const JobInfo = ({ jobId }) => {
       </Card>
     ),
     [TABS.TRACE]: <Trace data={traceData} />,
-    [TABS.JSON]: <JsonSwitch obj={json} options={options} />,
+    [TABS.INFO]: <JsonSwitch obj={pipeline} options={options} />,
   };
 
   const onTabClick = tabKey => tabKey === TABS.TRACE && fetch({ jobId: key });

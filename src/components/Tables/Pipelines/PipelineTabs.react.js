@@ -1,16 +1,16 @@
-import React, { useState, useCallback } from 'react';
-import PropTypes from 'prop-types';
-import { Tabs, Card, JsonSwitch, MdEditor } from 'components/common';
 import { Button } from 'antd';
+import { Card, JsonSwitch, MdEditor, Tabs } from 'components/common';
 import { useReadme } from 'hooks';
+import PropTypes from 'prop-types';
+import React, { useCallback, useState } from 'react';
 
 const TABS = {
-  JSON: 'JSON',
+  INFO: 'Information',
   DESCRIPTION: 'Description',
 };
 
 const PipelineTabs = ({ record }) => {
-  const [activeKey, setActiveKey] = useState(TABS.JSON);
+  const [activeKey, setActiveKey] = useState(TABS.INFO);
   const [readme, setReadme] = useState();
 
   const { asyncFetch, post } = useReadme(useReadme.TYPES.PIPELINE);
@@ -40,7 +40,7 @@ const PipelineTabs = ({ record }) => {
         activeKey={activeKey}
         onChange={setActiveKey}
         extra={activeKey === TABS.DESCRIPTION && <Button onClick={onApply}>Apply Markdown</Button>}>
-        <Tabs.TabPane tab={TABS.JSON} key={TABS.JSON}>
+        <Tabs.TabPane tab={TABS.INFO} key={TABS.INFO}>
           <JsonSwitch obj={record} />
         </Tabs.TabPane>
         <Tabs.TabPane tab={TABS.DESCRIPTION} key={TABS.DESCRIPTION}>

@@ -10,7 +10,7 @@ import getBuildsTableColumns from '../../getBuildsTableColumns.react';
 
 const IDs = {
   LOGS: 'Logs',
-  JSON: 'JSON',
+  INFO: 'Information',
 };
 
 const CardOverflow = styled(Card)`
@@ -40,7 +40,7 @@ const AlgorithmBuildsTable = ({ builds }) => {
                 )}
               </CardOverflow>
             </Tabs.TabPane>
-            <Tabs.TabPane tab={IDs.JSON} key={IDs.JSON}>
+            <Tabs.TabPane tab={IDs.INFO} key={IDs.INFO}>
               <Card>
                 <JsonView jsonObject={record} collapsed="1" />
               </Card>
