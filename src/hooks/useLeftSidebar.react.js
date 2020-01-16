@@ -2,7 +2,6 @@ import {
   AlgorithmsTable,
   DebugTable,
   DriversTable,
-  JobsTable,
   PipelinesTable,
   WorkersTable,
 } from 'components/Tables';
@@ -13,7 +12,6 @@ import { createStore } from 'reusable';
 import { getBooleanLSItem } from 'utils';
 
 const tableSelector = {
-  [LEFT_SIDEBAR_NAMES.JOBS]: <JobsTable />,
   [LEFT_SIDEBAR_NAMES.PIPELINES]: <PipelinesTable />,
   [LEFT_SIDEBAR_NAMES.ALGORITHMS]: <AlgorithmsTable />,
   [LEFT_SIDEBAR_NAMES.WORKERS]: <WorkersTable />,

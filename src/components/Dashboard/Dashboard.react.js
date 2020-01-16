@@ -1,7 +1,8 @@
 import { Layout, message } from 'antd';
 import { LoadingScreen, SidebarLeft, SidebarRight, UserGuide } from 'components';
 import GridView from 'components/GridView/GridView.react';
-import { USER_GUIDE, LOCAL_STORAGE_KEYS } from 'const';
+import { JobsTable } from 'components/Tables';
+import { LEFT_SIDEBAR_NAMES, LOCAL_STORAGE_KEYS, USER_GUIDE } from 'const';
 import {
   useActions,
   useConnectionStatus,
@@ -83,7 +84,12 @@ const Dashboard = () => {
                         <GridView />
                       </Display>
                     )}
-                    <Display isVisible={isTableView}>{selector[tableValue]}</Display>
+                    <Display isVisible={tableValue === LEFT_SIDEBAR_NAMES.JOBS && isTableView}>
+                      <JobsTable />
+                    </Display>
+                    <Display isVisible={isTableView && tableValue !== LEFT_SIDEBAR_NAMES.JOBS}>
+                      {selector[tableValue]}
+                    </Display>
                   </ContentMargin>
                   <RightContainer>
                     <SidebarRight className={USER_GUIDE.SIDEBAR_TOP_RIGHT} isTop />
