@@ -1,12 +1,19 @@
-import { COLOR_PIPELINE_STATUS, COLOR } from 'styles/colors';
+import { COLOR, COLOR_PIPELINE_STATUS } from 'styles/colors';
 
-const defaultOptions = {
+// https://visjs.github.io/vis-network/docs/network/
+
+export const directionTypes = {
+  'Left Right': 'LR',
+  'Up Down': 'UD',
+};
+
+const setOptions = ({ direction }) => ({
   height: `400px`,
   physics: false,
   layout: {
     hierarchical: {
       enabled: true,
-      direction: 'LR',
+      direction,
       sortMethod: 'directed',
       nodeSpacing: 200,
     },
@@ -91,10 +98,10 @@ const defaultOptions = {
       color: { border: 'white' },
     },
   },
-};
+});
 
-const cardOptions = {
-  ...defaultOptions,
+const setCardOptions = ({ direction }) => ({
+  ...setOptions({ direction }),
   height: `200px`,
   autoResize: false,
   configure: {
@@ -113,6 +120,6 @@ const cardOptions = {
     enabled: false,
   },
   clickToUse: true,
-};
+});
 
-export { cardOptions, defaultOptions };
+export { setCardOptions, setOptions };

@@ -1,9 +1,9 @@
 import { Empty } from 'antd';
-import { Card, Fallback, FlexBox } from 'components/common';
-import { defaultOptions } from 'config/template/graph-options.template';
-import { useNodeInfo } from 'hooks';
+import { Card, Fallback, FallbackComponent, FlexBox } from 'components/common';
+import { setOptions as defaultSetOptions } from 'config/template/graph-options.template';
+import { useNodeInfo, useSettings } from 'hooks';
 import PropTypes from 'prop-types';
-import React, { lazy } from 'react';
+import React, { lazy, useEffect, useReducer } from 'react';
 import styled from 'styled-components';
 import { formatEdge, formatNode } from 'utils';
 import { NodeInfo } from '.';
@@ -24,7 +24,13 @@ const EmptyHeight = styled(Empty)`
   height: 136px;
 `;
 
-const JobGraph = ({ graph, pipeline, options = defaultOptions, isMinified = false, className }) => {
+const JobGraph = ({
+  graph,
+  pipeline,
+  setOptions = defaultSetOptions,
+  isMinified = false,
+  className,
+}) => {
   // On every render define new Graph!
   // Causes 'id already exists' on trying update the nodes.
   const adaptedGraph = {
@@ -39,15 +45,29 @@ const JobGraph = ({ graph, pipeline, options = defaultOptions, isMinified = fals
   const isValidGraph = adaptedGraph.nodes.length !== 0;
 
   const { node, events } = useNodeInfo({ graph, pipeline });
+  const { graphDirection: direction } = useSettings();
+
+  const [showGraph, toggleForceUpdate] = useReducer(p => !p, true);
+
+  useEffect(() => {
+    toggleForceUpdate();
+    setTimeout(() => {
+      toggleForceUpdate();
+    }, 500);
+  }, [direction]);
 
   return (
     <FlexBox direction="column" className={className}>
       <FlexBox.Item full>
         <GraphContainer isMinified={isMinified}>
           {isValidGraph ? (
-            <Fallback>
-              <Graph graph={adaptedGraph} options={options} events={events} />
-            </Fallback>
+            showGraph ? (
+              <Fallback>
+                <Graph graph={adaptedGraph} options={setOptions({ direction })} events={events} />
+              </Fallback>
+            ) : (
+              <FallbackComponent />
+            )
           ) : (
             <EmptyHeight image={Empty.PRESENTED_IMAGE_SIMPLE} />
           )}
@@ -67,7 +87,7 @@ const JobGraph = ({ graph, pipeline, options = defaultOptions, isMinified = fals
 JobGraph.propTypes = {
   graph: PropTypes.object.isRequired,
   pipeline: PropTypes.object,
-  options: PropTypes.object,
+  setOptions: PropTypes.func,
   isMinified: PropTypes.bool,
   className: PropTypes.string,
 };

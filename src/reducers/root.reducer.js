@@ -9,6 +9,7 @@ import { filterByType } from 'reducers/filter.reducer';
 import { jobsKubernetesLogs, jobsTable } from 'reducers/jobs.reducer';
 import { nodeStatistics } from 'reducers/nodeStatistics.reducer';
 import { pipelineTable } from 'reducers/pipeline.reducer';
+import { settings } from 'reducers/settings.reducer';
 import { userGuide } from 'reducers/userGuide.reducer';
 import { viewType } from 'reducers/viewType.reducer';
 import { workerTable } from 'reducers/worker.reducer';
@@ -32,6 +33,7 @@ const store = {
   userGuide,
   viewType,
   workerTable,
+  settings,
 };
 
 export default combineReducers(store);

@@ -16,6 +16,7 @@ import {
   stopPipeline,
   updateStored,
 } from 'actions/pipeline.action';
+import { setSettings } from 'actions/settings.action';
 import { changeStep, triggerUserGuide } from 'actions/userGuide.action';
 import { firstLoad, toggle as toggleViewType } from 'actions/viewType.action';
 
@@ -45,6 +46,7 @@ const actions = {
   toggleViewType,
   triggerUserGuide,
   updateStored,
+  setSettings,
 };
 
 export default actions;
