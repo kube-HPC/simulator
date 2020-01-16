@@ -6,6 +6,7 @@ import { COLOR_LAYOUT } from 'styles/colors';
 
 const DarkHoverStyle = styled(Icon)`
   color: ${COLOR_LAYOUT.darkBorder};
+  transition: all 0.5s;
   :hover {
     color: black;
   }

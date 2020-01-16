@@ -1,45 +1,76 @@
-import React from 'react';
+import { Button, Empty } from 'antd';
+import { FlexBox, JsonSwitch, Tabs } from 'components/common';
+import { STATE_SOURCES } from 'const';
+import { useActions, useLogs } from 'hooks';
 import PropTypes from 'prop-types';
-
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Tabs, JsonSwitch } from 'components/common';
-import { NodeLogs, NodeInputOutput } from '.';
+import styled from 'styled-components';
+import { NodeInputOutput, NodeLogs } from '.';
 
 const DEFAULT_ALGORITHM = {};
 
-const isSameLength = (a, b) => a.length === b.length;
+const OverflowContainer = styled.div`
+  height: 100%;
+  overflow: auto;
+`;
 
-const NodeInfo = ({ payload }) => {
-  const dataSource = useSelector(state =>
-    state.jobsKubernetesLogs.dataSource.map((value, key) => ({ key, ...value }), isSameLength),
+const getTaskDetails = node =>
+  node && node.batch && node.batch.length > 0
+    ? node.batch
+    : [{ taskId: node.taskId, podName: node.podName }];
+
+const algorithmDetailsSelector = node => state =>
+  state[STATE_SOURCES.ALGORITHM_TABLE].dataSource.find(a => a.name === node.algorithmName) ||
+  DEFAULT_ALGORITHM;
+
+const NodeInfo = ({ node, jobId }) => {
+  const algorithmDetails = useSelector(algorithmDetailsSelector(node));
+  const [index, setIndex] = useState(0);
+  const { getCaching } = useActions();
+  const { getLogs } = useLogs();
+  const taskDetails = getTaskDetails(node);
+
+  const onRunNode = () => node && getCaching({ jobId, nodeName: node.nodeName });
+
+  const onRefresh = () => {
+    const { taskId, podName } = taskDetails[index];
+    getLogs({ taskId, podName });
+  };
+
+  const extra = (
+    <FlexBox.Auto>
+      <Button key="run-node" type="primary" onClick={onRunNode}>
+        Run Node
+      </Button>
+      <Button key="refresh" icon="redo" onClick={onRefresh}>
+        Refresh Logs
+      </Button>
+    </FlexBox.Auto>
   );
 
-  const algorithmTable = useSelector(state => state.algorithmTable.dataSource);
-  const algorithmDetails =
-    algorithmTable.find(a => a.name === payload.algorithmName) || DEFAULT_ALGORITHM;
-
-  const taskDetails =
-    payload && payload.batch && payload.batch.length > 0
-      ? payload.batch
-      : [{ taskId: payload.taskId, podName: payload.podName }];
-
-  return (
-    <Tabs defaultActiveKey="1">
+  return node ? (
+    <Tabs defaultActiveKey="1" extra={extra}>
       <Tabs.TabPane tab="Logs" key="1">
-        <NodeLogs dataSource={dataSource} taskDetails={taskDetails} />
+        <NodeLogs taskDetails={taskDetails} onChange={setIndex} />
       </Tabs.TabPane>
       <Tabs.TabPane tab="Algorithm Details" key="2">
-        <JsonSwitch obj={algorithmDetails} />
+        <OverflowContainer>
+          <JsonSwitch obj={algorithmDetails} />
+        </OverflowContainer>
       </Tabs.TabPane>
       <Tabs.TabPane tab="Input Output Details" key="3">
-        <NodeInputOutput payload={payload} />
+        <NodeInputOutput payload={node} />
       </Tabs.TabPane>
     </Tabs>
+  ) : (
+    <Empty />
   );
 };
 
 NodeInfo.propTypes = {
-  payload: PropTypes.object,
+  jobId: PropTypes.string.isRequired,
+  node: PropTypes.object,
 };
 
 export default React.memo(NodeInfo);

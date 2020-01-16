@@ -15,23 +15,28 @@ const DEFAULT_LENGTH = 20;
 const onCopy = () =>
   notification({ message: 'Copied to clipboard', type: notification.TYPES.SUCCESS });
 
-const Ellipsis = ({ text, length, copyable, type, ellipsis, ...props }) => {
-  const textLength = length || DEFAULT_LENGTH;
-  const str = text ? text : '';
-  const isOverlapped = str.length >= textLength;
+const Ellipsis = ({
+  text = '',
+  length = DEFAULT_LENGTH,
+  copyable,
+  type,
+  ellipsis = true,
+  ...props
+}) => {
+  const isOverlapped = text.length >= length;
 
   const textComponent = (
     <Center>
-      <Tooltip title={isOverlapped && ellipsis && str}>
+      <Tooltip title={isOverlapped && ellipsis && text}>
         <Text ellipsis type={type ? type : copyable && 'secondary'} {...props}>
-          {isOverlapped && ellipsis ? `${str.substring(0, textLength)}...` : str}
+          {isOverlapped && ellipsis ? `${text.substring(0, length)}...` : text}
         </Text>
       </Tooltip>
     </Center>
   );
 
   const copyableComponent = copyable ? (
-    <CopyToClipboard text={str} onCopy={onCopy}>
+    <CopyToClipboard text={text} onCopy={onCopy}>
       {textComponent}
     </CopyToClipboard>
   ) : (
@@ -44,5 +49,5 @@ const Ellipsis = ({ text, length, copyable, type, ellipsis, ...props }) => {
 export default Ellipsis;
 
 Ellipsis.defaultProps = {
-  ellipsis: true
+  ellipsis: true,
 };

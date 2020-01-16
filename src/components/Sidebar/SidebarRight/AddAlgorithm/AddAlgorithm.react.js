@@ -1,18 +1,14 @@
-import React, { useState, useCallback, memo } from 'react';
-import { useDispatch } from 'react-redux';
-import PropTypes from 'prop-types';
-
 import { Button } from 'antd';
-
-import { DRAWER_SIZE } from 'const';
 import { BottomContent, Card, JsonEditor } from 'components/common';
-import { stringify } from 'utils';
-import { applyAlgorithm } from 'actions';
-
 import { addAlgorithmTemplate } from 'config';
-import AddAlgorithmForm from './AddAlgorithmForm.react';
-import tryParse from 'utils/handleParsing';
+import { DRAWER_SIZE } from 'const';
+import { useActions } from 'hooks';
+import PropTypes from 'prop-types';
+import React, { memo, useState } from 'react';
 import { Display } from 'styles';
+import { stringify } from 'utils';
+import tryParse from 'utils/handleParsing';
+import AddAlgorithmForm from './AddAlgorithmForm.react';
 
 const DEFAULT_EDITOR_VALUE = stringify(addAlgorithmTemplate);
 const noop = () => {};
@@ -24,17 +20,18 @@ const AddAlgorithm = ({ onSubmit = noop }) => {
 
   const toggleEditor = () => setEditorIsVisible(prev => !prev);
 
-  const onClear = () => setEditorValue('');
+  const onClear = () => setEditorValue(``);
   const onDefault = () => setEditorValue(DEFAULT_EDITOR_VALUE);
+
+  const { applyAlgorithm } = useActions();
   // #endregion
 
   // #region Handle submit
-  const dispatch = useDispatch();
-  const apply = useCallback(payload => dispatch(applyAlgorithm(payload)), [dispatch]);
+  const apply = payload => applyAlgorithm(payload);
 
   const onSuccess = ({ src }) => {
     const formData = new FormData();
-    formData.append('payload', src);
+    formData.append(`payload`, src);
     onSubmit({ payload: src });
     apply(formData);
   };

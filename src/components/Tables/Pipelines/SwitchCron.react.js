@@ -1,37 +1,44 @@
-import React, { useState } from 'react';
+import { Icon, Input, Popover, Switch, Typography } from 'antd';
+import { FlexBox } from 'components/common';
 import cronParser from 'cron-parser';
 import cronstrue from 'cronstrue';
-
-import { Row, Col, Icon, Switch, Input, Popover, message, Typography } from 'antd';
+import { useActions } from 'hooks';
+import PropTypes from 'prop-types';
+import React, { useReducer } from 'react';
+import { notification } from 'utils';
 
 const { Text } = Typography;
 
 const DEFAULT_CRON_EXPR = '0 * * * *';
 const ERROR_CRON_EXPR = 'Invalid Cron Expression, fix it and press apply';
+const inputWidth = { width: 160 };
 
-export default function SwitchCron(props) {
-  const { pipeline, cronStart, cronStop, updateStoredPipeline } = props;
+const isCron = pipeline =>
+  pipeline.triggers && pipeline.triggers.cron && pipeline.triggers.cron.enabled;
+const isPattern = pipeline =>
+  pipeline.triggers && pipeline.triggers.cron && !!pipeline.triggers.cron.pattern;
 
-  const cronIsEnabled =
-    pipeline.triggers && pipeline.triggers.cron && pipeline.triggers.cron.enabled;
+const enterButton = <Icon type="check" />;
 
-  const patternIsPresent =
-    pipeline.triggers && pipeline.triggers.cron && !!pipeline.triggers.cron.pattern;
+const SwitchCron = ({ pipeline, update }) => {
+  const { cronStart, cronStop } = useActions();
 
-  const [loading, setLoading] = useState(false);
-  const toggleLoading = () => setLoading(prev => !prev);
+  const cronIsEnabled = isCron(pipeline);
+  const patternIsPresent = isPattern(pipeline);
 
-  let cronExpr = patternIsPresent ? pipeline.triggers.cron.pattern : DEFAULT_CRON_EXPR;
+  const [loading, toggleLoading] = useReducer(p => !p, false);
+
+  const cronExpr = patternIsPresent ? pipeline.triggers.cron.pattern : DEFAULT_CRON_EXPR;
 
   let renderTooltip = ERROR_CRON_EXPR;
   try {
     const interval = cronParser.parseExpression(cronExpr);
 
-    // ! cronstrue.toString throws error on invalid cronExpr
+    // cronstrue.toString throws error on invalid cronExpr
     renderTooltip = (
       <Text>
         {cronstrue.toString(cronExpr, {
-          use24HourTimeFormat: true
+          use24HourTimeFormat: true,
         })}
         , Next Interval:<Text code>{interval.next().toString()}</Text>
       </Text>
@@ -41,50 +48,52 @@ export default function SwitchCron(props) {
     // On error `renderToolTip` got default value.
   }
 
+  const { name } = pipeline;
+
+  const onChange = () => {
+    toggleLoading();
+    cronIsEnabled ? cronStop(name, cronExpr) : cronStart(name, cronExpr);
+    setTimeout(() => {
+      toggleLoading();
+    }, 2000);
+  };
+
+  const onSearch = pattern => {
+    try {
+      cronstrue.toString(pattern);
+      update({
+        ...pipeline,
+        triggers: {
+          ...pipeline.triggers,
+          cron: { ...pipeline.triggers.cron, pattern },
+        },
+      });
+    } catch (errorMessage) {
+      notification({ message: ERROR_CRON_EXPR, description: errorMessage });
+    }
+  };
+
   return (
-    <Row type="flex" justify="start" gutter={10}>
-      <Col>
-        <Switch
+    <FlexBox.Auto justify="start">
+      <Switch size="small" checked={cronIsEnabled} loading={loading} onChange={onChange} />
+      <Popover content={renderTooltip} trigger="focus">
+        <Input.Search
+          style={inputWidth}
           size="small"
-          checked={cronIsEnabled}
-          loading={loading}
-          onChange={() => {
-            toggleLoading();
-            cronIsEnabled ? cronStop(pipeline.name, cronExpr) : cronStart(pipeline.name, cronExpr);
-            setTimeout(() => {
-              toggleLoading();
-            }, 2000);
-          }}
+          disabled={!cronIsEnabled}
+          placeholder="Cron Expression"
+          enterButton={enterButton}
+          defaultValue={cronExpr}
+          onSearch={onSearch}
         />
-      </Col>
-      <Col>
-        <Popover content={renderTooltip} trigger="focus">
-          <Input.Search
-            style={{ width: 160 }}
-            size="small"
-            disabled={!cronIsEnabled}
-            placeholder="Cron Expression"
-            enterButton={<Icon type="check" />}
-            defaultValue={cronExpr}
-            onSearch={pattern => {
-              try {
-                cronstrue.toString(pattern);
-                updateStoredPipeline({
-                  ...pipeline,
-                  triggers: {
-                    ...pipeline.triggers,
-                    cron: { ...pipeline.triggers.cron, pattern }
-                  }
-                });
-              } catch (errorMessage) {
-                message.error(
-                  `Cron Expression: ${ERROR_CRON_EXPR}, of ${pipeline.name} is Invalid`
-                );
-              }
-            }}
-          />
-        </Popover>
-      </Col>
-    </Row>
+      </Popover>
+    </FlexBox.Auto>
   );
-}
+};
+
+SwitchCron.propTypes = {
+  pipeline: PropTypes.object.isRequired,
+  update: PropTypes.func.isRequired,
+};
+
+export default SwitchCron;

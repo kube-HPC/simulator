@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import { useState, useEffect, useRef } from 'react';
-import { setLSItem, getLSItem } from 'utils/localStorage';
+import { setLsItem, getLsItem } from 'utils/localStorage';
 import LOCAL_STORAGE_KEYS from 'const/local-storage';
 import { STATE_SOURCES } from 'const';
 
@@ -12,7 +12,7 @@ const countAboveMax = (dataSource, lastMax) =>
 const getMaxTimestamp = dataSource =>
   getTimestamps(dataSource).reduce((max, curr) => (curr > max ? curr : max), 0);
 
-const lastTimestampInitial = Number(getLSItem(LOCAL_STORAGE_KEYS.LAST_WARNING_TIMESTAMP) || 0);
+const lastTimestampInitial = Number(getLsItem(LOCAL_STORAGE_KEYS.LAST_WARNING_TIMESTAMP) || 0);
 
 export default function useErrorLogs() {
   const dataSource = useSelector(state => state[STATE_SOURCES.ERROR_LOGS_TABLE].dataSource);
@@ -29,7 +29,7 @@ export default function useErrorLogs() {
     const maxTimestamp = getMaxTimestamp(dataSource);
     if (isCleared) {
       lastTimeStamp.current = maxTimestamp;
-      setLSItem(LOCAL_STORAGE_KEYS.LAST_WARNING_TIMESTAMP, lastTimeStamp.current);
+      setLsItem(LOCAL_STORAGE_KEYS.LAST_WARNING_TIMESTAMP, lastTimeStamp.current);
       setIsCleared(false);
     }
   }, [dataSource, isCleared]);

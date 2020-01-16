@@ -1,18 +1,17 @@
 import React, { useState, memo } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
 import { Input, Select, InputNumber, Button, Radio } from 'antd';
 
 import { DRAWER_SIZE } from 'const';
 import { BottomContent, Form } from 'components/common';
 import { toUpperCaseFirstLetter, mapObjValues, notification } from 'utils';
-import { applyAlgorithm } from 'actions';
 import MemoryField from './MemoryField.react';
 
 // Direct import for auto-complete
 import schema from 'config/schema/addAlgorithm.schema';
 import formTemplate from 'config/template/addAlgorithmForm.template';
 import { CodeBuild, ImageBuild, GitBuild } from './BuildTypes';
+import { useActions } from 'hooks';
 
 // #region  Helpers
 const { MAIN, BUILD_TYPES } = schema;
@@ -32,7 +31,7 @@ const insertAlgorithmOptions = options =>
   ));
 
 const toReadableBuildType = buildType =>
-  toUpperCaseFirstLetter(buildType === BUILD_TYPES.GIT.field ? 'GIT' : buildType);
+  toUpperCaseFirstLetter(buildType === BUILD_TYPES.GIT.field ? `GIT` : buildType);
 
 const insertRadioButtons = buildTypes =>
   Object.keys(buildTypes).map(key => (
@@ -42,7 +41,7 @@ const insertRadioButtons = buildTypes =>
   ));
 
 const isEmpty = v =>
-  v === undefined || v === '' || v === null || (typeof v === 'object' && !Object.entries(v).length);
+  v === undefined || v === `` || v === null || (typeof v === `object` && !Object.entries(v).length);
 const isNotEmpty = ({ value }) => !isEmpty(value);
 
 const getBuildTypes = ({ buildType, ...props }) => {
@@ -66,15 +65,16 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
   const { getFieldDecorator, validateFields } = form;
 
   // #region  Submit Handle
-  const dispatch = useDispatch();
   const buildTypes = getBuildTypes({ buildType, getFieldDecorator, fileList, setFileList });
+
+  const { applyAlgorithm } = useActions();
 
   const onFormSubmit = e => {
     e.preventDefault();
 
     validateFields((err, formObject) => {
       if (err || (buildType === BUILD_TYPES.CODE.field && !fileList.length)) {
-        notification({ message: 'Error', description: err || 'Please provide a file!' });
+        notification({ message: `Error`, description: err || `Please provide a file!` });
         return;
       }
 
@@ -105,13 +105,13 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
       const formData = new FormData();
       const [file] = fileList;
       if (buildType === BUILD_TYPES.CODE.field) {
-        formData.append('file', file);
+        formData.append(`file`, file);
       }
 
       const payloadFiltered = mapObjValues({ obj: payload, predicate: isNotEmpty });
-      formData.append('payload', JSON.stringify(payloadFiltered));
+      formData.append(`payload`, JSON.stringify(payloadFiltered));
 
-      dispatch(applyAlgorithm(formData));
+      applyAlgorithm(formData);
 
       onSubmit({ formData, payload: payloadFiltered });
     });

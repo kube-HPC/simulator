@@ -13,6 +13,7 @@ const notification = ({ message = msg, description, type = TYPES.ERROR }) =>
   notificationAntd[type]({
     message,
     description,
+    style: { zIndex: 10000 },
   });
 
 notification.TYPES = TYPES;

@@ -6,4 +6,5 @@ export default {
   CPU: '60vw',
   MEMORY: '60vw',
   ERROR_LOGS: '70vw',
+  JOB_INFO: '70vw',
 };

@@ -28,9 +28,10 @@ const NodeInputOutput = ({ payload }) => {
     input: task.input,
     output: task.output && task.output.storageInfo,
     error: task.error,
-    prevErrors: task.prevErrors,
+    warnings: task.warnings,
     status: task.status,
     podName: task.podName,
+    taskId: task.taskId,
     retries: task.retries || 0,
     startTime: task.startTime,
     endTime: task.endTime,
@@ -42,9 +43,7 @@ const NodeInputOutput = ({ payload }) => {
         ...mapTask(b),
         origInput: payload.origInput,
       }))
-      : [
-        mapTask(payload),
-      ];
+      : [mapTask(payload)];
 
   return (
     <Table

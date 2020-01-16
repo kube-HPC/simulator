@@ -1,17 +1,17 @@
-import React, { useCallback } from 'react';
-import PropTypes from 'prop-types';
-import { Input, AutoComplete as AntAutoComplete } from 'antd';
-import { useSelector, useDispatch } from 'react-redux';
-import styled from 'styled-components';
-import isEqual from 'lodash/isEqual';
 import { autoCompleteFilter } from 'actions/autoComplete.action';
+import { AutoComplete as AntAutoComplete, Input } from 'antd';
+import isEqual from 'lodash/isEqual';
+import PropTypes from 'prop-types';
+import React, { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components';
 import getDataByTable from './getDataByTable';
 
 const AutoCompleteLong = styled(AntAutoComplete)`
-  width: 600px;
+  width: 500px;
 `;
 
-function AutoComplete({ table, ...props }) {
+const AutoComplete = ({ table, ...props }) => {
   const tableData = useSelector(getDataByTable(table), isEqual);
   const dispatch = useDispatch();
   const filterData = useCallback(e => dispatch(autoCompleteFilter(e)), [dispatch]);
@@ -23,16 +23,15 @@ function AutoComplete({ table, ...props }) {
       onSearch={filterData}
       onSelect={filterData}
       placeholder="Search in current table 🎉"
-      dropdownMatchSelectWidth={true}
-    >
+      dropdownMatchSelectWidth={true}>
       <Input.Search allowClear />
     </AutoCompleteLong>
   );
-}
+};
 
 AutoComplete.propTypes = {
   table: PropTypes.string.isRequired,
-  ...AntAutoComplete.propTypes
+  ...AntAutoComplete.propTypes,
 };
 
 const areEqualByTableName = (prevProps, nextProps) => prevProps.table === nextProps.table;

@@ -1,21 +1,18 @@
-import React from 'react';
+import { Tag, Tooltip } from 'antd';
 import PropsTypes from 'prop-types';
-
-import { Tooltip, Tag } from 'antd';
-import { toUpperCaseFirstLetter } from 'utils/string';
+import React from 'react';
 import { COLOR_PIPELINE_STATUS } from 'styles/colors';
+import { toUpperCaseFirstLetter } from 'utils/string';
 
-function StatusTag({ status, count }) {
-  return (
-    <Tooltip placement="top" title={status && toUpperCaseFirstLetter(status)}>
-      <Tag color={COLOR_PIPELINE_STATUS[status]}>{count || 0}</Tag>
-    </Tooltip>
-  );
-}
+const StatusTag = ({ status, count }) => (
+  <Tooltip placement="top" title={status && toUpperCaseFirstLetter(status)}>
+    <Tag color={COLOR_PIPELINE_STATUS[status]}>{count || `No Stats`}</Tag>
+  </Tooltip>
+);
 
-StatusTag.propsTypes = {
+StatusTag.propTypes = {
   status: PropsTypes.string.isRequired,
-  count: PropsTypes.number.isRequired
+  count: PropsTypes.number.isRequired,
 };
 
 export default StatusTag;

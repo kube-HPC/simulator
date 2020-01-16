@@ -7,7 +7,7 @@ export const algorithmTable = handleActions(
     [actions.SOCKET_GET_DATA](currState, { payload }) {
       const algorithms = payload.algorithms;
       const isValidPayload = Array.isArray(algorithms);
-      return isValidPayload ? Immutable.set(currState, 'dataSource', algorithms) : currState;
+      return isValidPayload ? Immutable.set(currState, `dataSource`, algorithms) : currState;
     },
   },
   Immutable.from({ dataSource: [] }),
@@ -16,7 +16,7 @@ export const algorithmTable = handleActions(
 export const algorithmBuildsTable = handleActions(
   {
     [actions.SOCKET_GET_DATA](state, { payload }) {
-      return Immutable.set(state, 'dataSource', payload.algorithmBuilds);
+      return Immutable.set(state, `dataSource`, payload.algorithmBuilds);
     },
   },
   Immutable.from({ dataSource: [], showModal: false }),
