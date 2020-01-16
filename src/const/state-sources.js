@@ -1,4 +1,4 @@
-// Depends on actions/index.js
+// Depends on reducers/root.reducer.js
 
 export default {
   ALGORITHM_BUILDS_TABLE: `algorithmBuildsTable`,
@@ -19,4 +19,5 @@ export default {
   DRAWER: `drawer`,
   VIEW_TYPE: `viewType`,
   FILTER_TYPES: `filterByType`,
+  SETTINGS: `settings`,
 };

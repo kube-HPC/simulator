@@ -4,4 +4,5 @@ export default {
   LAST_WARNING_TIMESTAMP: `lastWarningTimeStamp`,
   IS_TABLE_VIEW: `isTableView`,
   FILTER_TYPES: `filterTypes`,
+  SETTINGS: `settings`,
 };

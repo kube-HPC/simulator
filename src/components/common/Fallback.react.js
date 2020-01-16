@@ -1,5 +1,5 @@
-import React, { Suspense } from 'react';
 import { Result, Spin } from 'antd';
+import React, { Suspense } from 'react';
 import styled from 'styled-components';
 
 const CenterImage = styled.div`
@@ -10,7 +10,7 @@ const CenterImage = styled.div`
   height: 50%;
 `;
 
-const FallbackComponent = () => (
+export const FallbackComponent = () => (
   <CenterImage>
     <Spin size="large" />
   </CenterImage>

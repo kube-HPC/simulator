@@ -6,7 +6,7 @@ import { useActions, useConnectionStatus, useLeftSidebar } from 'hooks';
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { COLOR_LAYOUT, Display } from 'styles';
-import TypesSelect from './TypesSelect/TypesSelect.react';
+import Settings from './Settings/Settings.react';
 import ViewType from './ViewType/ViewType.react';
 
 const Container = styled.div`
@@ -89,7 +89,7 @@ const Header = () => {
               </Tooltip>
             </Tag>
           )}
-          <Popover content={<TypesSelect />} placement="bottomRight">
+          <Popover content={<Settings />} placement="bottomRight">
             <Icons.Hover type="tool" />
           </Popover>
           <Icons.Hover type="global" onClick={openWebsite} />

@@ -16,6 +16,22 @@ export const getKubernetesLogsData = ({ podName, taskId }) => ({
   },
 });
 
+// export const setLogSource = ({ source }) => ({
+//   type: actions.REST_REQ,
+//   payload: {
+//     url: `logs/set?source=${source}`,
+//     actionType: actions,
+//   },
+// });
+
+// export const getLogSource = () => ({
+//   type: actions.REST_REQ,
+//   payload: {
+//     url: `logs/set`,
+//     actionType: actions,
+//   },
+// });
+
 export const getCaching = ({ jobId, nodeName }) => ({
   type: actions.REST_REQ_POST,
   payload: {

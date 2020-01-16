@@ -1,5 +1,5 @@
 import { Card, Ellipsis, FlexBox, ProgressStatus } from 'components/common';
-import { cardOptions } from 'config/template/graph-options.template';
+import { setCardOptions } from 'config/template/graph-options.template';
 import { useJobs } from 'hooks';
 import React, { memo } from 'react';
 import styled from 'styled-components';
@@ -72,7 +72,7 @@ const toGrid = dataSource =>
       <GridItem key={key} style={gridStyle}>
         <FlexContainer justify="center" direction="column">
           <Meta title={title} description={description} />
-          <JobGraph graph={{ ...graph, jobId: key }} options={cardOptions} isMinified />
+          <JobGraph graph={{ ...graph, jobId: key }} setOptions={setCardOptions} isMinified />
           <ActionsHidden job={job} />
         </FlexContainer>
       </GridItem>

@@ -17,3 +17,4 @@ export { default as useStore } from 'hooks/useStore';
 export { default as useTraceData } from 'hooks/useTraceData';
 export { default as useVersions } from 'hooks/useVersions';
 export { default as useViewType } from 'hooks/useViewType';
+export { default as useSettings } from 'hooks/useSettings';
