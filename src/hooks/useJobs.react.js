@@ -3,15 +3,16 @@ import { LEFT_SIDEBAR_NAMES, STATE_SOURCES } from 'const';
 import isEqual from 'lodash/isEqual';
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createStore } from 'reusable';
-import { dataSelector, tableSelector } from 'utils/tableSelector';
-import { selector } from 'utils';
 import { createSelector } from 'reselect';
+import { createStore } from 'reusable';
+import { selector } from 'utils';
+import { dataSelector, tableSelector } from 'utils/tableSelector';
 
 const { JOBS_TABLE, FILTER_TYPES } = STATE_SOURCES;
 
 const { predicate } = tableSelector[LEFT_SIDEBAR_NAMES.JOBS];
-const byTypes = filters => ({ pipeline: { types } }) => types.find(type => filters.includes(type));
+const byTypes = filters => ({ pipeline: { types } }) =>
+  filters.length === 0 ? true : filters.every(tag => types.includes(tag));
 
 const jobsSelector = createSelector(
   dataSelector(JOBS_TABLE),

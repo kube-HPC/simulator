@@ -1,11 +1,11 @@
-import { createSelector } from 'reselect';
 import { LEFT_SIDEBAR_NAMES, STATE_SOURCES } from 'const';
+import { createSelector } from 'reselect';
 
 export const tableSelector = {
   [LEFT_SIDEBAR_NAMES.JOBS]: {
     sourceName: STATE_SOURCES.JOBS_TABLE,
     mapFunc: job => job.key,
-    predicate: filter => row => row.key.includes(filter),
+    predicate: filter => job => job.key.includes(filter),
   },
   [LEFT_SIDEBAR_NAMES.PIPELINES]: {
     sourceName: STATE_SOURCES.PIPELINE_TABLE,
