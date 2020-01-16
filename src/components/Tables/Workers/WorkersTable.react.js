@@ -1,22 +1,20 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
-
-import defaultWorkerData from 'config/template/worker.template';
+import { Table } from 'components';
+import { Card, JsonSwitch, Tabs } from 'components/common';
 import {
   getWorkersColumns,
-  workersTableStats
+  workersTableStats,
 } from 'components/Tables/Workers/getWorkersColumns.react';
-
-import { Tabs, Card, JsonView } from 'components/common';
+import defaultWorkerData from 'config/template/worker.template';
 import { LEFT_SIDEBAR_NAMES } from 'const';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { tableFilterSelector } from 'utils/tableSelector';
-import { Table } from 'components';
 
 const generateTab = (key, value) => (
   <Tabs.TabPane tab={key} key={key}>
     <Card>
-      <JsonView jsonObject={value} />
+      <JsonSwitch obj={value} />
     </Card>
   </Tabs.TabPane>
 );
@@ -33,7 +31,7 @@ const expandedRowRender = (columns, dataSource) => record => {
         dataSource={filteredDataSource}
         expandedRowRender={record => (
           <Card isMargin>
-            <Tabs>{generateTab('JSON', record)}</Tabs>
+            <Tabs>{generateTab('Information', record)}</Tabs>
           </Card>
         )}
       />
@@ -62,7 +60,7 @@ function WorkersTable() {
 
 WorkersTable.propTypes = {
   dataSource: PropTypes.array,
-  stats: PropTypes.object
+  stats: PropTypes.object,
 };
 
 export default WorkersTable;

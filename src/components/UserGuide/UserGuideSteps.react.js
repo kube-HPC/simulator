@@ -1,7 +1,6 @@
-import React from 'react';
-
-import { Typography, Icon, Tag, Divider } from 'antd';
+import { Divider, Icon, Tag, Typography } from 'antd';
 import { USER_GUIDE } from 'const';
+import React from 'react';
 import { COLOR_LAYOUT } from 'styles';
 
 const { Text, Paragraph } = Typography;
@@ -30,7 +29,7 @@ const steps = [
       </>
     ),
     locale: { skip: 'Skip' },
-    placement: 'center'
+    placement: 'center',
   },
   {
     target: USER_GUIDE.HEADER.AUTO_COMPLETE,
@@ -40,7 +39,7 @@ const steps = [
         The <Text strong>search-bar</Text> allows you to filter current table's data.
       </Paragraph>
     ),
-    placement: 'bottom'
+    placement: 'bottom',
   },
   {
     target: USER_GUIDE.HEADER.SOCIALS,
@@ -53,7 +52,7 @@ const steps = [
         You can run the tutorial any time by pressing <Icon type="question-circle" />
       </Paragraph>
     ),
-    placement: 'bottom'
+    placement: 'bottom',
   },
   {
     target: USER_GUIDE.SIDEBAR_LEFT,
@@ -81,7 +80,7 @@ const steps = [
       </Paragraph>
     ),
     placement: 'right-start',
-    spotlightPadding: 0
+    spotlightPadding: 0,
   },
 
   {
@@ -111,7 +110,7 @@ const steps = [
         </Paragraph>
       </>
     ),
-    placement: 'bottom'
+    placement: 'bottom',
   },
   {
     target: USER_GUIDE.SIDEBAR_TOP_RIGHT,
@@ -132,7 +131,7 @@ const steps = [
         <Text strong>algorithm</Text> directly in your own <Text strong>IDE</Text>.
       </Paragraph>
     ),
-    placement: 'left'
+    placement: 'left',
   },
   {
     target: USER_GUIDE.SIDEBAR_BOTTOM_RIGHT,
@@ -152,7 +151,7 @@ const steps = [
         <Text code>CPU</Text> and <Text code>Memory</Text>
       </Paragraph>
     ),
-    placement: 'top'
+    placement: 'top',
   },
   {
     target: USER_GUIDE.TABLE_JOB.MENU_SELECT,
@@ -162,7 +161,7 @@ const steps = [
         We currently viewing all <Text strong>deployed</Text> jobs
       </Paragraph>
     ),
-    placement: 'right'
+    placement: 'right',
   },
   {
     target: USER_GUIDE.TABLE_JOB.ID_SELECT,
@@ -173,7 +172,7 @@ const steps = [
       </Paragraph>
     ),
     spotlightClicks: true,
-    placement: 'bottom'
+    placement: 'bottom',
   },
   {
     target: USER_GUIDE.TABLE_JOB.ACTIONS_SELECT,
@@ -192,7 +191,7 @@ const steps = [
         <Text code>Download Results</Text> for each entry!
       </Paragraph>
     ),
-    placement: 'right'
+    placement: 'right',
   },
   {
     target: USER_GUIDE.TABLE_JOB.ROW_SELECT,
@@ -209,13 +208,13 @@ const steps = [
         <Text code>JSON</Text> 🤘.
       </Paragraph>
     ),
-    placement: 'top'
-  }
+    placement: 'top',
+  },
 ];
 
 const userGuideSteps = steps.map(step => ({
   ...step,
-  target: `.${step.target}`
+  target: `.${step.target}`,
 }));
 
 export default userGuideSteps;

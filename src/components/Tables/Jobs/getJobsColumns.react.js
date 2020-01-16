@@ -64,10 +64,9 @@ const getJobsColumns = () => [
     render: StartTime,
   },
   {
-    title: `Pipeline Types`,
+    title: `Pipeline Type`,
     dataIndex: `pipeline.types`,
     key: `types`,
-    align: `center`,
     width: `10%`,
     render: Types,
   },

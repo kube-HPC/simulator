@@ -12,7 +12,7 @@ const Overflow = styled(FlexBox.Auto)`
 `;
 
 const JobTypes = ({ types, fullName = true }) => (
-  <Overflow justify="center" gutter={0}>
+  <Overflow justify="start" gutter={0}>
     {types.map(type =>
       fullName ? (
         <Tag key={type} color={COLOR_PIPELINE_TYPES[type]}>

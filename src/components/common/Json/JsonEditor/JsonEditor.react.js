@@ -1,15 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { ControlledEditor } from '@monaco-editor/react';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 
 const JsonEditor = ({
   onChange = () => {},
   value: controlledValue = '',
   height = '60vh',
+  innerRef = { current: undefined },
   ...props
 }) => {
   const [value, setValue] = useState(controlledValue);
   const handleEditorChange = (_, value) => setValue(value);
+
+  const handleEditorDidMount = (_, editor) => {
+    innerRef.current = editor;
+  };
 
   useEffect(() => {
     onChange(value);
@@ -26,6 +31,7 @@ const JsonEditor = ({
       language="json"
       value={value}
       onChange={handleEditorChange}
+      editorDidMount={handleEditorDidMount}
     />
   );
 };

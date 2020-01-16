@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import { Button } from 'antd';
+import { Card, JsonSwitch, MdEditor, Tabs } from 'components/common';
+import { useReadme, useVersions } from 'hooks';
 import PropTypes from 'prop-types';
-import { Tabs, Card, JsonSwitch, MdEditor } from 'components/common';
+import React, { useState } from 'react';
 import AlgorithmBuildsTable from './Builds/AlgorithmBuildsTable.react';
 import { VersionsTable } from './Versions';
-import { Button } from 'antd';
-import { useReadme, useVersions } from 'hooks';
 
 const TABS = {
   VERSIONS: 'Versions',
   BUILDS: 'Builds',
-  JSON: 'JSON',
+  INFO: 'Information',
   DESCRIPTION: 'Description',
 };
 
@@ -61,7 +61,7 @@ const AlgorithmsTabs = ({ record: { builds, ...algorithm } }) => {
         <Tabs.TabPane tab={TABS.BUILDS} key={TABS.BUILDS}>
           <AlgorithmBuildsTable builds={builds} />
         </Tabs.TabPane>
-        <Tabs.TabPane tab={TABS.JSON} key={TABS.JSON} forceRender>
+        <Tabs.TabPane tab={TABS.INFO} key={TABS.INFO} forceRender>
           <JsonSwitch obj={algorithm} />
         </Tabs.TabPane>
         <Tabs.TabPane tab={TABS.DESCRIPTION} key={TABS.DESCRIPTION}>

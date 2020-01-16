@@ -81,7 +81,7 @@ const JobActions = ({ job, className }) => {
 };
 
 JobActions.propTypes = {
-  className: PropTypes.string.isRequired,
+  className: PropTypes.string,
   job: PropTypes.object.isRequired,
 };
 

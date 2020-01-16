@@ -11,8 +11,8 @@ const StatusTag = ({ status, count }) => (
 );
 
 StatusTag.propTypes = {
-  status: PropsTypes.string.isRequired,
-  count: PropsTypes.number.isRequired,
+  status: PropsTypes.string,
+  count: PropsTypes.number,
 };
 
 export default StatusTag;

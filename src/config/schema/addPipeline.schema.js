@@ -46,6 +46,7 @@ const addPipelineSchema = {
   WEBHOOKS: {
     label: 'Webhooks',
     field: 'webhooks',
+    types: ['http://', 'ftp://', 'https://', 'ftps://'],
     PROGRESS: {
       label: 'Progress',
       field: 'webhooks.progress',

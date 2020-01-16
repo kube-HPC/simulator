@@ -1,6 +1,7 @@
+import { Col, Row } from 'antd';
+import PropTypes from 'prop-types';
 import React, { Children } from 'react';
 import styled from 'styled-components';
-import { Row, Col } from 'antd';
 
 const FlexAligned = styled(Row)`
   align-items: ${({ align = 'center' }) => align};
@@ -16,16 +17,20 @@ const FlexBox = ({ children, justify, align, gutter, ...props }) => (
 FlexBox.propTypes = Row.propTypes;
 
 const ColFull = styled(Col)`
-  width: ${({ full }) => (full ? '100%' : 'fit-content')};
+  width: ${({ full }) => (full === 'true' ? '100%' : 'fit-content')};
 `;
 
 const Item = ({ children, className, full = false, ...props }) => (
-  <ColFull className={className} full={full} {...props}>
+  <ColFull className={className} full={full.toString()} {...props}>
     {children}
   </ColFull>
 );
 
-Item.propTypes = Col.propTypes;
+Item.propTypes = {
+  ...Col.propTypes,
+  className: PropTypes.string,
+  full: PropTypes.bool,
+};
 
 FlexBox.Item = Item;
 

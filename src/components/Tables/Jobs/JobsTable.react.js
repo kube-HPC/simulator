@@ -1,8 +1,8 @@
+import { Table } from 'components';
+import { DRAWER_SIZE } from 'const';
+import { useActions, useJobs } from 'hooks';
 import React from 'react';
 import JobInfo from './JobInfo.react';
-import { useJobs, useActions } from 'hooks';
-import { DRAWER_SIZE } from 'const';
-import { Table } from 'components';
 
 const JobsTable = () => {
   const { columns, dataSource } = useJobs();

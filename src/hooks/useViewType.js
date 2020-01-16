@@ -1,6 +1,6 @@
-import { createStore } from 'reusable';
 import { STATE_SOURCES } from 'const';
 import { useSelector } from 'react-redux';
+import { createStore } from 'reusable';
 import useActions from './useActions';
 
 const useViewType = () => {

@@ -1,5 +1,5 @@
 import { Empty } from 'antd';
-import { Card, FlexBox, Fallback } from 'components/common';
+import { Card, Fallback, FlexBox } from 'components/common';
 import { defaultOptions } from 'config/template/graph-options.template';
 import { useNodeInfo } from 'hooks';
 import PropTypes from 'prop-types';
@@ -66,7 +66,7 @@ const JobGraph = ({ graph, pipeline, options = defaultOptions, isMinified = fals
 
 JobGraph.propTypes = {
   graph: PropTypes.object.isRequired,
-  pipeline: PropTypes.object.isRequired,
+  pipeline: PropTypes.object,
   options: PropTypes.object,
   isMinified: PropTypes.bool,
   className: PropTypes.string,

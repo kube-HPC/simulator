@@ -1,25 +1,13 @@
-import { Button, Empty } from 'antd';
-import { Card, JsonSwitch, Tabs } from 'components/common';
-import { useDrawer, useTraceData, useJobs } from 'hooks';
+import { Button } from 'antd';
+import { JsonSwitch, Tabs } from 'components/common';
+import { useJobs, useTraceData } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { memo, useState } from 'react';
 import styled from 'styled-components';
 import JobGraph from './JobGraph.react';
 import Trace from './Trace.react';
 
-const TABS = { GRAPH: 'Graph', TRACE: 'Trace', JSON: 'JSON' };
-const NoCard = [TABS.GRAPH];
-
-const OverflowContainer = styled(Card)`
-  height: 80vh;
-`;
-
-const generateTabs = tabs =>
-  Object.entries(tabs).map(([key, value]) => (
-    <Tabs.TabPane tab={key} key={key}>
-      {NoCard.includes(key) ? value : <OverflowContainer>{value}</OverflowContainer>}
-    </Tabs.TabPane>
-  ));
+const TABS = { GRAPH: 'Graph', TRACE: 'Trace', INFO: 'Information' };
 
 const options = {
   view: {
@@ -32,34 +20,18 @@ const FullGraph = styled(JobGraph)`
 `;
 
 const JobInfo = ({ jobId }) => {
-  const { dataSource } = useJobs();
-
-  const job = dataSource.find(({ key }) => jobId === key);
-
-  const { key, graph, pipeline, ...rest } = job;
   const [currentTab, setCurrentTab] = useState(TABS.GRAPH);
   const { traceData, fetch } = useTraceData();
-  const { isVisible } = useDrawer();
+
+  const { dataSource } = useJobs();
+  const job = dataSource.find(({ key }) => jobId === key);
+  const { key, graph, pipeline } = job;
 
   const refreshButton = currentTab === TABS.TRACE && (
     <Button onClick={() => fetch({ jobId: key })} icon="redo">
       Refresh
     </Button>
   );
-
-  const json = { pipeline, ...rest };
-
-  const tabs = {
-    [TABS.GRAPH]: graph ? (
-      isVisible && <FullGraph graph={{ ...graph, jobId: key }} pipeline={pipeline} />
-    ) : (
-      <Card>
-        <Empty />
-      </Card>
-    ),
-    [TABS.TRACE]: <Trace data={traceData} />,
-    [TABS.JSON]: <JsonSwitch obj={json} options={options} />,
-  };
 
   const onTabClick = tabKey => tabKey === TABS.TRACE && fetch({ jobId: key });
 
@@ -69,7 +41,15 @@ const JobInfo = ({ jobId }) => {
       tabBarExtraContent={refreshButton}
       onChange={setCurrentTab}
       onTabClick={onTabClick}>
-      {generateTabs(tabs)}
+      <Tabs.TabPane tab={TABS.GRAPH} key={TABS.GRAPH}>
+        <FullGraph graph={{ ...graph, jobId: key }} pipeline={pipeline} />
+      </Tabs.TabPane>
+      <Tabs.TabPane tab={TABS.TRACE} key={TABS.TRACE}>
+        <Trace data={traceData} />
+      </Tabs.TabPane>
+      <Tabs.TabPane tab={TABS.INFO} key={TABS.INFO}>
+        <JsonSwitch obj={pipeline} options={options} />
+      </Tabs.TabPane>
     </Tabs>
   );
 };

@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { getTaskDetails } from 'utils';
 import { NodeInputOutput, NodeLogs } from '.';
 
 const DEFAULT_ALGORITHM = {};
@@ -14,11 +15,6 @@ const OverflowContainer = styled.div`
   height: 100%;
   overflow: auto;
 `;
-
-const getTaskDetails = node =>
-  node && node.batch && node.batch.length > 0
-    ? node.batch
-    : [{ taskId: node.taskId, podName: node.podName }];
 
 const algorithmDetailsSelector = node => state =>
   state[STATE_SOURCES.ALGORITHM_TABLE].dataSource.find(a => a.name === node.algorithmName) ||
@@ -29,11 +25,11 @@ const NodeInfo = ({ node, jobId }) => {
   const [index, setIndex] = useState(0);
   const { getCaching } = useActions();
   const { getLogs } = useLogs();
-  const taskDetails = getTaskDetails(node);
 
   const onRunNode = () => node && getCaching({ jobId, nodeName: node.nodeName });
 
   const onRefresh = () => {
+    const taskDetails = getTaskDetails(node);
     const { taskId, podName } = taskDetails[index];
     getLogs({ taskId, podName });
   };
@@ -48,6 +44,8 @@ const NodeInfo = ({ node, jobId }) => {
       </Button>
     </FlexBox.Auto>
   );
+
+  const taskDetails = getTaskDetails(node);
 
   return node ? (
     <Tabs defaultActiveKey="1" extra={extra}>

@@ -1,26 +1,23 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { useSelector } from 'react-redux';
-import { useSpring, animated } from 'react-spring';
-
+import { Icon, Layout, Menu, Tag } from 'antd';
+import { FlexBox } from 'components/common';
+import { dataCountMock } from 'config';
+import { LEFT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
+import { useActions, useLeftSidebar, useViewType } from 'hooks';
+import { ReactComponent as AlgorithmIcon } from 'images/algorithm-icon.svg';
+import { ReactComponent as DebugIcon } from 'images/debug-icon.svg';
+import { ReactComponent as DriversIcon } from 'images/drivers-icon.svg';
+import { ReactComponent as JobsIcon } from 'images/jobs-icon.svg';
 import { ReactComponent as LogoFish } from 'images/logo-fish.svg';
 import { ReactComponent as LogoTitle } from 'images/logo-title.svg';
-import { ReactComponent as DriversIcon } from 'images/drivers-icon.svg';
-import { ReactComponent as DebugIcon } from 'images/debug-icon.svg';
 import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
 import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
-import { ReactComponent as AlgorithmIcon } from 'images/algorithm-icon.svg';
-import { ReactComponent as JobsIcon } from 'images/jobs-icon.svg';
-
 import isEqual from 'lodash/isEqual';
-
-import { Tag, Layout, Icon, Menu } from 'antd';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { animated, useSpring } from 'react-spring';
+import styled from 'styled-components';
 import { COLOR_LAYOUT } from 'styles';
-import { USER_GUIDE, LEFT_SIDEBAR_NAMES } from 'const';
-import { dataCountMock } from 'config';
-import { FlexBox } from 'components/common';
-import { useLeftSidebar, useActions, useViewType } from 'hooks';
 
 const Border = styled.div`
   border-right: 1px solid ${COLOR_LAYOUT.border};

@@ -2,6 +2,7 @@ export { default as useActions } from 'hooks/useActions';
 export { default as useAlgorithm } from 'hooks/useAlgorithm';
 export { default as useConnectionStatus } from 'hooks/useConnectionStatus';
 export { default as useDrawer } from 'hooks/useDrawer';
+export { default as useDrawerEditor } from 'hooks/useDrawerEditor.react';
 export { default as useErrorLogs } from 'hooks/useErrorLogs';
 export { default as useFilters } from 'hooks/useFilters';
 export { default as useJobs } from 'hooks/useJobs.react';

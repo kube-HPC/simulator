@@ -1,24 +1,26 @@
 import { applyAlgorithm, deleteAlgorithm } from 'actions/algorithm.action';
 import { init, socketInit } from 'actions/connection.action';
 import { open as drawerOpen, toggle as drawerToggle } from 'actions/drawer.action';
+import { filterByType } from 'actions/filter.action';
 import { downloadStorageResults, getCaching, getKubernetesLogsData } from 'actions/jobs.action';
 import {
+  addPipeline,
+  cronStart,
+  cronStop,
+  deleteStored,
   execRawPipeline,
+  execStored,
   pausePipeline,
   rerunRawPipeline,
   resumePipeline,
   stopPipeline,
-  cronStart,
-  cronStop,
-  deleteStored,
   updateStored,
-  execStored,
 } from 'actions/pipeline.action';
 import { changeStep, triggerUserGuide } from 'actions/userGuide.action';
 import { firstLoad, toggle as toggleViewType } from 'actions/viewType.action';
-import { filterByType } from 'actions/filter.action';
 
 const actions = {
+  addPipeline,
   applyAlgorithm,
   changeStep,
   cronStart,

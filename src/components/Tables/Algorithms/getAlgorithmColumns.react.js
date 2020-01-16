@@ -1,8 +1,7 @@
-import React from 'react';
-
-import { Button, Modal, Tooltip, Typography, Tag } from 'antd';
-import { sorter } from 'utils/string';
+import { Button, Modal, Tag, Tooltip, Typography } from 'antd';
 import { Ellipsis, FlexBox, StatusTag } from 'components/common';
+import React from 'react';
+import { sorter } from 'utils/string';
 
 const deleteConfirmAction = (action, { name }) => {
   Modal.confirm({
@@ -52,33 +51,28 @@ const Image = algorithmImage =>
 
 const Name = name => <Ellipsis text={name} />;
 
-const getAlgorithmColumns = ({ onDelete, toggle, setAlgorithm }) => {
-  const Action = (_, { builds, ...algorithm }) => (
-    <FlexBox justify="start">
-      <FlexBox.Item>
-        <Tooltip placement="top" title={'Edit Algorithm'}>
-          <Button
-            shape="circle"
-            icon="edit"
-            onClick={() => {
-              toggle();
-              setAlgorithm(algorithm);
-            }}
-          />
-        </Tooltip>
-      </FlexBox.Item>
-      <FlexBox.Item>
-        <Tooltip title="Delete Algorithm">
-          <Button
-            type="dashed"
-            shape="circle"
-            icon="delete"
-            onClick={() => deleteConfirmAction(onDelete, { builds, ...algorithm })}
-          />
-        </Tooltip>
-      </FlexBox.Item>
-    </FlexBox>
-  );
+const getAlgorithmColumns = ({ onDelete, open }) => {
+  const Action = (_, record) => {
+    // eslint-disable-next-line
+    const { builds, ...algorithm } = record;
+    const onEdit = () => open(algorithm);
+    const onClickDelete = () => deleteConfirmAction(onDelete, record);
+
+    return (
+      <FlexBox justify="start">
+        <FlexBox.Item>
+          <Tooltip placement="top" title={'Edit Algorithm'}>
+            <Button shape="circle" icon="edit" onClick={onEdit} />
+          </Tooltip>
+        </FlexBox.Item>
+        <FlexBox.Item>
+          <Tooltip title="Delete Algorithm">
+            <Button type="dashed" shape="circle" icon="delete" onClick={onClickDelete} />
+          </Tooltip>
+        </FlexBox.Item>
+      </FlexBox>
+    );
+  };
 
   return [
     {

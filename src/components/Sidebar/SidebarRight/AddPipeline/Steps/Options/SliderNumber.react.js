@@ -1,10 +1,12 @@
-import React, { useState, memo, useEffect, forwardRef } from 'react';
-import PropTypes from 'prop-types';
-import { Slider, InputNumber } from 'antd';
+import { InputNumber, Slider } from 'antd';
 import { FlexBox } from 'components/common';
+import PropTypes from 'prop-types';
+import React, { forwardRef, memo, useEffect, useState } from 'react';
+import styled from 'styled-components';
 
-const SPAN = 18;
-const SPAN_REST = 24 - SPAN;
+const FlexGrow = styled(FlexBox.Item)`
+  flex-grow: 1;
+`;
 
 const SliderNumber = forwardRef(({ onChange, value: initial }, ref) => {
   const [value, setValue] = useState(initial);
@@ -15,19 +17,21 @@ const SliderNumber = forwardRef(({ onChange, value: initial }, ref) => {
 
   return (
     <FlexBox>
-      <FlexBox.Item span={SPAN}>
-        <Slider value={value} onChange={setValue} />
-      </FlexBox.Item>
-      <FlexBox.Item span={SPAN_REST}>
+      <FlexGrow>
+        <Slider value={value} onChange={setValue} ref={ref} />
+      </FlexGrow>
+      <FlexBox.Item>
         <InputNumber value={value} onChange={setValue} />
       </FlexBox.Item>
     </FlexBox>
   );
 });
 
+SliderNumber.displayName = `Slider Number`;
+
 SliderNumber.propTypes = {
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.number.isRequired
+  value: PropTypes.number.isRequired,
 };
 
 export default memo(SliderNumber);

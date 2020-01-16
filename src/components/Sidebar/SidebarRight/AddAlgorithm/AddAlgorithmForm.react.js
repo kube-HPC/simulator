@@ -1,17 +1,14 @@
-import React, { useState, memo } from 'react';
-import PropTypes from 'prop-types';
-import { Input, Select, InputNumber, Button, Radio } from 'antd';
-
-import { DRAWER_SIZE } from 'const';
+import { Button, Input, InputNumber, Radio, Select } from 'antd';
 import { BottomContent, Form } from 'components/common';
-import { toUpperCaseFirstLetter, mapObjValues, notification } from 'utils';
-import MemoryField from './MemoryField.react';
-
-// Direct import for auto-complete
 import schema from 'config/schema/addAlgorithm.schema';
 import formTemplate from 'config/template/addAlgorithmForm.template';
-import { CodeBuild, ImageBuild, GitBuild } from './BuildTypes';
+import { DRAWER_SIZE } from 'const';
 import { useActions } from 'hooks';
+import PropTypes from 'prop-types';
+import React, { memo, useState } from 'react';
+import { mapObjValues, notification, stringify, toUpperCaseFirstLetter } from 'utils';
+import { CodeBuild, GitBuild, ImageBuild } from './BuildTypes';
+import MemoryField from './MemoryField.react';
 
 // #region  Helpers
 const { MAIN, BUILD_TYPES } = schema;
@@ -109,7 +106,7 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
       }
 
       const payloadFiltered = mapObjValues({ obj: payload, predicate: isNotEmpty });
-      formData.append(`payload`, JSON.stringify(payloadFiltered));
+      formData.append(`payload`, stringify(payloadFiltered));
 
       applyAlgorithm(formData);
 

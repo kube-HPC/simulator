@@ -40,12 +40,6 @@ ExpandIcon.propTypes = {
 const antIcon = <Icon type="loading" style={{ fontSize: 40 }} spin />;
 Spin.setDefaultIndicator(antIcon);
 
-const DEFAULT_PAGINATION = {
-  defaultPageSize: 20,
-  hideOnSinglePage: true,
-  showLessItems: true,
-};
-
 const Table = ({ dataSource = [], ...props }) => {
   const tableSource = Immutable.isImmutable(dataSource) ? dataSource.asMutable() : dataSource;
   return (
@@ -55,7 +49,7 @@ const Table = ({ dataSource = [], ...props }) => {
       expandIcon={ExpandIcon}
       // Cannot sort immutable entries.
       dataSource={tableSource}
-      pagination={DEFAULT_PAGINATION}
+      pagination={false}
       size="middle"
       {...props}
     />

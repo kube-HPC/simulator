@@ -1,46 +1,33 @@
-import React, { useState, useReducer } from 'react';
 import { Table } from 'components';
-import { useAlgorithm } from 'hooks';
-
+import { DRAWER_SIZE } from 'const';
+import { useActions, useAlgorithm } from 'hooks';
+import React from 'react';
 import getAlgorithmColumns from './getAlgorithmColumns.react';
-import AlgorithmsTabs from './Tabs/AlgorithmsTabs.react';
-import DrawerEditor from 'components/Drawer/DrawerEditor/DrawerEditor.react';
-import { Typography } from 'antd';
-import { stringify } from 'utils';
+import { AlgorithmsTabs } from './Tabs';
 
-const { Paragraph, Title, Text } = Typography;
-
-const title = (
-  <>
-    <Title level={2}>Edit Algorithm</Title>
-    <Paragraph>
-      Edit algorithm and <Text code>Submit</Text> the changes.
-    </Paragraph>
-  </>
-);
+const rowKey = ({ name }) => name;
 
 const AlgorithmsTable = () => {
-  const { dataSource, onSubmit, ...actions } = useAlgorithm();
-  const expandedRowRender = record => <AlgorithmsTabs record={record} />;
-  const [visible, toggle] = useReducer(prev => !prev, false);
-  const [algorithm, setAlgorithm] = useState(undefined);
+  const { dataSource, ...actions } = useAlgorithm();
+
+  const { drawerOpen } = useActions();
+
+  const onRow = record => ({
+    onDoubleClick: () => {
+      const { name } = record;
+      const body = <AlgorithmsTabs record={record} />;
+      drawerOpen({ title: name, body, width: DRAWER_SIZE.ALGORITHM_INFO });
+    },
+  });
 
   return (
-    <>
-      <DrawerEditor
-        visible={visible}
-        title={title}
-        value={stringify(algorithm)}
-        onClose={toggle}
-        onSubmit={onSubmit}
-      />
-      <Table
-        rowKey={({ name }) => name}
-        columns={getAlgorithmColumns({ toggle, setAlgorithm, ...actions })}
-        dataSource={dataSource}
-        expandedRowRender={expandedRowRender}
-      />
-    </>
+    <Table
+      onRow={onRow}
+      rowKey={rowKey}
+      columns={getAlgorithmColumns(actions)}
+      dataSource={dataSource}
+      expandIcon={false}
+    />
   );
 };
 
