@@ -29,10 +29,12 @@ const useNodeInfo = ({ graph, pipeline }) => {
       const { nodeName } = node;
       const newNode = findNodeByName(nodeName);
       if (!isEqual(node, newNode)) {
+        const { taskId, podName } = newNode;
+        getLogs({ taskId, podName });
         setNode(newNode);
       }
     }
-  }, [findNodeByName, graph, node]);
+  }, [findNodeByName, getLogs, graph, node]);
 
   const events = useMemo(
     () => ({
