@@ -64,7 +64,7 @@ const getPipelineColumns = ({ dataStats, update, remove, execute }) => {
         </FlexBox.Item>
         <FlexBox.Item>
           <Tooltip title="Update Pipeline">
-            <Button shape="circle" icon="edit" onClick={() => update(record)} />
+            <Button shape="circle" icon="edit" onClick={() => execute(record)} />
           </Tooltip>
         </FlexBox.Item>
         <FlexBox.Item>
