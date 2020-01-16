@@ -1,6 +1,6 @@
-import React, { memo } from 'react';
 import { Drawer } from 'components/Drawer';
 import { useActions, useDrawer } from 'hooks';
+import React, { memo } from 'react';
 
 const DashboardDrawer = () => {
   const {
@@ -11,7 +11,12 @@ const DashboardDrawer = () => {
   const { drawerToggle } = useActions();
 
   return (
-    <Drawer {...props} visible={isVisible} onClose={drawerToggle} bottomContent={footer}>
+    <Drawer
+      {...props}
+      visible={isVisible}
+      onClose={drawerToggle}
+      bottomContent={footer}
+      destroyOnClose={true}>
       {body}
     </Drawer>
   );

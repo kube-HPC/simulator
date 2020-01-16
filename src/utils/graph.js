@@ -8,8 +8,13 @@ const notStartedStatus = [STATUS.CREATING, STATUS.PENDING];
 
 export const findNodeName = nodeName => node => node.nodeName === nodeName;
 
+export const getTaskDetails = node =>
+  node && node.batch && node.batch.length > 0
+    ? node.batch
+    : [{ taskId: node.taskId, podName: node.podName }];
+
 export const nodeFinder = ({ graph, pipeline }) => nodeName => {
-  const nodeData = graph.nodes.find(findNodeName(nodeName));
+  const nodeData = graph && graph.nodes ? graph.nodes.find(findNodeName(nodeName)) : [];
   const node = pipeline.nodes.find(findNodeName(nodeName));
   const { jobId } = pipeline;
 

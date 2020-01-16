@@ -62,6 +62,7 @@ const timeFormat = 'DD/MM/YY HH:mm:ss';
 
 const toTableEntries = (log, index) => (
   <CopyToClipboard
+    key={index}
     text={`${moment.unix(log.timestamp).format(timeFormat)} ${log.message} Level:${log.level}`}
     onCopy={onCopy}>
     <LogLine>
@@ -80,7 +81,7 @@ const toTableEntries = (log, index) => (
 );
 
 const toBuildEntries = (log, index) => (
-  <CopyToClipboard text={`${log}`} onCopy={onCopy}>
+  <CopyToClipboard key={index} text={`${log}`} onCopy={onCopy}>
     <LogLine>
       <ItemWrapper>
         <LineNumber>{index + 1}</LineNumber>

@@ -30,7 +30,7 @@ const OptionBox = ({ index, taskId }) => (
 
 OptionBox.propTypes = {
   index: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  taskId: PropTypes.string.isRequired,
+  taskId: PropTypes.string,
 };
 
 const NodeLogs = ({ taskDetails, onChange }) => {
