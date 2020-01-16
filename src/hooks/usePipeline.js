@@ -1,5 +1,6 @@
 import { LEFT_SIDEBAR_NAMES, STATE_SOURCES } from 'const';
 import { useActions, useDrawerEditor } from 'hooks';
+import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { stringify } from 'utils';
 import { tableFilterSelector } from 'utils/tableSelector';
@@ -12,8 +13,13 @@ const usePipeline = () => {
 
   const { deleteStored, updateStored, execStored } = useActions();
 
-  const { open: execute } = useDrawerEditor({ onSubmit: execStored });
-  const { open: update } = useDrawerEditor({ onSubmit: updateStored });
+  const onSubmitExec = useCallback(pipeline => execStored(JSON.parse(pipeline)), [execStored]);
+  const onSubmitUpdate = useCallback(pipeline => updateStored(JSON.parse(pipeline)), [
+    updateStored,
+  ]);
+
+  const { open: execute } = useDrawerEditor({ onSubmit: onSubmitExec });
+  const { open: update } = useDrawerEditor({ onSubmit: onSubmitUpdate });
 
   return {
     dataSource,
