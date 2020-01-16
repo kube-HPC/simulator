@@ -6,7 +6,7 @@ const JsonEditor = ({
   onChange = () => {},
   value: controlledValue = '',
   height = '60vh',
-  innerRef,
+  innerRef = { current: undefined },
   ...props
 }) => {
   const [value, setValue] = useState(controlledValue);
