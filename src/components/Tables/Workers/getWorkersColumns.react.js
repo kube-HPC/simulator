@@ -8,54 +8,70 @@ import { sorter, toUpperCaseFirstLetter } from 'utils/string';
 
 const undefinedStateFilter = state => state || 'Creating';
 
+const WorkerState = (_, { workerStatus, jobStatus }) => {
+  const title = toUpperCaseFirstLetter(undefinedStateFilter(workerStatus));
+  return (
+    <>
+      <Tag color={COLOR_PIPELINE_STATUS[workerStatus]}>{title}</Tag>
+      <Tag color={COLOR_PIPELINE_STATUS[jobStatus]}>{`Job ${title}`}</Tag>
+    </>
+  );
+};
+
+const HotWorker = (_, { workerPaused, hotWorker }) => (
+  <>
+    {workerPaused && <Icon type="pause-circle" theme="twoTone" twoToneColor="red" />}
+    {hotWorker && <Icon type="fire" theme="filled" style={{ color: 'orange' }} />}
+  </>
+);
+
+const PodName = podName => <Ellipsis copyable text={podName} />;
+
+const JobId = jobId => {
+  const isValidJobId = jobId !== undefined;
+  const type = !isValidJobId && 'warning';
+  const text = jobId || 'Not Assigned';
+
+  return <Ellipsis type={type} copyable={isValidJobId} text={text} />;
+};
+
 export const workersTableStats = () => [
   {
     title: '',
     dataIndex: 'workerStatus',
     key: 'workerStatusIcon',
-    render: (_, record) => (
-      <>
-        {record.workerPaused && <Icon type="pause-circle" theme="twoTone" twoToneColor="red" />}
-        {record.hotWorker && <Icon type="fire" theme="filled" style={{ color: 'orange' }} />}
-      </>
-    ),
+    render: HotWorker,
   },
   {
     title: 'Pod Name',
     dataIndex: 'podName',
     key: 'podName',
     onFilter: (value, record) => record.podName.includes(value),
-    render: podName => <Ellipsis copyable text={podName} />,
+    render: PodName,
   },
   {
     title: 'Worker State',
     dataIndex: 'workerStatus',
     key: 'workerStatus',
-    render: (_, record) => {
-      const title = toUpperCaseFirstLetter(undefinedStateFilter(record.workerStatus));
-      return (
-        <>
-          <Tag color={COLOR_PIPELINE_STATUS[record.workerStatus]}>{title}</Tag>
-          <Tag color={COLOR_PIPELINE_STATUS[record.jobStatus]}>{`Job ${title}`}</Tag>
-        </>
-      );
-    },
+    render: WorkerState,
   },
   {
     title: 'Job ID',
     dataIndex: 'jobId',
     key: 'jobId',
-    render: jobId => {
-      const isValidJobId = jobId !== undefined;
-      const type = !isValidJobId && 'warning';
-      const text = jobId || 'Not Assigned';
-
-      return <Ellipsis type={type} copyable={isValidJobId} text={text} />;
-    },
+    render: JobId,
   },
 ];
 
 const toNum = text => (text && parseInt(text)) || 0;
+
+const Name = name => <Ellipsis text={name} />;
+const ReadyCount = text => <StatusTag status={PIPELINE_STATES.PENDING} count={toNum(text)} />;
+const WorkingCount = text => <StatusTag status={PIPELINE_STATES.ACTIVE} count={toNum(text)} />;
+const InitCount = text => <StatusTag status={PIPELINE_STATES.INIT} count={toNum(text)} />;
+const ExitCount = text => <StatusTag status={PIPELINE_STATES.STOPPED} count={toNum(text)} />;
+const HotCount = text => <StatusTag status={PIPELINE_STATES.COMPLETED} count={toNum(text)} />;
+const Count = text => <StatusTag status={PIPELINE_STATES.SUCCEED} count={toNum(text)} />;
 
 export const getWorkersColumns = () => [
   {
@@ -63,42 +79,42 @@ export const getWorkersColumns = () => [
     key: 'algorithmName',
     dataIndex: 'algorithmName',
     sorter: (a, b) => sorter(a.algorithmName, b.algorithmName),
-    render: name => <Ellipsis text={name} />,
+    render: Name,
   },
   {
     title: 'Ready Count',
     key: 'readyCount',
     dataIndex: 'ready',
-    render: text => <StatusTag status={PIPELINE_STATES.PENDING} count={toNum(text)} />,
+    render: ReadyCount,
   },
   {
     title: 'Working Count',
     key: 'workingCount',
     dataIndex: 'working',
-    render: text => <StatusTag status={PIPELINE_STATES.ACTIVE} count={toNum(text)} />,
+    render: WorkingCount,
   },
   {
     title: 'Init Count',
     key: 'initCount',
     dataIndex: 'init',
-    render: text => <StatusTag status={PIPELINE_STATES.INIT} count={toNum(text)} />,
+    render: InitCount,
   },
   {
     title: 'Exit Count',
     key: 'exitCount',
     dataIndex: 'exit',
-    render: text => <StatusTag status={PIPELINE_STATES.STOPPED} count={toNum(text)} />,
+    render: ExitCount,
   },
   {
     title: 'Hot Count',
     key: 'hotCount',
     dataIndex: 'hot',
-    render: text => <StatusTag status={PIPELINE_STATES.COMPLETED} count={toNum(text)} />,
+    render: HotCount,
   },
   {
     title: 'Count',
     key: 'count',
     dataIndex: 'count',
-    render: text => <StatusTag status={PIPELINE_STATES.SUCCEED} count={toNum(text)} />,
+    render: Count,
   },
 ];

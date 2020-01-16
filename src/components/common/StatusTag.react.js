@@ -6,7 +6,7 @@ import { toUpperCaseFirstLetter } from 'utils/string';
 
 const StatusTag = ({ status, count }) => (
   <Tooltip placement="top" title={status && toUpperCaseFirstLetter(status)}>
-    <Tag color={COLOR_PIPELINE_STATUS[status]}>{count || `No Stats`}</Tag>
+    <Tag color={COLOR_PIPELINE_STATUS[status]}>{Number.isInteger(count) ? count : `No Stats`}</Tag>
   </Tooltip>
 );
 
