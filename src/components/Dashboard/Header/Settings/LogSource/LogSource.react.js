@@ -1,23 +1,27 @@
 import { Radio, Typography } from 'antd';
 import { FlexBox } from 'components/common';
-import React from 'react';
+import { useSettings } from 'hooks';
+import { logSourceTypes } from 'config/template/log-sources.template';
+import React, { memo, useCallback } from 'react';
 
-const logSource = {
-  Kubernetes: 'k8s',
-  'Elastic Search': 'es',
+const LogSource = () => {
+  const { logSource, setSettings } = useSettings();
+
+  const onChange = useCallback(({ target: { value: logSource } }) => setSettings({ logSource }), [
+    setSettings,
+  ]);
+  return (
+    <FlexBox.Auto>
+      <Typography.Text strong>Log Source</Typography.Text>
+      <Radio.Group value={logSource} onChange={onChange}>
+        {Object.entries(logSourceTypes).map(([key, value]) => (
+          <Radio key={key} value={value}>
+            {key}
+          </Radio>
+        ))}
+      </Radio.Group>
+    </FlexBox.Auto>
+  );
 };
 
-const LogSource = () => (
-  <FlexBox.Auto>
-    <Typography.Text strong>Log Source</Typography.Text>
-    <Radio.Group disabled>
-      {Object.entries(logSource).map(([key, value]) => (
-        <Radio key={key} value={value}>
-          {key}
-        </Radio>
-      ))}
-    </Radio.Group>
-  </FlexBox.Auto>
-);
-
-export default LogSource;
+export default memo(LogSource);

@@ -1,7 +1,7 @@
 import { Button, Select, Tag, Tooltip } from 'antd';
 import { FlexBox } from 'components/common';
 import LogsViewer from 'components/common/LogsViewer/LogsViewer.react';
-import { useLogs } from 'hooks';
+import { useLogs, useSettings } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -36,16 +36,16 @@ OptionBox.propTypes = {
 const NodeLogs = ({ taskDetails, onChange }) => {
   const { logs, getLogs } = useLogs();
   const [currentTask, setCurrentTask] = useState(undefined);
+  const { logSource: source } = useSettings();
 
   useEffect(() => {
     const [task] = taskDetails;
     const { taskId, podName } = task;
-
     if (taskId !== currentTask) {
       setCurrentTask(taskId);
-      getLogs({ taskId, podName });
+      getLogs({ taskId, podName, source });
     }
-  }, [currentTask, taskDetails, getLogs]);
+  }, [currentTask, taskDetails, getLogs, source]);
 
   const options = taskDetails.map((task, index) => (
     <Select.Option key={index} value={index}>
@@ -64,7 +64,7 @@ const NodeLogs = ({ taskDetails, onChange }) => {
                 const { taskId, podName } = taskDetails[index];
                 onChange(index);
                 setCurrentTask(taskId);
-                getLogs({ taskId, podName });
+                getLogs({ taskId, podName, source });
               }}>
               {options}
             </SelectFull>
