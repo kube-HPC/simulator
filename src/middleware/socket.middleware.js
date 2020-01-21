@@ -20,13 +20,16 @@ const changeConnectionStatus = (dispatch, { isSocketConnected }) =>
 const connectionsEvents = {
   CONNECTION: 'connect',
   RECONNECT: 'reconnect',
+  EXPERIMENT_REGISTER: 'experiment-register',
 };
 
-const connectLog = () =>
+const connectOperation = socket => {
+  socket.emit('experiment-register', { name: 'experiment:main', lastRoom: null });
   console.log(
     `%cSOCKET Connected, id=${socket.id}`,
     `background: ${COLOR.grey}; color: ${COLOR.blue}`,
   );
+};
 
 const noConnectionEvents = [
   'disconnect',
@@ -60,8 +63,10 @@ const socketMiddleware = ({ dispatch }) => next => action => {
 
     Object.values(connectionsEvents).forEach(event => {
       socket.on(event, args => {
-        event === connectionsEvents.CONNECTION ? connectLog() : console.info(`${event}, ${args}`);
-        isSocketConnected = true;
+        event === (connectionsEvents.CONNECTION || connectionsEvents.EXPERIMENT_REGISTER)
+          ? connectOperation(socket)
+          : console.info(`${event}, ${args}`);
+
         changeConnectionStatus(dispatch, { isSocketConnected });
       });
     });
