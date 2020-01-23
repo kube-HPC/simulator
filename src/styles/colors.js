@@ -21,7 +21,8 @@ export const COLOR = {
 };
 
 export const COLOR_PIPELINE_TYPES = {
-  [TYPES.CACHING]: `#0065E5`,
+  [TYPES.NODE]: `#0065E5`,
+  [TYPES.ALGORITHM]: `#EAB675`,
   [TYPES.CRON]: `#C657D0`,
   [TYPES.INTERNAL]: `#FF5CA2`,
   [TYPES.RAW]: `#FF8974`,
