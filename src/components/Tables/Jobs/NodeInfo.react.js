@@ -1,7 +1,7 @@
 import { Button, Empty } from 'antd';
 import { FlexBox, JsonSwitch, Tabs } from 'components/common';
 import { STATE_SOURCES } from 'const';
-import { useActions, useLogs } from 'hooks';
+import { useActions, useLogs, useSettings } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -25,13 +25,14 @@ const NodeInfo = ({ node, jobId }) => {
   const [index, setIndex] = useState(0);
   const { getCaching } = useActions();
   const { getLogs } = useLogs();
+  const { logSource: source } = useSettings();
 
   const onRunNode = () => node && getCaching({ jobId, nodeName: node.nodeName });
 
   const onRefresh = () => {
     const taskDetails = getTaskDetails(node);
     const { taskId, podName } = taskDetails[index];
-    getLogs({ taskId, podName });
+    getLogs({ taskId, podName, source });
   };
 
   const extra = (
