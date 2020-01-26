@@ -90,7 +90,7 @@ const getJobsColumns = () => [
   },
   {
     title: `Status`,
-    dataIndex: `status.status`,
+    dataIndex: `status`,
     key: `job-status`,
     filterMultiple: true,
     filters: getStatusFilter(),

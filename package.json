@@ -30,7 +30,7 @@
     ]
   },
   "dependencies": {
-    "@hkube/consts": "^1.0.12",
+    "@hkube/consts": "^1.0.18",
     "@monaco-editor/react": "^2.3.0",
     "@nivo/bar": "^0.59.2",
     "ansi-to-react": "^5.1.0",
