@@ -22,14 +22,14 @@ export const nodeFinder = ({ graph, pipeline }) => nodeName => {
     nodeData && nodeData.taskId ? nodeData.taskId : nodeData.batch && nodeData.batch[0].taskId;
   const podName =
     nodeData && nodeData.podName ? nodeData.podName : nodeData.batch && nodeData.batch[0].podName;
-
+  const origInput = node ? node.input : [];
   const payload = {
     ...nodeData,
     jobId,
     taskId,
     nodeName,
     podName,
-    origInput: node.input,
+    origInput,
     batch: nodeData.batch || [],
   };
 

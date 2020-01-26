@@ -2,12 +2,14 @@ import isEqual from 'lodash/isEqual';
 import { useEffect, useMemo, useState } from 'react';
 import { nodeFinder } from 'utils';
 import useLogs from './useLogs';
+import useSettings from './useSettings';
 
 const EMPTY_NODE = {};
 
 const useNodeInfo = ({ graph, pipeline }) => {
   const [node, setNode] = useState(EMPTY_NODE);
   const { getLogs } = useLogs();
+  const { logSource: source } = useSettings();
   const findNodeByName = nodeFinder({ graph, pipeline });
 
   // Update logs on first entry
@@ -30,11 +32,11 @@ const useNodeInfo = ({ graph, pipeline }) => {
       const newNode = findNodeByName(nodeName);
       if (!isEqual(node, newNode)) {
         const { taskId, podName } = newNode;
-        getLogs({ taskId, podName });
+        getLogs({ taskId, podName, source });
         setNode(newNode);
       }
     }
-  }, [findNodeByName, getLogs, graph, node]);
+  }, [findNodeByName, getLogs, graph, node, source]);
 
   const events = useMemo(
     () => ({
@@ -47,11 +49,11 @@ const useNodeInfo = ({ graph, pipeline }) => {
         const payload = findNodeByName(nodeName);
         const { taskId, podName } = payload;
 
-        getLogs({ taskId, podName });
+        getLogs({ taskId, podName, source });
         setNode(payload);
       },
     }),
-    [getLogs, findNodeByName],
+    [getLogs, findNodeByName, source],
   );
 
   return { node, events };

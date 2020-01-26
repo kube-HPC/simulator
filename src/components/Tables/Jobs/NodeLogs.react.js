@@ -39,7 +39,7 @@ const NodeLogs = ({ taskDetails, onChange }) => {
   const { logSource: source } = useSettings();
 
   useEffect(() => {
-    const [task] = taskDetails;
+    const task = taskDetails.find(t => t.taskId === currentTask) || taskDetails[0];
     const { taskId, podName } = task;
     if (taskId !== currentTask) {
       setCurrentTask(taskId);
