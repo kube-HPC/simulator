@@ -5,9 +5,9 @@
   "homepage": ".",
   "scripts": {
     "analyze": "npm run build; source-map-explorer 'build/static/js/*.js'",
-    "start": "REACT_APP_VERSION=$npm_package_version PORT=9050 react-scripts start",
-    "builder": "REACT_APP_VERSION=$npm_package_version react-scripts --max_old_space_size=4096 build",
-    "test": "react-scripts test",
+    "start": "REACT_APP_VERSION=$npm_package_version PORT=9050 react-app-rewired start",
+    "builder": "REACT_APP_VERSION=$npm_package_version react-app-rewired --max_old_space_size=4096 build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "build": "./dockerfile/build.sh simulator",
     "test-travis": "echo \"No test specified\"",
@@ -45,6 +45,8 @@
     "lodash": "^4.17.15",
     "markdown-it": "^10.0.0",
     "moment": "^2.24.0",
+    "monaco-editor": "^0.19.3",
+    "monaco-editor-webpack-plugin": "^1.8.2",
     "object.fromentries": "^2.0.1",
     "parse-unit": "^1.0.1",
     "prop-types": "^15.7.2",
@@ -87,6 +89,7 @@
     "prettier": "^1.19.1",
     "prettier-eslint": "^9.0.1",
     "pretty-quick": "^2.0.1",
+    "react-app-rewired": "^2.1.5",
     "redux-logger": "^3.0.6"
   },
   "husky": {

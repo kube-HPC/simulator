@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { COLOR_LAYOUT, Display } from 'styles';
 import Settings from './Settings/Settings.react';
 import ViewType from './ViewType/ViewType.react';
+import * as monaco from 'monaco-editor'; //eslint-disable-line
 
 const Container = styled.div`
   height: 64px;
