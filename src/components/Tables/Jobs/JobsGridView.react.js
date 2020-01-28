@@ -58,7 +58,7 @@ const toGrid = dataSource =>
       <FlexBox.Auto>
         <Container direction="column" gutter={[0, 10]}>
           <JobProgress status={status} type="circle" width={40} />
-          <ProgressStatus status={status.status} />
+          <ProgressStatus status={status} />
         </Container>
         <FlexBox.Auto justify="start" align="top" gutter={[0, 5]} direction="column">
           <Ellipsis text={jobId} copyable length={35} />
