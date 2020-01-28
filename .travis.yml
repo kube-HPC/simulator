@@ -1,46 +1,50 @@
 sudo: required
 language: node_js
 node_js:
-- '10'
+  - '10'
 services:
-- docker
+  - docker
 branches:
   only:
-  - master
+    - master
 install:
-- npm install
+  - npm install
 # - npm install -g snyk
 # - snyk test || true
 cache:
   directories:
-  - node_modules
+    - node_modules
 script:
-- NODE_ENV=test npm run-script test-travis
+  - NODE_ENV=test npm run-script test-travis
 # after_script: "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
 after_success:
-- |
-  if ([ "$TRAVIS_BRANCH" == "master" ] || [ ! -z "$TRAVIS_TAG" ]) && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-    git config --global user.email "travis@travis-ci.org"
-    git config --global user.name "Travis CI"
-    git remote set-url --push origin "https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git"
-    git remote -v
-    git checkout -f -b version-branch
-    npm version patch -m "$(git log -1 --pretty=%B) .... bump version [skip ci]"
-    git push origin version-branch:master --follow-tags
-    docker login --username yehiyam --password ${DOCKER_HUB_PASS}
-    PRIVATE_REGISTRY=docker.io/hkube npm run build
-    curl -X POST -H 'accept:application/json'  -H "authorization:token ${TRAVIS_API_TOKEN}" -H 'content-type:application/json' -H 'travis-api-version:3' -d "{\"request\":{\"branch\":\"master\",\"message\":\"triggered by ${TRAVIS_REPO_SLUG}\"}}" "https://api.travis-ci.org/repo/kube-HPC%2Frelease-manager/requests"
-  elif [ ! -z "$DOCKER_HUB_PASS" ]; then
-    echo "version skipped!"
-    echo "creating temp docker image"
-    docker login --username yehiyam --password ${DOCKER_HUB_PASS}
-    export DEPLOYMENT_ID=$(./scripts/createGithubDeployment.sh)
-    echo created deployment with id ${DEPLOYMENT_ID}
-    STATUS=in_progress ./scripts/updateDeploymentStatus.sh
-    PRIVATE_REGISTRY=docker.io/hkube npm run build
-    ./scripts/install.sh
-    ./scripts/deploy-staging.sh
-    STATUS=success ./scripts/updateDeploymentStatus.sh
-  else
-    echo "version skipped!"
-  fi
+  - |
+    if ([ "$TRAVIS_BRANCH" == "master" ] || [ ! -z "$TRAVIS_TAG" ]) && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+      git config --global user.email "travis@travis-ci.org"
+      git config --global user.name "Travis CI"
+      git remote set-url --push origin "https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git"
+      git remote -v
+      git checkout -f -b version-branch
+      npm version patch -m "$(git log -1 --pretty=%B) .... bump version [skip ci]"
+      git push origin version-branch:master --follow-tags
+      docker login --username yehiyam --password ${DOCKER_HUB_PASS}
+      PRIVATE_REGISTRY=docker.io/hkube npm run build
+      curl -X POST -H 'accept:application/json'  -H "authorization:token ${TRAVIS_API_TOKEN}" -H 'content-type:application/json' -H 'travis-api-version:3' -d "{\"request\":{\"branch\":\"master\",\"message\":\"triggered by ${TRAVIS_REPO_SLUG}\"}}" "https://api.travis-ci.org/repo/kube-HPC%2Frelease-manager/requests"
+    elif [ ! -z "$DOCKER_HUB_PASS" ]; then
+      echo "version skipped!"
+      echo "creating temp docker image"
+      docker login --username yehiyam --password ${DOCKER_HUB_PASS}
+      export DEPLOYMENT_ID=$(./scripts/createGithubDeployment.sh)
+      echo created deployment with id ${DEPLOYMENT_ID}
+      STATUS=in_progress ./scripts/updateDeploymentStatus.sh
+      echo TRAVIS_PULL_REQUEST_BRANCH=$TRAVIS_PULL_REQUEST_BRANCH
+      export PR_NAME="${TRAVIS_PULL_REQUEST_BRANCH,,}"
+      export PR_NAME="${PR_NAME//_/-}"
+      echo TAG=$PR_NAME
+      PRIVATE_REGISTRY=docker.io/hkube npm run build
+      ./scripts/install.sh
+      ./scripts/deploy-staging.sh
+      STATUS=success ./scripts/updateDeploymentStatus.sh
+    else
+      echo "version skipped!"
+    fi
