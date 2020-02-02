@@ -3,6 +3,7 @@ import { Descriptions } from 'components/common';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
+import { prop } from 'styled-tools';
 
 const { Text } = Typography;
 const EMPTY = `Empty`;
@@ -14,21 +15,19 @@ const getTotalColumns = ({ obj, vertical }) => (vertical ? Object.keys(obj).leng
 const isEmptyObject = obj => Object.entries(obj).length === 0;
 
 const Margin = styled(Descriptions)`
-  margin-top: ${({ isMargin }) => (isMargin ? '8px' : 'none')};
+  margin-top: ${prop('isMargin', 'none')};
 `;
 
 // Recursion Step
 const RenderItemByValueType = ({ obj, vertical, isMargin = false, key }) =>
   isPureObject(obj) ? (
-    <>
-      <Margin
-        key={key}
-        column={getTotalColumns({ obj: obj, vertical })}
-        vertical={vertical}
-        isMargin={isMargin}>
-        {objToItem({ obj })}
-      </Margin>
-    </>
+    <Margin
+      key={key}
+      column={getTotalColumns({ obj: obj, vertical })}
+      vertical={vertical}
+      isMargin={isMargin}>
+      {objToItem({ obj })}
+    </Margin>
   ) : Array.isArray(obj) ? (
     <>
       {obj.map((value, i) =>

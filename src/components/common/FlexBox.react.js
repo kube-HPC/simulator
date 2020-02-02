@@ -2,15 +2,29 @@ import { Col, Row } from 'antd';
 import PropTypes from 'prop-types';
 import React, { Children } from 'react';
 import styled from 'styled-components';
-import { prop } from 'styled-tools';
+import { prop, switchProp } from 'styled-tools';
 
 const FlexAligned = styled(Row)`
   align-items: ${prop('align', 'center')};
   flex-direction: ${prop('direction', 'row')};
 `;
 
-const FlexBox = ({ children, justify, align, gutter, direction, ...props }) => (
-  <FlexAligned justify={justify} align={align} gutter={gutter} direction={direction} {...props}>
+const FlexBox = ({
+  children,
+  align,
+  direction,
+  justify = 'space-between',
+  type = 'flex',
+  gutter = 10,
+  ...props
+}) => (
+  <FlexAligned
+    justify={justify}
+    align={align}
+    gutter={gutter}
+    direction={direction}
+    type={type}
+    {...props}>
     {children}
   </FlexAligned>
 );
@@ -18,7 +32,10 @@ const FlexBox = ({ children, justify, align, gutter, direction, ...props }) => (
 FlexBox.propTypes = Row.propTypes;
 
 const ColFull = styled(Col)`
-  width: ${({ full }) => (full === 'true' ? '100%' : 'fit-content')};
+  width: ${switchProp('full', {
+    true: '100%',
+    false: 'fit-content',
+  })};
 `;
 
 const Item = ({ children, className, full = false, ...props }) => (
@@ -34,12 +51,6 @@ Item.propTypes = {
 };
 
 FlexBox.Item = Item;
-
-FlexBox.defaultProps = {
-  justify: 'space-between',
-  type: 'flex',
-  gutter: 10,
-};
 
 const Auto = ({ children, full, ...props }) => (
   <FlexBox {...props}>

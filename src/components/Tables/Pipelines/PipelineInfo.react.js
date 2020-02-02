@@ -9,7 +9,7 @@ const TABS = {
   DESCRIPTION: 'Description',
 };
 
-const PipelineTabs = ({ record }) => {
+const PipelineInfo = ({ record }) => {
   const [activeKey, setActiveKey] = useState(TABS.INFO);
   const [readme, setReadme] = useState();
 
@@ -51,8 +51,8 @@ const PipelineTabs = ({ record }) => {
   );
 };
 
-PipelineTabs.propTypes = {
+PipelineInfo.propTypes = {
   record: PropTypes.object.isRequired,
 };
 
-export default PipelineTabs;
+export default PipelineInfo;
