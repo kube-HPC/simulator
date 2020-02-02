@@ -1,11 +1,14 @@
-import { Button, Empty, Icon, Popover, Radio } from 'antd';
+import { Button, Empty, Icon, Popover, Radio, Tag } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import { FlexBox } from 'components/common';
 import { IconTensorFlow } from 'components/Icons';
 import { DRAWER_SIZE, USER_GUIDE } from 'const';
 import { useActions, usePipeline } from 'hooks';
+import isEqual from 'lodash/isEqual';
 import PropTypes from 'prop-types';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
+import { COLOR_LAYOUT } from 'styles';
 import { deleteConfirmAction } from 'utils';
 import PipelineInfo from './PipelineInfo.react';
 
@@ -15,9 +18,14 @@ const {
 
 const radioStyle = {
   display: 'block',
-  height: '30px',
-  lineHeight: '30px',
+  height: `30px`,
+  lineHeight: `30px`,
 };
+
+const Container = styled(Radio.Group)`
+  max-height: 30vh;
+  overflow: auto;
+`;
 
 const PipelineActions = ({ pipeline, className }) => {
   const [selectedNode, setSelectedNode] = useState(null);
@@ -56,14 +64,15 @@ const PipelineActions = ({ pipeline, className }) => {
 
   const content = (
     <FlexBox.Auto direction="column" full gutter={[0, 10]}>
-      <Radio.Group onChange={onSelect} value={selectedNode}>
+      <Container onChange={onSelect} value={selectedNode}>
         {nodes.map(({ nodeName, algorithmName }) => (
           <Radio key={nodeName} value={nodeName} style={radioStyle}>
-            <Text>Node: {nodeName} </Text>
-            <Text strong>Algorithm: {algorithmName}</Text>
+            Node: <Tag>{nodeName}</Tag>
+            <Text strong>Algorithm: </Text>
+            <Tag color={COLOR_LAYOUT.colorPrimary}>{algorithmName}</Tag>
           </Radio>
         ))}
-      </Radio.Group>
+      </Container>
       <Button type="primary" block size="small" onClick={onRun}>
         Run
       </Button>
@@ -96,4 +105,6 @@ PipelineActions.propTypes = {
   className: PropTypes.string,
 };
 
-export default PipelineActions;
+const areEqual = ({ pipeline: { nodes: a } }, { pipeline: { nodes: b } }) => isEqual(a, b);
+
+export default memo(PipelineActions, areEqual);

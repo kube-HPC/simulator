@@ -1,16 +1,16 @@
-import { Checkbox } from 'antd';
+import { Tag } from 'antd';
 import { useBoards } from 'hooks';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { memo } from 'react';
 
 const PipelineTensorflow = ({ name }) => {
   const { nodeMap } = useBoards();
   const nodeInfo = nodeMap[name];
-  return <Checkbox checked={nodeInfo !== undefined} />;
+  return <Tag>{nodeInfo !== undefined ? 'Has Metrics' : 'Empty'}</Tag>;
 };
 
 PipelineTensorflow.propTypes = {
   name: PropTypes.string.isRequired,
 };
 
-export default PipelineTensorflow;
+export default memo(PipelineTensorflow);
