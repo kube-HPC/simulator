@@ -30,7 +30,7 @@
     ]
   },
   "dependencies": {
-    "@hkube/consts": "^1.0.18",
+    "@hkube/consts": "^1.0.19",
     "@monaco-editor/react": "^2.3.0",
     "@nivo/bar": "^0.59.2",
     "ansi-to-react": "^5.1.0",
@@ -68,7 +68,8 @@
     "reusable": "^1.0.0-alpha.12",
     "seamless-immutable": "^7.1.4",
     "socket.io-client": "^2.3.0",
-    "styled-components": "^5.0.0-beta.6-ej4"
+    "styled-components": "^5.0.0-beta.6-ej4",
+    "styled-tools": "^1.7.1"
   },
   "devDependencies": {
     "@dennisvash/eslint-config": "^2.2.2",

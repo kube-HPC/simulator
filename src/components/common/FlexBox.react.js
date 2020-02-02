@@ -2,14 +2,15 @@ import { Col, Row } from 'antd';
 import PropTypes from 'prop-types';
 import React, { Children } from 'react';
 import styled from 'styled-components';
+import { prop } from 'styled-tools';
 
 const FlexAligned = styled(Row)`
-  align-items: ${({ align = 'center' }) => align};
-  flex-direction: ${({ direction = 'row' }) => direction};
+  align-items: ${prop('align', 'center')};
+  flex-direction: ${prop('direction', 'row')};
 `;
 
-const FlexBox = ({ children, justify, align, gutter, ...props }) => (
-  <FlexAligned justify={justify} align={align} gutter={gutter} {...props}>
+const FlexBox = ({ children, justify, align, gutter, direction, ...props }) => (
+  <FlexAligned justify={justify} align={align} gutter={gutter} direction={direction} {...props}>
     {children}
   </FlexAligned>
 );
@@ -40,15 +41,20 @@ FlexBox.defaultProps = {
   gutter: 10,
 };
 
-const Auto = ({ children, ...props }) => (
+const Auto = ({ children, full, ...props }) => (
   <FlexBox {...props}>
     {Children.map(children, (item, i) => (
-      <FlexBox.Item key={i}>{item}</FlexBox.Item>
+      <FlexBox.Item key={i} full={full}>
+        {item}
+      </FlexBox.Item>
     ))}
   </FlexBox>
 );
 
-Auto.propTypes = FlexBox.propTypes;
+Auto.propTypes = {
+  full: PropTypes.bool,
+  ...FlexBox.propTypes,
+};
 
 FlexBox.Auto = Auto;
 

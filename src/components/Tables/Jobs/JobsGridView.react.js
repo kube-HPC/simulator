@@ -12,6 +12,7 @@ import JobTypes from './JobTypes.react';
 
 const gridStyle = {
   width: `25%`,
+  padding: `24px 0px`,
 };
 
 const { Meta, Grid } = Card;
@@ -23,7 +24,7 @@ const GridItem = styled(Grid)`
     margin: 0px;
   }
   ${ActionsHidden} {
-    transition: all 0.3s;
+    transition: opacity 0.5s ease;
     opacity: 0;
   }
   &:hover,
@@ -41,6 +42,8 @@ const Container = styled(FlexBox.Auto)`
 const FlexContainer = styled(FlexBox.Auto)`
   height: 100%;
 `;
+
+const LENGTH = 20;
 
 const toGrid = dataSource =>
   dataSource.map(job => {
@@ -61,8 +64,8 @@ const toGrid = dataSource =>
           <ProgressStatus status={status} />
         </Container>
         <FlexBox.Auto justify="start" align="top" gutter={[0, 5]} direction="column">
-          <Ellipsis text={jobId} copyable length={35} />
-          <JobTime results={results} startTime={startTime} />
+          <Ellipsis text={jobId} copyable length={LENGTH} />
+          <JobTime results={results} startTime={startTime} length={LENGTH} />
           <JobStats status={status} />
         </FlexBox.Auto>
       </FlexBox.Auto>

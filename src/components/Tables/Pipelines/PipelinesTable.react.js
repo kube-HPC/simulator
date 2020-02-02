@@ -1,5 +1,6 @@
 import { Table } from 'components';
-import { usePipeline } from 'hooks';
+import { DRAWER_SIZE } from 'const';
+import { useActions, usePipeline } from 'hooks';
 import React from 'react';
 import getPipelineColumns from './getPipelineColumns.react';
 import PipelineTabs from './PipelineTabs.react';
@@ -9,14 +10,23 @@ const rowKey = ({ name }) => name;
 const PipelinesTable = () => {
   const { dataSource, ...actions } = usePipeline();
 
-  const expandedRowRender = record => <PipelineTabs record={record} />;
+  const { drawerOpen } = useActions();
+
+  const onRow = record => ({
+    onDoubleClick: () => {
+      const { name } = record;
+      const body = <PipelineTabs record={record} />;
+      drawerOpen({ title: name, body, width: DRAWER_SIZE.ALGORITHM_INFO });
+    },
+  });
 
   return (
     <Table
       rowKey={rowKey}
       dataSource={dataSource}
       columns={getPipelineColumns(actions)}
-      expandedRowRender={expandedRowRender}
+      onRow={onRow}
+      expandIcon={false}
     />
   );
 };

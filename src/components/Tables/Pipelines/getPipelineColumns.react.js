@@ -1,7 +1,7 @@
 import { Button, Modal, Tooltip, Typography } from 'antd';
 import { Ellipsis, FlexBox, StatusTag } from 'components/common';
 import React from 'react';
-import { sorter } from 'utils/string';
+import { sorter } from 'utils';
 import SwitchCron from './SwitchCron.react';
 
 const deleteConfirmAction = (action, record) => {
@@ -49,35 +49,29 @@ const getPipelineColumns = ({ dataStats, update, remove, execute }) => {
   const Action = (_, record) => {
     // http://hkube.io/spec/#tag/Execution/paths/~1exec~1stored/post
     // Don't use nodes & description
-    // eslint-disable-next-line
+    /* eslint-disable no-unused-vars */
     const { nodes, description, ...currPipeline } = record;
 
-    // eslint-disable-next-line
+    /* eslint-disable no-unused-vars */
     const { triggers, ...noTriggersPipeline } = currPipeline;
 
     return (
-      <FlexBox justify="start">
-        <FlexBox.Item>
-          <Tooltip title="Execute Pipeline">
-            <Button shape="circle" icon="caret-right" onClick={() => execute(noTriggersPipeline)} />
-          </Tooltip>
-        </FlexBox.Item>
-        <FlexBox.Item>
-          <Tooltip title="Update Pipeline">
-            <Button shape="circle" icon="edit" onClick={() => update(record)} />
-          </Tooltip>
-        </FlexBox.Item>
-        <FlexBox.Item>
-          <Tooltip title="Delete Pipeline">
-            <Button
-              type="dashed"
-              shape="circle"
-              icon="delete"
-              onClick={() => deleteConfirmAction(remove, record)}
-            />
-          </Tooltip>
-        </FlexBox.Item>
-      </FlexBox>
+      <FlexBox.Auto justify="start">
+        <Tooltip title="Execute Pipeline">
+          <Button shape="circle" icon="caret-right" onClick={() => execute(noTriggersPipeline)} />
+        </Tooltip>
+        <Tooltip title="Update Pipeline">
+          <Button shape="circle" icon="edit" onClick={() => update(record)} />
+        </Tooltip>
+        <Tooltip title="Delete Pipeline">
+          <Button
+            type="dashed"
+            shape="circle"
+            icon="delete"
+            onClick={() => deleteConfirmAction(remove, record)}
+          />
+        </Tooltip>
+      </FlexBox.Auto>
     );
   };
 
@@ -86,6 +80,7 @@ const getPipelineColumns = ({ dataStats, update, remove, execute }) => {
       title: 'Pipeline Name',
       dataIndex: 'name',
       key: 'name',
+      width: '10%',
       sorter: (a, b) => sorter(a.name, b.name),
       render: PipelineName,
     },
