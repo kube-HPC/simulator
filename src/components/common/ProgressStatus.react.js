@@ -1,4 +1,4 @@
-import { Tooltip, Tag as AntdTag } from 'antd';
+import { Tag as AntdTag, Tooltip } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
@@ -16,7 +16,7 @@ const ProgressStatus = ({ status }) => (
 );
 
 ProgressStatus.propTypes = {
-  status: PropTypes.string.isRequired,
+  status: PropTypes.object.isRequired,
 };
 
 export default ProgressStatus;
