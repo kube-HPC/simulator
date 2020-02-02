@@ -23,7 +23,7 @@ const PipelineActions = ({ pipeline, className }) => {
   const [selectedNode, setSelectedNode] = useState(null);
 
   const { execute, update, remove } = usePipeline();
-  const { drawerOpen } = useActions();
+  const { drawerOpen, startBoard } = useActions();
 
   const container = useRef();
 
@@ -52,7 +52,7 @@ const PipelineActions = ({ pipeline, className }) => {
   const onExecute = () => execute(noTriggersPipeline);
 
   const onSelect = ({ target: { value } }) => setSelectedNode(value);
-  const onRun = () => console.log(pipeline.name, selectedNode);
+  const onRun = () => startBoard({ pipelineName: pipeline.name, nodeName: selectedNode });
 
   const content = (
     <FlexBox.Auto direction="column" full gutter={[0, 10]}>

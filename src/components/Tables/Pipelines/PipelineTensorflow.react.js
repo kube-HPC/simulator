@@ -5,8 +5,8 @@ import React from 'react';
 
 const PipelineTensorflow = ({ name }) => {
   const { nodeMap } = useBoards();
-  const hasMetrics = nodeMap[name];
-  return <Checkbox checked={hasMetrics} />;
+  const nodeInfo = nodeMap[name];
+  return <Checkbox checked={nodeInfo !== undefined} />;
 };
 
 PipelineTensorflow.propTypes = {

@@ -1,7 +1,10 @@
-// export const toggle = () => ({
-//   type: actions.VIEW_TYPE_TOGGLE,
-// });
+import { actionType } from 'const';
 
-// export const firstLoad = () => ({
-//   type: actions.VIEW_TYPE_LOAD_ONCE,
-// });
+export const startBoard = ({ pipelineName, nodeName }) => ({
+  type: actionType.REST_REQ_POST,
+  payload: {
+    url: 'boards/tensors',
+    body: { pipelineName, nodeName },
+    actionType: actionType.TENSORFLOW_START,
+  },
+});
