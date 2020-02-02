@@ -1,6 +1,6 @@
-import { SERVICES } from '../const/services';
-import { PIPELINE_STATES, LOGGER_LEVEL } from 'const';
 import { pipelineTypes as TYPES } from '@hkube/consts';
+import { LOGGER_LEVEL, PIPELINE_STATES } from 'const';
+import { SERVICES } from '../const/services';
 
 export const COLOR = {
   blue: `#307fe6`,
@@ -29,6 +29,7 @@ export const COLOR_PIPELINE_TYPES = {
   [TYPES.STORED]: `#00A7F9`,
   [TYPES.SUB_PIPELINE]: `#FFC25A`,
   [TYPES.TENSORBOARD]: `#87d068`,
+  [TYPES.TRIGGER]: `#36DFB9`,
 };
 
 // View all services colors @ https://github.com/kube-HPC/hkube/labels
