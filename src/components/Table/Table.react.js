@@ -16,16 +16,18 @@ const TableWhite = styled(AntTable)`
     background: none;
   }
   .ant-table-row {
+    transition: all 1s ease;
     .${TABLE_JOB.ACTIONS_SELECT}, .${TABLE_PIPELINE.ACTIONS_SELECT} {
-      transition: all 0.5s ease;
-      opacity: 0;
+      transition: all 1s ease;
       height: 32px;
       overflow: hidden;
+      opacity: 0;
       width: 0;
     }
-    &:hover,
-    &:focus {
+    &:hover {
+      transition: all 1s ease;
       .${TABLE_JOB.ACTIONS_SELECT}, .${TABLE_PIPELINE.ACTIONS_SELECT} {
+        transition: all 1s ease;
         opacity: 1;
         width: fit-content;
       }

@@ -10,6 +10,7 @@ import { jobsKubernetesLogs, jobsTable } from 'reducers/jobs.reducer';
 import { nodeStatistics } from 'reducers/nodeStatistics.reducer';
 import { pipelineTable } from 'reducers/pipeline.reducer';
 import { settings } from 'reducers/settings.reducer';
+import { boards } from 'reducers/tensorflow.reducer';
 import { userGuide } from 'reducers/userGuide.reducer';
 import { viewType } from 'reducers/viewType.reducer';
 import { workerTable } from 'reducers/worker.reducer';
@@ -19,6 +20,7 @@ const store = {
   algorithmBuildsTable,
   algorithmTable,
   autoCompleteFilter,
+  boards,
   connectionStatus,
   debugTable,
   drawer,
@@ -29,11 +31,11 @@ const store = {
   jobsTable,
   nodeStatistics,
   pipelineTable,
+  settings,
   socketURL,
   userGuide,
   viewType,
   workerTable,
-  settings,
 };
 
 export default combineReducers(store);

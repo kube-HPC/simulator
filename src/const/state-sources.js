@@ -20,4 +20,5 @@ export default {
   VIEW_TYPE: `viewType`,
   FILTER_TYPES: `filterByType`,
   SETTINGS: `settings`,
+  BOARDS: `boards`,
 };

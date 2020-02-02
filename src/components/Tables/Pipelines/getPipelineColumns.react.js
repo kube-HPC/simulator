@@ -6,7 +6,7 @@ import PipelineStats from './PipelineStats.react';
 import PipelineTensorflow from './PipelineTensorflow.react';
 
 const PipelineName = name => <Ellipsis copyable text={name} />;
-const TensorflowMetrics = (_, pipeline) => <PipelineTensorflow pipeline={pipeline} />;
+const TensorflowMetrics = name => <PipelineTensorflow name={name} />;
 const Stats = (_, pipeline) => <PipelineStats pipeline={pipeline} />;
 const Cron = (_, pipeline) => <PipelineCron pipeline={pipeline} />;
 
@@ -28,6 +28,7 @@ const getPipelineColumns = () => [
   },
   {
     title: 'Tensorflow',
+    dataIndex: 'name',
     key: 'tensorflow',
     render: TensorflowMetrics,
     width: '20%',

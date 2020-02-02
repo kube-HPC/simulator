@@ -1,5 +1,6 @@
 export { default as useActions } from 'hooks/useActions';
 export { default as useAlgorithm } from 'hooks/useAlgorithm';
+export { default as useBoards } from 'hooks/useBoards';
 export { default as useConnectionStatus } from 'hooks/useConnectionStatus';
 export { default as useDrawer } from 'hooks/useDrawer';
 export { default as useDrawerEditor } from 'hooks/useDrawerEditor.react';
@@ -13,8 +14,8 @@ export { default as useNodeInfo } from 'hooks/useNodeInfo';
 export { default as usePipeline } from 'hooks/usePipeline';
 export { default as useReadme } from 'hooks/useReadme';
 export { default as useRightSidebar } from 'hooks/useRightSidebar.react';
+export { default as useSettings } from 'hooks/useSettings';
 export { default as useStore } from 'hooks/useStore';
 export { default as useTraceData } from 'hooks/useTraceData';
 export { default as useVersions } from 'hooks/useVersions';
 export { default as useViewType } from 'hooks/useViewType';
-export { default as useSettings } from 'hooks/useSettings';
