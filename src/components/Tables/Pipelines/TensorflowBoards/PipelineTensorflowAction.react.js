@@ -6,7 +6,7 @@ import isEqual from 'lodash/isEqual';
 import PropTypes from 'prop-types';
 import React, { memo, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { COLOR } from 'styles';
+import { COLOR, Display } from 'styles';
 
 const radioStyle = {
   height: `30px`,
@@ -17,6 +17,8 @@ const radioStyle = {
 const Container = styled(Radio.Group)`
   max-height: 30vh;
   overflow: auto;
+  width: 100%;
+  min-width: 300px;
 `;
 
 const PipelineTensorflowAction = ({ name, nodes }) => {
@@ -48,17 +50,17 @@ const PipelineTensorflowAction = ({ name, nodes }) => {
           </Radio>
         ))}
       </Container>
-      {!hasMetrics(selectedNode) && (
+      <Display isVisible={!hasMetrics(selectedNode)}>
         <Alert
           type="warning"
           message={
             <>
-              No tensor metrics for node <Text strong>{selectedNode}</Text>
+              No Tensor metrics for node <Text strong>{selectedNode}</Text>
             </>
           }
           showIcon
         />
-      )}
+      </Display>
       <Button type="primary" block size="small" onClick={onRun}>
         Run
       </Button>

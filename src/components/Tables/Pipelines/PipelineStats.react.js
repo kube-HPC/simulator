@@ -28,13 +28,10 @@ const PipelineStats = ({ name, nodes }) => {
 
   return (
     <>
-      {hasStats ? (
+      {hasStats &&
         pipelineStats.map(([status, count], i) => (
           <StatusTag key={`${status}-${i}`} status={status} count={count} />
-        ))
-      ) : (
-        <StatusTag count={0} />
-      )}
+        ))}
       {metricsAvailable && (
         <Tooltip title="Tensor Metrics are Available">
           <Tag color="orange">Metrics</Tag>
@@ -45,7 +42,7 @@ const PipelineStats = ({ name, nodes }) => {
           title={boards.map(({ name, boardLink, status }) => {
             const link = (
               <div>
-                <Text>
+                <Text underline>
                   <a href={boardLink}>{name}</a>
                 </Text>
               </div>
@@ -63,6 +60,7 @@ const PipelineStats = ({ name, nodes }) => {
           <Tag color="purple">Boards</Tag>
         </Tooltip>
       )}
+      {!hasStats && !metricsAvailable && !boardsAvailable && <Tag>No Stats</Tag>}
     </>
   );
 };
