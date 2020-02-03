@@ -54,7 +54,7 @@ RenderItemByValueType.propTypes = {
 function objToItem({ obj, vertical }) {
   return Object.entries(obj).map(([key, value]) => (
     <Descriptions.Item key={key} label={<Text strong>{key}</Text>}>
-      {isEmptyObject(value) ? (
+      {isPureObject(value) && isEmptyObject(value) ? (
         <Tag>{EMPTY}</Tag>
       ) : (
         RenderItemByValueType({ obj: value, vertical, key })

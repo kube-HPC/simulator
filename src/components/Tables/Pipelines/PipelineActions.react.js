@@ -1,37 +1,33 @@
-import { Button, Empty, Icon, Popover, Radio, Tag } from 'antd';
-import Text from 'antd/lib/typography/Text';
-import { FlexBox } from 'components/common';
+import { Button, Empty, Icon, Popover } from 'antd';
 import { IconTensorFlow } from 'components/Icons';
 import { DRAWER_SIZE, USER_GUIDE } from 'const';
-import { useActions, usePipeline } from 'hooks';
+import { useActions, useBoards, usePipeline } from 'hooks';
 import isEqual from 'lodash/isEqual';
 import PropTypes from 'prop-types';
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, useRef } from 'react';
 import styled from 'styled-components';
-import { COLOR_LAYOUT } from 'styles';
+import { ifProp } from 'styled-tools';
+import { COLOR } from 'styles';
 import { deleteConfirmAction } from 'utils';
 import PipelineInfo from './PipelineInfo.react';
+import PipelineTensorflowAction from './TensorflowBoards/PipelineTensorflowAction.react';
 
 const {
   TABLE_PIPELINE: { ACTIONS_SELECT },
 } = USER_GUIDE;
 
-const radioStyle = {
-  display: 'block',
-  height: `30px`,
-  lineHeight: `30px`,
-};
+const title = 'Run Node with Tensorflow Board';
 
-const Container = styled(Radio.Group)`
-  max-height: 30vh;
-  overflow: auto;
+const ColorButton = styled(Button)`
+  background: ${ifProp({ metrics: true }, COLOR.lightGreen, 'white')};
 `;
 
-const PipelineActions = ({ pipeline, className }) => {
-  const [selectedNode, setSelectedNode] = useState(null);
+export const hasMetrics = ({ info, node }) => info && info[node] && info[node].hasMetrics;
 
+const PipelineActions = ({ pipeline, className }) => {
   const { execute, update, remove } = usePipeline();
-  const { drawerOpen, startBoard } = useActions();
+  const { drawerOpen } = useActions();
+  const { nodeMap } = useBoards();
 
   const container = useRef();
 
@@ -42,54 +38,39 @@ const PipelineActions = ({ pipeline, className }) => {
 
   const hasNodes = nodes.length !== 0;
 
-  useEffect(() => {
-    if (hasNodes) {
-      const [{ nodeName }] = nodes;
-      setSelectedNode(nodeName);
-    }
-  }, [hasNodes, nodes]);
-
   const onMoreInfo = () =>
     drawerOpen({
       title: pipeline.name,
       body: <PipelineInfo record={pipeline} />,
       width: DRAWER_SIZE.JOB_INFO,
     });
+
   const onDelete = () => deleteConfirmAction(remove, pipeline);
   const onUpdate = () => update(pipeline);
   const onExecute = () => execute(noTriggersPipeline);
+  const setPopupContainer = () => container.current;
 
-  const onSelect = ({ target: { value } }) => setSelectedNode(value);
-  const onRun = () => startBoard({ pipelineName: pipeline.name, nodeName: selectedNode });
+  const popOverContent = hasNodes ? (
+    <PipelineTensorflowAction name={pipeline.name} nodes={nodes} />
+  ) : (
+    <Empty />
+  );
 
-  const content = (
-    <FlexBox.Auto direction="column" full gutter={[0, 10]}>
-      <Container onChange={onSelect} value={selectedNode}>
-        {nodes.map(({ nodeName, algorithmName }) => (
-          <Radio key={nodeName} value={nodeName} style={radioStyle}>
-            Node: <Tag>{nodeName}</Tag>
-            <Text strong>Algorithm: </Text>
-            <Tag color={COLOR_LAYOUT.colorPrimary}>{algorithmName}</Tag>
-          </Radio>
-        ))}
-      </Container>
-      <Button type="primary" block size="small" onClick={onRun}>
-        Run
-      </Button>
-    </FlexBox.Auto>
+  const hasNodeWithMetrics = nodes.some(({ nodeName }) =>
+    hasMetrics({ info: nodeMap[pipeline.name], node: nodeName }),
   );
 
   return (
     <div className={ACTIONS_SELECT} ref={container}>
       <Button.Group className={className}>
         <Popover
-          title="Run Node with Tensorflow Board"
-          content={hasNodes ? content : <Empty />}
+          title={title}
+          content={popOverContent}
           placement="left"
-          getPopupContainer={() => container.current}>
-          <Button className="ant-btn-icon-only">
+          getPopupContainer={setPopupContainer}>
+          <ColorButton metrics={hasNodeWithMetrics} className="ant-btn-icon-only">
             <Icon component={IconTensorFlow} />
-          </Button>
+          </ColorButton>
         </Popover>
         <Button icon="play-circle" onClick={onExecute} />
         <Button icon="edit" onClick={onUpdate} />
@@ -105,6 +86,6 @@ PipelineActions.propTypes = {
   className: PropTypes.string,
 };
 
-const areEqual = ({ pipeline: { nodes: a } }, { pipeline: { nodes: b } }) => isEqual(a, b);
+const areEqual = ({ pipeline: a }, { pipeline: b }) => isEqual(a, b);
 
 export default memo(PipelineActions, areEqual);

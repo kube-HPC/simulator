@@ -1,4 +1,4 @@
-import { pipelineTypes as TYPES } from '@hkube/consts';
+import { boardStatuses as BOARD, pipelineTypes as TYPES } from '@hkube/consts';
 import { LOGGER_LEVEL, PIPELINE_STATES } from 'const';
 import { SERVICES } from '../const/services';
 
@@ -30,6 +30,13 @@ export const COLOR_PIPELINE_TYPES = {
   [TYPES.SUB_PIPELINE]: `#FFC25A`,
   [TYPES.TENSORBOARD]: `#87d068`,
   [TYPES.TRIGGER]: `#36DFB9`,
+};
+
+export const COLOR_BOARDS = {
+  [BOARD.CREATING]: COLOR.yellow,
+  [BOARD.PENDING]: COLOR.grey,
+  [BOARD.RUNNING]: COLOR.lightGreen,
+  [BOARD.STOPPED]: COLOR.orange,
 };
 
 // View all services colors @ https://github.com/kube-HPC/hkube/labels

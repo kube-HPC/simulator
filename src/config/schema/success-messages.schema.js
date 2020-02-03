@@ -10,7 +10,8 @@ const successMsg = payload => ({
   PIPELINE_ADD: `Pipeline ${payload.name} has been stored`,
   PIPELINE_DELETE: 'Pipeline deleted',
   PIPELINE_START: 'Pipeline started, check Jobs table',
-  PIPELINE_UPDATE: 'Pipeline updated'
+  PIPELINE_UPDATE: 'Pipeline updated',
+  TENSORFLOW_START: 'Board started successfully',
 });
 
 export default successMsg;

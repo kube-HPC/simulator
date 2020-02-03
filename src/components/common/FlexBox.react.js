@@ -13,12 +13,14 @@ const FlexBox = ({
   children,
   align,
   direction,
+  innerRef,
   justify = 'space-between',
   type = 'flex',
   gutter = 10,
   ...props
 }) => (
   <FlexAligned
+    ref={innerRef}
     justify={justify}
     align={align}
     gutter={gutter}
