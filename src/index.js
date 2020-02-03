@@ -1,10 +1,10 @@
+import { ErrorBoundary } from 'components';
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import store from './store';
-import { ErrorBoundary } from 'components';
-import DashboardReact from './components/Dashboard/Dashboard.react';
 import { ReusableProvider } from 'reusable';
+import DashboardReact from './components/Dashboard/Dashboard.react';
+import store from './store';
 
 render(
   <Provider store={store}>

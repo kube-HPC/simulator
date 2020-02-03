@@ -1,13 +1,10 @@
 import { Button, Empty, Icon, Popover } from 'antd';
 import { IconTensorFlow } from 'components/Icons';
 import { DRAWER_SIZE, USER_GUIDE } from 'const';
-import { useActions, useBoards, usePipeline } from 'hooks';
+import { useActions, usePipeline } from 'hooks';
 import isEqual from 'lodash/isEqual';
 import PropTypes from 'prop-types';
 import React, { memo, useRef } from 'react';
-import styled from 'styled-components';
-import { ifProp } from 'styled-tools';
-import { COLOR } from 'styles';
 import { deleteConfirmAction } from 'utils';
 import PipelineInfo from './PipelineInfo.react';
 import PipelineTensorflowAction from './TensorflowBoards/PipelineTensorflowAction.react';
@@ -18,16 +15,9 @@ const {
 
 const title = 'Run Node with Tensorflow Board';
 
-const ColorButton = styled(Button)`
-  background: ${ifProp({ metrics: true }, COLOR.lightGreen, 'white')};
-`;
-
-export const hasMetrics = ({ info, node }) => info && info[node] && info[node].hasMetrics;
-
 const PipelineActions = ({ pipeline, className }) => {
   const { execute, update, remove } = usePipeline();
   const { drawerOpen } = useActions();
-  const { nodeMap } = useBoards();
 
   const container = useRef();
 
@@ -56,10 +46,6 @@ const PipelineActions = ({ pipeline, className }) => {
     <Empty />
   );
 
-  const hasNodeWithMetrics = nodes.some(({ nodeName }) =>
-    hasMetrics({ info: nodeMap[pipeline.name], node: nodeName }),
-  );
-
   return (
     <div className={ACTIONS_SELECT} ref={container}>
       <Button.Group className={className}>
@@ -68,9 +54,9 @@ const PipelineActions = ({ pipeline, className }) => {
           content={popOverContent}
           placement="left"
           getPopupContainer={setPopupContainer}>
-          <ColorButton metrics={hasNodeWithMetrics} className="ant-btn-icon-only">
+          <Button className="ant-btn-icon-only">
             <Icon component={IconTensorFlow} />
-          </ColorButton>
+          </Button>
         </Popover>
         <Button icon="play-circle" onClick={onExecute} />
         <Button icon="edit" onClick={onUpdate} />

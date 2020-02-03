@@ -19,15 +19,11 @@ const Container = styled(Radio.Group)`
   overflow: auto;
 `;
 
-const hasMetrics = ({ info, node }) => info && info[node] && info[node].hasMetrics;
-
 const PipelineTensorflowAction = ({ name, nodes }) => {
   const [selectedNode, setSelectedNode] = useState(null);
   const { startBoard } = useActions();
 
-  const { nodeMap } = useBoards();
-
-  const nodeInfo = nodeMap[name];
+  const { hasMetrics } = useBoards({ pipelineName: name });
 
   useEffect(() => {
     const hasNodes = nodes.length !== 0;
@@ -48,13 +44,11 @@ const PipelineTensorflowAction = ({ name, nodes }) => {
           <Radio key={nodeName} value={nodeName} style={radioStyle}>
             <Tag>{nodeName}</Tag>
             <Tag color={COLOR.darkGrey}>{algorithmName}</Tag>
-            {hasMetrics({ info: nodeInfo, node: nodeName }) && (
-              <Tag color={COLOR.lightGreen}>Has Metrics</Tag>
-            )}
+            {hasMetrics(nodeName) && <Tag color={COLOR.lightGreen}>Has Metrics</Tag>}
           </Radio>
         ))}
       </Container>
-      {!hasMetrics({ info: nodeInfo, node: selectedNode }) && (
+      {!hasMetrics(selectedNode) && (
         <Alert
           type="warning"
           message={

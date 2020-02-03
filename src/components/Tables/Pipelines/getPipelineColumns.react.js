@@ -6,7 +6,7 @@ import PipelineCron from './PipelineCron.react';
 import PipelineStats from './PipelineStats.react';
 
 const PipelineName = name => <Ellipsis copyable text={name} />;
-const Stats = (_, pipeline) => <PipelineStats pipeline={pipeline} />;
+const Stats = (name, { nodes }) => <PipelineStats name={name} nodes={nodes} />;
 const Cron = (_, pipeline) => <PipelineCron pipeline={pipeline} />;
 const Actions = (_, pipeline) => <PipelineActions pipeline={pipeline} />;
 
@@ -26,7 +26,7 @@ const getPipelineColumns = () => [
   },
   {
     title: 'Pipeline Stats',
-    dataIndex: 'status',
+    dataIndex: 'name',
     key: 'status',
     render: Stats,
   },
