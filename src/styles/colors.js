@@ -131,6 +131,7 @@ export const COLOR_PIPELINE_STATUS = {
   [PIPELINE.RUNNING]: COLOR.orangeLight,
   [PIPELINE.STALLED]: COLOR.grey,
   [PIPELINE.STOPPED]: COLOR.orange,
+  [PIPELINE.PAUSED]: COLOR.yellow,
 };
 
 export const COLOR_LOGGER = {
