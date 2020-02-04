@@ -8,10 +8,7 @@ const setMonitorPath = monitorBackend =>
     ? `${location.origin}${monitorBackend.path}` // eslint-disable-line
     : `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}${monitorBackend.path}`;
 
-const setBoardPath = board =>
-  board.useLocation
-    ? `${location.origin}${board.path}` // eslint-disable-line
-    : `${board.schema}${board.host}:${board.port}${board.path}`;
+const setBoardPath = board => `${board.schema}${board.host}:${board.port}${board.path}`;
 
 const DEFAULT_ERROR_MSG = 'Unexpected Error';
 
@@ -65,6 +62,7 @@ const success = (dispatch, payload, action) => {
 };
 
 let SOCKET_URL = null;
+let BOARD_URL = null;
 
 const createUrl = url => `${SOCKET_URL}/${url}`;
 
@@ -72,7 +70,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
   if (action.type === `${AT.SOCKET_GET_CONFIG}_SUCCESS`) {
     const { monitorBackend, board } = action.payload.config;
     SOCKET_URL = setMonitorPath(monitorBackend);
-    const BOARD_URL = setBoardPath(board);
+    BOARD_URL = setBoardPath(board);
     SOCKET_URL && dispatch({ type: AT.SOCKET_SET_URL, url: SOCKET_URL });
     dispatch({ type: AT.BOARD_SET_URL, url: BOARD_URL });
   } else if (
