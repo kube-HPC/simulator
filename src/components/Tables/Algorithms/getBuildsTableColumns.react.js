@@ -73,7 +73,7 @@ const getBuildsTableColumns = ({ onCancel, onRerun }) => [
             failed
               ? 'exception'
               : progress === 100
-                ? PIPELINE_STATUS.SUCCESS
+                ? PIPELINE_STATUS.COMPLETED
                 : PIPELINE_STATUS.ACTIVE
           }
           strokeColor={failed ? COLOR_TASK_STATUS.failed : undefined}

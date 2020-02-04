@@ -71,7 +71,7 @@ const WorkingCount = text => <StatusTag status={PIPELINE_STATUS.ACTIVE} count={t
 const InitCount = text => <StatusTag status={PIPELINE_STATUS.INIT} count={toNum(text)} />;
 const ExitCount = text => <StatusTag status={PIPELINE_STATUS.STOPPED} count={toNum(text)} />;
 const HotCount = text => <StatusTag status={PIPELINE_STATUS.COMPLETED} count={toNum(text)} />;
-const Count = text => <StatusTag status={PIPELINE_STATUS.SUCCEED} count={toNum(text)} />;
+const Count = text => <StatusTag status={PIPELINE_STATUS.COMPLETED} count={toNum(text)} />;
 
 export const getWorkersColumns = () => [
   {
