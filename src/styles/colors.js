@@ -111,12 +111,12 @@ export const COLOR_TASK_STATUS = {
   [TASK.ACTIVE]: COLOR.blueLight,
   [TASK.COMPLETED]: COLOR.greenLight,
   [TASK.CRASHED]: COLOR.pink,
-  [TASK.CREATING]: COLOR.green,
+  [TASK.CREATING]: COLOR.yellow,
   [TASK.FAILED]: COLOR.red,
   [TASK.PENDING]: COLOR.darkGrey,
   [TASK.PRESCHEDULE]: COLOR.cyan,
   [TASK.SKIPPED]: COLOR.orangeLight,
-  [TASK.STALLED]: COLOR.yellow,
+  [TASK.STALLED]: COLOR.grey,
   [TASK.SUCCEED]: COLOR.greenLight,
   [TASK.WARNING]: COLOR.orange,
 };
@@ -129,7 +129,7 @@ export const COLOR_PIPELINE_STATUS = {
   [PIPELINE.PENDING]: COLOR.darkGrey,
   [PIPELINE.RESUMED]: COLOR.blue,
   [PIPELINE.RUNNING]: COLOR.orangeLight,
-  [PIPELINE.STALLED]: COLOR.yellow,
+  [PIPELINE.STALLED]: COLOR.grey,
   [PIPELINE.STOPPED]: COLOR.orange,
 };
 

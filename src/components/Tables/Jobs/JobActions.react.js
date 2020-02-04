@@ -6,11 +6,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import JobInfo from './JobInfo.react';
 
-const ActiveState = [PIPELINE_STATUS.PENDING, PIPELINE_STATUS.ACTIVE, PIPELINE_STATUS.RESUMED];
+const activeStates = [PIPELINE_STATUS.PENDING, PIPELINE_STATUS.ACTIVE, PIPELINE_STATUS.RESUMED];
 
-const isActive = state => ActiveState.includes(state);
-const canPauseOrStop = state => isActive(state) || state === PIPELINE_STATUS.PAUSED;
+const isActive = state => activeStates.includes(state);
 const canPause = state => isActive(state);
+const canPauseOrStop = state => isActive(state) || state === PIPELINE_STATUS.PAUSED;
 
 const JobActions = ({ job, className }) => {
   const {
@@ -39,15 +39,14 @@ const JobActions = ({ job, className }) => {
   };
 
   const isDownloadDisabled = !(results && results.data && results.data.storageInfo);
-  const pauseAndStopIsDisabled = !canPauseOrStop(status);
 
   return (
     <Button.Group className={`${className} ${USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}`}>
       <Button icon="redo" onClick={onReRun} />
-      <Button type="danger" disabled={pauseAndStopIsDisabled} icon="close" onClick={onStop} />
+      <Button type="danger" disabled={!canPauseOrStop(status)} icon="close" onClick={onStop} />
       <Button
-        disabled={canPauseOrStop}
-        icon={pauseAndStopIsDisabled ? 'pause' : 'caret-right'}
+        disabled={!canPauseOrStop(status)}
+        icon={canPause(status) ? 'pause' : 'caret-right'}
         onClick={() => (canPause(status) ? pausePipeline(key) : resumePipeline(key))}
       />
       <Button disabled={isDownloadDisabled} icon="download" onClick={onDownload} />
