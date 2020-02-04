@@ -8,6 +8,10 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled from 'styled-components';
 import { notification } from 'utils';
 
+const Container = styled.div`
+  max-height: 300px;
+`;
+
 const SelectFull = styled(Select)`
   width: 100%;
 `;
@@ -77,7 +81,9 @@ const NodeLogs = ({ taskDetails, onChange }) => {
         </FlexBox.Item>
       </FlexBox>
       <br />
-      <LogsViewer dataSource={logs} />
+      <Container>
+        <LogsViewer dataSource={logs} />
+      </Container>
     </>
   );
 };

@@ -18,7 +18,6 @@ const Container = styled.div`
   padding: 10px;
   color: ${({ isValid }) => (isValid ? 'white' : 'black')};
   white-space: pre-line;
-  max-height: 400px;
 `;
 
 const ItemWrapper = styled.div`
