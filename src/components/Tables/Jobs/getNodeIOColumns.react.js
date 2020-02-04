@@ -6,28 +6,32 @@ import { COLOR_TASK_STATUS } from 'styles/colors';
 import { toUpperCaseFirstLetter } from 'utils/string';
 
 const getStatusFilter = () =>
-  [PIPELINE_STATUS.ACTIVE, PIPELINE_STATUS.SUCCEED, PIPELINE_STATUS.FAILED].map(status => ({
+  [PIPELINE_STATUS.ACTIVE, PIPELINE_STATUS.COMPLETED, PIPELINE_STATUS.FAILED].map(status => ({
     text: toUpperCaseFirstLetter(status),
     value: status,
   }));
+
+const Index = index => <Tag>{index}</Tag>;
+
+const Status = status => (
+  <Tag color={COLOR_TASK_STATUS[status]}>{status && toUpperCaseFirstLetter(status)}</Tag>
+);
 
 const getNodeIOColumns = ({ downloadResult }) => [
   {
     title: 'index',
     dataIndex: 'index',
     key: 'index',
-    render: index => <Tag>{index}</Tag>,
+    render: Index,
   },
   {
     title: 'status',
     dataIndex: 'status',
     key: 'status',
-    render: status => (
-      <Tag color={COLOR_TASK_STATUS[status]}>{status && toUpperCaseFirstLetter(status)}</Tag>
-    ),
     filterMultiple: true,
     filters: getStatusFilter(),
     onFilter: (value, record) => record.status === value,
+    render: Status,
   },
   {
     title: 'duration',

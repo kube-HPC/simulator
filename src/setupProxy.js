@@ -1,5 +1,15 @@
 const proxy = require('http-proxy-middleware');
 
+const parseBool = value => {
+  if (typeof value === 'boolean') {
+    return value;
+  }
+  if (typeof value === 'string' && value.toLowerCase() === 'false') {
+    return false;
+  }
+  return true;
+};
+
 module.exports = function(app) {
   app.use(
     proxy('/api', {
@@ -11,17 +21,19 @@ module.exports = function(app) {
     res.json({
       config: {
         monitorBackend: {
+          useLocation: parseBool(process.env.MONITOR_BACKEND_USE_LOCATION),
           host: process.env.MONITOR_BACKEND_HOST || 'localhost',
           port: process.env.MONITOR_BACKEND_PORT || '30010',
           path: process.env.MONITOR_BACKEND_PATH || '',
           socketIoPath: process.env.MONITOR_BACKEND_PATH_SOCKETIO || '',
-          schema: process.env.MONITOR_BACKEND_IS_SECURED ? 'https://' : 'http://',
+          schema: process.env.isSecured ? 'https://' : 'http://',
         },
         board: {
+          useLocation: parseBool(process.env.BOARD_USE_LOCATION),
           host: process.env.BOARD_HOST || 'localhost',
           port: process.env.BOARD_PORT || '30010',
           path: process.env.BOARD_PATH || '',
-          schema: process.env.BOARD_IS_SECURED ? 'https://' : 'http://',
+          schema: process.env.isSecured ? 'https://' : 'http://',
         },
       },
     });

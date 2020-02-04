@@ -4,6 +4,7 @@ const path = require('path');
 
 const app = express();
 const DEFAULT_PORT = parseInt(process.env.PORT) || 9050;
+
 const parseBool = value => {
   if (typeof value === 'boolean') {
     return value;
@@ -13,11 +14,13 @@ const parseBool = value => {
   }
   return true;
 };
+
 app.use(express.static(path.join(__dirname, '../build')));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../build', 'index.html'));
 });
+
 app.get('/config', (req, res) => {
   res.json({
     config: {
@@ -27,17 +30,19 @@ app.get('/config', (req, res) => {
         port: process.env.MONITOR_BACKEND_PORT || '30010',
         path: process.env.MONITOR_BACKEND_PATH || '',
         socketIoPath: process.env.MONITOR_BACKEND_PATH_SOCKETIO || '',
-        schema: process.env.isSecure ? 'https://' : 'http://',
+        schema: process.env.isSecured ? 'https://' : 'http://',
       },
       board: {
+        useLocation: parseBool(process.env.BOARD_USE_LOCATION),
         host: process.env.BOARD_HOST || 'localhost',
         port: process.env.BOARD_PORT || '30010',
         path: process.env.BOARD_PATH || '',
-        schema: process.env.BOARD_IS_SECURE ? 'https://' : 'http://',
+        schema: process.env.isSecured ? 'https://' : 'http://',
       },
     },
   });
 });
+
 const server = http.createServer(app);
 server.listen(DEFAULT_PORT, () => {
   // eslint-disable-next-line no-console

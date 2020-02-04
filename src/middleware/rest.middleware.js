@@ -8,7 +8,10 @@ const setMonitorPath = monitorBackend =>
     ? `${location.origin}${monitorBackend.path}` // eslint-disable-line
     : `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}${monitorBackend.path}`;
 
-const setBoardPath = board => `${board.schema}${board.host}:${board.port}${board.path}`;
+const setBoardPath = board =>
+  board.useLocation
+    ? `${location.origin}${board.path}` // eslint-disable-line
+    : `${board.schema}${board.host}:${board.port}${board.path}`;
 
 const DEFAULT_ERROR_MSG = 'Unexpected Error';
 
