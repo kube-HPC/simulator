@@ -1,6 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
 import { FlexBox, StatusTag } from 'components/common';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { COLOR_TASK_STATUS } from 'styles';
 
 const style = { flexWrap: `nowrap` };
 
@@ -10,7 +11,7 @@ const JobStats = ({ status, ...props }) => (
   <FlexBox.Auto justify="center" gutter={0} style={style} {...props}>
     {hasStatus(status) ? (
       Object.entries(status.data.states).map(([status, count]) => (
-        <StatusTag key={status} status={status} count={count} />
+        <StatusTag key={status} status={status} count={count} colorMap={COLOR_TASK_STATUS} />
       ))
     ) : (
       <StatusTag count={null} />

@@ -8,7 +8,7 @@ export const jobsTable = handleActions(
   {
     [actions.SOCKET_GET_DATA](currJobs, { payload }) {
       const { jobs } = payload;
-      return Immutable.from({ dataSource: jobs.slice(0, 10) });
+      return Immutable.from({ dataSource: jobs });
     },
   },
   Immutable.from({ dataSource: undefined }),
