@@ -1,12 +1,12 @@
+import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import { Progress } from 'antd';
-import { PIPELINE_STATES } from 'const';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { COLOR_PIPELINE_STATUS } from 'styles';
 
 const JobProgress = ({ status, type, width }) => {
-  const stopped = status && status.status === PIPELINE_STATES.STOPPED;
-  const failed = status && status.status === PIPELINE_STATES.FAILED;
+  const stopped = status && status.status === PIPELINE_STATUS.STOPPED;
+  const failed = status && status.status === PIPELINE_STATUS.FAILED;
   const percent = parseInt((status && status.data && status.data.progress) || 0);
   return (
     <Progress

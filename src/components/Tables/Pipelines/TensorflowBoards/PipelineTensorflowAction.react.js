@@ -46,7 +46,7 @@ const PipelineTensorflowAction = ({ name, nodes }) => {
           <Radio key={nodeName} value={nodeName} style={radioStyle}>
             <Tag>{nodeName}</Tag>
             <Tag color={COLOR.darkGrey}>{algorithmName}</Tag>
-            {hasMetrics(nodeName) && <Tag color={COLOR.lightGreen}>Has Metrics</Tag>}
+            {hasMetrics(nodeName) && <Tag color={COLOR.greenLight}>Has Metrics</Tag>}
           </Radio>
         ))}
       </Container>
@@ -62,7 +62,7 @@ const PipelineTensorflowAction = ({ name, nodes }) => {
         />
       </Display>
       <Button type="primary" block size="small" onClick={onRun}>
-        Run
+        Create Board
       </Button>
     </FlexBox.Auto>
   );

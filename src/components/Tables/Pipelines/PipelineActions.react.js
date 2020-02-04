@@ -13,7 +13,7 @@ const {
   TABLE_PIPELINE: { ACTIONS_SELECT },
 } = USER_GUIDE;
 
-const title = 'Run Node with Tensorflow Board';
+const title = 'Create Tensor Board for selected Node';
 
 const PipelineActions = ({ pipeline, className }) => {
   const { execute, update, remove } = usePipeline();

@@ -1,4 +1,4 @@
-import { COLOR, COLOR_PIPELINE_STATUS } from 'styles/colors';
+import { COLOR, COLOR_TASK_STATUS } from 'styles/colors';
 
 // https://visjs.github.io/vis-network/docs/network/
 
@@ -59,41 +59,41 @@ const setOptions = ({ direction }) => ({
   groups: {
     batchCompleted: {
       color: {
-        background: COLOR_PIPELINE_STATUS.completed,
+        background: COLOR_TASK_STATUS.completed,
       },
     },
     batchNotStarted: {
       color: {
-        background: COLOR_PIPELINE_STATUS.pending,
+        background: COLOR_TASK_STATUS.pending,
       },
     },
     batchRunning: {
       color: {
-        background: COLOR_PIPELINE_STATUS.inProgress,
+        background: COLOR_TASK_STATUS.inProgress,
       },
     },
     batchErrors: {
       color: {
-        background: COLOR_PIPELINE_STATUS.failed,
+        background: COLOR_TASK_STATUS.failed,
       },
     },
     batchPreSchedule: {
       color: {
-        background: COLOR_PIPELINE_STATUS.preschedule,
+        background: COLOR_TASK_STATUS.preschedule,
       },
     },
     notStarted: {
       color: {
-        background: COLOR_PIPELINE_STATUS.pending,
+        background: COLOR_TASK_STATUS.pending,
       },
     },
     preSchedule: {
       color: {
-        background: COLOR_PIPELINE_STATUS.preschedule,
+        background: COLOR_TASK_STATUS.preschedule,
       },
     },
-    completed: { color: { background: COLOR_PIPELINE_STATUS.completed } },
-    failed: { color: { background: COLOR_PIPELINE_STATUS.failed } },
+    completed: { color: { background: COLOR_TASK_STATUS.completed } },
+    failed: { color: { background: COLOR_TASK_STATUS.failed } },
     source: {
       color: { border: 'white' },
     },

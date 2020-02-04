@@ -9,14 +9,14 @@ const Tag = styled(AntdTag)`
   margin: 0px;
 `;
 
-const ProgressStatus = ({ status }) => (
+const JobStatus = ({ status }) => (
   <Tooltip justify="center" title={status.error}>
     <Tag color={COLOR_PIPELINE_STATUS[status.status]}>{toUpperCaseFirstLetter(status.status)}</Tag>
   </Tooltip>
 );
 
-ProgressStatus.propTypes = {
+JobStatus.propTypes = {
   status: PropTypes.object.isRequired,
 };
 
-export default ProgressStatus;
+export default JobStatus;

@@ -1,4 +1,4 @@
-import { Card, Ellipsis, FlexBox, ProgressStatus } from 'components/common';
+import { Card, Ellipsis, FlexBox } from 'components/common';
 import { setCardOptions } from 'config/template/graph-options.template';
 import { useJobs } from 'hooks';
 import React, { memo } from 'react';
@@ -7,6 +7,7 @@ import JobActions from './JobActions.react';
 import JobGraph from './JobGraph.react';
 import JobStats from './JobNodeStats.react';
 import JobProgress from './JobProgress.react';
+import JobStatus from './JobStatus.react';
 import JobTime from './JobTime.react';
 import JobTypes from './JobTypes.react';
 
@@ -61,7 +62,7 @@ const toGrid = dataSource =>
       <FlexBox.Auto>
         <Container direction="column" gutter={[0, 10]}>
           <JobProgress status={status} type="circle" width={40} />
-          <ProgressStatus status={status} />
+          <JobStatus status={status} />
         </Container>
         <FlexBox.Auto justify="start" align="top" gutter={[0, 5]} direction="column">
           <Ellipsis text={jobId} copyable length={LENGTH} />

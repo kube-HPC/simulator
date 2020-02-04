@@ -1,14 +1,15 @@
+import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import { Button } from 'antd';
-import { DRAWER_SIZE, PIPELINE_STATES, USER_GUIDE } from 'const';
+import { DRAWER_SIZE, USER_GUIDE } from 'const';
 import { useActions } from 'hooks';
 import PropTypes from 'prop-types';
 import React from 'react';
 import JobInfo from './JobInfo.react';
 
-const ActiveState = [PIPELINE_STATES.PENDING, PIPELINE_STATES.ACTIVE, PIPELINE_STATES.RESUMED];
+const ActiveState = [PIPELINE_STATUS.PENDING, PIPELINE_STATUS.ACTIVE, PIPELINE_STATUS.RESUMED];
 
 const isActive = state => ActiveState.includes(state);
-const canPauseOrStop = state => isActive(state) || state === PIPELINE_STATES.PAUSED;
+const canPauseOrStop = state => isActive(state) || state === PIPELINE_STATUS.PAUSED;
 const canPause = state => isActive(state);
 
 const JobActions = ({ job, className }) => {

@@ -7,7 +7,8 @@ export {
   COLOR_PIPELINE_STATUS,
   COLOR_PIPELINE_TYPES,
   COLOR_PRIORITY,
-  SERVICE_COLOR,
+  COLOR_SERVICE,
+  COLOR_TASK_STATUS,
 } from 'styles/colors';
 export { default as Display } from 'styles/Display.styles';
 export { default as GlobalStyle } from 'styles/GlobalStyle.styles';

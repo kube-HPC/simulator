@@ -1,12 +1,10 @@
+import { Tag, Typography } from 'antd';
+import Ellipsis from 'components/common/Ellipsis.react';
+import { SERVICES } from 'const/services';
 import React from 'react';
 import Moment from 'react-moment';
+import { COLOR_SERVICE } from 'styles/colors';
 import { sorter, stringify } from 'utils/string';
-
-import { Tag, Typography } from 'antd';
-
-import Ellipsis from 'components/common/Ellipsis.react';
-import { SERVICE_COLOR } from 'styles/colors';
-import { SERVICES } from 'const/services';
 
 const errorLogsTableColumns = () => [
   {
@@ -16,7 +14,7 @@ const errorLogsTableColumns = () => [
     width: '10%',
     sorter: (a, b) => sorter(a.serviceName, b.serviceName),
     render: serviceName => {
-      const serviceColor = SERVICE_COLOR[SERVICES[serviceName]] || SERVICE_COLOR.default;
+      const serviceColor = COLOR_SERVICE[SERVICES[serviceName]] || COLOR_SERVICE.default;
 
       const { backgroundColor, isLight } = serviceColor;
       return (
@@ -24,14 +22,14 @@ const errorLogsTableColumns = () => [
           <Ellipsis style={{ color: isLight ? 'white' : 'black' }} text={SERVICES[serviceName]} />
         </Tag>
       );
-    }
+    },
   },
   {
     title: 'Pod Name',
     dataIndex: 'podName',
     key: 'podName',
     width: '10%',
-    render: podName => <Ellipsis copyable text={podName} />
+    render: podName => <Ellipsis copyable text={podName} />,
   },
   {
     title: 'Message',
@@ -41,7 +39,7 @@ const errorLogsTableColumns = () => [
       <Typography.Paragraph strong>
         {typeof message === 'string' ? message : stringify(message)}
       </Typography.Paragraph>
-    )
+    ),
   },
   {
     title: 'Time Stamp',
@@ -53,8 +51,8 @@ const errorLogsTableColumns = () => [
       <Tag>
         <Moment format="DD/MM/YY HH:mm:ss">{timestamp}</Moment>
       </Tag>
-    )
-  }
+    ),
+  },
 ];
 
 export default errorLogsTableColumns;
