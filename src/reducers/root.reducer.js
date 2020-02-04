@@ -1,6 +1,6 @@
 import { algorithmBuildsTable, algorithmTable } from 'reducers/algorithm.reducer';
 import { autoCompleteFilter } from 'reducers/autoComplete.reducer';
-import { connectionStatus, socketURL } from 'reducers/connection.reducer';
+import { boardURL, connectionStatus, socketURL } from 'reducers/connection.reducer';
 import { debugTable } from 'reducers/debug.reducer';
 import { drawer } from 'reducers/drawer.reducer';
 import { driverTable } from 'reducers/driver.reducer';
@@ -21,6 +21,7 @@ const store = {
   algorithmTable,
   autoCompleteFilter,
   boards,
+  boardURL,
   connectionStatus,
   debugTable,
   drawer,

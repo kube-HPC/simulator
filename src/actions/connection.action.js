@@ -25,3 +25,5 @@ export const setConnectionStatus = ({ isDataAvailable, isSocketConnected }) => (
 });
 
 export const setSocketURL = ({ socketURL }) => ({ type: actions.SOCKET_SET_URL, socketURL });
+
+export const setBoardURL = ({ boardURL }) => ({ type: actions.BOARD_SET_URL, boardURL });
