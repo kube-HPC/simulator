@@ -50,6 +50,26 @@ spec:
                 configMapKeyRef:
                   key: MONITOR_BACKEND_IS_SECURE
                   name: simulator-configmap
+            - name: BOARD_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: simulator-configmap
+                  key: BOARD_PATH
+            - name: BOARD_USE_LOCATION
+              valueFrom:
+                configMapKeyRef:
+                  name: simulator-configmap
+                  key: BOARD_USE_LOCATION
+            - name: BOARD_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: simulator-configmap
+                  key: BOARD_HOST
+            - name: BOARD_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: simulator-configmap
+                  key: BOARD_PORT
             - name: NAMESPACE
               valueFrom:
                 fieldRef:
