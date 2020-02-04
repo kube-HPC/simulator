@@ -1,6 +1,8 @@
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import { Button, Tag, Tooltip } from 'antd';
+import { useActions } from 'hooks';
 import humanizeDuration from 'humanize-duration';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { COLOR_TASK_STATUS } from 'styles/colors';
 import { toUpperCaseFirstLetter } from 'utils/string';
@@ -17,7 +19,41 @@ const Status = status => (
   <Tag color={COLOR_TASK_STATUS[status]}>{status && toUpperCaseFirstLetter(status)}</Tag>
 );
 
-const getNodeIOColumns = ({ downloadResult }) => [
+const Duration = (_, record) => (
+  <Tag>
+    {humanizeDuration(
+      record.endTime ? record.endTime - record.startTime : Date.now() - record.startTime,
+      {
+        maxDecimalPoints: 2,
+      },
+    )}
+  </Tag>
+);
+
+const Retries = retries => <Tag>{retries}</Tag>;
+
+const Results = ({ record }) => {
+  const { downloadStorageResults } = useActions();
+  return (
+    <Tooltip placement="top" title={'Download Results'}>
+      <Button
+        type="default"
+        disabled={!record.output}
+        shape="circle"
+        icon="download"
+        onClick={() => downloadStorageResults(record.output.path)}
+      />
+    </Tooltip>
+  );
+};
+
+Results.propTypes = {
+  record: PropTypes.object.isRequired,
+};
+
+const ResultsColumn = (_, record) => <Results record={record} />;
+
+const getNodeIOColumns = () => [
   {
     title: 'index',
     dataIndex: 'index',
@@ -37,38 +73,19 @@ const getNodeIOColumns = ({ downloadResult }) => [
     title: 'duration',
     dataIndex: 'duration',
     key: 'duration',
-    render: (_, record) => (
-      <Tag>
-        {humanizeDuration(
-          record.endTime ? record.endTime - record.startTime : Date.now() - record.startTime,
-          {
-            maxDecimalPoints: 2,
-          },
-        )}
-      </Tag>
-    ),
+    render: Duration,
   },
   {
     title: 'retries',
     dataIndex: 'retries',
     key: 'retries',
-    render: retries => <Tag>{retries}</Tag>,
+    render: Retries,
   },
   {
     title: 'Results',
     dataIndex: 'results',
     key: 'results',
-    render: (_, record) => (
-      <Tooltip placement="top" title={'Download Results'}>
-        <Button
-          type="default"
-          disabled={!record.output}
-          shape="circle"
-          icon="download"
-          onClick={() => downloadResult(record.output.path)}
-        />
-      </Tooltip>
-    ),
+    render: ResultsColumn,
   },
 ];
 
