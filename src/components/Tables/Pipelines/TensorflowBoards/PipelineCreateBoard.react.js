@@ -6,7 +6,7 @@ import isEqual from 'lodash/isEqual';
 import PropTypes from 'prop-types';
 import React, { memo, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { COLOR, Display } from 'styles';
+import { COLOR } from 'styles';
 
 const radioStyle = {
   height: `30px`,
@@ -21,7 +21,7 @@ const Container = styled(Radio.Group)`
   min-width: 300px;
 `;
 
-const PipelineTensorflowAction = ({ name, nodes }) => {
+const PipelineCreateBoard = ({ name, nodes }) => {
   const [selectedNode, setSelectedNode] = useState(null);
   const { startBoard } = useActions();
 
@@ -39,6 +39,14 @@ const PipelineTensorflowAction = ({ name, nodes }) => {
   const onSelect = ({ target: { value } }) => setSelectedNode(value);
   const onRun = () => startBoard({ pipelineName: name, nodeName: selectedNode });
 
+  const metrics = hasMetrics(selectedNode);
+
+  const alertMessage = (
+    <>
+      {metrics ? `Tensor board` : `No Tensor metrics`} for node <Text strong>{selectedNode}</Text>
+    </>
+  );
+
   return (
     <FlexBox.Auto direction="column" full gutter={[0, 10]}>
       <Container onChange={onSelect} value={selectedNode}>
@@ -50,17 +58,7 @@ const PipelineTensorflowAction = ({ name, nodes }) => {
           </Radio>
         ))}
       </Container>
-      <Display isVisible={!hasMetrics(selectedNode)}>
-        <Alert
-          type="warning"
-          message={
-            <>
-              No Tensor metrics for node <Text strong>{selectedNode}</Text>
-            </>
-          }
-          showIcon
-        />
-      </Display>
+      <Alert type={metrics ? 'info' : 'warning'} message={alertMessage} showIcon />
       <Button type="primary" block size="small" onClick={onRun}>
         Create Board
       </Button>
@@ -68,11 +66,11 @@ const PipelineTensorflowAction = ({ name, nodes }) => {
   );
 };
 
-PipelineTensorflowAction.propTypes = {
+PipelineCreateBoard.propTypes = {
   name: PropTypes.string.isRequired,
   nodes: PropTypes.array.isRequired,
 };
 
 const areEqual = ({ nodes: a }, { nodes: b }) => isEqual(a, b);
 
-export default memo(PipelineTensorflowAction, areEqual);
+export default memo(PipelineCreateBoard, areEqual);

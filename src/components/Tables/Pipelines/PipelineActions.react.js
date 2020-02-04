@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import React, { memo, useRef } from 'react';
 import { deleteConfirmAction } from 'utils';
 import PipelineInfo from './PipelineInfo.react';
-import PipelineTensorflowAction from './TensorflowBoards/PipelineTensorflowAction.react';
+import PipelineCreateBoard from './TensorflowBoards/PipelineCreateBoard.react';
 
 const {
   TABLE_PIPELINE: { ACTIONS_SELECT },
@@ -41,7 +41,7 @@ const PipelineActions = ({ pipeline, className }) => {
   const setPopupContainer = () => container.current;
 
   const popOverContent = hasNodes ? (
-    <PipelineTensorflowAction name={pipeline.name} nodes={nodes} />
+    <PipelineCreateBoard name={pipeline.name} nodes={nodes} />
   ) : (
     <Empty />
   );

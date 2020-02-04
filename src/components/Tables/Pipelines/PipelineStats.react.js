@@ -10,7 +10,7 @@ import BoardStatus from './TensorflowBoards/BoardStatus.react';
 const PipelineStats = ({ name, nodes }) => {
   const { dataStats } = usePipeline();
 
-  const { hasMetrics, boards } = useBoards({ pipelineName: name });
+  const { hasMetrics, boards, boardURL } = useBoards({ pipelineName: name });
 
   // array flat one-liner
   const pipelineStats = [].concat(
@@ -39,11 +39,16 @@ const PipelineStats = ({ name, nodes }) => {
       )}
       {boardsAvailable && (
         <Tooltip
-          title={boards.map(({ name, boardLink, status }) => {
+          title={boards.map(({ name, boardReference, status }) => {
             const link = (
               <div>
                 <Text underline>
-                  <a href={boardLink}>{name}</a>
+                  <a
+                    href={`${boardURL}/${boardReference}`}
+                    target="_blank"
+                    rel="nofollow noopener noreferrer">
+                    {name}
+                  </a>
                 </Text>
               </div>
             );
