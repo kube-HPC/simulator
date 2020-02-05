@@ -44,7 +44,7 @@ const PipelineStats = ({ name, nodes }) => {
               <div>
                 <Text underline>
                   <a
-                    href={`${boardURL}/${boardReference}`}
+                    href={`${boardURL}/${boardReference}/`}
                     target="_blank"
                     rel="nofollow noopener noreferrer">
                     {name}
