@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import getDataByTable from './getDataByTable';
 
 const AutoCompleteLong = styled(AntAutoComplete)`
-  width: 500px;
+  width: 30%;
 `;
 
 const AutoComplete = ({ table, ...props }) => {

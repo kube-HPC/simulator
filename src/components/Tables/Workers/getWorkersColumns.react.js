@@ -1,9 +1,9 @@
+import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import { Icon, Tag } from 'antd';
 import Ellipsis from 'components/common/Ellipsis.react';
 import StatusTag from 'components/common/StatusTag.react';
-import { PIPELINE_STATES } from 'const';
 import React from 'react';
-import { COLOR_PIPELINE_STATUS } from 'styles/colors';
+import { COLOR_TASK_STATUS } from 'styles/colors';
 import { sorter, toUpperCaseFirstLetter } from 'utils/string';
 
 const undefinedStateFilter = state => state || 'Creating';
@@ -12,8 +12,8 @@ const WorkerState = (_, { workerStatus, jobStatus }) => {
   const title = toUpperCaseFirstLetter(undefinedStateFilter(workerStatus));
   return (
     <>
-      <Tag color={COLOR_PIPELINE_STATUS[workerStatus]}>{title}</Tag>
-      <Tag color={COLOR_PIPELINE_STATUS[jobStatus]}>{`Job ${title}`}</Tag>
+      <Tag color={COLOR_TASK_STATUS[workerStatus]}>{title}</Tag>
+      <Tag color={COLOR_TASK_STATUS[jobStatus]}>{`Job ${title}`}</Tag>
     </>
   );
 };
@@ -66,12 +66,12 @@ export const workersTableStats = () => [
 const toNum = text => (text && parseInt(text)) || 0;
 
 const Name = name => <Ellipsis text={name} />;
-const ReadyCount = text => <StatusTag status={PIPELINE_STATES.PENDING} count={toNum(text)} />;
-const WorkingCount = text => <StatusTag status={PIPELINE_STATES.ACTIVE} count={toNum(text)} />;
-const InitCount = text => <StatusTag status={PIPELINE_STATES.INIT} count={toNum(text)} />;
-const ExitCount = text => <StatusTag status={PIPELINE_STATES.STOPPED} count={toNum(text)} />;
-const HotCount = text => <StatusTag status={PIPELINE_STATES.COMPLETED} count={toNum(text)} />;
-const Count = text => <StatusTag status={PIPELINE_STATES.SUCCEED} count={toNum(text)} />;
+const ReadyCount = text => <StatusTag status={PIPELINE_STATUS.PENDING} count={toNum(text)} />;
+const WorkingCount = text => <StatusTag status={PIPELINE_STATUS.ACTIVE} count={toNum(text)} />;
+const InitCount = text => <StatusTag status={PIPELINE_STATUS.INIT} count={toNum(text)} />;
+const ExitCount = text => <StatusTag status={PIPELINE_STATUS.STOPPED} count={toNum(text)} />;
+const HotCount = text => <StatusTag status={PIPELINE_STATUS.COMPLETED} count={toNum(text)} />;
+const Count = text => <StatusTag status={PIPELINE_STATUS.COMPLETED} count={toNum(text)} />;
 
 export const getWorkersColumns = () => [
   {

@@ -9,7 +9,7 @@ const { Text } = Typography;
 
 const SEC = 1000;
 
-const JobTime = ({ results, startTime }) => {
+const JobTime = ({ results, startTime, length = 15 }) => {
   const [time, setTime] = useState(Date.now());
   const intervalId = useRef();
 
@@ -35,7 +35,7 @@ const JobTime = ({ results, startTime }) => {
         <Text strong>
           {HumanizeDuration(results ? results.timeTook * 1000 : time - startTime, {
             maxDecimalPoints: 2,
-          })}
+          }).slice(0, length)}
         </Text>
       </Tag>
     </FlexBox.Auto>
@@ -44,6 +44,7 @@ const JobTime = ({ results, startTime }) => {
 
 JobTime.propTypes = {
   startTime: PropTypes.number,
+  length: PropTypes.number,
   results: PropTypes.object,
 };
 

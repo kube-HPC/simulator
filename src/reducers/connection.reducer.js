@@ -1,12 +1,21 @@
+import { actionType } from 'const';
 import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
-import { actionType } from 'const';
 
 const initialValue = Immutable.from({ isDataAvailable: false, isSocketConnected: false });
 
 export const socketURL = handleActions(
   {
     [actionType.SOCKET_SET_URL](prevUrl, { url }) {
+      return Immutable.from(url);
+    },
+  },
+  Immutable.from(``),
+);
+
+export const boardURL = handleActions(
+  {
+    [actionType.BOARD_SET_URL](prevUrl, { url }) {
       return Immutable.from(url);
     },
   },

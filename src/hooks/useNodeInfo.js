@@ -47,13 +47,10 @@ const useNodeInfo = ({ graph, pipeline }) => {
         }
 
         const payload = findNodeByName(nodeName);
-        const { taskId, podName } = payload;
-
-        getLogs({ taskId, podName, source });
         setNode(payload);
       },
     }),
-    [getLogs, findNodeByName, source],
+    [findNodeByName],
   );
 
   return { node, events };

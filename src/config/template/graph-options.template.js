@@ -1,4 +1,5 @@
-import { COLOR, COLOR_PIPELINE_STATUS } from 'styles/colors';
+import { taskStatuses as TASK } from '@hkube/consts';
+import { COLOR, COLOR_TASK_STATUS } from 'styles/colors';
 
 // https://visjs.github.io/vis-network/docs/network/
 
@@ -59,41 +60,41 @@ const setOptions = ({ direction }) => ({
   groups: {
     batchCompleted: {
       color: {
-        background: COLOR_PIPELINE_STATUS.completed,
+        background: COLOR_TASK_STATUS[TASK.COMPLETED],
       },
     },
     batchNotStarted: {
       color: {
-        background: COLOR_PIPELINE_STATUS.pending,
+        background: COLOR_TASK_STATUS[TASK.PENDING],
       },
     },
     batchRunning: {
       color: {
-        background: COLOR_PIPELINE_STATUS.inProgress,
+        background: COLOR_TASK_STATUS[TASK.CREATING],
       },
     },
     batchErrors: {
       color: {
-        background: COLOR_PIPELINE_STATUS.failed,
+        background: COLOR_TASK_STATUS[TASK.FAILED],
       },
     },
     batchPreSchedule: {
       color: {
-        background: COLOR_PIPELINE_STATUS.preschedule,
+        background: COLOR_TASK_STATUS[TASK.PRESCHEDULE],
       },
     },
     notStarted: {
       color: {
-        background: COLOR_PIPELINE_STATUS.pending,
+        background: COLOR_TASK_STATUS[TASK.PENDING],
       },
     },
     preSchedule: {
       color: {
-        background: COLOR_PIPELINE_STATUS.preschedule,
+        background: COLOR_TASK_STATUS[TASK.PRESCHEDULE],
       },
     },
-    completed: { color: { background: COLOR_PIPELINE_STATUS.completed } },
-    failed: { color: { background: COLOR_PIPELINE_STATUS.failed } },
+    completed: { color: { background: COLOR_TASK_STATUS.completed } },
+    failed: { color: { background: COLOR_TASK_STATUS.failed } },
     source: {
       color: { border: 'white' },
     },

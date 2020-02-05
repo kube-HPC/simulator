@@ -1,5 +1,6 @@
-import { Ellipsis, FlexBox, ProgressStatus } from 'components/common';
-import { PIPELINE_STATES, USER_GUIDE } from 'const';
+import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
+import { Ellipsis, FlexBox } from 'components/common';
+import { USER_GUIDE } from 'const';
 import React from 'react';
 import styled from 'styled-components';
 import { sorter, toUpperCaseFirstLetter } from 'utils/string';
@@ -7,26 +8,27 @@ import JobActions from './JobActions.react';
 import JobStats from './JobNodeStats.react';
 import JobPriority from './JobPriority.react';
 import JobProgress from './JobProgress.react';
+import JobStatus from './JobStatus.react';
 import JobTime from './JobTime.react';
 import JobTypes from './JobTypes.react';
 
 const getStatusFilter = () =>
-  Object.values(PIPELINE_STATES).map(status => ({
+  Object.values(PIPELINE_STATUS).map(status => ({
     text: toUpperCaseFirstLetter(status),
     value: status,
   }));
 
-const Id = jobID => <Ellipsis className={USER_GUIDE.TABLE_JOB.ID_SELECT} copyable text={jobID} />;
-const Name = pipelineName => <Ellipsis text={pipelineName} />;
-const StartTime = (startTime, { results }) => <JobTime startTime={startTime} results={results} />;
-const Status = status => <ProgressStatus status={status} />;
-const Stats = status => <JobStats status={status} />;
-const Priority = priority => <JobPriority priority={priority} />;
-const Types = types => <JobTypes types={types} fullName={false} />;
-
 const ItemGrow = styled(FlexBox.Item)`
   flex-grow: 1;
 `;
+
+const Id = jobID => <Ellipsis className={USER_GUIDE.TABLE_JOB.ID_SELECT} copyable text={jobID} />;
+const Name = pipelineName => <Ellipsis text={pipelineName} />;
+const StartTime = (startTime, { results }) => <JobTime startTime={startTime} results={results} />;
+const Status = status => <JobStatus status={status} />;
+const Stats = status => <JobStats status={status} />;
+const Priority = priority => <JobPriority priority={priority} />;
+const Types = types => <JobTypes types={types} fullName={false} />;
 
 const Progress = (_, job) => (
   <FlexBox>

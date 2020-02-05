@@ -1,38 +1,58 @@
+import {
+  boardStatuses as BOARD,
+  pipelineStatuses as PIPELINE,
+  pipelineTypes as TYPES,
+  taskStatuses as TASK,
+  verbosityLevels as LEVEL,
+} from '@hkube/consts';
 import { SERVICES } from '../const/services';
-import { PIPELINE_STATES, LOGGER_LEVEL } from 'const';
-import { pipelineTypes as TYPES } from '@hkube/consts';
 
 export const COLOR = {
   blue: `#307fe6`,
+  blueDark: `#0065E5`,
   blueLight: `#45a9ec`,
   cyan: `#98dbef`,
   darkGrey: `#807c7c`,
+  green: `#63C13C`,
+  greenLight: `#87d068`,
   grey: `#ccc`,
-  lightGreen: `#87d068`,
   lightGrey: `#e8e8e8`,
   orange: `#ec8c16`,
-  lightOrange: `#EAB675`,
-  red: `#e74c3c`,
-  transparentGrey: `#bfbfbf21`,
-  yellow: `#eeda13`,
-  white: `white`,
+  orangeLight: `#EAB675`,
+  orangePale: `#FFC25A`,
   pink: `#e543b4`,
+  pinkLight: `#FF5CA2`,
+  purple: `#C657D0`,
+  red: `#e74c3c`,
+  redPale: `#FF8974`,
   transparentBlack: `#00000073`,
+  transparentGrey: `#bfbfbf21`,
+  turquoise: `#36DFB9`,
+  white: `white`,
+  yellow: `#eeda13`,
 };
 
 export const COLOR_PIPELINE_TYPES = {
-  [TYPES.NODE]: `#0065E5`,
-  [TYPES.ALGORITHM]: `#EAB675`,
-  [TYPES.CRON]: `#C657D0`,
-  [TYPES.INTERNAL]: `#FF5CA2`,
-  [TYPES.RAW]: `#FF8974`,
-  [TYPES.STORED]: `#00A7F9`,
-  [TYPES.SUB_PIPELINE]: `#FFC25A`,
-  [TYPES.TENSORBOARD]: `#87d068`,
+  [TYPES.ALGORITHM]: COLOR.orangeLight,
+  [TYPES.CRON]: COLOR.purple,
+  [TYPES.INTERNAL]: COLOR.pinkLight,
+  [TYPES.NODE]: COLOR.blueDark,
+  [TYPES.RAW]: COLOR.redPale,
+  [TYPES.STORED]: COLOR.blueLight,
+  [TYPES.SUB_PIPELINE]: COLOR.orangePale,
+  [TYPES.TENSORBOARD]: COLOR.greenLight,
+  [TYPES.TRIGGER]: COLOR.turquoise,
+};
+
+export const COLOR_BOARDS = {
+  [BOARD.CREATING]: COLOR.yellow,
+  [BOARD.PENDING]: COLOR.grey,
+  [BOARD.RUNNING]: COLOR.greenLight,
+  [BOARD.STOPPED]: COLOR.orange,
 };
 
 // View all services colors @ https://github.com/kube-HPC/hkube/labels
-export const SERVICE_COLOR = {
+export const COLOR_SERVICE = {
   [SERVICES.worker]: {
     backgroundColor: `#da96e8`,
   },
@@ -87,39 +107,47 @@ export const COLOR_LAYOUT = {
   darkBorder: COLOR.grey,
 };
 
+export const COLOR_TASK_STATUS = {
+  [TASK.ACTIVE]: COLOR.blueLight,
+  [TASK.COMPLETED]: COLOR.greenLight,
+  [TASK.CRASHED]: COLOR.pink,
+  [TASK.CREATING]: COLOR.yellow,
+  [TASK.FAILED]: COLOR.red,
+  [TASK.PENDING]: COLOR.darkGrey,
+  [TASK.PRESCHEDULE]: COLOR.cyan,
+  [TASK.SKIPPED]: COLOR.orangeLight,
+  [TASK.STALLED]: COLOR.grey,
+  [TASK.SUCCEED]: COLOR.greenLight,
+  [TASK.WARNING]: COLOR.orange,
+};
+
 export const COLOR_PIPELINE_STATUS = {
-  [PIPELINE_STATES.ACTIVE]: COLOR.blueLight,
-  bootstrap: COLOR.lightGreen,
-  [PIPELINE_STATES.COMPLETED]: COLOR.lightGreen,
-  creating: COLOR.yellow,
-  [PIPELINE_STATES.FAILED]: COLOR.red,
-  [PIPELINE_STATES.INIT]: COLOR.lightGreen,
-  inProgress: COLOR.yellow,
-  [PIPELINE_STATES.PENDING]: COLOR.darkGrey,
-  ready: COLOR.lightGreen,
-  recovering: COLOR.darkGrey,
-  skipped: COLOR.yellow,
-  [PIPELINE_STATES.STALLED]: COLOR.red,
-  stopped: COLOR.orange,
-  [PIPELINE_STATES.STOPPING]: COLOR.orange,
-  [PIPELINE_STATES.SUCCEED]: COLOR.lightGreen,
-  [PIPELINE_STATES.PRESCHEDULE]: COLOR.cyan,
+  [PIPELINE.ACTIVE]: COLOR.blueLight,
+  [PIPELINE.COMPLETED]: COLOR.greenLight,
+  [PIPELINE.CRASHED]: COLOR.redPale,
+  [PIPELINE.FAILED]: COLOR.red,
+  [PIPELINE.PENDING]: COLOR.darkGrey,
+  [PIPELINE.RESUMED]: COLOR.blue,
+  [PIPELINE.RUNNING]: COLOR.orangeLight,
+  [PIPELINE.STALLED]: COLOR.grey,
+  [PIPELINE.STOPPED]: COLOR.orange,
+  [PIPELINE.PAUSED]: COLOR.yellow,
 };
 
 export const COLOR_LOGGER = {
-  [LOGGER_LEVEL.INFO]: COLOR.blueLight,
-  [LOGGER_LEVEL.WARN]: COLOR.yellow,
-  [LOGGER_LEVEL.ERROR]: COLOR.red,
-  [LOGGER_LEVEL.CRITICAL]: COLOR.orange,
-  [LOGGER_LEVEL.DEBUG]: COLOR.lightGreen,
-  [LOGGER_LEVEL.TRACE]: COLOR.lightGrey,
-  [LOGGER_LEVEL.SILLY]: COLOR.grey,
+  [LEVEL.CRITICAL]: COLOR.orange,
+  [LEVEL.DEBUG]: COLOR.greenLight,
+  [LEVEL.ERROR]: COLOR.red,
+  [LEVEL.INFO]: COLOR.blueLight,
+  [LEVEL.SILLY]: COLOR.grey,
+  [LEVEL.TRACE]: COLOR.lightGrey,
+  [LEVEL.WARN]: COLOR.yellow,
 };
 
 export const COLOR_PRIORITY = {
   1: { color: COLOR.red, name: `Highest` },
   2: { color: COLOR.darkOrange, name: `High` },
   3: { color: COLOR.orange, name: `Medium` },
-  4: { color: COLOR.lightGreen, name: `Low` },
+  4: { color: COLOR.greenLight, name: `Low` },
   5: { color: COLOR.blueLight, name: `Lowest` },
 };

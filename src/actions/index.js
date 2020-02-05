@@ -17,10 +17,12 @@ import {
   updateStored,
 } from 'actions/pipeline.action';
 import { setSettings } from 'actions/settings.action';
+import { startBoard } from 'actions/tensorflow.action';
 import { changeStep, triggerUserGuide } from 'actions/userGuide.action';
 import { firstLoad, toggle as toggleViewType } from 'actions/viewType.action';
 
 const actions = {
+  startBoard,
   addPipeline,
   applyAlgorithm,
   changeStep,

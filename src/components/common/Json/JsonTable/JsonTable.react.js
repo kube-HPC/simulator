@@ -1,31 +1,33 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import { Tag, Typography } from 'antd';
 import { Descriptions } from 'components/common';
+import PropTypes from 'prop-types';
+import React from 'react';
 import styled from 'styled-components';
-import { Typography } from 'antd';
+import { prop } from 'styled-tools';
 
 const { Text } = Typography;
+const EMPTY = `Empty`;
 
 // Helpers
 const isPureObject = obj => !Array.isArray(obj) && typeof obj === 'object' && obj !== null;
 const getTotalColumns = ({ obj, vertical }) => (vertical ? Object.keys(obj).length : 1);
 
+const isEmptyObject = obj => Object.entries(obj).length === 0;
+
 const Margin = styled(Descriptions)`
-  margin-top: ${({ isMargin }) => (isMargin ? '8px' : 'none')};
+  margin-top: ${prop('isMargin', 'none')};
 `;
 
 // Recursion Step
 const RenderItemByValueType = ({ obj, vertical, isMargin = false, key }) =>
   isPureObject(obj) ? (
-    <>
-      <Margin
-        key={key}
-        column={getTotalColumns({ obj: obj, vertical })}
-        vertical={vertical}
-        isMargin={isMargin}>
-        {objToItem({ obj: obj })}
-      </Margin>
-    </>
+    <Margin
+      key={key}
+      column={getTotalColumns({ obj: obj, vertical })}
+      vertical={vertical}
+      isMargin={isMargin}>
+      {objToItem({ obj })}
+    </Margin>
   ) : Array.isArray(obj) ? (
     <>
       {obj.map((value, i) =>
@@ -52,7 +54,11 @@ RenderItemByValueType.propTypes = {
 function objToItem({ obj, vertical }) {
   return Object.entries(obj).map(([key, value]) => (
     <Descriptions.Item key={key} label={<Text strong>{key}</Text>}>
-      {RenderItemByValueType({ obj: value, vertical, key })}
+      {isPureObject(value) && isEmptyObject(value) ? (
+        <Tag>{EMPTY}</Tag>
+      ) : (
+        RenderItemByValueType({ obj: value, vertical, key })
+      )}
     </Descriptions.Item>
   ));
 }

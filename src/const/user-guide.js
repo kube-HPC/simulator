@@ -26,6 +26,9 @@ export const USER_GUIDE = {
     ACTIONS_SELECT: 'ug_job_actions_select',
     ROW_SELECT: 'ug_job_row_select',
   },
+  TABLE_PIPELINE: {
+    ACTIONS_SELECT: `ug_pipeline_actions_select`,
+  },
 };
 
 export const userGuideStepIndexes = [

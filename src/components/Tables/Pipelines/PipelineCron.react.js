@@ -2,7 +2,7 @@ import { Icon, Input, Popover, Switch, Typography } from 'antd';
 import { FlexBox } from 'components/common';
 import cronParser from 'cron-parser';
 import cronstrue from 'cronstrue';
-import { useActions } from 'hooks';
+import { useActions, usePipeline } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { useReducer } from 'react';
 import { notification } from 'utils';
@@ -20,8 +20,9 @@ const isPattern = pipeline =>
 
 const enterButton = <Icon type="check" />;
 
-const SwitchCron = ({ pipeline, update }) => {
+const PipelineCron = ({ pipeline }) => {
   const { cronStart, cronStop } = useActions();
+  const { update } = usePipeline();
 
   const cronIsEnabled = isCron(pipeline);
   const patternIsPresent = isPattern(pipeline);
@@ -91,9 +92,8 @@ const SwitchCron = ({ pipeline, update }) => {
   );
 };
 
-SwitchCron.propTypes = {
+PipelineCron.propTypes = {
   pipeline: PropTypes.object.isRequired,
-  update: PropTypes.func.isRequired,
 };
 
-export default SwitchCron;
+export default PipelineCron;

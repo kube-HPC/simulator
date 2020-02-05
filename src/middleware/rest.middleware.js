@@ -1,12 +1,17 @@
-import AT from 'const/application-actions';
 import axios from 'axios';
-import FileSaver from 'file-saver';
 import successMsg from 'config/schema/success-messages.schema';
+import AT from 'const/application-actions';
+import FileSaver from 'file-saver';
 
-const setPath = ({ monitorBackend }) =>
+const setMonitorPath = monitorBackend =>
   monitorBackend.useLocation
     ? `${location.origin}${monitorBackend.path}` // eslint-disable-line
     : `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}${monitorBackend.path}`;
+
+const setBoardPath = board =>
+  board.useLocation
+    ? `${location.origin}${board.path}` // eslint-disable-line
+    : `${board.schema}${board.host}:${board.port}${board.path}`;
 
 const DEFAULT_ERROR_MSG = 'Unexpected Error';
 
@@ -60,13 +65,17 @@ const success = (dispatch, payload, action) => {
 };
 
 let SOCKET_URL = null;
+let BOARD_URL = null;
 
 const createUrl = url => `${SOCKET_URL}/${url}`;
 
 const restMiddleware = ({ dispatch }) => next => action => {
   if (action.type === `${AT.SOCKET_GET_CONFIG}_SUCCESS`) {
-    SOCKET_URL = setPath(action.payload.config);
+    const { monitorBackend, board } = action.payload.config;
+    SOCKET_URL = setMonitorPath(monitorBackend);
+    BOARD_URL = setBoardPath(board);
     SOCKET_URL && dispatch({ type: AT.SOCKET_SET_URL, url: SOCKET_URL });
+    dispatch({ type: AT.BOARD_SET_URL, url: BOARD_URL });
   } else if (
     ![
       AT.REST_REQ,

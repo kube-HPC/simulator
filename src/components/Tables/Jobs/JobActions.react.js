@@ -1,16 +1,16 @@
-import { Button, Tooltip } from 'antd';
-import { FlexBox } from 'components/common';
-import { DRAWER_SIZE, PIPELINE_STATES, USER_GUIDE } from 'const';
+import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
+import { Button } from 'antd';
+import { DRAWER_SIZE, USER_GUIDE } from 'const';
 import { useActions } from 'hooks';
 import PropTypes from 'prop-types';
 import React from 'react';
 import JobInfo from './JobInfo.react';
 
-const ActiveState = [PIPELINE_STATES.PENDING, PIPELINE_STATES.ACTIVE, PIPELINE_STATES.RESUMED];
+const activeStates = [PIPELINE_STATUS.PENDING, PIPELINE_STATUS.ACTIVE, PIPELINE_STATUS.RESUMED];
 
-const isActive = state => ActiveState.includes(state);
-const canPauseOrStop = state => isActive(state) || state === PIPELINE_STATES.PAUSED;
+const isActive = state => activeStates.includes(state);
 const canPause = state => isActive(state);
+const canPauseOrStop = state => isActive(state) || state === PIPELINE_STATUS.PAUSED;
 
 const JobActions = ({ job, className }) => {
   const {
@@ -33,50 +33,25 @@ const JobActions = ({ job, className }) => {
   const onStop = () => stopPipeline(key);
   const onDownload = () => downloadStorageResults(results.data.storageInfo.path);
 
-  const body = <JobInfo jobId={key} />;
-
-  const onMoreInfo = () => drawerOpen({ title: pipeline.name, body, width: DRAWER_SIZE.JOB_INFO });
+  const onMoreInfo = () => {
+    const body = <JobInfo jobId={key} />;
+    return drawerOpen({ title: pipeline.name, body, width: DRAWER_SIZE.JOB_INFO });
+  };
 
   const isDownloadDisabled = !(results && results.data && results.data.storageInfo);
 
   return (
-    <div className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
-      <FlexBox.Auto justify="center" className={className}>
-        <Tooltip placement="top" title="Re-Run">
-          <Button type="default" shape="circle" icon="redo" onClick={onReRun} />
-        </Tooltip>
-        <Tooltip placement="top" title="Stop Pipeline">
-          <Button
-            type="danger"
-            disabled={!canPauseOrStop(status)}
-            shape="circle"
-            icon="close"
-            onClick={onStop}
-          />
-        </Tooltip>
-        <Tooltip placement="top" title={canPause(status) ? 'Pause Pipeline' : 'Resume Pipeline'}>
-          <Button
-            type="default"
-            disabled={!canPauseOrStop(status)}
-            shape="circle"
-            icon={canPause(status) ? 'pause' : 'caret-right'}
-            onClick={() => (canPause(status) ? pausePipeline(key) : resumePipeline(key))}
-          />
-        </Tooltip>
-        <Tooltip placement="top" title="Download Results">
-          <Button
-            type="default"
-            disabled={isDownloadDisabled}
-            shape="circle"
-            icon="download"
-            onClick={onDownload}
-          />
-        </Tooltip>
-        <Tooltip placement="top" title="More Info">
-          <Button type="default" shape="circle" icon="ellipsis" onClick={onMoreInfo} />
-        </Tooltip>
-      </FlexBox.Auto>
-    </div>
+    <Button.Group className={`${className} ${USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}`}>
+      <Button icon="redo" onClick={onReRun} />
+      <Button type="danger" disabled={!canPauseOrStop(status)} icon="close" onClick={onStop} />
+      <Button
+        disabled={!canPauseOrStop(status)}
+        icon={canPause(status) ? 'pause' : 'caret-right'}
+        onClick={() => (canPause(status) ? pausePipeline(key) : resumePipeline(key))}
+      />
+      <Button disabled={isDownloadDisabled} icon="download" onClick={onDownload} />
+      <Button icon="ellipsis" onClick={onMoreInfo} />
+    </Button.Group>
   );
 };
 

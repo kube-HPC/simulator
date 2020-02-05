@@ -9,21 +9,25 @@ const ExpandIcon = ({ expanded, onExpand, record }) => (
   <Icon type={expanded ? 'down' : 'right'} onClick={e => onExpand(record, e)} />
 );
 
+const { TABLE_JOB } = USER_GUIDE;
+
 const TableWhite = styled(AntTable)`
   .ant-table-thead > tr > th {
     background: none;
   }
   .ant-table-row {
-    .${USER_GUIDE.TABLE_JOB.ACTIONS_SELECT} {
-      transition: all 0.5s;
-      opacity: 0;
+    transition: all 1s ease;
+    .${TABLE_JOB.ACTIONS_SELECT} {
+      transition: all 1s ease;
       height: 32px;
       overflow: hidden;
+      opacity: 0;
       width: 0;
     }
-    &:hover,
-    &:focus {
-      .${USER_GUIDE.TABLE_JOB.ACTIONS_SELECT} {
+    &:hover {
+      transition: all 1s ease;
+      .${TABLE_JOB.ACTIONS_SELECT} {
+        transition: all 1s ease;
         opacity: 1;
         width: fit-content;
       }

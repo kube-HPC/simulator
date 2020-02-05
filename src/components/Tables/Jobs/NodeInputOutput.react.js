@@ -1,16 +1,12 @@
-import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import PropTypes from 'prop-types';
-
-import { downloadStorageResults } from 'actions/jobs.action';
 import { Table } from 'components';
 import { Card, JsonSwitch } from 'components/common';
+import { useActions } from 'hooks';
+import PropTypes from 'prop-types';
+import React, { useCallback } from 'react';
 import getNodeIOColumns from './getNodeIOColumns.react';
 
 const NodeInputOutput = ({ payload }) => {
-  const dispatch = useDispatch();
-
-  const downloadResult = useCallback(value => dispatch(downloadStorageResults(value)), [dispatch]);
+  const { downloadStorageResults } = useActions();
 
   const onSelect = useCallback(
     select =>
@@ -18,8 +14,8 @@ const NodeInputOutput = ({ payload }) => {
       (select.namespace.includes('input') || select.namespace.includes('output')) &&
       select.name === 'path' &&
       select.value &&
-      downloadResult(select.value),
-    [downloadResult],
+      downloadStorageResults(select.value),
+    [downloadStorageResults],
   );
 
   const mapTask = task => ({
@@ -48,7 +44,7 @@ const NodeInputOutput = ({ payload }) => {
   return (
     <Table
       rowKey={({ index }) => index}
-      columns={getNodeIOColumns({ downloadResult })}
+      columns={getNodeIOColumns()}
       dataSource={dataSource}
       expandedRowRender={record => (
         <Card>
