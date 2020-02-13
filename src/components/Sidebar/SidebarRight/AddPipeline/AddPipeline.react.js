@@ -70,10 +70,22 @@ const AddPipeline = () => {
 
     const isSubmit = step === steps.length - 1;
 
+    const { webhooks, ...restPipeline } = pipeline;
+    const { progress, result } = webhooks;
+    const areValidWebhooks = progress && result;
+
+    const pipelineToAdd = areValidWebhooks
+      ? pipeline
+      : progress
+        ? { webhooks: { progress }, ...restPipeline }
+        : result
+          ? { webhooks: { result }, ...restPipeline }
+          : restPipeline;
+
     isSubmit
       ? isValidPipeline
         ? notification({ message: 'Empty Required Field!' })
-        : addPipeline(pipeline)
+        : addPipeline(pipelineToAdd)
       : setStep(s => s + 1);
   }, [addPipeline, pipeline, step]);
 
