@@ -5,6 +5,9 @@ const addAlgorithmSchema = {
   },
   BUILD_TYPES: {
     CODE: {
+      DIVIDERS: {
+        BUILD: `Build Configuration`,
+      },
       DRAGGER: {
         field: 'code.dragger',
       },
@@ -34,6 +37,10 @@ const addAlgorithmSchema = {
       },
     },
     GIT: {
+      DIVIDERS: {
+        BUILD: `Build Configuration`,
+        GIT: `Git Configuration`,
+      },
       BASE_IMAGE: {
         field: 'gitRepository.baseImage',
         label: 'Base Image',

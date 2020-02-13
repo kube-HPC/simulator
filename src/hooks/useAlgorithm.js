@@ -8,7 +8,7 @@ import useActions from './useActions';
 const dataSelector = tableFilterSelector(LEFT_SIDEBAR_NAMES.ALGORITHMS);
 const buildsSelector = state => state[STATE_SOURCES.ALGORITHM_BUILDS_TABLE].dataSource;
 
-const useAlgorithm = () => {
+const useAlgorithm = name => {
   const { applyAlgorithm, deleteAlgorithm } = useActions();
 
   const onSubmit = useCallback(
@@ -32,6 +32,7 @@ const useAlgorithm = () => {
   }));
 
   return {
+    algorithm: name ? dataSource.find(({ name: source }) => source === name) : null,
     dataSource,
     onDelete: deleteAlgorithm,
     open: value => open(stringify(value)),

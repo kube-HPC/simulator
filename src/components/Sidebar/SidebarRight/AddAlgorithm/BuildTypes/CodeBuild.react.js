@@ -1,26 +1,23 @@
-// #region imports
-import React from 'react';
-import PropTypes from 'prop-types';
-
-import { Input, Upload, Icon, Alert, Typography } from 'antd';
-import schema from 'config/schema/addAlgorithm.schema';
-import SelectEnvOptions from '../SelectEnvOptions.react';
+import { Alert, Icon, Input, Typography, Upload } from 'antd';
 import { FlexBox, Form } from 'components/common';
+import schema from 'config/schema/addAlgorithm.schema';
+import PropTypes from 'prop-types';
+import React from 'react';
 import { COLOR } from 'styles';
 import { notification } from 'utils';
-// #endregion
+import SelectEnvOptions from '../SelectEnvOptions.react';
 
 // #region helpers
 const toStatusMessage = fileName => ({
   done: `${fileName} uploaded successfully`,
   error: `${fileName} upload failed`,
-  removed: `File ${fileName} removed`
+  removed: `File ${fileName} removed`,
 });
 
 const STATUS_TYPE = {
   done: notification.TYPES.SUCCESS,
   error: notification.TYPES.ERROR,
-  removed: notification.TYPES.INFO
+  removed: notification.TYPES.INFO,
 };
 
 const isNotify = status => status === 'done' || status === 'error' || status === 'removed';
@@ -45,7 +42,7 @@ const setDraggerProps = ({ fileList, setFileList }) => ({
     if (status === 'removed') {
       setFileList([]);
     }
-  }
+  },
 });
 
 const marginTop = { marginTop: 15 };
@@ -55,19 +52,20 @@ const { Text } = Typography;
 // #endregion
 
 const {
-  CODE: { ENVIRONMENT, ENTRY_POINT, VERSION, BASE_IMAGE }
+  CODE: { ENVIRONMENT, ENTRY_POINT, VERSION, BASE_IMAGE, DIVIDERS },
 } = schema.BUILD_TYPES;
 
 const CodeBuild = ({ required, getFieldDecorator, fileList, setFileList }) => (
   <>
+    <Form.Divider>{DIVIDERS.BUILD}</Form.Divider>
     <Form.Item label={ENVIRONMENT.label}>
       {getFieldDecorator(ENVIRONMENT.field, {
-        rules: [{ required, message: ENVIRONMENT.message }]
+        rules: [{ required, message: ENVIRONMENT.message }],
       })(<SelectEnvOptions placeholder={ENVIRONMENT.placeholder} />)}
     </Form.Item>
     <Form.Item label={ENTRY_POINT.label}>
       {getFieldDecorator(ENTRY_POINT.field, {
-        rules: [{ required, message: ENTRY_POINT.message }]
+        rules: [{ required, message: ENTRY_POINT.message }],
       })(<Input placeholder={ENTRY_POINT.placeholder} />)}
     </Form.Item>
     <Form.Item label={VERSION.label}>
@@ -101,7 +99,7 @@ CodeBuild.propTypes = {
   getFieldDecorator: PropTypes.func.isRequired,
   required: PropTypes.bool.isRequired,
   setFileList: PropTypes.func.isRequired,
-  fileList: PropTypes.array.isRequired
+  fileList: PropTypes.array.isRequired,
 };
 
 export default CodeBuild;

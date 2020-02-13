@@ -12,10 +12,9 @@ const AlgorithmsTable = () => {
 
   const { drawerOpen } = useActions();
 
-  const onRow = record => ({
+  const onRow = ({ name }) => ({
     onDoubleClick: () => {
-      const { name } = record;
-      const body = <AlgorithmsTabs record={record} />;
+      const body = <AlgorithmsTabs name={name} />;
       drawerOpen({ title: name, body, width: DRAWER_SIZE.ALGORITHM_INFO });
     },
   });
