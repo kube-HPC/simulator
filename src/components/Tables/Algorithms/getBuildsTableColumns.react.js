@@ -7,13 +7,28 @@ import Moment from 'react-moment';
 import { COLOR_TASK_STATUS } from 'styles/colors';
 import { sorter, toUpperCaseFirstLetter } from 'utils/string';
 
-const getBuildsTableColumns = ({ onCancel, onRerun }) => [
+const BuildId = buildId => <Ellipsis copyable type="secondary" text={buildId} />;
+const StartTime = startTime => <Moment format="DD/MM/YY HH:mm:ss">{startTime}</Moment>;
+
+const RunningTime = (_, { startTime, endTime }) => (
+  <span>
+    {humanizeDuration(endTime ? endTime - startTime : Date.now() - startTime, {
+      maxDecimalPoints: 2,
+    })}
+  </span>
+);
+
+const Status = status => (
+  <Tag color={COLOR_TASK_STATUS[status]}>{toUpperCaseFirstLetter(status)}</Tag>
+);
+
+const getBuildsTableColumns = ({ cancelBuild, rerunBuild }) => [
   {
     title: 'Build Id',
     dataIndex: 'buildId',
     key: 'buildId',
     sorter: (a, b) => sorter(a.buildId, b.buildId),
-    render: buildId => <Ellipsis copyable type="secondary" text={buildId} />,
+    render: BuildId,
   },
   {
     title: 'Env',
@@ -32,31 +47,21 @@ const getBuildsTableColumns = ({ onCancel, onRerun }) => [
     dataIndex: 'startTime',
     key: 'startTime',
     sorter: (a, b) => sorter(a.startTime, b.startTime),
-    render: (_, record) => <Moment format="DD/MM/YY HH:mm:ss">{record.startTime}</Moment>,
+    render: StartTime,
   },
   {
     title: 'Running time',
     dataIndex: 'timeTook',
     key: 'timeTook',
     sorter: (a, b) => sorter(a.endTime, b.endTime),
-    render: (_, record) => (
-      <span>
-        {humanizeDuration(
-          record.endTime ? record.endTime - record.startTime : Date.now() - record.startTime,
-          {
-            maxDecimalPoints: 2,
-          },
-        )}
-      </span>
-    ),
+    render: RunningTime,
   },
   {
     title: 'Status',
     key: 'status',
+    dataIndex: 'status',
     sorter: (a, b) => sorter(a.status, b.status),
-    render: (_, record) => (
-      <Tag color={COLOR_TASK_STATUS[record.status]}>{toUpperCaseFirstLetter(record.status)}</Tag>
-    ),
+    render: Status,
   },
   {
     title: 'Progress',
@@ -90,10 +95,15 @@ const getBuildsTableColumns = ({ onCancel, onRerun }) => [
           type="danger"
           shape="circle"
           icon="close"
-          onClick={() => onCancel(record.buildId)}
+          onClick={() => cancelBuild(record.buildId)}
         />
       ) : (
-        <Button type="default" shape="circle" icon="redo" onClick={() => onRerun(record.buildId)} />
+        <Button
+          type="default"
+          shape="circle"
+          icon="redo"
+          onClick={() => rerunBuild(record.buildId)}
+        />
       ),
   },
 ];

@@ -1,10 +1,9 @@
-import { cancelBuild, rerunBuild } from 'actions/builds.action';
 import { Empty } from 'antd';
 import { Table } from 'components';
 import { Card, JsonView, LogsViewer, Tabs } from 'components/common';
+import { useActions } from 'hooks';
 import PropTypes from 'prop-types';
-import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
 import styled from 'styled-components';
 import getBuildsTableColumns from '../../getBuildsTableColumns.react';
 
@@ -18,15 +17,12 @@ const CardOverflow = styled(Card)`
 `;
 
 const AlgorithmBuildsTable = ({ builds }) => {
-  const dispatch = useDispatch();
-
-  const onCancel = useCallback(data => dispatch(cancelBuild(data)), [dispatch]);
-  const onRerun = useCallback(data => dispatch(rerunBuild(data)), [dispatch]);
+  const { cancelBuild, rerunBuild } = useActions();
 
   return (
     <Table
       rowKey={record => record.buildId}
-      columns={getBuildsTableColumns({ onCancel, onRerun })}
+      columns={getBuildsTableColumns({ cancelBuild, rerunBuild })}
       dataSource={builds}
       expandedRowRender={record => (
         <Card isMargin>

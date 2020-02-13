@@ -1,20 +1,31 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Select, Input } from 'antd';
-import { toUpperCaseFirstLetter } from 'utils';
+import { Input, Radio } from 'antd';
+import { Form, InputAddon } from 'components/common';
 import addAlgorithmSchema from 'config/schema/addAlgorithm.schema';
-import { InputAddon, Form } from 'components/common';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { toUpperCaseFirstLetter } from 'utils';
 import SelectEnvOptions from '../SelectEnvOptions.react';
 
 const {
-  GIT: { URL, BRANCH, COMMIT, ENTRY_POINT, ENVIRONMENT, GIT_KIND, TAG, TOKEN, BASE_IMAGE },
+  GIT: {
+    URL,
+    BRANCH,
+    COMMIT,
+    ENTRY_POINT,
+    ENVIRONMENT,
+    GIT_KIND,
+    TAG,
+    TOKEN,
+    BASE_IMAGE,
+    DIVIDERS,
+  },
 } = addAlgorithmSchema.BUILD_TYPES;
 
 const insertGitKindOptions = ({ options, predicate = () => {} }) =>
-  options.map((type, key) => (
-    <Select.Option key={key} value={type} disabled={predicate(type)}>
+  options.map(type => (
+    <Radio key={type} value={type} disabled={predicate(type)}>
       {toUpperCaseFirstLetter(type)}
-    </Select.Option>
+    </Radio>
   ));
 
 const {
@@ -25,6 +36,21 @@ const defaultGitHost = 'github';
 
 const GitBuild = ({ required, getFieldDecorator }) => (
   <>
+    <Form.Divider>{DIVIDERS.BUILD}</Form.Divider>
+    <Form.Item label={ENVIRONMENT.label}>
+      {getFieldDecorator(ENVIRONMENT.field, {
+        rules: [{ required, message: ENVIRONMENT.message }],
+      })(<SelectEnvOptions placeholder={ENVIRONMENT.placeholder} />)}
+    </Form.Item>
+    <Form.Item label={ENTRY_POINT.label}>
+      {getFieldDecorator(ENTRY_POINT.field, {
+        rules: [{ required, message: ENTRY_POINT.message }],
+      })(<Input placeholder={ENTRY_POINT.placeholder} />)}
+    </Form.Item>
+    <Form.Item label={BASE_IMAGE.label}>
+      {getFieldDecorator(BASE_IMAGE.field)(<Input placeholder={BASE_IMAGE.placeholder} />)}
+    </Form.Item>
+    <Form.Divider>{DIVIDERS.GIT}</Form.Divider>
     <Form.Item label={URL.label}>
       {getFieldDecorator(URL.field, {
         rules: [{ required, message: URL.message }],
@@ -42,28 +68,10 @@ const GitBuild = ({ required, getFieldDecorator }) => (
     <Form.Item label={GIT_KIND.label}>
       {getFieldDecorator(GIT_KIND.field, {
         initialValue: defaultGitHost,
-      })(
-        // Only supporting github build for now
-        <Select placeholder={GIT_KIND.placeholder}>
-          {insertGitKindOptions({ options: GIT_KIND.types })}
-        </Select>,
-      )}
+      })(<Radio.Group>{insertGitKindOptions({ options: GIT_KIND.types })}</Radio.Group>)}
     </Form.Item>
     <Form.Item label={COMMIT.ID.label}>
       {getFieldDecorator(COMMIT.ID.field)(<Input placeholder={COMMIT.ID.placeholder} />)}
-    </Form.Item>
-    <Form.Item label={ENVIRONMENT.label}>
-      {getFieldDecorator(ENVIRONMENT.field, {
-        rules: [{ required, message: ENVIRONMENT.message }],
-      })(<SelectEnvOptions placeholder={ENVIRONMENT.placeholder} />)}
-    </Form.Item>
-    <Form.Item label={ENTRY_POINT.label}>
-      {getFieldDecorator(ENTRY_POINT.field, {
-        rules: [{ required, message: ENTRY_POINT.message }],
-      })(<Input placeholder={ENTRY_POINT.placeholder} />)}
-    </Form.Item>
-    <Form.Item label={BASE_IMAGE.label}>
-      {getFieldDecorator(BASE_IMAGE.field)(<Input placeholder={BASE_IMAGE.placeholder} />)}
     </Form.Item>
   </>
 );

@@ -1,6 +1,6 @@
 import { Button } from 'antd';
 import { Card, JsonSwitch, MdEditor, Tabs } from 'components/common';
-import { useReadme, useVersions } from 'hooks';
+import { useAlgorithm, useReadme, useVersions } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import AlgorithmBuildsTable from './Builds/AlgorithmBuildsTable.react';
@@ -13,11 +13,11 @@ const TABS = {
   DESCRIPTION: 'Description',
 };
 
-const AlgorithmsTabs = ({ record: { builds, ...algorithm } }) => {
+const AlgorithmsTabs = ({ name }) => {
   const [activeKey, setActiveKey] = useState(TABS.VERSIONS);
   const [readme, setReadme] = useState();
 
-  const { name } = algorithm;
+  const { algorithm } = useAlgorithm(name);
 
   const { asyncFetch, post } = useReadme(useReadme.TYPES.ALGORITHM);
 
@@ -59,7 +59,7 @@ const AlgorithmsTabs = ({ record: { builds, ...algorithm } }) => {
           />
         </Tabs.TabPane>
         <Tabs.TabPane tab={TABS.BUILDS} key={TABS.BUILDS}>
-          <AlgorithmBuildsTable builds={builds} />
+          <AlgorithmBuildsTable builds={algorithm.builds} />
         </Tabs.TabPane>
         <Tabs.TabPane tab={TABS.INFO} key={TABS.INFO} forceRender>
           <JsonSwitch obj={algorithm} />
@@ -73,7 +73,7 @@ const AlgorithmsTabs = ({ record: { builds, ...algorithm } }) => {
 };
 
 AlgorithmsTabs.propTypes = {
-  record: PropTypes.object.isRequired,
+  name: PropTypes.string.isRequired,
 };
 
 export default AlgorithmsTabs;

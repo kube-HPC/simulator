@@ -164,7 +164,6 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
           </Select>,
         )}
       </Form.Item>
-      <Form.Divider>{toReadableBuildType(buildType)}</Form.Divider>
       {buildTypes[buildType]}
       <BottomContent.Divider />
       <BottomContent

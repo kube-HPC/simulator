@@ -1,4 +1,5 @@
 import { applyAlgorithm, deleteAlgorithm } from 'actions/algorithm.action';
+import { cancelBuild, rerunBuild } from 'actions/builds.action';
 import { init, socketInit } from 'actions/connection.action';
 import { open as drawerOpen, toggle as drawerToggle } from 'actions/drawer.action';
 import { filterByType } from 'actions/filter.action';
@@ -22,9 +23,9 @@ import { changeStep, triggerUserGuide } from 'actions/userGuide.action';
 import { firstLoad, toggle as toggleViewType } from 'actions/viewType.action';
 
 const actions = {
-  startBoard,
   addPipeline,
   applyAlgorithm,
+  cancelBuild,
   changeStep,
   cronStart,
   cronStop,
@@ -41,14 +42,16 @@ const actions = {
   getKubernetesLogsData,
   init,
   pausePipeline,
+  rerunBuild,
   rerunRawPipeline,
   resumePipeline,
+  setSettings,
   socketInit,
+  startBoard,
   stopPipeline,
   toggleViewType,
   triggerUserGuide,
   updateStored,
-  setSettings,
 };
 
 export default actions;
