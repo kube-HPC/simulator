@@ -1,4 +1,5 @@
 import { applyAlgorithm, deleteAlgorithm } from 'actions/algorithm.action';
+import { filterData } from 'actions/autoComplete.action';
 import { cancelBuild, rerunBuild } from 'actions/builds.action';
 import { init, socketInit } from 'actions/connection.action';
 import { open as drawerOpen, toggle as drawerToggle } from 'actions/drawer.action';
@@ -37,6 +38,7 @@ const actions = {
   execRawPipeline,
   execStored,
   filterByType,
+  filterData,
   firstLoad,
   getCaching,
   getKubernetesLogsData,
