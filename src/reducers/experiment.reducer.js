@@ -7,7 +7,8 @@ import { getLsItem } from 'utils';
 
 const initial = Immutable.from({
   dataSource: [],
-  selected: getLsItem(LOCAL_STORAGE_KEYS.EXPERIMENT) || experimentsTemplate.default,
+  value: getLsItem(LOCAL_STORAGE_KEYS.EXPERIMENT) || experimentsTemplate.default,
+  lastValue: null,
 });
 
 export const experiments = handleActions(
@@ -15,8 +16,9 @@ export const experiments = handleActions(
     [actions.SOCKET_GET_DATA](currState, { payload: { experiments } }) {
       return Immutable.merge(currState, { dataSource: experiments });
     },
-    [actions.EXPERIMENT_CHANGE](currState, { selected }) {
-      return Immutable.merge(currState, { selected });
+    [actions.EXPERIMENT_CHANGE](currState, { value }) {
+      const { value: lastValue } = currState;
+      return Immutable.merge(currState, { value, lastValue });
     },
   },
   initial,

@@ -1,6 +1,6 @@
 import actions from 'const/application-actions';
 
-export const experimentChange = selected => ({
+export const experimentChange = value => ({
   type: actions.EXPERIMENT_CHANGE,
-  selected,
+  value,
 });

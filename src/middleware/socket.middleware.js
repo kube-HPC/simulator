@@ -1,7 +1,7 @@
+import { setConnectionStatus } from 'actions/connection.action';
 import AT from 'const/application-actions';
 import io from 'socket.io-client';
 import { COLOR } from 'styles/colors';
-import { setConnectionStatus } from 'actions/connection.action';
 
 let socket = null;
 const currentTopicRegistered = {};
@@ -23,9 +23,9 @@ const connectionsEvents = {
   EXPERIMENT_REGISTER: 'experiment-register',
 };
 
-const connectOperation = socket => {
-  socket.emit('experiment-register', { name: 'experiment:main', lastRoom: null });
-  console.log(
+const connectOperation = ({ socket, name, lastRoom }) => {
+  socket.emit('experiment-register', { name, lastRoom });
+  console.info(
     `%cSOCKET Connected, id=${socket.id}`,
     `background: ${COLOR.grey}; color: ${COLOR.blue}`,
   );
@@ -44,7 +44,19 @@ const noConnectionEvents = [
 
 let isSocketConnected = false;
 
-const socketMiddleware = ({ dispatch }) => next => action => {
+const toSocketRoom = value => (value ? `experiment:${value}` : null);
+const getSocketRoom = getState => {
+  const {
+    experiments: { value, lastValue },
+  } = getState();
+
+  return {
+    name: toSocketRoom(value),
+    lastRoom: toSocketRoom(lastValue),
+  };
+};
+
+const socketMiddleware = ({ dispatch, getState }) => next => action => {
   if (action.type === `${AT.SOCKET_GET_CONFIG}_SUCCESS`) {
     if (socket) {
       socket.close();
@@ -61,10 +73,12 @@ const socketMiddleware = ({ dispatch }) => next => action => {
       transports: ['websocket'],
     });
 
+    const emitOptions = getSocketRoom(getState);
+
     Object.values(connectionsEvents).forEach(event => {
       socket.on(event, args => {
         event === (connectionsEvents.CONNECTION || connectionsEvents.EXPERIMENT_REGISTER)
-          ? connectOperation(socket)
+          ? connectOperation({ socket, ...emitOptions })
           : console.info(`${event}, ${args}`);
 
         changeConnectionStatus(dispatch, { isSocketConnected });
@@ -99,6 +113,13 @@ const socketMiddleware = ({ dispatch }) => next => action => {
       }
       currentTopicRegistered[action.payload.topic] = action;
     }
+  }
+
+  if (action.type === AT.EXPERIMENT_CHANGE) {
+    const { name: lastRoom } = getSocketRoom(getState);
+    const { value } = next(action);
+
+    connectOperation({ socket, name: toSocketRoom(value), lastRoom });
   }
 
   return next(action);

@@ -4,12 +4,12 @@ import useActions from './useActions';
 import useLocalStorage from './useLocalStorage';
 
 const useExperiments = () => {
-  const { dataSource, selected } = useSelector(state => state[STATE_SOURCES.EXPERIMENTS]);
+  const { dataSource, value } = useSelector(state => state[STATE_SOURCES.EXPERIMENTS]);
   const { experimentChange } = useActions();
 
-  useLocalStorage({ value: selected, key: LOCAL_STORAGE_KEYS.EXPERIMENT });
+  useLocalStorage({ value, key: LOCAL_STORAGE_KEYS.EXPERIMENT });
 
-  return { experiments: dataSource, value: selected, set: experimentChange };
+  return { experiments: dataSource, value, set: experimentChange };
 };
 
 export default useExperiments;
