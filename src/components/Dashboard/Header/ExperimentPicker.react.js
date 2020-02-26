@@ -1,14 +1,19 @@
 import { Select } from 'antd';
+import { useExperiments } from 'hooks';
 import React from 'react';
-import { useSelector } from 'react-redux';
 
 const { Option } = Select;
+const selectWidth = { width: 200 };
 
 const ExperimentPicker = () => {
-  useSelector();
+  const { experiments, value, set: onChange } = useExperiments();
   return (
-    <Select>
-      <Option value="1">Hello</Option>
+    <Select style={selectWidth} value={value} onChange={onChange}>
+      {experiments.map(({ name }) => (
+        <Option key={name} value={name}>
+          {name}
+        </Option>
+      ))}
     </Select>
   );
 };

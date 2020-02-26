@@ -5,4 +5,5 @@ export default {
   IS_TABLE_VIEW: `isTableView`,
   FILTER_TYPES: `filterTypes`,
   SETTINGS: `settings`,
+  EXPERIMENT: `experiment`,
 };

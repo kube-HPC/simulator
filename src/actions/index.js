@@ -3,6 +3,7 @@ import { filterData } from 'actions/autoComplete.action';
 import { cancelBuild, rerunBuild } from 'actions/builds.action';
 import { init, socketInit } from 'actions/connection.action';
 import { open as drawerOpen, toggle as drawerToggle } from 'actions/drawer.action';
+import { experimentChange } from 'actions/experiments.action';
 import { filterByType } from 'actions/filter.action';
 import { downloadStorageResults, getCaching, getKubernetesLogsData } from 'actions/jobs.action';
 import {
@@ -26,6 +27,7 @@ import { firstLoad, toggle as toggleViewType } from 'actions/viewType.action';
 const actions = {
   addPipeline,
   applyAlgorithm,
+  experimentChange,
   cancelBuild,
   changeStep,
   cronStart,

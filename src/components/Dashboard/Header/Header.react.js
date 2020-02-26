@@ -5,6 +5,7 @@ import { useLeftSidebar } from 'hooks';
 import React from 'react';
 import styled from 'styled-components';
 import { COLOR_LAYOUT } from 'styles';
+import ExperimentPicker from './ExperimentPicker.react';
 import HelpBar from './HelpBar.react';
 import SidebarActions from './SidebarActions.react';
 
@@ -26,7 +27,10 @@ const Header = () => {
   return (
     <Container className={USER_GUIDE.WELCOME}>
       <SidebarActions />
-      <AutoComplete table={tableValue} className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
+      <FlexBox.Auto>
+        <ExperimentPicker />
+        <AutoComplete table={tableValue} className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
+      </FlexBox.Auto>
       <HelpBar />
     </Container>
   );

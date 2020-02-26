@@ -5,6 +5,7 @@ import { debugTable } from 'reducers/debug.reducer';
 import { drawer } from 'reducers/drawer.reducer';
 import { driverTable } from 'reducers/driver.reducer';
 import { errorLogsTable } from 'reducers/errorLogs.reducer';
+import { experiments } from 'reducers/experiment.reducer';
 import { filterByType } from 'reducers/filter.reducer';
 import { jobsKubernetesLogs, jobsTable } from 'reducers/jobs.reducer';
 import { nodeStatistics } from 'reducers/nodeStatistics.reducer';
@@ -27,6 +28,7 @@ const store = {
   drawer,
   driverTable,
   errorLogsTable,
+  experiments,
   filterByType,
   jobsKubernetesLogs,
   jobsTable,
