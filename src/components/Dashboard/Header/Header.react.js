@@ -1,7 +1,7 @@
+import { Divider } from 'antd';
 import { AutoComplete } from 'components';
 import { FlexBox } from 'components/common';
 import { USER_GUIDE } from 'const';
-import { useLeftSidebar } from 'hooks';
 import React from 'react';
 import styled from 'styled-components';
 import { COLOR_LAYOUT } from 'styles';
@@ -19,21 +19,20 @@ const Container = styled(FlexBox.Auto)`
   padding-right: 10px;
 `;
 
-const Header = () => {
-  const {
-    value: [tableValue],
-  } = useLeftSidebar();
+const LongDivider = styled(Divider)`
+  height: 1.5rem;
+`;
 
-  return (
-    <Container className={USER_GUIDE.WELCOME}>
-      <SidebarActions />
-      <FlexBox.Auto>
-        <ExperimentPicker />
-        <AutoComplete table={tableValue} className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
-      </FlexBox.Auto>
-      <HelpBar />
-    </Container>
-  );
-};
+const Header = () => (
+  <Container className={USER_GUIDE.WELCOME}>
+    <SidebarActions />
+    <FlexBox.Auto>
+      <ExperimentPicker />
+      <LongDivider type="vertical" />
+      <AutoComplete className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
+    </FlexBox.Auto>
+    <HelpBar />
+  </Container>
+);
 
 export default Header;

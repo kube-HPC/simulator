@@ -9,6 +9,7 @@ const initial = Immutable.from({
   dataSource: [],
   value: getLsItem(LOCAL_STORAGE_KEYS.EXPERIMENT) || experimentsTemplate.default,
   lastValue: null,
+  loading: false,
 });
 
 export const experiments = handleActions(
@@ -18,7 +19,11 @@ export const experiments = handleActions(
     },
     [actions.EXPERIMENT_CHANGE](currState, { value }) {
       const { value: lastValue } = currState;
-      return Immutable.merge(currState, { value, lastValue });
+      return Immutable.merge(currState, { value, lastValue, loading: true });
+    },
+    [actions.EXPERIMENT_TRIGGER_LOADING](currState) {
+      const { loading } = currState;
+      return Immutable.set(currState, `loading`, !loading);
     },
   },
   initial,

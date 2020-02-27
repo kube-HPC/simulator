@@ -120,6 +120,9 @@ const socketMiddleware = ({ dispatch, getState }) => next => action => {
     const { value } = next(action);
 
     connectOperation({ socket, name: toSocketRoom(value), lastRoom });
+    setTimeout(() => {
+      dispatch({ type: AT.EXPERIMENT_TRIGGER_LOADING });
+    }, 3000);
   }
 
   return next(action);

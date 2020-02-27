@@ -1,19 +1,23 @@
 import { AutoComplete as AntAutoComplete, Input } from 'antd';
-import { useActions } from 'hooks';
+import { useActions, useLeftSidebar } from 'hooks';
 import isEqual from 'lodash/isEqual';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import getDataByTable from './getDataByTable';
 
-const AutoComplete = ({ table, ...props }) => {
+const AutoComplete = ({ className }) => {
+  const {
+    value: [table],
+  } = useLeftSidebar();
+
   const tableData = useSelector(getDataByTable(table), isEqual);
 
   const { filterData } = useActions();
 
   return (
     <AntAutoComplete
-      {...props}
+      className={className}
       dataSource={tableData}
       onSearch={filterData}
       onSelect={filterData}
@@ -25,7 +29,7 @@ const AutoComplete = ({ table, ...props }) => {
 };
 
 AutoComplete.propTypes = {
-  table: PropTypes.string.isRequired,
+  className: PropTypes.string,
 };
 
 const areEqualByTableName = (prevProps, nextProps) => prevProps.table === nextProps.table;

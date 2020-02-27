@@ -5,7 +5,7 @@ import React from 'react';
 import JobInfo from './JobInfo.react';
 
 const JobsTable = () => {
-  const { columns, dataSource } = useJobs();
+  const { columns, dataSource, loading } = useJobs();
   const { drawerOpen } = useActions();
 
   const onRow = job => ({
@@ -21,6 +21,7 @@ const JobsTable = () => {
 
   return (
     <Table
+      loading={loading}
       onRow={onRow}
       expandIcon={false}
       columns={columns}
