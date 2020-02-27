@@ -2,7 +2,7 @@ import { Col, Row } from 'antd';
 import PropTypes from 'prop-types';
 import React, { Children } from 'react';
 import styled from 'styled-components';
-import { prop, switchProp } from 'styled-tools';
+import { ifProp, prop } from 'styled-tools';
 
 const FlexAligned = styled(Row)`
   align-items: ${prop('align', 'center')};
@@ -34,14 +34,11 @@ const FlexBox = ({
 FlexBox.propTypes = Row.propTypes;
 
 const ColFull = styled(Col)`
-  width: ${switchProp('full', {
-    true: '100%',
-    false: 'fit-content',
-  })};
+  width: ${ifProp('full', '100%', 'fit-content')};
 `;
 
 const Item = ({ children, className, full = false, ...props }) => (
-  <ColFull className={className} full={full.toString()} {...props}>
+  <ColFull className={className} full={full} {...props}>
     {children}
   </ColFull>
 );

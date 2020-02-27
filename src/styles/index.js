@@ -1,4 +1,4 @@
-export { default as BottomPosition } from 'styles/BottomPosition.styles';
+export { default as BottomPosition } from './BottomPosition.styles';
 export {
   COLOR,
   COLOR_BOARDS,
@@ -9,6 +9,7 @@ export {
   COLOR_PRIORITY,
   COLOR_SERVICE,
   COLOR_TASK_STATUS,
-} from 'styles/colors';
-export { default as Display } from 'styles/Display.styles';
-export { default as GlobalStyle } from 'styles/GlobalStyle.styles';
+} from './colors';
+export { default as Display } from './Display.styles';
+export { default as GlobalStyle } from './GlobalStyle.styles';
+export { default as mixins } from './mixins.styles';

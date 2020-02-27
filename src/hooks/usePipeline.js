@@ -4,16 +4,21 @@ import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { stringify } from 'utils';
 import { tableFilterSelector } from 'utils/tableSelector';
+import useExperiments from './useExperiments';
 
 const dataSelector = tableFilterSelector(LEFT_SIDEBAR_NAMES.PIPELINES);
 
 const usePipeline = () => {
   const dataSource = useSelector(dataSelector);
   const dataStats = useSelector(state => state[STATE_SOURCES.PIPELINE_TABLE].dataStats);
+  const { value: experimentName } = useExperiments();
 
   const { deleteStored, updateStored, execStored } = useActions();
 
-  const onSubmitExec = useCallback(pipeline => execStored(JSON.parse(pipeline)), [execStored]);
+  const onSubmitExec = useCallback(
+    pipeline => execStored({ experimentName, ...JSON.parse(pipeline) }),
+    [execStored, experimentName],
+  );
   const onSubmitUpdate = useCallback(pipeline => updateStored(JSON.parse(pipeline)), [
     updateStored,
   ]);

@@ -44,11 +44,11 @@ ExpandIcon.propTypes = {
 const antIcon = <Icon type="loading" style={{ fontSize: 40 }} spin />;
 Spin.setDefaultIndicator(antIcon);
 
-const Table = ({ dataSource = [], ...props }) => {
+const Table = ({ dataSource = [], loading = false, ...props }) => {
   const tableSource = Immutable.isImmutable(dataSource) ? dataSource.asMutable() : dataSource;
   return (
     <TableWhite
-      loading={!dataSource}
+      loading={loading || !dataSource}
       className={USER_GUIDE.TABLE}
       expandIcon={ExpandIcon}
       // Cannot sort immutable entries.
@@ -62,6 +62,7 @@ const Table = ({ dataSource = [], ...props }) => {
 
 Table.propTypes = {
   dataSource: PropTypes.array,
+  loading: PropTypes.bool,
   ...AntTable.propTypes,
 };
 

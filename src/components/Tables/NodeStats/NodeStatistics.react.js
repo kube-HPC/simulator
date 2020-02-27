@@ -1,10 +1,10 @@
-import { useSelector } from 'react-redux';
-import React from 'react';
-import PropTypes from 'prop-types';
 import { ResponsiveBar } from '@nivo/bar';
+import { STATE_SOURCES } from 'const';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { COLOR } from 'styles/colors';
-import { STATE_SOURCES } from 'const';
 
 const Container = styled.div`
   font-size: 20px;
@@ -14,6 +14,7 @@ const Container = styled.div`
 const adaptedData = (statistics, metric) => {
   const statisticsForMetric =
     statistics && statistics.find(statistic => statistic.metric === metric);
+
   const data =
     statisticsForMetric &&
     statisticsForMetric.results.map(res => {

@@ -1,12 +1,12 @@
+import { Icon } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
-
-import { Icon } from 'antd';
+import { mixins } from 'styles';
 import { COLOR_LAYOUT } from 'styles/colors';
 
 const DarkHoverStyle = styled(Icon)`
+  ${mixins.transition};
   color: ${COLOR_LAYOUT.darkBorder};
-  transition: all 0.5s;
   :hover {
     color: black;
   }

@@ -16,6 +16,8 @@ const actionType = {
   DEBUG_DELETE: `DEBUG_DELETE`,
   DRAWER_OPEN: `DRAWER_OPEN`,
   DRAWER_TOGGLE: `DRAWER_TOGGLE`,
+  EXPERIMENT_CHANGE: `EXPERIMENT_CHANGE`,
+  EXPERIMENT_TRIGGER_LOADING: `EXPERIMENT_TRIGGER_LOADING`,
   FILTER_TYPES: `FILTER_TYPES`,
   JOBS_DOWNLOAD_REQ: `JOBS_DOWNLOAD_REQ`,
   JOBS_DOWNLOAD_RESULTS: `JOBS_DOWNLOAD_RESULTS`,
@@ -53,21 +55,22 @@ const actionType = {
   VIEW_TYPE_TOGGLE: `VIEW_TYPE_TOGGLE`,
 };
 
-const restHelper = action => {
+const actionHelper = action => {
   actionType[`${action}_PENDING`] = `${action}_PENDING`;
   actionType[`${action}_SUCCESS`] = `${action}_SUCCESS`;
   actionType[`${action}_REJECT`] = `${action}_REJECT`;
 };
 
-restHelper(actionType.SOCKET_GET_CONFIG);
-restHelper(actionType.JOBS_DOWNLOAD_RESULTS);
-restHelper(actionType.JOBS_KUBERNETES_LOGS);
-restHelper(actionType.ALGORITHM_APPLY);
-restHelper(actionType.ALGORITHM_DELETE);
-restHelper(actionType.README_GET_PIPELINE);
-restHelper(actionType.README_GET_ALGORITHM);
-restHelper(actionType.README_POST_PIPELINE);
-restHelper(actionType.README_POST_ALGORITHM);
-restHelper(actionType.ALGORITHM_GET_VERSIONS);
+actionHelper(actionType.SOCKET_GET_CONFIG);
+actionHelper(actionType.JOBS_DOWNLOAD_RESULTS);
+actionHelper(actionType.JOBS_KUBERNETES_LOGS);
+actionHelper(actionType.ALGORITHM_APPLY);
+actionHelper(actionType.ALGORITHM_DELETE);
+actionHelper(actionType.README_GET_PIPELINE);
+actionHelper(actionType.README_GET_ALGORITHM);
+actionHelper(actionType.README_POST_PIPELINE);
+actionHelper(actionType.README_POST_ALGORITHM);
+actionHelper(actionType.ALGORITHM_GET_VERSIONS);
+actionHelper(actionType.EXPERIMENT_CHANGE);
 
 export default actionType;

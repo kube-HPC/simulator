@@ -12,6 +12,7 @@ export default {
   DRAWER: `drawer`,
   DRIVER_TABLE: `driverTable`,
   ERROR_LOGS_TABLE: `errorLogsTable`,
+  EXPERIMENTS: `experiments`,
   FILTER_TYPES: `filterByType`,
   JOBS_KUBERNETES_LOGS: `jobsKubernetesLogs`,
   JOBS_TABLE: `jobsTable`,

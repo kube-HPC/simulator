@@ -2,7 +2,7 @@ import { getJobsColumns } from 'components/Tables/Jobs';
 import { LEFT_SIDEBAR_NAMES, STATE_SOURCES } from 'const';
 import isEqual from 'lodash/isEqual';
 import { useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { createStore } from 'reusable';
 import { selector } from 'utils';
@@ -23,15 +23,14 @@ const jobsSelector = createSelector(
 );
 
 const useJobs = () => {
-  const { isOn } = useSelector(state => state.userGuide, isEqual);
-  const dispatch = useDispatch();
-  const columns = useMemo(() => getJobsColumns({ dispatch, isGuideOn: isOn }), [dispatch, isOn]);
-
+  const columns = useMemo(() => getJobsColumns(), []);
   const dataSource = useSelector(jobsSelector, isEqual);
+  const { loading } = useSelector(state => state[STATE_SOURCES.EXPERIMENTS]);
 
   return {
     dataSource,
     columns,
+    loading: loading || !dataSource,
   };
 };
 

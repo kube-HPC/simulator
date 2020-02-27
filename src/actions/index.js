@@ -1,7 +1,9 @@
 import { applyAlgorithm, deleteAlgorithm } from 'actions/algorithm.action';
+import { filterData } from 'actions/autoComplete.action';
 import { cancelBuild, rerunBuild } from 'actions/builds.action';
 import { init, socketInit } from 'actions/connection.action';
 import { open as drawerOpen, toggle as drawerToggle } from 'actions/drawer.action';
+import { experimentChange, triggerLoading as triggerExperiment } from 'actions/experiments.action';
 import { filterByType } from 'actions/filter.action';
 import { downloadStorageResults, getCaching, getKubernetesLogsData } from 'actions/jobs.action';
 import {
@@ -36,7 +38,9 @@ const actions = {
   drawerToggle,
   execRawPipeline,
   execStored,
+  experimentChange,
   filterByType,
+  filterData,
   firstLoad,
   getCaching,
   getKubernetesLogsData,
@@ -50,6 +54,7 @@ const actions = {
   startBoard,
   stopPipeline,
   toggleViewType,
+  triggerExperiment,
   triggerUserGuide,
   updateStored,
 };

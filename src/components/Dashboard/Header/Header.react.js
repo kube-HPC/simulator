@@ -1,16 +1,15 @@
-import { Icon, Popover, Tag, Tooltip, Typography } from 'antd';
+import { Divider } from 'antd';
 import { AutoComplete } from 'components';
-import { FlexBox, Icons } from 'components/common';
-import { LEFT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
-import { useActions, useConnectionStatus, useLeftSidebar } from 'hooks';
-import React, { useCallback } from 'react';
+import { FlexBox } from 'components/common';
+import { USER_GUIDE } from 'const';
+import React from 'react';
 import styled from 'styled-components';
-import { COLOR_LAYOUT, Display } from 'styles';
-import Settings from './Settings/Settings.react';
-import ViewType from './ViewType/ViewType.react';
-import * as monaco from 'monaco-editor'; //eslint-disable-line
+import { COLOR_LAYOUT } from 'styles';
+import ExperimentPicker from './ExperimentPicker.react';
+import HelpBar from './HelpBar.react';
+import SidebarActions from './SidebarActions.react';
 
-const Container = styled.div`
+const Container = styled(FlexBox)`
   height: 64px;
   padding: 0 50px;
   line-height: 64px;
@@ -20,87 +19,41 @@ const Container = styled.div`
   padding-right: 10px;
 `;
 
-const DarkText = styled.span`
-  color: ${COLOR_LAYOUT.darkBorder};
+const LongDivider = styled(Divider)`
+  height: 1.5rem;
 `;
 
-const HelpBar = styled(FlexBox)`
-  > ${Icons.DarkHoverStyle}, ${DarkText} {
-    margin-right: 10px;
-  }
+const { Item } = FlexBox;
+
+const Grow = styled(Item)`
+  flex-grow: 1;
+`;
+const Basis = styled(Item)`
+  flex-basis: 30%;
 `;
 
-const ActionsBar = styled(FlexBox)`
-  padding: 0px 5px;
-`;
-
-const openWebsite = () => window.open(`http://hkube.io/`);
-const openGithub = () => window.open(`https://github.com/kube-HPC/hkube`);
-const appVersion = `${process.env.REACT_APP_VERSION}v`;
-
-const Header = () => {
-  const {
-    value: [tableValue, setTableValue],
-    isCollapsed: [leftIsCollapsed, setLeftIsCollapsed],
-  } = useLeftSidebar();
-
-  const { triggerUserGuide } = useActions();
-
-  const onGuideClick = useCallback(() => {
-    triggerUserGuide();
-    setTableValue(LEFT_SIDEBAR_NAMES.JOBS);
-    setLeftIsCollapsed(true);
-  }, [setLeftIsCollapsed, setTableValue, triggerUserGuide]);
-
-  const triggerLeftVisible = useCallback(() => setLeftIsCollapsed(prev => !prev), [
-    setLeftIsCollapsed,
-  ]);
-
-  const { isSocketConnected } = useConnectionStatus();
-
-  return (
-    <Container className={USER_GUIDE.WELCOME}>
+const Header = () => (
+  <Container className={USER_GUIDE.WELCOME}>
+    <Item>
+      <SidebarActions />
+    </Item>
+    <Basis>
       <FlexBox>
-        <ActionsBar>
-          <FlexBox.Item>
-            <Icons.Hover
-              type={leftIsCollapsed ? `menu-fold` : `menu-unfold`}
-              onClick={triggerLeftVisible}
-            />
-          </FlexBox.Item>
-          <FlexBox.Item>
-            <Display hidden={tableValue !== LEFT_SIDEBAR_NAMES.JOBS}>
-              <ViewType />
-            </Display>
-          </FlexBox.Item>
-        </ActionsBar>
-        <AutoComplete table={tableValue} className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
-        <HelpBar className={USER_GUIDE.HEADER.SOCIALS}>
-          {!isSocketConnected && (
-            <Tag color="orange">
-              <Tooltip title="Reconnecting to Socket...">
-                <FlexBox>
-                  <FlexBox.Item>
-                    <Typography.Text>Offline Mode</Typography.Text>
-                  </FlexBox.Item>
-                  <FlexBox.Item>
-                    <Icon type="disconnect" />
-                  </FlexBox.Item>
-                </FlexBox>
-              </Tooltip>
-            </Tag>
-          )}
-          <Popover content={<Settings />} placement="bottomRight">
-            <Icons.Hover type="tool" />
-          </Popover>
-          <Icons.Hover type="global" onClick={openWebsite} />
-          <Icons.Hover type="github" onClick={openGithub} />
-          <Icons.Hover type="question-circle" onClick={onGuideClick} />
-          <DarkText>{appVersion}</DarkText>
-        </HelpBar>
+        <Item>
+          <ExperimentPicker />
+        </Item>
+        <Item>
+          <LongDivider type="vertical" />
+        </Item>
+        <Grow>
+          <AutoComplete className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
+        </Grow>
       </FlexBox>
-    </Container>
-  );
-};
+    </Basis>
+    <Item>
+      <HelpBar />
+    </Item>
+  </Container>
+);
 
 export default Header;
