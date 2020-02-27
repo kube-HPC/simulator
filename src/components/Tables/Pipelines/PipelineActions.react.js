@@ -24,7 +24,7 @@ const PipelineActions = ({ pipeline, className }) => {
   // http://hkube.io/spec/#tag/Execution/paths/~1exec~1stored/post
   // Don't use nodes & description
   /* eslint-disable no-unused-vars */
-  const { nodes, description, triggers, ...noTriggersPipeline } = pipeline;
+  const { nodes, description, triggers, experimentName, ...executePipeline } = pipeline;
 
   const hasNodes = nodes.length !== 0;
 
@@ -37,7 +37,7 @@ const PipelineActions = ({ pipeline, className }) => {
 
   const onDelete = () => deleteConfirmAction(remove, pipeline);
   const onUpdate = () => update(pipeline);
-  const onExecute = () => execute(noTriggersPipeline);
+  const onExecute = () => execute(executePipeline);
   const setPopupContainer = () => container.current;
 
   const popOverContent = hasNodes ? (
