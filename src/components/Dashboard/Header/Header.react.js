@@ -9,7 +9,7 @@ import ExperimentPicker from './ExperimentPicker.react';
 import HelpBar from './HelpBar.react';
 import SidebarActions from './SidebarActions.react';
 
-const Container = styled(FlexBox.Auto)`
+const Container = styled(FlexBox)`
   height: 64px;
   padding: 0 50px;
   line-height: 64px;
@@ -23,15 +23,36 @@ const LongDivider = styled(Divider)`
   height: 1.5rem;
 `;
 
+const { Item } = FlexBox;
+
+const Grow = styled(Item)`
+  flex-grow: 1;
+`;
+const Basis = styled(Item)`
+  flex-basis: 30%;
+`;
+
 const Header = () => (
   <Container className={USER_GUIDE.WELCOME}>
-    <SidebarActions />
-    <FlexBox.Auto>
-      <ExperimentPicker />
-      <LongDivider type="vertical" />
-      <AutoComplete className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
-    </FlexBox.Auto>
-    <HelpBar />
+    <Item>
+      <SidebarActions />
+    </Item>
+    <Basis>
+      <FlexBox>
+        <Item>
+          <ExperimentPicker />
+        </Item>
+        <Item>
+          <LongDivider type="vertical" />
+        </Item>
+        <Grow>
+          <AutoComplete className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
+        </Grow>
+      </FlexBox>
+    </Basis>
+    <Item>
+      <HelpBar />
+    </Item>
   </Container>
 );
 

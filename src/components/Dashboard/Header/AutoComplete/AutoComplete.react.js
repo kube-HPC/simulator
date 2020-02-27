@@ -4,7 +4,12 @@ import isEqual from 'lodash/isEqual';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import styled from 'styled-components';
 import getDataByTable from './getDataByTable';
+
+const AutoCompleteLong = styled(AntAutoComplete)`
+  width: 100%;
+`;
 
 const AutoComplete = ({ className }) => {
   const {
@@ -16,7 +21,7 @@ const AutoComplete = ({ className }) => {
   const { filterData } = useActions();
 
   return (
-    <AntAutoComplete
+    <AutoCompleteLong
       className={className}
       dataSource={tableData}
       onSearch={filterData}
@@ -24,7 +29,7 @@ const AutoComplete = ({ className }) => {
       placeholder="Filter Entities 🎉"
       dropdownMatchSelectWidth>
       <Input.Search allowClear />
-    </AntAutoComplete>
+    </AutoCompleteLong>
   );
 };
 
