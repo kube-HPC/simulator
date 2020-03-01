@@ -25,6 +25,8 @@ const Grow = styled(FlexBox.Item)`
   flex-grow: 1;
 `;
 
+const overflow = { height: 500, overflow: `auto` };
+
 const { Text } = Typography;
 
 const ExperimentPicker = () => {
@@ -39,7 +41,7 @@ const ExperimentPicker = () => {
   const onShowAll = useCallback(() => onChange(experimentsSchema.showAll), [onChange]);
 
   const menu = (
-    <MenuDisabledItems selectedKeys={[value]}>
+    <MenuDisabledItems selectedKeys={[value]} subMenuCloseDelay={0.5}>
       {experiments.map(({ name, description }, index) => {
         const onRemove = () => {
           remove(name);
@@ -53,7 +55,7 @@ const ExperimentPicker = () => {
           <Menu.Item key={name}>
             <FlexBox>
               <Grow onClick={onSelect}>
-                <Tag color={COLOR_EXPERIMENTS[index]}>{name}</Tag>
+                <Tag color={COLOR_EXPERIMENTS[index % COLOR_EXPERIMENTS.length]}>{name}</Tag>
                 <Text type="secondary">{description}</Text>
               </Grow>
               <FlexBox.Item>
@@ -80,10 +82,12 @@ const ExperimentPicker = () => {
   );
 
   const tagColor =
-    COLOR_EXPERIMENTS[experiments.findIndex(({ name }) => name === value)] || COLOR.blueLight;
+    COLOR_EXPERIMENTS[
+      experiments.findIndex(({ name }) => name === value) % COLOR_EXPERIMENTS.length
+    ] || COLOR.blueLight;
 
   return (
-    <Dropdown overlay={menu}>
+    <Dropdown overlay={menu} overlayStyle={overflow}>
       <BigTag color={tagColor}>{value}</BigTag>
     </Dropdown>
   );
