@@ -7,7 +7,7 @@ import {
   addExperiment,
   deleteExperiment,
   experimentChange,
-  triggerLoading as triggerExperiment,
+  triggerExperimentLoading as triggerExperiment,
 } from 'actions/experiments.action';
 import { filterByType } from 'actions/filter.action';
 import { downloadStorageResults, getCaching, getKubernetesLogsData } from 'actions/jobs.action';

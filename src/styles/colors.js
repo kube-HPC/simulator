@@ -151,3 +151,17 @@ export const COLOR_PRIORITY = {
   4: { color: COLOR.greenLight, name: `Low` },
   5: { color: COLOR.blueLight, name: `Lowest` },
 };
+
+export const COLOR_EXPERIMENTS = [
+  'blue',
+  'geekblue',
+  'magenta',
+  'red',
+  'volcano',
+  'orange',
+  'gold',
+  'green',
+  'cyan',
+  'purple',
+  'lime',
+];

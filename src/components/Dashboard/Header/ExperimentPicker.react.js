@@ -1,9 +1,10 @@
 import { Button, Dropdown, Input, Menu, Tag, Typography } from 'antd';
 import { FlexBox, Icons } from 'components/common';
-import { experimentsTemplate } from 'config';
+import { experimentsSchema } from 'config';
 import { useExperiments } from 'hooks';
 import React, { memo, useCallback, useState } from 'react';
 import styled from 'styled-components';
+import { COLOR_EXPERIMENTS } from 'styles/colors';
 
 const BigTag = styled(Tag)`
   line-height: 30px;
@@ -35,19 +36,24 @@ const ExperimentPicker = () => {
 
   const onNameChange = useCallback(({ target: { value } }) => setName(value), []);
   const onDescriptionChange = useCallback(({ target: { value } }) => setDescription(value), []);
-  const onShowAll = useCallback(() => onChange(experimentsTemplate.showAll), [onChange]);
+  const onShowAll = useCallback(() => onChange(experimentsSchema.showAll), [onChange]);
 
   const menu = (
     <MenuDisabledItems selectedKeys={[value]}>
-      {experiments.map(({ name, description }) => {
-        const onRemove = () => remove(name);
+      {experiments.map(({ name, description }, index) => {
+        const onRemove = () => {
+          remove(name);
+          if (name === value) {
+            onChange(experimentsSchema.showAll);
+          }
+        };
         const onSelect = () => onChange(name);
 
         return (
           <Menu.Item key={name}>
             <FlexBox>
               <Grow onClick={onSelect}>
-                <Tag>{name}</Tag>
+                <Tag color={COLOR_EXPERIMENTS[index]}>{name}</Tag>
                 <Text type="secondary">{description}</Text>
               </Grow>
               <FlexBox.Item>

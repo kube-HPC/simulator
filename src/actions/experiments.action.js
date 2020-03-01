@@ -5,7 +5,7 @@ export const experimentChange = value => ({
   value,
 });
 
-export const triggerLoading = () => ({
+export const triggerExperimentLoading = () => ({
   type: actions.EXPERIMENT_TRIGGER_LOADING,
 });
 

@@ -1,4 +1,4 @@
-import { experimentsTemplate } from 'config';
+import { experimentsSchema } from 'config';
 import { LOCAL_STORAGE_KEYS } from 'const';
 import actions from 'const/application-actions';
 import { handleActions } from 'redux-actions';
@@ -7,9 +7,9 @@ import { getLsItem } from 'utils';
 
 const initial = Immutable.from({
   dataSource: [],
-  value: getLsItem(LOCAL_STORAGE_KEYS.EXPERIMENT) || experimentsTemplate.default,
+  value: getLsItem(LOCAL_STORAGE_KEYS.EXPERIMENT) || experimentsSchema.default,
   lastValue: null,
-  loading: false,
+  loading: true,
 });
 
 export const experiments = handleActions(

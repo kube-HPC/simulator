@@ -21,12 +21,12 @@ const successMsg = payload => ({
   TENSORFLOW_START: 'Board started successfully',
   EXPERIMENT_ADD: (
     <>
-      Experiment <Text code>{JSON.stringify(payload)}</Text> has been stored
+      Experiment <Text code>{payload.name}</Text> has been stored
     </>
   ),
   EXPERIMENT_DELETE: (
     <>
-      Experiment <Text code>{JSON.stringify(payload)}</Text> has been removed
+      Experiment <Text code>{payload.name}</Text> has been removed
     </>
   ),
 });
