@@ -9,7 +9,7 @@ const initial = Immutable.from({
   dataSource: [],
   value: getLsItem(LOCAL_STORAGE_KEYS.EXPERIMENT) || experimentsSchema.default,
   lastValue: null,
-  loading: true,
+  loading: false,
 });
 
 export const experiments = handleActions(

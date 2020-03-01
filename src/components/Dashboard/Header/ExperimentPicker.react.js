@@ -79,9 +79,11 @@ const ExperimentPicker = () => {
     </MenuDisabledItems>
   );
 
+  const tagColor = COLOR_EXPERIMENTS[experiments.findIndex(({ name }) => name === value)];
+
   return (
     <Dropdown overlay={menu}>
-      <BigTag>{value}</BigTag>
+      <BigTag color={tagColor}>{value}</BigTag>
     </Dropdown>
   );
 };
