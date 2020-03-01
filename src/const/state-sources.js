@@ -23,4 +23,5 @@ export default {
   USER_GUIDE: `userGuide`,
   VIEW_TYPE: `viewType`,
   WORKER_TABLE: `workerTable`,
+  META: `meta`,
 };

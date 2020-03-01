@@ -4,6 +4,7 @@ import { experimentsSchema } from 'config';
 import { useExperiments } from 'hooks';
 import React, { memo, useCallback, useState } from 'react';
 import styled from 'styled-components';
+import { ifProp } from 'styled-tools';
 import { COLOR, COLOR_EXPERIMENTS } from 'styles/colors';
 
 const BigTag = styled(Tag)`
@@ -21,11 +22,16 @@ const MenuDisabledItems = styled(Menu)`
   }
 `;
 
+const ItemDisabled = styled(FlexBox)`
+  cursor: ${ifProp(`disabled`, `not-allowed`, `pointer`)};
+`;
+
 const Grow = styled(FlexBox.Item)`
   flex-grow: 1;
 `;
 
 const overflow = { height: 500, overflow: `auto` };
+const NOOP = () => {};
 
 const { Text } = Typography;
 
@@ -50,18 +56,19 @@ const ExperimentPicker = () => {
           }
         };
         const onSelect = () => onChange(name);
+        const isDisabled = name === value;
 
         return (
-          <Menu.Item key={name}>
-            <FlexBox>
-              <Grow onClick={onSelect}>
+          <Menu.Item key={name} disabled={isDisabled}>
+            <ItemDisabled disabled={isDisabled}>
+              <Grow onClick={isDisabled ? NOOP : onSelect}>
                 <Tag color={COLOR_EXPERIMENTS[index % COLOR_EXPERIMENTS.length]}>{name}</Tag>
                 <Text type="secondary">{description}</Text>
               </Grow>
               <FlexBox.Item>
                 <Icons.Hover onClick={onRemove} type="minus" />
               </FlexBox.Item>
-            </FlexBox>
+            </ItemDisabled>
           </Menu.Item>
         );
       })}

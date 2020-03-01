@@ -8,6 +8,7 @@ import { errorLogsTable } from 'reducers/errorLogs.reducer';
 import { experiments } from 'reducers/experiment.reducer';
 import { filterByType } from 'reducers/filter.reducer';
 import { jobsKubernetesLogs, jobsTable } from 'reducers/jobs.reducer';
+import { meta } from 'reducers/meta.reducer';
 import { nodeStatistics } from 'reducers/nodeStatistics.reducer';
 import { pipelineTable } from 'reducers/pipeline.reducer';
 import { settings } from 'reducers/settings.reducer';
@@ -20,6 +21,7 @@ import { combineReducers } from 'redux';
 const store = {
   algorithmBuildsTable,
   algorithmTable,
+  meta,
   autoCompleteFilter,
   boards,
   boardURL,
