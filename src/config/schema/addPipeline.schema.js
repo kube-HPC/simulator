@@ -83,8 +83,14 @@ const addPipelineSchema = {
       field: 'options.batchTolerance',
     },
     CONCURRENT: {
-      label: 'Concurrent',
-      field: 'options.concurrentPipelines',
+      amount: {
+        label: 'Concurrent Amount',
+        field: 'options.concurrentPipelines.amount',
+      },
+      reject: {
+        label: `Reject on Failure`,
+        field: 'options.concurrentPipelines.rejectOnFailure',
+      },
     },
     VERBOSITY_LEVEL: {
       label: 'Verbosity Level',
