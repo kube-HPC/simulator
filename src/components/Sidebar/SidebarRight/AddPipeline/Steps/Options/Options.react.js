@@ -32,9 +32,12 @@ const Options = () => {
       </Form.Item>
       <Form.Item label={CONCURRENT.amount.label}>
         <FlexBox>
-          <Grow>{getFieldDecorator(CONCURRENT.amount.field)(<SliderNumber />)}</Grow>
+          <Grow>{getFieldDecorator(CONCURRENT.amount.field)(<SliderNumber min={1} />)}</Grow>
           <FlexBox.Item>
-            Reject on Failure: {getFieldDecorator(CONCURRENT.reject.field)(<Checkbox />)}
+            Reject on Failure:{' '}
+            {getFieldDecorator(CONCURRENT.reject.field, {
+              valuePropName: 'checked',
+            })(<Checkbox />)}
           </FlexBox.Item>
         </FlexBox>
       </Form.Item>

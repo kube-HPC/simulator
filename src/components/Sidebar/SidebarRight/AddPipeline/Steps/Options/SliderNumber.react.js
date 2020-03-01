@@ -8,7 +8,7 @@ const FlexGrow = styled(FlexBox.Item)`
   flex-grow: 1;
 `;
 
-const SliderNumber = forwardRef(({ onChange, value: initial }, ref) => {
+const SliderNumber = forwardRef(({ onChange, value: initial, min }, ref) => {
   const [value, setValue] = useState(initial);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const SliderNumber = forwardRef(({ onChange, value: initial }, ref) => {
   return (
     <FlexBox>
       <FlexGrow>
-        <Slider value={value} onChange={setValue} ref={ref} />
+        <Slider value={value} onChange={setValue} ref={ref} min={min} />
       </FlexGrow>
       <FlexBox.Item>
         <InputNumber value={value} onChange={setValue} />
@@ -32,6 +32,7 @@ SliderNumber.displayName = `Slider Number`;
 SliderNumber.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.number.isRequired,
+  min: PropTypes.number,
 };
 
 export default memo(SliderNumber);
