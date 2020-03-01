@@ -9,8 +9,8 @@ export const getColorStatus = stats => {
   }
   const { results } = stats;
   const algorithmsDataArr = results.map(r => r.algorithmsData);
-  const totalSize = algorithmsDataArr.flatMap(flatAllStats).reduce(sumArr, []);
-  const freeSize = algorithmsDataArr.flatMap(flatByFree).reduce(sumArr, []);
+  const totalSize = algorithmsDataArr.flatMap(flatAllStats).reduce(sumArr, 0);
+  const freeSize = algorithmsDataArr.flatMap(flatByFree).reduce(sumArr, 0);
 
   const freePresents = freeSize / totalSize;
   const isWarningStatus = 0 < freePresents && freePresents <= 0.15;
