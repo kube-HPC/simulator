@@ -1,3 +1,4 @@
+import { experimentsSchema } from 'config';
 import { LEFT_SIDEBAR_NAMES, STATE_SOURCES } from 'const';
 import { useActions, useDrawerEditor } from 'hooks';
 import { useCallback } from 'react';
@@ -16,9 +17,15 @@ const usePipeline = () => {
   const { deleteStored, updateStored, execStored } = useActions();
 
   const onSubmitExec = useCallback(
-    pipeline => execStored({ experimentName, ...JSON.parse(pipeline) }),
+    pipeline => {
+      const parsed = JSON.parse(pipeline);
+      execStored(
+        experimentName === experimentsSchema.showAll ? parsed : { experimentName, ...parsed },
+      );
+    },
     [execStored, experimentName],
   );
+
   const onSubmitUpdate = useCallback(pipeline => updateStored(JSON.parse(pipeline)), [
     updateStored,
   ]);

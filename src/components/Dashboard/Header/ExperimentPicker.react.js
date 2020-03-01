@@ -4,7 +4,7 @@ import { experimentsSchema } from 'config';
 import { useExperiments } from 'hooks';
 import React, { memo, useCallback, useState } from 'react';
 import styled from 'styled-components';
-import { COLOR_EXPERIMENTS } from 'styles/colors';
+import { COLOR, COLOR_EXPERIMENTS } from 'styles/colors';
 
 const BigTag = styled(Tag)`
   line-height: 30px;
@@ -79,7 +79,8 @@ const ExperimentPicker = () => {
     </MenuDisabledItems>
   );
 
-  const tagColor = COLOR_EXPERIMENTS[experiments.findIndex(({ name }) => name === value)];
+  const tagColor =
+    COLOR_EXPERIMENTS[experiments.findIndex(({ name }) => name === value)] || COLOR.blueLight;
 
   return (
     <Dropdown overlay={menu}>
