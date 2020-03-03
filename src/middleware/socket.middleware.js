@@ -3,6 +3,8 @@ import AT from 'const/application-actions';
 import io from 'socket.io-client';
 import { COLOR } from 'styles/colors';
 
+/* eslint-disable no-console */
+
 let socket = null;
 const currentTopicRegistered = {};
 
@@ -23,14 +25,6 @@ const connectionsEvents = {
   EXPERIMENT_REGISTER: 'experiment-register',
 };
 
-const connectOperation = ({ socket, name, lastRoom }) => {
-  socket.emit('experiment-register', { name, lastRoom });
-  console.info(
-    `%cSOCKET Connected, id=${socket.id}`,
-    `background: ${COLOR.grey}; color: ${COLOR.blue}`,
-  );
-};
-
 const noConnectionEvents = [
   'disconnect',
   'connect_error',
@@ -41,6 +35,14 @@ const noConnectionEvents = [
   'reconnect_error',
   'reconnect_failed',
 ];
+
+const connectOperation = ({ socket, name, lastRoom }) => {
+  socket.emit(connectionsEvents.EXPERIMENT_REGISTER, { name, lastRoom });
+  console.info(
+    `%cSOCKET Connected, id=${socket.id}`,
+    `background: ${COLOR.grey}; color: ${COLOR.blue}`,
+  );
+};
 
 let isSocketConnected = false;
 
@@ -106,7 +108,7 @@ const socketMiddleware = ({ dispatch, getState }) => next => action => {
   if (action.type === AT.SOCKET_INIT) {
     // verify if topic is already  registered in-order to prevent duplicate registration
     if (Object.keys(currentTopicRegistered).includes(action.payload.topic)) {
-      console.warn(`socket middleware: trying to register topic ${action.payload.topic} twice `);
+      console.warn(`socket middleware: trying to register topic ${action.payload.topic} twice`);
     } else {
       if (socket !== null) {
         socket.on(action.payload.topic, data => success(dispatch, data, action));
@@ -120,9 +122,6 @@ const socketMiddleware = ({ dispatch, getState }) => next => action => {
     const { value } = next(action);
 
     connectOperation({ socket, name: toSocketRoom(value), lastRoom });
-    setTimeout(() => {
-      dispatch({ type: AT.EXPERIMENT_TRIGGER_LOADING });
-    }, 3000);
   }
 
   return next(action);

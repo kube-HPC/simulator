@@ -4,7 +4,7 @@ import cronParser from 'cron-parser';
 import cronstrue from 'cronstrue';
 import { useActions, usePipeline } from 'hooks';
 import PropTypes from 'prop-types';
-import React, { useReducer } from 'react';
+import React, { useCallback, useEffect, useReducer, useRef } from 'react';
 import { notification } from 'utils';
 
 const { Text } = Typography;
@@ -25,13 +25,22 @@ const PipelineCron = ({ pipeline }) => {
   const { update } = usePipeline();
 
   const cronIsEnabled = isCron(pipeline);
+  const prevCronRef = useRef(cronIsEnabled);
+
   const patternIsPresent = isPattern(pipeline);
 
   const [loading, toggleLoading] = useReducer(p => !p, false);
 
   const cronExpr = patternIsPresent ? pipeline.triggers.cron.pattern : DEFAULT_CRON_EXPR;
 
+  useEffect(() => {
+    if (prevCronRef.current !== cronIsEnabled) {
+      toggleLoading();
+    }
+  }, [cronIsEnabled]);
+
   let renderTooltip = ERROR_CRON_EXPR;
+
   try {
     const interval = cronParser.parseExpression(cronExpr);
 
@@ -51,13 +60,10 @@ const PipelineCron = ({ pipeline }) => {
 
   const { name } = pipeline;
 
-  const onChange = () => {
+  const onChange = useCallback(() => {
     toggleLoading();
     cronIsEnabled ? cronStop(name, cronExpr) : cronStart(name, cronExpr);
-    setTimeout(() => {
-      toggleLoading();
-    }, 2000);
-  };
+  }, [cronExpr, cronIsEnabled, cronStart, cronStop, name]);
 
   const onSearch = pattern => {
     try {

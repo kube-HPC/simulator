@@ -22,7 +22,10 @@ export default {
   },
   options: {
     batchTolerance: 100,
-    concurrentPipelines: 10,
+    concurrentPipelines: {
+      amount: 10,
+      rejectOnFailure: true,
+    },
     progressVerbosityLevel: 'info',
     ttl: 3600,
   },

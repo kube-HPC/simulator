@@ -18,14 +18,14 @@ const debugTableColumns = ({ onDelete }) => [
     key: 'path',
     render: (_, record) => (
       <CopyToClipboard
-        text={`${window.location.origin}/${record.data.path}`}
+        text={`ws://${window.location.host}/${record.data.path}`}
         onCopy={() =>
           notification.success({
             message: 'Copied to clipboard',
           })
         }>
         <Tag color={COLOR_TASK_STATUS.active}>
-          {`${window.location.origin}/${record.data.path}`}
+          {`ws://${window.location.host}/${record.data.path}`}
         </Tag>
       </CopyToClipboard>
     ),

@@ -1,69 +1,27 @@
-import React, { useEffect, useRef, useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
-
+import { NodeStatistics } from 'components';
+import { CONTENT_CONFIG } from 'components/Drawer';
 import {
-  AddPipeline,
   AddAlgorithm,
   AddDebug,
+  AddPipeline,
   ErrorLogsTable,
   RunRawPipeline,
-  IconAddPipeline,
-  IconAddAlgorithm,
-  IconAddDebug,
-  IconRawFile,
 } from 'components/Sidebar/SidebarRight';
-
+import { getBottomActions, topActions } from 'config/schema/rightSidebar.schema';
+import { RIGHT_SIDEBAR_NAMES } from 'const';
 import { useErrorLogs } from 'hooks';
-import { NodeStatistics } from 'components';
-import { STATE_SOURCES, RIGHT_SIDEBAR_NAMES } from 'const';
-import { CONTENT_CONFIG } from 'components/Drawer';
+import React, { useCallback, useMemo } from 'react';
+import { getColorStatus } from 'utils/warningColorStatus';
 import useActions from './useActions';
-
-const top = [
-  {
-    name: RIGHT_SIDEBAR_NAMES.ADD_PIPELINE,
-    component: IconAddPipeline,
-  },
-  {
-    name: RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM,
-    component: IconAddAlgorithm,
-  },
-  {
-    name: RIGHT_SIDEBAR_NAMES.ADD_DEBUG,
-    component: IconAddDebug,
-  },
-  {
-    name: RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE,
-    component: IconRawFile,
-  },
-];
-
-const mapBySize = node => node.size;
-const sumArr = (total, curr) => total + curr;
-const flatAllStats = nodeArr => nodeArr.map(mapBySize);
-const flatByFree = nodeArr => nodeArr.filter(node => node.name === 'free').map(mapBySize);
-
-const getColorStatus = stats => {
-  if (!(stats && stats.results)) {
-    return '';
-  }
-  const { results } = stats;
-  const algorithmsDataArr = results.map(r => r.algorithmsData);
-  const totalSize = algorithmsDataArr.flatMap(flatAllStats).reduce(sumArr);
-  const freeSize = algorithmsDataArr.flatMap(flatByFree).reduce(sumArr);
-
-  const freePresents = freeSize / totalSize;
-  const isWarningStatus = 0 < freePresents && freePresents <= 0.15;
-  const isErrorStatus = freePresents === 0;
-
-  return isWarningStatus ? 'warning' : isErrorStatus ? 'error' : '';
-};
+import useStats from './useStats';
 
 const useRightSidebar = () => {
   const { totalNewWarnings, setIsCleared } = useErrorLogs();
-  const cpuStatusRef = useRef('');
-  const memoryStatusRef = useRef('');
+  const { cpu, memory } = useStats();
 
+  const { drawerOpen } = useActions();
+
+  // Using Redux-hooks, must be in scope
   const operationSelector = useMemo(
     () => ({
       [RIGHT_SIDEBAR_NAMES.ADD_PIPELINE]: <AddPipeline />,
@@ -76,35 +34,6 @@ const useRightSidebar = () => {
     }),
     [],
   );
-
-  const {
-    dataSource: [cpuStats, memoryStats],
-  } = useSelector(state => state[STATE_SOURCES.NODE_STATISTICS]);
-
-  useEffect(() => {
-    cpuStatusRef.current = getColorStatus(cpuStats);
-    memoryStatusRef.current = getColorStatus(memoryStats);
-  }, [cpuStats, memoryStats]);
-
-  const bottom = [
-    {
-      name: RIGHT_SIDEBAR_NAMES.ERROR_LOGS,
-      type: 'warning',
-      count: totalNewWarnings,
-    },
-    {
-      name: RIGHT_SIDEBAR_NAMES.CPU,
-      type: 'cluster',
-      status: cpuStatusRef.current,
-    },
-    {
-      name: RIGHT_SIDEBAR_NAMES.MEMORY,
-      type: 'hdd',
-      status: memoryStatusRef.current,
-    },
-  ];
-
-  const { drawerOpen } = useActions();
 
   const onSelectDrawer = useCallback(
     selection => {
@@ -119,14 +48,18 @@ const useRightSidebar = () => {
       };
       drawerOpen(content);
     },
-    [setIsCleared, drawerOpen, operationSelector],
+    [operationSelector, drawerOpen, setIsCleared],
   );
 
   return {
     onSelect: onSelectDrawer,
     menus: {
-      top,
-      bottom,
+      top: topActions,
+      bottom: getBottomActions({
+        warnings: totalNewWarnings,
+        cpuStatus: getColorStatus(cpu),
+        memoryStatus: getColorStatus(memory),
+      }),
     },
   };
 };

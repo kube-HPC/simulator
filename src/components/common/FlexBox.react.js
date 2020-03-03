@@ -38,7 +38,7 @@ const ColFull = styled(Col)`
 `;
 
 const Item = ({ children, className, full = false, ...props }) => (
-  <ColFull className={className} full={full} {...props}>
+  <ColFull className={className} full={full ? full : undefined} {...props}>
     {children}
   </ColFull>
 );

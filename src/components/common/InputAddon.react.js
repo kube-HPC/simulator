@@ -43,6 +43,8 @@ const InputAddon = forwardRef(
         const currValue = inputValue || '';
         const index = before.findIndex(value => currValue.startsWith(value));
         index >= 0 && setSelectBefore(before[index]);
+      } else {
+        setSelectBefore(before);
       }
     }, [after, before, inputValue, selectAfter, selectBefore]);
 
@@ -50,13 +52,21 @@ const InputAddon = forwardRef(
       if (Array.isArray(after)) {
         const index = after.findIndex(value => inputValue.endsWith(value));
         index >= 0 && setSelectAfter(after[index]);
+      } else {
+        setSelectAfter(after);
       }
     }, [after, before, inputValue, selectAfter, selectBefore]);
 
     useEffect(() => {
       const beforeValue = selectBefore || initialByType(before);
+      const afterValue = selectAfter || initialByType(after);
       const value = inputValue || '';
-      setInputValue(value.replace(beforeValue, '').replace(beforeValue, ''));
+      setInputValue(
+        value
+          .replace(beforeValue, '')
+          .replace(beforeValue, '')
+          .replace(afterValue, ''),
+      );
       onChange(value ? `${beforeValue}${value}${after}` : '');
     }, [after, before, inputValue, onChange, selectAfter, selectBefore]);
 

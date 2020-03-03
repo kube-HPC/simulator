@@ -51,6 +51,11 @@ const GitBuild = ({ required, getFieldDecorator }) => (
       {getFieldDecorator(BASE_IMAGE.field)(<Input placeholder={BASE_IMAGE.placeholder} />)}
     </Form.Item>
     <Form.Divider>{DIVIDERS.GIT}</Form.Divider>
+    <Form.Item label={GIT_KIND.label}>
+      {getFieldDecorator(GIT_KIND.field, {
+        initialValue: defaultGitHost,
+      })(<Radio.Group>{insertGitKindOptions({ options: GIT_KIND.types })}</Radio.Group>)}
+    </Form.Item>
     <Form.Item label={URL.label}>
       {getFieldDecorator(URL.field, {
         rules: [{ required, message: URL.message }],
@@ -64,11 +69,6 @@ const GitBuild = ({ required, getFieldDecorator }) => (
     </Form.Item>
     <Form.Item label={TOKEN.label}>
       {getFieldDecorator(TOKEN.field)(<Input.Password placeholder={TOKEN.placeholder} />)}
-    </Form.Item>
-    <Form.Item label={GIT_KIND.label}>
-      {getFieldDecorator(GIT_KIND.field, {
-        initialValue: defaultGitHost,
-      })(<Radio.Group>{insertGitKindOptions({ options: GIT_KIND.types })}</Radio.Group>)}
     </Form.Item>
     <Form.Item label={COMMIT.ID.label}>
       {getFieldDecorator(COMMIT.ID.field)(<Input placeholder={COMMIT.ID.placeholder} />)}

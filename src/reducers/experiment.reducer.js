@@ -1,4 +1,4 @@
-import { experimentsTemplate } from 'config';
+import { experimentsSchema } from 'config';
 import { LOCAL_STORAGE_KEYS } from 'const';
 import actions from 'const/application-actions';
 import { handleActions } from 'redux-actions';
@@ -7,9 +7,9 @@ import { getLsItem } from 'utils';
 
 const initial = Immutable.from({
   dataSource: [],
-  value: getLsItem(LOCAL_STORAGE_KEYS.EXPERIMENT) || experimentsTemplate.default,
+  value: getLsItem(LOCAL_STORAGE_KEYS.EXPERIMENT) || experimentsSchema.default,
   lastValue: null,
-  loading: false,
+  loading: true,
 });
 
 export const experiments = handleActions(
@@ -19,7 +19,7 @@ export const experiments = handleActions(
     },
     [actions.EXPERIMENT_CHANGE](currState, { value }) {
       const { value: lastValue } = currState;
-      return Immutable.merge(currState, { value, lastValue, loading: true });
+      return Immutable.merge(currState, { value, lastValue });
     },
     [actions.EXPERIMENT_TRIGGER_LOADING](currState) {
       const { loading } = currState;
