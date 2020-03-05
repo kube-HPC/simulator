@@ -8,6 +8,8 @@ import { COLOR_LAYOUT } from 'styles';
 import ExperimentPicker from './ExperimentPicker.react';
 import HelpBar from './HelpBar.react';
 import SidebarActions from './SidebarActions.react';
+// DO NOT REMOVE! This is important to preload the monaco instance into the global window!!!
+import * as monaco from 'monaco-editor'; //eslint-disable-line
 
 const Container = styled(FlexBox)`
   height: 64px;
