@@ -4,6 +4,7 @@ export default {
   ADD_DEBUG: '20vw',
   RUN_RAW_PIPELINE: `40vw`,
   CPU: '60vw',
+  GPU: '60vw',
   MEMORY: '60vw',
   ERROR_LOGS: '70vw',
   JOB_INFO: '70vw',

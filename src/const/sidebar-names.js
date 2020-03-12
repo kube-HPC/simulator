@@ -13,6 +13,7 @@ export const RIGHT_SIDEBAR_NAMES = {
   ADD_DEBUG: 'Add Debug',
   RUN_RAW_PIPELINE: 'Run Raw Pipeline',
   CPU: 'CPU',
+  GPU: 'GPU',
   MEMORY: 'Memory',
   ERROR_LOGS: 'Error Logs',
 };

@@ -16,5 +16,5 @@ export const getColorStatus = stats => {
   const isWarningStatus = 0 < freePresents && freePresents <= 0.15;
   const isErrorStatus = freePresents === 0;
 
-  return isWarningStatus ? 'warning' : isErrorStatus ? 'error' : '';
+  return { status: isWarningStatus ? 'warning' : isErrorStatus ? 'error' : '', total: totalSize };
 };
