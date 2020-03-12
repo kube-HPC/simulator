@@ -17,7 +17,7 @@ import useStats from './useStats';
 
 const useRightSidebar = () => {
   const { totalNewWarnings, setIsCleared } = useErrorLogs();
-  const { cpu, memory } = useStats();
+  const { cpu, memory, gpu } = useStats();
 
   const { drawerOpen } = useActions();
 
@@ -31,6 +31,7 @@ const useRightSidebar = () => {
       [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: <ErrorLogsTable />,
       [RIGHT_SIDEBAR_NAMES.CPU]: <NodeStatistics metric="cpu" />,
       [RIGHT_SIDEBAR_NAMES.MEMORY]: <NodeStatistics metric="mem" />,
+      [RIGHT_SIDEBAR_NAMES.GPU]: <NodeStatistics metric="gpu" />,
     }),
     [],
   );
@@ -59,6 +60,7 @@ const useRightSidebar = () => {
         warnings: totalNewWarnings,
         cpuStatus: getColorStatus(cpu),
         memoryStatus: getColorStatus(memory),
+        gpuStatus: getColorStatus(gpu),
       }),
     },
   };

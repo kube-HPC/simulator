@@ -25,20 +25,30 @@ export const topActions = [
   },
 ];
 
-export const getBottomActions = ({ warnings, cpuStatus, memoryStatus }) => [
-  {
-    name: RIGHT_SIDEBAR_NAMES.ERROR_LOGS,
-    type: 'warning',
-    count: warnings,
-  },
-  {
-    name: RIGHT_SIDEBAR_NAMES.CPU,
-    type: 'cluster',
-    status: cpuStatus,
-  },
-  {
-    name: RIGHT_SIDEBAR_NAMES.MEMORY,
-    type: 'hdd',
-    status: memoryStatus,
-  },
-];
+export const getBottomActions = ({ warnings, cpuStatus, memoryStatus, gpuStatus }) => {
+  const ret = [
+    {
+      name: RIGHT_SIDEBAR_NAMES.ERROR_LOGS,
+      type: 'warning',
+      count: warnings,
+    },
+    {
+      name: RIGHT_SIDEBAR_NAMES.CPU,
+      type: 'cluster',
+      status: cpuStatus.status,
+    },
+    {
+      name: RIGHT_SIDEBAR_NAMES.MEMORY,
+      type: 'hdd',
+      status: memoryStatus.status,
+    },
+  ];
+  if (gpuStatus.total) {
+    ret.push({
+      name: RIGHT_SIDEBAR_NAMES.GPU,
+      type: 'google',
+      status: gpuStatus.status,
+    });
+  }
+  return ret;
+};

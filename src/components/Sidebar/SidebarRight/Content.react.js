@@ -75,6 +75,15 @@ const rightSidebarContent = {
       </>
     ),
   },
+  [RIGHT_SIDEBAR_NAMES.GPU]: {
+    width: DRAWER_SIZE.GPU,
+    title: 'Cluster GPU Usage',
+    description: (
+      <>
+        Hover the <Text code>Nodes</Text> for an additional information.
+      </>
+    ),
+  },
 };
 
 export default rightSidebarContent;
