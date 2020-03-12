@@ -46,7 +46,7 @@ export const getBottomActions = ({ warnings, cpuStatus, memoryStatus, gpuStatus 
   if (gpuStatus.total) {
     ret.push({
       name: RIGHT_SIDEBAR_NAMES.GPU,
-      type: 'google',
+      type: 'fund',
       status: gpuStatus.status,
     });
   }
