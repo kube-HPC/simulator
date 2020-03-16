@@ -5,7 +5,8 @@ const successMsg = payload => ({
   ALGORITHM_APPLY: 'Algorithm Applied, check Algorithms table',
   ALGORITHM_RUN: (
     <>
-      Algorithm <Text code>{payload.body.name}</Text> started, check <Text strong>Jobs</Text> table.
+      Algorithm <Text code>{payload.body && payload.body.name}</Text> started, check{' '}
+      <Text strong>Jobs</Text> table.
     </>
   ),
   BUILD_RERUN: 'Build rerun started',
