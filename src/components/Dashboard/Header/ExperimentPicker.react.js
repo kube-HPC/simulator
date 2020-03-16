@@ -30,7 +30,7 @@ const Grow = styled(FlexBox.Item)`
   flex-grow: 1;
 `;
 
-const overflow = { height: 500, overflow: `auto` };
+const overflow = { maxHeight: `30rem`, overflowY: `auto` };
 const NOOP = () => {};
 
 const { Text } = Typography;

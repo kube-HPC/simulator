@@ -16,3 +16,15 @@ export const deleteAlgorithm = algorithmName => ({
     actionType: actions.ALGORITHM_DELETE,
   },
 });
+
+export const runAlgorithm = ({ name, input }) => ({
+  type: actions.REST_REQ_POST,
+  payload: {
+    url: `exec/algorithm`,
+    actionType: actions.ALGORITHM_RUN,
+    body: {
+      name,
+      input,
+    },
+  },
+});

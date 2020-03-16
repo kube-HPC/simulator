@@ -1,10 +1,9 @@
-import React, { useState, forwardRef, useEffect, memo } from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-
 import { Button } from 'antd';
-import InputField from './InputField.react';
+import PropTypes from 'prop-types';
+import React, { forwardRef, memo, useEffect, useState } from 'react';
+import styled from 'styled-components';
 import { removeLast } from '../helpers';
+import InputField from './InputField.react';
 
 const ButtonGroupCenter = styled(Button.Group)`
   display: flex;
@@ -33,7 +32,7 @@ const Controller = forwardRef(({ onChange, ...props }, ref) => {
     setInputs(prev => {
       const INPUT_INITIAL = {
         component: <InputField {...props} onChange={onInputChange} key={prev.length} />,
-        value: ''
+        value: '',
       };
       return [...prev, INPUT_INITIAL];
     });
@@ -42,7 +41,7 @@ const Controller = forwardRef(({ onChange, ...props }, ref) => {
   const onRemoveInput = () => setInputs(removeLast);
 
   return (
-    <>
+    <div ref={ref}>
       {inputs.map(({ component }) => component)}
       <ButtonGroupCenter>
         <Button block icon="plus" type="dashed" onClick={onAddInput}>
@@ -54,12 +53,12 @@ const Controller = forwardRef(({ onChange, ...props }, ref) => {
           </Button>
         )}
       </ButtonGroupCenter>
-    </>
+    </div>
   );
 });
 
 Controller.propTypes = {
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
 };
 
 export default memo(Controller);
