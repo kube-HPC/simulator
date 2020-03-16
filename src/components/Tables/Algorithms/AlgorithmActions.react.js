@@ -75,7 +75,8 @@ const AlgorithmActions = ({ record }) => {
           title={title}
           placement="left"
           content={popOverContent}
-          getPopupContainer={setPopupContainer}>
+          getPopupContainer={setPopupContainer}
+          mouseLeaveDelay={0.5}>
           <Button icon="play-circle" onClick={onRun} />
         </Popover>
         <Button icon="edit" onClick={onEdit} />

@@ -53,7 +53,8 @@ const PipelineActions = ({ pipeline, className }) => {
           title={title}
           content={popOverContent}
           placement="left"
-          getPopupContainer={setPopupContainer}>
+          getPopupContainer={setPopupContainer}
+          mouseLeaveDelay={0.5}>
           <Button className="ant-btn-icon-only">
             <Icon component={IconTensorFlow} />
           </Button>
