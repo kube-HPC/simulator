@@ -30,6 +30,7 @@ const reject = (dispatch, payload, action) => {
   if (_ignoreError(action.payload.actionType)) {
     return;
   }
+
   dispatch({
     type: `${action.payload.actionType}_REJECT`,
     meta: {
@@ -51,7 +52,7 @@ const pending = (dispatch, payload, action) => {
 };
 
 const success = (dispatch, payload, action) => {
-  const successMessage = successMsg(payload);
+  const successMessage = successMsg({ ...payload, ...action.payload });
   dispatch({
     type: `${action.payload.actionType}_SUCCESS`,
     meta: {
@@ -78,7 +79,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
     dispatch({ type: AT.BOARD_SET_URL, url: BOARD_URL });
   } else if (
     ![
-      AT.REST_REQ,
+      AT.REST_REQ_GET,
       AT.REST_REQ_POST,
       AT.REST_REQ_POST_FORM,
       AT.REST_REQ_PUT,
@@ -87,7 +88,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
     ].includes(action.type)
   ) {
     return next(action);
-  } else if (action.type === AT.REST_REQ) {
+  } else if (action.type === AT.REST_REQ_GET) {
     if (!SOCKET_URL) {
       return next(action);
     }

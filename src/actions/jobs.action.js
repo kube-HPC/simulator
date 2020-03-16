@@ -9,7 +9,7 @@ export const downloadStorageResults = path => ({
 });
 
 export const getKubernetesLogsData = ({ podName, taskId, source = 'k8s' }) => ({
-  type: actions.REST_REQ,
+  type: actions.REST_REQ_GET,
   payload: {
     url: `logs?podName=${podName}&taskId=${taskId}&source=${source}`,
     actionType: actions.JOBS_KUBERNETES_LOGS,

@@ -1,4 +1,4 @@
-import { applyAlgorithm, deleteAlgorithm } from 'actions/algorithm.action';
+import { applyAlgorithm, deleteAlgorithm, runAlgorithm } from 'actions/algorithm.action';
 import { filterData } from 'actions/autoComplete.action';
 import { cancelBuild, rerunBuild } from 'actions/builds.action';
 import { init, socketInit } from 'actions/connection.action';
@@ -56,6 +56,7 @@ const actions = {
   rerunBuild,
   rerunRawPipeline,
   resumePipeline,
+  runAlgorithm,
   setSettings,
   socketInit,
   startBoard,

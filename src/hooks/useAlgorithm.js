@@ -1,27 +1,11 @@
 import { LEFT_SIDEBAR_NAMES, STATE_SOURCES } from 'const';
-import { useDrawerEditor } from 'hooks';
-import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { stringify, tableFilterSelector } from 'utils';
-import useActions from './useActions';
+import { tableFilterSelector } from 'utils';
 
 const dataSelector = tableFilterSelector(LEFT_SIDEBAR_NAMES.ALGORITHMS);
 const buildsSelector = state => state[STATE_SOURCES.ALGORITHM_BUILDS_TABLE].dataSource;
 
 const useAlgorithm = name => {
-  const { applyAlgorithm, deleteAlgorithm } = useActions();
-
-  const onSubmit = useCallback(
-    value => {
-      const formData = new FormData();
-      formData.append('payload', value);
-      applyAlgorithm(formData);
-    },
-    [applyAlgorithm],
-  );
-
-  const { open } = useDrawerEditor({ onSubmit });
-
   const algorithmSource = useSelector(dataSelector);
   const buildsSource = useSelector(buildsSelector);
 
@@ -34,8 +18,6 @@ const useAlgorithm = name => {
   return {
     algorithm: name ? dataSource.find(({ name: source }) => source === name) : null,
     dataSource,
-    onDelete: deleteAlgorithm,
-    open: value => open(stringify(value)),
   };
 };
 
