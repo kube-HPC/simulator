@@ -1,9 +1,11 @@
 import { Button, Modal, Popover, Typography } from 'antd';
+import { DRAWER_SIZE } from 'const';
 import { useActions, useDrawerEditor } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { useCallback, useRef, useState } from 'react';
 import { stringify } from 'utils';
 import AlgorithmRun from './AlgorithmRun.react';
+import { AlgorithmsTabs } from './Tabs';
 
 const deleteConfirmAction = action => {
   Modal.confirm({
@@ -33,7 +35,7 @@ const AlgorithmActions = ({ record }) => {
   const { builds, ...algorithm } = record;
   const { name } = algorithm;
 
-  const { applyAlgorithm, deleteAlgorithm, runAlgorithm } = useActions();
+  const { applyAlgorithm, deleteAlgorithm, runAlgorithm, drawerOpen } = useActions();
   const container = useRef();
 
   const [inputs, setInputs] = useState(EMPTY_INITIAL);
@@ -60,6 +62,11 @@ const AlgorithmActions = ({ record }) => {
 
   const popOverContent = <AlgorithmRun onChange={setInputs} onRun={onRun} />;
 
+  const onMoreInfo = () => {
+    const body = <AlgorithmsTabs name={name} />;
+    drawerOpen({ title: name, body, width: DRAWER_SIZE.ALGORITHM_INFO });
+  };
+
   return (
     <div ref={container}>
       <Button.Group>
@@ -72,7 +79,8 @@ const AlgorithmActions = ({ record }) => {
           <Button icon="play-circle" onClick={onRun} />
         </Popover>
         <Button icon="edit" onClick={onEdit} />
-        <Button shape="circle" icon="delete" onClick={onClickDelete} />
+        <Button icon="delete" onClick={onClickDelete} />
+        <Button icon="ellipsis" onClick={onMoreInfo} />
       </Button.Group>
     </div>
   );
