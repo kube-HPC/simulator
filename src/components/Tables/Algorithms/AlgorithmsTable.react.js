@@ -1,17 +1,29 @@
 import { Table } from 'components';
-import { useAlgorithm } from 'hooks';
+import { DRAWER_SIZE } from 'const';
+import { useActions, useAlgorithm } from 'hooks';
 import React from 'react';
 import getAlgorithmColumns from './getAlgorithmColumns.react';
+import { AlgorithmsTabs } from './Tabs';
 
 const rowKey = ({ name }) => name;
 
 const AlgorithmsTable = () => {
-  const { dataSource } = useAlgorithm();
+  const { dataSource, ...actions } = useAlgorithm();
+
+  const { drawerOpen } = useActions();
+
+  const onRow = ({ name }) => ({
+    onDoubleClick: () => {
+      const body = <AlgorithmsTabs name={name} />;
+      drawerOpen({ title: name, body, width: DRAWER_SIZE.ALGORITHM_INFO });
+    },
+  });
 
   return (
     <Table
+      onRow={onRow}
       rowKey={rowKey}
-      columns={getAlgorithmColumns()}
+      columns={getAlgorithmColumns(actions)}
       dataSource={dataSource}
       expandIcon={false}
     />
