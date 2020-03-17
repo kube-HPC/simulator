@@ -4,7 +4,7 @@ import { DRAWER_SIZE, USER_GUIDE } from 'const';
 import { useActions, usePipeline } from 'hooks';
 import isEqual from 'lodash/isEqual';
 import PropTypes from 'prop-types';
-import React, { memo, useRef } from 'react';
+import React, { memo, useCallback, useRef } from 'react';
 import { deleteConfirmAction } from 'utils';
 import PipelineInfo from './PipelineInfo.react';
 import PipelineCreateBoard from './TensorflowBoards/PipelineCreateBoard.react';
@@ -46,8 +46,17 @@ const PipelineActions = ({ pipeline, className }) => {
     <Empty />
   );
 
+  const stopPropagation = useCallback(e => {
+    e.stopPropagation();
+  }, []);
+
   return (
-    <div className={ACTIONS_SELECT} ref={container}>
+    <div
+      className={ACTIONS_SELECT}
+      role="none"
+      ref={container}
+      onClick={stopPropagation}
+      onDoubleClick={stopPropagation}>
       <Button.Group className={className}>
         <Popover
           title={title}

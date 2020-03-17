@@ -67,8 +67,12 @@ const AlgorithmActions = ({ record }) => {
     drawerOpen({ title: name, body, width: DRAWER_SIZE.ALGORITHM_INFO });
   };
 
+  const stopPropagation = useCallback(e => {
+    e.stopPropagation();
+  }, []);
+
   return (
-    <div ref={container}>
+    <div ref={container} role="none" onClick={stopPropagation} onDoubleClick={stopPropagation}>
       <Button.Group>
         <Popover
           overlayStyle={overlayStyle}
