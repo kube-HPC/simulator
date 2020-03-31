@@ -74,13 +74,7 @@ const getBuildsTableColumns = ({ cancelBuild, rerunBuild }) => [
       return (
         <Progress
           percent={progress}
-          status={
-            failed
-              ? 'exception'
-              : progress === 100
-                ? PIPELINE_STATUS.COMPLETED
-                : PIPELINE_STATUS.ACTIVE
-          }
+          status={failed ? 'exception' : progress === 100 ? 'success' : 'active'}
           strokeColor={failed ? COLOR_TASK_STATUS.failed : undefined}
         />
       );
