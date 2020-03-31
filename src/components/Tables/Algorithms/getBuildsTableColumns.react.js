@@ -89,8 +89,10 @@ const getBuildsTableColumns = ({ cancelBuild, rerunBuild }) => [
   {
     title: 'Actions',
     key: 'stop',
-    render: (_, record) =>
-      record.status !== PIPELINE_STATUS.COMPLETED ? (
+    render: (_, record) => {
+      const failed = record.status === PIPELINE_STATUS.FAILED;
+      const showCancel = !failed && record.status !== PIPELINE_STATUS.COMPLETED;
+      return showCancel ? (
         <Button
           type="danger"
           shape="circle"
@@ -104,7 +106,8 @@ const getBuildsTableColumns = ({ cancelBuild, rerunBuild }) => [
           icon="redo"
           onClick={() => rerunBuild(record.buildId)}
         />
-      ),
+      );
+    },
   },
 ];
 
