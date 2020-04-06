@@ -23,7 +23,7 @@ const Ellipsis = ({
   ellipsis = true,
   ...props
 }) => {
-  const isOverlapped = text.length >= length;
+  const isOverlapped = text && text.length >= length;
 
   const textComponent = (
     <Center>
