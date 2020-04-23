@@ -23,7 +23,7 @@ const JobActions = ({ job, className }) => {
   const {
     rerunRawPipeline,
     stopPipeline,
-    downloadStorageResults,
+    downloadPipelineResults,
     drawerOpen,
     pausePipeline,
     resumePipeline,
@@ -31,7 +31,7 @@ const JobActions = ({ job, className }) => {
 
   const onReRun = () => rerunRawPipeline(pipeline);
   const onStop = () => stopPipeline(key);
-  const onDownload = () => downloadStorageResults(results.data.storageInfo.path);
+  const onDownload = () => downloadPipelineResults(results.data.storageInfo.path);
 
   const onMoreInfo = () => {
     const body = <JobInfo jobId={key} />;

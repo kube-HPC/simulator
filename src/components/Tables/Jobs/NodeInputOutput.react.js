@@ -6,7 +6,7 @@ import React, { useCallback } from 'react';
 import getNodeIOColumns from './getNodeIOColumns.react';
 
 const NodeInputOutput = ({ payload }) => {
-  const { downloadStorageResults } = useActions();
+  const { downloadTaskResults } = useActions();
 
   const onSelect = useCallback(
     select =>
@@ -14,8 +14,8 @@ const NodeInputOutput = ({ payload }) => {
       (select.namespace.includes('input') || select.namespace.includes('output')) &&
       select.name === 'path' &&
       select.value &&
-      downloadStorageResults(select.value),
-    [downloadStorageResults],
+      downloadTaskResults(select.value),
+    [downloadTaskResults],
   );
 
   const mapTask = task => ({
