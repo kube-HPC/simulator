@@ -1,5 +1,7 @@
 # [![BannerGithubSimulator](https://user-images.githubusercontent.com/27515937/59030338-62150880-8869-11e9-86f9-b6c1c72eaf19.png)](http://hkube.io)
 
+> !! [Version 2 work in progress](https://github.com/kube-HPC/dashboard)
+
 ## Overview
 
 Dashboard is a web-based [HKube](https://github.com/kube-HPC/hkube) user interface, which supports every functionality HKube has to offer.
