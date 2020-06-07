@@ -181,7 +181,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
         success(dispatch, res.data, action);
       })
       .catch(err => {
-        reject(dispatch, err.response.data.error, action);
+        reject(dispatch, err.response && err.response.data.error, action);
       });
 
     return next(action);

@@ -1,9 +1,17 @@
 import actions from 'const/application-actions';
 
-export const downloadStorageResults = path => ({
+export const downloadPipelineResults = path => ({
   type: actions.JOBS_DOWNLOAD_REQ,
   payload: {
-    url: `download/results?path=${path}`,
+    url: `storage/values/${path}`,
+    actionType: actions.JOBS_DOWNLOAD_RESULTS,
+  },
+});
+
+export const downloadTaskResults = path => ({
+  type: actions.JOBS_DOWNLOAD_REQ,
+  payload: {
+    url: `storage/download/custom/${path}`,
     actionType: actions.JOBS_DOWNLOAD_RESULTS,
   },
 });
@@ -15,22 +23,6 @@ export const getKubernetesLogsData = ({ podName, taskId, source = 'k8s' }) => ({
     actionType: actions.JOBS_KUBERNETES_LOGS,
   },
 });
-
-// export const setLogSource = ({ source }) => ({
-//   type: actions.REST_REQ,
-//   payload: {
-//     url: `logs/set?source=${source}`,
-//     actionType: actions,
-//   },
-// });
-
-// export const getLogSource = () => ({
-//   type: actions.REST_REQ,
-//   payload: {
-//     url: `logs/set`,
-//     actionType: actions,
-//   },
-// });
 
 export const getCaching = ({ jobId, nodeName }) => ({
   type: actions.REST_REQ_POST,

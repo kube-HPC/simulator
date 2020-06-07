@@ -33,7 +33,7 @@ const Duration = (_, record) => (
 const Retries = retries => <Tag>{retries}</Tag>;
 
 const Results = ({ record }) => {
-  const { downloadStorageResults } = useActions();
+  const { downloadTaskResults } = useActions();
   return (
     <Tooltip placement="top" title={'Download Results'}>
       <Button
@@ -41,7 +41,7 @@ const Results = ({ record }) => {
         disabled={!record.output}
         shape="circle"
         icon="download"
-        onClick={() => downloadStorageResults(record.output.path)}
+        onClick={() => downloadTaskResults(record.output.path)}
       />
     </Tooltip>
   );
