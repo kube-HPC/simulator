@@ -67,7 +67,7 @@ export const jobsTableMock = [
         progressVerbosityLevel: 'debug',
       },
       priority: 3,
-      flowInput: {
+      flowInputMetadata: {
         metadata: {
           'flowInput.nums': {
             type: 'array',
@@ -79,7 +79,7 @@ export const jobsTableMock = [
             'pub-hkube/evalerror:d6bca9ba-dc02-4ed7-b8e1-26387b888a3d/evalerror:d6bca9ba-dc02-4ed7-b8e1-26387b888a3d',
         },
       },
-      flowInputOrig: {
+      flowInput: {
         nums: [1, 24, 3, 4, 5],
       },
       startTime: 1576156603091,
@@ -244,7 +244,7 @@ export const jobsTableMock = [
         progressVerbosityLevel: 'debug',
       },
       priority: 3,
-      flowInput: {
+      flowInputMetadata: {
         metadata: {
           'flowInput.nums': {
             type: 'array',
@@ -256,7 +256,7 @@ export const jobsTableMock = [
             'pub-hkube/evalerror:4396e0ac-eff6-4657-8980-8977159a1093/evalerror:4396e0ac-eff6-4657-8980-8977159a1093',
         },
       },
-      flowInputOrig: {
+      flowInput: {
         nums: [1, 24, 3, 4, 5],
       },
       startTime: 1576156602896,
