@@ -86,18 +86,12 @@ export const rerunRawPipeline = nominalPipeline => {
   // Destruct all unused values
   const {
     jobId,
-    flowInputOrig,
-    flowInput,
+    flowInputMetadata,
     startTime,
     lastRunResult,
     types,
-    ...rest
+    ...pipeline
   } = nominalPipeline;
-
-  const pipeline = {
-    flowInput: flowInputOrig,
-    ...rest,
-  };
 
   const action = {
     type: actions.REST_REQ_POST,

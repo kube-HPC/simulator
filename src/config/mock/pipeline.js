@@ -19,7 +19,7 @@ const pipelineMock = {
         input: ['@yellow'],
       },
     ],
-    flowInput: {
+    flowInputMetadata: {
       metadata: {
         'flowInput.files.link': {
           type: 'string',
@@ -36,7 +36,7 @@ const pipelineMock = {
       ttl: 3600,
     },
     priority: 3,
-    flowInputOrig: {
+    flowInput: {
       files: {
         link: 'links-1',
       },
