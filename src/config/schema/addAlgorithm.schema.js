@@ -54,18 +54,18 @@ const addAlgorithmSchema = {
       COMMIT: {
         field: 'gitRepository.commit',
         ID: {
-          field: 'id',
+          field: 'gitRepository.commit.id',
           label: 'Commit ID',
           placeholder: '(Optional) Commit ID',
         },
         label: 'Commit Details',
         MESSAGE: {
-          field: 'gitRepository.message',
+          field: 'gitRepository.commit.message',
           label: 'Message',
           placeholder: '(Optional) Enter Commit Message',
         },
         TIMESTAMP: {
-          field: 'gitRepository.timestamp',
+          field: 'gitRepository.commit.timestamp',
           label: 'Time Stamp',
           placeholder: '(Optional) Enter Commit Time Stamp',
         },
