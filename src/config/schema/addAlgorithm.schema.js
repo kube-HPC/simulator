@@ -2,6 +2,7 @@ const addAlgorithmSchema = {
   ENV_TYPES: {
     nodejs: 'Node.js',
     python: 'Python',
+    java: 'Java',
   },
   BUILD_TYPES: {
     CODE: {
