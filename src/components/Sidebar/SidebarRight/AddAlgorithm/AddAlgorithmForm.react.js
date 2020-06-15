@@ -4,6 +4,7 @@ import schema from 'config/schema/addAlgorithm.schema';
 import formTemplate from 'config/template/addAlgorithmForm.template';
 import { DRAWER_SIZE } from 'const';
 import { useActions } from 'hooks';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { memo, useState } from 'react';
 import { mapObjValues, notification, stringify, toUpperCaseFirstLetter } from 'utils';
@@ -86,18 +87,26 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
       // [ env, entryPoint, baseImage ] are on the top object's keys level
       const { env, entryPoint, baseImage, ...rest } = formObject[buildType];
 
+      /* eslint-disable indent */
       const payload =
         buildType === BUILD_TYPES.GIT.field
           ? {
-            ...formObject.main,
-            options,
-            [BUILD_TYPES.GIT.field]: rest,
-            env,
-            entryPoint,
-            baseImage,
-          }
+              ...formObject.main,
+              options,
+              [BUILD_TYPES.GIT.field]: rest,
+              env,
+              entryPoint,
+              baseImage,
+            }
           : { ...formObject.main, options, ...formObject[buildType] };
       // #endregion
+
+      if (buildType === BUILD_TYPES.GIT.field) {
+        const commitObject = _.get(payload, BUILD_TYPES.GIT.COMMIT.field);
+        if (commitObject.id === '') {
+          delete payload.gitRepository.commit;
+        }
+      }
 
       const formData = new FormData();
       const [file] = fileList;

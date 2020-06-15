@@ -3,6 +3,7 @@ import { create } from '@storybook/theming';
 import 'antd/dist/antd.css';
 import React from 'react';
 import { Provider } from 'react-redux';
+import { ReusableProvider } from 'reusable';
 import store from '../src/store';
 import { GlobalStyle } from '../src/styles';
 
@@ -14,8 +15,10 @@ const theme = create({
 
 addDecorator(S => (
   <Provider store={store}>
-    <GlobalStyle />
-    <S />
+    <ReusableProvider>
+      <GlobalStyle />
+      <S />
+    </ReusableProvider>
   </Provider>
 ));
 
