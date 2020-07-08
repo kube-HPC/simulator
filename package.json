@@ -14,7 +14,9 @@
     "start:server": "node ./server/server.js",
     "storybook": "NODE_PATH=src/ start-storybook --port 9001",
     "prettify": "prettier --write src/**/*.js",
-    "lint:fix": "eslint src/**/*.js --fix"
+    "lint:fix": "eslint src/**/*.js --fix",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "browserslist": {
     "production": [
@@ -69,7 +71,8 @@
     "seamless-immutable": "^7.1.4",
     "socket.io-client": "^2.3.0",
     "styled-components": "^5.0.0-beta.6-ej4",
-    "styled-tools": "^1.7.1"
+    "styled-tools": "^1.7.1",
+    "snyk": "^1.360.0"
   },
   "devDependencies": {
     "@dennisvash/eslint-config": "^2.2.2",
@@ -103,5 +106,6 @@
       "eslint --fix",
       "git add"
     ]
-  }
+  },
+  "snyk": true
 }
