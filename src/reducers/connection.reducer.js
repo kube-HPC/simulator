@@ -21,6 +21,14 @@ export const boardURL = handleActions(
   },
   Immutable.from(``),
 );
+export const hkubeSystemVersion = handleActions(
+  {
+    [actionType.SET_HKUBE_VERSION](prevHkubeSystemVersion, { hkubeSystemVersion }) {
+      return Immutable.from(hkubeSystemVersion);
+    },
+  },
+  Immutable.from(``),
+);
 
 export const connectionStatus = handleActions(
   {

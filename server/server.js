@@ -24,6 +24,7 @@ app.get('/', (req, res) => {
 app.get('/config', (req, res) => {
   res.json({
     config: {
+      hkubeSystemVersion: process.env.HKUBE_SYSTEM_VERSION,
       monitorBackend: {
         useLocation: parseBool(process.env.MONITOR_BACKEND_USE_LOCATION),
         host: process.env.MONITOR_BACKEND_HOST || 'localhost',

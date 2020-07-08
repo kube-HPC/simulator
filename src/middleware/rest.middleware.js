@@ -72,11 +72,12 @@ const createUrl = url => `${SOCKET_URL}/${url}`;
 
 const restMiddleware = ({ dispatch }) => next => action => {
   if (action.type === `${AT.SOCKET_GET_CONFIG}_SUCCESS`) {
-    const { monitorBackend, board } = action.payload.config;
+    const { monitorBackend, board, hkubeSystemVersion } = action.payload.config;
     SOCKET_URL = setMonitorPath(monitorBackend);
     BOARD_URL = setBoardPath(board);
     SOCKET_URL && dispatch({ type: AT.SOCKET_SET_URL, url: SOCKET_URL });
     dispatch({ type: AT.BOARD_SET_URL, url: BOARD_URL });
+    dispatch({ type: AT.SET_HKUBE_VERSION, hkubeSystemVersion: hkubeSystemVersion || null });
   } else if (
     ![
       AT.REST_REQ_GET,

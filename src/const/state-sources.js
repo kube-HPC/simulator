@@ -6,6 +6,7 @@ export default {
   ALGORITHM_VERSIONS: `algorithmVersions`,
   AUTO_COMPLETE_FILTER: `autoCompleteFilter`,
   BOARD_URL: `boardURL`,
+  HKUBE_SYSTEM_VERSION: `hkubeSystemVersion`,
   BOARDS: `boards`,
   CONNECTION_STATUS: `connectionStatus`,
   DEBUG_TABLE: `debugTable`,
