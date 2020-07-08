@@ -1,8 +1,8 @@
 import { Popover } from 'antd';
 import { FlexBox, Icons } from 'components/common';
 import { appInfo } from 'config';
-import { LEFT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
-import { useActions, useLeftSidebar } from 'hooks';
+import { LEFT_SIDEBAR_NAMES, USER_GUIDE, STATE_SOURCES } from 'const';
+import { useActions, useLeftSidebar, useStore } from 'hooks';
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import ConnectionStatus from './ConnectionStatus.react';
@@ -27,6 +27,7 @@ const HelpBar = () => {
   } = useLeftSidebar();
 
   const { triggerUserGuide } = useActions();
+  const hkubeSystemVersion = useStore(STATE_SOURCES.HKUBE_SYSTEM_VERSION);
 
   const onGuideClick = useCallback(() => {
     triggerUserGuide();
@@ -43,9 +44,7 @@ const HelpBar = () => {
       <Icons.Hover type="global" onClick={openUrl(appInfo.websiteUrl)} />
       <Icons.Hover type="github" onClick={openUrl(appInfo.githubUrl)} />
       <Icons.Hover type="question-circle" onClick={onGuideClick} />
-      <DarkText as="span" onClick={openUrl(appInfo.tagUrl)}>
-        {appInfo.version}
-      </DarkText>
+      <DarkText as="span">{hkubeSystemVersion}</DarkText>
     </Container>
   );
 };

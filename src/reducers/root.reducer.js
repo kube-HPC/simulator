@@ -1,6 +1,11 @@
 import { algorithmBuildsTable, algorithmTable } from 'reducers/algorithm.reducer';
 import { autoCompleteFilter } from 'reducers/autoComplete.reducer';
-import { boardURL, connectionStatus, socketURL } from 'reducers/connection.reducer';
+import {
+  boardURL,
+  connectionStatus,
+  socketURL,
+  hkubeSystemVersion,
+} from 'reducers/connection.reducer';
 import { debugTable } from 'reducers/debug.reducer';
 import { drawer } from 'reducers/drawer.reducer';
 import { driverTable } from 'reducers/driver.reducer';
@@ -25,6 +30,7 @@ const store = {
   autoCompleteFilter,
   boards,
   boardURL,
+  hkubeSystemVersion,
   connectionStatus,
   debugTable,
   drawer,

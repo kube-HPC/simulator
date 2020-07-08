@@ -10,6 +10,7 @@ module.exports = function(app) {
   app.get('/config', (req, res) => {
     res.json({
       config: {
+        hkubeSystemVersion: process.env.HKUBE_SYSTEM_VERSION,
         monitorBackend: {
           host: process.env.MONITOR_BACKEND_HOST || 'localhost',
           port: process.env.MONITOR_BACKEND_PORT || '30010',
