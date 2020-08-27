@@ -42,7 +42,7 @@
     "fuzzy": "^0.1.3",
     "humanize-duration": "^3.21.0",
     "jaeger-react-trace-component": "^1.0.16",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.17",
     "markdown-it": "^10.0.0",
     "moment": "^2.24.0",
     "monaco-editor": "^0.19.3",
