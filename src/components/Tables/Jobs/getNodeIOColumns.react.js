@@ -1,10 +1,11 @@
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import { Button, Tag, Tooltip } from 'antd';
-import { useActions } from 'hooks';
+import { useSelector } from 'react-redux';
 import humanizeDuration from 'humanize-duration';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { COLOR_TASK_STATUS } from 'styles/colors';
+import { STATE_SOURCES } from 'const';
 import { toUpperCaseFirstLetter } from 'utils/string';
 
 const getStatusFilter = () =>
@@ -32,28 +33,30 @@ const Duration = (_, record) => (
 
 const Retries = retries => <Tag>{retries}</Tag>;
 
-const Results = ({ record }) => {
-  const { downloadTaskResults } = useActions();
-  return (
-    <Tooltip placement="top" title={'Download Results'}>
+
+const Results = ({ record, url }) => (
+  <Tooltip placement="top" title={'Download Results'}>
+    <a href={`${url}/storage/download/custom/${record.output && record.output.path}`} download>
       <Button
         type="default"
         disabled={!record.output}
         shape="circle"
         icon="download"
-        onClick={() => downloadTaskResults(record.output.path)}
       />
-    </Tooltip>
-  );
-};
+    </a>
+  </Tooltip>
+);
+
 
 Results.propTypes = {
   record: PropTypes.object.isRequired,
+  url: PropTypes.string.isRequired,
 };
 
-const ResultsColumn = (_, record) => <Results record={record} />;
+const ResultsColumn = (_, record, url) => <Results url={url} record={record} />;
 
-const getNodeIOColumns = () => [
+
+const getNodeIOColumns = url => [
   {
     title: 'index',
     dataIndex: 'index',
@@ -85,8 +88,13 @@ const getNodeIOColumns = () => [
     title: 'Results',
     dataIndex: 'results',
     key: 'results',
-    render: ResultsColumn,
+    render: (value, record) => ResultsColumn(value, record, url),
   },
 ];
 
-export default getNodeIOColumns;
+const useNodeIOColumns = () => {
+  const socketURL = useSelector(state => state[STATE_SOURCES.SOCKET_URL]);
+  return getNodeIOColumns(socketURL);
+};
+
+export default useNodeIOColumns;

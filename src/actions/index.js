@@ -10,7 +10,7 @@ import {
   triggerExperimentLoading as triggerExperiment,
 } from 'actions/experiments.action';
 import { filterByType } from 'actions/filter.action';
-import { downloadPipelineResults, downloadTaskResults, getCaching, getKubernetesLogsData } from 'actions/jobs.action';
+import { downloadPipelineResults, getCaching, getKubernetesLogsData } from 'actions/jobs.action';
 import {
   addPipeline,
   cronStart,
@@ -41,7 +41,6 @@ const actions = {
   deleteExperiment,
   deleteStored,
   downloadPipelineResults,
-  downloadTaskResults,
   drawerOpen,
   drawerToggle,
   execRawPipeline,

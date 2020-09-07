@@ -1,22 +1,10 @@
 import { Table } from 'components';
 import { Card, JsonSwitch } from 'components/common';
-import { useActions } from 'hooks';
 import PropTypes from 'prop-types';
-import React, { useCallback } from 'react';
-import getNodeIOColumns from './getNodeIOColumns.react';
+import React from 'react';
+import useNodeIOColumns from './getNodeIOColumns.react';
 
 const NodeInputOutput = ({ payload }) => {
-  const { downloadTaskResults } = useActions();
-
-  const onSelect = useCallback(
-    select =>
-      select.namespace &&
-      (select.namespace.includes('input') || select.namespace.includes('output')) &&
-      select.name === 'path' &&
-      select.value &&
-      downloadTaskResults(select.value),
-    [downloadTaskResults],
-  );
 
   const mapTask = task => ({
     index: task.batchIndex || 1,
@@ -44,11 +32,11 @@ const NodeInputOutput = ({ payload }) => {
   return (
     <Table
       rowKey={({ index }) => index}
-      columns={getNodeIOColumns()}
+      columns={useNodeIOColumns()}
       dataSource={dataSource}
       expandedRowRender={record => (
         <Card>
-          <JsonSwitch obj={record} onSelect={onSelect} />
+          <JsonSwitch obj={record} />
         </Card>
       )}
     />
