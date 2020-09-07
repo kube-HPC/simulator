@@ -33,20 +33,16 @@ const Duration = (_, record) => (
 
 const Retries = retries => <Tag>{retries}</Tag>;
 
-
 const Results = ({ record, url }) => (
   <Tooltip placement="top" title={'Download Results'}>
-    <a href={`${url}/storage/download/custom/${record.output && record.output.path}`} download>
-      <Button
-        type="default"
-        disabled={!record.output}
-        shape="circle"
-        icon="download"
-      />
+    <a
+      href={`${url}/storage/download/custom/${record.output &&
+        record.output.path}?ext=${record.downloadFileExt || ''}`}
+      download>
+      <Button type="default" disabled={!record.output} shape="circle" icon="download" />
     </a>
   </Tooltip>
 );
-
 
 Results.propTypes = {
   record: PropTypes.object.isRequired,
@@ -54,7 +50,6 @@ Results.propTypes = {
 };
 
 const ResultsColumn = (_, record, url) => <Results url={url} record={record} />;
-
 
 const getNodeIOColumns = url => [
   {

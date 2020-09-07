@@ -4,9 +4,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import useNodeIOColumns from './getNodeIOColumns.react';
 
-const NodeInputOutput = ({ payload }) => {
-
-  const mapTask = task => ({
+const NodeInputOutput = ({ algorithm, payload }) => {
+  const mapTask = (task, algorithm) => ({
     index: task.batchIndex || 1,
     origInput: task.origInput,
     input: task.input,
@@ -19,15 +18,16 @@ const NodeInputOutput = ({ payload }) => {
     retries: task.retries || 0,
     startTime: task.startTime,
     endTime: task.endTime,
+    downloadFileExt: algorithm.downloadFileExt,
   });
 
   const dataSource =
     payload.batch && payload.batch.length > 0
       ? payload.batch.map(b => ({
-        ...mapTask(b),
+        ...mapTask(b, algorithm),
         origInput: payload.origInput,
       }))
-      : [mapTask(payload)];
+      : [mapTask(payload, algorithm)];
 
   return (
     <Table
@@ -45,6 +45,7 @@ const NodeInputOutput = ({ payload }) => {
 
 NodeInputOutput.propTypes = {
   payload: PropTypes.object.isRequired,
+  algorithm: PropTypes.object.isRequired,
 };
 
 export default NodeInputOutput;

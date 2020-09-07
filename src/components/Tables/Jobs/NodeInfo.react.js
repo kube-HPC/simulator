@@ -61,7 +61,7 @@ const NodeInfo = ({ node, jobId }) => {
         </OverflowContainer>
       </Tabs.TabPane>
       <Tabs.TabPane tab="Input Output Details" key="3">
-        <NodeInputOutput payload={node} />
+        <NodeInputOutput payload={node} algorithm={algorithmDetails} />
       </Tabs.TabPane>
     </Tabs>
   ) : (
