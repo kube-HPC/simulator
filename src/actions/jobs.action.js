@@ -1,13 +1,5 @@
 import actions from 'const/application-actions';
 
-export const downloadPipelineResults = path => ({
-  type: actions.JOBS_DOWNLOAD_REQ,
-  payload: {
-    url: `storage/values/${path}`,
-    actionType: actions.JOBS_DOWNLOAD_RESULTS,
-  },
-});
-
 export const getKubernetesLogsData = ({ podName, taskId, source = 'k8s' }) => ({
   type: actions.REST_REQ_GET,
   payload: {
