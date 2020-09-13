@@ -57,6 +57,15 @@ const rightSidebarContent = {
       </>
     ),
   },
+  [RIGHT_SIDEBAR_NAMES.DISK]: {
+    width: DRAWER_SIZE.DISK,
+    title: 'Cluster DISK Usage',
+    description: (
+      <>
+        Hover the <Text code>Nodes</Text> for an additional information.
+      </>
+    ),
+  },
   [RIGHT_SIDEBAR_NAMES.CPU]: {
     width: DRAWER_SIZE.CPU,
     title: 'Cluster CPU Usage',

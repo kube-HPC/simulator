@@ -18,6 +18,7 @@ export default {
   JOBS_KUBERNETES_LOGS: `jobsKubernetesLogs`,
   JOBS_TABLE: `jobsTable`,
   NODE_STATISTICS: `nodeStatistics`,
+  DISK_SPACE: `diskSpace`,
   PIPELINE_TABLE: `pipelineTable`,
   SETTINGS: `settings`,
   SOCKET_URL: `socketURL`,

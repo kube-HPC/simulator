@@ -25,12 +25,17 @@ export const topActions = [
   },
 ];
 
-export const getBottomActions = ({ warnings, cpuStatus, memoryStatus, gpuStatus }) => {
+export const getBottomActions = ({ warnings, diskSpace, cpuStatus, memoryStatus, gpuStatus }) => {
   const ret = [
     {
       name: RIGHT_SIDEBAR_NAMES.ERROR_LOGS,
       type: 'warning',
       count: warnings,
+    },
+    {
+      name: RIGHT_SIDEBAR_NAMES.DISK,
+      type: 'save',
+      status: diskSpace,
     },
     {
       name: RIGHT_SIDEBAR_NAMES.CPU,
