@@ -1,6 +1,7 @@
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import { Button } from 'antd';
-import { DRAWER_SIZE, USER_GUIDE } from 'const';
+import { useSelector } from 'react-redux';
+import { DRAWER_SIZE, USER_GUIDE, STATE_SOURCES } from 'const';
 import { useActions } from 'hooks';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -13,6 +14,7 @@ const canPause = state => isActive(state);
 const canPauseOrStop = state => isActive(state) || state === PIPELINE_STATUS.PAUSED;
 
 const JobActions = ({ job, className }) => {
+  const socketURL = useSelector(state => state[STATE_SOURCES.SOCKET_URL]);
   const {
     key,
     pipeline,
@@ -23,7 +25,6 @@ const JobActions = ({ job, className }) => {
   const {
     rerunRawPipeline,
     stopPipeline,
-    downloadPipelineResults,
     drawerOpen,
     pausePipeline,
     resumePipeline,
@@ -31,7 +32,6 @@ const JobActions = ({ job, className }) => {
 
   const onReRun = () => rerunRawPipeline(pipeline);
   const onStop = () => stopPipeline(key);
-  const onDownload = () => downloadPipelineResults(results.data.storageInfo.path);
 
   const onMoreInfo = () => {
     const body = <JobInfo jobId={key} />;
@@ -49,7 +49,8 @@ const JobActions = ({ job, className }) => {
         icon={canPause(status) ? 'pause' : 'caret-right'}
         onClick={() => (canPause(status) ? pausePipeline(key) : resumePipeline(key))}
       />
-      <Button disabled={isDownloadDisabled} icon="download" onClick={onDownload} />
+      <a href={`${socketURL}/storage/download/pipeline/result/${key}`} download>
+        <Button disabled={isDownloadDisabled} icon="download" /></a>
       <Button icon="ellipsis" onClick={onMoreInfo} />
     </Button.Group>
   );

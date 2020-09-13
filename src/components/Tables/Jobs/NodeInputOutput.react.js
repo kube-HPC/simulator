@@ -1,24 +1,11 @@
 import { Table } from 'components';
 import { Card, JsonSwitch } from 'components/common';
-import { useActions } from 'hooks';
 import PropTypes from 'prop-types';
-import React, { useCallback } from 'react';
-import getNodeIOColumns from './getNodeIOColumns.react';
+import React from 'react';
+import useNodeIOColumns from './getNodeIOColumns.react';
 
-const NodeInputOutput = ({ payload }) => {
-  const { downloadTaskResults } = useActions();
-
-  const onSelect = useCallback(
-    select =>
-      select.namespace &&
-      (select.namespace.includes('input') || select.namespace.includes('output')) &&
-      select.name === 'path' &&
-      select.value &&
-      downloadTaskResults(select.value),
-    [downloadTaskResults],
-  );
-
-  const mapTask = task => ({
+const NodeInputOutput = ({ algorithm, payload }) => {
+  const mapTask = (task, algorithm) => ({
     index: task.batchIndex || 1,
     origInput: task.origInput,
     input: task.input,
@@ -31,24 +18,25 @@ const NodeInputOutput = ({ payload }) => {
     retries: task.retries || 0,
     startTime: task.startTime,
     endTime: task.endTime,
+    downloadFileExt: algorithm.downloadFileExt,
   });
 
   const dataSource =
     payload.batch && payload.batch.length > 0
       ? payload.batch.map(b => ({
-        ...mapTask(b),
+        ...mapTask(b, algorithm),
         origInput: payload.origInput,
       }))
-      : [mapTask(payload)];
+      : [mapTask(payload, algorithm)];
 
   return (
     <Table
       rowKey={({ index }) => index}
-      columns={getNodeIOColumns()}
+      columns={useNodeIOColumns()}
       dataSource={dataSource}
       expandedRowRender={record => (
         <Card>
-          <JsonSwitch obj={record} onSelect={onSelect} />
+          <JsonSwitch obj={record} />
         </Card>
       )}
     />
@@ -57,6 +45,7 @@ const NodeInputOutput = ({ payload }) => {
 
 NodeInputOutput.propTypes = {
   payload: PropTypes.object.isRequired,
+  algorithm: PropTypes.object.isRequired,
 };
 
 export default NodeInputOutput;

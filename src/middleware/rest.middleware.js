@@ -1,7 +1,6 @@
 import axios from 'axios';
 import successMsg from 'config/schema/success-messages.schema';
 import AT from 'const/application-actions';
-import FileSaver from 'file-saver';
 
 const setMonitorPath = monitorBackend =>
   monitorBackend.useLocation
@@ -85,7 +84,6 @@ const restMiddleware = ({ dispatch }) => next => action => {
       AT.REST_REQ_POST_FORM,
       AT.REST_REQ_PUT,
       AT.REST_REQ_DELETE,
-      AT.JOBS_DOWNLOAD_REQ,
     ].includes(action.type)
   ) {
     return next(action);
@@ -164,25 +162,6 @@ const restMiddleware = ({ dispatch }) => next => action => {
       })
       .catch(err => {
         reject(dispatch, err.response.data.error, action);
-      });
-
-    return next(action);
-  } else if (action.type === AT.JOBS_DOWNLOAD_REQ) {
-    if (!SOCKET_URL) {
-      return next(action);
-    }
-    pending(dispatch, 'pending', action);
-    axios
-      .get(createUrl(action.payload.url), {
-        responseType: 'blob',
-        timeout: 30000,
-      })
-      .then(res => {
-        FileSaver.saveAs(res.data, 'results.json');
-        success(dispatch, res.data, action);
-      })
-      .catch(err => {
-        reject(dispatch, err.response && err.response.data.error, action);
       });
 
     return next(action);
