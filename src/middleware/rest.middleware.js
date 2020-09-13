@@ -1,7 +1,6 @@
 import axios from 'axios';
 import successMsg from 'config/schema/success-messages.schema';
 import AT from 'const/application-actions';
-import FileSaver from 'file-saver';
 
 const setMonitorPath = monitorBackend =>
   monitorBackend.useLocation
