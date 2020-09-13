@@ -2,6 +2,7 @@ import React from 'react';
 import { Empty } from 'antd';
 import { ResponsivePie } from '@nivo/pie';
 import { useDiskSpace } from 'hooks';
+import prettyBytes from 'pretty-bytes';
 import { Card } from 'components/common';
 import styled from 'styled-components';
 
@@ -10,18 +11,18 @@ const Container = styled.div`
   height: 70vh;
 `;
 
-const adaptedData = dataSource => {
+const adaptedData = ({ free, used, freeH, usedH }) => {
   const data = [
     {
       id: 'free',
-      label: `free ${dataSource.freeH}`,
-      value: dataSource.free,
+      label: `free ${freeH}`,
+      value: free,
       color: 'hsl(357, 70%, 50%)',
     },
     {
       id: 'used',
-      label: `used ${dataSource.usedH}`,
-      value: dataSource.used,
+      label: `used ${usedH}`,
+      value: used,
       color: 'hsl(357, 70%, 50%)',
     },
   ];
@@ -32,13 +33,21 @@ const adaptedData = dataSource => {
 const DiskSpace = () => {
   const { dataSource } = useDiskSpace();
 
-  if (!dataSource.freeH) {
+  if (!dataSource.size) {
     return <Empty description="No disk space" image={Empty.PRESENTED_IMAGE_SIMPLE} />;
   }
+  const { size, free } = dataSource;
+  const used = size - free;
+  const ratio = free / size;
+  const usedP = parseFloat((1 - ratio).toFixed(2)) * 100;
+  const freeP = parseFloat(ratio.toFixed(2)) * 100;
+  const sizeH = prettyBytes(size);
+  const freeH = prettyBytes(free);
+  const usedH = prettyBytes(used);
 
-  const data = adaptedData(dataSource);
+  const data = adaptedData({ free, used, freeH, usedH, usedP, freeP });
 
-  if (dataSource.freeP < 20) {
+  if (freeP < 20) {
     // we should set an alert.....
     // improve cards Total Capacity, Free Capacity
   }
@@ -46,10 +55,10 @@ const DiskSpace = () => {
   return (
     <Container>
       <Card isMargin title="Total Capacity">
-        <p>{dataSource.sizeH}</p>
+        <p>{sizeH}</p>
       </Card>
       <Card isMargin title="Free Capacity">
-        <p>{dataSource.freeH}</p>
+        <p>{freeH}</p>
       </Card>
       <ResponsivePie
         data={data}
