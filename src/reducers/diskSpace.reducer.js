@@ -6,7 +6,7 @@ export const diskSpace = handleActions(
   {
     [actions.SOCKET_GET_DATA](state, { payload }) {
       const { diskSpace } = payload;
-      return diskSpace ? Immutable.set(diskSpace, 'dataSource', diskSpace) : state;
+      return diskSpace ? Immutable.set(state, 'dataSource', diskSpace) : state;
     },
   },
   Immutable.from({ dataSource: {} }),

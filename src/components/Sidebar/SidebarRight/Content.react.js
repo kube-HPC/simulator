@@ -59,7 +59,7 @@ const rightSidebarContent = {
   },
   [RIGHT_SIDEBAR_NAMES.DISK]: {
     width: DRAWER_SIZE.DISK,
-    title: 'Cluster DISK Usage',
+    title: 'Hkube DISK Usage',
     description: (
       <>
         Hover the <Text code>Nodes</Text> for an additional information.

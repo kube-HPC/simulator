@@ -26,28 +26,28 @@ export const topActions = [
 ];
 
 export const getBottomActions = ({ warnings, diskSpace, cpuStatus, memoryStatus, gpuStatus }) => {
-  const ret = [
-    {
-      name: RIGHT_SIDEBAR_NAMES.ERROR_LOGS,
-      type: 'warning',
-      count: warnings,
-    },
-    {
+  const ret = [{
+    name: RIGHT_SIDEBAR_NAMES.ERROR_LOGS,
+    type: 'warning',
+    count: warnings,
+  }];
+  if (diskSpace.size) {
+    ret.push({
       name: RIGHT_SIDEBAR_NAMES.DISK,
       type: 'save',
-      status: diskSpace,
-    },
-    {
-      name: RIGHT_SIDEBAR_NAMES.CPU,
-      type: 'cluster',
-      status: cpuStatus.status,
-    },
-    {
-      name: RIGHT_SIDEBAR_NAMES.MEMORY,
-      type: 'hdd',
-      status: memoryStatus.status,
-    },
-  ];
+      status: diskSpace.status,
+    });
+  }
+  ret.push({
+    name: RIGHT_SIDEBAR_NAMES.CPU,
+    type: 'cluster',
+    status: cpuStatus.status,
+  });
+  ret.push({
+    name: RIGHT_SIDEBAR_NAMES.MEMORY,
+    type: 'hdd',
+    status: memoryStatus.status,
+  });
   if (gpuStatus.total) {
     ret.push({
       name: RIGHT_SIDEBAR_NAMES.GPU,

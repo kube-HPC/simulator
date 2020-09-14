@@ -30,6 +30,13 @@ export const COLOR = {
   turquoise: `#36DFB9`,
   white: `white`,
   yellow: `#eeda13`,
+  darkCharcoal: `#333333`,
+};
+
+export const COLOR_DISK_SPACE = {
+  FREE: COLOR.green,
+  USED: COLOR.red,
+  LABELS: COLOR.darkCharcoal,
 };
 
 export const COLOR_PIPELINE_TYPES = {

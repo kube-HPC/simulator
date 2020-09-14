@@ -12,7 +12,7 @@ import { getBottomActions, topActions } from 'config/schema/rightSidebar.schema'
 import { RIGHT_SIDEBAR_NAMES } from 'const';
 import { useErrorLogs } from 'hooks';
 import React, { useCallback, useMemo } from 'react';
-import { getColorStatus } from 'utils/warningColorStatus';
+import { getColorStatus, getDiskSpaceColorStatus } from 'utils/warningColorStatus';
 import useActions from './useActions';
 import useStats from './useStats';
 import useDiskSpace from './useDiskSpace';
@@ -62,7 +62,7 @@ const useRightSidebar = () => {
       top: topActions,
       bottom: getBottomActions({
         warnings: totalNewWarnings,
-        diskSpace,
+        diskSpace: getDiskSpaceColorStatus(diskSpace),
         cpuStatus: getColorStatus(cpu),
         memoryStatus: getColorStatus(memory),
         gpuStatus: getColorStatus(gpu),
