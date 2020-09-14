@@ -57,9 +57,9 @@ const rightSidebarContent = {
       </>
     ),
   },
-  [RIGHT_SIDEBAR_NAMES.DISK]: {
-    width: DRAWER_SIZE.DISK,
-    title: 'Hkube DISK Usage',
+  [RIGHT_SIDEBAR_NAMES.STORAGE]: {
+    width: DRAWER_SIZE.STORAGE,
+    title: 'Hkube STORAGE Usage',
     description: (
       <>
         Hover the <Text code>Nodes</Text> for an additional information.

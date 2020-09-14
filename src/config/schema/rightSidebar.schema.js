@@ -25,17 +25,17 @@ export const topActions = [
   },
 ];
 
-export const getBottomActions = ({ warnings, diskSpace, cpuStatus, memoryStatus, gpuStatus }) => {
+export const getBottomActions = ({ warnings, storage, cpuStatus, memoryStatus, gpuStatus }) => {
   const ret = [{
     name: RIGHT_SIDEBAR_NAMES.ERROR_LOGS,
     type: 'warning',
     count: warnings,
   }];
-  if (diskSpace.size) {
+  if (storage.size) {
     ret.push({
-      name: RIGHT_SIDEBAR_NAMES.DISK,
+      name: RIGHT_SIDEBAR_NAMES.STORAGE,
       type: 'save',
-      status: diskSpace.status,
+      status: storage.status,
     });
   }
   ret.push({

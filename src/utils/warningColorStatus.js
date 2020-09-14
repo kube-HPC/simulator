@@ -19,12 +19,12 @@ export const getColorStatus = stats => {
   return { status: isWarningStatus ? 'warning' : isErrorStatus ? 'error' : '', total: totalSize };
 };
 
-export const getDiskSpaceColorStatus = diskSpace => {
+export const getStorageColorStatus = storage => {
   let status = '';
-  if (!diskSpace) {
+  if (!storage) {
     return { status };
   }
-  const { size, free } = diskSpace;
+  const { size, free } = storage;
   const percent = (free / size) * 100;
   if (percent > 10 && percent < 20) {
     status = 'warning';

@@ -6,21 +6,21 @@ import {
   AddPipeline,
   ErrorLogsTable,
   RunRawPipeline,
-  DiskSpace,
+  Storage,
 } from 'components/Sidebar/SidebarRight';
 import { getBottomActions, topActions } from 'config/schema/rightSidebar.schema';
 import { RIGHT_SIDEBAR_NAMES } from 'const';
 import { useErrorLogs } from 'hooks';
 import React, { useCallback, useMemo } from 'react';
-import { getColorStatus, getDiskSpaceColorStatus } from 'utils/warningColorStatus';
+import { getColorStatus, getStorageColorStatus } from 'utils/warningColorStatus';
 import useActions from './useActions';
 import useStats from './useStats';
-import useDiskSpace from './useDiskSpace';
+import useStorage from './useStorage';
 
 const useRightSidebar = () => {
   const { totalNewWarnings, setIsCleared } = useErrorLogs();
   const { cpu, memory, gpu } = useStats();
-  const { diskSpace } = useDiskSpace();
+  const { storage } = useStorage();
 
   const { drawerOpen } = useActions();
 
@@ -32,7 +32,7 @@ const useRightSidebar = () => {
       [RIGHT_SIDEBAR_NAMES.ADD_DEBUG]: <AddDebug />,
       [RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE]: <RunRawPipeline />,
       [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: <ErrorLogsTable />,
-      [RIGHT_SIDEBAR_NAMES.DISK]: <DiskSpace />,
+      [RIGHT_SIDEBAR_NAMES.STORAGE]: <Storage />,
       [RIGHT_SIDEBAR_NAMES.CPU]: <NodeStatistics metric="cpu" />,
       [RIGHT_SIDEBAR_NAMES.MEMORY]: <NodeStatistics metric="mem" />,
       [RIGHT_SIDEBAR_NAMES.GPU]: <NodeStatistics metric="gpu" />,
@@ -62,7 +62,7 @@ const useRightSidebar = () => {
       top: topActions,
       bottom: getBottomActions({
         warnings: totalNewWarnings,
-        diskSpace: getDiskSpaceColorStatus(diskSpace),
+        storage: getStorageColorStatus(storage),
         cpuStatus: getColorStatus(cpu),
         memoryStatus: getColorStatus(memory),
         gpuStatus: getColorStatus(gpu),

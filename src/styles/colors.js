@@ -33,7 +33,7 @@ export const COLOR = {
   darkCharcoal: `#333333`,
 };
 
-export const COLOR_DISK_SPACE = {
+export const COLOR_STORAGE = {
   FREE: COLOR.green,
   USED: COLOR.red,
   LABELS: COLOR.darkCharcoal,

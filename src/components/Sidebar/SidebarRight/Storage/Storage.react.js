@@ -2,11 +2,10 @@ import React from 'react';
 import { Empty, Card, Col, Row } from 'antd';
 import { ResponsivePie } from '@nivo/pie';
 import GaugeChart from 'react-gauge-chart';
-import { useDiskSpace } from 'hooks';
+import { useStorage } from 'hooks';
 import prettyBytes from 'pretty-bytes';
 import styled from 'styled-components';
-
-import { COLOR_DISK_SPACE } from 'styles/colors';
+import { COLOR_STORAGE } from 'styles/colors';
 
 const Container = styled.div`
   font-size: 20px;
@@ -19,26 +18,26 @@ const adaptedData = ({ free, used, freeH, usedH }) => {
       id: 'free',
       label: `free ${freeH}`,
       value: free,
-      color: COLOR_DISK_SPACE.FREE,
+      color: COLOR_STORAGE.FREE,
     },
     {
       id: 'used',
       label: `used ${usedH}`,
       value: used,
-      color: COLOR_DISK_SPACE.USED,
+      color: COLOR_STORAGE.USED,
     },
   ];
 
   return data;
 };
 
-const DiskSpace = () => {
-  const { diskSpace } = useDiskSpace();
+const Storage = () => {
+  const { storage } = useStorage();
 
-  if (!diskSpace.size) {
-    return <Empty description="No disk space" image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+  if (!storage.size) {
+    return <Empty description="No storage data" image={Empty.PRESENTED_IMAGE_SIMPLE} />;
   }
-  const { size, free } = diskSpace;
+  const { size, free } = storage;
   const used = size - free;
   const ratio = free / size;
   const usedP = parseFloat((1 - ratio).toFixed(2));
@@ -69,11 +68,11 @@ const DiskSpace = () => {
           </Col>
           <Col span={6}>
             <Card>
-              <GaugeChart id="gauge-chart-disk-space"
+              <GaugeChart id="gauge-chart-storage"
                 nrOfLevels={3}
                 arcsLength={[0.3, 0.5, 0.2]}
                 colors={['#5BE12C', '#F5CD19', '#EA4228']}
-                textColor={COLOR_DISK_SPACE.LABELS}
+                textColor={COLOR_STORAGE.LABELS}
                 percent={usedP}
                 arcPadding={0.02}
               />
@@ -92,14 +91,14 @@ const DiskSpace = () => {
         borderColor={{ from: 'color', modifiers: [['darker', 0.2]] }}
         radialLabelsSkipAngle={10}
         radialLabelsTextXOffset={6}
-        radialLabelsTextColor={COLOR_DISK_SPACE.LABELS}
+        radialLabelsTextColor={COLOR_STORAGE.LABELS}
         radialLabelsLinkOffset={0}
         radialLabelsLinkDiagonalLength={16}
         radialLabelsLinkHorizontalLength={24}
         radialLabelsLinkStrokeWidth={1}
         radialLabelsLinkColor={{ from: 'color' }}
         slicesLabelsSkipAngle={10}
-        slicesLabelsTextColor={COLOR_DISK_SPACE.LABELS}
+        slicesLabelsTextColor={COLOR_STORAGE.LABELS}
         animate={true}
         motionStiffness={90}
         motionDamping={15}
@@ -108,14 +107,14 @@ const DiskSpace = () => {
             id: 'free',
             type: 'linearGradient',
             colors: [
-              { offset: 100, color: COLOR_DISK_SPACE.FREE },
+              { offset: 100, color: COLOR_STORAGE.FREE },
             ],
           },
           {
             id: 'used',
             type: 'linearGradient',
             colors: [
-              { offset: 100, color: COLOR_DISK_SPACE.USED },
+              { offset: 100, color: COLOR_STORAGE.USED },
             ],
           },
         ]}
@@ -140,14 +139,14 @@ const DiskSpace = () => {
             translateY: 56,
             itemWidth: 100,
             itemHeight: 18,
-            itemTextColor: COLOR_DISK_SPACE.LABELS,
+            itemTextColor: COLOR_STORAGE.LABELS,
             symbolSize: 18,
             symbolShape: 'circle',
             effects: [
               {
                 on: 'hover',
                 style: {
-                  itemTextColor: COLOR_DISK_SPACE.LABELS,
+                  itemTextColor: COLOR_STORAGE.LABELS,
                 },
               },
             ],
@@ -158,4 +157,4 @@ const DiskSpace = () => {
   );
 };
 
-export default DiskSpace;
+export default Storage;
