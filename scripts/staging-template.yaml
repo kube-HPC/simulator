@@ -94,7 +94,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
   labels:
     app: simulator-${PR_NAME}
@@ -111,7 +111,7 @@ spec:
           - backend:
               serviceName: simulator-${PR_NAME}
               servicePort: 9050
-            path: /hkube/simulator-${PR_NAME}
+            path: /hkube/simulator-${PR_NAME}(/|$)(.*)
 
 ---
 apiVersion: v1
