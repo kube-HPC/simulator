@@ -12,9 +12,8 @@ export const RIGHT_SIDEBAR_NAMES = {
   ADD_ALGORITHM: 'Add Algorithm',
   ADD_DEBUG: 'Add Debug',
   RUN_RAW_PIPELINE: 'Run Raw Pipeline',
-  STORAGE: 'STORAGE',
   CPU: 'CPU',
   GPU: 'GPU',
-  MEMORY: 'Memory',
+  MEMORY: 'Memory and Storage',
   ERROR_LOGS: 'Error Logs',
 };

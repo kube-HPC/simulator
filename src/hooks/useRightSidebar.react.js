@@ -1,4 +1,3 @@
-import { NodeStatistics } from 'components';
 import { CONTENT_CONFIG } from 'components/Drawer';
 import {
   AddAlgorithm,
@@ -6,7 +5,8 @@ import {
   AddPipeline,
   ErrorLogsTable,
   RunRawPipeline,
-  Storage,
+  MemoryAndStorage,
+  NodeStatistics,
 } from 'components/Sidebar/SidebarRight';
 import { getBottomActions, topActions } from 'config/schema/rightSidebar.schema';
 import { RIGHT_SIDEBAR_NAMES } from 'const';
@@ -32,14 +32,12 @@ const useRightSidebar = () => {
       [RIGHT_SIDEBAR_NAMES.ADD_DEBUG]: <AddDebug />,
       [RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE]: <RunRawPipeline />,
       [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: <ErrorLogsTable />,
-      [RIGHT_SIDEBAR_NAMES.STORAGE]: <Storage />,
+      [RIGHT_SIDEBAR_NAMES.MEMORY]: <MemoryAndStorage />,
       [RIGHT_SIDEBAR_NAMES.CPU]: <NodeStatistics metric="cpu" />,
-      [RIGHT_SIDEBAR_NAMES.MEMORY]: <NodeStatistics metric="mem" />,
       [RIGHT_SIDEBAR_NAMES.GPU]: <NodeStatistics metric="gpu" />,
     }),
     [],
   );
-
   const onSelectDrawer = useCallback(
     selection => {
       if (selection === RIGHT_SIDEBAR_NAMES.ERROR_LOGS) {

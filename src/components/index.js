@@ -6,4 +6,3 @@ export { default as SidebarRight } from 'components/Sidebar/SidebarRight/Sidebar
 export { default as UserGuide } from 'components/UserGuide/UserGuide.react';
 export { default as Dashboard } from './Dashboard/Dashboard.react';
 export { default as Table } from './Table/Table.react';
-export { default as NodeStatistics } from './Tables/NodeStats/NodeStatistics.react';

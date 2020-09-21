@@ -34,8 +34,8 @@ export const COLOR = {
 };
 
 export const COLOR_STORAGE = {
-  FREE: COLOR.green,
-  USED: COLOR.red,
+  FREE: COLOR.grey,
+  USED: COLOR.blue,
   LABELS: COLOR.darkCharcoal,
 };
 
