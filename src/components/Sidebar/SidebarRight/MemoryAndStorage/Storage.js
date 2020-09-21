@@ -7,7 +7,7 @@ import { ResponsivePie } from '@nivo/pie';
 import { Metrics, MetricHeader, MetricContainer, MetricValue, Header } from './styles';
 
 const PieContainer = styled.div`
-  height: 20em;
+  height: 10em;
   flex: 1;
 `;
 
@@ -55,7 +55,7 @@ const Storage = ({ storage }) => {
         <PieContainer>
           <ResponsivePie
             data={data}
-            margin={{ top: 40, right: 80, bottom: 40, left: 80 }}
+            margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
             innerRadius={0.75}
             padAngle={0.7}
             cornerRadius={0}

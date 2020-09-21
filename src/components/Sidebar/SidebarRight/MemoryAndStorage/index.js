@@ -9,11 +9,12 @@ import { Header } from './styles';
 
 const Root = styled.div`
   font-size: 20px;
-  padding: 1em 4ch;
+  padding: 0 4ch;
 `;
 
 const Memory = styled.div`
-  height: 70vh;
+  height: 50vh;
+  margin-bottom: 4em;
 `;
 
 const MemoryAndStorage = () => {
