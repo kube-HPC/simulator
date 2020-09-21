@@ -1,8 +1,7 @@
 import React from 'react';
-import { Empty } from 'antd';
+import PropTypes from 'prop-types';
 import prettyBytes from 'pretty-bytes';
 import styled from 'styled-components';
-import { useStorage } from 'hooks';
 import { COLOR_STORAGE } from 'styles/colors';
 import { ResponsivePie } from '@nivo/pie';
 import { Metrics, MetricHeader, MetricContainer, MetricValue, Header } from './styles';
@@ -38,9 +37,7 @@ const adaptedData = ({ free, used }) => {
   return data;
 };
 
-const Storage = () => {
-  const { storage } = useStorage();
-
+const Storage = ({ storage }) => {
   const { size, free } = storage;
   const used = size - free;
   const ratio = free / size;
@@ -50,10 +47,6 @@ const Storage = () => {
   const freeH = prettyBytes(free);
   const usedH = prettyBytes(used);
   const data = adaptedData({ free, used, freeH, usedH });
-
-  if (!storage.size) {
-    return <Empty description="No storage data" image={Empty.PRESENTED_IMAGE_SIMPLE} />;
-  }
 
   return (
     <div>
@@ -101,5 +94,10 @@ const Storage = () => {
     </div>
   );
 };
-Storage.propTypes = {};
+Storage.propTypes = {
+  storage: PropTypes.shape({
+    size: PropTypes.number.isRequired,
+    free: PropTypes.number.isRequired,
+  }).isRequired,
+};
 export default Storage;
