@@ -12,7 +12,7 @@ import { getBottomActions, topActions } from 'config/schema/rightSidebar.schema'
 import { RIGHT_SIDEBAR_NAMES } from 'const';
 import { useErrorLogs } from 'hooks';
 import React, { useCallback, useMemo } from 'react';
-import { getColorStatus, getStorageColorStatus } from 'utils/warningColorStatus';
+import { getColorStatus, getStorageColorStatus, combineStatus } from 'utils/warningColorStatus';
 import useActions from './useActions';
 import useStats from './useStats';
 import useStorage from './useStorage';
@@ -21,7 +21,6 @@ const useRightSidebar = () => {
   const { totalNewWarnings, setIsCleared } = useErrorLogs();
   const { cpu, memory, gpu } = useStats();
   const { storage } = useStorage();
-
   const { drawerOpen } = useActions();
 
   // Using Redux-hooks, must be in scope
@@ -60,9 +59,8 @@ const useRightSidebar = () => {
       top: topActions,
       bottom: getBottomActions({
         warnings: totalNewWarnings,
-        storage: getStorageColorStatus(storage),
         cpuStatus: getColorStatus(cpu),
-        memoryStatus: getColorStatus(memory),
+        memoryStatus: combineStatus(getColorStatus(memory), getStorageColorStatus(storage)),
         gpuStatus: getColorStatus(gpu),
       }),
     },
