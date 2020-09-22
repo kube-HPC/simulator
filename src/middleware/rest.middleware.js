@@ -4,12 +4,12 @@ import AT from 'const/application-actions';
 
 const setMonitorPath = monitorBackend =>
   monitorBackend.useLocation
-    ? `${location.origin}${monitorBackend.path}` // eslint-disable-line
+    ? `${window.location.origin}${monitorBackend.path}`
     : `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}${monitorBackend.path}`;
 
 const setBoardPath = board =>
   board.useLocation
-    ? `${location.origin}${board.path}` // eslint-disable-line
+    ? `${window.location.origin}${board.path}`
     : `${board.schema}${board.host}:${board.port}${board.path}`;
 
 const DEFAULT_ERROR_MSG = 'Unexpected Error';
@@ -71,7 +71,6 @@ let BOARD_URL = null;
 
 const createUrl = url => `${SOCKET_URL}/${url}`;
 
-// eslint-disable-next-line
 const restMiddleware = ({ dispatch }) => next => action => {
   if (action.type === `${AT.SOCKET_GET_CONFIG}_SUCCESS`) {
     const { monitorBackend, board, hkubeSystemVersion } = action.payload.config;
@@ -83,7 +82,9 @@ const restMiddleware = ({ dispatch }) => next => action => {
       type: AT.SET_HKUBE_VERSION,
       hkubeSystemVersion: hkubeSystemVersion || null,
     });
-  } else if (
+    return next(action);
+  }
+  if (
     ![
       AT.REST_REQ_GET,
       AT.REST_REQ_POST,
@@ -93,11 +94,12 @@ const restMiddleware = ({ dispatch }) => next => action => {
     ].includes(action.type)
   ) {
     return next(action);
-  } else if (action.type === AT.REST_REQ_GET) {
-    if (!SOCKET_URL) {
-      return next(action);
-    }
-    pending(dispatch, 'pending', action);
+  }
+
+  if (!SOCKET_URL) return next(action);
+
+  pending(dispatch, 'pending', action);
+  if (action.type === AT.REST_REQ_GET) {
     axios
       .get(createUrl(action.payload.url))
       .then(res => {
@@ -108,13 +110,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
           err.response && err.response.data && err.response.data.error;
         reject(dispatch, response, action);
       });
-
-    return next(action);
   } else if (action.type === AT.REST_REQ_POST) {
-    if (!SOCKET_URL) {
-      return next(action);
-    }
-    pending(dispatch, 'pending', action);
     axios
       .post(createUrl(action.payload.url), action.payload.body)
       .then(res => {
@@ -123,13 +119,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
       .catch(err => {
         reject(dispatch, err.response.data.error, action);
       });
-
-    return next(action);
   } else if (action.type === AT.REST_REQ_POST_FORM) {
-    if (!SOCKET_URL) {
-      return next(action);
-    }
-    pending(dispatch, 'pending', action);
     axios
       .post(createUrl(action.payload.url), action.payload.formData)
       .then(res => {
@@ -138,13 +128,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
       .catch(err => {
         reject(dispatch, err.response.data.error, action);
       });
-
-    return next(action);
   } else if (action.type === AT.REST_REQ_PUT) {
-    if (!SOCKET_URL) {
-      return next(action);
-    }
-    pending(dispatch, 'pending', action);
     axios
       .put(createUrl(action.payload.url), action.payload.body)
       .then(res => {
@@ -153,13 +137,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
       .catch(err => {
         reject(dispatch, err.response.data.error, action);
       });
-
-    return next(action);
   } else if (action.type === AT.REST_REQ_DELETE) {
-    if (!SOCKET_URL) {
-      return next(action);
-    }
-    pending(dispatch, 'pending', action);
     axios
       .delete(createUrl(action.payload.url), {
         data: action.payload.body,
@@ -170,9 +148,8 @@ const restMiddleware = ({ dispatch }) => next => action => {
       .catch(err => {
         reject(dispatch, err.response.data.error, action);
       });
-
-    return next(action);
   }
+  return next(action);
 };
 
 export default restMiddleware;
