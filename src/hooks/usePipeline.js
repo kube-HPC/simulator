@@ -11,7 +11,9 @@ const dataSelector = tableFilterSelector(LEFT_SIDEBAR_NAMES.PIPELINES);
 
 const usePipeline = () => {
   const dataSource = useSelector(dataSelector);
-  const dataStats = useSelector(state => state[STATE_SOURCES.PIPELINE_TABLE].dataStats);
+  const dataStats = useSelector(
+    state => state[STATE_SOURCES.PIPELINE_TABLE].dataStats
+  );
   const { value: experimentName } = useExperiments();
 
   const { deleteStored, updateStored, execStored } = useActions();
@@ -20,15 +22,18 @@ const usePipeline = () => {
     pipeline => {
       const parsed = JSON.parse(pipeline);
       execStored(
-        experimentName === experimentsSchema.showAll ? parsed : { experimentName, ...parsed },
+        experimentName === experimentsSchema.showAll
+          ? parsed
+          : { experimentName, ...parsed }
       );
     },
-    [execStored, experimentName],
+    [execStored, experimentName]
   );
 
-  const onSubmitUpdate = useCallback(pipeline => updateStored(JSON.parse(pipeline)), [
-    updateStored,
-  ]);
+  const onSubmitUpdate = useCallback(
+    pipeline => updateStored(JSON.parse(pipeline)),
+    [updateStored]
+  );
 
   const { open: execute } = useDrawerEditor({ onSubmit: onSubmitExec });
   const { open: update } = useDrawerEditor({ onSubmit: onSubmitUpdate });

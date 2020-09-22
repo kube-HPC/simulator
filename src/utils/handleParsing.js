@@ -14,6 +14,7 @@ const tryParse = ({ src, onSuccess = noop, onFail }) => {
     const parsed = JSON.parse(src);
     onSuccess({ src, parsed });
   } catch ({ message }) {
+    // eslint-disable-next-line
     onFail ? onFail() : notification.open(configNotificationOnOpen(message));
   }
 };

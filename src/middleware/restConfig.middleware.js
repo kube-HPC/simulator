@@ -1,4 +1,4 @@
-import AT from '../const/application-actions';
+import AT from 'const/application-actions';
 
 const reject = (dispatch, payload, action) => {
   dispatch({
@@ -48,7 +48,9 @@ const restConfigMiddleware = ({ dispatch }) => next => action => {
         console.error('get config error');
       });
   } else {
-    console.warn(`rest middleware: trying to register topic ${action.payload.topic} twice `);
+    console.warn(
+      `rest middleware: trying to register topic ${action.payload.topic} twice `
+    );
   }
   return next(action);
 };

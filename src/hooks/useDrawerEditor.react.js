@@ -11,10 +11,16 @@ const useDrawerEditor = ({ onSubmit = NOOP, submitText }) => {
 
   const open = useCallback(
     value => {
-      const body = <DrawerEditor value={value} submitText={submitText} onSubmit={onSubmit} />;
+      const body = (
+        <DrawerEditor
+          value={value}
+          submitText={submitText}
+          onSubmit={onSubmit}
+        />
+      );
       drawerOpen({ body, width: DRAWER_SIZE.ALGORITHM_EDIT });
     },
-    [drawerOpen, onSubmit, submitText],
+    [drawerOpen, onSubmit, submitText]
   );
 
   return { open };

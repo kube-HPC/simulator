@@ -17,7 +17,11 @@ const fetch = ({ url, callback }) => ({ jobId }) =>
       callback(transformTraceData(traceData || {}));
     })
     .catch(({ message: description }) =>
-      notification({ message: 'Error fetching Trace data', description, type: TYPES.WARNING }),
+      notification({
+        message: 'Error fetching Trace data',
+        description,
+        type: TYPES.WARNING,
+      })
     );
 
 const useTraceData = () => {

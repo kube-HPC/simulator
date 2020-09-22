@@ -1,4 +1,7 @@
-import { algorithmBuildsTable, algorithmTable } from 'reducers/algorithm.reducer';
+import {
+  algorithmBuildsTable,
+  algorithmTable,
+} from 'reducers/algorithm.reducer';
 import { autoCompleteFilter } from 'reducers/autoComplete.reducer';
 import {
   boardURL,

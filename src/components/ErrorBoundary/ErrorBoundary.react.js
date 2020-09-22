@@ -20,7 +20,8 @@ const { Paragraph, Text } = Typography;
 const { Panel } = Collapse;
 
 const reloadPage = () => window.location.reload();
-const openGithub = () => window.open('https://github.com/kube-HPC/hkube/issues');
+const openGithub = () =>
+  window.open('https://github.com/kube-HPC/hkube/issues');
 
 class ErrorBoundary extends React.Component {
   state = {
@@ -48,8 +49,8 @@ class ErrorBoundary extends React.Component {
             <FlexBox>
               <FlexBox.Item>
                 <Paragraph style={{ marginBottom: 0 }}>
-                  Please <Text strong>refresh</Text> the page, you can report the error on{' '}
-                  <Text strong>Github</Text>
+                  Please <Text strong>refresh</Text> the page, you can report
+                  the error on <Text strong>Github</Text>
                 </Paragraph>
               </FlexBox.Item>
               <FlexBox.Item>
@@ -58,7 +59,11 @@ class ErrorBoundary extends React.Component {
             </FlexBox>
           }
           extra={[
-            <Button type="primary" icon="redo" key="refresh" onClick={reloadPage}>
+            <Button
+              type="primary"
+              icon="redo"
+              key="refresh"
+              onClick={reloadPage}>
               Refresh
             </Button>,
           ]}>
@@ -89,6 +94,10 @@ class ErrorBoundary extends React.Component {
 
 ErrorBoundary.propTypes = {
   children: PropTypes.node,
+};
+
+ErrorBoundary.defaultProps = {
+  children: null,
 };
 
 export default ErrorBoundary;

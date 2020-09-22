@@ -7,7 +7,10 @@ const useSettings = () => {
   const settings = useSelector(state => state[STATE_SOURCES.SETTINGS]);
   const { setSettings } = useActions();
 
-  useLocalStorage({ value: stringify(settings), key: LOCAL_STORAGE_KEYS.SETTINGS });
+  useLocalStorage({
+    value: stringify(settings),
+    key: LOCAL_STORAGE_KEYS.SETTINGS,
+  });
 
   return { ...settings, setSettings };
 };

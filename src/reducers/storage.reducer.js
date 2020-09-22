@@ -5,9 +5,9 @@ import actions from 'const/application-actions';
 export const storage = handleActions(
   {
     [actions.SOCKET_GET_DATA](state, { payload }) {
-      const storage = payload.diskSpace;
-      return storage ? Immutable.set(state, 'dataSource', storage) : state;
+      const { diskSpace } = payload;
+      return diskSpace ? Immutable.set(state, 'dataSource', diskSpace) : state;
     },
   },
-  Immutable.from({ dataSource: {} }),
+  Immutable.from({ dataSource: {} })
 );

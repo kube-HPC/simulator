@@ -8,8 +8,14 @@ const useFilters = () => {
   const { filterByType: set } = useActions();
   const value = useStore(STATE_SOURCES.FILTER_TYPES);
 
-  useLocalStorage({ value: stringify(value), key: LOCAL_STORAGE_KEYS.FILTER_TYPES });
-  return { value: value && isImmutable(value) ? value.asMutable() : value, set };
+  useLocalStorage({
+    value: stringify(value),
+    key: LOCAL_STORAGE_KEYS.FILTER_TYPES,
+  });
+  return {
+    value: value && isImmutable(value) ? value.asMutable() : value,
+    set,
+  };
 };
 
 export default createStore(useFilters);

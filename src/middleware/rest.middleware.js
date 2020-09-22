@@ -18,7 +18,9 @@ const _formatError = payload => {
   if (!payload) {
     return DEFAULT_ERROR_MSG;
   }
-  return typeof payload === 'string' ? payload : payload.message || DEFAULT_ERROR_MSG;
+  return typeof payload === 'string'
+    ? payload
+    : payload.message || DEFAULT_ERROR_MSG;
 };
 
 const ignoreActions = [AT.README_GET_ALGORITHM, AT.README_GET_PIPELINE];
@@ -69,14 +71,19 @@ let BOARD_URL = null;
 
 const createUrl = url => `${SOCKET_URL}/${url}`;
 
+// eslint-disable-next-line
 const restMiddleware = ({ dispatch }) => next => action => {
   if (action.type === `${AT.SOCKET_GET_CONFIG}_SUCCESS`) {
     const { monitorBackend, board, hkubeSystemVersion } = action.payload.config;
     SOCKET_URL = setMonitorPath(monitorBackend);
     BOARD_URL = setBoardPath(board);
+    // eslint-disable-next-line
     SOCKET_URL && dispatch({ type: AT.SOCKET_SET_URL, url: SOCKET_URL });
     dispatch({ type: AT.BOARD_SET_URL, url: BOARD_URL });
-    dispatch({ type: AT.SET_HKUBE_VERSION, hkubeSystemVersion: hkubeSystemVersion || null });
+    dispatch({
+      type: AT.SET_HKUBE_VERSION,
+      hkubeSystemVersion: hkubeSystemVersion || null,
+    });
   } else if (
     ![
       AT.REST_REQ_GET,
@@ -98,7 +105,8 @@ const restMiddleware = ({ dispatch }) => next => action => {
         success(dispatch, res.data, action);
       })
       .catch(err => {
-        const response = err.response && err.response.data && err.response.data.error;
+        const response =
+          err.response && err.response.data && err.response.data.error;
         reject(dispatch, response, action);
       });
 

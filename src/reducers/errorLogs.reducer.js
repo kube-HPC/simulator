@@ -11,5 +11,5 @@ export const errorLogsTable = handleActions(
       return logs ? Immutable.set(currState, `dataSource`, logs) : currState;
     },
   },
-  initialValue,
+  initialValue
 );

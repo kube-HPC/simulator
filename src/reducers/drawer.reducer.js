@@ -16,5 +16,5 @@ export const drawer = handleActions(
       return state.merge({ isVisible: true, content });
     },
   },
-  initial,
+  initial
 );
