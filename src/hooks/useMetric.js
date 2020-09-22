@@ -17,13 +17,17 @@ export default metric => {
     () =>
       statisticsForMetric &&
       statisticsForMetric.results.map(res => {
-        const algorithms = {};
-        if (res && res.algorithmsData) {
-          res.algorithmsData.forEach(
-            // eslint-disable-next-line
-            algorithm => (algorithms[algorithm.name] = algorithm.size)
-          );
-        }
+        const algorithms =
+          res && res.algorithmsData
+            ? res.algorithmsData.reduce(
+                (acc, algorithm) => ({
+                  ...acc,
+                  [algorithm.name]: algorithm.size,
+                }),
+                {}
+              )
+            : {};
+
         return {
           nodes: res.name,
           ...algorithms,
