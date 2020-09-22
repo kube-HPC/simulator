@@ -17,63 +17,72 @@ export const DEFAULT_MS_PRECISION = Math.log10(ONE_MILLISECOND);
  * @param {number} timestamp
  * @param {number} initialTimestamp
  * @param {number} totalDuration
- * @return {number} 0-100 percentage
+ * @returns {number} 0-100 percentage
  */
 export function getPercentageOfDuration(duration, totalDuration) {
   return (duration / totalDuration) * 100;
 }
 
 const quantizeDuration = (duration, floatPrecision, conversionFactor) =>
-  toFloatPrecision(duration / conversionFactor, floatPrecision) * conversionFactor;
+  toFloatPrecision(duration / conversionFactor, floatPrecision) *
+  conversionFactor;
 
 /**
- * @param {number} duration (in microseconds)
- * @return {string} formatted, unit-labelled string with time in milliseconds
+ * @param {number} duration In microseconds)
+ * @returns {string} Formatted, unit-labelled string with time in milliseconds
  */
 export function formatDate(duration) {
   return moment(duration / ONE_MILLISECOND).format(STANDARD_DATE_FORMAT);
 }
 
 /**
- * @param {number} duration (in microseconds)
- * @return {string} formatted, unit-labelled string with time in milliseconds
+ * @param {number} duration In microseconds)
+ * @returns {string} Formatted, unit-labelled string with time in milliseconds
  */
 export function formatTime(duration) {
   return moment(duration / ONE_MILLISECOND).format(STANDARD_TIME_FORMAT);
 }
 
 /**
- * @param {number} duration (in microseconds)
- * @return {string} formatted, unit-labelled string with time in milliseconds
+ * @param {number} duration In microseconds)
+ * @returns {string} Formatted, unit-labelled string with time in milliseconds
  */
 export function formatDatetime(duration) {
   return moment(duration / ONE_MILLISECOND).format(STANDARD_DATETIME_FORMAT);
 }
 
 /**
- * @param {number} duration (in microseconds)
- * @return {string} formatted, unit-labelled string with time in milliseconds
+ * @param {number} duration In microseconds)
+ * @returns {string} Formatted, unit-labelled string with time in milliseconds
  */
 export function formatMillisecondTime(duration) {
-  const targetDuration = quantizeDuration(duration, DEFAULT_MS_PRECISION, ONE_MILLISECOND);
-  return `${moment.duration(targetDuration / ONE_MILLISECOND).asMilliseconds()}ms`;
+  const targetDuration = quantizeDuration(
+    duration,
+    DEFAULT_MS_PRECISION,
+    ONE_MILLISECOND
+  );
+  return `${moment
+    .duration(targetDuration / ONE_MILLISECOND)
+    .asMilliseconds()}ms`;
 }
 
 /**
- * @param {number} duration (in microseconds)
- * @return {string} formatted, unit-labelled string with time in seconds
+ * @param {number} duration In microseconds)
+ * @returns {string} Formatted, unit-labelled string with time in seconds
  */
 export function formatSecondTime(duration) {
-  const targetDuration = quantizeDuration(duration, DEFAULT_MS_PRECISION, ONE_SECOND);
+  const targetDuration = quantizeDuration(
+    duration,
+    DEFAULT_MS_PRECISION,
+    ONE_SECOND
+  );
   return `${moment.duration(targetDuration / ONE_MILLISECOND).asSeconds()}s`;
 }
 
 /**
  * Humanizes the duration based on the inputUnit
  *
- * Example:
- * 5000ms => 5s
- * 1000μs => 1ms
+ * Example: 5000ms => 5s 1000μs => 1ms
  */
 export function formatDuration(duration, inputUnit = 'microseconds') {
   let d = duration;

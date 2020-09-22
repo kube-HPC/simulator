@@ -32,6 +32,7 @@ module.exports = {
   plugins: ['react', 'prettier', 'react-hooks', 'jsdoc', 'jest'],
   rules: {
     'no-underscore-dangle': [0],
+    'no-plusplus': [0],
     'react/prop-types': [2],
     'react/default-props-match-prop-types': [2],
     'react/forbid-prop-types': [1],

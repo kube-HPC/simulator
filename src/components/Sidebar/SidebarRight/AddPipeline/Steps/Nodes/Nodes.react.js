@@ -37,6 +37,7 @@ const Nodes = () => {
         // Changing the key "name" to "nodeName",
         // thats because "nodeName" is used by React when querying the dom.
         const { name, ...rest } = allValues;
+        // eslint-disable-next-line
         prev[id].value = { ...rest, nodeName: name };
 
         return [...prev];

@@ -8,7 +8,8 @@ export default class TreeNode {
       return search;
     }
 
-    return (value, node) => (search instanceof TreeNode ? node === search : value === search);
+    return (value, node) =>
+      search instanceof TreeNode ? node === search : value === search;
   }
 
   constructor(value, children = []) {
@@ -17,7 +18,10 @@ export default class TreeNode {
   }
 
   get depth() {
-    return this.children.reduce((depth, child) => Math.max(child.depth + 1, depth), 1);
+    return this.children.reduce(
+      (depth, child) => Math.max(child.depth + 1, depth),
+      1
+    );
   }
 
   get size() {

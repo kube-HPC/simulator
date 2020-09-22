@@ -77,8 +77,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
     const { monitorBackend, board, hkubeSystemVersion } = action.payload.config;
     SOCKET_URL = setMonitorPath(monitorBackend);
     BOARD_URL = setBoardPath(board);
-    // eslint-disable-next-line
-    SOCKET_URL && dispatch({ type: AT.SOCKET_SET_URL, url: SOCKET_URL });
+    if (SOCKET_URL) dispatch({ type: AT.SOCKET_SET_URL, url: SOCKET_URL });
     dispatch({ type: AT.BOARD_SET_URL, url: BOARD_URL });
     dispatch({
       type: AT.SET_HKUBE_VERSION,

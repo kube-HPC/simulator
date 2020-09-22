@@ -35,6 +35,7 @@ const noConnectionEvents = [
   'reconnect_error',
   'reconnect_failed',
 ];
+
 // eslint-disable-next-line
 const connectOperation = ({ socket, name, lastRoom }) => {
   socket.emit(connectionsEvents.EXPERIMENT_REGISTER, { name, lastRoom });

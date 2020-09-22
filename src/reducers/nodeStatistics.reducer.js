@@ -5,11 +5,10 @@ import actions from 'const/application-actions';
 export const nodeStatistics = handleActions(
   {
     [actions.SOCKET_GET_DATA](currState, { payload }) {
-      // eslint-disable-next-line
-      const { nodeStatistics } = payload;
-      const validPayload = Array.isArray(nodeStatistics);
+      const { nodeStatistics: nextNodeStatistics } = payload;
+      const validPayload = Array.isArray(nextNodeStatistics);
       return validPayload
-        ? Immutable.set(currState, 'dataSource', nodeStatistics)
+        ? Immutable.set(currState, 'dataSource', nextNodeStatistics)
         : currState;
     },
   },

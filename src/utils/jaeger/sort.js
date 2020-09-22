@@ -15,13 +15,21 @@ export function getNewSortForClick(prevSort, column) {
 
   return {
     key: column.name,
-    dir: prevSort.key === column.name ? -1 * prevSort.dir : defaultDir
+    dir: prevSort.key === column.name ? -1 * prevSort.dir : defaultDir,
   };
 }
 
-export function createSortClickHandler(column, currentSortKey, currentSortDir, updateSort) {
+export function createSortClickHandler(
+  column,
+  currentSortKey,
+  currentSortDir,
+  updateSort
+) {
   return function onClickSortingElement() {
-    const { key, dir } = getNewSortForClick({ key: currentSortKey, dir: currentSortDir }, column);
+    const { key, dir } = getNewSortForClick(
+      { key: currentSortKey, dir: currentSortDir },
+      column
+    );
     updateSort(key, dir);
   };
 }

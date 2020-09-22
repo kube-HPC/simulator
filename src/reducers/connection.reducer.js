@@ -28,10 +28,9 @@ export const hkubeSystemVersion = handleActions(
   {
     [actionType.SET_HKUBE_VERSION](
       prevHkubeSystemVersion,
-      // eslint-disable-next-line
-      { hkubeSystemVersion }
+      { hkubeSystemVersion: nextHkubeSystemVersion }
     ) {
-      return Immutable.from(hkubeSystemVersion);
+      return Immutable.from(nextHkubeSystemVersion);
     },
   },
   Immutable.from(``)
@@ -39,12 +38,14 @@ export const hkubeSystemVersion = handleActions(
 
 export const connectionStatus = handleActions(
   {
-    // eslint-disable-next-line
-    [actionType.CONNECTION_STATUS_CHANGE](prevStatus, { connectionStatus }) {
+    [actionType.CONNECTION_STATUS_CHANGE](
+      prevStatus,
+      { connectionStatus: nextConnectionStatus }
+    ) {
       const {
         isSocketConnected: currSocket,
         isDataAvailable: currData,
-      } = connectionStatus;
+      } = nextConnectionStatus;
       const {
         isSocketConnected: prevSocket,
         isDataAvailable: prevData,

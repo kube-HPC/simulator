@@ -9,9 +9,8 @@ const initial = Immutable.from({
 
 export const meta = handleActions(
   {
-    // eslint-disable-next-line
-    [actions.SOCKET_GET_DATA](currState, { payload: { meta } }) {
-      return Immutable.merge(currState, { ...meta });
+    [actions.SOCKET_GET_DATA](currState, { payload: { meta: nextMeta } }) {
+      return Immutable.merge(currState, { ...nextMeta });
     },
   },
   initial

@@ -4,5 +4,4 @@ export const toUpperCaseFirstLetter = str =>
   str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
 export const sorter = (a, b) =>
-  // eslint-disable-next-line
-  isNaN(a) && isNaN(b) ? (a || '').localeCompare(b || '') : a - b;
+  Number.isNaN(a) && Number.isNaN(b) ? (a || '').localeCompare(b || '') : a - b;
