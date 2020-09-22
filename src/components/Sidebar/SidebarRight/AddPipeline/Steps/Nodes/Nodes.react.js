@@ -24,6 +24,8 @@ const { NODES } = addPipelineSchema;
 const EMPTY_INITIAL = [];
 
 const Nodes = () => {
+  // TODO: convert this whole component to formik or react-hook-form
+
   const [nodes, setNodes] = useState(EMPTY_INITIAL);
 
   const { getFieldDecorator, setFieldsValue } = useContext(FormContext);
@@ -68,6 +70,7 @@ const Nodes = () => {
 
   useEffect(() => {
     onAddNode();
+    // NOTE: the dependency array triggers infinite render
     // eslint-disable-next-line
   }, []);
 
