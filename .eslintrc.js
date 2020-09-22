@@ -33,6 +33,7 @@ module.exports = {
   rules: {
     'no-underscore-dangle': [0],
     'no-plusplus': [0],
+    'no-unused-expressions': [0],
     'react/prop-types': [2],
     'react/default-props-match-prop-types': [2],
     'react/forbid-prop-types': [1],
