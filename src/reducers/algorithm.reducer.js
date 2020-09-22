@@ -5,12 +5,14 @@ import actions from 'const/application-actions';
 export const algorithmTable = handleActions(
   {
     [actions.SOCKET_GET_DATA](currState, { payload }) {
-      const algorithms = payload.algorithms;
+      const { algorithms } = payload;
       const isValidPayload = Array.isArray(algorithms);
-      return isValidPayload ? Immutable.set(currState, `dataSource`, algorithms) : currState;
+      return isValidPayload
+        ? Immutable.set(currState, `dataSource`, algorithms)
+        : currState;
     },
   },
-  Immutable.from({ dataSource: [] }),
+  Immutable.from({ dataSource: [] })
 );
 
 export const algorithmBuildsTable = handleActions(
@@ -19,5 +21,5 @@ export const algorithmBuildsTable = handleActions(
       return Immutable.set(state, `dataSource`, payload.algorithmBuilds);
     },
   },
-  Immutable.from({ dataSource: [], showModal: false }),
+  Immutable.from({ dataSource: [], showModal: false })
 );

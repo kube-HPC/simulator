@@ -10,8 +10,14 @@ if (!Object.fromEntries) {
 
 const useActions = () => {
   const dispatch = useDispatch();
-  const createDispatch = useCallback(action => params => dispatch(action(params)), [dispatch]);
-  const objectMapped = Object.entries(actions).map(([key, value]) => [key, createDispatch(value)]);
+  const createDispatch = useCallback(
+    action => params => dispatch(action(params)),
+    [dispatch]
+  );
+  const objectMapped = Object.entries(actions).map(([key, value]) => [
+    key,
+    createDispatch(value),
+  ]);
   const dispatcher = Object.fromEntries(objectMapped);
 
   return dispatcher;

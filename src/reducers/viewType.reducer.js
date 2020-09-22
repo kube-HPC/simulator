@@ -1,6 +1,6 @@
-import { actionType, LOCAL_STORAGE_KEYS } from 'const';
 import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
+import { actionType, LOCAL_STORAGE_KEYS } from 'const';
 import { getBooleanLSItem } from 'utils';
 
 const isTableView = getBooleanLSItem(LOCAL_STORAGE_KEYS.IS_TABLE_VIEW);
@@ -19,5 +19,5 @@ export const viewType = handleActions(
       return state.merge({ ...state, loadedOnce: true });
     },
   },
-  initial,
+  initial
 );

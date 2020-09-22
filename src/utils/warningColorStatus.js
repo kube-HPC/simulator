@@ -1,7 +1,8 @@
 const mapBySize = node => node.size;
 const sumArr = (total, curr) => total + curr;
 const flatAllStats = nodeArr => nodeArr.map(mapBySize);
-const flatByFree = nodeArr => nodeArr.filter(node => node.name === 'free').map(mapBySize);
+const flatByFree = nodeArr =>
+  nodeArr.filter(node => node.name === 'free').map(mapBySize);
 
 export const getColorStatus = stats => {
   if (!(stats && stats.results)) {
@@ -13,10 +14,13 @@ export const getColorStatus = stats => {
   const freeSize = algorithmsDataArr.flatMap(flatByFree).reduce(sumArr, 0);
   const freePercentage = freeSize / totalSize;
 
-  const isWarningStatus = 0 < freePercentage && freePercentage <= 0.15;
+  const isWarningStatus = freePercentage > 0 && freePercentage <= 0.15;
   const isErrorStatus = freePercentage === 0;
 
-  return { status: isWarningStatus ? 'warning' : isErrorStatus ? 'error' : '', total: totalSize };
+  return {
+    status: isWarningStatus ? 'warning' : isErrorStatus ? 'error' : '',
+    total: totalSize,
+  };
 };
 
 export const getStorageColorStatus = storage => {
@@ -36,13 +40,11 @@ export const getStorageColorStatus = storage => {
 
 export const combineStatus = (a, b) => {
   const statuses = [a.status, b.status];
-  /* eslint-disable indent */
   const status = statuses.includes('error')
     ? 'error'
     : statuses.includes('warning')
     ? 'warning'
     : b.status || a.status;
-  /* eslint-enable indent */
   return {
     ...a,
     ...b,

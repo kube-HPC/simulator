@@ -5,7 +5,6 @@ import { useActions } from 'hooks';
 import React, { useState } from 'react';
 import { notification, stringify } from 'utils';
 
-// eslint-disable-next-line
 const { triggers, ...noTriggersPipeline } = addPipelineTemplate;
 
 const DEFAULT_VALUE = stringify(noTriggersPipeline);

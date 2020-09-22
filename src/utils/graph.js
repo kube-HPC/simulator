@@ -14,14 +14,19 @@ export const getTaskDetails = node =>
     : [{ taskId: node.taskId, podName: node.podName }];
 
 export const nodeFinder = ({ graph, pipeline }) => nodeName => {
-  const nodeData = graph && graph.nodes ? graph.nodes.find(findNodeName(nodeName)) : [];
+  const nodeData =
+    graph && graph.nodes ? graph.nodes.find(findNodeName(nodeName)) : [];
   const node = pipeline.nodes.find(findNodeName(nodeName));
   const { jobId } = pipeline;
 
   const taskId =
-    nodeData && nodeData.taskId ? nodeData.taskId : nodeData.batch && nodeData.batch[0].taskId;
+    nodeData && nodeData.taskId
+      ? nodeData.taskId
+      : nodeData.batch && nodeData.batch[0].taskId;
   const podName =
-    nodeData && nodeData.podName ? nodeData.podName : nodeData.batch && nodeData.batch[0].podName;
+    nodeData && nodeData.podName
+      ? nodeData.podName
+      : nodeData.batch && nodeData.batch[0].podName;
   const origInput = node ? node.input : [];
   const payload = {
     ...nodeData,
@@ -40,10 +45,10 @@ const toStatus = status =>
   completedStatus.includes(status)
     ? STATUS.COMPLETED
     : notStartedStatus.includes(status)
-      ? STATUS.NOT_STARTED
-      : sameStatus.includes(status)
-        ? status
-        : STATUS.RUNNING;
+    ? STATUS.NOT_STARTED
+    : sameStatus.includes(status)
+    ? status
+    : STATUS.RUNNING;
 
 const handleSingle = node => ({ ...node, group: toStatus(node.status) });
 
@@ -81,7 +86,10 @@ export const formatNode = n => {
   const fn = handleNode(n);
   const node = {
     id: fn.nodeName,
-    label: fn.extra && fn.extra.batch ? `${fn.nodeName}-${fn.extra.batch}` : fn.nodeName,
+    label:
+      fn.extra && fn.extra.batch
+        ? `${fn.nodeName}-${fn.extra.batch}`
+        : fn.nodeName,
   };
   return { ...fn, ...node };
 };

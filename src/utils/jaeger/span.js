@@ -10,10 +10,7 @@ export const getSpanTimestamp = span => span.startTime;
 export const getSpanProcessId = span => span.processID;
 export const getSpanReferences = span => span.references || [];
 export const getSpanReferenceByType = createSelector(
-  createSelector(
-    ({ span }) => span,
-    getSpanReferences
-  ),
+  createSelector(({ span }) => span, getSpanReferences),
   ({ type }) => type,
   (references, type) => references.find(ref => ref.refType === type)
 );
@@ -46,7 +43,9 @@ export const filterSpansForTimestamps = createSelector(
   ({ rightBound }) => rightBound,
   (spans, leftBound, rightBound) =>
     spans.filter(
-      span => getSpanTimestamp(span) >= leftBound && getSpanTimestamp(span) <= rightBound
+      span =>
+        getSpanTimestamp(span) >= leftBound &&
+        getSpanTimestamp(span) <= rightBound
     )
 );
 
@@ -56,7 +55,7 @@ export const filterSpansForText = createSelector(
   (spans, text) =>
     fuzzy
       .filter(text, spans, {
-        extract: span => `${getSpanServiceName(span)} ${getSpanName(span)}`
+        extract: span => `${getSpanServiceName(span)} ${getSpanName(span)}`,
       })
       .map(({ original }) => original)
 );
@@ -67,7 +66,7 @@ const getTextFilterdSpansAsMap = createSelector(
     matchingSpans.reduce(
       (obj, span) => ({
         ...obj,
-        [getSpanId(span)]: span
+        [getSpanId(span)]: span,
       }),
       {}
     )
@@ -79,7 +78,7 @@ export const highlightSpansForTextFilter = createSelector(
   (spans, textFilteredSpansMap) =>
     spans.map(span => ({
       ...span,
-      muted: !textFilteredSpansMap[getSpanId(span)]
+      muted: !textFilteredSpansMap[getSpanId(span)],
     }))
 );
 

@@ -3,7 +3,10 @@ import Immutable from 'seamless-immutable';
 import actions from 'const/application-actions';
 
 const DEFAULT_EMPTY = [];
-const initialValue = Immutable.from({ dataSource: DEFAULT_EMPTY, dataStats: DEFAULT_EMPTY });
+const initialValue = Immutable.from({
+  dataSource: DEFAULT_EMPTY,
+  dataStats: DEFAULT_EMPTY,
+});
 
 export const pipelineTable = handleActions(
   {
@@ -18,5 +21,5 @@ export const pipelineTable = handleActions(
       });
     },
   },
-  initialValue,
+  initialValue
 );

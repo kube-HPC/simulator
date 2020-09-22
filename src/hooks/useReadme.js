@@ -5,7 +5,10 @@ import axios from 'axios';
 
 const errorNotification = ({ message }) => notification({ message });
 const successNotification = () =>
-  notification({ message: 'Markdown Applied', type: notification.TYPES.SUCCESS });
+  notification({
+    message: 'Markdown Applied',
+    type: notification.TYPES.SUCCESS,
+  });
 
 const TYPES = {
   PIPELINE: 'pipelines',

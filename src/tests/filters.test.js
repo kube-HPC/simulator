@@ -1,21 +1,22 @@
-import * as filters from './../actions/filters.action';
-import reducer from './../reducers/filters.reducer';
 import expect from 'expect';
-import { generateMessage } from './common';
 import { createStore } from 'redux';
+import * as filters from './../actions/filter.action';
+import reducer from './../reducers/filter.reducer';
+// eslint-disable-next-line
+import { generateMessage } from './common';
 
 generateMessage.info('started filters test');
 function initialize() {
-  console.log('test - initialize started');
+  console.info('test - initialize started');
   const store = createStore(reducer);
   const expectedState = [];
   expect(store.getState().length).toEqual(0);
   expect(store.getState()).toEqual(expectedState);
-  console.log('test - initialize passed');
+  console.info('test - initialize passed');
 }
 
 function addFilter() {
-  console.log('test - addFilter started');
+  console.info('test - addFilter started');
   const store = createStore(reducer);
 
   store.dispatch(filters.addFilter(8, 'someDecision'));
@@ -24,10 +25,10 @@ function addFilter() {
   const expectedState = [{ id: 8, selection: 'someDecision' }];
 
   expect(store.getState()).toEqual(expectedState);
-  console.log('test - addFilter passed');
+  console.info('test - addFilter passed');
 }
 function removeFilter() {
-  console.log('test - removefilter started');
+  console.info('test - removefilter started');
 
   const store = createStore(reducer);
   expect(store.getState().length).toEqual(0);
@@ -42,7 +43,7 @@ function removeFilter() {
 
   expect(store.getState().length).toEqual(0);
 
-  console.log('test - removeFilter passed');
+  console.info('test - removeFilter passed');
 }
 
 initialize();

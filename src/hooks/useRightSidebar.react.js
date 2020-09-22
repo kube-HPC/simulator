@@ -8,11 +8,18 @@ import {
   MemoryAndStorage,
   NodeStatistics,
 } from 'components/Sidebar/SidebarRight';
-import { getBottomActions, topActions } from 'config/schema/rightSidebar.schema';
+import {
+  getBottomActions,
+  topActions,
+} from 'config/schema/rightSidebar.schema';
 import { RIGHT_SIDEBAR_NAMES } from 'const';
 import { useErrorLogs } from 'hooks';
 import React, { useCallback, useMemo } from 'react';
-import { getColorStatus, getStorageColorStatus, combineStatus } from 'utils/warningColorStatus';
+import {
+  getColorStatus,
+  getStorageColorStatus,
+  combineStatus,
+} from 'utils/warningColorStatus';
 import useActions from './useActions';
 import useStats from './useStats';
 import useStorage from './useStorage';
@@ -35,7 +42,7 @@ const useRightSidebar = () => {
       [RIGHT_SIDEBAR_NAMES.CPU]: <NodeStatistics metric="cpu" />,
       [RIGHT_SIDEBAR_NAMES.GPU]: <NodeStatistics metric="gpu" />,
     }),
-    [],
+    []
   );
   const onSelectDrawer = useCallback(
     selection => {
@@ -50,7 +57,7 @@ const useRightSidebar = () => {
       };
       drawerOpen(content);
     },
-    [operationSelector, drawerOpen, setIsCleared],
+    [operationSelector, drawerOpen, setIsCleared]
   );
 
   return {
@@ -60,7 +67,10 @@ const useRightSidebar = () => {
       bottom: getBottomActions({
         warnings: totalNewWarnings,
         cpuStatus: getColorStatus(cpu),
-        memoryStatus: combineStatus(getColorStatus(memory), getStorageColorStatus(storage)),
+        memoryStatus: combineStatus(
+          getColorStatus(memory),
+          getStorageColorStatus(storage)
+        ),
         gpuStatus: getColorStatus(gpu),
       }),
     },

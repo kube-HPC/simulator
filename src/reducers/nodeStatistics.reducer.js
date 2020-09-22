@@ -5,10 +5,12 @@ import actions from 'const/application-actions';
 export const nodeStatistics = handleActions(
   {
     [actions.SOCKET_GET_DATA](currState, { payload }) {
-      const { nodeStatistics } = payload;
-      const validPayload = Array.isArray(nodeStatistics);
-      return validPayload ? Immutable.set(currState, 'dataSource', nodeStatistics) : currState;
+      const { nodeStatistics: nextNodeStatistics } = payload;
+      const validPayload = Array.isArray(nextNodeStatistics);
+      return validPayload
+        ? Immutable.set(currState, 'dataSource', nextNodeStatistics)
+        : currState;
     },
   },
-  Immutable.from({ dataSource: [] }),
+  Immutable.from({ dataSource: [] })
 );

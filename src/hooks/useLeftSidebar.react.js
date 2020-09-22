@@ -27,7 +27,10 @@ const useLeftSidebar = () => {
   const [value, setValue] = useState(LEFT_SIDEBAR_NAMES.JOBS);
   const [isCollapsed, toggle] = useReducer(p => !p, leftCollapsedInitial);
 
-  useLocalStorage({ value: isCollapsed, key: LOCAL_STORAGE_KEYS.LEFT_SIDEBAR_IS_VISIBLE });
+  useLocalStorage({
+    value: isCollapsed,
+    key: LOCAL_STORAGE_KEYS.LEFT_SIDEBAR_IS_VISIBLE,
+  });
 
   return {
     value: [value, setValue],

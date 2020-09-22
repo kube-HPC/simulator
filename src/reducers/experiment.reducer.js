@@ -1,8 +1,8 @@
+import { handleActions } from 'redux-actions';
+import Immutable from 'seamless-immutable';
 import { experimentsSchema } from 'config';
 import { LOCAL_STORAGE_KEYS } from 'const';
 import actions from 'const/application-actions';
-import { handleActions } from 'redux-actions';
-import Immutable from 'seamless-immutable';
 import { getLsItem } from 'utils';
 
 const initial = Immutable.from({
@@ -14,8 +14,11 @@ const initial = Immutable.from({
 
 export const experiments = handleActions(
   {
-    [actions.SOCKET_GET_DATA](currState, { payload: { experiments } }) {
-      return Immutable.merge(currState, { dataSource: experiments });
+    [actions.SOCKET_GET_DATA](
+      currState,
+      { payload: { experiments: nextExperiments } }
+    ) {
+      return Immutable.merge(currState, { dataSource: nextExperiments });
     },
     [actions.EXPERIMENT_CHANGE](currState, { value }) {
       const { value: lastValue } = currState;
@@ -26,5 +29,5 @@ export const experiments = handleActions(
       return Immutable.set(currState, `loading`, !loading);
     },
   },
-  initial,
+  initial
 );

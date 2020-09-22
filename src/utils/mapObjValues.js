@@ -10,9 +10,10 @@ const noFilter = () => true;
 const noPredicate = () => false;
 
 /**
- * @param  {object} obj - An object to apply mapping.
- * @param  {function} predicate - Predicate function for indicating if object value is empty.
- * @param  {function} mapper - Mapping function to apply on object values.
+ * @param {object} obj An object to apply mapping.
+ * @param {function} predicate Predicate function for indicating if object value
+ *     is empty.
+ * @param {function} mapper Mapping function to apply on object values.
  */
 const mapObjValues = ({
   obj,
@@ -27,7 +28,7 @@ const mapObjValues = ({
         predicate({
           key,
           value,
-        }),
+        })
       )
       .map(([key, value]) =>
         mapPredicate({
@@ -35,21 +36,21 @@ const mapObjValues = ({
           value,
         }) || !isObject(value)
           ? [
-            key,
-            mapper({
               key,
-              value,
-            }),
-          ]
+              mapper({
+                key,
+                value,
+              }),
+            ]
           : [
-            key,
-            mapObjValues({
-              obj: value,
-              predicate,
-              mapper,
-            }),
-          ],
-      ),
+              key,
+              mapObjValues({
+                obj: value,
+                predicate,
+                mapper,
+              }),
+            ]
+      )
   );
 
 export default mapObjValues;

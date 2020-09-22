@@ -14,7 +14,8 @@ const tryParse = ({ src, onSuccess = noop, onFail }) => {
     const parsed = JSON.parse(src);
     onSuccess({ src, parsed });
   } catch ({ message }) {
-    onFail ? onFail() : notification.open(configNotificationOnOpen(message));
+    if (onFail) onFail();
+    else notification.open(configNotificationOnOpen(message));
   }
 };
 

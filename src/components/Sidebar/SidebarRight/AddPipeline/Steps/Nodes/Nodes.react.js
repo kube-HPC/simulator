@@ -1,4 +1,10 @@
-import React, { useState, useEffect, memo, useContext } from 'react';
+import React, {
+  useState,
+  useEffect,
+  memo,
+  useContext,
+  useCallback,
+} from 'react';
 import styled from 'styled-components';
 import { Button } from 'antd';
 
@@ -18,6 +24,8 @@ const { NODES } = addPipelineSchema;
 const EMPTY_INITIAL = [];
 
 const Nodes = () => {
+  // TODO: convert this whole component to formik or react-hook-form
+
   const [nodes, setNodes] = useState(EMPTY_INITIAL);
 
   const { getFieldDecorator, setFieldsValue } = useContext(FormContext);
@@ -28,18 +36,23 @@ const Nodes = () => {
     setFieldsValue({ [NODES.field]: nodes.map(({ value }) => value) });
   }, [nodes, setFieldsValue]);
 
-  const onAddNode = () => {
+  const onAddNode = useCallback(() => {
     // Note the closure on id
     const id = nodes.length;
 
     const onValuesChange = (_, __, allValues) => {
-      setNodes(prev => {
+      setNodes(state => {
         // Changing the key "name" to "nodeName",
         // thats because "nodeName" is used by React when querying the dom.
         const { name, ...rest } = allValues;
-        prev[id].value = { ...rest, nodeName: name };
-
-        return [...prev];
+        return [
+          ...state.slice(0, id),
+          {
+            ...state[id],
+            value: { ...rest, nodeName: name },
+          },
+          ...state.slice(id + 1),
+        ];
       });
     };
 
@@ -50,15 +63,14 @@ const Nodes = () => {
       value: {},
     };
 
-    setNodes(prev => [...prev, newNode]);
-  };
+    setNodes(state => [...state, newNode]);
+  }, [nodes, setNodes]);
 
   const onRemoveNode = () => setNodes(removeLast);
 
   useEffect(() => {
-    // Initial with a single node
     onAddNode();
-
+    // NOTE: the dependency array triggers infinite render
     // eslint-disable-next-line
   }, []);
 

@@ -1,6 +1,6 @@
-import { actionType, LOCAL_STORAGE_KEYS } from 'const';
 import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
+import { actionType, LOCAL_STORAGE_KEYS } from 'const';
 import { getLsObjectItem } from 'utils';
 
 const defaultSettings = getLsObjectItem(LOCAL_STORAGE_KEYS.SETTINGS) || {
@@ -16,5 +16,5 @@ export const settings = handleActions(
       return state.merge(payload);
     },
   },
-  initial,
+  initial
 );

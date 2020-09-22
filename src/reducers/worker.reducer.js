@@ -11,5 +11,5 @@ export const workerTable = handleActions(
       return state.merge({ dataSource: data, stats });
     },
   },
-  Immutable.from({ dataSource: [] }),
+  Immutable.from({ dataSource: [] })
 );

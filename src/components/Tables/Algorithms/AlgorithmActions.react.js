@@ -12,8 +12,9 @@ const deleteConfirmAction = action => {
     title: 'Deleting Algorithm',
     content: (
       <>
-        Deleting algorithm will <Typography.Text strong>delete all</Typography.Text> related
-        pipelines and <Typography.Text strong>stop all</Typography.Text> executions.
+        Deleting algorithm will{' '}
+        <Typography.Text strong>delete all</Typography.Text> related pipelines
+        and <Typography.Text strong>stop all</Typography.Text> executions.
       </>
     ),
     okText: 'Confirm',
@@ -31,11 +32,15 @@ const EMPTY_INITIAL = [];
 const overlayStyle = { width: `500px` };
 
 const AlgorithmActions = ({ record }) => {
-  /* eslint-disable-next-line no-unused-vars */
   const { builds, ...algorithm } = record;
   const { name } = algorithm;
 
-  const { applyAlgorithm, deleteAlgorithm, runAlgorithm, drawerOpen } = useActions();
+  const {
+    applyAlgorithm,
+    deleteAlgorithm,
+    runAlgorithm,
+    drawerOpen,
+  } = useActions();
   const container = useRef();
 
   const [inputs, setInputs] = useState(EMPTY_INITIAL);
@@ -48,16 +53,16 @@ const AlgorithmActions = ({ record }) => {
       formData.append('payload', value);
       applyAlgorithm(formData);
     },
-    [applyAlgorithm],
+    [applyAlgorithm]
   );
 
   const { open } = useDrawerEditor({ onSubmit });
 
   const onEdit = () => open(stringify(algorithm));
-  const onClickDelete = useCallback(() => deleteConfirmAction(() => deleteAlgorithm(name)), [
-    deleteAlgorithm,
-    name,
-  ]);
+  const onClickDelete = useCallback(
+    () => deleteConfirmAction(() => deleteAlgorithm(name)),
+    [deleteAlgorithm, name]
+  );
   const onRun = () => runAlgorithm({ name, input: inputs });
 
   const popOverContent = <AlgorithmRun onChange={setInputs} onRun={onRun} />;
@@ -72,7 +77,11 @@ const AlgorithmActions = ({ record }) => {
   }, []);
 
   return (
-    <div ref={container} role="none" onClick={stopPropagation} onDoubleClick={stopPropagation}>
+    <div
+      ref={container}
+      role="none"
+      onClick={stopPropagation}
+      onDoubleClick={stopPropagation}>
       <Button.Group>
         <Popover
           overlayStyle={overlayStyle}

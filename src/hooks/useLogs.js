@@ -5,7 +5,7 @@ import useActions from './useActions';
 const useLogs = () => {
   const { getKubernetesLogsData } = useActions();
   const logs = useSelector(state =>
-    state.jobsKubernetesLogs.dataSource.map((value, key) => ({ key, ...value })),
+    state.jobsKubernetesLogs.dataSource.map((value, key) => ({ key, ...value }))
   );
 
   return { logs, getLogs: getKubernetesLogsData };

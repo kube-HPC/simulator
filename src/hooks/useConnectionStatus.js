@@ -8,13 +8,15 @@ let isDispatchedOnce = false;
 
 export default function useConnectionStatus() {
   const { isDataAvailable, isSocketConnected } = useSelector(
-    state => state[STATE_SOURCES.CONNECTION_STATUS],
+    state => state[STATE_SOURCES.CONNECTION_STATUS]
   );
 
   const dispatch = useDispatch();
 
   // Connections status defined only by jobs table for now.
-  const dataSource = useSelector(state => state[STATE_SOURCES.JOBS_TABLE].dataSource);
+  const dataSource = useSelector(
+    state => state[STATE_SOURCES.JOBS_TABLE].dataSource
+  );
 
   useEffect(() => {
     if (!isDispatchedOnce && dataSource) {

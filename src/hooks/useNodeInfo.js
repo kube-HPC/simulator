@@ -50,7 +50,7 @@ const useNodeInfo = ({ graph, pipeline }) => {
         setNode(payload);
       },
     }),
-    [findNodeByName],
+    [findNodeByName]
   );
 
   return { node, events };

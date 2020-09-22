@@ -16,7 +16,9 @@ const useBoards = ({ pipelineName }) => {
   const pipelineInfo = nodeMap && nodeMap[pipelineName];
 
   const nodesWithBoards =
-    (pipelineInfo && Object.entries(pipelineInfo).filter(([, info]) => info.id)) || EMPTY;
+    (pipelineInfo &&
+      Object.entries(pipelineInfo).filter(([, info]) => info.id)) ||
+    EMPTY;
 
   const boards = nodesWithBoards.map(([name, info]) => ({ name, ...info }));
 

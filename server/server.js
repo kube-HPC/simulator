@@ -3,7 +3,7 @@ const http = require('http');
 const path = require('path');
 
 const app = express();
-const DEFAULT_PORT = parseInt(process.env.PORT) || 9050;
+const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 9050;
 
 const parseBool = value => {
   if (typeof value === 'boolean') {
@@ -46,6 +46,5 @@ app.get('/config', (req, res) => {
 
 const server = http.createServer(app);
 server.listen(DEFAULT_PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log('Listening on port', DEFAULT_PORT);
+  console.info('Listening on port', DEFAULT_PORT);
 });

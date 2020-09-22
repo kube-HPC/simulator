@@ -4,12 +4,12 @@ import AT from 'const/application-actions';
 
 const setMonitorPath = monitorBackend =>
   monitorBackend.useLocation
-    ? `${location.origin}${monitorBackend.path}` // eslint-disable-line
+    ? `${window.location.origin}${monitorBackend.path}`
     : `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}${monitorBackend.path}`;
 
 const setBoardPath = board =>
   board.useLocation
-    ? `${location.origin}${board.path}` // eslint-disable-line
+    ? `${window.location.origin}${board.path}`
     : `${board.schema}${board.host}:${board.port}${board.path}`;
 
 const DEFAULT_ERROR_MSG = 'Unexpected Error';
@@ -18,7 +18,9 @@ const _formatError = payload => {
   if (!payload) {
     return DEFAULT_ERROR_MSG;
   }
-  return typeof payload === 'string' ? payload : payload.message || DEFAULT_ERROR_MSG;
+  return typeof payload === 'string'
+    ? payload
+    : payload.message || DEFAULT_ERROR_MSG;
 };
 
 const ignoreActions = [AT.README_GET_ALGORITHM, AT.README_GET_PIPELINE];
@@ -74,10 +76,15 @@ const restMiddleware = ({ dispatch }) => next => action => {
     const { monitorBackend, board, hkubeSystemVersion } = action.payload.config;
     SOCKET_URL = setMonitorPath(monitorBackend);
     BOARD_URL = setBoardPath(board);
-    SOCKET_URL && dispatch({ type: AT.SOCKET_SET_URL, url: SOCKET_URL });
+    if (SOCKET_URL) dispatch({ type: AT.SOCKET_SET_URL, url: SOCKET_URL });
     dispatch({ type: AT.BOARD_SET_URL, url: BOARD_URL });
-    dispatch({ type: AT.SET_HKUBE_VERSION, hkubeSystemVersion: hkubeSystemVersion || null });
-  } else if (
+    dispatch({
+      type: AT.SET_HKUBE_VERSION,
+      hkubeSystemVersion: hkubeSystemVersion || null,
+    });
+    return next(action);
+  }
+  if (
     ![
       AT.REST_REQ_GET,
       AT.REST_REQ_POST,
@@ -87,27 +94,23 @@ const restMiddleware = ({ dispatch }) => next => action => {
     ].includes(action.type)
   ) {
     return next(action);
-  } else if (action.type === AT.REST_REQ_GET) {
-    if (!SOCKET_URL) {
-      return next(action);
-    }
-    pending(dispatch, 'pending', action);
+  }
+
+  if (!SOCKET_URL) return next(action);
+
+  pending(dispatch, 'pending', action);
+  if (action.type === AT.REST_REQ_GET) {
     axios
       .get(createUrl(action.payload.url))
       .then(res => {
         success(dispatch, res.data, action);
       })
       .catch(err => {
-        const response = err.response && err.response.data && err.response.data.error;
+        const response =
+          err.response && err.response.data && err.response.data.error;
         reject(dispatch, response, action);
       });
-
-    return next(action);
   } else if (action.type === AT.REST_REQ_POST) {
-    if (!SOCKET_URL) {
-      return next(action);
-    }
-    pending(dispatch, 'pending', action);
     axios
       .post(createUrl(action.payload.url), action.payload.body)
       .then(res => {
@@ -116,13 +119,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
       .catch(err => {
         reject(dispatch, err.response.data.error, action);
       });
-
-    return next(action);
   } else if (action.type === AT.REST_REQ_POST_FORM) {
-    if (!SOCKET_URL) {
-      return next(action);
-    }
-    pending(dispatch, 'pending', action);
     axios
       .post(createUrl(action.payload.url), action.payload.formData)
       .then(res => {
@@ -131,13 +128,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
       .catch(err => {
         reject(dispatch, err.response.data.error, action);
       });
-
-    return next(action);
   } else if (action.type === AT.REST_REQ_PUT) {
-    if (!SOCKET_URL) {
-      return next(action);
-    }
-    pending(dispatch, 'pending', action);
     axios
       .put(createUrl(action.payload.url), action.payload.body)
       .then(res => {
@@ -146,13 +137,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
       .catch(err => {
         reject(dispatch, err.response.data.error, action);
       });
-
-    return next(action);
   } else if (action.type === AT.REST_REQ_DELETE) {
-    if (!SOCKET_URL) {
-      return next(action);
-    }
-    pending(dispatch, 'pending', action);
     axios
       .delete(createUrl(action.payload.url), {
         data: action.payload.body,
@@ -163,9 +148,8 @@ const restMiddleware = ({ dispatch }) => next => action => {
       .catch(err => {
         reject(dispatch, err.response.data.error, action);
       });
-
-    return next(action);
   }
+  return next(action);
 };
 
 export default restMiddleware;

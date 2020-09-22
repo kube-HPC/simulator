@@ -15,11 +15,17 @@ const fetchVersion = ({ url, algorithmName, callback }) =>
     .catch(errorNotification);
 
 const applyVersion = ({ url }) => ({ name, image }) =>
-  axios.post(`${url}/versions/algorithms/apply`, { name, image }).catch(errorNotification);
+  axios
+    .post(`${url}/versions/algorithms/apply`, { name, image })
+    .catch(errorNotification);
 
 const deleteVersion = ({ url }) => ({ name, algorithmImage }) =>
   axios
-    .delete(`${url}/versions/algorithms/${name}?image=${encodeURIComponent(algorithmImage)}`)
+    .delete(
+      `${url}/versions/algorithms/${name}?image=${encodeURIComponent(
+        algorithmImage
+      )}`
+    )
     .catch(errorNotification);
 
 const useVersions = ({ algorithmName, isFetch }) => {
@@ -29,8 +35,9 @@ const useVersions = ({ algorithmName, isFetch }) => {
   const onDelete = deleteVersion({ url: socketURL });
 
   const fetch = useCallback(
-    () => fetchVersion({ url: socketURL, algorithmName, callback: setDataSource }),
-    [algorithmName, socketURL],
+    () =>
+      fetchVersion({ url: socketURL, algorithmName, callback: setDataSource }),
+    [algorithmName, socketURL]
   );
 
   useEffect(() => {

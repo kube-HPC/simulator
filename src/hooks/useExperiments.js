@@ -9,9 +9,14 @@ import useLocalStorage from './useLocalStorage';
 const useExperiments = () => {
   const { dataSource, value, loading } = useSelector(
     state => state[STATE_SOURCES.EXPERIMENTS],
-    isEqual,
+    isEqual
   );
-  const { experimentChange, addExperiment, deleteExperiment, triggerExperiment } = useActions();
+  const {
+    experimentChange,
+    addExperiment,
+    deleteExperiment,
+    triggerExperiment,
+  } = useActions();
 
   const { experimentName } = useSelector(state => state[STATE_SOURCES.META]);
 
@@ -25,8 +30,12 @@ const useExperiments = () => {
 
   useLocalStorage({ value, key: LOCAL_STORAGE_KEYS.EXPERIMENT });
 
-  const defaultExperiment = dataSource.find(({ name }) => name === experimentsSchema.default);
-  const restExperiments = dataSource.filter(({ name }) => name !== experimentsSchema.default);
+  const defaultExperiment = dataSource.find(
+    ({ name }) => name === experimentsSchema.default
+  );
+  const restExperiments = dataSource.filter(
+    ({ name }) => name !== experimentsSchema.default
+  );
 
   return {
     experiments: [defaultExperiment, ...restExperiments],

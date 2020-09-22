@@ -12,7 +12,7 @@ export const jobsTable = handleActions(
       return Immutable.from({ dataSource: jobs.slice(0, sliceParam) });
     },
   },
-  Immutable.from({ dataSource: undefined }),
+  Immutable.from({ dataSource: undefined })
 );
 
 export const jobsKubernetesLogs = handleActions(
@@ -21,5 +21,5 @@ export const jobsKubernetesLogs = handleActions(
       return state.merge({ dataSource: payload });
     },
   },
-  initialValue,
+  initialValue
 );
