@@ -14,6 +14,6 @@ export const RIGHT_SIDEBAR_NAMES = {
   RUN_RAW_PIPELINE: 'Run Raw Pipeline',
   CPU: 'CPU',
   GPU: 'GPU',
-  MEMORY: 'Memory',
+  MEMORY: 'Memory and Storage',
   ERROR_LOGS: 'Error Logs',
 };

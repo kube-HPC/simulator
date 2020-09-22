@@ -4,6 +4,8 @@ export { default as AddDebug } from './AddDebug/AddDebug.react';
 
 export { default as ErrorLogsTable } from './ErrorLogs/ErrorLogsTable.react';
 export { default as RunRawPipeline } from './RunRawPipeline/RunRawPipeline.react';
+export { default as MemoryAndStorage } from './MemoryAndStorage/';
+export { default as NodeStatistics } from './NodeStatistics.react';
 
 export { ReactComponent as IconAddPipeline } from 'images/no-fill/add-pipeline.svg';
 export { ReactComponent as IconAddAlgorithm } from 'images/no-fill/add-algorithm.svg';

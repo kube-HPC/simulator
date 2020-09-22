@@ -11,10 +11,41 @@ export const getColorStatus = stats => {
   const algorithmsDataArr = results.map(r => r.algorithmsData);
   const totalSize = algorithmsDataArr.flatMap(flatAllStats).reduce(sumArr, 0);
   const freeSize = algorithmsDataArr.flatMap(flatByFree).reduce(sumArr, 0);
+  const freePercentage = freeSize / totalSize;
 
-  const freePresents = freeSize / totalSize;
-  const isWarningStatus = 0 < freePresents && freePresents <= 0.15;
-  const isErrorStatus = freePresents === 0;
+  const isWarningStatus = 0 < freePercentage && freePercentage <= 0.15;
+  const isErrorStatus = freePercentage === 0;
 
   return { status: isWarningStatus ? 'warning' : isErrorStatus ? 'error' : '', total: totalSize };
+};
+
+export const getStorageColorStatus = storage => {
+  let status = '';
+  if (!storage) {
+    return { status };
+  }
+  const { size, free } = storage;
+  const percent = (free / size) * 100;
+  if (percent > 10 && percent < 20) {
+    status = 'warning';
+  } else if (percent <= 10) {
+    status = 'error';
+  }
+  return { status, size, free };
+};
+
+export const combineStatus = (a, b) => {
+  const statuses = [a.status, b.status];
+  /* eslint-disable indent */
+  const status = statuses.includes('error')
+    ? 'error'
+    : statuses.includes('warning')
+    ? 'warning'
+    : b.status || a.status;
+  /* eslint-enable indent */
+  return {
+    ...a,
+    ...b,
+    status,
+  };
 };

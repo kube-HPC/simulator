@@ -1,43 +1,18 @@
 import { ResponsiveBar } from '@nivo/bar';
-import { STATE_SOURCES } from 'const';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { COLOR } from 'styles/colors';
+import useMetric from '../../../hooks/useMetric';
 
 const Container = styled.div`
   font-size: 20px;
   height: 70vh;
 `;
 
-const adaptedData = (statistics, metric) => {
-  const statisticsForMetric =
-    statistics && statistics.find(statistic => statistic.metric === metric);
-
-  const data =
-    statisticsForMetric &&
-    statisticsForMetric.results.map(res => {
-      const algorithms = {};
-      res &&
-        res.algorithmsData &&
-        res.algorithmsData.forEach(algorithm => (algorithms[algorithm.name] = algorithm.size));
-      return {
-        nodes: res.name,
-        ...algorithms,
-      };
-    });
-  return {
-    data: data || [],
-    legend: statisticsForMetric && statisticsForMetric.legend,
-  };
-};
-
 // https://nivo.rocks/bar/ customization
 const NodeStatistics = ({ metric }) => {
-  const { dataSource } = useSelector(state => state[STATE_SOURCES.NODE_STATISTICS]);
-  const { data, legend } = adaptedData(dataSource, metric);
-
+  const { data, legend } = useMetric(metric);
   return (
     <Container>
       <ResponsiveBar

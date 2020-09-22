@@ -8,6 +8,6 @@ curl -X POST https://api.github.com/repos/${TRAVIS_REPO_SLUG}/deployments/${DEPL
   "environment":"qa",
   "state":"${STATUS}",
   "log_url": "${TRAVIS_BUILD_WEB_URL}",
-  "environment_url":"https://${KUBERNETES_MASTER_IP}/hkube/simulator-${TRAVIS_PULL_REQUEST_BRANCH}/"
+  "environment_url":"https://${KUBERNETES_MASTER_IP}/hkube/simulator-${PR_NAME}/"
 }
 EOF
