@@ -104,7 +104,7 @@ const SidebarLeft = ({ className }) => {
       LEFT_SIDEBAR_NAMES.ALGORITHMS,
       AlgorithmIcon,
       dataCount.algorithmsCount,
-      '/',
+      '/algorithms-table',
     ],
     [
       LEFT_SIDEBAR_NAMES.WORKERS,
