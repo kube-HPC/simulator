@@ -1,8 +1,15 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+import { animated, useSpring } from 'react-spring';
+import styled from 'styled-components';
+import isEqual from 'lodash/isEqual';
+import { useLeftSidebar } from 'hooks';
 import { Icon, Layout, Menu, Tag } from 'antd';
+import { Link } from 'react-router-dom';
 import { FlexBox } from 'components/common';
 import { dataCountMock } from 'config';
 import { LEFT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
-import { useActions, useLeftSidebar, useViewType } from 'hooks';
 import { ReactComponent as AlgorithmIcon } from 'images/algorithm-icon.svg';
 import { ReactComponent as DebugIcon } from 'images/debug-icon.svg';
 import { ReactComponent as DriversIcon } from 'images/drivers-icon.svg';
@@ -11,12 +18,6 @@ import { ReactComponent as LogoFish } from 'images/logo-fish.svg';
 import { ReactComponent as LogoTitle } from 'images/logo-title.svg';
 import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
 import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
-import isEqual from 'lodash/isEqual';
-import PropTypes from 'prop-types';
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { animated, useSpring } from 'react-spring';
-import styled from 'styled-components';
 import { COLOR_LAYOUT } from 'styles';
 
 const Border = styled.div`
@@ -37,42 +38,10 @@ const MenuMargin = styled(Menu)`
 
 const tagStyle = { color: COLOR_LAYOUT.colorPrimary };
 
-const setMenuItem = (component, title, count) => (
-  <FlexBox>
-    <FlexBox.Item>
-      {component}
-      <span>{title}</span>
-    </FlexBox.Item>
-    {!isNaN(count) && (
-      <FlexBox.Item>
-        <Tag style={tagStyle}>{count}</Tag>
-      </FlexBox.Item>
-    )}
-  </FlexBox>
-);
-
 const IconStyle = {
   fontSize: 22,
   marginTop: 2,
 };
-
-const MenuItemMemo = React.memo(Menu.Item);
-const MemoIcon = React.memo(Icon);
-
-const addMenuItems = items =>
-  items.map(([name, component, count]) => (
-    <MenuItemMemo key={name} className={USER_GUIDE.TABLE_SELECT[name]}>
-      {setMenuItem(
-        <MemoIcon
-          type={component}
-          component={typeof component === 'string' ? null : component}
-          style={IconStyle}
-        />,
-        name,
-        count,
-      )}
-    </MenuItemMemo>
-  ));
 
 const AnimatedTitle = () => {
   const styledProps = useSpring({
@@ -107,9 +76,6 @@ const equalByGuideOn = (a, b) => a.isOn === b.isOn;
 const DEFAULT_VALUE = [];
 const EMPTY_WORKERS = { total: 0 };
 
-const SidebarMemo = React.memo(Sider);
-const MenuMemo = React.memo(MenuMargin);
-
 const sidebarSelector = state => ({
   jobsCount: (state.jobsTable.dataSource || DEFAULT_VALUE).length,
   driversCount: (state.driverTable.dataSource || DEFAULT_VALUE).length,
@@ -119,46 +85,79 @@ const sidebarSelector = state => ({
   debugCount: (state.debugTable.dataSource || DEFAULT_VALUE).length,
 });
 
+// TODO: cleanup the menu items collection
 const SidebarLeft = ({ className }) => {
   const dataCountSource = useSelector(sidebarSelector, isEqual);
   const { isOn } = useSelector(state => state.userGuide, equalByGuideOn);
   const dataCount = isOn ? dataCountMock : dataCountSource;
+  const { isCollapsed, toggle } = useLeftSidebar();
 
   const menuItems = [
-    [LEFT_SIDEBAR_NAMES.JOBS, JobsIcon, dataCount.jobsCount],
-    [LEFT_SIDEBAR_NAMES.PIPELINES, PipelineIcon, dataCount.pipelinesCount],
-    [LEFT_SIDEBAR_NAMES.ALGORITHMS, AlgorithmIcon, dataCount.algorithmsCount],
-    [LEFT_SIDEBAR_NAMES.WORKERS, WorkerIcon, dataCount.workersCount],
-    [LEFT_SIDEBAR_NAMES.DRIVERS, DriversIcon, dataCount.driversCount],
-    [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, dataCount.debugCount],
+    [LEFT_SIDEBAR_NAMES.JOBS, JobsIcon, dataCount.jobsCount, '/'],
+    [
+      LEFT_SIDEBAR_NAMES.PIPELINES,
+      PipelineIcon,
+      dataCount.pipelinesCount,
+      '/pipelines-table',
+    ],
+    [
+      LEFT_SIDEBAR_NAMES.ALGORITHMS,
+      AlgorithmIcon,
+      dataCount.algorithmsCount,
+      '/',
+    ],
+    [
+      LEFT_SIDEBAR_NAMES.WORKERS,
+      WorkerIcon,
+      dataCount.workersCount,
+      '/workers-table',
+    ],
+    [
+      LEFT_SIDEBAR_NAMES.DRIVERS,
+      DriversIcon,
+      dataCount.driversCount,
+      '/drivers-table',
+    ],
+    [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, dataCount.debugCount, '/debug-table'],
   ];
-
-  const {
-    value: [value, setTableValue],
-    isCollapsed: [collapsed, toggle],
-  } = useLeftSidebar();
-
-  const { isTableView } = useViewType();
-  const { toggleViewType } = useActions();
-
-  const onSelect = ({ key }) => {
-    if (!isTableView) {
-      toggleViewType();
-    }
-    setTableValue(key);
-  };
 
   return (
     <Border>
-      <SidebarMemo className={className} theme="light" onCollapse={toggle} collapsed={collapsed}>
+      <Sider
+        className={className}
+        theme="light"
+        onCollapse={toggle}
+        collapsed={isCollapsed}>
         <LogoContainer>
           <IconLogo component={LogoFish} />
-          {!collapsed && <AnimatedTitle />}
+          {!isCollapsed && <AnimatedTitle />}
         </LogoContainer>
-        <MenuMemo onSelect={onSelect} selectedKeys={[value]}>
-          {addMenuItems(menuItems)}
-        </MenuMemo>
-      </SidebarMemo>
+        <MenuMargin>
+          {menuItems.map(([name, component, count, path]) => (
+            <Menu.Item key={name} className={USER_GUIDE.TABLE_SELECT[name]}>
+              <Link to={path}>
+                <FlexBox>
+                  <FlexBox.Item>
+                    <Icon
+                      type={component}
+                      component={
+                        typeof component === 'string' ? null : component
+                      }
+                      style={IconStyle}
+                    />
+                    <span>{name}</span>
+                  </FlexBox.Item>
+                  {!Number.isNaN(count) && (
+                    <FlexBox.Item>
+                      <Tag style={tagStyle}>{count}</Tag>
+                    </FlexBox.Item>
+                  )}
+                </FlexBox>
+              </Link>
+            </Menu.Item>
+          ))}
+        </MenuMargin>
+      </Sider>
     </Border>
   );
 };

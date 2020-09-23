@@ -1,18 +1,21 @@
+import React, { useEffect } from 'react';
 import { Layout, message } from 'antd';
-import { LoadingScreen, SidebarLeft, SidebarRight, UserGuide } from 'components';
-import GridView from 'components/GridView/GridView.react';
-import { JobsTable } from 'components/Tables';
-import { LEFT_SIDEBAR_NAMES, LOCAL_STORAGE_KEYS, USER_GUIDE } from 'const';
+import styled from 'styled-components';
+import {
+  LoadingScreen,
+  SidebarLeft,
+  SidebarRight,
+  UserGuide,
+} from 'components';
+import { LOCAL_STORAGE_KEYS, USER_GUIDE } from 'const';
+import { COLOR, COLOR_LAYOUT, GlobalStyle } from 'styles';
 import {
   useActions,
   useConnectionStatus,
-  useLeftSidebar,
   useLocalStorage,
   useViewType,
 } from 'hooks';
-import React, { useEffect } from 'react';
-import styled from 'styled-components';
-import { COLOR, COLOR_LAYOUT, Display, GlobalStyle } from 'styles';
+import Routes from './../../Routes';
 import DashboardDrawer from './Drawer/DashboardDrawer.react';
 import Header from './Header/Header.react';
 
@@ -56,14 +59,13 @@ const Dashboard = () => {
   }, [init, socketInit]);
 
   const { isDataAvailable } = useConnectionStatus();
-  const {
-    selector,
-    value: [tableValue],
-  } = useLeftSidebar();
 
-  const { isTableView, loadedOnce } = useViewType();
+  const { isTableView } = useViewType();
 
-  useLocalStorage({ value: isTableView, key: LOCAL_STORAGE_KEYS.IS_TABLE_VIEW });
+  useLocalStorage({
+    value: isTableView,
+    key: LOCAL_STORAGE_KEYS.IS_TABLE_VIEW,
+  });
 
   return (
     <>
@@ -79,20 +81,29 @@ const Dashboard = () => {
                 <Header />
                 <LayoutFullHeight>
                   <ContentMargin>
-                    {loadedOnce && (
+                    {/* {loadedOnce && (
                       <Display isVisible={!isTableView}>
                         <GridView />
                       </Display>
-                    )}
-                    <Display isVisible={tableValue === LEFT_SIDEBAR_NAMES.JOBS && isTableView}>
+                    )} */}
+                    {/* <Display
+                      isVisible={
+                        tableValue === LEFT_SIDEBAR_NAMES.JOBS && isTableView
+                      }>
                       <JobsTable />
-                    </Display>
-                    <Display isVisible={isTableView && tableValue !== LEFT_SIDEBAR_NAMES.JOBS}>
-                      {selector[tableValue]}
-                    </Display>
+                    </Display> */}
+                    {/* <Display
+                      isVisible={
+                        isTableView && tableValue !== LEFT_SIDEBAR_NAMES.JOBS
+                      }> */}
+                    <Routes />
+                    {/* </Display> */}
                   </ContentMargin>
                   <RightContainer>
-                    <SidebarRight className={USER_GUIDE.SIDEBAR_TOP_RIGHT} isTop />
+                    <SidebarRight
+                      className={USER_GUIDE.SIDEBAR_TOP_RIGHT}
+                      isTop
+                    />
                     <SidebarRight className={USER_GUIDE.SIDEBAR_BOTTOM_RIGHT} />
                   </RightContainer>
                 </LayoutFullHeight>

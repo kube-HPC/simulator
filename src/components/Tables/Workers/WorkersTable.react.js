@@ -1,3 +1,6 @@
+import React from 'react';
+// import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { Table } from 'components';
 import { Card, JsonSwitch, Tabs } from 'components/common';
 import {
@@ -6,9 +9,6 @@ import {
 } from 'components/Tables/Workers/getWorkersColumns.react';
 import defaultWorkerData from 'config/template/worker.template';
 import { LEFT_SIDEBAR_NAMES } from 'const';
-import PropTypes from 'prop-types';
-import React from 'react';
-import { useSelector } from 'react-redux';
 import { tableFilterSelector } from 'utils/tableSelector';
 
 const generateTab = (key, value) => (
@@ -20,18 +20,20 @@ const generateTab = (key, value) => (
 );
 
 const expandedRowRender = (columns, dataSource) => record => {
-  const filteredDataSource = dataSource.filter(d => d.algorithmName === record.algorithmName);
+  const filteredDataSource = dataSource.filter(
+    d => d.algorithmName === record.algorithmName
+  );
 
   return (
     <Card isMargin>
       <Table
         isInner
-        rowKey={record => record.podName}
+        rowKey={row => row.podName}
         columns={columns}
         dataSource={filteredDataSource}
-        expandedRowRender={record => (
+        expandedRowRender={row => (
           <Card isMargin>
-            <Tabs>{generateTab('Information', record)}</Tabs>
+            <Tabs>{generateTab('Information', row)}</Tabs>
           </Card>
         )}
       />
@@ -46,7 +48,10 @@ function WorkersTable() {
   const stats = useSelector(state => state.workerTable.stats);
 
   const statsMergedWithDefault =
-    (stats && stats.stats && stats.stats.map(algo => ({ ...defaultWorkerData, ...algo }))) || [];
+    (stats &&
+      stats.stats &&
+      stats.stats.map(algo => ({ ...defaultWorkerData, ...algo }))) ||
+    [];
 
   return (
     <Table
@@ -59,8 +64,8 @@ function WorkersTable() {
 }
 
 WorkersTable.propTypes = {
-  dataSource: PropTypes.array,
-  stats: PropTypes.object,
+  // dataSource: PropTypes.array.isRequired,
+  // stats: PropTypes.object.isRequired,
 };
 
 export default WorkersTable;

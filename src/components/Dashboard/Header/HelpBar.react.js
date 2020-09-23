@@ -1,8 +1,10 @@
 import { Popover } from 'antd';
 import { FlexBox, Icons } from 'components/common';
 import { appInfo } from 'config';
-import { LEFT_SIDEBAR_NAMES, USER_GUIDE, STATE_SOURCES } from 'const';
-import { useActions, useLeftSidebar, useStore } from 'hooks';
+import { USER_GUIDE, STATE_SOURCES } from 'const';
+// import { LEFT_SIDEBAR_NAMES, USER_GUIDE, STATE_SOURCES } from 'const';
+import { useStore } from 'hooks';
+// import { useActions, useLeftSidebar, useStore } from 'hooks';
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import ConnectionStatus from './ConnectionStatus.react';
@@ -20,20 +22,25 @@ const Container = styled(FlexBox.Auto)`
 
 const openUrl = url => () => window.open(url);
 
+// TODO: TEMPORARY_DEACTIVATED
 const HelpBar = () => {
-  const {
-    value: [, setTableValue],
-    isCollapsed: [, setLeftIsCollapsed],
-  } = useLeftSidebar();
+  // const {
+  // value: [, setTableValue],
+  // isCollapsed,
+  // } = useLeftSidebar();
 
-  const { triggerUserGuide } = useActions();
+  // const { triggerUserGuide } = useActions();
   const hkubeSystemVersion = useStore(STATE_SOURCES.HKUBE_SYSTEM_VERSION);
 
-  const onGuideClick = useCallback(() => {
-    triggerUserGuide();
-    setTableValue(LEFT_SIDEBAR_NAMES.JOBS);
-    setLeftIsCollapsed(true);
-  }, [setLeftIsCollapsed, setTableValue, triggerUserGuide]);
+  const onGuideClick = useCallback(
+    () => {
+      // triggerUserGuide();
+      // setTableValue(LEFT_SIDEBAR_NAMES.JOBS);
+      // setLeftIsCollapsed(true);
+    },
+    []
+    // [setLeftIsCollapsed, setTableValue, triggerUserGuide]
+  );
 
   return (
     <Container className={USER_GUIDE.HEADER.SOCIALS}>

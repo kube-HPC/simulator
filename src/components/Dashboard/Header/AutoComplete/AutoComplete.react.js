@@ -1,22 +1,24 @@
 import { AutoComplete as AntAutoComplete, Input } from 'antd';
-import { useActions, useLeftSidebar } from 'hooks';
-import isEqual from 'lodash/isEqual';
+// import { useActions, useLeftSidebar } from 'hooks';
+import { useActions } from 'hooks';
+// import isEqual from 'lodash/isEqual';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import getDataByTable from './getDataByTable';
+// import getDataByTable from './getDataByTable';
 
 const AutoCompleteLong = styled(AntAutoComplete)`
   width: 100%;
 `;
 
+// TODO: TEMPORARY_DEACTIVATED
 const AutoComplete = ({ className }) => {
-  const {
-    value: [table],
-  } = useLeftSidebar();
+  // const {
+  //   value: [table],
+  // } = useLeftSidebar();
 
-  const tableData = useSelector(getDataByTable(table), isEqual);
+  const tableData = []; // useSelector(getDataByTable(table), isEqual);
 
   const { filterData } = useActions();
 
@@ -36,7 +38,11 @@ const AutoComplete = ({ className }) => {
 AutoComplete.propTypes = {
   className: PropTypes.string,
 };
+AutoComplete.defaultProps = {
+  className: '',
+};
 
-const areEqualByTableName = (prevProps, nextProps) => prevProps.table === nextProps.table;
+const areEqualByTableName = (prevProps, nextProps) =>
+  prevProps.table === nextProps.table;
 
 export default React.memo(AutoComplete, areEqualByTableName);
