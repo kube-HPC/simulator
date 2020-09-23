@@ -1,25 +1,111 @@
-import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Layout, message } from 'antd';
+import styled from 'styled-components';
+// import { Route, Switch } from 'react-router-dom';
 import {
-  AlgorithmsTable,
-  DebugTable,
-  DriversTable,
-  PipelinesTable,
-  WorkersTable,
-  JobsTable,
-} from 'components/Tables';
+  LoadingScreen,
+  SidebarLeft,
+  SidebarRight,
+  UserGuide,
+} from 'components';
+import { LOCAL_STORAGE_KEYS, USER_GUIDE } from 'const';
+import { COLOR, COLOR_LAYOUT, GlobalStyle } from 'styles';
+import {
+  useActions,
+  useConnectionStatus,
+  useLocalStorage,
+  useViewType,
+} from 'hooks';
+import DashboardDrawer from 'components/Dashboard/Drawer';
+import Header from 'components/Dashboard/Header';
 
-const Routes = () => (
-  <>
-    {/* <h1>router root</h1> */}
-    <Switch>
-      <Route exact path="/debug-table" component={DebugTable} />
-      <Route exact path="/drivers-table" component={DriversTable} />
-      <Route exact path="/pipelines-table" component={PipelinesTable} />
-      <Route exact path="/workers-table" component={WorkersTable} />
-      <Route exact path="/algorithms-table" component={AlgorithmsTable} />
-      <Route exact path="/" component={JobsTable} />
-    </Switch>
-  </>
-);
+import Body from './Body';
+
+const LayoutFullHeight = styled(Layout)`
+  height: 100vh;
+  background: white;
+`;
+
+const Wrapper = styled.div`
+  transition: all 0.5s;
+`;
+
+const ContentMargin = styled(Layout.Content)`
+  padding: 2px 8px;
+  ::-webkit-scrollbar {
+    width: 1px;
+  }
+  ::-webkit-scrollbar-thumb {
+    border: 1px solid ${COLOR.darkGrey};
+  }
+`;
+
+const RightContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  border-left: 1px solid ${COLOR_LAYOUT.border};
+`;
+
+message.config({
+  duration: 5,
+  maxCount: 3,
+});
+
+const Routes = () => {
+  const { init, socketInit } = useActions();
+
+  useEffect(() => {
+    init();
+    socketInit();
+  }, [init, socketInit]);
+
+  const { isDataAvailable } = useConnectionStatus();
+
+  const { isTableView } = useViewType();
+
+  useLocalStorage({
+    value: isTableView,
+    key: LOCAL_STORAGE_KEYS.IS_TABLE_VIEW,
+  });
+
+  return (
+    <>
+      <GlobalStyle />
+      {isDataAvailable ? (
+        <>
+          <UserGuide />
+          <DashboardDrawer />
+          <Wrapper>
+            <LayoutFullHeight>
+              <SidebarLeft className={USER_GUIDE.SIDEBAR_LEFT} />
+              <Layout>
+                <Header />
+                <LayoutFullHeight>
+                  <ContentMargin>
+                    {/* {loadedOnce && (
+                      <Display isVisible={!isTableView}>
+                        <GridView />
+                      </Display>
+                    )} */}
+                    <Body />
+                  </ContentMargin>
+                  <RightContainer>
+                    <SidebarRight
+                      className={USER_GUIDE.SIDEBAR_TOP_RIGHT}
+                      isTop
+                    />
+                    <SidebarRight className={USER_GUIDE.SIDEBAR_BOTTOM_RIGHT} />
+                  </RightContainer>
+                </LayoutFullHeight>
+              </Layout>
+            </LayoutFullHeight>
+          </Wrapper>
+        </>
+      ) : (
+        <LoadingScreen />
+      )}
+    </>
+  );
+};
 export default Routes;

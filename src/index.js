@@ -4,7 +4,7 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ReusableProvider } from 'reusable';
-import DashboardReact from './components/Dashboard/Dashboard.react';
+import Root from './Routes';
 import store from './store';
 
 render(
@@ -12,7 +12,7 @@ render(
     <ReusableProvider>
       <ErrorBoundary>
         <Router>
-          <DashboardReact />
+          <Root />
         </Router>
       </ErrorBoundary>
     </ReusableProvider>

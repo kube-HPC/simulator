@@ -12,11 +12,12 @@ const DashboardDrawer = () => {
 
   return (
     <Drawer
+      // eslint-disable-next-line
       {...props}
       visible={isVisible}
       onClose={drawerToggle}
       bottomContent={footer}
-      destroyOnClose={true}>
+      destroyOnClose>
       {body}
     </Drawer>
   );
