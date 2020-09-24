@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import {
   AlgorithmsTable,
   DebugTable,
@@ -11,12 +11,13 @@ import {
 
 const Body = () => (
   <Switch>
-    <Route exact path="/debug-table" component={DebugTable} />
-    <Route exact path="/drivers-table" component={DriversTable} />
-    <Route exact path="/pipelines-table" component={PipelinesTable} />
-    <Route exact path="/workers-table" component={WorkersTable} />
-    <Route exact path="/algorithms-table" component={AlgorithmsTable} />
-    <Route exact path="/" component={JobsTable} />
+    <Route exact path="/debug" component={DebugTable} />
+    <Route exact path="/drivers" component={DriversTable} />
+    <Route exact path="/pipelines" component={PipelinesTable} />
+    <Route exact path="/workers" component={WorkersTable} />
+    <Route exact path="/algorithms" component={AlgorithmsTable} />
+    <Route exact path="/jobs" component={JobsTable} />
+    <Redirect to="jobs" replace />
   </Switch>
 );
 export default Body;

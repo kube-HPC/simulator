@@ -93,32 +93,32 @@ const SidebarLeft = ({ className }) => {
   const { isCollapsed, toggle } = useLeftSidebar();
 
   const menuItems = [
-    [LEFT_SIDEBAR_NAMES.JOBS, JobsIcon, dataCount.jobsCount, '/'],
+    [LEFT_SIDEBAR_NAMES.JOBS, JobsIcon, dataCount.jobsCount, '/jobs'],
     [
       LEFT_SIDEBAR_NAMES.PIPELINES,
       PipelineIcon,
       dataCount.pipelinesCount,
-      '/pipelines-table',
+      '/pipelines',
     ],
     [
       LEFT_SIDEBAR_NAMES.ALGORITHMS,
       AlgorithmIcon,
       dataCount.algorithmsCount,
-      '/algorithms-table',
+      '/algorithms',
     ],
     [
       LEFT_SIDEBAR_NAMES.WORKERS,
       WorkerIcon,
       dataCount.workersCount,
-      '/workers-table',
+      '/workers',
     ],
     [
       LEFT_SIDEBAR_NAMES.DRIVERS,
       DriversIcon,
       dataCount.driversCount,
-      '/drivers-table',
+      '/drivers',
     ],
-    [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, dataCount.debugCount, '/debug-table'],
+    [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, dataCount.debugCount, '/debug'],
   ];
 
   return (

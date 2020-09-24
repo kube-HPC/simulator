@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Layout, message } from 'antd';
 import styled from 'styled-components';
-// import { Route, Switch } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import {
   LoadingScreen,
   SidebarLeft,
@@ -68,7 +68,6 @@ const Routes = () => {
     value: isTableView,
     key: LOCAL_STORAGE_KEYS.IS_TABLE_VIEW,
   });
-
   return (
     <>
       <GlobalStyle />
@@ -80,7 +79,8 @@ const Routes = () => {
             <LayoutFullHeight>
               <SidebarLeft className={USER_GUIDE.SIDEBAR_LEFT} />
               <Layout>
-                <Header />
+                <Route path="/:pageName" component={Header} />
+                {/* <Header /> */}
                 <LayoutFullHeight>
                   <ContentMargin>
                     {/* {loadedOnce && (

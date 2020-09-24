@@ -1,10 +1,10 @@
 export const LEFT_SIDEBAR_NAMES = {
-  JOBS: 'Jobs',
-  PIPELINES: 'Pipelines',
-  ALGORITHMS: 'Algorithms',
-  WORKERS: 'Workers',
-  DRIVERS: 'Drivers',
-  DEBUG: 'Debug',
+  JOBS: 'jobs',
+  PIPELINES: 'pipelines',
+  ALGORITHMS: 'algorithms',
+  WORKERS: 'workers',
+  DRIVERS: 'drivers',
+  DEBUG: 'debug',
 };
 
 export const RIGHT_SIDEBAR_NAMES = {

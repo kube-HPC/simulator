@@ -1,24 +1,20 @@
 import { AutoComplete as AntAutoComplete, Input } from 'antd';
-// import { useActions, useLeftSidebar } from 'hooks';
 import { useActions } from 'hooks';
-// import isEqual from 'lodash/isEqual';
 import PropTypes from 'prop-types';
 import React from 'react';
-// import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-// import getDataByTable from './getDataByTable';
+import getDataByTable from './getDataByTable';
 
 const AutoCompleteLong = styled(AntAutoComplete)`
   width: 100%;
 `;
 
-// TODO: TEMPORARY_DEACTIVATED
 const AutoComplete = ({ className }) => {
-  // const {
-  //   value: [table],
-  // } = useLeftSidebar();
+  const { pageName } = useParams();
 
-  const tableData = []; // useSelector(getDataByTable(table), isEqual);
+  const tableData = useSelector(getDataByTable(pageName));
 
   const { filterData } = useActions();
 
