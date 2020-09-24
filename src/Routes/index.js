@@ -77,7 +77,7 @@ const Routes = () => {
           <DashboardDrawer />
           <Wrapper>
             <LayoutFullHeight>
-              <SidebarLeft className={USER_GUIDE.SIDEBAR_LEFT} />
+              <Route path="/:pageName" component={SidebarLeft} />
               <Layout>
                 <Route path="/:pageName" component={Header} />
                 <LayoutFullHeight>

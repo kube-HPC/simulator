@@ -1,12 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { animated, useSpring } from 'react-spring';
 import styled from 'styled-components';
 import isEqual from 'lodash/isEqual';
 import { useLeftSidebar } from 'hooks';
 import { Icon, Layout, Menu, Tag } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { FlexBox } from 'components/common';
 import { dataCountMock } from 'config';
 import { LEFT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
@@ -86,11 +85,12 @@ const sidebarSelector = state => ({
 });
 
 // TODO: cleanup the menu items collection
-const SidebarLeft = ({ className }) => {
+const SidebarLeft = () => {
   const dataCountSource = useSelector(sidebarSelector, isEqual);
   const { isOn } = useSelector(state => state.userGuide, equalByGuideOn);
   const dataCount = isOn ? dataCountMock : dataCountSource;
   const { isCollapsed, toggle } = useLeftSidebar();
+  const { pageName } = useParams();
 
   const menuItems = [
     [LEFT_SIDEBAR_NAMES.JOBS, JobsIcon, dataCount.jobsCount, '/jobs'],
@@ -124,7 +124,7 @@ const SidebarLeft = ({ className }) => {
   return (
     <Border>
       <Sider
-        className={className}
+        className={USER_GUIDE.SIDEBAR_LEFT}
         theme="light"
         onCollapse={toggle}
         collapsed={isCollapsed}>
@@ -132,7 +132,7 @@ const SidebarLeft = ({ className }) => {
           <IconLogo component={LogoFish} />
           {!isCollapsed && <AnimatedTitle />}
         </LogoContainer>
-        <MenuMargin>
+        <MenuMargin selectedKeys={[pageName]}>
           {menuItems.map(([name, component, count, path]) => (
             <Menu.Item key={name} className={USER_GUIDE.TABLE_SELECT[name]}>
               <Link to={path}>
@@ -145,7 +145,7 @@ const SidebarLeft = ({ className }) => {
                       }
                       style={IconStyle}
                     />
-                    <span>{name}</span>
+                    <span style={{ textTransform: 'capitalize' }}>{name}</span>
                   </FlexBox.Item>
                   {!Number.isNaN(count) && (
                     <FlexBox.Item>
@@ -162,8 +162,6 @@ const SidebarLeft = ({ className }) => {
   );
 };
 
-export default React.memo(SidebarLeft);
+export default SidebarLeft;
 
-SidebarLeft.propTypes = {
-  className: PropTypes.string.isRequired,
-};
+SidebarLeft.propTypes = {};
