@@ -1,9 +1,9 @@
-import { Icon, Spin, Table as AntTable } from 'antd';
-import { USER_GUIDE } from 'const';
-import PropTypes from 'prop-types';
 import React from 'react';
-import Immutable from 'seamless-immutable';
+import PropTypes from 'prop-types';
+import { Icon, Spin, Table as AntTable } from 'antd';
 import styled from 'styled-components';
+import Immutable from 'seamless-immutable';
+import { USER_GUIDE } from 'const';
 
 const ExpandIcon = ({ expanded, onExpand, record }) => (
   <Icon type={expanded ? 'down' : 'right'} onClick={e => onExpand(record, e)} />
@@ -38,14 +38,17 @@ const TableWhite = styled(AntTable)`
 ExpandIcon.propTypes = {
   expanded: PropTypes.bool.isRequired,
   onExpand: PropTypes.func.isRequired,
+  // eslint-disable-next-line
   record: PropTypes.object.isRequired,
 };
 
 const antIcon = <Icon type="loading" style={{ fontSize: 40 }} spin />;
 Spin.setDefaultIndicator(antIcon);
 
-const Table = ({ dataSource = [], loading = false, ...props }) => {
-  const tableSource = Immutable.isImmutable(dataSource) ? dataSource.asMutable() : dataSource;
+const Table = ({ dataSource, loading, ...props }) => {
+  const tableSource = Immutable.isImmutable(dataSource)
+    ? dataSource.asMutable()
+    : dataSource;
   return (
     <TableWhite
       loading={loading || !dataSource}
@@ -55,15 +58,20 @@ const Table = ({ dataSource = [], loading = false, ...props }) => {
       dataSource={tableSource}
       pagination={false}
       size="middle"
+      // eslint-disable-next-line
       {...props}
     />
   );
 };
 
 Table.propTypes = {
-  dataSource: PropTypes.array,
+  dataSource: PropTypes.arrayOf(PropTypes.object),
   loading: PropTypes.bool,
   ...AntTable.propTypes,
 };
+Table.defaultProps = {
+  dataSource: [],
+  loading: false,
+};
 
-export default React.memo(Table);
+export default Table;
