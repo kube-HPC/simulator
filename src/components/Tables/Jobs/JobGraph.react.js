@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import React, { lazy, useEffect, useReducer } from 'react';
 import styled from 'styled-components';
 import { formatEdge, formatNode } from 'utils';
-import { NodeInfo } from '.';
+import NodeInfo from './NodeInfo.react';
 
 const Graph = lazy(() => import(`react-graph-vis`));
 
@@ -63,7 +63,11 @@ const JobGraph = ({
           {isValidGraph ? (
             showGraph ? (
               <Fallback>
-                <Graph graph={adaptedGraph} options={setOptions({ direction })} events={events} />
+                <Graph
+                  graph={adaptedGraph}
+                  options={setOptions({ direction })}
+                  events={events}
+                />
               </Fallback>
             ) : (
               <FallbackComponent />
@@ -85,13 +89,17 @@ const JobGraph = ({
 };
 
 JobGraph.propTypes = {
+  // TODO: fix those props
+  /* eslint-disable */
   graph: PropTypes.object.isRequired,
   pipeline: PropTypes.object,
   setOptions: PropTypes.func,
   isMinified: PropTypes.bool,
   className: PropTypes.string,
+  /* eslint-enable */
 };
 
-const isSameGraph = (a, b) => (a.graph && b.graph ? a.graph.timestamp === b.graph.timestamp : true);
+const isSameGraph = (a, b) =>
+  a.graph && b.graph ? a.graph.timestamp === b.graph.timestamp : true;
 
 export default React.memo(JobGraph, isSameGraph);

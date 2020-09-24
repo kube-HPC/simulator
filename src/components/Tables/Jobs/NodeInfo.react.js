@@ -7,7 +7,8 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { getTaskDetails } from 'utils';
-import { NodeInputOutput, NodeLogs } from '.';
+import NodeInputOutput from './NodeInputOutput.react';
+import NodeLogs from './NodeLogs.react';
 
 const DEFAULT_ALGORITHM = {};
 
@@ -17,8 +18,9 @@ const OverflowContainer = styled.div`
 `;
 
 const algorithmDetailsSelector = node => state =>
-  state[STATE_SOURCES.ALGORITHM_TABLE].dataSource.find(a => a.name === node.algorithmName) ||
-  DEFAULT_ALGORITHM;
+  state[STATE_SOURCES.ALGORITHM_TABLE].dataSource.find(
+    a => a.name === node.algorithmName
+  ) || DEFAULT_ALGORITHM;
 
 const NodeInfo = ({ node, jobId }) => {
   const algorithmDetails = useSelector(algorithmDetailsSelector(node));
@@ -27,7 +29,8 @@ const NodeInfo = ({ node, jobId }) => {
   const { getLogs } = useLogs();
   const { logSource: source } = useSettings();
 
-  const onRunNode = () => node && getCaching({ jobId, nodeName: node.nodeName });
+  const onRunNode = () =>
+    node && getCaching({ jobId, nodeName: node.nodeName });
 
   const onRefresh = () => {
     const taskDetails = getTaskDetails(node);
@@ -71,6 +74,7 @@ const NodeInfo = ({ node, jobId }) => {
 
 NodeInfo.propTypes = {
   jobId: PropTypes.string.isRequired,
+  // eslint-disable-next-line
   node: PropTypes.object,
 };
 
