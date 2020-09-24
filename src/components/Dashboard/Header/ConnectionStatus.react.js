@@ -1,7 +1,18 @@
-import { Icon, Tag, Tooltip, Typography } from 'antd';
-import { FlexBox } from 'components/common';
+import { Icon, Tag as AntTag, Tooltip, Typography } from 'antd';
 import { useConnectionStatus } from 'hooks';
 import React from 'react';
+import styled from 'styled-components';
+
+const Tag = styled(AntTag)`
+  position: absolute;
+  right: 1em;
+  top: 50%;
+  transform: translateY(-50%);
+`;
+
+const Content = styled.span`
+  white-space: nowrap;
+`;
 
 const ConnectionStatus = () => {
   const { isSocketConnected } = useConnectionStatus();
@@ -10,10 +21,10 @@ const ConnectionStatus = () => {
     !isSocketConnected && (
       <Tag color="orange">
         <Tooltip title="Reconnecting to Socket...">
-          <FlexBox.Auto>
+          <Content>
             <Typography.Text>Offline Mode</Typography.Text>
-            <Icon type="disconnect" />
-          </FlexBox.Auto>
+            <Icon type="disconnect" style={{ marginLeft: '1ch' }} />
+          </Content>
         </Tooltip>
       </Tag>
     )

@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import React, { useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { Popover } from 'antd';
 import { USER_GUIDE, STATE_SOURCES } from 'const';
@@ -14,6 +14,7 @@ const DarkText = styled(Icons.DarkHoverStyle)`
 `;
 
 const Container = styled(FlexBox.Auto)`
+  position: relative;
   > ${Icons.DarkHoverStyle}, ${DarkText} {
     margin-right: 10px;
   }
@@ -22,7 +23,7 @@ const Container = styled(FlexBox.Auto)`
 const openUrl = url => () => window.open(url);
 
 const HelpBar = () => {
-  const [redirectTo, setRedirect] = useState(null);
+  const history = useHistory();
   const { setCollapsed } = useLeftSidebar();
 
   const { triggerUserGuide } = useActions();
@@ -30,11 +31,9 @@ const HelpBar = () => {
 
   const onGuideClick = useCallback(() => {
     triggerUserGuide();
-    setRedirect('/jobs');
+    history.push('/jobs');
     setCollapsed(true);
-  }, [setCollapsed, triggerUserGuide]);
-
-  if (redirectTo) return <Redirect to={redirectTo} />;
+  }, [history, setCollapsed, triggerUserGuide]);
 
   return (
     <Container className={USER_GUIDE.HEADER.SOCIALS}>

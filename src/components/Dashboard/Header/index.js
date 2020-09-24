@@ -1,28 +1,22 @@
-import { Divider } from 'antd';
-import { AutoComplete } from 'components';
-import { FlexBox } from 'components/common';
-import { USER_GUIDE } from 'const';
 import React from 'react';
 import styled from 'styled-components';
+import { Route } from 'react-router-dom';
+import { AutoComplete } from 'components';
+import { useLeftSidebar } from 'hooks';
+import { FlexBox, Icons } from 'components/common';
+import { USER_GUIDE } from 'const';
 import { COLOR_LAYOUT } from 'styles';
 import ExperimentPicker from './ExperimentPicker.react';
 import HelpBar from './HelpBar.react';
-import SidebarActions from './SidebarActions.react';
 // DO NOT REMOVE! This is important to preload the monaco instance into the global window!!!
-import * as monaco from 'monaco-editor'; //eslint-disable-line
+// eslint-disable-next-line
+import * as monaco from 'monaco-editor';
+import ViewType from './ViewType.react';
 
 const Container = styled(FlexBox)`
-  height: 64px;
-  padding: 0 50px;
-  line-height: 64px;
+  padding: 1em 2ch;
   background: white;
-  border-bottom: 1pt solid ${COLOR_LAYOUT.border};
-  padding-left: 10px;
-  padding-right: 10px;
-`;
-
-const LongDivider = styled(Divider)`
-  height: 1.5rem;
+  border-bottom: 1px solid ${COLOR_LAYOUT.border};
 `;
 
 const { Item } = FlexBox;
@@ -30,32 +24,37 @@ const { Item } = FlexBox;
 const Grow = styled(Item)`
   flex-grow: 1;
 `;
-const Basis = styled(Item)`
-  flex-basis: 30%;
+
+const ButtonsContainer = styled(FlexBox.Auto)`
+  padding: 0 1ch;
 `;
 
-const Header = () => (
-  <Container className={USER_GUIDE.WELCOME}>
-    <Item>
-      <SidebarActions />
-    </Item>
-    <Basis>
-      <FlexBox>
-        <Item>
-          <ExperimentPicker />
-        </Item>
-        <Item>
-          <LongDivider type="vertical" />
-        </Item>
+const MiddleContainer = styled(FlexBox)`
+  white-space: nowrap;
+  flex-basis: 30%;
+  min-width: 60ch;
+`;
+
+const Header = () => {
+  const { toggle, isCollapsed } = useLeftSidebar();
+  return (
+    <Container className={USER_GUIDE.WELCOME}>
+      <ButtonsContainer>
+        <Icons.Hover
+          type={isCollapsed ? `menu-fold` : `menu-unfold`}
+          onClick={toggle}
+        />
+        <Route exact path="/jobs" component={ViewType} />
+      </ButtonsContainer>
+      <MiddleContainer>
+        <ExperimentPicker />
         <Grow>
           <AutoComplete className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
         </Grow>
-      </FlexBox>
-    </Basis>
-    <Item>
+      </MiddleContainer>
       <HelpBar />
-    </Item>
-  </Container>
-);
+    </Container>
+  );
+};
 
 export default Header;
