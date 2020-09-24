@@ -1,9 +1,8 @@
 import { FlexBox, Icons } from 'components/common';
-// import { LEFT_SIDEBAR_NAMES } from 'const';
 import { useLeftSidebar } from 'hooks';
-import React from 'react'; // { useCallback } from 'react';
+import React from 'react';
+import { Route } from 'react-router-dom';
 import styled from 'styled-components';
-import { Display } from 'styles';
 import ViewType from './ViewType.react';
 
 const Container = styled(FlexBox.Auto)`
@@ -19,10 +18,7 @@ const SidebarActions = () => {
         type={isCollapsed ? `menu-fold` : `menu-unfold`}
         onClick={toggle}
       />
-      {/* <Display hidden={tableValue !== LEFT_SIDEBAR_NAMES.JOBS}> */}
-      <Display hidden={false}>
-        <ViewType />
-      </Display>
+      <Route exact path="/jobs" component={ViewType} />
     </Container>
   );
 };

@@ -6,8 +6,8 @@ import {
   DriversTable,
   PipelinesTable,
   WorkersTable,
-  JobsTable,
 } from 'components/Tables';
+import Jobs from 'components/Tables/Jobs';
 
 const Body = () => (
   <Switch>
@@ -16,8 +16,9 @@ const Body = () => (
     <Route exact path="/pipelines" component={PipelinesTable} />
     <Route exact path="/workers" component={WorkersTable} />
     <Route exact path="/algorithms" component={AlgorithmsTable} />
-    <Route exact path="/jobs" component={JobsTable} />
-    <Redirect to="jobs" replace />
+    <Route exact path="/jobs" component={Jobs} />
+    <Redirect to="/jobs" replace />
   </Switch>
 );
+
 export default Body;

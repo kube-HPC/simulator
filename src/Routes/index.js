@@ -80,14 +80,8 @@ const Routes = () => {
               <SidebarLeft className={USER_GUIDE.SIDEBAR_LEFT} />
               <Layout>
                 <Route path="/:pageName" component={Header} />
-                {/* <Header /> */}
                 <LayoutFullHeight>
                   <ContentMargin>
-                    {/* {loadedOnce && (
-                      <Display isVisible={!isTableView}>
-                        <GridView />
-                      </Display>
-                    )} */}
                     <Body />
                   </ContentMargin>
                   <RightContainer>
