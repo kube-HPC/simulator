@@ -8,6 +8,7 @@ const useLeftSidebar = () => {
   ]);
   return {
     isCollapsed,
+    setCollapsed,
     toggle,
   };
 };

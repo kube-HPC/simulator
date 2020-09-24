@@ -1,12 +1,11 @@
+import React, { useCallback, useState } from 'react';
+import { Redirect } from 'react-router-dom';
+import styled from 'styled-components';
 import { Popover } from 'antd';
+import { USER_GUIDE, STATE_SOURCES } from 'const';
+import { useActions, useLeftSidebar, useStore } from 'hooks';
 import { FlexBox, Icons } from 'components/common';
 import { appInfo } from 'config';
-import { USER_GUIDE, STATE_SOURCES } from 'const';
-// import { LEFT_SIDEBAR_NAMES, USER_GUIDE, STATE_SOURCES } from 'const';
-import { useStore } from 'hooks';
-// import { useActions, useLeftSidebar, useStore } from 'hooks';
-import React, { useCallback } from 'react';
-import styled from 'styled-components';
 import ConnectionStatus from './ConnectionStatus.react';
 import Settings from './Settings/Settings.react';
 
@@ -22,25 +21,20 @@ const Container = styled(FlexBox.Auto)`
 
 const openUrl = url => () => window.open(url);
 
-// TODO: TEMPORARY_DEACTIVATED
 const HelpBar = () => {
-  // const {
-  // value: [, setTableValue],
-  // isCollapsed,
-  // } = useLeftSidebar();
+  const [redirectTo, setRedirect] = useState(null);
+  const { setCollapsed } = useLeftSidebar();
 
-  // const { triggerUserGuide } = useActions();
+  const { triggerUserGuide } = useActions();
   const hkubeSystemVersion = useStore(STATE_SOURCES.HKUBE_SYSTEM_VERSION);
 
-  const onGuideClick = useCallback(
-    () => {
-      // triggerUserGuide();
-      // setTableValue(LEFT_SIDEBAR_NAMES.JOBS);
-      // setLeftIsCollapsed(true);
-    },
-    []
-    // [setLeftIsCollapsed, setTableValue, triggerUserGuide]
-  );
+  const onGuideClick = useCallback(() => {
+    triggerUserGuide();
+    setRedirect('/jobs');
+    setCollapsed(true);
+  }, [setCollapsed, triggerUserGuide]);
+
+  if (redirectTo) return <Redirect to={redirectTo} />;
 
   return (
     <Container className={USER_GUIDE.HEADER.SOCIALS}>
