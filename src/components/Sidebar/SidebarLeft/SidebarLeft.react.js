@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { animated, useSpring } from 'react-spring';
 import styled from 'styled-components';
@@ -84,7 +84,6 @@ const sidebarSelector = state => ({
   debugCount: (state.debugTable.dataSource || DEFAULT_VALUE).length,
 });
 
-// TODO: cleanup the menu items collection
 const SidebarLeft = () => {
   const dataCountSource = useSelector(sidebarSelector, isEqual);
   const { isOn } = useSelector(state => state.userGuide, equalByGuideOn);
@@ -92,34 +91,37 @@ const SidebarLeft = () => {
   const { isCollapsed, toggle } = useLeftSidebar();
   const { pageName } = useParams();
 
-  const menuItems = [
-    [LEFT_SIDEBAR_NAMES.JOBS, JobsIcon, dataCount.jobsCount, '/jobs'],
-    [
-      LEFT_SIDEBAR_NAMES.PIPELINES,
-      PipelineIcon,
-      dataCount.pipelinesCount,
-      '/pipelines',
+  const menuItems = useMemo(
+    () => [
+      [LEFT_SIDEBAR_NAMES.JOBS, JobsIcon, dataCount.jobsCount, '/jobs'],
+      [
+        LEFT_SIDEBAR_NAMES.PIPELINES,
+        PipelineIcon,
+        dataCount.pipelinesCount,
+        '/pipelines',
+      ],
+      [
+        LEFT_SIDEBAR_NAMES.ALGORITHMS,
+        AlgorithmIcon,
+        dataCount.algorithmsCount,
+        '/algorithms',
+      ],
+      [
+        LEFT_SIDEBAR_NAMES.WORKERS,
+        WorkerIcon,
+        dataCount.workersCount,
+        '/workers',
+      ],
+      [
+        LEFT_SIDEBAR_NAMES.DRIVERS,
+        DriversIcon,
+        dataCount.driversCount,
+        '/drivers',
+      ],
+      [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, dataCount.debugCount, '/debug'],
     ],
-    [
-      LEFT_SIDEBAR_NAMES.ALGORITHMS,
-      AlgorithmIcon,
-      dataCount.algorithmsCount,
-      '/algorithms',
-    ],
-    [
-      LEFT_SIDEBAR_NAMES.WORKERS,
-      WorkerIcon,
-      dataCount.workersCount,
-      '/workers',
-    ],
-    [
-      LEFT_SIDEBAR_NAMES.DRIVERS,
-      DriversIcon,
-      dataCount.driversCount,
-      '/drivers',
-    ],
-    [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, dataCount.debugCount, '/debug'],
-  ];
+    [dataCount]
+  );
 
   return (
     <Border>
