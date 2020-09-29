@@ -1,33 +1,54 @@
+import React, { useCallback } from 'react';
+import { Route, useHistory, useParams } from 'react-router-dom';
 import { Table } from 'components';
+import Drawer from 'components/Drawer/Drawer.react';
 import { DRAWER_SIZE } from 'const';
-import { useActions, usePipeline } from 'hooks';
-import React from 'react';
+import { usePipeline } from 'hooks';
 import getPipelineColumns from './getPipelineColumns.react';
 import PipelineInfo from './PipelineInfo.react';
 
 const rowKey = ({ name }) => name;
 
+const PipelineDrawer = () => {
+  const { pipelineId } = useParams();
+
+  const { dataSource } = usePipeline();
+  const record = dataSource.find(item => item.name === pipelineId);
+  const history = useHistory();
+
+  const goBack = useCallback(() => {
+    history.replace('/pipelines');
+  }, [history]);
+  return (
+    <Drawer
+      startOpen
+      onClose={goBack}
+      width={DRAWER_SIZE.ALGORITHM_INFO}
+      title={record.name}>
+      <PipelineInfo record={record} />
+    </Drawer>
+  );
+};
+
 const PipelinesTable = () => {
   const { dataSource, ...actions } = usePipeline();
 
-  const { drawerOpen } = useActions();
-
+  const history = useHistory();
   const onRow = record => ({
-    onDoubleClick: () => {
-      const { name } = record;
-      const body = <PipelineInfo record={record} />;
-      drawerOpen({ title: name, body, width: DRAWER_SIZE.ALGORITHM_INFO });
-    },
+    onDoubleClick: () => history.replace(`/pipelines/${record.name}`),
   });
 
   return (
-    <Table
-      rowKey={rowKey}
-      dataSource={dataSource}
-      columns={getPipelineColumns(actions)}
-      onRow={onRow}
-      expandIcon={false}
-    />
+    <>
+      <Table
+        rowKey={rowKey}
+        dataSource={dataSource}
+        columns={getPipelineColumns(actions)}
+        onRow={onRow}
+        expandIcon={false}
+      />
+      <Route path="/pipelines/:pipelineId" component={PipelineDrawer} />
+    </>
   );
 };
 

@@ -13,10 +13,10 @@ const Body = () => (
   <Switch>
     <Route exact path="/debug" component={DebugTable} />
     <Route exact path="/drivers" component={DriversTable} />
-    <Route exact path="/pipelines" component={PipelinesTable} />
+    <Route exact path="/pipelines/:pipelineId?" component={PipelinesTable} />
     <Route exact path="/workers" component={WorkersTable} />
-    <Route exact path="/algorithms" component={AlgorithmsTable} />
-    <Route exact path="/jobs" component={Jobs} />
+    <Route exact path="/algorithms/:algorithmId?" component={AlgorithmsTable} />
+    <Route exact path="/jobs/:jobId?" component={Jobs} />
     <Redirect to="/jobs" replace />
   </Switch>
 );
