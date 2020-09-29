@@ -15,7 +15,6 @@ export { default as useLogs } from 'hooks/useLogs';
 export { default as useNodeInfo } from 'hooks/useNodeInfo';
 export { default as usePipeline } from 'hooks/usePipeline';
 export { default as useReadme } from 'hooks/useReadme';
-export { default as useRightSidebar } from 'hooks/useRightSidebar.react';
 export { default as useSettings } from 'hooks/useSettings';
 export { default as useStats } from 'hooks/useStats';
 export { default as useStore } from 'hooks/useStore';
