@@ -1,6 +1,6 @@
 import { Drawer } from 'components/Drawer';
 import { useActions, useDrawer } from 'hooks';
-import React, { memo } from 'react';
+import React from 'react';
 
 const DashboardDrawer = () => {
   const {
@@ -23,4 +23,4 @@ const DashboardDrawer = () => {
   );
 };
 
-export default memo(DashboardDrawer);
+export default DashboardDrawer;

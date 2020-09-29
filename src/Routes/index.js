@@ -16,7 +16,7 @@ import {
   useLocalStorage,
   useViewType,
 } from 'hooks';
-import DashboardDrawer from 'components/Dashboard/Drawer';
+// import DashboardDrawer from 'components/Dashboard/Drawer';
 import Header from 'components/Dashboard/Header';
 
 import Body from './Body';
@@ -74,7 +74,10 @@ const Routes = () => {
       {isDataAvailable ? (
         <>
           <UserGuide />
-          <DashboardDrawer />
+          {/* 
+          // TODO: TEMPORARY_DEACTIVATED
+          <DashboardDrawer /> 
+          */}
           <Wrapper>
             <LayoutFullHeight>
               <Route path="/:pageName" component={SidebarLeft} />

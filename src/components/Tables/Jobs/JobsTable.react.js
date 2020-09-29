@@ -4,10 +4,12 @@ import { Table } from 'components';
 import Drawer from 'components/Drawer/Drawer.react';
 import { DRAWER_SIZE } from 'const';
 import { useJobs } from 'hooks';
+import useToggle from 'hooks/useToggle';
 import JobInfo from './JobInfo.react';
 
 const JobDrawer = () => {
   const { jobId } = useParams();
+  const { setOff, isOn } = useToggle(true);
   const history = useHistory();
   const { dataSource } = useJobs();
   const goBack = useCallback(() => {
@@ -18,8 +20,9 @@ const JobDrawer = () => {
 
   return (
     <Drawer
-      startOpen
-      onClose={goBack}
+      isOpened={isOn}
+      onDidClose={goBack}
+      onClose={setOff}
       width={DRAWER_SIZE}
       title={item.pipeline.name}>
       <JobInfo jobId={jobId} />

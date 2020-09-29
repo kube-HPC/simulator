@@ -4,6 +4,7 @@ import { Route, useHistory, useParams } from 'react-router-dom';
 import { Table } from 'components';
 import { DRAWER_SIZE } from 'const';
 import { useAlgorithm } from 'hooks';
+import useToggle from 'hooks/useToggle';
 import getAlgorithmColumns from './getAlgorithmColumns.react';
 import { AlgorithmsTabs } from './Tabs';
 
@@ -12,12 +13,17 @@ const rowKey = ({ name }) => name;
 const AlgorithmsDrawer = () => {
   const { algorithmId } = useParams();
   const history = useHistory();
-
+  const { setOff, isOn } = useToggle(true);
   const goBack = useCallback(() => {
     history.replace('/algorithms');
   }, [history]);
   return (
-    <Drawer startOpen onClose={goBack} width={DRAWER_SIZE} title={algorithmId}>
+    <Drawer
+      isOpened={isOn}
+      onDidClose={goBack}
+      onClose={setOff}
+      width={DRAWER_SIZE}
+      title={algorithmId}>
       <AlgorithmsTabs name={algorithmId} />
     </Drawer>
   );

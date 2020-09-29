@@ -4,6 +4,7 @@ import { Table } from 'components';
 import Drawer from 'components/Drawer/Drawer.react';
 import { DRAWER_SIZE } from 'const';
 import { usePipeline } from 'hooks';
+import useToggle from 'hooks/useToggle';
 import getPipelineColumns from './getPipelineColumns.react';
 import PipelineInfo from './PipelineInfo.react';
 
@@ -11,7 +12,7 @@ const rowKey = ({ name }) => name;
 
 const PipelineDrawer = () => {
   const { pipelineId } = useParams();
-
+  const { setOff, isOn } = useToggle(true);
   const { dataSource } = usePipeline();
   const record = dataSource.find(item => item.name === pipelineId);
   const history = useHistory();
@@ -21,8 +22,9 @@ const PipelineDrawer = () => {
   }, [history]);
   return (
     <Drawer
-      startOpen
-      onClose={goBack}
+      isOpened={isOn}
+      onDidClose={goBack}
+      onClose={setOff}
       width={DRAWER_SIZE.ALGORITHM_INFO}
       title={record.name}>
       <PipelineInfo record={record} />
