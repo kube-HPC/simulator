@@ -61,6 +61,7 @@ const Drawer = ({
 
 Drawer.propTypes = {
   ...AntDrawer.propTypes,
+  // TODO: detail the props
   // eslint-disable-next-line
   bottomContent: PropTypes.object,
   width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

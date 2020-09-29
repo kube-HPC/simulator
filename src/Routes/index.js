@@ -18,7 +18,7 @@ import {
 } from 'hooks';
 import Header from 'components/Dashboard/Header';
 
-import Body from './Body';
+import Tables from './Tables';
 
 const LayoutFullHeight = styled(Layout)`
   height: 100vh;
@@ -80,7 +80,7 @@ const Routes = () => {
                 <Route path="/:pageName" component={Header} />
                 <LayoutFullHeight>
                   <ContentMargin>
-                    <Body />
+                    <Tables />
                   </ContentMargin>
                   <RightContainer>
                     <SidebarRight
