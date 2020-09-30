@@ -6,7 +6,11 @@ import { notification } from 'utils';
 
 const NOOP = () => {};
 
-const DrawerEditor = ({ value: initial, submitText = 'Submit', onSubmit = NOOP }) => {
+const DrawerEditor = ({
+  value: initial,
+  submitText = 'Submit',
+  onSubmit = NOOP,
+}) => {
   const [value, setValue] = useState(initial);
 
   useEffect(() => {
@@ -50,9 +54,12 @@ const DrawerEditor = ({ value: initial, submitText = 'Submit', onSubmit = NOOP }
 };
 
 DrawerEditor.propTypes = {
+  // TODO: detail the props
+  /* eslint-disable  */
   value: PropTypes.string,
   submitText: PropTypes.string,
   onSubmit: PropTypes.func,
+  /* eslint-enable  */
 };
 
 export default DrawerEditor;

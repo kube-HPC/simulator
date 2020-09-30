@@ -2,12 +2,6 @@ import React, { useEffect } from 'react';
 import { Layout, message } from 'antd';
 import styled from 'styled-components';
 import { Route } from 'react-router-dom';
-import {
-  LoadingScreen,
-  SidebarLeft,
-  SidebarRight,
-  UserGuide,
-} from 'components';
 import { LOCAL_STORAGE_KEYS, USER_GUIDE } from 'const';
 import { COLOR, COLOR_LAYOUT, GlobalStyle } from 'styles';
 import {
@@ -16,8 +10,11 @@ import {
   useLocalStorage,
   useViewType,
 } from 'hooks';
-import Header from 'components/Dashboard/Header';
-
+import Header from 'components/Header';
+import SidebarRight from './Base/SidebarRight';
+import SidebarLeft from './Base/SidebarLeft';
+import UserGuide from './Base/UserGuide';
+import LoadingScreen from './Base/LoadingScreen';
 import Tables from './Tables';
 
 const LayoutFullHeight = styled(Layout)`
@@ -39,7 +36,7 @@ const ContentMargin = styled(Layout.Content)`
   }
 `;
 
-const RightContainer = styled.div`
+const RightContainer = styled.aside`
   display: flex;
   justify-content: space-between;
   flex-direction: column;

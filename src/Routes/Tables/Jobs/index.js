@@ -8,6 +8,5 @@ export { default as getJobsColumns } from './getJobsColumns.react';
 export default () => {
   const query = useQuery();
   const showGrid = useMemo(() => query.get('view') === 'grid', [query]);
-  if (showGrid) return <GridView />;
-  return <JobsTable />;
+  return showGrid ? <GridView /> : <JobsTable />;
 };

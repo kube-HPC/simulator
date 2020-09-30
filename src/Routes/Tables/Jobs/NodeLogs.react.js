@@ -56,7 +56,7 @@ const NodeLogs = ({ taskDetails, onChange }) => {
   }, [currentTask, taskDetails, getLogs, source]);
 
   const options = taskDetails.map((task, index) => (
-    // TODO: fix this key issue
+    // TODO: implement a better key
     // eslint-disable-next-line
     <Select.Option key={index} value={index}>
       <OptionBox index={index + 1} taskId={task.taskId} />

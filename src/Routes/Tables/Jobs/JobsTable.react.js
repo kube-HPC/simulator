@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Route, useHistory, useParams } from 'react-router-dom';
 import { Table } from 'components';
-import Drawer from 'components/Drawer/Drawer.react';
+import Drawer from 'components/Drawer';
 import { DRAWER_SIZE } from 'const';
 import { useJobs } from 'hooks';
 import useToggle from 'hooks/useToggle';

@@ -89,7 +89,7 @@ const JobGraph = ({
 };
 
 JobGraph.propTypes = {
-  // TODO: fix those props
+  // TODO: detail the props
   /* eslint-disable */
   graph: PropTypes.object.isRequired,
   pipeline: PropTypes.object,
