@@ -1,16 +1,18 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'antd';
 import { Card, JsonSwitch, MdEditor, Tabs } from 'components/common';
 import { useReadme } from 'hooks';
+import { useHistory, useParams } from 'react-router-dom';
 
-const TABS = {
-  INFO: 'Information',
-  DESCRIPTION: 'Description',
+export const TABS = {
+  INFO: 'information',
+  DESCRIPTION: 'description',
 };
 
-const PipelineInfo = ({ record }) => {
-  const [activeKey, setActiveKey] = useState(TABS.INFO);
+const PipelineInfo = ({ record, rootUrl }) => {
+  const { tabKey } = useParams();
+  const history = useHistory();
   const [readme, setReadme] = useState();
 
   const { asyncFetch, post } = useReadme(useReadme.TYPES.PIPELINE);
@@ -20,27 +22,36 @@ const PipelineInfo = ({ record }) => {
     post({ name, readme });
   };
 
-  const onTabClick = useCallback(
-    tab => {
-      if (tab === TABS.DESCRIPTION) {
-        const fetchReadme = async () => {
-          const nextReadme = await asyncFetch({ name });
-          setReadme(nextReadme);
-        };
-        fetchReadme();
-      }
+  const handleChange = useCallback(
+    nextTab => {
+      history.push(`${rootUrl}/${nextTab}`);
     },
-    [name, asyncFetch]
+    [history, rootUrl]
   );
+
+  useEffect(() => {
+    if (!tabKey || !Object.values(TABS).includes(tabKey)) {
+      history.push(`${rootUrl}/${TABS.INFO}`);
+    }
+  }, [tabKey, history, rootUrl]);
+
+  useEffect(() => {
+    if (tabKey === TABS.DESCRIPTION) {
+      const fetchReadme = async () => {
+        const nextReadme = await asyncFetch({ name });
+        setReadme(nextReadme);
+      };
+      fetchReadme();
+    }
+  }, [tabKey, asyncFetch, name]);
 
   return (
     <Card isMargin>
       <Tabs
-        onTabClick={onTabClick}
-        activeKey={activeKey}
-        onChange={setActiveKey}
+        activeKey={tabKey}
+        onChange={handleChange}
         extra={
-          activeKey === TABS.DESCRIPTION && (
+          tabKey === TABS.DESCRIPTION && (
             <Button onClick={onApply}>Apply Markdown</Button>
           )
         }>
@@ -59,6 +70,7 @@ PipelineInfo.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
   record: PropTypes.object.isRequired,
+  rootUrl: PropTypes.string.isRequired,
 };
 
 export default PipelineInfo;

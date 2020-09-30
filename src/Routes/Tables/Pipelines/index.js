@@ -6,7 +6,7 @@ import { DRAWER_SIZE } from 'const';
 import { usePipeline } from 'hooks';
 import useToggle from 'hooks/useToggle';
 import getPipelineColumns from './getPipelineColumns.react';
-import PipelineInfo from './PipelineInfo.react';
+import PipelineInfo, { TABS } from './PipelineInfo.react';
 
 const rowKey = ({ name }) => name;
 
@@ -20,6 +20,7 @@ const PipelineDrawer = () => {
   const goBack = useCallback(() => {
     history.replace('/pipelines');
   }, [history]);
+
   return (
     <Drawer
       isOpened={isOn}
@@ -27,7 +28,10 @@ const PipelineDrawer = () => {
       onClose={setOff}
       width={DRAWER_SIZE.ALGORITHM_INFO}
       title={record.name}>
-      <PipelineInfo record={record} />
+      <PipelineInfo
+        record={record}
+        rootUrl={`/pipelines/${record.name}/overview`}
+      />
     </Drawer>
   );
 };
@@ -37,7 +41,8 @@ const PipelinesTable = () => {
 
   const history = useHistory();
   const onRow = record => ({
-    onDoubleClick: () => history.replace(`/pipelines/${record.name}`),
+    onDoubleClick: () =>
+      history.replace(`/pipelines/${record.name}/overview/${TABS.INFO}`),
   });
 
   return (
@@ -49,7 +54,10 @@ const PipelinesTable = () => {
         onRow={onRow}
         expandIcon={false}
       />
-      <Route path="/pipelines/:pipelineId" component={PipelineDrawer} />
+      <Route
+        path="/pipelines/:pipelineId/overview/:tabKey?"
+        component={PipelineDrawer}
+      />
     </>
   );
 };

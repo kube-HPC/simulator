@@ -12,7 +12,11 @@ const Body = () => (
   <Switch>
     <Route exact path="/debug" component={DebugTable} />
     <Route exact path="/drivers" component={DriversTable} />
-    <Route exact path="/pipelines/:pipelineId?" component={PipelinesTable} />
+    <Route
+      exact
+      path={['/pipelines', '/pipelines/:pipelineId?/*']}
+      component={PipelinesTable}
+    />
     <Route exact path="/workers" component={WorkersTable} />
     <Route exact path="/algorithms/:algorithmId?" component={AlgorithmsTable} />
     <Route exact path="/jobs/:jobId?" component={Jobs} />
