@@ -4,6 +4,7 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ReusableProvider } from 'reusable';
+import { GlobalStyle } from 'styles';
 import Root from './Routes';
 import store from './store';
 
@@ -11,6 +12,7 @@ render(
   <Provider store={store}>
     <ReusableProvider>
       <ErrorBoundary>
+        <GlobalStyle />
         <Router>
           <Root />
         </Router>
