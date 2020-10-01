@@ -3,37 +3,27 @@ import PropTypes from 'prop-types';
 import { Button } from 'antd';
 import { Card, JsonSwitch, MdEditor, Tabs } from 'components/common';
 import { useReadme } from 'hooks';
-import { useHistory, useParams } from 'react-router-dom';
+import usePath, { OVERVIEW_TABS as TABS } from './usePath';
 
-export const TABS = {
-  INFO: 'information',
-  DESCRIPTION: 'description',
-};
-
-const PipelineInfo = ({ record, rootUrl }) => {
-  const { tabKey } = useParams();
-  const history = useHistory();
+const PipelineInfo = ({ record }) => {
+  const { tabKey, goTo } = usePath();
   const [readme, setReadme] = useState();
 
   const { asyncFetch, post } = useReadme(useReadme.TYPES.PIPELINE);
   const { name } = record;
 
-  const onApply = () => {
+  const onApply = useCallback(() => {
     post({ name, readme });
-  };
+  }, [post, name, readme]);
 
   const handleChange = useCallback(
-    nextTab => {
-      history.push(`${rootUrl}/${nextTab}`);
-    },
-    [history, rootUrl]
+    nextTabKey => goTo.overview({ nextTabKey }),
+    [goTo]
   );
 
   useEffect(() => {
-    if (!tabKey || !Object.values(TABS).includes(tabKey)) {
-      history.push(`${rootUrl}/${TABS.INFO}`);
-    }
-  }, [tabKey, history, rootUrl]);
+    (!tabKey || !Object.values(TABS).includes(tabKey)) && goTo.overview();
+  }, [tabKey, goTo]);
 
   useEffect(() => {
     if (tabKey === TABS.DESCRIPTION) {
@@ -70,7 +60,6 @@ PipelineInfo.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
   record: PropTypes.object.isRequired,
-  rootUrl: PropTypes.string.isRequired,
 };
 
 export default PipelineInfo;
