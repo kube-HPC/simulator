@@ -7,12 +7,17 @@ import { useActions } from 'hooks';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { memo, useState } from 'react';
-import { mapObjValues, notification, stringify, toUpperCaseFirstLetter } from 'utils';
+import {
+  mapObjValues,
+  notification,
+  stringify,
+  toUpperCaseFirstLetter,
+} from 'utils';
 import { CodeBuild, GitBuild, ImageBuild } from './BuildTypes';
 import MemoryField from './MemoryField.react';
 
 // #region  Helpers
-const { MAIN, BUILD_TYPES } = schema;
+const { MAIN, BUILD_TYPES, MEMORY_CACHE } = schema;
 
 // https://github.com/kube-HPC/hkube/blob/master/core/api-server/lib/consts/regex.js
 const ALGO_REGEX = /^[a-z0-9][-a-z0-9\\.]*[a-z0-9]$/;
@@ -23,13 +28,16 @@ const mainAdvancedOptions = Object.entries(formTemplate.main.options)
 
 const insertAlgorithmOptions = options =>
   options.map((option, key) => (
+    // eslint-disable-next-line
     <Select.Option key={key} value={option}>
       {toUpperCaseFirstLetter(option)}
     </Select.Option>
   ));
 
 const toReadableBuildType = buildType =>
-  toUpperCaseFirstLetter(buildType === BUILD_TYPES.GIT.field ? `GIT` : buildType);
+  toUpperCaseFirstLetter(
+    buildType === BUILD_TYPES.GIT.field ? `GIT` : buildType
+  );
 
 const insertRadioButtons = buildTypes =>
   Object.keys(buildTypes).map(key => (
@@ -39,15 +47,21 @@ const insertRadioButtons = buildTypes =>
   ));
 
 const isEmpty = v =>
-  v === undefined || v === `` || v === null || (typeof v === `object` && !Object.entries(v).length);
+  v === undefined ||
+  v === `` ||
+  v === null ||
+  (typeof v === `object` && !Object.entries(v).length);
 const isNotEmpty = ({ value }) => !isEmpty(value);
 
 const getBuildTypes = ({ buildType, ...props }) => {
   const { CODE, IMAGE, GIT } = BUILD_TYPES;
   const isRequired = type => type === buildType;
   return {
+    // eslint-disable-next-line
     [CODE.field]: <CodeBuild required={isRequired(CODE.field)} {...props} />,
+    // eslint-disable-next-line
     [IMAGE.field]: <ImageBuild required={isRequired(IMAGE.field)} {...props} />,
+    // eslint-disable-next-line
     [GIT.field]: <GitBuild required={isRequired(GIT.field)} {...props} />,
   };
 };
@@ -63,7 +77,12 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
   const { getFieldDecorator, validateFields } = form;
 
   // #region  Submit Handle
-  const buildTypes = getBuildTypes({ buildType, getFieldDecorator, fileList, setFileList });
+  const buildTypes = getBuildTypes({
+    buildType,
+    getFieldDecorator,
+    fileList,
+    setFileList,
+  });
 
   const { applyAlgorithm } = useActions();
 
@@ -72,25 +91,28 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
 
     validateFields((err, formObject) => {
       if (err || (buildType === BUILD_TYPES.CODE.field && !fileList.length)) {
-        notification({ message: `Error`, description: err || `Please provide a file!` });
+        notification({
+          message: `Error`,
+          description: err || `Please provide a file!`,
+        });
         return;
       }
 
       // Reduce selected options to boolean entry
       const options = formObject.main.options.reduce(
         (acc, option) => ({ ...acc, [option]: true }),
-        {},
+        {}
       );
 
       // #region From Form-Object to Schema
       // On GIT build type:
       // [ env, entryPoint, baseImage ] are on the top object's keys level
       const { env, entryPoint, baseImage, ...rest } = formObject[buildType];
-
       /* eslint-disable indent */
       const payload =
         buildType === BUILD_TYPES.GIT.field
           ? {
+              memoryCache: formObject.memoryCache,
               ...formObject.main,
               options,
               [BUILD_TYPES.GIT.field]: rest,
@@ -98,7 +120,12 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
               entryPoint,
               baseImage,
             }
-          : { ...formObject.main, options, ...formObject[buildType] };
+          : {
+              memoryCache: formObject.memoryCache,
+              ...formObject.main,
+              options,
+              ...formObject[buildType],
+            };
       // #endregion
 
       if (buildType === BUILD_TYPES.GIT.field) {
@@ -114,7 +141,11 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
         formData.append(`file`, file);
       }
 
-      const payloadFiltered = mapObjValues({ obj: payload, predicate: isNotEmpty });
+      const payloadFiltered = mapObjValues({
+        obj: payload,
+        predicate: isNotEmpty,
+      });
+
       formData.append(`payload`, stringify(payloadFiltered));
 
       applyAlgorithm(formData);
@@ -138,7 +169,10 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
         })(<Input placeholder={MAIN.NAME.placeholder} />)}
       </Form.Item>
       <Form.Item label="Build Type">
-        <Radio.Group defaultValue={buildType} buttonStyle="solid" onChange={onBuildTypeChange}>
+        <Radio.Group
+          defaultValue={buildType}
+          buttonStyle="solid"
+          onChange={onBuildTypeChange}>
           {insertRadioButtons(buildTypes)}
         </Radio.Group>
       </Form.Item>
@@ -157,10 +191,32 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
                 {value}
               </Select.Option>
             ))}
-          </MemoryField>,
+          </MemoryField>
         )}
       </Form.Item>
       <Form.Divider>{MAIN.DIVIDER.ADVANCED}</Form.Divider>
+      <Form.Item label={MEMORY_CACHE.STORAGE.label} labelAlign="left">
+        {getFieldDecorator(MEMORY_CACHE.STORAGE.field)(
+          <MemoryField>
+            {MEMORY_CACHE.STORAGE.types.map(value => (
+              <Select.Option key={value} value={value}>
+                {value}
+              </Select.Option>
+            ))}
+          </MemoryField>
+        )}
+      </Form.Item>
+      <Form.Item label={MEMORY_CACHE.PEERS.label} labelAlign="left">
+        {getFieldDecorator(MEMORY_CACHE.PEERS.field)(
+          <MemoryField>
+            {MEMORY_CACHE.PEERS.types.map(value => (
+              <Select.Option key={value} value={value}>
+                {value}
+              </Select.Option>
+            ))}
+          </MemoryField>
+        )}
+      </Form.Item>
       <Form.Item label={MAIN.WORKERS.label}>
         {getFieldDecorator(MAIN.WORKERS.field)(<InputNumber min={0} />)}
       </Form.Item>
@@ -170,7 +226,7 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
         })(
           <Select mode="tags" placeholder={MAIN.OPTIONS.placeholder}>
             {insertAlgorithmOptions(MAIN.OPTIONS.types)}
-          </Select>,
+          </Select>
         )}
       </Form.Item>
       {buildTypes[buildType]}
@@ -191,6 +247,8 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
 };
 
 AddAlgorithmForm.propTypes = {
+  // TODO: detail the props
+  // eslint-disable-next-line
   form: PropTypes.object.isRequired,
   onToggle: PropTypes.func.isRequired,
   onSubmit: PropTypes.func,

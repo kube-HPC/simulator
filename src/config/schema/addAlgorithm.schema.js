@@ -1,3 +1,19 @@
+const memoryTypes = [
+  'Ki',
+  'M',
+  'Mi',
+  'Gi',
+  'm',
+  'K',
+  'G',
+  'T',
+  'Ti',
+  'P',
+  'Pi',
+  'E',
+  'Ei',
+];
+
 const addAlgorithmSchema = {
   ENV_TYPES: {
     nodejs: 'Node.js',
@@ -140,13 +156,14 @@ const addAlgorithmSchema = {
     MEMORY: {
       field: 'main.mem',
       label: 'Memory Usage',
-      types: ['Ki', 'M', 'Mi', 'Gi', 'm', 'K', 'G', 'T', 'Ti', 'P', 'Pi', 'E', 'Ei'],
+      types: memoryTypes,
     },
     NAME: {
       field: 'main.name',
       label: 'Algorithm Name',
       placeholder: 'Insert Algorithm Name',
-      message: 'Lower cased letters and numbers are only allowed in Algorithm Name.',
+      message:
+        'Lower cased letters and numbers are only allowed in Algorithm Name.',
     },
     OPTIONS: {
       field: 'main.options',
@@ -157,6 +174,18 @@ const addAlgorithmSchema = {
     WORKERS: {
       field: 'main.minHotWorkers',
       label: 'Min Hot Workers',
+    },
+  },
+  MEMORY_CACHE: {
+    STORAGE: {
+      field: 'memoryCache.storage',
+      label: 'Cache Storage',
+      types: memoryTypes,
+    },
+    PEERS: {
+      field: 'memoryCache.peers',
+      label: 'Cache Peers',
+      types: memoryTypes,
     },
   },
 };
