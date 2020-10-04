@@ -5,6 +5,8 @@ import parseUnit from 'parse-unit';
 
 const selectStyle = { width: '90px' };
 
+// TODO: remove irrelevant forwardRef
+// eslint-disable-next-line
 const MemoryField = React.forwardRef(({ onChange, children, value }, ref) => {
   const [numberInitial, unitInitial] = parseUnit(value);
 
@@ -13,12 +15,12 @@ const MemoryField = React.forwardRef(({ onChange, children, value }, ref) => {
 
   const onNumber = target => {
     setNumber(target);
-    onChange(`${target}${unit}`);
+    onChange(target === null ? null : `${target}${unit}`);
   };
 
   const onSelect = target => {
     setUnit(target);
-    onChange(`${number}${target}`);
+    onChange(number === null ? null : `${number}${target}`);
   };
 
   return (
@@ -32,9 +34,12 @@ const MemoryField = React.forwardRef(({ onChange, children, value }, ref) => {
 });
 
 MemoryField.propTypes = {
+  // TODO: detail the props
+  /* eslint-disable */
   children: PropTypes.node,
   onChange: PropTypes.func,
-  value: PropTypes.string
+  value: PropTypes.string,
+  /* eslint-enable */
 };
 
 export default MemoryField;

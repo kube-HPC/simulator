@@ -108,11 +108,20 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
       // On GIT build type:
       // [ env, entryPoint, baseImage ] are on the top object's keys level
       const { env, entryPoint, baseImage, ...rest } = formObject[buildType];
+
+      // NOTE: this is a workaround, the component sometimes submits units only when no number is provided
+      // TODO: refactor the component and remove this patch
+      const filteredMemoryCache = Object.fromEntries(
+        Object.entries(formObject.memoryCache).filter(([, value]) =>
+          new RegExp('[0-9]+').test(value)
+        )
+      );
+
       /* eslint-disable indent */
       const payload =
         buildType === BUILD_TYPES.GIT.field
           ? {
-              memoryCache: formObject.memoryCache,
+              memoryCache: filteredMemoryCache,
               ...formObject.main,
               options,
               [BUILD_TYPES.GIT.field]: rest,
@@ -121,7 +130,7 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
               baseImage,
             }
           : {
-              memoryCache: formObject.memoryCache,
+              memoryCache: filteredMemoryCache,
               ...formObject.main,
               options,
               ...formObject[buildType],
