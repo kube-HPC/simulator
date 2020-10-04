@@ -10,6 +10,9 @@ const noFilter = () => true;
 const noPredicate = () => false;
 
 /**
+ * MapObjValues - filters entries from an object recursively by a given
+ * predicate
+ *
  * @param {object} obj An object to apply mapping.
  * @param {function} predicate Predicate function for indicating if object value
  *     is empty.
