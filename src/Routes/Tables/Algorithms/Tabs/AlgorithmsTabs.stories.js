@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { SB_SECTIONS } from 'const';
-import AlgorithmsTabs from './AlgorithmsTabs.react';
+import AlgorithmsTabs from '.';
 
 export default {
   title: `${SB_SECTIONS.TABLES.ALGORITHMS}/Tabs`,

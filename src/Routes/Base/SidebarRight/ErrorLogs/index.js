@@ -5,6 +5,14 @@ import { Table } from 'components';
 import { JsonSwitch, Card } from 'components/common';
 import errorLogsTableColumns from './ErrorLogsTableColumns.react';
 
+const expandedRowRender = record => (
+  <Card>
+    <JsonSwitch obj={record} />
+  </Card>
+);
+
+const extractId = ({ id }) => id;
+
 const ErrorLogsTable = () => {
   const { dataSource, setIsCleared } = useErrorLogs();
 
@@ -12,16 +20,10 @@ const ErrorLogsTable = () => {
     setIsCleared(true);
   }, [setIsCleared]);
 
-  const expandedRowRender = record => (
-    <Card>
-      <JsonSwitch obj={record} />
-    </Card>
-  );
-
   return (
     <Table
-      rowKey={({ id }) => id}
-      columns={errorLogsTableColumns()}
+      rowKey={extractId}
+      columns={errorLogsTableColumns}
       dataSource={dataSource}
       expandedRowRender={expandedRowRender}
     />

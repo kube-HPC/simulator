@@ -17,7 +17,7 @@ const Image = algorithmImage =>
 const Name = name => <Ellipsis text={name} />;
 const BuildStats = builds => <AlgorithmBuildStats builds={builds} />;
 
-const getAlgorithmColumns = () => [
+export default [
   {
     title: 'Algorithm Name',
     dataIndex: 'name',
@@ -66,5 +66,3 @@ const getAlgorithmColumns = () => [
     render: (_, record) => <AlgorithmActions record={record} />,
   },
 ];
-
-export default getAlgorithmColumns;

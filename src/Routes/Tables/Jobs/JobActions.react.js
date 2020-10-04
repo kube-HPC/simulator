@@ -1,11 +1,11 @@
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import { Button } from 'antd';
 import { useSelector } from 'react-redux';
-import { DRAWER_SIZE, USER_GUIDE, STATE_SOURCES } from 'const';
+import { USER_GUIDE, STATE_SOURCES } from 'const';
 import { useActions } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
-import JobInfo from './JobInfo.react';
+import usePath from './usePath';
 
 const activeStates = [
   PIPELINE_STATUS.PENDING,
@@ -20,6 +20,7 @@ const canPauseOrStop = state =>
 
 const JobActions = ({ job, className }) => {
   const socketURL = useSelector(state => state[STATE_SOURCES.SOCKET_URL]);
+  const { goTo } = usePath();
   const {
     key,
     pipeline,
@@ -30,7 +31,6 @@ const JobActions = ({ job, className }) => {
   const {
     rerunRawPipeline,
     stopPipeline,
-    drawerOpen,
     pausePipeline,
     resumePipeline,
   } = useActions();
@@ -38,14 +38,7 @@ const JobActions = ({ job, className }) => {
   const onReRun = () => rerunRawPipeline(pipeline);
   const onStop = () => stopPipeline(key);
 
-  const onMoreInfo = () => {
-    const body = <JobInfo jobId={key} />;
-    return drawerOpen({
-      title: pipeline.name,
-      body,
-      width: DRAWER_SIZE.JOB_INFO,
-    });
-  };
+  const onMoreInfo = () => goTo.overview({ nextJobId: key });
 
   const isDownloadDisabled = !(
     results &&

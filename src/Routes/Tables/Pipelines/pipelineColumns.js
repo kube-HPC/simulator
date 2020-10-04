@@ -10,7 +10,7 @@ const Stats = (name, { nodes }) => <PipelineStats name={name} nodes={nodes} />;
 const Cron = (_, pipeline) => <PipelineCron pipeline={pipeline} />;
 const Actions = (_, pipeline) => <PipelineActions pipeline={pipeline} />;
 
-const getPipelineColumns = () => [
+export default [
   {
     title: 'Pipeline Name',
     dataIndex: 'name',
@@ -37,5 +37,3 @@ const getPipelineColumns = () => [
     render: Actions,
   },
 ];
-
-export default getPipelineColumns;

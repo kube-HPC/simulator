@@ -1,11 +1,11 @@
 import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Modal, Popover, Typography } from 'antd';
-import { DRAWER_SIZE } from 'const';
-import { useActions, useDrawerEditor } from 'hooks';
-import { stringify } from 'utils';
+import {} from 'const';
+import { useActions } from 'hooks';
 import AlgorithmRun from './AlgorithmRun.react';
-import { AlgorithmsTabs } from './Tabs';
+
+import usePath from './usePath';
 
 const deleteConfirmAction = action => {
   Modal.confirm({
@@ -32,45 +32,44 @@ const EMPTY_INITIAL = [];
 const overlayStyle = { width: `500px` };
 
 const AlgorithmActions = ({ record }) => {
+  const { goTo } = usePath();
   const { builds, ...algorithm } = record;
   const { name } = algorithm;
 
-  const {
-    applyAlgorithm,
-    deleteAlgorithm,
-    runAlgorithm,
-    drawerOpen,
-  } = useActions();
+  const { /* applyAlgorithm , */ deleteAlgorithm, runAlgorithm } = useActions();
   const container = useRef();
 
   const [inputs, setInputs] = useState(EMPTY_INITIAL);
 
   const setPopupContainer = useCallback(() => container.current, []);
 
-  const onSubmit = useCallback(
-    value => {
-      const formData = new FormData();
-      formData.append('payload', value);
-      applyAlgorithm(formData);
-    },
-    [applyAlgorithm]
-  );
+  // const onSubmit = useCallback(
+  //   value => {
+  //     const formData = new FormData();
+  //     formData.append('payload', value);
+  //     applyAlgorithm(formData);
+  //   },
+  //   [applyAlgorithm]
+  // );
 
-  const { open } = useDrawerEditor({ onSubmit });
+  const onEdit = useCallback(() => goTo.edit({ nextAlgorithmId: name }), [
+    goTo,
+    name,
+  ]);
 
-  const onEdit = () => open(stringify(algorithm));
   const onClickDelete = useCallback(
     () => deleteConfirmAction(() => deleteAlgorithm(name)),
     [deleteAlgorithm, name]
   );
+
   const onRun = () => runAlgorithm({ name, input: inputs });
 
   const popOverContent = <AlgorithmRun onChange={setInputs} onRun={onRun} />;
 
-  const onMoreInfo = () => {
-    const body = <AlgorithmsTabs name={name} />;
-    drawerOpen({ title: name, body, width: DRAWER_SIZE.ALGORITHM_INFO });
-  };
+  const onMoreInfo = useCallback(
+    () => goTo.overview({ nextAlgorithmId: name }),
+    [goTo, name]
+  );
 
   const stopPropagation = useCallback(e => {
     e.stopPropagation();

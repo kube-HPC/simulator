@@ -1,13 +1,11 @@
+import React, { useCallback, useEffect } from 'react';
+import styled from 'styled-components';
 import { Button } from 'antd';
 import { JsonSwitch, Tabs } from 'components/common';
 import { useJobs, useTraceData } from 'hooks';
-import PropTypes from 'prop-types';
-import React, { memo, useState } from 'react';
-import styled from 'styled-components';
 import JobGraph from './JobGraph.react';
 import Trace from './Trace.react';
-
-const TABS = { GRAPH: 'Graph', TRACE: 'Trace', INFO: 'Information' };
+import usePath, { OVERVIEW_TABS as TABS } from './usePath';
 
 const options = {
   view: {
@@ -19,28 +17,34 @@ const FullGraph = styled(JobGraph)`
   width: 100%;
 `;
 
-const JobInfo = ({ jobId }) => {
-  const [currentTab, setCurrentTab] = useState(TABS.GRAPH);
+const JobInfo = () => {
+  const { tabKey: currentTab, goTo, jobId } = usePath();
   const { traceData, fetch } = useTraceData();
-
+  const setCurrentTab = useCallback(
+    nextTabKey => goTo.overview({ nextTabKey }),
+    [goTo]
+  );
   const { dataSource } = useJobs();
   const job = dataSource.find(({ key }) => jobId === key);
   const { key, graph, pipeline } = job;
 
+  const fetchJobTrace = useCallback(() => fetch({ jobId: key }), [fetch, key]);
+
   const refreshButton = currentTab === TABS.TRACE && (
-    <Button onClick={() => fetch({ jobId: key })} icon="redo">
+    <Button onClick={fetchJobTrace} icon="redo">
       Refresh
     </Button>
   );
 
-  const onTabClick = tabKey => tabKey === TABS.TRACE && fetch({ jobId: key });
+  useEffect(() => {
+    if (currentTab === TABS.TRACE) fetchJobTrace();
+  }, [currentTab, fetchJobTrace]);
 
   return (
     <Tabs
       activeKey={currentTab}
       tabBarExtraContent={refreshButton}
-      onChange={setCurrentTab}
-      onTabClick={onTabClick}>
+      onChange={setCurrentTab}>
       <Tabs.TabPane tab={TABS.GRAPH} key={TABS.GRAPH}>
         <FullGraph graph={{ ...graph, jobId: key }} pipeline={pipeline} />
       </Tabs.TabPane>
@@ -54,8 +58,4 @@ const JobInfo = ({ jobId }) => {
   );
 };
 
-JobInfo.propTypes = {
-  jobId: PropTypes.string.isRequired,
-};
-
-export default memo(JobInfo);
+export default JobInfo;

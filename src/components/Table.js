@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Icon, Spin, Table as AntTable } from 'antd';
 import styled from 'styled-components';
@@ -47,9 +47,12 @@ const antIcon = <Icon type="loading" style={{ fontSize: 40 }} spin />;
 Spin.setDefaultIndicator(antIcon);
 
 const Table = ({ dataSource, loading, ...props }) => {
-  const tableSource = Immutable.isImmutable(dataSource)
-    ? dataSource.asMutable()
-    : dataSource;
+  const tableSource = useMemo(
+    () =>
+      Immutable.isImmutable(dataSource) ? dataSource.asMutable() : dataSource,
+    [dataSource]
+  );
+
   return (
     <TableWhite
       loading={loading || !dataSource}
@@ -75,4 +78,4 @@ Table.defaultProps = {
   loading: false,
 };
 
-export default Table;
+export default React.memo(Table);

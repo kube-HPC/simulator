@@ -1,65 +1,41 @@
 import React, { useCallback } from 'react';
-import { Route, useHistory, useParams } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { Table } from 'components';
-import Drawer from 'components/Drawer';
-import { DRAWER_SIZE } from 'const';
 import { usePipeline } from 'hooks';
-import useToggle from 'hooks/useToggle';
-import getPipelineColumns from './getPipelineColumns.react';
-import PipelineInfo, { TABS } from './PipelineInfo.react';
+import pipelineColumns from './pipelineColumns';
+import OverviewDrawer from './OverviewDrawer';
+import usePath from './usePath';
+import EditDrawer from './EditDrawer';
 
 const rowKey = ({ name }) => name;
 
-const PipelineDrawer = () => {
-  const { pipelineId } = useParams();
-  const { setOff, isOn } = useToggle(true);
-  const { dataSource } = usePipeline();
-  const record = dataSource.find(item => item.name === pipelineId);
-  const history = useHistory();
-
-  const goBack = useCallback(() => {
-    history.replace('/pipelines');
-  }, [history]);
-
-  return (
-    <Drawer
-      isOpened={isOn}
-      onDidClose={goBack}
-      onClose={setOff}
-      width={DRAWER_SIZE.ALGORITHM_INFO}
-      title={record.name}>
-      <PipelineInfo
-        record={record}
-        rootUrl={`/pipelines/${record.name}/overview`}
-      />
-    </Drawer>
-  );
-};
-
 const PipelinesTable = () => {
-  const { dataSource, ...actions } = usePipeline();
+  const { dataSource } = usePipeline();
+  const { goTo } = usePath();
 
-  const history = useHistory();
-  const onRow = record => ({
-    onDoubleClick: () =>
-      history.replace(`/pipelines/${record.name}/overview/${TABS.INFO}`),
-  });
+  const onRow = useCallback(
+    record => ({
+      onDoubleClick: () => goTo.overview({ nextPipelineId: record.name }),
+    }),
+    [goTo]
+  );
 
   return (
     <>
       <Table
         rowKey={rowKey}
         dataSource={dataSource}
-        columns={getPipelineColumns(actions)}
+        columns={pipelineColumns}
         onRow={onRow}
         expandIcon={false}
       />
       <Route
         path="/pipelines/:pipelineId/overview/:tabKey?"
-        component={PipelineDrawer}
+        component={OverviewDrawer}
       />
+      <Route path="/pipelines/:pipelineId/edit" component={EditDrawer} />
     </>
   );
 };
 
-export default React.memo(PipelinesTable);
+export default PipelinesTable;

@@ -1,41 +1,20 @@
-import React, { useCallback } from 'react';
-import { Route, useHistory, useParams } from 'react-router-dom';
-import Drawer from 'components/Drawer';
+import React from 'react';
+import { Route } from 'react-router-dom';
 import { Table } from 'components';
-import { DRAWER_SIZE } from 'const';
 import { useAlgorithm } from 'hooks';
-import useToggle from 'hooks/useToggle';
-import getAlgorithmColumns from './getAlgorithmColumns.react';
-import { AlgorithmsTabs } from './Tabs';
+import algorithmColumns from './algorithmColumns';
+import usePath from './usePath';
+import OverviewDrawer from './OverviewDrawer';
+import EditDrawer from './EditDrawer';
 
 const rowKey = ({ name }) => name;
 
-const AlgorithmsDrawer = () => {
-  const { algorithmId } = useParams();
-  const history = useHistory();
-  const { setOff, isOn } = useToggle(true);
-  const goBack = useCallback(() => {
-    history.replace('/algorithms');
-  }, [history]);
-  return (
-    <Drawer
-      isOpened={isOn}
-      onDidClose={goBack}
-      onClose={setOff}
-      width={DRAWER_SIZE}
-      title={algorithmId}>
-      <AlgorithmsTabs name={algorithmId} />
-    </Drawer>
-  );
-};
-
 const AlgorithmsTable = () => {
-  const { dataSource, ...actions } = useAlgorithm();
-
-  const history = useHistory();
+  const { dataSource } = useAlgorithm();
+  const { goTo } = usePath();
 
   const onRow = ({ name }) => ({
-    onDoubleClick: () => history.push(`/algorithms/${name}`),
+    onDoubleClick: () => goTo.overview({ nextAlgorithmId: name }),
   });
 
   return (
@@ -43,15 +22,16 @@ const AlgorithmsTable = () => {
       <Table
         onRow={onRow}
         rowKey={rowKey}
-        columns={getAlgorithmColumns(actions)}
+        columns={algorithmColumns}
         dataSource={dataSource}
         expandIcon={false}
       />
       <Route
         exact
-        path="/algorithms/:algorithmId"
-        component={AlgorithmsDrawer}
+        path="/algorithms/:algorithmId/overview/:tabKey"
+        component={OverviewDrawer}
       />
+      <Route path="/algorithms/:algorithms/edit" component={EditDrawer} />
     </>
   );
 };

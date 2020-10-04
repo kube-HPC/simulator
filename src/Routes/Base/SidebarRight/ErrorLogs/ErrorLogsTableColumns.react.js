@@ -6,7 +6,7 @@ import Moment from 'react-moment';
 import { COLOR_SERVICE } from 'styles/colors';
 import { sorter, stringify } from 'utils/string';
 
-const errorLogsTableColumns = () => [
+const errorLogsTableColumns = [
   {
     title: 'Service Name',
     dataIndex: 'serviceName',

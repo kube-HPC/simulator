@@ -2,12 +2,13 @@ import React, { memo, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Empty, Icon, Popover } from 'antd';
 import { IconTensorFlow } from 'components/Icons';
-import { DRAWER_SIZE, USER_GUIDE } from 'const';
-import { useActions, usePipeline } from 'hooks';
+import { experimentsSchema } from 'config';
+import { USER_GUIDE } from 'const';
+import { usePipeline, useActions } from 'hooks';
 import isEqual from 'lodash/isEqual';
 import { deleteConfirmAction } from 'utils';
-import PipelineInfo from './PipelineInfo.react';
 import PipelineCreateBoard from './TensorflowBoards/PipelineCreateBoard.react';
+import usePath from './usePath';
 
 const {
   TABLE_PIPELINE: { ACTIONS_SELECT },
@@ -16,8 +17,11 @@ const {
 const title = 'Create Tensor Board for selected Node';
 
 const PipelineActions = ({ pipeline, className }) => {
-  const { execute, update, remove } = usePipeline();
-  const { drawerOpen } = useActions();
+  const { goTo } = usePath();
+
+  const { /* deleteStored, */ execStored } = useActions();
+
+  const { remove } = usePipeline();
 
   const container = useRef();
 
@@ -34,17 +38,25 @@ const PipelineActions = ({ pipeline, className }) => {
 
   const hasNodes = nodes.length !== 0;
 
-  const onMoreInfo = () =>
-    drawerOpen({
-      title: pipeline.name,
-      body: <PipelineInfo record={pipeline} />,
-      width: DRAWER_SIZE.JOB_INFO,
-    });
-
   const onDelete = () => deleteConfirmAction(remove, pipeline);
-  const onUpdate = () => update(pipeline);
-  const onExecute = () => execute(executePipeline);
+  const onExecute = useCallback(() => {
+    const parsed = JSON.parse(executePipeline);
+    execStored(
+      experimentName === experimentsSchema.showAll
+        ? parsed
+        : { experimentName, ...parsed }
+    );
+  }, [experimentName, executePipeline, execStored]);
+  // => execute(executePipeline);
   const setPopupContainer = () => container.current;
+
+  const onUpdate = useCallback(() => {
+    goTo.edit({ nextPipelineId: pipeline.name });
+  }, [goTo, pipeline]);
+
+  const onEdit = useCallback(() => {
+    goTo.overview({ nextPipelineId: pipeline.name });
+  }, [pipeline, goTo]);
 
   const popOverContent = hasNodes ? (
     <PipelineCreateBoard name={pipeline.name} nodes={nodes} />
@@ -77,7 +89,7 @@ const PipelineActions = ({ pipeline, className }) => {
         <Button icon="play-circle" onClick={onExecute} />
         <Button icon="edit" onClick={onUpdate} />
         <Button icon="delete" onClick={onDelete} />
-        <Button icon="ellipsis" onClick={onMoreInfo} />
+        <Button icon="ellipsis" onClick={onEdit} />
       </Button.Group>
     </div>
   );

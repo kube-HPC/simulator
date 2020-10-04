@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { createStore } from 'reusable';
@@ -6,7 +5,7 @@ import isEqual from 'lodash/isEqual';
 import { LEFT_SIDEBAR_NAMES, STATE_SOURCES } from 'const';
 import { selector } from 'utils';
 import { dataSelector, tableSelector } from 'utils/tableSelector';
-import { getJobsColumns } from 'Routes/Tables/Jobs';
+import { jobColumns } from 'Routes/Tables/Jobs';
 
 const { JOBS_TABLE, FILTER_TYPES } = STATE_SOURCES;
 
@@ -23,13 +22,12 @@ const jobsSelector = createSelector(
 );
 
 const useJobs = () => {
-  const columns = useMemo(() => getJobsColumns(), []);
   const dataSource = useSelector(jobsSelector, isEqual);
   const { loading } = useSelector(state => state[STATE_SOURCES.EXPERIMENTS]);
 
   return {
     dataSource,
-    columns,
+    columns: jobColumns,
     loading: loading || !dataSource,
   };
 };

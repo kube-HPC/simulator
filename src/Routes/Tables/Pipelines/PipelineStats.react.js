@@ -8,6 +8,7 @@ import { useBoards, usePipeline } from 'hooks';
 import BoardStatus from './TensorflowBoards/BoardStatus.react';
 
 const PipelineStats = ({ name, nodes }) => {
+  // TODO: replace with selector
   const { dataStats } = usePipeline();
 
   const { hasMetrics, boards, boardURL } = useBoards({ pipelineName: name });

@@ -18,8 +18,12 @@ const Body = () => (
       component={PipelinesTable}
     />
     <Route exact path="/workers" component={WorkersTable} />
-    <Route exact path="/algorithms/:algorithmId?" component={AlgorithmsTable} />
-    <Route exact path="/jobs/:jobId?" component={Jobs} />
+    <Route
+      exact
+      path={['/algorithms', '/algorithms/:algorithmId?/*']}
+      component={AlgorithmsTable}
+    />
+    <Route exact path={['/jobs', '/jobs/:jobId?/*']} component={Jobs} />
     <Redirect to="/jobs" replace />
   </Switch>
 );
