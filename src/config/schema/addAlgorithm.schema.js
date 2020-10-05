@@ -175,17 +175,12 @@ const addAlgorithmSchema = {
       field: 'main.minHotWorkers',
       label: 'Min Hot Workers',
     },
-  },
-  MEMORY_CACHE: {
-    STORAGE: {
-      field: 'memoryCache.storage',
-      label: 'Cache Storage',
+    RESERVE_MEMORY: {
+      field: 'main.reservedMemory',
+      label: 'Reserved Memory',
       types: memoryTypes,
-    },
-    PEERS: {
-      field: 'memoryCache.peers',
-      label: 'Cache Peers',
-      types: memoryTypes,
+      tooltip:
+        "Reserved memory for HKube's operations, such as in-memory cache. Higher values speed up data retrieval but leave less memory for the algorithms. Lower values slow down data retrieval but leave more memory for the algorithms.",
     },
   },
 };

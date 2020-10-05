@@ -12,10 +12,7 @@ const addAlgorithmTemplateForm = {
     algorithmEnv: '',
     workerEnv: '',
     nodeSelector: '',
-  },
-  memoryCache: {
-    storage: '512Mi',
-    peers: '512Mi',
+    reservedMemory: '512Mi',
   },
   code: {
     env: undefined,

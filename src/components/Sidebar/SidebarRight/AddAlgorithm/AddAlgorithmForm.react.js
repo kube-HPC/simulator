@@ -17,7 +17,7 @@ import { CodeBuild, GitBuild, ImageBuild } from './BuildTypes';
 import MemoryField from './MemoryField.react';
 
 // #region  Helpers
-const { MAIN, BUILD_TYPES, MEMORY_CACHE } = schema;
+const { MAIN, BUILD_TYPES } = schema;
 
 // https://github.com/kube-HPC/hkube/blob/master/core/api-server/lib/consts/regex.js
 const ALGO_REGEX = /^[a-z0-9][-a-z0-9\\.]*[a-z0-9]$/;
@@ -109,19 +109,10 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
       // [ env, entryPoint, baseImage ] are on the top object's keys level
       const { env, entryPoint, baseImage, ...rest } = formObject[buildType];
 
-      // NOTE: this is a workaround, the component sometimes submits units only when no number is provided
-      // TODO: refactor the component and remove this patch
-      const filteredMemoryCache = Object.fromEntries(
-        Object.entries(formObject.memoryCache).filter(([, value]) =>
-          new RegExp('[0-9]+').test(value)
-        )
-      );
-
       /* eslint-disable indent */
       const payload =
         buildType === BUILD_TYPES.GIT.field
           ? {
-              memoryCache: filteredMemoryCache,
               ...formObject.main,
               options,
               [BUILD_TYPES.GIT.field]: rest,
@@ -130,7 +121,6 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
               baseImage,
             }
           : {
-              memoryCache: filteredMemoryCache,
               ...formObject.main,
               options,
               ...formObject[buildType],
@@ -204,21 +194,10 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
         )}
       </Form.Item>
       <Form.Divider>{MAIN.DIVIDER.ADVANCED}</Form.Divider>
-      <Form.Item label={MEMORY_CACHE.STORAGE.label} labelAlign="left">
-        {getFieldDecorator(MEMORY_CACHE.STORAGE.field)(
-          <MemoryField>
-            {MEMORY_CACHE.STORAGE.types.map(value => (
-              <Select.Option key={value} value={value}>
-                {value}
-              </Select.Option>
-            ))}
-          </MemoryField>
-        )}
-      </Form.Item>
-      <Form.Item label={MEMORY_CACHE.PEERS.label} labelAlign="left">
-        {getFieldDecorator(MEMORY_CACHE.PEERS.field)(
-          <MemoryField>
-            {MEMORY_CACHE.PEERS.types.map(value => (
+      <Form.Item label={MAIN.RESERVE_MEMORY.label} labelAlign="left">
+        {getFieldDecorator(MAIN.RESERVE_MEMORY.field)(
+          <MemoryField min={0} tooltipTitle={MAIN.RESERVE_MEMORY.tooltip}>
+            {MAIN.RESERVE_MEMORY.types.map(value => (
               <Select.Option key={value} value={value}>
                 {value}
               </Select.Option>
