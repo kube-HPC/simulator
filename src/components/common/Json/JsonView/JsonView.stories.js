@@ -2,7 +2,7 @@ import React from 'react';
 import { SB_SECTIONS } from 'const';
 import { JsonView } from 'components/common';
 import { addPipelineTemplate } from 'config';
-import addAlgorithmSchema from 'Routes/Base/SidebarRight/AddAlgorithm/schema';
+import addAlgorithmSchema from 'Routes/SidebarRight/AddAlgorithm/schema';
 
 export default {
   title: `${SB_SECTIONS.JSON}Json View`,

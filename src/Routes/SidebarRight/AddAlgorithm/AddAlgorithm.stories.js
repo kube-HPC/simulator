@@ -1,8 +1,8 @@
 import React, { useState, useReducer } from 'react';
+import { Button } from 'antd';
 
 import { JsonView } from 'components/common';
-import AddAlgorithm from 'Routes/Base/SidebarRight/AddAlgorithm';
-import { Button } from 'antd';
+import AddAlgorithm from 'Routes/SidebarRight/AddAlgorithm';
 import { SB_SECTIONS } from 'const';
 import Drawer from 'components/Drawer';
 

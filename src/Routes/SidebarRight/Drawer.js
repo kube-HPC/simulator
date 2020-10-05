@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Drawer from 'components/Drawer';
-import { useDrawer } from 'hooks';
 import { RIGHT_SIDEBAR_NAMES } from 'const';
+import useToggle from 'hooks/useToggle';
+import { useHistory, useParams } from 'react-router-dom';
 import AddAlgorithm from './AddAlgorithm';
 import AddDebug from './AddDebug';
 import AddPipeline from './AddPipeline';
@@ -23,14 +24,22 @@ const operationSelector = {
 };
 
 const DashboardDrawer = () => {
-  const { selectedPanel, closeDrawer, isVisible } = useDrawer();
-  const body = operationSelector[selectedPanel];
-  const width = CONTENT_CONFIG[selectedPanel]?.width ?? 0;
+  const { panelType, root } = useParams();
+  const { isOn, setOff } = useToggle(true);
+  const history = useHistory();
+
+  const handleDidClose = useCallback(() => {
+    history.push(`/${root}`);
+  }, [root, history]);
+
+  const body = operationSelector[panelType];
+  const width = CONTENT_CONFIG[panelType]?.width ?? 0;
   return (
     <Drawer
       width={width}
-      isOpened={isVisible}
-      onClose={closeDrawer}
+      isOpened={isOn}
+      onDidClose={handleDidClose}
+      onClose={setOff}
       destroyOnClose>
       {body}
     </Drawer>

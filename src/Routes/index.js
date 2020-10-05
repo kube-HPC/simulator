@@ -2,11 +2,10 @@ import React, { useEffect } from 'react';
 import { Layout, message } from 'antd';
 import styled from 'styled-components';
 import { Route } from 'react-router-dom';
-import { USER_GUIDE } from 'const';
 import { COLOR, COLOR_LAYOUT } from 'styles';
 import { useActions, useConnectionStatus } from 'hooks';
 import Header from 'components/Header';
-import SidebarRight from './Base/SidebarRight';
+import SidebarRight, { Drawer as SiderBarRightDrawer } from './SidebarRight';
 import SidebarLeft from './Base/SidebarLeft';
 import UserGuide from './Base/UserGuide';
 import LoadingScreen from './Base/LoadingScreen';
@@ -62,8 +61,12 @@ const Routes = () => {
               <Tables />
             </ContentMargin>
             <RightContainer>
-              <SidebarRight className={USER_GUIDE.SIDEBAR_TOP_RIGHT} isTop />
-              <SidebarRight className={USER_GUIDE.SIDEBAR_BOTTOM_RIGHT} />
+              <Route path="/:root" component={SidebarRight} />
+              <Route
+                exact
+                path="/:root/:panelType"
+                component={SiderBarRightDrawer}
+              />
             </RightContainer>
           </LayoutFullHeight>
         </Layout>
