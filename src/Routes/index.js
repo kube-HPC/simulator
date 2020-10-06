@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Route } from 'react-router-dom';
 import { COLOR, COLOR_LAYOUT } from 'styles';
 import { useActions, useConnectionStatus } from 'hooks';
-import Header from 'components/Header';
+import Header from 'Routes/Base/Header';
 import SidebarRight, { Drawer as SiderBarRightDrawer } from './SidebarRight';
 import SidebarLeft from './Base/SidebarLeft';
 import UserGuide from './Base/UserGuide';

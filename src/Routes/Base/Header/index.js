@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Route } from 'react-router-dom';
-import { AutoComplete } from 'components';
 import { useLeftSidebar } from 'hooks';
 import { FlexBox, Icons } from 'components/common';
 import { USER_GUIDE } from 'const';
 import { COLOR_LAYOUT } from 'styles';
+import AutoComplete from './AutoComplete';
 import ExperimentPicker from './ExperimentPicker.react';
 import HelpBar from './HelpBar.react';
 // DO NOT REMOVE! This is important to preload the monaco instance into the global window!!!
