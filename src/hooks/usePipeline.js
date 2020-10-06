@@ -14,7 +14,7 @@ const usePipeline = () => {
   const dataStats = useSelector(
     state => state[STATE_SOURCES.PIPELINE_TABLE].dataStats
   );
-  const { value: experimentName } = useExperiments();
+  const { experimentId: experimentName } = useExperiments();
 
   const { deleteStored, updateStored, execStored } = useActions();
 

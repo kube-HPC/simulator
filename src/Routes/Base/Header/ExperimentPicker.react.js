@@ -1,10 +1,10 @@
+import React, { memo, useCallback, useState } from 'react';
+import styled from 'styled-components';
+import { ifProp } from 'styled-tools';
 import { Button, Dropdown, Input, Menu, Tag, Typography } from 'antd';
 import { FlexBox, Icons } from 'components/common';
 import { experimentsSchema } from 'config';
 import { useExperiments } from 'hooks';
-import React, { memo, useCallback, useState } from 'react';
-import styled from 'styled-components';
-import { ifProp } from 'styled-tools';
 import { COLOR, COLOR_EXPERIMENTS } from 'styles/colors';
 
 const BigTag = styled(Tag)`
@@ -36,7 +36,14 @@ const NOOP = () => {};
 const { Text } = Typography;
 
 const ExperimentPicker = () => {
-  const { experiments, value, set: onChange, add, remove } = useExperiments();
+  const {
+    experiments,
+    set: onChange,
+    add,
+    remove,
+    setExperiment,
+    experimentId,
+  } = useExperiments();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 
@@ -46,33 +53,28 @@ const ExperimentPicker = () => {
     name,
   ]);
 
-  const onNameChange = useCallback(
-    // eslint-disable-next-line
-    ({ target: { value } }) => setName(value),
-    []
-  );
-  const onDescriptionChange = useCallback(
-    // eslint-disable-next-line
-    ({ target: { value } }) => setDescription(value),
-    []
-  );
-  const onShowAll = useCallback(() => onChange(experimentsSchema.showAll), [
-    onChange,
+  const onNameChange = useCallback(e => setName(e.target.value), [setName]);
+  const onDescriptionChange = useCallback(e => setDescription(e.target.value), [
+    setDescription,
   ]);
+  // const onShowAll = useCallback(() => onChange(experimentsSchema.showAll), [
+  //   onChange,
+  // ]);
+  const onShowAll = useCallback(() => {}, []);
 
   const menu = (
-    <MenuDisabledItems selectedKeys={[value]} subMenuCloseDelay={0.5}>
+    <MenuDisabledItems selectedKeys={[experimentId]} subMenuCloseDelay={0.5}>
       {
         // eslint-disable-next-line
         experiments.map(({ name, description }, index) => {
           const onRemove = () => {
             remove(name);
-            if (name === value) {
+            if (name === experimentId) {
               onChange(experimentsSchema.showAll);
             }
           };
-          const onSelect = () => onChange(name);
-          const isDisabled = name === value;
+          const onSelect = () => setExperiment(name);
+          const isDisabled = name === experimentId;
 
           return (
             <Menu.Item key={name} disabled={isDisabled}>
@@ -111,13 +113,13 @@ const ExperimentPicker = () => {
   const tagColor =
     COLOR_EXPERIMENTS[
       // eslint-disable-next-line
-      experiments.findIndex(({ name }) => name === value) %
+      experiments.findIndex(({ name }) => name === experimentId) %
         COLOR_EXPERIMENTS.length
     ] || COLOR.blueLight;
 
   return (
     <Dropdown overlay={menu} overlayStyle={overflow}>
-      <BigTag color={tagColor}>{value}</BigTag>
+      <BigTag color={tagColor}>{experimentId}</BigTag>
     </Dropdown>
   );
 };
