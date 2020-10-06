@@ -15,14 +15,13 @@ const Select = styled(AntSelect)`
 const types = Object.values(pipelineTypes);
 
 const TypesSelect = () => {
-  const { value, set: onChange } = useFilters();
-
+  const { filters, setFilters } = useFilters();
   return (
     <FlexBox.Auto>
       <Typography.Text strong>Filter By Type</Typography.Text>
       <Select
-        value={value}
-        onChange={onChange}
+        value={filters}
+        onChange={setFilters}
         mode="multiple"
         allowClear
         placeholder="Filter By Pipeline Types">
