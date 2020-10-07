@@ -16,6 +16,7 @@ const OverviewDrawer = () => {
   }, [history]);
 
   const item = dataSource.find(job => job.key === jobId);
+  if (!item) return null;
 
   return (
     <Drawer
