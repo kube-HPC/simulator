@@ -18,7 +18,9 @@ const jobsSelector = createSelector(
   state => state.autoCompleteFilter.filter,
   selector(FILTER_TYPES),
   (dataSource, filter, types) =>
-    dataSource && dataSource.filter(predicate(filter)).filter(byTypes(types))
+    dataSource
+      ? dataSource.filter(predicate(filter)).filter(byTypes(types))
+      : []
 );
 
 const useJobs = () => {
