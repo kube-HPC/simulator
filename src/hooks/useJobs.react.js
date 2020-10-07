@@ -3,14 +3,13 @@ import { createSelector } from 'reselect';
 import { createStore } from 'reusable';
 import isEqual from 'lodash/isEqual';
 import { LEFT_SIDEBAR_NAMES, STATE_SOURCES } from 'const';
-import { selector } from 'utils';
 import { dataSelector, tableSelector } from 'utils/tableSelector';
 import { jobColumns } from 'Routes/Tables/Jobs';
 
-const { JOBS_TABLE, FILTER_TYPES } = STATE_SOURCES;
+const { JOBS_TABLE } = STATE_SOURCES;
 
 const { predicate } = tableSelector[LEFT_SIDEBAR_NAMES.JOBS];
-const byTypes = () => ({ pipeline: { types } }) => {
+const byTypes = ({ pipeline: { types } }) => {
   const { search } = window.location;
   const query = new URLSearchParams(search);
   const filters = query.getAll('filter');
@@ -22,11 +21,8 @@ const byTypes = () => ({ pipeline: { types } }) => {
 const jobsSelector = createSelector(
   dataSelector(JOBS_TABLE),
   state => state.autoCompleteFilter.filter,
-  selector(FILTER_TYPES),
-  (dataSource, filter, types) =>
-    dataSource
-      ? dataSource.filter(predicate(filter)).filter(byTypes(types))
-      : []
+  (dataSource, filter) =>
+    dataSource ? dataSource.filter(predicate(filter)).filter(byTypes) : []
 );
 
 const useJobs = () => {
