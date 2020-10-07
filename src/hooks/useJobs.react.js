@@ -10,8 +10,14 @@ import { jobColumns } from 'Routes/Tables/Jobs';
 const { JOBS_TABLE, FILTER_TYPES } = STATE_SOURCES;
 
 const { predicate } = tableSelector[LEFT_SIDEBAR_NAMES.JOBS];
-const byTypes = filters => ({ pipeline: { types } }) =>
-  filters.length === 0 ? true : filters.every(tag => types.includes(tag));
+const byTypes = () => ({ pipeline: { types } }) => {
+  const { search } = window.location;
+  const query = new URLSearchParams(search);
+  const filters = query.getAll('filter');
+  return filters.length === 0
+    ? true
+    : filters.every(tag => types.includes(tag));
+};
 
 const jobsSelector = createSelector(
   dataSelector(JOBS_TABLE),
