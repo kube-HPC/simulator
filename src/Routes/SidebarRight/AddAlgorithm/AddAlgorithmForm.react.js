@@ -28,7 +28,6 @@ const mainAdvancedOptions = Object.entries(formTemplate.main.options)
 
 const insertAlgorithmOptions = options =>
   options.map((option, key) => (
-    // TODO: implement a better key
     // eslint-disable-next-line
     <Select.Option key={key} value={option}>
       {toUpperCaseFirstLetter(option)}
@@ -121,7 +120,11 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
               entryPoint,
               baseImage,
             }
-          : { ...formObject.main, options, ...formObject[buildType] };
+          : {
+              ...formObject.main,
+              options,
+              ...formObject[buildType],
+            };
       // #endregion
 
       if (buildType === BUILD_TYPES.GIT.field) {
@@ -190,6 +193,17 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
         )}
       </Form.Item>
       <Form.Divider>{MAIN.DIVIDER.ADVANCED}</Form.Divider>
+      <Form.Item label={MAIN.RESERVE_MEMORY.label} labelAlign="left">
+        {getFieldDecorator(MAIN.RESERVE_MEMORY.field)(
+          <MemoryField min={0} tooltipTitle={MAIN.RESERVE_MEMORY.tooltip}>
+            {MAIN.RESERVE_MEMORY.types.map(value => (
+              <Select.Option key={value} value={value}>
+                {value}
+              </Select.Option>
+            ))}
+          </MemoryField>
+        )}
+      </Form.Item>
       <Form.Item label={MAIN.WORKERS.label}>
         {getFieldDecorator(MAIN.WORKERS.field)(<InputNumber min={0} />)}
       </Form.Item>

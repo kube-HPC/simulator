@@ -5,6 +5,9 @@ import Ellipsis from 'components/common/Ellipsis.react';
 import { COLOR_TASK_STATUS } from 'styles/colors';
 import { sorter } from 'utils/string';
 
+// drop the first slash if exists
+const firstSlash = new RegExp('^/');
+
 const debugTableColumns = ({ onDelete }) => [
   {
     title: 'Algorithm Name',
@@ -18,16 +21,22 @@ const debugTableColumns = ({ onDelete }) => [
     key: 'path',
     render: (_, record) => (
       <CopyToClipboard
-        text={`ws://${window.location.host}/${record.data.path}`}
+        text={`ws://${window.location.host}/${record.data.path.replace(
+          firstSlash,
+          ''
+        )}`}
         onCopy={
           () =>
             notification.success({
               message: 'Copied to clipboard',
             })
-          // eslint-disable-next-line
+          // eslint-disable-next-line react/jsx-curly-newline
         }>
         <Tag color={COLOR_TASK_STATUS.active}>
-          {`ws://${window.location.host}/${record.data.path}`}
+          {`ws://${window.location.host}/${record.data.path.replace(
+            firstSlash,
+            ''
+          )}`}
         </Tag>
       </CopyToClipboard>
     ),

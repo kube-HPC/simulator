@@ -1,4 +1,20 @@
-export default {
+const memoryTypes = [
+  'Ki',
+  'M',
+  'Mi',
+  'Gi',
+  'm',
+  'K',
+  'G',
+  'T',
+  'Ti',
+  'P',
+  'Pi',
+  'E',
+  'Ei',
+];
+
+const addAlgorithmSchema = {
   ENV_TYPES: {
     nodejs: 'Node.js',
     python: 'Python',
@@ -140,21 +156,7 @@ export default {
     MEMORY: {
       field: 'main.mem',
       label: 'Memory Usage',
-      types: [
-        'Ki',
-        'M',
-        'Mi',
-        'Gi',
-        'm',
-        'K',
-        'G',
-        'T',
-        'Ti',
-        'P',
-        'Pi',
-        'E',
-        'Ei',
-      ],
+      types: memoryTypes,
     },
     NAME: {
       field: 'main.name',
@@ -173,5 +175,13 @@ export default {
       field: 'main.minHotWorkers',
       label: 'Min Hot Workers',
     },
+    RESERVE_MEMORY: {
+      field: 'main.reservedMemory',
+      label: 'Reserved Memory',
+      types: memoryTypes,
+      tooltip:
+        "Reserved memory for HKube's operations, such as in-memory cache. Higher values speed up data retrieval but leave less memory for the algorithms. Lower values slow down data retrieval but leave more memory for the algorithms.",
+    },
   },
 };
+export default addAlgorithmSchema;

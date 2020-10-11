@@ -12,6 +12,7 @@ const addAlgorithmTemplateForm = {
     algorithmEnv: '',
     workerEnv: '',
     nodeSelector: '',
+    reservedMemory: '512Mi',
   },
   code: {
     env: undefined,
