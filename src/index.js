@@ -1,22 +1,33 @@
 import { ErrorBoundary } from 'components';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { render } from 'react-dom';
 import { Provider, useSelector } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ReusableProvider } from 'reusable';
 import { GlobalStyle } from 'styles';
+import { useActions } from 'hooks';
 import Root from './Routes';
 import store from './store';
 import { STATE_SOURCES } from './const';
 
 const RouterWrapper = () => {
   // the base url sets the basename because the app is not always served from the host's root
-  const baseUrl = useSelector(state => state[STATE_SOURCES.SETTINGS].baseUrl);
-  return (
+  const { init } = useActions();
+  useEffect(() => {
+    init();
+  }, [init]);
+
+  const { baseUrl, hasConfig } = useSelector(
+    state => state[STATE_SOURCES.CONFIG]
+  );
+
+  // changing the basename of the router after initial render does not work
+  // it has to be set on initial render
+  return hasConfig ? (
     <Router basename={baseUrl}>
       <Root />
     </Router>
-  );
+  ) : null;
 };
 
 render(

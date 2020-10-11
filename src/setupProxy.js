@@ -1,4 +1,5 @@
 const proxy = require('http-proxy-middleware');
+const packageJSON = require('./../package.json');
 
 module.exports = function (app) {
   app.use(
@@ -19,7 +20,7 @@ module.exports = function (app) {
           schema: process.env.isSecure ? 'https://' : 'http://',
         },
         board: {
-          baseUrl: '',
+          baseUrl: packageJSON.homepage,
           host: process.env.BOARD_HOST || 'localhost',
           port: process.env.BOARD_PORT || '30010',
           path: process.env.BOARD_PATH || '',

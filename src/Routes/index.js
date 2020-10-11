@@ -40,12 +40,11 @@ message.config({
 });
 
 const Routes = () => {
-  const { init, socketInit } = useActions();
+  const { socketInit } = useActions();
 
   useEffect(() => {
-    init();
     socketInit();
-  }, [init, socketInit]);
+  }, [socketInit]);
 
   const { isDataAvailable } = useConnectionStatus();
 
