@@ -1,3 +1,4 @@
+import axios from 'axios';
 import AT from 'const/application-actions';
 
 const reject = (dispatch, payload, action) => {
@@ -27,18 +28,16 @@ const success = (dispatch, payload, action) => {
 };
 
 const restConfigMiddleware = ({ dispatch }) => next => action => {
-  if (![AT.REST_REQ_CONFIG].includes(action.type)) {
-    return next(action);
-  }
-
+  if (action.type !== AT.REST_REQ_CONFIG) return next(action);
   if (action.type === AT.REST_REQ_CONFIG) {
     pending(dispatch, 'pending', action);
-    fetch(`/${action.payload.url}`) //eslint-disable-line
+    fetch(`${window.location}/${action.payload.url}`) //eslint-disable-line
       .then(res => {
         //eslint-disable-line
         res
           .json()
           .then(data => {
+            axios.defaults.baseURL = data.config.board.baseUrl;
             success(dispatch, data, action);
           })
           .catch(err => console.error(err));

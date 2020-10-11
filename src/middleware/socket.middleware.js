@@ -130,7 +130,6 @@ const socketMiddleware = ({ dispatch, getState }) => {
       const { name, lastRoom } = getSocketRoom(action.payload);
       connectOperation({ socket, name, lastRoom });
     }
-
     return next(action);
   };
 };

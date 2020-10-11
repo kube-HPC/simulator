@@ -17,7 +17,7 @@ const parseBool = value => {
 
 app.use(express.static(path.join(__dirname, '../build')));
 
-app.get('/config', (req, res) => {
+app.get('*/dashboard-config.json', (req, res) => {
   res.json({
     config: {
       hkubeSystemVersion: process.env.HKUBE_SYSTEM_VERSION,
@@ -30,6 +30,7 @@ app.get('/config', (req, res) => {
         schema: process.env.isSecure ? 'https://' : 'http://',
       },
       board: {
+        baseUrl: process.env.HKUBE_BASE_URL || '',
         useLocation: parseBool(process.env.BOARD_USE_LOCATION),
         host: process.env.BOARD_HOST || 'localhost',
         port: process.env.BOARD_PORT || '30010',

@@ -1,13 +1,13 @@
 const proxy = require('http-proxy-middleware');
 
-module.exports = function(app) {
+module.exports = function (app) {
   app.use(
     proxy('/api', {
       target: 'http://localhost:8091',
       pathRewrite: { '^/api': '' },
-    }),
+    })
   );
-  app.get('/config', (req, res) => {
+  app.get('*/dashboard-config.json', (req, res) => {
     res.json({
       config: {
         hkubeSystemVersion: process.env.HKUBE_SYSTEM_VERSION,
@@ -19,6 +19,7 @@ module.exports = function(app) {
           schema: process.env.isSecure ? 'https://' : 'http://',
         },
         board: {
+          baseUrl: '',
           host: process.env.BOARD_HOST || 'localhost',
           port: process.env.BOARD_PORT || '30010',
           path: process.env.BOARD_PATH || '',

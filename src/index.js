@@ -1,21 +1,30 @@
 import { ErrorBoundary } from 'components';
 import React from 'react';
 import { render } from 'react-dom';
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ReusableProvider } from 'reusable';
 import { GlobalStyle } from 'styles';
 import Root from './Routes';
 import store from './store';
+import { STATE_SOURCES } from './const';
+
+const RouterWrapper = () => {
+  // the base url sets the basename because the app is not always served from the host's root
+  const baseUrl = useSelector(state => state[STATE_SOURCES.SETTINGS].baseUrl);
+  return (
+    <Router basename={baseUrl}>
+      <Root />
+    </Router>
+  );
+};
 
 render(
   <Provider store={store}>
     <ReusableProvider>
       <ErrorBoundary>
         <GlobalStyle />
-        <Router>
-          <Root />
-        </Router>
+        <RouterWrapper />
       </ErrorBoundary>
     </ReusableProvider>
   </Provider>,
