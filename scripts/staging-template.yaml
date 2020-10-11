@@ -75,6 +75,8 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.namespace
+            - name: HKUBE_BASE_URL
+              value: /hkube/simulator-${PR_NAME}
           image: hkube/simulator:${PR_NAME}
           imagePullPolicy: Always
           name: simulator
