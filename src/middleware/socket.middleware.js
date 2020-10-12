@@ -41,8 +41,6 @@ const connectOperation = ({ socket, name, lastRoom }) => {
   );
 };
 
-let isSocketConnected = false;
-
 const toSocketRoom = value => (value ? `experiment:${value}` : null);
 
 // this value is used for un-subscribing the previous experiment
@@ -87,23 +85,25 @@ const socketMiddleware = ({ dispatch, getState }) => {
                 ...emitOptions,
               })
             : console.info(`${event}, ${args}`);
-
-          changeConnectionStatus(dispatch, { isSocketConnected });
+          changeConnectionStatus(dispatch, {
+            isSocketConnected: socket.connected,
+          });
         });
       });
 
-      noConnectionEvents.forEach(e =>
-        socket.on(e, args => {
-          console.info(`${e}, ${args}`);
-          isSocketConnected = false;
-          changeConnectionStatus(dispatch, { isSocketConnected });
-        })
-      );
+      noConnectionEvents.forEach(event => {
+        socket.on(event, args => {
+          console.info(`${event}, ${args}`);
+          changeConnectionStatus(dispatch, {
+            isSocketConnected: socket.connected,
+          });
+        });
+      });
 
       Object.keys(currentTopicRegistered).forEach(act =>
         socket.on(currentTopicRegistered[act].payload.topic, data => {
+          const isSocketConnected = socket.connected;
           if (data && !isSocketConnected) {
-            isSocketConnected = true;
             changeConnectionStatus(dispatch, { isSocketConnected });
           }
           success(dispatch, data, currentTopicRegistered[act]);
