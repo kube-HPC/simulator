@@ -18,7 +18,7 @@ npm start
 Start the proxy
 
 ```
-./dev-proxy.sh
+npm run start:proxy
 ```
 
 The app will be served under localhost:3005/some/subdir
