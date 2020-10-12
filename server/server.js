@@ -17,7 +17,7 @@ const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 9050;
 
 const indexHtmlContent = fs
   .readFileSync(indexHtml, 'utf-8')
-  .replace(/__BASE_URL_TOKEN__/g, `/${baseUrl}`);
+  .replace(/__BASE_URL_TOKEN__/g, `/${baseUrl}/`);
 
 app.use(express.static(path.join(__dirname, '../build')));
 
