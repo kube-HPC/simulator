@@ -11,7 +11,6 @@ import store from './store';
 import { STATE_SOURCES } from './const';
 
 const RouterWrapper = () => {
-  // the base url sets the basename because the app is not always served from the host's root
   const { init } = useActions();
   useEffect(() => {
     init();
@@ -21,8 +20,16 @@ const RouterWrapper = () => {
     state => state[STATE_SOURCES.CONFIG]
   );
 
-  // changing the basename of the router after initial render does not work
-  // it has to be set on initial render
+  /**
+   * The base url sets the basename because the app is not always served from
+   * the host's root.
+   *
+   * Changing the basename of the router after initial render does not work it
+   * has to be set on initial render only!
+   *
+   * Return null to avoid inner redirects/data fetching inside the app itself
+   * until we are all set
+   */
   return hasConfig ? (
     <Router basename={baseUrl}>
       <Root />
