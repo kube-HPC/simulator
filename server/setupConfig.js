@@ -10,18 +10,18 @@ const parseBool = value => {
   return true;
 };
 
-export const hkubeSystemVersion = process.env.HKUBE_SYSTEM_VERSION;
+const hkubeSystemVersion = process.env.HKUBE_SYSTEM_VERSION;
 
-export const baseUrl = process.env.HKUBE_BASE_URL
+const baseUrl = process.env.HKUBE_BASE_URL
   ? process.env.HKUBE_BASE_URL.replace(/^\//, '')
   : '';
 
-export const BOARD_HOST = process.env.BOARD_HOST || 'localhost';
-export const BOARD_PORT = process.env.BOARD_PORT || '3005';
+const BOARD_HOST = process.env.BOARD_HOST || 'localhost';
+const BOARD_PORT = process.env.BOARD_PORT || '3005';
 
-export const indexHtml = path.join(__dirname, '../build', 'index.html');
+const indexHtml = path.join(__dirname, '../build', 'index.html');
 
-export const monitorBackend = {
+const monitorBackend = {
   useLocation: parseBool(process.env.MONITOR_BACKEND_USE_LOCATION),
   host: process.env.MONITOR_BACKEND_HOST || 'localhost',
   port: process.env.MONITOR_BACKEND_PORT || '30010',
@@ -30,7 +30,7 @@ export const monitorBackend = {
   schema: process.env.isSecure ? 'https://' : 'http://',
 };
 
-export const board = {
+const board = {
   baseUrl,
   useLocation: parseBool(process.env.BOARD_USE_LOCATION),
   host: BOARD_HOST,
@@ -39,4 +39,14 @@ export const board = {
   schema: process.env.isSecure ? 'https://' : 'http://',
 };
 
-export const fullBaseUrl = `${board.schema}${board.host}:${board.port}/${board.baseUrl}/`;
+const fullBaseUrl = `${board.schema}${board.host}:${board.port}/${board.baseUrl}/`;
+module.exports = {
+  hkubeSystemVersion,
+  baseUrl,
+  fullBaseUrl,
+  board,
+  BOARD_HOST,
+  BOARD_PORT,
+  indexHtml,
+  monitorBackend,
+};
