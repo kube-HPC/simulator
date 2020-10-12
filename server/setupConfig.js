@@ -39,11 +39,9 @@ const board = {
   schema: process.env.isSecure ? 'https://' : 'http://',
 };
 
-const fullBaseUrl = `${board.schema}${board.host}:${board.port}/${board.baseUrl}/`;
 module.exports = {
   hkubeSystemVersion,
   baseUrl,
-  fullBaseUrl,
   board,
   BOARD_HOST,
   BOARD_PORT,
