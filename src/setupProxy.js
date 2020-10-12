@@ -12,6 +12,7 @@ module.exports = function (app) {
     res.json({
       config: {
         hkubeSystemVersion: process.env.HKUBE_SYSTEM_VERSION,
+        baseUrl: packageJSON.homepage,
         monitorBackend: {
           host: process.env.MONITOR_BACKEND_HOST || 'localhost',
           port: process.env.MONITOR_BACKEND_PORT || '30010',
@@ -20,7 +21,6 @@ module.exports = function (app) {
           schema: process.env.isSecure ? 'https://' : 'http://',
         },
         board: {
-          baseUrl: packageJSON.homepage,
           host: process.env.BOARD_HOST || 'localhost',
           port: process.env.BOARD_PORT || '30010',
           path: process.env.BOARD_PATH || '',

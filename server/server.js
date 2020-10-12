@@ -25,6 +25,7 @@ app.get('*/dashboard-config.json', (req, res) => {
   res.json({
     config: {
       hkubeSystemVersion,
+      baseUrl,
       monitorBackend,
       board,
     },

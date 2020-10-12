@@ -10,7 +10,7 @@ export const config = handleActions(
   {
     [`${actionType.SOCKET_GET_CONFIG}_SUCCESS`]: (state, { payload }) => ({
       ...state,
-      baseUrl: payload.config.board.baseUrl,
+      baseUrl: payload.config.baseUrl,
       hasConfig: true,
     }),
   },

@@ -31,7 +31,6 @@ const monitorBackend = {
 };
 
 const board = {
-  baseUrl,
   useLocation: parseBool(process.env.BOARD_USE_LOCATION),
   host: BOARD_HOST,
   port: BOARD_PORT,
