@@ -10,20 +10,20 @@ import WorkersTable from './Workers';
 
 const Body = () => (
   <Switch>
-    <Route exact path="/debug" component={DebugTable} />
-    <Route exact path="/drivers" component={DriversTable} />
+    <Route exact path={['/jobs', '/jobs/:jobId?/*']} component={Jobs} />
     <Route
       exact
       path={['/pipelines', '/pipelines/:pipelineId?/*']}
       component={PipelinesTable}
     />
-    <Route exact path="/workers" component={WorkersTable} />
     <Route
       exact
       path={['/algorithms', '/algorithms/:algorithmId?/*']}
       component={AlgorithmsTable}
     />
-    <Route exact path={['/jobs', '/jobs/:jobId?/*']} component={Jobs} />
+    <Route exact path="/workers/:empty?" component={WorkersTable} />
+    <Route exact path="/drivers/:empty?" component={DriversTable} />
+    <Route exact path="/debug/:empty?" component={DebugTable} />
     <Redirect to="/jobs" replace />
   </Switch>
 );
