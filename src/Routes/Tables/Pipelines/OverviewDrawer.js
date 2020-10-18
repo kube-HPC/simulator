@@ -11,6 +11,8 @@ const OverviewDrawer = () => {
   const { pipeline: record } = useActivePipeline();
   const { setOff, isOn } = useToggle(true);
 
+  if (!record) return null;
+
   return (
     <Drawer
       isOpened={isOn}

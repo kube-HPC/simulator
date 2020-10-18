@@ -9,7 +9,6 @@ import usePath, { OVERVIEW_TABS as TABS } from './../usePath';
 
 const AlgorithmsTabs = ({ name }) => {
   const { tabKey: activeKey, goTo } = usePath();
-
   const setActiveKey = useCallback(tab => goTo.overview({ nextTabKey: tab }), [
     goTo,
   ]);
