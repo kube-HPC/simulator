@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Layout, Icon, Menu, Badge } from 'antd';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useErrorLogs } from 'hooks';
 import useStats from 'hooks/useStats';
 import useStorage from 'hooks/useStorage';
@@ -23,9 +23,9 @@ const topMargin = { marginTop: '20%' };
 const noItemSelect = [];
 
 const SidebarRight = ({ isTop, className }) => {
-  // const { openDrawer } = useDrawer();
   const { root } = useParams();
   const history = useHistory();
+  const location = useLocation();
 
   const { totalNewWarnings } = useErrorLogs();
   const { cpu, memory, gpu } = useStats();
@@ -47,10 +47,12 @@ const SidebarRight = ({ isTop, className }) => {
   );
 
   // const menuSelect = useCallback(({ key }) => openDrawer(key), [openDrawer]);
-  const menuSelect = useCallback(({ key }) => history.push(`/${root}/${key}`), [
-    history,
-    root,
-  ]);
+  const menuSelect = useCallback(
+    ({ key }) => {
+      history.push(`/${root}/${key}${location.search}`);
+    },
+    [history, root, location]
+  );
 
   return (
     <SiderLight

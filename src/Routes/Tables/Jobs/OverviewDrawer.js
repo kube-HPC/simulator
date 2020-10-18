@@ -1,19 +1,19 @@
 import React, { useCallback } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
 import { useJobs } from 'hooks';
 import Drawer from 'components/Drawer';
 import { DRAWER_SIZE } from 'const';
 import useToggle from 'hooks/useToggle';
 import JobInfo from './JobInfo.react';
+import usePath from './usePath';
 
 const OverviewDrawer = () => {
-  const { jobId } = useParams();
+  const { goTo, jobId } = usePath();
   const { setOff, isOn } = useToggle(true);
-  const history = useHistory();
   const { dataSource } = useJobs();
+
   const goBack = useCallback(() => {
-    history.replace('/jobs');
-  }, [history]);
+    goTo.root();
+  }, [goTo]);
 
   const item = dataSource.find(job => job.key === jobId);
   if (!item) return null;

@@ -29,7 +29,7 @@ const DashboardDrawer = () => {
   const history = useHistory();
 
   const handleDidClose = useCallback(() => {
-    history.push(`/${root}`);
+    history.push(`/${root}${window.location.search}`);
   }, [root, history]);
 
   const body = operationSelector[panelType];

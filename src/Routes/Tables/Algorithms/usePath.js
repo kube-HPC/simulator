@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useHistory, useParams } from 'react-router';
+import { useHistory, useLocation, useParams } from 'react-router';
 
 export const OVERVIEW_TABS = {
   VERSIONS: 'Versions',
@@ -11,7 +11,7 @@ export const OVERVIEW_TABS = {
 export default () => {
   const { algorithmId, tabKey } = useParams();
   const history = useHistory();
-
+  const location = useLocation();
   const paths = useMemo(
     () => ({
       root: '/algorithms',
@@ -27,15 +27,23 @@ export default () => {
 
   const goTo = useMemo(
     () => ({
-      root: () => history.push(paths.root),
+      root: () =>
+        history.push({ pathname: paths.root, search: location.search }),
       overview: ({
         nextAlgorithmId = algorithmId,
         nextTabKey = OVERVIEW_TABS.VERSIONS,
-      } = {}) => history.push(paths.overview({ nextAlgorithmId, nextTabKey })),
+      } = {}) =>
+        history.push({
+          pathname: paths.overview({ nextAlgorithmId, nextTabKey }),
+          search: location.search,
+        }),
       edit: ({ nextAlgorithmId = algorithmId } = {}) =>
-        history.push(paths.edit({ nextAlgorithmId })),
+        history.push({
+          pathname: paths.edit({ nextAlgorithmId }),
+          search: location.search,
+        }),
     }),
-    [history, paths, algorithmId]
+    [history, paths, algorithmId, location]
   );
 
   return {

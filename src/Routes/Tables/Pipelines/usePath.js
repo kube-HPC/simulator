@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useHistory, useParams } from 'react-router';
+import { useHistory, useLocation, useParams } from 'react-router';
 
 export const OVERVIEW_TABS = {
   INFO: 'information',
@@ -9,7 +9,7 @@ export const OVERVIEW_TABS = {
 export default () => {
   const { pipelineId, tabKey } = useParams();
   const history = useHistory();
-
+  const location = useLocation();
   const paths = useMemo(
     () => ({
       root: '/pipelines',
@@ -25,15 +25,26 @@ export default () => {
 
   const goTo = useMemo(
     () => ({
-      root: () => history.push(paths.root),
+      root: () =>
+        history.push({
+          pathname: paths.root,
+          search: location.search,
+        }),
       overview: ({
         nextPipelineId = pipelineId,
         nextTabKey = OVERVIEW_TABS.INFO,
-      } = {}) => history.push(paths.overview({ nextPipelineId, nextTabKey })),
+      } = {}) =>
+        history.push({
+          pathname: paths.overview({ nextPipelineId, nextTabKey }),
+          search: location.search,
+        }),
       edit: ({ nextPipelineId = pipelineId } = {}) =>
-        history.push(paths.edit({ nextPipelineId })),
+        history.push({
+          pathname: paths.edit({ nextPipelineId }),
+          search: location.search,
+        }),
     }),
-    [history, paths, pipelineId]
+    [history, paths, pipelineId, location]
   );
 
   return {
