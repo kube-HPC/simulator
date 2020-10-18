@@ -28,10 +28,11 @@ const success = (dispatch, payload, action) => {
 };
 
 const restConfigMiddleware = ({ dispatch }) => next => action => {
+  const baseRef = document.getElementById('base_ref').innerHTML;
   if (action.type !== AT.REST_REQ_CONFIG) return next(action);
   if (action.type === AT.REST_REQ_CONFIG) {
     pending(dispatch, 'pending', action);
-    fetch(`${window.location}/${action.payload.url}`) //eslint-disable-line
+    fetch(`${baseRef}${action.payload.url}`) //eslint-disable-line
       .then(res => {
         //eslint-disable-line
         res
