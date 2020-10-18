@@ -1,6 +1,8 @@
 import axios from 'axios';
 import AT from 'const/application-actions';
 
+const baseRef = document.getElementById('base_ref').innerHTML;
+
 const reject = (dispatch, payload, action) => {
   dispatch({
     type: `${action.payload.actionType}_REJECT`,
@@ -28,13 +30,11 @@ const success = (dispatch, payload, action) => {
 };
 
 const restConfigMiddleware = ({ dispatch }) => next => action => {
-  const baseRef = document.getElementById('base_ref').innerHTML;
   if (action.type !== AT.REST_REQ_CONFIG) return next(action);
   if (action.type === AT.REST_REQ_CONFIG) {
     pending(dispatch, 'pending', action);
-    fetch(`${baseRef}${action.payload.url}`) //eslint-disable-line
+    fetch(`${baseRef}${action.payload.url}`)
       .then(res => {
-        //eslint-disable-line
         res
           .json()
           .then(data => {
