@@ -37,10 +37,10 @@ const getBuildsTableColumns = ({ cancelBuild, rerunBuild }) => [
     sorter: (a, b) => sorter(a.env, b.env),
   },
   {
-    title: 'Version',
-    dataIndex: 'version',
-    key: 'version',
-    sorter: (a, b) => sorter(a.version, b.version),
+    title: 'Image Tag',
+    dataIndex: 'imageTag',
+    key: 'imageTag',
+    sorter: (a, b) => sorter(a.imageTag, b.imageTag),
   },
   {
     title: 'Start Time',
@@ -94,13 +94,13 @@ const getBuildsTableColumns = ({ cancelBuild, rerunBuild }) => [
           onClick={() => cancelBuild(record.buildId)}
         />
       ) : (
-        <Button
-          type="default"
-          shape="circle"
-          icon="redo"
-          onClick={() => rerunBuild(record.buildId)}
-        />
-      );
+          <Button
+            type="default"
+            shape="circle"
+            icon="redo"
+            onClick={() => rerunBuild(record.buildId)}
+          />
+        );
     },
   },
 ];
