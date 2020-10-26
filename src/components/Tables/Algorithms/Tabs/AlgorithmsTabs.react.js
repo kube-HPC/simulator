@@ -54,7 +54,7 @@ const AlgorithmsTabs = ({ name }) => {
         <Tabs.TabPane tab={TABS.VERSIONS} key={TABS.VERSIONS}>
           <VersionsTable
             algorithmName={algorithm.name}
-            currentVersion={algorithm.versionId}
+            currentVersion={algorithm.version}
             isFetch={activeKey === TABS.VERSIONS}
           />
         </Tabs.TabPane>

@@ -6,7 +6,7 @@ import { Ellipsis, FlexBox } from 'components/common';
 import { COLOR_PIPELINE_STATUS } from 'styles';
 const { Text } = Typography;
 
-const deleteConfirmAction = (action, { id, name }) => {
+const deleteConfirmAction = (action, { name, version }) => {
   Modal.confirm({
     title: 'Deleting Algorithm Version',
     content: (
@@ -19,12 +19,12 @@ const deleteConfirmAction = (action, { id, name }) => {
     iconType: 'warning',
     cancelText: 'Cancel',
     onOk() {
-      action({ id, name });
+      action({ name, version });
     },
   });
 };
 
-const currentConfirmAction = (action, { id, name }) => {
+const currentConfirmAction = (action, { name, version }) => {
   Modal.confirm({
     title: 'Change Algorithm Version',
     content: (
@@ -36,7 +36,7 @@ const currentConfirmAction = (action, { id, name }) => {
     okType: 'primary',
     cancelText: 'Cancel',
     onOk() {
-      action({ id, name });
+      action({ name, version });
     },
   });
 };
@@ -48,56 +48,56 @@ const Type = type => <Tag>{type}</Tag>;
 const Created = created => <Moment format="DD/MM/YY HH:mm:ss">{created}</Moment>;
 
 const getVersionsColumns = ({ onDelete, onApply, currentVersion }) => {
-  const AlgorithmVersion = versionId => {
-    const isCurrentVersion = currentVersion === versionId;
-    return versionId ? (
-      <Ellipsis copyable ellipsis={false} text={versionId} strong={isCurrentVersion} />
+  const AlgorithmVersion = version => {
+    const isCurrentVersion = currentVersion === version;
+    return version ? (
+      <Ellipsis copyable ellipsis={false} text={version} strong={isCurrentVersion} />
     ) : (
         <Tag>No Image</Tag>
       );
   };
 
   const Action = (_, record) => {
-    const { id } = record;
-    const isCurrentVersion = currentVersion === id;
+    const { version } = record;
+    const isCurrentVersion = currentVersion === version;
 
     return isCurrentVersion ? (
       <Tag color={COLOR_PIPELINE_STATUS.ready}>Current Version</Tag>
     ) : (
-        <FlexBox justify="start">
-          <FlexBox.Item>
-            <Tooltip title={`${isCurrentVersion ? 'Already on' : 'Update to'} current version`}>
-              <Button
-                type={isCurrentVersion ? 'primary' : 'dashed'}
-                shape="circle"
-                icon="check"
-                disabled={isCurrentVersion}
-                onClick={() => currentConfirmAction(onApply, record)}
-              />
-            </Tooltip>
-          </FlexBox.Item>
-          <FlexBox.Item>
-            <Tooltip title={`${isCurrentVersion ? `Can't remove used` : `Remove current`} version`}>
-              <Button
-                type="dashed"
-                shape="circle"
-                icon="delete"
-                disabled={isCurrentVersion}
-                onClick={() => deleteConfirmAction(onDelete, record)}
-              />
-            </Tooltip>
-          </FlexBox.Item>
-        </FlexBox>
-      );
+      <FlexBox justify="start">
+        <FlexBox.Item>
+          <Tooltip title={`${isCurrentVersion ? 'Already on' : 'Update to'} current version`}>
+            <Button
+              type={isCurrentVersion ? 'primary' : 'dashed'}
+              shape="circle"
+              icon="check"
+              disabled={isCurrentVersion}
+              onClick={() => currentConfirmAction(onApply, record)}
+            />
+          </Tooltip>
+        </FlexBox.Item>
+        <FlexBox.Item>
+          <Tooltip title={`${isCurrentVersion ? `Can't remove used` : `Remove current`} version`}>
+            <Button
+              type="dashed"
+              shape="circle"
+              icon="delete"
+              disabled={isCurrentVersion}
+              onClick={() => deleteConfirmAction(onDelete, record)}
+            />
+          </Tooltip>
+        </FlexBox.Item>
+      </FlexBox>
+    );
   };
 
   return [
     {
       title: 'Version',
-      dataIndex: 'id',
-      key: 'id',
-      onFilter: (value, record) => record.id.includes(value),
-      sorter: (a, b) => sorter(a.id, b.id),
+      dataIndex: 'version',
+      key: 'version',
+      onFilter: (value, record) => record.version.includes(value),
+      sorter: (a, b) => sorter(a.version, b.version),
       render: AlgorithmVersion,
     },
     {

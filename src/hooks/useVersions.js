@@ -14,14 +14,14 @@ const fetchVersion = ({ url, algorithmName, callback }) =>
     })
     .catch(errorNotification);
 
-const applyVersion = ({ url }) => ({ id, name }) =>
+const applyVersion = ({ url }) => ({ name, version }) =>
   axios
-    .post(`${url}/versions/algorithms/apply`, { id, name })
+    .post(`${url}/versions/algorithms/apply`, { name, version })
     .catch(errorNotification);
 
-const deleteVersion = ({ url }) => ({ id, name }) =>
+const deleteVersion = ({ url }) => ({ name, version }) =>
   axios
-    .delete(`${url}/versions/algorithms/${name}/${id}`)
+    .delete(`${url}/versions/algorithms/${name}/${version}`)
     .catch(errorNotification);
 
 const useVersions = ({ algorithmName, isFetch }) => {
