@@ -1,13 +1,12 @@
 import React from 'react';
-
 import { Button, Modal, Tooltip, Typography, Tag } from 'antd';
+import Moment from 'react-moment';
 import { sorter } from 'utils/string';
 import { Ellipsis, FlexBox } from 'components/common';
 import { COLOR_PIPELINE_STATUS } from 'styles';
-
 const { Text } = Typography;
 
-const deleteConfirmAction = (action, { name, algorithmImage }) => {
+const deleteConfirmAction = (action, { name, version }) => {
   Modal.confirm({
     title: 'Deleting Algorithm Version',
     content: (
@@ -20,12 +19,12 @@ const deleteConfirmAction = (action, { name, algorithmImage }) => {
     iconType: 'warning',
     cancelText: 'Cancel',
     onOk() {
-      action({ name, algorithmImage });
+      action({ name, version });
     },
   });
 };
 
-const currentConfirmAction = (action, { name, algorithmImage }) => {
+const currentConfirmAction = (action, { name, version }) => {
   Modal.confirm({
     title: 'Change Algorithm Version',
     content: (
@@ -37,7 +36,7 @@ const currentConfirmAction = (action, { name, algorithmImage }) => {
     okType: 'primary',
     cancelText: 'Cancel',
     onOk() {
-      action({ name, image: algorithmImage });
+      action({ name, version });
     },
   });
 };
@@ -46,20 +45,21 @@ const Cpu = cpu => <Tag>{cpu || 'No CPU Assigned'}</Tag>;
 const Mem = mem => <Tag>{mem || 'No Memory Specified'}</Tag>;
 const MinHotWorkers = minHotWorkers => <Tag>{minHotWorkers}</Tag>;
 const Type = type => <Tag>{type}</Tag>;
+const Created = created => <Moment format="DD/MM/YY HH:mm:ss">{created}</Moment>;
 
 const getVersionsColumns = ({ onDelete, onApply, currentVersion }) => {
-  const AlgorithmVersion = algorithmImage => {
-    const isCurrentVersion = currentVersion === algorithmImage;
-    return algorithmImage ? (
-      <Ellipsis copyable ellipsis={false} text={algorithmImage} strong={isCurrentVersion} />
+  const AlgorithmVersion = version => {
+    const isCurrentVersion = currentVersion === version;
+    return version ? (
+      <Ellipsis copyable ellipsis={false} text={version} strong={isCurrentVersion} />
     ) : (
-      <Tag>No Image</Tag>
-    );
+        <Tag>No Image</Tag>
+      );
   };
 
   const Action = (_, record) => {
-    const { algorithmImage } = record;
-    const isCurrentVersion = currentVersion === algorithmImage;
+    const { version } = record;
+    const isCurrentVersion = currentVersion === version;
 
     return isCurrentVersion ? (
       <Tag color={COLOR_PIPELINE_STATUS.ready}>Current Version</Tag>
@@ -93,37 +93,53 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion }) => {
 
   return [
     {
-      title: 'Algorithm Version',
-      dataIndex: 'algorithmImage',
-      key: 'algorithmImage',
-      onFilter: (value, record) => record.algorithmImage.includes(value),
-      sorter: (a, b) => sorter(a.algorithmImage, b.algorithmImage),
+      title: 'Version',
+      dataIndex: 'version',
+      key: 'version',
+      onFilter: (value, record) => record.version.includes(value),
+      sorter: (a, b) => sorter(a.version, b.version),
       render: AlgorithmVersion,
     },
     {
+      title: 'Image',
+      dataIndex: 'algorithm.algorithmImage',
+      key: 'algorithm.algorithmImage',
+      onFilter: (value, record) => record.algorithm.algorithmImage.includes(value),
+      sorter: (a, b) => sorter(a.algorithm.algorithmImage, b.algorithm.algorithmImage),
+    },
+    {
+      title: 'Created',
+      dataIndex: 'created',
+      key: 'created',
+      sorter: (a, b) => sorter(a.created, b.created),
+      render: Created,
+    },
+    {
       title: 'CPU',
-      dataIndex: 'cpu',
-      key: 'cpu',
+      dataIndex: 'algorithm.cpu',
+      key: 'algorithm.cpu',
+      sorter: (a, b) => sorter(a.algorithm.cpu, b.algorithm.cpu),
       render: Cpu,
     },
     {
       title: 'Mem',
-      dataIndex: 'mem',
-      key: 'mem',
+      dataIndex: 'algorithm.mem',
+      key: 'algorithm.mem',
+      sorter: (a, b) => sorter(a.algorithm.mem, b.algorithm.mem),
       render: Mem,
     },
     {
-      title: 'Min Hot Workers',
-      dataIndex: 'minHotWorkers',
-      key: 'minHotWorkers',
-      sorter: (a, b) => sorter(a.workerImage, b.workerImage),
+      title: 'Min Hot',
+      dataIndex: 'algorithm.minHotWorkers',
+      key: 'algorithm.minHotWorkers',
+      sorter: (a, b) => sorter(a.algorithm.minHotWorkers, b.algorithm.minHotWorkers),
       render: MinHotWorkers,
     },
     {
       title: 'Type',
-      dataIndex: 'type',
-      key: 'type',
-      sorter: (a, b) => sorter(a.type, b.type),
+      dataIndex: 'algorithm.type',
+      key: 'algorithm.type',
+      sorter: (a, b) => sorter(a.algorithm.type, b.algorithm.type),
       render: Type,
     },
     {
