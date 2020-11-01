@@ -45,10 +45,10 @@ const toStatus = status =>
   completedStatus.includes(status)
     ? STATUS.COMPLETED
     : notStartedStatus.includes(status)
-      ? STATUS.NOT_STARTED
-      : sameStatus.includes(status)
-        ? status
-        : STATUS.RUNNING;
+    ? STATUS.NOT_STARTED
+    : sameStatus.includes(status)
+    ? status
+    : STATUS.RUNNING;
 
 const handleSingle = node => ({ ...node, group: toStatus(node.status) });
 
@@ -121,8 +121,8 @@ export const formatEdge = e => {
     const width = scaleValue(throughput, fromScale, toScale, fixedScale);
     const edgeColor = throughput > 0 && throughput < 50
       ? 'red' : throughput > 50 && throughput < 80
-        ? 'yellow'
-        : 'green'
+      ? 'yellow'
+      : 'green'
     const color = { color: edgeColor };
     edgeProps = { label, width, color }
   }
