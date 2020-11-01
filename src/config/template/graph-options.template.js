@@ -8,6 +8,7 @@ export const directionTypes = {
   'Up Down': 'UD',
 };
 
+
 const setOptions = ({ direction }) => ({
   height: `400px`,
   physics: false,

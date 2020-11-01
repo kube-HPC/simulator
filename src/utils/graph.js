@@ -45,10 +45,10 @@ const toStatus = status =>
   completedStatus.includes(status)
     ? STATUS.COMPLETED
     : notStartedStatus.includes(status)
-    ? STATUS.NOT_STARTED
-    : sameStatus.includes(status)
-    ? status
-    : STATUS.RUNNING;
+      ? STATUS.NOT_STARTED
+      : sameStatus.includes(status)
+        ? status
+        : STATUS.RUNNING;
 
 const handleSingle = node => ({ ...node, group: toStatus(node.status) });
 
@@ -82,6 +82,20 @@ const handleBatch = ({ nodeName, algorithmName, batchInfo, level = 0 }) => {
 
 const handleNode = n => (!n.batchInfo ? handleSingle(n) : handleBatch(n));
 
+const createScale = (from, to) => {
+  const scale = (to[1] - to[0]) / (from[1] - from[0]);
+  return scale;
+}
+
+const fromScale = [0, 100];
+const toScale = [2, 5];
+const fixedScale = createScale(fromScale, toScale);
+
+const scaleValue = (value, from, to, scale) => {
+  const capped = Math.min(from[1], Math.max(from[0], value)) - from[0];
+  return (toScale[0] + toScale[1]) - (capped * scale + to[0]);
+}
+
 export const formatNode = n => {
   const fn = handleNode(n);
   const node = {
@@ -95,11 +109,22 @@ export const formatNode = n => {
 };
 
 export const formatEdge = e => {
-  const { edges, ...rest } = e;
+  const { edges, throughput, ...rest } = e;
   const [group] = edges;
   const edge = {
     id: `${e.from}->${e.to}`,
     dashes: group === 'waitAny' || group === 'AlgorithmExecution',
   };
-  return { ...rest, ...edge, group };
+  let edgeProps;
+  if (throughput) {
+    const label = `${throughput}%`; // for debugging...
+    const width = scaleValue(throughput, fromScale, toScale, fixedScale);
+    const edgeColor = throughput > 0 && throughput < 50
+      ? 'red' : throughput > 50 && throughput < 80
+        ? 'yellow'
+        : 'green'
+    const color = { color: edgeColor };
+    edgeProps = { label, width, color }
+  }
+  return { ...rest, ...edge, ...edgeProps, group };
 };
