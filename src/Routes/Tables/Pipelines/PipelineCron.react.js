@@ -25,10 +25,8 @@ const enterButton = <Icon type="check" />;
 const PipelineCron = ({ pipeline }) => {
   const { cronStart, cronStop } = useActions();
   const { update } = usePipeline();
-
   const cronIsEnabled = isCron(pipeline);
   const prevCronRef = useRef(cronIsEnabled);
-
   const patternIsPresent = isPattern(pipeline);
 
   const [loading, toggleLoading] = useReducer(p => !p, false);
@@ -41,7 +39,7 @@ const PipelineCron = ({ pipeline }) => {
     if (prevCronRef.current !== cronIsEnabled) {
       toggleLoading();
     }
-  }, [cronIsEnabled]);
+  }, [cronIsEnabled, prevCronRef, toggleLoading]);
 
   let renderTooltip = ERROR_CRON_EXPR;
 
@@ -67,7 +65,7 @@ const PipelineCron = ({ pipeline }) => {
   const onChange = useCallback(() => {
     toggleLoading();
     cronIsEnabled ? cronStop(name, cronExpr) : cronStart(name, cronExpr);
-  }, [cronExpr, cronIsEnabled, cronStart, cronStop, name]);
+  }, [toggleLoading, cronExpr, cronIsEnabled, cronStart, cronStop, name]);
 
   const onSearch = pattern => {
     try {
