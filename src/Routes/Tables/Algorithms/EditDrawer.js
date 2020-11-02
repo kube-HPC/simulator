@@ -16,11 +16,18 @@ const EditDrawer = () => {
   const { setOff, isOn } = useToggle(true);
 
   const onSubmitUpdate = useCallback(
-    payload => applyAlgorithm(JSON.parse(payload)),
-    [applyAlgorithm]
+    payload =>
+      applyAlgorithm({
+        ...JSON.parse(payload),
+        builds: activeAlgorithm.builds,
+      }),
+    [applyAlgorithm, activeAlgorithm]
   );
 
-  const value = useMemo(() => stringify(activeAlgorithm), [activeAlgorithm]);
+  const value = useMemo(() => {
+    const { builds, ...rest } = activeAlgorithm;
+    return stringify(rest);
+  }, [activeAlgorithm]);
 
   return (
     <Drawer
