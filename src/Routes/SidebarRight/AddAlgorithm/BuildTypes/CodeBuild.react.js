@@ -56,7 +56,7 @@ const { Text } = Typography;
 // #endregion
 
 const {
-  CODE: { ENVIRONMENT, ENTRY_POINT, VERSION, BASE_IMAGE, DIVIDERS },
+  CODE: { ENVIRONMENT, ENTRY_POINT, BASE_IMAGE, DIVIDERS },
 } = schema.BUILD_TYPES;
 
 const CodeBuild = ({ required, getFieldDecorator, fileList, setFileList }) => (
@@ -71,11 +71,6 @@ const CodeBuild = ({ required, getFieldDecorator, fileList, setFileList }) => (
       {getFieldDecorator(ENTRY_POINT.field, {
         rules: [{ required, message: ENTRY_POINT.message }],
       })(<Input placeholder={ENTRY_POINT.placeholder} />)}
-    </Form.Item>
-    <Form.Item label={VERSION.label}>
-      {getFieldDecorator(VERSION.field)(
-        <Input placeholder={VERSION.placeholder} />
-      )}
     </Form.Item>
     <Form.Item label={BASE_IMAGE.label}>
       {getFieldDecorator(BASE_IMAGE.field)(

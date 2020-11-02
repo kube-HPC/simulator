@@ -1,10 +1,8 @@
 import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Modal, Popover, Typography } from 'antd';
-import {} from 'const';
 import { useActions } from 'hooks';
 import AlgorithmRun from './AlgorithmRun.react';
-
 import usePath from './usePath';
 
 const deleteConfirmAction = action => {

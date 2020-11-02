@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { stringify } from 'utils';
 import { DRAWER_SIZE } from 'const';
 import Drawer from 'components/Drawer';
@@ -16,12 +16,12 @@ const EditDrawer = () => {
   const { setOff, isOn } = useToggle(true);
 
   const onSubmitUpdate = useCallback(
-    payload =>
-      applyAlgorithm({
-        ...JSON.parse(payload),
-        builds: activeAlgorithm.builds,
-      }),
-    [applyAlgorithm, activeAlgorithm]
+    payload => {
+      const formData = new FormData();
+      formData.append('payload', payload);
+      applyAlgorithm(formData);
+    },
+    [applyAlgorithm]
   );
 
   const value = useMemo(() => {
@@ -44,10 +44,6 @@ const EditDrawer = () => {
   );
 };
 
-EditDrawer.propTypes = {
-  // TODO: detail the props
-  // eslint-disable-next-line
-  pipeline: PropTypes.any.isRequired,
-};
+EditDrawer.propTypes = {};
 
 export default EditDrawer;

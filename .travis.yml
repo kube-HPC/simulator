@@ -26,7 +26,7 @@ after_success:
       git push origin version-branch:master --follow-tags
       docker login --username yehiyam --password ${DOCKER_HUB_PASS}
       PRIVATE_REGISTRY=docker.io/hkube npm run build
-      curl -X POST -H 'accept:application/json'  -H "authorization:token ${TRAVIS_API_TOKEN}" -H 'content-type:application/json' -H 'travis-api-version:3' -d "{\"request\":{\"branch\":\"master\",\"message\":\"triggered by ${TRAVIS_REPO_SLUG}\"}}" "https://api.travis-ci.org/repo/kube-HPC%2Frelease-manager/requests"
+      curl -X POST -H 'accept:application/json'  -H "authorization:token ${TRAVIS_API_TOKEN}" -H 'content-type:application/json' -H 'travis-api-version:3' -d "{\"request\":{\"branch\":\"master\",\"message\":\"triggered by ${TRAVIS_REPO_SLUG}\"}}" "https://api.travis-ci.com/repo/kube-HPC%2Frelease-manager/requests"
     elif [ ! -z "$DOCKER_HUB_PASS" ]; then
       echo "version skipped!"
       echo "creating temp docker image"

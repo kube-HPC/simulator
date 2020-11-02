@@ -42,11 +42,6 @@ const addAlgorithmSchema = {
       },
       label: 'Code',
       field: 'code',
-      VERSION: {
-        field: 'code.version',
-        label: 'Version',
-        placeholder: '(Optional) Insert Version',
-      },
       BASE_IMAGE: {
         field: 'code.baseImage',
         label: 'Base Image',
