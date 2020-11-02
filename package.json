@@ -75,8 +75,6 @@
     "styled-tools": "^1.7.1"
   },
   "devDependencies": {
-    "@dennisvash/eslint-config": "^2.2.2",
-    "@dennisvash/prettier-config": "^1.0.0",
     "@storybook/addon-actions": "^5.2.6",
     "@storybook/addon-links": "^5.2.6",
     "@storybook/addons": "^5.2.6",
