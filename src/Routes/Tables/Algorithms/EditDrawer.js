@@ -12,12 +12,12 @@ import useActivePipeline from './useActiveAlgorithm';
 const EditDrawer = () => {
   const { goTo } = usePath();
   const { activeAlgorithm } = useActivePipeline();
-  const { updateStored } = useActions();
+  const { applyAlgorithm } = useActions();
   const { setOff, isOn } = useToggle(true);
 
   const onSubmitUpdate = useCallback(
-    payload => updateStored(JSON.parse(payload)),
-    [updateStored]
+    payload => applyAlgorithm(JSON.parse(payload)),
+    [applyAlgorithm]
   );
 
   const value = useMemo(() => stringify(activeAlgorithm), [activeAlgorithm]);
