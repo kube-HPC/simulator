@@ -40,14 +40,12 @@ const PipelineActions = ({ pipeline, className }) => {
 
   const onDelete = () => deleteConfirmAction(remove, pipeline);
   const onExecute = useCallback(() => {
-    const parsed = JSON.parse(executePipeline);
     execStored(
       experimentName === experimentsSchema.showAll
-        ? parsed
-        : { experimentName, ...parsed }
+        ? executePipeline
+        : { experimentName, ...executePipeline }
     );
   }, [experimentName, executePipeline, execStored]);
-  // => execute(executePipeline);
   const setPopupContainer = () => container.current;
 
   const onUpdate = useCallback(() => {
