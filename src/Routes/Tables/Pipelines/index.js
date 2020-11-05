@@ -6,6 +6,7 @@ import pipelineColumns from './pipelineColumns';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
 import EditDrawer from './EditDrawer';
+import ExecuteDrawer from './ExecuteDrawer';
 
 const rowKey = ({ name }) => name;
 
@@ -34,6 +35,7 @@ const PipelinesTable = () => {
         component={OverviewDrawer}
       />
       <Route path="/pipelines/:pipelineId/edit" component={EditDrawer} />
+      <Route path="/pipelines/:pipelineId/execute" component={ExecuteDrawer} />
     </>
   );
 };

@@ -19,6 +19,8 @@ export default () => {
       } = {}) => `/pipelines/${nextPipelineId}/overview/${nextTabKey}`,
       edit: ({ nextPipelineId = pipelineId } = {}) =>
         `/pipelines/${nextPipelineId}/edit`,
+      execute: ({ nextPipelineId = pipelineId } = {}) =>
+        `/pipelines/${nextPipelineId}/execute`,
     }),
     [pipelineId]
   );
@@ -41,6 +43,11 @@ export default () => {
       edit: ({ nextPipelineId = pipelineId } = {}) =>
         history.push({
           pathname: paths.edit({ nextPipelineId }),
+          search: location.search,
+        }),
+      execute: ({ nextPipelineId = pipelineId } = {}) =>
+        history.push({
+          pathname: paths.execute({ nextPipelineId }),
           search: location.search,
         }),
     }),

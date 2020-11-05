@@ -2,9 +2,8 @@ import React, { memo, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Empty, Icon, Popover } from 'antd';
 import { IconTensorFlow } from 'components/Icons';
-import { experimentsSchema } from 'config';
 import { USER_GUIDE } from 'const';
-import { usePipeline, useActions } from 'hooks';
+import { usePipeline } from 'hooks';
 import isEqual from 'lodash/isEqual';
 import { deleteConfirmAction } from 'utils';
 import PipelineCreateBoard from './TensorflowBoards/PipelineCreateBoard.react';
@@ -19,33 +18,18 @@ const title = 'Create Tensor Board for selected Node';
 const PipelineActions = ({ pipeline, className }) => {
   const { goTo } = usePath();
 
-  const { /* deleteStored, */ execStored } = useActions();
-
   const { remove } = usePipeline();
 
   const container = useRef();
 
   // http://hkube.io/spec/#tag/Execution/paths/~1exec~1stored/post
   // Don't use nodes & description
-  /* eslint-disable no-unused-vars */
-  const {
-    nodes,
-    description,
-    triggers,
-    experimentName,
-    ...executePipeline
-  } = pipeline;
+  const { nodes } = pipeline;
 
   const hasNodes = nodes.length !== 0;
 
   const onDelete = () => deleteConfirmAction(remove, pipeline);
-  const onExecute = useCallback(() => {
-    execStored(
-      experimentName === experimentsSchema.showAll
-        ? executePipeline
-        : { experimentName, ...executePipeline }
-    );
-  }, [experimentName, executePipeline, execStored]);
+
   const setPopupContainer = () => container.current;
 
   const onUpdate = useCallback(() => {
@@ -54,6 +38,10 @@ const PipelineActions = ({ pipeline, className }) => {
 
   const onEdit = useCallback(() => {
     goTo.overview({ nextPipelineId: pipeline.name });
+  }, [pipeline, goTo]);
+
+  const onExecute = useCallback(() => {
+    goTo.execute({ nextPipelineId: pipeline.name });
   }, [pipeline, goTo]);
 
   const popOverContent = hasNodes ? (
