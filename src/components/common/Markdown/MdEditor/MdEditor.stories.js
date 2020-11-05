@@ -1,11 +1,10 @@
+import React from 'react';
 import { Button, Typography } from 'antd';
 import MdEditor from 'components/common/Markdown/MdEditor/MdEditor.react';
-import Drawer from 'components/Drawer/Drawer.react';
 import addPipelineTemplate from 'config/template/addPipeline.template';
-import React from 'react';
 import { stringify } from 'utils/string';
 import { SB_SECTIONS } from 'const';
-import { DrawerEditorMD } from 'components';
+import Drawer, { DrawerEditorMD } from 'components/Drawer';
 
 export default {
   title: `${SB_SECTIONS.MARKDOWN}Markdown Editor`,
@@ -19,21 +18,22 @@ export const Default = () => <MdEditor value={source} />;
 export const Empty = () => <MdEditor value={undefined} config={config} />;
 
 export const InDrawer = () => (
-  <Drawer visible={true}>
+  <Drawer visible>
     <MdEditor value={source} />
   </Drawer>
 );
 
 export const DrawerEditorComponent = () => (
   <DrawerEditorMD
-    title={'Update Pipeline'}
+    title="Update Pipeline"
     description={
       <>
-        Edit pipeline properties and <Typography.Text code>Update</Typography.Text>
+        Edit pipeline properties and{' '}
+        <Typography.Text code>Update</Typography.Text>
       </>
     }
     valueString={stringify(addPipelineTemplate)}
-    submitText={'Update'}
+    submitText="Update"
     opener={setVisible => <Button onClick={setVisible}>Open Drawer</Button>}
   />
 );

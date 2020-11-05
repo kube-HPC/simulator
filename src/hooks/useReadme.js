@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux';
 import { notification } from 'utils';
 import { STATE_SOURCES } from 'const';
 import axios from 'axios';
+import { useCallback } from 'react';
 
 const errorNotification = ({ message }) => notification({ message });
 const successNotification = () =>
@@ -50,12 +51,20 @@ const post = ({ url, type }) => ({ name, readme }) => {
 
 const useReadme = type => {
   const url = useSelector(state => state[STATE_SOURCES.SOCKET_URL]);
+  const asyncFetch_ = useCallback(props => asyncFetch({ url, type })(props), [
+    url,
+    type,
+  ]);
+
+  const fetch_ = useCallback(props => fetch({ url, type })(props), [url, type]);
+  const apply_ = useCallback(props => apply({ url, type })(props), [url, type]);
+  const post_ = useCallback(props => post({ url, type })(props), [url, type]);
 
   return {
-    fetch: fetch({ url, type }),
-    asyncFetch: asyncFetch({ url, type }),
-    apply: apply({ url, type }),
-    post: post({ url, type }),
+    fetch: fetch_,
+    asyncFetch: asyncFetch_,
+    apply: apply_,
+    post: post_,
   };
 };
 

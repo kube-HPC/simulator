@@ -1,7 +1,7 @@
 import actions from 'const/application-actions';
 import TOPICS from 'const/topics';
 
-const DEFAULT_URL = 'config';
+const DEFAULT_URL = 'dashboard-config.json';
 
 export const socketInit = () => ({
   type: actions.SOCKET_INIT,

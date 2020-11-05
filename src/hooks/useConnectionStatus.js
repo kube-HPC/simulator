@@ -21,9 +21,11 @@ export default function useConnectionStatus() {
   useEffect(() => {
     if (!isDispatchedOnce && dataSource) {
       isDispatchedOnce = true;
-      dispatch(setConnectionStatus({ isDataAvailable: true }));
+      dispatch(
+        setConnectionStatus({ isDataAvailable: true, isSocketConnected })
+      );
     }
-  }, [dataSource, dispatch]);
+  }, [dataSource, dispatch, isSocketConnected]);
 
   return { isDataAvailable, isSocketConnected };
 }

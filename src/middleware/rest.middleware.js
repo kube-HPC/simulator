@@ -97,7 +97,6 @@ const restMiddleware = ({ dispatch }) => next => action => {
   }
 
   if (!SOCKET_URL) return next(action);
-
   pending(dispatch, 'pending', action);
   if (action.type === AT.REST_REQ_GET) {
     axios

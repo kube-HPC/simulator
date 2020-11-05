@@ -26,4 +26,5 @@ export default {
   VIEW_TYPE: `viewType`,
   WORKER_TABLE: `workerTable`,
   META: `meta`,
+  CONFIG: `config`,
 };

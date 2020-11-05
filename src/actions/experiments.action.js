@@ -1,10 +1,5 @@
 import actions from 'const/application-actions';
 
-export const experimentChange = value => ({
-  type: actions.EXPERIMENT_CHANGE,
-  value,
-});
-
 export const triggerExperimentLoading = () => ({
   type: actions.EXPERIMENT_TRIGGER_LOADING,
 });
@@ -16,6 +11,11 @@ export const addExperiment = ({ name, description }) => ({
     body: { name, description },
     actionType: actions.EXPERIMENT_ADD,
   },
+});
+
+export const changeExperiment = experimentId => ({
+  type: actions.EXPERIMENT_CHANGE,
+  payload: experimentId,
 });
 
 export const deleteExperiment = name => ({

@@ -15,10 +15,16 @@ const DarkHoverStyle = styled(Icon)`
 const iconStyle = { fontSize: 22 };
 
 const Hover = ({ type, onClick, ...props }) => (
-  <DarkHoverStyle type={type} style={iconStyle} onClick={onClick} {...props} />
+  <DarkHoverStyle
+    type={type}
+    style={iconStyle}
+    onClick={onClick}
+    // eslint-disable-next-line
+    {...props}
+  />
 );
 
-const HoverMemo = React.memo(Hover);
+const HoverMemo = Hover;
 export default { Hover: HoverMemo, DarkHoverStyle };
 
 Hover.propTypes = Icon.propTypes;

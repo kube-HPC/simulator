@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { LEFT_SIDEBAR_NAMES, STATE_SOURCES } from 'const';
 import { useSelector } from 'react-redux';
 import { tableFilterSelector } from 'utils';
@@ -11,17 +12,25 @@ const useAlgorithm = name => {
   const buildsSource = useSelector(buildsSelector);
 
   // Merged Source with builds
-  const dataSource = algorithmSource.map(source => ({
-    ...source,
-    builds: buildsSource.filter(
-      ({ algorithmName }) => algorithmName === source.name
-    ),
-  }));
+  const dataSource = useMemo(
+    () =>
+      algorithmSource.map(source => ({
+        ...source,
+        builds: buildsSource.filter(
+          ({ algorithmName }) => algorithmName === source.name
+        ),
+      })),
+    [algorithmSource, buildsSource]
+  );
+
+  const algorithm = useMemo(
+    () =>
+      name ? dataSource.find(({ name: source }) => source === name) : null,
+    [name, dataSource]
+  );
 
   return {
-    algorithm: name
-      ? dataSource.find(({ name: source }) => source === name)
-      : null,
+    algorithm,
     dataSource,
   };
 };

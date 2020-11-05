@@ -1,34 +1,54 @@
-import { experimentsSchema } from 'config';
-import { LOCAL_STORAGE_KEYS, STATE_SOURCES } from 'const';
-import isEqual from 'lodash/isEqual';
-import { useEffect } from 'react';
+import { useEffect, useMemo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
+import { useLocation, useHistory } from 'react-router-dom';
+import { experimentsSchema } from 'config';
+import { STATE_SOURCES } from 'const';
+import isEqual from 'lodash/isEqual';
 import useActions from './useActions';
-import useLocalStorage from './useLocalStorage';
 
 const useExperiments = () => {
-  const { dataSource, value, loading } = useSelector(
+  const location = useLocation();
+  const history = useHistory();
+  const { pathname, search } = location;
+  const query = new URLSearchParams(search);
+
+  const experimentId = useMemo(() => query.get('experiment') || 'main', [
+    query,
+  ]);
+
+  const { dataSource, loading } = useSelector(
     state => state[STATE_SOURCES.EXPERIMENTS],
     isEqual
   );
+
+  const setExperiment = useCallback(
+    id => {
+      id === 'main' ? query.delete('experiment') : query.set('experiment', id);
+      history.push(`${pathname}?${query.toString()}`);
+    },
+    [query, history, pathname]
+  );
+
   const {
-    experimentChange,
     addExperiment,
     deleteExperiment,
     triggerExperiment,
+    changeExperiment,
   } = useActions();
 
   const { experimentName } = useSelector(state => state[STATE_SOURCES.META]);
 
   useEffect(() => {
-    if (!loading && experimentName !== value) {
+    changeExperiment(experimentId);
+  }, [changeExperiment, experimentId]);
+
+  useEffect(() => {
+    if (!loading && experimentName !== experimentId) {
       triggerExperiment();
-    } else if (loading && experimentName === value) {
+    } else if (loading && experimentName === experimentId) {
       triggerExperiment();
     }
-  }, [experimentName, loading, triggerExperiment, value]);
-
-  useLocalStorage({ value, key: LOCAL_STORAGE_KEYS.EXPERIMENT });
+  }, [experimentName, loading, triggerExperiment, experimentId]);
 
   const defaultExperiment = dataSource.find(
     ({ name }) => name === experimentsSchema.default
@@ -39,10 +59,10 @@ const useExperiments = () => {
 
   return {
     experiments: [defaultExperiment, ...restExperiments],
-    value,
-    set: experimentChange,
     add: addExperiment,
     remove: deleteExperiment,
+    setExperiment,
+    experimentId,
   };
 };
 

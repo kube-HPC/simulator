@@ -1,3 +1,4 @@
+import { combineReducers } from 'redux';
 import {
   algorithmBuildsTable,
   algorithmTable,
@@ -25,7 +26,7 @@ import { boards } from 'reducers/tensorflow.reducer';
 import { userGuide } from 'reducers/userGuide.reducer';
 import { viewType } from 'reducers/viewType.reducer';
 import { workerTable } from 'reducers/worker.reducer';
-import { combineReducers } from 'redux';
+import { config } from 'reducers/config.reducer';
 
 const store = {
   algorithmBuildsTable,
@@ -52,6 +53,7 @@ const store = {
   userGuide,
   viewType,
   workerTable,
+  config,
 };
 
 export default combineReducers(store);

@@ -42,20 +42,17 @@ export const connectionStatus = handleActions(
       prevStatus,
       { connectionStatus: nextConnectionStatus }
     ) {
-      const {
-        isSocketConnected: currSocket,
-        isDataAvailable: currData,
-      } = nextConnectionStatus;
-      const {
-        isSocketConnected: prevSocket,
-        isDataAvailable: prevData,
-      } = prevStatus;
+      const { isDataAvailable: currData } = nextConnectionStatus;
+      const { isDataAvailable: prevData } = prevStatus;
 
-      const isSocketConnected =
-        currSocket === undefined ? prevSocket : currSocket;
       const isDataAvailable = currData === undefined ? prevData : currData;
 
-      return Immutable.from({ isSocketConnected, isDataAvailable });
+      return Immutable.from({
+        isSocketConnected:
+          nextConnectionStatus?.isSocketConnected ??
+          prevStatus.isSocketConnected,
+        isDataAvailable,
+      });
     },
   },
   initialValue

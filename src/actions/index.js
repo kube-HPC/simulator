@@ -13,8 +13,8 @@ import {
 import {
   addExperiment,
   deleteExperiment,
-  experimentChange,
   triggerExperimentLoading as triggerExperiment,
+  changeExperiment,
 } from 'actions/experiments.action';
 import { filterByType } from 'actions/filter.action';
 import { getCaching, getKubernetesLogsData } from 'actions/jobs.action';
@@ -41,6 +41,7 @@ const actions = {
   addPipeline,
   applyAlgorithm,
   cancelBuild,
+  changeExperiment,
   changeStep,
   cronStart,
   cronStop,
@@ -51,7 +52,6 @@ const actions = {
   drawerToggle,
   execRawPipeline,
   execStored,
-  experimentChange,
   filterByType,
   filterData,
   firstLoad,

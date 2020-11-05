@@ -35,7 +35,8 @@ export const tableSelector = {
   },
 };
 
-export const dataSelector = sourceName => state => state[sourceName].dataSource;
+export const dataSelector = sourceName => state =>
+  state[sourceName]?.dataSource ?? [];
 
 export const tableFilterSelector = table => {
   const { sourceName, predicate } = tableSelector[table];

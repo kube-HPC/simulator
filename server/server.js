@@ -1,47 +1,39 @@
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '..', '.env') });
+require('dotenv').config({ path: path.resolve(__dirname, '..', '.env.local') });
 const express = require('express');
 const http = require('http');
-const path = require('path');
+const fs = require('fs');
+const {
+  monitorBackend,
+  board,
+  hkubeSystemVersion,
+  indexHtml,
+  baseUrl,
+} = require('./setupConfig');
 
 const app = express();
 const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 9050;
 
-const parseBool = value => {
-  if (typeof value === 'boolean') {
-    return value;
-  }
-  if (typeof value === 'string' && value.toLowerCase() === 'false') {
-    return false;
-  }
-  return true;
-};
+const indexHtmlContent = fs
+  .readFileSync(indexHtml, 'utf-8')
+  .replace(/__BASE_URL_TOKEN__/g, `/${baseUrl}/`);
 
 app.use(express.static(path.join(__dirname, '../build')));
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../build', 'index.html'));
-});
-
-app.get('/config', (req, res) => {
+app.get('*/dashboard-config.json', (req, res) => {
   res.json({
     config: {
-      hkubeSystemVersion: process.env.HKUBE_SYSTEM_VERSION,
-      monitorBackend: {
-        useLocation: parseBool(process.env.MONITOR_BACKEND_USE_LOCATION),
-        host: process.env.MONITOR_BACKEND_HOST || 'localhost',
-        port: process.env.MONITOR_BACKEND_PORT || '30010',
-        path: process.env.MONITOR_BACKEND_PATH || '',
-        socketIoPath: process.env.MONITOR_BACKEND_PATH_SOCKETIO || '',
-        schema: process.env.isSecure ? 'https://' : 'http://',
-      },
-      board: {
-        useLocation: parseBool(process.env.BOARD_USE_LOCATION),
-        host: process.env.BOARD_HOST || 'localhost',
-        port: process.env.BOARD_PORT || '30010',
-        path: process.env.BOARD_PATH || '',
-        schema: process.env.isSecure ? 'https://' : 'http://',
-      },
+      hkubeSystemVersion,
+      baseUrl,
+      monitorBackend,
+      board,
     },
   });
+});
+
+app.get('/*', (req, res) => {
+  res.send(indexHtmlContent);
 });
 
 const server = http.createServer(app);

@@ -1,16 +1,18 @@
 const proxy = require('http-proxy-middleware');
+const packageJSON = require('./../package.json');
 
-module.exports = function(app) {
+module.exports = function (app) {
   app.use(
     proxy('/api', {
       target: 'http://localhost:8091',
       pathRewrite: { '^/api': '' },
-    }),
+    })
   );
-  app.get('/config', (req, res) => {
+  app.get('*/dashboard-config.json', (req, res) => {
     res.json({
       config: {
         hkubeSystemVersion: process.env.HKUBE_SYSTEM_VERSION,
+        baseUrl: packageJSON.homepage,
         monitorBackend: {
           host: process.env.MONITOR_BACKEND_HOST || 'localhost',
           port: process.env.MONITOR_BACKEND_PORT || '30010',
