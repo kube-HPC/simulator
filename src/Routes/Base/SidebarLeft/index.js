@@ -11,6 +11,7 @@ import { dataCountMock } from 'config';
 import { LEFT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
 import { ReactComponent as AlgorithmIcon } from 'images/algorithm-icon.svg';
 import { ReactComponent as DebugIcon } from 'images/debug-icon.svg';
+import { ReactComponent as DataSourceIcon } from 'images/datasource.svg';
 import { ReactComponent as DriversIcon } from 'images/drivers-icon.svg';
 import { ReactComponent as JobsIcon } from 'images/jobs-icon.svg';
 import { ReactComponent as LogoFish } from 'images/logo-fish.svg';
@@ -120,6 +121,7 @@ const SidebarLeft = () => {
         '/drivers',
       ],
       [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, dataCount.debugCount, '/debug'],
+      [LEFT_SIDEBAR_NAMES.DATASOURCES, DataSourceIcon, 0, '/datasources'],
     ],
     [dataCount]
   );
