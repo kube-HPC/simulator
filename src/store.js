@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { createLogger } from 'redux-logger';
 import rootReducer from 'reducers/root.reducer';
 import socketMiddleware from 'middleware/socket.middleware';
@@ -19,6 +19,6 @@ if (process.env.NODE_ENV === 'development') {
 
 const store = configureStore({
   reducer: rootReducer,
-  middleware,
+  middleware: [...getDefaultMiddleware(), ...middleware],
 });
 export default store;
