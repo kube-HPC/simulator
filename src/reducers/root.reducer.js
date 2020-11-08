@@ -27,6 +27,7 @@ import { userGuide } from 'reducers/userGuide.reducer';
 import { viewType } from 'reducers/viewType.reducer';
 import { workerTable } from 'reducers/worker.reducer';
 import { config } from 'reducers/config.reducer';
+import { reducer as dataSources } from 'reducers/dataSources';
 
 const store = {
   algorithmBuildsTable,
@@ -54,6 +55,7 @@ const store = {
   viewType,
   workerTable,
   config,
+  dataSources,
 };
 
 export default combineReducers(store);
