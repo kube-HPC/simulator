@@ -38,7 +38,7 @@ const restConfigMiddleware = ({ dispatch }) => next => action => {
         res
           .json()
           .then(data => {
-            axios.defaults.baseURL = data.config.board.baseUrl;
+            axios.defaults.baseURL = data.config.baseUrl;
             success(dispatch, data, action);
           })
           .catch(err => console.error(err));
