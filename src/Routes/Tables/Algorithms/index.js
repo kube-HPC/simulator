@@ -31,7 +31,7 @@ const AlgorithmsTable = () => {
         path="/algorithms/:algorithmId/overview/:tabKey"
         component={OverviewDrawer}
       />
-      <Route path="/algorithms/:algorithms/edit" component={EditDrawer} />
+      <Route path="/algorithms/:algorithmId/edit" component={EditDrawer} />
     </>
   );
 };
