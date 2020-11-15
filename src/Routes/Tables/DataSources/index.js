@@ -7,6 +7,7 @@ const rowKey = ({ name }) => name;
 
 const DataSourcesTables = () => {
   const { dataSources } = useDataSources();
+  console.log({ dataSources });
   return (
     <Table
       rowKey={rowKey}
