@@ -109,8 +109,9 @@ export const formatNode = n => {
 };
 
 export const formatEdge = e => {
-  const { edges, throughput, ...rest } = e;
-  const [group] = edges;
+  const { value, ...rest } = e;
+  const [group] = (value && value.types) || [];
+  const { throughput } = value || {};
   const edge = {
     id: `${e.from}->${e.to}`,
     dashes: group === 'waitAny' || group === 'AlgorithmExecution',
