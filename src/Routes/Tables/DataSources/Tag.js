@@ -26,7 +26,7 @@ const Tag = ({ title, value }) =>
   ) : null;
 Tag.propTypes = {
   title: PropTypes.string.isRequired,
-  value: PropTypes.number.isRequired,
+  value: PropTypes.node.isRequired,
 };
 
 export default Tag;

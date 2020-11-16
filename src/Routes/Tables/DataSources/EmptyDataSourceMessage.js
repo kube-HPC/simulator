@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { COLOR } from 'styles/colors';
 
-const Message = styled.p`
+const Message = styled.div`
   text-align: center;
   margin: 0 auto;
 `;

@@ -67,7 +67,7 @@ const DataSourcesTables = () => {
   return (
     <Grid>
       {sortedDataSources.map(dataSource => (
-        <GridItem hoverable>
+        <GridItem key={`datasource-${dataSource.id}`} hoverable>
           <Header>
             <DataSourceName>{dataSource.name}</DataSourceName>
             <DataSourceVersionId>{dataSource.id}</DataSourceVersionId>
@@ -76,7 +76,9 @@ const DataSourcesTables = () => {
           <FileTypesList>
             {dataSource.fileTypes.map(type => {
               const Component = FileIcons[type] || FileIcons.default;
-              return <Component />;
+              return (
+                <Component key={`dataSource-${dataSource.id}-icon-${type}`} />
+              );
             })}
           </FileTypesList>
           {dataSource.filesCount === 0 ? (
