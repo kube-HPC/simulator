@@ -12,6 +12,7 @@ export const RIGHT_SIDEBAR_NAMES = {
   ADD_PIPELINE: 'add-pipeline',
   ADD_ALGORITHM: 'add-algorithm',
   ADD_DEBUG: 'add-debug',
+  ADD_DATASOURCE: 'add-datasource',
   RUN_RAW_PIPELINE: 'run-raw-pipeline',
   CPU: 'cpu',
   GPU: 'gpu',

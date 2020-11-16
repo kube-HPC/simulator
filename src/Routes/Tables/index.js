@@ -25,7 +25,11 @@ const Body = () => (
     <Route exact path="/workers/:empty?" component={WorkersTable} />
     <Route exact path="/drivers/:empty?" component={DriversTable} />
     <Route exact path="/debug/:empty?" component={DebugTable} />
-    <Route exact path="/datasources/:empty?" component={DataSources} />
+    <Route
+      exact
+      path={['/datasources', '/datasources/:datasourceId?/*']}
+      component={DataSources}
+    />
     <Redirect to="/jobs" replace />
   </Switch>
 );

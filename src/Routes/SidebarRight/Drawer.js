@@ -6,6 +6,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import AddAlgorithm from './AddAlgorithm';
 import AddDebug from './AddDebug';
 import AddPipeline from './AddPipeline';
+import AddDataSource from './AddDataSource';
 import ErrorLogsTable from './ErrorLogs';
 import RunRawPipeline from './RunRawPipeline';
 import MemoryAndStorage from './MemoryAndStorage';
@@ -17,6 +18,7 @@ const operationSelector = {
   [RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM]: <AddAlgorithm />,
   [RIGHT_SIDEBAR_NAMES.ADD_DEBUG]: <AddDebug />,
   [RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE]: <RunRawPipeline />,
+  [RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE]: <AddDataSource />,
   [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: <ErrorLogsTable />,
   [RIGHT_SIDEBAR_NAMES.MEMORY]: <MemoryAndStorage />,
   [RIGHT_SIDEBAR_NAMES.CPU]: <NodeStatistics metric="cpu" />,
