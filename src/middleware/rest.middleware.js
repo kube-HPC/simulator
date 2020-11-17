@@ -123,6 +123,9 @@ const restMiddleware = ({ dispatch }) => next => action => {
       .post(createUrl(action.payload.url), action.payload.formData)
       .then(res => {
         success(dispatch, res.data, action);
+        if (action?.meta?.onSuccess) {
+          action.meta.onSuccess(res.data);
+        }
       })
       .catch(err => {
         reject(dispatch, err.response.data.error, action);
