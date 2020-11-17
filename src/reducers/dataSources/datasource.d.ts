@@ -1,7 +1,8 @@
-export type fileMeta = {
+export type FileMeta = {
   path: string;
   size: number;
   mtime: string;
+  type: string;
 };
 
 export type DataSourceEntry = {

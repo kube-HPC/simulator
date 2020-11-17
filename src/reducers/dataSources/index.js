@@ -11,14 +11,21 @@ const types = {
     success: `${actionTypes.DATASOURCE_FETCH_ALL}_SUCCESS`,
     fail: `${actionTypes.DATASOURCE_FETCH_ALL}_REJECT`,
   },
+  create: {
+    pending: `${actionTypes.DATASOURCE_CREATE}_PENDING`,
+    success: `${actionTypes.DATASOURCE_CREATE}_SUCCESS`,
+    fail: `${actionTypes.DATASOURCE_CREATE}_REJECT`,
+  },
 };
 
 /**
  * @typedef {import('./datasource.d').DataSource} DataSource
  * @typedef {import('@reduxjs/toolkit').EntityState<DataSource>} CollectionState
+ * @typedef {import('./datasource').DataSourceEntry} DataSourceEntry
+ * @typedef {'SUCCESS' | 'PENDING' | 'FAIL' | 'IDLE'} FetchStatus
  * @typedef {{
  *   collection: CollectionState;
- *   status: 'SUCCESS' | 'PENDING' | 'FAIL' | 'IDLE';
+ *   status: FetchStatus;
  *   error: string | null;
  * }} DataSourcesState
  */
@@ -39,9 +46,29 @@ const dataSources = createSlice({
      */
     [types.fetchAll.success]: (state, action) =>
       entityAdapter.setAll(state, action.payload),
+    /** @param {{ payload: DataSourceEntry }} action */
+    [types.create.success]: (state, action) => {
+      const { payload: dataSource } = action;
+      const totalSize = dataSource.files.reduce(
+        (acc, item) => acc + item.size,
+        0
+      );
+      const filesCount = dataSource.files.length;
+
+      const dataSourceMeta = {
+        ...dataSource,
+        fileTypes: [...new Set(dataSource.files.map(file => file.type))],
+        filesCount,
+        totalSize,
+        avgFileSize: totalSize / filesCount,
+      };
+
+      return entityAdapter.addOne(state, dataSourceMeta);
+    },
   },
 });
 
+/** @type {(state: FetchStatus, action: { type: string }) => FetchStatus} */
 const status = (state = 'IDLE', { type }) => {
   switch (type) {
     case types.fetchAll.pending:

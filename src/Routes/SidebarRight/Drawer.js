@@ -12,6 +12,7 @@ import RunRawPipeline from './RunRawPipeline';
 import MemoryAndStorage from './MemoryAndStorage';
 import NodeStatistics from './NodeStatistics.react';
 import CONTENT_CONFIG from './Content.react';
+import ctx from './ctx';
 
 const operationSelector = {
   [RIGHT_SIDEBAR_NAMES.ADD_PIPELINE]: <AddPipeline />,
@@ -37,14 +38,16 @@ const DashboardDrawer = () => {
   const body = operationSelector[panelType];
   const width = CONTENT_CONFIG[panelType]?.width ?? 0;
   return (
-    <Drawer
-      width={width}
-      isOpened={isOn}
-      onDidClose={handleDidClose}
-      onClose={setOff}
-      destroyOnClose>
-      {body}
-    </Drawer>
+    <ctx.Provider value={{ closeDrawer: setOff }}>
+      <Drawer
+        width={width}
+        isOpened={isOn}
+        onDidClose={handleDidClose}
+        onClose={setOff}
+        destroyOnClose>
+        {body}
+      </Drawer>
+    </ctx.Provider>
   );
 };
 
