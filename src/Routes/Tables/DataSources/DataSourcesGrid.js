@@ -7,6 +7,7 @@ import { COLOR } from 'styles/colors';
 import Tag from './Tag';
 import EmptyDataSourceMessage from './EmptyDataSourceMessage';
 import FileIcons from './FileIcons';
+import usePath from './usePath';
 
 const SummaryBar = styled.div`
   display: flex;
@@ -64,10 +65,14 @@ const DataSourcesGrid = () => {
     () => dataSources.slice().sort((a, b) => b.id - a.id),
     [dataSources]
   );
+  const { goTo } = usePath();
   return (
     <Grid>
       {sortedDataSources.map(dataSource => (
-        <GridItem key={`datasource-${dataSource.id}`} hoverable>
+        <GridItem
+          key={`datasource-${dataSource.id}`}
+          onDoubleClick={() => goTo.edit({ nextDataSourceId: dataSource.id })}
+          hoverable>
           <Header>
             <DataSourceName>{dataSource.name}</DataSourceName>
             <DataSourceVersionId>{dataSource.id}</DataSourceVersionId>
