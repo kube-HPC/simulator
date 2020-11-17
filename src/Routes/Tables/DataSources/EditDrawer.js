@@ -1,20 +1,16 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { DRAWER_SIZE } from 'const';
 import Drawer from 'components/Drawer';
-import useDataSources from 'hooks/useDataSources';
 import useToggle from 'hooks/useToggle';
 import usePath from './usePath';
+import useActiveDataSource from './useActiveDataSource';
 
 const EditDrawer = () => {
-  const { goTo, dataSourceId } = usePath();
-  const { dataSources } = useDataSources();
-  const activeAlgorithm = useMemo(
-    () => dataSources.find(item => item.id === dataSourceId),
-    [dataSources, dataSourceId]
-  );
-  // const { activeAlgorithm } = useActivePipeline();
-  // const { applyAlgorithm } = useActions();
+  const { goTo } = usePath();
+  const { dataSource, isReady } = useActiveDataSource();
   const { setOff, isOn } = useToggle(true);
+
+  if (!isReady) return null;
 
   return (
     <Drawer
@@ -22,7 +18,7 @@ const EditDrawer = () => {
       onClose={setOff}
       onDidClose={goTo.root}
       width={DRAWER_SIZE.ADD_DATASOURCE}>
-      <h1>{activeAlgorithm.name}</h1>
+      <h1>{dataSource.name}</h1>
     </Drawer>
   );
 };
