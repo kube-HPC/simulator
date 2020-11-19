@@ -38,4 +38,4 @@ JobTypes.propTypes = {
   fullName: PropTypes.bool,
 };
 
-export default JobTypes;
+export default React.memo(JobTypes);

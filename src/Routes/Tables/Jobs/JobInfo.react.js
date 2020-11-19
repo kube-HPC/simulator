@@ -58,4 +58,4 @@ const JobInfo = () => {
   );
 };
 
-export default JobInfo;
+export default React.memo(JobInfo);

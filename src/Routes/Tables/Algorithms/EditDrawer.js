@@ -42,4 +42,4 @@ const EditDrawer = () => {
   );
 };
 
-export default EditDrawer;
+export default React.memo(EditDrawer);

@@ -36,4 +36,4 @@ const AlgorithmsTable = () => {
   );
 };
 
-export default AlgorithmsTable;
+export default React.memo(AlgorithmsTable);

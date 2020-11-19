@@ -39,4 +39,4 @@ JobProgress.propTypes = {
   /* eslint-enable  */
 };
 
-export default JobProgress;
+export default React.memo(JobProgress);

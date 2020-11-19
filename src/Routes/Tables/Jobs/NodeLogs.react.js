@@ -102,4 +102,4 @@ NodeLogs.propTypes = {
   taskDetails: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
 };
-export default NodeLogs;
+export default React.memo(NodeLogs);

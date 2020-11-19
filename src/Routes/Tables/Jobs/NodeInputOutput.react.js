@@ -52,4 +52,4 @@ NodeInputOutput.propTypes = {
   algorithm: PropTypes.object.isRequired,
 };
 
-export default NodeInputOutput;
+export default React.memo(NodeInputOutput);

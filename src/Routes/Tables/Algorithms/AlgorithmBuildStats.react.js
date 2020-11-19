@@ -30,4 +30,4 @@ AlgorithmBuildStats.propTypes = {
   builds: PropTypes.array.isRequired,
 };
 
-export default AlgorithmBuildStats;
+export default React.memo(AlgorithmBuildStats);

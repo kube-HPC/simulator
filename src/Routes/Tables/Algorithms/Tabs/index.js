@@ -69,4 +69,4 @@ AlgorithmsTabs.propTypes = {
   name: PropTypes.string.isRequired,
 };
 
-export default AlgorithmsTabs;
+export default React.memo(AlgorithmsTabs);

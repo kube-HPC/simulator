@@ -103,4 +103,4 @@ AlgorithmActions.propTypes = {
   record: PropTypes.object.isRequired,
 };
 
-export default AlgorithmActions;
+export default React.memo(AlgorithmActions);

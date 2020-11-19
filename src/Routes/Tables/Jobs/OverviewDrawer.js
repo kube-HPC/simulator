@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useJobs } from 'hooks';
 import Drawer from 'components/Drawer';
 import { DRAWER_SIZE } from 'const';
@@ -15,7 +15,11 @@ const OverviewDrawer = () => {
     goTo.root();
   }, [goTo]);
 
-  const item = dataSource.find(job => job.key === jobId);
+  const item = useMemo(() => dataSource.find(job => job.key === jobId), [
+    dataSource,
+    jobId,
+  ]);
+
   if (!item) return null;
 
   return (
@@ -30,4 +34,4 @@ const OverviewDrawer = () => {
   );
 };
 
-export default OverviewDrawer;
+export default React.memo(OverviewDrawer);

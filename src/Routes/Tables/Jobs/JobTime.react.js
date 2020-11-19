@@ -54,4 +54,4 @@ JobTime.propTypes = {
   /* eslint-enable */
 };
 
-export default JobTime;
+export default React.memo(JobTime);
