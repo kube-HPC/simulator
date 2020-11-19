@@ -12,12 +12,6 @@ import JobStatus from './JobStatus.react';
 import JobTime from './JobTime.react';
 import JobTypes from './JobTypes.react';
 
-const getStatusFilter = () =>
-  Object.values(PIPELINE_STATUS).map(status => ({
-    text: toUpperCaseFirstLetter(status),
-    value: status,
-  }));
-
 const ItemGrow = styled(FlexBox.Item)`
   flex-grow: 1;
 `;
@@ -48,6 +42,17 @@ const Progress = (_, job) => (
   </FlexBox>
 );
 
+const sortPipelineName = (a, b) => sorter(a.pipeline.name, b.pipeline.name);
+const sortStartTime = (a, b) => a.pipeline.startTime - b.pipeline.startTime;
+const sortPriority = (a, b) => sorter(a.pipeline.priority, b.pipeline.priority);
+const onStatusFilter = (value, record) => record.status.status === value;
+const sortStatus = (a, b) => sorter(a.status.status, b.status.status);
+
+const statusFilter = Object.values(PIPELINE_STATUS).map(status => ({
+  text: toUpperCaseFirstLetter(status),
+  value: status,
+}));
+
 const jobColumns = [
   {
     title: `Job ID`,
@@ -61,7 +66,7 @@ const jobColumns = [
     dataIndex: `pipeline.name`,
     key: `pipeline`,
     width: `10%`,
-    sorter: (a, b) => sorter(a.pipeline.name, b.pipeline.name),
+    sorter: sortPipelineName,
     render: Name,
   },
   {
@@ -69,7 +74,7 @@ const jobColumns = [
     dataIndex: `pipeline.startTime`,
     key: `Start timestamp`,
     width: `10%`,
-    sorter: (a, b) => a.pipeline.startTime - b.pipeline.startTime,
+    sorter: sortStartTime,
     render: StartTime,
   },
   {
@@ -85,7 +90,7 @@ const jobColumns = [
     key: `priority`,
     align: `center`,
     width: `5%`,
-    sorter: (a, b) => sorter(a.pipeline.priority, b.pipeline.priority),
+    sorter: sortPriority,
     render: Priority,
   },
 
@@ -102,11 +107,11 @@ const jobColumns = [
     dataIndex: `status`,
     key: `job-status`,
     filterMultiple: true,
-    filters: getStatusFilter(),
+    filters: statusFilter,
     width: `8%`,
     align: `center`,
-    sorter: (a, b) => sorter(a.status.status, b.status.status),
-    onFilter: (value, record) => record.status.status === value,
+    sorter: sortStatus,
+    onFilter: onStatusFilter,
     render: Status,
   },
   {

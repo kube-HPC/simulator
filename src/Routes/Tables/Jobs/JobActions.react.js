@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { USER_GUIDE, STATE_SOURCES } from 'const';
 import { useActions } from 'hooks';
 import PropTypes from 'prop-types';
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import usePath from './usePath';
 
 const activeStates = [
@@ -35,20 +35,28 @@ const JobActions = ({ job, className }) => {
     resumePipeline,
   } = useActions();
 
-  const onReRun = () => rerunRawPipeline(pipeline);
-  const onStop = () => stopPipeline(key);
+  const onReRun = useCallback(() => rerunRawPipeline(pipeline), [
+    pipeline,
+    rerunRawPipeline,
+  ]);
+  const onStop = useCallback(() => stopPipeline(key), [stopPipeline, key]);
 
-  const onMoreInfo = () => goTo.overview({ nextJobId: key });
-
-  const isDownloadDisabled = !(
-    results &&
-    results.data &&
-    results.data.storageInfo
-  );
+  const onMoreInfo = useCallback(() => goTo.overview({ nextJobId: key }), [
+    goTo,
+    key,
+  ]);
 
   const onPause = useCallback(() => {
     canPause(status) ? pausePipeline(key) : resumePipeline(key);
   }, [status, pausePipeline, key, resumePipeline]);
+
+  const isStopDisabled = useMemo(() => !canPauseOrStop(status), [status]);
+  const disableIcon = useMemo(
+    () => (canPause(status) ? 'pause' : 'caret-right'),
+    [status]
+  );
+
+  const isDownloadDisabled = !results?.data?.storageInfo;
 
   return (
     <Button.Group
@@ -56,15 +64,11 @@ const JobActions = ({ job, className }) => {
       <Button icon="redo" onClick={onReRun} />
       <Button
         type="danger"
-        disabled={!canPauseOrStop(status)}
+        disabled={isStopDisabled}
         icon="close"
         onClick={onStop}
       />
-      <Button
-        disabled={!canPauseOrStop(status)}
-        icon={canPause(status) ? 'pause' : 'caret-right'}
-        onClick={onPause}
-      />
+      <Button disabled={isStopDisabled} icon={disableIcon} onClick={onPause} />
       <a href={`${socketURL}/storage/download/pipeline/result/${key}`} download>
         <Button disabled={isDownloadDisabled} icon="download" />
       </a>
@@ -84,4 +88,4 @@ JobActions.defaultProps = {
   className: '',
 };
 
-export default JobActions;
+export default React.memo(JobActions);
