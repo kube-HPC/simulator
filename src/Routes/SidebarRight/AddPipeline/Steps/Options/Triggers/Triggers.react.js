@@ -1,21 +1,17 @@
 import React, { useContext } from 'react';
 import { Select } from 'antd';
 import { useSelector } from 'react-redux';
-
 import { Form } from 'components/common';
 import addPipelineSchema from 'config/schema/addPipeline.schema';
-import { STATE_SOURCES } from 'const';
+import { selectors } from 'reducers/pipeline.reducer';
 import CronInput from './CronInput.react';
 import { FormContext } from '../../../Form/AddPipelineForm.react';
 
 const { CRON, PIPELINES } = addPipelineSchema.TRIGGERS;
 
-const pipelineNamesSelector = state =>
-  state[STATE_SOURCES.PIPELINE_TABLE].dataSource.map(({ name }) => name);
-
 const Triggers = () => {
   const { getFieldDecorator } = useContext(FormContext);
-  const pipelines = useSelector(pipelineNamesSelector);
+  const pipelineNames = useSelector(selectors.collection.names);
 
   return (
     <>
@@ -25,9 +21,9 @@ const Triggers = () => {
       <Form.Item label={PIPELINES.label}>
         {getFieldDecorator(PIPELINES.field)(
           <Select mode="multiple" placeholder={PIPELINES.placeholder}>
-            {pipelines.map(pipeline => (
-              <Select.Option key={pipeline} value={pipeline}>
-                {pipeline}
+            {pipelineNames.map(name => (
+              <Select.Option key={`pipeline-name-${name}`} value={name}>
+                {name}
               </Select.Option>
             ))}
           </Select>

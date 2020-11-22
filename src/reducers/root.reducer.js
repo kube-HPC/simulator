@@ -20,7 +20,7 @@ import { jobsKubernetesLogs, jobsTable } from 'reducers/jobs.reducer';
 import { meta } from 'reducers/meta.reducer';
 import { nodeStatistics } from 'reducers/nodeStatistics.reducer';
 import { storage } from 'reducers/storage.reducer';
-import { pipelineTable } from 'reducers/pipeline.reducer';
+import { reducer as pipelines } from 'reducers/pipeline.reducer';
 import { settings } from 'reducers/settings.reducer';
 import { boards } from 'reducers/tensorflow.reducer';
 import { userGuide } from 'reducers/userGuide.reducer';
@@ -47,7 +47,7 @@ const store = {
   jobsTable,
   nodeStatistics,
   storage,
-  pipelineTable,
+  pipelines,
   settings,
   socketURL,
   userGuide,

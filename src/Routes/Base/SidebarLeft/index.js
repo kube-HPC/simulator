@@ -18,6 +18,7 @@ import { ReactComponent as LogoTitle } from 'images/logo-title.svg';
 import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
 import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
 import { COLOR_LAYOUT } from 'styles';
+import { selectors } from 'reducers/pipeline.reducer';
 
 const Border = styled.div`
   border-right: 1px solid ${COLOR_LAYOUT.border};
@@ -78,9 +79,7 @@ const EMPTY_WORKERS = { total: 0 };
 const sidebarSelector = state => ({
   [LEFT_SIDEBAR_NAMES.JOBS]: (state.jobsTable.dataSource || DEFAULT_VALUE)
     .length,
-  [LEFT_SIDEBAR_NAMES.PIPELINES]: (
-    state.pipelineTable.dataSource || DEFAULT_VALUE
-  ).length,
+  [LEFT_SIDEBAR_NAMES.PIPELINES]: selectors.collection.count(state),
   [LEFT_SIDEBAR_NAMES.ALGORITHMS]: (
     state.algorithmTable.dataSource || DEFAULT_VALUE
   ).length,
