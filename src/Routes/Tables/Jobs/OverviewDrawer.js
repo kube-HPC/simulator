@@ -20,16 +20,18 @@ const OverviewDrawer = () => {
     jobId,
   ]);
 
-  if (!item) return null;
-
   return (
     <Drawer
       isOpened={isOn}
       onDidClose={goBack}
       onClose={setOff}
       width={DRAWER_SIZE.JOB_INFO}
-      title={item.pipeline.name}>
-      <JobInfo jobId={jobId} />
+      title={item?.pipeline?.name ?? jobId}>
+      {item ? (
+        <JobInfo job={item} />
+      ) : (
+        <p>could not find the item you searched for</p>
+      )}
     </Drawer>
   );
 };

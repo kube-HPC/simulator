@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button } from 'antd';
 import { JsonSwitch, Tabs } from 'components/common';
-import { useJobs, useTraceData } from 'hooks';
+import { useTraceData } from 'hooks';
 import JobGraph from './JobGraph.react';
 import Trace from './Trace.react';
 import usePath, { OVERVIEW_TABS as TABS } from './usePath';
@@ -17,18 +18,13 @@ const FullGraph = styled(JobGraph)`
   width: 100%;
 `;
 
-const JobInfo = () => {
-  const { tabKey: currentTab, goTo, jobId } = usePath();
+const JobInfo = ({ job }) => {
+  const { tabKey: currentTab, goTo } = usePath();
   const { traceData, fetch } = useTraceData();
   const setCurrentTab = useCallback(
     nextTabKey => goTo.overview({ nextTabKey }),
     [goTo]
   );
-  const { dataSource } = useJobs();
-  const job = useMemo(() => dataSource.find(({ key }) => jobId === key), [
-    dataSource,
-    jobId,
-  ]);
   const { key, graph, pipeline } = job;
 
   const fetchJobTrace = useCallback(() => fetch({ jobId: key }), [fetch, key]);
@@ -59,6 +55,17 @@ const JobInfo = () => {
       </Tabs.TabPane>
     </Tabs>
   );
+};
+
+JobInfo.propTypes = {
+  job: PropTypes.shape({
+    key: PropTypes.string.isRequired,
+    // TODO:: fill missing props
+    // eslint-disable-next-line
+    graph: PropTypes.any,
+    // eslint-disable-next-line
+    pipeline: PropTypes.any,
+  }).isRequired,
 };
 
 export default React.memo(JobInfo);
