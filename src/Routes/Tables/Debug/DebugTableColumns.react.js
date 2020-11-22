@@ -19,27 +19,28 @@ const debugTableColumns = ({ onDelete }) => [
   {
     title: 'Path',
     key: 'path',
-    render: (_, record) => (
-      <CopyToClipboard
-        text={`ws://${window.location.host}/${record.data.path.replace(
-          firstSlash,
-          ''
-        )}`}
-        onCopy={
-          () =>
-            notification.success({
-              message: 'Copied to clipboard',
-            })
-          // eslint-disable-next-line react/jsx-curly-newline
-        }>
-        <Tag color={COLOR_TASK_STATUS.active}>
-          {`ws://${window.location.host}/${record.data.path.replace(
+    render: (_, record) =>
+      record.data ? (
+        <CopyToClipboard
+          text={`ws://${window.location.host}/${record.data.path.replace(
             firstSlash,
             ''
           )}`}
-        </Tag>
-      </CopyToClipboard>
-    ),
+          onCopy={
+            () =>
+              notification.success({
+                message: 'Copied to clipboard',
+              })
+            // eslint-disable-next-line react/jsx-curly-newline
+          }>
+          <Tag color={COLOR_TASK_STATUS.active}>
+            {`ws://${window.location.host}/${record.data.path.replace(
+              firstSlash,
+              ''
+            )}`}
+          </Tag>
+        </CopyToClipboard>
+      ) : null,
   },
   {
     title: 'Stop',
