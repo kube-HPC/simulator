@@ -33,8 +33,14 @@ const JobGraph = ({
 }) => {
   const adaptedGraph = useMemo(
     () => ({
-      nodes: [].concat(graph.nodes).map(formatNode),
-      edges: [].concat(graph.edges).map(formatEdge),
+      nodes: []
+        .concat(graph.nodes)
+        .filter(item => item)
+        .map(formatNode),
+      edges: []
+        .concat(graph.edges)
+        .filter(item => item)
+        .map(formatEdge),
     }),
     [graph]
   );
