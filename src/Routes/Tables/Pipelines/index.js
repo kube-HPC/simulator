@@ -8,7 +8,7 @@ import usePath from './usePath';
 import EditDrawer from './EditDrawer';
 import ExecuteDrawer from './ExecuteDrawer';
 
-const rowKey = ({ name }) => name;
+const rowKey = ({ name }) => `pipeline-${name}`;
 
 const PipelinesTable = () => {
   const { dataSource } = usePipeline();
@@ -40,4 +40,4 @@ const PipelinesTable = () => {
   );
 };
 
-export default PipelinesTable;
+export default React.memo(PipelinesTable);

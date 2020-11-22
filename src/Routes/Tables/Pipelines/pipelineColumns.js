@@ -10,12 +10,14 @@ const Stats = (name, { nodes }) => <PipelineStats name={name} nodes={nodes} />;
 const Cron = (_, pipeline) => <PipelineCron pipeline={pipeline} />;
 const Actions = (_, pipeline) => <PipelineActions pipeline={pipeline} />;
 
+const sortByName = (a, b) => sorter(a.name, b.name);
+
 export default [
   {
     title: 'Pipeline Name',
     dataIndex: 'name',
     key: 'name',
-    sorter: (a, b) => sorter(a.name, b.name),
+    sorter: sortByName,
     render: PipelineName,
   },
   {

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { animated, useSpring } from 'react-spring';
 import styled from 'styled-components';
@@ -76,13 +76,34 @@ const DEFAULT_VALUE = [];
 const EMPTY_WORKERS = { total: 0 };
 
 const sidebarSelector = state => ({
-  jobsCount: (state.jobsTable.dataSource || DEFAULT_VALUE).length,
-  driversCount: (state.driverTable.dataSource || DEFAULT_VALUE).length,
-  algorithmsCount: (state.algorithmTable.dataSource || DEFAULT_VALUE).length,
-  pipelinesCount: (state.pipelineTable.dataSource || DEFAULT_VALUE).length,
-  workersCount: (state.workerTable.stats || EMPTY_WORKERS).total,
-  debugCount: (state.debugTable.dataSource || DEFAULT_VALUE).length,
+  [LEFT_SIDEBAR_NAMES.JOBS]: (state.jobsTable.dataSource || DEFAULT_VALUE)
+    .length,
+  [LEFT_SIDEBAR_NAMES.PIPELINES]: (
+    state.pipelineTable.dataSource || DEFAULT_VALUE
+  ).length,
+  [LEFT_SIDEBAR_NAMES.ALGORITHMS]: (
+    state.algorithmTable.dataSource || DEFAULT_VALUE
+  ).length,
+  [LEFT_SIDEBAR_NAMES.WORKERS]: (state.workerTable.stats || EMPTY_WORKERS)
+    .length,
+  [LEFT_SIDEBAR_NAMES.DRIVERS]: (state.driverTable.dataSource || DEFAULT_VALUE)
+    .total,
+  [LEFT_SIDEBAR_NAMES.DEBUG]: (state.debugTable.dataSource || DEFAULT_VALUE)
+    .length,
 });
+
+const menuItems = [
+  [LEFT_SIDEBAR_NAMES.JOBS, JobsIcon, '/jobs'],
+  [LEFT_SIDEBAR_NAMES.PIPELINES, PipelineIcon, '/pipelines'],
+  [LEFT_SIDEBAR_NAMES.ALGORITHMS, AlgorithmIcon, '/algorithms'],
+  [LEFT_SIDEBAR_NAMES.WORKERS, WorkerIcon, '/workers'],
+  [LEFT_SIDEBAR_NAMES.DRIVERS, DriversIcon, '/drivers'],
+  [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, '/debug'],
+];
+
+const Name = styled.span`
+  text-transform: capitalize;
+`;
 
 const SidebarLeft = () => {
   const dataCountSource = useSelector(sidebarSelector, isEqual);
@@ -91,39 +112,6 @@ const SidebarLeft = () => {
   const dataCount = isOn ? dataCountMock : dataCountSource;
   const { isCollapsed, toggle } = useLeftSidebar();
   const { pageName } = useParams();
-
-  const menuItems = useMemo(
-    () => [
-      [LEFT_SIDEBAR_NAMES.JOBS, JobsIcon, dataCount.jobsCount, '/jobs'],
-      [
-        LEFT_SIDEBAR_NAMES.PIPELINES,
-        PipelineIcon,
-        dataCount.pipelinesCount,
-        '/pipelines',
-      ],
-      [
-        LEFT_SIDEBAR_NAMES.ALGORITHMS,
-        AlgorithmIcon,
-        dataCount.algorithmsCount,
-        '/algorithms',
-      ],
-      [
-        LEFT_SIDEBAR_NAMES.WORKERS,
-        WorkerIcon,
-        dataCount.workersCount,
-        '/workers',
-      ],
-      [
-        LEFT_SIDEBAR_NAMES.DRIVERS,
-        DriversIcon,
-        dataCount.driversCount,
-        '/drivers',
-      ],
-      [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, dataCount.debugCount, '/debug'],
-    ],
-    [dataCount]
-  );
-
   return (
     <Border>
       <Sider
@@ -135,24 +123,24 @@ const SidebarLeft = () => {
           <IconLogo component={LogoFish} />
           {!isCollapsed && <AnimatedTitle />}
         </LogoContainer>
-        <MenuMargin selectedKeys={[pageName]}>
-          {menuItems.map(([name, component, count, path]) => (
-            <Menu.Item key={name} className={USER_GUIDE.TABLE_SELECT[name]}>
+        <MenuMargin selectedKeys={pageName}>
+          {menuItems.map(([name, component, path]) => (
+            <Menu.Item
+              key={`left-sidebar-${name}`}
+              className={USER_GUIDE.TABLE_SELECT[name]}>
               <Link to={{ pathname: path, search: location.search }}>
                 <FlexBox>
                   <FlexBox.Item>
                     <Icon
                       type={component}
-                      component={
-                        typeof component === 'string' ? null : component
-                      }
+                      component={component}
                       style={IconStyle}
                     />
-                    <span style={{ textTransform: 'capitalize' }}>{name}</span>
+                    <Name>{name}</Name>
                   </FlexBox.Item>
-                  {!Number.isNaN(count) && (
+                  {Number.isInteger(dataCount[name]) && (
                     <FlexBox.Item>
-                      <Tag style={tagStyle}>{count}</Tag>
+                      <Tag style={tagStyle}>{dataCount[name]}</Tag>
                     </FlexBox.Item>
                   )}
                 </FlexBox>
@@ -165,6 +153,4 @@ const SidebarLeft = () => {
   );
 };
 
-export default SidebarLeft;
-
-SidebarLeft.propTypes = {};
+export default React.memo(SidebarLeft);

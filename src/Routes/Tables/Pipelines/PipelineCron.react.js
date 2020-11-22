@@ -111,4 +111,4 @@ PipelineCron.propTypes = {
   pipeline: PropTypes.object.isRequired,
 };
 
-export default PipelineCron;
+export default React.memo(PipelineCron);

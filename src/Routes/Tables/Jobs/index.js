@@ -12,7 +12,7 @@ import usePath from './usePath';
 export { default as jobColumns } from './jobColumns';
 const rowKey = job => `job-${job.key}`;
 
-const JobsTable = React.memo(() => {
+const JobsTable = () => {
   const { goTo } = usePath();
   const { columns, dataSource, loading } = useJobs();
   const onRow = useCallback(
@@ -33,7 +33,9 @@ const JobsTable = React.memo(() => {
       pagination={false}
     />
   );
-});
+};
+
+const MemoizedJobsTable = React.memo(JobsTable);
 
 const Container = styled(Card)`
   & .ant-card-body {
@@ -52,7 +54,7 @@ const Jobs = () => {
   const showGrid = useMemo(() => query.get('view') === 'grid', [query]);
   return (
     <>
-      {showGrid ? <GridView /> : <JobsTable />}
+      {showGrid ? <GridView /> : <MemoizedJobsTable />}
       <Route
         exact
         path="/jobs/:jobId/overview/:tabKey"
