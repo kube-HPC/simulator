@@ -10,7 +10,7 @@ import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
 
 export { default as jobColumns } from './jobColumns';
-const rowKey = job => job.key;
+const rowKey = job => `job-${job.key}`;
 
 const JobsTable = React.memo(() => {
   const { goTo } = usePath();

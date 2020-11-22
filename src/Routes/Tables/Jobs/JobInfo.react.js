@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { Button } from 'antd';
 import { JsonSwitch, Tabs } from 'components/common';
@@ -25,7 +25,10 @@ const JobInfo = () => {
     [goTo]
   );
   const { dataSource } = useJobs();
-  const job = dataSource.find(({ key }) => jobId === key);
+  const job = useMemo(() => dataSource.find(({ key }) => jobId === key), [
+    dataSource,
+    jobId,
+  ]);
   const { key, graph, pipeline } = job;
 
   const fetchJobTrace = useCallback(() => fetch({ jobId: key }), [fetch, key]);

@@ -3,7 +3,7 @@ import { Card, Fallback, FallbackComponent, FlexBox } from 'components/common';
 import { setOptions as defaultSetOptions } from 'config/template/graph-options.template';
 import { useNodeInfo, useSettings } from 'hooks';
 import PropTypes from 'prop-types';
-import React, { lazy, useEffect, useReducer } from 'react';
+import React, { lazy, useEffect, useMemo, useReducer } from 'react';
 import styled from 'styled-components';
 import { formatEdge, formatNode } from 'utils';
 import NodeInfo from './NodeInfo.react';
@@ -31,16 +31,13 @@ const JobGraph = ({
   isMinified = false,
   className,
 }) => {
-  // On every render define new Graph!
-  // Causes 'id already exists' on trying update the nodes.
-  const adaptedGraph = {
-    edges: [],
-    nodes: [],
-  };
-
-  const { nodes = [], edges = [] } = graph;
-  nodes.forEach(n => adaptedGraph.nodes.push(formatNode(n)));
-  edges.forEach(e => adaptedGraph.edges.push(formatEdge(e)));
+  const adaptedGraph = useMemo(
+    () => ({
+      nodes: [].concat(graph.nodes).map(formatNode),
+      edges: [].concat(graph.edges).map(formatEdge),
+    }),
+    [graph]
+  );
 
   const isValidGraph = adaptedGraph.nodes.length !== 0;
 
