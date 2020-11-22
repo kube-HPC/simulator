@@ -54,6 +54,12 @@ export const connectionStatus = handleActions(
         isDataAvailable,
       });
     },
+    [actionType.SOCKET_GET_DATA]: () => {
+      return Immutable.from({
+        isSocketConnected: true,
+        isDataAvailable: true,
+      });
+    },
   },
   initialValue
 );
