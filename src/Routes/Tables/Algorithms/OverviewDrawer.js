@@ -3,6 +3,7 @@ import Drawer from 'components/Drawer';
 import { DRAWER_SIZE } from 'const';
 import { useAlgorithm } from 'hooks';
 import useToggle from 'hooks/useToggle';
+import MissingIdError from 'components/MissingIdError';
 import AlgorithmsTabs from './Tabs';
 import usePath from './usePath';
 
@@ -18,11 +19,7 @@ const OverviewDrawer = () => {
       onClose={setOff}
       width={DRAWER_SIZE.ALGORITHM_INFO}
       title={algorithmId}>
-      {algorithm ? (
-        <AlgorithmsTabs name={algorithmId} />
-      ) : (
-        <p>could not find the algorithm you asked for</p>
-      )}
+      {algorithm ? <AlgorithmsTabs name={algorithmId} /> : <MissingIdError />}
     </Drawer>
   );
 };

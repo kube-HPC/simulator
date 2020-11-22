@@ -4,13 +4,14 @@ import { DRAWER_SIZE } from 'const';
 import Drawer from 'components/Drawer';
 import useToggle from 'hooks/useToggle';
 import DrawerEditor from 'components/Drawer/DrawerEditor.react';
+import MissingIdError from 'components/MissingIdError';
 import { useActions } from 'hooks';
 import usePath from './usePath';
 import useActiveAlgorithm from './useActiveAlgorithm';
 
 const EditDrawer = () => {
   const { goTo } = usePath();
-  const { activeAlgorithm } = useActiveAlgorithm();
+  const { activeAlgorithm, algorithmId } = useActiveAlgorithm();
   const { applyAlgorithm } = useActions();
   const { setOff, isOn } = useToggle(true);
   const onSubmitUpdate = useCallback(
@@ -23,7 +24,7 @@ const EditDrawer = () => {
   );
 
   const value = useMemo(() => {
-    const { builds, ...rest } = activeAlgorithm;
+    const { builds, ...rest } = activeAlgorithm || {};
     return stringify(rest);
   }, [activeAlgorithm]);
 
@@ -32,12 +33,17 @@ const EditDrawer = () => {
       isOpened={isOn}
       onClose={setOff}
       onDidClose={goTo.root}
-      width={DRAWER_SIZE.ALGORITHM_INFO}>
-      <DrawerEditor
-        value={value}
-        submitText="submit"
-        onSubmit={onSubmitUpdate}
-      />
+      width={DRAWER_SIZE.ALGORITHM_INFO}
+      title={activeAlgorithm?.name ?? algorithmId}>
+      {activeAlgorithm ? (
+        <DrawerEditor
+          value={value}
+          submitText="submit"
+          onSubmit={onSubmitUpdate}
+        />
+      ) : (
+        <MissingIdError />
+      )}
     </Drawer>
   );
 };

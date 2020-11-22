@@ -7,7 +7,7 @@ import usePath from './usePath';
 const dataSelector = tableFilterSelector(LEFT_SIDEBAR_NAMES.PIPELINES);
 
 export default () => {
-  const { pipelineId, goTo } = usePath();
+  const { pipelineId } = usePath();
   const dataSource = useSelector(dataSelector);
 
   const pipeline = useMemo(
@@ -15,7 +15,5 @@ export default () => {
     [dataSource, pipelineId]
   );
 
-  if (!pipeline) goTo.root();
-
-  return { pipeline };
+  return { pipeline, pipelineId };
 };

@@ -3,7 +3,7 @@ import { useAlgorithm } from 'hooks';
 import usePath from './usePath';
 
 export default () => {
-  const { algorithmId, goTo } = usePath();
+  const { algorithmId } = usePath();
   const { dataSource } = useAlgorithm();
 
   const activeAlgorithm = useMemo(
@@ -11,9 +11,8 @@ export default () => {
     [algorithmId, dataSource]
   );
 
-  if (!activeAlgorithm) goTo.root();
-
   return {
     activeAlgorithm,
+    algorithmId,
   };
 };
