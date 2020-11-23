@@ -4,13 +4,7 @@ import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { notification } from 'utils';
 
-const NOOP = () => {};
-
-const DrawerEditor = ({
-  value: initial,
-  submitText = 'Submit',
-  onSubmit = NOOP,
-}) => {
+const DrawerEditor = ({ value: initial, submitText, onSubmit }) => {
   const [value, setValue] = useState(initial);
 
   useEffect(() => {
@@ -19,8 +13,8 @@ const DrawerEditor = ({
 
   const editorRef = useRef();
 
-  const onClear = useCallback(() => setValue(''), []);
-  const onDefault = useCallback(() => setValue(initial), [initial]);
+  const onClear = useCallback(() => setValue(''), [setValue]);
+  const onDefault = useCallback(() => setValue(initial), [initial, setValue]);
 
   const onSubmitClick = useCallback(() => {
     try {
@@ -28,7 +22,7 @@ const DrawerEditor = ({
     } catch ({ message: description }) {
       notification({ message: 'Error in Submitted Json', description });
     }
-  }, [onSubmit]);
+  }, [onSubmit, editorRef]);
 
   return (
     <>
@@ -54,12 +48,14 @@ const DrawerEditor = ({
 };
 
 DrawerEditor.propTypes = {
-  // TODO: detail the props
-  /* eslint-disable  */
   value: PropTypes.string,
+  onSubmit: PropTypes.func.isRequired,
   submitText: PropTypes.string,
-  onSubmit: PropTypes.func,
-  /* eslint-enable  */
+};
+
+DrawerEditor.defaultProps = {
+  submitText: 'Submit',
+  value: '',
 };
 
 export default DrawerEditor;
