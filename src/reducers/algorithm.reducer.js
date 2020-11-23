@@ -1,8 +1,4 @@
-import {
-  createEntityAdapter,
-  createSlice,
-  createSelector,
-} from '@reduxjs/toolkit';
+import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import sum from 'hash-sum';
 import { groupBy } from 'lodash/fp';
 import actions from 'const/application-actions';
@@ -65,13 +61,6 @@ export const selectors = {
       baseSelectors.selectById(state.algorithms.collection, id),
     /** @param {State} state */
     count: state => baseSelectors.selectIds(state.algorithms.collection).length,
-    filtered: createSelector(
-      /** @param {State} state */
-      state => baseSelectors.selectAll(state.algorithms.collection),
-      /** @returns {string} */
-      state => state.autoCompleteFilter.filter,
-      (items, filter) => items.filter(item => item.name.includes(filter))
-    ),
   },
   builds: {
     /**

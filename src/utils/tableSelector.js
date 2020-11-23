@@ -1,4 +1,5 @@
 import { LEFT_SIDEBAR_NAMES, STATE_SOURCES } from 'const';
+
 import { createSelector } from 'reselect';
 
 export const tableSelector = {

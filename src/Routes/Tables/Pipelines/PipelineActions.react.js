@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Empty, Icon, Popover } from 'antd';
 import { IconTensorFlow } from 'components/Icons';
 import { USER_GUIDE } from 'const';
-import { usePipeline } from 'hooks';
+import { useActions } from 'hooks';
 import isEqual from 'lodash/isEqual';
 import { deleteConfirmAction } from 'utils';
 import PipelineCreateBoard from './TensorflowBoards/PipelineCreateBoard.react';
@@ -17,8 +17,7 @@ const title = 'Create Tensor Board for selected Node';
 
 const PipelineActions = ({ pipeline, className }) => {
   const { goTo } = usePath();
-
-  const { remove } = usePipeline();
+  const { deleteStored: remove } = useActions();
 
   const container = useRef();
 

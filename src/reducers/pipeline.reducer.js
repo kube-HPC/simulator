@@ -1,9 +1,5 @@
 import actions from 'const/application-actions';
-import {
-  createEntityAdapter,
-  createSlice,
-  createSelector,
-} from '@reduxjs/toolkit';
+import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import sum from 'hash-sum';
 
 /**
@@ -109,12 +105,5 @@ export const selectors = {
     /** @param {State} state */
     count: state =>
       pipelinedBaseSelectors.selectIds(state.pipelines.collection).length,
-    filtered: createSelector(
-      /** @param {State} state */
-      state => pipelinedBaseSelectors.selectAll(state.pipelines.collection),
-      /** @returns {string} */
-      state => state.autoCompleteFilter.filter,
-      (items, filter) => items.filter(item => item.name.includes(filter))
-    ),
   },
 };

@@ -1,15 +1,33 @@
-import { handleActions } from 'redux-actions';
 import get from 'lodash/get';
-import Immutable from 'seamless-immutable';
 import actions from 'const/application-actions';
+import { createSlice } from '@reduxjs/toolkit';
+import sum from 'hash-sum';
 
-export const workerTable = handleActions(
-  {
+/**
+ * @typedef {{
+ *   stats: any[];
+ *   collection: any[];
+ * }} WorkersState
+ */
+
+export const workersReducer = createSlice({
+  name: 'workers',
+  initialState: { collection: [], stats: [], sum: null },
+  reducers: {},
+  extraReducers: {
     [actions.SOCKET_GET_DATA](state, { payload }) {
-      const data = (payload.discovery && payload.discovery.worker) || [];
+      const collection = (payload.discovery && payload.discovery.worker) || [];
       const stats = get(payload, 'discovery.task-executor[0].actual', []);
-      return state.merge({ dataSource: data, stats });
+      const nextState = { collection, stats };
+      const nextSum = sum(nextState);
+      return nextSum === state.sum ? state : { nextState, sum: nextSum };
     },
   },
-  Immutable.from({ dataSource: [] })
-);
+});
+export const { reducer } = workersReducer;
+
+export const selectors = {
+  all: state => state.workers.collection,
+  stats: state => state.workers.stats,
+  count: state => state.workers.collection.length,
+};

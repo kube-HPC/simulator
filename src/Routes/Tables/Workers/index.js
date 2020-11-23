@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 // import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Table } from 'components';
 import { Card, JsonSwitch, Tabs } from 'components/common';
 import defaultWorkerData from 'config/template/worker.template';
-import { LEFT_SIDEBAR_NAMES } from 'const';
-import { tableFilterSelector } from 'utils/tableSelector';
+import { selectors } from 'reducers';
 import {
   getWorkersColumns,
   workersTableStats,
@@ -19,9 +18,12 @@ const generateTab = (key, value) => (
   </Tabs.TabPane>
 );
 
-const expandedRowRender = (columns, dataSource) => record => {
-  const filteredDataSource = dataSource.filter(
-    d => d.algorithmName === record.algorithmName
+const expandedRowRender = columns => record => {
+  const collection = useSelector(selectors.workers.all);
+
+  const filteredDataSource = useMemo(
+    () => collection.filter(d => d.algorithmName === record.algorithmName),
+    [collection, record]
   );
 
   return (
@@ -41,11 +43,8 @@ const expandedRowRender = (columns, dataSource) => record => {
   );
 };
 
-const dataSelector = tableFilterSelector(LEFT_SIDEBAR_NAMES.WORKERS);
-
 function WorkersTable() {
-  const dataSource = useSelector(dataSelector);
-  const stats = useSelector(state => state.workerTable.stats);
+  const stats = useSelector(selectors.workers.stats);
 
   const statsMergedWithDefault =
     (stats &&
@@ -58,7 +57,7 @@ function WorkersTable() {
       rowKey={record => record.algorithmName}
       columns={getWorkersColumns()}
       dataSource={statsMergedWithDefault}
-      expandedRowRender={expandedRowRender(workersTableStats(), dataSource)}
+      expandedRowRender={expandedRowRender(workersTableStats())}
     />
   );
 }

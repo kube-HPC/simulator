@@ -74,15 +74,13 @@ const LogoContainer = styled.div`
 const equalByGuideOn = (a, b) => a.isOn === b.isOn;
 
 const DEFAULT_VALUE = [];
-const EMPTY_WORKERS = { total: 0 };
 
 const sidebarSelector = state => ({
   [LEFT_SIDEBAR_NAMES.JOBS]: (state.jobsTable.dataSource || DEFAULT_VALUE)
     .length,
   [LEFT_SIDEBAR_NAMES.PIPELINES]: selectors.pipelines.collection.count(state),
   [LEFT_SIDEBAR_NAMES.ALGORITHMS]: selectors.algorithms.collection.count(state),
-  [LEFT_SIDEBAR_NAMES.WORKERS]: (state.workerTable.stats || EMPTY_WORKERS)
-    .length,
+  [LEFT_SIDEBAR_NAMES.WORKERS]: selectors.workers.count,
   [LEFT_SIDEBAR_NAMES.DRIVERS]: (state.driverTable.dataSource || DEFAULT_VALUE)
     .total,
   [LEFT_SIDEBAR_NAMES.DEBUG]: (state.debugTable.dataSource || DEFAULT_VALUE)

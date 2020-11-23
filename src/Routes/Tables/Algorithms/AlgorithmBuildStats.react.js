@@ -23,9 +23,7 @@ const AlgorithmBuildStats = ({ builds }) => {
 };
 
 AlgorithmBuildStats.propTypes = {
-  builds: PropTypes.arrayOf(
-    PropTypes.shape({ status: PropTypes.string.isRequired })
-  ),
+  builds: PropTypes.arrayOf(PropTypes.shape({ status: PropTypes.string })),
 };
 
 AlgorithmBuildStats.defaultProps = {

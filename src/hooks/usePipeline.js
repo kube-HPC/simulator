@@ -1,18 +1,16 @@
-import { useActions } from 'hooks';
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers/pipeline.reducer';
+import { useFilter } from './useFilter';
 
 const usePipeline = () => {
-  const dataSource = useSelector(selectors.collection.filtered);
+  const collection = useSelector(selectors.collection.all);
 
   const dataStats = useSelector(selectors.stats.all);
-
-  const { deleteStored } = useActions();
+  const filtered = useFilter(collection, 'name');
 
   return {
-    dataSource,
+    collection: filtered,
     dataStats,
-    remove: deleteStored,
   };
 };
 

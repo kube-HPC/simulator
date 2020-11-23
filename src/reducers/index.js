@@ -3,6 +3,14 @@ import {
   reducer as algorithms,
   selectors as algorithmsSelectors,
 } from 'reducers/algorithm.reducer';
+import {
+  reducer as pipelines,
+  selectors as pipelinesSelectors,
+} from 'reducers/pipeline.reducer';
+import {
+  reducer as workers,
+  selectors as workersSelectors,
+} from 'reducers/worker.reducer';
 import { autoCompleteFilter } from 'reducers/autoComplete.reducer';
 import {
   boardURL,
@@ -20,15 +28,10 @@ import { jobsKubernetesLogs, jobsTable } from 'reducers/jobs.reducer';
 import { meta } from 'reducers/meta.reducer';
 import { nodeStatistics } from 'reducers/nodeStatistics.reducer';
 import { storage } from 'reducers/storage.reducer';
-import {
-  reducer as pipelines,
-  selectors as pipelinesSelectors,
-} from 'reducers/pipeline.reducer';
 import { settings } from 'reducers/settings.reducer';
 import { boards } from 'reducers/tensorflow.reducer';
 import { userGuide } from 'reducers/userGuide.reducer';
 import { viewType } from 'reducers/viewType.reducer';
-import { workerTable } from 'reducers/worker.reducer';
 import { config } from 'reducers/config.reducer';
 
 const store = {
@@ -54,7 +57,7 @@ const store = {
   socketURL,
   userGuide,
   viewType,
-  workerTable,
+  workers,
   config,
 };
 
@@ -63,4 +66,5 @@ export default combineReducers(store);
 export const selectors = {
   algorithms: algorithmsSelectors,
   pipelines: pipelinesSelectors,
+  workers: workersSelectors,
 };
