@@ -1,14 +1,21 @@
 import { useMemo } from 'react';
-import { useAlgorithm } from 'hooks';
+import { useSelector } from 'react-redux';
+import { selectors } from 'reducers';
 import usePath from './usePath';
 
 export default () => {
   const { algorithmId } = usePath();
-  const { dataSource } = useAlgorithm();
+
+  const algorithmBase = useSelector(state =>
+    selectors.algorithms.collection.byId(state, algorithmId)
+  );
+  const algorithmBuild = useSelector(state =>
+    selectors.algorithms.builds.byId(state, algorithmId)
+  );
 
   const activeAlgorithm = useMemo(
-    () => dataSource.find(item => item.name === algorithmId),
-    [algorithmId, dataSource]
+    () => (algorithmBase ? { ...algorithmBase, builds: algorithmBuild } : null),
+    [algorithmBase, algorithmBuild]
   );
 
   return {

@@ -1,7 +1,6 @@
-import { useSelector } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { createStore } from 'reusable';
-import isEqual from 'lodash/isEqual';
 import { LEFT_SIDEBAR_NAMES, STATE_SOURCES } from 'const';
 import { dataSelector, tableSelector } from 'utils/tableSelector';
 import { jobColumns } from 'Routes/Tables/Jobs';
@@ -26,8 +25,11 @@ const jobsSelector = createSelector(
 );
 
 const useJobs = () => {
-  const dataSource = useSelector(jobsSelector, isEqual);
-  const { loading } = useSelector(state => state[STATE_SOURCES.EXPERIMENTS]);
+  const dataSource = useSelector(jobsSelector, shallowEqual);
+  const { loading } = useSelector(
+    state => state[STATE_SOURCES.EXPERIMENTS],
+    shallowEqual
+  );
 
   return {
     dataSource,

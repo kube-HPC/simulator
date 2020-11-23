@@ -1,25 +1,85 @@
-import { handleActions } from 'redux-actions';
-import Immutable from 'seamless-immutable';
+import {
+  createEntityAdapter,
+  createSlice,
+  createSelector,
+} from '@reduxjs/toolkit';
+import sum from 'hash-sum';
+import { groupBy } from 'lodash/fp';
 import actions from 'const/application-actions';
+/** @typedef {import('./Algorithm.d').Algorithm} Algorithm */
 
-export const algorithmTable = handleActions(
-  {
-    [actions.SOCKET_GET_DATA](currState, { payload }) {
-      const { algorithms } = payload;
+/** @type {import('@reduxjs/toolkit').EntityAdapter<Algorithm>} */
+const algorithmsEntityAdapter = createEntityAdapter({
+  selectId: item => item.name,
+});
+
+/**
+ * @typedef {{
+ *   collection: import('@reduxjs/toolkit').EntityState<Algorithm>;
+ *   builds: { [algorithmNames: string]: any };
+ *   sum: string;
+ * }} AlgorithmsState
+ * @typedef {{ algorithms: AlgorithmsState }} State
+ */
+
+const algorithmsReducer = createSlice({
+  name: 'algorithms',
+  initialState: {
+    collection: algorithmsEntityAdapter.getInitialState(),
+    builds: [],
+    sum: null,
+  },
+  reducers: {},
+  extraReducers: {
+    [actions.SOCKET_GET_DATA]: (state, { payload }) => {
+      const { algorithms, algorithmBuilds } = payload;
       const isValidPayload = Array.isArray(algorithms);
-      return isValidPayload
-        ? Immutable.set(currState, `dataSource`, algorithms)
-        : currState;
+      if (!isValidPayload) return state;
+      const nextSum = sum(algorithms);
+      return nextSum === state.sum
+        ? state
+        : {
+            sum: nextSum,
+            collection: algorithmsEntityAdapter.setAll({}, algorithms),
+            builds: groupBy('algorithmName', algorithmBuilds),
+          };
     },
   },
-  Immutable.from({ dataSource: [] })
-);
+});
 
-export const algorithmBuildsTable = handleActions(
-  {
-    [actions.SOCKET_GET_DATA](state, { payload }) {
-      return Immutable.set(state, `dataSource`, payload.algorithmBuilds);
-    },
+export const { reducer } = algorithmsReducer;
+
+const baseSelectors = algorithmsEntityAdapter.getSelectors();
+
+export const selectors = {
+  collection: {
+    /** @param {State} state */
+    all: state => baseSelectors.selectAll(state.algorithms.collection),
+    /** @param {State} state */
+    ids: state => baseSelectors.selectIds(state.algorithms.collection),
+    /**
+     * @param {State} state
+     * @param {string} id
+     */
+    byId: (state, id) =>
+      baseSelectors.selectById(state.algorithms.collection, id),
+    /** @param {State} state */
+    count: state => baseSelectors.selectIds(state.algorithms.collection).length,
+    filtered: createSelector(
+      /** @param {State} state */
+      state => baseSelectors.selectAll(state.algorithms.collection),
+      /** @returns {string} */
+      state => state.autoCompleteFilter.filter,
+      (items, filter) => items.filter(item => item.name.includes(filter))
+    ),
   },
-  Immutable.from({ dataSource: [], showModal: false })
-);
+  builds: {
+    /**
+     * @param {State} state
+     * @param {string} id
+     */
+    byId: (state, id) => state.algorithms.builds[id],
+    /** @param {State} state */
+    entities: state => state.algorithms.builds,
+  },
+};

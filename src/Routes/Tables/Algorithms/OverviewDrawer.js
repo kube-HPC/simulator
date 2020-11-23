@@ -1,16 +1,16 @@
 import React from 'react';
 import Drawer from 'components/Drawer';
 import { DRAWER_SIZE } from 'const';
-import { useAlgorithm } from 'hooks';
 import useToggle from 'hooks/useToggle';
 import MissingIdError from 'components/MissingIdError';
 import AlgorithmsTabs from './Tabs';
 import usePath from './usePath';
+import useActiveAlgorithm from './useActiveAlgorithm';
 
 const OverviewDrawer = () => {
-  const { goTo, algorithmId } = usePath();
+  const { goTo } = usePath();
   const { setOff, isOn } = useToggle(true);
-  const { algorithm } = useAlgorithm(algorithmId);
+  const { activeAlgorithm, algorithmId } = useActiveAlgorithm();
 
   return (
     <Drawer
@@ -19,7 +19,11 @@ const OverviewDrawer = () => {
       onClose={setOff}
       width={DRAWER_SIZE.ALGORITHM_INFO}
       title={algorithmId}>
-      {algorithm ? <AlgorithmsTabs name={algorithmId} /> : <MissingIdError />}
+      {activeAlgorithm ? (
+        <AlgorithmsTabs algorithm={activeAlgorithm} />
+      ) : (
+        <MissingIdError />
+      )}
     </Drawer>
   );
 };

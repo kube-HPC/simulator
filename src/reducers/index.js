@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import {
-  algorithmBuildsTable,
-  algorithmTable,
+  reducer as algorithms,
+  selectors as algorithmsSelectors,
 } from 'reducers/algorithm.reducer';
 import { autoCompleteFilter } from 'reducers/autoComplete.reducer';
 import {
@@ -20,7 +20,10 @@ import { jobsKubernetesLogs, jobsTable } from 'reducers/jobs.reducer';
 import { meta } from 'reducers/meta.reducer';
 import { nodeStatistics } from 'reducers/nodeStatistics.reducer';
 import { storage } from 'reducers/storage.reducer';
-import { reducer as pipelines } from 'reducers/pipeline.reducer';
+import {
+  reducer as pipelines,
+  selectors as pipelinesSelectors,
+} from 'reducers/pipeline.reducer';
 import { settings } from 'reducers/settings.reducer';
 import { boards } from 'reducers/tensorflow.reducer';
 import { userGuide } from 'reducers/userGuide.reducer';
@@ -29,8 +32,7 @@ import { workerTable } from 'reducers/worker.reducer';
 import { config } from 'reducers/config.reducer';
 
 const store = {
-  algorithmBuildsTable,
-  algorithmTable,
+  algorithms,
   meta,
   autoCompleteFilter,
   boards,
@@ -57,3 +59,8 @@ const store = {
 };
 
 export default combineReducers(store);
+
+export const selectors = {
+  algorithms: algorithmsSelectors,
+  pipelines: pipelinesSelectors,
+};
