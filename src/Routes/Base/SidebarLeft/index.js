@@ -81,10 +81,8 @@ const sidebarSelector = state => ({
   [LEFT_SIDEBAR_NAMES.PIPELINES]: selectors.pipelines.collection.count(state),
   [LEFT_SIDEBAR_NAMES.ALGORITHMS]: selectors.algorithms.collection.count(state),
   [LEFT_SIDEBAR_NAMES.WORKERS]: selectors.workers.count,
-  [LEFT_SIDEBAR_NAMES.DRIVERS]: (state.driverTable.dataSource || DEFAULT_VALUE)
-    .total,
-  [LEFT_SIDEBAR_NAMES.DEBUG]: (state.debugTable.dataSource || DEFAULT_VALUE)
-    .length,
+  [LEFT_SIDEBAR_NAMES.DRIVERS]: selectors.drivers.count(state),
+  [LEFT_SIDEBAR_NAMES.DEBUG]: selectors.debug.count(state),
 });
 
 const menuItems = [

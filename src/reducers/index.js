@@ -13,14 +13,20 @@ import {
 } from 'reducers/worker.reducer';
 import { autoCompleteFilter } from 'reducers/autoComplete.reducer';
 import {
+  reducer as drivers,
+  selectors as driversSelectors,
+} from 'reducers/driver.reducer';
+import {
+  reducer as debug,
+  selectors as debugSelectors,
+} from 'reducers/debug.reducer';
+import {
   boardURL,
   connectionStatus,
   socketURL,
   hkubeSystemVersion,
 } from 'reducers/connection.reducer';
-import { debugTable } from 'reducers/debug.reducer';
 import { drawer } from 'reducers/drawer.reducer';
-import { driverTable } from 'reducers/driver.reducer';
 import { errorLogsTable } from 'reducers/errorLogs.reducer';
 import { experiments } from 'reducers/experiment.reducer';
 import { filterByType } from 'reducers/filter.reducer';
@@ -42,9 +48,9 @@ const store = {
   boardURL,
   hkubeSystemVersion,
   connectionStatus,
-  debugTable,
+  debug,
   drawer,
-  driverTable,
+  drivers,
   errorLogsTable,
   experiments,
   filterByType,
@@ -67,4 +73,6 @@ export const selectors = {
   algorithms: algorithmsSelectors,
   pipelines: pipelinesSelectors,
   workers: workersSelectors,
+  drivers: driversSelectors,
+  debug: debugSelectors,
 };
