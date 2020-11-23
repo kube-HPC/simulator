@@ -69,4 +69,5 @@ type GitAlgorithm = {
   };
   minHotWorkers: number;
 };
+
 export type Algorithm = ImageAlgorithm | GitAlgorithm | CodeAlgorithm;

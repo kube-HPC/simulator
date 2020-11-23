@@ -7,7 +7,6 @@ import React, {
 } from 'react';
 import styled from 'styled-components';
 import { Button } from 'antd';
-
 import { Form } from 'components/common';
 import addPipelineSchema from 'config/schema/addPipeline.schema';
 import NodeForm from './NodeForm.react';
