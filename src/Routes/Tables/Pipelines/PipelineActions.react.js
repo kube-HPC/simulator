@@ -28,9 +28,12 @@ const PipelineActions = ({ pipeline, className }) => {
 
   const hasNodes = nodes.length !== 0;
 
-  const onDelete = () => deleteConfirmAction(remove, pipeline);
+  const onDelete = useCallback(() => deleteConfirmAction(remove, pipeline), [
+    pipeline,
+    remove,
+  ]);
 
-  const setPopupContainer = () => container.current;
+  const setPopupContainer = useCallback(() => container.current, [container]);
 
   const onUpdate = useCallback(() => {
     goTo.edit({ nextPipelineId: pipeline.name });

@@ -1,9 +1,11 @@
 import actions from 'const/application-actions';
 import {
-  combineReducers,
   createEntityAdapter,
   createSlice,
+  createSelector,
 } from '@reduxjs/toolkit';
+import sum from 'hash-sum';
+
 /**
  * @typedef {import('./pipeline.d').Pipeline} Pipeline
  * @typedef {import('./pipeline.d').Stats} Stats
@@ -22,40 +24,36 @@ const statsEntityAdapter = createEntityAdapter({
   selectId: item => item.name,
 });
 
-const collection = createSlice({
-  name: 'pipelines-collection',
-  initialState: pipelinesEntityAdapter.getInitialState(),
+const pipelinesReducer = createSlice({
+  name: 'pipelines',
+  initialState: {
+    collection: pipelinesEntityAdapter.getInitialState(),
+    stats: statsEntityAdapter.getInitialState(),
+    sum: null,
+  },
   reducers: {},
   extraReducers: {
     [actions.SOCKET_GET_DATA]: (state, { payload }) => {
-      const { discovery, pipelines } = payload;
+      const { discovery, pipelines, pipelinesStats } = payload;
+      const nextSum = sum(payload.pipelines);
+      if (nextSum === state.sum) return state;
       const isValidSource = discovery && pipelines;
-      return isValidSource
-        ? pipelinesEntityAdapter.setAll(state, pipelines)
-        : state;
-    },
-  },
-});
-
-const stats = createSlice({
-  name: 'pipeline-stats',
-  initialState: statsEntityAdapter.getInitialState(),
-  reducers: {},
-  extraReducers: {
-    [actions.SOCKET_GET_DATA]: (state, { payload }) => {
-      const { pipelinesStats } = payload;
       const isValidStats = pipelinesStats;
-      return isValidStats
-        ? state
-        : statsEntityAdapter.setAll(state, payload.pipelinesStats);
+
+      return {
+        sum: nextSum,
+        collection: isValidSource
+          ? pipelinesEntityAdapter.setAll({}, pipelines)
+          : state.collection,
+        stats: isValidStats
+          ? state.stats
+          : statsEntityAdapter.setAll({}, pipelinesStats),
+      };
     },
   },
 });
 
-export const reducer = combineReducers({
-  stats: stats.reducer,
-  collection: collection.reducer,
-});
+export const { reducer } = pipelinesReducer;
 
 const pipelinedBaseSelectors = pipelinesEntityAdapter.getSelectors();
 const statsBaseSelectors = statsEntityAdapter.getSelectors();
@@ -70,9 +68,7 @@ export const selectors = {
     /** @param {string[]} names */
     byNames: (state, names) =>
       names
-        .map(name =>
-          statsBaseSelectors.selectById(state.pipelines.collection, name)
-        )
+        .map(name => statsBaseSelectors.selectById(state.pipelines.stats, name))
         .filter(notNull),
   },
   collection: {
@@ -90,5 +86,10 @@ export const selectors = {
         .filter(notNull),
     count: state =>
       pipelinedBaseSelectors.selectIds(state.pipelines.collection).length,
+    filtered: createSelector(
+      state => pipelinedBaseSelectors.selectAll(state.pipelines.collection),
+      state => state.autoCompleteFilter.filter,
+      (items, filter) => items.filter(item => item.name.includes(filter))
+    ),
   },
 };
