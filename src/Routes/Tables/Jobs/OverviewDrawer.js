@@ -1,5 +1,6 @@
-import React, { useCallback, useMemo } from 'react';
-import { useJobs } from 'hooks';
+import React, { useCallback } from 'react';
+import { useSelector } from 'react-redux';
+import { selectors } from 'reducers';
 import Drawer from 'components/Drawer';
 import { DRAWER_SIZE } from 'const';
 import MissingIdError from 'components/MissingIdError';
@@ -10,16 +11,12 @@ import usePath from './usePath';
 const OverviewDrawer = () => {
   const { goTo, jobId } = usePath();
   const { setOff, isOn } = useToggle(true);
-  const { dataSource } = useJobs();
 
   const goBack = useCallback(() => {
     goTo.root();
   }, [goTo]);
 
-  const item = useMemo(() => dataSource.find(job => job.key === jobId), [
-    dataSource,
-    jobId,
-  ]);
+  const item = useSelector(state => selectors.jobs.byId(state, jobId));
 
   return (
     <Drawer
