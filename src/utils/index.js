@@ -18,4 +18,3 @@ export { deleteConfirmAction } from './modal';
 export { default as notification } from './notification';
 export { default as selector } from './selector';
 export { sorter, stringify, toUpperCaseFirstLetter } from './string';
-export { tableFilterSelector, tableSelector } from './tableSelector';

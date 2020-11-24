@@ -1,6 +1,6 @@
 import get from 'lodash/get';
 import actions from 'const/application-actions';
-import { createSlice } from '@reduxjs/toolkit';
+import { createSelector, createSlice } from '@reduxjs/toolkit';
 import sum from 'hash-sum';
 
 /**
@@ -30,4 +30,8 @@ export const selectors = {
   all: state => state.workers.collection,
   stats: state => state.workers.stats,
   count: state => state.workers.collection.length,
+  ids: createSelector(
+    state => state.workers.collection,
+    collection => collection.map(item => item.algorithmName)
+  ),
 };

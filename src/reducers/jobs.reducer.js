@@ -42,6 +42,8 @@ const baseSelectors = entityAdapter.getSelectors();
 export const selectors = {
   /** @param {State} state */
   all: state => baseSelectors.selectAll(state.jobs.collection),
+  /** @param {State} state */
+  ids: state => baseSelectors.selectIds(state.jobs.collection),
   /**
    * @param {State} state
    * @param {string} id

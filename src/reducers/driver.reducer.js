@@ -1,5 +1,5 @@
 import actions from 'const/application-actions';
-import { createSlice } from '@reduxjs/toolkit';
+import { createSelector, createSlice } from '@reduxjs/toolkit';
 import sum from 'hash-sum';
 
 /** @typedef {import('./Driver.d').Driver} Driver */
@@ -32,4 +32,9 @@ export const selectors = {
   all: state => state.drivers.collection,
   /** @param {State} state */
   count: state => state.drivers.collection.length,
+  ids: createSelector(
+    /** @param {State} state */
+    state => state.drivers.collection,
+    collection => collection.map(item => item.podName)
+  ),
 };

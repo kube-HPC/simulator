@@ -1,5 +1,5 @@
 import actions from 'const/application-actions';
-import { createSlice } from '@reduxjs/toolkit';
+import { createSelector, createSlice } from '@reduxjs/toolkit';
 import sum from 'hash-sum';
 
 /**
@@ -38,4 +38,9 @@ export const selectors = {
   all: state => state.debug.collection,
   /** @param {State} state */
   count: state => state.debug.collection.length,
+  ids: createSelector(
+    /** @param {State} state */
+    state => state.debug.collection,
+    collection => collection.map(item => item.name)
+  ),
 };
