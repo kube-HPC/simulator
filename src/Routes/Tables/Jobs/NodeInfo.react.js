@@ -1,29 +1,24 @@
 import { Button, Empty } from 'antd';
 import { FlexBox, JsonSwitch, Tabs } from 'components/common';
-import { STATE_SOURCES } from 'const';
 import { useActions, useLogs, useSettings } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { selectors } from 'reducers';
 import styled from 'styled-components';
 import { getTaskDetails } from 'utils';
 import NodeInputOutput from './NodeInputOutput.react';
 import NodeLogs from './NodeLogs.react';
-
-const DEFAULT_ALGORITHM = {};
 
 const OverflowContainer = styled.div`
   height: 100%;
   overflow: auto;
 `;
 
-const algorithmDetailsSelector = node => state =>
-  state[STATE_SOURCES.ALGORITHM_TABLE].dataSource.find(
-    a => a.name === node.algorithmName
-  ) || DEFAULT_ALGORITHM;
-
 const NodeInfo = ({ node, jobId }) => {
-  const algorithmDetails = useSelector(algorithmDetailsSelector(node));
+  const algorithmDetails = useSelector(state =>
+    selectors.algorithms.collection.byId(state, node.algorithmName)
+  );
   const [index, setIndex] = useState(0);
   const { getCaching } = useActions();
   const { getLogs } = useLogs();

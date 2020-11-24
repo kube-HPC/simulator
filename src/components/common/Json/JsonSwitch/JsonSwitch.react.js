@@ -16,12 +16,13 @@ const Wrapper = styled.div`
 `;
 
 const onCopy = () =>
-  notification({ message: 'JSON Copied to Clipboard', type: notification.TYPES.SUCCESS });
+  notification({
+    message: 'JSON Copied to Clipboard',
+    type: notification.TYPES.SUCCESS,
+  });
 
-const EMPTY = {};
-
-const JsonSwitch = ({ obj, options = EMPTY }) => {
-  const { view = EMPTY, table = EMPTY } = options;
+const JsonSwitch = ({ obj, options }) => {
+  const { view = {}, table = {} } = options;
   const extra = (
     <CopyToClipboard text={stringify(obj)} onCopy={onCopy}>
       <Button type="dashed">Copy</Button>
@@ -31,19 +32,33 @@ const JsonSwitch = ({ obj, options = EMPTY }) => {
     <Tabs tabPosition="left" tabBarExtraContent={extra} type="card">
       <Tabs.TabPane key={TABS.TABLE} tab={TABS.TABLE}>
         <Wrapper>
-          <JsonTable obj={obj} {...table} />
+          <JsonTable
+            obj={obj}
+            // eslint-disable-next-line
+            {...table}
+          />
         </Wrapper>
       </Tabs.TabPane>
       <Tabs.TabPane key={TABS.JSON} tab={TABS.JSON}>
-        <JsonView jsonObject={obj} {...view} />
+        <JsonView
+          jsonObject={obj}
+          // eslint-disable-next-line
+          {...view}
+        />
       </Tabs.TabPane>
     </Tabs>
   );
 };
 
 JsonSwitch.propTypes = {
-  obj: PropTypes.object.isRequired,
+  // eslint-disable-next-line
+  obj: PropTypes.object,
+  // eslint-disable-next-line
   options: PropTypes.object,
+};
+JsonSwitch.defaultProps = {
+  obj: {},
+  options: {},
 };
 
 export default JsonSwitch;
