@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { JsonView, Card } from 'components/common';
 import { Table } from 'components';
 import { selectors } from 'reducers';
-import { useFilter } from 'hooks/useFilter';
+import { useFilter } from 'hooks/useSearch';
 import driversTableColumns from './DriversTableColumns.react';
 
 export default function DriversTable() {

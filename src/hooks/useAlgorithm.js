@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
-import { useFilter } from 'hooks/useFilter';
+import { useFilter } from 'hooks/useSearch';
 
 const useAlgorithm = () => {
   const algorithmSource = useSelector(selectors.algorithms.collection.all);

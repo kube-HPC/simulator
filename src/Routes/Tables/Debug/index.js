@@ -4,7 +4,7 @@ import { deleteAlgorithm } from 'actions/debug.action';
 import { Table } from 'components';
 import { Card, JsonView } from 'components/common';
 import { selectors } from 'reducers';
-import { useFilter } from 'hooks/useFilter';
+import { useFilter } from 'hooks/useSearch';
 import debugTableColumns from './DebugTableColumns.react';
 
 const DebugTable = () => {

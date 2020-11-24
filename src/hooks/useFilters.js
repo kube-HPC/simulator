@@ -5,7 +5,7 @@ const useFilters = () => {
   const location = useLocation();
   const history = useHistory();
   const { pathname, search } = location;
-  const query = new URLSearchParams(search);
+  const query = useMemo(() => new URLSearchParams(search), [search]);
 
   const filters = useMemo(() => query.getAll('filter'), [query]);
 

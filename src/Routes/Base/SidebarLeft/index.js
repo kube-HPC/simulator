@@ -73,11 +73,8 @@ const LogoContainer = styled.div`
 
 const equalByGuideOn = (a, b) => a.isOn === b.isOn;
 
-const DEFAULT_VALUE = [];
-
 const sidebarSelector = state => ({
-  [LEFT_SIDEBAR_NAMES.JOBS]: (state.jobsTable.dataSource || DEFAULT_VALUE)
-    .length,
+  [LEFT_SIDEBAR_NAMES.JOBS]: selectors.jobs.count(state),
   [LEFT_SIDEBAR_NAMES.PIPELINES]: selectors.pipelines.collection.count(state),
   [LEFT_SIDEBAR_NAMES.ALGORITHMS]: selectors.algorithms.collection.count(state),
   [LEFT_SIDEBAR_NAMES.WORKERS]: selectors.workers.count,

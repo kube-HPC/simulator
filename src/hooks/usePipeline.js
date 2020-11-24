@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers/pipeline.reducer';
-import { useFilter } from './useFilter';
+import { useFilter } from './useSearch';
 
 const usePipeline = () => {
   const collection = useSelector(selectors.collection.all);

@@ -1,20 +1,22 @@
 import { ErrorBoundary } from 'components';
 import React, { useEffect } from 'react';
 import { render } from 'react-dom';
-import { Provider, useSelector } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ReusableProvider } from 'reusable';
 import { GlobalStyle } from 'styles';
-import { useActions } from 'hooks';
+import { init } from 'actions/connection.action';
 import Root from './Routes';
 import store from './store';
 import { STATE_SOURCES } from './const';
 
-const RouterWrapper = () => {
-  const { init } = useActions();
+const ConfigProvider = () => {
+  // do not use the useActions hook
+  // ReusableProvider is not available yet at this point!
+  const dispatch = useDispatch();
   useEffect(() => {
-    init();
-  }, [init]);
+    dispatch(init());
+  }, [dispatch]);
 
   const { baseUrl, hasConfig } = useSelector(
     state => state[STATE_SOURCES.CONFIG]
@@ -32,19 +34,19 @@ const RouterWrapper = () => {
    */
   return hasConfig ? (
     <Router basename={baseUrl}>
-      <Root />
+      <ReusableProvider>
+        <ErrorBoundary>
+          <GlobalStyle />
+          <Root />
+        </ErrorBoundary>
+      </ReusableProvider>
     </Router>
   ) : null;
 };
 
 render(
   <Provider store={store}>
-    <ReusableProvider>
-      <ErrorBoundary>
-        <GlobalStyle />
-        <RouterWrapper />
-      </ErrorBoundary>
-    </ReusableProvider>
+    <ConfigProvider />
   </Provider>,
   document.getElementById('root')
 );

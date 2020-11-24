@@ -21,6 +21,11 @@ import {
   selectors as debugSelectors,
 } from 'reducers/debug.reducer';
 import {
+  jobsKubernetesLogs,
+  reducer as jobs,
+  selectors as jobsSelectors,
+} from 'reducers/jobs.reducer';
+import {
   boardURL,
   connectionStatus,
   socketURL,
@@ -30,7 +35,6 @@ import { drawer } from 'reducers/drawer.reducer';
 import { errorLogsTable } from 'reducers/errorLogs.reducer';
 import { experiments } from 'reducers/experiment.reducer';
 import { filterByType } from 'reducers/filter.reducer';
-import { jobsKubernetesLogs, jobsTable } from 'reducers/jobs.reducer';
 import { meta } from 'reducers/meta.reducer';
 import { nodeStatistics } from 'reducers/nodeStatistics.reducer';
 import { storage } from 'reducers/storage.reducer';
@@ -55,7 +59,7 @@ const store = {
   experiments,
   filterByType,
   jobsKubernetesLogs,
-  jobsTable,
+  jobs,
   nodeStatistics,
   storage,
   pipelines,
@@ -75,4 +79,5 @@ export const selectors = {
   workers: workersSelectors,
   drivers: driversSelectors,
   debug: debugSelectors,
+  jobs: jobsSelectors,
 };

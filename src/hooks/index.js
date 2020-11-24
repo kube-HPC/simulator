@@ -8,7 +8,7 @@ export { default as useErrorLogs } from 'hooks/useErrorLogs';
 export { default as useStorage } from 'hooks/useStorage';
 export { default as useExperiments } from 'hooks/useExperiments';
 export { default as useFilters } from 'hooks/useFilters';
-export { default as useJobs } from 'hooks/useJobs.react';
+export { default as useJobs } from 'hooks/useJobs';
 export { default as useLeftSidebar } from 'hooks/useLeftSidebar.react';
 export { default as useLocalStorage } from 'hooks/useLocalStorage';
 export { default as useLogs } from 'hooks/useLogs';
