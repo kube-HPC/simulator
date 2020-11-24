@@ -11,18 +11,22 @@ const Overflow = styled(FlexBox.Auto)`
   flex-wrap: wrap;
 `;
 
-const JobTypes = ({ types, fullName = true }) => (
+const CapitalizedTag = styled(Tag)`
+  text-transform: capitalize;
+`;
+
+const JobTypes = ({ types, fullName }) => (
   <Overflow justify="start" gutter={0}>
     {types.map(type =>
       fullName ? (
-        <Tag key={type} color={COLOR_PIPELINE_TYPES[type]}>
-          {toUpper(type)}
-        </Tag>
+        <CapitalizedTag key={type} color={COLOR_PIPELINE_TYPES[type]}>
+          {type}
+        </CapitalizedTag>
       ) : (
         <Tooltip key={type} placement="top" title={toUpper(type)}>
-          <Tag color={COLOR_PIPELINE_TYPES[type]}>
-            {toUpper(type.slice(0, 2))}
-          </Tag>
+          <CapitalizedTag color={COLOR_PIPELINE_TYPES[type]}>
+            {type.slice(0, 2)}
+          </CapitalizedTag>
         </Tooltip>
       )
     )}
@@ -30,12 +34,12 @@ const JobTypes = ({ types, fullName = true }) => (
 );
 
 JobTypes.propTypes = {
-  // TODO: detail the props
-  // eslint-disable-next-line
-  types: PropTypes.array.isRequired,
-  // TODO: fill missing default value
-  // eslint-disable-next-line
+  types: PropTypes.arrayOf(PropTypes.string).isRequired,
   fullName: PropTypes.bool,
+};
+
+JobTypes.defaultProps = {
+  fullName: true,
 };
 
 export default React.memo(JobTypes);

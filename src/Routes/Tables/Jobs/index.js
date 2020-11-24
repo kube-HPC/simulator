@@ -11,7 +11,6 @@ import usePath from './usePath';
 
 export { default as jobColumns } from './jobColumns';
 const rowKey = job => `job-${job.key}`;
-
 const JobsTable = () => {
   const { goTo } = usePath();
   const { columns, dataSource, loading } = useJobs();

@@ -1,25 +1,32 @@
 import { Tag, Typography } from 'antd';
-import { FlexBox } from 'components/common';
 import HumanizeDuration from 'humanize-duration';
 import PropTypes from 'prop-types';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Moment from 'react-moment';
 
 const { Text } = Typography;
 
 const SEC = 1000;
 
-const JobTime = ({ results, startTime, length = 15 }) => {
-  const [time, setTime] = useState(Date.now());
+const JobTime = ({ results, startTime, length }) => {
+  const diffTime = useCallback(
+    (from = new Date()) =>
+      HumanizeDuration(results ? results.timeTook * SEC : startTime - from, {
+        maxDecimalPoints: 2,
+      }).slice(0, length),
+    [results, startTime, length]
+  );
+
+  const [time, setTime] = useState(diffTime());
   const intervalId = useRef();
 
   useEffect(() => {
     const id = setInterval(() => {
-      setTime(Date.now());
+      setTime(diffTime());
     }, 2 * SEC);
     intervalId.current = id;
     return () => clearInterval(intervalId.current);
-  }, []);
+  }, [diffTime, intervalId]);
 
   useEffect(() => {
     if (results) {
@@ -28,30 +35,26 @@ const JobTime = ({ results, startTime, length = 15 }) => {
   }, [results]);
 
   return (
-    <FlexBox.Auto justify="start">
-      <Tag>
-        <Moment format="DD/MM/YY HH:mm:ss">{startTime}</Moment>
-        {` `}
-        <Text strong>
-          {HumanizeDuration(
-            results ? results.timeTook * 1000 : time - startTime,
-            {
-              maxDecimalPoints: 2,
-            }
-          ).slice(0, length)}
-        </Text>
-      </Tag>
-    </FlexBox.Auto>
+    <Tag>
+      <Moment format="DD/MM/YY HH:mm:ss" style={{ marginRight: '1ch' }}>
+        {startTime}
+      </Moment>
+      <Text strong>{time}</Text>
+    </Tag>
   );
 };
 
 JobTime.propTypes = {
+  length: PropTypes.number,
+  startTime: PropTypes.number.isRequired,
   // TODO: detail the props
   /* eslint-disable */
-  startTime: PropTypes.number,
-  length: PropTypes.number,
   results: PropTypes.object,
   /* eslint-enable */
+};
+
+JobTime.defaultProps = {
+  length: 15,
 };
 
 export default React.memo(JobTime);
