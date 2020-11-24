@@ -1,47 +1,44 @@
-import React, { memo, useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Icon, Steps } from 'antd';
-import {
-  BottomContent,
-  Card,
-  Form,
-  JsonView,
-  FlexBox,
-} from 'components/common';
-import { DRAWER_SIZE } from 'const';
+import { Card, JsonView, Form } from 'components/common';
 import schema from 'config/schema/addPipeline.schema';
 import styled from 'styled-components';
 import { mapObjValues, stringify, notification } from 'utils';
 import { mergeWith } from 'lodash';
-import { BottomPosition } from 'styles';
+import { COLOR_LAYOUT } from 'styles';
 import addPipelineTemplate from 'config/template/addPipeline.template';
 import AddPipelineForm from './Form/AddPipelineForm.react';
 
-// #region  Helpers
 const steps = ['Initial', 'Nodes', 'Options'].map(label => (
   <Steps.Step key={label} title={label} />
 ));
 
-// #region  Styling
-const StepsBottom = styled.div`
-  bottom: ${BottomContent.DefaultHeight};
-`;
-
-const FlexItemStart = styled(FlexBox.Item)`
-  align-self: flex-start;
-  width: 40%;
-  height: 80vh;
-`;
-
-const FlexItemGrow = styled(FlexBox.Item)`
+const Body = styled.div`
+  display: flex;
   flex-grow: 1;
-  width: min-content;
+  height: 0;
 `;
 
-const Container = styled(FlexBox)`
-  max-height: 100%;
+const FormContainer = styled.div`
+  flex: 1;
+  overflow: auto;
+  padding-bottom: 2em;
 `;
-// #endregion
+
+const JsonViewWrapper = styled(Card)`
+  flex: 1;
+  transition: none;
+  margin-right: 2ch;
+  border-bottom: none;
+`;
+
+const BottomPanel = styled.div`
+  display: flex;
+  padding-top: 1em;
+  margin-bottom: -1em;
+  border-top: 1px solid ${COLOR_LAYOUT.border};
+`;
 
 const innerClasses = ['flowInput'];
 
@@ -68,8 +65,8 @@ const Wizard = ({ toggle, addPipeline }) => {
   const [step, setStep] = useState(0);
   const onPrevClick = () => setStep(s => s - 1);
   const isLastStep = step === steps.length - 1;
-  // #region Bottom Buttons
-  const onNextClick = useCallback(() => {
+
+  const onNextClick = () => {
     const isValidPipeline =
       !pipeline.name ||
       !pipeline.nodes.every(
@@ -95,9 +92,8 @@ const Wizard = ({ toggle, addPipeline }) => {
         ? notification({ message: 'Empty Required Field!' })
         : addPipeline(pipelineToAdd)
       : setStep(s => s + 1);
-  }, [addPipeline, pipeline, step, setStep]);
+  };
 
-  // #region Form Control
   const onValuesChange = useCallback(
     (_, changedValues) => {
       setPipeline(prevObj => ({
@@ -111,40 +107,34 @@ const Wizard = ({ toggle, addPipeline }) => {
   //    against unnecessary re-renders due to callbacks.
   // 3. Memoize the whole value to not lose component's state on re-render.
   const FormInjected = useMemo(
-    () =>
-      memo(Form.create({ mapPropsToFields, onValuesChange })(AddPipelineForm)),
+    () => Form.create({ mapPropsToFields, onValuesChange })(AddPipelineForm),
     [onValuesChange]
   );
 
   return (
     <>
-      <Container gutter={15}>
-        <FlexItemStart>
-          <Card>
-            <JsonView jsonObject={pipeline} collapsed={undefined} />
-          </Card>
-        </FlexItemStart>
-        <FlexItemGrow as={FlexItemStart}>
+      <Body>
+        <JsonViewWrapper>
+          <JsonView jsonObject={pipeline} collapsed={undefined} />
+        </JsonViewWrapper>
+        <FormContainer>
           <FormInjected step={step} />
-        </FlexItemGrow>
-      </Container>
-
-      <BottomContent.Divider />
-      <StepsBottom as={BottomPosition}>
-        <Steps type="navigation" size="small" current={step} onChange={setStep}>
-          {steps}
-        </Steps>
-      </StepsBottom>
-
-      <BottomContent.Divider />
-      <BottomContent
-        width={DRAWER_SIZE.ADD_PIPELINE}
-        extra={[
-          <Button key="Editor" onClick={toggle}>
-            Editor View
-          </Button>,
-        ]}>
-        <Button disabled={!step} onClick={onPrevClick}>
+        </FormContainer>
+      </Body>
+      <Steps
+        type="navigation"
+        size="small"
+        current={step}
+        onChange={setStep}
+        style={{ borderTop: `1px solid ${COLOR_LAYOUT.border}` }}>
+        {steps}
+      </Steps>
+      <BottomPanel>
+        <Button onClick={toggle}>Editor View</Button>
+        <Button
+          disabled={!step}
+          onClick={onPrevClick}
+          style={{ marginLeft: 'auto', marginRight: '1ch' }}>
           <Icon type="left" />
           Back
         </Button>
@@ -156,7 +146,7 @@ const Wizard = ({ toggle, addPipeline }) => {
           {isLastStep ? 'Submit' : 'Next'}
           <Icon type={isLastStep ? 'check' : 'right'} />
         </Button>
-      </BottomContent>
+      </BottomPanel>
     </>
   );
 };
