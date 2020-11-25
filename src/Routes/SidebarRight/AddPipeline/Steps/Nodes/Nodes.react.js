@@ -11,7 +11,7 @@ import { Form } from 'components/common';
 import addPipelineSchema from 'config/schema/addPipeline.schema';
 import NodeForm from './NodeForm.react';
 import { removeLast } from './helpers';
-import { FormContext } from '../../Form/AddPipelineForm.react';
+import { FormContext } from '../../AddPipelineForm';
 
 const ButtonGroupCenter = styled(Button.Group)`
   display: flex;

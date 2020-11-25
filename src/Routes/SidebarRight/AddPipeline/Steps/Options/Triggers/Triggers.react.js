@@ -5,7 +5,7 @@ import { Form } from 'components/common';
 import addPipelineSchema from 'config/schema/addPipeline.schema';
 import { selectors } from 'reducers/pipeline.reducer';
 import CronInput from './CronInput.react';
-import { FormContext } from '../../../Form/AddPipelineForm.react';
+import { FormContext } from '../../../AddPipelineForm';
 
 const { CRON, PIPELINES } = addPipelineSchema.TRIGGERS;
 

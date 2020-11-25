@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Icon, Steps } from 'antd';
 import { Card, JsonView, Form } from 'components/common';
@@ -8,7 +8,7 @@ import { mapObjValues, stringify, notification } from 'utils';
 import { mergeWith } from 'lodash';
 import { COLOR_LAYOUT } from 'styles';
 import addPipelineTemplate from 'config/template/addPipeline.template';
-import AddPipelineForm from './Form/AddPipelineForm.react';
+import AddPipelineForm from './AddPipelineForm';
 import { BottomPanel } from './styles';
 
 const steps = ['Initial', 'Nodes', 'Options'].map(label => (
@@ -89,11 +89,10 @@ const Wizard = ({ toggle, addPipeline }) => {
   };
 
   const onValuesChange = useCallback(
-    (_, changedValues) => {
+    (_, changedValues) =>
       setPipeline(prevObj => ({
         ...mergeWith(prevObj, changedValues, mergeMapper),
-      }));
-    },
+      })),
     [setPipeline]
   );
   // 1. Inject antd `form` object and callbacks.
@@ -101,7 +100,9 @@ const Wizard = ({ toggle, addPipeline }) => {
   //    against unnecessary re-renders due to callbacks.
   // 3. Memoize the whole value to not lose component's state on re-render.
   const FormInjected = useMemo(
-    () => Form.create({ mapPropsToFields, onValuesChange })(AddPipelineForm),
+    () =>
+      // do not drop this memo it will break the form's behavior!
+      memo(Form.create({ mapPropsToFields, onValuesChange })(AddPipelineForm)),
     [onValuesChange]
   );
 

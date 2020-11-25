@@ -4,7 +4,7 @@ import addPipelineSchema from 'config/schema/addPipeline.schema';
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { toUpperCaseFirstLetter } from 'utils';
-import { FormContext } from '../../Form/AddPipelineForm.react';
+import { FormContext } from '../../AddPipelineForm';
 import SliderNumber from './SliderNumber.react';
 import Triggers from './Triggers/Triggers.react';
 import Webhooks from './Webhooks.react';
