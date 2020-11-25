@@ -9,16 +9,11 @@ import { mergeWith } from 'lodash';
 import { COLOR_LAYOUT } from 'styles';
 import addPipelineTemplate from 'config/template/addPipeline.template';
 import AddPipelineForm from './Form/AddPipelineForm.react';
+import { BottomPanel } from './styles';
 
 const steps = ['Initial', 'Nodes', 'Options'].map(label => (
   <Steps.Step key={label} title={label} />
 ));
-
-const Body = styled.div`
-  display: flex;
-  flex-grow: 1;
-  height: 0;
-`;
 
 const FormContainer = styled.div`
   flex: 1;
@@ -26,18 +21,17 @@ const FormContainer = styled.div`
   padding-bottom: 2em;
 `;
 
+export const Body = styled.div`
+  display: flex;
+  flex-grow: 1;
+  height: 0;
+`;
+
 const JsonViewWrapper = styled(Card)`
   flex: 1;
   transition: none;
   margin-right: 2ch;
   border-bottom: none;
-`;
-
-const BottomPanel = styled.div`
-  display: flex;
-  padding-top: 1em;
-  margin-bottom: -1em;
-  border-top: 1px solid ${COLOR_LAYOUT.border};
 `;
 
 const innerClasses = ['flowInput'];

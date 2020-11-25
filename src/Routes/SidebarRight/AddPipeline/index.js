@@ -1,4 +1,4 @@
-import React, { memo, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import { useActions } from 'hooks';
 import Wizard from './Wizard';
 import Editor from './Editor';
@@ -15,4 +15,4 @@ const AddPipeline = () => {
   );
 };
 
-export default memo(AddPipeline);
+export default AddPipeline;

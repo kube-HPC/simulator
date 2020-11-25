@@ -5,7 +5,7 @@ import { Display } from 'styles';
 import { Initial, Nodes, Options } from '../Steps';
 
 const steps = [Initial, Nodes, Options];
-
+const stepNames = ['step-initial', 'step-nodes', 'step-options'];
 export const FormContext = createContext();
 
 const AddPipelineForm = ({ form, step }) => {
@@ -18,7 +18,7 @@ const AddPipelineForm = ({ form, step }) => {
         {steps.map((Step, index) => (
           // TODO: implement a better key
           // eslint-disable-next-line
-          <Display key={index} isVisible={step === index}>
+          <Display key={stepNames[index]} isVisible={step === index}>
             <Step />
           </Display>
         ))}
