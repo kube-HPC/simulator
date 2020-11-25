@@ -1,14 +1,11 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 // import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Table } from 'components';
 import { Card, JsonSwitch, Tabs } from 'components/common';
 import defaultWorkerData from 'config/template/worker.template';
 import { selectors } from 'reducers';
-import {
-  getWorkersColumns,
-  workersTableStats,
-} from './getWorkersColumns.react';
+import { workersColumns, workersTableStats } from './getWorkersColumns.react';
 
 const generateTab = (key, value) => (
   <Tabs.TabPane tab={key} key={key}>
@@ -18,12 +15,9 @@ const generateTab = (key, value) => (
   </Tabs.TabPane>
 );
 
-const expandedRowRender = columns => record => {
-  const collection = useSelector(selectors.workers.all);
-
-  const filteredDataSource = useMemo(
-    () => collection.filter(d => d.algorithmName === record.algorithmName),
-    [collection, record]
+const ExpandedRow = collection => record => {
+  const filteredDataSource = collection.filter(
+    d => d.algorithmName === record.algorithmName
   );
 
   return (
@@ -31,7 +25,7 @@ const expandedRowRender = columns => record => {
       <Table
         isInner
         rowKey={row => row.podName}
-        columns={columns}
+        columns={workersTableStats}
         dataSource={filteredDataSource}
         expandedRowRender={row => (
           <Card isMargin>
@@ -45,6 +39,7 @@ const expandedRowRender = columns => record => {
 
 function WorkersTable() {
   const stats = useSelector(selectors.workers.stats);
+  const collection = useSelector(selectors.workers.all);
 
   const statsMergedWithDefault =
     (stats &&
@@ -55,9 +50,9 @@ function WorkersTable() {
   return (
     <Table
       rowKey={record => record.algorithmName}
-      columns={getWorkersColumns()}
+      columns={workersColumns}
       dataSource={statsMergedWithDefault}
-      expandedRowRender={expandedRowRender(workersTableStats())}
+      expandedRowRender={ExpandedRow(collection)}
     />
   );
 }

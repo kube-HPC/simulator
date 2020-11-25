@@ -39,7 +39,7 @@ const JobId = jobId => {
   return <Ellipsis type={type} copyable={isValidJobId} text={text} />;
 };
 
-export const workersTableStats = () => [
+export const workersTableStats = [
   {
     title: '',
     dataIndex: 'workerStatus',
@@ -91,7 +91,7 @@ const Count = text => (
   <StatusTag status={PIPELINE_STATUS.COMPLETED} count={toNum(text)} />
 );
 
-export const getWorkersColumns = () => [
+export const workersColumns = [
   {
     title: 'Algorithm Name',
     key: 'algorithmName',
