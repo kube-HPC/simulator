@@ -5,7 +5,7 @@ import useQuery from 'hooks/useQuery';
 import { Table } from 'components';
 import { Card } from 'components/common';
 import { useJobs } from 'hooks';
-import JobsGridView from './JobsGridView.react';
+import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
 
@@ -42,9 +42,9 @@ const Container = styled(Card)`
   }
 `;
 
-const GridView = React.memo(() => (
+const GridViewWrapper = React.memo(() => (
   <Container bordered={false}>
-    <JobsGridView />
+    <GridView />
   </Container>
 ));
 
@@ -53,7 +53,7 @@ const Jobs = () => {
   const showGrid = useMemo(() => query.get('view') === 'grid', [query]);
   return (
     <>
-      {showGrid ? <GridView /> : <MemoizedJobsTable />}
+      {showGrid ? <GridViewWrapper /> : <MemoizedJobsTable />}
       <Route
         exact
         path="/jobs/:jobId/overview/:tabKey"

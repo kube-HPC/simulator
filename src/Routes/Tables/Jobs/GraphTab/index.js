@@ -1,19 +1,28 @@
 import { Empty } from 'antd';
-import { Card, Fallback, FallbackComponent, FlexBox } from 'components/common';
+import { Fallback, FallbackComponent } from 'components/common';
 import { setOptions as defaultSetOptions } from 'config/template/graph-options.template';
 import { useNodeInfo, useSettings } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { lazy, useEffect, useMemo, useReducer } from 'react';
 import styled from 'styled-components';
+import { COLOR_LAYOUT } from 'styles';
 import { formatEdge, formatNode } from 'utils';
-import NodeInfo from './NodeInfo.react';
+import Details from './Details';
+
+const Card = styled.div`
+  border: 1px solid ${COLOR_LAYOUT.border};
+  overflow: auto;
+  flex: 1;
+`;
 
 const Graph = lazy(() => import(`react-graph-vis`));
 
 const GraphContainer = styled.div`
-  pointer-events: ${({ isMinified }) => (!isMinified ? `all` : `none`)};
-  max-width: ${({ isMinified }) => (!isMinified ? `100%` : `40vw`)};
-  width: 100%;
+  flex: 1;
+  max-height: 40vh;
+  .vis-network {
+    height: 100% !important;
+  }
 `;
 
 const EmptyHeight = styled(Empty)`
@@ -24,12 +33,11 @@ const EmptyHeight = styled(Empty)`
   height: 136px;
 `;
 
-const JobGraph = ({
+const GraphTab = ({
   graph,
   pipeline,
   setOptions = defaultSetOptions,
   isMinified = false,
-  className,
 }) => {
   const adaptedGraph = useMemo(
     () => ({
@@ -60,38 +68,39 @@ const JobGraph = ({
   }, [direction]);
 
   return (
-    <FlexBox direction="column" className={className}>
-      <FlexBox.Item full>
-        <GraphContainer isMinified={isMinified}>
-          {isValidGraph ? (
-            showGraph ? (
-              <Fallback>
-                <Graph
-                  graph={adaptedGraph}
-                  options={setOptions({ direction })}
-                  events={events}
-                />
-              </Fallback>
-            ) : (
-              <FallbackComponent />
-            )
+    <>
+      <GraphContainer
+        isMinified={isMinified}
+        style={{
+          pointerEvents: !isMinified ? `all` : `none`,
+          maxWidth: !isMinified ? `100%` : `40vw`,
+        }}>
+        {isValidGraph ? (
+          showGraph ? (
+            <Fallback>
+              <Graph
+                graph={adaptedGraph}
+                options={setOptions({ direction })}
+                events={events}
+              />
+            </Fallback>
           ) : (
-            <EmptyHeight image={Empty.PRESENTED_IMAGE_SIMPLE} />
-          )}
-        </GraphContainer>
-      </FlexBox.Item>
-      <FlexBox.Item full>
-        {!isMinified && isValidGraph && (
-          <Card>
-            <NodeInfo node={node} jobId={graph.jobId} />
-          </Card>
+            <FallbackComponent />
+          )
+        ) : (
+          <EmptyHeight image={Empty.PRESENTED_IMAGE_SIMPLE} />
         )}
-      </FlexBox.Item>
-    </FlexBox>
+      </GraphContainer>
+      {!isMinified && isValidGraph && (
+        <Card>
+          <Details node={node} jobId={graph.jobId} />
+        </Card>
+      )}
+    </>
   );
 };
 
-JobGraph.propTypes = {
+GraphTab.propTypes = {
   // TODO: detail the props
   /* eslint-disable */
   graph: PropTypes.object.isRequired,
@@ -105,4 +114,4 @@ JobGraph.propTypes = {
 const isSameGraph = (a, b) =>
   a.graph && b.graph ? a.graph.timestamp === b.graph.timestamp : true;
 
-export default React.memo(JobGraph, isSameGraph);
+export default React.memo(GraphTab, isSameGraph);

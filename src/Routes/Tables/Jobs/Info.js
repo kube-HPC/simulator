@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { Button } from 'antd';
-import { JsonSwitch, Tabs } from 'components/common';
+import { JsonSwitch } from 'components/common';
 import { useTraceData } from 'hooks';
-import JobGraph from './JobGraph.react';
+import GraphTab from './GraphTab';
 import Trace from './Trace.react';
 import usePath, { OVERVIEW_TABS as TABS } from './usePath';
+import { Tabs, Pane } from './styles';
 
 const options = {
   view: {
@@ -14,9 +14,7 @@ const options = {
   },
 };
 
-const FullGraph = styled(JobGraph)`
-  width: 100%;
-`;
+const tabsAnimation = { inkBar: false, tabPane: false };
 
 const JobInfo = ({ job }) => {
   const { tabKey: currentTab, goTo } = usePath();
@@ -41,18 +39,19 @@ const JobInfo = ({ job }) => {
 
   return (
     <Tabs
+      animated={tabsAnimation}
       activeKey={currentTab}
       tabBarExtraContent={refreshButton}
       onChange={setCurrentTab}>
-      <Tabs.TabPane tab={TABS.GRAPH} key={TABS.GRAPH}>
-        <FullGraph graph={{ ...graph, jobId: key }} pipeline={pipeline} />
-      </Tabs.TabPane>
-      <Tabs.TabPane tab={TABS.TRACE} key={TABS.TRACE}>
+      <Pane tab={TABS.GRAPH} key={TABS.GRAPH}>
+        <GraphTab graph={{ ...graph, jobId: key }} pipeline={pipeline} />
+      </Pane>
+      <Pane tab={TABS.TRACE} key={TABS.TRACE}>
         <Trace data={traceData} />
-      </Tabs.TabPane>
-      <Tabs.TabPane tab={TABS.INFO} key={TABS.INFO}>
+      </Pane>
+      <Pane tab={TABS.INFO} key={TABS.INFO}>
         <JsonSwitch obj={pipeline} options={options} />
-      </Tabs.TabPane>
+      </Pane>
     </Tabs>
   );
 };

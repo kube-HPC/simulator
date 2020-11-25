@@ -5,7 +5,7 @@ import Drawer from 'components/Drawer';
 import { DRAWER_SIZE } from 'const';
 import MissingIdError from 'components/MissingIdError';
 import useToggle from 'hooks/useToggle';
-import JobInfo from './JobInfo.react';
+import Info from './Info';
 import usePath from './usePath';
 
 const OverviewDrawer = () => {
@@ -25,7 +25,7 @@ const OverviewDrawer = () => {
       onClose={setOff}
       width={DRAWER_SIZE.JOB_INFO}
       title={item?.pipeline?.name ?? jobId}>
-      {item ? <JobInfo job={item} /> : <MissingIdError />}
+      {item ? <Info job={item} /> : <MissingIdError />}
     </Drawer>
   );
 };

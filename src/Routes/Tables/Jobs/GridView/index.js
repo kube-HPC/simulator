@@ -3,30 +3,30 @@ import { setCardOptions } from 'config/template/graph-options.template';
 import { useJobs } from 'hooks';
 import React, { memo } from 'react';
 import styled from 'styled-components';
-import JobActions from './JobActions.react';
-import JobGraph from './JobGraph.react';
-import JobStats from './JobNodeStats.react';
-import JobProgress from './JobProgress.react';
-import JobStatus from './JobStatus.react';
-import JobTime from './JobTime.react';
-import JobTypes from './JobTypes.react';
-
-const gridStyle = {
-  width: `25%`,
-  padding: `24px 0px`,
-};
+import Graph from './Graph';
+import JobActions from '../JobActions.react';
+import JobStats from '../JobNodeStats.react';
+import JobProgress from '../JobProgress.react';
+import JobStatus from '../JobStatus.react';
+import JobTime from '../JobTime.react';
+import JobTypes from '../JobTypes.react';
 
 const { Meta, Grid } = Card;
 
 const ActionsHidden = styled(JobActions)``;
 
 const GridItem = styled(Grid)`
+  width: 25%;
+  padding: 2em;
   .ant-card-meta {
     margin: 0px;
   }
   ${ActionsHidden} {
     transition: opacity 0.5s ease;
     opacity: 0;
+    margin: 0 auto;
+    width: 100%;
+    text-align: center;
   }
   &:hover,
   &:focus {
@@ -40,9 +40,9 @@ const Container = styled(FlexBox.Auto)`
   width: 80px;
 `;
 
-const FlexContainer = styled(FlexBox.Auto)`
-  height: 100%;
-`;
+// const FlexContainer = styled(FlexBox.Auto)`
+//   height: 100%;
+// `;
 
 const LENGTH = 20;
 
@@ -77,16 +77,10 @@ const toGrid = dataSource =>
     );
 
     return (
-      <GridItem key={key} style={gridStyle}>
-        <FlexContainer justify="center" direction="column">
-          <Meta title={title} description={description} />
-          <JobGraph
-            graph={{ ...graph, jobId: key }}
-            setOptions={setCardOptions}
-            isMinified
-          />
-          <ActionsHidden job={job} />
-        </FlexContainer>
+      <GridItem key={key}>
+        <Meta title={title} description={description} />
+        <Graph graph={{ ...graph, jobId: key }} setOptions={setCardOptions} />
+        <ActionsHidden job={job} />
       </GridItem>
     );
   });
