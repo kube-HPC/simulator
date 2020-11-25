@@ -20,7 +20,7 @@ export const workersReducer = createSlice({
       const stats = get(payload, 'discovery.task-executor[0].actual', []);
       const nextState = { collection, stats };
       const nextSum = sum(nextState);
-      return nextSum === state.sum ? state : { nextState, sum: nextSum };
+      return nextSum === state.sum ? state : { ...nextState, sum: nextSum };
     },
   },
 });
