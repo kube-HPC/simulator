@@ -43,6 +43,8 @@ jobs:
           PR_NAME: ${{ github.event.deployment.payload.prName }}
       - name: deploy
         run: ./scripts/deploy-staging.sh
+        env:
+          PR_NAME: ${{ github.event.deployment.payload.prName }}
       - name: set deployment status to failure
         id: failed_deployment
         uses: octokit/request-action@v2.x
