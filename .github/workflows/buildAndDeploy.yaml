@@ -33,10 +33,8 @@ jobs:
           echo KUBECONFIG=/tmp/config >> $GITHUB_ENV
         env:
           KUBE_CONFIG_DATA: ${{ secrets.CICD_KUBECONFIG }}
-      - name: install kubectl
-        run: ./scripts/install.sh
-        env:
-          KUBECONFIG: ${{ env.KUBECONFIG }}
+      - name: verify kubectl
+        run: kubectl cluster-info
       - run: npm ci
       - name: build
         run: PRIVATE_REGISTRY=docker.io/hkube npm run build
