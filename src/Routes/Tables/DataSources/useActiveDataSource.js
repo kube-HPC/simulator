@@ -1,15 +1,14 @@
 import { useSelector } from 'react-redux';
-import { selectors } from 'reducers/dataSources';
+import { selectors } from 'reducers';
 import usePath from './usePath';
 
 const useActiveDataSource = () => {
-  const { dataSourceId, goTo } = usePath();
+  const { dataSourceId } = usePath();
   const dataSource = useSelector(state => {
-    return selectors.byId(state.dataSources, dataSourceId);
+    return selectors.dataSources.byId(state, dataSourceId);
   });
-  const status = useSelector(state => selectors.status(state.dataSources));
+  const status = useSelector(selectors.dataSources.status);
   // add use effect to fetch more data (some datasources are meta data only, also fetching updates)
-  if (status === 'SUCCESS' && !dataSource) goTo.root();
 
   return { dataSource, status, isReady: status === 'SUCCESS' && dataSource };
 };

@@ -26,6 +26,11 @@ import {
   selectors as jobsSelectors,
 } from 'reducers/jobs.reducer';
 import {
+  reducer as dataSources,
+  selectors as dataSourcesSelectors,
+} from 'reducers/dataSources';
+
+import {
   boardURL,
   connectionStatus,
   socketURL,
@@ -43,7 +48,6 @@ import { boards } from 'reducers/tensorflow.reducer';
 import { userGuide } from 'reducers/userGuide.reducer';
 import { viewType } from 'reducers/viewType.reducer';
 import { config } from 'reducers/config.reducer';
-import { reducer as dataSources } from 'reducers/dataSources';
 
 const store = {
   algorithms,
@@ -82,4 +86,5 @@ export const selectors = {
   drivers: driversSelectors,
   debug: debugSelectors,
   jobs: jobsSelectors,
+  dataSources: dataSourcesSelectors,
 };

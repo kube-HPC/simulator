@@ -81,7 +81,7 @@ const sidebarSelector = state => ({
   [LEFT_SIDEBAR_NAMES.WORKERS]: selectors.workers.count(state),
   [LEFT_SIDEBAR_NAMES.DRIVERS]: selectors.drivers.count(state),
   [LEFT_SIDEBAR_NAMES.DEBUG]: selectors.debug.count(state),
-  [LEFT_SIDEBAR_NAMES.DATASOURCES]: 0,
+  [LEFT_SIDEBAR_NAMES.DATASOURCES]: selectors.dataSources.count(state),
 });
 
 const menuItems = [
@@ -91,7 +91,7 @@ const menuItems = [
   [LEFT_SIDEBAR_NAMES.WORKERS, WorkerIcon, '/workers'],
   [LEFT_SIDEBAR_NAMES.DRIVERS, DriversIcon, '/drivers'],
   [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, '/debug'],
-  [LEFT_SIDEBAR_NAMES.DATASOURCES, DataSourceIcon, '/datasource'],
+  [LEFT_SIDEBAR_NAMES.DATASOURCES, DataSourceIcon, '/datasources'],
 ];
 
 const Name = styled.span`

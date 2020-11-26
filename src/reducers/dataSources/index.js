@@ -2,6 +2,7 @@ import {
   createSlice,
   createEntityAdapter,
   combineReducers,
+  createSelector,
 } from '@reduxjs/toolkit';
 import actionTypes from './../../const/application-actions';
 
@@ -28,6 +29,9 @@ const types = {
  *   status: FetchStatus;
  *   error: string | null;
  * }} DataSourcesState
+ * @typedef {{
+ *   dataSources: DataSourcesState;
+ * }} State
  */
 
 /** @type {import('@reduxjs/toolkit').EntityAdapter<DataSource>} */
@@ -94,18 +98,27 @@ export const reducer = combineReducers({
   error,
 });
 
-const entitySelectors = entityAdapter.getSelectors();
+const baseSelectors = entityAdapter.getSelectors();
 
 export const selectors = {
-  /** @param {DataSourcesState} state */
-  all: state => entitySelectors.selectAll(state.collection),
+  /** @param {State} state */
+  all: state => baseSelectors.selectAll(state.dataSources.collection),
   /**
-   * @param {DataSourcesState} state
+   * @param {State} state
    * @param {string} id
    */
-  byId: (state, id) => entitySelectors.selectById(state.collection, id),
-  /** @param {DataSourcesState} state */
-  status: state => state.status,
-  /** @param {DataSourcesState} state */
-  error: state => (state.status === 'FAIL' ? state.error : null),
+  byId: (state, id) =>
+    baseSelectors.selectById(state.dataSources.collection, id),
+  /** @param {State} state */
+  status: state => state.dataSources.status,
+  /** @param {State} state */
+  error: state =>
+    state.dataSources.status === 'FAIL' ? state.dataSources.error : null,
+  /** @param {State} state */
+  count: state => baseSelectors.selectIds(state.dataSources.collection).length,
+  names: createSelector(
+    /** @param {State} state */
+    state => baseSelectors.selectAll(state.dataSources.collection),
+    collection => collection.map(item => item.name)
+  ),
 };
