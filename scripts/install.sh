@@ -10,7 +10,12 @@ echo 333
 chmod +x ./bin/kubectl
 echo 444
 echo "export PATH=$PWD/bin:$PATH" > setPath
+echo 555
 source ./setPath
+echo 666
 mkdir -p ~/.kube/
+echo 777
 envsubst < ${DIR}/kube-config-template.yml > ~/.kube/config
+echo 888
 kubectl cluster-info
+echo 999
