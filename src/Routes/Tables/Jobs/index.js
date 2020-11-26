@@ -34,8 +34,6 @@ const JobsTable = () => {
   );
 };
 
-const MemoizedJobsTable = React.memo(JobsTable);
-
 const Container = styled(Card)`
   & .ant-card-body {
     padding: 5px;
@@ -53,7 +51,7 @@ const Jobs = () => {
   const showGrid = useMemo(() => query.get('view') === 'grid', [query]);
   return (
     <>
-      {showGrid ? <GridViewWrapper /> : <MemoizedJobsTable />}
+      {showGrid ? <GridViewWrapper /> : <JobsTable />}
       <Route
         exact
         path="/jobs/:jobId/overview/:tabKey"

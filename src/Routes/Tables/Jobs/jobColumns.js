@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
-import { Ellipsis, FlexBox } from 'components/common';
+import { Ellipsis } from 'components/common';
 import { USER_GUIDE } from 'const';
 import { sorter, toUpperCaseFirstLetter } from 'utils/string';
 import JobActions from './JobActions.react';
@@ -11,10 +11,6 @@ import JobProgress from './JobProgress.react';
 import JobStatus from './JobStatus.react';
 import JobTime from './JobTime.react';
 import JobTypes from './JobTypes.react';
-
-const ItemGrow = styled(FlexBox.Item)`
-  flex-grow: 1;
-`;
 
 const Id = jobID => (
   <Ellipsis className={USER_GUIDE.TABLE_JOB.ID_SELECT} copyable text={jobID} />
@@ -26,20 +22,22 @@ const StartTime = (startTime, { results }) => (
 const Status = status => <JobStatus status={status} />;
 const Stats = status => <JobStats status={status} />;
 const Priority = priority => <JobPriority priority={priority} />;
+
 const Types = types => <JobTypes types={types} fullName={false} />;
 
+const ProgressContainer = styled.div`
+  display: flex;
+  flex-wrap: nowrap;
+`;
+
 const Progress = (_, job) => (
-  <FlexBox>
-    <ItemGrow>
-      <JobProgress
-        // eslint-disable-next-line
-        {...job}
-      />
-    </ItemGrow>
-    <FlexBox.Item>
-      <JobActions job={job} />
-    </FlexBox.Item>
-  </FlexBox>
+  <ProgressContainer>
+    <JobProgress
+      // eslint-disable-next-line
+      {...job}
+    />
+    <JobActions job={job} />
+  </ProgressContainer>
 );
 
 const sortPipelineName = (a, b) => sorter(a.pipeline.name, b.pipeline.name);
@@ -58,7 +56,7 @@ const jobColumns = [
     title: `Job ID`,
     dataIndex: `key`,
     key: `key`,
-    width: `10%`,
+    width: `10ch`,
     render: Id,
   },
   {
@@ -89,7 +87,7 @@ const jobColumns = [
     dataIndex: `pipeline.priority`,
     key: `priority`,
     align: `center`,
-    width: `5%`,
+    width: `15ch`,
     sorter: sortPriority,
     render: Priority,
   },
@@ -99,7 +97,7 @@ const jobColumns = [
     dataIndex: `status`,
     key: `node-status`,
     align: `center`,
-    width: `10%`,
+    width: `20ch`,
     render: Stats,
   },
   {
