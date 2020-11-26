@@ -14,7 +14,7 @@ jobs:
           repository: ${{ github.repository }}
           deployment: ${{ github.event.deployment.id }}
           environment: cicd
-          environment_url: https://${{ secrets.CICD_URL }}/hkube/dashboard/
+          environment_url: https://${{ secrets.CICD_URL }}/hkube/dashboard-${{ github.event.deployment.payload.prName }}
           log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           state: in_progress
           mediaType: '{"previews": ["flash", "ant-man"]}'
@@ -46,7 +46,7 @@ jobs:
           repository: ${{ github.repository }}
           deployment: ${{ github.event.deployment.id }}
           environment: cicd
-          environment_url: https://${{ secrets.CICD_URL }}/hkube/dashboard/
+          environment_url: https://${{ secrets.CICD_URL }}/hkube/dashboard-${{ github.event.deployment.payload.prName }}
           log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           mediaType: '{"previews": ["ant-man"]}'
           state: failure
