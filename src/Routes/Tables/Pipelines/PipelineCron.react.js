@@ -15,6 +15,7 @@ const inputWidth = { width: 160 };
 
 const isCron = pipeline =>
   pipeline.triggers && pipeline.triggers.cron && pipeline.triggers.cron.enabled;
+
 const isPattern = pipeline =>
   pipeline.triggers &&
   pipeline.triggers.cron &&
@@ -67,20 +68,23 @@ const PipelineCron = ({ pipeline }) => {
     cronIsEnabled ? cronStop(name, cronExpr) : cronStart(name, cronExpr);
   }, [toggleLoading, cronExpr, cronIsEnabled, cronStart, cronStop, name]);
 
-  const onSearch = pattern => {
-    try {
-      cronstrue.toString(pattern);
-      update({
-        ...pipeline,
-        triggers: {
-          ...pipeline.triggers,
-          cron: { ...pipeline.triggers.cron, pattern },
-        },
-      });
-    } catch (errorMessage) {
-      notification({ message: ERROR_CRON_EXPR, description: errorMessage });
-    }
-  };
+  const onSearch = useCallback(
+    pattern => {
+      try {
+        cronstrue.toString(pattern);
+        update({
+          ...pipeline,
+          triggers: {
+            ...pipeline.triggers,
+            cron: { ...pipeline.triggers.cron, pattern },
+          },
+        });
+      } catch (errorMessage) {
+        notification({ message: ERROR_CRON_EXPR, description: errorMessage });
+      }
+    },
+    [pipeline, update]
+  );
 
   return (
     <FlexBox.Auto justify="start">
@@ -111,4 +115,4 @@ PipelineCron.propTypes = {
   pipeline: PropTypes.object.isRequired,
 };
 
-export default PipelineCron;
+export default React.memo(PipelineCron);

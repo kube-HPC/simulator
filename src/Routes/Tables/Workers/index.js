@@ -4,12 +4,8 @@ import { useSelector } from 'react-redux';
 import { Table } from 'components';
 import { Card, JsonSwitch, Tabs } from 'components/common';
 import defaultWorkerData from 'config/template/worker.template';
-import { LEFT_SIDEBAR_NAMES } from 'const';
-import { tableFilterSelector } from 'utils/tableSelector';
-import {
-  getWorkersColumns,
-  workersTableStats,
-} from './getWorkersColumns.react';
+import { selectors } from 'reducers';
+import { workersColumns, workersTableStats } from './getWorkersColumns.react';
 
 const generateTab = (key, value) => (
   <Tabs.TabPane tab={key} key={key}>
@@ -19,8 +15,8 @@ const generateTab = (key, value) => (
   </Tabs.TabPane>
 );
 
-const expandedRowRender = (columns, dataSource) => record => {
-  const filteredDataSource = dataSource.filter(
+const ExpandedRow = collection => record => {
+  const filteredDataSource = collection.filter(
     d => d.algorithmName === record.algorithmName
   );
 
@@ -29,7 +25,7 @@ const expandedRowRender = (columns, dataSource) => record => {
       <Table
         isInner
         rowKey={row => row.podName}
-        columns={columns}
+        columns={workersTableStats}
         dataSource={filteredDataSource}
         expandedRowRender={row => (
           <Card isMargin>
@@ -41,11 +37,9 @@ const expandedRowRender = (columns, dataSource) => record => {
   );
 };
 
-const dataSelector = tableFilterSelector(LEFT_SIDEBAR_NAMES.WORKERS);
-
 function WorkersTable() {
-  const dataSource = useSelector(dataSelector);
-  const stats = useSelector(state => state.workerTable.stats);
+  const stats = useSelector(selectors.workers.stats);
+  const collection = useSelector(selectors.workers.all);
 
   const statsMergedWithDefault =
     (stats &&
@@ -56,9 +50,9 @@ function WorkersTable() {
   return (
     <Table
       rowKey={record => record.algorithmName}
-      columns={getWorkersColumns()}
+      columns={workersColumns}
       dataSource={statsMergedWithDefault}
-      expandedRowRender={expandedRowRender(workersTableStats(), dataSource)}
+      expandedRowRender={ExpandedRow(collection)}
     />
   );
 }

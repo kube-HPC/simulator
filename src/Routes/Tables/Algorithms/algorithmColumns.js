@@ -16,21 +16,27 @@ const Image = algorithmImage =>
   );
 const Name = name => <Ellipsis text={name} />;
 const BuildStats = builds => <AlgorithmBuildStats builds={builds} />;
+const renderAction = (_, record) => <AlgorithmActions record={record} />;
+
+const sortByName = (a, b) => sorter(a.name, b.name);
+const filterByImage = (value, record) => record.algorithmImage.includes(value);
+const sortByImage = (a, b) => sorter(a.algorithmImage, b.algorithmImage);
+const sortByMinHotWorkers = (a, b) => sorter(a.workerImage, b.workerImage);
 
 export default [
   {
     title: 'Algorithm Name',
     dataIndex: 'name',
     key: 'name',
-    sorter: (a, b) => sorter(a.name, b.name),
+    sorter: sortByName,
     render: Name,
   },
   {
     title: 'Algorithm Image',
     dataIndex: 'algorithmImage',
     key: 'algorithmImage',
-    onFilter: (value, record) => record.algorithmImage.includes(value),
-    sorter: (a, b) => sorter(a.algorithmImage, b.algorithmImage),
+    onFilter: filterByImage,
+    sorter: sortByImage,
     render: Image,
   },
   {
@@ -56,13 +62,13 @@ export default [
     title: 'Min Hot Workers',
     dataIndex: 'minHotWorkers',
     key: 'minHotWorkers',
-    sorter: (a, b) => sorter(a.workerImage, b.workerImage),
+    sorter: sortByMinHotWorkers,
     render: HotWorkers,
   },
   {
     title: 'Action',
     dataIndex: 'action',
     key: 'action',
-    render: (_, record) => <AlgorithmActions record={record} />,
+    render: renderAction,
   },
 ];

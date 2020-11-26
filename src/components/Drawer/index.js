@@ -28,6 +28,7 @@ const Drawer = ({
   onClose,
   onDidClose,
   title,
+  style,
   ...props
 }) => {
   const handleVisibleChange = useCallback(
@@ -45,6 +46,7 @@ const Drawer = ({
       placement="right"
       closable={false}
       onClose={onClose}
+      bodyStyle={style}
       title={title}
       // eslint-disable-next-line
       {...props}>

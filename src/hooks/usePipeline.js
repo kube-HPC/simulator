@@ -1,23 +1,16 @@
-// import { experimentsSchema } from 'config';
-import { LEFT_SIDEBAR_NAMES, STATE_SOURCES } from 'const';
-import { useActions } from 'hooks';
 import { useSelector } from 'react-redux';
-import { tableFilterSelector } from 'utils/tableSelector';
-
-const dataSelector = tableFilterSelector(LEFT_SIDEBAR_NAMES.PIPELINES);
+import { selectors } from 'reducers/pipeline.reducer';
+import { useFilter } from './useSearch';
 
 const usePipeline = () => {
-  const dataSource = useSelector(dataSelector);
-  const dataStats = useSelector(
-    state => state[STATE_SOURCES.PIPELINE_TABLE].dataStats
-  );
+  const collection = useSelector(selectors.collection.all);
 
-  const { deleteStored } = useActions();
+  const dataStats = useSelector(selectors.stats.all);
+  const filtered = useFilter(collection, 'name');
 
   return {
-    dataSource,
+    collection: filtered,
     dataStats,
-    remove: deleteStored,
   };
 };
 

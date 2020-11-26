@@ -44,6 +44,11 @@ const DashboardDrawer = () => {
         isOpened={isOn}
         onDidClose={handleDidClose}
         onClose={setOff}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          overFlow: 'hidden',
+        }}
         destroyOnClose>
         {body}
       </Drawer>

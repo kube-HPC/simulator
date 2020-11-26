@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect } from 'react';
-import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import { Button } from 'antd';
-import { JsonSwitch, Tabs } from 'components/common';
-import { useJobs, useTraceData } from 'hooks';
-import JobGraph from './JobGraph.react';
+import { JsonSwitch } from 'components/common';
+import { useTraceData } from 'hooks';
+import GraphTab from './GraphTab';
 import Trace from './Trace.react';
 import usePath, { OVERVIEW_TABS as TABS } from './usePath';
+import { Tabs, Pane } from './styles';
 
 const options = {
   view: {
@@ -13,19 +14,15 @@ const options = {
   },
 };
 
-const FullGraph = styled(JobGraph)`
-  width: 100%;
-`;
+const tabsAnimation = { inkBar: false, tabPane: false };
 
-const JobInfo = () => {
-  const { tabKey: currentTab, goTo, jobId } = usePath();
+const JobInfo = ({ job }) => {
+  const { tabKey: currentTab, goTo } = usePath();
   const { traceData, fetch } = useTraceData();
   const setCurrentTab = useCallback(
     nextTabKey => goTo.overview({ nextTabKey }),
     [goTo]
   );
-  const { dataSource } = useJobs();
-  const job = dataSource.find(({ key }) => jobId === key);
   const { key, graph, pipeline } = job;
 
   const fetchJobTrace = useCallback(() => fetch({ jobId: key }), [fetch, key]);
@@ -42,20 +39,32 @@ const JobInfo = () => {
 
   return (
     <Tabs
+      animated={tabsAnimation}
       activeKey={currentTab}
       tabBarExtraContent={refreshButton}
       onChange={setCurrentTab}>
-      <Tabs.TabPane tab={TABS.GRAPH} key={TABS.GRAPH}>
-        <FullGraph graph={{ ...graph, jobId: key }} pipeline={pipeline} />
-      </Tabs.TabPane>
-      <Tabs.TabPane tab={TABS.TRACE} key={TABS.TRACE}>
+      <Pane tab={TABS.GRAPH} key={TABS.GRAPH}>
+        <GraphTab graph={{ ...graph, jobId: key }} pipeline={pipeline} />
+      </Pane>
+      <Pane tab={TABS.TRACE} key={TABS.TRACE}>
         <Trace data={traceData} />
-      </Tabs.TabPane>
-      <Tabs.TabPane tab={TABS.INFO} key={TABS.INFO}>
+      </Pane>
+      <Pane tab={TABS.INFO} key={TABS.INFO}>
         <JsonSwitch obj={pipeline} options={options} />
-      </Tabs.TabPane>
+      </Pane>
     </Tabs>
   );
 };
 
-export default JobInfo;
+JobInfo.propTypes = {
+  job: PropTypes.shape({
+    key: PropTypes.string.isRequired,
+    // TODO:: fill missing props
+    // eslint-disable-next-line
+    graph: PropTypes.any,
+    // eslint-disable-next-line
+    pipeline: PropTypes.any,
+  }).isRequired,
+};
+
+export default React.memo(JobInfo);

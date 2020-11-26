@@ -98,4 +98,4 @@ SidebarRight.defaultProps = {
   className: '',
 };
 
-export default React.memo(SidebarRight);
+export default SidebarRight;

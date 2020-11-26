@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import useNodeIOColumns from './getNodeIOColumns.react';
 
-const NodeInputOutput = ({ algorithm, payload }) => {
+const NodeInputOutput = ({ algorithm = {}, payload }) => {
   const mapTask = (task, { downloadFileExt }) => ({
     index: task.batchIndex || 1,
     origInput: task.origInput,
@@ -52,4 +52,4 @@ NodeInputOutput.propTypes = {
   algorithm: PropTypes.object.isRequired,
 };
 
-export default NodeInputOutput;
+export default React.memo(NodeInputOutput);

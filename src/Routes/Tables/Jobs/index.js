@@ -5,14 +5,13 @@ import useQuery from 'hooks/useQuery';
 import { Table } from 'components';
 import { Card } from 'components/common';
 import { useJobs } from 'hooks';
-import JobsGridView from './JobsGridView.react';
+import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
 
 export { default as jobColumns } from './jobColumns';
-const rowKey = job => job.key;
-
-const JobsTable = React.memo(() => {
+const rowKey = job => `job-${job.key}`;
+const JobsTable = () => {
   const { goTo } = usePath();
   const { columns, dataSource, loading } = useJobs();
   const onRow = useCallback(
@@ -33,7 +32,7 @@ const JobsTable = React.memo(() => {
       pagination={false}
     />
   );
-});
+};
 
 const Container = styled(Card)`
   & .ant-card-body {
@@ -41,9 +40,9 @@ const Container = styled(Card)`
   }
 `;
 
-const GridView = React.memo(() => (
+const GridViewWrapper = React.memo(() => (
   <Container bordered={false}>
-    <JobsGridView />
+    <GridView />
   </Container>
 ));
 
@@ -52,7 +51,7 @@ const Jobs = () => {
   const showGrid = useMemo(() => query.get('view') === 'grid', [query]);
   return (
     <>
-      {showGrid ? <GridView /> : <JobsTable />}
+      {showGrid ? <GridViewWrapper /> : <JobsTable />}
       <Route
         exact
         path="/jobs/:jobId/overview/:tabKey"

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
-import { Ellipsis, FlexBox } from 'components/common';
+import { Ellipsis } from 'components/common';
 import { USER_GUIDE } from 'const';
 import { sorter, toUpperCaseFirstLetter } from 'utils/string';
 import JobActions from './JobActions.react';
@@ -11,16 +11,6 @@ import JobProgress from './JobProgress.react';
 import JobStatus from './JobStatus.react';
 import JobTime from './JobTime.react';
 import JobTypes from './JobTypes.react';
-
-const getStatusFilter = () =>
-  Object.values(PIPELINE_STATUS).map(status => ({
-    text: toUpperCaseFirstLetter(status),
-    value: status,
-  }));
-
-const ItemGrow = styled(FlexBox.Item)`
-  flex-grow: 1;
-`;
 
 const Id = jobID => (
   <Ellipsis className={USER_GUIDE.TABLE_JOB.ID_SELECT} copyable text={jobID} />
@@ -32,28 +22,41 @@ const StartTime = (startTime, { results }) => (
 const Status = status => <JobStatus status={status} />;
 const Stats = status => <JobStats status={status} />;
 const Priority = priority => <JobPriority priority={priority} />;
+
 const Types = types => <JobTypes types={types} fullName={false} />;
 
+const ProgressContainer = styled.div`
+  display: flex;
+  flex-wrap: nowrap;
+`;
+
 const Progress = (_, job) => (
-  <FlexBox>
-    <ItemGrow>
-      <JobProgress
-        // eslint-disable-next-line
-        {...job}
-      />
-    </ItemGrow>
-    <FlexBox.Item>
-      <JobActions job={job} />
-    </FlexBox.Item>
-  </FlexBox>
+  <ProgressContainer>
+    <JobProgress
+      // eslint-disable-next-line
+      {...job}
+    />
+    <JobActions job={job} />
+  </ProgressContainer>
 );
+
+const sortPipelineName = (a, b) => sorter(a.pipeline.name, b.pipeline.name);
+const sortStartTime = (a, b) => a.pipeline.startTime - b.pipeline.startTime;
+const sortPriority = (a, b) => sorter(a.pipeline.priority, b.pipeline.priority);
+const onStatusFilter = (value, record) => record.status.status === value;
+const sortStatus = (a, b) => sorter(a.status.status, b.status.status);
+
+const statusFilter = Object.values(PIPELINE_STATUS).map(status => ({
+  text: toUpperCaseFirstLetter(status),
+  value: status,
+}));
 
 const jobColumns = [
   {
     title: `Job ID`,
     dataIndex: `key`,
     key: `key`,
-    width: `10%`,
+    width: `10ch`,
     render: Id,
   },
   {
@@ -61,7 +64,7 @@ const jobColumns = [
     dataIndex: `pipeline.name`,
     key: `pipeline`,
     width: `10%`,
-    sorter: (a, b) => sorter(a.pipeline.name, b.pipeline.name),
+    sorter: sortPipelineName,
     render: Name,
   },
   {
@@ -69,7 +72,7 @@ const jobColumns = [
     dataIndex: `pipeline.startTime`,
     key: `Start timestamp`,
     width: `10%`,
-    sorter: (a, b) => a.pipeline.startTime - b.pipeline.startTime,
+    sorter: sortStartTime,
     render: StartTime,
   },
   {
@@ -84,8 +87,8 @@ const jobColumns = [
     dataIndex: `pipeline.priority`,
     key: `priority`,
     align: `center`,
-    width: `5%`,
-    sorter: (a, b) => sorter(a.pipeline.priority, b.pipeline.priority),
+    width: `15ch`,
+    sorter: sortPriority,
     render: Priority,
   },
 
@@ -94,7 +97,7 @@ const jobColumns = [
     dataIndex: `status`,
     key: `node-status`,
     align: `center`,
-    width: `10%`,
+    width: `20ch`,
     render: Stats,
   },
   {
@@ -102,11 +105,11 @@ const jobColumns = [
     dataIndex: `status`,
     key: `job-status`,
     filterMultiple: true,
-    filters: getStatusFilter(),
+    filters: statusFilter,
     width: `8%`,
     align: `center`,
-    sorter: (a, b) => sorter(a.status.status, b.status.status),
-    onFilter: (value, record) => record.status.status === value,
+    sorter: sortStatus,
+    onFilter: onStatusFilter,
     render: Status,
   },
   {

@@ -1,21 +1,21 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import { LEFT_SIDEBAR_NAMES } from 'const';
-import { tableFilterSelector } from 'utils/tableSelector';
 import { JsonView, Card } from 'components/common';
 import { Table } from 'components';
+import { selectors } from 'reducers';
+import { useFilter } from 'hooks/useSearch';
 import driversTableColumns from './DriversTableColumns.react';
 
-const dataSelector = tableFilterSelector(LEFT_SIDEBAR_NAMES.DRIVERS);
-
 export default function DriversTable() {
-  const dataSource = useSelector(dataSelector);
+  const collection = useSelector(selectors.drivers.all);
+  const filtered = useFilter(collection, 'podName');
+
   return (
     <Table
       rowKey={record => record.driverId}
       columns={driversTableColumns()}
-      dataSource={dataSource}
+      dataSource={filtered}
       expandedRowRender={record => (
         <Card>
           <JsonView jsonObject={record} />

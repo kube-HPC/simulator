@@ -1,37 +1,19 @@
-import { useMemo } from 'react';
-import { LEFT_SIDEBAR_NAMES, STATE_SOURCES } from 'const';
 import { useSelector } from 'react-redux';
-import { tableFilterSelector } from 'utils';
+import { selectors } from 'reducers';
+import { useFilter } from 'hooks/useSearch';
 
-const dataSelector = tableFilterSelector(LEFT_SIDEBAR_NAMES.ALGORITHMS);
-const buildsSelector = state =>
-  state[STATE_SOURCES.ALGORITHM_BUILDS_TABLE].dataSource;
+const useAlgorithm = () => {
+  const algorithmSource = useSelector(selectors.algorithms.collection.all);
+  const buildsSource = useSelector(selectors.algorithms.builds.entities);
+  const filtered = useFilter(algorithmSource, 'name');
 
-const useAlgorithm = name => {
-  const algorithmSource = useSelector(dataSelector);
-  const buildsSource = useSelector(buildsSelector);
-
-  // Merged Source with builds
-  const dataSource = useMemo(
-    () =>
-      algorithmSource.map(source => ({
-        ...source,
-        builds: buildsSource.filter(
-          ({ algorithmName }) => algorithmName === source.name
-        ),
-      })),
-    [algorithmSource, buildsSource]
-  );
-
-  const algorithm = useMemo(
-    () =>
-      name ? dataSource.find(({ name: source }) => source === name) : null,
-    [name, dataSource]
-  );
+  const collection = filtered.map(item => ({
+    ...item,
+    builds: buildsSource[item.name],
+  }));
 
   return {
-    algorithm,
-    dataSource,
+    collection,
   };
 };
 

@@ -1,18 +1,15 @@
 import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-
 import { deleteAlgorithm } from 'actions/debug.action';
 import { Table } from 'components';
 import { Card, JsonView } from 'components/common';
-import { tableFilterSelector } from 'utils/tableSelector';
-import { LEFT_SIDEBAR_NAMES } from 'const';
+import { selectors } from 'reducers';
+import { useFilter } from 'hooks/useSearch';
 import debugTableColumns from './DebugTableColumns.react';
 
-const dataSelector = tableFilterSelector(LEFT_SIDEBAR_NAMES.DEBUG);
-
 const DebugTable = () => {
-  const dataSource = useSelector(dataSelector);
-
+  const collection = useSelector(selectors.debug.all);
+  const filtered = useFilter(collection, 'name');
   const dispatch = useDispatch();
   const onDelete = useCallback(data => dispatch(deleteAlgorithm(data)), [
     dispatch,
@@ -28,7 +25,7 @@ const DebugTable = () => {
     <Table
       rowKey={({ name }) => name}
       columns={debugTableColumns({ onDelete })}
-      dataSource={dataSource}
+      dataSource={filtered}
       expandedRowRender={expandedRowRender}
     />
   );

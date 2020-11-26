@@ -1,7 +1,7 @@
 import { Form, InputAddon } from 'components/common';
 import schema from 'config/schema/addPipeline.schema';
 import React, { useContext } from 'react';
-import { FormContext } from '../../Form/AddPipelineForm.react';
+import { FormContext } from '../../AddPipelineForm';
 
 const { RESULT, PROGRESS, types } = schema.WEBHOOKS;
 

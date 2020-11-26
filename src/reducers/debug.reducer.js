@@ -1,16 +1,46 @@
-import { handleActions } from 'redux-actions';
-import Immutable from 'seamless-immutable';
 import actions from 'const/application-actions';
+import { createSelector, createSlice } from '@reduxjs/toolkit';
+import sum from 'hash-sum';
 
-export const debugTable = handleActions(
-  {
+/**
+ * @typedef {import('./Debug.d').Debug} Debug
+ * @typedef {{
+ *   collection: Debug[];
+ *   sum: string;
+ * }} DebugState
+ * @typedef {{
+ *   debug: DebugState;
+ * }} State
+ */
+const debugReducer = createSlice({
+  name: 'debug',
+  reducers: {},
+  initialState: { sum: null, collection: [] },
+  extraReducers: {
     [actions.SOCKET_GET_DATA](state, { payload }) {
-      return state.merge({
-        dataSource:
-          payload.algorithms &&
-          payload.algorithms.filter(a => a.options && a.options.debug === true),
-      });
+      const collection = (payload?.algorithms ?? []).filter(
+        item => item?.options?.debug
+      );
+      const nextSum = sum(collection);
+      if (state.sum === nextSum) return state;
+      return {
+        sum: nextSum,
+        collection,
+      };
     },
   },
-  Immutable.from({ dataSource: [] })
-);
+});
+
+export const { reducer } = debugReducer;
+
+export const selectors = {
+  /** @param {State} state */
+  all: state => state.debug.collection,
+  /** @param {State} state */
+  count: state => state.debug.collection.length,
+  ids: createSelector(
+    /** @param {State} state */
+    state => state.debug.collection,
+    collection => collection.map(item => item.name)
+  ),
+};

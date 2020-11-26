@@ -23,4 +23,4 @@ JobStatus.propTypes = {
   status: PropTypes.object.isRequired,
 };
 
-export default JobStatus;
+export default React.memo(JobStatus);
