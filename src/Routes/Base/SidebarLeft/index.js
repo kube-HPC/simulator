@@ -77,7 +77,7 @@ const sidebarSelector = state => ({
   [LEFT_SIDEBAR_NAMES.JOBS]: selectors.jobs.count(state),
   [LEFT_SIDEBAR_NAMES.PIPELINES]: selectors.pipelines.collection.count(state),
   [LEFT_SIDEBAR_NAMES.ALGORITHMS]: selectors.algorithms.collection.count(state),
-  [LEFT_SIDEBAR_NAMES.WORKERS]: selectors.workers.count,
+  [LEFT_SIDEBAR_NAMES.WORKERS]: selectors.workers.count(state),
   [LEFT_SIDEBAR_NAMES.DRIVERS]: selectors.drivers.count(state),
   [LEFT_SIDEBAR_NAMES.DEBUG]: selectors.debug.count(state),
 });

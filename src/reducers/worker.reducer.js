@@ -38,7 +38,7 @@ export const selectors = {
   /** @param {State} state */
   stats: state => state.workers.stats,
   /** @param {State} state */
-  count: state => state.workers.collection.length,
+  count: state => baseSelectors.selectIds(state.workers.collection).length,
   /** @param {State} state */
   ids: state => baseSelectors.selectIds(state.workers.collection),
   /** @param {State} state */
