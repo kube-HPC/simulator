@@ -19,3 +19,11 @@ const notification = ({ message = msg, description, type = TYPES.ERROR }) =>
 notification.TYPES = TYPES;
 
 export default notification;
+
+export const copyToClipboard = content => {
+  navigator.clipboard.writeText(content);
+  notification({
+    message: 'Copied to clipboard',
+    type: notification.TYPES.SUCCESS,
+  });
+};

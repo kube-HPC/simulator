@@ -1,12 +1,13 @@
 import React, { useMemo } from 'react';
-import { Card } from 'antd';
+import { Card, Tooltip } from 'antd';
 import styled from 'styled-components';
 import useDataSources from 'hooks/useDataSources';
 import prettyBytes from 'pretty-bytes';
-import { COLOR } from 'styles/colors';
+import { COLOR, COLOR_LAYOUT } from 'styles/colors';
+import { copyToClipboard } from 'utils';
 import Tag from './Tag';
 import EmptyDataSourceMessage from './EmptyDataSourceMessage';
-import FileIcons from './FileIcons';
+import { FileIcon, fileTypes } from './FileIcons';
 import usePath from './usePath';
 
 const SummaryBar = styled.div`
@@ -25,6 +26,9 @@ const DataSourceVersionId = styled.span`
   color: ${COLOR.darkGrey};
   margin-left: auto;
   margin-top: auto;
+  border: 1px solid ${COLOR_LAYOUT.border};
+  border-radius: 0.5em;
+  padding: 0.5em 1ch;
 `;
 
 const Header = styled.h3`
@@ -50,6 +54,7 @@ const GridItem = styled(Card.Grid)`
   margin-bottom: 1em;
   border-radius: 0.5em;
   cursor: pointer;
+  padding: 1em;
 `;
 
 const FileTypesList = styled.div`
@@ -75,16 +80,19 @@ const DataSourcesGrid = () => {
           hoverable>
           <Header>
             <DataSourceName>{dataSource.name}</DataSourceName>
-            <DataSourceVersionId>{dataSource.id}</DataSourceVersionId>
+            <DataSourceVersionId onClick={() => copyToClipboard(dataSource.id)}>
+              {dataSource.id}
+            </DataSourceVersionId>
           </Header>
           <p>{dataSource.versionDescription}</p>
           <FileTypesList>
-            {dataSource.fileTypes.map(type => {
-              const Component = FileIcons[type] || FileIcons.default;
-              return (
-                <Component key={`dataSource-${dataSource.id}-icon-${type}`} />
-              );
-            })}
+            {dataSource.fileTypes.map(type => (
+              <Tooltip title={type}>
+                <FileIcon key={`dataSource-${dataSource.id}-icon-${type}`}>
+                  {fileTypes[type]?.name ?? fileTypes.default.name}
+                </FileIcon>
+              </Tooltip>
+            ))}
           </FileTypesList>
           {dataSource.filesCount === 0 ? (
             <EmptyDataSourceMessage />
