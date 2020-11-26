@@ -39,6 +39,8 @@
     "ansi-to-react": "^5.1.0",
     "antd": "^3.25.3",
     "axios": "^0.19.0",
+    "chonky": "^2.0.5",
+    "chonky-icon-fontawesome": "^2.0.5",
     "cron-parser": "^2.13.0",
     "cronstrue": "^1.86.0",
     "fuzzy": "^0.1.3",

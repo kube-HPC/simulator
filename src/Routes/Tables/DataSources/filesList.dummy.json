@@ -1,0 +1,37 @@
+[
+  {
+    "id": "9514a3d74d57",
+    "name": "fileA.csv",
+    "path": "/innerFolder",
+    "size": 2293,
+    "modDate": "2020-10-20T03:11:50.570Z"
+  },
+  {
+    "id": "9514a3d74d58",
+    "name": "fileB.js",
+    "path": "/innerFolder/joe/pie",
+    "size": 5500,
+    "modDate": "2020-10-20T03:11:50.570Z"
+  },
+  {
+    "id": "9514a3d74d59",
+    "name": "fileC.js",
+    "path": "/",
+    "size": 1000,
+    "modDate": "2020-10-20T03:11:50.570Z"
+  },
+  {
+    "id": "9514a3d74d60",
+    "name": "fileD.js",
+    "path": "/innerFolder/something",
+    "size": 5500,
+    "modDate": "2020-10-20T03:11:50.570Z"
+  },
+  {
+    "id": "9514a3d74d61",
+    "name": "fileE.js",
+    "path": "/another",
+    "size": 2500,
+    "modDate": "2020-10-20T03:11:50.570Z"
+  }
+]
