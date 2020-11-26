@@ -25,7 +25,6 @@ const DataSourceVersionId = styled.span`
   font-size: 0.75em;
   color: ${COLOR.darkGrey};
   margin-left: auto;
-  margin-top: auto;
   border: 1px solid ${COLOR_LAYOUT.border};
   border-radius: 0.5em;
   padding: 0.5em 1ch;
@@ -33,6 +32,7 @@ const DataSourceVersionId = styled.span`
 
 const Header = styled.h3`
   display: flex;
+  align-items: center;
 `;
 
 const Grid = styled.div`
@@ -55,6 +55,7 @@ const GridItem = styled(Card.Grid)`
   border-radius: 0.5em;
   cursor: pointer;
   padding: 1em;
+  user-select: none;
 `;
 
 const FileTypesList = styled.div`
@@ -80,15 +81,20 @@ const DataSourcesGrid = () => {
           hoverable>
           <Header>
             <DataSourceName>{dataSource.name}</DataSourceName>
-            <DataSourceVersionId onClick={() => copyToClipboard(dataSource.id)}>
-              {dataSource.id}
-            </DataSourceVersionId>
+            <Tooltip title="copy to clipboard" placement="bottom">
+              <DataSourceVersionId
+                onClick={() => copyToClipboard(dataSource.id)}>
+                {dataSource.id}
+              </DataSourceVersionId>
+            </Tooltip>
           </Header>
           <p>{dataSource.versionDescription}</p>
           <FileTypesList>
             {dataSource.fileTypes.map(type => (
-              <Tooltip title={type}>
-                <FileIcon key={`dataSource-${dataSource.id}-icon-${type}`}>
+              <Tooltip
+                title={type}
+                key={`dataSource-${dataSource.id}-icon-${type}`}>
+                <FileIcon>
                   {fileTypes[type]?.name ?? fileTypes.default.name}
                 </FileIcon>
               </Tooltip>
