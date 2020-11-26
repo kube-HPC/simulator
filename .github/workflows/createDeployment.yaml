@@ -43,6 +43,7 @@ jobs:
           required_contexts: '[]'
           payload: |
             prNumber: ${{ github.event.issue.number }}
+            prName: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
         env:
           GITHUB_TOKEN: '${{ secrets.GH_TOKEN }}'
       - name: write failed comment on failure
