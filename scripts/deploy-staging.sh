@@ -9,4 +9,4 @@ export PR_NAME="${PR_NAME//_/-}"
 echo TAG=$PR_NAME
 envsubst < ${DIR}/staging-template.yaml > /tmp/staging.yaml
 kubectl apply -f /tmp/staging.yaml
-kubectl patch deployment simulator-${PR_NAME} -p "{\"spec\": {\"template\": {\"metadata\": { \"labels\": {  \"redeploy\": \"$(date +%s)\"}}}}}"
+kubectl patch deployment dashboard-${PR_NAME} -p "{\"spec\": {\"template\": {\"metadata\": { \"labels\": {  \"redeploy\": \"$(date +%s)\"}}}}}"
