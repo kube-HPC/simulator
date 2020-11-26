@@ -27,14 +27,14 @@ jobs:
           node-version: '14'
       - name: Docker login
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
+      - name: install kubectl
+        run: ./scripts/install.sh
       - run: npm ci
       - name: build
         run: PRIVATE_REGISTRY=docker.io/hkube npm run build
         env:
           TRAVIS_PULL_REQUEST: 'true'
           PR_NAME: ${{ github.event.deployment.payload.prName }}
-      - name: install kubectl
-        run: ./scripts/install.sh
       - name: deploy
         run: ./scripts/deploy-staging.sh
       - name: set deployment status to failure
