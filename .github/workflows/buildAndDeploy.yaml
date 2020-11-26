@@ -27,8 +27,16 @@ jobs:
           node-version: '14'
       - name: Docker login
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
+      - name: create kubeconfig
+        run: |
+          echo "$KUBE_CONFIG_DATA" | base64 --decode > /tmp/config
+          echo KUBECONFIG=/tmp/config >> $GITHUB_ENV
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.CICD_KUBECONFIG }}
       - name: install kubectl
         run: ./scripts/install.sh
+        env:
+          KUBECONFIG: ${{ env.KUBECONFIG }}
       - run: npm ci
       - name: build
         run: PRIVATE_REGISTRY=docker.io/hkube npm run build
