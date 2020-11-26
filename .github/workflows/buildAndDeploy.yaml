@@ -14,7 +14,7 @@ jobs:
           repository: ${{ github.repository }}
           deployment: ${{ github.event.deployment.id }}
           environment: cicd
-          environment_url: https://${{ secrets.CICD_URL }}/hkube/dashboard/
+          environment_url: https://${{ secrets.CICD_URL }}hkube/dashboard-${{ github.event.deployment.payload.prName }}/
           log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           state: in_progress
           mediaType: '{"previews": ["flash", "ant-man"]}'
@@ -27,11 +27,38 @@ jobs:
           node-version: '14'
       - name: Docker login
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
+      - name: create kubeconfig
+        run: |
+          echo "$KUBE_CONFIG_DATA" | base64 --decode > /tmp/config
+          echo KUBECONFIG=/tmp/config >> $GITHUB_ENV
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.CICD_KUBECONFIG }}
+      - name: verify kubectl
+        run: kubectl cluster-info
+      - run: npm ci
       - name: build
         run: PRIVATE_REGISTRY=docker.io/hkube npm run build
         env:
           TRAVIS_PULL_REQUEST: 'true'
-          PR_NAME: ${{ github.event.deployment.payload.prNumber }}
+          PR_NAME: ${{ github.event.deployment.payload.prName }}
+      - name: deploy
+        run: ./scripts/deploy-staging.sh
+        env:
+          PR_NAME: ${{ github.event.deployment.payload.prName }}
+      - name: set deployment status to success
+        id: successful_deployment
+        uses: octokit/request-action@v2.x
+        with:
+          route: POST /repos/:repository/deployments/:deployment/statuses
+          repository: ${{ github.repository }}
+          deployment: ${{ github.event.deployment.id }}
+          environment: dev
+          environment_url: https://${{ secrets.CICD_URL }}hkube/dashboard-${{ github.event.deployment.payload.prName }}/
+          log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          mediaType: '{"previews": ["ant-man"]}'
+          state: success
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
       - name: set deployment status to failure
         id: failed_deployment
         uses: octokit/request-action@v2.x
@@ -41,7 +68,7 @@ jobs:
           repository: ${{ github.repository }}
           deployment: ${{ github.event.deployment.id }}
           environment: cicd
-          environment_url: https://${{ secrets.CICD_URL }}/hkube/dashboard/
+          environment_url: https://${{ secrets.CICD_URL }}hkube/dashboard-${{ github.event.deployment.payload.prName }}/
           log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           mediaType: '{"previews": ["ant-man"]}'
           state: failure
