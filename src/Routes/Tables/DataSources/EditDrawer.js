@@ -19,7 +19,7 @@ const EditDrawer = () => {
       isOpened={isOn}
       onClose={setOff}
       onDidClose={goTo.root}
-      width={DRAWER_SIZE.ADD_DATASOURCE}>
+      width={DRAWER_SIZE.EDIT_DATASOURCE}>
       <h1>{dataSource.name}</h1>
       <div>
         <FileBrowser files={dummyFilesList} />
