@@ -21,7 +21,7 @@
  */
 
 /** @type {(flatList: FlatFile[]) => StratifiedMap} */
-const stratify = flatList => {
+export const stratify = flatList => {
   /** @type {StratifiedMap} */
   const stratifiedMap = flatList.reduce((acc, file) => {
     const parentDirs = [
@@ -76,7 +76,7 @@ const restorePath = (folder, mapping) => {
 };
 
 /** @type {(mapping: StratifiedMap) => FlatFile[]} */
-const flatten = mapping => {
+export const flatten = mapping => {
   /** @type {StratifiedFile[]} */
   // @ts-ignore
   const files = Object.values(mapping).filter(item => !item.isDir);
@@ -87,9 +87,4 @@ const flatten = mapping => {
       path: restorePath(mapping[file.parentId], mapping).join('/') || '/',
     };
   });
-};
-
-module.exports = {
-  stratify,
-  flatten,
 };

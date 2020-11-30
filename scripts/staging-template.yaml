@@ -2,20 +2,20 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: simulator-${PR_NAME}
+    app: dashboard-${PR_NAME}
     core: 'true'
     group: hkube
-  name: simulator-${PR_NAME}
+  name: dashboard-${PR_NAME}
   namespace: default
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: simulator-${PR_NAME}
+      app: dashboard-${PR_NAME}
   template:
     metadata:
       labels:
-        app: simulator-${PR_NAME}
+        app: dashboard-${PR_NAME}
         group: hkube
     spec:
       containers:
@@ -76,7 +76,7 @@ spec:
                   apiVersion: v1
                   fieldPath: metadata.namespace
             - name: HKUBE_BASE_URL
-              value: /hkube/simulator-${PR_NAME}
+              value: /hkube/dashboard-${PR_NAME}
           image: hkube/simulator:${PR_NAME}
           imagePullPolicy: Always
           name: simulator
@@ -99,21 +99,21 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
   labels:
-    app: simulator-${PR_NAME}
+    app: dashboard-${PR_NAME}
     core: 'true'
     group: hkube
     heritage: Tiller
     release: hkube
-  name: simulator-${PR_NAME}
+  name: dashboard-${PR_NAME}
   namespace: default
 spec:
   rules:
     - http:
         paths:
           - backend:
-              serviceName: simulator-${PR_NAME}
+              serviceName: dashboard-${PR_NAME}
               servicePort: 9050
-            path: /hkube/simulator-${PR_NAME}(/|$)(.*)
+            path: /hkube/dashboard-${PR_NAME}(/|$)(.*)
 
 ---
 apiVersion: v1
@@ -121,10 +121,10 @@ kind: Service
 metadata:
   creationTimestamp: 2019-07-24T09:12:55Z
   labels:
-    app: simulator-${PR_NAME}
+    app: dashboard-${PR_NAME}
     core: 'true'
     group: hkube
-  name: simulator-${PR_NAME}
+  name: dashboard-${PR_NAME}
   namespace: default
 spec:
   ports:
@@ -132,4 +132,4 @@ spec:
       protocol: TCP
       targetPort: 9050
   selector:
-    app: simulator-${PR_NAME}
+    app: dashboard-${PR_NAME}
