@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -eo pipefail
 REPO_NAME=$1
 if [ -v PRIVATE_REGISTRY ]
 then
