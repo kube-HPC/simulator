@@ -38,7 +38,7 @@ const pipelinesReducer = createSlice({
       const nextSum = sum(payload.pipelines);
       if (nextSum === state.sum) return state;
       const isValidSource = discovery && pipelines;
-      const isValidStats = pipelinesStats;
+      const isValidStats = Array.isArray(pipelinesStats);
 
       return {
         sum: nextSum,
@@ -46,8 +46,8 @@ const pipelinesReducer = createSlice({
           ? pipelinesEntityAdapter.setAll({}, pipelines)
           : state.collection,
         stats: isValidStats
-          ? state.stats
-          : statsEntityAdapter.setAll({}, pipelinesStats),
+          ? statsEntityAdapter.setAll({}, pipelinesStats)
+          : state.stats,
       };
     },
   },
