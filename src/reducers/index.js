@@ -26,13 +26,16 @@ import {
   selectors as jobsSelectors,
 } from 'reducers/jobs.reducer';
 import {
+  reducer as errorLogs,
+  selectors as errorLogsSelectors,
+} from 'reducers/errorLogs.reducer';
+import {
   boardURL,
   connectionStatus,
   socketURL,
   hkubeSystemVersion,
 } from 'reducers/connection.reducer';
 import { drawer } from 'reducers/drawer.reducer';
-import { errorLogsTable } from 'reducers/errorLogs.reducer';
 import { experiments } from 'reducers/experiment.reducer';
 import { filterByType } from 'reducers/filter.reducer';
 import { meta } from 'reducers/meta.reducer';
@@ -55,7 +58,7 @@ const store = {
   debug,
   drawer,
   drivers,
-  errorLogsTable,
+  errorLogs,
   experiments,
   filterByType,
   jobsKubernetesLogs,
@@ -80,4 +83,5 @@ export const selectors = {
   drivers: driversSelectors,
   debug: debugSelectors,
   jobs: jobsSelectors,
+  errorLogs: errorLogsSelectors,
 };
