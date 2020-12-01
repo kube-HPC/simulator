@@ -14,11 +14,11 @@ const expandedRowRender = record => (
 const extractId = ({ id }) => id;
 
 const ErrorLogsTable = () => {
-  const { dataSource, setIsCleared } = useErrorLogs();
+  const { dataSource, clearCounter } = useErrorLogs();
 
   useEffect(() => {
-    setIsCleared(true);
-  }, [setIsCleared]);
+    clearCounter();
+  }, [clearCounter]);
 
   return (
     <Table

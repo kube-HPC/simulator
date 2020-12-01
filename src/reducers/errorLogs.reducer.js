@@ -1,15 +1,33 @@
-import { handleActions } from 'redux-actions';
-import Immutable from 'seamless-immutable';
 import actions from 'const/application-actions';
+import { createSlice } from '@reduxjs/toolkit';
+import sum from 'hash-sum';
 
-const initialValue = Immutable.from({ dataSource: [] });
+/**
+ * @typedef {import('./ErrorLog').ErrorLog} ErrorLog
+ * @typedef {{ collection: ErrorLog[]; sum: string }} ErrorLogsState
+ * @typedef {{
+ *   errorLogs: ErrorLogsState;
+ * }} State
+ */
 
-export const errorLogsTable = handleActions(
-  {
-    [actions.SOCKET_GET_DATA](currState, { payload }) {
-      const { logs } = payload;
-      return logs ? Immutable.set(currState, `dataSource`, logs) : currState;
+const errorLogs = createSlice({
+  name: 'error-logs',
+  /** @type {ErrorLogsState} */
+  initialState: { collection: [], sum: null },
+  reducers: {},
+  extraReducers: {
+    [actions.SOCKET_GET_DATA]: (state, { payload }) => {
+      if (!payload.logs) return state;
+      const nextSum = sum(payload.logs);
+      if (state.sum === nextSum) return state;
+      return { collection: payload.logs, sum: nextSum };
     },
   },
-  initialValue
-);
+});
+
+export const { reducer } = errorLogs;
+
+export const selectors = {
+  /** @param {State} state */
+  all: state => state.errorLogs.collection,
+};
