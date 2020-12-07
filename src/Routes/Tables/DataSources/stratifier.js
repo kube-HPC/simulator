@@ -4,7 +4,6 @@
  *   id: string;
  *   path: string;
  *   size: number;
- *   tags: string[];
  * }} FlatFile
  * @typedef {{ parentId: string } & FlatFile} StratifiedFile
  * @typedef {{
@@ -16,7 +15,7 @@
  *   parentId?: string;
  * }} StratifiedDirectory
  * @typedef {{
- *   [x: string]: StratifiedDirectory | StratifiedFile;
+ *   [id: string]: StratifiedDirectory | StratifiedFile;
  * }} StratifiedMap
  */
 
@@ -71,7 +70,7 @@ export const stratify = flatList => {
 /** @type {(file: StratifiedDirectory, mapping: StratifiedMap) => string[]} */
 const restorePath = (folder, mapping) => {
   return folder.parentId
-    ? restorePath(mapping[folder.parentId], mapping).concat(folder.id)
+    ? restorePath(mapping[folder.parentId], mapping).concat(folder.name)
     : [''];
 };
 

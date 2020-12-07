@@ -103,6 +103,7 @@ export default (filesList, rootFolderId = '/') => {
           childrenIds: newDestinationChildrenIds,
           childrenCount: newDestinationChildrenIds.length,
         };
+        console.log({ files, destination });
         files.map(file => {
           newFileMap[file.id] = {
             ...file,
