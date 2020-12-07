@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { notification } from 'utils';
 import { stratify, flatten } from './stratifier';
 
 export default (filesList, rootFolderId = '/') => {
@@ -120,10 +121,27 @@ export default (filesList, rootFolderId = '/') => {
     folderName =>
       setFileMap(oldFileMap => {
         const parent = oldFileMap[currentFolderIdRef.current];
+
+        const childrenNames = new Set(
+          oldFileMap[currentFolderIdRef.current].childrenIds.map(
+            childId => oldFileMap[childId].name
+          )
+        );
+
+        if (childrenNames.has(folderName)) {
+          notification({
+            message: `folder name "${folderName}" already exists in this directory`,
+          });
+          return oldFileMap;
+        }
+
+        const folderId = `${Math.floor(
+          Math.random().toFixed(4) * 10 ** 4
+        )}-${folderName}`;
         const newFileMap = {
           ...oldFileMap,
-          [folderName]: {
-            id: folderName,
+          [folderId]: {
+            id: folderId,
             name: folderName,
             isDir: true,
             modDate: new Date(),
@@ -133,7 +151,7 @@ export default (filesList, rootFolderId = '/') => {
           },
           [currentFolderIdRef.current]: {
             ...parent,
-            childrenIds: [...parent.childrenIds, folderName],
+            childrenIds: [...parent.childrenIds, folderId],
           },
         };
         return newFileMap;
