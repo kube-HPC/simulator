@@ -17,16 +17,28 @@ export const fetchDataSource = ({ name }) => ({
 });
 
 /**
+ * @typedef {{
+ *   lastModified: number;
+ *   lastModifiedDate: string;
+ *   name: string;
+ *   response: string;
+ *   size: number;
+ *   status: string;
+ *   type: string;
+ *   uid: string;
+ * }} AntFile
  * @param {object} payload
  * @param {string} payload.name
- * @param {any[]} payload.files
+ * @param {AntFile[]} payload.files
  * @param {object} meta
  * @param {function} meta.onSuccess
  */
 export const createDataSource = ({ name, files }, { onSuccess }) => {
   const formData = new FormData();
   formData.append('name', name);
-  files.forEach(file => formData.append('files', file));
+  files.forEach(file => {
+    formData.append('files', file);
+  });
   return {
     type: actions.REST_REQ_POST_FORM,
     payload: {
