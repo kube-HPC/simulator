@@ -24,34 +24,66 @@ export const generateFolderId = folderName =>
 
 /** @type {(flatList: FlatFile[]) => StratifiedMap} */
 export const stratify = flatList => {
+  /**
+   * Holds all the directories by their paths used to ensure each directory
+   * appears only once and has a unique id
+   *
+   * @typedef {{
+   *   [directoryPath: string]: { id: string; dir: string };
+   * }} PathsMap
+   * @type {PathsMap}
+   */
+  let pathsMap = {};
+
   /** @type {StratifiedMap} */
   const stratifiedMap = flatList.reduce((acc, file) => {
-    const parentDirs = [
-      '/',
-      ...file.path.split('/').filter(subPath => subPath),
-    ];
+    /** @type {PathsMap} */
+    const parentDirsMap = Object.fromEntries([
+      ['/', { dir: '/', id: '/' }],
+      ...file.path
+        .split('/')
+        .filter(subPath => subPath)
+        .map((dir, ii, completePath) => {
+          const directoryPath = completePath.slice(0, ii + 1).join('/');
+          const entry = pathsMap[directoryPath];
+          // ensure each entry appears only once
+          return entry
+            ? [directoryPath, entry]
+            : [
+                directoryPath,
+                {
+                  dir,
+                  id: generateFolderId(dir),
+                },
+              ];
+        }),
+    ]);
 
-    const nextDirs = parentDirs.map((dir, ii) => {
-      let childrenIds = acc[dir]?.childrenIds ?? [];
+    pathsMap = { ...parentDirsMap, ...pathsMap };
+
+    const parentDirs = Object.values(parentDirsMap);
+
+    const nextDirs = parentDirs.map(({ dir, id: dirId }, ii, collection) => {
+      let childrenIds = acc[dirId]?.childrenIds ?? [];
 
       childrenIds =
-        ii !== parentDirs.length - 1
-          ? childrenIds.concat(parentDirs[ii + 1])
+        ii !== collection.length - 1
+          ? childrenIds.concat(collection[ii + 1].id)
           : childrenIds.concat(file.id);
 
       childrenIds = [...new Set(childrenIds)];
 
       return [
-        dir,
+        dirId,
         {
-          id: generateFolderId(dir),
+          id: dirId,
           name: dir,
           isDir: true,
           children: childrenIds.length,
           childrenIds,
           ...(ii !== 0
             ? {
-                parentId: parentDirs[ii - 1],
+                parentId: collection[ii - 1].id,
               }
             : {}),
         },
@@ -63,7 +95,7 @@ export const stratify = flatList => {
       ...Object.fromEntries(nextDirs),
       [file.id]: {
         ...file,
-        parentId: parentDirs[parentDirs.length - 1],
+        parentId: parentDirs[parentDirs.length - 1].id,
       },
     };
   }, {});
