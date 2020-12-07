@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { notification } from 'utils';
-import { stratify, flatten } from './stratifier';
+import { stratify, flatten, generateFolderId } from './stratifier';
 
 export default (filesList, rootFolderId = '/') => {
   const baseMap = useMemo(() => stratify(filesList), [filesList]);
@@ -103,7 +103,6 @@ export default (filesList, rootFolderId = '/') => {
           childrenIds: newDestinationChildrenIds,
           childrenCount: newDestinationChildrenIds.length,
         };
-        console.log({ files, destination });
         files.map(file => {
           newFileMap[file.id] = {
             ...file,
@@ -136,9 +135,7 @@ export default (filesList, rootFolderId = '/') => {
           return oldFileMap;
         }
 
-        const folderId = `${Math.floor(
-          Math.random().toFixed(4) * 10 ** 4
-        )}-${folderName}`;
+        const folderId = generateFolderId(folderName);
         const newFileMap = {
           ...oldFileMap,
           [folderId]: {

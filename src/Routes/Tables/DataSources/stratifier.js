@@ -19,6 +19,9 @@
  * }} StratifiedMap
  */
 
+export const generateFolderId = folderName =>
+  `${Math.floor(Math.random().toFixed(4) * 10 ** 4)}-${folderName}`;
+
 /** @type {(flatList: FlatFile[]) => StratifiedMap} */
 export const stratify = flatList => {
   /** @type {StratifiedMap} */
@@ -41,7 +44,7 @@ export const stratify = flatList => {
       return [
         dir,
         {
-          id: dir,
+          id: generateFolderId(dir),
           name: dir,
           isDir: true,
           children: childrenIds.length,
