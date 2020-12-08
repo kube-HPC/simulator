@@ -1,3 +1,5 @@
+export type FetchStatus = 'SUCCESS' | 'PENDING' | 'FAIL' | 'IDLE';
+
 export type FileMeta = {
   path: string;
   size: number;
@@ -22,4 +24,5 @@ export type DataSourceMeta = {
   fileTypes: string[];
 };
 
-export type DataSource = DataSourceMeta & DataSourceEntry;
+export type DataSource = DataSourceMeta &
+  DataSourceEntry & { status?: FetchStatus };

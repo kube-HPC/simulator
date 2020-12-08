@@ -1,4 +1,9 @@
-import React, { useCallback, useMemo, useReducer } from 'react';
+import React, {
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useReducer,
+} from 'react';
 import PropTypes from 'prop-types';
 import {
   ChonkyActions,
@@ -28,11 +33,7 @@ setChonkyDefaults({ iconComponent: ChonkyIconFA });
 
 const fileActions = [ChonkyActions.CreateFolder, ChonkyActions.DeleteFiles];
 
-/** @type {(file: FileData) => string} */
-const generateThumbnail = file =>
-  file.thumbnailUrl ? `https://chonky.io${file.thumbnailUrl}` : null;
-
-const FileBrowser = ({ files: srcFiles }) => {
+const FileBrowser = ({ files: srcFiles, forwardRef }) => {
   const {
     fileMap,
     currentFolderId,
@@ -103,13 +104,22 @@ const FileBrowser = ({ files: srcFiles }) => {
     [createFolder, deleteFiles, moveFiles, setCurrentFolderId]
   );
 
+  useImperativeHandle(forwardRef, () => ({
+    ls: retrieveFiles,
+    getDeleteFiles: () => deletedFiles,
+    getCWD: () =>
+      folderChain.length === 1
+        ? '/'
+        : folderChain
+            .map(item => item.name)
+            .join('/')
+            .slice(1),
+  }));
+
   return (
     <>
       <button type="button" onClick={resetFileMap} style={{ marginBottom: 10 }}>
         Reset file map
-      </button>
-      <button type="button" onClick={() => console.log(retrieveFiles())}>
-        print updated files
       </button>
       <button type="button" onClick={toggleFlat}>
         toggle flat
@@ -119,8 +129,7 @@ const FileBrowser = ({ files: srcFiles }) => {
           files={files}
           folderChain={folderChain}
           fileActions={fileActions}
-          onFileAction={handleFileAction}
-          thumbnailGenerator={generateThumbnail}>
+          onFileAction={handleFileAction}>
           <FileNavbar />
           <FileToolbar />
           <FileList />
@@ -135,15 +144,24 @@ const FileBrowser = ({ files: srcFiles }) => {
   );
 };
 
+const WrappedFileBrowser = React.forwardRef((props, ref) => (
+  // eslint-disable-next-line
+  <FileBrowser {...props} forwardRef={ref} />
+));
+
 FileBrowser.propTypes = {
   files: PropTypes.arrayOf(
     PropTypes.shape({
       isDir: PropTypes.bool,
     })
   ),
+  forwardRef: PropTypes.shape({
+    // eslint-disable-next-line
+    currentFolder: PropTypes.object,
+  }).isRequired,
 };
 FileBrowser.defaultProps = {
   files: [],
 };
 
-export default FileBrowser;
+export default WrappedFileBrowser;

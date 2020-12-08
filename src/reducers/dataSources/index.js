@@ -17,17 +17,28 @@ const types = {
     success: `${actionTypes.DATASOURCE_CREATE}_SUCCESS`,
     fail: `${actionTypes.DATASOURCE_CREATE}_REJECT`,
   },
+  fetch: {
+    pending: `${actionTypes.DATASOURCE_FETCH}_PENDING`,
+    success: `${actionTypes.DATASOURCE_FETCH}_SUCCESS`,
+    fail: `${actionTypes.DATASOURCE_FETCH}_REJECT`,
+  },
+  postVersion: {
+    pending: `${actionTypes.DATASOURCE_POST_VERSION}_PENDING`,
+    success: `${actionTypes.DATASOURCE_POST_VERSION}_SUCCESS`,
+    fail: `${actionTypes.DATASOURCE_POST_VERSION}_REJECT`,
+  },
 };
 
 /**
  * @typedef {import('./datasource.d').DataSource} DataSource
  * @typedef {import('@reduxjs/toolkit').EntityState<DataSource>} CollectionState
  * @typedef {import('./datasource').DataSourceEntry} DataSourceEntry
- * @typedef {'SUCCESS' | 'PENDING' | 'FAIL' | 'IDLE'} FetchStatus
+ * @typedef {import('./datasource').FetchStatus} FetchStatus
  * @typedef {{
  *   collection: CollectionState;
  *   status: FetchStatus;
  *   error: string | null;
+ *   activeVersions: { [name: string]: string };
  * }} DataSourcesState
  * @typedef {{
  *   dataSources: DataSourcesState;
@@ -36,6 +47,36 @@ const types = {
 
 /** @type {import('@reduxjs/toolkit').EntityAdapter<DataSource>} */
 const entityAdapter = createEntityAdapter();
+
+// this is temporary!
+// in the future there will be a project config object setting which version is active
+// for now:
+// track the latest version for each dataSource
+const activeVersions = createSlice({
+  initialState: {},
+  name: 'dataSources/active-versions',
+  reducers: {},
+  extraReducers: {
+    /** @param {{ payload: DataSource[] }} action */
+    [types.fetchAll.success]: (state, action) =>
+      action.payload.reduce(
+        (acc, item) => ({ ...acc, [item.name]: item.id }),
+        {}
+      ),
+
+    /** @param {{ payload: DataSourceEntry }} action */
+    [types.create.success]: (state, action) => ({
+      ...state,
+      [action.payload.name]: action.payload.id,
+    }),
+
+    /** @param {{ payload: 'OK' | DataSource; meta: { id: string } }} action */
+    [types.postVersion.success]: (state, action) => {
+      if (action.payload === 'OK') return state;
+      return { ...state, [action.payload.name]: action.payload.id };
+    },
+  },
+});
 
 const dataSources = createSlice({
   initialState: entityAdapter.getInitialState(),
@@ -49,7 +90,36 @@ const dataSources = createSlice({
      * ) => CollectionState}
      */
     [types.fetchAll.success]: (state, action) =>
-      entityAdapter.setAll(state, action.payload),
+      entityAdapter.setAll(
+        state,
+        action.payload.map(entry => ({
+          ...entry,
+          status: 'IDLE',
+        }))
+      ),
+
+    [types.fetch.pending]: (state, { meta }) =>
+      entityAdapter.updateOne(state, {
+        id: meta.id,
+        changes: {
+          status: 'PENDING',
+        },
+      }),
+
+    [types.fetch.fail]: (state, { meta }) =>
+      entityAdapter.updateOne(state, {
+        id: meta.id,
+        changes: {
+          status: 'FAIL',
+        },
+      }),
+
+    [types.fetch.success]: (state, { payload }) =>
+      entityAdapter.upsertOne(state, {
+        ...payload,
+        status: 'SUCCESS',
+      }),
+
     /** @param {{ payload: DataSourceEntry }} action */
     [types.create.success]: (state, action) => {
       const { payload: dataSource } = action;
@@ -65,10 +135,20 @@ const dataSources = createSlice({
         filesCount,
         totalSize,
         avgFileSize: totalSize / filesCount,
+        status: 'SUCCESS',
       };
 
       return entityAdapter.addOne(state, dataSourceMeta);
     },
+
+    /** @param {{ payload: 'OK' | DataSource; meta: { id: string } }} action */
+    [types.postVersion.success]: (state, action) =>
+      action.payload === 'OK'
+        ? state
+        : entityAdapter.addOne(state, {
+            ...action.payload,
+            status: 'SUCCESS',
+          }),
   },
 });
 
@@ -94,6 +174,7 @@ const error = (state = null, { type }) => {
 
 export const reducer = combineReducers({
   collection: dataSources.reducer,
+  activeVersions: activeVersions.reducer,
   status,
   error,
 });
@@ -101,8 +182,18 @@ export const reducer = combineReducers({
 const baseSelectors = entityAdapter.getSelectors();
 
 export const selectors = {
-  /** @param {State} state */
-  all: state => baseSelectors.selectAll(state.dataSources.collection),
+  all: createSelector(
+    // select the active version for each dataSource
+    /** @param {State} state */
+    state => state.dataSources.collection,
+    /** @param {State} state */
+    state => state.dataSources.activeVersions,
+    (collectionState, activeVersionState) => {
+      const entities = baseSelectors.selectEntities(collectionState);
+      const activeIds = Object.values(activeVersionState);
+      return activeIds.map(id => entities[id]);
+    }
+  ),
   /**
    * @param {State} state
    * @param {string} id

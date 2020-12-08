@@ -7,7 +7,6 @@ export default () => {
   const dataSources = useSelector(selectors.dataSources.all);
   const status = useSelector(selectors.dataSources.status);
   const error = useSelector(selectors.dataSources.error);
-
   const dispatch = useDispatch();
   const isPending = status === 'PENDING';
 

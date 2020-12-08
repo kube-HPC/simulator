@@ -35,6 +35,7 @@ const reject = (dispatch, payload, action) => {
   dispatch({
     type: `${action.payload.actionType}_REJECT`,
     meta: {
+      ...action.meta,
       message: {
         type: 'error',
         content: _formatError(payload),
@@ -57,6 +58,7 @@ const success = (dispatch, payload, action) => {
   dispatch({
     type: `${action.payload.actionType}_SUCCESS`,
     meta: {
+      ...action.meta,
       message: {
         type: 'success',
         content: successMessage[action.payload.actionType],
