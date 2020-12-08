@@ -8,7 +8,12 @@ const TYPES = {
 };
 
 const msg = 'Something Went Wrong!';
-
+/**
+ * @param {object} props
+ * @param {'success' | 'info' | 'warning' | 'error'} props.type
+ * @param {string} props.message
+ * @param {string} props.description
+ */
 const notification = ({ message = msg, description, type = TYPES.ERROR }) =>
   notificationAntd[type]({
     message,
