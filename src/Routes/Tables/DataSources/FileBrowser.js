@@ -15,6 +15,7 @@ import {
   FileToolbar,
   setChonkyDefaults,
 } from 'chonky';
+import DebugWindow from 'components/DebugWindow';
 import { ChonkyIconFA } from 'chonky-icon-fontawesome';
 import useFileMap from './useFileMap';
 
@@ -22,11 +23,21 @@ import useFileMap from './useFileMap';
  * @typedef {import('chonky').ChonkyFileActionData} ChonkyFileActionData
  * @typedef {import('chonky').FileArray} FileArray
  * @typedef {import('chonky').FileData} FileData
+ * @typedef {import('actions/dataSources').AntFile} AntFile
  * @typedef {FileData & {
  *   parentId?: string;
  *   childrenIds?: string[];
  * }} CustomFileData
- * @typedef {{ [fileId: string]: CustomFileData }} CustomFileMap
+ * @typedef {{
+ *   [fileId: string]: CustomFileData;
+ * }} CustomFileMap
+ * @typedef {{
+ *   ls: () => FileArray;
+ *   getDeleteFiles: () => string[];
+ *   getCWD: () => string;
+ *   addFile: (file: AntFile, folderId?: string) => void;
+ *   dropFile: (id: string) => void;
+ * }} RefContent
  */
 
 setChonkyDefaults({ iconComponent: ChonkyIconFA });
@@ -42,6 +53,7 @@ const FileBrowser = ({ files: srcFiles, forwardRef }) => {
     deleteFiles,
     moveFiles,
     createFolder,
+    addFile,
     retrieveFiles,
     touchedFiles,
     deletedFiles,
@@ -54,6 +66,7 @@ const FileBrowser = ({ files: srcFiles, forwardRef }) => {
       return Object.values(fileMap).filter(file => !file.isDir);
     }
     const currentFolder = fileMap[currentFolderId];
+    if (!currentFolder) return [];
     return currentFolder.childrenIds
       ? currentFolder.childrenIds.map(
           /** @param {string} fileId */
@@ -64,7 +77,7 @@ const FileBrowser = ({ files: srcFiles, forwardRef }) => {
 
   const folderChain = useMemo(() => {
     const getParent = folder =>
-      !folder.parentId
+      !folder?.parentId
         ? [folder]
         : [...getParent(fileMap[folder.parentId]), folder];
 
@@ -89,7 +102,7 @@ const FileBrowser = ({ files: srcFiles, forwardRef }) => {
           if (fileToOpen && FileHelper.isDirectory(fileToOpen))
             setCurrentFolderId(fileToOpen.id);
           else {
-            console.log({ fileToOpen });
+            // console.log({ fileToOpen });
           }
           return null;
         case ChonkyActions.CreateFolder.id:
@@ -104,17 +117,29 @@ const FileBrowser = ({ files: srcFiles, forwardRef }) => {
     [createFolder, deleteFiles, moveFiles, setCurrentFolderId]
   );
 
-  useImperativeHandle(forwardRef, () => ({
-    ls: retrieveFiles,
-    getDeleteFiles: () => deletedFiles,
-    getCWD: () =>
-      folderChain.length === 1
-        ? '/'
-        : folderChain
-            .map(item => item.name)
-            .join('/')
-            .slice(1),
-  }));
+  const getCWD = () =>
+    folderChain.length === 1
+      ? '/'
+      : folderChain
+          .map(item => item.name)
+          .join('/')
+          .slice(1);
+
+  useImperativeHandle(
+    forwardRef,
+    /** @type {() => RefContent} */
+    () => ({
+      ls: retrieveFiles,
+      getDeleteFiles: () => deletedFiles,
+      getCWD,
+      addFile: (file, folderId = currentFolderId, path = getCWD()) => {
+        addFile({ file, folderId, path });
+      },
+      dropFile: id => {
+        deleteFiles([fileMap[id]]);
+      },
+    })
+  );
 
   return (
     <>
@@ -135,10 +160,14 @@ const FileBrowser = ({ files: srcFiles, forwardRef }) => {
           <FileList />
           <FileContextMenu />
         </ChonkyFileBrowser>
-        <pre>{JSON.stringify(deletedFiles, null, 2)}</pre>
-        <pre>{JSON.stringify(touchedFiles, null, 2)}</pre>
-        <pre>{JSON.stringify(files, null, 2)}</pre>
-        <pre>{JSON.stringify(retrieveFiles(), null, 2)}</pre>
+        <DebugWindow
+          params={{
+            deletedFiles,
+            touchedFiles,
+            currentDirectory: files,
+            output: retrieveFiles(),
+          }}
+        />
       </div>
     </>
   );

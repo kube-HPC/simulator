@@ -1,31 +1,60 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { DRAWER_SIZE } from 'const';
 import Drawer from 'components/Drawer';
 import useToggle from 'hooks/useToggle';
 import { useDispatch } from 'react-redux';
 import { postVersion } from 'actions/dataSources';
 import { notification } from 'utils';
+import { Alert } from 'antd';
+import UploadDragger, { useDragger } from 'components/UploadDragger';
 import usePath from './usePath';
 import useActiveDataSource from './useActiveDataSource';
 import FileBrowser from './FileBrowser';
-// import dummyFilesList from './filesList.dummy.json';
+
+/** @typedef {import('./FileBrowser').RefContent} RefContent */
 
 const EditDrawer = () => {
   const { goTo, dataSourceId } = usePath();
   const { dataSource, isReady, status } = useActiveDataSource();
   const { setOff, isOn } = useToggle(true);
-  const ref = useRef();
+  const [addedFiles, setAddedFiles] = useState([]);
+  /** @type {{ current?: RefContent }} */
+  const fileBrowserRef = useRef();
+
+  const handleFileAdded = useCallback(
+    file => {
+      if (!fileBrowserRef.current) return;
+      setAddedFiles(list => list.concat(file));
+      fileBrowserRef.current.addFile(file);
+    },
+    [setAddedFiles]
+  );
+
+  const handleFileDropped = useCallback(
+    file => {
+      setAddedFiles(list => list.filter(item => item !== file));
+      fileBrowserRef.current.dropFile(file.uid);
+    },
+    [setAddedFiles]
+  );
+
+  const { onChange, customRequest } = useDragger({
+    onAddFile: handleFileAdded,
+    onDropFile: handleFileDropped,
+  });
+  // setFileList(list => list.concat(file));
+
   const dispatch = useDispatch();
 
   const onSubmit = useCallback(() => {
-    if (!ref.current) return;
+    if (!fileBrowserRef.current) return;
     dispatch(
       postVersion(
         {
           dataSourceName: dataSource.name,
           files: [],
-          droppedFileIds: ref.current.getDeleteFiles(),
-          mapping: ref.current.ls(),
+          droppedFileIds: fileBrowserRef.current.getDeleteFiles(),
+          mapping: fileBrowserRef.current.ls(),
           versionDescription: 'new version from the ui',
         },
         {
@@ -38,9 +67,8 @@ const EditDrawer = () => {
         }
       )
     );
-  }, [ref, dataSource, dispatch, goTo]);
+  }, [fileBrowserRef, dataSource, dispatch, goTo]);
 
-  const files = dataSource?.files ?? [];
   const header = useMemo(() => {
     switch (status) {
       case 'NOT_FOUND':
@@ -55,6 +83,7 @@ const EditDrawer = () => {
         return '';
     }
   }, [status, dataSource, dataSourceId]);
+
   return (
     <Drawer
       isOpened={isOn}
@@ -63,9 +92,31 @@ const EditDrawer = () => {
       width={DRAWER_SIZE.EDIT_DATASOURCE}>
       <h1>{header}</h1>
       <button onClick={onSubmit} type="button">
-        click!
+        submit
       </button>
-      <div>{isReady ? <FileBrowser files={files} ref={ref} /> : null}</div>
+      <div>
+        {isReady ? (
+          <>
+            <FileBrowser files={dataSource.files} ref={fileBrowserRef} />
+            <UploadDragger
+              onChange={onChange}
+              fileList={addedFiles}
+              customRequest={customRequest}>
+              <Alert
+                message={
+                  addedFiles.length
+                    ? addedFiles.length === 1
+                      ? '1 file to upload'
+                      : `${addedFiles.length} files to upload`
+                    : 'please select at least one file to upload'
+                }
+                type={addedFiles.length ? 'info' : 'warning'}
+                showIcon
+              />
+            </UploadDragger>
+          </>
+        ) : null}
+      </div>
     </Drawer>
   );
 };

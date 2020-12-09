@@ -4,6 +4,9 @@
  *   id: string;
  *   path: string;
  *   size: number;
+ *   type: string;
+ *   description: string;
+ *   uploadedAt?: number;
  * }} FlatFile
  * @typedef {{ parentId: string } & FlatFile} StratifiedFile
  * @typedef {{

@@ -2,12 +2,20 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { notification } from 'utils';
 import { stratify, flatten, generateFolderId } from './stratifier';
 
+/**
+ * @typedef {import('actions/dataSources').AntFile} AntFile
+ * @typedef {import('./stratifier').StratifiedFile} StratifiedFile
+ * @typedef {import('./stratifier').StratifiedDirectory} StratifiedDirectory
+ */
+
 export default (filesList, rootFolderId = '/') => {
   const baseMap = useMemo(() => stratify(filesList), [filesList]);
   const [fileMap, setFileMap] = useState(baseMap);
+
   const [currentFolderId, setCurrentFolderId] = useState(rootFolderId);
   const [touchedFiles, setTouchedFiles] = useState([]);
   const [deletedFiles, setDeletedFiles] = useState([]);
+  const [addedFiles, setAddedFiles] = useState([]);
 
   const tagFilesAsTouched = useCallback(
     fileIds => setTouchedFiles(state => [...new Set([...state, ...fileIds])]),
@@ -44,11 +52,55 @@ export default (filesList, rootFolderId = '/') => {
     setDeletedFiles([]);
   }, [baseMap, rootFolderId]);
 
+  const addFile = useCallback(
+    /**
+     * @param {object} props
+     * @param {AntFile} props.file
+     * @param {string} props.folderId
+     * @param {string} props.path
+     */
+    ({ file, folderId, path }) => {
+      setAddedFiles(state => state.concat(file.uid));
+      setFileMap(oldFileMap => {
+        /** @type {StratifiedFile} */
+        const fileEntry = {
+          id: file.uid,
+          parentId: folderId,
+          name: file.name,
+          path,
+          size: file.size,
+        };
+
+        /** @type {StratifiedDirectory} */
+        const parentDir = oldFileMap[folderId];
+
+        return {
+          ...oldFileMap,
+          [file.uid]: fileEntry,
+          [folderId]: {
+            ...parentDir,
+            children: parentDir.children + 1,
+            childrenIds: parentDir.childrenIds.concat(file.uid),
+          },
+        };
+      });
+    },
+    [setFileMap]
+  );
+
   const deleteFiles = useCallback(
     /** @param {CustomFileData[]} files */
     files => {
       const fileIds = files.map(file => file.id);
-      tagFilesToDelete(fileIds);
+      const addedFilesSet = new Set(addedFiles);
+      const filesToDeleteSet = new Set(fileIds);
+      // drop from the files added collection
+      setAddedFiles(state =>
+        state.filter(fileId => !filesToDeleteSet.has(fileId))
+      );
+      // tag files to delete
+      // only existing files, files added for uploading and removed are ignored
+      tagFilesToDelete(fileIds.filter(id => !addedFilesSet.has(id)));
       unTagTouchedFiles(fileIds);
       setFileMap(oldFileMap => {
         const newFileMap = { ...oldFileMap };
@@ -71,7 +123,7 @@ export default (filesList, rootFolderId = '/') => {
         return newFileMap;
       });
     },
-    [tagFilesToDelete, unTagTouchedFiles]
+    [tagFilesToDelete, unTagTouchedFiles, addedFiles]
   );
 
   const moveFiles = useCallback(
@@ -170,5 +222,6 @@ export default (filesList, rootFolderId = '/') => {
     tagFilesAsTouched,
     tagFilesToDelete,
     deletedFiles,
+    addFile,
   };
 };
