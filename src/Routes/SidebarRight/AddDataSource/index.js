@@ -8,12 +8,15 @@ import UploadDragger, { useDragger } from 'components/UploadDragger';
 import { DRAWER_SIZE } from 'const';
 import ctx from './../ctx';
 
+/** @type {import('antd/lib/upload/interface').UploadFile[]} */
+const initialState = [];
+
 const AddDataSource = ({ form }) => {
   const context = useContext(ctx);
   const { getFieldDecorator, validateFields } = form;
   const dispatch = useDispatch();
 
-  const [addedFiles, setAddedFiles] = useState([]);
+  const [addedFiles, setAddedFiles] = useState(initialState);
   const { onChange, customRequest } = useDragger({
     setFileList: setAddedFiles,
   });

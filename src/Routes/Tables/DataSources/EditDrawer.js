@@ -63,7 +63,7 @@ const EditDrawer = () => {
       postVersion(
         {
           dataSourceName: dataSource.name,
-          files: addedFiles.map(file => file.originFileObj),
+          files: addedFiles,
           droppedFileIds: fileBrowserRef.current.getDeleteFiles(),
           mapping: fileBrowserRef.current.ls(),
           versionDescription: 'new version from the ui',
