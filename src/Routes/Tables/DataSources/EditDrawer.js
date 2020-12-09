@@ -11,29 +11,40 @@ import usePath from './usePath';
 import useActiveDataSource from './useActiveDataSource';
 import FileBrowser from './FileBrowser';
 
-/** @typedef {import('./FileBrowser').RefContent} RefContent */
+/**
+ * @typedef {import('./FileBrowser').RefContent} RefContent
+ * @typedef {import('./stratifier').FlatFile} FlatFile
+ * @typedef {import('antd/lib/upload/interface').UploadFile} UploadFile
+ */
+
+/** @type {UploadFile[]} */
+const initialState = [];
 
 const EditDrawer = () => {
   const { goTo, dataSourceId } = usePath();
   const { dataSource, isReady, status } = useActiveDataSource();
   const { setOff, isOn } = useToggle(true);
-  const [addedFiles, setAddedFiles] = useState([]);
+
+  const [addedFiles, setAddedFiles] = useState(initialState);
   /** @type {{ current?: RefContent }} */
   const fileBrowserRef = useRef();
 
-  const handleFileAdded = useCallback(
-    file => {
-      if (!fileBrowserRef.current) return;
-      setAddedFiles(list => list.concat(file));
-      fileBrowserRef.current.addFile(file);
-    },
-    [setAddedFiles]
-  );
+  const handleFileAdded = useCallback(file => {
+    if (!fileBrowserRef.current) return;
+    fileBrowserRef.current.addFile(file);
+  }, []);
 
-  const handleFileDropped = useCallback(
-    file => {
-      setAddedFiles(list => list.filter(item => item !== file));
-      fileBrowserRef.current.dropFile(file.uid);
+  const handleFileDropped = useCallback(file => {
+    fileBrowserRef.current.dropFile(file.uid);
+  }, []);
+
+  const handleFileBrowserDelete = useCallback(
+    /** @param {FlatFile[]} files */
+    files => {
+      const fileIds = new Set(files.map(file => file.id));
+      return setAddedFiles(state =>
+        state.filter(file => !fileIds.has(file.uid))
+      );
     },
     [setAddedFiles]
   );
@@ -41,8 +52,8 @@ const EditDrawer = () => {
   const { onChange, customRequest } = useDragger({
     onAddFile: handleFileAdded,
     onDropFile: handleFileDropped,
+    setFileList: setAddedFiles,
   });
-  // setFileList(list => list.concat(file));
 
   const dispatch = useDispatch();
 
@@ -52,7 +63,7 @@ const EditDrawer = () => {
       postVersion(
         {
           dataSourceName: dataSource.name,
-          files: [],
+          files: addedFiles.map(file => file.originFileObj),
           droppedFileIds: fileBrowserRef.current.getDeleteFiles(),
           mapping: fileBrowserRef.current.ls(),
           versionDescription: 'new version from the ui',
@@ -67,7 +78,7 @@ const EditDrawer = () => {
         }
       )
     );
-  }, [fileBrowserRef, dataSource, dispatch, goTo]);
+  }, [fileBrowserRef, dataSource, dispatch, goTo, addedFiles]);
 
   const header = useMemo(() => {
     switch (status) {
@@ -97,7 +108,11 @@ const EditDrawer = () => {
       <div>
         {isReady ? (
           <>
-            <FileBrowser files={dataSource.files} ref={fileBrowserRef} />
+            <FileBrowser
+              files={dataSource.files}
+              ref={fileBrowserRef}
+              onDelete={handleFileBrowserDelete}
+            />
             <UploadDragger
               onChange={onChange}
               fileList={addedFiles}

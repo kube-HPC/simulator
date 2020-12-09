@@ -33,7 +33,7 @@ const STATUS_TYPE = {
   removed: notification.TYPES.INFO,
 };
 
-export const useDragger = ({ onAddFile, onDropFile }) => {
+export const useDragger = ({ onAddFile, onDropFile, setFileList }) => {
   const onChange = useCallback(
     /** @param {{ file: import('antd/lib/upload/interface').UploadFile }} info */
     ({ file }) => {
@@ -48,13 +48,16 @@ export const useDragger = ({ onAddFile, onDropFile }) => {
       // we are not really uploading the file here
       // it has no real meaning
       if (fileStatus === 'uploading') {
-        onAddFile && onAddFile(file.originFileObj);
+        setFileList &&
+          setFileList(list => list.concat({ ...file, status: 'done' }));
+        onAddFile && onAddFile({ ...file, status: 'done' });
       }
       if (fileStatus === 'removed') {
+        setFileList && setFileList(list => list.filter(item => item !== file));
         onDropFile && onDropFile(file);
       }
     },
-    [onDropFile, onAddFile]
+    [onDropFile, onAddFile, setFileList]
   );
 
   const customRequest = useCallback(

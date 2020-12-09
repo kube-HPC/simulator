@@ -1,17 +1,6 @@
 import actions from 'const/application-actions';
 
-/**
- * @typedef {{
- *   lastModified: number;
- *   lastModifiedDate: string;
- *   name: string;
- *   response: string;
- *   size: number;
- *   status: string;
- *   type: string;
- *   uid: string;
- * }} AntFile
- */
+/** @typedef {import('Routes/Tables/DataSources/EditDrawer').UploadFile} UploadFile */
 
 export const fetchDataSources = () => ({
   type: actions.REST_REQ_GET,
@@ -40,7 +29,7 @@ export const fetchDataSource = ({ name, id }) => ({
 /**
  * @param {object} payload
  * @param {string} payload.name
- * @param {AntFile[]} payload.files
+ * @param {UploadFile[]} payload.files
  * @param {object} meta
  * @param {function} meta.onSuccess
  */
@@ -48,7 +37,7 @@ export const createDataSource = ({ name, files }, { onSuccess }) => {
   const formData = new FormData();
   formData.append('name', name);
   files.forEach(file => {
-    formData.append('files', file);
+    formData.append('files', file.originFileObj);
   });
   return {
     type: actions.REST_REQ_POST_FORM,
@@ -71,7 +60,7 @@ export const createDataSource = ({ name, files }, { onSuccess }) => {
  * }} MappingFile
  * @param {object} payload
  * @param {string} payload.dataSourceName
- * @param {AntFile[]} payload.files
+ * @param {UploadFile[]} payload.files
  * @param {MappingFile[]=} payload.mapping
  * @param {string[]=} payload.droppedFileIds
  * @param {string} payload.versionDescription
@@ -89,11 +78,10 @@ export const postVersion = (
     (acc, item) => ({ ...acc, [item.id]: item }),
     {}
   );
-
   files.forEach(file => {
     formData.append(
       'files',
-      file,
+      file.originFileObj,
       normalizedMapping[file.uid] ? file.uid : file.name
     );
   });

@@ -3,9 +3,9 @@ import { notification } from 'utils';
 import { stratify, flatten, generateFolderId } from './stratifier';
 
 /**
- * @typedef {import('actions/dataSources').AntFile} AntFile
  * @typedef {import('./stratifier').StratifiedFile} StratifiedFile
  * @typedef {import('./stratifier').StratifiedDirectory} StratifiedDirectory
+ * @typedef {import('antd/lib/upload/interface').UploadFile} UploadFile
  */
 
 export default (filesList, rootFolderId = '/') => {
@@ -55,7 +55,7 @@ export default (filesList, rootFolderId = '/') => {
   const addFile = useCallback(
     /**
      * @param {object} props
-     * @param {AntFile} props.file
+     * @param {UploadFile} props.file
      * @param {string} props.folderId
      * @param {string} props.path
      */

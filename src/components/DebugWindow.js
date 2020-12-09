@@ -16,7 +16,7 @@ const Window = styled.div`
 const DebugWindow = ({ params, children, top, right }) => (
   <Window top={top} right={right}>
     {Object.entries(params).map(([name, value]) => (
-      <pre>
+      <pre key={`debug-${name}`}>
         {name}: {JSON.stringify(value, null, 2)}
       </pre>
     ))}

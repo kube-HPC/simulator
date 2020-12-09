@@ -23,7 +23,7 @@ import useFileMap from './useFileMap';
  * @typedef {import('chonky').ChonkyFileActionData} ChonkyFileActionData
  * @typedef {import('chonky').FileArray} FileArray
  * @typedef {import('chonky').FileData} FileData
- * @typedef {import('actions/dataSources').AntFile} AntFile
+ * @typedef {import('antd/lib/upload/interface').UploadFile}
  * @typedef {FileData & {
  *   parentId?: string;
  *   childrenIds?: string[];
@@ -35,7 +35,7 @@ import useFileMap from './useFileMap';
  *   ls: () => FileArray;
  *   getDeleteFiles: () => string[];
  *   getCWD: () => string;
- *   addFile: (file: AntFile, folderId?: string) => void;
+ *   addFile: (file: UploadFile, folderId?: string) => void;
  *   dropFile: (id: string) => void;
  * }} RefContent
  */
@@ -44,7 +44,7 @@ setChonkyDefaults({ iconComponent: ChonkyIconFA });
 
 const fileActions = [ChonkyActions.CreateFolder, ChonkyActions.DeleteFiles];
 
-const FileBrowser = ({ files: srcFiles, forwardRef }) => {
+const FileBrowser = ({ files: srcFiles, forwardRef, onDelete }) => {
   const {
     fileMap,
     currentFolderId,
@@ -89,6 +89,7 @@ const FileBrowser = ({ files: srcFiles, forwardRef }) => {
     action => {
       switch (action.id) {
         case ChonkyActions.DeleteFiles.id:
+          onDelete && onDelete(action.state.selectedFilesForAction);
           return deleteFiles(action.state.selectedFilesForAction);
         case ChonkyActions.MoveFiles.id:
           // eslint-disable-next-line
@@ -114,7 +115,7 @@ const FileBrowser = ({ files: srcFiles, forwardRef }) => {
           return null;
       }
     },
-    [createFolder, deleteFiles, moveFiles, setCurrentFolderId]
+    [createFolder, deleteFiles, moveFiles, setCurrentFolderId, onDelete]
   );
 
   const getCWD = () =>
@@ -188,9 +189,11 @@ FileBrowser.propTypes = {
     // eslint-disable-next-line
     currentFolder: PropTypes.object,
   }).isRequired,
+  onDelete: PropTypes.func,
 };
 FileBrowser.defaultProps = {
   files: [],
+  onDelete: null,
 };
 
 export default WrappedFileBrowser;
