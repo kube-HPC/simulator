@@ -26,7 +26,7 @@ const JobInfo = () => {
   );
   const { dataSource } = useJobs();
   const job = dataSource.find(({ key }) => jobId === key);
-  const { key, graph, pipeline } = job;
+  const { key, graph, userPipeline = {}, pipeline } = job;
 
   const fetchJobTrace = useCallback(() => fetch({ jobId: key }), [fetch, key]);
 
@@ -52,7 +52,7 @@ const JobInfo = () => {
         <Trace data={traceData} />
       </Tabs.TabPane>
       <Tabs.TabPane tab={TABS.INFO} key={TABS.INFO}>
-        <JsonSwitch obj={pipeline} options={options} />
+        <JsonSwitch obj={userPipeline} options={options} />
       </Tabs.TabPane>
     </Tabs>
   );

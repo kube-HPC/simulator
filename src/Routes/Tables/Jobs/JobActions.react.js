@@ -23,7 +23,7 @@ const JobActions = ({ job, className }) => {
   const { goTo } = usePath();
   const {
     key,
-    pipeline,
+    userPipeline,
     status: { status },
     results,
   } = job;
@@ -35,7 +35,7 @@ const JobActions = ({ job, className }) => {
     resumePipeline,
   } = useActions();
 
-  const onReRun = () => rerunRawPipeline(pipeline);
+  const onReRun = () => rerunRawPipeline(userPipeline);
   const onStop = () => stopPipeline(key);
 
   const onMoreInfo = () => goTo.overview({ nextJobId: key });

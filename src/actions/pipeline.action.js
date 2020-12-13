@@ -83,19 +83,7 @@ export const cronStop = (name, pattern) => ({
   },
 });
 
-export const rerunRawPipeline = nominalPipeline => {
-  /* eslint-disable no-unused-vars */
-
-  // Destruct all unused values
-  const {
-    jobId,
-    flowInputMetadata,
-    startTime,
-    lastRunResult,
-    types,
-    ...pipeline
-  } = nominalPipeline;
-
+export const rerunRawPipeline = pipeline => {
   const action = {
     type: actions.REST_REQ_POST,
     payload: {
