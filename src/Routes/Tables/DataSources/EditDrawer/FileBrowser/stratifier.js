@@ -8,7 +8,11 @@
  *   description: string;
  *   uploadedAt?: number;
  * }} FlatFile
- * @typedef {{ parentId: string } & FlatFile} StratifiedFile
+ * @typedef {{
+ *   parentId: string;
+ *   isHidden?: boolean;
+ *   overrideFile?: string;
+ * } & FlatFile} StratifiedFile
  * @typedef {{
  *   id: string;
  *   name: string;
@@ -118,7 +122,7 @@ export const flatten = mapping => {
   // @ts-ignore
   const files = Object.values(mapping).filter(item => !item.isDir);
   return files.map(file => {
-    const { parentId, ...rest } = file;
+    const { parentId, overrideFile, isHidden, ...rest } = file;
     return {
       ...rest,
       path: restorePath(mapping[file.parentId], mapping).join('/') || '/',

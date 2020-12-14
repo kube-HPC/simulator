@@ -24,6 +24,8 @@ import useFileMap from './useFileMap';
  * @typedef {import('chonky').FileArray} FileArray
  * @typedef {import('chonky').FileData} FileData
  * @typedef {import('antd/lib/upload/interface').UploadFile}
+ * @typedef {import('./stratifier').StratifiedDirectory} StratifiedDirectory
+ * @typedef {import('./stratifier').StratifiedFile} StratifiedFile
  * @typedef {FileData & {
  *   parentId?: string;
  *   childrenIds?: string[];
@@ -37,6 +39,9 @@ import useFileMap from './useFileMap';
  *   getCWD: () => string;
  *   addFile: (file: UploadFile, folderId?: string) => void;
  *   dropFile: (id: string) => void;
+ *   resetFileMap: () => void;
+ *   toggleFlat: () => void;
+ *   getCurrentDirContent: (StratifiedDirectory | StratifiedFile)[];
  * }} RefContent
  */
 
@@ -65,14 +70,12 @@ const FileBrowser = ({ files: srcFiles, forwardRef, onDelete }) => {
     if (isFlat) {
       return Object.values(fileMap).filter(file => !file.isDir);
     }
+    /** @type {StratifiedDirectory} */
     const currentFolder = fileMap[currentFolderId];
-    if (!currentFolder) return [];
+    if (!currentFolder || !currentFolder.childrenIds) return [];
     return currentFolder.childrenIds
-      ? currentFolder.childrenIds.map(
-          /** @param {string} fileId */
-          fileId => fileMap[fileId] ?? null
-        )
-      : [];
+      .map(fileId => fileMap[fileId] ?? null)
+      .filter(file => !file.isHidden);
   }, [currentFolderId, fileMap, isFlat]);
 
   const folderChain = useMemo(() => {
@@ -139,38 +142,34 @@ const FileBrowser = ({ files: srcFiles, forwardRef, onDelete }) => {
       dropFile: id => {
         deleteFiles([fileMap[id]]);
       },
+      resetFileMap,
+      toggleFlat,
+      getCurrentDirContent: () => files,
     })
   );
 
   return (
-    <>
-      <button type="button" onClick={resetFileMap} style={{ marginBottom: 10 }}>
-        Reset file map
-      </button>
-      <button type="button" onClick={toggleFlat}>
-        toggle flat
-      </button>
-      <div style={{ height: 400 }}>
-        <ChonkyFileBrowser
-          files={files}
-          folderChain={folderChain}
-          fileActions={fileActions}
-          onFileAction={handleFileAction}>
-          <FileNavbar />
-          <FileToolbar />
-          <FileList />
-          <FileContextMenu />
-        </ChonkyFileBrowser>
-        <DebugWindow
-          params={{
-            deletedFiles,
-            touchedFiles,
-            currentDirectory: files,
-            output: retrieveFiles(),
-          }}
-        />
-      </div>
-    </>
+    <div style={{ height: 400 }}>
+      <ChonkyFileBrowser
+        files={files}
+        folderChain={folderChain}
+        fileActions={fileActions}
+        defaultFileViewActionId={ChonkyActions.EnableListView.id}
+        onFileAction={handleFileAction}>
+        <FileNavbar />
+        <FileToolbar />
+        <FileList />
+        <FileContextMenu />
+      </ChonkyFileBrowser>
+      <DebugWindow
+        params={{
+          deletedFiles,
+          touchedFiles,
+          currentDirectory: files,
+          output: retrieveFiles(),
+        }}
+      />
+    </div>
   );
 };
 

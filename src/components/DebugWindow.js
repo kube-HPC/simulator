@@ -11,6 +11,7 @@ const Window = styled.div`
   background: white;
   max-height: 100vh;
   overflow: auto;
+  padding: 1em 2ch;
 `;
 
 const DebugWindow = ({ params, children, top, right }) => (

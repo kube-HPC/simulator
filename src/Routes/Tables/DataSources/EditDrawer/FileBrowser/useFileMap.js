@@ -5,10 +5,13 @@ import { stratify, flatten, generateFolderId } from './stratifier';
 /**
  * @typedef {import('./stratifier').StratifiedFile} StratifiedFile
  * @typedef {import('./stratifier').StratifiedDirectory} StratifiedDirectory
+ * @typedef {import('./stratifier').StratifiedMap} StratifiedMap
  * @typedef {import('antd/lib/upload/interface').UploadFile} UploadFile
+ * @typedef {import('./').CustomFileData} CustomFileData
  */
 
 export default (filesList, rootFolderId = '/') => {
+  /** @type {StratifiedMap} */
   const baseMap = useMemo(() => stratify(filesList), [filesList]);
   const [fileMap, setFileMap] = useState(baseMap);
 
@@ -62,6 +65,18 @@ export default (filesList, rootFolderId = '/') => {
     ({ file, folderId, path }) => {
       setAddedFiles(state => state.concat(file.uid));
       setFileMap(oldFileMap => {
+        /** @type {StratifiedDirectory} */
+        const parentDir = oldFileMap[folderId];
+        const existingFile = parentDir.childrenIds
+          .map(id => oldFileMap[id])
+          .find(item => !item.isDir && item.name === file.name);
+
+        let nextMap = oldFileMap;
+        if (existingFile) {
+          const { [existingFile.id]: droppedFile, ...rest } = oldFileMap;
+          nextMap = rest;
+        }
+
         /** @type {StratifiedFile} */
         const fileEntry = {
           id: file.uid,
@@ -70,17 +85,22 @@ export default (filesList, rootFolderId = '/') => {
           path,
           size: file.size,
         };
-
-        /** @type {StratifiedDirectory} */
-        const parentDir = oldFileMap[folderId];
-
+        const nextChildrenIds = parentDir.childrenIds.concat(file.uid);
         return {
-          ...oldFileMap,
+          ...nextMap,
           [file.uid]: fileEntry,
           [folderId]: {
             ...parentDir,
-            children: parentDir.children + 1,
-            childrenIds: parentDir.childrenIds.concat(file.uid),
+            ...(existingFile
+              ? {
+                  childrenIds: nextChildrenIds.filter(
+                    id => id !== existingFile.id
+                  ),
+                }
+              : {
+                  children: parentDir.children + 1,
+                  childrenIds: nextChildrenIds,
+                }),
           },
         };
       });
@@ -104,22 +124,25 @@ export default (filesList, rootFolderId = '/') => {
       unTagTouchedFiles(fileIds);
       setFileMap(oldFileMap => {
         const newFileMap = { ...oldFileMap };
-        files.map(file => {
-          delete newFileMap[file.id];
-          if (file.parentId) {
-            const parent = newFileMap[file.parentId];
-            const newChildrenIds = parent.childrenIds.filter(
-              /** @param {string} id */
-              id => id !== file.id
-            );
-            newFileMap[file.parentId] = {
-              ...parent,
-              childrenIds: newChildrenIds,
-              childrenCount: newChildrenIds.length,
-            };
+        files.map(
+          /** @param {StratifiedFile} file */
+          file => {
+            delete newFileMap[file.id];
+            if (file.parentId) {
+              const parent = newFileMap[file.parentId];
+              const newChildrenIds = parent.childrenIds.filter(
+                /** @param {string} id */
+                id => id !== file.id
+              );
+              newFileMap[file.parentId] = {
+                ...parent,
+                childrenIds: newChildrenIds,
+                childrenCount: newChildrenIds.length,
+              };
+            }
+            return undefined;
           }
-          return undefined;
-        });
+        );
         return newFileMap;
       });
     },
@@ -133,7 +156,38 @@ export default (filesList, rootFolderId = '/') => {
      * @param {CustomFileData} destination
      */
     (files, source, destination) => {
-      const moveFileIds = new Set(files.map(f => f.id));
+      const destDirContent = destination.childrenIds.map(id => fileMap[id]);
+      const byName = destDirContent
+        .filter(file => !file.isDir)
+        .reduce((acc, item) => ({ [item.name]: item }), {});
+
+      const { movedFiles, overrideFiles } = files.reduce(
+        (acc, file) => {
+          const existingFile = byName[file.name];
+          if (!existingFile)
+            return { ...acc, movedFiles: acc.movedFiles.concat(file) };
+          return (
+            // eslint-disable-next-line
+            window.confirm(
+              `file ${file.name} already exists would you like to override it?`
+            )
+              ? {
+                  ...acc,
+                  overrideFiles: acc.overrideFiles.concat(existingFile),
+                  movedFiles: acc.movedFiles.concat(file),
+                }
+              : { ...acc, ignoredFiles: acc.ignoredFiles.concat(file) }
+          );
+        },
+        {
+          movedFiles: [],
+          ignoredFiles: [],
+          overrideFiles: [],
+        }
+      );
+
+      const moveFileIds = new Set(movedFiles.map(f => f.id));
+
       tagFilesAsTouched([...moveFileIds]);
 
       setFileMap(oldFileMap => {
@@ -146,26 +200,31 @@ export default (filesList, rootFolderId = '/') => {
           childrenIds: newSourceChildrenIds,
           childrenCount: newSourceChildrenIds.length,
         };
+        const overrideIds = new Set(overrideFiles.map(file => file.id));
         const newDestinationChildrenIds = [
-          ...destination.childrenIds,
-          ...files.map(f => f.id),
+          ...destination.childrenIds.filter(id => !overrideIds.has(id)),
+          ...movedFiles.map(f => f.id),
         ];
         newFileMap[destination.id] = {
           ...destination,
           childrenIds: newDestinationChildrenIds,
           childrenCount: newDestinationChildrenIds.length,
         };
-        files.map(file => {
+        movedFiles.map(file => {
           newFileMap[file.id] = {
             ...file,
             parentId: destination.id,
           };
           return undefined;
         });
-        return newFileMap;
+        const nextMap = overrideFiles.reduce((acc, file) => {
+          const { [file.id]: droppedFile, ...rest } = acc;
+          return rest;
+        }, newFileMap);
+        return nextMap;
       });
     },
-    [tagFilesAsTouched]
+    [tagFilesAsTouched, fileMap]
   );
 
   const createFolder = useCallback(
