@@ -12,6 +12,11 @@ const types = {
     success: `${actionTypes.DATASOURCE_FETCH_ALL}_SUCCESS`,
     fail: `${actionTypes.DATASOURCE_FETCH_ALL}_REJECT`,
   },
+  fetchVersions: {
+    pending: `${actionTypes.DATASOURCE_FETCH_VERSIONS}_PENDING`,
+    success: `${actionTypes.DATASOURCE_FETCH_VERSIONS}_SUCCESS`,
+    fail: `${actionTypes.DATASOURCE_FETCH_VERSIONS}_REJECT`,
+  },
   create: {
     pending: `${actionTypes.DATASOURCE_CREATE}_PENDING`,
     success: `${actionTypes.DATASOURCE_CREATE}_SUCCESS`,
@@ -34,11 +39,16 @@ const types = {
  * @typedef {import('@reduxjs/toolkit').EntityState<DataSource>} CollectionState
  * @typedef {import('./datasource').DataSourceEntry} DataSourceEntry
  * @typedef {import('./datasource').FetchStatus} FetchStatus
+ * @typedef {import('./datasource').DataSourceVersion} DataSourceVersion
+ * @typedef {{
+ *   [name: string]: { status: FetchStatus; versions: DataSourceVersion[] };
+ * }} VersionsCollection
  * @typedef {{
  *   collection: CollectionState;
  *   status: FetchStatus;
  *   error: string | null;
  *   activeVersions: { [name: string]: string };
+ *   versions: VersionsCollection;
  * }} DataSourcesState
  * @typedef {{
  *   dataSources: DataSourcesState;
@@ -78,6 +88,66 @@ const activeVersions = createSlice({
   },
 });
 
+/** @type {VersionsCollection} */
+const initialVersions = {};
+const versions = createSlice({
+  initialState: initialVersions,
+  name: 'datasources/versions',
+  reducers: {},
+  extraReducers: {
+    /**
+     * @param {{ payload: DataSource[] }} action
+     * @returns {VersionsCollection}
+     */
+    [types.fetchAll.success]: (state, action) => {
+      const nextState = action.payload.reduce((acc, item) => {
+        if (state[item.name]) return acc;
+        return {
+          ...acc,
+          [item.name]: {
+            status: 'IDLE',
+            versions: [],
+          },
+        };
+      }, {});
+      return {
+        ...state,
+        ...nextState,
+      };
+    },
+    [types.fetchVersions.pending]: (state, action) => {
+      if (!action?.meta?.dataSource) return state;
+      return {
+        ...state,
+        [action.meta.dataSource]: {
+          status: 'PENDING',
+          versions: state[action.meta.dataSource].versions || [],
+        },
+      };
+    },
+    [types.fetchVersions.success]: (state, action) => {
+      if (!action?.meta?.dataSource) return state;
+      return {
+        ...state,
+        [action.meta.dataSource]: {
+          status: 'SUCCESS',
+          versions: action.payload,
+        },
+      };
+    },
+    [types.fetchVersions.fail]: (state, action) => {
+      if (!action?.meta?.dataSource) return state;
+      return {
+        ...state,
+        [action.meta.dataSource]: {
+          ...state[action.meta.dataSource],
+          status: 'FAIL',
+        },
+      };
+    },
+  },
+});
+
 const dataSources = createSlice({
   initialState: entityAdapter.getInitialState(),
   name: 'dataSources',
@@ -107,11 +177,10 @@ const dataSources = createSlice({
       }),
 
     [types.fetch.fail]: (state, { meta }) =>
-      entityAdapter.updateOne(state, {
+      entityAdapter.upsertOne(state, {
         id: meta.id,
-        changes: {
-          status: 'FAIL',
-        },
+        ...state[meta.id],
+        status: 'FAIL',
       }),
 
     [types.fetch.success]: (state, { payload }) =>
@@ -175,6 +244,7 @@ const error = (state = null, { type }) => {
 export const reducer = combineReducers({
   collection: dataSources.reducer,
   activeVersions: activeVersions.reducer,
+  versions: versions.reducer,
   status,
   error,
 });
@@ -210,6 +280,13 @@ export const selectors = {
   names: createSelector(
     /** @param {State} state */
     state => baseSelectors.selectAll(state.dataSources.collection),
-    collection => collection.map(item => item.name)
+    // if an invalid id is used, **it will be saved to the store** with a failed status and without a name
+    collection =>
+      collection.reduce(
+        (acc, item) => (item.name ? acc.concat(item.name) : acc),
+        []
+      )
   ),
+  /** @param {State} state */
+  versions: (state, name) => state.dataSources.versions[name],
 };

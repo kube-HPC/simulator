@@ -17,17 +17,21 @@ const useActiveDataSource = () => {
 
   useEffect(() => {
     if (collectionStatus !== 'SUCCESS') return;
+    if (dataSource?.status === 'FAIL') return;
     if (dataSource?.status === 'IDLE') {
       dispatch(fetchDataSource(dataSource));
     }
-  }, [dispatch, dataSource, collectionStatus]);
+    if (!dataSource) {
+      dispatch(fetchDataSource({ id: dataSourceId }));
+    }
+  }, [dispatch, dataSource, collectionStatus, dataSourceId]);
 
   /** @type {FetchStatus | 'NOT_FOUND'} */
   const status =
     collectionStatus === 'SUCCESS'
       ? dataSource
         ? dataSource.status
-        : 'NOT_FOUND'
+        : 'PENDING'
       : collectionStatus;
 
   return {

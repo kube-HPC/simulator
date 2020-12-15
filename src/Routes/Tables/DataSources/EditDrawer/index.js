@@ -11,7 +11,7 @@ const EditDrawer = () => {
   const { goTo, dataSourceId } = usePath();
   const { dataSource, isReady, status } = useActiveDataSource();
   const { setOff, isOn } = useToggle(true);
-
+  console.log(status);
   return (
     <Drawer
       isOpened={isOn}

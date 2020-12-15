@@ -1,5 +1,6 @@
 import React, {
   useCallback,
+  useEffect,
   useImperativeHandle,
   useMemo,
   useReducer,
@@ -63,6 +64,10 @@ const FileBrowser = ({ files: srcFiles, forwardRef, onDelete }) => {
     touchedFiles,
     deletedFiles,
   } = useFileMap(srcFiles);
+
+  useEffect(() => {
+    if (Array.isArray(srcFiles)) resetFileMap(srcFiles);
+  }, [resetFileMap, srcFiles]);
 
   const [isFlat, toggleFlat] = useReducer(state => !state, false);
 

@@ -10,6 +10,17 @@ export const fetchDataSources = () => ({
   },
 });
 
+export const fetchDataSourceVersions = ({ name }) => ({
+  type: actions.REST_REQ_GET,
+  payload: {
+    url: `datasource/${name}/versions`,
+    actionType: actions.DATASOURCE_FETCH_VERSIONS,
+  },
+  meta: {
+    dataSource: name,
+  },
+});
+
 export const fetchDataSource = ({ name, id }) => ({
   type: actions.REST_REQ_GET,
   payload: {

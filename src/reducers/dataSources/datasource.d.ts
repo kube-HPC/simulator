@@ -24,5 +24,11 @@ export type DataSourceMeta = {
   fileTypes: string[];
 };
 
+export type DataSourceVersion = {
+  versionDescription: string;
+  versionId: string;
+  id: string;
+};
+
 export type DataSource = DataSourceMeta &
   DataSourceEntry & { status?: FetchStatus };

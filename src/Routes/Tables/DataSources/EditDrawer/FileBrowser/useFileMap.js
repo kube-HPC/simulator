@@ -48,12 +48,18 @@ export default (filesList, rootFolderId = '/') => {
     currentFolderIdRef.current = currentFolderId;
   }, [currentFolderId]);
 
-  const resetFileMap = useCallback(() => {
-    setFileMap(baseMap);
-    setCurrentFolderId(rootFolderId);
-    setTouchedFiles([]);
-    setDeletedFiles([]);
-  }, [baseMap, rootFolderId]);
+  const resetFileMap = useCallback(
+    files => {
+      const nextFileMap = stratify(files);
+      setFileMap(nextFileMap);
+      setCurrentFolderId(activeDirectory =>
+        nextFileMap[activeDirectory] ? activeDirectory : rootFolderId
+      );
+      setTouchedFiles([]);
+      setDeletedFiles([]);
+    },
+    [rootFolderId]
+  );
 
   const addFile = useCallback(
     /**

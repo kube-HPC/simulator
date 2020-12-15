@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { postVersion } from 'actions/dataSources';
@@ -8,6 +8,7 @@ import UploadDragger, { useDragger } from 'components/UploadDragger';
 import FileBrowser from './FileBrowser';
 import { BottomPanel, FileUploadContainer } from './styles';
 import useActiveDataSource from './../useActiveDataSource';
+import VersionSelect from './VersionSelect';
 
 /**
  * @typedef {import('./FileBrowser').RefContent} RefContent
@@ -94,9 +95,14 @@ const Body = ({ goTo }) => {
     );
   }, [fileBrowserRef, dataSource, dispatch, goTo, addedFiles]);
 
+  useEffect(() => {
+    setAddedFiles([]);
+  }, [dataSource.id]);
+
   return (
     <>
       <div>
+        <VersionSelect dataSource={dataSource} />
         <FileBrowser
           files={dataSource.files}
           ref={fileBrowserRef}
@@ -123,7 +129,7 @@ const Body = ({ goTo }) => {
       </div>
       <BottomPanel>
         <Button type="primary" onClick={onSubmit}>
-          Create
+          Update Version
         </Button>
       </BottomPanel>
     </>
