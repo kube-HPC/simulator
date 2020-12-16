@@ -169,19 +169,17 @@ const FileBrowser = ({ files: srcFiles, forwardRef, onDelete, isReadOnly }) => {
   );
 
   return (
-    <div style={{ height: 400 }}>
-      <ChonkyFileBrowser
-        files={files}
-        folderChain={folderChain}
-        fileActions={isReadOnly ? [] : fileActions}
-        defaultFileViewActionId={ChonkyActions.EnableListView.id}
-        onFileAction={isReadOnly ? handleReadOnlyAction : handleFileAction}>
-        <FileNavbar />
-        <FileToolbar />
-        <FileList />
-        <FileContextMenu />
-      </ChonkyFileBrowser>
-    </div>
+    <ChonkyFileBrowser
+      files={files}
+      folderChain={folderChain}
+      fileActions={isReadOnly ? [] : fileActions}
+      defaultFileViewActionId={ChonkyActions.EnableListView.id}
+      onFileAction={isReadOnly ? handleReadOnlyAction : handleFileAction}>
+      <FileNavbar />
+      <FileToolbar />
+      <FileList />
+      <FileContextMenu />
+    </ChonkyFileBrowser>
   );
 };
 

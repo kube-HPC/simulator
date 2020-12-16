@@ -13,13 +13,12 @@ import { reducer as versionsReducer } from './versions';
  * @typedef {import('./datasource').FetchStatus} FetchStatus
  * @typedef {import('./versions').VersionsState} VersionsState
  * @typedef {{
- *   collection: CollectionState;
- *   status: FetchStatus;
- *   error: string | null;
- *   versions: VersionsState;
- * }} DataSourcesState
- * @typedef {{
- *   dataSources: DataSourcesState;
+ *   dataSources: {
+ *     collection: CollectionState;
+ *     status: FetchStatus;
+ *     error: string | null;
+ *     versions: VersionsState;
+ *   };
  * }} State
  */
 

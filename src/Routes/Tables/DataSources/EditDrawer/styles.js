@@ -13,3 +13,8 @@ export const FileUploadContainer = styled.div`
   margin: 0 auto;
   margin-top: 1em;
 `;
+
+export const FileBrowserContainer = styled.div`
+  height: 400;
+  margin: 1em 0;
+`;
