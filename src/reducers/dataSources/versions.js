@@ -94,6 +94,7 @@ const collection = createSlice({
         },
       };
     },
+    /** @param {{ payload: 'OK' | DataSource; meta: { id: string } }} action */
     [types.postVersion.success]: (state, action) => {
       if (action.payload === 'OK') return state;
       const {

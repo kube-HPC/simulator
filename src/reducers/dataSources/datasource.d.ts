@@ -8,7 +8,7 @@ export type FileMeta = {
 };
 
 export type DataSourceEntry = {
-  id?: Id;
+  id?: string;
   name: string;
   files: FileMeta[];
   versionDescription: string;
