@@ -57,10 +57,10 @@ const ExperimentPicker = () => {
   const onDescriptionChange = useCallback(e => setDescription(e.target.value), [
     setDescription,
   ]);
-  // const onShowAll = useCallback(() => onChange(experimentsSchema.showAll), [
-  //   onChange,
-  // ]);
-  const onShowAll = useCallback(() => {}, []);
+
+  const onShowAll = useCallback(() => setExperiment('show-all'), [
+    setExperiment,
+  ]);
 
   const menu = (
     <MenuDisabledItems selectedKeys={[experimentId]} subMenuCloseDelay={0.5}>
