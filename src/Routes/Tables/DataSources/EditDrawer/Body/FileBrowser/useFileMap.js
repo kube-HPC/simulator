@@ -7,7 +7,7 @@ import { stratify, flatten, generateFolderId } from './stratifier';
  * @typedef {import('./stratifier').StratifiedDirectory} StratifiedDirectory
  * @typedef {import('./stratifier').StratifiedMap} StratifiedMap
  * @typedef {import('antd/lib/upload/interface').UploadFile} UploadFile
- * @typedef {import('./').CustomFileData} CustomFileData
+ * @typedef {import('.').CustomFileData} CustomFileData
  */
 
 export default (filesList, rootFolderId = '/') => {

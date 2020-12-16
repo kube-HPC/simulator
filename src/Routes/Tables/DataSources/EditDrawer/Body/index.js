@@ -4,9 +4,9 @@ import { useDispatch } from 'react-redux';
 import _ from 'lodash';
 import { postVersion } from 'actions/dataSources';
 import { notification } from 'utils';
-import useActiveDataSource from './../useActiveDataSource';
-import VersionSelect from './VersionSelect';
-import useVersions from './useVersions';
+import useActiveDataSource from '../../useActiveDataSource';
+import VersionSelect from '../VersionSelect';
+import useVersions from '../useVersions';
 import EditForm from './EditForm';
 import ReadOnly from './ReadOnly';
 
@@ -20,7 +20,8 @@ const Body = ({ goTo }) => {
   const { dataSource } = useActiveDataSource();
   const versionsCollection = useVersions(dataSource);
   const dispatch = useDispatch();
-  const onSubmit = useCallback(
+
+  const onCreateVersion = useCallback(
     ({ files, droppedFileIds, mapping, versionDescription }) => {
       dispatch(
         postVersion(
@@ -58,7 +59,7 @@ const Body = ({ goTo }) => {
         versionsCollection={versionsCollection}
       />
       {isEditable ? (
-        <EditForm onSubmit={onSubmit} dataSource={dataSource} />
+        <EditForm dataSource={dataSource} onCreateVersion={onCreateVersion} />
       ) : (
         <ReadOnly dataSource={dataSource} onSelectVersion={onSelectVersion} />
       )}

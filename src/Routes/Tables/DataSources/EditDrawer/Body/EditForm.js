@@ -1,16 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
-import { Alert, Button } from 'antd';
-import { postVersion } from 'actions/dataSources';
-import { notification } from 'utils';
+import { Alert, Button, Input, Icon, Form } from 'antd';
 import UploadDragger, { useDragger } from 'components/UploadDragger';
 import FileBrowser from './FileBrowser';
-import {
-  BottomPanel,
-  FileUploadContainer,
-  FileBrowserContainer,
-} from './styles';
+import { BottomPanel, Row, FileBrowserContainer } from './styles';
 
 /**
  * @typedef {import('./FileBrowser').RefContent} RefContent
@@ -22,8 +15,15 @@ import {
 /** @type {UploadFile[]} */
 const initialState = [];
 
-/** @param {{ dataSource: DataSource }} props */
-const Body = ({ goTo, dataSource }) => {
+/**
+ * @param {{
+ *   dataSource: DataSource;
+ *   onSubmit: function;
+ *   form: import('antd/lib/form/Form').WrappedFormUtils;
+ * }} props
+ */
+
+const Body = ({ dataSource, onCreateVersion, form }) => {
   const [addedFiles, setAddedFiles] = useState(initialState);
   /** @type {{ current?: RefContent }} */
   const fileBrowserRef = useRef();
@@ -73,46 +73,39 @@ const Body = ({ goTo, dataSource }) => {
     setFileList: setAddedFiles,
   });
 
-  const dispatch = useDispatch();
-
-  const onSubmit = useCallback(() => {
-    if (!fileBrowserRef.current) return;
-    dispatch(
-      postVersion(
-        {
-          dataSourceName: dataSource.name,
+  const handleSubmit = useCallback(
+    /** @param {import('react').SyntheticEvent} e */
+    e => {
+      e.preventDefault();
+      if (!fileBrowserRef.current) return;
+      form.validateFields((err, values) => {
+        if (err) return null;
+        return onCreateVersion({
           files: addedFiles,
           droppedFileIds: fileBrowserRef.current.getDeleteFiles(),
           mapping: fileBrowserRef.current.ls(),
-          versionDescription: 'new version from the ui',
-        },
-        {
-          onSuccess: nextDataSource => {
-            if (nextDataSource === 'OK') {
-              notification({ message: 'no changes were made', type: 'info' });
-            }
-            goTo.edit({ nextDataSourceId: nextDataSource.id });
-          },
-        }
-      )
-    );
-  }, [fileBrowserRef, dataSource, dispatch, goTo, addedFiles]);
+          versionDescription: values.comment,
+        });
+      });
+    },
+    [fileBrowserRef, addedFiles, onCreateVersion, form]
+  );
 
   useEffect(() => {
     setAddedFiles([]);
   }, [dataSource.id]);
 
   return (
-    <>
+    <Form onSubmit={handleSubmit} style={{ display: 'contents' }}>
+      <FileBrowserContainer>
+        <FileBrowser
+          files={dataSource.files}
+          ref={fileBrowserRef}
+          onDelete={handleFileBrowserDelete}
+        />
+      </FileBrowserContainer>
       <div>
-        <FileBrowserContainer>
-          <FileBrowser
-            files={dataSource.files}
-            ref={fileBrowserRef}
-            onDelete={handleFileBrowserDelete}
-          />
-        </FileBrowserContainer>
-        <FileUploadContainer>
+        <Row>
           <UploadDragger
             onChange={onChange}
             fileList={[]}
@@ -129,26 +122,48 @@ const Body = ({ goTo, dataSource }) => {
               showIcon
             />
           </UploadDragger>
-        </FileUploadContainer>
+        </Row>
+        <Row>
+          <Form.Item>
+            {form.getFieldDecorator('comment', {
+              rules: [
+                {
+                  required: true,
+                  message: 'please enter a comment describing the update',
+                },
+              ],
+            })(
+              <Input
+                prefix={
+                  <Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }} />
+                }
+                placeholder="update comment"
+                allowClear
+              />
+            )}
+          </Form.Item>
+        </Row>
       </div>
       <BottomPanel>
-        <Button htmlType="submit" type="primary" onClick={onSubmit}>
+        <Button htmlType="submit" type="primary">
           Update Version
         </Button>
       </BottomPanel>
-    </>
+    </Form>
   );
 };
 
 Body.propTypes = {
-  goTo: PropTypes.shape({
-    edit: PropTypes.func.isRequired,
-  }).isRequired,
   dataSource: PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     files: PropTypes.arrayOf(PropTypes.object).isRequired,
   }).isRequired,
+  onCreateVersion: PropTypes.func.isRequired,
+  form: PropTypes.shape({
+    getFieldDecorator: PropTypes.func.isRequired,
+    validateFields: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
-export default Body;
+export default Form.create({ comment: '' })(Body);

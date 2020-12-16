@@ -9,12 +9,13 @@ export const BottomPanel = styled.footer`
   text-align: right;
 `;
 
-export const FileUploadContainer = styled.div`
+export const Row = styled.section`
   margin: 0 auto;
   margin-top: 1em;
 `;
 
-export const FileBrowserContainer = styled.div`
-  height: 400;
-  margin: 1em 0;
+export const FileBrowserContainer = styled.section`
+  flex: 1;
+  margin: 0;
+  margin-top: 1em;
 `;
