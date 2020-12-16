@@ -145,6 +145,23 @@ const versions = createSlice({
         },
       };
     },
+    [types.postVersion.success]: (state, action) => {
+      if (action.payload === 'OK') return state;
+      const {
+        payload: { name, id, versionDescription, versionId },
+      } = action;
+      return {
+        ...state,
+        [name]: {
+          ...state[name],
+          versions: state[name].versions.concat({
+            id,
+            versionDescription,
+            versionId,
+          }),
+        },
+      };
+    },
   },
 });
 
