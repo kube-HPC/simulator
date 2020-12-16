@@ -22,6 +22,7 @@ export type DataSourceMeta = {
   avgFileSize: string;
   totalSize: number;
   fileTypes: string[];
+  versionId: string;
 };
 
 export type DataSourceVersion = {
