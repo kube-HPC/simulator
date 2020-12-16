@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown, Menu, Button } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { selectors } from 'reducers';
-import { fetchDataSourceVersions } from 'actions/dataSources';
 import styled from 'styled-components';
+
+/**
+ * @typedef {import('reducers/dataSources/datasource').DataSource} DataSource
+ * @typedef {import('reducers/dataSources/datasource').DataSourceVersion} DataSourceVersion
+ */
 
 const Container = styled.section`
   display: flex;
@@ -20,38 +22,61 @@ const VersionDescription = styled.p`
 
 /**
  * @param {{
- *   dataSource: import('reducers/dataSources/datasource').DataSource;
+ *   versions: DataSourceVersion[];
+ *   isPending: boolean;
+ *   dataSource: DataSource;
  * }} params
  */
-const Versions = ({ dataSource }) => {
-  const dispatch = useDispatch();
-
-  const versionsCollection = useSelector(state =>
-    selectors.dataSources.versions(state, dataSource.name)
-  );
-  useEffect(() => {
-    if (versionsCollection.status === 'IDLE') {
-      dispatch(fetchDataSourceVersions(dataSource));
-    }
-  }, [dispatch, versionsCollection, dataSource]);
+const Selector = ({ versions, isPending, dataSource }) => {
+  if (isPending || versions === null) return <Button loading>versions</Button>;
+  if (versions.length === 0) return <Button loading>{dataSource.id}</Button>;
 
   const menu = (
     <Menu>
-      {versionsCollection.versions.map(version => (
+      {versions.map(version => (
         <Menu.Item key={`dataSource-version-${version.id}`}>
           <Link to={`/datasources/${version.id}/edit`}>{version.id}</Link>
         </Menu.Item>
       ))}
     </Menu>
   );
-  const isPending = versionsCollection.status === 'PENDING';
+  return (
+    <Dropdown overlay={menu} placement="bottomLeft">
+      <Button loading={isPending}>
+        {isPending ? 'versions' : dataSource.id}
+      </Button>
+    </Dropdown>
+  );
+};
+Selector.propTypes = {
+  versions: PropTypes.arrayOf(PropTypes.shape({})),
+  isPending: PropTypes.bool.isRequired,
+  dataSource: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+  }).isRequired,
+};
+Selector.defaultProps = {
+  versions: null,
+};
+
+/**
+ * @param {{
+ *   dataSource: DataSource;
+ *   versionsCollection: {
+ *     versions: DataSourceVersion[];
+ *     status: string;
+ *   };
+ * }} params
+ */
+const Versions = ({ dataSource, versionsCollection }) => {
+  const isPending = versionsCollection?.status === 'PENDING' ?? true;
   return (
     <Container>
-      <Dropdown overlay={menu} placement="bottomLeft">
-        <Button loading={isPending}>
-          {isPending ? 'versions' : dataSource.id}
-        </Button>
-      </Dropdown>
+      <Selector
+        versions={versionsCollection.versions}
+        isPending={isPending}
+        dataSource={dataSource}
+      />
       <VersionDescription>{dataSource.versionDescription}</VersionDescription>
     </Container>
   );
@@ -62,6 +87,12 @@ Versions.propTypes = {
     name: PropTypes.string.isRequired,
     versionDescription: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
+  }).isRequired,
+  versionsCollection: PropTypes.shape({
+    status: PropTypes.string,
+    versions: PropTypes.arrayOf(
+      PropTypes.shape({ versionDescription: PropTypes.string.isRequired })
+    ),
   }).isRequired,
 };
 export default Versions;

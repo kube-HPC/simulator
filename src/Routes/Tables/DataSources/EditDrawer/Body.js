@@ -1,15 +1,16 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
+import { Alert, Button } from 'antd';
+import _ from 'lodash';
 import { postVersion } from 'actions/dataSources';
 import { notification } from 'utils';
-import { Alert, Button } from 'antd';
 import UploadDragger, { useDragger } from 'components/UploadDragger';
 import FileBrowser from './FileBrowser';
 import { BottomPanel, FileUploadContainer } from './styles';
 import useActiveDataSource from './../useActiveDataSource';
 import VersionSelect from './VersionSelect';
-
+import useVersions from './useVersions';
 /**
  * @typedef {import('./FileBrowser').RefContent} RefContent
  * @typedef {import('./stratifier').FlatFile} FlatFile
@@ -24,6 +25,10 @@ const Body = ({ goTo }) => {
   const [addedFiles, setAddedFiles] = useState(initialState);
   /** @type {{ current?: RefContent }} */
   const fileBrowserRef = useRef();
+  const versionsCollection = useVersions(dataSource);
+  const isEditable = versionsCollection
+    ? dataSource.id === _.last(versionsCollection.versions)?.id
+    : false;
 
   const handleFileAdded = useCallback(
     file => {
@@ -102,35 +107,47 @@ const Body = ({ goTo }) => {
   return (
     <>
       <div>
-        <VersionSelect dataSource={dataSource} />
+        <VersionSelect
+          dataSource={dataSource}
+          versionsCollection={versionsCollection}
+        />
         <FileBrowser
+          isReadOnly={!isEditable}
           files={dataSource.files}
           ref={fileBrowserRef}
           onDelete={handleFileBrowserDelete}
         />
         <FileUploadContainer>
-          <UploadDragger
-            onChange={onChange}
-            fileList={[]}
-            customRequest={customRequest}>
-            <Alert
-              message={
-                addedFiles.length
-                  ? addedFiles.length === 1
-                    ? '1 file to upload'
-                    : `${addedFiles.length} files to upload`
-                  : 'please select at least one file to upload'
-              }
-              type={addedFiles.length ? 'info' : 'warning'}
-              showIcon
-            />
-          </UploadDragger>
+          {isEditable ? (
+            <UploadDragger
+              onChange={onChange}
+              fileList={[]}
+              customRequest={customRequest}>
+              <Alert
+                message={
+                  addedFiles.length
+                    ? addedFiles.length === 1
+                      ? '1 file to upload'
+                      : `${addedFiles.length} files to upload`
+                    : 'please select at least one file to upload'
+                }
+                type={addedFiles.length ? 'info' : 'warning'}
+                showIcon
+              />
+            </UploadDragger>
+          ) : null}
         </FileUploadContainer>
       </div>
       <BottomPanel>
-        <Button type="primary" onClick={onSubmit}>
-          Update Version
-        </Button>
+        {isEditable ? (
+          <Button type="primary" onClick={onSubmit}>
+            Update Version
+          </Button>
+        ) : (
+          <Button type="primary" onClick={() => console.log('not implemented')}>
+            Select Version
+          </Button>
+        )}
       </BottomPanel>
     </>
   );

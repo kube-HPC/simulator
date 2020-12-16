@@ -16,7 +16,6 @@ import {
   FileToolbar,
   setChonkyDefaults,
 } from 'chonky';
-import DebugWindow from 'components/DebugWindow';
 import { ChonkyIconFA } from 'chonky-icon-fontawesome';
 import useFileMap from './useFileMap';
 
@@ -50,7 +49,7 @@ setChonkyDefaults({ iconComponent: ChonkyIconFA });
 
 const fileActions = [ChonkyActions.CreateFolder, ChonkyActions.DeleteFiles];
 
-const FileBrowser = ({ files: srcFiles, forwardRef, onDelete }) => {
+const FileBrowser = ({ files: srcFiles, forwardRef, onDelete, isReadOnly }) => {
   const {
     fileMap,
     currentFolderId,
@@ -61,7 +60,6 @@ const FileBrowser = ({ files: srcFiles, forwardRef, onDelete }) => {
     createFolder,
     addFile,
     retrieveFiles,
-    touchedFiles,
     deletedFiles,
   } = useFileMap(srcFiles);
 
@@ -105,9 +103,9 @@ const FileBrowser = ({ files: srcFiles, forwardRef, onDelete }) => {
           return moveFiles(payload.files, payload.source, payload.destination);
         case ChonkyActions.OpenFiles.id:
           // eslint-disable-next-line
-          const { targetFile, files } = action.payload;
+          const { targetFile, files: _files } = action.payload;
           // eslint-disable-next-line
-          const fileToOpen = targetFile ?? files[0];
+          const fileToOpen = targetFile ?? _files[0];
           if (fileToOpen && FileHelper.isDirectory(fileToOpen))
             setCurrentFolderId(fileToOpen.id);
           else {
@@ -124,6 +122,23 @@ const FileBrowser = ({ files: srcFiles, forwardRef, onDelete }) => {
       }
     },
     [createFolder, deleteFiles, moveFiles, setCurrentFolderId, onDelete]
+  );
+
+  const handleReadOnlyAction = useCallback(
+    /** @param {ChonkyFileActionData} action */
+    action => {
+      if (action.id === ChonkyActions.OpenFiles.id) {
+        const { targetFile, files: _files } = action.payload;
+        const fileToOpen = targetFile ?? _files[0];
+        if (fileToOpen && FileHelper.isDirectory(fileToOpen))
+          setCurrentFolderId(fileToOpen.id);
+        else {
+          // console.log({ fileToOpen });
+        }
+      }
+      return null;
+    },
+    [setCurrentFolderId]
   );
 
   const getCWD = () =>
@@ -158,22 +173,14 @@ const FileBrowser = ({ files: srcFiles, forwardRef, onDelete }) => {
       <ChonkyFileBrowser
         files={files}
         folderChain={folderChain}
-        fileActions={fileActions}
+        fileActions={isReadOnly ? [] : fileActions}
         defaultFileViewActionId={ChonkyActions.EnableListView.id}
-        onFileAction={handleFileAction}>
+        onFileAction={isReadOnly ? handleReadOnlyAction : handleFileAction}>
         <FileNavbar />
         <FileToolbar />
         <FileList />
         <FileContextMenu />
       </ChonkyFileBrowser>
-      <DebugWindow
-        params={{
-          deletedFiles,
-          touchedFiles,
-          currentDirectory: files,
-          output: retrieveFiles(),
-        }}
-      />
     </div>
   );
 };
@@ -194,10 +201,12 @@ FileBrowser.propTypes = {
     currentFolder: PropTypes.object,
   }).isRequired,
   onDelete: PropTypes.func,
+  isReadOnly: PropTypes.bool,
 };
 FileBrowser.defaultProps = {
   files: [],
   onDelete: null,
+  isReadOnly: false,
 };
 
 export default WrappedFileBrowser;

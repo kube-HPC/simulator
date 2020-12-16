@@ -16,24 +16,24 @@ export default (filesList, rootFolderId = '/') => {
   const [fileMap, setFileMap] = useState(baseMap);
 
   const [currentFolderId, setCurrentFolderId] = useState(rootFolderId);
-  const [touchedFiles, setTouchedFiles] = useState([]);
+  // const [touchedFiles, setTouchedFiles] = useState([]);
   const [deletedFiles, setDeletedFiles] = useState([]);
   const [addedFiles, setAddedFiles] = useState([]);
 
-  const tagFilesAsTouched = useCallback(
-    fileIds => setTouchedFiles(state => [...new Set([...state, ...fileIds])]),
-    [setTouchedFiles]
-  );
+  // const tagFilesAsTouched = useCallback(
+  //   fileIds => setTouchedFiles(state => [...new Set([...state, ...fileIds])]),
+  //   [setTouchedFiles]
+  // );
 
-  const unTagTouchedFiles = useCallback(
-    fileIds => {
-      setTouchedFiles(state => {
-        const filesSet = new Set(fileIds);
-        return state.filter(file => !filesSet.has(file));
-      });
-    },
-    [setTouchedFiles]
-  );
+  // const unTagTouchedFiles = useCallback(
+  //   fileIds => {
+  //     setTouchedFiles(state => {
+  //       const filesSet = new Set(fileIds);
+  //       return state.filter(file => !filesSet.has(file));
+  //     });
+  //   },
+  //   [setTouchedFiles]
+  // );
 
   const tagFilesToDelete = useCallback(
     fileIds => setDeletedFiles(state => [...new Set([...state, ...fileIds])]),
@@ -55,7 +55,7 @@ export default (filesList, rootFolderId = '/') => {
       setCurrentFolderId(activeDirectory =>
         nextFileMap[activeDirectory] ? activeDirectory : rootFolderId
       );
-      setTouchedFiles([]);
+      // setTouchedFiles([]);
       setDeletedFiles([]);
     },
     [rootFolderId]
@@ -124,10 +124,9 @@ export default (filesList, rootFolderId = '/') => {
       setAddedFiles(state =>
         state.filter(fileId => !filesToDeleteSet.has(fileId))
       );
-      // tag files to delete
       // only existing files, files added for uploading and removed are ignored
       tagFilesToDelete(fileIds.filter(id => !addedFilesSet.has(id)));
-      unTagTouchedFiles(fileIds);
+      // unTagTouchedFiles(fileIds);
       setFileMap(oldFileMap => {
         const newFileMap = { ...oldFileMap };
         files.map(
@@ -152,7 +151,8 @@ export default (filesList, rootFolderId = '/') => {
         return newFileMap;
       });
     },
-    [tagFilesToDelete, unTagTouchedFiles, addedFiles]
+    [tagFilesToDelete, addedFiles]
+    // [tagFilesToDelete, unTagTouchedFiles, addedFiles]
   );
 
   const moveFiles = useCallback(
@@ -165,7 +165,7 @@ export default (filesList, rootFolderId = '/') => {
       const destDirContent = destination.childrenIds.map(id => fileMap[id]);
       const byName = destDirContent
         .filter(file => !file.isDir)
-        .reduce((acc, item) => ({ [item.name]: item }), {});
+        .reduce((acc, item) => ({ ...acc, [item.name]: item }), {});
 
       const { movedFiles, overrideFiles } = files.reduce(
         (acc, file) => {
@@ -194,7 +194,7 @@ export default (filesList, rootFolderId = '/') => {
 
       const moveFileIds = new Set(movedFiles.map(f => f.id));
 
-      tagFilesAsTouched([...moveFileIds]);
+      // tagFilesAsTouched([...moveFileIds]);
 
       setFileMap(oldFileMap => {
         const newFileMap = { ...oldFileMap };
@@ -230,7 +230,8 @@ export default (filesList, rootFolderId = '/') => {
         return nextMap;
       });
     },
-    [tagFilesAsTouched, fileMap]
+    [fileMap]
+    // [tagFilesAsTouched, fileMap]
   );
 
   const createFolder = useCallback(
@@ -283,8 +284,6 @@ export default (filesList, rootFolderId = '/') => {
     moveFiles,
     createFolder,
     retrieveFiles,
-    touchedFiles,
-    tagFilesAsTouched,
     tagFilesToDelete,
     deletedFiles,
     addFile,
