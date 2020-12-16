@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { ifProp } from 'styled-tools';
 import { Button, Dropdown, Input, Menu, Tag, Typography } from 'antd';
 import { FlexBox, Icons } from 'components/common';
-import { experimentsSchema } from 'config';
 import { useExperiments } from 'hooks';
+import { schema } from 'hooks/useExperiments';
 import { COLOR, COLOR_EXPERIMENTS } from 'styles/colors';
 
 const BigTag = styled(Tag)`
@@ -58,7 +58,7 @@ const ExperimentPicker = () => {
     setDescription,
   ]);
 
-  const onShowAll = useCallback(() => setExperiment('show-all'), [
+  const onShowAll = useCallback(() => setExperiment(schema.SHOW_ALL), [
     setExperiment,
   ]);
 
@@ -70,7 +70,7 @@ const ExperimentPicker = () => {
           const onRemove = () => {
             remove(name);
             if (name === experimentId) {
-              onChange(experimentsSchema.showAll);
+              onChange(schema.SHOW_ALL);
             }
           };
           const onSelect = () => setExperiment(name);

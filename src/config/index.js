@@ -1,5 +1,4 @@
 export { default as appInfo } from './application-info';
-export { default as experimentsSchema } from './schema/experiments.schema';
 export { default as addAlgorithmTemplate } from './template/addAlgorithm.template';
 export { default as addPipelineTemplate } from './template/addPipeline.template';
 export { default as particlesTemplate } from './template/particles.template';

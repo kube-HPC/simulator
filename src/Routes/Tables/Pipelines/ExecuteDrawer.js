@@ -5,7 +5,7 @@ import useToggle from 'hooks/useToggle';
 import MissingIdError from 'components/MissingIdError';
 import { DRAWER_SIZE } from 'const';
 import { useActions } from 'hooks';
-import { experimentsSchema } from 'config';
+import { schema as experimentsSchema } from 'hooks/useExperiments';
 import useActivePipeline from './useActivePipeline';
 import usePath from './usePath';
 
