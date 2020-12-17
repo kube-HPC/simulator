@@ -88,8 +88,8 @@ const menuItems = [
   [LEFT_SIDEBAR_NAMES.JOBS, JobsIcon, '/jobs'],
   [LEFT_SIDEBAR_NAMES.PIPELINES, PipelineIcon, '/pipelines'],
   [LEFT_SIDEBAR_NAMES.ALGORITHMS, AlgorithmIcon, '/algorithms'],
-  [LEFT_SIDEBAR_NAMES.DATASOURCES, DataSourceIcon, '/datasources'],
   [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, '/debug'],
+  [LEFT_SIDEBAR_NAMES.DATASOURCES, DataSourceIcon, '/datasources'],
   [LEFT_SIDEBAR_NAMES.WORKERS, WorkerIcon, '/workers'],
   [LEFT_SIDEBAR_NAMES.DRIVERS, DriversIcon, '/drivers'],
 ];
@@ -116,7 +116,7 @@ const SidebarLeft = () => {
           <IconLogo component={LogoFish} />
           {!isCollapsed && <AnimatedTitle />}
         </LogoContainer>
-        <MenuMargin selectedKeys={pageName}>
+        <MenuMargin selectedKeys={[`left-sidebar-${pageName}`]}>
           {menuItems.map(([name, component, path]) => (
             <Menu.Item
               key={`left-sidebar-${name}`}
