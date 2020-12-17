@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useReducer, useRef } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
 import PropTypes from 'prop-types';
 import { Icon, Input, Popover, Switch, Typography, Tooltip } from 'antd';
 import { useActions, usePipeline } from 'hooks';
@@ -43,6 +49,8 @@ const PipelineCron = ({ pipeline }) => {
     ? pipeline.triggers.cron.pattern
     : DEFAULT_CRON_EXPR;
 
+  const [value, setValue] = useState(cronExpr);
+
   useEffect(() => {
     if (prevCronRef.current !== cronIsEnabled) {
       toggleLoading();
@@ -52,12 +60,11 @@ const PipelineCron = ({ pipeline }) => {
   let renderTooltip = ERROR_CRON_EXPR;
 
   try {
-    const interval = cronParser.parseExpression(cronExpr);
-
+    const interval = cronParser.parseExpression(value);
     // cronstrue.toString throws error on invalid cronExpr
     renderTooltip = (
       <Text>
-        {cronstrue.toString(cronExpr, {
+        {cronstrue.toString(value, {
           use24HourTimeFormat: true,
         })}
         , Next Interval:<Text code>{interval.next().toString()}</Text>
@@ -72,8 +79,8 @@ const PipelineCron = ({ pipeline }) => {
 
   const onToggle = useCallback(() => {
     toggleLoading();
-    cronIsEnabled ? cronStop(name, cronExpr) : cronStart(name, cronExpr);
-  }, [toggleLoading, cronExpr, cronIsEnabled, cronStart, cronStop, name]);
+    cronIsEnabled ? cronStop(name, value) : cronStart(name, value);
+  }, [toggleLoading, value, cronIsEnabled, cronStart, cronStop, name]);
 
   const onSave = useCallback(
     pattern => {
@@ -85,6 +92,12 @@ const PipelineCron = ({ pipeline }) => {
       }
     },
     [pipeline, updateCron]
+  );
+
+  const handleChange = useCallback(
+    /** @param {import('react').SyntheticEvent} e */
+    e => setValue(e.target.value),
+    [setValue]
   );
 
   return (
@@ -101,11 +114,12 @@ const PipelineCron = ({ pipeline }) => {
       <Popover content={renderTooltip} trigger="focus">
         <Input.Search
           style={inputWidth}
+          onChange={handleChange}
+          value={value}
           size="small"
           disabled={!cronIsEnabled}
           placeholder="Cron Expression"
           enterButton={enterButton}
-          defaultValue={cronExpr}
           onSearch={onSave}
         />
       </Popover>
