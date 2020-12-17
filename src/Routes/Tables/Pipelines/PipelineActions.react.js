@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Empty, Icon, Popover } from 'antd';
+import { Button, Empty, Icon, Popover, Tooltip } from 'antd';
 import { IconTensorFlow } from 'components/Icons';
 import { USER_GUIDE } from 'const';
 import { useActions } from 'hooks';
@@ -74,10 +74,18 @@ const PipelineActions = ({ pipeline, className }) => {
             <Icon component={IconTensorFlow} />
           </Button>
         </Popover>
-        <Button icon="play-circle" onClick={onExecute} />
-        <Button icon="edit" onClick={onUpdate} />
-        <Button icon="delete" onClick={onDelete} />
-        <Button icon="ellipsis" onClick={onEdit} />
+        <Tooltip title="run pipeline">
+          <Button icon="play-circle" onClick={onExecute} />
+        </Tooltip>
+        <Tooltip title="edit pipeline">
+          <Button icon="edit" onClick={onUpdate} />
+        </Tooltip>
+        <Tooltip title="delete pipeline">
+          <Button icon="delete" onClick={onDelete} />
+        </Tooltip>
+        <Tooltip title="show overview">
+          <Button icon="info-circle" onClick={onEdit} />
+        </Tooltip>
       </Button.Group>
     </div>
   );

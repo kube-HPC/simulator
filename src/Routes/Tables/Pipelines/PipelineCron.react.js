@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useReducer, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Input, Popover, Switch, Typography } from 'antd';
+import { Icon, Input, Popover, Switch, Typography, Tooltip } from 'antd';
 import { useActions, usePipeline } from 'hooks';
 import { FlexBox } from 'components/common';
 import cronParser from 'cron-parser';
@@ -21,7 +21,14 @@ const isPattern = pipeline =>
   pipeline.triggers.cron &&
   !!pipeline.triggers.cron.pattern;
 
-const enterButton = <Icon type="check" />;
+// the extra div is required for the tooltip to render
+const enterButton = (
+  <Tooltip title="save changes">
+    <div>
+      <Icon type="check" />
+    </div>
+  </Tooltip>
+);
 
 const PipelineCron = ({ pipeline }) => {
   const { cronStart, cronStop } = useActions();
@@ -88,12 +95,15 @@ const PipelineCron = ({ pipeline }) => {
 
   return (
     <FlexBox.Auto justify="start">
-      <Switch
-        size="small"
-        checked={cronIsEnabled}
-        loading={loading}
-        onChange={onChange}
-      />
+      <Tooltip title={`toggle cron ${cronIsEnabled ? 'off' : 'on'}`}>
+        <Switch
+          size="small"
+          checked={cronIsEnabled}
+          loading={loading}
+          onChange={onChange}
+        />
+      </Tooltip>
+
       <Popover content={renderTooltip} trigger="focus">
         <Input.Search
           style={inputWidth}
