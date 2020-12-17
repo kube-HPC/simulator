@@ -1,17 +1,20 @@
 import { useEffect, useMemo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useHistory } from 'react-router-dom';
-import { experimentsSchema } from 'config';
 import { STATE_SOURCES } from 'const';
 import isEqual from 'lodash/isEqual';
 import useActions from './useActions';
+
+export const schema = {
+  DEFAULT: 'main',
+  SHOW_ALL: 'show-all',
+};
 
 const useExperiments = () => {
   const location = useLocation();
   const history = useHistory();
   const { pathname, search } = location;
   const query = new URLSearchParams(search);
-
   const experimentId = useMemo(() => query.get('experiment') || 'main', [
     query,
   ]);
@@ -51,10 +54,10 @@ const useExperiments = () => {
   }, [experimentName, loading, triggerExperiment, experimentId]);
 
   const defaultExperiment = dataSource.find(
-    ({ name }) => name === experimentsSchema.default
+    ({ name }) => name === schema.DEFAULT
   );
   const restExperiments = dataSource.filter(
-    ({ name }) => name !== experimentsSchema.default
+    ({ name }) => name !== schema.DEFAULT
   );
 
   return {

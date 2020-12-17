@@ -1,12 +1,13 @@
 import { handleActions } from 'redux-actions';
 import Immutable from 'seamless-immutable';
-import { experimentsSchema } from 'config';
+import { schema } from 'hooks/useExperiments';
 import actions from 'const/application-actions';
 
 const initial = Immutable.from({
-  experimentName: experimentsSchema.default,
+  experimentName: schema.default,
 });
-
+// holds the experiment name *sent from the server*
+// used to validate the right experiment is displayed
 export const meta = handleActions(
   {
     [actions.SOCKET_GET_DATA](currState, { payload: { meta: nextMeta } }) {
