@@ -113,7 +113,7 @@ const SidebarLeft = () => {
           <IconLogo component={LogoFish} />
           {!isCollapsed && <AnimatedTitle />}
         </LogoContainer>
-        <MenuMargin selectedKeys={pageName}>
+        <MenuMargin selectedKeys={[`left-sidebar-${pageName}`]}>
           {menuItems.map(([name, component, path]) => (
             <Menu.Item
               key={`left-sidebar-${name}`}
