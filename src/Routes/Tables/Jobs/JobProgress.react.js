@@ -18,7 +18,7 @@ const JobProgress = ({ status, type, width }) => {
       type={type}
       width={width}
       percent={percent}
-      style={{ flexGrow: 1 }}
+      style={{ flex: 1 }}
       status={percent === 100 ? 'success' : 'normal'}
       strokeColor={
         failed

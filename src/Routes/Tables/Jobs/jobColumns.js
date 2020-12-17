@@ -28,6 +28,7 @@ const Types = types => <JobTypes types={types} fullName={false} />;
 const ProgressContainer = styled.div`
   display: flex;
   flex-wrap: nowrap;
+  align-items: center;
 `;
 
 const Progress = (_, job) => (
@@ -91,7 +92,6 @@ const jobColumns = [
     sorter: sortPriority,
     render: Priority,
   },
-
   {
     title: `Nodes Stats`,
     dataIndex: `status`,
