@@ -10,8 +10,8 @@ import { notification } from 'utils';
 const { Text } = Typography;
 
 const DEFAULT_CRON_EXPR = '0 * * * *';
-const ERROR_CRON_EXPR = 'Invalid Cron Expression, fix it and press apply';
-const inputWidth = { width: 160 };
+const ERROR_CRON_EXPR = 'Invalid Cron Expression';
+const inputWidth = { width: '20ch' };
 
 const isCron = pipeline =>
   pipeline.triggers && pipeline.triggers.cron && pipeline.triggers.cron.enabled;
@@ -32,7 +32,7 @@ const enterButton = (
 
 const PipelineCron = ({ pipeline }) => {
   const { cronStart, cronStop } = useActions();
-  const { update } = usePipeline();
+  const { updateCron } = usePipeline();
   const cronIsEnabled = isCron(pipeline);
   const prevCronRef = useRef(cronIsEnabled);
   const patternIsPresent = isPattern(pipeline);
@@ -70,27 +70,21 @@ const PipelineCron = ({ pipeline }) => {
 
   const { name } = pipeline;
 
-  const onChange = useCallback(() => {
+  const onToggle = useCallback(() => {
     toggleLoading();
     cronIsEnabled ? cronStop(name, cronExpr) : cronStart(name, cronExpr);
   }, [toggleLoading, cronExpr, cronIsEnabled, cronStart, cronStop, name]);
 
-  const onSearch = useCallback(
+  const onSave = useCallback(
     pattern => {
       try {
         cronstrue.toString(pattern);
-        update({
-          ...pipeline,
-          triggers: {
-            ...pipeline.triggers,
-            cron: { ...pipeline.triggers.cron, pattern },
-          },
-        });
+        updateCron(pipeline, pattern);
       } catch (errorMessage) {
         notification({ message: ERROR_CRON_EXPR, description: errorMessage });
       }
     },
-    [pipeline, update]
+    [pipeline, updateCron]
   );
 
   return (
@@ -100,7 +94,7 @@ const PipelineCron = ({ pipeline }) => {
           size="small"
           checked={cronIsEnabled}
           loading={loading}
-          onChange={onChange}
+          onChange={onToggle}
         />
       </Tooltip>
 
@@ -112,7 +106,7 @@ const PipelineCron = ({ pipeline }) => {
           placeholder="Cron Expression"
           enterButton={enterButton}
           defaultValue={cronExpr}
-          onSearch={onSearch}
+          onSearch={onSave}
         />
       </Popover>
     </FlexBox.Auto>

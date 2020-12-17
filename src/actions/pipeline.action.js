@@ -84,9 +84,6 @@ export const cronStop = (name, pattern) => ({
 });
 
 export const rerunRawPipeline = nominalPipeline => {
-  /* eslint-disable no-unused-vars */
-
-  // Destruct all unused values
   const {
     jobId,
     flowInputMetadata,
