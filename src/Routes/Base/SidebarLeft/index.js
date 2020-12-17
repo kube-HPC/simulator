@@ -89,9 +89,9 @@ const menuItems = [
   [LEFT_SIDEBAR_NAMES.PIPELINES, PipelineIcon, '/pipelines'],
   [LEFT_SIDEBAR_NAMES.ALGORITHMS, AlgorithmIcon, '/algorithms'],
   [LEFT_SIDEBAR_NAMES.DATASOURCES, DataSourceIcon, '/datasources'],
+  [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, '/debug'],
   [LEFT_SIDEBAR_NAMES.WORKERS, WorkerIcon, '/workers'],
   [LEFT_SIDEBAR_NAMES.DRIVERS, DriversIcon, '/drivers'],
-  [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, '/debug'],
 ];
 
 const Name = styled.span`
