@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { Input, Icon, Form, Button } from 'antd';
+import { Input, Form, Button } from 'antd';
 
 import { addAlgorithm } from 'actions/debug.action';
 import { DRAWER_SIZE } from 'const';
@@ -22,9 +22,7 @@ function AddDebug({ form }) {
     <>
       <Form onSubmit={onSubmit} layout="vertical">
         <Form.Item label="Algorithm Name">
-          {getFieldDecorator('debugImage')(
-            <Input prefix={<Icon type="share-alt" />} placeholder="name" />
-          )}
+          {getFieldDecorator('debugImage')(<Input placeholder="name" />)}
         </Form.Item>
       </Form>
       <BottomContent.Divider />

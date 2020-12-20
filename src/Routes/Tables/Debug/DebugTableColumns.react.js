@@ -26,10 +26,9 @@ const debugTableColumns = ({ onDelete }) => [
             firstSlash,
             ''
           )}`}
-          onCopy={() =>
-            notification.success({
-              message: 'Copied to clipboard',
-            })
+          onCopy={
+            () => notification.success({ message: 'Copied to clipboard' })
+            // eslint-disable-next-line
           }>
           <Tag color={COLOR_TASK_STATUS.active}>
             {`ws://${window.location.host}/${record.data.path.replace(
