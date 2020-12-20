@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Alert, Button, Input, Icon, Form } from 'antd';
+import { Alert, Input, Icon, Form } from 'antd';
 import UploadDragger, { useDragger } from 'components/UploadDragger';
 import FileBrowser from './FileBrowser';
-import { BottomPanel, Row, FileBrowserContainer } from './styles';
+import { BottomPanel, Row, FileBrowserContainer, RightButton } from './styles';
 
 /**
  * @typedef {import('./FileBrowser').RefContent} RefContent
@@ -145,9 +145,9 @@ const Body = ({ dataSource, onCreateVersion, form }) => {
         </Row>
       </div>
       <BottomPanel>
-        <Button htmlType="submit" type="primary">
+        <RightButton htmlType="submit" type="primary">
           Update Version
-        </Button>
+        </RightButton>
       </BottomPanel>
     </Form>
   );

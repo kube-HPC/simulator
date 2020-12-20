@@ -1,8 +1,7 @@
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'antd';
-import { BottomPanel, FileBrowserContainer } from './styles';
-
+import { BottomPanel } from 'components/Drawer';
+import { FileBrowserContainer, RightButton } from './styles';
 import FileBrowser from './FileBrowser';
 
 /**
@@ -15,19 +14,13 @@ const ReadOnly = ({ dataSource, onSelectVersion }) => {
   const fileBrowserRef = useRef();
   return (
     <>
-      <div>
-        <FileBrowserContainer>
-          <FileBrowser
-            isReadOnly
-            files={dataSource.files}
-            ref={fileBrowserRef}
-          />
-        </FileBrowserContainer>
-      </div>
+      <FileBrowserContainer>
+        <FileBrowser isReadOnly files={dataSource.files} ref={fileBrowserRef} />
+      </FileBrowserContainer>
       <BottomPanel>
-        <Button type="primary" onClick={onSelectVersion}>
+        <RightButton type="primary" onClick={onSelectVersion}>
           Select Version
-        </Button>
+        </RightButton>
       </BottomPanel>
     </>
   );
