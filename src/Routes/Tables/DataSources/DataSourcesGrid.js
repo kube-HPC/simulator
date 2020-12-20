@@ -94,7 +94,7 @@ const DataSourcesGrid = () => {
               <Tooltip
                 title={type}
                 key={`dataSource-${dataSource.id}-icon-${type}`}>
-                <FileIcon>
+                <FileIcon data-category={fileTypes[type]?.category}>
                   {fileTypes[type]?.name ?? fileTypes.default.name}
                 </FileIcon>
               </Tooltip>
