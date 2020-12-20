@@ -8,7 +8,7 @@ import { JsonEditor } from 'components/common';
 import schema from 'config/schema/addPipeline.schema';
 import { tryParse, stringify } from 'utils';
 import addPipelineTemplate from 'config/template/addPipeline.template';
-import { BottomPanel } from './styles';
+import { BottomPanel } from 'components/Drawer';
 
 const INITIAL_EDITOR_VALUE = stringify(addPipelineTemplate);
 

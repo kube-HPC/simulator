@@ -1,9 +1,10 @@
-import { Button } from 'antd';
-import { BottomContent, Card, JsonEditor } from 'components/common';
+import { Button, Card } from 'antd';
+import { JsonEditor } from 'components/common';
 import { addPipelineTemplate } from 'config';
 import { useActions } from 'hooks';
 import React, { useState } from 'react';
 import { notification, stringify } from 'utils';
+import { BottomPanel } from 'components/Drawer';
 
 const { triggers, ...noTriggersPipeline } = addPipelineTemplate;
 
@@ -26,23 +27,25 @@ const RunRawPipeline = () => {
 
   return (
     <>
-      <Card>
-        <JsonEditor value={value} onChange={setValue} />
+      <Card
+        style={{ flex: 1, marginBottom: '1em' }}
+        bodyStyle={{ height: '100%' }}>
+        <JsonEditor value={value} onChange={setValue} height="100%" />
       </Card>
-      <BottomContent.Divider />
-      <BottomContent
-        extra={[
-          <Button type="danger" key="clear" onClick={onClear}>
-            Clear
-          </Button>,
-          <Button key="default" onClick={onDefault}>
-            Default
-          </Button>,
-        ]}>
-        <Button type="primary" onClick={onSubmitClick}>
+      <BottomPanel>
+        <Button type="danger" key="clear" onClick={onClear}>
+          Clear
+        </Button>
+        <Button key="default" onClick={onDefault}>
+          Default
+        </Button>
+        <Button
+          type="primary"
+          onClick={onSubmitClick}
+          style={{ marginLeft: 'auto' }}>
           Execute
         </Button>
-      </BottomContent>
+      </BottomPanel>
     </>
   );
 };

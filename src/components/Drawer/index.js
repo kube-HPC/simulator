@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { BottomContent } from 'components/common';
 
 export { default as DrawerEditorMD } from './DrawerEditor.react';
+export { BottomPanel } from './styles';
 
 const DrawerPadding = styled(AntDrawer)`
   .ant-drawer-wrapper-body {
