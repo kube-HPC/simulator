@@ -7,9 +7,9 @@ import styled from 'styled-components';
 import { mapObjValues, stringify, notification } from 'utils';
 import { mergeWith } from 'lodash';
 import { COLOR_LAYOUT } from 'styles';
+import { BottomPanel } from 'components/Drawer';
 import addPipelineTemplate from 'config/template/addPipeline.template';
 import AddPipelineForm from './AddPipelineForm';
-import { BottomPanel } from './styles';
 
 const steps = ['Initial', 'Nodes', 'Options'].map(label => (
   <Steps.Step key={label} title={label} />

@@ -1,6 +1,6 @@
 import React from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Button, notification, Tag } from 'antd';
+import { Button, notification, Tag, Tooltip } from 'antd';
 import Ellipsis from 'components/common/Ellipsis.react';
 import { COLOR_TASK_STATUS } from 'styles/colors';
 import { sorter } from 'utils/string';
@@ -26,12 +26,10 @@ const debugTableColumns = ({ onDelete }) => [
             firstSlash,
             ''
           )}`}
-          onCopy={
-            () =>
-              notification.success({
-                message: 'Copied to clipboard',
-              })
-            // eslint-disable-next-line react/jsx-curly-newline
+          onCopy={() =>
+            notification.success({
+              message: 'Copied to clipboard',
+            })
           }>
           <Tag color={COLOR_TASK_STATUS.active}>
             {`ws://${window.location.host}/${record.data.path.replace(
@@ -46,12 +44,13 @@ const debugTableColumns = ({ onDelete }) => [
     title: 'Stop',
     key: 'stop',
     render: (_, record) => (
-      <Button
-        type="danger"
-        shape="circle"
-        icon="delete"
-        onClick={() => onDelete(record.name)}
-      />
+      <Tooltip title="delete debug">
+        <Button
+          type="danger"
+          icon="delete"
+          onClick={() => onDelete(record.name)}
+        />
+      </Tooltip>
     ),
   },
 ];

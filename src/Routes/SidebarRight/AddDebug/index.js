@@ -21,9 +21,9 @@ function AddDebug({ form }) {
   return (
     <>
       <Form onSubmit={onSubmit} layout="vertical">
-        <Form.Item label="Image URL">
+        <Form.Item label="Algorithm Name">
           {getFieldDecorator('debugImage')(
-            <Input prefix={<Icon type="share-alt" />} placeholder="Algorithm" />
+            <Input prefix={<Icon type="share-alt" />} placeholder="name" />
           )}
         </Form.Item>
       </Form>
