@@ -10,6 +10,7 @@ import { BottomPanel, Row, FileBrowserContainer, RightButton } from './styles';
  * @typedef {import('./stratifier').FlatFile} FlatFile
  * @typedef {import('antd/lib/upload/interface').UploadFile} UploadFile
  * @typedef {import('./VersionSelect').DataSource} DataSource
+ * @typedef {import('reducers/dataSources/datasource').FetchStatus} FetchStatus
  */
 
 /** @type {UploadFile[]} */
@@ -20,10 +21,11 @@ const initialState = [];
  *   dataSource: DataSource;
  *   onSubmit: function;
  *   form: import('antd/lib/form/Form').WrappedFormUtils;
+ *   submittingStatus: FetchStatus;
  * }} props
  */
 
-const Body = ({ dataSource, onCreateVersion, form }) => {
+const Body = ({ dataSource, onCreateVersion, form, submittingStatus }) => {
   const [addedFiles, setAddedFiles] = useState(initialState);
   /** @type {{ current?: RefContent }} */
   const fileBrowserRef = useRef();
@@ -145,7 +147,10 @@ const Body = ({ dataSource, onCreateVersion, form }) => {
         </Row>
       </div>
       <BottomPanel>
-        <RightButton htmlType="submit" type="primary">
+        <RightButton
+          htmlType="submit"
+          type="primary"
+          loading={submittingStatus === 'PENDING'}>
           Update Version
         </RightButton>
       </BottomPanel>
@@ -164,6 +169,10 @@ Body.propTypes = {
     getFieldDecorator: PropTypes.func.isRequired,
     validateFields: PropTypes.func.isRequired,
   }).isRequired,
+  submittingStatus: PropTypes.string,
+};
+Body.defaultProps = {
+  submittingStatus: null,
 };
 
 export default Form.create({ comment: '' })(Body);

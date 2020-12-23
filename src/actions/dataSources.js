@@ -38,11 +38,11 @@ export const fetchDataSource = ({ name, id }) => ({
 });
 
 /**
- * @param {object} payload
- * @param {string} payload.name
- * @param {UploadFile[]} payload.files
- * @param {object} meta
- * @param {function} meta.onSuccess
+ * @param {{
+ *   name: string;
+ *   files: UploadFile[];
+ * }} payload
+ * @param {{ onSuccess: function }} meta
  */
 export const createDataSource = ({ name, files }, { onSuccess }) => {
   const formData = new FormData();
@@ -69,14 +69,14 @@ export const createDataSource = ({ name, files }, { onSuccess }) => {
  *   name: string;
  *   path: string;
  * }} MappingFile
- * @param {object} payload
- * @param {string} payload.dataSourceName
- * @param {UploadFile[]} payload.files
- * @param {MappingFile[]=} payload.mapping
- * @param {string[]=} payload.droppedFileIds
- * @param {string} payload.versionDescription
- * @param {object} meta
- * @param {function} meta.onSuccess
+ * @param {{
+ *   dataSourceName: string;
+ *   files?: UploadFile;
+ *   mapping?: MappingFile;
+ *   droppedFileIds?: string;
+ *   versionDescription: string;
+ * }} payload
+ * @param {{ meta: function }} meta
  */
 export const postVersion = (
   { dataSourceName, files, mapping, droppedFileIds = [], versionDescription },
@@ -115,6 +115,7 @@ export const postVersion = (
     },
     meta: {
       onSuccess,
+      dataSourceName,
     },
   };
 };

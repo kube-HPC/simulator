@@ -3,11 +3,13 @@ import types from './actionTypes';
 
 /**
  * @typedef {import('./datasource').DataSourceVersion} DataSourceVersion
+ * @typedef {import('./datasource').FetchStatus} FetchStatus
  * @typedef {{
  *   [name: string]: {
  *     status: FetchStatus;
  *     versions: DataSourceVersion[];
  *     active: string;
+ *     submittingStatus?: FetchStatus;
  *   };
  * }} VersionsState
  * @typedef {import('./datasource').DataSource} DataSource
@@ -94,9 +96,26 @@ const collection = createSlice({
         },
       };
     },
+    [types.postVersion.pending]: (state, action) => {
+      const name = action.meta.dataSourceName;
+      return {
+        ...state,
+        [name]: { ...state[name], submittingStatus: 'PENDING' },
+      };
+    },
+    [types.postVersion.fail]: (state, action) => {
+      const name = action.meta.dataSourceName;
+      return { ...state, [name]: { ...state[name], submittingStatus: 'FAIL' } };
+    },
     /** @param {{ payload: 'OK' | DataSource; meta: { id: string } }} action */
     [types.postVersion.success]: (state, action) => {
-      if (action.payload === 'OK') return state;
+      if (action.payload === 'OK') {
+        const name = action.meta.dataSourceName;
+        return {
+          ...state,
+          [name]: { ...state[name], submittingStatus: 'IDLE' },
+        };
+      }
       const {
         payload: { name, id, versionDescription, versionId },
       } = action;
@@ -109,6 +128,7 @@ const collection = createSlice({
             versionDescription,
             versionId,
           }),
+          submittingStatus: 'SUCCESS',
           active: id,
         },
       };

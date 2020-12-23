@@ -59,7 +59,11 @@ const Body = ({ goTo }) => {
         versionsCollection={versionsCollection}
       />
       {isEditable ? (
-        <EditForm dataSource={dataSource} onCreateVersion={onCreateVersion} />
+        <EditForm
+          dataSource={dataSource}
+          onCreateVersion={onCreateVersion}
+          submittingStatus={versionsCollection.submittingStatus}
+        />
       ) : (
         <ReadOnly dataSource={dataSource} onSelectVersion={onSelectVersion} />
       )}
