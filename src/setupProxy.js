@@ -1,13 +1,6 @@
-const proxy = require('http-proxy-middleware');
 const packageJSON = require('./../package.json');
 
-module.exports = function (app) {
-  app.use(
-    proxy('/api', {
-      target: 'http://localhost:8091',
-      pathRewrite: { '^/api': '' },
-    })
-  );
+module.exports = app => {
   app.get('*/dashboard-config.json', (req, res) => {
     res.json({
       config: {
