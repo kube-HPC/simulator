@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Dropdown, Menu, Button } from 'antd';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import _ from 'lodash';
 
 /**
  * @typedef {import('reducers/dataSources/datasource').DataSource} DataSource
@@ -15,6 +16,28 @@ const VersionDescription = styled.p`
   margin-left: 2ch;
 `;
 
+const VersionTag = styled.span`
+  float: right;
+  margin-left: 5ch;
+  font-weight: bold;
+`;
+
+/** @param {{ version: DataSourceVersion; collection: DataSourceVersion[] }} props */
+const VersionRow = ({ version, collection }) => (
+  <>
+    <span>{version.id}</span>
+    <VersionTag>
+      {_.last(collection).id === version.id ? 'Latest' : 'Raw'}
+    </VersionTag>
+  </>
+);
+VersionRow.propTypes = {
+  version: PropTypes.shape({ id: PropTypes.string.isRequired }).isRequired,
+  collection: PropTypes.arrayOf(
+    PropTypes.shape({ id: PropTypes.string.isRequired }).isRequired
+  ).isRequired,
+};
+
 /**
  * @param {{
  *   versions: DataSourceVersion[];
@@ -23,26 +46,30 @@ const VersionDescription = styled.p`
  * }} params
  */
 const Selector = ({ versions, isPending, dataSource }) => {
-  if (isPending || versions === null) return <Button loading>versions</Button>;
-  if (versions.length === 0) return <Button loading>{dataSource.id}</Button>;
+  if (isPending || versions.length === 0 || !dataSource)
+    return <Button loading>loading versions</Button>;
 
   const menu = (
     <Menu>
       {versions.map(version => (
         <Menu.Item key={`dataSource-version-${version.id}`}>
-          <Link to={`/datasources/${version.id}/edit`}>{version.id}</Link>
+          <Link to={`/datasources/${version.id}/edit`}>
+            <VersionRow version={version} collection={versions} />
+          </Link>
         </Menu.Item>
       ))}
     </Menu>
   );
+
   return (
     <Dropdown overlay={menu} placement="bottomLeft">
       <Button loading={isPending}>
-        {isPending ? 'versions' : dataSource.id}
+        <VersionRow version={dataSource} collection={versions} />
       </Button>
     </Dropdown>
   );
 };
+
 Selector.propTypes = {
   versions: PropTypes.arrayOf(PropTypes.shape({})),
   isPending: PropTypes.bool.isRequired,
