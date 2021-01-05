@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import types from './actionTypes';
+import globalActions from './../../const/application-actions';
 
 /**
  * @typedef {import('./datasource').DataSourceVersion} DataSourceVersion
@@ -27,6 +28,38 @@ const collection = createSlice({
   reducers: {},
   extraReducers: {
     /**
+     * @param {{
+     *   payload: { dataSources: DataSource[] };
+     * }} action
+     */
+    [globalActions.SOCKET_GET_DATA]: (state, action) =>
+      action.payload.dataSources.reduce((acc, item) => {
+        const { name, id } = item;
+        const current = acc[name];
+        if (!current)
+          return {
+            ...acc,
+            [name]: {
+              status: 'IDLE',
+              versions: [id],
+              active: id,
+            },
+          };
+
+        if (current.versions[0] !== id)
+          return {
+            ...acc,
+            [name]: {
+              ...current,
+              versions: [id, ...current.versions],
+              active: id,
+            },
+          };
+
+        return acc;
+      }, state),
+
+    /**
      * @param {{ payload: DataSource[] }} action
      * @returns {VersionsState}
      */
@@ -37,7 +70,7 @@ const collection = createSlice({
           ...acc,
           [item.name]: {
             status: 'IDLE',
-            versions: [],
+            versions: [item.id],
             active: item.id,
           },
         };

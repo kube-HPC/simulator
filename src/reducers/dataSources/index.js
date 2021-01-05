@@ -6,6 +6,8 @@ import {
 } from '@reduxjs/toolkit';
 import types from './actionTypes';
 import { reducer as versionsReducer } from './versions';
+import globalActions from './../../const/application-actions';
+
 /**
  * @typedef {import('./datasource.d').DataSource} DataSource
  * @typedef {import('@reduxjs/toolkit').EntityState<DataSource>} CollectionState
@@ -44,6 +46,20 @@ const dataSources = createSlice({
           status: 'IDLE',
         }))
       ),
+
+    /**
+     * @param {{
+     *   payload: { dataSources: DataSource[] };
+     * }} action
+     */
+    [globalActions.SOCKET_GET_DATA]: (state, action) => {
+      const { dataSources: payload } = action.payload;
+      const entitiesToAdd = payload
+        .filter(item => !state.entities[item.id])
+        .map(item => ({ ...item, status: 'IDLE' }));
+      if (entitiesToAdd.length === 0) return state;
+      return entityAdapter.addMany(state, entitiesToAdd);
+    },
 
     [types.fetch.pending]: (state, { meta }) =>
       entityAdapter.updateOne(state, {
