@@ -6,19 +6,36 @@ import globalActions from './../../const/application-actions';
  * @typedef {import('./datasource').DataSourceVersion} DataSourceVersion
  * @typedef {import('./datasource').FetchStatus} FetchStatus
  * @typedef {{
- *   [name: string]: {
- *     status: FetchStatus;
- *     versions: DataSourceVersion[];
- *     active: string;
- *     submittingStatus?: FetchStatus;
- *   };
+ *   status: FetchStatus;
+ *   versions: DataSourceVersion[];
+ *   active: string;
+ *   submittingStatus?: FetchStatus;
+ * }} VersionsStateEntry
+ * @typedef {{
+ *   [name: string]: VersionsStateEntry;
  * }} VersionsState
  * @typedef {import('./datasource').DataSource} DataSource
  */
 
-// in the future there will be a project config object setting which version is active
-// for now:
-// track the latest version for each dataSource
+/**
+ * Initialize an entry, optional arg (current) for merging
+ *
+ * @type {(
+ *   dataSource: DataSource,
+ *   current?: VersionsStateEntry
+ * ) => VersionsStateEntry}
+ */
+const Entry = ({ id, versionDescription, versionId }, current = {}) => ({
+  ...current,
+  versions: (current?.versions ?? []).concat({
+    id,
+    versionDescription,
+    versionId,
+  }),
+  active: id,
+});
+
+const getIdsSet = versions => new Set(versions.map(version => version.id));
 
 /** @type {VersionsState} */
 const initialVersions = {};
@@ -39,24 +56,14 @@ const collection = createSlice({
         if (!current)
           return {
             ...acc,
-            [name]: {
-              status: 'IDLE',
-              versions: [id],
-              active: id,
-            },
+            [name]: Entry(item, { status: 'IDLE' }),
           };
-
-        if (current.versions[0] !== id)
-          return {
-            ...acc,
-            [name]: {
-              ...current,
-              versions: [id, ...current.versions],
-              active: id,
-            },
-          };
-
-        return acc;
+        const ids = getIdsSet(current.versions);
+        if (ids.has(id)) return acc;
+        return {
+          ...acc,
+          [name]: Entry(item, current),
+        };
       }, state),
 
     /**
@@ -68,11 +75,7 @@ const collection = createSlice({
         if (state[item.name]) return acc;
         return {
           ...acc,
-          [item.name]: {
-            status: 'IDLE',
-            versions: [item.id],
-            active: item.id,
-          },
+          [item.name]: Entry(item, { status: 'IDLE' }),
         };
       }, {});
       return {
@@ -80,6 +83,7 @@ const collection = createSlice({
         ...nextState,
       };
     },
+
     [types.fetchVersions.pending]: (state, action) => {
       if (!action?.meta?.dataSource) return state;
       const name = action.meta.dataSource;
@@ -122,11 +126,10 @@ const collection = createSlice({
       } = action;
       return {
         ...state,
-        [name]: {
-          status: 'SUCCESS',
-          versions: [{ id, versionDescription, versionId }],
-          active: id,
-        },
+        [name]: Entry(
+          { id, versionDescription, versionId },
+          { status: 'SUCCESS', ...state[name] }
+        ),
       };
     },
     [types.postVersion.pending]: (state, action) => {
@@ -152,18 +155,14 @@ const collection = createSlice({
       const {
         payload: { name, id, versionDescription, versionId },
       } = action;
+      const ids = getIdsSet(state[name].versions);
+      if (ids.has(id)) return state;
       return {
         ...state,
-        [name]: {
-          ...state[name],
-          versions: state[name].versions.concat({
-            id,
-            versionDescription,
-            versionId,
-          }),
-          submittingStatus: 'SUCCESS',
-          active: id,
-        },
+        [name]: Entry(
+          { id, versionDescription, versionId },
+          { ...state[name], submittingStatus: 'SUCCESS' }
+        ),
       };
     },
   },

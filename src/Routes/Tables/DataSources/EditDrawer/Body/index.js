@@ -51,7 +51,7 @@ const Body = ({ goTo, mode }) => {
   const onSelectVersion = useCallback(() => console.log('not implemented'), []);
 
   const isEditable = versionsCollection
-    ? dataSource.id === _.last(versionsCollection.versions)?.id
+    ? dataSource.id === _.last(versionsCollection.versions).id
     : false;
 
   return (
