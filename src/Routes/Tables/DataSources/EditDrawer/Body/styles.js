@@ -13,6 +13,7 @@ export const BottomPanel = styled(CommonBottomPanel)`
 export const Row = styled.section`
   margin: 0 auto;
   margin-top: 1em;
+  width: 100%;
 `;
 
 export const FileBrowserContainer = styled.section`

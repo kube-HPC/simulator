@@ -25,7 +25,7 @@ const initialState = [];
  * }} props
  */
 
-const Body = ({ dataSource, onCreateVersion, form, submittingStatus }) => {
+const EditMode = ({ dataSource, onCreateVersion, form, submittingStatus }) => {
   const [addedFiles, setAddedFiles] = useState(initialState);
   /** @type {{ current?: RefContent }} */
   const fileBrowserRef = useRef();
@@ -158,7 +158,7 @@ const Body = ({ dataSource, onCreateVersion, form, submittingStatus }) => {
   );
 };
 
-Body.propTypes = {
+EditMode.propTypes = {
   dataSource: PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
@@ -171,8 +171,8 @@ Body.propTypes = {
   }).isRequired,
   submittingStatus: PropTypes.string,
 };
-Body.defaultProps = {
+EditMode.defaultProps = {
   submittingStatus: null,
 };
 
-export default Form.create({ comment: '' })(Body);
+export default Form.create({ comment: '' })(EditMode);

@@ -1,0 +1,15 @@
+/* a patch to override ant's behavior on form.item component */
+.ant-form-item-control {
+  display: contents;
+}
+.ant-form-item-children {
+  height: 100%;
+}
+
+.ant-input-affix-wrapper {
+  display: contents;
+}
+
+textarea.ant-input {
+  resize: none;
+}

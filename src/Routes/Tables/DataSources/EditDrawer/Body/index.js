@@ -2,13 +2,15 @@ import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import _ from 'lodash';
+import { Switch, Route } from 'react-router-dom';
 import { postVersion } from 'actions/dataSources';
 import { notification } from 'utils';
 import useActiveDataSource from '../../useActiveDataSource';
-import VersionSelect from '../VersionSelect';
+import TopPanel from './TopPanel';
 import useVersions from '../useVersions';
-import EditForm from './EditForm';
+import EditMode from './EditMode';
 import ReadOnly from './ReadOnly';
+import QueryMode from './QueryMode';
 
 /**
  * @typedef {import('./FileBrowser').RefContent} RefContent
@@ -16,7 +18,7 @@ import ReadOnly from './ReadOnly';
  * @typedef {import('antd/lib/upload/interface').UploadFile} UploadFile
  */
 
-const Body = ({ goTo }) => {
+const Body = ({ goTo, mode }) => {
   const { dataSource } = useActiveDataSource();
   const versionsCollection = useVersions(dataSource);
   const dispatch = useDispatch();
@@ -54,19 +56,37 @@ const Body = ({ goTo }) => {
 
   return (
     <>
-      <VersionSelect
+      <TopPanel
+        mode={mode}
+        goTo={goTo}
         dataSource={dataSource}
         versionsCollection={versionsCollection}
       />
-      {isEditable ? (
-        <EditForm
-          dataSource={dataSource}
-          onCreateVersion={onCreateVersion}
-          submittingStatus={versionsCollection.submittingStatus}
+      <Switch>
+        <Route
+          exact
+          path="/datasources/:dataSourceId/query"
+          render={() => <QueryMode dataSource={dataSource} />}
         />
-      ) : (
-        <ReadOnly dataSource={dataSource} onSelectVersion={onSelectVersion} />
-      )}
+        <Route
+          exact
+          path="/datasources/:dataSourceId/edit"
+          render={() =>
+            isEditable ? (
+              <EditMode
+                dataSource={dataSource}
+                onCreateVersion={onCreateVersion}
+                submittingStatus={versionsCollection.submittingStatus}
+              />
+            ) : (
+              <ReadOnly
+                dataSource={dataSource}
+                onSelectVersion={onSelectVersion}
+              />
+            )
+          }
+        />
+      </Switch>
     </>
   );
 };
@@ -75,6 +95,7 @@ Body.propTypes = {
   goTo: PropTypes.shape({
     edit: PropTypes.func.isRequired,
   }).isRequired,
+  mode: PropTypes.string.isRequired,
 };
 
 export default Body;

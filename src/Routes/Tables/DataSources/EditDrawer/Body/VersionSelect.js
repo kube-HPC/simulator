@@ -9,11 +9,6 @@ import styled from 'styled-components';
  * @typedef {import('reducers/dataSources/datasource').DataSourceVersion} DataSourceVersion
  */
 
-const Container = styled.section`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
 const VersionDescription = styled.p`
   padding: 0;
   margin: 0;
@@ -71,14 +66,14 @@ Selector.defaultProps = {
 const Versions = ({ dataSource, versionsCollection }) => {
   const isPending = versionsCollection?.status === 'PENDING' ?? true;
   return (
-    <Container>
+    <>
       <Selector
         versions={versionsCollection.versions}
         isPending={isPending}
         dataSource={dataSource}
       />
       <VersionDescription>{dataSource.versionDescription}</VersionDescription>
-    </Container>
+    </>
   );
 };
 

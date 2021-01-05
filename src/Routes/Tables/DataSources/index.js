@@ -6,7 +6,7 @@ import DataSourcesGrid from './DataSourcesGrid';
 const DataSourcesTables = () => (
   <>
     <DataSourcesGrid />
-    <Route path="/datasources/:dataSourceId/edit" component={EditDrawer} />
+    <Route path="/datasources/:dataSourceId/:mode" component={EditDrawer} />
   </>
 );
 
