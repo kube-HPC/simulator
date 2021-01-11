@@ -1,6 +1,6 @@
-import axios from 'axios';
 import successMsg from 'config/schema/success-messages.schema';
 import AT from 'const/application-actions';
+import client from './../client';
 
 const setMonitorPath = monitorBackend =>
   monitorBackend.useLocation
@@ -71,8 +71,6 @@ const success = (dispatch, payload, action) => {
 let SOCKET_URL = null;
 let BOARD_URL = null;
 
-const createUrl = url => `${SOCKET_URL}/${url}`;
-
 const restMiddleware = ({ dispatch }) => next => action => {
   if (action.type === `${AT.SOCKET_GET_CONFIG}_SUCCESS`) {
     const { monitorBackend, board, hkubeSystemVersion } = action.payload.config;
@@ -84,6 +82,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
       type: AT.SET_HKUBE_VERSION,
       hkubeSystemVersion: hkubeSystemVersion || null,
     });
+    client.defaults.baseURL = SOCKET_URL;
     return next(action);
   }
   if (
@@ -101,8 +100,8 @@ const restMiddleware = ({ dispatch }) => next => action => {
   if (!SOCKET_URL) return next(action);
   pending(dispatch, 'pending', action);
   if (action.type === AT.REST_REQ_GET) {
-    axios
-      .get(createUrl(action.payload.url))
+    client
+      .get(action.payload.url)
       .then(res => {
         success(dispatch, res.data, action);
       })
@@ -112,8 +111,8 @@ const restMiddleware = ({ dispatch }) => next => action => {
         reject(dispatch, response, action);
       });
   } else if (action.type === AT.REST_REQ_POST) {
-    axios
-      .post(createUrl(action.payload.url), action.payload.body)
+    client
+      .post(action.payload.url, action.payload.body)
       .then(res => {
         success(dispatch, res.data, action);
       })
@@ -121,8 +120,8 @@ const restMiddleware = ({ dispatch }) => next => action => {
         reject(dispatch, err.response.data.error, action);
       });
   } else if (action.type === AT.REST_REQ_POST_FORM) {
-    axios
-      .post(createUrl(action.payload.url), action.payload.formData)
+    client
+      .post(action.payload.url, action.payload.formData)
       .then(res => {
         success(dispatch, res.data, action);
         if (action?.meta?.onSuccess) {
@@ -133,8 +132,8 @@ const restMiddleware = ({ dispatch }) => next => action => {
         reject(dispatch, err.response.data.error, action);
       });
   } else if (action.type === AT.REST_REQ_PUT) {
-    axios
-      .put(createUrl(action.payload.url), action.payload.body)
+    client
+      .put(action.payload.url, action.payload.body)
       .then(res => {
         success(dispatch, res.data, action);
       })
@@ -142,8 +141,8 @@ const restMiddleware = ({ dispatch }) => next => action => {
         reject(dispatch, err.response.data.error, action);
       });
   } else if (action.type === AT.REST_REQ_DELETE) {
-    axios
-      .delete(createUrl(action.payload.url), {
+    client
+      .delete(action.payload.url, {
         data: action.payload.body,
       })
       .then(res => {

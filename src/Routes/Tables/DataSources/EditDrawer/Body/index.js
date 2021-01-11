@@ -48,7 +48,12 @@ const Body = ({ goTo, mode }) => {
     [dataSource, dispatch, goTo]
   );
 
-  const onSelectVersion = useCallback(() => console.log('not implemented'), []);
+  const onDownload = useCallback(
+    fileIds => {
+      console.log({ fileIds, id: dataSource.id });
+    },
+    [dataSource]
+  );
 
   const isEditable = versionsCollection
     ? dataSource.id === _.last(versionsCollection.versions).id
@@ -66,7 +71,9 @@ const Body = ({ goTo, mode }) => {
         <Route
           exact
           path="/datasources/:dataSourceId/query"
-          render={() => <QueryMode dataSource={dataSource} />}
+          render={() => (
+            <QueryMode dataSource={dataSource} onDownload={onDownload} />
+          )}
         />
         <Route
           exact
@@ -75,14 +82,12 @@ const Body = ({ goTo, mode }) => {
             isEditable ? (
               <EditMode
                 dataSource={dataSource}
+                onDownload={onDownload}
                 onCreateVersion={onCreateVersion}
                 submittingStatus={versionsCollection.submittingStatus}
               />
             ) : (
-              <ReadOnly
-                dataSource={dataSource}
-                onSelectVersion={onSelectVersion}
-              />
+              <ReadOnly dataSource={dataSource} onDownload={onDownload} />
             )
           }
         />

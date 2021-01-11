@@ -2,7 +2,7 @@ import { message } from 'antd';
 
 /**
  * @typedef {{
- *   type: 'success' | 'error';
+ *   type: string;
  *   content: string;
  * }} Message
  * @typedef {{

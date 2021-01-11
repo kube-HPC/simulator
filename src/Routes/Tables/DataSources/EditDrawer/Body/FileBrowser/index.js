@@ -26,6 +26,7 @@ import useFileMap from './useFileMap';
  * @typedef {import('antd/lib/upload/interface').UploadFile}
  * @typedef {import('./stratifier').StratifiedDirectory} StratifiedDirectory
  * @typedef {import('./stratifier').StratifiedFile} StratifiedFile
+ * @typedef {import('./stratifier').StratifiedMap} StratifiedMap
  * @typedef {FileData & {
  *   parentId?: string;
  *   childrenIds?: string[];
@@ -49,7 +50,38 @@ setChonkyDefaults({ iconComponent: ChonkyIconFA });
 
 const fileActions = [ChonkyActions.CreateFolder, ChonkyActions.DeleteFiles];
 
-const FileBrowser = ({ files: srcFiles, forwardRef, onDelete, isReadOnly }) => {
+/**
+ * @type {(
+ *   dir: StratifiedDirectory,
+ *   mapping: StratifiedMap
+ * ) => StratifiedFile[]}
+ */
+const resolveSubDir = (dir, mapping) =>
+  dir.childrenIds
+    .map(child => {
+      const entry = mapping[child];
+      return entry.isDir ? resolveSubDir(entry, mapping) : entry;
+    })
+    .flat();
+/**
+ * @type {(
+ *   dir: (StratifiedDirectory | StratifiedFile)[],
+ *   mapping: StratifiedMap
+ * ) => StratifiedFile[]}
+ */
+const collectFiles = (files, mapping) =>
+  files
+    .filter(file => file.uploadedAt || file.isDir) // drop files that were never uploaded
+    .map(file => (file.isDir ? resolveSubDir(file, mapping) : file))
+    .flat();
+
+const FileBrowser = ({
+  files: srcFiles,
+  forwardRef,
+  onDelete,
+  isReadOnly,
+  onDownload,
+}) => {
   const {
     fileMap,
     currentFolderId,
@@ -106,10 +138,20 @@ const FileBrowser = ({ files: srcFiles, forwardRef, onDelete, isReadOnly }) => {
           const { targetFile, files: _files } = action.payload;
           // eslint-disable-next-line
           const fileToOpen = targetFile ?? _files[0];
-          if (fileToOpen && FileHelper.isDirectory(fileToOpen))
+          if (
+            fileToOpen &&
+            FileHelper.isDirectory(fileToOpen) &&
+            action.payload.files.length === 1
+          ) {
+            // console.log({ payload: action.payload });
             setCurrentFolderId(fileToOpen.id);
-          else {
-            // console.log({ fileToOpen });
+          } else {
+            const filesToDownload = collectFiles(
+              action.payload.files,
+              fileMap
+            ).map(file => file.id);
+
+            return onDownload(filesToDownload);
           }
           return null;
         case ChonkyActions.CreateFolder.id:
@@ -121,7 +163,15 @@ const FileBrowser = ({ files: srcFiles, forwardRef, onDelete, isReadOnly }) => {
           return null;
       }
     },
-    [createFolder, deleteFiles, moveFiles, setCurrentFolderId, onDelete]
+    [
+      createFolder,
+      deleteFiles,
+      moveFiles,
+      setCurrentFolderId,
+      onDelete,
+      fileMap,
+      onDownload,
+    ]
   );
 
   const handleReadOnlyAction = useCallback(
@@ -198,6 +248,7 @@ FileBrowser.propTypes = {
     // eslint-disable-next-line
     currentFolder: PropTypes.object,
   }).isRequired,
+  onDownload: PropTypes.func.isRequired,
   onDelete: PropTypes.func,
   isReadOnly: PropTypes.bool,
 };

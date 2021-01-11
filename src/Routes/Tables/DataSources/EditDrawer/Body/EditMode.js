@@ -25,7 +25,13 @@ const initialState = [];
  * }} props
  */
 
-const EditMode = ({ dataSource, onCreateVersion, form, submittingStatus }) => {
+const EditMode = ({
+  dataSource,
+  onCreateVersion,
+  form,
+  submittingStatus,
+  onDownload,
+}) => {
   const [addedFiles, setAddedFiles] = useState(initialState);
   /** @type {{ current?: RefContent }} */
   const fileBrowserRef = useRef();
@@ -104,6 +110,7 @@ const EditMode = ({ dataSource, onCreateVersion, form, submittingStatus }) => {
           files={dataSource.files}
           ref={fileBrowserRef}
           onDelete={handleFileBrowserDelete}
+          onDownload={onDownload}
         />
       </FileBrowserContainer>
       <div>
@@ -170,6 +177,7 @@ EditMode.propTypes = {
     validateFields: PropTypes.func.isRequired,
   }).isRequired,
   submittingStatus: PropTypes.string,
+  onDownload: PropTypes.func.isRequired,
 };
 EditMode.defaultProps = {
   submittingStatus: null,

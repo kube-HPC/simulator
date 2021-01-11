@@ -1,10 +1,17 @@
 export type FetchStatus = 'SUCCESS' | 'PENDING' | 'FAIL' | 'IDLE';
 
 export type FileMeta = {
+  id: string;
+  name: string;
+  /** The file's location in the repository */
   path: string;
+  /** Size in bytes */
   size: number;
-  mtime: string;
+  /** Mime type */
   type: string;
+  /** An extra text content the user can upload per file */
+  meta?: string;
+  uploadedAt: number;
 };
 
 export type DataSourceEntry = {

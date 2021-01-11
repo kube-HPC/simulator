@@ -2,6 +2,8 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Input, Icon, Form, Button } from 'antd';
 import styled from 'styled-components';
+import { notification } from 'utils';
+import client from './../../../../../client';
 import FileBrowser from './FileBrowser';
 import { BottomPanel, Row, FileBrowserContainer, RightButton } from './styles';
 import './styles.css';
@@ -12,6 +14,7 @@ import './styles.css';
  * @typedef {import('antd/lib/upload/interface').UploadFile} UploadFile
  * @typedef {import('./../../../../../reducers/dataSources/datasource').DataSource} DataSource
  * @typedef {import('reducers/dataSources/datasource').FetchStatus} FetchStatus
+ * @typedef {import('reducers/dataSources/datasource').FileMeta} FileMeta
  */
 
 /**
@@ -31,7 +34,6 @@ const InnerContainer = styled.section`
 
 const FormItem = styled(Form.Item)`
   height: 100%;
-  background: papayawhip;
 `;
 
 /**
@@ -41,22 +43,37 @@ const FormItem = styled(Form.Item)`
  *   form: import('antd/lib/form/Form').WrappedFormUtils;
  * }} props
  */
-// const EditMode = ({ dataSource, onCreateVersion, form, submittingStatus }) => {
-const QueryMode = ({ dataSource, form }) => {
-  // const [addedFiles, setAddedFiles] = useState(initialState);
+const QueryMode = ({ dataSource, form, onDownload }) => {
   /** @type {{ current?: RefContent }} */
   const fileBrowserRef = useRef();
-  const [query, setQuery] = useState('');
-  const handleTryQuery = useCallback(() => {
-    const queryValue = form.getFieldValue('query');
-    setQuery(queryValue);
-  }, [form]);
+
+  const [previewFiles, setPreviewFiles] = useState([]);
+  const [showQuery, setShowQuery] = useState(false);
+
+  const handleToggleQuery = useCallback(() => setShowQuery(state => !state), [
+    setShowQuery,
+  ]);
+
+  const handleTryQuery = useCallback(async () => {
+    form.validateFields(['query'], async (err, values) => {
+      if (err) return null;
+      try {
+        /** @type {import('axios').AxiosResponse<FileMeta[]>} */
+        const response = await client.post(
+          `/datasource/id/${dataSource.id}/snapshot/preview`,
+          { query: values.query }
+        );
+        setShowQuery(true);
+        return setPreviewFiles(response.data);
+      } catch (e) {
+        return notification({ message: e.message, type: 'error' });
+      }
+    });
+  }, [dataSource, form, setPreviewFiles]);
 
   const filteredFiles = useMemo(() => {
-    if (query === '') return dataSource.files;
-    const queryRegexp = new RegExp(query, 'i');
-    return dataSource.files.filter(file => file.meta.match(queryRegexp));
-  }, [dataSource, query]);
+    return showQuery ? previewFiles : dataSource.files;
+  }, [showQuery, previewFiles, dataSource]);
 
   // const handleFileAdded = useCallback(
   //   file => {
@@ -138,7 +155,11 @@ const QueryMode = ({ dataSource, form }) => {
   return (
     <Form onSubmit={handleSubmit} style={{ display: 'contents' }}>
       <FileBrowserContainer>
-        <FileBrowser files={filteredFiles} ref={fileBrowserRef} />
+        <FileBrowser
+          files={filteredFiles}
+          ref={fileBrowserRef}
+          onDownload={onDownload}
+        />
       </FileBrowserContainer>
       <InnerContainer>
         <Row style={{ flex: 1 }}>
@@ -146,12 +167,7 @@ const QueryMode = ({ dataSource, form }) => {
             style={{ display: 'contents' }}
             wrapperCol={{ style: { display: 'contents' } }}>
             {form.getFieldDecorator('query', {
-              rules: [
-                {
-                  required: true,
-                  message: 'please enter a query',
-                },
-              ],
+              rules: [{ message: 'please enter a query', required: true }],
             })(<Input.TextArea placeholder="Query" allowClear />)}
           </FormItem>
         </Row>
@@ -160,8 +176,9 @@ const QueryMode = ({ dataSource, form }) => {
             {form.getFieldDecorator('snapshotName', {
               rules: [
                 {
-                  required: true,
                   message: 'please enter a snapshot name',
+                  max: 25,
+                  required: true,
                 },
               ],
             })(
@@ -178,8 +195,16 @@ const QueryMode = ({ dataSource, form }) => {
       </InnerContainer>
       <BottomPanel>
         <Button type="secondary" onClick={handleTryQuery}>
-          try query
+          Preview Query
         </Button>
+        {showQuery || previewFiles.length > 0 ? (
+          <Button
+            type="dashed"
+            onClick={handleToggleQuery}
+            style={{ marginLeft: '2ch' }}>
+            {showQuery ? 'Show All' : 'Apply Preview'}
+          </Button>
+        ) : null}
         <RightButton
           htmlType="submit"
           type="primary"
@@ -203,6 +228,8 @@ QueryMode.propTypes = {
     validateFields: PropTypes.func.isRequired,
     getFieldValue: PropTypes.func.isRequired,
   }).isRequired,
+
+  onDownload: PropTypes.func.isRequired,
 };
 
 export default Form.create({ comment: '' })(QueryMode);

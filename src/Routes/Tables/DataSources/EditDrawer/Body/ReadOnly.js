@@ -10,16 +10,21 @@ import FileBrowser from './FileBrowser';
  * @typedef {import('antd/lib/upload/interface').UploadFile} UploadFile
  */
 
-const ReadOnly = ({ dataSource, onSelectVersion }) => {
+const ReadOnly = ({ dataSource, onDownload }) => {
   const fileBrowserRef = useRef();
   return (
     <>
       <FileBrowserContainer>
-        <FileBrowser isReadOnly files={dataSource.files} ref={fileBrowserRef} />
+        <FileBrowser
+          isReadOnly
+          files={dataSource.files}
+          ref={fileBrowserRef}
+          onDownload={onDownload}
+        />
       </FileBrowserContainer>
       <BottomPanel>
-        <RightButton type="primary" onClick={onSelectVersion}>
-          Select Version
+        <RightButton type="primary" disabled>
+          read only
         </RightButton>
       </BottomPanel>
     </>
@@ -30,7 +35,7 @@ ReadOnly.propTypes = {
   dataSource: PropTypes.shape({
     files: PropTypes.arrayOf(PropTypes.object).isRequired,
   }).isRequired,
-  onSelectVersion: PropTypes.func.isRequired,
+  onDownload: PropTypes.func.isRequired,
 };
 
 export default ReadOnly;
