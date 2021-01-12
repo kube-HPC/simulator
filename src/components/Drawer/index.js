@@ -21,6 +21,17 @@ const DrawerPadding = styled(AntDrawer)`
   }
 `;
 
+/**
+ * @param {{
+ *   style: import('react').CSSProperties;
+ *   wrapperStyle: import('react').CSSProperties;
+ *   width: string;
+ *   isOpened: boolean;
+ *   onClose: function;
+ *   onDidClose: function;
+ *   title: string;
+ * }} props
+ */
 const Drawer = ({
   children,
   bottomContent,
@@ -29,6 +40,7 @@ const Drawer = ({
   onClose,
   onDidClose,
   title,
+  wrapperStyle,
   style,
   ...props
 }) => {

@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown, Menu, Button } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import _ from 'lodash';
-
+import usePath from './../../usePath';
 /**
- * @typedef {import('reducers/dataSources/datasource').DataSource} DataSource
+ * @typedef {import('./').ExtendedDataSource} ExtendedDataSource
  * @typedef {import('reducers/dataSources/datasource').DataSourceVersion} DataSourceVersion
+ * @typedef {import('reducers/dataSources/datasource').Snapshot} Snapshot
+ * @typedef {import('../../usePath').SideBarMode} SideBarMode
+ * @typedef {import('reducers/dataSources/datasource').FetchStatus} FetchStatus
  */
 
 const VersionDescription = styled.p`
@@ -22,82 +25,157 @@ const VersionTag = styled.span`
   font-weight: bold;
 `;
 
-/** @param {{ version: DataSourceVersion; collection: DataSourceVersion[] }} props */
-const VersionRow = ({ version, collection }) => (
+/**
+ * @param {{
+ *   version: DataSourceVersion;
+ *   isLatest: boolean;
+ * }} props
+ */
+const VersionRow = ({ title, isLatest, isSnapshot }) => (
   <>
-    <span>{version.id}</span>
+    <span>{title}</span>
     <VersionTag>
-      {_.last(collection).id === version.id ? 'Latest' : 'Raw'}
+      {isSnapshot ? 'Snapshot' : isLatest ? 'Latest' : 'Raw'}
     </VersionTag>
   </>
 );
 VersionRow.propTypes = {
-  version: PropTypes.shape({ id: PropTypes.string.isRequired }).isRequired,
-  collection: PropTypes.arrayOf(
-    PropTypes.shape({ id: PropTypes.string.isRequired }).isRequired
-  ).isRequired,
+  title: PropTypes.string.isRequired,
+  isLatest: PropTypes.bool.isRequired,
+  isSnapshot: PropTypes.bool,
 };
+VersionRow.defaultProps = {
+  isSnapshot: false,
+};
+
+const isLatest = (collection, entry) => _.last(collection).id === entry.id;
 
 /**
  * @param {{
- *   versions: DataSourceVersion[];
+ *   entries: (DataSourceVersion | Snapshot)[];
  *   isPending: boolean;
- *   dataSource: DataSource;
- * }} params
+ *   dataSource: ExtendedDataSource;
+ *   versions: DataSourceVersion[];
+ *   activeSnapshot?: Snapshot;
+ * }}
  */
-const Selector = ({ versions, isPending, dataSource }) => {
-  if (isPending || versions.length === 0 || !dataSource)
+const Selector = ({
+  entries,
+  isPending,
+  dataSource,
+  versions,
+  activeSnapshot,
+}) => {
+  const { paths, mode } = usePath();
+  const location = useLocation();
+  if (isPending || entries.length === 0 || !dataSource)
     return <Button loading>loading versions</Button>;
 
   const menu = (
     <Menu>
-      {versions.map(version => (
-        <Menu.Item key={`dataSource-version-${version.id}`}>
-          <Link to={`/datasources/${version.id}/edit`}>
-            <VersionRow version={version} collection={versions} />
-          </Link>
-        </Menu.Item>
-      ))}
+      {entries.map(entry => {
+        const isSnapshot = !!entry.query;
+        return (
+          <Menu.Item key={`dataSource-versions-entry-${entry.id}`}>
+            <Link
+              to={{
+                pathname: isSnapshot
+                  ? paths.snapshot({
+                      nextDataSourceId: entry.dataSource.id,
+                      nextSnapshotName: entry.name,
+                    })
+                  : paths[mode]({ nextDataSourceId: entry.id }),
+                search: location.search,
+              }}>
+              <VersionRow
+                title={isSnapshot ? entry.name : entry.id}
+                isLatest={isLatest(versions, entry)}
+                isSnapshot={isSnapshot}
+                collection={entries}
+              />
+            </Link>
+          </Menu.Item>
+        );
+      })}
     </Menu>
   );
-
   return (
     <Dropdown overlay={menu} placement="bottomLeft">
       <Button loading={isPending}>
-        <VersionRow version={dataSource} collection={versions} />
+        <VersionRow
+          title={activeSnapshot ? activeSnapshot.name : dataSource.id}
+          isLatest={isLatest(versions, dataSource)}
+          isSnapshot={activeSnapshot !== null}
+        />
       </Button>
     </Dropdown>
   );
 };
 
 Selector.propTypes = {
-  versions: PropTypes.arrayOf(PropTypes.shape({})),
+  entries: PropTypes.arrayOf(PropTypes.object),
   isPending: PropTypes.bool.isRequired,
   dataSource: PropTypes.shape({
     id: PropTypes.string.isRequired,
+    snapshot: PropTypes.shape({
+      name: PropTypes.string,
+    }),
+    isSnapshot: PropTypes.bool,
   }).isRequired,
+  versions: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  activeSnapshot: PropTypes.shape({
+    name: PropTypes.string,
+  }),
 };
+
 Selector.defaultProps = {
-  versions: null,
+  entries: [],
+  activeSnapshot: null,
 };
 
 /**
  * @param {{
- *   dataSource: DataSource;
+ *   dataSource: ExtendedDataSource;
  *   versionsCollection: {
  *     versions: DataSourceVersion[];
- *     status: string;
+ *     status: FetchStatus;
  *   };
+ *   snapshots: Snapshot[];
+ *   mode: SideBarMode;
+ *   activeSnapshot?: Snapshot;
  * }} params
  */
-const Versions = ({ dataSource, versionsCollection }) => {
+const Versions = ({
+  dataSource,
+  versionsCollection,
+  snapshots,
+  activeSnapshot,
+}) => {
   const isPending = versionsCollection?.status === 'PENDING' ?? true;
+  const combinedItems = useMemo(() => {
+    const { versions } = versionsCollection;
+    if (snapshots.length === 0) return versions;
+    const snapshotsByVersion = _.groupBy(snapshots, 'dataSource.id');
+    return versions.reduce(
+      (acc, version) =>
+        snapshotsByVersion[version.id]
+          ? acc.concat(version).concat(snapshotsByVersion[version.id])
+          : acc.concat(version),
+      []
+    );
+  }, [snapshots, versionsCollection]);
   return (
     <>
       <Selector
         versions={versionsCollection.versions}
+        entries={combinedItems}
         isPending={isPending}
         dataSource={dataSource}
+        activeSnapshot={activeSnapshot}
       />
       <VersionDescription>{dataSource.versionDescription}</VersionDescription>
     </>
@@ -109,6 +187,7 @@ Versions.propTypes = {
     name: PropTypes.string.isRequired,
     versionDescription: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
+    snapshot: PropTypes.shape({ id: PropTypes.string }),
   }).isRequired,
   versionsCollection: PropTypes.shape({
     status: PropTypes.string,
@@ -116,5 +195,14 @@ Versions.propTypes = {
       PropTypes.shape({ versionDescription: PropTypes.string.isRequired })
     ),
   }).isRequired,
+  snapshots: PropTypes.arrayOf(PropTypes.object),
+  // eslint-disable-next-line
+  activeSnapshot: PropTypes.any,
 };
+
+Versions.defaultProps = {
+  snapshots: [],
+  activeSnapshot: null,
+};
+
 export default Versions;

@@ -6,6 +6,7 @@ import {
 } from '@reduxjs/toolkit';
 import types from './actionTypes';
 import { reducer as versionsReducer } from './versions';
+import { reducer as snapshotsReducer } from './snapshots';
 import globalActions from './../../const/application-actions';
 
 /**
@@ -14,9 +15,11 @@ import globalActions from './../../const/application-actions';
  * @typedef {import('./datasource').DataSourceEntry} DataSourceEntry
  * @typedef {import('./datasource').FetchStatus} FetchStatus
  * @typedef {import('./versions').VersionsState} VersionsState
+ * @typedef {import('./snapshots').SnapshotsState} SnapshotsState
  * @typedef {{
  *   dataSources: {
  *     collection: CollectionState;
+ *     snapshots: SnapshotsState;
  *     status: FetchStatus;
  *     error: string | null;
  *     versions: VersionsState;
@@ -137,6 +140,7 @@ const error = (state = null, { type }) => {
 export const reducer = combineReducers({
   collection: dataSources.reducer,
   versions: versionsReducer,
+  snapshots: snapshotsReducer,
   status,
   error,
 });
@@ -181,4 +185,7 @@ export const selectors = {
   ),
   /** @param {State} state */
   versions: (state, name) => state.dataSources.versions[name],
+  /** @param {State} state */
+  snapshots: (state, dataSourceName) =>
+    state.dataSources.snapshots[dataSourceName],
 };

@@ -40,3 +40,12 @@ export type DataSourceVersion = {
 
 export type DataSource = DataSourceMeta &
   DataSourceEntry & { status?: FetchStatus };
+
+export type Snapshot = {
+  id?: string;
+  name: string;
+  query: string;
+  filteredFilesList?: FileMeta[];
+  droppedFiles?: FileMeta[];
+  dataSource: { id: string; name: string };
+};

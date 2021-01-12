@@ -8,7 +8,7 @@ import Header from './Header';
 import Body from './Body';
 
 const EditDrawer = () => {
-  const { goTo, dataSourceId, mode } = usePath();
+  const { goTo, dataSourceId, mode, snapshotName } = usePath();
   const { dataSource, isReady, status } = useActiveDataSource();
   const { setOff, isOn } = useToggle(true);
   return (
@@ -24,7 +24,7 @@ const EditDrawer = () => {
         dataSourceName={dataSource?.name}
       />
       {isReady ? (
-        <Body dataSource={dataSource} goTo={goTo} mode={mode} />
+        <Body goTo={goTo} mode={mode} snapshotName={snapshotName} />
       ) : null}
     </Drawer>
   );

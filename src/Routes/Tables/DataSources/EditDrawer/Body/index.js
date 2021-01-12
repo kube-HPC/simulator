@@ -11,16 +11,25 @@ import useVersions from '../useVersions';
 import EditMode from './EditMode';
 import ReadOnly from './ReadOnly';
 import QueryMode from './QueryMode';
-
+import PreviewSnapshot from './PreviewSnapshot';
+import useSnapshots from '../useSnapshots';
 /**
  * @typedef {import('./FileBrowser').RefContent} RefContent
  * @typedef {import('./stratifier').FlatFile} FlatFile
  * @typedef {import('antd/lib/upload/interface').UploadFile} UploadFile
+ * @typedef {import('reducers/dataSources/datasource').DataSource} DataSource
+ * @typedef {import('reducers/dataSources/datasource').Snapshot} Snapshot
+ * @typedef {DataSource & { snapshot?: Snapshot; isSnapshot: boolean }} ExtendedDataSource
  */
 
 const Body = ({ goTo, mode }) => {
   const { dataSource } = useActiveDataSource();
   const versionsCollection = useVersions(dataSource);
+  const {
+    collection: snapshots,
+    isReady: hasSnapshots,
+    activeSnapshot,
+  } = useSnapshots({ dataSourceName: dataSource.name });
   const dispatch = useDispatch();
 
   const onCreateVersion = useCallback(
@@ -56,7 +65,8 @@ const Body = ({ goTo, mode }) => {
   );
 
   const isEditable = versionsCollection
-    ? dataSource.id === _.last(versionsCollection.versions).id
+    ? dataSource.id === _.last(versionsCollection.versions).id &&
+      !dataSource.isSnapshot
     : false;
 
   return (
@@ -66,13 +76,25 @@ const Body = ({ goTo, mode }) => {
         goTo={goTo}
         dataSource={dataSource}
         versionsCollection={versionsCollection}
+        activeSnapshot={activeSnapshot}
+        snapshots={hasSnapshots ? snapshots : []}
       />
       <Switch>
         <Route
           exact
+          path="/datasources/:dataSourceId/:mode/snapshot/:snapshotName"
+          render={() => (
+            <PreviewSnapshot
+              onDownload={onDownload}
+              activeSnapshot={activeSnapshot}
+            />
+          )}
+        />
+        <Route
+          exact
           path="/datasources/:dataSourceId/query"
           render={() => (
-            <QueryMode dataSource={dataSource} onDownload={onDownload} />
+            <QueryMode onDownload={onDownload} dataSource={dataSource} />
           )}
         />
         <Route
@@ -81,13 +103,13 @@ const Body = ({ goTo, mode }) => {
           render={() =>
             isEditable ? (
               <EditMode
-                dataSource={dataSource}
                 onDownload={onDownload}
                 onCreateVersion={onCreateVersion}
+                dataSource={dataSource}
                 submittingStatus={versionsCollection.submittingStatus}
               />
             ) : (
-              <ReadOnly dataSource={dataSource} onDownload={onDownload} />
+              <ReadOnly onDownload={onDownload} dataSource={dataSource} />
             )
           }
         />

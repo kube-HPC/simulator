@@ -19,5 +19,7 @@ export const fileTypes = {
   'text/csv': { name: 'CSV', category: 'text' },
   'image/gif': { name: 'GIF', category: 'image' },
   'image/jpeg': { name: 'JPG', category: 'image' },
+  'image/png': { name: 'PNG', category: 'image' },
+  'image/svg+xml': { name: 'SVG', category: 'image' },
   default: { name: '?' },
 };
