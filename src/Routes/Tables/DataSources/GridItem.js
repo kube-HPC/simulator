@@ -36,18 +36,28 @@ const FileTypesList = styled.div`
 `;
 
 const GridItemCard = styled(Card.Grid)`
-  max-width: calc(25% - 1em);
+  max-width: calc(25% - 2ch);
   min-width: 40ch;
   margin: 0 auto;
   min-height: 15em;
   display: flex;
   flex-direction: column;
-  margin: 0 0.5em;
+  margin: 0 1ch;
   margin-bottom: 1em;
   border-radius: 0.5em;
   cursor: pointer;
   padding: 1em;
   user-select: none;
+  @media only screen and (max-width: 210ch) {
+    max-width: calc(33% - 2ch);
+  }
+  @media only screen and (max-width: 160ch) {
+    max-width: unset;
+    width: calc(50% - 2ch);
+  }
+  @media only screen and (max-width: 120ch) {
+    width: calc(100% - 2ch);
+  }
 `;
 
 const SummaryBar = styled.div`

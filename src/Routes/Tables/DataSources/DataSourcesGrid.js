@@ -7,8 +7,7 @@ import GridItem from './GridItem';
 const Grid = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  margin: 0;
+  justify-content: flex-start;
   padding-top: 1em;
 `;
 
