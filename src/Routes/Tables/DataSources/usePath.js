@@ -17,8 +17,9 @@ export default () => {
       snapshot: ({
         nextDataSourceId = dataSourceId,
         nextSnapshotName = snapshotName,
+        mode: _mode = mode,
       } = {}) =>
-        `/datasources/${nextDataSourceId}/${mode}/snapshot/${nextSnapshotName}`,
+        `/datasources/${nextDataSourceId}/${_mode}/snapshot/${nextSnapshotName}`,
     }),
     [dataSourceId, mode, snapshotName]
   );
@@ -40,9 +41,13 @@ export default () => {
           pathname: paths.query({ nextDataSourceId }),
           search: location.search,
         }),
-      snapshot: ({ nextDataSourceId, nextSnapshotName } = {}) =>
+      snapshot: ({ nextDataSourceId, nextSnapshotName, mode: _mode } = {}) =>
         history.push({
-          pathname: paths.snapshot({ nextDataSourceId, nextSnapshotName }),
+          pathname: paths.snapshot({
+            nextDataSourceId,
+            nextSnapshotName,
+            mode: _mode,
+          }),
           search: location.search,
         }),
     }),

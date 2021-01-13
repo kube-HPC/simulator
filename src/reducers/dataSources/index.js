@@ -6,9 +6,13 @@ import {
 } from '@reduxjs/toolkit';
 import types from './actionTypes';
 import { reducer as versionsReducer } from './versions';
-import { reducer as snapshotsReducer } from './snapshots';
+import {
+  reducer as snapshotsReducer,
+  actions as snapshotsActions,
+} from './snapshots';
 import globalActions from './../../const/application-actions';
 
+export { snapshotsActions };
 /**
  * @typedef {import('./datasource.d').DataSource} DataSource
  * @typedef {import('@reduxjs/toolkit').EntityState<DataSource>} CollectionState
@@ -49,7 +53,6 @@ const dataSources = createSlice({
           status: 'IDLE',
         }))
       ),
-
     /**
      * @param {{
      *   payload: { dataSources: DataSource[] };
@@ -146,7 +149,6 @@ export const reducer = combineReducers({
 });
 
 const baseSelectors = entityAdapter.getSelectors();
-
 export const selectors = {
   all: createSelector(
     // select the active version for each dataSource

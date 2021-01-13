@@ -32,9 +32,7 @@ export const fetchDataSource = ({ name, id }) => ({
         : `datasource/${name}`,
     actionType: actions.DATASOURCE_FETCH,
   },
-  meta: {
-    id,
-  },
+  meta: { id },
 });
 
 export const fetchSnapshots = ({ name }) => ({
@@ -44,16 +42,6 @@ export const fetchSnapshots = ({ name }) => ({
     actionType: actions.SNAPSHOT_FETCH_ALL,
   },
   meta: { name },
-});
-
-export const createSnapshot = ({ dataSourceId, query }) => ({
-  type: actions.REST_REQ_POST,
-  payload: {
-    url: `/datasource/id/${dataSourceId}/snapshot`,
-    body: { query },
-    actionType: actions.SNAPSHOT_POST,
-  },
-  meta: { dataSourceId },
 });
 
 /**

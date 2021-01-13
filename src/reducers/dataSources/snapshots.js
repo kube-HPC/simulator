@@ -15,7 +15,20 @@ const initialState = {};
 const snapshots = createSlice({
   name: 'snapshots',
   initialState,
-  reducers: {},
+  reducers: {
+    /** @param {{ payload: Snapshot; meta: { dataSourceId: string } }} action */
+    appendSnapshot: (state, { payload }) => {
+      const { name } = payload.dataSource;
+      const dataSource = state[name];
+      return {
+        ...state,
+        [name]: {
+          ...dataSource,
+          collection: dataSource.collection.concat(payload),
+        },
+      };
+    },
+  },
   extraReducers: {
     /** @param {{ payload: DataSource[] }} action */
     [actionTypes.fetchAll.success]: (state, action) => {
@@ -54,12 +67,22 @@ const snapshots = createSlice({
         collection: state[action.meta.name]?.collection ?? [],
       },
     }),
-    [actionTypes.createSnapshot.success]: (state, action) => {
-      console.log(action);
-      // save the snapshots by datasource name
-      return state;
+    /** @param {{ payload: Snapshot; meta: { dataSourceId: string } }} action */
+    [actionTypes.createSnapshot.success]: (state, { payload }) => {
+      const { name } = payload.dataSource;
+      let dataSource = state[name];
+      if (!dataSource) {
+        dataSource = { status: 'SUCCESS', collection: [] };
+      }
+      return {
+        ...state,
+        [name]: {
+          ...dataSource,
+          collection: dataSource.collection.concat(payload),
+        },
+      };
     },
   },
 });
 
-export const { reducer } = snapshots;
+export const { reducer, actions } = snapshots;

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Input, Icon, Form, Button } from 'antd';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
-import { createSnapshot } from 'actions/dataSources';
+import { snapshotsActions } from 'reducers/dataSources';
 import { notification } from 'utils';
 import client from '../../../../../client';
 import FileBrowser from './FileBrowser';
@@ -15,11 +15,13 @@ import {
   FormContainer,
 } from './styles';
 import './styles.css';
+import usePath from './../../usePath';
 
 /**
  * @typedef {import('reducers/dataSources/datasource').FileMeta} FileMeta
  * @typedef {import('./FileBrowser').RefContent} RefContent
  * @typedef {import('.').ExtendedDataSource} ExtendedDataSource
+ * @typedef {import('reducers/dataSources/datasource').Snapshot} Snapshot
  */
 
 const FormItem = styled(Form.Item)`
@@ -33,13 +35,14 @@ const FormItem = styled(Form.Item)`
  *   form: import('antd/lib/form/Form').WrappedFormUtils;
  * }} props
  */
-const Create = ({ dataSource, form, onDownload }) => {
+const QueryMode = ({ dataSource, form, onDownload }) => {
   /** @type {{ current?: RefContent }} */
   const fileBrowserRef = useRef();
   const dispatch = useDispatch();
   const [previewFiles, setPreviewFiles] = useState([]);
   const [showQuery, setShowQuery] = useState(false);
-
+  const [isPending, setPending] = useState(false);
+  const { goTo } = usePath();
   const handleToggleQuery = useCallback(() => setShowQuery(state => !state), [
     setShowQuery,
   ]);
@@ -68,22 +71,32 @@ const Create = ({ dataSource, form, onDownload }) => {
   const handleSubmit = useCallback(
     e => {
       e.preventDefault();
-      form.validateFields((err, values) =>
-        err
-          ? null
-          : dispatch(
-              createSnapshot({
-                dataSourceId: dataSource.id,
-                query: values.query,
-              })
-            )
-      );
+      form.validateFields(async (err, values) => {
+        if (err) return null;
+        try {
+          setPending(true);
+          /** @type {import('axios').AxiosResponse<Snapshot>} */
+          const response = await client.post(
+            `/datasource/id/${dataSource.id}/snapshot`,
+            { snapshot: { query: values.query, name: values.snapshotName } }
+          );
+          dispatch(snapshotsActions.appendSnapshot(response.data));
+          goTo.snapshot({
+            nextDataSourceId: dataSource.id,
+            nextSnapshotName: response.data.name,
+            mode: 'query',
+          });
+          return null;
+        } catch (error) {
+          setPending(false);
+          return notification({ message: error.message, type: 'error' });
+        }
+      });
       return null;
     },
-    [dispatch, dataSource, form]
+    [dispatch, dataSource, form, setPending, goTo]
   );
 
-  const submittingStatus = 'null';
   return (
     <Form onSubmit={handleSubmit} style={{ display: 'contents' }}>
       <FileBrowserContainer>
@@ -137,18 +150,15 @@ const Create = ({ dataSource, form, onDownload }) => {
             {showQuery ? 'Show All' : 'Apply Preview'}
           </Button>
         ) : null}
-        <RightButton
-          htmlType="submit"
-          type="primary"
-          loading={submittingStatus === 'PENDING'}>
-          Create snapshot
+        <RightButton htmlType="submit" type="primary" loading={isPending}>
+          Create Snapshot
         </RightButton>
       </BottomPanel>
     </Form>
   );
 };
 
-Create.propTypes = {
+QueryMode.propTypes = {
   dataSource: PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
@@ -163,4 +173,4 @@ Create.propTypes = {
   onDownload: PropTypes.func.isRequired,
 };
 
-export default Form.create({ comment: '' })(Create);
+export default Form.create({ comment: '' })(QueryMode);
