@@ -25,3 +25,9 @@ export const FileBrowserContainer = styled.section`
 export const RightButton = styled(Button)`
   margin-left: auto;
 `;
+
+export const FormContainer = styled.section`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+`;

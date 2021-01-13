@@ -35,7 +35,10 @@ const VersionRow = ({ title, isLatest, isSnapshot }) => (
   <>
     <span>{title}</span>
     <VersionTag>
-      {isSnapshot ? 'Snapshot' : isLatest ? 'Latest' : 'Raw'}
+      {
+        // \u00A0 is a space character to maintain the margins when the tag is empty
+        isSnapshot ? 'Snapshot' : isLatest ? 'Latest' : '\u00A0'
+      }
     </VersionTag>
   </>
 );

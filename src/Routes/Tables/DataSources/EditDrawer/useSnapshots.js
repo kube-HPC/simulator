@@ -11,7 +11,7 @@ const useSnapshots = ({ dataSourceName }) => {
   const snapshots = useSelector(state =>
     selectors.dataSources.snapshots(state, dataSourceName)
   );
-  const isReady = snapshots.status === 'SUCCESS';
+  const isReady = snapshots?.status === 'SUCCESS';
 
   const activeSnapshot = useMemo(
     () =>

@@ -3,19 +3,13 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { COLOR_LAYOUT } from 'styles';
 import FileBrowser from './FileBrowser';
-import { FileBrowserContainer } from './styles';
+import { FileBrowserContainer, FormContainer } from './styles';
 import './styles.css';
 
 /**
  * @typedef {import('./FileBrowser').RefContent} RefContent
  * @typedef {import('reducers/dataSources/datasource').Snapshot} Snapshot
  */
-
-const InnerContainer = styled.section`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-`;
 
 const QueryPreview = styled.p`
   border: 1px solid ${COLOR_LAYOUT.border};
@@ -28,6 +22,7 @@ const Header = styled.h3`
   text-transform: capitalize;
   margin-top: 1em;
 `;
+
 /** @param {{ activeSnapshot: Snapshot }} props */
 const PreviewSnapshot = ({ activeSnapshot, onDownload }) => {
   /** @type {RefContent} */
@@ -42,10 +37,10 @@ const PreviewSnapshot = ({ activeSnapshot, onDownload }) => {
           ref={fileBrowserRef}
         />
       </FileBrowserContainer>
-      <InnerContainer>
+      <FormContainer>
         <Header>Query</Header>
         <QueryPreview>{activeSnapshot.query}</QueryPreview>
-      </InnerContainer>
+      </FormContainer>
     </div>
   );
 };

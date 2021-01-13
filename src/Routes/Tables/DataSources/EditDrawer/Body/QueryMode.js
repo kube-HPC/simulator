@@ -7,7 +7,13 @@ import { createSnapshot } from 'actions/dataSources';
 import { notification } from 'utils';
 import client from '../../../../../client';
 import FileBrowser from './FileBrowser';
-import { BottomPanel, Row, FileBrowserContainer, RightButton } from './styles';
+import {
+  BottomPanel,
+  Row,
+  FileBrowserContainer,
+  RightButton,
+  FormContainer,
+} from './styles';
 import './styles.css';
 
 /**
@@ -15,12 +21,6 @@ import './styles.css';
  * @typedef {import('./FileBrowser').RefContent} RefContent
  * @typedef {import('.').ExtendedDataSource} ExtendedDataSource
  */
-
-const InnerContainer = styled.section`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-`;
 
 const FormItem = styled(Form.Item)`
   height: 100%;
@@ -93,7 +93,7 @@ const Create = ({ dataSource, form, onDownload }) => {
           onDownload={onDownload}
         />
       </FileBrowserContainer>
-      <InnerContainer>
+      <FormContainer>
         <Row style={{ flex: 1 }}>
           <FormItem
             style={{ display: 'contents' }}
@@ -124,7 +124,7 @@ const Create = ({ dataSource, form, onDownload }) => {
             )}
           </Form.Item>
         </Row>
-      </InnerContainer>
+      </FormContainer>
       <BottomPanel>
         <Button type="secondary" onClick={handleTryQuery}>
           Preview Query
