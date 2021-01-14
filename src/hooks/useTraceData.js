@@ -1,17 +1,16 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { notification, transformTraceData } from 'utils';
-import Axios from 'axios';
-import { useSelector } from 'react-redux';
-import { selectors } from 'reducers';
+import client from './../client';
 
 const { TYPES } = notification;
 
-const fetch = ({ url, callback }) => ({ jobId }) =>
-  Axios.get(`${url}/jaeger`, {
-    params: {
-      jobId,
-    },
-  })
+const fetch = ({ callback }) => ({ jobId }) =>
+  client
+    .get(`/jaeger`, {
+      params: {
+        jobId,
+      },
+    })
     .then(({ data }) => {
       const [traceData] = data.data;
       callback(transformTraceData(traceData || {}));
@@ -26,8 +25,10 @@ const fetch = ({ url, callback }) => ({ jobId }) =>
 
 const useTraceData = () => {
   const [traceData, setTraceData] = useState(undefined);
-  const { socketURL: url } = useSelector(selectors.connection.stats);
-  return { traceData, fetch: fetch({ url, callback: setTraceData }) };
+  const _fetch = useCallback(() => fetch({ callback: setTraceData }), [
+    setTraceData,
+  ]);
+  return { traceData, fetch: _fetch };
 };
 
 export default useTraceData;

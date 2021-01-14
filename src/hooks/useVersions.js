@@ -1,51 +1,45 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useSelector } from 'react-redux';
 import { notification } from 'utils';
-import axios from 'axios';
-import { selectors } from 'reducers';
+import client from './../client';
 
 const errorNotification = ({ message }) => notification({ message });
 
-const fetchVersion = ({ url, algorithmName, callback }) =>
-  axios
-    .get(`${url}/versions/algorithms/${algorithmName}`)
+const fetchVersion = ({ algorithmName, callback }) =>
+  client
+    .get(`/versions/algorithms/${algorithmName}`)
     .then(({ data }) => {
       callback(data);
     })
     .catch(errorNotification);
 
-const applyVersion = ({ url }) => ({ name, version }) =>
-  axios
-    .post(`${url}/versions/algorithms/apply`, { name, version })
+const applyVersion = ({ name, version }) =>
+  client
+    .post(`/versions/algorithms/apply`, { name, version })
     .catch(errorNotification);
 
-const deleteVersion = ({ url }) => ({ name, version }) =>
-  axios
-    .delete(`${url}/versions/algorithms/${name}/${version}`)
+const deleteVersion = ({ name, version }) =>
+  client
+    .delete(`/versions/algorithms/${name}/${version}`)
     .catch(errorNotification);
 
 const useVersions = ({ algorithmName, isFetch }) => {
   const [dataSource, setDataSource] = useState(undefined);
-  const { socketURL } = useSelector(selectors.connection.stats);
-  const onApply = applyVersion({ url: socketURL });
-  const onDelete = deleteVersion({ url: socketURL });
 
   const fetch = useCallback(
-    () =>
-      fetchVersion({ url: socketURL, algorithmName, callback: setDataSource }),
-    [algorithmName, socketURL]
+    () => fetchVersion({ algorithmName, callback: setDataSource }),
+    [algorithmName]
   );
 
   useEffect(() => {
     if (isFetch) {
       fetch();
     }
-  }, [algorithmName, fetch, isFetch, socketURL]);
+  }, [algorithmName, fetch, isFetch]);
 
   return {
     dataSource,
-    onApply,
-    onDelete,
+    onApply: applyVersion,
+    onDelete: deleteVersion,
     fetch,
   };
 };
