@@ -22,7 +22,7 @@ const JobActions = ({ job }) => {
   const { goTo } = usePath();
   const {
     key,
-    pipeline,
+    userPipeline,
     status: { status },
     results,
   } = job;
@@ -34,10 +34,11 @@ const JobActions = ({ job }) => {
     resumePipeline,
   } = useActions();
   const downloadLinkRef = useRef();
-  const onReRun = useCallback(() => rerunRawPipeline(pipeline), [
-    pipeline,
+  const onReRun = useCallback(() => rerunRawPipeline(userPipeline), [
+    userPipeline,
     rerunRawPipeline,
   ]);
+
   const onStop = useCallback(() => stopPipeline(key), [stopPipeline, key]);
 
   const onMoreInfo = useCallback(() => goTo.overview({ nextJobId: key }), [

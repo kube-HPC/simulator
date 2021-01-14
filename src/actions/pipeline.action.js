@@ -83,16 +83,7 @@ export const cronStop = (name, pattern) => ({
   },
 });
 
-export const rerunRawPipeline = nominalPipeline => {
-  const {
-    jobId,
-    flowInputMetadata,
-    startTime,
-    lastRunResult,
-    types,
-    ...pipeline
-  } = nominalPipeline;
-
+export const rerunRawPipeline = pipeline => {
   const action = {
     type: actions.REST_REQ_POST,
     payload: {
