@@ -20,7 +20,6 @@ const JobsTable = () => {
     }),
     [goTo]
   );
-
   return (
     <Table
       loading={loading}

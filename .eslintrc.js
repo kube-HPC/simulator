@@ -58,6 +58,7 @@ module.exports = {
     'react/jsx-closing-bracket-location': [0],
     'react/jsx-one-expression-per-line': [0],
     'no-nested-ternary': [0],
+    'no-bitwise': [0],
     'import/no-named-as-default-member': [0],
     'import/no-named-as-default': [0],
     'import/prefer-default-export': [0],

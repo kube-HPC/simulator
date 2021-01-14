@@ -34,7 +34,10 @@ import {
   selectors as connectionSelectors,
 } from 'reducers/connection.reducer';
 import { drawer } from 'reducers/drawer.reducer';
-import { experiments } from 'reducers/experiment.reducer';
+import {
+  reducer as experiments,
+  selectors as experimentsSelectors,
+} from 'reducers/experiment.reducer';
 import { filterByType } from 'reducers/filter.reducer';
 import { meta } from 'reducers/meta.reducer';
 import { nodeStatistics } from 'reducers/nodeStatistics.reducer';
@@ -80,4 +83,5 @@ export const selectors = {
   jobs: jobsSelectors,
   errorLogs: errorLogsSelectors,
   connection: connectionSelectors,
+  experiments: experimentsSelectors,
 };

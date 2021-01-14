@@ -2,7 +2,7 @@ import { useEffect, useMemo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useHistory } from 'react-router-dom';
 import { STATE_SOURCES } from 'const';
-import isEqual from 'lodash/isEqual';
+import { selectors } from 'reducers';
 import useActions from './useActions';
 
 export const schema = {
@@ -19,9 +19,8 @@ const useExperiments = () => {
     query,
   ]);
 
-  const { dataSource, loading } = useSelector(
-    state => state[STATE_SOURCES.EXPERIMENTS],
-    isEqual
+  const { collection: experiments, loading } = useSelector(
+    selectors.experiments.all
   );
 
   const setExperiment = useCallback(
@@ -35,8 +34,8 @@ const useExperiments = () => {
   const {
     addExperiment,
     deleteExperiment,
-    triggerExperiment,
     changeExperiment,
+    setExperimentLoading,
   } = useActions();
 
   const { experimentName } = useSelector(state => state[STATE_SOURCES.META]);
@@ -46,22 +45,23 @@ const useExperiments = () => {
   }, [changeExperiment, experimentId]);
 
   useEffect(() => {
-    if (!loading && experimentName !== experimentId) {
-      triggerExperiment();
-    } else if (loading && experimentName === experimentId) {
-      triggerExperiment();
-    }
-  }, [experimentName, loading, triggerExperiment, experimentId]);
+    if (!(loading ^ (experimentName === experimentId)))
+      setExperimentLoading({ to: true });
+  }, [experimentName, loading, setExperimentLoading, experimentId]);
 
-  const defaultExperiment = dataSource.find(
-    ({ name }) => name === schema.DEFAULT
-  );
-  const restExperiments = dataSource.filter(
-    ({ name }) => name !== schema.DEFAULT
+  /* moves the default experiment to the top of the list */
+  const sortedExperiments = useMemo(
+    () =>
+      experiments
+        .slice()
+        .sort((a, b) =>
+          a.name === schema.DEFAULT ? -1 : b.name === schema.DEFAULT ? 1 : 0
+        ),
+    [experiments]
   );
 
   return {
-    experiments: [defaultExperiment, ...restExperiments],
+    experiments: sortedExperiments,
     add: addExperiment,
     remove: deleteExperiment,
     setExperiment,

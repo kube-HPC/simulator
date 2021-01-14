@@ -18,7 +18,7 @@ import {
 import {
   addExperiment,
   deleteExperiment,
-  triggerExperimentLoading as triggerExperiment,
+  setExperimentLoading,
   changeExperiment,
 } from 'actions/experiments.action';
 import { filterByType } from 'actions/filter.action';
@@ -73,7 +73,7 @@ const actions = {
   startBoard,
   stopPipeline,
   toggleViewType,
-  triggerExperiment,
+  setExperimentLoading,
   triggerUserGuide,
   updateStored,
   setConnectionStatus,
