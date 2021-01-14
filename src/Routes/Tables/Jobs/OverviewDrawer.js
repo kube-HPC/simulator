@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
 import Drawer from 'components/Drawer';
@@ -12,16 +12,12 @@ const OverviewDrawer = () => {
   const { goTo, jobId } = usePath();
   const { setOff, isOn } = useToggle(true);
 
-  const goBack = useCallback(() => {
-    goTo.root();
-  }, [goTo]);
-
   const item = useSelector(state => selectors.jobs.byId(state, jobId));
 
   return (
     <Drawer
       isOpened={isOn}
-      onDidClose={goBack}
+      onDidClose={goTo.root}
       onClose={setOff}
       width={DRAWER_SIZE.JOB_INFO}
       title={item?.pipeline?.name ?? jobId}>
