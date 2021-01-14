@@ -1,7 +1,8 @@
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import { Button, Tooltip } from 'antd';
 import { useSelector } from 'react-redux';
-import { USER_GUIDE, STATE_SOURCES } from 'const';
+import { selectors } from 'reducers';
+import { USER_GUIDE } from 'const';
 import { useActions } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { useCallback, useMemo, useRef } from 'react';
@@ -18,11 +19,11 @@ const canPauseOrStop = state =>
   isActive(state) || state === PIPELINE_STATUS.PAUSED;
 
 const JobActions = ({ job }) => {
-  const socketURL = useSelector(state => state[STATE_SOURCES.SOCKET_URL]);
+  const { socketURL } = useSelector(selectors.connection.stats);
   const { goTo } = usePath();
   const {
     key,
-    pipeline,
+    userPipeline,
     status: { status },
     results,
   } = job;
@@ -34,10 +35,11 @@ const JobActions = ({ job }) => {
     resumePipeline,
   } = useActions();
   const downloadLinkRef = useRef();
-  const onReRun = useCallback(() => rerunRawPipeline(pipeline), [
-    pipeline,
+  const onReRun = useCallback(() => rerunRawPipeline(userPipeline), [
+    userPipeline,
     rerunRawPipeline,
   ]);
+
   const onStop = useCallback(() => stopPipeline(key), [stopPipeline, key]);
 
   const onMoreInfo = useCallback(() => goTo.overview({ nextJobId: key }), [

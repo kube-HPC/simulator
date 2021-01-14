@@ -23,7 +23,7 @@ const JobInfo = ({ job }) => {
     nextTabKey => goTo.overview({ nextTabKey }),
     [goTo]
   );
-  const { key, graph, pipeline } = job;
+  const { key, graph, userPipeline = {}, pipeline } = job;
 
   const fetchJobTrace = useCallback(() => fetch({ jobId: key }), [fetch, key]);
 
@@ -46,12 +46,15 @@ const JobInfo = ({ job }) => {
       <Pane tab={TABS.GRAPH} key={TABS.GRAPH}>
         <GraphTab graph={{ ...graph, jobId: key }} pipeline={pipeline} />
       </Pane>
-      <Pane tab={TABS.TRACE} key={TABS.TRACE}>
+      <Tabs.TabPane tab={TABS.TRACE} key={TABS.TRACE}>
         <Trace data={traceData} />
-      </Pane>
-      <Pane tab={TABS.INFO} key={TABS.INFO}>
+      </Tabs.TabPane>
+      <Tabs.TabPane tab={TABS.INFO} key={TABS.INFO}>
+        <JsonSwitch obj={userPipeline} options={options} />
+      </Tabs.TabPane>
+      <Tabs.TabPane tab={TABS.MORE_INFO} key={TABS.MORE_INFO}>
         <JsonSwitch obj={pipeline} options={options} />
-      </Pane>
+      </Tabs.TabPane>
     </Tabs>
   );
 };
@@ -60,10 +63,11 @@ JobInfo.propTypes = {
   job: PropTypes.shape({
     key: PropTypes.string.isRequired,
     // TODO:: fill missing props
-    // eslint-disable-next-line
+    /* eslint-disable */
     graph: PropTypes.any,
-    // eslint-disable-next-line
+    userPipeline: PropTypes.object,
     pipeline: PropTypes.any,
+    /* eslint-enable */
   }).isRequired,
 };
 

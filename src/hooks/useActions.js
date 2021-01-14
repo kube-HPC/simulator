@@ -1,12 +1,9 @@
 import { createStore } from 'reusable';
 import { useDispatch } from 'react-redux';
 import actions from 'actions';
-import fromEntries from 'object.fromentries';
 import { useCallback } from 'react';
 
-if (!Object.fromEntries) {
-  fromEntries.shim();
-}
+/** @typedef {typeof actions} Actions */
 
 const useActions = () => {
   const dispatch = useDispatch();
@@ -18,8 +15,8 @@ const useActions = () => {
     key,
     createDispatch(value),
   ]);
+  /** @type {Actions} */
   const dispatcher = Object.fromEntries(objectMapped);
-
   return dispatcher;
 };
 

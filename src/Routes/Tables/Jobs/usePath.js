@@ -4,7 +4,8 @@ import { useHistory, useLocation, useParams } from 'react-router';
 export const OVERVIEW_TABS = {
   GRAPH: 'graph',
   TRACE: 'trace',
-  INFO: 'information',
+  INFO: 'pipeline',
+  MORE_INFO: 'extended pipeline',
 };
 
 export default () => {

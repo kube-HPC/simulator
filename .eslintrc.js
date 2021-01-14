@@ -59,6 +59,8 @@ module.exports = {
     'import/extensions': [0],
     'import/no-extraneous-dependencies': [0],
     'import/no-useless-path-segments': [0],
+    'no-nested-ternary': [0],
+    'no-bitwise': [0],
     'import/no-named-as-default-member': [0],
     'import/no-named-as-default': [0],
     'import/prefer-default-export': [0],

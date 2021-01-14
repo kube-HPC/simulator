@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
-import { shallowEqual, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { createStore } from 'reusable';
-import { STATE_SOURCES } from 'const';
 import useFilters from 'hooks/useFilters';
 import { jobColumns } from 'Routes/Tables/Jobs';
 import { selectors } from 'reducers';
@@ -24,15 +23,11 @@ const useJobs = () => {
     });
   }, [collection, searchFilter, filters]);
 
-  const { loading } = useSelector(
-    state => state[STATE_SOURCES.EXPERIMENTS],
-    shallowEqual
-  );
-
+  const loading = useSelector(selectors.experiments.loadingState);
   return {
     dataSource: filtered,
     columns: jobColumns,
-    loading: loading || !filtered,
+    loading,
   };
 };
 

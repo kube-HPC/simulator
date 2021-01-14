@@ -5,7 +5,12 @@ import {
 } from 'actions/algorithm.action';
 import { filterData } from 'actions/autoComplete.action';
 import { cancelBuild, rerunBuild } from 'actions/builds.action';
-import { init, socketInit } from 'actions/connection.action';
+import {
+  init,
+  socketInit,
+  setConnectionStatus,
+  connectionSetup,
+} from 'actions/connection.action';
 import {
   open as drawerOpen,
   toggle as drawerToggle,
@@ -13,7 +18,7 @@ import {
 import {
   addExperiment,
   deleteExperiment,
-  triggerExperimentLoading as triggerExperiment,
+  setExperimentLoading,
   changeExperiment,
 } from 'actions/experiments.action';
 import { filterByType } from 'actions/filter.action';
@@ -68,9 +73,11 @@ const actions = {
   startBoard,
   stopPipeline,
   toggleViewType,
-  triggerExperiment,
+  setExperimentLoading,
   triggerUserGuide,
   updateStored,
+  setConnectionStatus,
+  connectionSetup,
 };
 
 export default actions;
