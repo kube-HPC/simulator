@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { notification } from 'utils';
-import { STATE_SOURCES } from 'const';
 import axios from 'axios';
+import { selectors } from 'reducers';
 
 const errorNotification = ({ message }) => notification({ message });
 
@@ -26,7 +26,7 @@ const deleteVersion = ({ url }) => ({ name, version }) =>
 
 const useVersions = ({ algorithmName, isFetch }) => {
   const [dataSource, setDataSource] = useState(undefined);
-  const socketURL = useSelector(state => state[STATE_SOURCES.SOCKET_URL]);
+  const { socketURL } = useSelector(selectors.connection.stats);
   const onApply = applyVersion({ url: socketURL });
   const onDelete = deleteVersion({ url: socketURL });
 

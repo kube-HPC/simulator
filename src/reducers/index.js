@@ -30,10 +30,8 @@ import {
   selectors as errorLogsSelectors,
 } from 'reducers/errorLogs.reducer';
 import {
-  boardURL,
-  connectionStatus,
-  socketURL,
-  hkubeSystemVersion,
+  reducer as connection,
+  selectors as connectionSelectors,
 } from 'reducers/connection.reducer';
 import { drawer } from 'reducers/drawer.reducer';
 import { experiments } from 'reducers/experiment.reducer';
@@ -52,9 +50,7 @@ const store = {
   meta,
   autoCompleteFilter,
   boards,
-  boardURL,
-  hkubeSystemVersion,
-  connectionStatus,
+  connection,
   debug,
   drawer,
   drivers,
@@ -67,7 +63,6 @@ const store = {
   storage,
   pipelines,
   settings,
-  socketURL,
   userGuide,
   viewType,
   workers,
@@ -84,4 +79,5 @@ export const selectors = {
   debug: debugSelectors,
   jobs: jobsSelectors,
   errorLogs: errorLogsSelectors,
+  connection: connectionSelectors,
 };

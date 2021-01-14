@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
 import { notification } from 'utils';
-import { STATE_SOURCES } from 'const';
 import axios from 'axios';
 import { useCallback } from 'react';
+import { selectors } from 'reducers';
 
 const errorNotification = ({ message }) => notification({ message });
 const successNotification = () =>
@@ -50,7 +50,7 @@ const post = ({ url, type }) => ({ name, readme }) => {
 };
 
 const useReadme = type => {
-  const url = useSelector(state => state[STATE_SOURCES.SOCKET_URL]);
+  const { socketURL: url } = useSelector(selectors.connection.stats);
   const asyncFetch_ = useCallback(props => asyncFetch({ url, type })(props), [
     url,
     type,

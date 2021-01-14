@@ -5,7 +5,12 @@ import {
 } from 'actions/algorithm.action';
 import { filterData } from 'actions/autoComplete.action';
 import { cancelBuild, rerunBuild } from 'actions/builds.action';
-import { init, socketInit } from 'actions/connection.action';
+import {
+  init,
+  socketInit,
+  setConnectionStatus,
+  connectionSetup,
+} from 'actions/connection.action';
 import {
   open as drawerOpen,
   toggle as drawerToggle,
@@ -71,6 +76,8 @@ const actions = {
   triggerExperiment,
   triggerUserGuide,
   updateStored,
+  setConnectionStatus,
+  connectionSetup,
 };
 
 export default actions;

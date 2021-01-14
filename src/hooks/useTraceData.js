@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { notification, transformTraceData } from 'utils';
 import Axios from 'axios';
-import { STATE_SOURCES } from 'const';
 import { useSelector } from 'react-redux';
+import { selectors } from 'reducers';
 
 const { TYPES } = notification;
 
@@ -26,7 +26,7 @@ const fetch = ({ url, callback }) => ({ jobId }) =>
 
 const useTraceData = () => {
   const [traceData, setTraceData] = useState(undefined);
-  const url = useSelector(state => state[STATE_SOURCES.SOCKET_URL]);
+  const { socketURL: url } = useSelector(selectors.connection.stats);
   return { traceData, fetch: fetch({ url, callback: setTraceData }) };
 };
 

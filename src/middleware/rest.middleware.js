@@ -1,6 +1,8 @@
 import axios from 'axios';
 import successMsg from 'config/schema/success-messages.schema';
 import AT from 'const/application-actions';
+import client from './../client';
+import actions from '../actions';
 
 const setMonitorPath = monitorBackend =>
   monitorBackend.useLocation
@@ -76,12 +78,14 @@ const restMiddleware = ({ dispatch }) => next => action => {
     const { monitorBackend, board, hkubeSystemVersion } = action.payload.config;
     SOCKET_URL = setMonitorPath(monitorBackend);
     BOARD_URL = setBoardPath(board);
-    if (SOCKET_URL) dispatch({ type: AT.SOCKET_SET_URL, url: SOCKET_URL });
-    dispatch({ type: AT.BOARD_SET_URL, url: BOARD_URL });
-    dispatch({
-      type: AT.SET_HKUBE_VERSION,
-      hkubeSystemVersion: hkubeSystemVersion || null,
-    });
+    dispatch(
+      actions.connectionSetup({
+        socketURL: SOCKET_URL,
+        boardUrl: BOARD_URL,
+        hkubeSystemVersion,
+      })
+    );
+    client.defaults.baseURL = SOCKET_URL;
     return next(action);
   }
   if (
