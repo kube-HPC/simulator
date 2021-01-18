@@ -14,7 +14,8 @@ const useExperiments = () => {
   const location = useLocation();
   const history = useHistory();
   const { pathname, search } = location;
-  const query = new URLSearchParams(search);
+
+  const query = useMemo(() => new URLSearchParams(search), [search]);
   const experimentId = useMemo(() => query.get('experiment') || 'main', [
     query,
   ]);

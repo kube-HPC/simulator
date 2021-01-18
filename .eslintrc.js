@@ -15,7 +15,7 @@ module.exports = {
   extends: [
     'plugin:react/recommended',
     'airbnb',
-    'plugin:prettier/recommended',
+    'prettier',
     'plugin:jest/recommended',
   ],
   globals: {
@@ -23,9 +23,7 @@ module.exports = {
     SharedArrayBuffer: 'readonly',
   },
   parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
-    },
+    ecmaFeatures: { jsx: true },
     ecmaVersion: 2018,
     sourceType: 'module',
   },
@@ -35,12 +33,12 @@ module.exports = {
     'no-plusplus': [0],
     'no-unused-expressions': [0],
     'no-console': [1, { allow: ['info', 'warn', 'error'] }],
-    'no-nested-ternary': [0],
     'react/prop-types': [2],
     'react/default-props-match-prop-types': [2],
     'react/forbid-prop-types': [1],
     'react/no-array-index-key': [2],
     'react/no-redundant-should-component-update': [1],
+    'react/jsx-props-no-spreading': [0],
     'react/no-typos': [2],
     'react/no-this-in-sfc': [2],
     'react/no-unused-prop-types': [1],

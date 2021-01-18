@@ -6,14 +6,18 @@ import { toUpperCaseFirstLetter } from 'utils/string';
 
 const StatusTag = ({ status, count, colorMap = COLOR_PIPELINE_STATUS }) => (
   <Tooltip placement="top" title={status && toUpperCaseFirstLetter(status)}>
-    <Tag color={colorMap[status]}>{Number.isInteger(count) ? count : `No Stats`}</Tag>
+    <Tag color={colorMap[status]}>
+      {Number.isInteger(count) ? count : `No Stats`}
+    </Tag>
   </Tooltip>
 );
 
 StatusTag.propTypes = {
+  /* eslint-disable */
   status: PropsTypes.string,
   count: PropsTypes.number,
   colorMap: PropsTypes.object,
+  /* eslint-enable */
 };
 
 export default StatusTag;

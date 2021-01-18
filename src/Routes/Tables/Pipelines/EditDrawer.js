@@ -43,9 +43,7 @@ const EditDrawer = () => {
 };
 
 EditDrawer.propTypes = {
-  // TODO: detail the props
-  // eslint-disable-next-line
-  pipeline: PropTypes.any.isRequired,
+  pipeline: PropTypes.shape({ name: PropTypes.string }).isRequired,
 };
 
 export default React.memo(EditDrawer);

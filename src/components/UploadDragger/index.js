@@ -77,30 +77,29 @@ const FileDragger = ({
   onChange,
   children,
   supportedFiles,
-}) => {
-  return (
-    <Upload.Dragger
-      multiple
-      name="files"
-      accept="*"
-      customRequest={customRequest}
-      fileList={fileList}
-      onChange={onChange}>
-      <DraggerContent>
-        <Icon type="inbox" style={{ fontSize: 50, color: COLOR.blueLight }} />
-        <DraggerDescription>
-          <Text>Click or drag files to upload</Text>
-          <Text type="secondary">
-            {supportedFiles.length > 0
-              ? `supports ${supportedFiles.join(' | ')}`
-              : 'all file types are supported'}
-          </Text>
-        </DraggerDescription>
-        {children}
-      </DraggerContent>
-    </Upload.Dragger>
-  );
-};
+}) => (
+  <Upload.Dragger
+    multiple
+    name="files"
+    accept="*"
+    customRequest={customRequest}
+    fileList={fileList}
+    onChange={onChange}>
+    <DraggerContent>
+      <Icon type="inbox" style={{ fontSize: 50, color: COLOR.blueLight }} />
+      <DraggerDescription>
+        <Text>Click or drag files to upload</Text>
+        <Text type="secondary">
+          {supportedFiles.length > 0
+            ? `supports ${supportedFiles.join(' | ')}`
+            : 'all file types are supported'}
+        </Text>
+      </DraggerDescription>
+      {children}
+    </DraggerContent>
+  </Upload.Dragger>
+);
+
 FileDragger.propTypes = {
   supportedFiles: PropTypes.arrayOf(PropTypes.string),
   children: PropTypes.oneOfType([

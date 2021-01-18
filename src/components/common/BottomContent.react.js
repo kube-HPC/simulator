@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import FlexBox from './FlexBox.react';
 import { BottomPosition } from 'styles';
+import FlexBox from './FlexBox.react';
 
 const DEFAULT_HEIGHT = '3.5rem';
 
@@ -16,6 +16,7 @@ const BottomContent = ({ children, extra = [] }) => (
       <FlexBox.Item>
         <FlexBox>
           {extra.map((value, key) => (
+            // eslint-disable-next-line
             <FlexBox.Item key={key}>{value}</FlexBox.Item>
           ))}
         </FlexBox>
@@ -23,6 +24,7 @@ const BottomContent = ({ children, extra = [] }) => (
       <FlexBox.Item>
         <FlexBox>
           {React.Children.map(children, (child, key) => (
+            // eslint-disable-next-line
             <FlexBox.Item key={key}>{child}</FlexBox.Item>
           ))}
         </FlexBox>
@@ -35,9 +37,9 @@ BottomContent.Divider = Divider;
 BottomContent.DefaultHeight = DEFAULT_HEIGHT;
 
 BottomContent.propTypes = {
+  // eslint-disable-next-line
   extra: PropTypes.array.isRequired,
   children: PropTypes.node.isRequired,
-  width: PropTypes.string,
 };
 
 export default BottomContent;

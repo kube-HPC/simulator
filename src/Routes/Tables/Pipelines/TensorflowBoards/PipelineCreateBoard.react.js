@@ -76,9 +76,12 @@ const PipelineCreateBoard = ({ name, nodes }) => {
 
 PipelineCreateBoard.propTypes = {
   name: PropTypes.string.isRequired,
-  // TODO: detail the props
-  // eslint-disable-next-line
-  nodes: PropTypes.array.isRequired,
+  nodes: PropTypes.arrayOf(
+    PropTypes.shape({
+      nodeName: PropTypes.string.isRequired,
+      algorithmName: PropTypes.string.isRequired,
+    })
+  ).isRequired,
 };
 
 const areEqual = ({ nodes: a }, { nodes: b }) => isEqual(a, b);

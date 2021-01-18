@@ -110,11 +110,10 @@ export const stratify = flatList => {
 };
 
 /** @type {(file: StratifiedDirectory, mapping: StratifiedMap) => string[]} */
-const restorePath = (folder, mapping) => {
-  return folder.parentId
+const restorePath = (folder, mapping) =>
+  folder.parentId
     ? restorePath(mapping[folder.parentId], mapping).concat(folder.name)
     : [''];
-};
 
 /** @type {(mapping: StratifiedMap) => FlatFile[]} */
 export const flatten = mapping => {

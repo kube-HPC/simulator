@@ -10,9 +10,10 @@ const JsonEditor = ({
   ...props
 }) => {
   const [value, setValue] = useState(controlledValue);
-  const handleEditorChange = (_, value) => setValue(value);
+  const handleEditorChange = (_, _value) => setValue(_value);
 
   const handleEditorDidMount = (_, editor) => {
+    // eslint-disable-next-line
     innerRef.current = editor;
   };
 
@@ -37,6 +38,7 @@ const JsonEditor = ({
 };
 
 JsonEditor.propTypes = {
+  // eslint-disable-next-line
   onChange: PropTypes.func,
   ...ControlledEditor.propTypes,
 };

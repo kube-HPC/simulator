@@ -3,27 +3,27 @@ import { COLOR } from 'styles';
 export default {
   particles: {
     color: {
-      value: COLOR.blueLight
+      value: COLOR.blueLight,
     },
     number: {
-      value: 120
+      value: 120,
     },
     size: {
-      value: 4
+      value: 4,
     },
     line_linked: {
-      color: COLOR.blue
+      color: COLOR.blue,
     },
     shape: {
-      type: ['circle', 'triangle', 'polygon', 'edge']
-    }
+      type: ['circle', 'triangle', 'polygon', 'edge'],
+    },
   },
   interactivity: {
     events: {
       onhover: {
         enable: true,
-        mode: 'repulse'
-      }
-    }
-  }
+        mode: 'repulse',
+      },
+    },
+  },
 };

@@ -54,7 +54,7 @@ export const jobsTableMock = [
             code: [
               '(input,require) => {',
               'if (input[0]>10){',
-              'throw new Error (\'eval error, dont know what to do\');}',
+              "throw new Error ('eval error, dont know what to do');}",
               'else{',
               'return 100}}',
             ],
@@ -108,7 +108,8 @@ export const jobsTableMock = [
               ],
               podName: 'eval-alg-29e989e5-051e-4682-89de-5927e58ad7ad-gfhzk',
               status: 'failed',
-              error: 'Error: failed to eval code: eval error, dont know what to do',
+              error:
+                'Error: failed to eval code: eval error, dont know what to do',
               prevErrors: [],
               batchIndex: 2,
               startTime: 1576156607394,
@@ -231,7 +232,7 @@ export const jobsTableMock = [
             code: [
               '(input,require) => {',
               'if (input[0]>10){',
-              'throw new Error (\'eval error, dont know what to do\');}',
+              "throw new Error ('eval error, dont know what to do');}",
               'else{',
               'return 100}}',
             ],
@@ -285,7 +286,8 @@ export const jobsTableMock = [
               ],
               podName: 'eval-alg-6c53d56e-5624-4944-8405-cf778e6daff2-49pbs',
               status: 'failed',
-              error: 'Error: failed to eval code: eval error, dont know what to do',
+              error:
+                'Error: failed to eval code: eval error, dont know what to do',
               prevErrors: [],
               batchIndex: 2,
               startTime: 1576156605654,

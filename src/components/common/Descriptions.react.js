@@ -14,13 +14,19 @@ const LAYOUT = {
   HORIZONTAL: 'horizontal',
 };
 
-const Descriptions = ({ column, vertical = false, children, className, ...props }) => (
+const Descriptions = ({
+  column,
+  vertical = false,
+  children,
+  className,
+  ...props
+}) => (
   <Wrapper
     className={className}
     column={column}
     bordered
     size="small"
-    colon={true}
+    colon
     layout={vertical ? LAYOUT.VERTICAL : LAYOUT.HORIZONTAL}
     {...props}>
     {children}
@@ -30,9 +36,11 @@ const Descriptions = ({ column, vertical = false, children, className, ...props 
 Descriptions.Item = AntdDescription.Item;
 
 Descriptions.propTypes = {
+  /* eslint-disable */
   className: PropTypes.string,
   vertical: PropTypes.bool,
   column: PropTypes.number,
+  /* eslint-enable */
   children: PropTypes.node.isRequired,
 };
 

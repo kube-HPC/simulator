@@ -64,9 +64,10 @@ const QueryMode = ({ dataSource, form, onDownload }) => {
     });
   }, [dataSource, form, setPreviewFiles]);
 
-  const filteredFiles = useMemo(() => {
-    return showQuery ? previewFiles : dataSource.files;
-  }, [showQuery, previewFiles, dataSource]);
+  const filteredFiles = useMemo(
+    () => (showQuery ? previewFiles : dataSource.files),
+    [showQuery, previewFiles, dataSource]
+  );
 
   const handleSubmit = useCallback(
     e => {

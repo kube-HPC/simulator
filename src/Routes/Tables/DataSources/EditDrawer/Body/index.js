@@ -59,6 +59,7 @@ const Body = ({ goTo, mode }) => {
 
   const onDownload = useCallback(
     fileIds => {
+      // eslint-disable-next-line
       console.log({ fileIds, id: dataSource.id });
     },
     [dataSource]
