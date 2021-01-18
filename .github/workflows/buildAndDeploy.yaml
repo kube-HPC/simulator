@@ -4,8 +4,35 @@ jobs:
   build_job:
     runs-on: ubuntu-latest
     name: build dockers
-    if: ${{ github.event.deployment.environment == 'cicd' }}
     steps:
+      - name: get environment
+        run: |
+          echo "environment is: $DEPLOY_ENVIRONMENT"
+          URL=''
+          case "$DEPLOY_ENVIRONMENT" in
+            *dev1*)
+              URL=$DEV1_URL
+              KUBE_CONFIG_DATA=$DEV1_KUBE_CONFIG_DATA
+              ;;
+            *cicd*)
+              URL=$CICD_URL
+              KUBE_CONFIG_DATA=$CICD_KUBE_CONFIG_DATA
+              ;;
+            **)
+              echo "unknown environment. defaulting to cicd"
+              URL=$CICD_URL
+              KUBE_CONFIG_DATA=$CICD_KUBE_CONFIG_DATA
+              ;;
+          esac
+          echo URL=$URL >> $GITHUB_ENV
+          echo KUBE_CONFIG_DATA=$KUBE_CONFIG_DATA >> $GITHUB_ENV
+        env:
+          DEPLOY_ENVIRONMENT: '${{ github.event.deployment.environment }}'
+          CICD_URL: ${{ secrets.CICD_URL }}
+          CICD_KUBE_CONFIG_DATA: ${{ secrets.CICD_KUBECONFIG }}
+          DEV1_URL: ${{ secrets.DEV1_URL }}
+          DEV1_KUBE_CONFIG_DATA: ${{ secrets.DEV1_KUBECONFIG }}
+
       - name: set deployment status to in progress
         id: start_deployment
         uses: octokit/request-action@v2.x
@@ -13,8 +40,8 @@ jobs:
           route: POST /repos/:repository/deployments/:deployment/statuses
           repository: ${{ github.repository }}
           deployment: ${{ github.event.deployment.id }}
-          environment: cicd
-          environment_url: https://${{ secrets.CICD_URL }}hkube/dashboard-${{ github.event.deployment.payload.prName }}/
+          environment: ${{ github.event.deployment.environment }}
+          environment_url: https://${{ env.URL }}hkube/dashboard-${{ github.event.deployment.payload.prName }}/
           log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           state: in_progress
           mediaType: '{"previews": ["flash", "ant-man"]}'
@@ -31,8 +58,6 @@ jobs:
         run: |
           echo "$KUBE_CONFIG_DATA" | base64 --decode > /tmp/config
           echo KUBECONFIG=/tmp/config >> $GITHUB_ENV
-        env:
-          KUBE_CONFIG_DATA: ${{ secrets.CICD_KUBECONFIG }}
       - name: verify kubectl
         run: kubectl cluster-info
       - run: npm ci
@@ -52,8 +77,8 @@ jobs:
           route: POST /repos/:repository/deployments/:deployment/statuses
           repository: ${{ github.repository }}
           deployment: ${{ github.event.deployment.id }}
-          environment: dev
-          environment_url: https://${{ secrets.CICD_URL }}hkube/dashboard-${{ github.event.deployment.payload.prName }}/
+          environment: ${{ github.event.deployment.environment }}
+          environment_url: https://${{ env.URL }}hkube/dashboard-${{ github.event.deployment.payload.prName }}/
           log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           mediaType: '{"previews": ["ant-man"]}'
           state: success
@@ -67,8 +92,8 @@ jobs:
           route: POST /repos/:repository/deployments/:deployment/statuses
           repository: ${{ github.repository }}
           deployment: ${{ github.event.deployment.id }}
-          environment: cicd
-          environment_url: https://${{ secrets.CICD_URL }}hkube/dashboard-${{ github.event.deployment.payload.prName }}/
+          environment: ${{ github.event.deployment.environment }}
+          environment_url: https://${{ env.URL }}hkube/dashboard-${{ github.event.deployment.payload.prName }}/
           log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           mediaType: '{"previews": ["ant-man"]}'
           state: failure
