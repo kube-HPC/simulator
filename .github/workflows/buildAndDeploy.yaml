@@ -11,21 +11,23 @@ jobs:
           URL=''
           case "$DEPLOY_ENVIRONMENT" in
             *dev1*)
-              URL=$DEV1_URL
-              KUBE_CONFIG_DATA=$DEV1_KUBE_CONFIG_DATA
+              export URL=$DEV1_URL
+              export KUBE_CONFIG_DATA=$DEV1_KUBE_CONFIG_DATA
               ;;
             *cicd*)
-              URL=$CICD_URL
-              KUBE_CONFIG_DATA=$CICD_KUBE_CONFIG_DATA
+              export URL=$CICD_URL
+              export KUBE_CONFIG_DATA=$CICD_KUBE_CONFIG_DATA
               ;;
             **)
               echo "unknown environment. defaulting to cicd"
-              URL=$CICD_URL
-              KUBE_CONFIG_DATA=$CICD_KUBE_CONFIG_DATA
+              export URL=$CICD_URL
+              export KUBE_CONFIG_DATA=$CICD_KUBE_CONFIG_DATA
               ;;
           esac
           echo URL=$URL >> $GITHUB_ENV
-          echo KUBE_CONFIG_DATA=$KUBE_CONFIG_DATA >> $GITHUB_ENV
+          # echo KUBE_CONFIG_DATA=$KUBE_CONFIG_DATA >> $GITHUB_ENV
+          echo "$KUBE_CONFIG_DATA" | base64 --decode > /tmp/config
+          echo KUBECONFIG=/tmp/config >> $GITHUB_ENV
         env:
           DEPLOY_ENVIRONMENT: '${{ github.event.deployment.environment }}'
           CICD_URL: ${{ secrets.CICD_URL }}
@@ -54,10 +56,11 @@ jobs:
           node-version: '14'
       - name: Docker login
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
-      - name: create kubeconfig
-        run: |
-          echo "$KUBE_CONFIG_DATA" | base64 --decode > /tmp/config
-          echo KUBECONFIG=/tmp/config >> $GITHUB_ENV
+      # - name: create kubeconfig
+      #   run: |
+      #     env
+      #     echo "$KUBE_CONFIG_DATA" | base64 --decode > /tmp/config
+      #     echo KUBECONFIG=/tmp/config >> $GITHUB_ENV
       - name: verify kubectl
         run: kubectl cluster-info
       - run: npm ci

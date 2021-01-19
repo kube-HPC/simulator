@@ -49,7 +49,7 @@ jobs:
           echo environment=$environment
           echo DEPLOY_ENVIRONMENT=$environment >> $GITHUB_ENV
         env:
-          COMMENT_BODY: ${{ needs.deploy-check.outputs.comment_body }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
       - name: create deployment
         id: create_deployment
         uses: octokit/request-action@v2.x
