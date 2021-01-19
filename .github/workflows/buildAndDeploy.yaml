@@ -11,17 +11,17 @@ jobs:
           URL=''
           case "$DEPLOY_ENVIRONMENT" in
             *dev1*)
-              URL=$DEV1_URL
-              KUBE_CONFIG_DATA=$DEV1_KUBE_CONFIG_DATA
+              export URL=$DEV1_URL
+              export KUBE_CONFIG_DATA=$DEV1_KUBE_CONFIG_DATA
               ;;
             *cicd*)
-              URL=$CICD_URL
-              KUBE_CONFIG_DATA=$CICD_KUBE_CONFIG_DATA
+              export URL=$CICD_URL
+              export KUBE_CONFIG_DATA=$CICD_KUBE_CONFIG_DATA
               ;;
             **)
               echo "unknown environment. defaulting to cicd"
-              URL=$CICD_URL
-              KUBE_CONFIG_DATA=$CICD_KUBE_CONFIG_DATA
+              export URL=$CICD_URL
+              export KUBE_CONFIG_DATA=$CICD_KUBE_CONFIG_DATA
               ;;
           esac
           echo URL=$URL >> $GITHUB_ENV
