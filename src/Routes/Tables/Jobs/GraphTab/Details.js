@@ -48,7 +48,7 @@ const NodeInfo = ({ node, jobId }) => {
   const taskDetails = getTaskDetails(node);
 
   return node ? (
-    <Tabs defaultActiveKey="1" extra={extra}>
+    <Tabs defaultActiveKey="1" tabBarExtraContent={extra}>
       <Pane tab="Logs" key="1">
         <OverflowContainer>
           <NodeLogs taskDetails={taskDetails} onChange={setIndex} />
