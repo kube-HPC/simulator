@@ -46,20 +46,18 @@ ExpandIcon.propTypes = {
 const antIcon = <Icon type="loading" style={{ fontSize: 40 }} spin />;
 Spin.setDefaultIndicator(antIcon);
 
-const Table = ({ dataSource, loading, ...props }) => {
-  return (
-    <TableWhite
-      loading={loading || !dataSource}
-      className={USER_GUIDE.TABLE}
-      expandIcon={ExpandIcon}
-      dataSource={dataSource}
-      pagination={false}
-      size="middle"
-      // eslint-disable-next-line
-      {...props}
-    />
-  );
-};
+const Table = ({ dataSource, loading, ...props }) => (
+  <TableWhite
+    loading={loading || !dataSource}
+    className={USER_GUIDE.TABLE}
+    expandIcon={ExpandIcon}
+    dataSource={dataSource}
+    pagination={false}
+    size="middle"
+    // eslint-disable-next-line
+    {...props}
+  />
+);
 
 Table.propTypes = {
   dataSource: PropTypes.arrayOf(PropTypes.object),
