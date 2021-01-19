@@ -2,6 +2,7 @@ import io from 'socket.io-client';
 import { setConnectionStatus } from 'actions/connection.action';
 import AT from 'const/application-actions';
 import { COLOR } from 'styles/colors';
+import { getExperimentName } from 'hooks/useExperiments';
 
 const currentTopicRegistered = {};
 
@@ -34,7 +35,10 @@ const noConnectionEvents = [
 ];
 
 const connectOperation = ({ socket, name, lastRoom }) => {
-  socket.emit(connectionsEvents.EXPERIMENT_REGISTER, { name, lastRoom });
+  socket.emit(connectionsEvents.EXPERIMENT_REGISTER, {
+    name,
+    lastRoom,
+  });
   console.info(
     `%cSOCKET Connected, id=${socket.id}`,
     `background: ${COLOR.grey}; color: ${COLOR.blue}`
@@ -55,7 +59,7 @@ const getSocketRoom = experimentId => {
   return response;
 };
 
-const socketMiddleware = ({ dispatch, getState }) => {
+const socketMiddleware = ({ dispatch }) => {
   let socket = null;
   return next => action => {
     if (action.type === `${AT.SOCKET_GET_CONFIG}_SUCCESS`) {
@@ -72,19 +76,20 @@ const socketMiddleware = ({ dispatch, getState }) => {
         transports: ['websocket'],
       });
 
-      const emitOptions = getSocketRoom(getState);
-
       Object.values(connectionsEvents).forEach(event => {
         socket.on(event, args => {
-          [
-            connectionsEvents.CONNECTION,
-            connectionsEvents.EXPERIMENT_REGISTER,
-          ].includes(event)
-            ? connectOperation({
-                socket,
-                ...emitOptions,
-              })
-            : console.info(`${event}, ${args}`);
+          if (
+            [
+              connectionsEvents.CONNECTION,
+              connectionsEvents.EXPERIMENT_REGISTER,
+            ].includes(event)
+          ) {
+            const experimentName = getExperimentName(window.location.search);
+            const { name, lastRoom } = toSocketRoom(experimentName);
+            connectOperation({ socket, name, lastRoom });
+          } else {
+            console.info(`${event}, ${args}`);
+          }
           changeConnectionStatus(dispatch, {
             isSocketConnected: socket.connected,
           });

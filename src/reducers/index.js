@@ -39,7 +39,10 @@ import {
   selectors as experimentsSelectors,
 } from 'reducers/experiment.reducer';
 import { filterByType } from 'reducers/filter.reducer';
-import { meta } from 'reducers/meta.reducer';
+import {
+  reducer as meta,
+  selectors as metaSelectors,
+} from 'reducers/meta.reducer';
 import { nodeStatistics } from 'reducers/nodeStatistics.reducer';
 import { storage } from 'reducers/storage.reducer';
 import { settings } from 'reducers/settings.reducer';
@@ -84,4 +87,5 @@ export const selectors = {
   errorLogs: errorLogsSelectors,
   connection: connectionSelectors,
   experiments: experimentsSelectors,
+  meta: metaSelectors,
 };
