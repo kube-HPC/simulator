@@ -1,13 +1,18 @@
 import { useEffect, useMemo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useHistory } from 'react-router-dom';
-import { STATE_SOURCES } from 'const';
 import { selectors } from 'reducers';
 import useActions from './useActions';
 
 export const schema = {
   DEFAULT: 'main',
   SHOW_ALL: 'show-all',
+};
+
+// used on the socket middleware
+export const getExperimentName = search => {
+  const query = new URLSearchParams(search);
+  return query.get('experiment') || schema.DEFAULT;
 };
 
 const useExperiments = () => {
@@ -39,7 +44,7 @@ const useExperiments = () => {
     setExperimentLoading,
   } = useActions();
 
-  const { experimentName } = useSelector(state => state[STATE_SOURCES.META]);
+  const experimentName = useSelector(selectors.meta.experimentName);
 
   useEffect(() => {
     changeExperiment(experimentId);

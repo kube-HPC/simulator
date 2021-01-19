@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Icon, Spin, Table as AntTable } from 'antd';
 import styled from 'styled-components';
-import Immutable from 'seamless-immutable';
+
 import { USER_GUIDE } from 'const';
 
 const ExpandIcon = ({ expanded, onExpand, record }) => (
@@ -47,19 +47,12 @@ const antIcon = <Icon type="loading" style={{ fontSize: 40 }} spin />;
 Spin.setDefaultIndicator(antIcon);
 
 const Table = ({ dataSource, loading, ...props }) => {
-  const tableSource = useMemo(
-    () =>
-      Immutable.isImmutable(dataSource) ? dataSource.asMutable() : dataSource,
-    [dataSource]
-  );
-
   return (
     <TableWhite
       loading={loading || !dataSource}
       className={USER_GUIDE.TABLE}
       expandIcon={ExpandIcon}
-      // Cannot sort immutable entries.
-      dataSource={tableSource}
+      dataSource={dataSource}
       pagination={false}
       size="middle"
       // eslint-disable-next-line
