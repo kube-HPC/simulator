@@ -20,4 +20,3 @@ export { default as useStats } from 'hooks/useStats';
 export { default as useStore } from 'hooks/useStore';
 export { default as useTraceData } from 'hooks/useTraceData';
 export { default as useVersions } from 'hooks/useVersions';
-export { default as useViewType } from 'hooks/useViewType';

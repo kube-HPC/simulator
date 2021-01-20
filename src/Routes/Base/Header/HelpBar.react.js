@@ -2,8 +2,8 @@ import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { Popover } from 'antd';
-import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
+import { useSelector } from 'react-redux';
 import { USER_GUIDE } from 'const';
 import { useActions, useLeftSidebar } from 'hooks';
 import { FlexBox, Icons } from 'components/common';
@@ -30,6 +30,7 @@ const HelpBar = () => {
 
   const { triggerUserGuide } = useActions();
   const { hkubeSystemVersion } = useSelector(selectors.connection.stats);
+
   const onGuideClick = useCallback(() => {
     triggerUserGuide();
     history.push('/jobs');

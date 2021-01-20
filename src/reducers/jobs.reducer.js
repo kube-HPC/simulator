@@ -1,14 +1,14 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import actions from 'const/application-actions';
-import { handleActions } from 'redux-actions';
-import Immutable from 'seamless-immutable';
 import sum from 'hash-sum';
 
 /**
+ * @typedef {{ message: string }} LogEntry
  * @typedef {import('./Job').Job} Job
  * @typedef {{
  *   collection: import('@reduxjs/toolkit').EntityState<Job>;
  *   sum: string;
+ *   logs: LogEntry[];
  * }} JobsState
  * @typedef {{
  *   jobs: JobsState;
@@ -17,9 +17,13 @@ import sum from 'hash-sum';
 /** @type {import('@reduxjs/toolkit').EntityAdapter<Job>} */
 const entityAdapter = createEntityAdapter({ selectId: job => job.key });
 
-const jobsReducer = createSlice({
+const slice = createSlice({
   name: 'jobs',
-  initialState: { sum: null, collection: entityAdapter.getInitialState() },
+  initialState: {
+    sum: null,
+    collection: entityAdapter.getInitialState(),
+    logs: [],
+  },
   reducers: {},
   extraReducers: {
     [actions.SOCKET_GET_DATA]: (state, { payload }) => {
@@ -28,14 +32,17 @@ const jobsReducer = createSlice({
       const nextSum = sum(jobs);
       if (state.sum === nextSum) return state;
       return {
+        ...state,
         sum: nextSum,
         collection: entityAdapter.setAll({}, jobs),
       };
     },
+    [actions.JOBS_KUBERNETES_LOGS_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      logs: payload,
+    }),
   },
 });
-
-export const { reducer } = jobsReducer;
 
 const baseSelectors = entityAdapter.getSelectors();
 
@@ -51,15 +58,8 @@ export const selectors = {
   byId: (state, id) => baseSelectors.selectById(state.jobs.collection, id),
   /** @param {State} state */
   count: state => baseSelectors.selectIds(state.jobs.collection).length,
+  /** @param {State} state */
+  logs: state => state.jobs.logs,
 };
 
-const initialValue = Immutable.from({ dataSource: [] });
-
-export const jobsKubernetesLogs = handleActions(
-  {
-    [actions.JOBS_KUBERNETES_LOGS_SUCCESS](state, { payload }) {
-      return state.merge({ dataSource: payload });
-    },
-  },
-  initialValue
-);
+export const { reducer } = slice;
