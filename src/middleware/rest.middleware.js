@@ -79,7 +79,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
     BOARD_URL = setBoardPath(board);
     dispatch(
       actions.connectionSetup({
-        socketURL: SOCKET_URL,
+        socketUrl: SOCKET_URL,
         boardUrl: BOARD_URL,
         hkubeSystemVersion,
       })

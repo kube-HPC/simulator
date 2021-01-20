@@ -24,7 +24,6 @@ const JobInfo = ({ job }) => {
     [goTo]
   );
   const { key, graph, userPipeline = {}, pipeline } = job;
-
   const fetchJobTrace = useCallback(() => fetch({ jobId: key }), [fetch, key]);
 
   const refreshButton = currentTab === TABS.TRACE && (

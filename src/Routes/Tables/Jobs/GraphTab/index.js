@@ -39,23 +39,31 @@ const GraphTab = ({
   setOptions = defaultSetOptions,
   isMinified = false,
 }) => {
+  const normalizedPipeline = useMemo(
+    () =>
+      pipeline.nodes.reduce(
+        (acc, item) => ({ ...acc, [item.nodeName]: item }),
+        {}
+      ),
+    [pipeline]
+  );
   const adaptedGraph = useMemo(
     () => ({
       nodes: []
         .concat(graph.nodes)
         .filter(item => item)
-        .map(formatNode),
+        .map(formatNode(normalizedPipeline)),
       edges: []
         .concat(graph.edges)
         .filter(item => item)
         .map(formatEdge),
     }),
-    [graph]
+    [graph, normalizedPipeline]
   );
 
   const isValidGraph = adaptedGraph.nodes.length !== 0;
-
   const { node, events } = useNodeInfo({ graph, pipeline });
+
   const { graphDirection: direction } = useSettings();
 
   const [showGraph, toggleForceUpdate] = useReducer(p => !p, true);

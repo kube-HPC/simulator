@@ -96,8 +96,15 @@ const scaleValue = (value, from, to, scale) => {
   return toScale[0] + toScale[1] - (capped * scale + to[0]);
 };
 
-export const formatNode = n => {
+const nodeShapes = {
+  default: 'box',
+  algorithm: 'box',
+  dataSource: 'circle',
+};
+
+export const formatNode = normalizedPipeline => n => {
   const fn = handleNode(n);
+  const kind = normalizedPipeline[n.nodeName].kind || 'algorithm';
   const node = {
     id: fn.nodeName,
     label:
@@ -105,7 +112,12 @@ export const formatNode = n => {
         ? `${fn.nodeName}-${fn.extra.batch}`
         : fn.nodeName,
   };
-  return { ...fn, ...node };
+  return {
+    ...fn,
+    ...node,
+    kind,
+    shape: nodeShapes[kind] || nodeShapes.default,
+  };
 };
 
 export const formatEdge = e => {

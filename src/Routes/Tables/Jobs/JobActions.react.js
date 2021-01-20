@@ -19,7 +19,7 @@ const canPauseOrStop = state =>
   isActive(state) || state === PIPELINE_STATUS.PAUSED;
 
 const JobActions = ({ job }) => {
-  const { socketURL } = useSelector(selectors.connection.stats);
+  const { socketUrl } = useSelector(selectors.connection.stats);
   const { goTo } = usePath();
   const {
     key,
@@ -96,7 +96,7 @@ const JobActions = ({ job }) => {
       <a
         style={{ display: 'none' }}
         ref={downloadLinkRef}
-        href={`${socketURL}/storage/download/pipeline/result/${key}`}
+        href={`${socketUrl}/storage/download/pipeline/result/${key}`}
         download>
         hidden download link
       </a>

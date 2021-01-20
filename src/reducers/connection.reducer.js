@@ -7,8 +7,8 @@ import { actionType } from 'const';
  */
 
 const initialState = {
-  socketURL: null,
-  boardURL: null,
+  socketUrl: null,
+  boardUrl: null,
   hkubeSystemVersion: null,
   hasData: false,
   isSocketConnected: false,

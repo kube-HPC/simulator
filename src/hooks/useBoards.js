@@ -11,7 +11,7 @@ const EMPTY = [];
 
 const useBoards = ({ pipelineName }) => {
   const { nodeMap, taskMap, batchMap } = useStore(STATE_SOURCES.BOARDS);
-  const boardURL = useStore(STATE_SOURCES.BOARD_URL);
+  const boardUrl = useStore(STATE_SOURCES.BOARD_URL);
 
   const getNodeInfo = useMemo(
     () => generateGetNodeInfo({ nodeMap, pipelineName }),
@@ -36,7 +36,7 @@ const useBoards = ({ pipelineName }) => {
   return {
     taskMap,
     batchMap,
-    boardURL,
+    boardUrl,
     boards,
     hasMetrics,
     pipelineInfo,

@@ -1,5 +1,5 @@
 export default {
-  BOARD_URL: `boardURL`,
+  BOARD_URL: `boardUrl`,
   BOARDS: `boards`,
   DEBUG_TABLE: `debugTable`,
   NODE_STATISTICS: `nodeStatistics`,

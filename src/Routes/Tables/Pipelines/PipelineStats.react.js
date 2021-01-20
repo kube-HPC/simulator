@@ -11,7 +11,7 @@ const PipelineStats = ({ name, nodes }) => {
   // TODO: replace with selector
   const { dataStats } = usePipeline();
 
-  const { hasMetrics, boards, boardURL } = useBoards({ pipelineName: name });
+  const { hasMetrics, boards, boardUrl } = useBoards({ pipelineName: name });
 
   // array flat one-liner
   const pipelineStats = useMemo(
@@ -60,7 +60,7 @@ const PipelineStats = ({ name, nodes }) => {
               <div>
                 <Text underline>
                   <a
-                    href={`${boardURL}/${boardReference}/`}
+                    href={`${boardUrl}/${boardReference}/`}
                     target="_blank"
                     rel="nofollow noopener noreferrer">
                     {boardName}
