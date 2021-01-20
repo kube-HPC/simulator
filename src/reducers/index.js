@@ -21,7 +21,6 @@ import {
   selectors as debugSelectors,
 } from 'reducers/debug.reducer';
 import {
-  jobsKubernetesLogs,
   reducer as jobs,
   selectors as jobsSelectors,
 } from 'reducers/jobs.reducer';
@@ -63,7 +62,6 @@ const store = {
   errorLogs,
   experiments,
   filterByType,
-  jobsKubernetesLogs,
   jobs,
   nodeStatistics,
   storage,

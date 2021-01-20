@@ -5,7 +5,5 @@ export default {
   NODE_STATISTICS: `nodeStatistics`,
   STORAGE: `storage`,
   SETTINGS: `settings`,
-  VIEW_TYPE: `viewType`,
-  META: `meta`,
   CONFIG: `config`,
 };
