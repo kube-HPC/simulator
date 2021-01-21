@@ -72,29 +72,25 @@ const handleBatch = ({ nodeName, algorithmName, batchInfo, level = 0 }) => {
   return {
     nodeName,
     algorithmName,
-    extra: {
-      batch: `${_completed}/${total}`,
-    },
+    extra: { batch: `${_completed}/${total}` },
     group,
     level,
   };
 };
 
-const handleNode = n => (!n.batchInfo ? handleSingle(n) : handleBatch(n));
+const createFixedScale = (from, to) => (to[1] - to[0]) / (from[1] - from[0]);
 
-const createScale = (from, to) => {
-  const scale = (to[1] - to[0]) / (from[1] - from[0]);
-  return scale;
+const createCappedScale = (from, to) => {
+  const scale = createFixedScale(from, to);
+  return value => {
+    const capped = Math.min(from[1], Math.max(from[0], value)) - from[0];
+    return to[0] + to[1] - (capped * scale + to[0]);
+  };
 };
 
 const fromScale = [0, 100];
 const toScale = [2, 5];
-const fixedScale = createScale(fromScale, toScale);
-
-const scaleValue = (value, from, to, scale) => {
-  const capped = Math.min(from[1], Math.max(from[0], value)) - from[0];
-  return toScale[0] + toScale[1] - (capped * scale + to[0]);
-};
+const scaleThroughput = createCappedScale(fromScale, toScale);
 
 const nodeShapes = {
   default: 'box',
@@ -102,36 +98,36 @@ const nodeShapes = {
   dataSource: 'circle',
 };
 
-export const formatNode = normalizedPipeline => n => {
-  const fn = handleNode(n);
-  const kind = normalizedPipeline[n.nodeName].kind || 'algorithm';
-  const node = {
-    id: fn.nodeName,
+export const formatNode = normalizedPipeline => node => {
+  const meta = node.batchInfo ? handleBatch(node) : handleSingle(node);
+  const kind = normalizedPipeline[node.nodeName].kind || 'algorithm';
+  const _node = {
+    id: meta.nodeName,
     label:
-      fn.extra && fn.extra.batch
-        ? `${fn.nodeName}-${fn.extra.batch}`
-        : fn.nodeName,
+      meta.extra && meta.extra.batch
+        ? `${meta.nodeName}-${meta.extra.batch}`
+        : meta.nodeName,
   };
   return {
-    ...fn,
-    ...node,
+    ...meta,
+    ..._node,
     kind,
     shape: nodeShapes[kind] || nodeShapes.default,
   };
 };
 
-export const formatEdge = e => {
-  const { value, ...rest } = e;
+export const formatEdge = edge => {
+  const { value, ...rest } = edge;
   const [group] = (value && value.types) || [];
   const { throughput } = value || {};
-  const edge = {
-    id: `${e.from}->${e.to}`,
+  const _edge = {
+    id: `${edge.from}->${edge.to}`,
     dashes: group === 'waitAny' || group === 'AlgorithmExecution',
   };
-  let edgeProps;
+  let styles;
   if (throughput) {
     const label = `${throughput}%`; // for debugging...
-    const width = scaleValue(throughput, fromScale, toScale, fixedScale);
+    const width = scaleThroughput(throughput);
     const edgeColor =
       throughput > 0 && throughput < 50
         ? 'red'
@@ -139,7 +135,7 @@ export const formatEdge = e => {
         ? 'yellow'
         : 'green';
     const color = { color: edgeColor };
-    edgeProps = { label, width, color };
+    styles = { label, width, color };
   }
-  return { ...rest, ...edge, ...edgeProps, group };
+  return { ...rest, ..._edge, ...styles, group };
 };

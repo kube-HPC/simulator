@@ -40,10 +40,6 @@ const Container = styled(FlexBox.Auto)`
   width: 80px;
 `;
 
-// const FlexContainer = styled(FlexBox.Auto)`
-//   height: 100%;
-// `;
-
 const LENGTH = 20;
 
 const toGrid = dataSource =>
