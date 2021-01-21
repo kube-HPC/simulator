@@ -1,11 +1,8 @@
-import { STATE_SOURCES } from 'const';
 import { useSelector } from 'react-redux';
+import { selectors } from 'reducers';
 
 const useStats = () => {
-  const {
-    dataSource: [cpu, memory, gpu],
-  } = useSelector(state => state[STATE_SOURCES.NODE_STATISTICS]);
-
+  const [cpu, memory, gpu] = useSelector(selectors.nodeStatistics);
   return { cpu, memory, gpu };
 };
 

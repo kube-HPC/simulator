@@ -7,7 +7,7 @@ import { selectors } from 'reducers';
 
 const useJobs = () => {
   const collection = useSelector(selectors.jobs.all);
-  const searchFilter = useSelector(state => state.autoCompleteFilter.filter);
+  const searchFilter = useSelector(selectors.autoCompleteFilter);
   const { filters } = useFilters();
 
   const filtered = useMemo(() => {

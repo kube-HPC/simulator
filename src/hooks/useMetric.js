@@ -1,11 +1,9 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { STATE_SOURCES } from 'const';
+import { selectors } from 'reducers';
 
 export default metric => {
-  const { dataSource: statistics } = useSelector(
-    state => state[STATE_SOURCES.NODE_STATISTICS]
-  );
+  const statistics = useSelector(selectors.nodeStatistics);
 
   const statisticsForMetric = useMemo(
     () =>

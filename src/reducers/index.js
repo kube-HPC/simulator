@@ -11,7 +11,6 @@ import {
   reducer as workers,
   selectors as workersSelectors,
 } from 'reducers/worker.reducer';
-import { autoCompleteFilter } from 'reducers/autoComplete.reducer';
 import {
   reducer as drivers,
   selectors as driversSelectors,
@@ -36,46 +35,62 @@ import {
   reducer as connection,
   selectors as connectionSelectors,
 } from 'reducers/connection.reducer';
-import { drawer } from 'reducers/drawer.reducer';
 import {
   reducer as experiments,
   selectors as experimentsSelectors,
 } from 'reducers/experiment.reducer';
-import { filterByType } from 'reducers/filter.reducer';
 import {
   reducer as meta,
   selectors as metaSelectors,
 } from 'reducers/meta.reducer';
-import { nodeStatistics } from 'reducers/nodeStatistics.reducer';
-import { storage } from 'reducers/storage.reducer';
-import { settings } from 'reducers/settings.reducer';
-import { boards } from 'reducers/tensorflow.reducer';
-import { userGuide } from 'reducers/userGuide.reducer';
-import { viewType } from 'reducers/viewType.reducer';
-import { config } from 'reducers/config.reducer';
+import {
+  reducer as nodeStatistics,
+  selectors as nodeStatisticsSelectors,
+} from 'reducers/nodeStatistics.reducer';
+import {
+  reducer as storage,
+  selectors as storageSelectors,
+} from 'reducers/storage.reducer';
+import {
+  reducer as config,
+  selectors as configSelectors,
+} from 'reducers/config.reducer';
+import {
+  reducer as settings,
+  selectors as settingsSelectors,
+} from 'reducers/settings.reducer';
+import {
+  reducer as boards,
+  selectors as boardsSelector,
+} from 'reducers/tensorflow.reducer';
+import {
+  reducer as userGuide,
+  selectors as userGuideSelectors,
+} from 'reducers/userGuide.reducer';
+import {
+  reducer as autoCompleteFilter,
+  selectors as autoCompleteFilterSelectors,
+} from 'reducers/autoComplete.reducer';
 
 const store = {
   algorithms,
   meta,
-  autoCompleteFilter,
   boards,
   connection,
   debug,
-  drawer,
   drivers,
   errorLogs,
   experiments,
-  filterByType,
   jobs,
   nodeStatistics,
   storage,
   pipelines,
   settings,
   userGuide,
-  viewType,
   workers,
   config,
   dataSources,
+  autoCompleteFilter,
 };
 
 export default combineReducers(store);
@@ -92,4 +107,11 @@ export const selectors = {
   connection: connectionSelectors,
   experiments: experimentsSelectors,
   meta: metaSelectors,
+  nodeStatistics: nodeStatisticsSelectors,
+  config: configSelectors,
+  storage: storageSelectors,
+  settings: settingsSelectors,
+  boards: boardsSelector,
+  userGuide: userGuideSelectors,
+  autoCompleteFilter: autoCompleteFilterSelectors,
 };

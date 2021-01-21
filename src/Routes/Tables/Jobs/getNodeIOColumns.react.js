@@ -32,9 +32,7 @@ const Duration = (_, record) => (
       record.endTime
         ? record.endTime - record.startTime
         : Date.now() - record.startTime,
-      {
-        maxDecimalPoints: 2,
-      }
+      { maxDecimalPoints: 2 }
     )}
   </Tag>
 );
@@ -104,8 +102,8 @@ const getNodeIOColumns = url => [
 ];
 
 const useNodeIOColumns = () => {
-  const { socketUrl } = useSelector(selectors.connection.stats);
-  return getNodeIOColumns(socketUrl);
+  const { socketURL } = useSelector(selectors.connection);
+  return getNodeIOColumns(socketURL);
 };
 
 export default useNodeIOColumns;

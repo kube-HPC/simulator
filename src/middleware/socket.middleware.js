@@ -6,16 +6,14 @@ import { getExperimentName } from 'hooks/useExperiments';
 
 const currentTopicRegistered = {};
 
-const success = (dispatch, payload, action) => {
-  dispatch({
-    type: action.payload.actionType,
-    meta: action.meta,
-    payload,
-  });
-};
+const success = (payload, action) => ({
+  type: action.payload.actionType,
+  meta: action.meta,
+  payload,
+});
 
-const changeConnectionStatus = (dispatch, { isSocketConnected }) =>
-  dispatch(setConnectionStatus({ isSocketConnected }));
+const changeConnectionStatus = isSocketConnected =>
+  setConnectionStatus({ isSocketConnected });
 
 const connectionsEvents = {
   CONNECTION: 'connect',
@@ -90,18 +88,14 @@ const socketMiddleware = ({ dispatch }) => {
           } else {
             console.info(`${event}, ${args}`);
           }
-          changeConnectionStatus(dispatch, {
-            isSocketConnected: socket.connected,
-          });
+          dispatch(changeConnectionStatus(socket.connected));
         });
       });
 
       noConnectionEvents.forEach(event => {
         socket.on(event, args => {
           console.info(`${event}, ${args}`);
-          changeConnectionStatus(dispatch, {
-            isSocketConnected: socket.connected,
-          });
+          dispatch(changeConnectionStatus(socket.connected));
         });
       });
 
@@ -109,9 +103,9 @@ const socketMiddleware = ({ dispatch }) => {
         socket.on(currentTopicRegistered[act].payload.topic, data => {
           const isSocketConnected = socket.connected;
           if (data && !isSocketConnected) {
-            changeConnectionStatus(dispatch, { isSocketConnected });
+            dispatch(changeConnectionStatus(isSocketConnected));
           }
-          success(dispatch, data, currentTopicRegistered[act]);
+          dispatch(success(data, currentTopicRegistered[act]));
         })
       );
     }
@@ -124,7 +118,7 @@ const socketMiddleware = ({ dispatch }) => {
       } else {
         if (socket !== null) {
           socket.on(action.payload.topic, data =>
-            success(dispatch, data, action)
+            dispatch(success(data, action))
           );
         }
         currentTopicRegistered[action.payload.topic] = action;
