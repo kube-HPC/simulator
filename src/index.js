@@ -6,9 +6,9 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { ReusableProvider } from 'reusable';
 import { GlobalStyle } from 'styles';
 import { init } from 'actions/connection.action';
+import { selectors } from 'reducers';
 import Root from './Routes';
 import store from './store';
-import { STATE_SOURCES } from './const';
 
 const ConfigProvider = () => {
   // do not use the useActions hook
@@ -18,9 +18,7 @@ const ConfigProvider = () => {
     dispatch(init());
   }, [dispatch]);
 
-  const { baseUrl, hasConfig } = useSelector(
-    state => state[STATE_SOURCES.CONFIG]
-  );
+  const { baseUrl, hasConfig } = useSelector(selectors.config);
 
   /**
    * The base url sets the basename because the app is not always served from

@@ -17,6 +17,5 @@ export { default as usePipeline } from 'hooks/usePipeline';
 export { default as useReadme } from 'hooks/useReadme';
 export { default as useSettings } from 'hooks/useSettings';
 export { default as useStats } from 'hooks/useStats';
-export { default as useStore } from 'hooks/useStore';
 export { default as useTraceData } from 'hooks/useTraceData';
 export { default as useVersions } from 'hooks/useVersions';

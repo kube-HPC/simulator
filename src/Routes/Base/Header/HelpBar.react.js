@@ -29,7 +29,7 @@ const HelpBar = () => {
   const { setCollapsed } = useLeftSidebar();
 
   const { triggerUserGuide } = useActions();
-  const { hkubeSystemVersion } = useSelector(selectors.connection.stats);
+  const { hkubeSystemVersion } = useSelector(selectors.connection);
 
   const onGuideClick = useCallback(() => {
     triggerUserGuide();

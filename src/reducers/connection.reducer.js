@@ -46,7 +46,5 @@ const connection = createSlice({
 });
 
 export const { reducer } = connection;
-export const selectors = {
-  /** @param {ConnectionState} state */
-  stats: state => state.connection,
-};
+/** @param {ConnectionState} state */
+export const selectors = state => state.connection;

@@ -5,7 +5,7 @@ import { Table } from 'components';
 import { Card, JsonSwitch, Tabs } from 'components/common';
 import defaultWorkerData from 'config/template/worker.template';
 import { selectors } from 'reducers';
-import { workersColumns, workersTableStats } from './getWorkersColumns.react';
+import { workersColumns, workersTableStats } from './columns';
 
 const generateTab = (key, value) => (
   <Tabs.TabPane tab={key} key={key}>
@@ -37,14 +37,14 @@ const ExpandedRow = collection => record => {
   );
 };
 
-function WorkersTable() {
+const WorkersTable = () => {
   const stats = useSelector(selectors.workers.stats);
   const collection = useSelector(selectors.workers.all);
 
   const statsMergedWithDefault =
     (stats &&
       stats.stats &&
-      stats.stats.map(algo => ({ ...defaultWorkerData, ...algo }))) ||
+      stats.stats.map(algorithm => ({ ...defaultWorkerData, ...algorithm }))) ||
     [];
 
   return (
@@ -55,7 +55,7 @@ function WorkersTable() {
       expandedRowRender={ExpandedRow(collection)}
     />
   );
-}
+};
 
 WorkersTable.propTypes = {
   // dataSource: PropTypes.array.isRequired,

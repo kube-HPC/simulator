@@ -19,7 +19,7 @@ const canPauseOrStop = state =>
   isActive(state) || state === PIPELINE_STATUS.PAUSED;
 
 const JobActions = ({ job }) => {
-  const { socketURL } = useSelector(selectors.connection.stats);
+  const { socketURL } = useSelector(selectors.connection);
   const { goTo } = usePath();
   const {
     key,

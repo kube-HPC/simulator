@@ -1,9 +1,9 @@
-import { STATE_SOURCES } from 'const';
 import { useSelector } from 'react-redux';
+import { selectors } from 'reducers';
 
 const useStorage = () => {
-  const { dataSource } = useSelector(state => state[STATE_SOURCES.STORAGE]);
-  return { storage: dataSource };
+  const storage = useSelector(selectors.storage);
+  return { storage };
 };
 
 export default useStorage;

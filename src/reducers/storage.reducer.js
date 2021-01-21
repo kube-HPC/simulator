@@ -1,13 +1,23 @@
-import { handleActions } from 'redux-actions';
-import Immutable from 'seamless-immutable';
 import actions from 'const/application-actions';
+import { createSlice } from '@reduxjs/toolkit';
 
-export const storage = handleActions(
-  {
-    [actions.SOCKET_GET_DATA](state, { payload }) {
-      const { diskSpace } = payload;
-      return diskSpace ? Immutable.set(state, 'dataSource', diskSpace) : state;
-    },
+/**
+ * @typedef {typeof initialState} StorageState
+ * @typedef {{ storage: StorageState }} State
+ */
+const initialState = {};
+
+const storage = createSlice({
+  name: 'storage',
+  initialState,
+  reducers: {},
+  extraReducers: {
+    [actions.SOCKET_GET_DATA]: (state, { payload }) =>
+      payload?.diskSpace ?? state,
   },
-  Immutable.from({ dataSource: {} })
-);
+});
+
+export const { reducer } = storage;
+
+/** @param {State} state */
+export const selectors = state => state.storage;

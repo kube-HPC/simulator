@@ -1,10 +1,11 @@
-import { LOCAL_STORAGE_KEYS, STATE_SOURCES } from 'const';
+import { LOCAL_STORAGE_KEYS } from 'const';
 import { useActions, useLocalStorage } from 'hooks';
 import { useSelector } from 'react-redux';
+import { selectors } from 'reducers';
 import { stringify } from 'utils';
 
 const useSettings = () => {
-  const settings = useSelector(state => state[STATE_SOURCES.SETTINGS]);
+  const settings = useSelector(selectors.settings);
   const { setSettings } = useActions();
 
   useLocalStorage({

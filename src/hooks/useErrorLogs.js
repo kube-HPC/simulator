@@ -22,7 +22,7 @@ const initialCounter = Number(
 );
 
 const useErrorLogs = () => {
-  const dataSource = useSelector(selectors.errorLogs.all);
+  const dataSource = useSelector(selectors.errorLogs);
 
   const [lastTimeStamp, setLastTimeStamp] = useState(initialCounter);
 

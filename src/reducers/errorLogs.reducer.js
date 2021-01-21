@@ -27,7 +27,5 @@ const errorLogs = createSlice({
 
 export const { reducer } = errorLogs;
 
-export const selectors = {
-  /** @param {State} state */
-  all: state => state.errorLogs.collection,
-};
+/** @param {State} state */
+export const selectors = state => state.errorLogs.collection;

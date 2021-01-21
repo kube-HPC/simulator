@@ -1,6 +1,6 @@
-import { STATE_SOURCES } from 'const';
 import { useCallback, useMemo } from 'react';
-import useStore from './useStore';
+import { useSelector } from 'react-redux';
+import { selectors } from 'reducers';
 
 const generateGetNodeInfo = ({ nodeMap, pipelineName }) => {
   const info = nodeMap[pipelineName];
@@ -10,8 +10,8 @@ const generateGetNodeInfo = ({ nodeMap, pipelineName }) => {
 const EMPTY = [];
 
 const useBoards = ({ pipelineName }) => {
-  const { nodeMap, taskMap, batchMap } = useStore(STATE_SOURCES.BOARDS);
-  const boardURL = useStore(STATE_SOURCES.BOARD_URL);
+  const { nodeMap, taskMap, batchMap } = useSelector(selectors.boards);
+  const { boardURL } = useSelector(selectors.connection);
 
   const getNodeInfo = useMemo(
     () => generateGetNodeInfo({ nodeMap, pipelineName }),

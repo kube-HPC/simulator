@@ -104,7 +104,7 @@ const getNodeIOColumns = url => [
 ];
 
 const useNodeIOColumns = () => {
-  const { socketURL } = useSelector(selectors.connection.stats);
+  const { socketURL } = useSelector(selectors.connection);
   return getNodeIOColumns(socketURL);
 };
 
