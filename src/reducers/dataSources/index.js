@@ -18,6 +18,7 @@ export { snapshotsActions };
  * @typedef {import('@reduxjs/toolkit').EntityState<DataSource>} CollectionState
  * @typedef {import('./datasource').DataSourceEntry} DataSourceEntry
  * @typedef {import('./datasource').FetchStatus} FetchStatus
+ * @typedef {import('./datasource').AsyncType} AsyncType
  * @typedef {import('./versions').VersionsState} VersionsState
  * @typedef {import('./snapshots').SnapshotsState} SnapshotsState
  * @typedef {{
@@ -25,6 +26,7 @@ export { snapshotsActions };
  *     collection: CollectionState;
  *     snapshots: SnapshotsState;
  *     status: FetchStatus;
+ *     createStatus: FetchStatus;
  *     error: string | null;
  *     versions: VersionsState;
  *   };
@@ -120,19 +122,26 @@ const dataSources = createSlice({
   },
 });
 
-/** @type {(state: FetchStatus, action: { type: string }) => FetchStatus} */
-const status = (state = 'IDLE', { type }) => {
+/**
+ * @type {(
+ *   asyncType: AsyncType
+ * ) => (state: FetchStatus, action: { type: string }) => FetchStatus}
+ */
+const statusReducer = asyncType => (state = 'IDLE', { type }) => {
   switch (type) {
-    case types.fetchAll.pending:
+    case asyncType.pending:
       return 'PENDING';
-    case types.fetchAll.success:
+    case asyncType.success:
       return 'SUCCESS';
-    case types.fetchAll.fail:
+    case asyncType.fail:
       return 'FAIL';
     default:
       return state;
   }
 };
+
+const status = statusReducer(types.fetchAll);
+const createStatus = statusReducer(types.create);
 
 const error = (state = null, { type }) => {
   if (type !== types.fetchAll.fail) return state;
@@ -145,6 +154,7 @@ export const reducer = combineReducers({
   versions: versionsReducer,
   snapshots: snapshotsReducer,
   status,
+  createStatus,
   error,
 });
 
@@ -190,4 +200,6 @@ export const selectors = {
   /** @param {State} state */
   snapshots: (state, dataSourceName) =>
     state.dataSources.snapshots[dataSourceName],
+  /** @param {State} state */
+  createStatus: state => state.dataSources.createStatus,
 };
