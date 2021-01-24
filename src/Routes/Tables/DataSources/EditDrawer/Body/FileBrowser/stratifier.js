@@ -42,6 +42,17 @@ export const stratify = flatList => {
    */
   let pathsMap = {};
 
+  if (flatList.length === 0)
+    return {
+      '/': {
+        children: 0,
+        childrenIds: [],
+        id: '/',
+        isDir: true,
+        name: '/',
+      },
+    };
+
   /** @type {StratifiedMap} */
   const stratifiedMap = flatList.reduce((acc, file) => {
     /** @type {PathsMap} */
@@ -106,6 +117,7 @@ export const stratify = flatList => {
       },
     };
   }, {});
+
   return stratifiedMap;
 };
 
