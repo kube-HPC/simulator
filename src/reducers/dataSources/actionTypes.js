@@ -1,6 +1,6 @@
 import actionTypes from './../../const/application-actions';
 
-export default {
+const types = {
   fetchAll: {
     pending: `${actionTypes.DATASOURCE_FETCH_ALL}_PENDING`,
     success: `${actionTypes.DATASOURCE_FETCH_ALL}_SUCCESS`,
@@ -37,3 +37,5 @@ export default {
     fail: `${actionTypes.SNAPSHOT_POST}_REJECT`,
   },
 };
+
+export default types;

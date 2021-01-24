@@ -1,11 +1,12 @@
 import React, { useCallback, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Input, Icon, Form, Button, Alert } from 'antd';
 import { BottomContent } from 'components/common';
 import { createDataSource } from 'actions/dataSources';
 import UploadDragger, { useDragger } from 'components/UploadDragger';
 import { DRAWER_SIZE } from 'const';
+import { selectors } from 'reducers';
 import ctx from './../ctx';
 
 /** @type {import('antd/lib/upload/interface').UploadFile[]} */
@@ -15,12 +16,11 @@ const AddDataSource = ({ form }) => {
   const context = useContext(ctx);
   const { getFieldDecorator, validateFields } = form;
   const dispatch = useDispatch();
-
   const [addedFiles, setAddedFiles] = useState(initialState);
   const { onChange, customRequest } = useDragger({
     setFileList: setAddedFiles,
   });
-
+  const SubmittingStatus = useSelector(selectors.dataSources.createStatus);
   const onSubmit = useCallback(
     e => {
       e.preventDefault();
@@ -67,8 +67,12 @@ const AddDataSource = ({ form }) => {
         </UploadDragger>
       </Form.Item>
       <BottomContent.Divider />
-      <BottomContent width={DRAWER_SIZE.ADD_DATASOURCE} extra={[]}>
-        <Button key="Submit" type="primary" onClick={onSubmit}>
+      <BottomContent width={DRAWER_SIZE.ADD_DATASOURCE}>
+        <Button
+          key="Submit"
+          type="primary"
+          onClick={onSubmit}
+          loading={SubmittingStatus === 'PENDING'}>
           Create
         </Button>
       </BottomContent>

@@ -18,10 +18,6 @@ export default () => {
     dispatch,
   ]);
 
-  useEffect(() => {
-    reFetchAll();
-  }, [reFetchAll]);
-
   const fetchDataSource = useCallback(
     name => dispatch(actions.fetchDataSource({ name })),
     [dispatch]

@@ -20,7 +20,6 @@ const PipelinesTable = () => {
     }),
     [goTo]
   );
-
   return (
     <>
       <Table

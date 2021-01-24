@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Joyride, { EVENTS, ACTIONS } from 'react-joyride';
 import { useHistory } from 'react-router-dom';
+import { selectors } from 'reducers';
 import {
   triggerUserGuide,
   changeStep as _changeStep,
@@ -13,13 +14,11 @@ import UserGuideTooltip from './UserGuideTooltip.react';
 
 const stepAction = [ACTIONS.NEXT, ACTIONS.PREV, ACTIONS.INIT, ACTIONS.UPDATE];
 
-const isOnEqual = (a, b) => a.isOn === b.isOn;
-
 const UserGuide = () => {
   const history = useHistory();
   const { setCollapsed } = useLeftSidebar();
 
-  const { isOn } = useSelector(state => state.userGuide, isOnEqual);
+  const { isOn } = useSelector(selectors.userGuide);
   const dispatch = useDispatch();
 
   const trigger = useCallback(() => dispatch(triggerUserGuide()), [dispatch]);

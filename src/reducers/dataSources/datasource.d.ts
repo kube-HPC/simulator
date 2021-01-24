@@ -1,3 +1,6 @@
+import types from './actionTypes';
+
+export type AsyncType = typeof types.fetchAll;
 export type FetchStatus = 'SUCCESS' | 'PENDING' | 'FAIL' | 'IDLE';
 
 export type FileMeta = {

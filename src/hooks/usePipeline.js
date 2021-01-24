@@ -1,13 +1,13 @@
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { selectors } from 'reducers/pipeline.reducer';
+import { selectors } from 'reducers';
 import useActions from './useActions';
 import { useFilter } from './useSearch';
 
 const usePipeline = () => {
-  const collection = useSelector(selectors.collection.all);
+  const collection = useSelector(selectors.pipelines.collection.all);
 
-  const dataStats = useSelector(selectors.stats.all);
+  const dataStats = useSelector(selectors.pipelines.stats.all);
   const filtered = useFilter(collection, 'name');
   const { updateStored } = useActions();
   const updateCron = useCallback(

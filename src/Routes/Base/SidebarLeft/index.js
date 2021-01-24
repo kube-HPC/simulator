@@ -72,8 +72,6 @@ const LogoContainer = styled.div`
   display: flex;
 `;
 
-const equalByGuideOn = (a, b) => a.isOn === b.isOn;
-
 const sidebarSelector = state => ({
   [LEFT_SIDEBAR_NAMES.JOBS]: selectors.jobs.count(state),
   [LEFT_SIDEBAR_NAMES.PIPELINES]: selectors.pipelines.collection.count(state),
@@ -100,7 +98,7 @@ const Name = styled.span`
 
 const SidebarLeft = () => {
   const dataCountSource = useSelector(sidebarSelector, isEqual);
-  const { isOn } = useSelector(state => state.userGuide, equalByGuideOn);
+  const { isOn } = useSelector(selectors.userGuide);
   const location = useLocation();
   const dataCount = isOn ? dataCountMock : dataCountSource;
   const { isCollapsed, toggle } = useLeftSidebar();
