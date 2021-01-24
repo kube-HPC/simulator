@@ -101,6 +101,10 @@ export const COLOR_SERVICE = {
     backgroundColor: `#b70949`,
     isLight: true,
   },
+  [SERVICES[`datasources-service`]]: {
+    backgroundColor: `#a480d1`,
+    isLight: true,
+  },
   default: {
     backgroundColor: COLOR.orange,
   },

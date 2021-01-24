@@ -16,4 +16,5 @@ export const SERVICES = {
   'trigger-service': 'Trigger Service',
   worker: 'Worker',
   'caching-service': 'Caching Service',
+  'datasources-service': 'Datasource Service',
 };
