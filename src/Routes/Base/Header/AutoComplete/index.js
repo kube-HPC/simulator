@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { selectors } from 'reducers';
+import { useDebounceCallback } from '@react-hook/debounce';
 
 const AutoCompleteLong = styled(AntAutoComplete)`
   width: 100%;
@@ -27,13 +28,13 @@ const AutoComplete = ({ className }) => {
   const tableData = useSelector(selectorsMap[pageName]);
 
   const { filterData } = useActions();
-
+  const handleFilter = useDebounceCallback(filterData, 1000, false);
   return (
     <AutoCompleteLong
       className={className}
       dataSource={tableData}
-      onSearch={filterData}
-      onSelect={filterData}
+      onSearch={handleFilter}
+      onSelect={handleFilter}
       placeholder="Filter Entities 🎉"
       dropdownMatchSelectWidth>
       <Input.Search allowClear />
