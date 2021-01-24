@@ -12,7 +12,9 @@ const autoCompleteFilter = createSlice({
   initialState,
   reducers: {},
   extraReducers: {
-    [actions.AUTO_COMPLETE_UPDATE_FILTER]: (_, { payload }) => payload || '',
+    /** @type {(_: any, action: { payload: { filter: string } }) => string} action */
+    [actions.AUTO_COMPLETE_UPDATE_FILTER]: (_, { payload: { filter } }) =>
+      filter || '',
   },
 });
 
