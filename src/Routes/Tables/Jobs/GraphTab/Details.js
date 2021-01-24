@@ -44,14 +44,13 @@ const NodeInfo = ({ node, jobId }) => {
       </Button>
     </FlexBox.Auto>
   );
-
   const taskDetails = getTaskDetails(node);
 
   return node ? (
     <Tabs defaultActiveKey="1" tabBarExtraContent={extra}>
       <Pane tab="Logs" key="1">
         <OverflowContainer>
-          <NodeLogs taskDetails={taskDetails} onChange={setIndex} />
+          <NodeLogs node={node} taskDetails={taskDetails} onChange={setIndex} />
         </OverflowContainer>
       </Pane>
       <Tabs.TabPane tab="Algorithm Details" key="2">

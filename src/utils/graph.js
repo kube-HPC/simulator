@@ -1,4 +1,5 @@
 import { GRAPH_TYPES } from 'const';
+import { nodeKind } from '@hkube/consts';
 
 const { STATUS, BATCH } = GRAPH_TYPES;
 
@@ -17,6 +18,7 @@ export const nodeFinder = ({ graph, pipeline }) => nodeName => {
   const nodeData =
     graph && graph.nodes ? graph.nodes.find(findNodeName(nodeName)) : [];
   const node = pipeline.nodes.find(findNodeName(nodeName));
+
   const { jobId } = pipeline;
 
   const taskId =
@@ -29,6 +31,7 @@ export const nodeFinder = ({ graph, pipeline }) => nodeName => {
       : nodeData.batch && nodeData.batch[0].podName;
   const origInput = node ? node.input : [];
   const payload = {
+    ...node,
     ...nodeData,
     jobId,
     taskId,
@@ -95,7 +98,7 @@ const scaleThroughput = createCappedScale(fromScale, toScale);
 const nodeShapes = {
   default: 'box',
   algorithm: 'box',
-  dataSource: 'circle',
+  [nodeKind.DataSource]: 'circle',
 };
 
 export const formatNode = normalizedPipeline => node => {
