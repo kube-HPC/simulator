@@ -9,7 +9,7 @@ import debugTableColumns from './DebugTableColumns.react';
 
 const DebugTable = () => {
   const collection = useSelector(selectors.debug.all);
-  const filtered = useFilter(collection, 'name');
+  const filtered = useFilter(collection, ['name']);
   const dispatch = useDispatch();
   const onDelete = useCallback(data => dispatch(deleteAlgorithm(data)), [
     dispatch,
