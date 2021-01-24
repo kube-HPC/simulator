@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Modal, Popover, Typography } from 'antd';
+import { Button, Modal, Popover, Typography, Tooltip } from 'antd';
 import { useActions } from 'hooks';
 import AlgorithmRun from './AlgorithmRun.react';
 import usePath from './usePath';
@@ -27,7 +27,7 @@ const deleteConfirmAction = action => {
 const title = `Run Algorithm`;
 const EMPTY_INITIAL = [];
 
-const overlayStyle = { width: `500px` };
+const overlayStyle = { width: `60ch` };
 
 const AlgorithmActions = ({ record }) => {
   const { goTo } = usePath();
@@ -89,9 +89,15 @@ const AlgorithmActions = ({ record }) => {
           mouseLeaveDelay={0.5}>
           <Button icon="play-circle" onClick={onRun} />
         </Popover>
-        <Button icon="edit" onClick={onEdit} />
-        <Button icon="delete" onClick={onClickDelete} />
-        <Button icon="ellipsis" onClick={onMoreInfo} />
+        <Tooltip title="edit algorithm">
+          <Button icon="edit" onClick={onEdit} />
+        </Tooltip>
+        <Tooltip title="delete algorithm">
+          <Button icon="delete" onClick={onClickDelete} />
+        </Tooltip>
+        <Tooltip title="show overview">
+          <Button icon="info-circle" onClick={onMoreInfo} />
+        </Tooltip>
       </Button.Group>
     </div>
   );
@@ -103,4 +109,4 @@ AlgorithmActions.propTypes = {
   record: PropTypes.object.isRequired,
 };
 
-export default AlgorithmActions;
+export default React.memo(AlgorithmActions);

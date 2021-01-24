@@ -8,18 +8,26 @@ const parser = new MarkdownIt();
 const renderHtml = text => parser.render(text);
 const noop = () => {};
 
-const MdEditor = ({ value: initialValue = readmeTemplate, onChange = noop }) => {
+const MdEditor = ({
+  value: initialValue = readmeTemplate,
+  onChange = noop,
+}) => {
   const handleValueChange = ({ text }) => {
     onChange(text);
   };
 
   return (
-    <MdEditorReact value={initialValue} onChange={handleValueChange} renderHTML={renderHtml} />
+    <MdEditorReact
+      value={initialValue}
+      onChange={handleValueChange}
+      renderHTML={renderHtml}
+    />
   );
 };
 
 MdEditor.propTypes = {
   value: PropTypes.string.isRequired,
+  // eslint-disable-next-line
   onChange: PropTypes.func,
 };
 

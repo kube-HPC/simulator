@@ -10,7 +10,7 @@ import EditDrawer from './EditDrawer';
 const rowKey = ({ name }) => name;
 
 const AlgorithmsTable = () => {
-  const { dataSource } = useAlgorithm();
+  const { collection } = useAlgorithm();
   const { goTo } = usePath();
 
   const onRow = ({ name }) => ({
@@ -23,7 +23,7 @@ const AlgorithmsTable = () => {
         onRow={onRow}
         rowKey={rowKey}
         columns={algorithmColumns}
-        dataSource={dataSource}
+        dataSource={collection}
         expandIcon={false}
       />
       <Route
@@ -36,4 +36,4 @@ const AlgorithmsTable = () => {
   );
 };
 
-export default AlgorithmsTable;
+export default React.memo(AlgorithmsTable);

@@ -62,4 +62,4 @@ PipelineInfo.propTypes = {
   record: PropTypes.object.isRequired,
 };
 
-export default PipelineInfo;
+export default React.memo(PipelineInfo);

@@ -28,4 +28,4 @@ Trace.propTypes = {
   data: PropTypes.object,
 };
 
-export default Trace;
+export default React.memo(Trace);

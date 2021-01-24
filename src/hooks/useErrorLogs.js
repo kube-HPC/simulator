@@ -1,52 +1,44 @@
+import { useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { useState, useEffect, useRef } from 'react';
+import { createStore } from 'reusable';
 import { setLsItem, getLsItem } from 'utils/localStorage';
 import LOCAL_STORAGE_KEYS from 'const/local-storage';
-import { STATE_SOURCES } from 'const';
+import { selectors } from 'reducers';
 
-const getTimestamps = dataSource => dataSource.map(data => data.timestamp);
+/** @typedef {import('reducers/ErrorLog').ErrorLog} ErrorLog */
 
-const countAboveMax = (dataSource, lastMax) =>
-  getTimestamps(dataSource).reduce(
-    (total, curr) => total + (curr > lastMax ? 1 : 0),
+/**
+ * @param {ErrorLog[]} logs
+ * @param {number} lastMax
+ */
+const countAboveMax = (logs, lastMax) =>
+  logs.reduce(
+    (total, { timestamp }) => total + (timestamp > lastMax ? 1 : 0),
     0
   );
 
-const getMaxTimestamp = dataSource =>
-  getTimestamps(dataSource).reduce((max, curr) => (curr > max ? curr : max), 0);
-
-const lastTimestampInitial = Number(
+const initialCounter = Number(
   getLsItem(LOCAL_STORAGE_KEYS.LAST_WARNING_TIMESTAMP) || 0
 );
 
-export default function useErrorLogs() {
-  const dataSource = useSelector(
-    state => state[STATE_SOURCES.ERROR_LOGS_TABLE].dataSource
-  );
-  const [isCleared, setIsCleared] = useState(false);
-  const lastTimeStamp = useRef(lastTimestampInitial);
-  const [totalNewWarnings, setTotalNewWarnings] = useState(0);
+const useErrorLogs = () => {
+  const dataSource = useSelector(selectors.errorLogs);
 
-  useEffect(() => {
-    const currNewWarnings = countAboveMax(dataSource, lastTimeStamp.current);
-    setTotalNewWarnings(currNewWarnings);
-  }, [dataSource]);
+  const [lastTimeStamp, setLastTimeStamp] = useState(initialCounter);
 
-  useEffect(() => {
-    const maxTimestamp = getMaxTimestamp(dataSource);
-    if (isCleared) {
-      lastTimeStamp.current = maxTimestamp;
-      setLsItem(
-        LOCAL_STORAGE_KEYS.LAST_WARNING_TIMESTAMP,
-        lastTimeStamp.current
-      );
-      setIsCleared(false);
-    }
-  }, [dataSource, isCleared]);
+  const totalNewWarnings = countAboveMax(dataSource, lastTimeStamp);
+
+  const clearCounter = useCallback(() => {
+    const nextTimeStamp = new Date().getTime();
+    setLastTimeStamp(nextTimeStamp);
+    setLsItem(LOCAL_STORAGE_KEYS.LAST_WARNING_TIMESTAMP, nextTimeStamp);
+  }, [setLastTimeStamp]);
 
   return {
     dataSource,
     totalNewWarnings,
-    setIsCleared,
+    clearCounter,
   };
-}
+};
+
+export default createStore(useErrorLogs);

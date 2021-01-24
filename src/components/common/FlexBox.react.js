@@ -45,8 +45,10 @@ const Item = ({ children, className, full = false, ...props }) => (
 
 Item.propTypes = {
   ...Col.propTypes,
+  /* eslint-disable */
   className: PropTypes.string,
   full: PropTypes.bool,
+  /* eslint-enable */
 };
 
 FlexBox.Item = Item;
@@ -54,6 +56,7 @@ FlexBox.Item = Item;
 const Auto = ({ children, full, ...props }) => (
   <FlexBox {...props}>
     {Children.map(children, (item, i) => (
+      // eslint-disable-next-line
       <FlexBox.Item key={i} full={full}>
         {item}
       </FlexBox.Item>
@@ -62,6 +65,7 @@ const Auto = ({ children, full, ...props }) => (
 );
 
 Auto.propTypes = {
+  // eslint-disable-next-line
   full: PropTypes.bool,
   ...FlexBox.propTypes,
 };

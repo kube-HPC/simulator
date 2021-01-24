@@ -5,16 +5,26 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import getDataByTable from './getDataByTable';
+import { selectors } from 'reducers';
 
 const AutoCompleteLong = styled(AntAutoComplete)`
   width: 100%;
 `;
 
+const selectorsMap = {
+  jobs: selectors.jobs.ids,
+  algorithms: selectors.algorithms.collection.ids,
+  pipelines: selectors.pipelines.collection.names,
+  drivers: selectors.drivers.ids,
+  workers: selectors.workers.ids,
+  debug: selectors.debug.ids,
+  datasources: selectors.dataSources.names,
+};
+
 const AutoComplete = ({ className }) => {
   const { pageName } = useParams();
 
-  const tableData = useSelector(getDataByTable(pageName));
+  const tableData = useSelector(selectorsMap[pageName]);
 
   const { filterData } = useActions();
 

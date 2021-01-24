@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { boardStatuses } from '@hkube/consts';
 import { Tag, Tooltip } from 'antd';
@@ -11,31 +11,39 @@ const PipelineStats = ({ name, nodes }) => {
   // TODO: replace with selector
   const { dataStats } = usePipeline();
 
-  const { hasMetrics, boards, boardURL } = useBoards({ pipelineName: name });
+  const { hasMetrics, boards, boardUrl } = useBoards({ pipelineName: name });
 
   // array flat one-liner
-  const pipelineStats = [].concat(
-    ...[
-      ...dataStats
-        .filter(status => status.name === name && status.stats.length !== 0)
-        .map(({ stats }) => stats),
-    ]
+  const pipelineStats = useMemo(
+    () =>
+      [].concat(
+        ...[
+          ...dataStats
+            .filter(status => status.name === name && status.stats.length !== 0)
+            .map(({ stats }) => stats),
+        ]
+      ),
+    [dataStats, name]
   );
 
   const hasStats = pipelineStats.length !== 0;
 
-  const metricsAvailable = nodes
-    .map(({ nodeName }) => nodeName)
-    .some(nodeName => hasMetrics(nodeName));
+  const metricsAvailable = useMemo(
+    () =>
+      nodes
+        .map(({ nodeName }) => nodeName)
+        .some(nodeName => hasMetrics(nodeName)),
+    [nodes, hasMetrics]
+  );
   const boardsAvailable = boards.length > 0;
 
   return (
     <>
       {hasStats &&
-        pipelineStats.map(([status, count], i) => (
+        pipelineStats.map(([status, count]) => (
           <StatusTag
             // eslint-disable-next-line
-            key={`${status}-${i}`}
+            key={`${dataStats.name}-${status}`}
             status={status}
             count={count}
           />
@@ -52,7 +60,7 @@ const PipelineStats = ({ name, nodes }) => {
               <div>
                 <Text underline>
                   <a
-                    href={`${boardURL}/${boardReference}/`}
+                    href={`${boardUrl}/${boardReference}/`}
                     target="_blank"
                     rel="nofollow noopener noreferrer">
                     {boardName}
@@ -87,4 +95,4 @@ PipelineStats.propTypes = {
   nodes: PropTypes.array.isRequired,
 };
 
-export default PipelineStats;
+export default React.memo(PipelineStats);

@@ -72,34 +72,70 @@ const handleBatch = ({ nodeName, algorithmName, batchInfo, level = 0 }) => {
   return {
     nodeName,
     algorithmName,
-    extra: {
-      batch: `${_completed}/${total}`,
-    },
+    extra: { batch: `${_completed}/${total}` },
     group,
     level,
   };
 };
 
-const handleNode = n => (!n.batchInfo ? handleSingle(n) : handleBatch(n));
+const createFixedScale = (from, to) => (to[1] - to[0]) / (from[1] - from[0]);
 
-export const formatNode = n => {
-  const fn = handleNode(n);
-  const node = {
-    id: fn.nodeName,
-    label:
-      fn.extra && fn.extra.batch
-        ? `${fn.nodeName}-${fn.extra.batch}`
-        : fn.nodeName,
+const createCappedScale = (from, to) => {
+  const scale = createFixedScale(from, to);
+  return value => {
+    const capped = Math.min(from[1], Math.max(from[0], value)) - from[0];
+    return to[0] + to[1] - (capped * scale + to[0]);
   };
-  return { ...fn, ...node };
 };
 
-export const formatEdge = e => {
-  const { value, ...rest } = e;
+const fromScale = [0, 100];
+const toScale = [2, 5];
+const scaleThroughput = createCappedScale(fromScale, toScale);
+
+const nodeShapes = {
+  default: 'box',
+  algorithm: 'box',
+  dataSource: 'circle',
+};
+
+export const formatNode = normalizedPipeline => node => {
+  const meta = node.batchInfo ? handleBatch(node) : handleSingle(node);
+  const kind = normalizedPipeline[node.nodeName].kind || 'algorithm';
+  const _node = {
+    id: meta.nodeName,
+    label:
+      meta.extra && meta.extra.batch
+        ? `${meta.nodeName}-${meta.extra.batch}`
+        : meta.nodeName,
+  };
+  return {
+    ...meta,
+    ..._node,
+    kind,
+    shape: nodeShapes[kind] || nodeShapes.default,
+  };
+};
+
+export const formatEdge = edge => {
+  const { value, ...rest } = edge;
   const [group] = (value && value.types) || [];
-  const edge = {
-    id: `${e.from}->${e.to}`,
+  const { throughput } = value || {};
+  const _edge = {
+    id: `${edge.from}->${edge.to}`,
     dashes: group === 'waitAny' || group === 'AlgorithmExecution',
   };
-  return { ...rest, ...edge, group };
+  let styles;
+  if (throughput) {
+    const label = `${throughput}%`; // for debugging...
+    const width = scaleThroughput(throughput);
+    const edgeColor =
+      throughput > 0 && throughput < 50
+        ? 'red'
+        : throughput > 50 && throughput < 80
+        ? 'yellow'
+        : 'green';
+    const color = { color: edgeColor };
+    styles = { label, width, color };
+  }
+  return { ...rest, ..._edge, ...styles, group };
 };

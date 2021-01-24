@@ -2,7 +2,7 @@ import { Input } from 'antd';
 import { Form } from 'components/common';
 import schema from 'config/schema/addPipeline.schema';
 import React, { memo, useContext } from 'react';
-import { FormContext } from '../../Form/AddPipelineForm.react';
+import { FormContext } from '../../AddPipelineForm';
 import FlowInput from './FlowInput.react';
 
 const { NAME, DESCRIPTION, FLOW_INPUT } = schema.INITIAL;

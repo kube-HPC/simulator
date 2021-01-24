@@ -18,4 +18,4 @@ AlgorithmRun.propTypes = {
   onRun: PropTypes.func.isRequired,
 };
 
-export default AlgorithmRun;
+export default React.memo(AlgorithmRun);

@@ -5,16 +5,13 @@ import { Input, Select, Typography } from 'antd';
 
 import { Form } from 'components/common';
 import addPipelineSchema from 'config/schema/addPipeline.schema';
-import { STATE_SOURCES } from 'const';
+import { selectors } from 'reducers';
 import Controller from './InputParseJson/Controller.react';
 
 const { NAME, ALGORITHM, INPUT } = addPipelineSchema.NODES;
 
-const algorithmNamesSelector = state =>
-  state[STATE_SOURCES.ALGORITHM_TABLE].dataSource.map(({ name }) => name);
-
 const NodeForm = ({ form: { getFieldDecorator }, id }) => {
-  const algorithms = useSelector(algorithmNamesSelector);
+  const algorithms = useSelector(selectors.algorithms.collection.ids);
 
   return (
     <>

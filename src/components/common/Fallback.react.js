@@ -16,7 +16,9 @@ export const FallbackComponent = () => (
   </CenterImage>
 );
 
-const Fallback = ({ children }) => <Suspense fallback={<FallbackComponent />}>{children}</Suspense>;
+const Fallback = ({ children }) => (
+  <Suspense fallback={<FallbackComponent />}>{children}</Suspense>
+);
 
 Fallback.propTypes = Result.propTypes;
 

@@ -1,12 +1,21 @@
-import { handleActions } from 'redux-actions';
-import Immutable from 'seamless-immutable';
 import actions from 'const/application-actions';
+import { createSlice } from '@reduxjs/toolkit';
 
-export const autoCompleteFilter = handleActions(
-  {
-    [actions.AUTO_COMPLETE_UPDATE_FILTER](state, { payload }) {
-      return state.merge(payload);
-    },
+/**
+ * @typedef {typeof initialState} FilterState
+ * @typedef {{ autoCompleteFilter: FilterState }} State
+ */
+const initialState = '';
+
+const autoCompleteFilter = createSlice({
+  name: 'autoCompleteFilter',
+  initialState,
+  reducers: {},
+  extraReducers: {
+    [actions.AUTO_COMPLETE_UPDATE_FILTER]: (_, { payload }) => payload || '',
   },
-  Immutable.from({ filter: `` })
-);
+});
+
+export const { reducer } = autoCompleteFilter;
+/** @param {State} state */
+export const selectors = state => state.autoCompleteFilter;

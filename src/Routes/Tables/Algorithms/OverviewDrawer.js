@@ -1,20 +1,16 @@
 import React from 'react';
 import Drawer from 'components/Drawer';
 import { DRAWER_SIZE } from 'const';
-import { useAlgorithm } from 'hooks';
-import { Redirect, useLocation } from 'react-router-dom';
 import useToggle from 'hooks/useToggle';
+import MissingIdError from 'components/MissingIdError';
 import AlgorithmsTabs from './Tabs';
 import usePath from './usePath';
+import useActiveAlgorithm from './useActiveAlgorithm';
 
-export default () => {
-  const { goTo, algorithmId, paths } = usePath();
+const OverviewDrawer = () => {
+  const { goTo } = usePath();
   const { setOff, isOn } = useToggle(true);
-  const { algorithm } = useAlgorithm(algorithmId);
-  const location = useLocation();
-
-  if (!algorithm)
-    return <Redirect to={{ pathname: paths.root, search: location.search }} />;
+  const { activeAlgorithm, algorithmId } = useActiveAlgorithm();
 
   return (
     <Drawer
@@ -23,7 +19,13 @@ export default () => {
       onClose={setOff}
       width={DRAWER_SIZE.ALGORITHM_INFO}
       title={algorithmId}>
-      <AlgorithmsTabs name={algorithmId} />
+      {activeAlgorithm ? (
+        <AlgorithmsTabs algorithm={activeAlgorithm} />
+      ) : (
+        <MissingIdError />
+      )}
     </Drawer>
   );
 };
+
+export default React.memo(OverviewDrawer);

@@ -15,4 +15,4 @@ JobPriority.propTypes = {
   priority: PropTypes.number.isRequired,
 };
 
-export default JobPriority;
+export default React.memo(JobPriority);

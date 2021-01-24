@@ -1,0 +1,11 @@
+[data-category] {
+  color: white !important;
+}
+
+[data-category='image'] {
+  background: #87d068 !important;
+}
+
+[data-category='text'] {
+  background: #45a9ec !important;
+}

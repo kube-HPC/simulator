@@ -1,13 +1,13 @@
 import { Button } from 'antd';
 import { Card, JsonSwitch, MdEditor, Tabs } from 'components/common';
-import { useAlgorithm, useReadme, useVersions } from 'hooks';
+import { useReadme, useVersions } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useState } from 'react';
 import AlgorithmBuildsTable from './Builds/AlgorithmBuildsTable.react';
 import { VersionsTable } from './Versions';
 import usePath, { OVERVIEW_TABS as TABS } from './../usePath';
 
-const AlgorithmsTabs = ({ name }) => {
+const AlgorithmsTabs = ({ algorithm }) => {
   const { tabKey: activeKey, goTo } = usePath();
   const setActiveKey = useCallback(tab => goTo.overview({ nextTabKey: tab }), [
     goTo,
@@ -15,20 +15,18 @@ const AlgorithmsTabs = ({ name }) => {
 
   const [readme, setReadme] = useState();
 
-  const { algorithm } = useAlgorithm(name);
-
   const { asyncFetch, post } = useReadme(useReadme.TYPES.ALGORITHM);
 
   const { fetch } = useVersions({ algorithmName: algorithm.name });
 
   const onApply = useCallback(() => {
-    post({ name, readme });
-  }, [post, name, readme]);
+    post({ name: algorithm.name, readme });
+  }, [post, algorithm, readme]);
 
   useEffect(() => {
     if (activeKey !== TABS.DESCRIPTION) return;
-    asyncFetch({ name }).then(setReadme);
-  }, [asyncFetch, name, activeKey]);
+    asyncFetch({ name: algorithm.name }).then(setReadme);
+  }, [asyncFetch, algorithm, activeKey]);
 
   const extra =
     activeKey === TABS.DESCRIPTION ? (
@@ -66,7 +64,11 @@ const AlgorithmsTabs = ({ name }) => {
 };
 
 AlgorithmsTabs.propTypes = {
-  name: PropTypes.string.isRequired,
+  algorithm: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    builds: PropTypes.arrayOf(PropTypes.object),
+    version: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
-export default AlgorithmsTabs;
+export default React.memo(AlgorithmsTabs);

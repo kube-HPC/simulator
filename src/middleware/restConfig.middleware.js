@@ -1,4 +1,3 @@
-import axios from 'axios';
 import AT from 'const/application-actions';
 
 const baseRef = document.getElementById('base_ref').innerHTML;
@@ -38,7 +37,6 @@ const restConfigMiddleware = ({ dispatch }) => next => action => {
         res
           .json()
           .then(data => {
-            axios.defaults.baseURL = data.config.board.baseUrl;
             success(dispatch, data, action);
           })
           .catch(err => console.error(err));

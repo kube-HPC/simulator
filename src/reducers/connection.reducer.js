@@ -1,59 +1,50 @@
-import { handleActions } from 'redux-actions';
-import Immutable from 'seamless-immutable';
+import { createSlice } from '@reduxjs/toolkit';
 import { actionType } from 'const';
 
-const initialValue = Immutable.from({
-  isDataAvailable: false,
+/**
+ * @typedef {{ connection: ConnectionStats }} ConnectionState
+ * @typedef {typeof initialState} ConnectionStats
+ */
+
+const initialState = {
+  socketUrl: null,
+  boardUrl: null,
+  hkubeSystemVersion: null,
+  hasData: false,
   isSocketConnected: false,
+};
+
+const connection = createSlice({
+  name: 'connection',
+  initialState,
+  reducers: {},
+  extraReducers: {
+    /**
+     * @param {{
+     *   payload: {
+     *     socketUrl?: string;
+     *     boardUrl?: string;
+     *     hkubeSystemVersion?: string;
+     *   };
+     * }} action
+     */
+    [actionType.CONNECTION_SETUP]: (state, action) => ({
+      ...state,
+      ...action.payload,
+    }),
+    /** @param {{ payload: { isSocketConnected: boolean } }} action */
+    [actionType.CONNECTION_STATUS_CHANGE]: (state, action) => ({
+      ...state,
+      isSocketConnected: action.payload.isSocketConnected,
+    }),
+    [actionType.SOCKET_GET_DATA]: state => ({
+      ...state,
+      isSocketConnected: true,
+      hasData: true,
+    }),
+  },
 });
 
-export const socketURL = handleActions(
-  {
-    [actionType.SOCKET_SET_URL](prevUrl, { url }) {
-      return Immutable.from(url);
-    },
-  },
-  Immutable.from(``)
-);
-
-export const boardURL = handleActions(
-  {
-    [actionType.BOARD_SET_URL](prevUrl, { url }) {
-      return Immutable.from(url);
-    },
-  },
-  Immutable.from(``)
-);
-export const hkubeSystemVersion = handleActions(
-  {
-    [actionType.SET_HKUBE_VERSION](
-      prevHkubeSystemVersion,
-      { hkubeSystemVersion: nextHkubeSystemVersion }
-    ) {
-      return Immutable.from(nextHkubeSystemVersion);
-    },
-  },
-  Immutable.from(``)
-);
-
-export const connectionStatus = handleActions(
-  {
-    [actionType.CONNECTION_STATUS_CHANGE](
-      prevStatus,
-      { connectionStatus: nextConnectionStatus }
-    ) {
-      const { isDataAvailable: currData } = nextConnectionStatus;
-      const { isDataAvailable: prevData } = prevStatus;
-
-      const isDataAvailable = currData === undefined ? prevData : currData;
-
-      return Immutable.from({
-        isSocketConnected:
-          nextConnectionStatus?.isSocketConnected ??
-          prevStatus.isSocketConnected,
-        isDataAvailable,
-      });
-    },
-  },
-  initialValue
-);
+export const { reducer } = connection;
+/** @param {ConnectionState} state */
+export const selectors = state => state.connection;

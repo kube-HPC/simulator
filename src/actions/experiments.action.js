@@ -1,7 +1,8 @@
 import actions from 'const/application-actions';
 
-export const triggerExperimentLoading = () => ({
-  type: actions.EXPERIMENT_TRIGGER_LOADING,
+export const setExperimentLoading = ({ to }) => ({
+  type: actions.SET_EXPERIMENT_LOADING,
+  payload: to,
 });
 
 export const addExperiment = ({ name, description }) => ({

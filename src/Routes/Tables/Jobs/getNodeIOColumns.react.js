@@ -5,8 +5,8 @@ import humanizeDuration from 'humanize-duration';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { COLOR_TASK_STATUS } from 'styles/colors';
-import { STATE_SOURCES } from 'const';
 import { toUpperCaseFirstLetter } from 'utils/string';
+import { selectors } from 'reducers';
 
 const getStatusFilter = () =>
   [
@@ -32,9 +32,7 @@ const Duration = (_, record) => (
       record.endTime
         ? record.endTime - record.startTime
         : Date.now() - record.startTime,
-      {
-        maxDecimalPoints: 2,
-      }
+      { maxDecimalPoints: 2 }
     )}
   </Tag>
 );
@@ -104,7 +102,7 @@ const getNodeIOColumns = url => [
 ];
 
 const useNodeIOColumns = () => {
-  const socketURL = useSelector(state => state[STATE_SOURCES.SOCKET_URL]);
+  const { socketURL } = useSelector(selectors.connection);
   return getNodeIOColumns(socketURL);
 };
 

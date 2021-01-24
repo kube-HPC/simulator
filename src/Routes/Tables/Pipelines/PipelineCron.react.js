@@ -1,6 +1,12 @@
-import React, { useCallback, useEffect, useReducer, useRef } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Input, Popover, Switch, Typography } from 'antd';
+import { Icon, Input, Popover, Switch, Typography, Tooltip } from 'antd';
 import { useActions, usePipeline } from 'hooks';
 import { FlexBox } from 'components/common';
 import cronParser from 'cron-parser';
@@ -10,21 +16,29 @@ import { notification } from 'utils';
 const { Text } = Typography;
 
 const DEFAULT_CRON_EXPR = '0 * * * *';
-const ERROR_CRON_EXPR = 'Invalid Cron Expression, fix it and press apply';
-const inputWidth = { width: 160 };
+const ERROR_CRON_EXPR = 'Invalid Cron Expression';
+const inputWidth = { width: '20ch' };
 
 const isCron = pipeline =>
   pipeline.triggers && pipeline.triggers.cron && pipeline.triggers.cron.enabled;
+
 const isPattern = pipeline =>
   pipeline.triggers &&
   pipeline.triggers.cron &&
   !!pipeline.triggers.cron.pattern;
 
-const enterButton = <Icon type="check" />;
+// the extra div is required for the tooltip to render
+const enterButton = (
+  <Tooltip title="save changes">
+    <div>
+      <Icon type="check" />
+    </div>
+  </Tooltip>
+);
 
 const PipelineCron = ({ pipeline }) => {
   const { cronStart, cronStop } = useActions();
-  const { update } = usePipeline();
+  const { updateCron } = usePipeline();
   const cronIsEnabled = isCron(pipeline);
   const prevCronRef = useRef(cronIsEnabled);
   const patternIsPresent = isPattern(pipeline);
@@ -35,6 +49,8 @@ const PipelineCron = ({ pipeline }) => {
     ? pipeline.triggers.cron.pattern
     : DEFAULT_CRON_EXPR;
 
+  const [value, setValue] = useState(cronExpr);
+
   useEffect(() => {
     if (prevCronRef.current !== cronIsEnabled) {
       toggleLoading();
@@ -44,12 +60,11 @@ const PipelineCron = ({ pipeline }) => {
   let renderTooltip = ERROR_CRON_EXPR;
 
   try {
-    const interval = cronParser.parseExpression(cronExpr);
-
+    const interval = cronParser.parseExpression(value);
     // cronstrue.toString throws error on invalid cronExpr
     renderTooltip = (
       <Text>
-        {cronstrue.toString(cronExpr, {
+        {cronstrue.toString(value, {
           use24HourTimeFormat: true,
         })}
         , Next Interval:<Text code>{interval.next().toString()}</Text>
@@ -62,43 +77,50 @@ const PipelineCron = ({ pipeline }) => {
 
   const { name } = pipeline;
 
-  const onChange = useCallback(() => {
+  const onToggle = useCallback(() => {
     toggleLoading();
-    cronIsEnabled ? cronStop(name, cronExpr) : cronStart(name, cronExpr);
-  }, [toggleLoading, cronExpr, cronIsEnabled, cronStart, cronStop, name]);
+    cronIsEnabled ? cronStop(name, value) : cronStart(name, value);
+  }, [toggleLoading, value, cronIsEnabled, cronStart, cronStop, name]);
 
-  const onSearch = pattern => {
-    try {
-      cronstrue.toString(pattern);
-      update({
-        ...pipeline,
-        triggers: {
-          ...pipeline.triggers,
-          cron: { ...pipeline.triggers.cron, pattern },
-        },
-      });
-    } catch (errorMessage) {
-      notification({ message: ERROR_CRON_EXPR, description: errorMessage });
-    }
-  };
+  const onSave = useCallback(
+    pattern => {
+      try {
+        cronstrue.toString(pattern);
+        updateCron(pipeline, pattern);
+      } catch (errorMessage) {
+        notification({ message: ERROR_CRON_EXPR, description: errorMessage });
+      }
+    },
+    [pipeline, updateCron]
+  );
+
+  const handleChange = useCallback(
+    /** @param {import('react').SyntheticEvent} e */
+    e => setValue(e.target.value),
+    [setValue]
+  );
 
   return (
     <FlexBox.Auto justify="start">
-      <Switch
-        size="small"
-        checked={cronIsEnabled}
-        loading={loading}
-        onChange={onChange}
-      />
+      <Tooltip title={`toggle cron ${cronIsEnabled ? 'off' : 'on'}`}>
+        <Switch
+          size="small"
+          checked={cronIsEnabled}
+          loading={loading}
+          onChange={onToggle}
+        />
+      </Tooltip>
+
       <Popover content={renderTooltip} trigger="focus">
         <Input.Search
           style={inputWidth}
+          onChange={handleChange}
+          value={value}
           size="small"
           disabled={!cronIsEnabled}
           placeholder="Cron Expression"
           enterButton={enterButton}
-          defaultValue={cronExpr}
-          onSearch={onSearch}
+          onSearch={onSave}
         />
       </Popover>
     </FlexBox.Auto>
@@ -111,4 +133,4 @@ PipelineCron.propTypes = {
   pipeline: PropTypes.object.isRequired,
 };
 
-export default PipelineCron;
+export default React.memo(PipelineCron);

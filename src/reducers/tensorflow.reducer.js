@@ -1,20 +1,28 @@
-import { handleActions } from 'redux-actions';
-import Immutable from 'seamless-immutable';
 import { actionType } from 'const';
+import { createSlice } from '@reduxjs/toolkit';
+/**
+ * @typedef {typeof initialState} BoardsState
+ * @typedef {{ boards: BoardsState }} State
+ */
+const initialState = {
+  nodeMap: {},
+  taskMap: {},
+  batchMap: {},
+};
 
-const EMPTY_MAP = {};
-
-const initial = Immutable.from({
-  nodeMap: EMPTY_MAP,
-  taskMap: EMPTY_MAP,
-  batchMap: EMPTY_MAP,
+const boards = createSlice({
+  name: 'tensor-boards',
+  initialState,
+  reducers: {},
+  extraReducers: {
+    [actionType.SOCKET_GET_DATA]: (
+      state,
+      { payload: { boards: nextBoards } }
+    ) => ({ ...state, ...nextBoards }),
+  },
 });
 
-export const boards = handleActions(
-  {
-    [actionType.SOCKET_GET_DATA](state, { payload: { boards: nextBoards } }) {
-      return state.merge({ ...nextBoards });
-    },
-  },
-  initial
-);
+export const { reducer } = boards;
+
+/** @param {State} state */
+export const selectors = state => state.boards;

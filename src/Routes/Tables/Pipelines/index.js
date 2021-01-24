@@ -8,10 +8,10 @@ import usePath from './usePath';
 import EditDrawer from './EditDrawer';
 import ExecuteDrawer from './ExecuteDrawer';
 
-const rowKey = ({ name }) => name;
+const rowKey = ({ name }) => `pipeline-${name}`;
 
 const PipelinesTable = () => {
-  const { dataSource } = usePipeline();
+  const { collection } = usePipeline();
   const { goTo } = usePath();
 
   const onRow = useCallback(
@@ -25,7 +25,7 @@ const PipelinesTable = () => {
     <>
       <Table
         rowKey={rowKey}
-        dataSource={dataSource}
+        dataSource={collection}
         columns={pipelineColumns}
         onRow={onRow}
         expandIcon={false}
@@ -40,4 +40,4 @@ const PipelinesTable = () => {
   );
 };
 
-export default PipelinesTable;
+export default React.memo(PipelinesTable);

@@ -2,16 +2,15 @@ import React from 'react';
 import Drawer from 'components/Drawer';
 import useToggle from 'hooks/useToggle';
 import { DRAWER_SIZE } from 'const';
+import MissingIdError from 'components/MissingIdError';
 import useActivePipeline from './useActivePipeline';
 import usePath from './usePath';
 import PipelineInfo from './PipelineInfo.react';
 
 const OverviewDrawer = () => {
   const { goTo } = usePath();
-  const { pipeline: record } = useActivePipeline();
+  const { pipeline: record, pipelineId } = useActivePipeline();
   const { setOff, isOn } = useToggle(true);
-
-  if (!record) return null;
 
   return (
     <Drawer
@@ -19,10 +18,10 @@ const OverviewDrawer = () => {
       onDidClose={goTo.root}
       onClose={setOff}
       width={DRAWER_SIZE.PIPELINE_INFO}
-      title={record.name}>
-      <PipelineInfo record={record} />
+      title={record?.name ?? pipelineId}>
+      {record ? <PipelineInfo record={record} /> : <MissingIdError />}
     </Drawer>
   );
 };
 
-export default OverviewDrawer;
+export default React.memo(OverviewDrawer);

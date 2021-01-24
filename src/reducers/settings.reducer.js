@@ -1,20 +1,29 @@
-import { handleActions } from 'redux-actions';
-import Immutable from 'seamless-immutable';
+import { createSlice } from '@reduxjs/toolkit';
 import { actionType, LOCAL_STORAGE_KEYS } from 'const';
 import { getLsObjectItem } from 'utils';
 
-const defaultSettings = getLsObjectItem(LOCAL_STORAGE_KEYS.SETTINGS) || {
+/**
+ * @typedef {typeof initialState} SettingState
+ * @typedef {{ settings: SettingsState }} State
+ */
+const initialState = getLsObjectItem(LOCAL_STORAGE_KEYS.SETTINGS) || {
   graphDirection: 'LR',
   logSource: 'k8s',
 };
 
-const initial = Immutable.from(defaultSettings);
-
-export const settings = handleActions(
-  {
-    [actionType.UPDATE_SETTINGS](state, { payload }) {
-      return state.merge(payload);
-    },
+const settings = createSlice({
+  name: 'settings',
+  initialState,
+  reducers: {},
+  extraReducers: {
+    [actionType.UPDATE_SETTINGS]: (state, { payload }) => ({
+      ...state,
+      ...payload,
+    }),
   },
-  initial
-);
+});
+
+export const { reducer } = settings;
+
+/** @param {State} state */
+export const selectors = state => state.settings;

@@ -1,4 +1,4 @@
-const actionType = {
+const actionTypes = {
   ALGORITHM_APPLY_VERSIONS: `ALGORITHM_APPLY_VERSIONS`,
   ALGORITHM_APPLY: `ALGORITHM_APPLY`,
   ALGORITHM_DELETE_VERSIONS: `ALGORITHM_DELETE_VERSIONS`,
@@ -8,6 +8,13 @@ const actionType = {
   ALGORITHM_RUN: `ALGORITHM_RUN`,
   AUTO_COMPLETE_UPDATE_FILTER: `AUTO_COMPLETE_UPDATE_FILTER`,
   BOARD_SET_URL: `BOARD_SET_URL`,
+  DATASOURCE_FETCH_ALL: 'DATASOURCE_FETCH_ALL',
+  DATASOURCE_FETCH_VERSIONS: 'DATASOURCE_FETCH_VERSIONS',
+  DATASOURCE_FETCH: 'DATASOURCE_FETCH',
+  DATASOURCE_CREATE: 'DATASOURCE_CREATE',
+  DATASOURCE_POST_VERSION: 'DATASOURCE_POST_VERSION',
+  SNAPSHOT_POST: 'SNAPSHOT_POST',
+  SNAPSHOT_FETCH_ALL: 'SNAPSHOT_FETCH_ALL',
   SET_HKUBE_VERSION: `SET_HKUBE_VERSION`,
   BUILD_RERUN: `BUILD_RERUN`,
   BUILD_STOP: `BUILD_STOP`,
@@ -19,7 +26,7 @@ const actionType = {
   DRAWER_OPEN: `DRAWER_OPEN`,
   DRAWER_TOGGLE: `DRAWER_TOGGLE`,
   EXPERIMENT_CHANGE: `EXPERIMENT_CHANGE`,
-  EXPERIMENT_TRIGGER_LOADING: `EXPERIMENT_TRIGGER_LOADING`,
+  SET_EXPERIMENT_LOADING: `SET_EXPERIMENT_LOADING`,
   EXPERIMENT_ADD: `EXPERIMENT_ADD`,
   EXPERIMENT_DELETE: `EXPERIMENT_DELETE`,
   FILTER_TYPES: `FILTER_TYPES`,
@@ -55,23 +62,27 @@ const actionType = {
   USER_GUIDE_TRIGGER: `USER_GUIDE_TRIGGER`,
   VIEW_TYPE_LOAD_ONCE: `VIEW_TYPE_LOAD_ONCE`,
   VIEW_TYPE_TOGGLE: `VIEW_TYPE_TOGGLE`,
+  CONNECTION_SETUP: 'CONNECTION_SETUP',
 };
 
-const actionHelper = action => {
-  actionType[`${action}_PENDING`] = `${action}_PENDING`;
-  actionType[`${action}_SUCCESS`] = `${action}_SUCCESS`;
-  actionType[`${action}_REJECT`] = `${action}_REJECT`;
+const asAsync = action => {
+  actionTypes[`${action}_PENDING`] = `${action}_PENDING`;
+  actionTypes[`${action}_SUCCESS`] = `${action}_SUCCESS`;
+  actionTypes[`${action}_REJECT`] = `${action}_REJECT`;
 };
 
-actionHelper(actionType.SOCKET_GET_CONFIG);
-actionHelper(actionType.JOBS_KUBERNETES_LOGS);
-actionHelper(actionType.ALGORITHM_APPLY);
-actionHelper(actionType.ALGORITHM_DELETE);
-actionHelper(actionType.README_GET_PIPELINE);
-actionHelper(actionType.README_GET_ALGORITHM);
-actionHelper(actionType.README_POST_PIPELINE);
-actionHelper(actionType.README_POST_ALGORITHM);
-actionHelper(actionType.ALGORITHM_GET_VERSIONS);
-actionHelper(actionType.EXPERIMENT_CHANGE);
+asAsync(actionTypes.SOCKET_GET_CONFIG);
+asAsync(actionTypes.JOBS_KUBERNETES_LOGS);
+asAsync(actionTypes.ALGORITHM_APPLY);
+asAsync(actionTypes.ALGORITHM_DELETE);
+asAsync(actionTypes.README_GET_PIPELINE);
+asAsync(actionTypes.README_GET_ALGORITHM);
+asAsync(actionTypes.README_POST_PIPELINE);
+asAsync(actionTypes.README_POST_ALGORITHM);
+asAsync(actionTypes.ALGORITHM_GET_VERSIONS);
+asAsync(actionTypes.EXPERIMENT_CHANGE);
+asAsync(actionTypes.DATASOURCE_FETCH_ALL);
+asAsync(actionTypes.DATASOURCE_FETCH);
+asAsync(actionTypes.DATASOURCE_CREATE);
 
-export default actionType;
+export default actionTypes;

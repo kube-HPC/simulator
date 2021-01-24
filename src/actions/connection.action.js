@@ -19,20 +19,20 @@ export const init = () => ({
   },
 });
 
-export const setConnectionStatus = ({
-  isDataAvailable,
-  isSocketConnected,
+export const connectionSetup = ({
+  socketUrl,
+  boardUrl,
+  hkubeSystemVersion,
 }) => ({
+  type: actions.CONNECTION_SETUP,
+  payload: {
+    socketUrl,
+    boardUrl,
+    hkubeSystemVersion,
+  },
+});
+
+export const setConnectionStatus = ({ isSocketConnected }) => ({
   type: actions.CONNECTION_STATUS_CHANGE,
-  connectionStatus: { isDataAvailable, isSocketConnected },
-});
-
-export const setSocketURL = ({ socketURL }) => ({
-  type: actions.SOCKET_SET_URL,
-  socketURL,
-});
-
-export const setBoardURL = ({ boardURL }) => ({
-  type: actions.BOARD_SET_URL,
-  boardURL,
+  payload: { isSocketConnected },
 });

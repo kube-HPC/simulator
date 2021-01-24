@@ -1,15 +1,40 @@
-import { handleActions } from 'redux-actions';
-import Immutable from 'seamless-immutable';
 import actions from 'const/application-actions';
+import { createSelector, createSlice } from '@reduxjs/toolkit';
+import sum from 'hash-sum';
 
-export const driverTable = handleActions(
-  {
+/** @typedef {import('./Driver.d').Driver} Driver */
+
+/**
+ * @typedef {{
+ *   collection: Driver[];
+ *   sum: string;
+ * }} DriversState
+ * @typedef {{ drivers: DriversState }} State
+ */
+
+const driversReducer = createSlice({
+  name: 'drivers',
+  initialState: { sum: null, collection: [] },
+  reducers: {},
+  extraReducers: {
     [actions.SOCKET_GET_DATA](state, { payload }) {
-      return state.merge({
-        dataSource:
-          (payload.discovery && payload.discovery[`pipeline-driver`]) || [],
-      });
+      const collection = payload?.discovery[`pipeline-driver`] || [];
+      const nextSum = sum(collection);
+      return nextSum === state.sum ? state : { sum: nextSum, collection };
     },
   },
-  Immutable.from({ dataSource: [] })
-);
+});
+
+export const { reducer } = driversReducer;
+
+export const selectors = {
+  /** @param {State} state */
+  all: state => state.drivers.collection,
+  /** @param {State} state */
+  count: state => state.drivers.collection.length,
+  ids: createSelector(
+    /** @param {State} state */
+    state => state.drivers.collection,
+    collection => collection.map(item => item.podName)
+  ),
+};

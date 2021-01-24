@@ -1,33 +1,29 @@
-import React, { useCallback } from 'react';
-import { useJobs } from 'hooks';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { selectors } from 'reducers';
 import Drawer from 'components/Drawer';
 import { DRAWER_SIZE } from 'const';
+import MissingIdError from 'components/MissingIdError';
 import useToggle from 'hooks/useToggle';
-import JobInfo from './JobInfo.react';
+import Info from './Info';
 import usePath from './usePath';
 
 const OverviewDrawer = () => {
   const { goTo, jobId } = usePath();
   const { setOff, isOn } = useToggle(true);
-  const { dataSource } = useJobs();
 
-  const goBack = useCallback(() => {
-    goTo.root();
-  }, [goTo]);
-
-  const item = dataSource.find(job => job.key === jobId);
-  if (!item) return null;
+  const item = useSelector(state => selectors.jobs.byId(state, jobId));
 
   return (
     <Drawer
       isOpened={isOn}
-      onDidClose={goBack}
+      onDidClose={goTo.root}
       onClose={setOff}
       width={DRAWER_SIZE.JOB_INFO}
-      title={item.pipeline.name}>
-      <JobInfo jobId={jobId} />
+      title={item?.pipeline?.name ?? jobId}>
+      {item ? <Info job={item} /> : <MissingIdError />}
     </Drawer>
   );
 };
 
-export default OverviewDrawer;
+export default React.memo(OverviewDrawer);

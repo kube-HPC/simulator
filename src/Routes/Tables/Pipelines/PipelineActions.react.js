@@ -1,9 +1,9 @@
 import React, { memo, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Empty, Icon, Popover } from 'antd';
+import { Button, Empty, Icon, Popover, Tooltip } from 'antd';
 import { IconTensorFlow } from 'components/Icons';
 import { USER_GUIDE } from 'const';
-import { usePipeline } from 'hooks';
+import { useActions } from 'hooks';
 import isEqual from 'lodash/isEqual';
 import { deleteConfirmAction } from 'utils';
 import PipelineCreateBoard from './TensorflowBoards/PipelineCreateBoard.react';
@@ -17,8 +17,7 @@ const title = 'Create Tensor Board for selected Node';
 
 const PipelineActions = ({ pipeline, className }) => {
   const { goTo } = usePath();
-
-  const { remove } = usePipeline();
+  const { deleteStored: remove } = useActions();
 
   const container = useRef();
 
@@ -28,9 +27,12 @@ const PipelineActions = ({ pipeline, className }) => {
 
   const hasNodes = nodes.length !== 0;
 
-  const onDelete = () => deleteConfirmAction(remove, pipeline);
+  const onDelete = useCallback(() => deleteConfirmAction(remove, pipeline), [
+    pipeline,
+    remove,
+  ]);
 
-  const setPopupContainer = () => container.current;
+  const setPopupContainer = useCallback(() => container.current, [container]);
 
   const onUpdate = useCallback(() => {
     goTo.edit({ nextPipelineId: pipeline.name });
@@ -72,10 +74,18 @@ const PipelineActions = ({ pipeline, className }) => {
             <Icon component={IconTensorFlow} />
           </Button>
         </Popover>
-        <Button icon="play-circle" onClick={onExecute} />
-        <Button icon="edit" onClick={onUpdate} />
-        <Button icon="delete" onClick={onDelete} />
-        <Button icon="ellipsis" onClick={onEdit} />
+        <Tooltip title="run pipeline">
+          <Button icon="play-circle" onClick={onExecute} />
+        </Tooltip>
+        <Tooltip title="edit pipeline">
+          <Button icon="edit" onClick={onUpdate} />
+        </Tooltip>
+        <Tooltip title="delete pipeline">
+          <Button icon="delete" onClick={onDelete} />
+        </Tooltip>
+        <Tooltip title="show overview">
+          <Button icon="info-circle" onClick={onEdit} />
+        </Tooltip>
       </Button.Group>
     </div>
   );

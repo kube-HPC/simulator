@@ -1,16 +1,21 @@
-import { handleActions } from 'redux-actions';
-import Immutable from 'seamless-immutable';
+import { createSlice } from '@reduxjs/toolkit';
 import actions from 'const/application-actions';
 
-export const nodeStatistics = handleActions(
-  {
-    [actions.SOCKET_GET_DATA](currState, { payload }) {
+/** @typedef {{ nodeStatistics: any[] }} State */
+
+const slice = createSlice({
+  name: 'node-statistics',
+  initialState: [],
+  reducers: {},
+  extraReducers: {
+    [actions.SOCKET_GET_DATA](state, { payload }) {
       const { nodeStatistics: nextNodeStatistics } = payload;
       const validPayload = Array.isArray(nextNodeStatistics);
-      return validPayload
-        ? Immutable.set(currState, 'dataSource', nextNodeStatistics)
-        : currState;
+      return validPayload ? nextNodeStatistics : state;
     },
   },
-  Immutable.from({ dataSource: [] })
-);
+});
+
+export const { reducer } = slice;
+/** @param {State} state */
+export const selectors = state => state.nodeStatistics;

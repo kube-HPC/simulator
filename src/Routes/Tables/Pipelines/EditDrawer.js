@@ -5,13 +5,14 @@ import { DRAWER_SIZE } from 'const';
 import Drawer from 'components/Drawer';
 import useToggle from 'hooks/useToggle';
 import DrawerEditor from 'components/Drawer/DrawerEditor.react';
+import MissingIdError from 'components/MissingIdError';
 import { useActions } from 'hooks';
 import usePath from './usePath';
 import useActivePipeline from './useActivePipeline';
 
 const EditDrawer = () => {
   const { goTo } = usePath();
-  const { pipeline } = useActivePipeline();
+  const { pipeline, pipelineId } = useActivePipeline();
   const { updateStored } = useActions();
   const { setOff, isOn } = useToggle(true);
 
@@ -26,20 +27,23 @@ const EditDrawer = () => {
       isOpened={isOn}
       onClose={setOff}
       onDidClose={goTo.root}
-      width={DRAWER_SIZE.PIPELINE_INFO}>
-      <DrawerEditor
-        value={value}
-        submitText="submit"
-        onSubmit={onSubmitUpdate}
-      />
+      width={DRAWER_SIZE.PIPELINE_INFO}
+      title={pipeline?.name ?? pipelineId}>
+      {pipeline ? (
+        <DrawerEditor
+          value={value}
+          submitText="submit"
+          onSubmit={onSubmitUpdate}
+        />
+      ) : (
+        <MissingIdError />
+      )}
     </Drawer>
   );
 };
 
 EditDrawer.propTypes = {
-  // TODO: detail the props
-  // eslint-disable-next-line
-  pipeline: PropTypes.any.isRequired,
+  pipeline: PropTypes.shape({ name: PropTypes.string }).isRequired,
 };
 
-export default EditDrawer;
+export default React.memo(EditDrawer);

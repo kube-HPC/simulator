@@ -31,6 +31,11 @@ const rightSidebarContent = {
     title: RIGHT_SIDEBAR_NAMES.ADD_DEBUG,
     description: <>Add algorithm image for debugging.</>,
   },
+  [RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE]: {
+    width: DRAWER_SIZE.ADD_DATASOURCE,
+    title: RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE,
+    description: <>Add a new Datasource.</>,
+  },
   [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: {
     width: DRAWER_SIZE.ERROR_LOGS,
     title: 'Cluster Error Logs',

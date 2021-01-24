@@ -1,0 +1,9 @@
+<svg width="350" height="400" viewBox="0 0 350 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M22 74V323.082C22 350.651 90.7243 373 175.5 373C260.276 373 329 350.651 329 323.082V74" stroke="#888"
+        stroke-width="20" fill="transparent" />
+    <path d="M329 240C329 267.062 260.276 289 175.5 289C90.7243 289 22 267.062 22 240" stroke="#888" stroke-width="20"
+        fill="transparent" />
+    <path d="M329 157C329 184.062 260.276 206 175.5 206C90.7243 206 22 184.062 22 157" stroke="#888" stroke-width="20"
+        fill="transparent" />
+    <ellipse cx="175.5" cy="73.5" rx="153.5" ry="49.5" stroke="#888" stroke-width="20" fill="transparent" />
+</svg>

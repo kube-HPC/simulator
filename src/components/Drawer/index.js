@@ -4,6 +4,7 @@ import { Drawer as AntDrawer } from 'antd';
 import styled from 'styled-components';
 import { BottomContent } from 'components/common';
 
+export { BottomPanel } from './styles';
 export { default as DrawerEditorMD } from './DrawerEditor.react';
 
 const DrawerPadding = styled(AntDrawer)`
@@ -20,6 +21,17 @@ const DrawerPadding = styled(AntDrawer)`
   }
 `;
 
+/**
+ * @param {{
+ *   style: import('react').CSSProperties;
+ *   wrapperStyle: import('react').CSSProperties;
+ *   width: string;
+ *   isOpened: boolean;
+ *   onClose: function;
+ *   onDidClose: function;
+ *   title: string;
+ * }} props
+ */
 const Drawer = ({
   children,
   bottomContent,
@@ -28,6 +40,8 @@ const Drawer = ({
   onClose,
   onDidClose,
   title,
+  wrapperStyle,
+  style,
   ...props
 }) => {
   const handleVisibleChange = useCallback(
@@ -45,6 +59,7 @@ const Drawer = ({
       placement="right"
       closable={false}
       onClose={onClose}
+      bodyStyle={style}
       title={title}
       // eslint-disable-next-line
       {...props}>

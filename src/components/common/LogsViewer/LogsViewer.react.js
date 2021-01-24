@@ -11,7 +11,10 @@ import { COLOR, COLOR_LOGGER } from 'styles/colors';
 import { notification, toUpperCaseFirstLetter } from 'utils';
 
 const onCopy = () =>
-  notification({ message: 'Log Line Copied to clipboard', type: notification.TYPES.SUCCESS });
+  notification({
+    message: 'Log Line Copied to clipboard',
+    type: notification.TYPES.SUCCESS,
+  });
 
 const Container = styled.div`
   background-color: ${({ isValid }) => (isValid ? 'black' : 'transparent')};
@@ -62,7 +65,9 @@ const timeFormat = 'DD/MM/YY HH:mm:ss';
 const toTableEntries = (log, index) => (
   <CopyToClipboard
     key={index}
-    text={`${moment.unix(log.timestamp).format(timeFormat)} ${log.message} Level:${log.level}`}
+    text={`${moment.unix(log.timestamp).format(timeFormat)} ${
+      log.message
+    } Level:${log.level}`}
     onCopy={onCopy}>
     <LogLine>
       <ItemWrapper>
@@ -73,7 +78,9 @@ const toTableEntries = (log, index) => (
         <Message>{log.message}</Message>
       </ItemWrapper>
       <Tag>
-        <TagText color={COLOR_LOGGER[log.level]}>{toUpperCaseFirstLetter(log.level)}</TagText>
+        <TagText color={COLOR_LOGGER[log.level]}>
+          {toUpperCaseFirstLetter(log.level)}
+        </TagText>
       </Tag>
     </LogLine>
   </CopyToClipboard>
@@ -92,7 +99,7 @@ const toBuildEntries = (log, index) => (
   </CopyToClipboard>
 );
 
-const LogsViewer = ({ dataSource, isBuild = false }) => {
+const LogsViewer = ({ dataSource, isBuild }) => {
   const [first] = dataSource;
   const isValid = isBuild || (first && first.level);
   return (
@@ -102,15 +109,21 @@ const LogsViewer = ({ dataSource, isBuild = false }) => {
       ) : isValid ? (
         dataSource.map(toTableEntries)
       ) : (
-        <Empty description="No valid logs for current pod" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <Empty
+          description="No valid logs for current pod"
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+        />
       )}
     </Container>
   );
 };
 
 LogsViewer.propTypes = {
-  dataSource: PropTypes.array.isRequired,
+  dataSource: PropTypes.arrayOf(PropTypes.object).isRequired,
   isBuild: PropTypes.bool,
+};
+LogsViewer.defaultProps = {
+  isBuild: false,
 };
 
 export default LogsViewer;

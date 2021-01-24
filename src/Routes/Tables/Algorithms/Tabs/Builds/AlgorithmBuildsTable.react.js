@@ -58,4 +58,4 @@ AlgorithmBuildsTable.defaultProps = {
   builds: [],
 };
 
-export default AlgorithmBuildsTable;
+export default React.memo(AlgorithmBuildsTable);

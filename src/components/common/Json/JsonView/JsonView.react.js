@@ -20,7 +20,8 @@ const JsonView = ({ jsonObject, ...props }) => (
 );
 
 JsonView.propTypes = {
-  jsonObject: PropTypes.object,
+  // eslint-disable-next-line
+  jsonObject: PropTypes.object.isRequired,
 };
 
 export default React.memo(JsonView);
