@@ -1,9 +1,11 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import _ from 'lodash';
 import { Switch, Route } from 'react-router-dom';
 import { postVersion } from 'actions/dataSources';
+import DownloadLink from 'components/DownloadLink';
+import client from 'client';
 import { notification } from 'utils';
 import useActiveDataSource from '../../useActiveDataSource';
 import TopPanel from './TopPanel';
@@ -13,6 +15,7 @@ import ReadOnly from './ReadOnly';
 import QueryMode from './QueryMode';
 import PreviewSnapshot from './PreviewSnapshot';
 import useSnapshots from '../useSnapshots';
+
 /**
  * @typedef {import('./FileBrowser').RefContent} RefContent
  * @typedef {import('./stratifier').FlatFile} FlatFile
@@ -31,7 +34,7 @@ const Body = ({ goTo, mode }) => {
     activeSnapshot,
   } = useSnapshots({ dataSourceName: dataSource.name });
   const dispatch = useDispatch();
-
+  const [downloadHref, setDownloadHref] = useState(null);
   const onCreateVersion = useCallback(
     ({ files, droppedFileIds, mapping, versionDescription }) => {
       dispatch(
@@ -58,11 +61,15 @@ const Body = ({ goTo, mode }) => {
   );
 
   const onDownload = useCallback(
-    fileIds => {
-      // eslint-disable-next-line
-      console.log({ fileIds, id: dataSource.id });
+    async fileIds => {
+      const {
+        data: { href },
+      } = await client.post(`/datasource/id/${dataSource.id}/download`, {
+        fileIds,
+      });
+      setDownloadHref(href);
     },
-    [dataSource]
+    [dataSource, setDownloadHref]
   );
 
   const isEditable = versionsCollection
@@ -115,6 +122,7 @@ const Body = ({ goTo, mode }) => {
           }
         />
       </Switch>
+      <DownloadLink href={downloadHref} unset={setDownloadHref} />
     </>
   );
 };

@@ -1,5 +1,4 @@
 import React, {
-  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -10,7 +9,6 @@ import {
   ChonkyActions,
   FileBrowser as ChonkyFileBrowser,
   FileContextMenu,
-  FileHelper,
   FileList,
   FileNavbar,
   FileToolbar,
@@ -18,6 +16,7 @@ import {
 } from 'chonky';
 import { ChonkyIconFA } from 'chonky-icon-fontawesome';
 import useFileMap from './useFileMap';
+import useFileActions from './useFileActions';
 
 /**
  * @typedef {import('chonky').ChonkyFileActionData} ChonkyFileActionData
@@ -48,33 +47,6 @@ import useFileMap from './useFileMap';
 
 setChonkyDefaults({ iconComponent: ChonkyIconFA });
 
-const fileActions = [ChonkyActions.CreateFolder, ChonkyActions.DeleteFiles];
-
-/**
- * @type {(
- *   dir: StratifiedDirectory,
- *   mapping: StratifiedMap
- * ) => StratifiedFile[]}
- */
-const resolveSubDir = (dir, mapping) =>
-  dir.childrenIds
-    .map(child => {
-      const entry = mapping[child];
-      return entry.isDir ? resolveSubDir(entry, mapping) : entry;
-    })
-    .flat();
-/**
- * @type {(
- *   dir: (StratifiedDirectory | StratifiedFile)[],
- *   mapping: StratifiedMap
- * ) => StratifiedFile[]}
- */
-const collectFiles = (files, mapping) =>
-  files
-    .filter(file => file.uploadedAt || file.isDir) // drop files that were never uploaded
-    .map(file => (file.isDir ? resolveSubDir(file, mapping) : file))
-    .flat();
-
 const FileBrowser = ({
   files: srcFiles,
   forwardRef,
@@ -94,6 +66,14 @@ const FileBrowser = ({
     retrieveFiles,
     deletedFiles,
   } = useFileMap(srcFiles);
+
+  const actionsMap = useFileActions(fileMap, isReadOnly, {
+    onOpen: setCurrentFolderId,
+    onDownload,
+    onDelete,
+    onMove: moveFiles,
+    onCreateFolder: createFolder,
+  });
 
   useEffect(() => {
     if (Array.isArray(srcFiles)) resetFileMap(srcFiles);
@@ -121,75 +101,6 @@ const FileBrowser = ({
 
     return getParent(fileMap[currentFolderId]);
   }, [currentFolderId, fileMap]);
-
-  const handleFileAction = useCallback(
-    /** @param {ChonkyFileActionData} action */
-    action => {
-      switch (action.id) {
-        case ChonkyActions.DeleteFiles.id:
-          onDelete && onDelete(action.state.selectedFilesForAction);
-          return deleteFiles(action.state.selectedFilesForAction);
-        case ChonkyActions.MoveFiles.id:
-          // eslint-disable-next-line
-          const { payload } = action;
-          return moveFiles(payload.files, payload.source, payload.destination);
-        case ChonkyActions.OpenFiles.id:
-          // eslint-disable-next-line
-          const { targetFile, files: _files } = action.payload;
-          // eslint-disable-next-line
-          const fileToOpen = targetFile ?? _files[0];
-          if (
-            fileToOpen &&
-            FileHelper.isDirectory(fileToOpen) &&
-            action.payload.files.length === 1
-          ) {
-            // console.log({ payload: action.payload });
-            setCurrentFolderId(fileToOpen.id);
-          } else {
-            const filesToDownload = collectFiles(
-              action.payload.files,
-              fileMap
-            ).map(file => file.id);
-
-            return onDownload(filesToDownload);
-          }
-          return null;
-        case ChonkyActions.CreateFolder.id:
-          // eslint-disable-next-line
-          const folderName = prompt('Enter a name for your new folder:');
-          if (folderName) createFolder(folderName);
-          return null;
-        default:
-          return null;
-      }
-    },
-    [
-      createFolder,
-      deleteFiles,
-      moveFiles,
-      setCurrentFolderId,
-      onDelete,
-      fileMap,
-      onDownload,
-    ]
-  );
-
-  const handleReadOnlyAction = useCallback(
-    /** @param {ChonkyFileActionData} action */
-    action => {
-      if (action.id === ChonkyActions.OpenFiles.id) {
-        const { targetFile, files: _files } = action.payload;
-        const fileToOpen = targetFile ?? _files[0];
-        if (fileToOpen && FileHelper.isDirectory(fileToOpen))
-          setCurrentFolderId(fileToOpen.id);
-        else {
-          // console.log({ fileToOpen });
-        }
-      }
-      return null;
-    },
-    [setCurrentFolderId]
-  );
 
   const getCWD = () =>
     folderChain.length === 1
@@ -222,9 +133,9 @@ const FileBrowser = ({
     <ChonkyFileBrowser
       files={files}
       folderChain={folderChain}
-      fileActions={isReadOnly ? [] : fileActions}
+      fileActions={actionsMap.fileActions}
       defaultFileViewActionId={ChonkyActions.EnableListView.id}
-      onFileAction={isReadOnly ? handleReadOnlyAction : handleFileAction}>
+      onFileAction={actionsMap.handleFileAction}>
       <FileNavbar />
       <FileToolbar />
       <FileList />
