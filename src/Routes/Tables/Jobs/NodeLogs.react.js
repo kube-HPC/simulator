@@ -40,7 +40,7 @@ OptionBox.propTypes = {
   taskId: PropTypes.string.isRequired,
 };
 
-const NodeLogs = ({ taskDetails, onChange }) => {
+const NodeLogs = ({ node, taskDetails, onChange }) => {
   const { logs, getLogs } = useLogs();
   const [currentTask, setCurrentTask] = useState(undefined);
   const { logSource: source } = useSettings();
@@ -51,9 +51,9 @@ const NodeLogs = ({ taskDetails, onChange }) => {
     const { taskId, podName } = task;
     if (taskId !== currentTask) {
       setCurrentTask(taskId);
-      getLogs({ taskId, podName, source });
+      getLogs({ taskId, podName, source, nodeKind: node.kind });
     }
-  }, [currentTask, taskDetails, getLogs, source]);
+  }, [currentTask, taskDetails, getLogs, source, node]);
 
   const options = taskDetails.map((task, index) => (
     // TODO: implement a better key
@@ -101,5 +101,6 @@ NodeLogs.propTypes = {
   // eslint-disable-next-line
   taskDetails: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
+  node: PropTypes.shape({ kind: PropTypes.string }).isRequired,
 };
 export default React.memo(NodeLogs);

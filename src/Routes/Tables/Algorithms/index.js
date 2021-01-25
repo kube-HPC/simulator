@@ -2,7 +2,7 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 import { Table } from 'components';
 import { useAlgorithm } from 'hooks';
-import algorithmColumns from './algorithmColumns';
+import algorithmColumns from './columns';
 import usePath from './usePath';
 import OverviewDrawer from './OverviewDrawer';
 import EditDrawer from './EditDrawer';

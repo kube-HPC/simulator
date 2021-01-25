@@ -8,7 +8,7 @@ const usePipeline = () => {
   const collection = useSelector(selectors.pipelines.collection.all);
 
   const dataStats = useSelector(selectors.pipelines.stats.all);
-  const filtered = useFilter(collection, 'name');
+  const filtered = useFilter(collection, ['name']);
   const { updateStored } = useActions();
   const updateCron = useCallback(
     (pipeline, pattern) => {

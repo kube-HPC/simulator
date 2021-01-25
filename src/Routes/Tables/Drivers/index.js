@@ -9,7 +9,7 @@ import driversTableColumns from './DriversTableColumns.react';
 
 export default function DriversTable() {
   const collection = useSelector(selectors.drivers.all);
-  const filtered = useFilter(collection, 'podName');
+  const filtered = useFilter(collection, ['podName', 'pipelineName', 'jobId']);
 
   return (
     <Table
