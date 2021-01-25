@@ -77,11 +77,12 @@ const FileDragger = ({
   onChange,
   children,
   supportedFiles,
+  accept,
 }) => (
   <Upload.Dragger
     multiple
     name="files"
-    accept="*"
+    accept={accept}
     customRequest={customRequest}
     fileList={fileList}
     onChange={onChange}>
@@ -110,8 +111,10 @@ FileDragger.propTypes = {
   fileList: PropTypes.array.isRequired,
   customRequest: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
+  accept: PropTypes.string,
 };
 FileDragger.defaultProps = {
   supportedFiles: [],
+  accept: undefined,
 };
 export default FileDragger;
