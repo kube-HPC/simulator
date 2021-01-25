@@ -31,7 +31,7 @@ const NodeInfo = ({ node, jobId }) => {
   const onRefresh = () => {
     const taskDetails = getTaskDetails(node);
     const { taskId, podName } = taskDetails[index];
-    getLogs({ taskId, podName, source });
+    getLogs({ taskId, podName, source, nodeKind: node.kind });
   };
 
   const extra = (
