@@ -18,7 +18,7 @@ const DrawerPadding = styled(AntDrawer)`
   .ant-drawer-body {
     position: relative;
     flex-grow: 1;
-    transition: opacity 100ms ease-in-out, transform 100ms ease-in-out;
+    transition: opacity 100ms ease-in-out;
   }
 `;
 
@@ -70,7 +70,6 @@ const Drawer = ({
       bodyStyle={{
         ...style,
         opacity: hasEntered ? 1 : 0,
-        transform: `translate(${hasEntered ? 0 : '2em'}, 0)`,
       }}
       title={title}
       // eslint-disable-next-line
