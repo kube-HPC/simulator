@@ -50,8 +50,11 @@ const setOptions = ({ direction }) => ({
   },
   edges: {
     width: 2,
-    hoverWidth: 0,
-    selectionWidth: 0,
+    hoverWidth: 3,
+    selectionWidth: 3,
+    interaction: {
+      hover: true
+    },
     smooth: {
       enabled: true,
       type: 'cubicBezier',
