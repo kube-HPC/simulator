@@ -14,6 +14,10 @@ jobs:
               export URL=$DEV1_URL
               export KUBE_CONFIG_DATA=$DEV1_KUBE_CONFIG_DATA
               ;;
+            *test*)
+              export URL=$TEST_URL
+              export KUBE_CONFIG_DATA=$TEST_KUBE_CONFIG_DATA
+              ;;
             *cicd*)
               export URL=$CICD_URL
               export KUBE_CONFIG_DATA=$CICD_KUBE_CONFIG_DATA
@@ -34,6 +38,8 @@ jobs:
           CICD_KUBE_CONFIG_DATA: ${{ secrets.CICD_KUBECONFIG }}
           DEV1_URL: ${{ secrets.DEV1_URL }}
           DEV1_KUBE_CONFIG_DATA: ${{ secrets.DEV1_KUBECONFIG }}
+          TEST_URL: ${{ secrets.TEST_KUBERNETES_MASTER_IP }}
+          TEST_KUBE_CONFIG_DATA: ${{ secrets.TEST_KUBECONFIG }}
 
       - name: set deployment status to in progress
         id: start_deployment
