@@ -49,7 +49,7 @@ const JobInfo = ({ job }) => {
         <Trace data={traceData} />
       </Tabs.TabPane>
       <Tabs.TabPane tab={TABS.INFO} key={TABS.INFO}>
-        <JsonSwitch obj={userPipeline} options={options} />
+        <JsonSwitch obj={userPipeline} options={options} jobId={key} />
       </Tabs.TabPane>
       <Tabs.TabPane tab={TABS.MORE_INFO} key={TABS.MORE_INFO}>
         <JsonSwitch obj={pipeline} options={options} />

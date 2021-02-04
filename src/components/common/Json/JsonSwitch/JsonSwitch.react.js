@@ -21,7 +21,7 @@ const onCopy = () =>
     type: notification.TYPES.SUCCESS,
   });
 
-const JsonSwitch = ({ obj, options }) => {
+const JsonSwitch = ({ obj, options, jobId }) => {
   const { view = {}, table = {} } = options;
   const extra = (
     <CopyToClipboard text={stringify(obj)} onCopy={onCopy}>
@@ -36,6 +36,7 @@ const JsonSwitch = ({ obj, options }) => {
             obj={obj}
             // eslint-disable-next-line
             {...table}
+            jobId={jobId}
           />
         </Wrapper>
       </Tabs.TabPane>
@@ -55,6 +56,8 @@ JsonSwitch.propTypes = {
   obj: PropTypes.object,
   // eslint-disable-next-line
   options: PropTypes.object,
+  // eslint-disable-next-line
+  jobId: PropTypes.string,
 };
 JsonSwitch.defaultProps = {
   obj: {},
