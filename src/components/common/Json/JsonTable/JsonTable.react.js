@@ -47,7 +47,7 @@ const RenderItemByValueType = ({
           <a
             style={{ display: 'none' }}
             ref={downloadLinkRef}
-            href={`${socketUrl}/flowInput/${jobId}`}
+            href={`${socketUrl}/flowInput/${jobId}?download=true`}
             download>
             hidden download link
           </a>
