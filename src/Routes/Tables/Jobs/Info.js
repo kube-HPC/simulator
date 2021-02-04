@@ -52,7 +52,7 @@ const JobInfo = ({ job }) => {
         <JsonSwitch obj={userPipeline} options={options} jobId={key} />
       </Tabs.TabPane>
       <Tabs.TabPane tab={TABS.MORE_INFO} key={TABS.MORE_INFO}>
-        <JsonSwitch obj={pipeline} options={options} />
+        <JsonSwitch obj={pipeline} options={options} jobId={key} />
       </Tabs.TabPane>
     </Tabs>
   );
