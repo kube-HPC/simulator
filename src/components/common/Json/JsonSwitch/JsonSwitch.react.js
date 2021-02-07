@@ -53,11 +53,11 @@ const JsonSwitch = ({ obj, options, jobId }) => {
 
 JsonSwitch.propTypes = {
   // eslint-disable-next-line
-  obj: PropTypes.object,
+  obj: PropTypes.shape({ view: PropTypes.object, table: PropTypes.object }),
   // eslint-disable-next-line
   options: PropTypes.object,
   // eslint-disable-next-line
-  jobId: PropTypes.string,
+  jobId: PropTypes.string.isRequired,
 };
 JsonSwitch.defaultProps = {
   obj: {},
