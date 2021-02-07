@@ -1,9 +1,20 @@
 import actions from 'const/application-actions';
+import qs from 'querystring';
 
-export const getKubernetesLogsData = ({ podName, taskId, source = 'k8s' }) => ({
+const filterEmptyValues = object =>
+  Object.fromEntries(Object.entries(object).filter(([, value]) => value));
+
+export const getKubernetesLogsData = ({
+  podName,
+  taskId,
+  source = 'k8s',
+  nodeKind,
+}) => ({
   type: actions.REST_REQ_GET,
   payload: {
-    url: `logs?podName=${podName}&taskId=${taskId}&source=${source}`,
+    url: `logs?${qs.stringify(
+      filterEmptyValues({ podName, taskId, source, nodeKind })
+    )}`,
     actionType: actions.JOBS_KUBERNETES_LOGS,
   },
 });

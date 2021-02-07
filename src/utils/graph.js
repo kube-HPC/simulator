@@ -1,4 +1,5 @@
 import { GRAPH_TYPES } from 'const';
+import { nodeKind } from '@hkube/consts';
 
 const { STATUS, BATCH } = GRAPH_TYPES;
 
@@ -17,6 +18,7 @@ export const nodeFinder = ({ graph, pipeline }) => nodeName => {
   const nodeData =
     graph && graph.nodes ? graph.nodes.find(findNodeName(nodeName)) : [];
   const node = pipeline.nodes.find(findNodeName(nodeName));
+
   const { jobId } = pipeline;
 
   const taskId =
@@ -29,6 +31,7 @@ export const nodeFinder = ({ graph, pipeline }) => nodeName => {
       : nodeData.batch && nodeData.batch[0].podName;
   const origInput = node ? node.input : [];
   const payload = {
+    ...node,
     ...nodeData,
     jobId,
     taskId,
@@ -95,7 +98,12 @@ const scaleThroughput = createCappedScale(fromScale, toScale);
 const nodeShapes = {
   default: 'box',
   algorithm: 'box',
-  dataSource: 'circle',
+  [nodeKind.DataSource]: 'circle',
+};
+
+const _titleFormat = (metrics) => {
+  const title = Object.entries(metrics).map(([k, v]) => `${k}: ${v}`).join('<br>');
+  return title;
 };
 
 export const formatNode = normalizedPipeline => node => {
@@ -119,23 +127,25 @@ export const formatNode = normalizedPipeline => node => {
 export const formatEdge = edge => {
   const { value, ...rest } = edge;
   const [group] = (value && value.types) || [];
-  const { throughput } = value || {};
+  const { metrics } = value || {};
   const _edge = {
     id: `${edge.from}->${edge.to}`,
     dashes: group === 'waitAny' || group === 'AlgorithmExecution',
   };
   let styles;
-  if (throughput) {
+  if (metrics) {
+    const { throughput } = metrics;
+    const title = _titleFormat(metrics);
     const label = `${throughput}%`; // for debugging...
     const width = scaleThroughput(throughput);
     const edgeColor =
       throughput > 0 && throughput < 50
         ? 'red'
         : throughput > 50 && throughput < 80
-        ? 'yellow'
-        : 'green';
+          ? 'yellow'
+          : 'green';
     const color = { color: edgeColor };
-    styles = { label, width, color };
+    styles = { title, label, width, color };
   }
   return { ...rest, ..._edge, ...styles, group };
 };
