@@ -25,7 +25,8 @@ const usePipeline = () => {
     },
     [updateStored]
   );
-  const rerunRawPipeline = async (pipeline, jobId) => {
+
+  const rerunRawPipeline = useCallback(async (pipeline, jobId) => {
     let { flowInput } = pipeline;
     try {
       if (flowInput?.truncated) {
@@ -43,7 +44,8 @@ const usePipeline = () => {
     } catch (error) {
       message.error(error.message);
     }
-  };
+  }, []);
+
   return {
     collection: filtered,
     dataStats,
