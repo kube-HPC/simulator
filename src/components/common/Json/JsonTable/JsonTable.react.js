@@ -1,11 +1,10 @@
 import { Tag, Typography, Button } from 'antd';
 import { Descriptions } from 'components/common';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
-import { selectors } from 'reducers';
-import React, { useRef, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { prop } from 'styled-tools';
+import DownloadLink from 'components/DownloadLink';
 // TODO: re-write this whole component
 
 const { Text } = Typography;
@@ -32,25 +31,18 @@ const RenderItemByValueType = ({
   key,
   jobId,
 }) => {
-  const { socketUrl } = useSelector(selectors.connection);
-  const downloadLinkRef = useRef();
+  const [downloadHref, setDownloadHref] = useState(null);
 
   const handleDownload = useCallback(
-    () => downloadLinkRef.current && downloadLinkRef.current?.click(),
-    [downloadLinkRef]
+    () => setDownloadHref(`/flowInput/${jobId}?download=true`),
+    [jobId, setDownloadHref]
   );
   if (isPureObject(obj)) {
     if (key === 'flowInput' && obj.truncated) {
       return (
         <>
           <Button onClick={handleDownload}>Download</Button>
-          <a
-            style={{ display: 'none' }}
-            ref={downloadLinkRef}
-            href={`${socketUrl}/flowInput/${jobId}?download=true`}
-            download>
-            hidden download link
-          </a>
+          <DownloadLink href={downloadHref} unset={setDownloadHref} />
         </>
       );
     }
@@ -94,6 +86,10 @@ RenderItemByValueType.propTypes = {
   /* eslint-enable  */
 };
 
+RenderItemByValueType.defaultProps = {
+  jobId: null,
+};
+
 // Item
 const objToItem = ({ obj, vertical, jobId }) =>
   Object.entries(obj).map(([key, value]) => (
@@ -119,7 +115,7 @@ JsonTable.propTypes = {
   /* eslint-disable  */
   obj: PropTypes.object,
   vertical: PropTypes.bool,
-  jobId: PropTypes.string,
+  jobId: PropTypes.string.isRequired,
   /* eslint-enable  */
 };
 
