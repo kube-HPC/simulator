@@ -4,31 +4,32 @@ import client from './../client';
 
 const { TYPES } = notification;
 
-const fetch = ({ callback }) => ({ jobId }) =>
-  client
-    .get(`/jaeger`, {
-      params: {
-        jobId,
-      },
-    })
-    .then(({ data }) => {
-      const [traceData] = data.data;
-      callback(transformTraceData(traceData || {}));
-    })
-    .catch(({ message: description }) =>
-      notification({
-        message: 'Error fetching Trace data',
-        description,
-        type: TYPES.WARNING,
-      })
-    );
-
 const useTraceData = () => {
   const [traceData, setTraceData] = useState(undefined);
-  const _fetch = useCallback(() => fetch({ callback: setTraceData }), [
-    setTraceData,
-  ]);
-  return { traceData, fetch: _fetch };
+  const fetch = useCallback(
+    async ({ jobId }) => {
+      let response;
+      try {
+        response = await client.get('/jaeger', {
+          params: {
+            jobId,
+          },
+        });
+      } catch ({ message: description }) {
+        notification({
+          message: 'Error fetching Trace data',
+          description,
+          type: TYPES.WARNING,
+        });
+        return null;
+      }
+      const [nextTraceData] = response.data.data;
+      setTraceData(transformTraceData(nextTraceData || {}));
+      return response.data.data;
+    },
+    [setTraceData]
+  );
+  return { traceData, fetch };
 };
 
 export default useTraceData;
