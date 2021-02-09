@@ -51,12 +51,20 @@ export const fetchSnapshots = ({ name }) => ({
  * }} payload
  * @param {{ onSuccess: function }} meta
  */
-export const createDataSource = ({ name, files }, { onSuccess }) => {
+export const createDataSource = ({ files, ...fields }, { onSuccess }) => {
   const formData = new FormData();
-  formData.append('name', name);
+  Object.entries(fields).forEach(([key, value]) => {
+    if (typeof value !== 'object' && value !== null) {
+      formData.append(key, value);
+    } else {
+      formData.append(key, JSON.stringify(value));
+    }
+  });
+
   files.forEach(file => {
     formData.append('files', file.originFileObj);
   });
+
   return {
     type: actions.REST_REQ_POST_FORM,
     payload: {
