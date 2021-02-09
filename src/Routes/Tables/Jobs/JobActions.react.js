@@ -3,7 +3,8 @@ import { Button, Tooltip } from 'antd';
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
 import { USER_GUIDE } from 'const';
-import { useActions } from 'hooks';
+import { useActions, usePipeline } from 'hooks';
+
 import PropTypes from 'prop-types';
 import React, { useCallback, useMemo, useRef } from 'react';
 import usePath from './usePath';
@@ -28,16 +29,13 @@ const JobActions = ({ job }) => {
     results,
   } = job;
 
-  const {
-    rerunRawPipeline,
-    stopPipeline,
-    pausePipeline,
-    resumePipeline,
-  } = useActions();
+  const { rerunRawPipeline } = usePipeline();
+  const { stopPipeline, pausePipeline, resumePipeline } = useActions();
   const downloadLinkRef = useRef();
-  const onReRun = useCallback(() => rerunRawPipeline(userPipeline), [
+  const onReRun = useCallback(() => rerunRawPipeline(userPipeline, key), [
     userPipeline,
     rerunRawPipeline,
+    key,
   ]);
 
   const onStop = useCallback(() => stopPipeline(key), [stopPipeline, key]);
