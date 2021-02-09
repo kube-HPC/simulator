@@ -24,7 +24,7 @@ module.exports = {
   },
   parserOptions: {
     ecmaFeatures: { jsx: true },
-    ecmaVersion: 2018,
+    ecmaVersion: 2020,
     sourceType: 'module',
   },
   plugins: ['react', 'prettier', 'react-hooks', 'jsdoc', 'jest'],
