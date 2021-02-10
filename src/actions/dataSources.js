@@ -1,5 +1,4 @@
 import actions from 'const/application-actions';
-
 /** @typedef {import('Routes/Tables/DataSources/EditDrawer').UploadFile} UploadFile */
 
 export const fetchDataSources = () => ({
