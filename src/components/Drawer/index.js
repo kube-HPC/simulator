@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Drawer as AntDrawer } from 'antd';
 import styled from 'styled-components';
@@ -18,6 +18,7 @@ const DrawerPadding = styled(AntDrawer)`
   .ant-drawer-body {
     position: relative;
     flex-grow: 1;
+    transition: opacity 100ms ease-in-out;
   }
 `;
 
@@ -39,16 +40,23 @@ const Drawer = ({
   isOpened,
   onClose,
   onDidClose,
+  onDidOpen,
   title,
   wrapperStyle,
   style,
   ...props
 }) => {
+  const [hasEntered, setEntered] = useState(false);
+
   const handleVisibleChange = useCallback(
     isVisible => {
       if (!isVisible && onDidClose) onDidClose();
+      if (isVisible) {
+        setEntered(true);
+        onDidOpen && onDidOpen();
+      }
     },
-    [onDidClose]
+    [onDidClose, onDidOpen, setEntered]
   );
 
   return (
@@ -59,19 +67,26 @@ const Drawer = ({
       placement="right"
       closable={false}
       onClose={onClose}
-      bodyStyle={style}
+      bodyStyle={{
+        ...style,
+        opacity: hasEntered ? 1 : 0,
+      }}
       title={title}
       // eslint-disable-next-line
       {...props}>
-      {children}
-      {bottomContent && (
+      {hasEntered ? (
         <>
-          <BottomContent.Divider />
-          <BottomContent extra={bottomContent.extra}>
-            {bottomContent.body}
-          </BottomContent>
+          {children}
+          {bottomContent && (
+            <>
+              <BottomContent.Divider />
+              <BottomContent extra={bottomContent.extra}>
+                {bottomContent.body}
+              </BottomContent>
+            </>
+          )}
         </>
-      )}
+      ) : null}
     </DrawerPadding>
   );
 };
