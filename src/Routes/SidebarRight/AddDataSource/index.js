@@ -73,7 +73,14 @@ const AddDataSource = ({ form }) => {
   return (
     <Form {...formItemLayout} onSubmit={onSubmit} layout="horizontal">
       <FormItem label="DataSource Name">
-        {getFieldDecorator('name')(
+        {getFieldDecorator('name', {
+          rules: [
+            {
+              required: true,
+              message: 'Please insert a name for the new DataSource',
+            },
+          ],
+        })(
           <Input
             prefix={<Icon type="database" />}
             placeholder="name"
@@ -96,7 +103,11 @@ const AddDataSource = ({ form }) => {
         )}
       </FormItem>
       <FormItem label="Provider Endpoint">
-        {getFieldDecorator('gitEndpoint')(
+        {getFieldDecorator('gitEndpoint', {
+          rules: [
+            { required: true, message: 'Please provide a git host endpoint' },
+          ],
+        })(
           <Input
             prefix={<Icon type="apartment" />}
             placeholder="Git endpoint"
@@ -113,7 +124,11 @@ const AddDataSource = ({ form }) => {
         )}
       </FormItem>
       <FormItem label="Access Token">
-        {getFieldDecorator('gitToken')(
+        {getFieldDecorator('gitToken', {
+          rules: [
+            { required: true, message: 'Please provide a git user token' },
+          ],
+        })(
           <Input
             prefix={<Icon type="key" />}
             placeholder="Access Token"
@@ -123,15 +138,24 @@ const AddDataSource = ({ form }) => {
       </FormItem>
       {gitKind === 'gitlab' && (
         <FormItem label="Access Token Name">
-          {getFieldDecorator('gitTokenTokenName')(
-            <Input placeholder="Access Token Name" required />
-          )}
+          {getFieldDecorator('gitTokenTokenName', {
+            rules: [
+              {
+                required: true,
+                message: 'Please provide a gitlab token name',
+              },
+            ],
+          })(<Input placeholder="Access Token Name" required />)}
         </FormItem>
       )}
       {/* -------------------------- storage -------------------------- */}
       <CommonForm.Divider>Storage</CommonForm.Divider>
       <FormItem label="Endpoint">
-        {getFieldDecorator('storageEndpoint')(
+        {getFieldDecorator('storageEndpoint', {
+          rules: [
+            { required: true, message: 'Please provide an S3 host endpoint' },
+          ],
+        })(
           <Input
             prefix={<Icon type="apartment" />}
             placeholder="Storage Endpoint"
@@ -140,7 +164,11 @@ const AddDataSource = ({ form }) => {
         )}
       </FormItem>
       <FormItem label="Bucket Name">
-        {getFieldDecorator('storageBucketName')(
+        {getFieldDecorator('storageBucketName', {
+          rules: [
+            { required: true, message: 'Please provide an S3 bucket name' },
+          ],
+        })(
           <Input
             prefix={<Icon type="folder" />}
             placeholder="Bucket Name"
@@ -157,7 +185,11 @@ const AddDataSource = ({ form }) => {
         )}
       </FormItem>
       <FormItem label="Access Key">
-        {getFieldDecorator('storageAccessKey')(
+        {getFieldDecorator('storageAccessKey', {
+          rules: [
+            { required: true, message: 'Please provide an S3 Access Key' },
+          ],
+        })(
           <Input
             prefix={<Icon type="key" />}
             placeholder="Access Key"
@@ -167,7 +199,11 @@ const AddDataSource = ({ form }) => {
       </FormItem>
       {/* retain the original Form.item bottom-margin */}
       <Form.Item label="Access Key ID">
-        {getFieldDecorator('storageAccessKeyId')(
+        {getFieldDecorator('storageAccessKeyId', {
+          rules: [
+            { required: true, message: 'Please provide an S3 Access Key ID' },
+          ],
+        })(
           <Input
             // prefix={<Icon type="database" />}
             placeholder="Access Key ID"
