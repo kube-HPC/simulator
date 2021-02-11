@@ -29,5 +29,6 @@ export default () => {
     error,
     reFetchAll,
     fetchDataSource,
+    status,
   };
 };
