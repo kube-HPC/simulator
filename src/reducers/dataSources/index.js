@@ -193,7 +193,7 @@ export const selectors = {
   error: state =>
     state.dataSources.status === 'FAIL' ? state.dataSources.error : null,
   /** @param {State} state */
-  count: state => baseSelectors.selectIds(state.dataSources.collection).length,
+  count: state => Object.keys(state.dataSources.versions).length,
   names: createSelector(
     /** @param {State} state */
     state => baseSelectors.selectAll(state.dataSources.collection),
