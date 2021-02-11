@@ -61,9 +61,7 @@ const AddDataSource = ({ form }) => {
         const prunedPayload = pruneObject(payload);
         actions.createDataSource(
           { files: addedFiles, ...prunedPayload },
-          {
-            onSuccess: context.closeDrawer,
-          }
+          { onSuccess: context.closeDrawer }
         );
       });
     },

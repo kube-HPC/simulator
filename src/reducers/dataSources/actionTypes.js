@@ -5,6 +5,7 @@ const types = {
     pending: `${actionTypes.DATASOURCE_FETCH_ALL}_PENDING`,
     success: `${actionTypes.DATASOURCE_FETCH_ALL}_SUCCESS`,
     fail: `${actionTypes.DATASOURCE_FETCH_ALL}_REJECT`,
+    retry: `${actionTypes.DATASOURCE_FETCH_ALL}_RETRY`,
   },
   fetchVersions: {
     pending: `${actionTypes.DATASOURCE_FETCH_VERSIONS}_PENDING`,
@@ -20,6 +21,7 @@ const types = {
     pending: `${actionTypes.DATASOURCE_FETCH}_PENDING`,
     success: `${actionTypes.DATASOURCE_FETCH}_SUCCESS`,
     fail: `${actionTypes.DATASOURCE_FETCH}_REJECT`,
+    retry: `${actionTypes.DATASOURCE_FETCH}_RETRY`,
   },
   postVersion: {
     pending: `${actionTypes.DATASOURCE_POST_VERSION}_PENDING`,

@@ -90,6 +90,13 @@ const dataSources = createSlice({
         status: 'SUCCESS',
       }),
 
+    /** @param {{ payload: { dataSourceId: string } }} action */
+    [globalActions.DATASOURCE_FETCH_RETRY]: (state, action) =>
+      entityAdapter.updateOne(state, {
+        id: action.payload.dataSourceId,
+        changes: { status: 'IDLE' },
+      }),
+
     /** @param {{ payload: DataSourceEntry }} action */
     [types.create.success]: (state, action) => {
       const { payload: dataSource } = action;
@@ -129,6 +136,8 @@ const dataSources = createSlice({
  */
 const statusReducer = asyncType => (state = 'IDLE', { type }) => {
   switch (type) {
+    case asyncType.retry:
+      return 'IDLE';
     case asyncType.pending:
       return 'PENDING';
     case asyncType.success:

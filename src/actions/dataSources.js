@@ -1,5 +1,6 @@
 import actions from 'const/application-actions';
 /** @typedef {import('Routes/Tables/DataSources/EditDrawer').UploadFile} UploadFile */
+import dataSourceActions from 'reducers/dataSources/actionTypes';
 
 export const fetchDataSources = () => ({
   type: actions.REST_REQ_GET,
@@ -7,6 +8,15 @@ export const fetchDataSources = () => ({
     url: 'datasource/',
     actionType: actions.DATASOURCE_FETCH_ALL,
   },
+});
+
+export const retryFetchDataSources = () => ({
+  type: dataSourceActions.fetchAll.retry,
+});
+
+export const retryFetchDataSource = dataSourceId => ({
+  type: dataSourceActions.fetch.retry,
+  payload: { dataSourceId },
 });
 
 export const fetchDataSourceVersions = ({ name }) => ({
