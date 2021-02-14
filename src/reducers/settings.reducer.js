@@ -3,16 +3,14 @@ import { actionType, LOCAL_STORAGE_KEYS } from 'const';
 import { logModes } from '@hkube/consts';
 import { getLsObjectItem } from 'utils';
 
-/**
- * @typedef {typeof initialState} SettingState
- * @typedef {{ settings: SettingsState }} State
- */
+/** @typedef {{ settings: typeof defaults }} State */
 const defaults = {
   graphDirection: 'LR',
   logSource: 'k8s',
   logMode: logModes.ALGORITHM,
 };
 
+/** @type {typeof defaults} */
 const initialState = {
   ...defaults,
   ...(getLsObjectItem(LOCAL_STORAGE_KEYS.SETTINGS) || {}),
