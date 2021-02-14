@@ -1,13 +1,13 @@
+import { useActions } from 'hooks';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
-import { fetchDataSource } from './../../../actions/dataSources';
 import usePath from './usePath';
 
 /** @typedef {import('reducers/dataSources/datasource').FetchStatus} FetchStatus */
 
 const useActiveDataSource = () => {
-  const dispatch = useDispatch();
+  const { fetchDataSource } = useActions();
   const { dataSourceId } = usePath();
   const dataSource = useSelector(state =>
     selectors.dataSources.byId(state, dataSourceId)
@@ -19,12 +19,11 @@ const useActiveDataSource = () => {
     if (collectionStatus !== 'SUCCESS') return;
     if (dataSource?.status === 'FAIL') return;
     if (dataSource?.status === 'IDLE') {
-      dispatch(fetchDataSource(dataSource));
+      fetchDataSource(dataSource);
+    } else if (!dataSource) {
+      fetchDataSource({ id: dataSourceId });
     }
-    if (!dataSource) {
-      dispatch(fetchDataSource({ id: dataSourceId }));
-    }
-  }, [dispatch, dataSource, collectionStatus, dataSourceId]);
+  }, [fetchDataSource, dataSource, collectionStatus, dataSourceId]);
 
   /** @type {FetchStatus | 'NOT_FOUND'} */
   const status =
@@ -37,6 +36,7 @@ const useActiveDataSource = () => {
   return {
     dataSource,
     status,
+    collectionStatus,
     isReady: status === 'SUCCESS',
   };
 };

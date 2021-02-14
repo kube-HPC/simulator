@@ -2,27 +2,24 @@ import {
   applyAlgorithm,
   deleteAlgorithm,
   runAlgorithm,
-} from 'actions/algorithm.action';
-import { filterData } from 'actions/autoComplete.action';
-import { cancelBuild, rerunBuild } from 'actions/builds.action';
+} from './algorithm.action';
+import { filterData } from './autoComplete.action';
+import { cancelBuild, rerunBuild } from './builds.action';
 import {
   init,
   socketInit,
   setConnectionStatus,
   connectionSetup,
-} from 'actions/connection.action';
-import {
-  open as drawerOpen,
-  toggle as drawerToggle,
-} from 'actions/drawer.action';
+} from './connection.action';
+import { open as drawerOpen, toggle as drawerToggle } from './drawer.action';
 import {
   addExperiment,
   deleteExperiment,
   setExperimentLoading,
   changeExperiment,
-} from 'actions/experiments.action';
-import { filterByType } from 'actions/filter.action';
-import { getCaching, getKubernetesLogsData } from 'actions/jobs.action';
+} from './experiments.action';
+import { filterByType } from './filter.action';
+import { getCaching, getKubernetesLogsData } from './jobs.action';
 import {
   addPipeline,
   cronStart,
@@ -35,11 +32,22 @@ import {
   resumePipeline,
   stopPipeline,
   updateStored,
-} from 'actions/pipeline.action';
-import { setSettings } from 'actions/settings.action';
-import { startBoard } from 'actions/tensorflow.action';
-import { changeStep, triggerUserGuide } from 'actions/userGuide.action';
-import { firstLoad, toggle as toggleViewType } from 'actions/viewType.action';
+} from './pipeline.action';
+import { setSettings } from './settings.action';
+import { startBoard } from './tensorflow.action';
+import { changeStep, triggerUserGuide } from './userGuide.action';
+import { firstLoad, toggle as toggleViewType } from './viewType.action';
+import {
+  fetchDataSources,
+  fetchDataSourceVersions,
+  fetchDataSource,
+  retryFetchDataSource,
+  retryFetchDataSources,
+  fetchSnapshots,
+  createDataSource,
+  deleteDataSource,
+  postVersion as postDataSourceVersion,
+} from './dataSources';
 
 const actions = {
   addExperiment,
@@ -78,6 +86,15 @@ const actions = {
   updateStored,
   setConnectionStatus,
   connectionSetup,
+  fetchDataSources,
+  retryFetchDataSources,
+  deleteDataSource,
+  fetchDataSourceVersions,
+  fetchDataSource,
+  retryFetchDataSource,
+  fetchSnapshots,
+  createDataSource,
+  postDataSourceVersion,
 };
 
 export default actions;

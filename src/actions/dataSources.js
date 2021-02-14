@@ -1,6 +1,6 @@
 import actions from 'const/application-actions';
-
 /** @typedef {import('Routes/Tables/DataSources/EditDrawer').UploadFile} UploadFile */
+import dataSourceActions from 'reducers/dataSources/actionTypes';
 
 export const fetchDataSources = () => ({
   type: actions.REST_REQ_GET,
@@ -8,6 +8,15 @@ export const fetchDataSources = () => ({
     url: 'datasource/',
     actionType: actions.DATASOURCE_FETCH_ALL,
   },
+});
+
+export const retryFetchDataSources = () => ({
+  type: dataSourceActions.fetchAll.retry,
+});
+
+export const retryFetchDataSource = dataSourceId => ({
+  type: dataSourceActions.fetch.retry,
+  payload: { dataSourceId },
 });
 
 export const fetchDataSourceVersions = ({ name }) => ({
@@ -44,6 +53,16 @@ export const fetchSnapshots = ({ name }) => ({
   meta: { name },
 });
 
+export const deleteDataSource = (name, { onSuccess }) => ({
+  type: actions.REST_REQ_DELETE,
+  payload: {
+    url: `/datasource/${name}`,
+    body: {},
+    actionType: actions.DATASOURCE_DELETE,
+  },
+  meta: { name, onSuccess },
+});
+
 /**
  * @param {{
  *   name: string;
@@ -51,12 +70,20 @@ export const fetchSnapshots = ({ name }) => ({
  * }} payload
  * @param {{ onSuccess: function }} meta
  */
-export const createDataSource = ({ name, files }, { onSuccess }) => {
+export const createDataSource = ({ files, ...fields }, { onSuccess }) => {
   const formData = new FormData();
-  formData.append('name', name);
+  Object.entries(fields).forEach(([key, value]) => {
+    if (typeof value !== 'object' && value !== null) {
+      formData.append(key, value);
+    } else {
+      formData.append(key, JSON.stringify(value));
+    }
+  });
+
   files.forEach(file => {
     formData.append('files', file.originFileObj);
   });
+
   return {
     type: actions.REST_REQ_POST_FORM,
     payload: {

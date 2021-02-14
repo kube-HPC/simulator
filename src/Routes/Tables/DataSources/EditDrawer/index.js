@@ -6,10 +6,16 @@ import usePath from './../usePath';
 import useActiveDataSource from './../useActiveDataSource';
 import Header from './Header';
 import Body from './Body';
+import ErrorPage from './Body/Error';
 
 const EditDrawer = () => {
   const { goTo, dataSourceId, mode, snapshotName } = usePath();
-  const { dataSource, isReady, status } = useActiveDataSource();
+  const {
+    dataSource,
+    isReady,
+    status,
+    collectionStatus,
+  } = useActiveDataSource();
   const { setOff, isOn } = useToggle(true);
   return (
     <Drawer
@@ -25,6 +31,11 @@ const EditDrawer = () => {
       />
       {isReady ? (
         <Body goTo={goTo} mode={mode} snapshotName={snapshotName} />
+      ) : status === 'FAIL' ? (
+        <ErrorPage
+          dataSourceId={dataSourceId}
+          collectionStatus={collectionStatus}
+        />
       ) : null}
     </Drawer>
   );

@@ -1,5 +1,8 @@
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
+import { Button, Icon } from 'antd';
+import { useActions } from 'hooks';
+import { COLOR_LAYOUT, COLOR } from 'styles/colors';
 import useDataSources from 'hooks/useDataSources';
 import usePath from './usePath';
 import GridItem from './GridItem';
@@ -9,10 +12,42 @@ const Grid = styled.div`
   flex-wrap: wrap;
   justify-content: flex-start;
   padding-top: 1em;
+  position: relative;
 `;
 
+const FailedMessageContainer = styled.div`
+  position: absolute;
+  top: 1em;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  border-radius: 0.5em;
+  border: 1px solid ${COLOR_LAYOUT.border};
+  padding: 0.75em 1.5ch;
+  box-shadow: 0 0 1em rgba(0, 0, 0, 0.1);
+`;
+
+const FailedMessageContent = styled.span`
+  margin: 0 1ch;
+`;
+
+const FailedMessage = () => {
+  const { retryFetchDataSources } = useActions();
+  return (
+    <FailedMessageContainer>
+      <Icon type="exclamation-circle" style={{ color: COLOR.red }} />
+      <FailedMessageContent>
+        Failed fetching dataSources collection
+      </FailedMessageContent>
+      <Button type="primary" onClick={retryFetchDataSources}>
+        retry
+      </Button>
+    </FailedMessageContainer>
+  );
+};
+
 const DataSourcesGrid = () => {
-  const { dataSources } = useDataSources();
+  const { dataSources, status } = useDataSources();
   const sortedDataSources = useMemo(
     () => dataSources.slice().sort((a, b) => b.id - a.id),
     [dataSources]
@@ -20,6 +55,7 @@ const DataSourcesGrid = () => {
   const { goTo } = usePath();
   return (
     <Grid>
+      {status === 'FAIL' ? <FailedMessage /> : null}
       {sortedDataSources.map(dataSource => (
         <GridItem
           key={`datasource-${dataSource.id}`}

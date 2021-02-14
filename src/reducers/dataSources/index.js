@@ -35,6 +35,7 @@ export { snapshotsActions };
 
 /** @type {import('@reduxjs/toolkit').EntityAdapter<DataSource>} */
 const entityAdapter = createEntityAdapter();
+const baseSelectors = entityAdapter.getSelectors();
 
 const dataSources = createSlice({
   initialState: entityAdapter.getInitialState(),
@@ -90,6 +91,20 @@ const dataSources = createSlice({
         status: 'SUCCESS',
       }),
 
+    [types.delete.success]: (state, { meta }) => {
+      const key = baseSelectors
+        .selectAll(state)
+        .find(item => item.name === meta.name);
+      return key ? entityAdapter.removeOne(state, key.id) : state;
+    },
+
+    /** @param {{ payload: { dataSourceId: string } }} action */
+    [globalActions.DATASOURCE_FETCH_RETRY]: (state, action) =>
+      entityAdapter.updateOne(state, {
+        id: action.payload.dataSourceId,
+        changes: { status: 'IDLE' },
+      }),
+
     /** @param {{ payload: DataSourceEntry }} action */
     [types.create.success]: (state, action) => {
       const { payload: dataSource } = action;
@@ -129,6 +144,8 @@ const dataSources = createSlice({
  */
 const statusReducer = asyncType => (state = 'IDLE', { type }) => {
   switch (type) {
+    case asyncType.retry:
+      return 'IDLE';
     case asyncType.pending:
       return 'PENDING';
     case asyncType.success:
@@ -158,7 +175,6 @@ export const reducer = combineReducers({
   error,
 });
 
-const baseSelectors = entityAdapter.getSelectors();
 export const selectors = {
   all: createSelector(
     // select the active version for each dataSource
@@ -184,7 +200,7 @@ export const selectors = {
   error: state =>
     state.dataSources.status === 'FAIL' ? state.dataSources.error : null,
   /** @param {State} state */
-  count: state => baseSelectors.selectIds(state.dataSources.collection).length,
+  count: state => Object.keys(state.dataSources.versions).length,
   names: createSelector(
     /** @param {State} state */
     state => baseSelectors.selectAll(state.dataSources.collection),

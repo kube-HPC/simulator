@@ -5,6 +5,7 @@ const types = {
     pending: `${actionTypes.DATASOURCE_FETCH_ALL}_PENDING`,
     success: `${actionTypes.DATASOURCE_FETCH_ALL}_SUCCESS`,
     fail: `${actionTypes.DATASOURCE_FETCH_ALL}_REJECT`,
+    retry: `${actionTypes.DATASOURCE_FETCH_ALL}_RETRY`,
   },
   fetchVersions: {
     pending: `${actionTypes.DATASOURCE_FETCH_VERSIONS}_PENDING`,
@@ -20,6 +21,7 @@ const types = {
     pending: `${actionTypes.DATASOURCE_FETCH}_PENDING`,
     success: `${actionTypes.DATASOURCE_FETCH}_SUCCESS`,
     fail: `${actionTypes.DATASOURCE_FETCH}_REJECT`,
+    retry: `${actionTypes.DATASOURCE_FETCH}_RETRY`,
   },
   postVersion: {
     pending: `${actionTypes.DATASOURCE_POST_VERSION}_PENDING`,
@@ -35,6 +37,11 @@ const types = {
     pending: `${actionTypes.SNAPSHOT_POST}_PENDING`,
     success: `${actionTypes.SNAPSHOT_POST}_SUCCESS`,
     fail: `${actionTypes.SNAPSHOT_POST}_REJECT`,
+  },
+  delete: {
+    pending: `${actionTypes.DATASOURCE_DELETE}_PENDING`,
+    success: `${actionTypes.DATASOURCE_DELETE}_SUCCESS`,
+    fail: `${actionTypes.DATASOURCE_DELETE}_REJECT`,
   },
 };
 

@@ -1,9 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Alert, Input, Icon, Form } from 'antd';
+import { Alert, Input, Icon, Form, Button } from 'antd';
 import UploadDragger, { useDragger } from 'components/UploadDragger';
+import useToggle from 'hooks/useToggle';
 import FileBrowser from './FileBrowser';
 import { BottomPanel, Row, FileBrowserContainer, RightButton } from './styles';
+import DeleteModal from './DeleteModal';
 
 /**
  * @typedef {import('./FileBrowser').RefContent} RefContent
@@ -31,7 +33,13 @@ const EditMode = ({
   form,
   submittingStatus,
   onDownload,
+  onDelete,
 }) => {
+  const {
+    isOn: isModalDisplayed,
+    setOn: showModal,
+    setOff: hideModal,
+  } = useToggle();
   const [addedFiles, setAddedFiles] = useState(initialState);
   /** @type {{ current?: RefContent }} */
   const fileBrowserRef = useRef();
@@ -154,6 +162,9 @@ const EditMode = ({
         </Row>
       </div>
       <BottomPanel>
+        <Button type="danger" onClick={showModal}>
+          Delete Datasource
+        </Button>
         <RightButton
           htmlType="submit"
           type="primary"
@@ -161,6 +172,12 @@ const EditMode = ({
           Update Version
         </RightButton>
       </BottomPanel>
+      <DeleteModal
+        isVisible={isModalDisplayed}
+        onClose={hideModal}
+        dataSource={dataSource}
+        onAccept={onDelete}
+      />
     </Form>
   );
 };
@@ -178,6 +195,7 @@ EditMode.propTypes = {
   }).isRequired,
   submittingStatus: PropTypes.string,
   onDownload: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 EditMode.defaultProps = {
   submittingStatus: null,
