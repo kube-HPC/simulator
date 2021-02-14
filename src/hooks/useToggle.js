@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-export default initialState => {
+export default (initialState = false) => {
   const [isOn, setState] = useState(initialState);
   const setOn = useCallback(() => setState(true), [setState]);
   const setOff = useCallback(() => setState(false), [setState]);

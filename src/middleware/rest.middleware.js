@@ -56,6 +56,9 @@ const pending = (dispatch, payload, action) => {
 
 const success = (dispatch, payload, action) => {
   const successMessage = successMsg({ ...payload, ...action.payload });
+  if (action?.meta?.onSuccess) {
+    action.meta.onSuccess(payload);
+  }
   dispatch({
     type: `${action.payload.actionType}_SUCCESS`,
     meta: {
@@ -104,9 +107,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
   if (action.type === AT.REST_REQ_GET) {
     client
       .get(action.payload.url)
-      .then(res => {
-        success(dispatch, res.data, action);
-      })
+      .then(res => success(dispatch, res.data, action))
       .catch(err => {
         const response =
           err.response && err.response.data && err.response.data.error;
@@ -115,44 +116,23 @@ const restMiddleware = ({ dispatch }) => next => action => {
   } else if (action.type === AT.REST_REQ_POST) {
     client
       .post(action.payload.url, action.payload.body)
-      .then(res => {
-        success(dispatch, res.data, action);
-      })
-      .catch(err => {
-        reject(dispatch, err.response.data.error, action);
-      });
+      .then(res => success(dispatch, res.data, action))
+      .catch(err => reject(dispatch, err.response.data.error, action));
   } else if (action.type === AT.REST_REQ_POST_FORM) {
     client
       .post(action.payload.url, action.payload.formData)
-      .then(res => {
-        success(dispatch, res.data, action);
-        if (action?.meta?.onSuccess) {
-          action.meta.onSuccess(res.data);
-        }
-      })
-      .catch(err => {
-        reject(dispatch, err.response.data.error, action);
-      });
+      .then(res => success(dispatch, res.data, action))
+      .catch(err => reject(dispatch, err.response.data.error, action));
   } else if (action.type === AT.REST_REQ_PUT) {
     client
       .put(action.payload.url, action.payload.body)
-      .then(res => {
-        success(dispatch, res.data, action);
-      })
-      .catch(err => {
-        reject(dispatch, err.response.data.error, action);
-      });
+      .then(res => success(dispatch, res.data, action))
+      .catch(err => reject(dispatch, err.response.data.error, action));
   } else if (action.type === AT.REST_REQ_DELETE) {
     client
-      .delete(action.payload.url, {
-        data: action.payload.body,
-      })
-      .then(res => {
-        success(dispatch, res.data, action);
-      })
-      .catch(err => {
-        reject(dispatch, err.response.data.error, action);
-      });
+      .delete(action.payload.url, { data: action.payload.body })
+      .then(res => success(dispatch, res.data, action))
+      .catch(err => reject(dispatch, err?.response?.data?.error, action));
   }
   return next(action);
 };

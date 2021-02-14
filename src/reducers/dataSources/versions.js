@@ -139,6 +139,10 @@ const collection = createSlice({
         [name]: { ...state[name], submittingStatus: 'PENDING' },
       };
     },
+    [types.delete.success]: (state, { meta }) => {
+      const { [meta.name]: dropped, ...rest } = state;
+      return rest;
+    },
     [types.postVersion.fail]: (state, action) => {
       const name = action.meta.dataSourceName;
       return { ...state, [name]: { ...state[name], submittingStatus: 'FAIL' } };
