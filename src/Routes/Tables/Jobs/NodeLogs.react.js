@@ -43,7 +43,7 @@ OptionBox.propTypes = {
 const NodeLogs = ({ node, taskDetails, onChange }) => {
   const { logs, getLogs } = useLogs();
   const [currentTask, setCurrentTask] = useState(undefined);
-  const { logSource: source } = useSettings();
+  const { logSource: source, logMode } = useSettings();
 
   useEffect(() => {
     const task =
@@ -51,9 +51,9 @@ const NodeLogs = ({ node, taskDetails, onChange }) => {
     const { taskId, podName } = task;
     if (taskId !== currentTask) {
       setCurrentTask(taskId);
-      getLogs({ taskId, podName, source, nodeKind: node.kind });
+      getLogs({ taskId, podName, source, nodeKind: node.kind, logMode });
     }
-  }, [currentTask, taskDetails, getLogs, source, node]);
+  }, [currentTask, taskDetails, getLogs, source, node, logMode]);
 
   const options = taskDetails.map((task, index) => (
     // TODO: implement a better key
