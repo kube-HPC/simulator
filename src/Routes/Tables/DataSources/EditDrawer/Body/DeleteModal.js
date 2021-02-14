@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Input } from 'antd';
+import { Modal, Input, Tooltip } from 'antd';
 import styled from 'styled-components';
 import { COLOR } from 'styles';
 import { copyToClipboard } from 'utils';
@@ -13,6 +13,16 @@ const DataSourceName = styled.em`
   border-radius: 0.25em;
   border: 1px solid rgba(0, 0, 0, 0.15);
   cursor: pointer;
+`;
+
+const Bolded = styled.em`
+  font-style: normal;
+  font-weight: bolder;
+`;
+
+const WarningText = styled.span`
+  display: block;
+  color: ${COLOR.red};
 `;
 
 const DeleteModal = ({ onAccept, onClose, isVisible, dataSource }) => {
@@ -35,12 +45,18 @@ const DeleteModal = ({ onAccept, onClose, isVisible, dataSource }) => {
       <p>
         Are you sure you would like to delete datasource
         <span style={{ fontWeight: 'bold' }}>{` ${dataSource.name}?`}</span>
+        <WarningText>
+          ** <Bolded>Please note:</Bolded> deleting a datasource is{' '}
+          <Bolded>irreversible!</Bolded> **
+        </WarningText>
       </p>
       <p>
-        Please enter the dataSource name{' '}
-        <DataSourceName onClick={() => copyToClipboard(dataSource.name)}>
-          {dataSource.name}
-        </DataSourceName>{' '}
+        Enter the dataSource name{' '}
+        <Tooltip title="copy to clipboard">
+          <DataSourceName onClick={() => copyToClipboard(dataSource.name)}>
+            {dataSource.name}
+          </DataSourceName>{' '}
+        </Tooltip>
         in the box below
       </p>
       <Input

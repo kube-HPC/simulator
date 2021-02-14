@@ -37,7 +37,13 @@ const Body = ({ goTo, mode }) => {
   const dispatch = useDispatch();
   const { deleteDataSource } = useActions();
   const handleDelete = useCallback(
-    name => deleteDataSource(name, { onSuccess: () => goTo.root() }),
+    name =>
+      deleteDataSource(name, {
+        onSuccess: () => {
+          notification({ message: `deleted dataSource ${name}`, type: 'info' });
+          goTo.root();
+        },
+      }),
     [deleteDataSource, goTo]
   );
   const [downloadHref, setDownloadHref] = useState(null);
