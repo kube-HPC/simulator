@@ -16,15 +16,9 @@ const LogMode = () => {
     <FlexBox.Auto>
       <Typography.Text strong>Log Mode</Typography.Text>
       <Radio.Group value={logMode} onChange={onChange}>
-        <Radio key="log-mode-Algorithm" value={logModes.ALGORITHM}>
-          Algorithm
-        </Radio>
-        <Radio key="log-mode-Internal" value={logModes.INTERNAL}>
-          Internal
-        </Radio>
-        <Radio key="log-mode-All" value={logModes.ALL}>
-          All
-        </Radio>
+        <Radio value={logModes.ALGORITHM}>Algorithm</Radio>
+        <Radio value={logModes.INTERNAL}>Internal</Radio>
+        <Radio value={logModes.ALL}>All</Radio>
       </Radio.Group>
     </FlexBox.Auto>
   );
