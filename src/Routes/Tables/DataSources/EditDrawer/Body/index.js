@@ -6,6 +6,7 @@ import { Switch, Route } from 'react-router-dom';
 import { postVersion } from 'actions/dataSources';
 import DownloadLink from 'components/DownloadLink';
 import client from 'client';
+import { useActions } from 'hooks';
 import { notification } from 'utils';
 import useActiveDataSource from '../../useActiveDataSource';
 import TopPanel from './TopPanel';
@@ -34,6 +35,11 @@ const Body = ({ goTo, mode }) => {
     activeSnapshot,
   } = useSnapshots({ dataSourceName: dataSource.name });
   const dispatch = useDispatch();
+  const { deleteDataSource } = useActions();
+  const handleDelete = useCallback(
+    name => deleteDataSource(name, { onSuccess: () => goTo.root() }),
+    [deleteDataSource, goTo]
+  );
   const [downloadHref, setDownloadHref] = useState(null);
   const onCreateVersion = useCallback(
     ({ files, droppedFileIds, mapping, versionDescription }) => {
@@ -114,6 +120,7 @@ const Body = ({ goTo, mode }) => {
                 onDownload={onDownload}
                 onCreateVersion={onCreateVersion}
                 dataSource={dataSource}
+                onDelete={handleDelete}
                 submittingStatus={versionsCollection.submittingStatus}
               />
             ) : (
@@ -130,6 +137,7 @@ const Body = ({ goTo, mode }) => {
 Body.propTypes = {
   goTo: PropTypes.shape({
     edit: PropTypes.func.isRequired,
+    root: PropTypes.func.isRequired,
   }).isRequired,
   mode: PropTypes.string.isRequired,
 };

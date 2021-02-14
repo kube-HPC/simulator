@@ -35,6 +35,7 @@ export { snapshotsActions };
 
 /** @type {import('@reduxjs/toolkit').EntityAdapter<DataSource>} */
 const entityAdapter = createEntityAdapter();
+const baseSelectors = entityAdapter.getSelectors();
 
 const dataSources = createSlice({
   initialState: entityAdapter.getInitialState(),
@@ -89,6 +90,13 @@ const dataSources = createSlice({
         ...payload,
         status: 'SUCCESS',
       }),
+
+    [types.delete.success]: (state, { meta }) => {
+      const key = baseSelectors
+        .selectAll(state)
+        .find(item => item.name === meta.name);
+      return key ? entityAdapter.removeOne(state, key.id) : state;
+    },
 
     /** @param {{ payload: { dataSourceId: string } }} action */
     [globalActions.DATASOURCE_FETCH_RETRY]: (state, action) =>
@@ -167,7 +175,6 @@ export const reducer = combineReducers({
   error,
 });
 
-const baseSelectors = entityAdapter.getSelectors();
 export const selectors = {
   all: createSelector(
     // select the active version for each dataSource

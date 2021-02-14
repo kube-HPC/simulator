@@ -38,6 +38,11 @@ const types = {
     success: `${actionTypes.SNAPSHOT_POST}_SUCCESS`,
     fail: `${actionTypes.SNAPSHOT_POST}_REJECT`,
   },
+  delete: {
+    pending: `${actionTypes.DATASOURCE_DELETE}_PENDING`,
+    success: `${actionTypes.DATASOURCE_DELETE}_SUCCESS`,
+    fail: `${actionTypes.DATASOURCE_DELETE}_REJECT`,
+  },
 };
 
 export default types;

@@ -53,6 +53,16 @@ export const fetchSnapshots = ({ name }) => ({
   meta: { name },
 });
 
+export const deleteDataSource = (name, { onSuccess }) => ({
+  type: actions.REST_REQ_DELETE,
+  payload: {
+    url: `/datasource/${name}`,
+    body: {},
+    actionType: actions.DATASOURCE_DELETE,
+  },
+  meta: { name, onSuccess },
+});
+
 /**
  * @param {{
  *   name: string;

@@ -45,6 +45,7 @@ import {
   retryFetchDataSources,
   fetchSnapshots,
   createDataSource,
+  deleteDataSource,
   postVersion as postDataSourceVersion,
 } from './dataSources';
 
@@ -87,6 +88,7 @@ const actions = {
   connectionSetup,
   fetchDataSources,
   retryFetchDataSources,
+  deleteDataSource,
   fetchDataSourceVersions,
   fetchDataSource,
   retryFetchDataSource,
