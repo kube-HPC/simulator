@@ -9,11 +9,12 @@ export const getKubernetesLogsData = ({
   taskId,
   source = 'k8s',
   nodeKind,
+  logMode,
 }) => ({
   type: actions.REST_REQ_GET,
   payload: {
     url: `logs?${qs.stringify(
-      filterEmptyValues({ podName, taskId, source, nodeKind })
+      filterEmptyValues({ podName, taskId, source, nodeKind, logMode })
     )}`,
     actionType: actions.JOBS_KUBERNETES_LOGS,
   },
