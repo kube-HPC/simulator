@@ -76,7 +76,7 @@ const NodeLogs = ({ node, taskDetails, onChange }) => {
                 const { taskId, podName } = taskDetails[index];
                 onChange(index);
                 setCurrentTask(taskId);
-                getLogs({ taskId, podName, source });
+                getLogs({ taskId, podName, source, logMode });
               }}>
               {options}
             </SelectFull>
