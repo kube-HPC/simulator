@@ -9,7 +9,7 @@ const EMPTY_NODE = {};
 const useNodeInfo = ({ graph, pipeline }) => {
   const [node, setNode] = useState(EMPTY_NODE);
   const { getLogs } = useLogs();
-  const { logSource: source } = useSettings();
+  const { logSource: source, logMode } = useSettings();
   const findNodeByName = nodeFinder({ graph, pipeline });
 
   // Update logs on first entry
@@ -32,11 +32,11 @@ const useNodeInfo = ({ graph, pipeline }) => {
       const newNode = findNodeByName(nodeName);
       if (!isEqual(node, newNode)) {
         const { taskId, podName } = newNode;
-        getLogs({ taskId, podName, source });
+        getLogs({ taskId, podName, source, logMode });
         setNode(newNode);
       }
     }
-  }, [findNodeByName, getLogs, graph, node, source]);
+  }, [findNodeByName, getLogs, graph, node, source, logMode]);
 
   const events = useMemo(
     () => ({
