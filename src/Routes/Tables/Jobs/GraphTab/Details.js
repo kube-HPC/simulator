@@ -23,7 +23,7 @@ const NodeInfo = ({ node, jobId }) => {
   const [index, setIndex] = useState(0);
   const { getCaching } = useActions();
   const { getLogs } = useLogs();
-  const { logSource: source } = useSettings();
+  const { logSource: source, logMode } = useSettings();
 
   const onRunNode = () =>
     node && getCaching({ jobId, nodeName: node.nodeName });
@@ -31,7 +31,7 @@ const NodeInfo = ({ node, jobId }) => {
   const onRefresh = () => {
     const taskDetails = getTaskDetails(node);
     const { taskId, podName } = taskDetails[index];
-    getLogs({ taskId, podName, source, nodeKind: node.kind });
+    getLogs({ taskId, podName, source, nodeKind: node.kind, logMode });
   };
 
   const extra = (
