@@ -37,6 +37,12 @@ export { snapshotsActions };
 const entityAdapter = createEntityAdapter();
 const baseSelectors = entityAdapter.getSelectors();
 
+/** @returns {DataSource} */
+const DataSourceConstructor = entry => ({
+  ...entry,
+  status: 'IDLE',
+});
+
 const dataSources = createSlice({
   initialState: entityAdapter.getInitialState(),
   name: 'dataSources',
@@ -49,13 +55,7 @@ const dataSources = createSlice({
      * ) => CollectionState}
      */
     [types.fetchAll.success]: (state, action) =>
-      entityAdapter.setAll(
-        state,
-        action.payload.map(entry => ({
-          ...entry,
-          status: 'IDLE',
-        }))
-      ),
+      entityAdapter.setAll(state, action.payload.map(DataSourceConstructor)),
     /**
      * @param {{
      *   payload: { dataSources: DataSource[] };
@@ -65,9 +65,12 @@ const dataSources = createSlice({
       const { dataSources: payload } = action.payload;
       const entitiesToAdd = payload
         .filter(item => !state.entities[item.id])
-        .map(item => ({ ...item, status: 'IDLE' }));
-      if (entitiesToAdd.length === 0) return state;
-      return entityAdapter.addMany(state, entitiesToAdd);
+        .map(DataSourceConstructor);
+      let nextState = state;
+      if (entitiesToAdd.length > 0) {
+        nextState = entityAdapter.addMany(nextState, entitiesToAdd);
+      }
+      return nextState;
     },
 
     [types.fetch.pending]: (state, { meta }) =>
@@ -90,13 +93,6 @@ const dataSources = createSlice({
         ...payload,
         status: 'SUCCESS',
       }),
-
-    [types.delete.success]: (state, { meta }) => {
-      const key = baseSelectors
-        .selectAll(state)
-        .find(item => item.name === meta.name);
-      return key ? entityAdapter.removeOne(state, key.id) : state;
-    },
 
     /** @param {{ payload: { dataSourceId: string } }} action */
     [globalActions.DATASOURCE_FETCH_RETRY]: (state, action) =>
@@ -184,7 +180,9 @@ export const selectors = {
     state => state.dataSources.versions,
     (collectionState, versions) => {
       const entities = baseSelectors.selectEntities(collectionState);
-      const activeIds = Object.values(versions).map(item => item.active);
+      const activeIds = Object.values(versions)
+        .filter(item => item.status !== 'DELETED')
+        .map(item => item.active);
       return activeIds.map(id => entities[id]);
     }
   ),
@@ -199,8 +197,12 @@ export const selectors = {
   /** @param {State} state */
   error: state =>
     state.dataSources.status === 'FAIL' ? state.dataSources.error : null,
-  /** @param {State} state */
-  count: state => Object.keys(state.dataSources.versions).length,
+  count: createSelector(
+    /** @param {State} state */
+    state => state.dataSources.versions,
+    versions =>
+      Object.values(versions).filter(item => item.status !== 'DELETED').length
+  ),
   names: createSelector(
     /** @param {State} state */
     state => baseSelectors.selectAll(state.dataSources.collection),
