@@ -17,11 +17,12 @@ const Grid = styled.div`
 
 const FailedMessageContainer = styled.div`
   position: absolute;
-  top: 1em;
+  top: 1.5em;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
   border-radius: 0.5em;
+  background: white;
   border: 1px solid ${COLOR_LAYOUT.border};
   padding: 0.75em 1.5ch;
   box-shadow: 0 0 1em rgba(0, 0, 0, 0.1);
