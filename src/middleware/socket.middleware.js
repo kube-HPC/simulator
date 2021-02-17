@@ -33,6 +33,9 @@ const noConnectionEvents = [
 ];
 
 const connectOperation = ({ socket, name, lastRoom }) => {
+  console.info(
+    `connecting to socket room: ${name}, previous room: ${lastRoom}`
+  );
   socket.emit(connectionsEvents.EXPERIMENT_REGISTER, {
     name,
     lastRoom,
@@ -62,7 +65,6 @@ const socketMiddleware = ({ dispatch }) => {
   return next => action => {
     if (action.type === `${AT.SOCKET_GET_CONFIG}_SUCCESS`) {
       if (socket) socket.close();
-
       const { monitorBackend } = action.payload.config;
 
       const url = monitorBackend.useLocation
@@ -76,6 +78,14 @@ const socketMiddleware = ({ dispatch }) => {
 
       Object.values(connectionsEvents).forEach(event => {
         socket.on(event, args => {
+          console.info(
+            args
+              ? `initializing socket event: ${event}, with args: ${JSON.stringify(
+                  args
+                )}`
+              : `initializing socket event: ${event}, with no args`
+          );
+
           if (
             [
               connectionsEvents.CONNECTION,
