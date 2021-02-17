@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { COLOR_LAYOUT } from 'styles';
 import FileBrowser from './FileBrowser';
-import { FileBrowserContainer, FormContainer } from './styles';
+import { Bold, FileBrowserContainer, FormContainer } from './styles';
 import './styles.css';
+import ErrorPage from './Error';
 
 /**
  * @typedef {import('./FileBrowser').RefContent} RefContent
@@ -24,10 +25,18 @@ const Header = styled.h3`
 `;
 
 /** @param {{ activeSnapshot: Snapshot }} props */
-const PreviewSnapshot = ({ activeSnapshot, onDownload }) => {
+const PreviewSnapshot = ({ activeSnapshot, onDownload, snapshotName }) => {
   /** @type {RefContent} */
   const fileBrowserRef = useRef();
-  if (!activeSnapshot) return null;
+  if (!activeSnapshot)
+    return (
+      <ErrorPage>
+        could not find snapshot <Bold>{snapshotName}</Bold>
+        <span style={{ display: 'block' }}>
+          Please select another version or snapshot from the dropdown above
+        </span>
+      </ErrorPage>
+    );
   return (
     <div style={{ display: 'contents' }}>
       <FileBrowserContainer>
@@ -54,6 +63,7 @@ PreviewSnapshot.propTypes = {
     query: PropTypes.string,
   }),
   onDownload: PropTypes.func.isRequired,
+  snapshotName: PropTypes.string.isRequired,
 };
 
 PreviewSnapshot.defaultProps = {

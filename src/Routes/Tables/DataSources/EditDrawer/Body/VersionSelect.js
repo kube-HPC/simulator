@@ -5,6 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import _ from 'lodash';
 import usePath from './../../usePath';
+import useSnapshots from '../useSnapshots';
 /**
  * @typedef {import('./').ExtendedDataSource} ExtendedDataSource
  * @typedef {import('reducers/dataSources/datasource').DataSourceVersion} DataSourceVersion
@@ -68,6 +69,7 @@ const Selector = ({
   dataSource,
   versions,
   activeSnapshot,
+  hasMissingSnapshot,
 }) => {
   const { paths, mode } = usePath();
   const location = useLocation();
@@ -106,8 +108,14 @@ const Selector = ({
     <Dropdown overlay={menu} placement="bottomLeft">
       <Button loading={isPending}>
         <VersionRow
-          title={activeSnapshot ? activeSnapshot.name : dataSource.id}
-          isLatest={isLatest(versions, dataSource)}
+          title={
+            hasMissingSnapshot
+              ? 'missing snapshot!'
+              : activeSnapshot
+              ? activeSnapshot.name
+              : dataSource.id
+          }
+          isLatest={hasMissingSnapshot ? '' : isLatest(versions, dataSource)}
           isSnapshot={activeSnapshot !== null}
         />
       </Button>
@@ -133,6 +141,7 @@ Selector.propTypes = {
   activeSnapshot: PropTypes.shape({
     name: PropTypes.string,
   }),
+  hasMissingSnapshot: PropTypes.bool.isRequired,
 };
 
 Selector.defaultProps = {
@@ -171,6 +180,9 @@ const Versions = ({
       []
     );
   }, [snapshots, versionsCollection]);
+  const { snapshotName } = useSnapshots({ dataSourceName: dataSource.name });
+  const hasMissingSnapshot = snapshotName && !activeSnapshot;
+
   return (
     <>
       <Selector
@@ -179,8 +191,15 @@ const Versions = ({
         isPending={isPending}
         dataSource={dataSource}
         activeSnapshot={activeSnapshot}
+        hasMissingSnapshot={hasMissingSnapshot}
       />
-      <VersionDescription>{dataSource.versionDescription}</VersionDescription>
+      <VersionDescription>
+        {activeSnapshot
+          ? ''
+          : hasMissingSnapshot
+          ? '<- version selector'
+          : dataSource.versionDescription}
+      </VersionDescription>
     </>
   );
 };

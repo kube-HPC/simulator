@@ -90,7 +90,10 @@ const QueryMode = ({ dataSource, form, onDownload }) => {
           return null;
         } catch (error) {
           setPending(false);
-          return notification({ message: error.message, type: 'error' });
+          return notification({
+            message: error?.response?.data?.error?.message ?? error.message,
+            type: 'error',
+          });
         }
       });
       return null;

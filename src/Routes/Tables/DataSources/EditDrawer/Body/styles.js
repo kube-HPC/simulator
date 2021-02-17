@@ -10,6 +10,11 @@ export const BottomPanel = styled(CommonBottomPanel)`
   margin-top: 0;
 `;
 
+export const Bold = styled.em`
+  font-weight: bolder;
+  font-style: normal;
+`;
+
 export const Row = styled.section`
   margin: 0 auto;
   margin-top: 1em;

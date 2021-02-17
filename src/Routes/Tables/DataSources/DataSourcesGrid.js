@@ -20,7 +20,7 @@ const FailedMessageContainer = styled.div`
   top: 1.5em;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1;
+  z-index: 10;
   border-radius: 0.5em;
   background: white;
   border: 1px solid ${COLOR_LAYOUT.border};

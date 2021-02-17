@@ -31,6 +31,7 @@ const useSnapshots = ({ dataSourceName }) => {
     ...snapshots,
     isReady,
     activeSnapshot,
+    snapshotName,
   };
 };
 
