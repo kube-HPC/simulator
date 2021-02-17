@@ -1,11 +1,13 @@
 import React, { memo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'antd';
-import { BottomContent, Card, JsonEditor } from 'components/common';
+import {
+  BottomPanel,
+  RightAlignedButton,
+  PanelButton,
+} from 'components/Drawer';
+import { Card, JsonEditor } from 'components/common';
 import { addAlgorithmTemplate } from 'config';
-import { DRAWER_SIZE } from 'const';
 import { useActions } from 'hooks';
-import { Display } from 'styles';
 import { stringify } from 'utils';
 import tryParse from 'utils/handleParsing';
 import AddAlgorithmForm from './AddAlgorithmForm.react';
@@ -39,39 +41,31 @@ const AddAlgorithm = ({ onSubmit = noop }) => {
   const onEditorSubmit = () => tryParse({ src: editorValue, onSuccess });
   // #endregion
 
-  return (
+  return editorIsVisible ? (
     <>
-      <Display isVisible={!editorIsVisible}>
-        <AddAlgorithmForm
-          isVisible={!editorIsVisible}
-          onToggle={toggleEditor}
-          onSubmit={onSubmit}
-        />
-      </Display>
-      <Display isVisible={editorIsVisible}>
-        <Card>
-          <JsonEditor value={editorValue} onChange={setEditorValue} />
-        </Card>
-        <BottomContent.Divider />
-        <BottomContent
-          width={DRAWER_SIZE.ADD_ALGORITHM}
-          extra={[
-            <Button key="editor" onClick={toggleEditor}>
-              Form View
-            </Button>,
-            <Button key="default" type="dashed" onClick={onDefault}>
-              Default
-            </Button>,
-            <Button key="clear" type="danger" onClick={onClear}>
-              Clear
-            </Button>,
-          ]}>
-          <Button key="Submit" type="primary" onClick={onEditorSubmit}>
-            Submit
-          </Button>
-        </BottomContent>
-      </Display>
+      <Card style={{ flex: 1 }} bodyStyle={{ height: '100%' }}>
+        <JsonEditor value={editorValue} onChange={setEditorValue} />
+      </Card>
+      <BottomPanel>
+        <PanelButton key="editor" onClick={toggleEditor}>
+          Form View
+        </PanelButton>
+        <PanelButton key="default" type="dashed" onClick={onDefault}>
+          Default
+        </PanelButton>
+        <PanelButton key="clear" type="danger" onClick={onClear}>
+          Clear
+        </PanelButton>
+        <RightAlignedButton
+          key="Submit"
+          type="primary"
+          onClick={onEditorSubmit}>
+          Submit
+        </RightAlignedButton>
+      </BottomPanel>
     </>
+  ) : (
+    <AddAlgorithmForm onToggle={toggleEditor} onSubmit={onSubmit} />
   );
 };
 
@@ -81,3 +75,11 @@ AddAlgorithm.propTypes = {
 };
 
 export default memo(AddAlgorithm);
+
+// <BottomContent.Divider />
+// <BottomContent
+//   width={DRAWER_SIZE.ADD_ALGORITHM}
+//   extra={[
+//   ]}>
+//
+// </BottomContent>

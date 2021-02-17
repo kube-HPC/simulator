@@ -1,9 +1,10 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Icon, Form, Button } from 'antd';
+import { Input, Icon, Form } from 'antd';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { snapshotsActions } from 'reducers/dataSources';
+import { RightAlignedButton, PanelButton } from 'components/Drawer';
 import { notification } from 'utils';
 import client from '../../../../../client';
 import FileBrowser from './FileBrowser';
@@ -11,7 +12,6 @@ import {
   BottomPanel,
   Row,
   FileBrowserContainer,
-  RightButton,
   FormContainer,
 } from './styles';
 import './styles.css';
@@ -143,20 +143,20 @@ const QueryMode = ({ dataSource, form, onDownload }) => {
         </Row>
       </FormContainer>
       <BottomPanel>
-        <Button type="secondary" onClick={handleTryQuery}>
+        <PanelButton type="secondary" onClick={handleTryQuery}>
           Preview Query
-        </Button>
+        </PanelButton>
         {showQuery || previewFiles.length > 0 ? (
-          <Button
-            type="dashed"
-            onClick={handleToggleQuery}
-            style={{ marginLeft: '2ch' }}>
+          <PanelButton type="dashed" onClick={handleToggleQuery}>
             {showQuery ? 'Show All' : 'Apply Preview'}
-          </Button>
+          </PanelButton>
         ) : null}
-        <RightButton htmlType="submit" type="primary" loading={isPending}>
+        <RightAlignedButton
+          htmlType="submit"
+          type="primary"
+          loading={isPending}>
           Create Snapshot
-        </RightButton>
+        </RightAlignedButton>
       </BottomPanel>
     </Form>
   );

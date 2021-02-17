@@ -1,10 +1,14 @@
 import React, { memo, useState } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Button, Input, InputNumber, Radio, Select } from 'antd';
-import { BottomContent, Form } from 'components/common';
+import { Input, InputNumber, Radio, Select } from 'antd';
+import { Form } from 'components/common';
+import {
+  BottomPanel,
+  RightAlignedButton,
+  PanelButton,
+} from 'components/Drawer';
 import formTemplate from 'config/template/addAlgorithmForm.template';
-import { DRAWER_SIZE } from 'const';
 import { useActions } from 'hooks';
 import {
   mapObjValues,
@@ -154,7 +158,7 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
   // #endregion
 
   return (
-    <Form onSubmit={onFormSubmit}>
+    <Form onSubmit={onFormSubmit} style={{ display: 'contents' }}>
       <Form.Item label={MAIN.NAME.label}>
         {getFieldDecorator(MAIN.NAME.field, {
           rules: [
@@ -217,18 +221,12 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
         )}
       </Form.Item>
       {buildTypes[buildType]}
-      <BottomContent.Divider />
-      <BottomContent
-        width={DRAWER_SIZE.ADD_ALGORITHM}
-        extra={[
-          <Button key="editor" onClick={onToggle}>
-            Editor View
-          </Button>,
-        ]}>
-        <Button key="Submit" type="primary" htmlType="submit">
+      <BottomPanel style={{ marginTop: 'auto' }}>
+        <PanelButton onClick={onToggle}>Editor View</PanelButton>
+        <RightAlignedButton type="primary" htmlType="submit">
           Submit
-        </Button>
-      </BottomContent>
+        </RightAlignedButton>
+      </BottomPanel>
     </Form>
   );
 };

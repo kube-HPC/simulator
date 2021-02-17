@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Alert, Input, Icon, Form, Button } from 'antd';
+import { Alert, Input, Icon, Form } from 'antd';
 import UploadDragger, { useDragger } from 'components/UploadDragger';
+import { RightAlignedButton, PanelButton } from 'components/Drawer';
 import useToggle from 'hooks/useToggle';
 import FileBrowser from './FileBrowser';
-import { BottomPanel, Row, FileBrowserContainer, RightButton } from './styles';
+import { BottomPanel, Row, FileBrowserContainer } from './styles';
 import DeleteModal from './DeleteModal';
 
 /**
@@ -162,15 +163,15 @@ const EditMode = ({
         </Row>
       </div>
       <BottomPanel>
-        <Button type="danger" onClick={showModal}>
+        <PanelButton type="danger" onClick={showModal}>
           Delete Datasource
-        </Button>
-        <RightButton
+        </PanelButton>
+        <RightAlignedButton
           htmlType="submit"
           type="primary"
           loading={submittingStatus === 'PENDING'}>
           Update Version
-        </RightButton>
+        </RightAlignedButton>
       </BottomPanel>
       <DeleteModal
         isVisible={isModalDisplayed}

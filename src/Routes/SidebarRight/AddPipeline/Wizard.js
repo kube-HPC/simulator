@@ -1,13 +1,17 @@
 import React, { useCallback, useMemo, useState, memo } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Icon, Steps } from 'antd';
+import { Icon, Steps } from 'antd';
 import { Card, JsonView, Form } from 'components/common';
 import schema from 'config/schema/addPipeline.schema';
 import styled from 'styled-components';
 import { mapObjValues, stringify, notification } from 'utils';
 import { mergeWith } from 'lodash';
 import { COLOR_LAYOUT } from 'styles';
-import { BottomPanel } from 'components/Drawer';
+import {
+  BottomPanel,
+  PanelButton,
+  RightAlignedButton,
+} from 'components/Drawer';
 import addPipelineTemplate from 'config/template/addPipeline.template';
 import AddPipelineForm from './AddPipelineForm';
 
@@ -125,22 +129,19 @@ const Wizard = ({ toggle, addPipeline }) => {
         {steps}
       </Steps>
       <BottomPanel>
-        <Button onClick={toggle}>Editor View</Button>
-        <Button
-          disabled={!step}
-          onClick={onPrevClick}
-          style={{ marginLeft: 'auto', marginRight: '1ch' }}>
+        <PanelButton onClick={toggle}>Editor View</PanelButton>
+        <PanelButton disabled={!step} onClick={onPrevClick}>
           <Icon type="left" />
           Back
-        </Button>
-        <Button
+        </PanelButton>
+        <RightAlignedButton
           type={isLastStep ? 'primary' : 'default'}
           onClick={onNextClick}
           form={schema.ID}
           htmlType="submit">
           {isLastStep ? 'Submit' : 'Next'}
           <Icon type={isLastStep ? 'check' : 'right'} />
-        </Button>
+        </RightAlignedButton>
       </BottomPanel>
     </>
   );

@@ -34,7 +34,8 @@ const EditDrawer = () => {
       onClose={setOff}
       onDidClose={goTo.root}
       width={DRAWER_SIZE.ALGORITHM_INFO}
-      title={activeAlgorithm?.name ?? algorithmId}>
+      title={activeAlgorithm?.name ?? algorithmId}
+      asFlex>
       {activeAlgorithm ? (
         <DrawerEditor
           value={value}

@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
-import { BottomPanel } from 'components/Drawer';
-import { FileBrowserContainer, RightButton } from './styles';
+import { BottomPanel, RightAlignedButton } from 'components/Drawer';
+import { FileBrowserContainer } from './styles';
 import FileBrowser from './FileBrowser';
 
 /**
@@ -23,9 +23,9 @@ const ReadOnly = ({ dataSource, onDownload }) => {
         />
       </FileBrowserContainer>
       <BottomPanel>
-        <RightButton type="primary" disabled>
+        <RightAlignedButton type="primary" disabled>
           read only
-        </RightButton>
+        </RightAlignedButton>
       </BottomPanel>
     </>
   );
