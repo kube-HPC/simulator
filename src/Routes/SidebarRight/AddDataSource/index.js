@@ -50,7 +50,6 @@ const AddDataSource = ({ form }) => {
                   secretAccessKey: formObject.storageAccessKey,
                   endpoint: formObject.storageEndpoint,
                   bucketName: formObject.storageBucketName,
-                  useSSL: formObject.useSSL === 'true',
                 }),
           },
           git: {

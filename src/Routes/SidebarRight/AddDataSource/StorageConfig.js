@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, Icon, Radio } from 'antd';
+import { Input, Icon } from 'antd';
 import { FormItem } from './styles';
 
 const StorageConfig = ({ getFieldDecorator }) => (
@@ -29,14 +29,6 @@ const StorageConfig = ({ getFieldDecorator }) => (
           placeholder="Bucket Name"
           required
         />
-      )}
-    </FormItem>
-    <FormItem label="Bucket Name">
-      {getFieldDecorator('storageUseSSL', { initialValue: 'false' })(
-        <Radio.Group>
-          <Radio.Button value="false">no-ssl</Radio.Button>
-          <Radio.Button value="true">use-ssl</Radio.Button>
-        </Radio.Group>
       )}
     </FormItem>
     <FormItem label="Access Key">
