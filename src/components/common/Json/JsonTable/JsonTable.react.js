@@ -1,43 +1,40 @@
 import { Tag, Typography, Button } from 'antd';
 import { Descriptions } from 'components/common';
 import PropTypes from 'prop-types';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { prop } from 'styled-tools';
 import DownloadLink from 'components/DownloadLink';
-// TODO: re-write this whole component
 
 const { Text } = Typography;
 const EMPTY = `Empty`;
 
 // Helpers
 
-const isPureObject = obj =>
+const isObject = obj =>
   !Array.isArray(obj) && typeof obj === 'object' && obj !== null;
-const getTotalColumns = ({ obj, vertical }) =>
+
+const getColumns = ({ obj, vertical }) =>
   vertical ? Object.keys(obj).length : 1;
 
 const isEmptyObject = obj => Object.entries(obj).length === 0;
 
 const Margin = styled(Descriptions)`
-  margin-top: ${prop('isMargin', 'none')};
+  margin-top: ${prop('hasMargin', 'none')};
 `;
 
 // Recursion Step
-const RenderItemByValueType = ({
-  obj,
-  vertical,
-  isMargin = false,
-  key,
-  jobId,
-}) => {
+const ItemByValueType = ({ obj, vertical, hasMargin = false, key, jobId }) => {
   const [downloadHref, setDownloadHref] = useState(null);
 
   const handleDownload = useCallback(
     () => setDownloadHref(`/flowInput/${jobId}?download=true`),
     [jobId, setDownloadHref]
   );
-  if (isPureObject(obj)) {
+
+  const columns = useMemo(() => getColumns({ obj, vertical }), [obj, vertical]);
+
+  if (isObject(obj)) {
     if (key === 'flowInput' && obj.truncated) {
       return (
         <>
@@ -49,68 +46,69 @@ const RenderItemByValueType = ({
     return (
       <Margin
         key={key}
-        column={getTotalColumns({ obj, vertical })}
+        column={columns}
         vertical={vertical}
-        isMargin={isMargin}>
-        {
-          // eslint-disable-next-line
-          objToItem({ obj })
-        }
+        hasMargin={hasMargin}>
+        <Items obj={obj} />
       </Margin>
     );
   }
-  if (Array.isArray(obj)) {
-    return (
-      <>
-        {obj.map((value, i) =>
-          RenderItemByValueType({
-            obj: value,
-            vertical,
-            isMargin: i !== 0 || i === obj.length - 1,
-            key: i,
-          })
-        )}
-      </>
-    );
-  }
-  return String(obj);
+  return Array.isArray(obj)
+    ? obj.map((value, i) => (
+        // eslint-disable-next-line
+        <ItemByValueType
+          obj={value}
+          vertical={vertical}
+          hasMargin={i !== 0 || i === obj.length - 1}
+          // TODO:: replace the key with actual value
+          // eslint-disable-next-line
+          key={`${ItemByValueType}-${i}`}
+        />
+      ))
+    : String(obj);
 };
 
-RenderItemByValueType.propTypes = {
+ItemByValueType.propTypes = {
   /* eslint-disable  */
   obj: PropTypes.object,
   vertical: PropTypes.bool,
-  isMargin: PropTypes.bool,
+  hasMargin: PropTypes.bool,
   key: PropTypes.oneOf([PropTypes.string, PropTypes.number]),
   jobId: PropTypes.string,
   /* eslint-enable  */
 };
 
-RenderItemByValueType.defaultProps = {
+ItemByValueType.defaultProps = {
   jobId: null,
 };
 
 // Item
-const objToItem = ({ obj, vertical, jobId }) =>
+const Items = ({ obj, vertical, jobId }) =>
   Object.entries(obj).map(([key, value]) => (
     <Descriptions.Item key={key} label={<Text strong>{key}</Text>}>
-      {isPureObject(value) && isEmptyObject(value) ? (
+      {isObject(value) && isEmptyObject(value) ? (
         <Tag>{EMPTY}</Tag>
       ) : (
-        RenderItemByValueType({ obj: value, vertical, key, jobId })
+        <ItemByValueType
+          obj={value}
+          vertical={vertical}
+          key={key}
+          jobId={jobId}
+        />
       )}
     </Descriptions.Item>
   ));
 
 // Entry
-const JsonTable = ({ obj, vertical = false, jobId, ...props }) => (
-  <Descriptions
-    column={getTotalColumns({ obj, vertical })}
-    vertical={vertical}
-    {...props}>
-    {objToItem({ obj, vertical, jobId })}
-  </Descriptions>
-);
+const JsonTable = ({ obj, vertical = false, jobId, ...props }) => {
+  const columns = useMemo(() => getColumns({ obj, vertical }), [obj, vertical]);
+
+  return (
+    <Descriptions column={columns} vertical={vertical} {...props}>
+      <Items obj={obj} vertical={vertical} jobId={jobId} />
+    </Descriptions>
+  );
+};
 JsonTable.propTypes = {
   /* eslint-disable  */
   obj: PropTypes.object,

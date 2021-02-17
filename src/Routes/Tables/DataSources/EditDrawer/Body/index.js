@@ -33,6 +33,7 @@ const Body = ({ goTo, mode }) => {
     collection: snapshots,
     isReady: hasSnapshots,
     activeSnapshot,
+    snapshotName,
   } = useSnapshots({ dataSourceName: dataSource.name });
   const dispatch = useDispatch();
   const { deleteDataSource } = useActions();
@@ -107,6 +108,7 @@ const Body = ({ goTo, mode }) => {
             <PreviewSnapshot
               onDownload={onDownload}
               activeSnapshot={activeSnapshot}
+              snapshotName={snapshotName}
             />
           )}
         />

@@ -6,7 +6,7 @@ import globalActions from './../../const/application-actions';
  * @typedef {import('./datasource').DataSourceVersion} DataSourceVersion
  * @typedef {import('./datasource').FetchStatus} FetchStatus
  * @typedef {{
- *   status: FetchStatus;
+ *   status: FetchStatus | 'DELETED';
  *   versions: DataSourceVersion[];
  *   active: string;
  *   submittingStatus?: FetchStatus;
@@ -139,10 +139,10 @@ const collection = createSlice({
         [name]: { ...state[name], submittingStatus: 'PENDING' },
       };
     },
-    [types.delete.success]: (state, { meta }) => {
-      const { [meta.name]: dropped, ...rest } = state;
-      return rest;
-    },
+    [types.delete.success]: (state, { meta }) => ({
+      ...state,
+      [meta.name]: { ...state[meta.name], status: 'DELETED' },
+    }),
     [types.postVersion.fail]: (state, action) => {
       const name = action.meta.dataSourceName;
       return { ...state, [name]: { ...state[name], submittingStatus: 'FAIL' } };

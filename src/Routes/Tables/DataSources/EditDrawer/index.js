@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { DRAWER_SIZE } from 'const';
 import Drawer from 'components/Drawer';
 import useToggle from 'hooks/useToggle';
+import { useActions } from 'hooks';
 import usePath from './../usePath';
 import useActiveDataSource from './../useActiveDataSource';
 import Header from './Header';
 import Body from './Body';
 import ErrorPage from './Body/Error';
+import { Bold } from './Body/styles';
 
 const EditDrawer = () => {
   const { goTo, dataSourceId, mode, snapshotName } = usePath();
@@ -17,6 +19,19 @@ const EditDrawer = () => {
     collectionStatus,
   } = useActiveDataSource();
   const { setOff, isOn } = useToggle(true);
+  const { retryFetchDataSource, retryFetchDataSources } = useActions();
+  const handleRetry = useCallback(() => {
+    if (collectionStatus === 'SUCCESS') {
+      retryFetchDataSource(dataSourceId);
+    }
+    retryFetchDataSources();
+  }, [
+    retryFetchDataSource,
+    retryFetchDataSources,
+    dataSourceId,
+    collectionStatus,
+  ]);
+
   return (
     <Drawer
       isOpened={isOn}
@@ -33,9 +48,17 @@ const EditDrawer = () => {
         <Body goTo={goTo} mode={mode} snapshotName={snapshotName} />
       ) : status === 'FAIL' ? (
         <ErrorPage
+          onRetry={handleRetry}
           dataSourceId={dataSourceId}
-          collectionStatus={collectionStatus}
-        />
+          collectionStatus={collectionStatus}>
+          {collectionStatus === 'SUCCESS' ? (
+            <span>
+              Could not fetch dataSource <Bold>{dataSourceId}</Bold>
+            </span>
+          ) : (
+            <span>Could not fetch dataSources collection</span>
+          )}
+        </ErrorPage>
       ) : null}
     </Drawer>
   );
