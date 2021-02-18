@@ -47,7 +47,7 @@ const AddDataSource = ({ form }) => {
               ? {}
               : {
                   accessKeyId: formObject.storageAccessKeyId,
-                  secretAccessKey: formObject.storageAccessKey,
+                  secretAccessKey: formObject.storageSecretAccessKey,
                   endpoint: formObject.storageEndpoint,
                   bucketName: formObject.storageBucketName,
                 }),
