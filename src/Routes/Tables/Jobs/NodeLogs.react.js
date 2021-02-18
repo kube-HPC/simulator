@@ -37,7 +37,10 @@ const OptionBox = ({ index, taskId }) => (
 
 OptionBox.propTypes = {
   index: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  taskId: PropTypes.string.isRequired,
+  taskId: PropTypes.string,
+};
+OptionBox.defaultProps = {
+  taskId: null,
 };
 
 const NodeLogs = ({ node, taskDetails, onChange }) => {

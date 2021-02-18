@@ -60,7 +60,11 @@ Results.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
   record: PropTypes.object.isRequired,
-  url: PropTypes.string.isRequired,
+  url: PropTypes.string,
+};
+
+Results.defaultProps = {
+  url: null,
 };
 
 const ResultsColumn = (_, record, url) => <Results url={url} record={record} />;

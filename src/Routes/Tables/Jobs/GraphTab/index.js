@@ -22,7 +22,7 @@ const GraphContainer = styled.div`
   max-height: 40vh;
   .vis-network {
     height: 100% !important;
-  };
+  }
   .vis-tooltip {
     position: absolute;
     visibility: hidden;
@@ -36,9 +36,9 @@ const GraphContainer = styled.div`
     -webkit-border-radius: 3px;
     border-radius: 3px;
     border: 1px solid #808074;
-    box-shadow: 3px 3px 10px rgba(0,0,0,.2);
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
     pointer-events: none;
-    z-index: 5
+    z-index: 5;
   }
 `;
 
@@ -77,7 +77,6 @@ const GraphTab = ({
     }),
     [graph, normalizedPipeline]
   );
-
   const isValidGraph = adaptedGraph.nodes.length !== 0;
   const { node, events } = useNodeInfo({ graph, pipeline });
 

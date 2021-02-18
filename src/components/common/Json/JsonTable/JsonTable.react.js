@@ -21,7 +21,14 @@ const Margin = styled(Descriptions)`
   margin-top: ${prop('hasMargin', 'none')};
 `;
 
-const ItemByValueType = ({ obj, vertical, hasMargin, name, jobId, level }) => {
+const ItemByValueType = ({
+  obj,
+  vertical,
+  hasMargin,
+  name,
+  jobId,
+  parentId,
+}) => {
   const [downloadHref, setDownloadHref] = useState(null);
   const handleDownload = useCallback(
     () => setDownloadHref(`/flowInput/${jobId}?download=true`),
@@ -40,17 +47,13 @@ const ItemByValueType = ({ obj, vertical, hasMargin, name, jobId, level }) => {
       );
     }
     return (
-      <Margin
-        key={name}
-        column={columns}
-        vertical={vertical}
-        hasMargin={hasMargin}>
+      <Margin column={columns} vertical={vertical} hasMargin={hasMargin}>
         {
           // cannot be re-used as a component!
           // ant requires direct children for description items!
           Object.entries(obj).map(([key, value]) => (
             <Descriptions.Item
-              key={`description-${key}`}
+              key={`ItemByValueType.Descriptions.Item:: description-${key} parentId:${parentId}`}
               label={<Text strong>{key}</Text>}>
               {isObject(value) && isEmptyObject(value) ? (
                 <Tag>{EMPTY}</Tag>
@@ -58,8 +61,9 @@ const ItemByValueType = ({ obj, vertical, hasMargin, name, jobId, level }) => {
                 <ItemByValueType
                   obj={value}
                   vertical={vertical}
-                  key={key}
                   jobId={jobId}
+                  name={key}
+                  parentId={`${parentId}.${key}`}
                 />
               )}
             </Descriptions.Item>
@@ -71,16 +75,15 @@ const ItemByValueType = ({ obj, vertical, hasMargin, name, jobId, level }) => {
   if (Array.isArray(obj)) {
     return (
       <>
-        {obj.map((value, i) => (
+        {obj.map((value, ii) => (
           // eslint-disable-next-line
           <ItemByValueType
             obj={value}
             vertical={vertical}
-            level={level + 1}
-            hasMargin={i !== 0 || i === obj.length - 1}
-            // TODO:: replace the key with actual value
+            hasMargin={ii !== 0 || ii === obj.length - 1}
+            parentId={`${parentId}.${ii}`}
             // eslint-disable-next-line
-            key={`ItemByValueType:: joId:${jobId} | name:${name} | level:${level}`}
+            key={`ItemByValueType:: name:${name} | parentId::${parentId} name:${name} idx:${ii}`}
           />
         ))}
       </>
@@ -91,21 +94,21 @@ const ItemByValueType = ({ obj, vertical, hasMargin, name, jobId, level }) => {
 
 ItemByValueType.propTypes = {
   // eslint-disable-next-line
-  obj: PropTypes.object.isRequired,
+  obj: PropTypes.any,
   vertical: PropTypes.bool.isRequired,
-  name: PropTypes.oneOf([PropTypes.string, PropTypes.number]).isRequired,
+  name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   hasMargin: PropTypes.bool,
-  jobId: PropTypes.string.isRequired,
-  level: PropTypes.number.isRequired,
+  jobId: PropTypes.string,
 };
 
 ItemByValueType.defaultProps = {
+  obj: null,
+  jobId: null,
   hasMargin: false,
 };
 
 const JsonTable = ({ obj, vertical, jobId, ...props }) => {
   const columns = useMemo(() => getColumns({ obj, vertical }), [obj, vertical]);
-  if (!jobId) return null;
   return (
     <Descriptions column={columns} vertical={vertical} {...props}>
       {
@@ -113,18 +116,16 @@ const JsonTable = ({ obj, vertical, jobId, ...props }) => {
         // ant requires direct children for description items!
         Object.entries(obj).map(([key, value]) => (
           <Descriptions.Item
-            key={`description-${key}`}
+            key={`JsonTable.Descriptions.Item:: description:${key} level: 1`}
             label={<Text strong>{key}</Text>}>
             {isObject(value) && isEmptyObject(value) ? (
               <Tag>{EMPTY}</Tag>
             ) : (
               <ItemByValueType
-                level={1}
                 obj={value}
                 vertical={vertical}
-                key={`ItemByValueType:: joId:${jobId} | name:${key} | level:1`}
                 name={key}
-                jobId={jobId}
+                parentId="root"
               />
             )}
           </Descriptions.Item>
@@ -138,11 +139,12 @@ JsonTable.propTypes = {
   // eslint-disable-next-line
   obj: PropTypes.object,
   vertical: PropTypes.bool,
-  jobId: PropTypes.string.isRequired,
+  jobId: PropTypes.string,
 };
 
 JsonTable.defaultProps = {
   vertical: false,
+  jobId: null,
 };
 
 export default JsonTable;
