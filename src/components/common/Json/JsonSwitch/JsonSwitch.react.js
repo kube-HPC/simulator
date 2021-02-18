@@ -56,7 +56,6 @@ JsonSwitch.propTypes = {
   obj: PropTypes.shape({ view: PropTypes.object, table: PropTypes.object }),
   // eslint-disable-next-line
   options: PropTypes.object,
-  // eslint-disable-next-line
   jobId: PropTypes.string.isRequired,
 };
 JsonSwitch.defaultProps = {
