@@ -1,5 +1,6 @@
 import { GRAPH_TYPES } from 'const';
 import { nodeKind } from '@hkube/consts';
+import { COLOR } from 'styles/colors';
 
 const { STATUS, BATCH } = GRAPH_TYPES;
 
@@ -98,17 +99,72 @@ const scaleThroughput = createCappedScale(fromScale, toScale);
 const nodeShapes = {
   default: 'box',
   algorithm: 'box',
+  stateful: 'box',
+  stateless: 'box',
   [nodeKind.DataSource]: 'circle',
 };
 
-const _titleFormat = (metrics) => {
-  const title = Object.entries(metrics).map(([k, v]) => `${k}: ${v}`).join('<br>');
-  return title;
+const _titleFormat = metrics =>
+  Object.entries(metrics)
+    .map(([k, v]) => `${k}: ${v}`)
+    .join('<br>');
+
+const getNodeStyle = (status, isStateLess) => {
+  let style = {
+    color: {
+      background: COLOR.blueLight,
+      border: COLOR.blue,
+    },
+  };
+  if (isStateLess) {
+    style = {
+      borderWidth: 0.25,
+      font: {
+        color: '#000',
+      },
+      shapeProperties: {
+        borderDashes: [2, 2],
+      },
+      color: {
+        background: '#fff',
+        border: '#000',
+      },
+      shadow: {
+        enabled: false,
+      },
+    };
+  }
+
+  // eslint-disable-next-line default-case
+  switch (status) {
+    case 'failed':
+      style = {
+        ...style,
+        color: {
+          background: COLOR.redPale,
+          border: COLOR.red,
+        },
+      };
+      break;
+    case 'succeed':
+      style = {
+        ...style,
+        color: {
+          background: COLOR.greenLight,
+          border: COLOR.green,
+        },
+      };
+      break;
+  }
+
+  return style;
 };
 
 export const formatNode = normalizedPipeline => node => {
   const meta = node.batchInfo ? handleBatch(node) : handleSingle(node);
-  const kind = normalizedPipeline[node.nodeName].kind || 'algorithm';
+  const pipelineNode = normalizedPipeline[node.nodeName];
+  const kind = pipelineNode.kind || 'algorithm';
+  const isStateLess = pipelineNode.stateType === 'stateless';
   const _node = {
     id: meta.nodeName,
     label:
@@ -116,7 +172,9 @@ export const formatNode = normalizedPipeline => node => {
         ? `${meta.nodeName}-${meta.extra.batch}`
         : meta.nodeName,
   };
+
   return {
+    ...getNodeStyle(node.status, isStateLess),
     ...meta,
     ..._node,
     kind,
@@ -140,12 +198,23 @@ export const formatEdge = edge => {
     const width = scaleThroughput(throughput);
     const edgeColor =
       throughput > 0 && throughput < 50
-        ? 'red'
+        ? COLOR.redPale
         : throughput > 50 && throughput < 80
-          ? 'yellow'
-          : 'green';
+        ? COLOR.blueLight
+        : COLOR.greenLight;
     const color = { color: edgeColor };
-    styles = { title, label, width, color };
+    styles = {
+      title,
+      label,
+      width,
+      color,
+      smooth: {
+        enabled: true,
+        type: 'discrete',
+        roundness: 0.5,
+      },
+      font: { vadjust: 10 },
+    };
   }
   return { ...rest, ..._edge, ...styles, group };
 };
