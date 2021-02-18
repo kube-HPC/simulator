@@ -7,7 +7,7 @@ import { prop } from 'styled-tools';
 import DownloadLink from 'components/DownloadLink';
 
 const { Text } = Typography;
-const EMPTY = `Empty`;
+const EMPTY = '—';
 
 const isObject = obj =>
   !Array.isArray(obj) && typeof obj === 'object' && obj !== null;
@@ -89,6 +89,7 @@ const ItemByValueType = ({
       </>
     );
   }
+  if (obj === null) return EMPTY;
   return String(obj);
 };
 
