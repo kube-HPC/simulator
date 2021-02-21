@@ -3,7 +3,6 @@ import {
   pipelineStatuses as PIPELINE,
   pipelineTypes as TYPES,
   taskStatuses as TASK,
-  verbosityLevels as LEVEL,
 } from '@hkube/consts';
 import { SERVICES } from '../const/services';
 
@@ -147,16 +146,6 @@ export const COLOR_PIPELINE_STATUS = {
   [PIPELINE.STALLED]: COLOR.grey,
   [PIPELINE.STOPPED]: COLOR.orange,
   [PIPELINE.PAUSED]: COLOR.yellow,
-};
-
-export const COLOR_LOGGER = {
-  [LEVEL.CRITICAL]: COLOR.orange,
-  [LEVEL.DEBUG]: COLOR.greenLight,
-  [LEVEL.ERROR]: COLOR.red,
-  [LEVEL.INFO]: COLOR.blueLight,
-  [LEVEL.SILLY]: COLOR.grey,
-  [LEVEL.TRACE]: COLOR.lightGrey,
-  [LEVEL.WARN]: COLOR.yellow,
 };
 
 export const COLOR_PRIORITY = {

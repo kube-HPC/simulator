@@ -1,6 +1,6 @@
 import { Button, Select, Tag, Tooltip } from 'antd';
 import { FlexBox } from 'components/common';
-import LogsViewer from 'components/common/LogsViewer/LogsViewer.react';
+import LogsViewer from 'components/common/LogsViewer';
 import { useLogs, useSettings } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
