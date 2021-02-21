@@ -20,6 +20,7 @@ const JobsTable = () => {
     }),
     [goTo]
   );
+  const _dataSource = useMemo(() => dataSource.slice(0, 20), [dataSource]);
   return (
     <Table
       loading={loading}
@@ -27,7 +28,7 @@ const JobsTable = () => {
       rowKey={rowKey}
       expandIcon={false}
       columns={columns}
-      dataSource={dataSource}
+      dataSource={_dataSource}
       pagination={false}
     />
   );
