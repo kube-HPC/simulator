@@ -2,6 +2,8 @@ import { GRAPH_TYPES } from 'const';
 import { nodeKind } from '@hkube/consts';
 import { COLOR } from 'styles/colors';
 
+/** @typedef {import('vis').NodeOptions} NodeOptions */
+
 const { STATUS, BATCH } = GRAPH_TYPES;
 
 const sameStatus = [STATUS.SKIPPED, STATUS.FAILED];
@@ -93,14 +95,13 @@ const createCappedScale = (from, to) => {
 };
 
 const fromScale = [0, 100];
-const toScale = [2, 5];
+const toScale = [1, 6];
 const scaleThroughput = createCappedScale(fromScale, toScale);
 
 const nodeShapes = {
   default: 'box',
   algorithm: 'box',
-  stateful: 'box',
-  stateless: 'box',
+  stateless: 'diamond',
   [nodeKind.DataSource]: 'circle',
 };
 
@@ -109,62 +110,11 @@ const _titleFormat = metrics =>
     .map(([k, v]) => `${k}: ${v}`)
     .join('<br>');
 
-const getNodeStyle = (status, isStateLess) => {
-  let style = {
-    color: {
-      background: COLOR.blueLight,
-      border: COLOR.blue,
-    },
-  };
-  if (isStateLess) {
-    style = {
-      borderWidth: 0.25,
-      font: {
-        color: '#000',
-      },
-      shapeProperties: {
-        borderDashes: [2, 2],
-      },
-      color: {
-        background: '#fff',
-        border: '#000',
-      },
-      shadow: {
-        enabled: false,
-      },
-    };
-  }
-
-  // eslint-disable-next-line default-case
-  switch (status) {
-    case 'failed':
-      style = {
-        ...style,
-        color: {
-          background: COLOR.redPale,
-          border: COLOR.red,
-        },
-      };
-      break;
-    case 'succeed':
-      style = {
-        ...style,
-        color: {
-          background: COLOR.greenLight,
-          border: COLOR.green,
-        },
-      };
-      break;
-  }
-
-  return style;
-};
-
 export const formatNode = normalizedPipeline => node => {
   const meta = node.batchInfo ? handleBatch(node) : handleSingle(node);
   const pipelineNode = normalizedPipeline[node.nodeName];
-  const kind = pipelineNode.kind || 'algorithm';
   const isStateLess = pipelineNode.stateType === 'stateless';
+  const kind = isStateLess ? 'stateless' : pipelineNode.kind || 'algorithm';
   const _node = {
     id: meta.nodeName,
     label:
@@ -174,7 +124,6 @@ export const formatNode = normalizedPipeline => node => {
   };
 
   return {
-    ...getNodeStyle(node.status, isStateLess),
     ...meta,
     ..._node,
     kind,
@@ -208,12 +157,6 @@ export const formatEdge = edge => {
       label,
       width,
       color,
-      smooth: {
-        enabled: true,
-        type: 'discrete',
-        roundness: 0.5,
-      },
-      font: { vadjust: 10 },
     };
   }
   return { ...rest, ..._edge, ...styles, group };

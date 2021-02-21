@@ -1,8 +1,12 @@
 import { Radio, Typography } from 'antd';
 import { FlexBox } from 'components/common';
-import { directionTypes } from 'config/template/graph-options.template';
 import { useSettings } from 'hooks';
 import React, { memo, useCallback } from 'react';
+
+export const directionTypes = {
+  'Left Right': 'LR',
+  'Up Down': 'UD',
+};
 
 const GraphDirection = () => {
   const { graphDirection, setSettings } = useSettings();

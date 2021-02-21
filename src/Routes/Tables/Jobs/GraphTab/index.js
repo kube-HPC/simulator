@@ -1,11 +1,11 @@
 import { Empty } from 'antd';
 import { Fallback, FallbackComponent } from 'components/common';
-import { setOptions as defaultSetOptions } from 'config/template/graph-options.template';
 import { useNodeInfo, useSettings } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { lazy, useEffect, useMemo, useReducer } from 'react';
 import styled from 'styled-components';
 import { COLOR_LAYOUT } from 'styles';
+import setGraphStyles from '../setGraphStyles';
 import { formatEdge, formatNode } from './../graph';
 import Details from './Details';
 
@@ -53,7 +53,7 @@ const EmptyHeight = styled(Empty)`
 const GraphTab = ({
   graph,
   pipeline,
-  setOptions = defaultSetOptions,
+  setOptions = setGraphStyles,
   isMinified = false,
 }) => {
   const normalizedPipeline = useMemo(
@@ -84,6 +84,11 @@ const GraphTab = ({
 
   const [showGraph, toggleForceUpdate] = useReducer(p => !p, true);
 
+  const graphOptions = useMemo(() => setOptions({ direction }), [
+    setOptions,
+    direction,
+  ]);
+
   useEffect(() => {
     toggleForceUpdate();
     setTimeout(() => {
@@ -104,7 +109,7 @@ const GraphTab = ({
             <Fallback>
               <Graph
                 graph={adaptedGraph}
-                options={setOptions({ direction })}
+                options={graphOptions}
                 events={events}
               />
             </Fallback>
