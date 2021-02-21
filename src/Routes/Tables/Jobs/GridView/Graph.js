@@ -5,7 +5,7 @@ import { useNodeInfo, useSettings } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { lazy, useEffect, useMemo, useReducer } from 'react';
 import styled from 'styled-components';
-import { formatEdge, formatNode } from 'utils';
+import { formatEdge, formatNode } from './../graph';
 
 const Graph = lazy(() => import(`react-graph-vis`));
 

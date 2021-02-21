@@ -8,7 +8,7 @@ const sameStatus = [STATUS.SKIPPED, STATUS.FAILED];
 const completedStatus = [STATUS.SUCCEED];
 const notStartedStatus = [STATUS.CREATING, STATUS.PENDING];
 
-export const findNodeName = nodeName => node => node.nodeName === nodeName;
+const findNodeName = nodeName => node => node.nodeName === nodeName;
 
 export const getTaskDetails = node =>
   node && node.batch && node.batch.length > 0

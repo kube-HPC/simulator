@@ -6,9 +6,9 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
 import styled from 'styled-components';
-import { getTaskDetails } from 'utils';
-import NodeInputOutput from '../NodeInputOutput.react';
-import NodeLogs from '../NodeLogs.react';
+import { getTaskDetails } from './../graph';
+import NodeInputOutput from '../NodeInputOutput';
+import NodeLogs from '../NodeLogs';
 import { Tabs, Pane } from './../styles';
 
 const OverflowContainer = styled.div`

@@ -4,12 +4,12 @@ import { useJobs } from 'hooks';
 import React, { memo } from 'react';
 import styled from 'styled-components';
 import Graph from './Graph';
-import JobActions from '../JobActions.react';
-import JobStats from '../JobNodeStats.react';
-import JobProgress from '../JobProgress.react';
-import JobStatus from '../JobStatus.react';
-import JobTime from '../JobTime.react';
-import JobTypes from '../JobTypes.react';
+import JobActions from '../JobActions';
+import NodeStats from '../NodeStats';
+import JobProgress from '../JobProgress';
+import JobStatus from '../JobStatus';
+import JobTime from '../JobTime';
+import JobTypes from '../JobTypes';
 
 const { Meta, Grid } = Card;
 
@@ -67,7 +67,7 @@ const toGrid = dataSource =>
           direction="column">
           <Ellipsis text={jobId} copyable length={LENGTH} />
           <JobTime results={results} startTime={startTime} length={LENGTH} />
-          <JobStats status={status} />
+          <NodeStats status={status} />
         </FlexBox.Auto>
       </FlexBox.Auto>
     );

@@ -2,9 +2,11 @@ import { Table } from 'components';
 import { Card, JsonSwitch } from 'components/common';
 import PropTypes from 'prop-types';
 import React from 'react';
-import useNodeIOColumns from './getNodeIOColumns.react';
+import useNodeIOColumns from './useNodeIOColumns';
 
 const NodeInputOutput = ({ algorithm = {}, payload }) => {
+  const nodeIoColumns = useNodeIOColumns();
+
   const mapTask = (task, { downloadFileExt }) => ({
     index: task.batchIndex || 1,
     origInput: task.origInput,
@@ -32,7 +34,7 @@ const NodeInputOutput = ({ algorithm = {}, payload }) => {
   return (
     <Table
       rowKey={({ index }) => index}
-      columns={useNodeIOColumns()}
+      columns={nodeIoColumns}
       dataSource={dataSource}
       expandedRowRender={record => (
         <Card>

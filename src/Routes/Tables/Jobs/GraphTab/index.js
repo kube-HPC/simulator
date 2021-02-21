@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import React, { lazy, useEffect, useMemo, useReducer } from 'react';
 import styled from 'styled-components';
 import { COLOR_LAYOUT } from 'styles';
-import { formatEdge, formatNode } from 'utils';
+import { formatEdge, formatNode } from './../graph';
 import Details from './Details';
 
 const Card = styled.div`
