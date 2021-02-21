@@ -49,10 +49,11 @@ const NodeInfo = ({ node, jobId }) => {
 
   return node ? (
     <Tabs defaultActiveKey="logs-tab" tabBarExtraContent={extra}>
-      <Pane tab="Logs" key="logs-tab">
-        <OverflowContainer>
-          <NodeLogs node={node} taskDetails={taskDetails} onChange={setIndex} />
-        </OverflowContainer>
+      <Pane
+        tab="Logs"
+        key="logs-tab"
+        style={{ display: 'flex', flexDirection: 'column' }}>
+        <NodeLogs node={node} taskDetails={taskDetails} onChange={setIndex} />
       </Pane>
       <Tabs.TabPane tab="Algorithm Details" key="algorithms-tab">
         <OverflowContainer>

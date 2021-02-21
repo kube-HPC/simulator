@@ -9,7 +9,10 @@ import styled from 'styled-components';
 import { notification } from 'utils';
 
 const Container = styled.div`
-  max-height: 300px;
+  margin-top: 1em;
+  max-height: 22.5em;
+  flex: 1;
+  overflow: auto;
 `;
 
 const SelectFull = styled(Select)`
@@ -91,7 +94,6 @@ const NodeLogs = ({ node, taskDetails, onChange }) => {
           </CopyToClipboard>
         </FlexBox.Item>
       </FlexBox>
-      <br />
       <Container>
         <LogsViewer dataSource={logs} />
       </Container>
