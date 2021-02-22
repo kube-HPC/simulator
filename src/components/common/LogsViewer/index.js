@@ -8,6 +8,7 @@ import Moment from 'react-moment';
 import styled from 'styled-components';
 import { COLOR } from 'styles/colors';
 import { notification } from 'utils';
+import { List, AutoSizer } from 'react-virtualized';
 import './logColors.css';
 
 const ContainerBase = styled.div`
@@ -18,6 +19,7 @@ const ContainerBase = styled.div`
 const ValidContainer = styled(ContainerBase)`
   background-color: black;
   color: white;
+  height: 25em;
 `;
 
 const InvalidContainer = styled(ContainerBase)`
@@ -86,9 +88,9 @@ class Entry extends React.PureComponent {
   };
 
   render() {
-    const { timestamp, message, level, idx } = this.props;
+    const { timestamp, message, level, idx, style } = this.props;
     return (
-      <LogLine>
+      <LogLine style={style}>
         <LineNumber>{idx + 1}</LineNumber>
         <Timestamp format={timeFormat}>{timestamp}</Timestamp>
         <Message>{message}</Message>
@@ -106,6 +108,8 @@ Entry.propTypes = {
   message: PropTypes.string.isRequired,
   level: PropTypes.string.isRequired,
   idx: PropTypes.number.isRequired,
+  // eslint-disable-next-line
+  style: PropTypes.object.isRequired,
 };
 
 class BuildEntry extends React.PureComponent {
@@ -119,9 +123,9 @@ class BuildEntry extends React.PureComponent {
   };
 
   render() {
-    const { index, log } = this.props;
+    const { index, log, style } = this.props;
     return (
-      <LogLine>
+      <LogLine style={style}>
         <LineNumber>{index + 1}</LineNumber>
         <Message>
           <Ansi>{log}</Ansi>
@@ -133,6 +137,8 @@ class BuildEntry extends React.PureComponent {
 BuildEntry.propTypes = {
   index: PropTypes.number.isRequired,
   log: PropTypes.string.isRequired,
+  // eslint-disable-next-line
+  style: PropTypes.object.isRequired,
 };
 
 const LogsViewer = ({ dataSource, isBuild }) => {
@@ -140,15 +146,24 @@ const LogsViewer = ({ dataSource, isBuild }) => {
   const isValid = isBuild || (first && first.level);
   return isValid ? (
     <ValidContainer>
-      {isBuild
-        ? dataSource.split('\n').map((log, ii) => (
-            // eslint-disable-next-line
-            <BuildEntry key={`build-log-${ii}`} log={log} idx={ii} />
-          ))
-        : dataSource.map((log, ii) => (
-            // eslint-disable-next-line
-            <Entry key={`log-line-${log.timestamp}-${ii}`} {...log} idx={ii} />
-          ))}
+      <AutoSizer>
+        {({ width, height }) => (
+          <List
+            width={width}
+            height={height}
+            rowHeight={35}
+            rowCount={dataSource.length}
+            rowRenderer={({ key, index, style }) => {
+              const log = dataSource[index];
+              return isBuild ? (
+                <BuildEntry key={key} log={log} idx={index} style={style} />
+              ) : (
+                <Entry key={key} {...log} idx={index} style={style} />
+              );
+            }}
+          />
+        )}
+      </AutoSizer>
     </ValidContainer>
   ) : (
     <InvalidContainer>
