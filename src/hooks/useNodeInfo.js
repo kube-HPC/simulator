@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import isEqual from 'lodash/isEqual';
-import { nodeFinder } from 'Routes/Tables/Jobs/graphUtils';
+import { findNode } from 'Routes/Tables/Jobs/graphUtils';
 import useLogs from './useLogs';
 import useSettings from './useSettings';
 
@@ -10,11 +10,11 @@ const useNodeInfo = ({ graph, pipeline }) => {
   const [node, setNode] = useState(EMPTY_NODE);
   const { getLogs } = useLogs();
   const { logSource: source, logMode } = useSettings();
-  const findNodeByName = nodeFinder({ graph, pipeline });
+  const findNodeByName = findNode({ graph, pipeline });
 
   // Update logs on first entry
   useEffect(() => {
-    if (pipeline && pipeline.nodes) {
+    if (pipeline?.nodes) {
       const [firstNode] = pipeline.nodes;
       const { nodeName } = firstNode;
       const newNode = findNodeByName(nodeName);
