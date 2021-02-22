@@ -1,6 +1,7 @@
 import GRAPH_TYPES from './types';
 import generateStyles from './styles';
-import { formatEdge, formatNode, findNode, getTaskDetails } from './formats';
+import { formatEdge } from './edges';
+import { formatNode, findNode, getTaskDetails } from './nodes';
 
 export {
   GRAPH_TYPES,

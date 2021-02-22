@@ -4,9 +4,10 @@ import { useSelector } from 'react-redux';
 import humanizeDuration from 'humanize-duration';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { COLOR_TASK_STATUS } from 'styles/colors';
 import { toUpperCaseFirstLetter } from 'utils/string';
 import { selectors } from 'reducers';
+import StatusTag from 'components/StatusTag';
+import { COLOR_TASK_STATUS } from 'styles';
 
 const getStatusFilter = () =>
   [
@@ -21,9 +22,9 @@ const getStatusFilter = () =>
 const Index = index => <Tag>{index}</Tag>;
 
 const Status = status => (
-  <Tag color={COLOR_TASK_STATUS[status]}>
-    {status && toUpperCaseFirstLetter(status)}
-  </Tag>
+  <StatusTag status={status} colorMap={COLOR_TASK_STATUS}>
+    {status}
+  </StatusTag>
 );
 
 const Duration = (_, record) => (

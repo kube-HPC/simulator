@@ -1,20 +1,11 @@
-import { Tag as AntdTag, Tooltip } from 'antd';
-import PropTypes from 'prop-types';
 import React from 'react';
-import styled from 'styled-components';
-import { COLOR_PIPELINE_STATUS } from 'styles';
-import { toUpperCaseFirstLetter } from 'utils';
-
-const Tag = styled(AntdTag)`
-  margin: 0px;
-`;
+import PropTypes from 'prop-types';
+import StatusTag from 'components/StatusTag';
 
 const JobStatus = ({ status }) => (
-  <Tooltip justify="center" title={status.error}>
-    <Tag color={COLOR_PIPELINE_STATUS[status.status]}>
-      {toUpperCaseFirstLetter(status.status)}
-    </Tag>
-  </Tooltip>
+  <StatusTag status={status.status} tooltip={status.error}>
+    {status.status}
+  </StatusTag>
 );
 
 JobStatus.propTypes = {

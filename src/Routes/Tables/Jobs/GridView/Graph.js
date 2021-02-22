@@ -27,13 +27,13 @@ const JobGraph = ({ graph, pipeline, setOptions = generateStyles }) => {
       nodes: []
         .concat(graph.nodes)
         .filter(item => item)
-        .map(formatNode),
+        .map(formatNode({}, pipeline.kind)),
       edges: []
         .concat(graph.edges)
         .filter(item => item)
         .map(formatEdge),
     }),
-    [graph]
+    [graph, pipeline]
   );
 
   const isValidGraph = adaptedGraph.nodes.length !== 0;

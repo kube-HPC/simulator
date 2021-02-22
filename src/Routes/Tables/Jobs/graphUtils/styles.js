@@ -1,59 +1,43 @@
 import { taskStatuses as TASK } from '@hkube/consts';
 import { COLOR, COLOR_TASK_STATUS } from 'styles/colors';
+import GRAPH_TYPES from './types';
 
+const { NODE_GROUPS } = GRAPH_TYPES;
 /** @type {{ [key: string]: import('vis').NodeOptions }} */
 const groups = {
-  batchCompleted: {
+  [NODE_GROUPS.SUCCEED]: {
     color: {
       background: COLOR_TASK_STATUS[TASK.COMPLETED],
     },
   },
-  batchNotStarted: {
+  [NODE_GROUPS.IDLE]: {
     color: {
       background: COLOR_TASK_STATUS[TASK.PENDING],
     },
   },
-  batchRunning: {
-    color: {
-      background: COLOR_TASK_STATUS[TASK.CREATING],
-    },
-    font: {
-      color: COLOR.transparentBlack,
-    },
-  },
-  batchErrors: {
+  [NODE_GROUPS.ERRORS]: {
     color: {
       background: COLOR_TASK_STATUS[TASK.FAILED],
     },
   },
-  batchPreSchedule: {
-    color: {
-      background: COLOR_TASK_STATUS[TASK.PRESCHEDULE],
-    },
-  },
-  notStarted: {
-    color: {
-      background: COLOR_TASK_STATUS[TASK.PENDING],
-    },
-  },
-  preSchedule: {
-    color: {
-      background: COLOR_TASK_STATUS[TASK.PRESCHEDULE],
-    },
-  },
-  completed: {
-    color: {
-      background: COLOR_TASK_STATUS[TASK.SUCCEED],
-    },
-  },
-  failed: {
-    color: {
-      background: COLOR_TASK_STATUS[TASK.FAILED],
-    },
-  },
-  running: {
+  [NODE_GROUPS.ACTIVE]: {
     color: {
       background: COLOR_TASK_STATUS[TASK.ACTIVE],
+    },
+  },
+  [NODE_GROUPS.WARNING]: {
+    color: {
+      background: COLOR_TASK_STATUS[TASK.WARNING],
+    },
+  },
+  [NODE_GROUPS.SKIPPED]: {
+    color: {
+      background: COLOR_TASK_STATUS[TASK.SKIPPED],
+      border: COLOR.transparentBlack,
+    },
+    borderWidth: 1,
+    font: {
+      color: COLOR.transparentBlack,
     },
   },
   source: {
@@ -76,6 +60,7 @@ export default ({ direction }) => ({
   interaction: {
     hover: false,
   },
+  // autoResize: true,
   nodes: {
     shape: 'box',
     color: {
@@ -83,7 +68,7 @@ export default ({ direction }) => ({
       border: COLOR.transparentBlack,
       highlight: {
         background: COLOR.yellowPale,
-        border: COLOR.blue,
+        border: COLOR.transparentBlack,
       },
       hover: {
         background: COLOR.darkGrey,

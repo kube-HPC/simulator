@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { boardStatuses } from '@hkube/consts';
 import { Tag, Tooltip } from 'antd';
 import Text from 'antd/lib/typography/Text';
-import { FlexBox, StatusTag } from 'components/common';
+import { FlexBox } from 'components/common';
+import { Count } from 'components/StatusTag';
 import { useBoards, usePipeline } from 'hooks';
 import BoardStatus from './TensorflowBoards/BoardStatus.react';
 
@@ -41,8 +42,7 @@ const PipelineStats = ({ name, nodes }) => {
     <>
       {hasStats &&
         pipelineStats.map(([status, count]) => (
-          <StatusTag
-            // eslint-disable-next-line
+          <Count
             key={`${dataStats.name}-${status}`}
             status={status}
             count={count}

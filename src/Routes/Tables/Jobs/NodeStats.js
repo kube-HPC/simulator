@@ -1,7 +1,7 @@
-import { FlexBox, StatusTag } from 'components/common';
+import { FlexBox } from 'components/common';
+import { Count } from 'components/StatusTag';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { COLOR_TASK_STATUS } from 'styles';
 
 const style = { flexWrap: `nowrap` };
 
@@ -19,16 +19,11 @@ const JobStats = ({ status, ...props }) => (
         // TODO: rename status field
         // eslint-disable-next-line
         ([status, count]) => (
-          <StatusTag
-            key={status}
-            status={status}
-            count={count}
-            colorMap={COLOR_TASK_STATUS}
-          />
+          <Count key={`${status}`} status={status} count={count} />
         )
       )
     ) : (
-      <StatusTag count={null} />
+      <Count count={null} />
     )}
   </FlexBox.Auto>
 );

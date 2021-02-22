@@ -68,13 +68,13 @@ const GraphTab = ({
       nodes: []
         .concat(graph.nodes)
         .filter(item => item)
-        .map(formatNode(normalizedPipeline)),
+        .map(formatNode(normalizedPipeline, pipeline.kind)),
       edges: []
         .concat(graph.edges)
         .filter(item => item)
         .map(formatEdge),
     }),
-    [graph, normalizedPipeline]
+    [graph, normalizedPipeline, pipeline]
   );
   const isValidGraph = adaptedGraph.nodes.length !== 0;
   const { node, events } = useNodeInfo({ graph, pipeline });
