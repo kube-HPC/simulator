@@ -7,7 +7,6 @@ import React from 'react';
 import { toUpperCaseFirstLetter } from 'utils/string';
 import { selectors } from 'reducers';
 import StatusTag from 'components/StatusTag';
-import { COLOR_TASK_STATUS } from 'styles';
 
 const getStatusFilter = () =>
   [
@@ -22,7 +21,7 @@ const getStatusFilter = () =>
 const Index = index => <Tag>{index}</Tag>;
 
 const Status = status => (
-  <StatusTag status={status} colorMap={COLOR_TASK_STATUS}>
+  <StatusTag status={status} taskColorMap>
     {status}
   </StatusTag>
 );

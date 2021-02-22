@@ -4,8 +4,12 @@ import { Tag, Tooltip } from 'antd';
 import { COLOR_PIPELINE_STATUS, COLOR, COLOR_TASK_STATUS } from 'styles/colors';
 import { toUpperCaseFirstLetter } from 'utils/string';
 
-const BaseTag = ({ status, children, colorMap, tooltip }) => {
-  const color = colorMap[status];
+const BaseTag = ({ status, children, colorMap, tooltip, taskColorMap }) => {
+  let _colorMap = colorMap;
+  if (taskColorMap) {
+    _colorMap = COLOR_TASK_STATUS;
+  }
+  const color = _colorMap[status];
   const isBright = [COLOR.lightGrey, COLOR.white].includes(color) || !color;
   const textColor = isBright ? COLOR.transparentBlack : COLOR.white;
   return (
@@ -29,17 +33,19 @@ BaseTag.propTypes = {
   status: PropTypes.string.isRequired,
   colorMap: PropTypes.objectOf(PropTypes.string),
   tooltip: PropTypes.string,
+  taskColorMap: PropTypes.bool,
 };
 
 BaseTag.defaultProps = {
   colorMap: COLOR_PIPELINE_STATUS,
   tooltip: null,
+  taskColorMap: false,
 };
 
 export default BaseTag;
 
 const Count = ({ status, count }) => (
-  <BaseTag key={status} status={status} colorMap={COLOR_TASK_STATUS}>
+  <BaseTag key={status} status={status} taskColorMap>
     {Number.isInteger(count) ? count : `No Stats`}
   </BaseTag>
 );

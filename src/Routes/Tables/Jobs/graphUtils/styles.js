@@ -36,9 +36,6 @@ const groups = {
       border: COLOR.transparentBlack,
     },
     borderWidth: 1,
-    font: {
-      color: COLOR.transparentBlack,
-    },
   },
   source: {
     color: { border: 'white' },
