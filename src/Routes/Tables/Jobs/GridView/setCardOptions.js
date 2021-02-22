@@ -1,7 +1,7 @@
-import setGraphStyles from '../setGraphStyles';
+import { generateStyles } from '../graphUtils';
 
 export default ({ direction }) => ({
-  ...setGraphStyles({ direction }),
+  ...generateStyles({ direction }),
   height: `200px`,
   autoResize: false,
   configure: {

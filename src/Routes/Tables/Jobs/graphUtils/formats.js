@@ -1,6 +1,6 @@
-import { GRAPH_TYPES } from 'const';
 import { nodeKind } from '@hkube/consts';
 import { COLOR } from 'styles/colors';
+import GRAPH_TYPES from './../graphUtils/types';
 
 /** @typedef {import('vis').NodeOptions} NodeOptions */
 

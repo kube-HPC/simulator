@@ -1,9 +1,9 @@
-import { Card, Ellipsis, FlexBox } from 'components/common';
-import { useJobs } from 'hooks';
 import React, { memo } from 'react';
 import styled from 'styled-components';
-import setGraphStyles from '../setGraphStyles';
+import { Card, Ellipsis, FlexBox } from 'components/common';
+import { useJobs } from 'hooks';
 import Graph from './Graph';
+import { generateStyles } from '../graphUtils';
 import JobActions from '../JobActions';
 import NodeStats from '../NodeStats';
 import JobProgress from '../JobProgress';
@@ -75,7 +75,7 @@ const toGrid = dataSource =>
     return (
       <GridItem key={key}>
         <Meta title={title} description={description} />
-        <Graph graph={{ ...graph, jobId: key }} setOptions={setGraphStyles} />
+        <Graph graph={{ ...graph, jobId: key }} setOptions={generateStyles} />
         <ActionsHidden job={job} />
       </GridItem>
     );

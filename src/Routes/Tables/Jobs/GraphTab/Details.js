@@ -1,12 +1,12 @@
+import React, { useCallback, useMemo, useState } from 'react';
+import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+import styled from 'styled-components';
 import { Button, Empty } from 'antd';
 import { FlexBox, JsonSwitch } from 'components/common';
 import { useActions, useLogs, useSettings } from 'hooks';
-import PropTypes from 'prop-types';
-import React, { useCallback, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
-import styled from 'styled-components';
-import { getTaskDetails } from './../graph';
+import { getTaskDetails } from '../graphUtils';
 import NodeInputOutput from '../NodeInputOutput';
 import NodeLogs from '../NodeLogs';
 import { Tabs, Pane } from './../styles';

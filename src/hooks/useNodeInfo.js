@@ -1,6 +1,6 @@
-import isEqual from 'lodash/isEqual';
 import { useEffect, useMemo, useState } from 'react';
-import { nodeFinder } from 'Routes/Tables/Jobs/graph';
+import isEqual from 'lodash/isEqual';
+import { nodeFinder } from 'Routes/Tables/Jobs/graphUtils';
 import useLogs from './useLogs';
 import useSettings from './useSettings';
 

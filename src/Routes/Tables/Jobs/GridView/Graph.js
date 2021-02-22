@@ -1,11 +1,10 @@
+import React, { lazy, useEffect, useMemo, useReducer } from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { Empty } from 'antd';
 import { Fallback, FallbackComponent } from 'components/common';
 import { useNodeInfo, useSettings } from 'hooks';
-import PropTypes from 'prop-types';
-import React, { lazy, useEffect, useMemo, useReducer } from 'react';
-import styled from 'styled-components';
-import setGraphStyles from '../setGraphStyles';
-import { formatEdge, formatNode } from './../graph';
+import { generateStyles, formatEdge, formatNode } from '../graphUtils';
 
 const Graph = lazy(() => import(`react-graph-vis`));
 
@@ -22,7 +21,7 @@ const EmptyHeight = styled(Empty)`
   height: 136px; // TODO: get rid of this
 `;
 
-const JobGraph = ({ graph, pipeline, setOptions = setGraphStyles }) => {
+const JobGraph = ({ graph, pipeline, setOptions = generateStyles }) => {
   const adaptedGraph = useMemo(
     () => ({
       nodes: []

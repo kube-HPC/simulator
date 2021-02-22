@@ -1,12 +1,11 @@
+import React, { lazy, useEffect, useMemo, useReducer } from 'react';
+import PropTypes from 'prop-types';
 import { Empty } from 'antd';
+import styled from 'styled-components';
 import { Fallback, FallbackComponent } from 'components/common';
 import { useNodeInfo, useSettings } from 'hooks';
-import PropTypes from 'prop-types';
-import React, { lazy, useEffect, useMemo, useReducer } from 'react';
-import styled from 'styled-components';
 import { COLOR_LAYOUT } from 'styles';
-import setGraphStyles from '../setGraphStyles';
-import { formatEdge, formatNode } from './../graph';
+import { generateStyles, formatEdge, formatNode } from '../graphUtils';
 import Details from './Details';
 
 const Card = styled.div`
@@ -53,7 +52,7 @@ const EmptyHeight = styled(Empty)`
 const GraphTab = ({
   graph,
   pipeline,
-  setOptions = setGraphStyles,
+  setOptions = generateStyles,
   isMinified = false,
 }) => {
   const normalizedPipeline = useMemo(
