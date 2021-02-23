@@ -29,7 +29,7 @@ const BaseTag = ({ status, children, colorMap, tooltip, taskColorMap }) => {
 };
 
 BaseTag.propTypes = {
-  children: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
   status: PropTypes.string.isRequired,
   colorMap: PropTypes.objectOf(PropTypes.string),
   tooltip: PropTypes.string,

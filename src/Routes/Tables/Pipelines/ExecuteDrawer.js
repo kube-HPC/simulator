@@ -22,13 +22,15 @@ const ExecuteDrawer = () => {
   ]);
 
   const onSubmit = useCallback(
-    () =>
+    nextValue => {
+      const parsedValue = JSON.parse(nextValue);
       execStored(
         experimentName === experimentsSchema.showAll
-          ? executePipeline
-          : { experimentName, ...executePipeline }
-      ),
-    [experimentName, executePipeline, execStored]
+          ? parsedValue
+          : { experimentName, ...parsedValue }
+      );
+    },
+    [experimentName, execStored]
   );
 
   return (
@@ -40,7 +42,7 @@ const ExecuteDrawer = () => {
       title={record?.name ?? pipelineId}
       asFlex>
       {record ? (
-        <DrawerEditor value={value} submitText="submit" onSubmit={onSubmit} />
+        <DrawerEditor value={value} submitText="Run" onSubmit={onSubmit} />
       ) : (
         <MissingIdError />
       )}
