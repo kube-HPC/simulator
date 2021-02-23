@@ -43,8 +43,8 @@ const groups = {
 };
 
 /** @returns {import('vis').Options} */
-export default ({ direction }) => ({
-  height: `400px`,
+export default ({ direction, isMinified = false }) => ({
+  height: isMinified ? '200px' : `400px`,
   physics: false,
   layout: {
     hierarchical: {

@@ -21,19 +21,28 @@ const EmptyHeight = styled(Empty)`
   height: 136px; // TODO: get rid of this
 `;
 
-const JobGraph = ({ graph, pipeline, setOptions = generateStyles }) => {
+const JobGraph = ({ graph, pipeline }) => {
+  const normalizedPipeline = useMemo(
+    () =>
+      pipeline.nodes.reduce(
+        (acc, item) => ({ ...acc, [item.nodeName]: item }),
+        {}
+      ),
+    [pipeline]
+  );
+
   const adaptedGraph = useMemo(
     () => ({
       nodes: []
         .concat(graph.nodes)
         .filter(item => item)
-        .map(formatNode({}, pipeline.kind)),
+        .map(formatNode(normalizedPipeline, pipeline?.kind)),
       edges: []
         .concat(graph.edges)
         .filter(item => item)
         .map(formatEdge),
     }),
-    [graph, pipeline]
+    [graph, pipeline, normalizedPipeline]
   );
 
   const isValidGraph = adaptedGraph.nodes.length !== 0;
@@ -50,6 +59,11 @@ const JobGraph = ({ graph, pipeline, setOptions = generateStyles }) => {
     }, 500);
   }, [direction]);
 
+  const graphOptions = useMemo(
+    () => generateStyles({ direction, isMinified: true }),
+    [direction]
+  );
+
   return (
     <GraphContainer>
       {isValidGraph ? (
@@ -57,7 +71,7 @@ const JobGraph = ({ graph, pipeline, setOptions = generateStyles }) => {
           <Fallback>
             <Graph
               graph={adaptedGraph}
-              options={setOptions({ direction })}
+              options={graphOptions}
               events={events}
             />
           </Fallback>
@@ -72,14 +86,15 @@ const JobGraph = ({ graph, pipeline, setOptions = generateStyles }) => {
 };
 
 JobGraph.propTypes = {
-  // TODO: detail the props
-  /* eslint-disable */
-  graph: PropTypes.object.isRequired,
-  pipeline: PropTypes.object,
-  setOptions: PropTypes.func,
-  isMinified: PropTypes.bool,
-  className: PropTypes.string,
-  /* eslint-enable */
+  pipeline: PropTypes.shape({
+    kind: PropTypes.string.isRequired,
+    nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  }).isRequired,
+  graph: PropTypes.shape({
+    nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
+    edges: PropTypes.arrayOf(PropTypes.object).isRequired,
+    jobId: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 const isSameGraph = (a, b) =>

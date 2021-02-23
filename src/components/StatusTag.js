@@ -4,7 +4,14 @@ import { Tag, Tooltip } from 'antd';
 import { COLOR_PIPELINE_STATUS, COLOR, COLOR_TASK_STATUS } from 'styles/colors';
 import { toUpperCaseFirstLetter } from 'utils/string';
 
-const BaseTag = ({ status, children, colorMap, tooltip, taskColorMap }) => {
+const BaseTag = ({
+  status,
+  children,
+  colorMap,
+  tooltip,
+  taskColorMap,
+  style,
+}) => {
   let _colorMap = colorMap;
   if (taskColorMap) {
     _colorMap = COLOR_TASK_STATUS;
@@ -21,6 +28,7 @@ const BaseTag = ({ status, children, colorMap, tooltip, taskColorMap }) => {
         style={{
           color: textColor,
           border: isBright ? `1px solid ${COLOR.lightGrey}` : undefined,
+          ...style,
         }}>
         {children}
       </Tag>
@@ -34,6 +42,8 @@ BaseTag.propTypes = {
   colorMap: PropTypes.objectOf(PropTypes.string),
   tooltip: PropTypes.string,
   taskColorMap: PropTypes.bool,
+  // eslint-disable-next-line
+  style: PropTypes.object,
 };
 
 BaseTag.defaultProps = {

@@ -7,8 +7,11 @@ import Moment from 'react-moment';
 const { Text } = Typography;
 
 const SEC = 1000;
-
-const JobTime = ({ results, startTime, length }) => {
+/**
+ * @param {object} props
+ * @param {React.CSSProperties} props.style
+ */
+const JobTime = ({ results, startTime, length, style }) => {
   const diffTime = useCallback(
     (from = new Date()) =>
       HumanizeDuration(results ? results.timeTook * SEC : startTime - from, {
@@ -35,7 +38,7 @@ const JobTime = ({ results, startTime, length }) => {
   }, [results]);
 
   return (
-    <Tag>
+    <Tag style={style}>
       <Moment format="DD/MM/YY HH:mm:ss" style={{ marginRight: '1ch' }}>
         {startTime}
       </Moment>
@@ -49,6 +52,7 @@ JobTime.propTypes = {
   startTime: PropTypes.number.isRequired,
   // TODO: detail the props
   /* eslint-disable */
+  style: PropTypes.object,
   results: PropTypes.object,
   /* eslint-enable */
 };

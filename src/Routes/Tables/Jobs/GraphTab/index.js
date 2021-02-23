@@ -49,12 +49,7 @@ const EmptyHeight = styled(Empty)`
   height: 136px;
 `;
 
-const GraphTab = ({
-  graph,
-  pipeline,
-  setOptions = generateStyles,
-  isMinified = false,
-}) => {
+const GraphTab = ({ graph, pipeline }) => {
   const normalizedPipeline = useMemo(
     () =>
       pipeline.nodes.reduce(
@@ -83,8 +78,7 @@ const GraphTab = ({
 
   const [showGraph, toggleForceUpdate] = useReducer(p => !p, true);
 
-  const graphOptions = useMemo(() => setOptions({ direction }), [
-    setOptions,
+  const graphOptions = useMemo(() => generateStyles({ direction }), [
     direction,
   ]);
 
@@ -98,17 +92,16 @@ const GraphTab = ({
   return (
     <>
       <GraphContainer
-        isMinified={isMinified}
         style={{
-          pointerEvents: !isMinified ? `all` : `none`,
-          maxWidth: !isMinified ? `100%` : `40vw`,
+          pointerEvents: `all`,
+          maxWidth: `100%`,
         }}>
         {isValidGraph ? (
           showGraph ? (
             <Fallback>
               <Graph
                 graph={adaptedGraph}
-                options={graphOptions}
+                options={{ ...graphOptions, height: '100px' }}
                 events={events}
               />
             </Fallback>
@@ -119,7 +112,7 @@ const GraphTab = ({
           <EmptyHeight image={Empty.PRESENTED_IMAGE_SIMPLE} />
         )}
       </GraphContainer>
-      {!isMinified && isValidGraph && (
+      {isValidGraph && (
         <Card>
           <Details node={node} jobId={graph.jobId} />
         </Card>
@@ -129,14 +122,15 @@ const GraphTab = ({
 };
 
 GraphTab.propTypes = {
-  // TODO: detail the props
-  /* eslint-disable */
-  graph: PropTypes.object.isRequired,
-  pipeline: PropTypes.object,
-  setOptions: PropTypes.func,
-  isMinified: PropTypes.bool,
-  className: PropTypes.string,
-  /* eslint-enable */
+  pipeline: PropTypes.shape({
+    kind: PropTypes.string.isRequired,
+    nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  }).isRequired,
+  graph: PropTypes.shape({
+    nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
+    edges: PropTypes.arrayOf(PropTypes.object).isRequired,
+    jobId: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 const isSameGraph = (a, b) =>
