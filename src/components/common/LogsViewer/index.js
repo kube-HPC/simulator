@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Ansi from 'ansi-to-react';
-import { Empty, Icon } from 'antd';
+import { Empty, Icon, Tooltip } from 'antd';
 import Moment from 'react-moment';
 import styled from 'styled-components';
 import { COLOR } from 'styles/colors';
@@ -94,9 +94,11 @@ class Entry extends React.PureComponent {
         <LineNumber>{idx + 1}</LineNumber>
         <Timestamp format={timeFormat}>{timestamp}</Timestamp>
         <Message>{message}</Message>
-        <CopyButton onClick={this.onCopy} type="button">
-          <Icon type="copy" />
-        </CopyButton>
+        <Tooltip title="Copy log to clipboard" placement="left">
+          <CopyButton onClick={this.onCopy} type="button">
+            <Icon type="copy" />
+          </CopyButton>
+        </Tooltip>
         <Tag data-log-level={level}>{level}</Tag>
       </LogLine>
     );
