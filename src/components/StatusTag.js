@@ -52,7 +52,11 @@ const Count = ({ status, count }) => (
 
 Count.propTypes = {
   status: PropTypes.string.isRequired,
-  count: PropTypes.number.isRequired,
+  count: PropTypes.number,
+};
+
+Count.defaultProps = {
+  count: null,
 };
 
 export { Count };
