@@ -37,7 +37,8 @@ const ExecuteDrawer = () => {
       onDidClose={goTo.root}
       onClose={setOff}
       width={DRAWER_SIZE.PIPELINE_INFO}
-      title={record?.name ?? pipelineId}>
+      title={record?.name ?? pipelineId}
+      asFlex>
       {record ? (
         <DrawerEditor value={value} submitText="submit" onSubmit={onSubmit} />
       ) : (

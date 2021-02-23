@@ -20,6 +20,7 @@ const DrawerPadding = styled(AntDrawer)`
     flex-grow: 1;
     transition: opacity 100ms ease-in-out;
     flex-direction: column;
+    display: ${({ asFlex }) => (asFlex ? 'flex' : '')};
   }
 `;
 
@@ -60,6 +61,7 @@ const Drawer = ({
     },
     [onDidClose, onDidOpen, setEntered]
   );
+
   return (
     <DrawerPadding
       visible={isOpened}
@@ -68,8 +70,8 @@ const Drawer = ({
       placement="right"
       closable={false}
       onClose={onClose}
+      asFlex={asFlex}
       bodyStyle={{
-        display: asFlex ? 'flex' : '',
         ...style,
         opacity: hasEntered ? 1 : 0,
       }}
