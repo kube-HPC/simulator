@@ -19,7 +19,7 @@ const ContainerBase = styled.div`
 const ValidContainer = styled(ContainerBase)`
   background-color: black;
   color: white;
-  height: 25em;
+  height: 100%;
 `;
 
 const InvalidContainer = styled(ContainerBase)`

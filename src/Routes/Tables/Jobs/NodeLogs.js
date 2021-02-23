@@ -12,7 +12,7 @@ const Container = styled.div`
   margin-top: 1em;
   max-height: 22.5em;
   flex: 1;
-  overflow: auto;
+  overflow: visible;
 `;
 
 const SelectFull = styled(Select)`
