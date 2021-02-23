@@ -1,11 +1,13 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown, Menu, Button } from 'antd';
+import { Dropdown, Menu, Button, Icon, Tooltip } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import _ from 'lodash';
+import { copyToClipboard } from 'utils';
 import usePath from './../../usePath';
 import useSnapshots from '../useSnapshots';
+import { checkLatest } from './utils';
 /**
  * @typedef {import('./').ExtendedDataSource} ExtendedDataSource
  * @typedef {import('reducers/dataSources/datasource').DataSourceVersion} DataSourceVersion
@@ -52,8 +54,6 @@ VersionRow.defaultProps = {
   isSnapshot: false,
 };
 
-const isLatest = (collection, entry) => _.last(collection).id === entry.id;
-
 /**
  * @param {{
  *   entries: (DataSourceVersion | Snapshot)[];
@@ -71,8 +71,13 @@ const Selector = ({
   activeSnapshot,
   hasMissingSnapshot,
 }) => {
-  const { paths, mode } = usePath();
+  const { paths, mode, goTo } = usePath();
   const location = useLocation();
+
+  const isLatest = checkLatest(versions, dataSource);
+
+  if (mode === 'edit' && !isLatest) goTo.query();
+
   if (isPending || entries.length === 0 || !dataSource)
     return <Button loading>loading versions</Button>;
 
@@ -94,7 +99,7 @@ const Selector = ({
               }}>
               <VersionRow
                 title={isSnapshot ? entry.name : entry.id}
-                isLatest={isLatest(versions, entry)}
+                isLatest={checkLatest(versions, entry)}
                 isSnapshot={isSnapshot}
                 collection={entries}
               />
@@ -104,6 +109,7 @@ const Selector = ({
       })}
     </Menu>
   );
+
   return (
     <Dropdown overlay={menu} placement="bottomLeft">
       <Button loading={isPending}>
@@ -115,7 +121,7 @@ const Selector = ({
               ? activeSnapshot.name
               : dataSource.id
           }
-          isLatest={hasMissingSnapshot ? '' : isLatest(versions, dataSource)}
+          isLatest={hasMissingSnapshot ? '' : isLatest}
           isSnapshot={activeSnapshot !== null}
         />
       </Button>
@@ -149,6 +155,10 @@ Selector.defaultProps = {
   activeSnapshot: null,
 };
 
+const CopyButton = styled(Button)`
+  margin-left: 1ch;
+`;
+
 /**
  * @param {{
  *   dataSource: ExtendedDataSource;
@@ -181,6 +191,14 @@ const Versions = ({
     );
   }, [snapshots, versionsCollection]);
   const { snapshotName } = useSnapshots({ dataSourceName: dataSource.name });
+
+  const handleCopy = useCallback(() => {
+    if (!snapshotName) copyToClipboard(dataSource.id);
+    else
+      copyToClipboard(
+        `dataSource: ${dataSource.name}, snapshot: ${snapshotName}`
+      );
+  }, [snapshotName, dataSource]);
   const hasMissingSnapshot = snapshotName && !activeSnapshot;
 
   return (
@@ -193,6 +211,16 @@ const Versions = ({
         activeSnapshot={activeSnapshot}
         hasMissingSnapshot={hasMissingSnapshot}
       />
+      <Tooltip
+        title={
+          snapshotName
+            ? 'Copy DataSource & Snapshot Name'
+            : 'Copy DataSource ID'
+        }>
+        <CopyButton onClick={handleCopy} type="dashed">
+          <Icon type="copy" />
+        </CopyButton>
+      </Tooltip>
       <VersionDescription>
         {activeSnapshot
           ? ''

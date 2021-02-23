@@ -1,9 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Radio } from 'antd';
+import { Button, Radio } from 'antd';
 import styled from 'styled-components';
 import VersionSelect from './VersionSelect';
+import { checkLatest } from './utils';
 
+/**
+ * @typedef {import('reducers/dataSources/datasource').DataSource} DataSource
+ * @typedef {import('reducers/dataSources/versions').VersionsStateEntry} Version
+ * @typedef {import('reducers/dataSources/snapshots').Snapshot} Snapshot
+ */
 const Container = styled.section`
   display: flex;
   flex-direction: row;
@@ -14,6 +20,20 @@ const RadioGroup = styled(Radio.Group)`
   margin-left: auto;
 `;
 
+const ReadOnly = styled(Button)`
+  margin-left: auto;
+`;
+
+/**
+ * @param {{
+ *   dataSource: DataSource;
+ *   versionsCollection: Version;
+ *   goTo: any;
+ *   mode: string;
+ *   snapshots: Snapshot[];
+ *   activeSnapshot: Snapshot;
+ * }} props
+ */
 const TopBar = ({
   dataSource,
   versionsCollection,
@@ -26,7 +46,7 @@ const TopBar = ({
     typeof goTo[e.target.value] === 'function'
       ? goTo[e.target.value]({ nextDataSourceId: dataSource.id })
       : null;
-
+  const isLatest = checkLatest(versionsCollection.versions, dataSource);
   return (
     <Container>
       <VersionSelect
@@ -35,13 +55,17 @@ const TopBar = ({
         versionsCollection={versionsCollection}
         activeSnapshot={activeSnapshot}
       />
-      <RadioGroup
-        onChange={handleChange}
-        value={mode}
-        disabled={activeSnapshot !== null}>
-        <Radio.Button value="edit">Edit</Radio.Button>
-        <Radio.Button value="query">Query</Radio.Button>
-      </RadioGroup>
+      {activeSnapshot ? (
+        <ReadOnly disabled>read only</ReadOnly>
+      ) : (
+        <RadioGroup
+          onChange={handleChange}
+          value={mode}
+          disabled={activeSnapshot !== null}>
+          {isLatest && <Radio.Button value="edit">Edit</Radio.Button>}
+          <Radio.Button value="query">Query</Radio.Button>
+        </RadioGroup>
+      )}
     </Container>
   );
 };
