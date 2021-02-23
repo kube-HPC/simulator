@@ -9,6 +9,9 @@ import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
 
+const jobsAmount = parseInt(process.env.REACT_APP_SLICE_JOBS, 10);
+const shouldSliceJobs = Number.isInteger(jobsAmount) && jobsAmount > 0;
+
 export { default as jobColumns } from './jobColumns';
 const rowKey = job => `job-${job.key}`;
 const JobsTable = () => {
@@ -20,7 +23,10 @@ const JobsTable = () => {
     }),
     [goTo]
   );
-  const _dataSource = useMemo(() => dataSource.slice(0, 5), [dataSource]);
+  const _dataSource = useMemo(
+    () => (shouldSliceJobs ? dataSource.slice(0, jobsAmount) : dataSource),
+    [dataSource]
+  );
 
   return (
     <Table
