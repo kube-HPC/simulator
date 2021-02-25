@@ -16,11 +16,14 @@ const Wrapper = styled.div`
 `;
 
 const onCopy = () =>
-  notification({ message: 'JSON Copied to Clipboard', type: notification.TYPES.SUCCESS });
+  notification({
+    message: 'JSON Copied to Clipboard',
+    type: notification.TYPES.SUCCESS,
+  });
 
 const EMPTY = {};
 
-const JsonSwitch = ({ obj, options = EMPTY }) => {
+const JsonSwitch = ({ obj, options = EMPTY, jobId }) => {
   const { view = EMPTY, table = EMPTY } = options;
   const extra = (
     <CopyToClipboard text={stringify(obj)} onCopy={onCopy}>
@@ -31,7 +34,7 @@ const JsonSwitch = ({ obj, options = EMPTY }) => {
     <Tabs tabPosition="left" tabBarExtraContent={extra} type="card">
       <Tabs.TabPane key={TABS.TABLE} tab={TABS.TABLE}>
         <Wrapper>
-          <JsonTable obj={obj} {...table} />
+          <JsonTable obj={obj} {...table} jobId={jobId} />
         </Wrapper>
       </Tabs.TabPane>
       <Tabs.TabPane key={TABS.JSON} tab={TABS.JSON}>
@@ -44,6 +47,7 @@ const JsonSwitch = ({ obj, options = EMPTY }) => {
 JsonSwitch.propTypes = {
   obj: PropTypes.object.isRequired,
   options: PropTypes.object,
+  jobId: PropTypes.string,
 };
 
 export default JsonSwitch;

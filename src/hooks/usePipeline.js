@@ -4,6 +4,10 @@ import { useActions, useDrawerEditor } from 'hooks';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { stringify } from 'utils';
+import { message } from 'antd';
+import successMsg from 'config/schema/success-messages.schema';
+import axios from 'axios';
+
 import { tableFilterSelector } from 'utils/tableSelector';
 import useExperiments from './useExperiments';
 
@@ -38,12 +42,45 @@ const usePipeline = () => {
   const { open: execute } = useDrawerEditor({ onSubmit: onSubmitExec });
   const { open: update } = useDrawerEditor({ onSubmit: onSubmitUpdate });
 
+  const url = useSelector(state => state[STATE_SOURCES.SOCKET_URL]);
+
+  const rerunRawPipeline = useCallback(
+    async (pipeline, jobId) => {
+      const {
+        jobId: deleteJobId,
+        flowInputMetadata,
+        startTime,
+        lastRunResult,
+        types,
+        ...cleanPipeline
+      } = pipeline;
+      let { flowInput } = cleanPipeline;
+      try {
+        if (flowInput?.truncated) {
+          const flowInputRes = await axios.get(`${url}/flowInput/${jobId}`);
+          if (flowInputRes.data) {
+            flowInput = flowInputRes.data;
+          }
+        }
+
+        const res = await axios.post(`${url}/exec/raw`, {
+          ...cleanPipeline,
+          flowInput,
+        });
+        message.success(successMsg(res.data).PIPELINE_START);
+      } catch (error) {
+        message.error(error.message);
+      }
+    },
+    [url]
+  );
   return {
     dataSource,
     dataStats,
     remove: deleteStored,
     update: pipeline => update(stringify(pipeline)),
     execute: pipeline => execute(stringify(pipeline)),
+    rerunRawPipeline,
   };
 };
 
