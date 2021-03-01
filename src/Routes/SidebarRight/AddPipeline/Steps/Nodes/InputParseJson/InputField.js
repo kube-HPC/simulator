@@ -1,8 +1,7 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import { Input, Icon, Tooltip, Button } from 'antd';
+import { Input, Icon, Tooltip } from 'antd';
 import { tryParse } from 'utils';
 import styled from 'styled-components';
 import DeleteButton from '../DeleteButton';
@@ -69,11 +68,12 @@ const InputField = ({ placeholder, tooltip, onRemove, idx, ...antFields }) => {
 InputField.propTypes = {
   placeholder: PropTypes.string.isRequired,
   tooltip: PropTypes.string.isRequired,
-  // TODO: detail the props
-  // eslint-disable-next-line
-  onChange: PropTypes.func,
   onRemove: PropTypes.func,
   idx: PropTypes.string.isRequired,
+  // under antFields
+  value: PropTypes.node.isRequired,
+  id: PropTypes.node.isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 InputField.defaultProps = {

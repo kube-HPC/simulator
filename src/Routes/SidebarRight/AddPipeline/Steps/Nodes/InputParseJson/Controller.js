@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'antd';
@@ -22,7 +21,7 @@ const Controller = ({ nodeIdx }) => {
 
   return (
     <>
-      {ids.map((id, ii) =>
+      {ids.map(id =>
         getFieldDecorator(`nodes.${nodeIdx}.input.${id}`, {
           validateTrigger: ['onChange', 'onBlur'],
           rules: [
