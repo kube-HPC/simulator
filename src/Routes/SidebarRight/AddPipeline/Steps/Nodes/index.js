@@ -1,29 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, Radio, Form, Input } from 'antd';
+import { Button, Radio, Input, Form } from 'antd';
 import AlgorithmNode from './Algorithms';
 import DataSourceNode from './DataSource';
 import useIds from './useIds';
 import useWizardContext from '../../useWizardContext';
 import DeleteButton from './DeleteButton';
+import { BoldedFormField } from './../../styles';
 
 const ButtonGroupCenter = styled(Button.Group)`
   display: flex;
   justify-content: center;
   margin-top: 20px;
 `;
-
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 4 },
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 20 },
-  },
-};
 
 const nodesMap = {
   dataSource: DataSourceNode,
@@ -57,9 +47,11 @@ const Nodes = ({ style }) => {
   return (
     <div style={style}>
       {ids.map((id, ii) => (
-        <Form.Item
-          {...formItemLayout}
-          style={{ borderBottom: '1px dashed #ccc', paddingBottom: '1em' }}
+        <BoldedFormField
+          style={{
+            borderBottom: '1px dashed #ccc',
+            paddingBottom: '1em',
+          }}
           label={`Node ${ii}`}
           required={false}
           key={`node::id-${id}`}>
@@ -96,7 +88,7 @@ const Nodes = ({ style }) => {
             </Form.Item>
             <Node id={id} kind={getFieldValue(`nodes.${id}.kind`)} />
           </>
-        </Form.Item>
+        </BoldedFormField>
       ))}
       <ButtonGroupCenter>
         <Button block icon="plus" type="primary" onClick={appendKey}>
