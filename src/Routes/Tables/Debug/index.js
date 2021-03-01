@@ -17,7 +17,7 @@ const DebugTable = () => {
 
   const expandedRowRender = record => (
     <Card isMargin>
-      <JsonView jsonObject={record} />
+      <JsonView.Card jsonObject={record} />
     </Card>
   );
 

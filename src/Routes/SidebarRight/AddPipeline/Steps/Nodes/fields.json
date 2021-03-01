@@ -1,0 +1,21 @@
+{
+  "nodeName": "string",
+  "algorithmName": "string",
+  "pipelineName": "string",
+  "input": [],
+  "ttl": 0,
+  "includeInResult": true,
+  "metrics": {
+    "tensorboard": true
+  },
+  "retry": {
+    "policy": "OnCrash",
+    "limit": 1
+  },
+  "batchOperation": "indexed",
+  "stateType": "stateless",
+  "kind": "dataSource",
+  "dataSource": {
+    "id": "string"
+  }
+}

@@ -1,8 +1,8 @@
+import React, { forwardRef, memo, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { InputNumber, Slider } from 'antd';
 import { FlexBox } from 'components/common';
-import PropTypes from 'prop-types';
-import React, { forwardRef, memo, useEffect, useState } from 'react';
-import styled from 'styled-components';
 
 const FlexGrow = styled(FlexBox.Item)`
   flex-grow: 1;

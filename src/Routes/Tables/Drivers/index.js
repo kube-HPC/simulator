@@ -18,7 +18,7 @@ export default function DriversTable() {
       dataSource={filtered}
       expandedRowRender={record => (
         <Card>
-          <JsonView jsonObject={record} />
+          <JsonView.Card jsonObject={record} />
         </Card>
       )}
     />

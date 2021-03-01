@@ -1,19 +1,17 @@
-import React, { useState, forwardRef, memo, useContext } from 'react';
+import React, { useState, forwardRef, memo } from 'react';
 import cronParser from 'cron-parser';
 import cronstrue from 'cronstrue';
 
 import { Popover, Typography, Icon, Input, Switch } from 'antd';
-import addPipelineSchema from 'config/schema/addPipeline.schema';
-
-import { FormContext } from '../../../AddPipelineForm';
+import addPipelineSchema from './../../../schema';
 
 const { Text } = Typography;
 const { errorMessage, fields } = addPipelineSchema.TRIGGERS.CRON;
 
 // TODO: consider removing the forward ref wrap
-const CronInput = forwardRef(() => {
+// eslint-disable-next-line
+const CronInput = forwardRef(({ getFieldDecorator }) => {
   const [readablePattern, setReadablePattern] = useState(undefined);
-  const { getFieldDecorator } = useContext(FormContext);
 
   // #region  Helpers
   const content = readablePattern ? (

@@ -1,22 +1,24 @@
-import React, { useContext } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Select } from 'antd';
 import { useSelector } from 'react-redux';
 import { Form } from 'components/common';
-import addPipelineSchema from 'config/schema/addPipeline.schema';
 import { selectors } from 'reducers/pipeline.reducer';
-import CronInput from './CronInput.react';
-import { FormContext } from '../../../AddPipelineForm';
+import CronInput from './CronInput';
+import addPipelineSchema from './../../../schema';
 
 const { CRON, PIPELINES } = addPipelineSchema.TRIGGERS;
 
-const Triggers = () => {
-  const { getFieldDecorator } = useContext(FormContext);
+const Triggers = ({ getFieldDecorator }) => {
   const pipelineNames = useSelector(selectors.collection.names);
 
   return (
     <>
       <Form.Item label={CRON.label}>
-        <CronInput placeholder={CRON.placeholder} />
+        <CronInput
+          placeholder={CRON.placeholder}
+          getFieldDecorator={getFieldDecorator}
+        />
       </Form.Item>
       <Form.Item label={PIPELINES.label}>
         {getFieldDecorator(PIPELINES.field)(
@@ -31,6 +33,10 @@ const Triggers = () => {
       </Form.Item>
     </>
   );
+};
+
+Triggers.propTypes = {
+  getFieldDecorator: PropTypes.func.isRequired,
 };
 
 export default Triggers;

@@ -41,7 +41,7 @@ const JsonSwitch = ({ obj, options, jobId }) => {
         </Wrapper>
       </Tabs.TabPane>
       <Tabs.TabPane key={TABS.JSON} tab={TABS.JSON}>
-        <JsonView
+        <JsonView.Card
           jsonObject={obj}
           // eslint-disable-next-line
           {...view}

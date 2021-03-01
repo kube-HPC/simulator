@@ -49,6 +49,7 @@ const DashboardDrawer = () => {
           flexDirection: 'column',
           overFlow: 'hidden',
         }}
+        asFlex
         destroyOnClose>
         {body}
       </Drawer>

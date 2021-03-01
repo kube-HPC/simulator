@@ -38,7 +38,7 @@ const AlgorithmBuildsTable = ({ builds }) => {
             </Tabs.TabPane>
             <Tabs.TabPane tab={IDs.INFO} key={IDs.INFO}>
               <Card>
-                <JsonView jsonObject={record} collapsed="1" />
+                <JsonView.Card jsonObject={record} collapsed="1" />
               </Card>
             </Tabs.TabPane>
           </Tabs>

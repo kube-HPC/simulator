@@ -4,7 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { stringify } from 'utils/string';
 import { SB_SECTIONS } from 'const';
-import JsonEditor from './JsonEditor.react';
+import JsonEditor from '.';
 
 const StyledCard = styled(Card)`
   width: 45%;
@@ -19,7 +19,7 @@ export default {
 export const Default = () => <JsonEditor value={stringify(template)} />;
 export const InCard = () => (
   <StyledCard>
-    <JsonEditor height={'60vh'} value={stringify(template)} />
+    <JsonEditor height="60vh" value={stringify(template)} />
   </StyledCard>
 );
 export const Empty = () => <JsonEditor />;

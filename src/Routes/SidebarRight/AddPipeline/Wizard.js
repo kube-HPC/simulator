@@ -1,143 +1,151 @@
-import React, { useCallback, useMemo, useState, memo } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Steps } from 'antd';
-import { Card, JsonView, Form } from 'components/common';
-import schema from 'config/schema/addPipeline.schema';
+import { Icon, Steps, Form as AntdForm } from 'antd';
+import { JsonView } from 'components/common';
 import styled from 'styled-components';
-import { mapObjValues, stringify, notification } from 'utils';
-import { mergeWith } from 'lodash';
 import { COLOR_LAYOUT } from 'styles';
 import {
   BottomPanel,
   PanelButton,
   RightAlignedButton,
 } from 'components/Drawer';
-import addPipelineTemplate from 'config/template/addPipeline.template';
-import AddPipelineForm from './AddPipelineForm';
+import { Initial, Nodes, Options } from './Steps';
+import { context } from './useWizardContext';
 
-const steps = ['Initial', 'Nodes', 'Options'].map(label => (
-  <Steps.Step key={label} title={label} />
-));
-
-const FormContainer = styled.div`
-  flex: 1;
-  overflow: auto;
-  padding-bottom: 2em;
+const Form = styled(AntdForm)`
+  width: 70ch;
 `;
 
 export const Body = styled.div`
   display: flex;
-  flex-grow: 1;
+  flex: 1;
   height: 0;
 `;
 
-const JsonViewWrapper = styled(Card)`
-  flex: 1;
-  transition: none;
-  margin-right: 2ch;
-  border-bottom: none;
-`;
+const stepNames = ['Initial', 'Nodes', 'Options'];
+const stepComponents = [Initial, Nodes, Options];
 
-const innerClasses = ['flowInput'];
+const steps = stepNames.map(name => (
+  <Steps.Step key={`steps-${name}`} title={name} />
+));
 
-const mapper = ({ key, value }) =>
-  Form.createFormField({
-    value: innerClasses.includes(key) ? stringify(value) : value,
-  });
-const mapPredicate = ({ key }) => innerClasses.includes(key);
+/** @param {[any]} collection */
+const normalize = collection =>
+  collection.reduce((acc, item, ii) => ({ ...acc, [ii]: item }), {});
 
-const mapPropsToFields = () =>
-  mapObjValues({ obj: addPipelineTemplate, mapper, mapPredicate });
-
-// Customizer for lodash merge.
-// TODO: fix inconsistent return
-// eslint-disable-next-line
-const mergeMapper = (objValue, srcValue) => {
-  if (Array.isArray(objValue)) {
-    return srcValue;
-  }
+// converts arrays to objects on selected fields to match ant requirement
+const parseInitialState = initialState => {
+  const nodes =
+    initialState?.nodes?.map(item =>
+      !item.input
+        ? item
+        : {
+            ...item,
+            input: normalize(item.input),
+          }
+    ) ?? [];
+  return {
+    ...initialState,
+    nodes: normalize(nodes),
+  };
 };
 
-const Wizard = ({ toggle, addPipeline }) => {
-  const [pipeline, setPipeline] = useState(addPipelineTemplate);
-  const [step, setStep] = useState(0);
-  const onPrevClick = () => setStep(s => s - 1);
-  const isLastStep = step === steps.length - 1;
+/** @param {object} props */
+/** @param {import('antd/lib/form').FormProps} props.form */
+const Wizard = ({
+  toggle,
+  onSubmit,
+  initialState,
+  setEditorState,
+  form,
+  setStepIdx,
+  stepIdx,
+}) => {
+  const { setFieldsValue, getFieldsValue } = form;
 
-  const onNextClick = () => {
-    const isValidPipeline =
-      !pipeline.name ||
-      !pipeline.nodes.every(
-        ({ nodeName, algorithmName }) => nodeName && algorithmName
-      );
+  useEffect(() => {
+    setFieldsValue(parseInitialState(initialState));
+  }, [setFieldsValue, initialState, getFieldsValue]);
 
-    const isSubmit = step === steps.length - 1;
+  const isLastStep = stepIdx === steps.length - 1;
 
-    const { webhooks, ...restPipeline } = pipeline;
-    const { progress, result } = webhooks;
-    const areValidWebhooks = progress && result;
+  const onPrevious = useCallback(() => setStepIdx(state => state - 1), [
+    setStepIdx,
+  ]);
 
-    const pipelineToAdd = areValidWebhooks
-      ? pipeline
-      : progress
-      ? { webhooks: { progress }, ...restPipeline }
-      : result
-      ? { webhooks: { result }, ...restPipeline }
-      : restPipeline;
+  const onNext = useCallback(() => setStepIdx(state => state + 1), [
+    setStepIdx,
+  ]);
 
-    isSubmit
-      ? isValidPipeline
-        ? notification({ message: 'Empty Required Field!' })
-        : addPipeline(pipelineToAdd)
-      : setStep(s => s + 1);
-  };
+  const getFormattedFormValues = useCallback(() => {
+    const formValues = getFieldsValue();
+    const nodes = Object.values(formValues.nodes || {})
+      .filter(item => item.kind)
+      .map(item => {
+        if (!item.input) return item;
+        return {
+          ...item,
+          input: Object.values(item.input),
+        };
+      });
+    return { ...formValues, nodes };
+  }, [getFieldsValue]);
 
-  const onValuesChange = useCallback(
-    (_, changedValues) =>
-      setPipeline(prevObj => ({
-        ...mergeWith(prevObj, changedValues, mergeMapper),
-      })),
-    [setPipeline]
-  );
-  // 1. Inject antd `form` object and callbacks.
-  // 2. Memoize the returned component from Form.create
-  //    against unnecessary re-renders due to callbacks.
-  // 3. Memoize the whole value to not lose component's state on re-render.
-  const FormInjected = useMemo(
-    () =>
-      // do not drop this memo it will break the form's behavior!
-      memo(Form.create({ mapPropsToFields, onValuesChange })(AddPipelineForm)),
-    [onValuesChange]
+  const handleToggle = useCallback(() => {
+    setEditorState(getFormattedFormValues());
+    toggle();
+  }, [toggle, setEditorState, getFormattedFormValues]);
+
+  const handleSubmit = useCallback(
+    e => {
+      e?.preventDefault();
+      onSubmit(getFormattedFormValues());
+    },
+    [getFormattedFormValues, onSubmit]
   );
 
   return (
     <>
       <Body>
-        <JsonViewWrapper>
-          <JsonView jsonObject={pipeline} collapsed={undefined} />
-        </JsonViewWrapper>
-        <FormContainer>
-          <FormInjected step={step} />
-        </FormContainer>
+        <JsonView
+          src={getFormattedFormValues()}
+          collapsed={undefined}
+          style={{ flex: 1, overflow: 'auto' }}
+        />
+        <Form
+          onSubmit={handleSubmit}
+          style={{ overflow: 'auto', padding: '0 2ch' }}>
+          <context.Provider value={{ form, initialState }}>
+            {stepComponents.map((StepComponent, ii) => (
+              <StepComponent
+                key={`step-component-${stepNames[ii]}`}
+                style={{
+                  display: ii === stepIdx ? 'block' : 'none',
+                }}
+              />
+            ))}
+          </context.Provider>
+        </Form>
       </Body>
       <Steps
         type="navigation"
         size="small"
-        current={step}
-        onChange={setStep}
+        current={stepIdx}
+        onChange={setStepIdx}
         style={{ borderTop: `1px solid ${COLOR_LAYOUT.border}` }}>
         {steps}
       </Steps>
+
       <BottomPanel>
-        <PanelButton onClick={toggle}>Editor View</PanelButton>
-        <PanelButton disabled={!step} onClick={onPrevClick}>
+        <PanelButton onClick={handleToggle}>Editor View</PanelButton>
+        <PanelButton disabled={stepIdx === 0} onClick={onPrevious}>
           <Icon type="left" />
           Back
         </PanelButton>
         <RightAlignedButton
           type={isLastStep ? 'primary' : 'default'}
-          onClick={onNextClick}
-          form={schema.ID}
+          onClick={!isLastStep ? onNext : handleSubmit}
+          form="create-pipeline"
           htmlType="submit">
           {isLastStep ? 'Submit' : 'Next'}
           <Icon type={isLastStep ? 'check' : 'right'} />
@@ -148,8 +156,19 @@ const Wizard = ({ toggle, addPipeline }) => {
 };
 
 Wizard.propTypes = {
-  addPipeline: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   toggle: PropTypes.func.isRequired,
+  setEditorState: PropTypes.func.isRequired,
+  form: PropTypes.shape({
+    getFieldDecorator: PropTypes.func.isRequired,
+    setFieldsValue: PropTypes.func.isRequired,
+    getFieldsValue: PropTypes.func.isRequired,
+    getFieldValue: PropTypes.func.isRequired,
+  }).isRequired,
+  setStepIdx: PropTypes.func.isRequired,
+  stepIdx: PropTypes.number.isRequired,
+  // eslint-disable-next-line
+  initialState: PropTypes.object.isRequired,
 };
 
-export default Wizard;
+export default Form.create({ name: 'create-pipeline' })(Wizard);

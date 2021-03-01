@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'antd';
 import { FlexBox } from 'components/common';
-import InputsController from 'Routes/SidebarRight/AddPipeline/Steps/Nodes/InputParseJson/Controller.react';
+import InputsController from 'Routes/SidebarRight/AddPipeline/Steps/Nodes/InputParseJson/Controller';
 
 const AlgorithmRun = ({ onChange, onRun }) => (
   <FlexBox.Auto direction="column" full gutter={[0, 10]}>

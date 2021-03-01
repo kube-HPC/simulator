@@ -1,13 +1,16 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { Checkbox, InputNumber, Select } from 'antd';
 import { FlexBox, Form } from 'components/common';
-import addPipelineSchema from 'config/schema/addPipeline.schema';
-import React, { useContext } from 'react';
-import styled from 'styled-components';
 import { toUpperCaseFirstLetter } from 'utils';
-import { FormContext } from '../../AddPipelineForm';
-import SliderNumber from './SliderNumber.react';
-import Triggers from './Triggers/Triggers.react';
-import Webhooks from './Webhooks.react';
+import SliderNumber from './SliderNumber';
+import Triggers from './Triggers';
+import Webhooks from './Webhooks';
+import addPipelineSchema from './../../schema';
+import useWizardContext from '../../useWizardContext';
+
+export { Triggers, Webhooks };
 
 const smallSelectStyle = { width: '90px' };
 
@@ -23,15 +26,15 @@ const Grow = styled(FlexBox.Item)`
   flex-grow: 1;
 `;
 
-const Options = () => {
-  const { getFieldDecorator } = useContext(FormContext);
-
+const Options = ({ style }) => {
+  const { form } = useWizardContext();
+  const { getFieldDecorator } = form;
   return (
-    <>
+    <div style={style}>
       <Form.Divider>Webhooks</Form.Divider>
-      <Webhooks />
+      <Webhooks getFieldDecorator={getFieldDecorator} />
       <Form.Divider>Triggers</Form.Divider>
-      <Triggers />
+      <Triggers getFieldDecorator={getFieldDecorator} />
       <Form.Divider>Advanced Options</Form.Divider>
       <Form.Item label={TOLERANCE.label}>
         {getFieldDecorator(TOLERANCE.field)(<SliderNumber />)}
@@ -68,8 +71,13 @@ const Options = () => {
       <Form.Item label={PRIORITY.label}>
         {getFieldDecorator(PRIORITY.field)(<InputNumber />)}
       </Form.Item>
-    </>
+    </div>
   );
+};
+
+Options.propTypes = {
+  // eslint-disable-next-line
+  style: PropTypes.object.isRequired,
 };
 
 export default Options;

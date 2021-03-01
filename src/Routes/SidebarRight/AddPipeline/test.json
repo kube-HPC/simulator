@@ -1,0 +1,40 @@
+{
+  "name": "pie",
+  "description": "a dummy",
+  "flowInput": {},
+  "nodes": [
+    {
+      "kind": "algorithm",
+      "nodeName": "node-0",
+      "algorithmName": "",
+      "input": [1, 2]
+    },
+    {
+      "kind": "algorithm",
+      "nodeName": "node-1",
+      "algorithmName": "",
+      "input": [3, 5]
+    }
+  ],
+  "options": {
+    "batchTolerance": 100,
+    "concurrentPipelines": {
+      "amount": 10,
+      "rejectOnFailure": true
+    },
+    "ttl": 3600,
+    "progressVerbosityLevel": "info"
+  },
+  "priority": 3,
+  "webhooks": {
+    "progress": "",
+    "result": ""
+  },
+  "triggers": {
+    "pipelines": [],
+    "cron": {
+      "enabled": false,
+      "pattern": "0 * * * *"
+    }
+  }
+}
