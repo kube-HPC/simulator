@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, Radio, Input, Form } from 'antd';
+import { Button, Radio, Input } from 'antd';
 import AlgorithmNode from './Algorithms';
 import DataSourceNode from './DataSource';
 import useIds from './useIds';
 import useWizardContext from '../../useWizardContext';
-import DeleteButton from './DeleteButton';
 import { BoldedFormField } from './../../styles';
+import { Field, DeleteButton } from './../FormUtils';
 
 const ButtonGroupCenter = styled(Button.Group)`
   display: flex;
@@ -73,25 +73,24 @@ const Nodes = ({ style }) => {
                 ) : null}
               </Radio.Group>
             )}
-            <Form.Item label="Node Name">
-              {getFieldDecorator(`nodes.${id}.nodeName`, {
-                validateTrigger: ['onChange', 'onBlur'],
-                rules: [
-                  {
-                    required: true,
-                    whitespace: true,
-                    message:
-                      "Please input passenger's name or delete this field.",
-                  },
-                ],
-              })(<Input placeholder="Node Name" />)}
-            </Form.Item>
+            <Field
+              title="Node Name"
+              name="nodeName"
+              rootId={`nodes.${id}`}
+              getFieldDecorator={getFieldDecorator}>
+              <Input placeholder="Node Name" />
+            </Field>
             <Node id={id} kind={getFieldValue(`nodes.${id}.kind`)} />
           </>
         </BoldedFormField>
       ))}
       <ButtonGroupCenter>
-        <Button block icon="plus" type="primary" onClick={appendKey}>
+        <Button
+          block
+          icon="plus"
+          type="primary"
+          onClick={appendKey}
+          style={{ marginBottom: '1em' }}>
           Add Node
         </Button>
       </ButtonGroupCenter>

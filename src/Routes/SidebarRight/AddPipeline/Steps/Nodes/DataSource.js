@@ -1,27 +1,45 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Form } from 'antd';
+import { Input } from 'antd';
+import useDataSources from 'hooks/useDataSources';
 import useWizardContext from '../../useWizardContext';
+import { Field as RawField } from './../FormUtils';
 
-const DataSourceNode = ({ id }) => {
-  const {
-    form: { getFieldDecorator },
-  } = useWizardContext();
+const ctx = React.createContext();
+
+/** @type {import('./../FormUtils').FieldProps} */
+const Field = props => {
+  const { form } = useWizardContext();
+  const { rootId } = useContext(ctx);
   return (
-    <Form.Item label="Input">
-      {getFieldDecorator(`nodes.${id}.dataSourceName`, {
-        validateTrigger: ['onChange', 'onBlur'],
-        rules: [
-          {
-            required: true,
-            whitespace: true,
-            message: "Please input dataSource's name or delete this field.",
-          },
-        ],
-      })(<Input placeholder="dataSourceName" />)}
-    </Form.Item>
+    <RawField
+      {...props}
+      getFieldDecorator={form.getFieldDecorator}
+      rootId={rootId}
+    />
   );
 };
+// eslint-disable-next-line
+const DataSourceNode = ({ id }) => {
+  const { dataSources: collection } = useDataSources();
+  console.log(collection);
+  const names = collection.map(item => item.name);
+  console.log({ names });
+  return (
+    <ctx.Provider value={{ rootId: `nodes.${id}.datasource` }}>
+      <Field name="name" title="DataSource Name">
+        <Input placeholder="DataSource Name" />
+      </Field>
+      <Field name="id" title="Id">
+        <Input placeholder="Version Id" />
+      </Field>
+      <Field name="snapshot.name" title="Snapshot Name">
+        <Input placeholder="Snapshot Name" />
+      </Field>
+    </ctx.Provider>
+  );
+};
+
 DataSourceNode.propTypes = {
   id: PropTypes.node.isRequired,
 };

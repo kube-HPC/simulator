@@ -1,14 +1,14 @@
 import React, { useReducer, useState } from 'react';
-// import { addPipelineTemplate } from 'config';
+import { addPipelineTemplate } from 'config';
 // import { useActions } from 'hooks';
 import Wizard from './Wizard';
 import Editor from './Editor';
-import testData from './test';
+// import testData from './test';
 
 const AddPipeline = () => {
   const [isEditorVisible, toggle] = useReducer(visible => !visible, false);
-  // const [editorState, setEditorState] = useState(addPipelineTemplate);
-  const [editorState, setEditorState] = useState(testData);
+  const [editorState, setEditorState] = useState(addPipelineTemplate);
+  // const [editorState, setEditorState] = useState(testData);
 
   const [wizardStepIdx, setWizardStepIdx] = useState(0);
 

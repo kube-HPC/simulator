@@ -1,32 +1,93 @@
-import React from 'react';
+import React, { createContext, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Form } from 'antd';
-import Controller from './InputParseJson/Controller';
+import { Input, InputNumber, Switch, Radio } from 'antd';
+import { Form as CommonForm } from 'components/common';
+import Controller from './InputParseJson';
 import useWizardContext from '../../useWizardContext';
+import { Field as RawField, HorizontalRow } from './../FormUtils';
+
+const { Divider } = CommonForm;
+
+const ctx = createContext();
+
+/** @type {import('./../FormUtils').FieldProps} */
+const Field = props => {
+  const { getFieldDecorator, rootId } = useContext(ctx);
+  return (
+    <RawField
+      {...props}
+      getFieldDecorator={getFieldDecorator}
+      rootId={rootId}
+    />
+  );
+};
 
 const AlgorithmNode = ({ id }) => {
   const {
     form: { getFieldDecorator },
   } = useWizardContext();
-
+  const rootId = `nodes.${id}`;
   return (
-    <>
-      <Form.Item label="Algorithm name">
-        {getFieldDecorator(`nodes.${id}.algorithmName`, {
-          validateTrigger: ['onChange', 'onBlur'],
-          rules: [
-            {
-              required: true,
-              whitespace: true,
-              message: "Please input algorithm's name or delete this field.",
-            },
-          ],
-        })(<Input placeholder="Algorithm name" />)}
-      </Form.Item>
-      <Form.Item label="Inputs">
-        <Controller placeholder="Input" tooltip="Input" nodeIdx={id} />
-      </Form.Item>
-    </>
+    <ctx.Provider value={{ rootId, getFieldDecorator }}>
+      <Field name="pipelineName" title="Pipeline Name">
+        <Input placeholder="Pipeline Name" />
+      </Field>
+      <Field name="algorithmName" title="Algorithm name">
+        <Input placeholder="Algorithm name" />
+      </Field>
+      <Divider>Inputs</Divider>
+      <Controller placeholder="Input" tooltip="Input" nodeIdx={id} />
+
+      <Divider>retry</Divider>
+      <HorizontalRow>
+        <Field name="retry.policy" title="Policy" skipValidation>
+          <Radio.Group>
+            <Radio.Button value="Never">Never</Radio.Button>
+            <Radio.Button value="Always">Always</Radio.Button>
+            <Radio.Button value="OnError">OnError</Radio.Button>
+            <Radio.Button value="OnCrash">OnCrash</Radio.Button>
+          </Radio.Group>
+        </Field>
+        <Field title="Retry Limit" name="retry.limit" skipValidation>
+          <InputNumber min={0} />
+        </Field>
+      </HorizontalRow>
+
+      <Divider>Options</Divider>
+      <HorizontalRow>
+        <Field name="batchOperation" title="Batch Operation" skipValidation>
+          <Radio.Group>
+            <Radio.Button value="Never">indexed</Radio.Button>
+            <Radio.Button value="Always">cartesian</Radio.Button>
+          </Radio.Group>
+        </Field>
+        <Field name="stateType" title="State Type" skipValidation>
+          <Radio.Group>
+            <Radio.Button value="Never">stateless</Radio.Button>
+            <Radio.Button value="Always">stateful</Radio.Button>
+          </Radio.Group>
+        </Field>
+      </HorizontalRow>
+      <HorizontalRow>
+        <Field title="TTL" name="ttl" skipValidation small>
+          <InputNumber min={0} />
+        </Field>
+        <Field
+          title="Include In Result"
+          name="includeInResult"
+          skipValidation
+          small>
+          <Switch />
+        </Field>
+        <Field
+          title="Use tensorboard"
+          name="metrics.tensorboard"
+          skipValidation
+          small>
+          <Switch />
+        </Field>
+      </HorizontalRow>
+    </ctx.Provider>
   );
 };
 

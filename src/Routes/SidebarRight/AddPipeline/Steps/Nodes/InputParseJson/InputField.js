@@ -1,15 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
-
-import { Input, Icon, Tooltip } from 'antd';
 import { tryParse } from 'utils';
-import styled from 'styled-components';
-import DeleteButton from '../DeleteButton';
-
-const Field = styled.div`
-  display: flex;
-  align-items: center;
-`;
+import RawInputField from 'components/InputField';
 
 const InputField = ({ placeholder, tooltip, onRemove, idx, ...antFields }) => {
   const [isValid, setIsValid] = useState(true);
@@ -35,33 +27,16 @@ const InputField = ({ placeholder, tooltip, onRemove, idx, ...antFields }) => {
   );
 
   return (
-    <Field>
-      <Tooltip title={isValid ? '' : tooltip}>
-        <Input
-          style={{
-            width: hasRemove ? '90%' : '100%',
-          }}
-          id={antFields.id}
-          onChange={onInputChange}
-          defaultValue={antFields.value}
-          value={value}
-          placeholder={placeholder}
-          addonAfter={
-            <Icon
-              style={{ color: !isValid && 'red', fontSize: '15px' }}
-              type={isValid ? 'check' : 'warning'}
-            />
-          }
-        />
-      </Tooltip>
-      {hasRemove && (
-        <DeleteButton
-          type="close-circle"
-          theme="filled"
-          onClick={() => onRemove(idx)}
-        />
-      )}
-    </Field>
+    <RawInputField
+      id={antFields.id}
+      tooltip={tooltip}
+      hasRemove={hasRemove}
+      isValid={isValid}
+      onRemove={() => onRemove(idx)}
+      value={value}
+      onChange={onInputChange}
+      placeholder={placeholder}
+    />
   );
 };
 
