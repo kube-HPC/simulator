@@ -27,7 +27,7 @@ export const findNode = ({ graph, pipeline }) => nodeName => {
     nodeName,
     podName,
     origInput,
-    batch: nodeData.batch || [],
+    batch: nodeData?.batch || [],
   };
   return payload;
 };

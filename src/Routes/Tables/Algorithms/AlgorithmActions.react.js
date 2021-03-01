@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Modal, Popover, Typography, Tooltip } from 'antd';
 import { useActions } from 'hooks';
@@ -25,8 +25,6 @@ const deleteConfirmAction = action => {
 };
 
 const title = `Run Algorithm`;
-const EMPTY_INITIAL = [];
-
 const overlayStyle = { width: `60ch` };
 
 const AlgorithmActions = ({ record }) => {
@@ -37,7 +35,7 @@ const AlgorithmActions = ({ record }) => {
   const { /* applyAlgorithm , */ deleteAlgorithm, runAlgorithm } = useActions();
   const container = useRef();
 
-  const [inputs, setInputs] = useState(EMPTY_INITIAL);
+  // const [inputs, setInputs] = useState(EMPTY_INITIAL);
 
   const setPopupContainer = useCallback(() => container.current, []);
 
@@ -60,9 +58,9 @@ const AlgorithmActions = ({ record }) => {
     [deleteAlgorithm, name]
   );
 
-  const onRun = () => runAlgorithm({ name, input: inputs });
+  const onRun = input => runAlgorithm({ name, input });
 
-  const popOverContent = <AlgorithmRun onChange={setInputs} onRun={onRun} />;
+  const popOverContent = <AlgorithmRun onRun={onRun} />;
 
   const onMoreInfo = useCallback(
     () => goTo.overview({ nextAlgorithmId: name }),

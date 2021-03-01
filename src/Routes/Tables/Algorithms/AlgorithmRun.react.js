@@ -1,21 +1,112 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'antd';
-import { FlexBox } from 'components/common';
-import InputsController from 'Routes/SidebarRight/AddPipeline/Steps/Nodes/InputParseJson/Controller';
+import { Button, Form } from 'antd';
+import styled from 'styled-components';
+import RawInputField from 'components/InputField';
+import { tryParse } from 'utils';
+import useIds from '../../SidebarRight/AddPipeline/Steps/Nodes/useIds';
 
-const AlgorithmRun = ({ onChange, onRun }) => (
-  <FlexBox.Auto direction="column" full gutter={[0, 10]}>
-    <InputsController onChange={onChange} />
-    <Button type="primary" block size="small" onClick={onRun}>
-      Run
-    </Button>
-  </FlexBox.Auto>
-);
+const ButtonGroupCenter = styled(Button.Group)`
+  display: flex;
+  justify-content: center;
+  margin-top: 5px;
+`;
 
-AlgorithmRun.propTypes = {
-  onChange: PropTypes.func.isRequired,
-  onRun: PropTypes.func.isRequired,
+const InputField = ({ onRemove, idx, ...antFields }) => {
+  const [isValid, setIsValid] = useState(true);
+  const [value, setValue] = useState();
+  const hasRemove = !!onRemove;
+  const onInputChange = useCallback(
+    ({ target: { value: src } }) => {
+      setValue(src);
+      const onFail = () => setIsValid(src === '');
+      const onSuccess = ({ parsed }) => {
+        antFields.onChange(parsed);
+        setIsValid(true);
+      };
+      tryParse({ src, onSuccess, onFail });
+    },
+    [antFields]
+  );
+
+  return (
+    <RawInputField
+      id={antFields.id}
+      tooltip=""
+      hasRemove={hasRemove}
+      isValid={isValid}
+      onRemove={() => onRemove(idx)}
+      value={value}
+      onChange={onInputChange}
+      placeholder="algorithm input"
+    />
+  );
+};
+InputField.propTypes = {
+  onRemove: PropTypes.func.isRequired,
+  idx: PropTypes.number.isRequired,
 };
 
-export default React.memo(AlgorithmRun);
+const InputsCollection = ({ getFieldDecorator }) => {
+  const [ids, appendKey, dropKey] = useIds([0]);
+  return (
+    <>
+      {ids.map(id =>
+        getFieldDecorator(`inputs.${id}`, {
+          validateTrigger: ['onChange', 'onBlur'],
+          rules: [
+            {
+              required: true,
+              whitespace: true,
+              message: "Please input algorithm's name or delete this field.",
+            },
+          ],
+        })(<InputField onRemove={ids.length > 1 ? dropKey : null} idx={id} />)
+      )}
+      <ButtonGroupCenter>
+        <Button block icon="plus" type="dashed" onClick={appendKey}>
+          Add Input
+        </Button>
+      </ButtonGroupCenter>
+    </>
+  );
+};
+
+InputsCollection.propTypes = {
+  getFieldDecorator: PropTypes.func.isRequired,
+};
+
+/**
+ * @param {{
+ *   onSubmit: () => {};
+ *   onRum: {};
+ * } & import('antd/lib/form').FormComponentProps} props
+ */
+const AlgorithmRun = ({ onRun, form }) => {
+  const handleRun = useCallback(() => {
+    const values = form.getFieldsValue();
+    if (values.inputs) {
+      onRun(values.inputs.filter(item => item !== undefined));
+    } else {
+      onRun();
+    }
+  }, [form, onRun]);
+  return (
+    <Form direction="column" full gutter={[0, 10]}>
+      <InputsCollection getFieldDecorator={form.getFieldDecorator} />
+      <Button type="primary" block size="small" onClick={handleRun}>
+        Run
+      </Button>
+    </Form>
+  );
+};
+
+AlgorithmRun.propTypes = {
+  onRun: PropTypes.func.isRequired,
+  form: PropTypes.shape({
+    getFieldDecorator: PropTypes.func.isRequired,
+    getFieldsValue: PropTypes.func.isRequired,
+  }).isRequired,
+};
+
+export default Form.create({ name: 'run algorithm' })(AlgorithmRun);
