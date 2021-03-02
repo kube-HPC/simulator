@@ -5,6 +5,7 @@ import cleanDeep from 'clean-deep';
 import Wizard from './Wizard';
 import Editor from './Editor';
 
+/** @param {import('./fields').DataSourceNode} node */
 const formatDataSourceNode = node =>
   // if used datasource by id, avoid all other parameters
   node?.dataSource?.id
@@ -15,20 +16,22 @@ const formatDataSourceNode = node =>
         },
       }
     : node;
+
+/** @param {import('./fields').AlgorithmNode} node */
 const formatAlgorithmNode = node => {
   const { kind, ...rest } = node;
   return rest;
 };
 
+const formats = {
+  dataSource: formatDataSourceNode,
+  algorithm: formatAlgorithmNode,
+};
+
+/** @param {import('./fields').Node} node */
 const formatNode = node => {
-  switch (node.kind) {
-    case 'dataSource':
-      return formatDataSourceNode(node);
-    case 'algorithm':
-      return formatAlgorithmNode(node);
-    default:
-      return node;
-  }
+  const formatter = formats[node.kind];
+  return formatter ? formatter(node) : node;
 };
 
 const AddPipeline = () => {
@@ -38,6 +41,7 @@ const AddPipeline = () => {
   const { addPipeline } = useActions();
   const handleSubmit = useCallback(
     formData => {
+      /** @type {import('./fields').PipelineDescriptor} */
       const formattedData = {
         ...formData,
         nodes: formData.nodes.map(formatNode),
