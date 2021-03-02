@@ -10,7 +10,6 @@ const useSnapshots = ({ dataSourceName }) => {
     selectors.dataSources.snapshots(state, dataSourceName)
   );
   const isReady = snapshots?.status === 'SUCCESS';
-  console.log({ dataSourceName });
   useEffect(() => {
     if (!snapshots) return;
     if (snapshots.status === 'IDLE')
