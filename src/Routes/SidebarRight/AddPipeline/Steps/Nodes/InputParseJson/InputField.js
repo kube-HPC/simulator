@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { tryParse } from 'utils';
@@ -8,10 +9,16 @@ const InputField = ({ placeholder, tooltip, onRemove, idx, ...antFields }) => {
   const [value, setValue] = useState();
   const hasRemove = !!onRemove;
   useEffect(() => {
-    if (value === undefined) {
+    /**
+     * IsValid will override the field most of the time, this is useful when
+     * you delete an entry - ant needs to re-write this field you don't want
+     * ant to override a field if it is invalid, it will show an "x" and hide
+     * the extra invalid characters from the user making it unusable
+     */
+    if (isValid || value === undefined) {
       setValue(antFields.value);
     }
-  }, [antFields, value]);
+  }, [antFields, value, isValid]);
 
   const onInputChange = useCallback(
     ({ target: { value: src } }) => {

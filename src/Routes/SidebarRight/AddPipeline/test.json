@@ -1,19 +1,26 @@
 {
-  "name": "pie",
-  "description": "a dummy",
+  "name": "",
+  "description": "",
   "flowInput": {},
   "nodes": [
     {
       "kind": "algorithm",
       "nodeName": "node-0",
+      "pipelineName": "2",
       "algorithmName": "",
-      "input": [1, 2]
+      "retry": {},
+      "metrics": {}
     },
     {
       "kind": "algorithm",
-      "nodeName": "node-1",
-      "algorithmName": "",
-      "input": [3, 5]
+      "retry": {},
+      "metrics": {}
+    },
+    {
+      "kind": "algorithm",
+      "input": [123, 666, 777, 888],
+      "retry": {},
+      "metrics": {}
     }
   ],
   "options": {
