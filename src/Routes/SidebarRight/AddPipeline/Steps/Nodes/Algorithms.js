@@ -29,7 +29,7 @@ const AlgorithmNode = ({ id }) => {
   const rootId = `nodes.${id}`;
   return (
     <ctx.Provider value={{ rootId, getFieldDecorator }}>
-      <Field name="pipelineName" title="Pipeline Name">
+      <Field name="pipelineName" title="Pipeline Name" skipValidation>
         <Input placeholder="Pipeline Name" />
       </Field>
       <Field name="algorithmName" title="Algorithm name">
@@ -57,14 +57,14 @@ const AlgorithmNode = ({ id }) => {
       <HorizontalRow>
         <Field name="batchOperation" title="Batch Operation" skipValidation>
           <Radio.Group>
-            <Radio.Button value="Never">indexed</Radio.Button>
-            <Radio.Button value="Always">cartesian</Radio.Button>
+            <Radio.Button value="indexed">indexed</Radio.Button>
+            <Radio.Button value="cartesian">cartesian</Radio.Button>
           </Radio.Group>
         </Field>
         <Field name="stateType" title="State Type" skipValidation>
           <Radio.Group>
-            <Radio.Button value="Never">stateless</Radio.Button>
-            <Radio.Button value="Always">stateful</Radio.Button>
+            <Radio.Button value="stateless">stateless</Radio.Button>
+            <Radio.Button value="stateful">stateful</Radio.Button>
           </Radio.Group>
         </Field>
       </HorizontalRow>

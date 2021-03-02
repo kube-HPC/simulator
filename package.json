@@ -43,6 +43,7 @@
     "axios": "^0.21.1",
     "chonky": "^2.0.5",
     "chonky-icon-fontawesome": "^2.0.5",
+    "clean-deep": "^3.4.0",
     "cron-parser": "^2.13.0",
     "cronstrue": "^1.86.0",
     "express": "^4.17.1",
