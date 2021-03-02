@@ -1,7 +1,8 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Input, InputNumber, Switch, Radio } from 'antd';
+import { Input, InputNumber, Switch, Radio, Select } from 'antd';
 import { Form as CommonForm } from 'components/common';
+import useAlgorithm from 'hooks/useAlgorithm';
 import Controller from './InputParseJson';
 import useWizardContext from '../../useWizardContext';
 import { Field as RawField, HorizontalRow } from './../FormUtils';
@@ -26,6 +27,13 @@ const AlgorithmNode = ({ id }) => {
   const {
     form: { getFieldDecorator },
   } = useWizardContext();
+  const { collection } = useAlgorithm();
+
+  const sortedAlgorithms = useMemo(
+    () => collection.map(item => item.name).sort(),
+    [collection]
+  );
+
   const rootId = `nodes.${id}`;
   return (
     <ctx.Provider value={{ rootId, getFieldDecorator }}>
@@ -33,7 +41,15 @@ const AlgorithmNode = ({ id }) => {
         <Input placeholder="Pipeline Name" />
       </Field>
       <Field name="algorithmName" title="Algorithm name">
-        <Input placeholder="Algorithm name" />
+        <Select disabled={collection.length === 0}>
+          {sortedAlgorithms.map(name => (
+            <Select.Option
+              key={`nodes.${id}.algorithmName.${name}`}
+              value={name}>
+              {name}
+            </Select.Option>
+          ))}
+        </Select>
       </Field>
       <Divider>Inputs</Divider>
       <Controller placeholder="Input" tooltip="Input" nodeIdx={id} />
