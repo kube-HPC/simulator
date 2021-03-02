@@ -43,6 +43,7 @@ const EditDrawer = () => {
         status={status}
         dataSourceId={dataSourceId}
         dataSourceName={dataSource?.name}
+        repositoryUrl={dataSource?.repositoryUrl}
       />
       {isReady ? (
         <Body goTo={goTo} mode={mode} snapshotName={snapshotName} />
