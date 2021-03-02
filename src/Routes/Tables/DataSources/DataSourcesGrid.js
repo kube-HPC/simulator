@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Button, Icon } from 'antd';
 import { useActions } from 'hooks';
 import { COLOR_LAYOUT, COLOR } from 'styles/colors';
-import useDataSources from 'hooks/useDataSources';
+import useDataSources from 'hooks/dataSources/useDataSources';
 import usePath from './usePath';
 import GridItem from './GridItem';
 

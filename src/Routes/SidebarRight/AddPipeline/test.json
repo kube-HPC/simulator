@@ -4,6 +4,12 @@
   "flowInput": {},
   "nodes": [
     {
+      "kind": "dataSource",
+      "datasource": {
+        "name": "flnm"
+      }
+    },
+    {
       "kind": "algorithm",
       "nodeName": "node-0",
       "pipelineName": "2",

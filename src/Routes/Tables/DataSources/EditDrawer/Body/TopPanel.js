@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Radio } from 'antd';
 import styled from 'styled-components';
+import { checkLatest } from 'components/dataSourceVersions';
 import VersionSelect from './VersionSelect';
-import { checkLatest } from './utils';
 
 /**
  * @typedef {import('reducers/dataSources/datasource').DataSource} DataSource

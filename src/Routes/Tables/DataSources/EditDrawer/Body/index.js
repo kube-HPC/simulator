@@ -7,15 +7,15 @@ import { postVersion } from 'actions/dataSources';
 import DownloadLink from 'components/DownloadLink';
 import client from 'client';
 import { useActions } from 'hooks';
+import useVersions from 'hooks/dataSources/useVersions';
 import { notification } from 'utils';
 import useActiveDataSource from '../../useActiveDataSource';
 import TopPanel from './TopPanel';
-import useVersions from '../useVersions';
 import EditMode from './EditMode';
 import ReadOnly from './ReadOnly';
 import QueryMode from './QueryMode';
 import PreviewSnapshot from './PreviewSnapshot';
-import useSnapshots from '../useSnapshots';
+import useActiveSnapshot from './useActiveSnapshot';
 
 /**
  * @typedef {import('./FileBrowser').RefContent} RefContent
@@ -34,7 +34,7 @@ const Body = ({ goTo, mode }) => {
     isReady: hasSnapshots,
     activeSnapshot,
     snapshotName,
-  } = useSnapshots({ dataSourceName: dataSource.name });
+  } = useActiveSnapshot({ dataSourceName: dataSource.name });
   const dispatch = useDispatch();
   const { deleteDataSource } = useActions();
   const handleDelete = useCallback(

@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectors } from 'reducers';
-import * as actions from './../actions/dataSources';
+import * as actions from '../../actions/dataSources';
 
 export default () => {
   const dataSources = useSelector(selectors.dataSources.all);

@@ -1,21 +1,31 @@
-export { default as useActions } from 'hooks/useActions';
-export { default as useAlgorithm } from 'hooks/useAlgorithm';
-export { default as useBoards } from 'hooks/useBoards';
-export { default as useConnectionStatus } from 'hooks/useConnectionStatus';
-export { default as useDrawer } from 'hooks/useDrawer';
-export { default as useDrawerEditor } from 'hooks/useDrawerEditor.react';
-export { default as useErrorLogs } from 'hooks/useErrorLogs';
-export { default as useStorage } from 'hooks/useStorage';
-export { default as useExperiments } from 'hooks/useExperiments';
-export { default as useFilters } from 'hooks/useFilters';
-export { default as useJobs } from 'hooks/useJobs';
-export { default as useLeftSidebar } from 'hooks/useLeftSidebar.react';
-export { default as useLocalStorage } from 'hooks/useLocalStorage';
-export { default as useLogs } from 'hooks/useLogs';
-export { default as useNodeInfo } from 'hooks/useNodeInfo';
-export { default as usePipeline } from 'hooks/usePipeline';
-export { default as useReadme } from 'hooks/useReadme';
-export { default as useSettings } from 'hooks/useSettings';
-export { default as useStats } from 'hooks/useStats';
-export { default as useTraceData } from 'hooks/useTraceData';
-export { default as useVersions } from 'hooks/useVersions';
+import useDataSourceSnapshots from './dataSources/useSnapshots';
+import useDataSources from './dataSources/useDataSources';
+import useDataSourceVersions from './dataSources/useVersions';
+
+export { default as useActions } from './useActions';
+export { default as useAlgorithm } from './useAlgorithm';
+export { default as useBoards } from './useBoards';
+export { default as useConnectionStatus } from './useConnectionStatus';
+export { default as useDrawer } from './useDrawer';
+export { default as useDrawerEditor } from './useDrawerEditor.react';
+export { default as useErrorLogs } from './useErrorLogs';
+export { default as useStorage } from './useStorage';
+export { default as useExperiments } from './useExperiments';
+export { default as useFilters } from './useFilters';
+export { default as useJobs } from './useJobs';
+export { default as useLeftSidebar } from './useLeftSidebar.react';
+export { default as useLocalStorage } from './useLocalStorage';
+export { default as useLogs } from './useLogs';
+export { default as useNodeInfo } from './useNodeInfo';
+export { default as usePipeline } from './usePipeline';
+export { default as useReadme } from './useReadme';
+export { default as useSettings } from './useSettings';
+export { default as useStats } from './useStats';
+export { default as useTraceData } from './useTraceData';
+export { default as useVersions } from './useVersions';
+
+export const dataSources = {
+  useSnapshots: useDataSourceSnapshots,
+  useVersions: useDataSourceVersions,
+  useDataSources,
+};

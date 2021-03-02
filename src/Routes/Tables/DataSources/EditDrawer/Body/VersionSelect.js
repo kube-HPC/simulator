@@ -4,10 +4,11 @@ import { Dropdown, Menu, Button, Icon, Tooltip } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import _ from 'lodash';
+import { VersionRow, checkLatest } from 'components/dataSourceVersions';
 import { copyToClipboard } from 'utils';
 import usePath from './../../usePath';
-import useSnapshots from '../useSnapshots';
-import { checkLatest } from './utils';
+import useActiveSnapshot from './useActiveSnapshot';
+
 /**
  * @typedef {import('./').ExtendedDataSource} ExtendedDataSource
  * @typedef {import('reducers/dataSources/datasource').DataSourceVersion} DataSourceVersion
@@ -21,38 +22,6 @@ const VersionDescription = styled.p`
   margin: 0;
   margin-left: 2ch;
 `;
-
-const VersionTag = styled.span`
-  float: right;
-  margin-left: 5ch;
-  font-weight: bold;
-`;
-
-/**
- * @param {{
- *   version: DataSourceVersion;
- *   isLatest: boolean;
- * }} props
- */
-const VersionRow = ({ title, isLatest, isSnapshot }) => (
-  <>
-    <span>{title}</span>
-    <VersionTag>
-      {
-        // \u00A0 is a space character to maintain the margins when the tag is empty
-        isSnapshot ? 'Snapshot' : isLatest ? 'Latest' : '\u00A0'
-      }
-    </VersionTag>
-  </>
-);
-VersionRow.propTypes = {
-  title: PropTypes.string.isRequired,
-  isLatest: PropTypes.bool.isRequired,
-  isSnapshot: PropTypes.bool,
-};
-VersionRow.defaultProps = {
-  isSnapshot: false,
-};
 
 /**
  * @param {{
@@ -190,7 +159,9 @@ const Versions = ({
       []
     );
   }, [snapshots, versionsCollection]);
-  const { snapshotName } = useSnapshots({ dataSourceName: dataSource.name });
+  const { snapshotName } = useActiveSnapshot({
+    dataSourceName: dataSource.name,
+  });
 
   const handleCopy = useCallback(() => {
     if (!snapshotName) copyToClipboard(dataSource.id);
