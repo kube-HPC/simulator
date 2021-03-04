@@ -123,7 +123,7 @@ GridItem.propTypes = {
     name: PropTypes.string.isRequired,
     versionDescription: PropTypes.string.isRequired,
     fileTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
-    avgFileSize: PropTypes.number.isRequired,
+    avgFileSize: PropTypes.number,
     totalSize: PropTypes.number.isRequired,
   }).isRequired,
   goTo: PropTypes.shape({

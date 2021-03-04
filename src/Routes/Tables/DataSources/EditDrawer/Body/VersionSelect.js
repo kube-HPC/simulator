@@ -116,12 +116,13 @@ Selector.propTypes = {
   activeSnapshot: PropTypes.shape({
     name: PropTypes.string,
   }),
-  hasMissingSnapshot: PropTypes.bool.isRequired,
+  hasMissingSnapshot: PropTypes.bool,
 };
 
 Selector.defaultProps = {
   entries: [],
   activeSnapshot: null,
+  hasMissingSnapshot: false,
 };
 
 const CopyButton = styled(Button)`

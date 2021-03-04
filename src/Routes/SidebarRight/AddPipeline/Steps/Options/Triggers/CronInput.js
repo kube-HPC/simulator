@@ -8,7 +8,7 @@ import addPipelineSchema from './../../../schema';
 const { Text } = Typography;
 const { errorMessage, fields } = addPipelineSchema.TRIGGERS.CRON;
 
-// TODO: consider removing the forward ref wrap
+// TODO: rebuild this component to not use forwardRef
 // eslint-disable-next-line
 const CronInput = forwardRef(({ getFieldDecorator }) => {
   const [readablePattern, setReadablePattern] = useState(undefined);
