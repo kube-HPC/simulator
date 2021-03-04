@@ -37,7 +37,7 @@ const formatNode = node => {
 const AddPipeline = () => {
   const [isEditorVisible, toggle] = useReducer(visible => !visible, false);
   const [editorState, setEditorState] = useState(addPipelineTemplate);
-  const [wizardStepIdx, setWizardStepIdx] = useState(1);
+  const [wizardStepIdx, setWizardStepIdx] = useState(0);
   const { addPipeline } = useActions();
   const handleSubmit = useCallback(
     formData => {

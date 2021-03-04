@@ -2,7 +2,7 @@ import React, { useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Modal, Popover, Typography, Tooltip } from 'antd';
 import { useActions } from 'hooks';
-import AlgorithmRun from './AlgorithmRun.react';
+import RunForm from './RunForm';
 import usePath from './usePath';
 
 const deleteConfirmAction = action => {
@@ -58,9 +58,12 @@ const AlgorithmActions = ({ record }) => {
     [deleteAlgorithm, name]
   );
 
-  const onRun = input => runAlgorithm({ name, input });
+  const onRun = useCallback(input => runAlgorithm({ name, input }), [
+    runAlgorithm,
+    name,
+  ]);
 
-  const popOverContent = <AlgorithmRun onRun={onRun} />;
+  const popOverContent = <RunForm onRun={onRun} />;
 
   const onMoreInfo = useCallback(
     () => goTo.overview({ nextAlgorithmId: name }),
@@ -85,7 +88,7 @@ const AlgorithmActions = ({ record }) => {
           content={popOverContent}
           getPopupContainer={setPopupContainer}
           mouseLeaveDelay={0.5}>
-          <Button icon="play-circle" onClick={onRun} />
+          <Button icon="play-circle" onClick={() => onRun()} />
         </Popover>
         <Tooltip title="edit algorithm">
           <Button icon="edit" onClick={onEdit} />

@@ -85,8 +85,11 @@ InputsCollection.propTypes = {
 const AlgorithmRun = ({ onRun, form }) => {
   const handleRun = useCallback(() => {
     const values = form.getFieldsValue();
-    if (values.inputs) {
-      onRun(values.inputs.filter(item => item !== undefined));
+    const _values = Object.values(values.inputs)?.filter(
+      item => item !== undefined
+    );
+    if (_values?.length > 0) {
+      onRun(_values);
     } else {
       onRun();
     }

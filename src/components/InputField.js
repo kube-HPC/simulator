@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Tooltip, Input, Icon } from 'antd';
 import { DeleteButton } from 'Routes/SidebarRight/AddPipeline/Steps/FormUtils';
@@ -18,31 +18,38 @@ const InputField = ({
   onChange,
   value,
   placeholder,
-}) => (
-  <Field>
-    <Tooltip title={isValid ? '' : tooltip}>
-      <Input
-        style={{
-          width: hasRemove ? '90%' : '100%',
-        }}
-        id={id}
-        onChange={onChange}
-        defaultValue={value}
-        value={value}
-        placeholder={placeholder}
-        addonAfter={
-          <Icon
-            style={{ color: !isValid && 'red', fontSize: '15px' }}
-            type={isValid ? 'check' : 'warning'}
-          />
-        }
-      />
-    </Tooltip>
-    {hasRemove && (
-      <DeleteButton type="close-circle" theme="filled" onClick={onRemove} />
-    )}
-  </Field>
-);
+}) => {
+  const inputRef = useRef();
+  useEffect(() => {
+    inputRef?.current?.focus();
+  }, []);
+  return (
+    <Field>
+      <Tooltip title={isValid ? '' : tooltip}>
+        <Input
+          style={{
+            width: hasRemove ? '90%' : '100%',
+          }}
+          ref={inputRef}
+          id={id}
+          onChange={onChange}
+          defaultValue={value}
+          value={value}
+          placeholder={placeholder}
+          addonAfter={
+            <Icon
+              style={{ color: !isValid && 'red', fontSize: '15px' }}
+              type={isValid ? 'check' : 'warning'}
+            />
+          }
+        />
+      </Tooltip>
+      {hasRemove && (
+        <DeleteButton type="close-circle" theme="filled" onClick={onRemove} />
+      )}
+    </Field>
+  );
+};
 
 InputField.propTypes = {
   hasRemove: PropTypes.bool.isRequired,
