@@ -14,7 +14,6 @@ import {
   addExperiment,
   deleteExperiment,
   experimentChange,
-  triggerExperimentLoading as triggerExperiment,
 } from 'actions/experiments.action';
 import { filterByType } from 'actions/filter.action';
 import { getCaching, getKubernetesLogsData } from 'actions/jobs.action';
@@ -68,7 +67,6 @@ const actions = {
   startBoard,
   stopPipeline,
   toggleViewType,
-  triggerExperiment,
   triggerUserGuide,
   updateStored,
 };

@@ -18,15 +18,14 @@ export const experiments = handleActions(
       currState,
       { payload: { experiments: nextExperiments } }
     ) {
-      return Immutable.merge(currState, { dataSource: nextExperiments });
+      return Immutable.merge(currState, {
+        dataSource: nextExperiments,
+        loading: false,
+      });
     },
     [actions.EXPERIMENT_CHANGE](currState, { value }) {
       const { value: lastValue } = currState;
-      return Immutable.merge(currState, { value, lastValue });
-    },
-    [actions.EXPERIMENT_TRIGGER_LOADING](currState) {
-      const { loading } = currState;
-      return Immutable.set(currState, `loading`, !loading);
+      return Immutable.merge(currState, { value, lastValue, loading: true });
     },
   },
   initial

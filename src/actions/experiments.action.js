@@ -5,10 +5,6 @@ export const experimentChange = value => ({
   value,
 });
 
-export const triggerExperimentLoading = () => ({
-  type: actions.EXPERIMENT_TRIGGER_LOADING,
-});
-
 export const addExperiment = ({ name, description }) => ({
   type: actions.REST_REQ_POST,
   payload: {
