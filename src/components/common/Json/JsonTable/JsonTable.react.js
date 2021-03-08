@@ -81,7 +81,7 @@ const JsonTable = ({ obj: mainObj, vertical = false, jobId, ...props }) => {
     obj: PropTypes.object,
     vertical: PropTypes.bool,
     isMargin: PropTypes.bool,
-    key: PropTypes.oneOf([PropTypes.string, PropTypes.number]),
+    key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     jobId: PropTypes.string,
   };
 
@@ -92,7 +92,7 @@ const JsonTable = ({ obj: mainObj, vertical = false, jobId, ...props }) => {
         {isPureObject(value) && isEmptyObject(value) ? (
           <Tag>{EMPTY}</Tag>
         ) : (
-          <RenderItemByValueType obj={value} key={key} jobId={jobId} />
+          RenderItemByValueType({ obj: value, key, jobId })
         )}
       </Descriptions.Item>
     ));
