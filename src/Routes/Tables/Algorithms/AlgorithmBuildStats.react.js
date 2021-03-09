@@ -16,7 +16,7 @@ const AlgorithmBuildStats = ({ builds }) => {
     <FlexBox justify="start" gutter={0} style={{ flexWrap: 'nowrap' }}>
       {Object.entries(statusCounter).map(([status, count]) => (
         <FlexBox.Item key={status}>
-          <Count status={status} count={count} />
+          <Count status={status} count={count} taskColorMap={false} />
         </FlexBox.Item>
       ))}
     </FlexBox>

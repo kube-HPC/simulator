@@ -1,11 +1,12 @@
 import React from 'react';
 import Moment from 'react-moment';
-import { Button, Progress, Tag } from 'antd';
+import { Button, Progress } from 'antd';
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import Ellipsis from 'components/common/Ellipsis.react';
 import humanizeDuration from 'humanize-duration';
 import { COLOR_TASK_STATUS } from 'styles/colors';
-import { sorter, toUpperCaseFirstLetter } from 'utils/string';
+import StatusTag from 'components/StatusTag';
+import { sorter } from 'utils/string';
 
 const BuildId = buildId => (
   <Ellipsis copyable type="secondary" text={buildId} />
@@ -14,17 +15,7 @@ const StartTime = startTime => (
   <Moment format="DD/MM/YY HH:mm:ss">{startTime}</Moment>
 );
 
-const RunningTime = (_, { startTime, endTime }) => (
-  <span>
-    {humanizeDuration(endTime ? endTime - startTime : Date.now() - startTime, {
-      maxDecimalPoints: 2,
-    })}
-  </span>
-);
-
-const Status = status => (
-  <Tag color={COLOR_TASK_STATUS[status]}>{toUpperCaseFirstLetter(status)}</Tag>
-);
+const Status = status => <StatusTag status={status}>{status}</StatusTag>;
 
 const RenderProgress = (_, record) => {
   const failed = record.status === PIPELINE_STATUS.FAILED;
@@ -45,7 +36,7 @@ const sortByStartTime = (a, b) => sorter(a.startTime, b.startTime);
 const sortByRunningTime = (a, b) => sorter(a.endTime, b.endTime);
 const sortByStatus = (a, b) => sorter(a.status, b.status);
 
-const getBuildsTableColumns = ({ cancelBuild, rerunBuild }) => [
+const getColumns = ({ cancelBuild, rerunBuild, currentTime }) => [
   {
     title: 'Build Id',
     dataIndex: 'buildId',
@@ -77,7 +68,16 @@ const getBuildsTableColumns = ({ cancelBuild, rerunBuild }) => [
     dataIndex: 'timeTook',
     key: 'timeTook',
     sorter: sortByRunningTime,
-    render: RunningTime,
+    render: (_, { startTime, endTime }) => (
+      <span>
+        {humanizeDuration(
+          endTime ? endTime - startTime : currentTime - startTime,
+          {
+            maxDecimalPoints: 2,
+          }
+        )}
+      </span>
+    ),
   },
   {
     title: 'Status',
@@ -97,8 +97,11 @@ const getBuildsTableColumns = ({ cancelBuild, rerunBuild }) => [
     title: 'Actions',
     key: 'stop',
     render: (_, record) => {
-      const failed = record.status === PIPELINE_STATUS.FAILED;
-      const showCancel = !failed && record.status !== PIPELINE_STATUS.COMPLETED;
+      const { status } = record;
+      const failed = status === PIPELINE_STATUS.FAILED;
+      const showCancel =
+        !failed &&
+        ![PIPELINE_STATUS.COMPLETED, PIPELINE_STATUS.STOPPED].includes(status);
       return showCancel ? (
         <Button
           type="danger"
@@ -118,4 +121,4 @@ const getBuildsTableColumns = ({ cancelBuild, rerunBuild }) => [
   },
 ];
 
-export default getBuildsTableColumns;
+export default getColumns;

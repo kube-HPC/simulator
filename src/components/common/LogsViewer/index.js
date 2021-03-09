@@ -114,6 +114,7 @@ Entry.propTypes = {
   style: PropTypes.object.isRequired,
 };
 
+const emptyRow = '-'.repeat(80);
 class BuildEntry extends React.PureComponent {
   onCopy = () => {
     const { log } = this.props;
@@ -125,19 +126,19 @@ class BuildEntry extends React.PureComponent {
   };
 
   render() {
-    const { index, log, style } = this.props;
+    const { idx, log, style } = this.props;
     return (
       <LogLine style={style}>
-        <LineNumber>{index + 1}</LineNumber>
+        <LineNumber>{idx + 1}</LineNumber>
         <Message>
-          <Ansi>{log}</Ansi>
+          <Ansi>{log === '' ? emptyRow : log}</Ansi>
         </Message>
       </LogLine>
     );
   }
 }
 BuildEntry.propTypes = {
-  index: PropTypes.number.isRequired,
+  idx: PropTypes.number.isRequired,
   log: PropTypes.string.isRequired,
   // eslint-disable-next-line
   style: PropTypes.object.isRequired,
@@ -153,7 +154,7 @@ const LogsViewer = ({ dataSource, isBuild }) => {
           <List
             width={width}
             height={height}
-            rowHeight={35}
+            rowHeight={isBuild ? 45 : 35}
             rowCount={dataSource.length}
             rowRenderer={({ key, index, style }) => {
               const log = dataSource[index];

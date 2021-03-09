@@ -54,8 +54,8 @@ BaseTag.defaultProps = {
 
 export default BaseTag;
 
-const Count = ({ status, count }) => (
-  <BaseTag key={status} status={status} taskColorMap>
+const Count = ({ status, count, taskColorMap }) => (
+  <BaseTag key={status} status={status} taskColorMap={taskColorMap}>
     {Number.isInteger(count) ? count : `No Stats`}
   </BaseTag>
 );
@@ -63,10 +63,12 @@ const Count = ({ status, count }) => (
 Count.propTypes = {
   status: PropTypes.string.isRequired,
   count: PropTypes.number,
+  taskColorMap: PropTypes.bool,
 };
 
 Count.defaultProps = {
   count: null,
+  taskColorMap: true,
 };
 
 export { Count };
