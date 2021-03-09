@@ -84,6 +84,7 @@ const ItemByValueType = ({
             parentId={`${parentId}.${ii}`}
             // eslint-disable-next-line
             key={`ItemByValueType:: name:${name} | parentId::${parentId} name:${name} idx:${ii}`}
+            jobId={jobId}
           />
         ))}
       </>
@@ -127,6 +128,7 @@ const JsonTable = ({ obj, vertical, jobId, ...props }) => {
                 vertical={vertical}
                 name={key}
                 parentId="root"
+                jobId={jobId}
               />
             )}
           </Descriptions.Item>
