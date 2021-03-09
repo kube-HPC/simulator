@@ -1,11 +1,9 @@
-import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
-import { Button, Tag, Tooltip } from 'antd';
-import { useSelector } from 'react-redux';
-import humanizeDuration from 'humanize-duration';
-import PropTypes from 'prop-types';
 import React from 'react';
+import PropTypes from 'prop-types';
+import { Button, Tag, Tooltip } from 'antd';
+import humanizeDuration from 'humanize-duration';
+import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import { toUpperCaseFirstLetter } from 'utils/string';
-import { selectors } from 'reducers';
 import StatusTag from 'components/StatusTag';
 
 const getStatusFilter = () =>
@@ -42,7 +40,7 @@ const Retries = retries => <Tag>{retries}</Tag>;
 const Results = ({ record, url }) => (
   <Tooltip placement="top" title="Download Results">
     <a
-      href={`${url}/storage/download/custom/${
+      href={`${url ? `${url}/` : ''}storage/download/custom/${
         record.output && record.output.path
       }?ext=${record.downloadFileExt || ''}`}
       download>
@@ -66,8 +64,6 @@ Results.propTypes = {
 Results.defaultProps = {
   url: null,
 };
-
-const ResultsColumn = (_, record, url) => <Results url={url} record={record} />;
 
 const getNodeIOColumns = url => [
   {
@@ -101,13 +97,8 @@ const getNodeIOColumns = url => [
     title: 'Results',
     dataIndex: 'results',
     key: 'results',
-    render: (value, record) => ResultsColumn(value, record, url),
+    render: (_, record) => <Results url={url} record={record} />,
   },
 ];
 
-const useNodeIOColumns = () => {
-  const { socketURL } = useSelector(selectors.connection);
-  return getNodeIOColumns(socketURL);
-};
-
-export default useNodeIOColumns;
+export default getNodeIOColumns;

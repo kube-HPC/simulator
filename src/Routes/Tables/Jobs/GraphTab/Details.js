@@ -7,7 +7,7 @@ import { FlexBox, JsonSwitch } from 'components/common';
 import { useActions, useLogs, useSettings } from 'hooks';
 import { selectors } from 'reducers';
 import { getTaskDetails } from '../graphUtils';
-import NodeInputOutput from '../NodeInputOutput';
+import NodeInputOutput from './NodeInputOutput';
 import NodeLogs from '../NodeLogs';
 import { Tabs, Pane } from './../styles';
 

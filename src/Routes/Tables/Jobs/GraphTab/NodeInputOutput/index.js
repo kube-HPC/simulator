@@ -1,12 +1,13 @@
-import { Table } from 'components';
-import { Card, JsonSwitch } from 'components/common';
 import PropTypes from 'prop-types';
 import React from 'react';
-import useNodeIOColumns from './useNodeIOColumns';
+import { useSelector } from 'react-redux';
+import { selectors } from 'reducers';
+import { Table } from 'components';
+import { Card, JsonSwitch } from 'components/common';
+import getColumns from './getColumns';
 
 const NodeInputOutput = ({ algorithm = {}, payload }) => {
-  const nodeIoColumns = useNodeIOColumns();
-
+  const { socketUrl } = useSelector(selectors.connection);
   const mapTask = (task, { downloadFileExt }) => ({
     index: task.batchIndex || 1,
     origInput: task.origInput,
@@ -34,7 +35,7 @@ const NodeInputOutput = ({ algorithm = {}, payload }) => {
   return (
     <Table
       rowKey={({ index }) => index}
-      columns={nodeIoColumns}
+      columns={getColumns(socketUrl)}
       dataSource={dataSource}
       expandedRowRender={record => (
         <Card>
