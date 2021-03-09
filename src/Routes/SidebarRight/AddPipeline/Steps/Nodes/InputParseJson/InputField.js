@@ -16,7 +16,6 @@ const InputField = ({ placeholder, tooltip, onRemove, idx, ...antFields }) => {
      * the extra invalid characters from the user making it unusable
      */
     if (isValid || value === undefined) {
-      // console.log('here!');
       if (Number.isNaN(value)) {
         setValue(value);
       } else {
@@ -38,7 +37,6 @@ const InputField = ({ placeholder, tooltip, onRemove, idx, ...antFields }) => {
     [antFields]
   );
 
-  console.log({ value });
   return (
     <RawInputField
       id={antFields.id}

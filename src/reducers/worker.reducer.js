@@ -5,7 +5,10 @@ import sum from 'hash-sum';
 
 /**
  * @typedef {{
- *   stats: any[];
+ *   stats: {
+ *     stats: { algorithmName: string; count: number }[];
+ *     total: number;
+ *   };
  *   collection: import('@reduxjs/toolkit').EntityState<{ algorithmName: string }>;
  * }} WorkersState
  * @typedef {{ workers: WorkersState }} State
@@ -38,7 +41,7 @@ export const selectors = {
   /** @param {State} state */
   stats: state => state.workers.stats,
   /** @param {State} state */
-  count: state => baseSelectors.selectIds(state.workers.collection).length,
+  count: state => state.workers.stats.total,
   /** @param {State} state */
   ids: state => baseSelectors.selectIds(state.workers.collection),
   /** @param {State} state */
