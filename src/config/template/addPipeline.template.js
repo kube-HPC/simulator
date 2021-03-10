@@ -4,7 +4,7 @@ export default {
   nodes: [
     {
       kind: 'algorithm',
-      nodeName: 'node-0',
+      nodeName: '',
       algorithmName: '',
       input: [],
     },

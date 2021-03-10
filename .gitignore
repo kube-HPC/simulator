@@ -21,3 +21,4 @@ npm-debug.log
 .editorconfig
 deployment
 .eslintcache
+**/*.mock.*
