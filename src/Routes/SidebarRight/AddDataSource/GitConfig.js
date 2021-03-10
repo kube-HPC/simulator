@@ -5,24 +5,14 @@ import { FormItem } from './styles';
 
 const GitConfig = ({ kind, getFieldDecorator }) => (
   <>
-    <FormItem label="Provider Endpoint">
-      {getFieldDecorator('gitEndpoint', {
-        rules: [
-          { required: true, message: 'Please provide a git host endpoint' },
-        ],
+    <FormItem label="Repository url">
+      {getFieldDecorator('repositoryUrl', {
+        rules: [{ required: true, message: 'Please provide a repository url' }],
       })(
         <Input
           prefix={<Icon type="apartment" />}
-          placeholder="Git endpoint"
+          placeholder="Repository url"
           required
-        />
-      )}
-    </FormItem>
-    <FormItem label="Organization">
-      {getFieldDecorator('gitOrganization')(
-        <Input
-          prefix={<Icon type="team" />}
-          placeholder="Organization Name (optional)"
         />
       )}
     </FormItem>

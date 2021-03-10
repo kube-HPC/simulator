@@ -57,8 +57,7 @@ const AddDataSource = ({ form }) => {
             ...(_gitKind === 'internal'
               ? {}
               : {
-                  organization: formObject.gitOrganization || null,
-                  endpoint: formObject.gitEndpoint,
+                  repositoryUrl: formObject.repositoryUrl,
                   token: formObject.gitToken,
                   tokenName:
                     _gitKind === 'gitlab' ? formObject.gitTokenTokenName : null,
