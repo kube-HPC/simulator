@@ -3,7 +3,6 @@ import {
   pipelineStatuses as PIPELINE,
   pipelineTypes as TYPES,
   taskStatuses as TASK,
-  verbosityLevels as LEVEL,
 } from '@hkube/consts';
 import { SERVICES } from '../const/services';
 
@@ -11,6 +10,7 @@ export const COLOR = {
   blue: `#307fe6`,
   blueDark: `#0065E5`,
   blueLight: `#45a9ec`,
+  blueExtraLight: `#a3d4f5`,
   cyan: `#98dbef`,
   darkGrey: `#807c7c`,
   green: `#63C13C`,
@@ -23,13 +23,16 @@ export const COLOR = {
   pink: `#e543b4`,
   pinkLight: `#FF5CA2`,
   purple: `#C657D0`,
+  darkPurple: '#4b1650',
   red: `#e74c3c`,
   redPale: `#FF8974`,
   transparentBlack: `#00000073`,
+  transparentWhite: `#ffffffdd`,
   transparentGrey: `#bfbfbf21`,
   turquoise: `#36DFB9`,
   white: `white`,
   yellow: `#eeda13`,
+  yellowPale: '#f6ed88',
   darkCharcoal: `#333333`,
 };
 
@@ -119,17 +122,24 @@ export const COLOR_LAYOUT = {
 };
 
 export const COLOR_TASK_STATUS = {
+  // ACTIVE
   [TASK.ACTIVE]: COLOR.blueLight,
+  [TASK.STORING]: COLOR.blueLight,
+  // IDLE
+  [TASK.PRESCHEDULE]: COLOR.lightGrey,
+  [TASK.CREATING]: COLOR.lightGrey,
+  [TASK.PENDING]: COLOR.lightGrey,
+  // SUCCEED
   [TASK.COMPLETED]: COLOR.greenLight,
-  [TASK.CRASHED]: COLOR.pink,
-  [TASK.CREATING]: COLOR.yellow,
-  [TASK.FAILED]: COLOR.red,
-  [TASK.PENDING]: COLOR.darkGrey,
-  [TASK.PRESCHEDULE]: COLOR.cyan,
-  [TASK.SKIPPED]: COLOR.orangeLight,
-  [TASK.STALLED]: COLOR.grey,
   [TASK.SUCCEED]: COLOR.greenLight,
+  // ERRORS
+  [TASK.CRASHED]: COLOR.redPale,
+  [TASK.FAILED]: COLOR.red,
+  // WARNING
+  [TASK.STALLED]: COLOR.orangeLight,
   [TASK.WARNING]: COLOR.orange,
+  // SKIPPED
+  [TASK.SKIPPED]: COLOR.white,
 };
 
 export const COLOR_PIPELINE_STATUS = {
@@ -137,22 +147,12 @@ export const COLOR_PIPELINE_STATUS = {
   [PIPELINE.COMPLETED]: COLOR.greenLight,
   [PIPELINE.CRASHED]: COLOR.redPale,
   [PIPELINE.FAILED]: COLOR.red,
-  [PIPELINE.PENDING]: COLOR.darkGrey,
-  [PIPELINE.RESUMED]: COLOR.blue,
-  [PIPELINE.RUNNING]: COLOR.orangeLight,
-  [PIPELINE.STALLED]: COLOR.grey,
+  [PIPELINE.PENDING]: COLOR.white,
+  [PIPELINE.RESUMED]: COLOR.blueLight,
+  [PIPELINE.RUNNING]: COLOR.blue,
+  [PIPELINE.STALLED]: COLOR.darkGrey,
   [PIPELINE.STOPPED]: COLOR.orange,
   [PIPELINE.PAUSED]: COLOR.yellow,
-};
-
-export const COLOR_LOGGER = {
-  [LEVEL.CRITICAL]: COLOR.orange,
-  [LEVEL.DEBUG]: COLOR.greenLight,
-  [LEVEL.ERROR]: COLOR.red,
-  [LEVEL.INFO]: COLOR.blueLight,
-  [LEVEL.SILLY]: COLOR.grey,
-  [LEVEL.TRACE]: COLOR.lightGrey,
-  [LEVEL.WARN]: COLOR.yellow,
 };
 
 export const COLOR_PRIORITY = {

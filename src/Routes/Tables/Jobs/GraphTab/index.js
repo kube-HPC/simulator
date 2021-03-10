@@ -1,12 +1,11 @@
-import { Empty } from 'antd';
-import { Fallback, FallbackComponent } from 'components/common';
-import { setOptions as defaultSetOptions } from 'config/template/graph-options.template';
-import { useNodeInfo, useSettings } from 'hooks';
-import PropTypes from 'prop-types';
 import React, { lazy, useEffect, useMemo, useReducer } from 'react';
+import PropTypes from 'prop-types';
+import { Empty } from 'antd';
 import styled from 'styled-components';
+import { Fallback, FallbackComponent } from 'components/common';
+import { useNodeInfo, useSettings } from 'hooks';
 import { COLOR_LAYOUT } from 'styles';
-import { formatEdge, formatNode } from 'utils';
+import { generateStyles, formatEdge, formatNode } from '../graphUtils';
 import Details from './Details';
 
 const Card = styled.div`
@@ -22,7 +21,7 @@ const GraphContainer = styled.div`
   max-height: 40vh;
   .vis-network {
     height: 100% !important;
-  };
+  }
   .vis-tooltip {
     position: absolute;
     visibility: hidden;
@@ -36,9 +35,9 @@ const GraphContainer = styled.div`
     -webkit-border-radius: 3px;
     border-radius: 3px;
     border: 1px solid #808074;
-    box-shadow: 3px 3px 10px rgba(0,0,0,.2);
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
     pointer-events: none;
-    z-index: 5
+    z-index: 5;
   }
 `;
 
@@ -50,12 +49,7 @@ const EmptyHeight = styled(Empty)`
   height: 136px;
 `;
 
-const GraphTab = ({
-  graph,
-  pipeline,
-  setOptions = defaultSetOptions,
-  isMinified = false,
-}) => {
+const GraphTab = ({ graph, pipeline }) => {
   const normalizedPipeline = useMemo(
     () =>
       pipeline.nodes.reduce(
@@ -69,21 +63,24 @@ const GraphTab = ({
       nodes: []
         .concat(graph.nodes)
         .filter(item => item)
-        .map(formatNode(normalizedPipeline)),
+        .map(formatNode(normalizedPipeline, pipeline.kind)),
       edges: []
         .concat(graph.edges)
         .filter(item => item)
         .map(formatEdge),
     }),
-    [graph, normalizedPipeline]
+    [graph, normalizedPipeline, pipeline]
   );
-
   const isValidGraph = adaptedGraph.nodes.length !== 0;
   const { node, events } = useNodeInfo({ graph, pipeline });
 
   const { graphDirection: direction } = useSettings();
 
   const [showGraph, toggleForceUpdate] = useReducer(p => !p, true);
+
+  const graphOptions = useMemo(() => generateStyles({ direction }), [
+    direction,
+  ]);
 
   useEffect(() => {
     toggleForceUpdate();
@@ -95,17 +92,16 @@ const GraphTab = ({
   return (
     <>
       <GraphContainer
-        isMinified={isMinified}
         style={{
-          pointerEvents: !isMinified ? `all` : `none`,
-          maxWidth: !isMinified ? `100%` : `40vw`,
+          pointerEvents: `all`,
+          maxWidth: `100%`,
         }}>
         {isValidGraph ? (
           showGraph ? (
             <Fallback>
               <Graph
                 graph={adaptedGraph}
-                options={setOptions({ direction })}
+                options={{ ...graphOptions, height: '100px' }}
                 events={events}
               />
             </Fallback>
@@ -116,7 +112,7 @@ const GraphTab = ({
           <EmptyHeight image={Empty.PRESENTED_IMAGE_SIMPLE} />
         )}
       </GraphContainer>
-      {!isMinified && isValidGraph && (
+      {isValidGraph && (
         <Card>
           <Details node={node} jobId={graph.jobId} />
         </Card>
@@ -126,14 +122,15 @@ const GraphTab = ({
 };
 
 GraphTab.propTypes = {
-  // TODO: detail the props
-  /* eslint-disable */
-  graph: PropTypes.object.isRequired,
-  pipeline: PropTypes.object,
-  setOptions: PropTypes.func,
-  isMinified: PropTypes.bool,
-  className: PropTypes.string,
-  /* eslint-enable */
+  pipeline: PropTypes.shape({
+    kind: PropTypes.string.isRequired,
+    nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  }).isRequired,
+  graph: PropTypes.shape({
+    nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
+    edges: PropTypes.arrayOf(PropTypes.object).isRequired,
+    jobId: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 const isSameGraph = (a, b) =>

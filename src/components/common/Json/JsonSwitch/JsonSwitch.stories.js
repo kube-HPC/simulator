@@ -1,8 +1,8 @@
 import React from 'react';
 import { SB_SECTIONS } from 'const';
-import JsonSwitch from './JsonSwitch.react';
-
 import { algorithmMock } from 'config/mock';
+import JsonSwitch from '.';
+
 
 export default {
   title: `${SB_SECTIONS.JSON}Json Switch`,

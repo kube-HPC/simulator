@@ -9,8 +9,8 @@ export default {
 };
 
 export const AddPipelineTemplate = () => (
-  <JsonView jsonObject={addPipelineTemplate} />
+  <JsonView.Card jsonObject={addPipelineTemplate} />
 );
 export const AddAlgorithmSchema = () => (
-  <JsonView jsonObject={addAlgorithmSchema} />
+  <JsonView.Card jsonObject={addAlgorithmSchema} />
 );

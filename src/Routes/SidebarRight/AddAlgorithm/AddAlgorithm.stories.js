@@ -13,7 +13,7 @@ const Container = () => {
   return (
     <>
       <Button onClick={toggle}>Open Drawer</Button>
-      <JsonView jsonObject={value} />
+      <JsonView.Card jsonObject={value} />
       <Drawer visible={isOpen} operation="Add Algorithm" onClose={toggle}>
         <AddAlgorithm onSubmit={({ payload }) => setValue(payload)} />
       </Drawer>

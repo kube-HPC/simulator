@@ -20,6 +20,7 @@ const Ellipsis = ({
     <Text
       onClick={() => (copyable ? copyToClipboard(text) : null)}
       style={{
+        cursor: 'pointer',
         whiteSpace: 'nowrap',
         textOverflow: ellipsis ? 'ellipsis' : 'visible',
         ...(length ? { width: `${length}ch` } : {}),

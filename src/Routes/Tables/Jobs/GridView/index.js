@@ -1,15 +1,16 @@
-import { Card, Ellipsis, FlexBox } from 'components/common';
-import { setCardOptions } from 'config/template/graph-options.template';
-import { useJobs } from 'hooks';
 import React, { memo } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { Card, Ellipsis, FlexBox } from 'components/common';
+import { useJobs } from 'hooks';
 import Graph from './Graph';
-import JobActions from '../JobActions.react';
-import JobStats from '../JobNodeStats.react';
-import JobProgress from '../JobProgress.react';
-import JobStatus from '../JobStatus.react';
-import JobTime from '../JobTime.react';
-import JobTypes from '../JobTypes.react';
+import { generateStyles } from '../graphUtils';
+import JobActions from '../JobActions';
+import NodeStats from '../NodeStats';
+import JobProgress from '../JobProgress';
+import JobStatus from '../JobStatus';
+import JobTime from '../JobTime';
+import JobTypes from '../JobTypes';
 
 const { Meta, Grid } = Card;
 
@@ -36,54 +37,94 @@ const GridItem = styled(Grid)`
   }
 `;
 
-const Container = styled(FlexBox.Auto)`
-  width: 80px;
+const StatusContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const Description = styled.section`
+  display: flex;
+`;
+
+const StatsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-left: 2ch;
 `;
 
 const LENGTH = 20;
 
-const toGrid = dataSource =>
-  dataSource.map(job => {
-    const { key, pipeline, status, results, graph } = job;
-    const { jobId, name, startTime, types } = pipeline;
+const GridItems = ({ jobs }) => (
+  <>
+    {jobs.map(job => {
+      const { key, pipeline, status, results, graph } = job;
+      const { name, startTime, types } = pipeline;
 
-    const title = (
-      <FlexBox.Auto>
-        <Ellipsis text={name} />
-        <JobTypes types={types} />
-      </FlexBox.Auto>
-    );
-
-    const description = (
-      <FlexBox.Auto>
-        <Container direction="column" gutter={[0, 10]}>
-          <JobProgress status={status} type="circle" width={40} />
-          <JobStatus status={status} />
-        </Container>
-        <FlexBox.Auto
-          justify="start"
-          align="top"
-          gutter={[0, 5]}
-          direction="column">
-          <Ellipsis text={jobId} copyable length={LENGTH} />
-          <JobTime results={results} startTime={startTime} length={LENGTH} />
-          <JobStats status={status} />
+      const title = (
+        <FlexBox.Auto>
+          <Ellipsis text={name} />
+          <JobTypes types={types} />
         </FlexBox.Auto>
-      </FlexBox.Auto>
-    );
+      );
 
-    return (
-      <GridItem key={key}>
-        <Meta title={title} description={description} />
-        <Graph graph={{ ...graph, jobId: key }} setOptions={setCardOptions} />
-        <ActionsHidden job={job} />
-      </GridItem>
-    );
-  });
+      const description = (
+        <Description>
+          <StatusContainer>
+            <JobProgress status={status} type="circle" width={40} />
+            <JobStatus
+              status={status}
+              style={{ marginRight: 0, marginTop: '1em' }}
+            />
+          </StatusContainer>
+          <StatsContainer>
+            <NodeStats status={status} />
+            <JobTime
+              results={results}
+              startTime={startTime}
+              length={LENGTH}
+              style={{ marginTop: 'auto' }}
+            />
+          </StatsContainer>
+        </Description>
+      );
+
+      return (
+        <GridItem key={key} style={{ textAlign: 'center' }}>
+          <Meta title={title} description={description} />
+          <Graph
+            graph={{ ...graph, jobId: key }}
+            setOptions={generateStyles}
+            pipeline={pipeline}
+          />
+          <ActionsHidden job={job} />
+        </GridItem>
+      );
+    })}
+  </>
+);
+
+GridItems.propTypes = {
+  jobs: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.string.isRequired,
+      pipeline: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        startTime: PropTypes.number.isRequired,
+        types: PropTypes.arrayOf(PropTypes.string).isRequired,
+      }).isRequired,
+      status: PropTypes.string.isRequired,
+      // eslint-disable-next-line
+      results: PropTypes.object,
+      // eslint-disable-next-line
+      graph: PropTypes.object.isRequired,
+    })
+  ).isRequired,
+};
 
 const JobsGridView = () => {
   const { dataSource } = useJobs();
-  return toGrid(dataSource);
+  return <GridItems jobs={dataSource} />;
 };
 
 export default memo(JobsGridView);

@@ -22,6 +22,15 @@ export type DataSourceEntry = {
   name: string;
   files: FileMeta[];
   versionDescription: string;
+  git: {
+    kind: 'github' | 'gitlab' | 'internal';
+    repositoryUrl: string;
+  };
+  storage: {
+    bucketName: string;
+    endpoint: string;
+    kind: 'S3' | 'internal';
+  };
 };
 
 export type DataSourceMeta = {

@@ -1,7 +1,7 @@
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import { Icon, Tag } from 'antd';
 import Ellipsis from 'components/common/Ellipsis.react';
-import StatusTag from 'components/common/StatusTag.react';
+import { Count as CountTag } from 'components/StatusTag';
 import React from 'react';
 import { COLOR_TASK_STATUS } from 'styles/colors';
 import { sorter, toUpperCaseFirstLetter } from 'utils/string';
@@ -73,22 +73,22 @@ const toNum = text => (text && parseInt(text, 10)) || 0;
 
 const Name = name => <Ellipsis text={name} />;
 const ReadyCount = text => (
-  <StatusTag status={PIPELINE_STATUS.PENDING} count={toNum(text)} />
+  <CountTag status={PIPELINE_STATUS.PENDING} count={toNum(text)} />
 );
 const WorkingCount = text => (
-  <StatusTag status={PIPELINE_STATUS.ACTIVE} count={toNum(text)} />
+  <CountTag status={PIPELINE_STATUS.ACTIVE} count={toNum(text)} />
 );
 const InitCount = text => (
-  <StatusTag status={PIPELINE_STATUS.INIT} count={toNum(text)} />
+  <CountTag status={PIPELINE_STATUS.INIT} count={toNum(text)} />
 );
 const ExitCount = text => (
-  <StatusTag status={PIPELINE_STATUS.STOPPED} count={toNum(text)} />
+  <CountTag status={PIPELINE_STATUS.STOPPED} count={toNum(text)} />
 );
 const HotCount = text => (
-  <StatusTag status={PIPELINE_STATUS.COMPLETED} count={toNum(text)} />
+  <CountTag status={PIPELINE_STATUS.COMPLETED} count={toNum(text)} />
 );
 const Count = text => (
-  <StatusTag status={PIPELINE_STATUS.COMPLETED} count={toNum(text)} />
+  <CountTag status={PIPELINE_STATUS.COMPLETED} count={toNum(text)} />
 );
 
 export const workersColumns = [

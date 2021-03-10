@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, Icon, Radio } from 'antd';
+import { Input, Icon } from 'antd';
 import { FormItem } from './styles';
 
 const StorageConfig = ({ getFieldDecorator }) => (
@@ -31,31 +31,22 @@ const StorageConfig = ({ getFieldDecorator }) => (
         />
       )}
     </FormItem>
-    <FormItem label="Bucket Name">
-      {getFieldDecorator('storageUseSSL', { initialValue: 'false' })(
-        <Radio.Group>
-          <Radio.Button value="false">no-ssl</Radio.Button>
-          <Radio.Button value="true">use-ssl</Radio.Button>
-        </Radio.Group>
-      )}
-    </FormItem>
-    <FormItem label="Access Key">
-      {getFieldDecorator('storageAccessKey', {
-        rules: [{ required: true, message: 'Please provide an S3 Access Key' }],
-      })(
-        <Input prefix={<Icon type="key" />} placeholder="Access Key" required />
-      )}
-    </FormItem>
-    {/* retain the original Form.item bottom-margin */}
-    <FormItem label="Access Key ID">
+    <FormItem label="Access key ID">
       {getFieldDecorator('storageAccessKeyId', {
         rules: [
-          { required: true, message: 'Please provide an S3 Access Key ID' },
+          { required: true, message: 'Please provide an S3 Access key ID' },
+        ],
+      })(<Input placeholder="Access key ID" required />)}
+    </FormItem>
+    <FormItem label="Secret access key">
+      {getFieldDecorator('storageSecretAccessKey', {
+        rules: [
+          { required: true, message: 'Please provide an S3 Secret access key' },
         ],
       })(
         <Input
-          // prefix={<Icon type="database" />}
-          placeholder="Access Key ID"
+          prefix={<Icon type="key" />}
+          placeholder="Secret access key"
           required
         />
       )}

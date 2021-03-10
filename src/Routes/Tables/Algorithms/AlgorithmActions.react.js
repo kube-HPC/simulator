@@ -1,8 +1,8 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Modal, Popover, Typography, Tooltip } from 'antd';
 import { useActions } from 'hooks';
-import AlgorithmRun from './AlgorithmRun.react';
+import RunForm from './RunForm';
 import usePath from './usePath';
 
 const deleteConfirmAction = action => {
@@ -25,8 +25,6 @@ const deleteConfirmAction = action => {
 };
 
 const title = `Run Algorithm`;
-const EMPTY_INITIAL = [];
-
 const overlayStyle = { width: `60ch` };
 
 const AlgorithmActions = ({ record }) => {
@@ -37,7 +35,7 @@ const AlgorithmActions = ({ record }) => {
   const { /* applyAlgorithm , */ deleteAlgorithm, runAlgorithm } = useActions();
   const container = useRef();
 
-  const [inputs, setInputs] = useState(EMPTY_INITIAL);
+  // const [inputs, setInputs] = useState(EMPTY_INITIAL);
 
   const setPopupContainer = useCallback(() => container.current, []);
 
@@ -60,9 +58,12 @@ const AlgorithmActions = ({ record }) => {
     [deleteAlgorithm, name]
   );
 
-  const onRun = () => runAlgorithm({ name, input: inputs });
+  const onRun = useCallback(input => runAlgorithm({ name, input }), [
+    runAlgorithm,
+    name,
+  ]);
 
-  const popOverContent = <AlgorithmRun onChange={setInputs} onRun={onRun} />;
+  const popOverContent = <RunForm onRun={onRun} />;
 
   const onMoreInfo = useCallback(
     () => goTo.overview({ nextAlgorithmId: name }),
@@ -87,7 +88,7 @@ const AlgorithmActions = ({ record }) => {
           content={popOverContent}
           getPopupContainer={setPopupContainer}
           mouseLeaveDelay={0.5}>
-          <Button icon="play-circle" onClick={onRun} />
+          <Button icon="play-circle" onClick={() => onRun()} />
         </Popover>
         <Tooltip title="edit algorithm">
           <Button icon="edit" onClick={onEdit} />

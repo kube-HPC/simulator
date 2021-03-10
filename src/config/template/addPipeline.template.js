@@ -3,6 +3,7 @@ export default {
   description: '',
   nodes: [
     {
+      kind: 'algorithm',
       nodeName: '',
       algorithmName: '',
       input: [],

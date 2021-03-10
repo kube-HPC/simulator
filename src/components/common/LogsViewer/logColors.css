@@ -1,0 +1,21 @@
+[data-log-level='info'] {
+  color: #45a9ec;
+}
+[data-log-level='critical'] {
+  color: #ec8c16;
+}
+[data-log-level='debug'] {
+  color: #87d068;
+}
+[data-log-level='error'] {
+  color: #e74c3c;
+}
+[data-log-level='silly'] {
+  color: #87d068;
+}
+[data-log-level='trace'] {
+  color: #e8e8e8;
+}
+[data-log-level='warn'] {
+  color: #eeda13;
+}

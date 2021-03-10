@@ -4,7 +4,7 @@ import { Drawer as AntDrawer } from 'antd';
 import styled from 'styled-components';
 import { BottomContent } from 'components/common';
 
-export { BottomPanel } from './styles';
+export { BottomPanel, RightAlignedButton, PanelButton } from './styles';
 export { default as DrawerEditorMD } from './DrawerEditor.react';
 
 const DrawerPadding = styled(AntDrawer)`
@@ -19,6 +19,8 @@ const DrawerPadding = styled(AntDrawer)`
     position: relative;
     flex-grow: 1;
     transition: opacity 100ms ease-in-out;
+    flex-direction: column;
+    display: ${attrs => (attrs['data-as-flex'] ? 'flex' : '')};
   }
 `;
 
@@ -44,6 +46,7 @@ const Drawer = ({
   title,
   wrapperStyle,
   style,
+  asFlex,
   ...props
 }) => {
   const [hasEntered, setEntered] = useState(false);
@@ -67,6 +70,7 @@ const Drawer = ({
       placement="right"
       closable={false}
       onClose={onClose}
+      data-as-flex={asFlex}
       bodyStyle={{
         ...style,
         opacity: hasEntered ? 1 : 0,
@@ -101,6 +105,7 @@ Drawer.propTypes = {
   isOpened: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onDidClose: PropTypes.func,
+  asFlex: PropTypes.bool,
 };
 
 Drawer.defaultProps = {
@@ -108,6 +113,7 @@ Drawer.defaultProps = {
   width: '50vw',
   onDidClose: undefined,
   title: '',
+  asFlex: false,
 };
 
 export default Drawer;

@@ -14,6 +14,7 @@ const algorithmsEntityAdapter = createEntityAdapter({
  *   collection: import('@reduxjs/toolkit').EntityState<Algorithm>;
  *   builds: { [algorithmNames: string]: any };
  *   sum: string;
+ *   buildsSum: string;
  * }} AlgorithmsState
  * @typedef {{ algorithms: AlgorithmsState }} State
  */
@@ -24,6 +25,7 @@ const algorithmsReducer = createSlice({
     collection: algorithmsEntityAdapter.getInitialState(),
     builds: [],
     sum: null,
+    buildsSum: null,
   },
   reducers: {},
   extraReducers: {
@@ -32,10 +34,12 @@ const algorithmsReducer = createSlice({
       const isValidPayload = Array.isArray(algorithms);
       if (!isValidPayload) return state;
       const nextSum = sum(algorithms);
-      return nextSum === state.sum
+      const nextBuildsSum = sum(algorithmBuilds);
+      return nextSum === state.sum && nextBuildsSum === state.buildsSum
         ? state
         : {
             sum: nextSum,
+            buildsSum: nextBuildsSum,
             collection: algorithmsEntityAdapter.setAll({}, algorithms),
             builds: groupBy('algorithmName', algorithmBuilds),
           };

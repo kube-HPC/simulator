@@ -4,13 +4,13 @@ import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import { Ellipsis } from 'components/common';
 import { USER_GUIDE } from 'const';
 import { sorter, toUpperCaseFirstLetter } from 'utils/string';
-import JobActions from './JobActions.react';
-import JobStats from './JobNodeStats.react';
-import JobPriority from './JobPriority.react';
-import JobProgress from './JobProgress.react';
-import JobStatus from './JobStatus.react';
-import JobTime from './JobTime.react';
-import JobTypes from './JobTypes.react';
+import JobActions from './JobActions';
+import NodeStats from './NodeStats';
+import JobPriority from './JobPriority';
+import JobProgress from './JobProgress';
+import JobStatus from './JobStatus';
+import JobTime from './JobTime';
+import JobTypes from './JobTypes';
 
 const Id = jobID => (
   <Ellipsis className={USER_GUIDE.TABLE_JOB.ID_SELECT} copyable text={jobID} />
@@ -20,7 +20,7 @@ const StartTime = (startTime, { results }) => (
   <JobTime startTime={startTime} results={results} />
 );
 const Status = status => <JobStatus status={status} />;
-const Stats = status => <JobStats status={status} />;
+const Stats = status => <NodeStats status={status} />;
 const Priority = priority => <JobPriority priority={priority} />;
 
 const Types = types => <JobTypes types={types} fullName={false} />;

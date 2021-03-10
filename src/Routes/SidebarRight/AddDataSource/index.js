@@ -47,10 +47,9 @@ const AddDataSource = ({ form }) => {
               ? {}
               : {
                   accessKeyId: formObject.storageAccessKeyId,
-                  secretAccessKey: formObject.storageAccessKey,
+                  secretAccessKey: formObject.storageSecretAccessKey,
                   endpoint: formObject.storageEndpoint,
                   bucketName: formObject.storageBucketName,
-                  useSSL: formObject.useSSL === 'true',
                 }),
           },
           git: {
@@ -58,8 +57,7 @@ const AddDataSource = ({ form }) => {
             ...(_gitKind === 'internal'
               ? {}
               : {
-                  organization: formObject.gitOrganization || null,
-                  endpoint: formObject.gitEndpoint,
+                  repositoryUrl: formObject.repositoryUrl,
                   token: formObject.gitToken,
                   tokenName:
                     _gitKind === 'gitlab' ? formObject.gitTokenTokenName : null,

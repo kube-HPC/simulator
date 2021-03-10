@@ -1,11 +1,10 @@
+import React, { lazy, useEffect, useMemo, useReducer } from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { Empty } from 'antd';
 import { Fallback, FallbackComponent } from 'components/common';
-import { setOptions as defaultSetOptions } from 'config/template/graph-options.template';
 import { useNodeInfo, useSettings } from 'hooks';
-import PropTypes from 'prop-types';
-import React, { lazy, useEffect, useMemo, useReducer } from 'react';
-import styled from 'styled-components';
-import { formatEdge, formatNode } from 'utils';
+import { generateStyles, formatEdge, formatNode } from '../graphUtils';
 
 const Graph = lazy(() => import(`react-graph-vis`));
 
@@ -22,19 +21,28 @@ const EmptyHeight = styled(Empty)`
   height: 136px; // TODO: get rid of this
 `;
 
-const JobGraph = ({ graph, pipeline, setOptions = defaultSetOptions }) => {
+const JobGraph = ({ graph, pipeline }) => {
+  const normalizedPipeline = useMemo(
+    () =>
+      pipeline.nodes.reduce(
+        (acc, item) => ({ ...acc, [item.nodeName]: item }),
+        {}
+      ),
+    [pipeline]
+  );
+
   const adaptedGraph = useMemo(
     () => ({
       nodes: []
         .concat(graph.nodes)
         .filter(item => item)
-        .map(formatNode),
+        .map(formatNode(normalizedPipeline, pipeline?.kind)),
       edges: []
         .concat(graph.edges)
         .filter(item => item)
         .map(formatEdge),
     }),
-    [graph]
+    [graph, pipeline, normalizedPipeline]
   );
 
   const isValidGraph = adaptedGraph.nodes.length !== 0;
@@ -51,6 +59,11 @@ const JobGraph = ({ graph, pipeline, setOptions = defaultSetOptions }) => {
     }, 500);
   }, [direction]);
 
+  const graphOptions = useMemo(
+    () => generateStyles({ direction, isMinified: true }),
+    [direction]
+  );
+
   return (
     <GraphContainer>
       {isValidGraph ? (
@@ -58,7 +71,7 @@ const JobGraph = ({ graph, pipeline, setOptions = defaultSetOptions }) => {
           <Fallback>
             <Graph
               graph={adaptedGraph}
-              options={setOptions({ direction })}
+              options={graphOptions}
               events={events}
             />
           </Fallback>
@@ -73,14 +86,15 @@ const JobGraph = ({ graph, pipeline, setOptions = defaultSetOptions }) => {
 };
 
 JobGraph.propTypes = {
-  // TODO: detail the props
-  /* eslint-disable */
-  graph: PropTypes.object.isRequired,
-  pipeline: PropTypes.object,
-  setOptions: PropTypes.func,
-  isMinified: PropTypes.bool,
-  className: PropTypes.string,
-  /* eslint-enable */
+  pipeline: PropTypes.shape({
+    kind: PropTypes.string.isRequired,
+    nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  }).isRequired,
+  graph: PropTypes.shape({
+    nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
+    edges: PropTypes.arrayOf(PropTypes.object).isRequired,
+    jobId: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 const isSameGraph = (a, b) =>

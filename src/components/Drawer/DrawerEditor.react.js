@@ -1,5 +1,9 @@
-import { Button } from 'antd';
-import { BottomContent, Card, JsonEditor } from 'components/common';
+import {
+  BottomPanel,
+  PanelButton,
+  RightAlignedButton,
+} from 'components/Drawer';
+import { Card, JsonEditor } from 'components/common';
 import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { notification } from 'utils';
@@ -26,23 +30,20 @@ const DrawerEditor = ({ value: initial, submitText, onSubmit }) => {
 
   return (
     <>
-      <Card>
+      <Card style={{ flex: 1 }}>
         <JsonEditor innerRef={editorRef} value={value} />
       </Card>
-      <BottomContent.Divider />
-      <BottomContent
-        extra={[
-          <Button key="clear" type="danger" onClick={onClear}>
-            Clear
-          </Button>,
-          <Button key="default" type="dashed" onClick={onDefault}>
-            Default
-          </Button>,
-        ]}>
-        <Button type="primary" onClick={onSubmitClick}>
+      <BottomPanel style={{ marginTop: '1em' }}>
+        <PanelButton type="danger" onClick={onClear}>
+          Clear
+        </PanelButton>
+        <PanelButton type="dashed" onClick={onDefault}>
+          Default
+        </PanelButton>
+        <RightAlignedButton type="primary" onClick={onSubmitClick}>
           {submitText}
-        </Button>
-      </BottomContent>
+        </RightAlignedButton>
+      </BottomPanel>
     </>
   );
 };

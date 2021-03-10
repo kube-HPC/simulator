@@ -3,7 +3,7 @@ import { Card, JsonSwitch, MdEditor, Tabs } from 'components/common';
 import { useReadme, useVersions } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useState } from 'react';
-import AlgorithmBuildsTable from './Builds/AlgorithmBuildsTable.react';
+import AlgorithmBuildsTable from './Builds';
 import { VersionsTable } from './Versions';
 import usePath, { OVERVIEW_TABS as TABS } from './../usePath';
 

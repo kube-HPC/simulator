@@ -27,8 +27,10 @@ const EditDrawer = () => {
       isOpened={isOn}
       onClose={setOff}
       onDidClose={goTo.root}
+      bodyStyle={{}}
       width={DRAWER_SIZE.PIPELINE_INFO}
-      title={pipeline?.name ?? pipelineId}>
+      title={pipeline?.name ?? pipelineId}
+      asFlex>
       {pipeline ? (
         <DrawerEditor
           value={value}
