@@ -8,8 +8,15 @@ import Moment from 'react-moment';
 import styled from 'styled-components';
 import { COLOR } from 'styles/colors';
 import { notification } from 'utils';
-import { List, AutoSizer } from 'react-virtualized';
+import {
+  List,
+  AutoSizer,
+  CellMeasurer,
+  CellMeasurerCache,
+} from 'react-virtualized';
 import './logColors.css';
+
+/** @typedef {import('react-virtualized').ListRowProps} ListRowProps */
 
 const ContainerBase = styled.div`
   padding: 0.5em 1ch;
@@ -75,6 +82,17 @@ const CopyButton = styled.button`
 
 const timeFormat = 'DD/MM/YY HH:mm:ss';
 
+/**
+ * @typedef {{
+ *   timestamp: number;
+ *   message: string;
+ *   level: string;
+ *   style: React.CSSProperties;
+ *   index: number;
+ * }} EntryProps
+ * @typedef {object} EntryState
+ * @extends React.PureComponent<EntryProps, EntryState>
+ */
 class Entry extends React.PureComponent {
   onCopy = () => {
     const { timestamp, message, level } = this.props;
@@ -88,10 +106,10 @@ class Entry extends React.PureComponent {
   };
 
   render() {
-    const { timestamp, message, level, idx, style } = this.props;
+    const { timestamp, message, level, index, style } = this.props;
     return (
       <LogLine style={style}>
-        <LineNumber>{idx + 1}</LineNumber>
+        <LineNumber>{index + 1}</LineNumber>
         <Timestamp format={timeFormat}>{timestamp}</Timestamp>
         <Message>{message}</Message>
         <Tooltip title="Copy log to clipboard" placement="left">
@@ -109,9 +127,10 @@ Entry.propTypes = {
   timestamp: PropTypes.number.isRequired,
   message: PropTypes.string.isRequired,
   level: PropTypes.string.isRequired,
-  idx: PropTypes.number.isRequired,
-  // eslint-disable-next-line
+  index: PropTypes.number.isRequired,
+  /* eslint-disable */
   style: PropTypes.object.isRequired,
+  /* eslint-enable */
 };
 
 const emptyRow = '-'.repeat(80);
@@ -126,10 +145,10 @@ class BuildEntry extends React.PureComponent {
   };
 
   render() {
-    const { idx, log, style } = this.props;
+    const { index, log, style } = this.props;
     return (
       <LogLine style={style}>
-        <LineNumber>{idx + 1}</LineNumber>
+        <LineNumber>{index + 1}</LineNumber>
         <Message>
           <Ansi>{log === '' ? emptyRow : log}</Ansi>
         </Message>
@@ -138,45 +157,87 @@ class BuildEntry extends React.PureComponent {
   }
 }
 BuildEntry.propTypes = {
-  idx: PropTypes.number.isRequired,
+  index: PropTypes.number.isRequired,
   log: PropTypes.string.isRequired,
   // eslint-disable-next-line
   style: PropTypes.object.isRequired,
 };
 
-const LogsViewer = ({ dataSource, isBuild }) => {
-  const [first] = dataSource;
-  const isValid = isBuild || (first && first.level);
-  return isValid ? (
-    <ValidContainer>
-      <AutoSizer>
-        {({ width, height }) => (
-          <List
-            width={width}
-            height={height}
-            rowHeight={isBuild ? 45 : 35}
-            rowCount={dataSource.length}
-            rowRenderer={({ key, index, style }) => {
-              const log = dataSource[index];
-              return isBuild ? (
-                <BuildEntry key={key} log={log} idx={index} style={style} />
-              ) : (
-                <Entry key={key} {...log} idx={index} style={style} />
-              );
-            }}
-          />
-        )}
-      </AutoSizer>
-    </ValidContainer>
-  ) : (
-    <InvalidContainer>
-      <Empty
-        description="No valid logs for current pod"
-        image={Empty.PRESENTED_IMAGE_SIMPLE}
-      />
-    </InvalidContainer>
-  );
-};
+/**
+ * @typedef {{
+ *   dataSource: object[];
+ *   isBuild: boolean;
+ * }} LogViewerProps
+ * @typedef {any} LogViewerState
+ * @extends React.PureComponent<LogViewerProps, LogViewerState>
+ */
+class LogsViewer extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    const { dataSource } = this.props;
+    this._cache = new CellMeasurerCache({
+      fixedWidth: true,
+      defaultHeight: 30,
+      keyMapper: index => dataSource[index],
+    });
+  }
+
+  render() {
+    const { isBuild, dataSource } = this.props;
+    const [first] = dataSource;
+    const isValid = isBuild || (first && first.level);
+    return isValid ? (
+      <ValidContainer>
+        <AutoSizer>
+          {({ width, height }) => (
+            <List
+              ref={element => {
+                this._list = element;
+              }}
+              deferredMeasurementCache={this._cache}
+              overscanRowCount={0}
+              rowHeight={this._cache.rowHeight}
+              width={width}
+              height={height}
+              rowCount={dataSource.length}
+              rowRenderer={({ parent, index, style, key }) => (
+                <CellMeasurer
+                  cache={this._cache}
+                  columnIndex={0}
+                  rowIndex={index}
+                  parent={parent}
+                  key={key}>
+                  {isBuild ? (
+                    <BuildEntry
+                      style={style}
+                      index={index}
+                      log={dataSource[index]}
+                      cache={this.cache}
+                    />
+                  ) : (
+                    <Entry
+                      style={style}
+                      index={index}
+                      {...dataSource[index]}
+                      cache={this.cache}
+                    />
+                  )}
+                </CellMeasurer>
+              )}
+            />
+          )}
+        </AutoSizer>
+      </ValidContainer>
+    ) : (
+      <InvalidContainer>
+        <Empty
+          description="No valid logs for current pod"
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+        />
+      </InvalidContainer>
+    );
+  }
+}
 
 LogsViewer.propTypes = {
   dataSource: PropTypes.arrayOf(PropTypes.object).isRequired,
