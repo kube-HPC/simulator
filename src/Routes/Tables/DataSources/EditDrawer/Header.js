@@ -18,19 +18,13 @@ const HeaderContainer = styled.header`
   align-items: center;
 `;
 
-const Header = ({
-  status,
-  dataSourceId,
-  dataSourceName,
-  repositoryUrl,
-  storage,
-}) => {
+const Header = ({ status, dataSourceId, dataSourceName, git, storage }) => {
   const onCopyRepositoryUrl = useCallback(() => {
-    copyToClipboard(repositoryUrl);
-  }, [repositoryUrl]);
+    copyToClipboard(git.repositoryUrl);
+  }, [git]);
 
   const onCopyBucket = useCallback(() => {
-    if (storage?.kind === 'S3')
+    if (storage.kind === 'S3')
       copyToClipboard(
         `endpoint: ${storage.endpoint}, bucketName: ${storage.bucketName}`
       );
@@ -42,14 +36,14 @@ const Header = ({
         {options[status] ? options[status](dataSourceId, dataSourceName) : ''}
       </h2>
       <ButtonContainer>
-        {storage?.kind === 'S3' ? (
+        {storage.kind === 'S3' ? (
           <Tooltip title="copy storage info" placement="left">
             <Button onClick={onCopyBucket} type="dashed">
               S3
             </Button>
           </Tooltip>
         ) : null}
-        {repositoryUrl ? (
+        {git.repositoryUrl ? (
           <Tooltip title="copy repository url" placement="left">
             <Button
               style={{ marginLeft: '0.5ch' }}
@@ -68,18 +62,18 @@ Header.propTypes = {
   status: PropTypes.string.isRequired,
   dataSourceId: PropTypes.string.isRequired,
   dataSourceName: PropTypes.string,
-  repositoryUrl: PropTypes.string,
+  git: PropTypes.shape({
+    repositoryUrl: PropTypes.string,
+  }).isRequired,
   storage: PropTypes.shape({
     kind: PropTypes.oneOf(['S3', 'internal']).isRequired,
     bucketName: PropTypes.string.isRequired,
     endpoint: PropTypes.string.isRequired,
-  }),
+  }).isRequired,
 };
 
 Header.defaultProps = {
   dataSourceName: '',
-  repositoryUrl: null,
-  storage: null,
 };
 
 export default Header;

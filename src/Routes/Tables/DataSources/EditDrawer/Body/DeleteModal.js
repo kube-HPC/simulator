@@ -20,12 +20,23 @@ const Bolded = styled.em`
   font-weight: bolder;
 `;
 
+const BoldedBlock = styled(Bolded)`
+  display: block;
+`;
+
 const WarningText = styled.span`
   display: block;
   color: ${COLOR.red};
 `;
 
-const DeleteModal = ({ onAccept, onClose, isVisible, dataSource }) => {
+const DeleteModal = ({
+  onAccept,
+  onClose,
+  isVisible,
+  dataSource,
+  isInternalStorage,
+  isInternalGit,
+}) => {
   const [inputValue, setInputValue] = useState('');
   const handleChange = useCallback(e => setInputValue(e.target.value), [
     setInputValue,
@@ -45,6 +56,16 @@ const DeleteModal = ({ onAccept, onClose, isVisible, dataSource }) => {
       <p>
         Are you sure you would like to delete datasource
         <span style={{ fontWeight: 'bold' }}>{` ${dataSource.name}?`}</span>
+        {isInternalGit ? null : (
+          <BoldedBlock>
+            - the git repository is not internal and will not be deleted
+          </BoldedBlock>
+        )}
+        {isInternalStorage ? null : (
+          <BoldedBlock>
+            - the storage is not internal and will not be deleted
+          </BoldedBlock>
+        )}
         <WarningText>
           ** <Bolded>Please note:</Bolded> deleting a datasource is{' '}
           <Bolded>irreversible!</Bolded> **
@@ -74,5 +95,7 @@ DeleteModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   isVisible: PropTypes.bool.isRequired,
   dataSource: PropTypes.shape({ name: PropTypes.string.isRequired }).isRequired,
+  isInternalStorage: PropTypes.bool.isRequired,
+  isInternalGit: PropTypes.bool.isRequired,
 };
 export default DeleteModal;

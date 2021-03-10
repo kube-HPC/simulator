@@ -178,6 +178,8 @@ const EditMode = ({
         onClose={hideModal}
         dataSource={dataSource}
         onAccept={onDelete}
+        isInternalGit={dataSource.git.kind === 'internal'}
+        isInternalStorage={dataSource.storage.kind === 'internal'}
       />
     </Form>
   );
@@ -188,6 +190,12 @@ EditMode.propTypes = {
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     files: PropTypes.arrayOf(PropTypes.object).isRequired,
+    git: PropTypes.shape({
+      kind: PropTypes.string.isRequired,
+    }).isRequired,
+    storage: PropTypes.shape({
+      kind: PropTypes.string.isRequired,
+    }).isRequired,
   }).isRequired,
   onCreateVersion: PropTypes.func.isRequired,
   form: PropTypes.shape({
