@@ -43,7 +43,7 @@ const Header = ({ status, dataSourceId, dataSourceName, git, storage }) => {
             </Button>
           </Tooltip>
         ) : null}
-        {git.repositoryUrl ? (
+        {git.kind !== 'internal' ? (
           <Tooltip title="copy repository url" placement="left">
             <Button
               style={{ marginLeft: '0.5ch' }}
@@ -63,7 +63,8 @@ Header.propTypes = {
   dataSourceId: PropTypes.string.isRequired,
   dataSourceName: PropTypes.string,
   git: PropTypes.shape({
-    repositoryUrl: PropTypes.string,
+    repositoryUrl: PropTypes.string.isRequired,
+    kind: PropTypes.string.isRequired,
   }).isRequired,
   storage: PropTypes.shape({
     kind: PropTypes.oneOf(['S3', 'internal']).isRequired,
