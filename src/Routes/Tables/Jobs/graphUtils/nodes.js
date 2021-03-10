@@ -113,7 +113,9 @@ const splitBatchToGroups = (
   return {
     nodeName,
     algorithmName,
-    extra: { batch: isStreaming ? `${_completed}/${total}` : total },
+    extra: {
+      batch: isStreaming ? `${_completed}/${total}` : `${completed}/${total}`,
+    },
     group,
     level,
   };
