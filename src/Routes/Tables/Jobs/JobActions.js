@@ -45,9 +45,7 @@ const JobActions = ({ job }) => {
     key,
   ]);
 
-  const canPause = useMemo(() => {
-    isActive(status);
-  }, [status]);
+  const canPause = useMemo(() => isActive(status), [status]);
 
   const onPause = useCallback(() => {
     canPause ? pausePipeline(key) : resumePipeline(key);
