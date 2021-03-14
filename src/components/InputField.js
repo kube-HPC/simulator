@@ -24,11 +24,11 @@ const InputField = ({
     inputRef?.current?.focus();
   }, []);
   return (
-    <Field>
+    <Field style={{ marginTop: '0.5em' }}>
       <Tooltip title={isValid ? '' : tooltip}>
         <Input
           style={{
-            width: hasRemove ? '90%' : '100%',
+            width: hasRemove ? '60ch' : '100%',
           }}
           ref={inputRef}
           id={id}
@@ -45,7 +45,11 @@ const InputField = ({
         />
       </Tooltip>
       {hasRemove && (
-        <DeleteButton type="close-circle" theme="filled" onClick={onRemove} />
+        <DeleteButton
+          type="minus-circle"
+          style={{ color: '#999' }}
+          onClick={onRemove}
+        />
       )}
     </Field>
   );

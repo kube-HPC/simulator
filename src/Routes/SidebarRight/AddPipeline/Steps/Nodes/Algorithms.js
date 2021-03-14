@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
-// import { Input, InputNumber, Switch, Radio, Select } from 'antd';
-import { InputNumber, Switch, Radio, Select } from 'antd';
+import { InputNumber, Switch, Radio, AutoComplete } from 'antd';
 import { Form as CommonForm } from 'components/common';
 import useAlgorithm from 'hooks/useAlgorithm';
 import Controller from './InputParseJson';
@@ -41,15 +40,13 @@ const AlgorithmNode = ({ id }) => {
   return (
     <ctx.Provider value={{ rootId, getFieldDecorator }}>
       <Field name="algorithmName" title="Algorithm name">
-        <Select disabled={collection.length === 0}>
-          {sortedAlgorithms.map(name => (
-            <Select.Option
-              key={`nodes.${id}.algorithmName.${name}`}
-              value={name}>
-              {name}
-            </Select.Option>
-          ))}
-        </Select>
+        <AutoComplete
+          disabled={collection.length === 0}
+          dataSource={sortedAlgorithms}
+          filterOption={(inputValue, option) =>
+            option.props.children.indexOf(inputValue) !== -1
+          }
+        />
       </Field>
       <Divider>Inputs</Divider>
       <Controller placeholder="Input" tooltip="Input" nodeIdx={id} />
@@ -85,20 +82,20 @@ const AlgorithmNode = ({ id }) => {
               </Radio.Group>
             </Field>
           )}
-        </HorizontalRow>
-        <HorizontalRow>
           <Field title="Node TTL" name="ttl" skipValidation small>
             <InputNumber min={0} />
           </Field>
+        </HorizontalRow>
+        <HorizontalRow>
           <Field
-            title="Include In Result"
+            title="Include In Pipeline Results"
             name="includeInResult"
             skipValidation
             small>
             <Switch />
           </Field>
           <Field
-            title="Use tensorboard"
+            title="Create A Tensorboard"
             name="metrics.tensorboard"
             skipValidation
             small>
