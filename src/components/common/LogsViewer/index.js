@@ -62,7 +62,7 @@ const Tag = styled.div`
 
 const LogLine = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   padding: 0.25em 1ch;
   :hover {
     background: #ffffff33;
@@ -84,9 +84,11 @@ const timeFormat = 'DD/MM/YY HH:mm:ss';
 
 /**
  * @typedef {{
- *   timestamp: number;
- *   message: string;
- *   level: string;
+ *   log: {
+ *     timestamp: number;
+ *     message: string;
+ *     level: string;
+ *   };
  *   style: React.CSSProperties;
  *   index: number;
  * }} EntryProps
@@ -95,7 +97,9 @@ const timeFormat = 'DD/MM/YY HH:mm:ss';
  */
 class Entry extends React.PureComponent {
   onCopy = () => {
-    const { timestamp, message, level } = this.props;
+    const {
+      log: { timestamp, message, level },
+    } = this.props;
     window.navigator.clipboard.writeText(
       `${moment.unix(timestamp).format(timeFormat)} ${message} Level:${level}`
     );
@@ -106,7 +110,12 @@ class Entry extends React.PureComponent {
   };
 
   render() {
-    const { timestamp, message, level, index, style } = this.props;
+    const {
+      log: { timestamp, message, level },
+      index,
+      style,
+    } = this.props;
+
     return (
       <LogLine style={style}>
         <LineNumber>{index + 1}</LineNumber>
@@ -124,13 +133,14 @@ class Entry extends React.PureComponent {
 }
 
 Entry.propTypes = {
-  timestamp: PropTypes.number.isRequired,
-  message: PropTypes.string.isRequired,
-  level: PropTypes.string.isRequired,
+  log: PropTypes.shape({
+    timestamp: PropTypes.number.isRequired,
+    message: PropTypes.string.isRequired,
+    level: PropTypes.string.isRequired,
+  }).isRequired,
   index: PropTypes.number.isRequired,
-  /* eslint-disable */
+  // eslint-disable-next-line
   style: PropTypes.object.isRequired,
-  /* eslint-enable */
 };
 
 const emptyRow = '-'.repeat(80);
@@ -167,6 +177,7 @@ BuildEntry.propTypes = {
  * @typedef {{
  *   dataSource: object[];
  *   isBuild: boolean;
+ *   id: string;
  * }} LogViewerProps
  * @typedef {any} LogViewerState
  * @extends React.PureComponent<LogViewerProps, LogViewerState>
@@ -174,18 +185,44 @@ BuildEntry.propTypes = {
 class LogsViewer extends React.PureComponent {
   constructor(props) {
     super(props);
-    const { dataSource } = this.props;
-    this._cache = new CellMeasurerCache({
+
+    this.renderRow = this.renderRow.bind(this);
+    this.cache = new CellMeasurerCache({
       fixedWidth: true,
       defaultHeight: 30,
-      keyMapper: index => dataSource[index],
     });
   }
+
+  getSnapshotBeforeUpdate(prevProps) {
+    const { id } = this.props;
+    if (prevProps.id !== id) {
+      this.cache.clearAll();
+    }
+  }
+
+  renderRow = ({ index, parent, style, key }) => {
+    const { isBuild, dataSource } = this.props;
+    return (
+      <CellMeasurer
+        cache={this.cache}
+        columnIndex={0}
+        rowIndex={index}
+        parent={parent}
+        key={key}>
+        {isBuild ? (
+          <BuildEntry style={style} index={index} log={dataSource[index]} />
+        ) : (
+          <Entry style={style} index={index} log={dataSource[index]} />
+        )}
+      </CellMeasurer>
+    );
+  };
 
   render() {
     const { isBuild, dataSource } = this.props;
     const [first] = dataSource;
     const isValid = isBuild || (first && first.level);
+
     return isValid ? (
       <ValidContainer>
         <AutoSizer>
@@ -194,36 +231,13 @@ class LogsViewer extends React.PureComponent {
               ref={element => {
                 this._list = element;
               }}
-              deferredMeasurementCache={this._cache}
+              deferredMeasurementCache={this.cache}
               overscanRowCount={0}
-              rowHeight={this._cache.rowHeight}
+              rowHeight={this.cache.rowHeight}
               width={width}
               height={height}
               rowCount={dataSource.length}
-              rowRenderer={({ parent, index, style, key }) => (
-                <CellMeasurer
-                  cache={this._cache}
-                  columnIndex={0}
-                  rowIndex={index}
-                  parent={parent}
-                  key={key}>
-                  {isBuild ? (
-                    <BuildEntry
-                      style={style}
-                      index={index}
-                      log={dataSource[index]}
-                      cache={this.cache}
-                    />
-                  ) : (
-                    <Entry
-                      style={style}
-                      index={index}
-                      {...dataSource[index]}
-                      cache={this.cache}
-                    />
-                  )}
-                </CellMeasurer>
-              )}
+              rowRenderer={this.renderRow}
             />
           )}
         </AutoSizer>
@@ -242,6 +256,7 @@ class LogsViewer extends React.PureComponent {
 LogsViewer.propTypes = {
   dataSource: PropTypes.arrayOf(PropTypes.object).isRequired,
   isBuild: PropTypes.bool,
+  id: PropTypes.string.isRequired,
 };
 LogsViewer.defaultProps = {
   isBuild: false,

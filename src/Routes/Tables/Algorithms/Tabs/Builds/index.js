@@ -39,6 +39,7 @@ const Builds = ({ builds }) => {
               <CardOverflow bodyStyle={{ height: '20em' }}>
                 {record.result && record.result.data ? (
                   <LogsViewer
+                    id={record.buildId}
                     dataSource={record.result.data.split('\n')}
                     isBuild
                   />
