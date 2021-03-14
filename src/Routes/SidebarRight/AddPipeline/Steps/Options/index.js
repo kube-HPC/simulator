@@ -36,10 +36,16 @@ const Options = ({ style }) => {
       <Form.Divider>Triggers</Form.Divider>
       <Triggers getFieldDecorator={getFieldDecorator} />
       <Form.Divider>Advanced Options</Form.Divider>
-      <Form.Item label={TOLERANCE.label}>
+      <Form.Item
+        label={TOLERANCE.label}
+        labelCol={{}}
+        wrapperCol={{ style: { whiteSpace: 'nowrap' } }}>
         {getFieldDecorator(TOLERANCE.field)(<SliderNumber />)}
       </Form.Item>
-      <Form.Item label={CONCURRENT.amount.label}>
+      <Form.Item
+        label={CONCURRENT.amount.label}
+        labelCol={{}}
+        wrapperCol={{ style: { whiteSpace: 'nowrap' } }}>
         <FlexBox>
           <Grow>
             {getFieldDecorator(CONCURRENT.amount.field)(
@@ -69,7 +75,7 @@ const Options = ({ style }) => {
         )}
       </Form.Item>
       <Form.Item label={PRIORITY.label}>
-        {getFieldDecorator(PRIORITY.field)(<InputNumber />)}
+        {getFieldDecorator(PRIORITY.field)(<InputNumber max={5} min={1} />)}
       </Form.Item>
     </div>
   );

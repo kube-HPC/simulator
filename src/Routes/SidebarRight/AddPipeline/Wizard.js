@@ -113,6 +113,8 @@ const Wizard = ({
           style={{ flex: 1, overflow: 'auto' }}
         />
         <Form
+          layout="horizontal"
+          hideRequiredMark
           onSubmit={handleSubmit}
           style={{ overflow: 'auto', padding: '0 2ch' }}>
           <context.Provider value={{ form, initialState }}>

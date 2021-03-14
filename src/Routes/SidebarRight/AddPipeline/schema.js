@@ -98,7 +98,7 @@ const addPipelineSchema = {
       types: ['info', 'trace', 'debug', 'warn', 'error', 'critical'],
     },
     TTL: {
-      label: 'TTL',
+      label: 'Pipeline TTL',
       field: 'options.ttl',
     },
     // Note that Priority on the top level and not under options.

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input } from 'antd';
+import { Input, Radio } from 'antd';
 import { Form } from 'components/common';
 import schema from './../../schema';
 import FlowInput from './FlowInput';
@@ -21,6 +21,17 @@ const Initial = ({ style }) => {
       <Form.Item label={DESCRIPTION.label}>
         {getFieldDecorator(DESCRIPTION.field)(
           <Input placeholder={DESCRIPTION.placeholder} />
+        )}
+      </Form.Item>
+      <Form.Item label="Pipeline Kind">
+        {getFieldDecorator('pipelineKind', {
+          rules: [{ required: true }],
+          initialValue: 'batch',
+        })(
+          <Radio.Group>
+            <Radio.Button value="batch">Batch</Radio.Button>
+            <Radio.Button value="streaming">Streaming</Radio.Button>
+          </Radio.Group>
         )}
       </Form.Item>
       <Form.Item label={FLOW_INPUT.label}>

@@ -77,7 +77,13 @@ const Nodes = ({ style }) => {
               title="Node Name"
               name="nodeName"
               rootId={`nodes.${id}`}
-              getFieldDecorator={getFieldDecorator}>
+              getFieldDecorator={getFieldDecorator}
+              extraRules={[
+                {
+                  max: 32,
+                  message: 'Node Name has to be shorter than 32 characters',
+                },
+              ]}>
               <Input placeholder="Node Name" />
             </Field>
             <Node id={id} kind={getFieldValue(`nodes.${id}.kind`)} />
