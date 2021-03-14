@@ -43,8 +43,8 @@ const EditDrawer = () => {
         status={status}
         dataSourceId={dataSourceId}
         dataSourceName={dataSource?.name}
-        git={dataSource.git}
-        storage={dataSource.storage}
+        git={dataSource?.git}
+        storage={dataSource?.storage}
       />
       {isReady ? (
         <Body goTo={goTo} mode={mode} snapshotName={snapshotName} />

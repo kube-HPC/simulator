@@ -65,15 +65,24 @@ Header.propTypes = {
   git: PropTypes.shape({
     repositoryUrl: PropTypes.string.isRequired,
     kind: PropTypes.string.isRequired,
-  }).isRequired,
+  }),
   storage: PropTypes.shape({
     kind: PropTypes.oneOf(['S3', 'internal']).isRequired,
     bucketName: PropTypes.string.isRequired,
     endpoint: PropTypes.string.isRequired,
-  }).isRequired,
+  }),
 };
 
 Header.defaultProps = {
+  git: {
+    repositoryUrl: null,
+    kind: null,
+  },
+  storage: {
+    kind: null,
+    bucketName: null,
+    endpoint: null,
+  },
   dataSourceName: '',
 };
 
