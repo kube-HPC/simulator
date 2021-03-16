@@ -54,10 +54,6 @@ export default ({ direction, isMinified = false }) => ({
       nodeSpacing: 200,
     },
   },
-  interaction: {
-    hover: false,
-  },
-  // autoResize: true,
   nodes: {
     shape: 'box',
     color: {
@@ -86,8 +82,6 @@ export default ({ direction, isMinified = false }) => ({
     shadow: false,
   },
   edges: {
-    width: 2,
-    hoverWidth: 3,
     selectionWidth: 2,
     color: {
       highlight: COLOR.yellowPale,
@@ -97,9 +91,6 @@ export default ({ direction, isMinified = false }) => ({
       to: {
         scaleFactor: 0.75,
       },
-    },
-    interaction: {
-      hover: true,
     },
     smooth: {
       enabled: true,
