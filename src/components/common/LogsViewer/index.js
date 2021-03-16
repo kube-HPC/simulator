@@ -9,7 +9,7 @@ import styled from 'styled-components';
 import { COLOR } from 'styles/colors';
 import { notification } from 'utils';
 import {
-  List,
+  List as VirtualizedList,
   AutoSizer,
   CellMeasurer,
   CellMeasurerCache,
@@ -17,6 +17,13 @@ import {
 import './logColors.css';
 
 /** @typedef {import('react-virtualized').ListRowProps} ListRowProps */
+
+const List = styled(VirtualizedList)`
+  &:focus {
+    outline: none;
+    border: none;
+  }
+`;
 
 const ContainerBase = styled.div`
   padding: 0.5em 1ch;
@@ -46,6 +53,7 @@ const LineNumber = styled.span`
   display: inline-block;
   color: gray;
   min-width: 3ch;
+  align-self: flex-start;
 `;
 
 const Timestamp = styled(Moment)`
@@ -62,7 +70,7 @@ const Tag = styled.div`
 
 const LogLine = styled.div`
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   padding: 0.25em 1ch;
   :hover {
     background: #ffffff33;
@@ -92,8 +100,9 @@ const timeFormat = 'DD/MM/YY HH:mm:ss';
  *   style: React.CSSProperties;
  *   index: number;
  * }} EntryProps
- * @typedef {object} EntryState
+ *
  * @extends React.PureComponent<EntryProps, EntryState>
+ * @typedef {object} EntryState
  */
 class Entry extends React.PureComponent {
   onCopy = () => {
@@ -179,8 +188,9 @@ BuildEntry.propTypes = {
  *   isBuild: boolean;
  *   id: string;
  * }} LogViewerProps
- * @typedef {any} LogViewerState
+ *
  * @extends React.PureComponent<LogViewerProps, LogViewerState>
+ * @typedef {any} LogViewerState
  */
 class LogsViewer extends React.PureComponent {
   constructor(props) {
@@ -193,11 +203,12 @@ class LogsViewer extends React.PureComponent {
     });
   }
 
-  getSnapshotBeforeUpdate(prevProps) {
+  componentDidUpdate(prevProps) {
     const { id } = this.props;
     if (prevProps.id !== id) {
       this.cache.clearAll();
     }
+    return null;
   }
 
   renderRow = ({ index, parent, style, key }) => {

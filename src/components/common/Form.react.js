@@ -59,7 +59,7 @@ const Collapsible = ({ title, children, defaultExpanded }) => {
 
 Collapsible.propTypes = {
   title: PropTypes.string.isRequired,
-  children: oneOfType(PropTypes.node, PropTypes.arrayOf(PropTypes.node))
+  children: oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)])
     .isRequired,
   defaultExpanded: PropTypes.bool,
 };

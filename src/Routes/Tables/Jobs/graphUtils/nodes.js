@@ -87,17 +87,14 @@ const splitBatchToGroups = (
   const itemsGroups = batch.map(item => item.status).map(statusToGroup);
   const itemsGroupsSet = new Set(itemsGroups);
   const overrideGroup = OverrideGroup(itemsGroupsSet);
-  const { completed, total, idle, running, errors } = batchInfo;
-  let _completed = 0;
+  const { completed, total, idle, errors } = batchInfo;
+
   let group = null;
   if (completed === total) {
-    _completed = total;
     group = NODE_GROUPS.SUCCEED;
   } else if (idle === total) {
-    _completed = 0;
     group = NODE_GROUPS.IDLE;
   } else {
-    _completed = running + completed;
     group = NODE_GROUPS.ACTIVE;
   }
   if (errors > 0) {
@@ -114,7 +111,7 @@ const splitBatchToGroups = (
     nodeName,
     algorithmName,
     extra: {
-      batch: isStreaming ? `${_completed}/${total}` : `${completed}/${total}`,
+      batch: isStreaming ? total : `${completed}/${total}`,
     },
     group,
     level,
@@ -154,6 +151,13 @@ export const formatNode = (normalizedPipeline, pipelineKind) => node => {
       }
     : {};
 
+  console.log({
+    ...batchStyling,
+    ...meta,
+    ..._node,
+    kind,
+    shape: nodeShapes[kind] || nodeShapes.default,
+  });
   return {
     ...batchStyling,
     ...meta,
