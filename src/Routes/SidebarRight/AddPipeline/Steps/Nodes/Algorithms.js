@@ -34,7 +34,7 @@ const AlgorithmNode = ({ id }) => {
     [collection]
   );
 
-  const isStreamingPipeline = getFieldValue('pipelineKind') === 'streaming';
+  const isStreamingPipeline = getFieldValue('kind') === 'streaming';
 
   const rootId = `nodes.${id}`;
   return (
@@ -52,7 +52,11 @@ const AlgorithmNode = ({ id }) => {
       <Controller placeholder="Input" tooltip="Input" nodeIdx={id} />
       <Collapsible title="Retry">
         <HorizontalRow>
-          <Field name="retry.policy" title="Policy" skipValidation>
+          <Field
+            name="retry.policy"
+            title="Policy"
+            initialValue="OnCrash"
+            skipValidation>
             <Radio.Group>
               <Radio.Button value="Never">Never</Radio.Button>
               <Radio.Button value="Always">Always</Radio.Button>
@@ -60,7 +64,11 @@ const AlgorithmNode = ({ id }) => {
               <Radio.Button value="OnCrash">OnCrash</Radio.Button>
             </Radio.Group>
           </Field>
-          <Field title="Retry Limit" name="retry.limit" skipValidation>
+          <Field
+            title="Retry Limit"
+            name="retry.limit"
+            initialValue={3}
+            skipValidation>
             <InputNumber min={0} />
           </Field>
         </HorizontalRow>
@@ -90,7 +98,12 @@ const AlgorithmNode = ({ id }) => {
               </Radio.Group>
             </Field>
           )}
-          <Field title="Node TTL" name="ttl" skipValidation small>
+          <Field
+            title="Node TTL"
+            name="ttl"
+            initialValue={0}
+            skipValidation
+            small>
             <InputNumber min={0} />
           </Field>
         </HorizontalRow>
@@ -99,6 +112,7 @@ const AlgorithmNode = ({ id }) => {
             title="Include In Pipeline Results"
             name="includeInResult"
             skipValidation
+            initialValue={false}
             small>
             <Switch />
           </Field>
@@ -106,8 +120,9 @@ const AlgorithmNode = ({ id }) => {
             title="Create A Tensorboard"
             name="metrics.tensorboard"
             skipValidation
+            initialValue
             small>
-            <Switch />
+            <Switch defaultChecked />
           </Field>
         </HorizontalRow>
       </Collapsible>

@@ -1,14 +1,14 @@
 import React, { useState, forwardRef, memo } from 'react';
 import cronParser from 'cron-parser';
 import cronstrue from 'cronstrue';
-
 import { Popover, Typography, Icon, Input, Switch } from 'antd';
+import useWizardContext from 'Routes/SidebarRight/AddPipeline/useWizardContext';
 
 const { Text } = Typography;
 
-// TODO: rebuild this component to not use forwardRef
-// eslint-disable-next-line
-const CronInput = forwardRef(({ getFieldDecorator }) => {
+const CronInput = forwardRef(() => {
+  const { fieldDecorator } = useWizardContext();
+
   const [readablePattern, setReadablePattern] = useState(undefined);
 
   // #region  Helpers
@@ -28,7 +28,7 @@ const CronInput = forwardRef(({ getFieldDecorator }) => {
     />
   );
 
-  const addonAfter = getFieldDecorator('triggers.cron.enabled', {
+  const addonAfter = fieldDecorator('triggers.cron.enabled', {
     valuePropName: 'checked',
   })(<Switch />);
 
@@ -46,9 +46,9 @@ const CronInput = forwardRef(({ getFieldDecorator }) => {
 
   return (
     <Popover content={content} trigger="focus">
-      {getFieldDecorator('triggers.cron.pattern', { normalize })(
-        <Input addonBefore={addonBefore} addonAfter={addonAfter} />
-      )}
+      {fieldDecorator('triggers.cron.pattern', {
+        normalize,
+      })(<Input addonBefore={addonBefore} addonAfter={addonAfter} />)}
     </Popover>
   );
 });

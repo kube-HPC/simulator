@@ -14,7 +14,7 @@ export default {
       ttl: 0,
       includeInResult: false,
       metrics: {
-        tensorboard: false,
+        tensorboard: true,
       },
     },
   ],

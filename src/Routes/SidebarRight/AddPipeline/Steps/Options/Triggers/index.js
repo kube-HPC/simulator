@@ -1,24 +1,21 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Select } from 'antd';
 import { useSelector } from 'react-redux';
 import { Form } from 'components/common';
 import { selectors } from 'reducers/pipeline.reducer';
 import CronInput from './CronInput';
+import useWizardContext from '../../../useWizardContext';
 
-const Triggers = ({ getFieldDecorator }) => {
+const Triggers = () => {
   const pipelineNames = useSelector(selectors.collection.names);
-
+  const { fieldDecorator } = useWizardContext();
   return (
     <>
       <Form.Item label="Cron">
-        <CronInput
-          placeholder="Pattern"
-          getFieldDecorator={getFieldDecorator}
-        />
+        <CronInput placeholder="Pattern" />
       </Form.Item>
       <Form.Item label="Pipelines">
-        {getFieldDecorator('triggers.pipelines')(
+        {fieldDecorator('triggers.pipelines')(
           <Select
             mode="multiple"
             placeholder="Pick Pipelines to Trigger Current One">
@@ -32,10 +29,6 @@ const Triggers = ({ getFieldDecorator }) => {
       </Form.Item>
     </>
   );
-};
-
-Triggers.propTypes = {
-  getFieldDecorator: PropTypes.func.isRequired,
 };
 
 export default Triggers;

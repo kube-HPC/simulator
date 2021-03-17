@@ -4,6 +4,8 @@ import { Icon, Steps, Form as AntdForm } from 'antd';
 import { JsonView } from 'components/common';
 import styled from 'styled-components';
 import { COLOR_LAYOUT } from 'styles';
+import { pickBy, identity, get } from 'lodash';
+import template from 'config/template/addPipeline.template';
 import {
   BottomPanel,
   PanelButton,
@@ -11,6 +13,8 @@ import {
 } from 'components/Drawer';
 import { Initial, Nodes, Options } from './Steps';
 import { context } from './useWizardContext';
+
+const pruneObject = obj => pickBy(obj, identity);
 
 const Form = styled(AntdForm)`
   width: 70ch;
@@ -61,10 +65,22 @@ const Wizard = ({
   setStepIdx,
   stepIdx,
 }) => {
-  const { setFieldsValue, getFieldsValue } = form;
+  const { setFieldsValue, getFieldsValue, getFieldDecorator } = form;
+
+  // NOTE:: this is a workaround!
+  // filtering unchanged values removes the initial values from the form
+  const fieldDecorator = useCallback(
+    /** @type {typeof getFieldDecorator} */
+    (field, props) =>
+      getFieldDecorator(field, {
+        initialValue: get(template, field),
+        ...props,
+      }),
+    [getFieldDecorator]
+  );
 
   useEffect(() => {
-    setFieldsValue(parseInitialState(initialState));
+    setFieldsValue(pruneObject(parseInitialState(initialState)));
   }, [setFieldsValue, initialState, getFieldsValue]);
 
   const isLastStep = stepIdx === steps.length - 1;
@@ -88,7 +104,7 @@ const Wizard = ({
           input: Object.values(item.input),
         };
       });
-    return { ...formValues, nodes };
+    return pruneObject({ ...formValues, nodes });
   }, [getFieldsValue]);
 
   const handleToggle = useCallback(() => {
@@ -117,7 +133,7 @@ const Wizard = ({
           hideRequiredMark
           onSubmit={handleSubmit}
           style={{ overflow: 'auto', padding: '0 2ch' }}>
-          <context.Provider value={{ form, initialState }}>
+          <context.Provider value={{ form, initialState, fieldDecorator }}>
             {stepComponents.map((StepComponent, ii) => (
               <StepComponent
                 key={`step-component-${stepNames[ii]}`}

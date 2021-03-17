@@ -21,7 +21,7 @@ const Initial = ({ style }) => {
         )}
       </Form.Item>
       <Form.Item label="Pipeline Kind">
-        {getFieldDecorator('pipelineKind', {
+        {getFieldDecorator('kind', {
           rules: [{ required: true }],
           initialValue: 'batch',
         })(
