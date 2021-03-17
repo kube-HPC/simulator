@@ -133,8 +133,8 @@ export const formatNode = (normalizedPipeline, pipelineKind) => node => {
     : setNodeGroup(node);
 
   const pipelineNode = normalizedPipeline[node.nodeName];
-  const isStateLess = pipelineNode.stateType === 'stateless';
-  const kind = isStateLess ? 'stateless' : pipelineNode.kind || 'algorithm';
+  const isStateLess = pipelineNode?.stateType === 'stateless';
+  const kind = isStateLess ? 'stateless' : pipelineNode?.kind || 'algorithm';
   const _node = {
     id: meta.nodeName,
     label: meta?.extra?.batch
