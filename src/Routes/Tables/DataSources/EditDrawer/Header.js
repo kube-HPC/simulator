@@ -19,9 +19,7 @@ const Header = ({ status, dataSourceId, dataSourceName, git, storage }) =>
       <h2>
         {options[status] ? options[status](dataSourceId, dataSourceName) : ''}
       </h2>
-      {storage.kind !== 'internal' || git.kind !== 'internal' ? (
-        <RemoteDetails storage={storage} git={git} />
-      ) : null}
+      <RemoteDetails storage={storage} git={git} />
     </HeaderContainer>
   );
 
