@@ -7,6 +7,15 @@ export default {
       nodeName: '',
       algorithmName: '',
       input: [],
+      retry: {
+        policy: 'OnCrash',
+        limit: 3,
+      },
+      ttl: 0,
+      includeInResult: false,
+      metrics: {
+        tensorboard: false,
+      },
     },
   ],
   flowInput: {},
@@ -22,7 +31,7 @@ export default {
     pipelines: [],
   },
   options: {
-    batchTolerance: 100,
+    batchTolerance: 80,
     concurrentPipelines: {
       amount: 10,
       rejectOnFailure: true,

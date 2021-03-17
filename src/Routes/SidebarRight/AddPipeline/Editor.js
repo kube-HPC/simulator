@@ -12,7 +12,6 @@ import {
   RightAlignedButton,
   PanelButton,
 } from 'components/Drawer';
-import schema from './schema';
 
 const INITIAL_EDITOR_VALUE = stringify(addPipelineTemplate);
 
@@ -74,7 +73,7 @@ const Editor = ({ toggle, onSubmit, initialState, setEditorState }) => {
         <RightAlignedButton
           type="primary"
           onClick={onEditorSubmit}
-          form={schema.ID}
+          form="add-pipeline"
           htmlType="submit">
           Submit
           <Icon type="check" />

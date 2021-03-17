@@ -3,10 +3,8 @@ import cronParser from 'cron-parser';
 import cronstrue from 'cronstrue';
 
 import { Popover, Typography, Icon, Input, Switch } from 'antd';
-import addPipelineSchema from './../../../schema';
 
 const { Text } = Typography;
-const { errorMessage, fields } = addPipelineSchema.TRIGGERS.CRON;
 
 // TODO: rebuild this component to not use forwardRef
 // eslint-disable-next-line
@@ -20,7 +18,7 @@ const CronInput = forwardRef(({ getFieldDecorator }) => {
       <Text code>{readablePattern.next}</Text>
     </Text>
   ) : (
-    errorMessage
+    'Invalid Cron Expression'
   );
 
   const addonBefore = (
@@ -30,7 +28,7 @@ const CronInput = forwardRef(({ getFieldDecorator }) => {
     />
   );
 
-  const addonAfter = getFieldDecorator(fields.ENABLED, {
+  const addonAfter = getFieldDecorator('triggers.cron.enabled', {
     valuePropName: 'checked',
   })(<Switch />);
 
@@ -48,7 +46,7 @@ const CronInput = forwardRef(({ getFieldDecorator }) => {
 
   return (
     <Popover content={content} trigger="focus">
-      {getFieldDecorator(fields.PATTERN, { normalize })(
+      {getFieldDecorator('triggers.cron.pattern', { normalize })(
         <Input addonBefore={addonBefore} addonAfter={addonAfter} />
       )}
     </Popover>

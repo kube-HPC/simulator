@@ -151,13 +151,6 @@ export const formatNode = (normalizedPipeline, pipelineKind) => node => {
       }
     : {};
 
-  console.log({
-    ...batchStyling,
-    ...meta,
-    ..._node,
-    kind,
-    shape: nodeShapes[kind] || nodeShapes.default,
-  });
   return {
     ...batchStyling,
     ...meta,

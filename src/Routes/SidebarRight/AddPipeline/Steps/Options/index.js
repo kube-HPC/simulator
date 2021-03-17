@@ -7,24 +7,17 @@ import { toUpperCaseFirstLetter } from 'utils';
 import SliderNumber from './SliderNumber';
 import Triggers from './Triggers';
 import Webhooks from './Webhooks';
-import addPipelineSchema from './../../schema';
 import useWizardContext from '../../useWizardContext';
 
 export { Triggers, Webhooks };
 
 const smallSelectStyle = { width: '90px' };
 
-const {
-  TOLERANCE,
-  CONCURRENT,
-  PRIORITY,
-  TTL,
-  VERBOSITY_LEVEL,
-} = addPipelineSchema.OPTIONS;
-
 const Grow = styled(FlexBox.Item)`
   flex-grow: 1;
 `;
+
+const verbosityLevels = ['info', 'trace', 'debug', 'warn', 'error', 'critical'];
 
 const Options = ({ style }) => {
   const { form } = useWizardContext();
@@ -37,45 +30,47 @@ const Options = ({ style }) => {
       <Triggers getFieldDecorator={getFieldDecorator} />
       <Form.Divider>Advanced Options</Form.Divider>
       <Form.Item
-        label={TOLERANCE.label}
+        label="Batch Tolerance"
         labelCol={{}}
         wrapperCol={{ style: { whiteSpace: 'nowrap' } }}>
-        {getFieldDecorator(TOLERANCE.field)(<SliderNumber />)}
+        {getFieldDecorator('options.batchTolerance', { initialValue: 80 })(
+          <SliderNumber />
+        )}
       </Form.Item>
       <Form.Item
-        label={CONCURRENT.amount.label}
+        label="Concurrent Amount"
         labelCol={{}}
         wrapperCol={{ style: { whiteSpace: 'nowrap' } }}>
         <FlexBox>
           <Grow>
-            {getFieldDecorator(CONCURRENT.amount.field)(
-              <SliderNumber min={1} />
-            )}
+            {getFieldDecorator('options.concurrentPipelines.amount', {
+              initialValue: 10,
+            })(<SliderNumber min={1} />)}
           </Grow>
           <FlexBox.Item>
             Reject on Failure:{' '}
-            {getFieldDecorator(CONCURRENT.reject.field, {
+            {getFieldDecorator('options.concurrentPipelines.rejectOnFailure', {
               valuePropName: 'checked',
             })(<Checkbox />)}
           </FlexBox.Item>
         </FlexBox>
       </Form.Item>
-      <Form.Item label={TTL.label}>
-        {getFieldDecorator(TTL.field)(<InputNumber />)}
+      <Form.Item label="Pipeline TTL">
+        {getFieldDecorator('options.ttl')(<InputNumber />)}
       </Form.Item>
-      <Form.Item label={VERBOSITY_LEVEL.label}>
-        {getFieldDecorator(VERBOSITY_LEVEL.field)(
+      <Form.Item label="Verbosity Level">
+        {getFieldDecorator('options.progressVerbosityLevel')(
           <Select style={smallSelectStyle}>
-            {VERBOSITY_LEVEL.types.map(option => (
-              <Select.Option key={option} value={option}>
-                {toUpperCaseFirstLetter(option)}
+            {verbosityLevels.map(level => (
+              <Select.Option key={`verbosity-level-${level}`} value={level}>
+                {toUpperCaseFirstLetter(level)}
               </Select.Option>
             ))}
           </Select>
         )}
       </Form.Item>
-      <Form.Item label={PRIORITY.label}>
-        {getFieldDecorator(PRIORITY.field)(<InputNumber max={5} min={1} />)}
+      <Form.Item label="Priority">
+        {getFieldDecorator('priority')(<InputNumber max={5} min={1} />)}
       </Form.Item>
     </div>
   );

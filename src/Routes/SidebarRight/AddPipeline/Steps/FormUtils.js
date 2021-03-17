@@ -26,14 +26,16 @@ export const Field = ({
   getFieldDecorator,
   rootId,
   extraRules,
+  initialValue,
 }) => (
   <Form.Item label={title} style={small ? smallStyle : {}}>
     {getFieldDecorator(
       `${rootId}.${name}`,
       /** @type {import('antd/lib/form/Form').GetFieldDecoratorOptions} */
       (skipValidation
-        ? {}
+        ? { initialValue }
         : {
+            initialValue,
             validateTrigger: ['onChange', 'onBlur'],
             rules: [
               {
@@ -61,6 +63,7 @@ Field.propTypes = {
   rootId: PropTypes.string.isRequired,
   // eslint-disable-next-line
   extraRules: PropTypes.object,
+  initialValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 Field.defaultProps = {
   type: 'string',
@@ -68,6 +71,7 @@ Field.defaultProps = {
   skipValidation: false,
   small: false,
   extraRules: [],
+  initialValue: null,
 };
 
 export const HorizontalRow = styled.div`

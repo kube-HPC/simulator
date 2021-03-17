@@ -68,14 +68,22 @@ const AlgorithmNode = ({ id }) => {
       <Collapsible title="Options">
         <HorizontalRow>
           {isStreamingPipeline ? (
-            <Field name="stateType" title="State Type" skipValidation>
+            <Field
+              name="stateType"
+              title="State Type"
+              skipValidation
+              initialValue="stateless">
               <Radio.Group>
                 <Radio.Button value="stateless">stateless</Radio.Button>
                 <Radio.Button value="stateful">stateful</Radio.Button>
               </Radio.Group>
             </Field>
           ) : (
-            <Field name="batchOperation" title="Batch Operation" skipValidation>
+            <Field
+              name="batchOperation"
+              title="Batch Operation"
+              skipValidation
+              initialValue="indexed">
               <Radio.Group>
                 <Radio.Button value="indexed">indexed</Radio.Button>
                 <Radio.Button value="cartesian">cartesian</Radio.Button>

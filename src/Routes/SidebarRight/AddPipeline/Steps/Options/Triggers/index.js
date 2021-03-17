@@ -5,24 +5,23 @@ import { useSelector } from 'react-redux';
 import { Form } from 'components/common';
 import { selectors } from 'reducers/pipeline.reducer';
 import CronInput from './CronInput';
-import addPipelineSchema from './../../../schema';
-
-const { CRON, PIPELINES } = addPipelineSchema.TRIGGERS;
 
 const Triggers = ({ getFieldDecorator }) => {
   const pipelineNames = useSelector(selectors.collection.names);
 
   return (
     <>
-      <Form.Item label={CRON.label}>
+      <Form.Item label="Cron">
         <CronInput
-          placeholder={CRON.placeholder}
+          placeholder="Pattern"
           getFieldDecorator={getFieldDecorator}
         />
       </Form.Item>
-      <Form.Item label={PIPELINES.label}>
-        {getFieldDecorator(PIPELINES.field)(
-          <Select mode="multiple" placeholder={PIPELINES.placeholder}>
+      <Form.Item label="Pipelines">
+        {getFieldDecorator('triggers.pipelines')(
+          <Select
+            mode="multiple"
+            placeholder="Pick Pipelines to Trigger Current One">
             {pipelineNames.map(name => (
               <Select.Option key={`pipeline-name-${name}`} value={name}>
                 {name}

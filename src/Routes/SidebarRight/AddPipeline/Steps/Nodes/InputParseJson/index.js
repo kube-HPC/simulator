@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'antd';
-import useWizardContext from 'Routes/SidebarRight/AddPipeline/useWizardContext';
 import styled from 'styled-components';
+import useWizardContext from 'Routes/SidebarRight/AddPipeline/useWizardContext';
 import useIds from '../useIds';
 import InputField from './InputField';
 
