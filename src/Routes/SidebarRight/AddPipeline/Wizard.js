@@ -13,6 +13,7 @@ import {
 } from 'components/Drawer';
 import { Initial, Nodes, Options } from './Steps';
 import { context } from './useWizardContext';
+import useSubscribe from '../useSubscribe';
 
 const pruneObject = obj => pickBy(obj, identity);
 
@@ -48,10 +49,11 @@ const parseInitialState = initialState => {
             input: normalize(item.input),
           }
     ) ?? [];
-  return {
+  const state = {
     ...initialState,
     nodes: normalize(nodes),
   };
+  return state;
 };
 
 /** @param {object} props */
@@ -66,32 +68,11 @@ const Wizard = ({
   stepIdx,
 }) => {
   const { setFieldsValue, getFieldsValue, getFieldDecorator } = form;
-
-  // NOTE:: this is a workaround!
-  // filtering unchanged values removes the initial values from the form
-  const fieldDecorator = useCallback(
-    /** @type {typeof getFieldDecorator} */
-    (field, props) =>
-      getFieldDecorator(field, {
-        initialValue: get(template, field),
-        ...props,
-      }),
-    [getFieldDecorator]
-  );
+  const { subscribe } = useSubscribe();
 
   useEffect(() => {
     setFieldsValue(pruneObject(parseInitialState(initialState)));
-  }, [setFieldsValue, initialState, getFieldsValue]);
-
-  const isLastStep = stepIdx === steps.length - 1;
-
-  const onPrevious = useCallback(() => setStepIdx(state => state - 1), [
-    setStepIdx,
-  ]);
-
-  const onNext = useCallback(() => setStepIdx(state => state + 1), [
-    setStepIdx,
-  ]);
+  }, [setFieldsValue, initialState]);
 
   const getFormattedFormValues = useCallback(() => {
     const formValues = getFieldsValue();
@@ -107,10 +88,39 @@ const Wizard = ({
     return pruneObject({ ...formValues, nodes });
   }, [getFieldsValue]);
 
+  const persistForm = useCallback(
+    () => setEditorState(getFormattedFormValues()),
+    [setEditorState, getFormattedFormValues]
+  );
+
+  useEffect(() => subscribe(persistForm), [subscribe, persistForm]);
+
+  // NOTE:: this is a workaround!
+  // filtering unchanged values removes the initial values from the form
+  const fieldDecorator = useCallback(
+    /** @type {typeof getFieldDecorator} */
+    (field, props) =>
+      getFieldDecorator(field, {
+        initialValue: get(template, field),
+        ...props,
+      }),
+    [getFieldDecorator]
+  );
+
+  const isLastStep = stepIdx === steps.length - 1;
+
+  const onPrevious = useCallback(() => setStepIdx(state => state - 1), [
+    setStepIdx,
+  ]);
+
+  const onNext = useCallback(() => setStepIdx(state => state + 1), [
+    setStepIdx,
+  ]);
+
   const handleToggle = useCallback(() => {
-    setEditorState(getFormattedFormValues());
+    persistForm();
     toggle();
-  }, [toggle, setEditorState, getFormattedFormValues]);
+  }, [persistForm, toggle]);
 
   const handleSubmit = useCallback(
     e => {

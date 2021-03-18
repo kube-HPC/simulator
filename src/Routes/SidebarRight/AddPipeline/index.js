@@ -1,4 +1,4 @@
-import React, { useCallback, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { addPipelineTemplate } from 'config';
 import { useActions } from 'hooks';
 import cleanDeep from 'clean-deep';
@@ -39,6 +39,30 @@ const AddPipeline = () => {
   const [editorState, setEditorState] = useState(addPipelineTemplate);
   const [wizardStepIdx, setWizardStepIdx] = useState(0);
   const { addPipeline } = useActions();
+  const didNotLoadState = editorState === addPipelineTemplate;
+
+  useEffect(() => {
+    // avoid infinite looping
+    if (didNotLoadState) {
+      const rawData = window.localStorage.getItem('add-pipeline-form-state');
+      try {
+        const parsedState = JSON.parse(rawData);
+        if (parsedState) setEditorState(parsedState);
+      } catch (error) {
+        console.info('did not load form state from storage');
+      }
+    }
+
+    return () => {
+      // avoid infinite looping
+      if (didNotLoadState) return;
+      window.localStorage.setItem(
+        'add-pipeline-form-state',
+        JSON.stringify(editorState)
+      );
+    };
+  }, [setEditorState, editorState, didNotLoadState]);
+
   const handleSubmit = useCallback(
     formData => {
       /** @type {import('./fields').PipelineDescriptor} */
@@ -51,6 +75,7 @@ const AddPipeline = () => {
     [addPipeline]
   );
 
+  if (didNotLoadState) return null;
   return isEditorVisible ? (
     <Editor
       toggle={toggle}

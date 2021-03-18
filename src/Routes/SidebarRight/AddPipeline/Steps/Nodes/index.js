@@ -40,9 +40,8 @@ const Nodes = ({ style }) => {
     form: { getFieldDecorator, getFieldValue },
     initialState,
   } = useWizardContext();
-  const [ids, appendKey, dropKey] = useIds(
-    Object.keys(initialState?.nodes ?? {})
-  );
+
+  const [ids, appendKey, dropKey] = useIds(Object.keys(initialState.nodes));
 
   return (
     <div style={style}>
