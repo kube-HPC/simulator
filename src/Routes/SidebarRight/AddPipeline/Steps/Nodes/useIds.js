@@ -1,7 +1,9 @@
 import { useMemo, useState, useCallback } from 'react';
 
 export default (initialState = []) => {
-  const [ids, setCollection] = useState(Object.keys(initialState));
+  const [ids, setCollection] = useState(
+    Object.keys(initialState).map(x => parseInt(x, 10))
+  );
   const latest = useMemo(() => (ids.length === 0 ? 0 : ids[ids.length - 1]), [
     ids,
   ]);
