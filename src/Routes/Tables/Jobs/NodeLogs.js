@@ -95,7 +95,7 @@ const NodeLogs = ({ node, taskDetails, onChange }) => {
         </FlexBox.Item>
       </FlexBox>
       <Container>
-        <LogsViewer dataSource={logs} id={node.nodeName} />
+        <LogsViewer dataSource={logs} id={node?.nodeName ?? ''} />
       </Container>
     </>
   );
@@ -108,7 +108,7 @@ NodeLogs.propTypes = {
   onChange: PropTypes.func.isRequired,
   node: PropTypes.shape({
     kind: PropTypes.string,
-    nodeName: PropTypes.string.isRequired,
+    nodeName: PropTypes.string,
   }).isRequired,
 };
 export default React.memo(NodeLogs);
