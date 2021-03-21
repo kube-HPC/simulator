@@ -53,6 +53,7 @@ const LineNumber = styled.span`
   display: inline-block;
   color: gray;
   min-width: 3ch;
+  white-space: nowrap;
   align-self: flex-start;
 `;
 
@@ -91,6 +92,8 @@ const CopyButton = styled.button`
 const timeFormat = 'DD/MM/YY HH:mm:ss';
 
 /**
+ * @extends React.PureComponent<EntryProps, EntryState>
+ *
  * @typedef {{
  *   log: {
  *     timestamp: number;
@@ -101,7 +104,6 @@ const timeFormat = 'DD/MM/YY HH:mm:ss';
  *   index: number;
  * }} EntryProps
  *
- * @extends React.PureComponent<EntryProps, EntryState>
  * @typedef {object} EntryState
  */
 class Entry extends React.PureComponent {
@@ -183,13 +185,14 @@ BuildEntry.propTypes = {
 };
 
 /**
+ * @extends React.PureComponent<LogViewerProps, LogViewerState>
+ *
  * @typedef {{
  *   dataSource: object[];
  *   isBuild: boolean;
  *   id: string;
  * }} LogViewerProps
  *
- * @extends React.PureComponent<LogViewerProps, LogViewerState>
  * @typedef {any} LogViewerState
  */
 class LogsViewer extends React.PureComponent {
