@@ -34,7 +34,7 @@ const NodeInputOutput = ({ algorithm = {}, payload }) => {
 
   return (
     <Table
-      rowKey={({ index }) => index}
+      rowKey={({ taskId }) => `input-output-table-task-${taskId}`}
       columns={getColumns(socketUrl)}
       dataSource={dataSource}
       expandedRowRender={record => (

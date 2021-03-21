@@ -1,30 +1,38 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input } from 'antd';
+import { Input, Radio } from 'antd';
 import { Form } from 'components/common';
-import schema from './../../schema';
 import FlowInput from './FlowInput';
 import useWizardContext from '../../useWizardContext';
-
-const { NAME, DESCRIPTION, FLOW_INPUT } = schema.INITIAL;
 
 const Initial = ({ style }) => {
   const { form } = useWizardContext();
   const { getFieldDecorator } = form;
   return (
     <div style={style}>
-      <Form.Item label={NAME.label} required={NAME.required}>
-        {getFieldDecorator(NAME.field, {
-          rules: [{ required: true, message: NAME.message }],
-        })(<Input placeholder={NAME.placeholder} />)}
+      <Form.Item label="Name" required>
+        {getFieldDecorator('name', {
+          rules: [{ required: true, message: 'Pipeline name is required' }],
+        })(<Input placeholder="Unique Identifier" />)}
       </Form.Item>
-      <Form.Item label={DESCRIPTION.label}>
-        {getFieldDecorator(DESCRIPTION.field)(
-          <Input placeholder={DESCRIPTION.placeholder} />
+      <Form.Item label="Description">
+        {getFieldDecorator('description')(
+          <Input placeholder="Pipeline Description" />
         )}
       </Form.Item>
-      <Form.Item label={FLOW_INPUT.label}>
-        {getFieldDecorator(FLOW_INPUT.field)(<FlowInput />)}
+      <Form.Item label="Pipeline Kind">
+        {getFieldDecorator('kind', {
+          rules: [{ required: true }],
+          initialValue: 'batch',
+        })(
+          <Radio.Group>
+            <Radio.Button value="batch">Batch</Radio.Button>
+            <Radio.Button value="streaming">Streaming</Radio.Button>
+          </Radio.Group>
+        )}
+      </Form.Item>
+      <Form.Item label="Flow Input">
+        {getFieldDecorator('flowInput')(<FlowInput />)}
       </Form.Item>
     </div>
   );

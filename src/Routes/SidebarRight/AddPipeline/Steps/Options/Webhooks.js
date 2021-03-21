@@ -1,23 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Form, InputAddon } from 'components/common';
-import schema from './../../schema';
+import useWizardContext from '../../useWizardContext';
 
-const { RESULT, PROGRESS, types } = schema.WEBHOOKS;
-
-const Webhooks = ({ getFieldDecorator }) => (
-  <>
-    <Form.Item label={PROGRESS.label}>
-      {getFieldDecorator(PROGRESS.field)(<InputAddon before={types} />)}
-    </Form.Item>
-    <Form.Item label={RESULT.label}>
-      {getFieldDecorator(RESULT.field)(<InputAddon before={types} />)}
-    </Form.Item>
-  </>
-);
-
-Webhooks.propTypes = {
-  getFieldDecorator: PropTypes.func.isRequired,
+const protocols = ['http://', 'https://'];
+const Webhooks = () => {
+  const { fieldDecorator } = useWizardContext();
+  return (
+    <>
+      <Form.Item label="Progress">
+        {fieldDecorator('webhooks.progress')(<InputAddon before={protocols} />)}
+      </Form.Item>
+      <Form.Item label="Result">
+        {fieldDecorator('webhooks.result')(<InputAddon before={protocols} />)}
+      </Form.Item>
+    </>
+  );
 };
 
 export default Webhooks;

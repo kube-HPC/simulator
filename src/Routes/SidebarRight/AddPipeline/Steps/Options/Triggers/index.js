@@ -1,28 +1,24 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Select } from 'antd';
 import { useSelector } from 'react-redux';
 import { Form } from 'components/common';
 import { selectors } from 'reducers/pipeline.reducer';
 import CronInput from './CronInput';
-import addPipelineSchema from './../../../schema';
+import useWizardContext from '../../../useWizardContext';
 
-const { CRON, PIPELINES } = addPipelineSchema.TRIGGERS;
-
-const Triggers = ({ getFieldDecorator }) => {
+const Triggers = () => {
   const pipelineNames = useSelector(selectors.collection.names);
-
+  const { fieldDecorator } = useWizardContext();
   return (
     <>
-      <Form.Item label={CRON.label}>
-        <CronInput
-          placeholder={CRON.placeholder}
-          getFieldDecorator={getFieldDecorator}
-        />
+      <Form.Item label="Cron">
+        <CronInput placeholder="Pattern" />
       </Form.Item>
-      <Form.Item label={PIPELINES.label}>
-        {getFieldDecorator(PIPELINES.field)(
-          <Select mode="multiple" placeholder={PIPELINES.placeholder}>
+      <Form.Item label="Pipelines">
+        {fieldDecorator('triggers.pipelines')(
+          <Select
+            mode="multiple"
+            placeholder="Pick Pipelines to Trigger Current One">
             {pipelineNames.map(name => (
               <Select.Option key={`pipeline-name-${name}`} value={name}>
                 {name}
@@ -33,10 +29,6 @@ const Triggers = ({ getFieldDecorator }) => {
       </Form.Item>
     </>
   );
-};
-
-Triggers.propTypes = {
-  getFieldDecorator: PropTypes.func.isRequired,
 };
 
 export default Triggers;

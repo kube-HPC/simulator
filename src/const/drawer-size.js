@@ -1,5 +1,5 @@
 export default {
-  ADD_PIPELINE: '120ch',
+  ADD_PIPELINE: '130ch',
   ADD_ALGORITHM: '40vw',
   ADD_DEBUG: '20vw',
   ADD_DATASOURCE: '40vw',
@@ -10,7 +10,7 @@ export default {
   GPU: '60vw',
   MEMORY: '60vw',
   ERROR_LOGS: '70vw',
-  JOB_INFO: '70vw',
+  JOB_INFO: '120ch',
   ALGORITHM_INFO: '160ch',
   PIPELINE_INFO: '70vw',
   ALGORITHM_EDIT: '40vw',

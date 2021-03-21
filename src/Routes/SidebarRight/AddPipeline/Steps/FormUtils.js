@@ -11,6 +11,10 @@ const smallStyle = {
 };
 
 /** @typedef {typeof Field} FieldProps */
+/**
+ * @param {Object} props
+ * @param {import('antd/lib/form').ValidationRule[]} props.extraRules
+ */
 export const Field = ({
   name,
   children,
@@ -21,21 +25,26 @@ export const Field = ({
   small,
   getFieldDecorator,
   rootId,
+  extraRules,
+  initialValue,
 }) => (
   <Form.Item label={title} style={small ? smallStyle : {}}>
     {getFieldDecorator(
       `${rootId}.${name}`,
       /** @type {import('antd/lib/form/Form').GetFieldDecoratorOptions} */
       (skipValidation
-        ? {}
+        ? { initialValue }
         : {
+            initialValue,
             validateTrigger: ['onChange', 'onBlur'],
             rules: [
               {
                 required,
                 whitespace: true,
                 type,
+                message: `${title} is required`,
               },
+              ...extraRules,
             ],
           })
     )(children)}
@@ -52,12 +61,17 @@ Field.propTypes = {
   small: PropTypes.bool,
   getFieldDecorator: PropTypes.func.isRequired,
   rootId: PropTypes.string.isRequired,
+  // eslint-disable-next-line
+  extraRules: PropTypes.object,
+  initialValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 Field.defaultProps = {
   type: 'string',
   required: true,
   skipValidation: false,
   small: false,
+  extraRules: [],
+  initialValue: null,
 };
 
 export const HorizontalRow = styled.div`

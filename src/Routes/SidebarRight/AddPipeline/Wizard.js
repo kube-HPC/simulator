@@ -4,6 +4,8 @@ import { Icon, Steps, Form as AntdForm } from 'antd';
 import { JsonView } from 'components/common';
 import styled from 'styled-components';
 import { COLOR_LAYOUT } from 'styles';
+import { pickBy, identity, get } from 'lodash';
+import template from 'config/template/addPipeline.template';
 import {
   BottomPanel,
   PanelButton,
@@ -11,6 +13,9 @@ import {
 } from 'components/Drawer';
 import { Initial, Nodes, Options } from './Steps';
 import { context } from './useWizardContext';
+import useSubscribe from '../useSubscribe';
+
+const pruneObject = obj => pickBy(obj, identity);
 
 const Form = styled(AntdForm)`
   width: 70ch;
@@ -44,10 +49,11 @@ const parseInitialState = initialState => {
             input: normalize(item.input),
           }
     ) ?? [];
-  return {
+  const state = {
     ...initialState,
     nodes: normalize(nodes),
   };
+  return state;
 };
 
 /** @param {object} props */
@@ -61,21 +67,12 @@ const Wizard = ({
   setStepIdx,
   stepIdx,
 }) => {
-  const { setFieldsValue, getFieldsValue } = form;
+  const { setFieldsValue, getFieldsValue, getFieldDecorator } = form;
+  const { subscribe } = useSubscribe();
 
   useEffect(() => {
-    setFieldsValue(parseInitialState(initialState));
-  }, [setFieldsValue, initialState, getFieldsValue]);
-
-  const isLastStep = stepIdx === steps.length - 1;
-
-  const onPrevious = useCallback(() => setStepIdx(state => state - 1), [
-    setStepIdx,
-  ]);
-
-  const onNext = useCallback(() => setStepIdx(state => state + 1), [
-    setStepIdx,
-  ]);
+    setFieldsValue(pruneObject(parseInitialState(initialState)));
+  }, [setFieldsValue, initialState]);
 
   const getFormattedFormValues = useCallback(() => {
     const formValues = getFieldsValue();
@@ -88,13 +85,42 @@ const Wizard = ({
           input: Object.values(item.input),
         };
       });
-    return { ...formValues, nodes };
+    return pruneObject({ ...formValues, nodes });
   }, [getFieldsValue]);
 
+  const persistForm = useCallback(
+    () => setEditorState(getFormattedFormValues()),
+    [setEditorState, getFormattedFormValues]
+  );
+
+  useEffect(() => subscribe(persistForm), [subscribe, persistForm]);
+
+  // NOTE:: this is a workaround!
+  // filtering unchanged values removes the initial values from the form
+  const fieldDecorator = useCallback(
+    /** @type {typeof getFieldDecorator} */
+    (field, props) =>
+      getFieldDecorator(field, {
+        initialValue: get(template, field),
+        ...props,
+      }),
+    [getFieldDecorator]
+  );
+
+  const isLastStep = stepIdx === steps.length - 1;
+
+  const onPrevious = useCallback(() => setStepIdx(state => state - 1), [
+    setStepIdx,
+  ]);
+
+  const onNext = useCallback(() => setStepIdx(state => state + 1), [
+    setStepIdx,
+  ]);
+
   const handleToggle = useCallback(() => {
-    setEditorState(getFormattedFormValues());
+    persistForm();
     toggle();
-  }, [toggle, setEditorState, getFormattedFormValues]);
+  }, [persistForm, toggle]);
 
   const handleSubmit = useCallback(
     e => {
@@ -113,9 +139,11 @@ const Wizard = ({
           style={{ flex: 1, overflow: 'auto' }}
         />
         <Form
+          layout="horizontal"
+          hideRequiredMark
           onSubmit={handleSubmit}
           style={{ overflow: 'auto', padding: '0 2ch' }}>
-          <context.Provider value={{ form, initialState }}>
+          <context.Provider value={{ form, initialState, fieldDecorator }}>
             {stepComponents.map((StepComponent, ii) => (
               <StepComponent
                 key={`step-component-${stepNames[ii]}`}

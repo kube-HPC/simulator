@@ -1,5 +1,5 @@
 import { nodeKind } from '@hkube/consts';
-import { get } from 'lodash';
+import { get, pick } from 'lodash';
 import GRAPH_TYPES from './../graphUtils/types';
 /** @typedef {import('vis').NodeOptions} NodeOptions */
 const { STATUS, NODE_GROUPS } = GRAPH_TYPES;
@@ -70,7 +70,7 @@ const statusMap = {
 const statusToGroup = status =>
   Object.values(statusMap).find(({ availableFrom }) =>
     availableFrom.has(status)
-  )?.group ?? null;
+  )?.group ?? NODE_GROUPS.IDLE;
 
 const setNodeGroup = node => {
   const { status } = node;
@@ -87,17 +87,14 @@ const splitBatchToGroups = (
   const itemsGroups = batch.map(item => item.status).map(statusToGroup);
   const itemsGroupsSet = new Set(itemsGroups);
   const overrideGroup = OverrideGroup(itemsGroupsSet);
-  const { completed, total, idle, running, errors } = batchInfo;
-  let _completed = 0;
+  const { completed, total, idle, errors } = batchInfo;
+
   let group = null;
   if (completed === total) {
-    _completed = total;
     group = NODE_GROUPS.SUCCEED;
   } else if (idle === total) {
-    _completed = 0;
     group = NODE_GROUPS.IDLE;
   } else {
-    _completed = running + completed;
     group = NODE_GROUPS.ACTIVE;
   }
   if (errors > 0) {
@@ -114,7 +111,7 @@ const splitBatchToGroups = (
     nodeName,
     algorithmName,
     extra: {
-      batch: isStreaming ? `${_completed}/${total}` : `${completed}/${total}`,
+      batch: isStreaming ? total : `${completed}/${total}`,
     },
     group,
     level,
@@ -136,8 +133,8 @@ export const formatNode = (normalizedPipeline, pipelineKind) => node => {
     : setNodeGroup(node);
 
   const pipelineNode = normalizedPipeline[node.nodeName];
-  const isStateLess = pipelineNode.stateType === 'stateless';
-  const kind = isStateLess ? 'stateless' : pipelineNode.kind || 'algorithm';
+  const isStateLess = pipelineNode?.stateType === 'stateless';
+  const kind = isStateLess ? 'stateless' : pipelineNode?.kind || 'algorithm';
   const _node = {
     id: meta.nodeName,
     label: meta?.extra?.batch
@@ -153,12 +150,21 @@ export const formatNode = (normalizedPipeline, pipelineKind) => node => {
         },
       }
     : {};
-
-  return {
+  const editedNode = {
     ...batchStyling,
     ...meta,
     ..._node,
     kind,
     shape: nodeShapes[kind] || nodeShapes.default,
   };
+  return pick(
+    editedNode,
+    'label',
+    'shape',
+    'extra',
+    'borderWidth',
+    'id',
+    'shapeProperties',
+    'group'
+  );
 };

@@ -40,9 +40,8 @@ const Nodes = ({ style }) => {
     form: { getFieldDecorator, getFieldValue },
     initialState,
   } = useWizardContext();
-  const [ids, appendKey, dropKey] = useIds(
-    Object.keys(initialState?.nodes ?? {})
-  );
+
+  const [ids, appendKey, dropKey] = useIds(Object.keys(initialState.nodes));
 
   return (
     <div style={style}>
@@ -77,7 +76,13 @@ const Nodes = ({ style }) => {
               title="Node Name"
               name="nodeName"
               rootId={`nodes.${id}`}
-              getFieldDecorator={getFieldDecorator}>
+              getFieldDecorator={getFieldDecorator}
+              extraRules={[
+                {
+                  max: 32,
+                  message: 'Node Name has to be shorter than 32 characters',
+                },
+              ]}>
               <Input placeholder="Node Name" />
             </Field>
             <Node id={id} kind={getFieldValue(`nodes.${id}.kind`)} />

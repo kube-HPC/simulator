@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useReducer } from 'react';
+import PropTypes, { oneOfType } from 'prop-types';
 import styled from 'styled-components';
-import { Form as AntdForm, Divider as AntdDivider } from 'antd';
+import { Form as AntdForm, Divider as AntdDivider, Icon } from 'antd';
 
 const DEFAULT_SPAN = 5;
 const formItemLayout = {
@@ -40,5 +40,33 @@ Form.Divider = DividerWrapper;
 
 Form.Item.propTypes = AntdForm.Item.propTypes;
 Form.Divider.propTypes = AntdDivider.propTypes;
+
+const Collapsible = ({ title, children, defaultExpanded }) => {
+  const [isExpanded, toggle] = useReducer(state => !state, defaultExpanded);
+  return (
+    <>
+      <DividerWrapper>
+        {title}{' '}
+        <Icon
+          type={isExpanded ? 'caret-down' : 'caret-right'}
+          onClick={toggle}
+        />
+      </DividerWrapper>
+      <div style={{ display: isExpanded ? 'unset' : 'none' }}>{children}</div>
+    </>
+  );
+};
+
+Collapsible.propTypes = {
+  title: PropTypes.string.isRequired,
+  children: oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)])
+    .isRequired,
+  defaultExpanded: PropTypes.bool,
+};
+
+Collapsible.defaultProps = {
+  defaultExpanded: false,
+};
+Form.Collapsible = Collapsible;
 
 export default Form;

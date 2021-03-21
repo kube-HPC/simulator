@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Icon } from 'antd';
@@ -12,7 +12,6 @@ import {
   RightAlignedButton,
   PanelButton,
 } from 'components/Drawer';
-import schema from './schema';
 
 const INITIAL_EDITOR_VALUE = stringify(addPipelineTemplate);
 
@@ -38,14 +37,17 @@ const Editor = ({ toggle, onSubmit, initialState, setEditorState }) => {
   const onDefault = () => setInnerState(INITIAL_EDITOR_VALUE);
   const onClear = () => setInnerState('');
 
-  const handleToggle = () =>
-    tryParse({
-      src: innerState,
-      onSuccess: ({ parsed }) => {
-        setEditorState(parsed);
-        toggle();
-      },
-    });
+  useEffect(
+    () => () =>
+      tryParse({
+        src: innerState,
+        onSuccess: ({ parsed }) => {
+          setEditorState(parsed);
+        },
+        onFail: () => {},
+      }),
+    [innerState, setEditorState]
+  );
 
   return (
     <>
@@ -59,7 +61,8 @@ const Editor = ({ toggle, onSubmit, initialState, setEditorState }) => {
       </JsonViewWrapper>
 
       <BottomPanel width={DRAWER_SIZE.ADD_PIPELINE}>
-        <PanelButton key="Editor" onClick={handleToggle}>
+        {/* <PanelButton key="Editor" onClick={handleToggle}> */}
+        <PanelButton key="Editor" onClick={toggle}>
           Wizard View
         </PanelButton>
         <PanelButton
@@ -74,7 +77,7 @@ const Editor = ({ toggle, onSubmit, initialState, setEditorState }) => {
         <RightAlignedButton
           type="primary"
           onClick={onEditorSubmit}
-          form={schema.ID}
+          form="add-pipeline"
           htmlType="submit">
           Submit
           <Icon type="check" />

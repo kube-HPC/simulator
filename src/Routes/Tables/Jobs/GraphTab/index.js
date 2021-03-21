@@ -78,9 +78,10 @@ const GraphTab = ({ graph, pipeline }) => {
 
   const [showGraph, toggleForceUpdate] = useReducer(p => !p, true);
 
-  const graphOptions = useMemo(() => generateStyles({ direction }), [
-    direction,
-  ]);
+  const graphOptions = useMemo(
+    () => ({ ...generateStyles({ direction }), height: '100px' }),
+    [direction]
+  );
 
   useEffect(() => {
     toggleForceUpdate();
@@ -101,7 +102,7 @@ const GraphTab = ({ graph, pipeline }) => {
             <Fallback>
               <Graph
                 graph={adaptedGraph}
-                options={{ ...graphOptions, height: '100px' }}
+                options={graphOptions}
                 events={events}
               />
             </Fallback>
