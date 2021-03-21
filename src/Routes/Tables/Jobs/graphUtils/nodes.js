@@ -1,5 +1,5 @@
 import { nodeKind } from '@hkube/consts';
-import { get } from 'lodash';
+import { get, pick } from 'lodash';
 import GRAPH_TYPES from './../graphUtils/types';
 /** @typedef {import('vis').NodeOptions} NodeOptions */
 const { STATUS, NODE_GROUPS } = GRAPH_TYPES;
@@ -150,12 +150,21 @@ export const formatNode = (normalizedPipeline, pipelineKind) => node => {
         },
       }
     : {};
-
-  return {
+  const editedNode = {
     ...batchStyling,
     ...meta,
     ..._node,
     kind,
     shape: nodeShapes[kind] || nodeShapes.default,
   };
+  return pick(
+    editedNode,
+    'label',
+    'shape',
+    'extra',
+    'borderWidth',
+    'id',
+    'shapeProperties',
+    'group'
+  );
 };
