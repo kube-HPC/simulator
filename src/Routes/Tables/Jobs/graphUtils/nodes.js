@@ -70,7 +70,7 @@ const statusMap = {
 const statusToGroup = status =>
   Object.values(statusMap).find(({ availableFrom }) =>
     availableFrom.has(status)
-  )?.group ?? null;
+  )?.group ?? NODE_GROUPS.IDLE;
 
 const setNodeGroup = node => {
   const { status } = node;
