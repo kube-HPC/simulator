@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Radio, Input } from 'antd';
@@ -7,12 +7,32 @@ import DataSourceNode from './DataSource';
 import useIds from './useIds';
 import useWizardContext from '../../useWizardContext';
 import { BoldedFormField } from './../../styles';
-import { Field, DeleteButton } from './../FormUtils';
+import { Field } from './../FormUtils';
 
-const ButtonGroupCenter = styled(Button.Group)`
+const NodeBrowserContainer = styled.section`
   display: flex;
-  justify-content: center;
-  margin-top: 20px;
+  flex-wrap: wrap;
+  border-top: 1px dashed #ccc;
+  padding-top: 1em;
+`;
+
+const NodeSelectRadioButton = styled(Radio.Button)`
+  width: calc(25% - 1ch);
+  border-radius: 0.5em;
+  margin: 0.5em 0.5ch;
+`;
+
+const NodeSelectRadioGroup = styled(Radio.Group)`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0;
+  margin-bottom: auto;
+  width: 100%;
+`;
+
+const NodeNameHeader = styled.h1`
+  text-transform: capitalize;
 `;
 
 const nodesMap = {
@@ -43,63 +63,106 @@ const Nodes = ({ style }) => {
 
   const [ids, appendKey, dropKey] = useIds(Object.keys(initialState.nodes));
 
+  const [activeNodeId, setActiveNodeId] = useState(ids[0]);
+
+  const selectActiveNode = useCallback(
+    e => {
+      setActiveNodeId(e.target.value);
+    },
+    [setActiveNodeId]
+  );
+
+  const handleDelete = useCallback(
+    id => {
+      const idx = ids.indexOf(id);
+      const nextIdx = (() => {
+        if (idx === ids.length - 1) return ids.length - 2;
+        if (idx === 0) return 1;
+        return idx - 1;
+      })();
+      const nextId = ids[nextIdx];
+      dropKey(id);
+      setActiveNodeId(nextId);
+    },
+    [dropKey, setActiveNodeId, ids]
+  );
+
   return (
-    <div style={style}>
-      {ids.map((id, ii) => (
-        <BoldedFormField
-          style={{
-            borderBottom: '1px dashed #ccc',
-            paddingBottom: '1em',
-          }}
-          label={`Node ${ii}`}
-          required={false}
-          key={`node::id-${id}`}>
-          <>
-            {getFieldDecorator(`nodes.${id}.kind`, {
-              initialValue: 'algorithm',
-            })(
-              <Radio.Group
-                buttonStyle="solid"
-                style={{ display: 'flex', alignItems: 'center' }}>
-                <Radio.Button value="algorithm">Algorithm</Radio.Button>
-                <Radio.Button value="dataSource">dataSource</Radio.Button>
-                {ids.length > 1 ? (
-                  <DeleteButton
-                    type="close-circle"
-                    theme="filled"
-                    onClick={() => dropKey(id)}
-                  />
-                ) : null}
-              </Radio.Group>
-            )}
-            <Field
-              title="Node Name"
-              name="nodeName"
-              rootId={`nodes.${id}`}
-              getFieldDecorator={getFieldDecorator}
-              extraRules={[
-                {
-                  max: 32,
-                  message: 'Node Name has to be shorter than 32 characters',
-                },
-              ]}>
-              <Input placeholder="Node Name" />
-            </Field>
-            <Node id={id} kind={getFieldValue(`nodes.${id}.kind`)} />
-          </>
-        </BoldedFormField>
-      ))}
-      <ButtonGroupCenter>
+    <>
+      <div style={style}>
+        {ids.map(id => (
+          <BoldedFormField
+            key={`node::id-${id}`}
+            style={{
+              display: activeNodeId === id ? '' : 'none',
+              margin: 0,
+            }}
+            required={false}>
+            <NodeNameHeader>
+              {getFieldValue(`nodes.${id}.nodeName`) || `node-${id}`}
+            </NodeNameHeader>
+            <h2>
+              {getFieldDecorator(`nodes.${id}.kind`, {
+                initialValue: 'algorithm',
+              })(
+                <Radio.Group
+                  buttonStyle="solid"
+                  style={{ display: 'flex', alignItems: 'center' }}>
+                  <Radio.Button value="algorithm">Algorithm</Radio.Button>
+                  <Radio.Button value="dataSource">dataSource</Radio.Button>
+                  {ids.length > 1 ? (
+                    <Button
+                      icon="close-circle"
+                      theme="filled"
+                      onClick={() => handleDelete(id)}
+                      type="danger"
+                      style={{ marginLeft: 'auto' }}>
+                      Delete Node
+                    </Button>
+                  ) : null}
+                </Radio.Group>
+              )}
+              <Field
+                title="Node Name"
+                name="nodeName"
+                rootId={`nodes.${id}`}
+                getFieldDecorator={getFieldDecorator}
+                extraRules={[
+                  {
+                    max: 32,
+                    message: 'Node Name has to be shorter than 32 characters',
+                  },
+                ]}>
+                <Input placeholder="Node Name" />
+              </Field>
+              <Node id={id} kind={getFieldValue(`nodes.${id}.kind`)} />
+            </h2>
+          </BoldedFormField>
+        ))}
+      </div>
+      <NodeBrowserContainer>
         <Button
           block
           icon="plus"
           type="primary"
           onClick={appendKey}
-          style={{ marginBottom: '1em' }}>
+          style={{ marginBottom: '1em', marginTop: 0 }}>
           Add Node
         </Button>
-      </ButtonGroupCenter>
-    </div>
+        {ids.length > 1 ? (
+          <NodeSelectRadioGroup
+            value={activeNodeId}
+            buttonStyle="solid"
+            onChange={selectActiveNode}>
+            {ids.map(id => (
+              <NodeSelectRadioButton key={`node-radio-${id}`} value={id}>
+                {getFieldValue(`nodes.${id}.nodeName`) || `node-${id}`}
+              </NodeSelectRadioButton>
+            ))}
+          </NodeSelectRadioGroup>
+        ) : null}
+      </NodeBrowserContainer>
+    </>
   );
 };
 

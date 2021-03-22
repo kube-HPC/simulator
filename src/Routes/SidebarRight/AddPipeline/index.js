@@ -41,7 +41,7 @@ const AddPipeline = () => {
   const [status, setStatus] = useState('IDLE');
   const [isEditorVisible, toggle] = useReducer(visible => !visible, false);
   const [editorState, setEditorState] = useState(addPipelineTemplate);
-  const [wizardStepIdx, setWizardStepIdx] = useState(0);
+  const [wizardStepIdx, setWizardStepIdx] = useState(1);
   const { addPipeline } = useActions();
 
   useEffect(() => {

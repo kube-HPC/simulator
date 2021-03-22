@@ -5,6 +5,7 @@ import { Form } from 'components/common';
 import FlowInput from './FlowInput';
 import useWizardContext from '../../useWizardContext';
 
+/** @param {{ style: import('react').CSSProperties }} props */
 const Initial = ({ style }) => {
   const { form } = useWizardContext();
   const { getFieldDecorator } = form;
