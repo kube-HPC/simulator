@@ -27,7 +27,7 @@ const Initial = ({ style }) => {
         })(
           <Radio.Group>
             <Radio.Button value="batch">Batch</Radio.Button>
-            <Radio.Button value="streaming">Streaming</Radio.Button>
+            <Radio.Button value="stream">Streaming</Radio.Button>
           </Radio.Group>
         )}
       </Form.Item>
