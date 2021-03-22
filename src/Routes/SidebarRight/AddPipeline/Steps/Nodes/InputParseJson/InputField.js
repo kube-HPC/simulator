@@ -10,10 +10,10 @@ const InputField = ({ placeholder, tooltip, onRemove, idx, ...antFields }) => {
   const hasRemove = !!onRemove;
   useEffect(() => {
     /**
-     * IsValid will override the field most of the time, this is useful when
-     * you delete an entry - ant needs to re-write this field you don't want
-     * ant to override a field if it is invalid, it will show an "x" and hide
-     * the extra invalid characters from the user making it unusable
+     * IsValid will override the field most of the time, this is useful when you
+     * delete an entry - ant needs to re-write this field you don't want ant to
+     * override a field if it is invalid, it will show an "x" and hide the extra
+     * invalid characters from the user making it unusable
      */
     if (isValid || value === undefined) {
       if (Number.isNaN(value)) {
@@ -32,7 +32,12 @@ const InputField = ({ placeholder, tooltip, onRemove, idx, ...antFields }) => {
         antFields.onChange(parsed);
         setIsValid(true);
       };
-      tryParse({ src, onSuccess, onFail });
+      if (src === '') {
+        onSuccess({ parsed: undefined });
+        setIsValid(false);
+      } else {
+        tryParse({ src, onSuccess, onFail });
+      }
     },
     [antFields]
   );

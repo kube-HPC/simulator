@@ -36,6 +36,7 @@ const InputField = ({
           defaultValue={value}
           value={value}
           placeholder={placeholder}
+          allowClear
           addonAfter={
             <Icon
               style={{ color: !isValid && 'red', fontSize: '15px' }}
