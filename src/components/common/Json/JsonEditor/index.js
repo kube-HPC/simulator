@@ -30,7 +30,6 @@ const JsonEditor = ({
     <AutoSizer>
       {({ width, height }) => (
         <ControlledEditor
-          t={console.log({ width, height })}
           {...props}
           width={width}
           height={height}
