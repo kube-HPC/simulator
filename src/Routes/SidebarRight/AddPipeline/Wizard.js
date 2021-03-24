@@ -67,7 +67,12 @@ const Wizard = ({
   setStepIdx,
   stepIdx,
 }) => {
-  const { setFieldsValue, getFieldsValue, getFieldDecorator } = form;
+  const {
+    setFieldsValue,
+    getFieldsValue,
+    getFieldDecorator,
+    getFieldValue,
+  } = form;
   const { subscribe } = useSubscribe();
 
   useEffect(() => {
@@ -130,6 +135,8 @@ const Wizard = ({
     [getFormattedFormValues, onSubmit]
   );
 
+  const isStreamingPipeline = getFieldValue('kind') === 'stream';
+
   return (
     <>
       <Body>
@@ -143,7 +150,8 @@ const Wizard = ({
           hideRequiredMark
           onSubmit={handleSubmit}
           style={{ overflow: 'auto', padding: '0 2ch' }}>
-          <context.Provider value={{ form, initialState, fieldDecorator }}>
+          <context.Provider
+            value={{ form, initialState, fieldDecorator, isStreamingPipeline }}>
             {stepComponents.map((StepComponent, ii) => (
               <StepComponent
                 key={`step-component-${stepNames[ii]}`}

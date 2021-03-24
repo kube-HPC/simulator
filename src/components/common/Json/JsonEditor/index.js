@@ -1,11 +1,12 @@
 import { ControlledEditor } from '@monaco-editor/react';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
+import { AutoSizer } from 'react-virtualized';
 
 const JsonEditor = ({
   onChange = () => {},
   value: controlledValue = '',
-  height = '60vh',
+  // height = '60vh',
   innerRef = { current: undefined },
   ...props
 }) => {
@@ -26,14 +27,20 @@ const JsonEditor = ({
   }, [controlledValue]);
 
   return (
-    <ControlledEditor
-      {...props}
-      height={height}
-      language="json"
-      value={value}
-      onChange={handleEditorChange}
-      editorDidMount={handleEditorDidMount}
-    />
+    <AutoSizer>
+      {({ width, height }) => (
+        <ControlledEditor
+          t={console.log({ width, height })}
+          {...props}
+          width={width}
+          height={height}
+          language="json"
+          value={value}
+          onChange={handleEditorChange}
+          editorDidMount={handleEditorDidMount}
+        />
+      )}
+    </AutoSizer>
   );
 };
 

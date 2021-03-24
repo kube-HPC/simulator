@@ -10,6 +10,7 @@ export const context = createContext();
  *     id: string,
  *     props: GetFieldDecoratorOptions
  *   ) => React.ReactNode;
+ *   isStreamingPipeline: boolean;
  * }}
  */
 export default () => useContext(context);

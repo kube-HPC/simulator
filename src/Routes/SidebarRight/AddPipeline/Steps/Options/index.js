@@ -7,6 +7,8 @@ import SliderNumber from './SliderNumber';
 import Triggers from './Triggers';
 import Webhooks from './Webhooks';
 import useWizardContext from '../../useWizardContext';
+import { Field } from '../FormUtils';
+import FlowInput from '../Initial/FlowInput';
 
 export { Triggers, Webhooks };
 
@@ -19,9 +21,24 @@ const Grow = styled(FlexBox.Item)`
 const verbosityLevels = ['info', 'trace', 'debug', 'warn', 'error', 'critical'];
 
 const Options = ({ style }) => {
-  const { fieldDecorator } = useWizardContext();
+  const {
+    fieldDecorator,
+    form: { getFieldDecorator },
+    isStreamingPipeline,
+  } = useWizardContext();
   return (
     <div style={style}>
+      {isStreamingPipeline && (
+        <>
+          <Form.Divider>Streaming Flows</Form.Divider>
+          <Field
+            name="streaming.flows"
+            getFieldDecorator={getFieldDecorator}
+            skipValidation>
+            <FlowInput style={{ height: '20em', width: '65ch' }} />
+          </Field>
+        </>
+      )}
       <Form.Divider>Webhooks</Form.Divider>
       <Webhooks />
       <Form.Divider>Triggers</Form.Divider>

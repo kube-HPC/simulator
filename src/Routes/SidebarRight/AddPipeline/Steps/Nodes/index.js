@@ -12,11 +12,17 @@ import { Field } from './../FormUtils';
 const NodeBrowserContainer = styled.section`
   display: flex;
   flex-wrap: wrap;
-  border-top: 1px dashed #ccc;
-  padding-top: 1em;
+  border-bottom: 1px dashed #ccc;
+  margin-bottom: 1em;
+  padding-bottom: 1em;
 `;
 
 const NodeSelectRadioButton = styled(Radio.Button)`
+  width: calc(25% - 1ch);
+  border-radius: 0.5em;
+  margin: 0.5em 0.5ch;
+`;
+const AddNodeButton = styled(Button)`
   width: calc(25% - 1ch);
   border-radius: 0.5em;
   margin: 0.5em 0.5ch;
@@ -88,81 +94,75 @@ const Nodes = ({ style }) => {
   );
 
   return (
-    <>
-      <div style={style}>
-        {ids.map(id => (
-          <BoldedFormField
-            key={`node::id-${id}`}
-            style={{
-              display: activeNodeId === id ? '' : 'none',
-              margin: 0,
-            }}
-            required={false}>
-            <NodeNameHeader>
-              {getFieldValue(`nodes.${id}.nodeName`) || `node-${id}`}
-            </NodeNameHeader>
-            <h2>
-              {getFieldDecorator(`nodes.${id}.kind`, {
-                initialValue: 'algorithm',
-              })(
-                <Radio.Group
-                  buttonStyle="solid"
-                  style={{ display: 'flex', alignItems: 'center' }}>
-                  <Radio.Button value="algorithm">Algorithm</Radio.Button>
-                  <Radio.Button value="dataSource">dataSource</Radio.Button>
-                  {ids.length > 1 ? (
-                    <Button
-                      icon="close-circle"
-                      theme="filled"
-                      onClick={() => handleDelete(id)}
-                      type="danger"
-                      style={{ marginLeft: 'auto' }}>
-                      Delete Node
-                    </Button>
-                  ) : null}
-                </Radio.Group>
-              )}
-              <Field
-                title="Node Name"
-                name="nodeName"
-                rootId={`nodes.${id}`}
-                getFieldDecorator={getFieldDecorator}
-                extraRules={[
-                  {
-                    max: 32,
-                    message: 'Node Name has to be shorter than 32 characters',
-                  },
-                ]}>
-                <Input placeholder="Node Name" />
-              </Field>
-              <Node id={id} kind={getFieldValue(`nodes.${id}.kind`)} />
-            </h2>
-          </BoldedFormField>
-        ))}
-      </div>
+    <div style={style}>
       <NodeBrowserContainer>
-        <Button
-          block
-          icon="plus"
-          type="primary"
-          onClick={appendKey}
-          style={{ marginBottom: '1em', marginTop: 0 }}>
-          Add Node
-        </Button>
-        {ids.length > 1 ? (
-          <NodeSelectRadioGroup
-            value={activeNodeId}
-            buttonStyle="solid"
-            onChange={selectActiveNode}>
-            {ids.map(id => (
-              <NodeSelectRadioButton key={`node-radio-${id}`} value={id}>
-                {getFieldValue(`nodes.${id}.nodeName`) || `node-${id}`}
-              </NodeSelectRadioButton>
-            ))}
-          </NodeSelectRadioGroup>
-        ) : null}
+        <NodeSelectRadioGroup
+          value={activeNodeId}
+          buttonStyle="outline"
+          onChange={selectActiveNode}>
+          {ids.map(id => (
+            <NodeSelectRadioButton key={`node-radio-${id}`} value={id}>
+              {getFieldValue(`nodes.${id}.nodeName`) || `node-${id}`}
+            </NodeSelectRadioButton>
+          ))}
+          <AddNodeButton
+            // block
+            icon="plus"
+            type="dashed"
+            onClick={appendKey}
+          />
+        </NodeSelectRadioGroup>
       </NodeBrowserContainer>
-    </>
+      {ids.map(id => (
+        <BoldedFormField
+          key={`node::id-${id}`}
+          style={{
+            display: activeNodeId === id ? '' : 'none',
+            margin: 0,
+          }}
+          required={false}>
+          <NodeNameHeader>
+            {getFieldValue(`nodes.${id}.nodeName`) || `node-${id}`}
+          </NodeNameHeader>
+          <h2>
+            {getFieldDecorator(`nodes.${id}.kind`, {
+              initialValue: 'algorithm',
+            })(
+              <Radio.Group
+                buttonStyle="solid"
+                style={{ display: 'flex', alignItems: 'center' }}>
+                <Radio.Button value="algorithm">Algorithm</Radio.Button>
+                <Radio.Button value="dataSource">dataSource</Radio.Button>
+                {ids.length > 1 ? (
+                  <Button
+                    icon="close-circle"
+                    ghost
+                    onClick={() => handleDelete(id)}
+                    type="danger"
+                    style={{ marginLeft: 'auto' }}>
+                    Delete Node
+                  </Button>
+                ) : null}
+              </Radio.Group>
+            )}
+            <Field
+              title="Node Name"
+              name="nodeName"
+              rootId={`nodes.${id}`}
+              getFieldDecorator={getFieldDecorator}
+              extraRules={[
+                {
+                  max: 32,
+                  message: 'Node Name has to be shorter than 32 characters',
+                },
+              ]}>
+              <Input placeholder="Node Name" />
+            </Field>
+            <Node id={id} kind={getFieldValue(`nodes.${id}.kind`)} />
+          </h2>
+        </BoldedFormField>
+      ))}
+    </div>
   );
 };
 

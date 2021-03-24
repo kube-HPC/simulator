@@ -33,7 +33,9 @@ const Initial = ({ style }) => {
         )}
       </Form.Item>
       <Form.Item label="Flow Input">
-        {getFieldDecorator('flowInput')(<FlowInput />)}
+        {getFieldDecorator('flowInput')(
+          <FlowInput style={{ height: '30em' }} />
+        )}
       </Form.Item>
     </div>
   );
