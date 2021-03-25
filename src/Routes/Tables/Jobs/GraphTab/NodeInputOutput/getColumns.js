@@ -24,16 +24,19 @@ const Status = status => (
   </StatusTag>
 );
 
-const Duration = (_, record) => (
-  <Tag>
-    {humanizeDuration(
-      record.endTime
-        ? record.endTime - record.startTime
-        : Date.now() - record.startTime,
-      { maxDecimalPoints: 2 }
-    )}
-  </Tag>
-);
+const Duration = (_, record) =>
+  record.startTime ? (
+    <Tag>
+      {humanizeDuration(
+        record.endTime
+          ? record.endTime - record.startTime
+          : Date.now() - record.startTime,
+        { maxDecimalPoints: 2 }
+      )}
+    </Tag>
+  ) : (
+    <Tag style={{ width: '4ch', textAlign: 'center' }}>-</Tag>
+  );
 
 const Retries = retries => <Tag>{retries}</Tag>;
 
