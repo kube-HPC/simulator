@@ -36,6 +36,7 @@ const InputField = ({
           defaultValue={value}
           value={value}
           placeholder={placeholder}
+          allowClear
           addonAfter={
             <Icon
               style={{ color: !isValid && 'red', fontSize: '15px' }}
@@ -47,7 +48,7 @@ const InputField = ({
       {hasRemove && (
         <DeleteButton
           type="minus-circle"
-          style={{ color: '#999' }}
+          style={{ color: '#999', fontSize: '1em', marginLeft: '1ch' }}
           onClick={onRemove}
         />
       )}

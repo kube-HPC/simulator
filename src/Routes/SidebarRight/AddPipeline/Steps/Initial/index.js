@@ -5,6 +5,7 @@ import { Form } from 'components/common';
 import FlowInput from './FlowInput';
 import useWizardContext from '../../useWizardContext';
 
+/** @param {{ style: import('react').CSSProperties }} props */
 const Initial = ({ style }) => {
   const { form } = useWizardContext();
   const { getFieldDecorator } = form;
@@ -27,12 +28,14 @@ const Initial = ({ style }) => {
         })(
           <Radio.Group>
             <Radio.Button value="batch">Batch</Radio.Button>
-            <Radio.Button value="streaming">Streaming</Radio.Button>
+            <Radio.Button value="stream">Streaming</Radio.Button>
           </Radio.Group>
         )}
       </Form.Item>
       <Form.Item label="Flow Input">
-        {getFieldDecorator('flowInput')(<FlowInput />)}
+        {getFieldDecorator('flowInput')(
+          <FlowInput style={{ height: '30em' }} />
+        )}
       </Form.Item>
     </div>
   );

@@ -2,18 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Form, Icon } from 'antd';
+
 import { COLOR } from 'styles';
 
 const smallStyle = {
   marginRight: '2ch',
   alignItems: 'center',
   textAlign: 'center',
+  fontWeight: 'normal',
 };
+const DEFAULT_SPAN = 8;
 
 /** @typedef {typeof Field} FieldProps */
 /**
  * @param {Object} props
  * @param {import('antd/lib/form').ValidationRule[]} props.extraRules
+ * @param {import('antd/lib/form').FormItemProps} props.overrides
  */
 export const Field = ({
   name,
@@ -27,10 +31,21 @@ export const Field = ({
   rootId,
   extraRules,
   initialValue,
+  overrides,
 }) => (
-  <Form.Item label={title} style={small ? smallStyle : {}}>
+  <Form.Item
+    label={title}
+    labelAlign="left"
+    style={
+      small
+        ? smallStyle
+        : { marginTop: '1em', marginBottom: 0, fontWeight: 'normal' }
+    }
+    labelCol={{ span: DEFAULT_SPAN }}
+    wrapperCol={{ span: 24 - DEFAULT_SPAN }}
+    {...overrides}>
     {getFieldDecorator(
-      `${rootId}.${name}`,
+      rootId ? `${rootId}.${name}` : name,
       /** @type {import('antd/lib/form/Form').GetFieldDecoratorOptions} */
       (skipValidation
         ? { initialValue }
@@ -61,8 +76,10 @@ Field.propTypes = {
   small: PropTypes.bool,
   getFieldDecorator: PropTypes.func.isRequired,
   rootId: PropTypes.string.isRequired,
-  // eslint-disable-next-line
+  /* eslint-disable */
   extraRules: PropTypes.object,
+  overrides: PropTypes.object,
+  /* eslint-enable */
   initialValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 Field.defaultProps = {
@@ -72,6 +89,7 @@ Field.defaultProps = {
   small: false,
   extraRules: [],
   initialValue: null,
+  overrides: {},
 };
 
 export const HorizontalRow = styled.div`

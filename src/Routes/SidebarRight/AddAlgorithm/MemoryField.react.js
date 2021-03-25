@@ -29,7 +29,6 @@ const MemoryField = React.forwardRef(
       ? { title: tooltipTitle, placement: 'topLeft' }
       : {};
     return (
-      // eslint-disable-next-line
       <Wrapper {...wrapperProps}>
         <Input.Group compact>
           {iconType && <Icon type={iconType} />}

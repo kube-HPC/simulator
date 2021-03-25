@@ -54,7 +54,6 @@ const Table = ({ dataSource, loading, ...props }) => (
     dataSource={dataSource}
     pagination={false}
     size="middle"
-    // eslint-disable-next-line
     {...props}
   />
 );

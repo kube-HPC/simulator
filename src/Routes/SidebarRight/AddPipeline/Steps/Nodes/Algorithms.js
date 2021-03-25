@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { InputNumber, Switch, Radio, AutoComplete } from 'antd';
+
 import { Form as CommonForm } from 'components/common';
 import useAlgorithm from 'hooks/useAlgorithm';
 import Controller from './InputParseJson';
@@ -23,9 +24,21 @@ const Field = props => {
   );
 };
 
+const overrides = {
+  labelCol: {
+    span: 10,
+  },
+  wrapperCol: {
+    style: {
+      textAlign: 'left',
+    },
+  },
+};
+
 const AlgorithmNode = ({ id }) => {
   const {
-    form: { getFieldDecorator, getFieldValue },
+    form: { getFieldDecorator },
+    isStreamingPipeline,
   } = useWizardContext();
   const { collection } = useAlgorithm();
 
@@ -33,8 +46,6 @@ const AlgorithmNode = ({ id }) => {
     () => collection.map(item => item.name).sort(),
     [collection]
   );
-
-  const isStreamingPipeline = getFieldValue('kind') === 'streaming';
 
   const rootId = `nodes.${id}`;
   return (
@@ -48,6 +59,14 @@ const AlgorithmNode = ({ id }) => {
           }
         />
       </Field>
+      {isStreamingPipeline && (
+        <Field name="stateType" title="State Type" required>
+          <Radio.Group buttonStyle="solid">
+            <Radio.Button value="stateless">stateless</Radio.Button>
+            <Radio.Button value="stateful">stateful</Radio.Button>
+          </Radio.Group>
+        </Field>
+      )}
       <Divider>Inputs</Divider>
       <Controller placeholder="Input" tooltip="Input" nodeIdx={id} />
       <Collapsible title="Retry">
@@ -56,8 +75,13 @@ const AlgorithmNode = ({ id }) => {
             name="retry.policy"
             title="Policy"
             initialValue="OnCrash"
+            overrides={{
+              labelAlign: undefined,
+              labelCol: { span: 5 },
+              wrapperCol: { span: 24 },
+            }}
             skipValidation>
-            <Radio.Group>
+            <Radio.Group buttonStyle="solid">
               <Radio.Button value="Never">Never</Radio.Button>
               <Radio.Button value="Always">Always</Radio.Button>
               <Radio.Button value="OnError">OnError</Radio.Button>
@@ -65,66 +89,61 @@ const AlgorithmNode = ({ id }) => {
             </Radio.Group>
           </Field>
           <Field
+            inline={false}
             title="Retry Limit"
             name="retry.limit"
             initialValue={3}
-            skipValidation>
+            skipValidation
+            overrides={{
+              labelAlign: undefined,
+              labelCol: { span: 10 },
+            }}>
             <InputNumber min={0} />
           </Field>
         </HorizontalRow>
       </Collapsible>
       <Collapsible title="Options">
-        <HorizontalRow>
-          {isStreamingPipeline ? (
-            <Field
-              name="stateType"
-              title="State Type"
-              skipValidation
-              initialValue="stateless">
-              <Radio.Group>
-                <Radio.Button value="stateless">stateless</Radio.Button>
-                <Radio.Button value="stateful">stateful</Radio.Button>
-              </Radio.Group>
-            </Field>
-          ) : (
-            <Field
-              name="batchOperation"
-              title="Batch Operation"
-              skipValidation
-              initialValue="indexed">
-              <Radio.Group>
-                <Radio.Button value="indexed">indexed</Radio.Button>
-                <Radio.Button value="cartesian">cartesian</Radio.Button>
-              </Radio.Group>
-            </Field>
-          )}
+        {!isStreamingPipeline && (
           <Field
-            title="Node TTL"
-            name="ttl"
-            initialValue={0}
+            overrides={overrides}
+            name="batchOperation"
+            title="Batch Operation"
             skipValidation
-            small>
-            <InputNumber min={0} />
+            initialValue="indexed">
+            <Radio.Group style={{ marginLeft: '-0.5ch' }} buttonStyle="solid">
+              <Radio.Button value="indexed">indexed</Radio.Button>
+              <Radio.Button value="cartesian">cartesian</Radio.Button>
+            </Radio.Group>
           </Field>
-        </HorizontalRow>
-        <HorizontalRow>
-          <Field
-            title="Include In Pipeline Results"
-            name="includeInResult"
-            skipValidation
-            initialValue={false}
-            small>
-            <Switch />
-          </Field>
-          <Field
-            title="Create A Tensorboard"
-            name="metrics.tensorboard"
-            skipValidation
-            initialValue
-            small>
-            <Switch defaultChecked />
-          </Field>
-        </HorizontalRow>
+        )}
+        <Field
+          title="Node TTL"
+          name="ttl"
+          initialValue={0}
+          skipValidation
+          overrides={overrides}
+          small>
+          <InputNumber min={0} />
+        </Field>
+
+        <Field
+          overrides={overrides}
+          title="Include In Pipeline Results"
+          name="includeInResult"
+          skipValidation
+          initialValue={false}
+          small>
+          <Switch />
+        </Field>
+        <Field
+          overrides={overrides}
+          title="Create A Tensorboard"
+          name="metrics.tensorboard"
+          skipValidation
+          initialValue
+          small>
+          <Switch defaultChecked />
+        </Field>
       </Collapsible>
     </ctx.Provider>
   );
