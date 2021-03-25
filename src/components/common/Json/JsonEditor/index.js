@@ -6,7 +6,6 @@ import { AutoSizer } from 'react-virtualized';
 const JsonEditor = ({
   onChange = () => {},
   value: controlledValue = '',
-  // height = '60vh',
   innerRef = { current: undefined },
   ...props
 }) => {
