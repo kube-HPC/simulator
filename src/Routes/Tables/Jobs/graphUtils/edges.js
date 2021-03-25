@@ -17,7 +17,7 @@ const scaleThroughput = CappedScale(fromScale, toScale);
 const _formatTitle = metrics =>
   Object.entries(metrics)
     .map(([k, v]) => `${k}: ${v}`)
-    .join('<br>');
+    .join('\n');
 
 export const formatEdge = edge => {
   const { value, ...rest } = edge;
