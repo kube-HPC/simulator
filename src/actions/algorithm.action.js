@@ -17,7 +17,7 @@ export const deleteAlgorithm = algorithmName => ({
   },
 });
 
-export const runAlgorithm = ({ name, input }) => ({
+export const runAlgorithm = ({ name, input = [] }) => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: `exec/algorithm`,
