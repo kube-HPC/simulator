@@ -108,12 +108,7 @@ const Nodes = ({ style }) => {
               {getFieldValue(`nodes.${id}.nodeName`) || `node-${id}`}
             </NodeSelectRadioButton>
           ))}
-          <AddNodeButton
-            // block
-            icon="plus"
-            type="dashed"
-            onClick={appendKey}
-          />
+          <AddNodeButton icon="plus" type="dashed" onClick={appendKey} />
         </NodeSelectRadioGroup>
       </NodeBrowserContainer>
       {ids.map(id => (

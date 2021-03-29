@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Input, Radio } from 'antd';
 import { Form } from 'components/common';
-import FlowInput from './FlowInput';
 import useWizardContext from '../../useWizardContext';
+import JsonEditor from '../../JsonEditor';
 
 /** @param {{ style: import('react').CSSProperties }} props */
 const Initial = ({ style }) => {
@@ -34,7 +34,7 @@ const Initial = ({ style }) => {
       </Form.Item>
       <Form.Item label="Flow Input">
         {getFieldDecorator('flowInput')(
-          <FlowInput style={{ height: '30em' }} />
+          <JsonEditor style={{ height: '30em' }} />
         )}
       </Form.Item>
     </div>

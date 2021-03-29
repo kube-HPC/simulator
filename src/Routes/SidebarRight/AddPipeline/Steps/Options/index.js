@@ -8,7 +8,7 @@ import Triggers from './Triggers';
 import Webhooks from './Webhooks';
 import useWizardContext from '../../useWizardContext';
 import { Field } from '../FormUtils';
-import FlowInput from '../Initial/FlowInput';
+import JsonEditor from './../../JsonEditor';
 
 export { Triggers, Webhooks };
 
@@ -26,16 +26,17 @@ const Options = ({ style }) => {
     form: { getFieldDecorator },
     isStreamingPipeline,
   } = useWizardContext();
+
   return (
     <div style={style}>
-      {isStreamingPipeline && (
+      {isStreamingPipeline !== false && (
         <>
           <Form.Divider>Streaming Flows</Form.Divider>
           <Field
-            name="streaming.flows"
+            name="flows"
             getFieldDecorator={getFieldDecorator}
             skipValidation>
-            <FlowInput style={{ height: '20em', width: '65ch' }} />
+            <JsonEditor style={{ height: '20em', width: '65ch' }} />
           </Field>
         </>
       )}

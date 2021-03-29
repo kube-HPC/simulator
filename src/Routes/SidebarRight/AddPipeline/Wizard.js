@@ -74,7 +74,6 @@ const Wizard = ({
     getFieldValue,
   } = form;
   const { subscribe } = useSubscribe();
-
   useEffect(() => {
     setFieldsValue(pruneObject(parseInitialState(initialState)));
   }, [setFieldsValue, initialState]);
@@ -134,8 +133,10 @@ const Wizard = ({
     },
     [getFormattedFormValues, onSubmit]
   );
-
-  const isStreamingPipeline = getFieldValue('kind') === 'stream';
+  // check for undefined to avoid removing streaming only fields while initial load
+  const isStreamingPipeline = ['stream', undefined].includes(
+    getFieldValue('kind')
+  );
 
   return (
     <>
