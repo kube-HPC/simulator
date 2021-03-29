@@ -21,6 +21,9 @@ const NodeSelectRadioButton = styled(Radio.Button)`
   width: calc(25% - 1ch);
   border-radius: 0.5em;
   margin: 0.5em 0.5ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 const AddNodeButton = styled(Button)`
   width: calc(25% - 1ch);
