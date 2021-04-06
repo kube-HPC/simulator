@@ -20,19 +20,28 @@ import useFileActions from './useFileActions';
 
 /**
  * @typedef {import('chonky').ChonkyFileActionData} ChonkyFileActionData
+ *
  * @typedef {import('chonky').FileArray} FileArray
+ *
  * @typedef {import('chonky').FileData} FileData
+ *
  * @typedef {import('antd/lib/upload/interface').UploadFile}
+ *
  * @typedef {import('./stratifier').StratifiedDirectory} StratifiedDirectory
+ *
  * @typedef {import('./stratifier').StratifiedFile} StratifiedFile
+ *
  * @typedef {import('./stratifier').StratifiedMap} StratifiedMap
+ *
  * @typedef {FileData & {
  *   parentId?: string;
  *   childrenIds?: string[];
  * }} CustomFileData
+ *
  * @typedef {{
  *   [fileId: string]: CustomFileData;
  * }} CustomFileMap
+ *
  * @typedef {{
  *   ls: () => FileArray;
  *   getDeleteFiles: () => string[];
