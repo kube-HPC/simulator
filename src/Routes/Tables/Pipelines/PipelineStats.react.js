@@ -40,6 +40,7 @@ const PipelineStats = ({ name, nodes }) => {
             key={`${dataStats.name}-${s.status}`}
             status={s.status}
             count={s.count}
+            taskColorMap={false}
           />
         ))}
       {metricsAvailable && (
