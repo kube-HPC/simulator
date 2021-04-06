@@ -11,9 +11,13 @@ import useActiveSnapshot from './useActiveSnapshot';
 
 /**
  * @typedef {import('./').ExtendedDataSource} ExtendedDataSource
+ *
  * @typedef {import('reducers/dataSources/datasource').DataSourceVersion} DataSourceVersion
+ *
  * @typedef {import('reducers/dataSources/datasource').Snapshot} Snapshot
+ *
  * @typedef {import('../../usePath').SideBarMode} SideBarMode
+ *
  * @typedef {import('reducers/dataSources/datasource').FetchStatus} FetchStatus
  */
 
@@ -165,11 +169,24 @@ const Versions = ({
   });
 
   const handleCopy = useCallback(() => {
-    if (!snapshotName) copyToClipboard(dataSource.id);
-    else
-      copyToClipboard(
-        `dataSource: ${dataSource.name}, snapshot: ${snapshotName}`
-      );
+    let payload = null;
+    if (!snapshotName) {
+      payload = {
+        dataSource: {
+          id: dataSource.id,
+        },
+      };
+    } else {
+      payload = {
+        dataSource: dataSource.name,
+        snapshot: {
+          name: snapshotName,
+        },
+      };
+    }
+    if (payload) {
+      copyToClipboard(JSON.stringify(payload, null, 2));
+    }
   }, [snapshotName, dataSource]);
   const hasMissingSnapshot = snapshotName && !activeSnapshot;
 

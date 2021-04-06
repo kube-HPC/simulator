@@ -38,6 +38,7 @@ const NodeSelectRadioGroup = styled(Radio.Group)`
   margin: 0;
   margin-bottom: auto;
   width: 100%;
+  text-transform: capitalize;
 `;
 
 const NodeNameHeader = styled.h1`
