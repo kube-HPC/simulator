@@ -8,11 +8,13 @@
  *   description: string;
  *   uploadedAt?: number;
  * }} FlatFile
+ *
  * @typedef {{
  *   parentId: string;
  *   isHidden?: boolean;
  *   overrideFile?: string;
  * } & FlatFile} StratifiedFile
+ *
  * @typedef {{
  *   id: string;
  *   name: string;
@@ -21,10 +23,13 @@
  *   childrenIds: string[];
  *   parentId?: string;
  * }} StratifiedDirectory
+ *
  * @typedef {{
  *   [id: string]: StratifiedDirectory | StratifiedFile;
  * }} StratifiedMap
  */
+
+const ROOT_ID = '/';
 
 export const generateFolderId = folderName =>
   `${Math.floor(Math.random().toFixed(4) * 10 ** 4)}-${folderName}`;
@@ -44,10 +49,10 @@ export const stratify = flatList => {
 
   if (flatList.length === 0)
     return {
-      '/': {
+      [ROOT_ID]: {
         children: 0,
         childrenIds: [],
-        id: '/',
+        id: ROOT_ID,
         isDir: true,
         name: '/',
       },
@@ -57,7 +62,7 @@ export const stratify = flatList => {
   const stratifiedMap = flatList.reduce((acc, file) => {
     /** @type {PathsMap} */
     const parentDirsMap = Object.fromEntries([
-      ['/', { dir: '/', id: '/' }],
+      [ROOT_ID, { dir: '/', id: ROOT_ID }],
       ...file.path
         .split('/')
         .filter(subPath => subPath)
@@ -81,32 +86,39 @@ export const stratify = flatList => {
 
     const parentDirs = Object.values(parentDirsMap);
 
-    const nextDirs = parentDirs.map(({ dir, id: dirId }, ii, collection) => {
-      let childrenIds = acc[dirId]?.childrenIds ?? [];
+    const nextDirs = parentDirs
+      .slice()
+      .sort((a, b) => {
+        if (a.id === ROOT_ID) return -1;
+        if (b.id === ROOT_ID) return 1;
+        return 0;
+      })
+      .map(({ dir, id: dirId }, ii, collection) => {
+        let childrenIds = acc[dirId]?.childrenIds ?? [];
 
-      childrenIds =
-        ii !== collection.length - 1
-          ? childrenIds.concat(collection[ii + 1].id)
-          : childrenIds.concat(file.id);
+        childrenIds =
+          ii !== collection.length - 1
+            ? childrenIds.concat(collection[ii + 1].id)
+            : childrenIds.concat(file.id);
 
-      childrenIds = [...new Set(childrenIds)];
+        childrenIds = [...new Set(childrenIds)];
 
-      return [
-        dirId,
-        {
-          id: dirId,
-          name: dir,
-          isDir: true,
-          children: childrenIds.length,
-          childrenIds,
-          ...(ii !== 0
-            ? {
-                parentId: collection[ii - 1].id,
-              }
-            : {}),
-        },
-      ];
-    });
+        return [
+          dirId,
+          {
+            id: dirId,
+            name: dir,
+            isDir: true,
+            children: childrenIds.length,
+            childrenIds,
+            ...(ii !== 0
+              ? {
+                  parentId: collection[ii - 1].id,
+                }
+              : {}),
+          },
+        ];
+      });
 
     return {
       ...acc,
