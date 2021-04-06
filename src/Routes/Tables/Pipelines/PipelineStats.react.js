@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { boardStatuses } from '@hkube/consts';
 import { Tag, Tooltip } from 'antd';
 import Text from 'antd/lib/typography/Text';
+import { sortBy } from 'lodash';
 import { FlexBox } from 'components/common';
 import { Count } from 'components/StatusTag';
 import { useBoards, usePipeline } from 'hooks';
@@ -16,23 +17,11 @@ const PipelineStats = ({ name, nodes }) => {
 
   // array flat one-liner
   const pipelineStats = useMemo(
-    () =>
-      dataStats
-        .find(s => s.name === name)
-        ?.stats?.slice()
-        .sort((a, b) => {
-          if (a.status < b.status) {
-            return -1;
-          }
-          if (a.status > b.status) {
-            return 1;
-          }
-          return 0;
-        }),
+    () => sortBy(dataStats.find(s => s.name === name)?.stats, ['status']),
     [dataStats, name]
   );
 
-  const hasStats = pipelineStats?.length;
+  const hasStats = pipelineStats?.length !== 0;
 
   const metricsAvailable = useMemo(
     () =>
