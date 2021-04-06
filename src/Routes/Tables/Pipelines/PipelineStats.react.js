@@ -17,17 +17,22 @@ const PipelineStats = ({ name, nodes }) => {
   // array flat one-liner
   const pipelineStats = useMemo(
     () =>
-      [].concat(
-        ...[
-          ...dataStats
-            .filter(status => status.name === name && status.stats.length !== 0)
-            .map(({ stats }) => stats),
-        ]
-      ),
+      dataStats
+        .find(s => s.name === name)
+        ?.stats?.slice()
+        .sort((a, b) => {
+          if (a.status < b.status) {
+            return -1;
+          }
+          if (a.status > b.status) {
+            return 1;
+          }
+          return 0;
+        }),
     [dataStats, name]
   );
 
-  const hasStats = pipelineStats.length !== 0;
+  const hasStats = pipelineStats?.length;
 
   const metricsAvailable = useMemo(
     () =>
@@ -41,11 +46,11 @@ const PipelineStats = ({ name, nodes }) => {
   return (
     <>
       {hasStats &&
-        pipelineStats.map(([status, count]) => (
+        pipelineStats.map(s => (
           <Count
-            key={`${dataStats.name}-${status}`}
-            status={status}
-            count={count}
+            key={`${dataStats.name}-${s.status}`}
+            status={s.status}
+            count={s.count}
           />
         ))}
       {metricsAvailable && (
