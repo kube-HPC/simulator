@@ -4,12 +4,15 @@ import sum from 'hash-sum';
 
 /**
  * @typedef {import('./Pipeline').Pipeline} Pipeline
+ *
  * @typedef {import('./Pipeline').Stats} Stats
+ *
  * @typedef {{
  *   collection: import('@reduxjs/toolkit').EntityState<Pipeline>;
  *   sum: string;
  *   stats: import('@reduxjs/toolkit').EntityState<Stats>;
  * }} PipelinesState
+ *
  * @typedef {{
  *   pipelines: PipelinesState;
  * }} State
@@ -35,7 +38,7 @@ const pipelinesReducer = createSlice({
   extraReducers: {
     [actions.SOCKET_GET_DATA]: (state, { payload }) => {
       const { discovery, pipelines, pipelinesStats } = payload;
-      const nextSum = sum(payload.pipelines);
+      const nextSum = sum([].concat(pipelines, pipelinesStats));
       if (nextSum === state.sum) return state;
       const isValidSource = discovery && pipelines;
       const isValidStats = Array.isArray(pipelinesStats);
