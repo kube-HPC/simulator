@@ -33,36 +33,37 @@ const noConnectionEvents = [
   'reconnect_error',
   'reconnect_failed',
 ];
-
-/** @param {{ socket: Socket; name: string; lastRoom: string }} props */
-const connectOperation = ({ socket, name, lastRoom }) => {
-  console.info(
-    `connecting to socket room: ${name}, previous room: ${lastRoom}`
-  );
-  socket.emit(connectionsEvents.EXPERIMENT_REGISTER, {
-    name,
-    lastRoom,
-  });
-  console.info(
-    `%cSOCKET Connected, id=${socket.id}`,
-    `background: ${COLOR.grey}; color: ${COLOR.blue}`
-  );
-};
+// this value is used for un-subscribing the previous experiment
+let lastExperimentId = null;
 
 /** @type {(experimentName: string) => string} */
 const formatSocketRoomName = experimentName =>
   experimentName ? `experiment:${experimentName}` : null;
 
-// this value is used for un-subscribing the previous experiment
-let lastExperimentId = null;
-const getSocketRoom = experimentId => {
-  const response = {
-    name: formatSocketRoomName(experimentId),
+/** @param {{ socket: Socket; name: string; lastRoom: string }} props */
+const connectToRoom = ({ socket, name }) => {
+  if (lastExperimentId === name) return;
+  console.info(
+    `
+    %cDisconnecting%c from socket room: %c${lastExperimentId}
+    %cConnecting%c to socket room: %c${name}, 
+    `,
+    'font-weight: bold;',
+    '',
+    'font-style: italic;',
+    'font-weight: bold;',
+    '',
+    'font-style: italic;'
+  );
+  socket.emit(connectionsEvents.EXPERIMENT_REGISTER, {
+    name: formatSocketRoomName(name),
     lastRoom: formatSocketRoomName(lastExperimentId),
-  };
-
-  lastExperimentId = experimentId;
-  return response;
+  });
+  lastExperimentId = name;
+  console.info(
+    `%cSOCKET Connected, id=${socket.id}`,
+    `background: ${COLOR.grey}; color: ${COLOR.blue}`
+  );
 };
 
 const socketMiddleware = ({ dispatch }) => {
@@ -99,11 +100,9 @@ const socketMiddleware = ({ dispatch }) => {
             ].includes(event)
           ) {
             const experimentName = getExperimentName(window.location.search);
-            const socketRoom = formatSocketRoomName(experimentName);
-            connectOperation({
+            connectToRoom({
               socket,
-              name: socketRoom,
-              lastRoom: lastExperimentId,
+              name: experimentName,
             });
           } else {
             console.info(`${event}, ${args}`);
@@ -146,8 +145,7 @@ const socketMiddleware = ({ dispatch }) => {
     }
 
     if (action.type === AT.EXPERIMENT_CHANGE) {
-      const { name, lastRoom } = getSocketRoom(action.payload);
-      connectOperation({ socket, name, lastRoom });
+      connectToRoom({ socket, name: action.payload });
     }
     return next(action);
   };
