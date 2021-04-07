@@ -5,6 +5,7 @@ import useToggle from 'hooks/useToggle';
 import MissingIdError from 'components/MissingIdError';
 import { DRAWER_SIZE } from 'const';
 import { useActions, useExperiments } from 'hooks';
+import { schema as experimentsSchema } from 'hooks/useExperiments';
 import useActivePipeline from './useActivePipeline';
 import usePath from './usePath';
 
@@ -16,7 +17,17 @@ const ExecuteDrawer = () => {
   const { execStored } = useActions();
   const { experimentId: experimentName } = useExperiments();
   const value = useMemo(
-    () => JSON.stringify({ ...executePipeline, experimentName }, null, 4),
+    () =>
+      JSON.stringify(
+        {
+          ...executePipeline,
+          ...(experimentName === experimentsSchema.SHOW_ALL
+            ? {}
+            : { experimentName }),
+        },
+        null,
+        4
+      ),
     [executePipeline, experimentName]
   );
 
