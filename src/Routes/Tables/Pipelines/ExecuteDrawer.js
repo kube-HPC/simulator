@@ -5,7 +5,6 @@ import useToggle from 'hooks/useToggle';
 import MissingIdError from 'components/MissingIdError';
 import { DRAWER_SIZE } from 'const';
 import { useActions, useExperiments } from 'hooks';
-import { schema as experimentsSchema } from 'hooks/useExperiments';
 import useActivePipeline from './useActivePipeline';
 import usePath from './usePath';
 
@@ -16,20 +15,17 @@ const ExecuteDrawer = () => {
   const { nodes, description, triggers, ...executePipeline } = record || {};
   const { execStored } = useActions();
   const { experimentId: experimentName } = useExperiments();
-  const value = useMemo(() => JSON.stringify(executePipeline, null, 4), [
-    executePipeline,
-  ]);
+  const value = useMemo(
+    () => JSON.stringify({ ...executePipeline, experimentName }, null, 4),
+    [executePipeline, experimentName]
+  );
 
   const onSubmit = useCallback(
     nextValue => {
       const parsedValue = JSON.parse(nextValue);
-      execStored(
-        experimentName === experimentsSchema.showAll
-          ? parsedValue
-          : { ...parsedValue, experimentName }
-      );
+      execStored(parsedValue);
     },
-    [experimentName, execStored]
+    [execStored]
   );
 
   return (
