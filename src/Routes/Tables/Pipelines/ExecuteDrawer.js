@@ -4,7 +4,7 @@ import DrawerEditor from 'components/Drawer/DrawerEditor.react';
 import useToggle from 'hooks/useToggle';
 import MissingIdError from 'components/MissingIdError';
 import { DRAWER_SIZE } from 'const';
-import { useActions } from 'hooks';
+import { useActions, useExperiments } from 'hooks';
 import { schema as experimentsSchema } from 'hooks/useExperiments';
 import useActivePipeline from './useActivePipeline';
 import usePath from './usePath';
@@ -13,24 +13,30 @@ const ExecuteDrawer = () => {
   const { goTo, pipelineId } = usePath();
   const { pipeline: record } = useActivePipeline();
   const { setOff, isOn } = useToggle(true);
-  const { nodes, description, triggers, experimentName, ...executePipeline } =
-    record || {};
+  const { nodes, description, triggers, ...executePipeline } = record || {};
   const { execStored } = useActions();
-
-  const value = useMemo(() => JSON.stringify(executePipeline, null, 4), [
-    executePipeline,
-  ]);
+  const { experimentId: experimentName } = useExperiments();
+  const value = useMemo(
+    () =>
+      JSON.stringify(
+        {
+          ...executePipeline,
+          ...(experimentName === experimentsSchema.SHOW_ALL
+            ? {}
+            : { experimentName }),
+        },
+        null,
+        4
+      ),
+    [executePipeline, experimentName]
+  );
 
   const onSubmit = useCallback(
     nextValue => {
       const parsedValue = JSON.parse(nextValue);
-      execStored(
-        experimentName === experimentsSchema.showAll
-          ? parsedValue
-          : { experimentName, ...parsedValue }
-      );
+      execStored(parsedValue);
     },
-    [experimentName, execStored]
+    [execStored]
   );
 
   return (
