@@ -4,6 +4,8 @@ import AT from 'const/application-actions';
 import { COLOR } from 'styles/colors';
 import { getExperimentName } from 'hooks/useExperiments';
 
+/** @typedef {SocketIOClient.Socket} Socket */
+
 const currentTopicRegistered = {};
 
 const success = (payload, action) => ({
@@ -32,6 +34,7 @@ const noConnectionEvents = [
   'reconnect_failed',
 ];
 
+/** @param {{ socket: Socket; name: string; lastRoom: string }} props */
 const connectOperation = ({ socket, name, lastRoom }) => {
   console.info(
     `connecting to socket room: ${name}, previous room: ${lastRoom}`
@@ -46,14 +49,16 @@ const connectOperation = ({ socket, name, lastRoom }) => {
   );
 };
 
-const toSocketRoom = value => (value ? `experiment:${value}` : null);
+/** @type {(experimentName: string) => string} */
+const formatSocketRoomName = experimentName =>
+  experimentName ? `experiment:${experimentName}` : null;
 
 // this value is used for un-subscribing the previous experiment
 let lastExperimentId = null;
 const getSocketRoom = experimentId => {
   const response = {
-    name: toSocketRoom(experimentId),
-    lastRoom: toSocketRoom(lastExperimentId),
+    name: formatSocketRoomName(experimentId),
+    lastRoom: formatSocketRoomName(lastExperimentId),
   };
 
   lastExperimentId = experimentId;
@@ -61,6 +66,7 @@ const getSocketRoom = experimentId => {
 };
 
 const socketMiddleware = ({ dispatch }) => {
+  /** @type {Socket} */
   let socket = null;
   return next => action => {
     if (action.type === `${AT.SOCKET_GET_CONFIG}_SUCCESS`) {
@@ -93,8 +99,12 @@ const socketMiddleware = ({ dispatch }) => {
             ].includes(event)
           ) {
             const experimentName = getExperimentName(window.location.search);
-            const { name, lastRoom } = toSocketRoom(experimentName);
-            connectOperation({ socket, name, lastRoom });
+            const socketRoom = formatSocketRoomName(experimentName);
+            connectOperation({
+              socket,
+              name: socketRoom,
+              lastRoom: lastExperimentId,
+            });
           } else {
             console.info(`${event}, ${args}`);
           }
