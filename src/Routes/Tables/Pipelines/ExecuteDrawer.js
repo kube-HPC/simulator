@@ -26,7 +26,7 @@ const ExecuteDrawer = () => {
       execStored(
         experimentName === experimentsSchema.showAll
           ? parsedValue
-          : { experimentName, ...parsedValue }
+          : { ...parsedValue, experimentName }
       );
     },
     [experimentName, execStored]
