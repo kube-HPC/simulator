@@ -16,17 +16,14 @@ const generateTab = (key, value) => (
 );
 
 const ExpandedRow = collection => record => {
-  const filteredDataSource = collection.filter(
-    d => d.algorithmName === record.algorithmName
-  );
-
+  const entries = collection[record?.algorithmName] || [];
   return (
     <Card isMargin>
       <Table
         isInner
         rowKey={row => row.podName}
         columns={workersTableStats}
-        dataSource={filteredDataSource}
+        dataSource={entries}
         expandedRowRender={row => (
           <Card isMargin>
             <Tabs>{generateTab('Information', row)}</Tabs>
@@ -57,9 +54,6 @@ const WorkersTable = () => {
   );
 };
 
-WorkersTable.propTypes = {
-  // dataSource: PropTypes.array.isRequired,
-  // stats: PropTypes.object.isRequired,
-};
+WorkersTable.propTypes = {};
 
 export default WorkersTable;
