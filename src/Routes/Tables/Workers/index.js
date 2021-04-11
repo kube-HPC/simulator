@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 // import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Table } from 'components';
@@ -16,17 +16,14 @@ const generateTab = (key, value) => (
 );
 
 const ExpandedRow = collection => record => {
-  const filteredDataSource = collection.filter(
-    d => d.algorithmName === record.algorithmName
-  );
-
+  const entries = collection[record?.algorithmName] || [];
   return (
     <Card isMargin>
       <Table
         isInner
         rowKey={row => row.podName}
         columns={workersTableStats}
-        dataSource={filteredDataSource}
+        dataSource={entries}
         expandedRowRender={row => (
           <Card isMargin>
             <Tabs>{generateTab('Information', row)}</Tabs>
@@ -41,11 +38,14 @@ const WorkersTable = () => {
   const stats = useSelector(selectors.workers.stats);
   const collection = useSelector(selectors.workers.all);
 
-  const statsMergedWithDefault =
-    (stats &&
-      stats.stats &&
-      stats.stats.map(algorithm => ({ ...defaultWorkerData, ...algorithm }))) ||
-    [];
+  const statsMergedWithDefault = useMemo(
+    () =>
+      stats?.stats?.map(algorithm => ({
+        ...defaultWorkerData,
+        ...algorithm,
+      })) ?? [],
+    [stats]
+  );
 
   return (
     <Table
@@ -57,9 +57,6 @@ const WorkersTable = () => {
   );
 };
 
-WorkersTable.propTypes = {
-  // dataSource: PropTypes.array.isRequired,
-  // stats: PropTypes.object.isRequired,
-};
+WorkersTable.propTypes = {};
 
 export default WorkersTable;

@@ -53,7 +53,7 @@ export const workersTableStats = [
     onFilter: (value, record) => record.podName.includes(value),
     render: PodName,
     sorter: (a, b) => sorter(a.podName, b.podName),
-    sortOrder: 'ascend',
+    defaultSortOrder: 'ascend',
   },
   {
     title: 'Worker State',
@@ -97,7 +97,7 @@ export const workersColumns = [
     key: 'algorithmName',
     dataIndex: 'algorithmName',
     sorter: (a, b) => sorter(a.algorithmName, b.algorithmName),
-    sortOrder: 'ascend',
+    defaultSortOrder: 'ascend',
     render: Name,
   },
   {
