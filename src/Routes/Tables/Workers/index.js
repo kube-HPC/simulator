@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 // import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Table } from 'components';
@@ -38,11 +38,14 @@ const WorkersTable = () => {
   const stats = useSelector(selectors.workers.stats);
   const collection = useSelector(selectors.workers.all);
 
-  const statsMergedWithDefault =
-    (stats &&
-      stats.stats &&
-      stats.stats.map(algorithm => ({ ...defaultWorkerData, ...algorithm }))) ||
-    [];
+  const statsMergedWithDefault = useMemo(
+    () =>
+      stats?.stats?.map(algorithm => ({
+        ...defaultWorkerData,
+        ...algorithm,
+      })) ?? [],
+    [stats]
+  );
 
   return (
     <Table
