@@ -2,8 +2,11 @@ import { createSlice } from '@reduxjs/toolkit';
 import actionTypes from './actionTypes';
 /**
  * @typedef {import('./datasource').Snapshot} Snapshot
+ *
  * @typedef {import('./datasource').FetchStatus} FetchStatus
+ *
  * @typedef {import('./datasource').DataSource} DataSource
+ *
  * @typedef {{
  *   [dataSourceName: string]: { status: FetchStatus; collection: Snapshot[] };
  * }} SnapshotsState
@@ -16,7 +19,10 @@ const snapshots = createSlice({
   name: 'snapshots',
   initialState,
   reducers: {
-    /** @param {{ payload: Snapshot; meta: { dataSourceId: string } }} action */
+    /**
+     * @param {{ payload: Snapshot; meta: { dataSourceId: string } }} action
+     * @returns {SnapshotsState}
+     */
     appendSnapshot: (state, { payload }) => {
       const { name } = payload.dataSource;
       const dataSource = state[name];
@@ -24,7 +30,10 @@ const snapshots = createSlice({
         ...state,
         [name]: {
           ...dataSource,
-          collection: dataSource.collection.concat(payload),
+          status: 'SUCCESS',
+          collection: dataSource
+            ? dataSource.collection.concat(payload)
+            : [payload],
         },
       };
     },
