@@ -10,9 +10,13 @@ import DeleteModal from './DeleteModal';
 
 /**
  * @typedef {import('./FileBrowser').RefContent} RefContent
+ *
  * @typedef {import('./stratifier').FlatFile} FlatFile
+ *
  * @typedef {import('antd/lib/upload/interface').UploadFile} UploadFile
+ *
  * @typedef {import('./VersionSelect').DataSource} DataSource
+ *
  * @typedef {import('reducers/dataSources/datasource').FetchStatus} FetchStatus
  */
 
@@ -66,27 +70,8 @@ const EditMode = ({
     [fileBrowserRef]
   );
 
-  const handleFileDropped = useCallback(
-    file => {
-      fileBrowserRef.current.dropFile(file.uid);
-    },
-    [fileBrowserRef]
-  );
-
-  const handleFileBrowserDelete = useCallback(
-    /** @param {FlatFile[]} files */
-    files => {
-      const fileIds = new Set(files.map(file => file.id));
-      return setAddedFiles(state =>
-        state.filter(file => !fileIds.has(file.uid))
-      );
-    },
-    [setAddedFiles]
-  );
-
   const { onChange, customRequest } = useDragger({
     onAddFile: handleFileAdded,
-    onDropFile: handleFileDropped,
     setFileList: setAddedFiles,
   });
 
@@ -112,14 +97,24 @@ const EditMode = ({
     setAddedFiles([]);
   }, [dataSource.id]);
 
+  // drop a file from the added files list if deleted before upload
+  const handleDelete = useCallback(
+    /** @param {UploadFile[]} files */
+    files => {
+      const ids = new Set(files.map(file => file.id));
+      setAddedFiles(state => state.filter(item => !ids.has(item.uid)));
+    },
+    [setAddedFiles]
+  );
+
   return (
     <Form onSubmit={handleSubmit} style={{ display: 'contents' }}>
       <FileBrowserContainer>
         <FileBrowser
           files={dataSource.files}
           ref={fileBrowserRef}
-          onDelete={handleFileBrowserDelete}
           onDownload={onDownload}
+          onDelete={handleDelete}
         />
       </FileBrowserContainer>
       <div>
