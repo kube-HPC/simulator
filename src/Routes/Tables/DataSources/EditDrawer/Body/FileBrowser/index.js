@@ -1,4 +1,5 @@
 import React, {
+  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -59,9 +60,9 @@ setChonkyDefaults({ iconComponent: ChonkyIconFA });
 const FileBrowser = ({
   files: srcFiles,
   forwardRef,
-  onDelete,
   isReadOnly,
   onDownload,
+  onDelete,
 }) => {
   const {
     fileMap,
@@ -76,10 +77,18 @@ const FileBrowser = ({
     deletedFiles,
   } = useFileMap(srcFiles);
 
+  const handleDelete = useCallback(
+    files => {
+      deleteFiles(files);
+      onDelete && onDelete(files);
+    },
+    [deleteFiles, onDelete]
+  );
+
   const actionsMap = useFileActions(fileMap, isReadOnly, {
     onOpen: setCurrentFolderId,
     onDownload,
-    onDelete,
+    onDelete: handleDelete,
     onMove: moveFiles,
     onCreateFolder: createFolder,
   });
@@ -169,13 +178,13 @@ FileBrowser.propTypes = {
     currentFolder: PropTypes.object,
   }).isRequired,
   onDownload: PropTypes.func.isRequired,
-  onDelete: PropTypes.func,
   isReadOnly: PropTypes.bool,
+  onDelete: PropTypes.func,
 };
 FileBrowser.defaultProps = {
   files: [],
-  onDelete: null,
   isReadOnly: false,
+  onDelete: null,
 };
 
 export default WrappedFileBrowser;
