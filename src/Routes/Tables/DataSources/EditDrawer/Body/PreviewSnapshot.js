@@ -9,6 +9,7 @@ import ErrorPage from './Error';
 
 /**
  * @typedef {import('./FileBrowser').RefContent} RefContent
+ *
  * @typedef {import('reducers/dataSources/datasource').Snapshot} Snapshot
  */
 
@@ -41,6 +42,7 @@ const PreviewSnapshot = ({ activeSnapshot, onDownload, snapshotName }) => {
     <div style={{ display: 'contents' }}>
       <FileBrowserContainer>
         <FileBrowser
+          isReadOnly
           files={activeSnapshot.filteredFilesList}
           onDownload={onDownload}
           ref={fileBrowserRef}

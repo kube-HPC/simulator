@@ -19,8 +19,11 @@ import usePath from './../../usePath';
 
 /**
  * @typedef {import('reducers/dataSources/datasource').FileMeta} FileMeta
+ *
  * @typedef {import('./FileBrowser').RefContent} RefContent
+ *
  * @typedef {import('.').ExtendedDataSource} ExtendedDataSource
+ *
  * @typedef {import('reducers/dataSources/datasource').Snapshot} Snapshot
  */
 
@@ -105,6 +108,7 @@ const QueryMode = ({ dataSource, form, onDownload }) => {
     <Form onSubmit={handleSubmit} style={{ display: 'contents' }}>
       <FileBrowserContainer>
         <FileBrowser
+          isReadOnly
           files={filteredFiles}
           ref={fileBrowserRef}
           onDownload={onDownload}
