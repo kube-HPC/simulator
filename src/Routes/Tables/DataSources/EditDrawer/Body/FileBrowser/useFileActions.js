@@ -3,7 +3,9 @@ import { ChonkyActions, FileHelper } from 'chonky';
 
 /**
  * @typedef {import('./stratifier').StratifiedDirectory} StratifiedDirectory
+ *
  * @typedef {import('./stratifier').StratifiedFile} StratifiedFile
+ *
  * @typedef {import('./stratifier').StratifiedMap} StratifiedMap
  * @type {(
  *   dir: StratifiedDirectory,

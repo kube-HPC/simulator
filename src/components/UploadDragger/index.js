@@ -48,6 +48,8 @@ export const useDragger = ({ onAddFile, onDropFile, setFileList }) => {
       // we are not really uploading the file here
       // it has no real meaning
       if (fileStatus === 'uploading') {
+        // the file has an empty type -> it is a directory
+        if (file.type === '') return;
         setFileList &&
           setFileList(list => list.concat({ ...file, status: 'done' }));
         onAddFile && onAddFile({ ...file, status: 'done' });
