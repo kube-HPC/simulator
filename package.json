@@ -92,6 +92,7 @@
     "@types/react-router-dom": "^5.1.7",
     "@types/vis": "^4.21.21",
     "babel-eslint": "^10.0.3",
+    "core-js": "^3.11.0",
     "dotenv": "^8.2.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^8.1.0",
