@@ -79,7 +79,7 @@
     "reselect": "^4.0.0",
     "reusable": "^1.0.0-alpha.12",
     "seamless-immutable": "^7.1.4",
-    "socket.io-client": "^2.3.0",
+    "socket.io-client": "^4.0.0",
     "styled-components": "^5.0.0-beta.6-ej4",
     "styled-tools": "^1.7.1",
     "use-debounce": "^6.0.0"
