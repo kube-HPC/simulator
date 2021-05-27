@@ -42,7 +42,6 @@ const formatSocketRoomName = experimentName =>
 
 /** @param {{ socket: Socket; name: string; lastRoom: string }} props */
 const connectToRoom = ({ socket, name }) => {
-  if (lastExperimentId === name) return;
   console.info(
     `
     %cDisconnecting%c from socket room: %c${lastExperimentId}
