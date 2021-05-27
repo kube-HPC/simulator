@@ -32,6 +32,10 @@
     ]
   },
   "dependencies": {
+    "express": "^4.17.1",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
     "@hkube/consts": "^1.0.32",
     "@monaco-editor/react": "^2.3.0",
     "@nivo/bar": "^0.59.2",
@@ -46,7 +50,6 @@
     "clean-deep": "^3.4.0",
     "cron-parser": "^2.13.0",
     "cronstrue": "^1.86.0",
-    "express": "^4.17.1",
     "fuzzy": "^0.1.3",
     "hash-sum": "^2.0.0",
     "humanize-duration": "^3.21.0",
@@ -82,9 +85,7 @@
     "socket.io-client": "^2.3.0",
     "styled-components": "^5.0.0-beta.6-ej4",
     "styled-tools": "^1.7.1",
-    "use-debounce": "^6.0.0"
-  },
-  "devDependencies": {
+    "use-debounce": "^6.0.0",
     "@storybook/addon-actions": "^5.2.6",
     "@storybook/addon-links": "^5.2.6",
     "@storybook/addons": "^5.2.6",
@@ -93,7 +94,6 @@
     "@types/vis": "^4.21.21",
     "babel-eslint": "^10.0.3",
     "core-js": "^3.11.0",
-    "dotenv": "^8.2.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-import": "^2.22.1",
