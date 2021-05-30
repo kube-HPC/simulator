@@ -4,9 +4,12 @@ import { Table } from 'components';
 import { Card } from 'components/common';
 import { selectors } from 'reducers';
 import { driversTableColumns, driverJobsTableColumns } from './DriversTableColumns.react';
+import DriverLogs from './DriverLogs';
+
 
 const ExpandedRow = collection => record => {
-  const driver = collection.find(c => c.driverId === record.driverId);
+  const { driverId, podName } = record
+  const driver = collection.find(c => c.driverId === driverId);
   const jobs = driver?.jobs || [];
   return (
     <Card isMargin>
@@ -16,6 +19,7 @@ const ExpandedRow = collection => record => {
         columns={driverJobsTableColumns}
         dataSource={jobs}
       />
+      <DriverLogs driverId={driverId} podName={podName} />
     </Card>
   );
 };
@@ -32,6 +36,4 @@ const DriversTable = () => {
   );
 }
 
-DriversTable.propTypes = {};
-
-export default DriversTable;
+export default DriversTable
