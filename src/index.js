@@ -1,4 +1,3 @@
-import 'core-js/features/array';
 import { ErrorBoundary } from 'components';
 import React, { useEffect } from 'react';
 import { render } from 'react-dom';
