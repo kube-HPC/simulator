@@ -19,7 +19,7 @@ const DriverLogs = ({ driverId, podName }) => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await client.get(`/logs?${qs.stringify({ podName, source })}`);
+        const res = await client.get(`/logs?${qs.stringify({ podName, source, nodeKind: 'driver' })}`);
         const logsMap = res.data.map((value, key) => ({ key, ...value }));
         setLogs(logsMap);
       }
