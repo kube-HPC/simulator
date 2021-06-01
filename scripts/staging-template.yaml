@@ -87,8 +87,6 @@ spec:
             limits:
               cpu: 100m
               memory: 256Mi
-      nodeSelector:
-        core: 'true'
       restartPolicy: Always
 
 ---
