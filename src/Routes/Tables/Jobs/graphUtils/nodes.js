@@ -120,8 +120,10 @@ const splitBatchToGroups = (
 
 const nodeShapes = {
   default: 'box',
-  algorithm: 'box',
   stateless: 'diamond',
+  [nodeKind.Algorithm]: 'box',
+  [nodeKind.Debug]: 'hexagon',
+  [nodeKind.Gateway]: 'square',
   [nodeKind.DataSource]: 'circle',
 };
 export const formatNode = (normalizedPipeline, pipelineKind) => node => {
@@ -144,11 +146,11 @@ export const formatNode = (normalizedPipeline, pipelineKind) => node => {
   /** @type {NodeOptions} */
   const batchStyling = isBatch
     ? {
-        borderWidth: 2,
-        shapeProperties: {
-          borderDashes: [4, 4],
-        },
-      }
+      borderWidth: 2,
+      shapeProperties: {
+        borderDashes: [4, 4],
+      },
+    }
     : {};
   const editedNode = {
     ...batchStyling,

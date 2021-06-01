@@ -1,26 +1,39 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-
-import { JsonView, Card } from 'components/common';
 import { Table } from 'components';
+import { Card } from 'components/common';
 import { selectors } from 'reducers';
-import { useFilter } from 'hooks/useSearch';
-import driversTableColumns from './DriversTableColumns.react';
+import { driversTableColumns, driverJobsTableColumns } from './DriversTableColumns.react';
+import DriverLogs from './DriverLogs';
 
-export default function DriversTable() {
+
+const ExpandedRow = collection => record => {
+  const { driverId, podName } = record
+  const driver = collection.find(c => c.driverId === driverId);
+  const jobs = driver?.jobs || [];
+  return (
+    <Card isMargin>
+      <Table
+        isInner
+        rowKey={row => row.jobId}
+        columns={driverJobsTableColumns}
+        dataSource={jobs}
+      />
+      <DriverLogs driverId={driverId} podName={podName} />
+    </Card>
+  );
+};
+
+const DriversTable = () => {
   const collection = useSelector(selectors.drivers.all);
-  const filtered = useFilter(collection, ['podName', 'pipelineName', 'jobId']);
-
   return (
     <Table
       rowKey={record => record.driverId}
-      columns={driversTableColumns()}
-      dataSource={filtered}
-      expandedRowRender={record => (
-        <Card>
-          <JsonView.Card jsonObject={record} />
-        </Card>
-      )}
+      columns={driversTableColumns}
+      dataSource={collection}
+      expandedRowRender={ExpandedRow(collection)}
     />
   );
 }
+
+export default DriversTable
