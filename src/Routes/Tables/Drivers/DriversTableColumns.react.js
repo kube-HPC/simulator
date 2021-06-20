@@ -6,6 +6,8 @@ const DriverId = driverId => <Ellipsis text={driverId} />
 const PodName = podName => <Ellipsis copyable text={podName} />;
 const Status = status => <Ellipsis text={status} />
 const Jobs = jobs => <CountTag count={jobs.length} />
+const Max = count => <CountTag count={count} />
+const Capacity = count => <CountTag count={count} />
 const JobId = jobId => <Ellipsis text={jobId} />
 const Active = active => <Ellipsis text={active ? 'active' : 'inActive'} />
 
@@ -31,28 +33,42 @@ export const driversTableColumns = [
     title: 'Driver Id',
     key: 'driverId',
     dataIndex: 'driverId',
-    width: '25%',
+    width: '20%',
     render: DriverId,
   },
   {
     title: 'Pod Name',
     key: 'podName',
     dataIndex: 'podName',
-    width: '25%',
+    width: '20%',
     render: PodName,
   },
   {
     title: 'Status',
     key: 'status',
     dataIndex: 'status',
-    width: '25%',
+    width: '15%',
     render: Status,
   },
   {
-    title: 'Jobs',
+    title: 'Current Jobs',
     key: 'jobs',
     dataIndex: 'jobs',
-    width: '25%',
+    width: '15%',
     render: Jobs,
+  },
+  {
+    title: 'Max Jobs',
+    key: 'max',
+    dataIndex: 'max',
+    width: '15%',
+    render: Max,
+  },
+  {
+    title: 'Total Capacity',
+    key: 'capacity',
+    dataIndex: 'capacity',
+    width: '15%',
+    render: Capacity,
   },
 ];
