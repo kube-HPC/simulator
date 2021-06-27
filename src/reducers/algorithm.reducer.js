@@ -2,6 +2,7 @@ import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import sum from 'hash-sum';
 import { groupBy } from 'lodash/fp';
 import actions from 'const/application-actions';
+
 /** @typedef {import('./Algorithm.d').Algorithm} Algorithm */
 
 /** @type {import('@reduxjs/toolkit').EntityAdapter<Algorithm>} */
@@ -16,6 +17,7 @@ const algorithmsEntityAdapter = createEntityAdapter({
  *   sum: string;
  *   buildsSum: string;
  * }} AlgorithmsState
+ *
  * @typedef {{ algorithms: AlgorithmsState }} State
  */
 
@@ -64,7 +66,7 @@ export const selectors = {
     byId: (state, id) =>
       baseSelectors.selectById(state.algorithms.collection, id),
     /** @param {State} state */
-    count: state => baseSelectors.selectIds(state.algorithms.collection).length,
+    count: state => baseSelectors.selectTotal(state.algorithms.collection),
   },
   builds: {
     /**
