@@ -14,8 +14,6 @@ const successMsg = payload => ({
   CRON_START: 'Cron job started for selected pipeline',
   CRON_STOP: 'Cron job disabled for selected pipeline',
   DATASOURCE_CREATE: `created dataSource ${payload.name}`,
-  DEBUG_ADD: 'Debug added',
-  DEBUG_DELETE: 'Debug deleted',
   JOBS_EXEC_CACHING: `Jobs Caching Execution Succeed, executing job with ID=${payload.jobId}`,
   PIPELINE_ADD: (
     <>

@@ -18,7 +18,6 @@ const selectorsMap = {
   pipelines: selectors.pipelines.collection.names,
   drivers: selectors.drivers.ids,
   workers: selectors.workers.ids,
-  debug: selectors.debug.ids,
   datasources: selectors.dataSources.names,
 };
 

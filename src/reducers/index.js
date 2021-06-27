@@ -16,10 +16,6 @@ import {
   selectors as driversSelectors,
 } from 'reducers/driver.reducer';
 import {
-  reducer as debug,
-  selectors as debugSelectors,
-} from 'reducers/debug.reducer';
-import {
   reducer as jobs,
   selectors as jobsSelectors,
 } from 'reducers/jobs.reducer';
@@ -77,7 +73,6 @@ const store = {
   meta,
   boards,
   connection,
-  debug,
   drivers,
   errorLogs,
   experiments,
@@ -100,7 +95,6 @@ export const selectors = {
   pipelines: pipelinesSelectors,
   workers: workersSelectors,
   drivers: driversSelectors,
-  debug: debugSelectors,
   jobs: jobsSelectors,
   dataSources: dataSourcesSelectors,
   errorLogs: errorLogsSelectors,
