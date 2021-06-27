@@ -19,7 +19,7 @@ const ConfigProvider = () => {
     dispatch(init());
   }, [dispatch]);
 
-  const { baseUrl, hasConfig } = useSelector(selectors.config);
+  const { hasConfig } = useSelector(selectors.config);
 
   /**
    * The base url sets the basename because the app is not always served from
@@ -32,7 +32,7 @@ const ConfigProvider = () => {
    * until we are all set
    */
   return hasConfig ? (
-    <Router basename={baseUrl}>
+    <Router>
       <ReusableProvider>
         <ErrorBoundary>
           <GlobalStyle />
