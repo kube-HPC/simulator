@@ -24,7 +24,6 @@ const selectorsMap = {
 
 const AutoComplete = ({ className }) => {
   const { pageName } = useParams();
-
   const tableData = useSelector(selectorsMap[pageName]);
 
   const { filterData } = useActions();

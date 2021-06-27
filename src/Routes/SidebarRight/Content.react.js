@@ -26,11 +26,6 @@ const rightSidebarContent = {
       </>
     ),
   },
-  [RIGHT_SIDEBAR_NAMES.ADD_DEBUG]: {
-    width: DRAWER_SIZE.ADD_DEBUG,
-    title: RIGHT_SIDEBAR_NAMES.ADD_DEBUG,
-    description: <>Add algorithm image for debugging.</>,
-  },
   [RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE]: {
     width: DRAWER_SIZE.ADD_DATASOURCE,
     title: RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE,

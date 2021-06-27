@@ -10,7 +10,6 @@ import { FlexBox } from 'components/common';
 import { dataCountMock } from 'config';
 import { LEFT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
 import { ReactComponent as AlgorithmIcon } from 'images/algorithm-icon.svg';
-import { ReactComponent as DebugIcon } from 'images/debug-icon.svg';
 import { ReactComponent as DataSourceIcon } from 'images/datasource.svg';
 import { ReactComponent as DriversIcon } from 'images/drivers-icon.svg';
 import { ReactComponent as JobsIcon } from 'images/jobs-icon.svg';
@@ -78,7 +77,6 @@ const sidebarSelector = state => ({
   [LEFT_SIDEBAR_NAMES.ALGORITHMS]: selectors.algorithms.collection.count(state),
   [LEFT_SIDEBAR_NAMES.WORKERS]: selectors.workers.count(state),
   [LEFT_SIDEBAR_NAMES.DRIVERS]: selectors.drivers.count(state),
-  [LEFT_SIDEBAR_NAMES.DEBUG]: selectors.debug.count(state),
   [LEFT_SIDEBAR_NAMES.DATASOURCES]: selectors.dataSources.count(state),
 });
 
@@ -86,7 +84,6 @@ const menuItems = [
   [LEFT_SIDEBAR_NAMES.JOBS, JobsIcon, '/jobs'],
   [LEFT_SIDEBAR_NAMES.PIPELINES, PipelineIcon, '/pipelines'],
   [LEFT_SIDEBAR_NAMES.ALGORITHMS, AlgorithmIcon, '/algorithms'],
-  [LEFT_SIDEBAR_NAMES.DEBUG, DebugIcon, '/debug'],
   [LEFT_SIDEBAR_NAMES.DATASOURCES, DataSourceIcon, '/datasources'],
   [LEFT_SIDEBAR_NAMES.WORKERS, WorkerIcon, '/workers'],
   [LEFT_SIDEBAR_NAMES.DRIVERS, DriversIcon, '/drivers'],

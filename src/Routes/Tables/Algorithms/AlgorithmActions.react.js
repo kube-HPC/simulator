@@ -24,7 +24,6 @@ const deleteConfirmAction = action => {
   });
 };
 
-const title = `Run Algorithm`;
 const overlayStyle = { width: `60ch` };
 
 const AlgorithmActions = ({ record }) => {
@@ -63,7 +62,13 @@ const AlgorithmActions = ({ record }) => {
     name,
   ]);
 
-  const popOverContent = <RunForm onRun={onRun} />;
+  const onDebug = useCallback(
+    input => runAlgorithm({ name, input, debug: true }),
+    [runAlgorithm, name]
+  );
+
+  const popOverContentRun = <RunForm onRun={onRun} buttonTitle="Run" />;
+  const popOverContentDebug = <RunForm onRun={onDebug} buttonTitle="Debug" />;
 
   const onMoreInfo = useCallback(
     () => goTo.overview({ nextAlgorithmId: name }),
@@ -83,12 +88,21 @@ const AlgorithmActions = ({ record }) => {
       <Button.Group>
         <Popover
           overlayStyle={overlayStyle}
-          title={title}
+          title="Run Algorithm"
           placement="left"
-          content={popOverContent}
+          content={popOverContentRun}
           getPopupContainer={setPopupContainer}
           mouseLeaveDelay={0.5}>
           <Button icon="play-circle" onClick={() => onRun()} />
+        </Popover>
+        <Popover
+          overlayStyle={overlayStyle}
+          title="Debug Algorithm"
+          placement="left"
+          content={popOverContentDebug}
+          getPopupContainer={setPopupContainer}
+          mouseLeaveDelay={0.5}>
+          <Button icon="bug" onClick={() => onDebug()} />
         </Popover>
         <Tooltip title="edit algorithm">
           <Button icon="edit" onClick={onEdit} />

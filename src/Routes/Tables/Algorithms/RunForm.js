@@ -82,7 +82,7 @@ InputsCollection.propTypes = {
  *   onRum: {};
  * } & import('antd/lib/form').FormComponentProps} props
  */
-const AlgorithmRun = ({ onRun, form }) => {
+const AlgorithmRun = ({ onRun, form, buttonTitle }) => {
   const handleRun = useCallback(() => {
     const values = form.getFieldsValue();
     const _values = Object.values(values.inputs)?.filter(
@@ -98,7 +98,7 @@ const AlgorithmRun = ({ onRun, form }) => {
     <Form direction="column" full gutter={[0, 10]}>
       <InputsCollection getFieldDecorator={form.getFieldDecorator} />
       <Button type="primary" block size="small" onClick={handleRun}>
-        Run
+        {buttonTitle}
       </Button>
     </Form>
   );
@@ -110,6 +110,7 @@ AlgorithmRun.propTypes = {
     getFieldDecorator: PropTypes.func.isRequired,
     getFieldsValue: PropTypes.func.isRequired,
   }).isRequired,
+  buttonTitle: PropTypes.string.isRequired,
 };
 
 export default Form.create({ name: 'run algorithm' })(AlgorithmRun);
