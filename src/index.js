@@ -3,7 +3,7 @@ import { ErrorBoundary } from 'components';
 import React, { useEffect } from 'react';
 import { render } from 'react-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { HashRouter as Router } from 'react-router-dom';
 import { ReusableProvider } from 'reusable';
 import { GlobalStyle } from 'styles';
 import { init } from 'actions/connection.action';
@@ -19,7 +19,7 @@ const ConfigProvider = () => {
     dispatch(init());
   }, [dispatch]);
 
-  const { baseUrl, hasConfig } = useSelector(selectors.config);
+  const { hasConfig } = useSelector(selectors.config);
 
   /**
    * The base url sets the basename because the app is not always served from
@@ -32,7 +32,7 @@ const ConfigProvider = () => {
    * until we are all set
    */
   return hasConfig ? (
-    <Router basename={baseUrl}>
+    <Router>
       <ReusableProvider>
         <ErrorBoundary>
           <GlobalStyle />
