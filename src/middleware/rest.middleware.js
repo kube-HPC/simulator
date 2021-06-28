@@ -56,7 +56,7 @@ const pending = (dispatch, payload, action) => {
 
 const success = (dispatch, payload, action) => {
   const successMessage = successMsg({ ...payload, ...action.payload });
-  action.meta?.onSuccess(payload);
+  action.meta?.onSuccess?.(payload);
   dispatch({
     type: `${action.payload.actionType}_SUCCESS`,
     meta: {
