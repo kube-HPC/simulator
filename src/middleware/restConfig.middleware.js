@@ -29,7 +29,6 @@ const success = (dispatch, payload, action) => {
 };
 
 const restConfigMiddleware = ({ dispatch }) => next => action => {
-  if (action.type !== AT.REST_REQ_CONFIG) return next(action);
   if (action.type === AT.REST_REQ_CONFIG) {
     pending(dispatch, 'pending', action);
     fetch(`${baseRef}${action.payload.url}`)
@@ -45,10 +44,6 @@ const restConfigMiddleware = ({ dispatch }) => next => action => {
         reject(dispatch, err, action);
         console.error('get config error');
       });
-  } else {
-    console.warn(
-      `rest middleware: trying to register topic ${action.payload.topic} twice `
-    );
   }
   return next(action);
 };

@@ -9,8 +9,8 @@ const findNodeByName = (collection = [], name) =>
 
 export const getTaskDetails = node =>
   node?.batch?.length > 0
-    ? node.batch
-    : [{ taskId: node.taskId, podName: node.podName }];
+    ? node?.batch
+    : [{ taskId: node?.taskId, podName: node?.podName }];
 
 export const findNode = ({ graph, pipeline }) => nodeName => {
   const nodeData = findNodeByName(graph?.nodes, nodeName);
@@ -146,11 +146,11 @@ export const formatNode = (normalizedPipeline, pipelineKind) => node => {
   /** @type {NodeOptions} */
   const batchStyling = isBatch
     ? {
-      borderWidth: 2,
-      shapeProperties: {
-        borderDashes: [4, 4],
-      },
-    }
+        borderWidth: 2,
+        shapeProperties: {
+          borderDashes: [4, 4],
+        },
+      }
     : {};
   const editedNode = {
     ...batchStyling,
