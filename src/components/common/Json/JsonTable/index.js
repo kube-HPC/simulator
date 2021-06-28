@@ -1,13 +1,18 @@
-import { Tag, Typography, Button } from 'antd';
+import { Tag, Typography, Button, notification } from 'antd';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Descriptions } from 'components/common';
 import PropTypes from 'prop-types';
 import React, { useState, useCallback, useMemo } from 'react';
+import { COLOR_TASK_STATUS } from 'styles/colors';
 import styled from 'styled-components';
 import { prop } from 'styled-tools';
 import DownloadLink from 'components/DownloadLink';
 
 const { Text } = Typography;
 const EMPTY = '—';
+
+// drop the first slash if exists
+const firstSlash = new RegExp('^/');
 
 const isObject = obj =>
   !Array.isArray(obj) && typeof obj === 'object' && obj !== null;
@@ -88,6 +93,17 @@ const ItemByValueType = ({
           />
         ))}
       </>
+    );
+  }
+  if (name === 'debugUrl') {
+    return (
+      <CopyToClipboard
+        text={`ws://${window.location.host}/${obj.replace(firstSlash, '')}`}
+        onCopy={() => notification.success({ message: 'Copied to clipboard' })}>
+        <Tag color={COLOR_TASK_STATUS.active}>
+          {`ws://${window.location.host}/${obj.replace(firstSlash, '')}`}
+        </Tag>
+      </CopyToClipboard>
     );
   }
   if (obj === null) return EMPTY;

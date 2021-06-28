@@ -3,7 +3,6 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 
 import Jobs from './Jobs';
 import AlgorithmsTable from './Algorithms';
-import DebugTable from './Debug';
 import DriversTable from './Drivers';
 import PipelinesTable from './Pipelines';
 import WorkersTable from './Workers';
@@ -24,7 +23,6 @@ const Body = () => (
     />
     <Route exact path="/workers/:empty?" component={WorkersTable} />
     <Route exact path="/drivers/:empty?" component={DriversTable} />
-    <Route exact path="/debug/:empty?" component={DebugTable} />
     <Route
       exact
       path={['/datasources', '/datasources/:datasourceId?/*']}

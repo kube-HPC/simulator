@@ -18,13 +18,11 @@ const selectorsMap = {
   pipelines: selectors.pipelines.collection.names,
   drivers: selectors.drivers.ids,
   workers: selectors.workers.ids,
-  debug: selectors.debug.ids,
   datasources: selectors.dataSources.names,
 };
 
 const AutoComplete = ({ className }) => {
   const { pageName } = useParams();
-
   const tableData = useSelector(selectorsMap[pageName]);
 
   const { filterData } = useActions();

@@ -4,14 +4,12 @@ export const LEFT_SIDEBAR_NAMES = {
   ALGORITHMS: 'algorithms',
   WORKERS: 'workers',
   DRIVERS: 'drivers',
-  DEBUG: 'debug',
   DATASOURCES: 'datasources',
 };
 
 export const RIGHT_SIDEBAR_NAMES = {
   ADD_PIPELINE: 'add-pipeline',
   ADD_ALGORITHM: 'add-algorithm',
-  ADD_DEBUG: 'add-debug',
   ADD_DATASOURCE: 'add-datasource',
   RUN_RAW_PIPELINE: 'run-raw-pipeline',
   CPU: 'cpu',

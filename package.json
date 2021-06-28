@@ -1,6 +1,7 @@
 {
   "name": "simulator",
   "version": "2.1.4",
+  "description": "The Hkube Dashboard",
   "private": true,
   "homepage": ".",
   "scripts": {
