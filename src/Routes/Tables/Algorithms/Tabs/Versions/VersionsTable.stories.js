@@ -11,6 +11,6 @@ export const Default = () => (
   <VersionsTable
     algorithmName="algorithmName"
     currentVersion="ver1"
-    isFetch="false"
+    isFetch={false}
   />
 );

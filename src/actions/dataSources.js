@@ -73,7 +73,7 @@ export const deleteDataSource = (name, { onSuccess }) => ({
 export const createDataSource = ({ files, ...fields }, { onSuccess }) => {
   const formData = new FormData();
   Object.entries(fields).forEach(([key, value]) => {
-    if (typeof value !== 'object' && value !== null) {
+    if (typeof value !== 'object') {
       formData.append(key, value);
     } else {
       formData.append(key, JSON.stringify(value));
