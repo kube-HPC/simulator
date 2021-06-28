@@ -20,11 +20,11 @@ export const getKubernetesLogsData = ({
   },
 });
 
-export const getCaching = ({ jobId, nodeName }) => ({
+export const getCaching = ({ jobId, nodeName, debug }) => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: 'exec/caching',
-    body: { jobId, nodeName },
+    body: { jobId, nodeName, debug },
     actionType: actions.JOBS_EXEC_CACHING,
   },
 });
