@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { Button, Empty } from 'antd';
+import { Button, Empty, Tooltip } from 'antd';
 import { FlexBox, JsonSwitch } from 'components/common';
 import { useActions, useLogs, useSettings } from 'hooks';
 import { selectors } from 'reducers';
@@ -28,6 +28,8 @@ const NodeInfo = ({ node, jobId }) => {
 
   const onRunNode = () =>
     node && getCaching({ jobId, nodeName: node.nodeName });
+  const onDebugNode = () =>
+    node && getCaching({ jobId, nodeName: node.nodeName, debug: true });
 
   const taskDetails = useMemo(() => getTaskDetails(node), [node]);
 
@@ -38,9 +40,22 @@ const NodeInfo = ({ node, jobId }) => {
 
   const extra = (
     <FlexBox.Auto>
-      <Button key="run-node" type="primary" onClick={onRunNode}>
-        Run Node
-      </Button>
+      <Tooltip title={`Run from node ${node.nodeName}`}>
+        <Button
+          key="run-node"
+          type="ghost"
+          onClick={onRunNode}
+          icon="play-circle"
+        />
+      </Tooltip>
+      <Tooltip title={`Debug from node ${node.nodeName}`}>
+        <Button
+          key="debug-node"
+          type="ghost"
+          onClick={onDebugNode}
+          icon="bug"
+        />
+      </Tooltip>
       <Button key="refresh" icon="redo" onClick={onRefresh}>
         Refresh Logs
       </Button>
