@@ -69,13 +69,13 @@ export const Field = ({
 Field.propTypes = {
   name: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   type: PropTypes.string,
   required: PropTypes.bool,
   skipValidation: PropTypes.bool,
   small: PropTypes.bool,
   getFieldDecorator: PropTypes.func.isRequired,
-  rootId: PropTypes.string.isRequired,
+  rootId: PropTypes.string,
   /* eslint-disable */
   extraRules: PropTypes.object,
   overrides: PropTypes.object,
@@ -90,6 +90,8 @@ Field.defaultProps = {
   extraRules: [],
   initialValue: null,
   overrides: {},
+  title: '',
+  rootId: null,
 };
 
 export const HorizontalRow = styled.div`

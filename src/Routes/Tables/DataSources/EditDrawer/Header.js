@@ -28,7 +28,7 @@ Header.propTypes = {
   dataSourceId: PropTypes.string.isRequired,
   dataSourceName: PropTypes.string,
   git: PropTypes.shape({
-    repositoryUrl: PropTypes.string.isRequired,
+    repositoryUrl: PropTypes.string,
     kind: PropTypes.string.isRequired,
   }),
   storage: PropTypes.shape({
@@ -41,7 +41,7 @@ Header.propTypes = {
 Header.defaultProps = {
   git: {
     repositoryUrl: null,
-    kind: null,
+    kind: 'internal',
   },
   storage: {
     kind: 'internal',

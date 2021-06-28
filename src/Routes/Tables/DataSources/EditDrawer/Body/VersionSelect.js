@@ -193,7 +193,7 @@ const Versions = ({
   return (
     <>
       <Selector
-        versions={versionsCollection.versions}
+        versions={versionsCollection?.versions}
         entries={combinedItems}
         isPending={isPending}
         dataSource={dataSource}

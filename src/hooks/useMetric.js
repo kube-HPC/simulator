@@ -27,7 +27,7 @@ export default metric => {
             : {};
 
         return {
-          nodes: res.name,
+          nodes: res?.name,
           ...algorithms,
         };
       }),

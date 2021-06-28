@@ -211,7 +211,6 @@ class LogsViewer extends React.PureComponent {
     if (prevProps.id !== id) {
       this.cache.clearAll();
     }
-    return null;
   }
 
   renderRow = ({ index, parent, style, key }) => {

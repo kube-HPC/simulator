@@ -14,7 +14,7 @@ export const getTaskDetails = node =>
 
 export const findNode = ({ graph, pipeline }) => nodeName => {
   const nodeData = findNodeByName(graph?.nodes, nodeName);
-  const node = findNodeByName(pipeline?.nodes, nodeName);
+  const node = findNodeByName(pipeline.nodes, nodeName);
   const { jobId } = pipeline;
   const taskId = nodeData?.taskId ?? get(nodeData, 'batch[0].taskId');
   const podName = nodeData?.podName ?? get(nodeData, 'batch[0].podName');
