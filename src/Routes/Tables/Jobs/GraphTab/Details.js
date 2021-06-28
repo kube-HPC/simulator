@@ -38,7 +38,7 @@ const NodeInfo = ({ node, jobId }) => {
     getLogs({ taskId, podName, source, nodeKind: node.kind, logMode });
   }, [taskDetails, getLogs, index, logMode, node, source]);
 
-  const extra = (
+  const extra = node ? (
     <FlexBox.Auto>
       <Tooltip title={`Run from node ${node.nodeName}`}>
         <Button
@@ -60,7 +60,7 @@ const NodeInfo = ({ node, jobId }) => {
         Refresh Logs
       </Button>
     </FlexBox.Auto>
-  );
+  ) : null;
 
   return node ? (
     <Tabs defaultActiveKey="logs-tab" tabBarExtraContent={extra}>
