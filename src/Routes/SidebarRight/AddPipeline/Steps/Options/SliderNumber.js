@@ -30,9 +30,15 @@ const SliderNumber = forwardRef(({ onChange, value: initial, min }, ref) => {
 SliderNumber.displayName = `Slider Number`;
 
 SliderNumber.propTypes = {
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.number.isRequired,
-  min: PropTypes.number.isRequired,
+  onChange: PropTypes.func,
+  value: PropTypes.number,
+  min: PropTypes.number,
+};
+
+SliderNumber.defaultProps = {
+  onChange: () => {},
+  value: 0,
+  min: 0,
 };
 
 export default SliderNumber;

@@ -7,4 +7,10 @@ export default {
   title: `${SB_SECTIONS.TABLES.ALGORITHMS}/Versions Table`,
 };
 
-export const Default = () => <VersionsTable />;
+export const Default = () => (
+  <VersionsTable
+    algorithmName="algorithmName"
+    currentVersion="ver1"
+    isFetch="false"
+  />
+);

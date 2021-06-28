@@ -7,4 +7,8 @@ export default {
   title: `${SB_SECTIONS.TABLES.ALGORITHMS}/Tabs`,
 };
 
-export const Default = () => <AlgorithmsTabs />;
+export const Default = () => (
+  <AlgorithmsTabs
+    algorithm={{ name: 'algorithmName', builds: [], version: 'version1' }}
+  />
+);

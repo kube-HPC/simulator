@@ -7,6 +7,8 @@ export default {
   title: `${SB_SECTIONS.COMMON}|Logs Viewer`,
 };
 
-export const NodeLog = () => <LogsViewer dataSource={mockData} id="mockId" />;
-export const BuildLog = () => <LogsViewer dataSource={buildLog} isBuild />;
-export const Empty = () => <LogsViewer dataSource={[]} />;
+export const NodeLog = () => <LogsViewer dataSource={mockData} id="NodeLog" />;
+export const BuildLog = () => (
+  <LogsViewer dataSource={buildLog} isBuild id="BuildLog" />
+);
+export const Empty = () => <LogsViewer dataSource={[]} id="Empty" />;

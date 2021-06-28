@@ -45,7 +45,7 @@ const DataSourceNode = ({ id }) => {
   const handleChangeMode = useCallback(e => setMode(e.target.value), []);
 
   const disableSnapshot =
-    !snapshots.isReady ||
+    !snapshots?.isReady ||
     !snapshots?.collection ||
     snapshots?.collection.length === 0;
   const disableVersions = !versionsCollection?.versions;

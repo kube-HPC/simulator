@@ -74,29 +74,21 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion }) => {
     ) : (
       <FlexBox justify="start">
         <FlexBox.Item>
-          <Tooltip
-            title={`${
-              isCurrentVersion ? 'Already on' : 'Update to'
-            } current version`}>
+          <Tooltip title="Update to current version">
             <Button
-              type={isCurrentVersion ? 'primary' : 'dashed'}
+              type="dashed"
               shape="circle"
               icon="check"
-              disabled={isCurrentVersion}
               onClick={() => currentConfirmAction(onApply, record)}
             />
           </Tooltip>
         </FlexBox.Item>
         <FlexBox.Item>
-          <Tooltip
-            title={`${
-              isCurrentVersion ? `Can't remove used` : `Remove current`
-            } version`}>
+          <Tooltip title="Remove version">
             <Button
               type="dashed"
               shape="circle"
               icon="delete"
-              disabled={isCurrentVersion}
               onClick={() => deleteConfirmAction(onDelete, record)}
             />
           </Tooltip>

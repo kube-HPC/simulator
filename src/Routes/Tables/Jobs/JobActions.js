@@ -53,10 +53,9 @@ const JobActions = ({ job }) => {
   const isStopDisabled = useMemo(() => !canPauseOrStop(status), [status]);
 
   const isDownloadDisabled = !results?.data?.storageInfo;
-  const handleDownload = useCallback(
-    () => downloadLinkRef.current && downloadLinkRef.current?.click(),
-    [downloadLinkRef]
-  );
+  const handleDownload = useCallback(() => downloadLinkRef.current?.click(), [
+    downloadLinkRef,
+  ]);
   return (
     <>
       <Button.Group className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
