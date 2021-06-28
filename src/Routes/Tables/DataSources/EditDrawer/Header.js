@@ -33,8 +33,8 @@ Header.propTypes = {
   }),
   storage: PropTypes.shape({
     kind: PropTypes.oneOf(['S3', 'internal']).isRequired,
-    bucketName: PropTypes.string.isRequired,
-    endpoint: PropTypes.string.isRequired,
+    bucketName: PropTypes.string,
+    endpoint: PropTypes.string,
   }),
 };
 
@@ -44,7 +44,7 @@ Header.defaultProps = {
     kind: null,
   },
   storage: {
-    kind: null,
+    kind: 'internal',
     bucketName: null,
     endpoint: null,
   },

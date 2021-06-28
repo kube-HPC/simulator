@@ -61,7 +61,7 @@ const JsonEditor = ({ onChange, value: _value, style }) => {
 };
 
 JsonEditor.propTypes = {
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
   value: PropTypes.string,
   // eslint-disable-next-line
   style: PropTypes.object,
@@ -69,6 +69,7 @@ JsonEditor.propTypes = {
 JsonEditor.defaultProps = {
   value: '',
   style: {},
+  onChange: () => {},
 };
 
 export default JsonEditor;
