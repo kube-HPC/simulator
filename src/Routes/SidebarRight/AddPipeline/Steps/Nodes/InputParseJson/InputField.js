@@ -57,18 +57,23 @@ const InputField = ({ placeholder, tooltip, onRemove, idx, ...antFields }) => {
 };
 
 InputField.propTypes = {
-  placeholder: PropTypes.string.isRequired,
-  tooltip: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
+  tooltip: PropTypes.string,
   onRemove: PropTypes.func,
   idx: PropTypes.string.isRequired,
   // under antFields
-  value: PropTypes.node.isRequired,
-  id: PropTypes.node.isRequired,
-  onChange: PropTypes.func.isRequired,
+  value: PropTypes.node,
+  id: PropTypes.node,
+  onChange: PropTypes.func,
 };
 
 InputField.defaultProps = {
   onRemove: null,
+  placeholder: null,
+  tooltip: null,
+  value: undefined,
+  id: undefined,
+  onChange: undefined,
 };
 
 export default InputField;
