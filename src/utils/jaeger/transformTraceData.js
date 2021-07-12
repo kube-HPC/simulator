@@ -1,7 +1,7 @@
 import _isEqual from 'lodash/isEqual';
 import { getTraceSpanIdsAsTree } from './trace';
 
-export default function transformTraceData(data) {
+export default function transformTraceData(data, algorithms) {
   let { traceID } = data;
   if (!traceID) {
     return null;
@@ -14,7 +14,16 @@ export default function transformTraceData(data) {
   const spanMap = new Map();
   // filter out spans with empty start times
   // eslint-disable-next-line no-param-reassign
-  data.spans = data.spans.filter(span => Boolean(span.startTime));
+  data.processes = Object.keys(data.processes)
+    .filter((k) => algorithms.includes(data.processes[k].serviceName))
+    .reduce((acc, cur) => {
+      acc[cur] = data.processes[cur];
+      return acc;
+    }, {});
+
+  const processKeys = Object.keys(data.processes);
+
+  data.spans = data.spans.filter(span => Boolean(span.startTime) && processKeys.includes(span.processID));
 
   const max = data.spans.length;
   for (let i = 0; i < max; i++) {
