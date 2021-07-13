@@ -7,7 +7,7 @@ const { TYPES } = notification;
 const useTraceData = () => {
   const [traceData, setTraceData] = useState(undefined);
   const fetch = useCallback(
-    async ({ jobId }) => {
+    async ({ jobId, algorithms }) => {
       let response;
       try {
         response = await client.get('/jaeger', {
@@ -24,7 +24,7 @@ const useTraceData = () => {
         return null;
       }
       const [nextTraceData] = response.data.data;
-      setTraceData(transformTraceData(nextTraceData || {}));
+      setTraceData(transformTraceData(nextTraceData || {}, algorithms));
       return response.data.data;
     },
     [setTraceData]
