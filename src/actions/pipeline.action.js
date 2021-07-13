@@ -83,18 +83,6 @@ export const cronStop = (name, pattern) => ({
   },
 });
 
-export const rerunRawPipeline = pipeline => {
-  const action = {
-    type: actions.REST_REQ_POST,
-    payload: {
-      url: `exec/raw`,
-      body: pipeline,
-      actionType: actions.PIPELINE_START,
-    },
-  };
-  return action;
-};
-
 export const execRawPipeline = pipeline => ({
   type: actions.REST_REQ_POST,
   payload: {

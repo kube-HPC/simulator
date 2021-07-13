@@ -24,17 +24,15 @@ const JobActions = ({ job }) => {
   const { goTo } = usePath();
   const {
     key,
-    userPipeline,
     status: { status },
     results,
   } = job;
 
-  const { rerunRawPipeline } = usePipeline();
+  const { rerunPipeline } = usePipeline();
   const { stopPipeline, pausePipeline, resumePipeline } = useActions();
   const downloadLinkRef = useRef();
-  const onReRun = useCallback(() => rerunRawPipeline(userPipeline, key), [
-    userPipeline,
-    rerunRawPipeline,
+  const onReRun = useCallback(() => rerunPipeline(key), [
+    rerunPipeline,
     key,
   ]);
 
