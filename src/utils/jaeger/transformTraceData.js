@@ -12,7 +12,7 @@ export default function transformTraceData(data, algorithms) {
   let traceStartTime = Number.MAX_SAFE_INTEGER;
   const spanIdCounts = new Map();
   const spanMap = new Map();
-  // filter out spans with empty start times
+
   // eslint-disable-next-line no-param-reassign
   data.processes = Object.keys(data.processes)
     .filter((k) => algorithms.includes(data.processes[k].serviceName))
@@ -23,6 +23,8 @@ export default function transformTraceData(data, algorithms) {
 
   const processKeys = Object.keys(data.processes);
 
+  // filter out spans with empty start times and processes ids
+  // eslint-disable-next-line no-param-reassign
   data.spans = data.spans.filter(span => Boolean(span.startTime) && processKeys.includes(span.processID));
 
   const max = data.spans.length;
