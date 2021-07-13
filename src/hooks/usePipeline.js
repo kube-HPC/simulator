@@ -26,20 +26,9 @@ const usePipeline = () => {
     [updateStored]
   );
 
-  const rerunRawPipeline = useCallback(async (pipeline, jobId) => {
-    let { flowInput } = pipeline;
+  const rerunPipeline = useCallback(async (jobId) => {
     try {
-      if (flowInput?.truncated) {
-        const flowInputRes = await client.get(`/flowInput/${jobId}`);
-        if (flowInputRes.data) {
-          flowInput = flowInputRes.data;
-        }
-      }
-
-      const res = await client.post('/exec/raw', {
-        ...pipeline,
-        flowInput,
-      });
+      const res = await client.post('/exec/rerun', { jobId });
       message.success(successMsg(res.data).PIPELINE_START);
     } catch (error) {
       message.error(error.message);
@@ -50,7 +39,7 @@ const usePipeline = () => {
     collection: filtered,
     dataStats,
     updateCron,
-    rerunRawPipeline,
+    rerunPipeline,
   };
 };
 
