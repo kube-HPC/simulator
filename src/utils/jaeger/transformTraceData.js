@@ -28,6 +28,9 @@ export default function transformTraceData(data, algorithms) {
   data.spans = data.spans.filter(span => Boolean(span.startTime) && processKeys.includes(span.processID));
 
   const max = data.spans.length;
+  if (!max) {
+    return null;
+  }
   for (let i = 0; i < max; i++) {
     const span = data.spans[i];
     const { startTime, duration, processID } = span;
