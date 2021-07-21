@@ -24,6 +24,7 @@ const NodeSelectRadioButton = styled(Radio.Button)`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-transform: none;
 `;
 const AddNodeButton = styled(Button)`
   width: calc(25% - 1ch);
@@ -38,11 +39,6 @@ const NodeSelectRadioGroup = styled(Radio.Group)`
   margin: 0;
   margin-bottom: auto;
   width: 100%;
-  text-transform: capitalize;
-`;
-
-const NodeNameHeader = styled.h1`
-  text-transform: capitalize;
 `;
 
 const nodesMap = {
@@ -120,9 +116,7 @@ const Nodes = ({ style }) => {
             margin: 0,
           }}
           required={false}>
-          <NodeNameHeader>
-            {getFieldValue(`nodes.${id}.nodeName`) || `node-${id}`}
-          </NodeNameHeader>
+          <h1>{getFieldValue(`nodes.${id}.nodeName`) || `node-${id}`}</h1>
           <h2>
             {getFieldDecorator(`nodes.${id}.kind`, {
               initialValue: 'algorithm',
@@ -131,7 +125,7 @@ const Nodes = ({ style }) => {
                 buttonStyle="solid"
                 style={{ display: 'flex', alignItems: 'center' }}>
                 <Radio.Button value="algorithm">Algorithm</Radio.Button>
-                <Radio.Button value="dataSource">dataSource</Radio.Button>
+                <Radio.Button value="dataSource">DataSource</Radio.Button>
                 {ids.length > 1 ? (
                   <Button
                     icon="close-circle"

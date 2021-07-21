@@ -24,7 +24,9 @@ const Form = styled(AntdForm)`
 export const Body = styled.div`
   display: flex;
   flex: 1;
-  height: 0;
+
+  overflow-y: scroll;
+  max-height: 81vh;
 `;
 
 const stepNames = ['Initial', 'Nodes', 'Options'];
@@ -72,6 +74,7 @@ const Wizard = ({
     getFieldsValue,
     getFieldDecorator,
     getFieldValue,
+    resetFields,
   } = form;
   const { subscribe } = useSubscribe();
   useEffect(() => {
@@ -121,6 +124,10 @@ const Wizard = ({
     setStepIdx,
   ]);
 
+  const handleResetWizard = useCallback(() => {
+    resetFields();
+  }, [resetFields]);
+
   const handleToggle = useCallback(() => {
     persistForm();
     toggle();
@@ -144,13 +151,13 @@ const Wizard = ({
         <JsonView
           src={getFormattedFormValues()}
           collapsed={undefined}
-          style={{ flex: 1, overflow: 'auto' }}
+          style={{ flex: 1 }}
         />
         <Form
           layout="horizontal"
           hideRequiredMark
           onSubmit={handleSubmit}
-          style={{ overflow: 'auto', padding: '0 2ch' }}>
+          style={{ padding: '0 2ch' }}>
           <context.Provider
             value={{ form, initialState, fieldDecorator, isStreamingPipeline }}>
             {stepComponents.map((StepComponent, ii) => (
@@ -169,11 +176,17 @@ const Wizard = ({
         size="small"
         current={stepIdx}
         onChange={setStepIdx}
-        style={{ borderTop: `1px solid ${COLOR_LAYOUT.border}` }}>
+        style={{
+          borderTop: `1px solid ${COLOR_LAYOUT.border}`,
+          marginTop: '20px',
+        }}>
         {steps}
       </Steps>
 
       <BottomPanel>
+        <PanelButton type="danger" onClick={handleResetWizard}>
+          Clear
+        </PanelButton>
         <PanelButton onClick={handleToggle}>Editor View</PanelButton>
         <PanelButton disabled={stepIdx === 0} onClick={onPrevious}>
           <Icon type="left" />
@@ -201,6 +214,7 @@ Wizard.propTypes = {
     setFieldsValue: PropTypes.func.isRequired,
     getFieldsValue: PropTypes.func.isRequired,
     getFieldValue: PropTypes.func.isRequired,
+    resetFields: PropTypes.func.isRequired,
   }).isRequired,
   setStepIdx: PropTypes.func.isRequired,
   stepIdx: PropTypes.number.isRequired,
