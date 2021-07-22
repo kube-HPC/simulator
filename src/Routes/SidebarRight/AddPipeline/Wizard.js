@@ -68,13 +68,13 @@ const Wizard = ({
   form,
   setStepIdx,
   stepIdx,
+  wizardClear,
 }) => {
   const {
     setFieldsValue,
     getFieldsValue,
     getFieldDecorator,
     getFieldValue,
-    resetFields,
   } = form;
   const { subscribe } = useSubscribe();
   useEffect(() => {
@@ -124,10 +124,6 @@ const Wizard = ({
     setStepIdx,
   ]);
 
-  const handleResetWizard = useCallback(() => {
-    resetFields();
-  }, [resetFields]);
-
   const handleToggle = useCallback(() => {
     persistForm();
     toggle();
@@ -147,6 +143,17 @@ const Wizard = ({
 
   return (
     <>
+      <Steps
+        type="navigation"
+        size="small"
+        current={stepIdx}
+        onChange={setStepIdx}
+        style={{
+          borderBottom: `1px solid ${COLOR_LAYOUT.border}`,
+          marginBottom: '20px',
+        }}>
+        {steps}
+      </Steps>
       <Body>
         <JsonView
           src={getFormattedFormValues()}
@@ -171,20 +178,9 @@ const Wizard = ({
           </context.Provider>
         </Form>
       </Body>
-      <Steps
-        type="navigation"
-        size="small"
-        current={stepIdx}
-        onChange={setStepIdx}
-        style={{
-          borderTop: `1px solid ${COLOR_LAYOUT.border}`,
-          marginTop: '20px',
-        }}>
-        {steps}
-      </Steps>
 
       <BottomPanel>
-        <PanelButton type="danger" onClick={handleResetWizard}>
+        <PanelButton type="danger" onClick={wizardClear}>
           Clear
         </PanelButton>
         <PanelButton onClick={handleToggle}>Editor View</PanelButton>
@@ -220,6 +216,7 @@ Wizard.propTypes = {
   stepIdx: PropTypes.number.isRequired,
   // eslint-disable-next-line
   initialState: PropTypes.object.isRequired,
+  wizardClear: PropTypes.object.isRequired,
 };
 
 export default Form.create({ name: 'create-pipeline' })(Wizard);

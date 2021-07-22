@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { addPipelineTemplate } from 'config';
 import { useActions } from 'hooks';
 import cleanDeep from 'clean-deep';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { message } from 'antd';
 import client from 'client';
@@ -47,12 +47,14 @@ const AddPipeline = () => {
   const [isEditorVisible, toggle] = useReducer(visible => !visible, false);
   const [editorState, setEditorState] = useState(addPipelineTemplate);
   const [wizardStepIdx, setWizardStepIdx] = useState(0);
+
   const { addPipeline } = useActions();
-  const { root } = useParams();
+
   const history = useHistory();
 
   useEffect(() => {
     // avoid infinite looping
+
     if (status === 'IDLE') {
       const rawData = window.localStorage.getItem(LOCAL_STORAGE_KEY);
       try {
@@ -68,6 +70,13 @@ const AddPipeline = () => {
       setStatus('READY');
     }
 
+    if (status === 'CLEAR') {
+      window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+      setEditorState(addPipelineTemplate);
+      setWizardStepIdx(0);
+      setStatus('IDLE');
+    }
+
     return () => {
       // avoid infinite looping
       if (status !== 'READY') return;
@@ -78,16 +87,19 @@ const AddPipeline = () => {
     };
   }, [setEditorState, editorState, status, setStatus]);
 
-  const addNewPipeline = useCallback(async data => {
-    try {
-      const res = await client.post('store/pipelines', { ...data });
-      message.success(successMsg(res.data).PIPELINE_ADD);
-      window.localStorage.removeItem(LOCAL_STORAGE_KEY);
-      history.push(`/${root}${window.location.search}`);
-    } catch (res) {
-      message.error(res.response.data.error.message);
-    }
-  }, []);
+  const addNewPipeline = useCallback(
+    async data => {
+      try {
+        const res = await client.post('store/pipelines', { ...data });
+        message.success(successMsg(res.data).PIPELINE_ADD);
+        window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+        history.push('/pipelines');
+      } catch (res) {
+        message.error(res.response.data.error.message);
+      }
+    },
+    [history]
+  );
 
   const handleSubmit = useCallback(
     formData => {
@@ -106,6 +118,10 @@ const AddPipeline = () => {
     [addPipeline, setStatus]
   );
 
+  const wizardClear = useCallback(() => {
+    setStatus('CLEAR');
+  }, [setStatus]);
+
   if (status === 'IDLE') return null;
   return isEditorVisible ? (
     <Editor
@@ -122,6 +138,7 @@ const AddPipeline = () => {
       setEditorState={setEditorState}
       setStepIdx={setWizardStepIdx}
       stepIdx={wizardStepIdx}
+      wizardClear={wizardClear}
     />
   );
 };
