@@ -124,8 +124,8 @@ InputAddon.propTypes = {
 };
 
 InputAddon.defaultProps = {
-  before: null,
-  after: null,
+  before: '',
+  after: '',
   placeholder: '',
   onChange: undefined,
 };
