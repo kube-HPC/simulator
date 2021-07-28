@@ -30,15 +30,19 @@ const MODES = {
 };
 
 const DataSourceNode = ({ id }) => {
-  const { form } = useWizardContext();
-  const state = form.getFieldValue(`nodes.${id}.dataSource`);
+  const { form, initialState } = useWizardContext();
 
   const { dataSources: collection } = useDataSources();
 
   const [mode, setMode] = useState(
-    state?.snapshot ? MODES.SNAPSHOT : state?.id ? MODES.VERSION : MODES.LATEST
+    initialState?.nodes[id]?.spec?.snapshot
+      ? MODES.SNAPSHOT
+      : initialState?.nodes[id]?.spec?.id
+      ? MODES.VERSION
+      : MODES.LATEST
   );
-  const activeName = form.getFieldValue(`nodes.${id}.dataSource.name`);
+
+  const activeName = form.getFieldValue(`nodes.${id}.spec.name`);
   const versionsCollection = useVersions({ name: activeName });
   const snapshots = useSnapshots({ dataSourceName: activeName });
 
@@ -51,11 +55,11 @@ const DataSourceNode = ({ id }) => {
   const disableVersions = !versionsCollection?.versions;
 
   return (
-    <ctx.Provider value={{ rootId: `nodes.${id}.dataSource` }}>
+    <ctx.Provider value={{ rootId: `nodes.${id}.spec` }}>
       <Field name="name" title="DataSource Name">
         <Select disabled={collection.length === 0}>
           {collection.map(({ name }) => (
-            <Select.Option key={`nodes.${id}.dataSource.name`} value={name}>
+            <Select.Option key={`nodes.${id}.spec.name`} value={name}>
               {name}
             </Select.Option>
           ))}
@@ -73,9 +77,9 @@ const DataSourceNode = ({ id }) => {
       {mode === MODES.SNAPSHOT ? (
         <Field name="snapshot.name" title="Snapshot Name">
           <Select disabled={disableSnapshot}>
-            {snapshots?.collection.map(entry => (
+            {snapshots?.collection?.map(entry => (
               <Select.Option
-                key={`nodes.${id}.dataSource.version.${entry.id}`}
+                key={`nodes.${id}.spec.version.${entry.id}`}
                 value={entry.name}>
                 <VersionRow
                   key={entry.id}
@@ -92,7 +96,7 @@ const DataSourceNode = ({ id }) => {
           <Select disabled={disableVersions}>
             {versionsCollection?.versions.map(entry => (
               <Select.Option
-                key={`nodes.${id}.dataSource.version.${entry.id}`}
+                key={`nodes.${id}.spec.version.${entry.id}`}
                 value={entry.id}>
                 <VersionRow
                   key={entry.id}

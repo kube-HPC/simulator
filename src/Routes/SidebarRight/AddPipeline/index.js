@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { addPipelineTemplate } from 'config';
-import { useActions } from 'hooks';
 import cleanDeep from 'clean-deep';
 import { useHistory } from 'react-router-dom';
 
@@ -47,8 +46,6 @@ const AddPipeline = () => {
   const [isEditorVisible, toggle] = useReducer(visible => !visible, false);
   const [editorState, setEditorState] = useState(addPipelineTemplate);
   const [wizardStepIdx, setWizardStepIdx] = useState(0);
-
-  const { addPipeline } = useActions();
 
   const history = useHistory();
 
@@ -109,13 +106,12 @@ const AddPipeline = () => {
         nodes: formData.nodes.map(formatNode),
       };
 
-      // addPipeline(cleanDeep(formattedData));
       addNewPipeline(cleanDeep(formattedData));
 
       // prevent re-saving to localStorage
       setStatus('SUBMITTED');
     },
-    [addPipeline, setStatus]
+    [addNewPipeline, setStatus]
   );
 
   const wizardClear = useCallback(() => {

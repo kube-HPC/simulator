@@ -1,6 +1,6 @@
 export type Node = {
   nodeName: string;
-  kind: 'dataSource' | 'algorithm';
+  kind: 'dataSource' | 'algorithm' | 'gateway';
 };
 
 export type DataSourceNode = Node & {

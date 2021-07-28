@@ -18,7 +18,7 @@ import useSubscribe from '../useSubscribe';
 const pruneObject = obj => pickBy(obj, identity);
 
 const Form = styled(AntdForm)`
-  width: 70ch;
+  width: 90ch;
 `;
 
 export const Body = styled.div`
@@ -77,6 +77,7 @@ const Wizard = ({
     getFieldValue,
   } = form;
   const { subscribe } = useSubscribe();
+
   useEffect(() => {
     setFieldsValue(pruneObject(parseInitialState(initialState)));
   }, [setFieldsValue, initialState]);
@@ -141,6 +142,19 @@ const Wizard = ({
     getFieldValue('kind')
   );
 
+  useEffect(() => {
+    // remove gateway option from nodes and reset them to algorithm option
+    if (isStreamingPipeline === false) {
+      const { nodes } = getFieldsValue();
+
+      for (let ii = 0; ii < nodes.length; ii++) {
+        if (nodes[ii].kind === 'gateway') {
+          setFieldsValue({ [`nodes.${ii}.kind`]: 'algorithm' });
+        }
+      }
+    }
+  }, [isStreamingPipeline, getFieldsValue, setFieldsValue]);
+
   return (
     <>
       <Steps
@@ -154,12 +168,8 @@ const Wizard = ({
         }}>
         {steps}
       </Steps>
+
       <Body>
-        <JsonView
-          src={getFormattedFormValues()}
-          collapsed={undefined}
-          style={{ flex: 1 }}
-        />
         <Form
           layout="horizontal"
           hideRequiredMark
@@ -177,6 +187,11 @@ const Wizard = ({
             ))}
           </context.Provider>
         </Form>
+        <JsonView
+          src={getFormattedFormValues()}
+          collapsed={undefined}
+          style={{ flex: 1 }}
+        />
       </Body>
 
       <BottomPanel>
@@ -216,6 +231,7 @@ Wizard.propTypes = {
   stepIdx: PropTypes.number.isRequired,
   // eslint-disable-next-line
   initialState: PropTypes.object.isRequired,
+  // eslint-disable-next-line
   wizardClear: PropTypes.object.isRequired,
 };
 

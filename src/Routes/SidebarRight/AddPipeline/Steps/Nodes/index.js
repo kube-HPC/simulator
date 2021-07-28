@@ -1,9 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, Radio, Input } from 'antd';
+import { Button, Radio, Input, Tag } from 'antd';
 import AlgorithmNode from './Algorithms';
 import DataSourceNode from './DataSource';
+import GatewayNode from './Gateway';
 import useIds from './useIds';
 import useWizardContext from '../../useWizardContext';
 import { BoldedFormField } from './../../styles';
@@ -18,16 +19,21 @@ const NodeBrowserContainer = styled.section`
 `;
 
 const NodeSelectRadioButton = styled(Radio.Button)`
-  width: calc(25% - 1ch);
+  &:nth-child(1) {
+    border-radius: 0.5em;
+  }
+  width: calc(33% - 1ch);
+  border-width: 1px;
   border-radius: 0.5em;
   margin: 0.5em 0.5ch;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   text-transform: none;
+  /*border: 2px solid ${props => props.theme} !important;*/
 `;
 const AddNodeButton = styled(Button)`
-  width: calc(25% - 1ch);
+  width: calc(33% - 1ch);
   border-radius: 0.5em;
   margin: 0.5em 0.5ch;
 `;
@@ -41,7 +47,16 @@ const NodeSelectRadioGroup = styled(Radio.Group)`
   width: 100%;
 `;
 
+const TagByName = styled(Tag)`
+  color: #fff;
+  font-weight: 500;
+  background-color: ${props => props.theme};
+  border-radius: 50px;
+  border-color: ${props => props.theme};
+`;
+
 const nodesMap = {
+  gateway: GatewayNode,
   dataSource: DataSourceNode,
   algorithm: AlgorithmNode,
 };
@@ -52,7 +67,7 @@ const Node = ({ kind, id }) => {
 };
 
 Node.propTypes = {
-  kind: PropTypes.oneOf(['dataSource', 'algorithm']).isRequired,
+  kind: PropTypes.oneOf(['dataSource', 'algorithm', 'gateway']).isRequired,
   id: PropTypes.node.isRequired,
 };
 
@@ -65,7 +80,28 @@ const Nodes = ({ style }) => {
   const {
     form: { getFieldDecorator, getFieldValue },
     initialState,
+    isStreamingPipeline,
   } = useWizardContext();
+
+  const getColor = useCallback(typeKind => {
+    switch (typeKind) {
+      case 'gateway':
+        return '#006618';
+      case 'dataSource':
+        return '#550066';
+
+      default:
+        return '#b5227f';
+    }
+  }, []);
+
+  const getShortName = useCallback(name => {
+    if (name !== undefined) {
+      const arrName = name.split(/(?=[A-Z])/);
+      return arrName.map(i => i[0].toUpperCase());
+    }
+    return '';
+  }, []);
 
   const [ids, appendKey, dropKey] = useIds(Object.keys(initialState.nodes));
 
@@ -102,6 +138,9 @@ const Nodes = ({ style }) => {
           onChange={selectActiveNode}>
           {ids.map(id => (
             <NodeSelectRadioButton key={`node-radio-${id}`} value={id}>
+              <TagByName theme={getColor(getFieldValue(`nodes.${id}.kind`))}>
+                {getShortName(getFieldValue(`nodes.${id}.kind`))}
+              </TagByName>{' '}
               {getFieldValue(`nodes.${id}.nodeName`) || `node-${id}`}
             </NodeSelectRadioButton>
           ))}
@@ -117,15 +156,23 @@ const Nodes = ({ style }) => {
           }}
           required={false}>
           <h1>{getFieldValue(`nodes.${id}.nodeName`) || `node-${id}`}</h1>
+
           <h2>
             {getFieldDecorator(`nodes.${id}.kind`, {
-              initialValue: 'algorithm',
+              initialValue: initialState?.nodes[id]?.kind
+                ? initialState.nodes[id].kind
+                : 'algorithm',
             })(
               <Radio.Group
                 buttonStyle="solid"
                 style={{ display: 'flex', alignItems: 'center' }}>
                 <Radio.Button value="algorithm">Algorithm</Radio.Button>
                 <Radio.Button value="dataSource">DataSource</Radio.Button>
+
+                {isStreamingPipeline && (
+                  <Radio.Button value="gateway">Gateway</Radio.Button>
+                )}
+
                 {ids.length > 1 ? (
                   <Button
                     icon="close-circle"
@@ -151,6 +198,7 @@ const Nodes = ({ style }) => {
               ]}>
               <Input placeholder="Node Name" />
             </Field>
+
             <Node id={id} kind={getFieldValue(`nodes.${id}.kind`)} />
           </h2>
         </BoldedFormField>
