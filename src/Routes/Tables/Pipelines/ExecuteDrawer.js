@@ -1,9 +1,10 @@
 import React, { useMemo, useCallback } from 'react';
 import Drawer from 'components/Drawer';
+import { TabDrawerText, TabDrawer } from 'styles';
 import DrawerEditor from 'components/Drawer/DrawerEditor.react';
 import useToggle from 'hooks/useToggle';
 import MissingIdError from 'components/MissingIdError';
-import { DRAWER_SIZE } from 'const';
+import { DRAWER_SIZE, DRAWER_TITLES } from 'const';
 import { useActions, useExperiments } from 'hooks';
 import { schema as experimentsSchema } from 'hooks/useExperiments';
 import useActivePipeline from './useActivePipeline';
@@ -52,6 +53,9 @@ const ExecuteDrawer = () => {
       ) : (
         <MissingIdError />
       )}
+      <TabDrawer>
+        <TabDrawerText>{DRAWER_TITLES.PIPELINE_EXECUTE}</TabDrawerText>
+      </TabDrawer>
     </Drawer>
   );
 };

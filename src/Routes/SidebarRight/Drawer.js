@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import Drawer from 'components/Drawer';
+import { TabDrawerText, TabDrawer } from 'styles';
 import { RIGHT_SIDEBAR_NAMES } from 'const';
 import useToggle from 'hooks/useToggle';
 import { useHistory, useParams } from 'react-router-dom';
@@ -13,6 +14,7 @@ import NodeStatistics from './NodeStatistics.react';
 import CONTENT_CONFIG from './Content.react';
 import ctx from './ctx';
 import useSubscribe from './useSubscribe';
+import { DRAWER_TITLES } from '../../const';
 
 const operationSelector = {
   // eslint-disable-next-line
@@ -24,6 +26,18 @@ const operationSelector = {
   [RIGHT_SIDEBAR_NAMES.MEMORY]: MemoryAndStorage,
   [RIGHT_SIDEBAR_NAMES.CPU]: () => <NodeStatistics metric="cpu" />,
   [RIGHT_SIDEBAR_NAMES.GPU]: () => <NodeStatistics metric="gpu" />,
+};
+
+const titleSelector = {
+  // eslint-disable-next-line
+  [RIGHT_SIDEBAR_NAMES.ADD_PIPELINE]: DRAWER_TITLES.ADD_PIPELINE,
+  [RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM]: DRAWER_TITLES.ADD_ALGORITHM,
+  [RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE]: DRAWER_TITLES.RUN_RAW_PIPELINE,
+  [RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE]: DRAWER_TITLES.ADD_DATASOURCE,
+  [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: DRAWER_TITLES.ERROR_LOGS,
+  [RIGHT_SIDEBAR_NAMES.CPU]: DRAWER_TITLES.CPU,
+  [RIGHT_SIDEBAR_NAMES.MEMORY]: DRAWER_TITLES.MEMORY,
+  [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: DRAWER_TITLES.ERROR_LOGS,
 };
 
 const DashboardDrawer = () => {
@@ -43,6 +57,7 @@ const DashboardDrawer = () => {
 
   const Body = operationSelector[panelType];
   const width = CONTENT_CONFIG[panelType]?.width ?? 0;
+  const titleDrawer = titleSelector[panelType];
 
   return (
     <ctx.Provider value={{ closeDrawer: setOff }}>
@@ -58,6 +73,9 @@ const DashboardDrawer = () => {
         }}
         asFlex
         destroyOnClose>
+        <TabDrawer>
+          <TabDrawerText>{titleDrawer}</TabDrawerText>
+        </TabDrawer>
         <Body />
       </Drawer>
     </ctx.Provider>

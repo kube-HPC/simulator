@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
-import { DRAWER_SIZE } from 'const';
+import { TabDrawerText, TabDrawer } from 'styles';
+import { DRAWER_SIZE, DRAWER_TITLES } from 'const';
 import Drawer from 'components/Drawer';
 import useToggle from 'hooks/useToggle';
 import { useActions } from 'hooks';
@@ -39,6 +40,10 @@ const EditDrawer = () => {
       onDidClose={goTo.root}
       style={{ display: 'flex', flexDirection: 'column' }}
       width={DRAWER_SIZE.EDIT_DATASOURCE}>
+      <TabDrawer>
+        <TabDrawerText>{DRAWER_TITLES.EDIT_DATASOURCE}</TabDrawerText>
+      </TabDrawer>
+
       <Header
         status={status}
         dataSourceId={dataSourceId}
@@ -46,6 +51,7 @@ const EditDrawer = () => {
         git={dataSource?.git}
         storage={dataSource?.storage}
       />
+
       {isReady ? (
         <Body goTo={goTo} mode={mode} snapshotName={snapshotName} />
       ) : status === 'FAIL' ? (

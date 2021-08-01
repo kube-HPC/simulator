@@ -30,12 +30,24 @@ const NodeSelectRadioButton = styled(Radio.Button)`
   text-overflow: ellipsis;
   white-space: nowrap;
   text-transform: none;
-  /*border: 2px solid ${props => props.theme} !important;*/
+
+  &.ant-radio-button-wrapper-checked {
+    background-color: #f4faff;
+  }
 `;
 const AddNodeButton = styled(Button)`
   width: calc(33% - 1ch);
   border-radius: 0.5em;
   margin: 0.5em 0.5ch;
+
+  background: #1890ff;
+  color: #ffffff;
+
+  &:hover,
+  :focus {
+    background: #1890ff;
+    color: #ffffff;
+  }
 `;
 
 const NodeSelectRadioGroup = styled(Radio.Group)`
@@ -48,11 +60,18 @@ const NodeSelectRadioGroup = styled(Radio.Group)`
 `;
 
 const TagByName = styled(Tag)`
+  border: 0px;
   color: #fff;
   font-weight: 500;
-  background-color: ${props => props.theme};
+  background-color: ${props =>
+    props.tagColor === 'gateway'
+      ? '#006618'
+      : props.tagColor === 'dataSource'
+      ? '#550066'
+      : props.tagColor === 'algorithm'
+      ? '#b5227f'
+      : ''};
   border-radius: 50px;
-  border-color: ${props => props.theme};
 `;
 
 const nodesMap = {
@@ -83,24 +102,12 @@ const Nodes = ({ style }) => {
     isStreamingPipeline,
   } = useWizardContext();
 
-  const getColor = useCallback(typeKind => {
-    switch (typeKind) {
-      case 'gateway':
-        return '#006618';
-      case 'dataSource':
-        return '#550066';
-
-      default:
-        return '#b5227f';
-    }
-  }, []);
-
   const getShortName = useCallback(name => {
     if (name !== undefined) {
       const arrName = name.split(/(?=[A-Z])/);
       return arrName.map(i => i[0].toUpperCase());
     }
-    return '';
+    return ' ';
   }, []);
 
   const [ids, appendKey, dropKey] = useIds(Object.keys(initialState.nodes));
@@ -129,6 +136,11 @@ const Nodes = ({ style }) => {
     [dropKey, setActiveNodeId, ids]
   );
 
+  const handleAddNode = useCallback(() => {
+    appendKey();
+    setActiveNodeId(ids.length);
+  }, [appendKey, ids]);
+
   return (
     <div style={style}>
       <NodeBrowserContainer>
@@ -138,13 +150,13 @@ const Nodes = ({ style }) => {
           onChange={selectActiveNode}>
           {ids.map(id => (
             <NodeSelectRadioButton key={`node-radio-${id}`} value={id}>
-              <TagByName theme={getColor(getFieldValue(`nodes.${id}.kind`))}>
+              <TagByName tagColor={getFieldValue(`nodes.${id}.kind`)}>
                 {getShortName(getFieldValue(`nodes.${id}.kind`))}
               </TagByName>{' '}
               {getFieldValue(`nodes.${id}.nodeName`) || `node-${id}`}
             </NodeSelectRadioButton>
           ))}
-          <AddNodeButton icon="plus" type="dashed" onClick={appendKey} />
+          <AddNodeButton icon="plus" type="dashed" onClick={handleAddNode} />
         </NodeSelectRadioGroup>
       </NodeBrowserContainer>
       {ids.map(id => (
