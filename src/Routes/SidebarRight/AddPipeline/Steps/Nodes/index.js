@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import { COLOR } from 'styles/colors';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Radio, Input, Tag } from 'antd';
@@ -61,15 +62,15 @@ const NodeSelectRadioGroup = styled(Radio.Group)`
 
 const TagByName = styled(Tag)`
   border: 0px;
-  color: #fff;
+  color: ${props => props.colors.white};
   font-weight: 500;
   background-color: ${props =>
     props.tagColor === 'gateway'
-      ? '#006618'
+      ? props.colors.greenDark
       : props.tagColor === 'dataSource'
-      ? '#550066'
+      ? props.colors.darkPurple
       : props.tagColor === 'algorithm'
-      ? '#b5227f'
+      ? props.colors.pink
       : ''};
   border-radius: 50px;
 `;
@@ -102,13 +103,13 @@ const Nodes = ({ style }) => {
     isStreamingPipeline,
   } = useWizardContext();
 
-  const getShortName = useCallback(name => {
+  const getShortName = name => {
     if (name !== undefined) {
       const arrName = name.split(/(?=[A-Z])/);
       return arrName.map(i => i[0].toUpperCase());
     }
     return ' ';
-  }, []);
+  };
 
   const [ids, appendKey, dropKey] = useIds(Object.keys(initialState.nodes));
 
@@ -150,7 +151,9 @@ const Nodes = ({ style }) => {
           onChange={selectActiveNode}>
           {ids.map(id => (
             <NodeSelectRadioButton key={`node-radio-${id}`} value={id}>
-              <TagByName tagColor={getFieldValue(`nodes.${id}.kind`)}>
+              <TagByName
+                tagColor={getFieldValue(`nodes.${id}.kind`)}
+                colors={COLOR}>
                 {getShortName(getFieldValue(`nodes.${id}.kind`))}
               </TagByName>{' '}
               {getFieldValue(`nodes.${id}.nodeName`) || `node-${id}`}

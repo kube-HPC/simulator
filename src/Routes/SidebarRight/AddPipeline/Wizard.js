@@ -144,14 +144,14 @@ const Wizard = ({
 
   useEffect(() => {
     // remove gateway option from nodes and reset them to algorithm option
+
     if (isStreamingPipeline === false) {
       const { nodes } = getFieldsValue();
-
-      for (let ii = 0; ii < nodes.length; ii++) {
-        if (nodes[ii].kind === 'gateway') {
-          setFieldsValue({ [`nodes.${ii}.kind`]: 'algorithm' });
+      nodes.forEach((node, index) => {
+        if (node.kind === 'gateway') {
+          setFieldsValue({ [`nodes.${index}.kind`]: 'algorithm' });
         }
-      }
+      });
     }
   }, [isStreamingPipeline, getFieldsValue, setFieldsValue]);
 

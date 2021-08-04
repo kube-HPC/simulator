@@ -1,11 +1,7 @@
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { addPipelineTemplate } from 'config';
 import cleanDeep from 'clean-deep';
-import { useHistory } from 'react-router-dom';
-
-import { message } from 'antd';
-import client from 'client';
-import successMsg from 'config/schema/success-messages.schema';
+import { usePipeline } from 'hooks';
 import packageJson from './../../../../package.json';
 import Editor from './Editor';
 import Wizard from './Wizard';
@@ -46,8 +42,7 @@ const AddPipeline = () => {
   const [isEditorVisible, toggle] = useReducer(visible => !visible, false);
   const [editorState, setEditorState] = useState(addPipelineTemplate);
   const [wizardStepIdx, setWizardStepIdx] = useState(0);
-
-  const history = useHistory();
+  const { addNewPipeline } = usePipeline();
 
   useEffect(() => {
     // avoid infinite looping
@@ -84,20 +79,6 @@ const AddPipeline = () => {
     };
   }, [setEditorState, editorState, status, setStatus]);
 
-  const addNewPipeline = useCallback(
-    async data => {
-      try {
-        const res = await client.post('store/pipelines', { ...data });
-        message.success(successMsg(res.data).PIPELINE_ADD);
-        window.localStorage.removeItem(LOCAL_STORAGE_KEY);
-        history.push('/pipelines');
-      } catch (res) {
-        message.error(res.response.data.error.message);
-      }
-    },
-    [history]
-  );
-
   const handleSubmit = useCallback(
     formData => {
       /** @type {import('./fields').PipelineDescriptor} */
@@ -106,7 +87,7 @@ const AddPipeline = () => {
         nodes: formData.nodes.map(formatNode),
       };
 
-      addNewPipeline(cleanDeep(formattedData));
+      addNewPipeline(cleanDeep(formattedData), LOCAL_STORAGE_KEY);
 
       // prevent re-saving to localStorage
       setStatus('SUBMITTED');
