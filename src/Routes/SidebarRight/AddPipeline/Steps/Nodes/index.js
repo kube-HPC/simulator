@@ -8,7 +8,7 @@ import GatewayNode from './Gateway';
 import useIds from './useIds';
 import useWizardContext from '../../useWizardContext';
 import { BoldedFormField } from './../../styles';
-import { Field } from './../FormUtils';
+import { Field, FormItemLabelWrapper } from './../FormUtils';
 
 const NodeBrowserContainer = styled.section`
   display: flex;
@@ -170,33 +170,36 @@ const Nodes = ({ style }) => {
           <h1>{getFieldValue(`nodes.${id}.nodeName`) || `node-${id}`}</h1>
 
           <h2>
-            {getFieldDecorator(`nodes.${id}.kind`, {
-              initialValue: initialState?.nodes[id]?.kind
-                ? initialState.nodes[id].kind
-                : 'algorithm',
-            })(
-              <Radio.Group
-                buttonStyle="solid"
-                style={{ display: 'flex', alignItems: 'center' }}>
-                <Radio.Button value="algorithm">Algorithm</Radio.Button>
-                <Radio.Button value="dataSource">DataSource</Radio.Button>
+            <FormItemLabelWrapper label="Kind">
+              {getFieldDecorator(`nodes.${id}.kind`, {
+                initialValue: initialState?.nodes[id]?.kind
+                  ? initialState.nodes[id].kind
+                  : 'algorithm',
+              })(
+                <Radio.Group
+                  buttonStyle="solid"
+                  style={{ display: 'flex', alignItems: 'center' }}>
+                  <Radio.Button value="algorithm">Algorithm</Radio.Button>
+                  <Radio.Button value="dataSource">DataSource</Radio.Button>
 
-                {isStreamingPipeline && (
-                  <Radio.Button value="gateway">Gateway</Radio.Button>
-                )}
+                  {isStreamingPipeline && (
+                    <Radio.Button value="gateway">Gateway</Radio.Button>
+                  )}
 
-                {ids.length > 1 ? (
-                  <Button
-                    icon="close-circle"
-                    ghost
-                    onClick={() => handleDelete(id)}
-                    type="danger"
-                    style={{ marginLeft: 'auto' }}>
-                    Delete Node
-                  </Button>
-                ) : null}
-              </Radio.Group>
-            )}
+                  {ids.length > 1 ? (
+                    <Button
+                      icon="close-circle"
+                      ghost
+                      onClick={() => handleDelete(id)}
+                      type="danger"
+                      style={{ marginLeft: 'auto' }}>
+                      Delete Node
+                    </Button>
+                  ) : null}
+                </Radio.Group>
+              )}
+            </FormItemLabelWrapper>
+
             <Field
               title="Node Name"
               name="nodeName"
