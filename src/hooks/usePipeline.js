@@ -38,16 +38,19 @@ const usePipeline = () => {
     }
   }, []);
 
-  const addNewPipeline = useCallback(async (data, LOCAL_STORAGE_KEY) => {
-    try {
-      const res = await client.post('store/pipelines', { ...data });
-      message.success(successMsg(res.data).PIPELINE_ADD);
-      window.localStorage.removeItem(LOCAL_STORAGE_KEY);
-      history.push('/pipelines');
-    } catch (res) {
-      message.error(res.response.data.error.message);
-    }
-  }, []);
+  const addNewPipeline = useCallback(
+    async (data, LOCAL_STORAGE_KEY) => {
+      try {
+        const res = await client.post('store/pipelines', { ...data });
+        message.success(successMsg(res.data).PIPELINE_ADD);
+        window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+        history.push('/pipelines');
+      } catch (res) {
+        message.error(res.response.data.error.message);
+      }
+    },
+    [history]
+  );
 
   return {
     collection: filtered,
