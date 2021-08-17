@@ -49,7 +49,7 @@ const JobTime = ({ results, startTime, length, style }) => {
 
 JobTime.propTypes = {
   length: PropTypes.number,
-  startTime: PropTypes.number.isRequired,
+  startTime: PropTypes.number,
   // TODO: detail the props
   /* eslint-disable */
   style: PropTypes.object,
@@ -59,6 +59,7 @@ JobTime.propTypes = {
 
 JobTime.defaultProps = {
   length: 15,
+  startTime: 0,
 };
 
 export default React.memo(JobTime);

@@ -12,7 +12,11 @@ const JobPriority = ({ priority }) => (
 );
 
 JobPriority.propTypes = {
-  priority: PropTypes.number.isRequired,
+  priority: PropTypes.number,
+};
+
+JobPriority.defaultProps = {
+  priority: 1,
 };
 
 export default React.memo(JobPriority);

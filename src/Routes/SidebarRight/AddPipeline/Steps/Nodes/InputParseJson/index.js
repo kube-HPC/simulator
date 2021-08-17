@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { PlusOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import styled from 'styled-components';
 import useWizardContext from 'Routes/SidebarRight/AddPipeline/useWizardContext';
@@ -34,7 +35,7 @@ const Controller = ({ nodeIdx }) => {
         })(<InputField onRemove={ids.length > 1 ? dropKey : null} idx={id} />)
       )}
       <ButtonGroupCenter>
-        <Button block icon="plus" type="dashed" onClick={appendKey}>
+        <Button block icon={<PlusOutlined />} type="dashed" onClick={appendKey}>
           Add Input
         </Button>
       </ButtonGroupCenter>

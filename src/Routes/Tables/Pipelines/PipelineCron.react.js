@@ -6,7 +6,8 @@ import React, {
   useState,
 } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Input, Popover, Switch, Typography, Tooltip } from 'antd';
+import { CheckOutlined } from '@ant-design/icons';
+import { Input, Popover, Switch, Typography, Tooltip } from 'antd';
 import { useActions, usePipeline } from 'hooks';
 import { FlexBox } from 'components/common';
 import cronParser from 'cron-parser';
@@ -31,7 +32,7 @@ const isPattern = pipeline =>
 const enterButton = (
   <Tooltip title="save changes">
     <div>
-      <Icon type="check" />
+      <CheckOutlined />
     </div>
   </Tooltip>
 );

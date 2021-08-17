@@ -2,6 +2,11 @@ import React, { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+import {
+  BugOutlined,
+  PlayCircleOutlined,
+  RedoOutlined,
+} from '@ant-design/icons';
 import { Button, Empty, Tooltip } from 'antd';
 import { FlexBox, JsonSwitch } from 'components/common';
 import { useActions, useLogs, useSettings } from 'hooks';
@@ -45,7 +50,7 @@ const NodeInfo = ({ node, jobId }) => {
           key="run-node"
           type="ghost"
           onClick={onRunNode}
-          icon="play-circle"
+          icon={<PlayCircleOutlined />}
         />
       </Tooltip>
       <Tooltip title={`Debug from node ${node.nodeName}`}>
@@ -53,10 +58,10 @@ const NodeInfo = ({ node, jobId }) => {
           key="debug-node"
           type="ghost"
           onClick={onDebugNode}
-          icon="bug"
+          icon={<BugOutlined />}
         />
       </Tooltip>
-      <Button key="refresh" icon="redo" onClick={onRefresh}>
+      <Button key="refresh" icon={<RedoOutlined />} onClick={onRefresh}>
         Refresh Logs
       </Button>
     </FlexBox.Auto>

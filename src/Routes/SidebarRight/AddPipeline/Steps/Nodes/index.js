@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { COLOR } from 'styles/colors';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { CloseCircleOutlined } from '@ant-design/icons';
 import { Button, Radio, Input, Tag } from 'antd';
 import AlgorithmNode from './Algorithms';
 import DataSourceNode from './DataSource';
@@ -191,7 +192,7 @@ const Nodes = ({ style }) => {
 
                   {ids.length > 1 ? (
                     <Button
-                      icon="close-circle"
+                      icon={<CloseCircleOutlined />}
                       ghost
                       onClick={() => handleDelete(id)}
                       type="danger"

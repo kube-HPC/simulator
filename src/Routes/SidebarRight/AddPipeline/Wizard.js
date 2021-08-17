@@ -1,6 +1,13 @@
 import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Steps, Form as AntdForm } from 'antd';
+import { Form as AntdForm } from '@ant-design/compatible';
+import Icon, {
+  CheckOutlined,
+  RightOutlined,
+  LeftOutlined,
+} from '@ant-design/icons';
+import '@ant-design/compatible/assets/index.css';
+import { Steps } from 'antd';
 import { JsonView } from 'components/common';
 import styled from 'styled-components';
 import { COLOR_LAYOUT } from 'styles';
@@ -200,7 +207,7 @@ const Wizard = ({
         </PanelButton>
         <PanelButton onClick={handleToggle}>Editor View</PanelButton>
         <PanelButton disabled={stepIdx === 0} onClick={onPrevious}>
-          <Icon type="left" />
+          <LeftOutlined />
           Back
         </PanelButton>
         <RightAlignedButton
@@ -209,7 +216,7 @@ const Wizard = ({
           form="create-pipeline"
           htmlType="submit">
           {isLastStep ? 'Submit' : 'Next'}
-          <Icon type={isLastStep ? 'check' : 'right'} />
+          <Icon type={isLastStep ? <CheckOutlined /> : <RightOutlined />} />
         </RightAlignedButton>
       </BottomPanel>
     </>

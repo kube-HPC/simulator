@@ -1,10 +1,11 @@
 import React from 'react';
-import { Icon, notification } from 'antd';
+import { WarningOutlined } from '@ant-design/icons';
+import { notification } from 'antd';
 
 const configNotificationOnOpen = description => ({
   message: 'Error in Submitted Json',
   description,
-  icon: <Icon type="warning" style={{ color: 'red' }} />,
+  icon: <WarningOutlined style={{ color: 'red' }} />,
 });
 
 const noop = () => {};

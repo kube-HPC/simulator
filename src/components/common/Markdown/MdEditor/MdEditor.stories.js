@@ -18,13 +18,14 @@ export const Default = () => <MdEditor value={source} />;
 export const Empty = () => <MdEditor value={undefined} config={config} />;
 
 export const InDrawer = () => (
-  <Drawer visible>
+  <Drawer visible getContainer={false}>
     <MdEditor value={source} />
   </Drawer>
 );
 
 export const DrawerEditorComponent = () => (
   <DrawerEditorMD
+    getContainer={false}
     title="Update Pipeline"
     description={
       <>

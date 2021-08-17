@@ -1,6 +1,9 @@
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Button } from 'antd';
 import styled from 'styled-components';
 import RawInputField from 'components/InputField';
 import { tryParse } from 'utils';
@@ -64,7 +67,7 @@ const InputsCollection = ({ getFieldDecorator }) => {
         })(<InputField onRemove={ids.length > 1 ? dropKey : null} idx={id} />)
       )}
       <ButtonGroupCenter>
-        <Button block icon="plus" type="dashed" onClick={appendKey}>
+        <Button block icon={<PlusOutlined />} type="dashed" onClick={appendKey}>
           Add Input
         </Button>
       </ButtonGroupCenter>

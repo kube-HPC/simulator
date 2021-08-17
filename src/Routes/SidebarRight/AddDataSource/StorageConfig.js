@@ -1,6 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, Icon } from 'antd';
+import {
+  ApartmentOutlined,
+  FolderOutlined,
+  KeyOutlined,
+} from '@ant-design/icons';
+import { Input } from 'antd';
 import { FormItem } from './styles';
 
 const StorageConfig = ({ getFieldDecorator }) => (
@@ -12,7 +17,7 @@ const StorageConfig = ({ getFieldDecorator }) => (
         ],
       })(
         <Input
-          prefix={<Icon type="apartment" />}
+          prefix={<ApartmentOutlined />}
           placeholder="Storage Endpoint"
           required
         />
@@ -24,11 +29,7 @@ const StorageConfig = ({ getFieldDecorator }) => (
           { required: true, message: 'Please provide an S3 bucket name' },
         ],
       })(
-        <Input
-          prefix={<Icon type="folder" />}
-          placeholder="Bucket Name"
-          required
-        />
+        <Input prefix={<FolderOutlined />} placeholder="Bucket Name" required />
       )}
     </FormItem>
     <FormItem label="Access key ID">
@@ -45,7 +46,7 @@ const StorageConfig = ({ getFieldDecorator }) => (
         ],
       })(
         <Input
-          prefix={<Icon type="key" />}
+          prefix={<KeyOutlined />}
           placeholder="Secret access key"
           required
         />

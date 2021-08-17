@@ -1,12 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Spin, Table as AntTable } from 'antd';
+import Icon, {
+  DownOutlined,
+  RightOutlined,
+  LoadingOutlined,
+} from '@ant-design/icons';
+import { Spin, Table as AntTable } from 'antd';
 import styled from 'styled-components';
 
 import { USER_GUIDE } from 'const';
 
 const ExpandIcon = ({ expanded, onExpand, record }) => (
-  <Icon type={expanded ? 'down' : 'right'} onClick={e => onExpand(record, e)} />
+  <Icon
+    type={expanded ? <DownOutlined /> : <RightOutlined />}
+    onClick={e => onExpand(record, e)}
+  />
 );
 
 const { TABLE_JOB } = USER_GUIDE;
@@ -43,7 +51,7 @@ ExpandIcon.propTypes = {
   record: PropTypes.object.isRequired,
 };
 
-const antIcon = <Icon type="loading" style={{ fontSize: 40 }} spin />;
+const antIcon = <LoadingOutlined style={{ fontSize: 40 }} spin />;
 Spin.setDefaultIndicator(antIcon);
 
 const Table = ({ dataSource, loading, ...props }) => (

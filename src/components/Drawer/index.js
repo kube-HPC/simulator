@@ -64,6 +64,7 @@ const Drawer = ({
 
   return (
     <DrawerPadding
+      getContainer={false}
       visible={isOpened}
       width={width}
       afterVisibleChange={handleVisibleChange}

@@ -4,6 +4,12 @@ import { ReactComponent as IconRawFile } from 'images/raw.svg';
 import { ReactComponent as IconDataSource } from 'images/datasource.svg';
 
 import { RIGHT_SIDEBAR_NAMES } from 'const';
+import {
+  WarningOutlined,
+  ClusterOutlined,
+  FundOutlined,
+  HddOutlined,
+} from '@ant-design/icons';
 
 export const topActions = [
   {
@@ -33,24 +39,24 @@ export const getBottomActions = ({
   const ret = [
     {
       name: RIGHT_SIDEBAR_NAMES.ERROR_LOGS,
-      type: 'warning',
       count: warnings,
+      component: WarningOutlined,
     },
     {
       name: RIGHT_SIDEBAR_NAMES.CPU,
-      type: 'cluster',
       status: cpuStatus.status,
+      component: ClusterOutlined,
     },
     {
       name: RIGHT_SIDEBAR_NAMES.MEMORY,
-      type: 'hdd',
       status: memoryStatus.status,
+      component: HddOutlined,
     },
   ];
   if (gpuStatus.total) {
     ret.push({
       name: RIGHT_SIDEBAR_NAMES.GPU,
-      type: 'fund',
+      component: FundOutlined,
       status: gpuStatus.status,
     });
   }

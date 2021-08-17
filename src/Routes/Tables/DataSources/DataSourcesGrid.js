@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
-import { Button, Icon } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 import { useActions } from 'hooks';
 import { COLOR_LAYOUT, COLOR } from 'styles/colors';
 import useDataSources from 'hooks/dataSources/useDataSources';
@@ -36,7 +37,7 @@ const FailedMessage = () => {
   const { retryFetchDataSources } = useActions();
   return (
     <FailedMessageContainer>
-      <Icon type="exclamation-circle" style={{ color: COLOR.red }} />
+      <ExclamationCircleOutlined style={{ color: COLOR.red }} />
       <FailedMessageContent>
         Failed fetching dataSources collection
       </FailedMessageContent>

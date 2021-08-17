@@ -1,7 +1,14 @@
 import React, { useCallback, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Input, Icon, Form, Button, Alert, Radio } from 'antd';
+import {
+  DatabaseOutlined,
+  GithubOutlined,
+  GitlabOutlined,
+} from '@ant-design/icons';
+import { Form, Icon as LegacyIcon } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Button, Alert, Radio } from 'antd';
 import { BottomContent, Form as CommonForm } from 'components/common';
 import UploadDragger, { useDragger } from 'components/UploadDragger';
 import pruneObject from 'utils/pruneObject';
@@ -89,13 +96,7 @@ const AddDataSource = ({ form }) => {
               message: 'Please insert a name for the new DataSource',
             },
           ],
-        })(
-          <Input
-            prefix={<Icon type="database" />}
-            placeholder="name"
-            required
-          />
-        )}
+        })(<Input prefix={<DatabaseOutlined />} placeholder="name" required />)}
       </FormItem>
       {/* -------------------------- git -------------------------- */}
       <CommonForm.Divider>Git</CommonForm.Divider>
@@ -103,13 +104,13 @@ const AddDataSource = ({ form }) => {
         {getFieldDecorator('gitKind', { initialValue: 'internal' })(
           <Radio.Group>
             <Radio.Button value="github">
-              <Icon type="github" /> Github
+              <GithubOutlined /> Github
             </Radio.Button>
             <Radio.Button value="gitlab">
-              <Icon type="gitlab" /> Gitlab
+              <GitlabOutlined /> Gitlab
             </Radio.Button>
             <Radio.Button value="internal">
-              <Icon type="internal" /> Internal
+              <LegacyIcon type="internal" /> Internal
             </Radio.Button>
           </Radio.Group>
         )}
@@ -123,10 +124,10 @@ const AddDataSource = ({ form }) => {
         {getFieldDecorator('storageKind', { initialValue: 'internal' })(
           <Radio.Group>
             <Radio.Button value="S3">
-              <Icon type="S3" /> S3
+              <LegacyIcon type="S3" /> S3
             </Radio.Button>
             <Radio.Button value="internal">
-              <Icon type="internal" /> Internal
+              <LegacyIcon type="internal" /> Internal
             </Radio.Button>
           </Radio.Group>
         )}

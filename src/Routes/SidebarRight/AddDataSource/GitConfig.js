@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, Icon } from 'antd';
+import { ApartmentOutlined, KeyOutlined } from '@ant-design/icons';
+import { Input } from 'antd';
 import { FormItem } from './styles';
 
 const GitConfig = ({ kind, getFieldDecorator }) => (
@@ -10,7 +11,7 @@ const GitConfig = ({ kind, getFieldDecorator }) => (
         rules: [{ required: true, message: 'Please provide a repository url' }],
       })(
         <Input
-          prefix={<Icon type="apartment" />}
+          prefix={<ApartmentOutlined />}
           placeholder="Repository url"
           required
         />
@@ -20,11 +21,7 @@ const GitConfig = ({ kind, getFieldDecorator }) => (
       {getFieldDecorator('gitToken', {
         rules: [{ required: true, message: 'Please provide a git user token' }],
       })(
-        <Input
-          prefix={<Icon type="key" />}
-          placeholder="Access Token"
-          required
-        />
+        <Input prefix={<KeyOutlined />} placeholder="Access Token" required />
       )}
     </FormItem>
     {kind === 'gitlab' && (

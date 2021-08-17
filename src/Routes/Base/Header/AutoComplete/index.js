@@ -23,14 +23,17 @@ const selectorsMap = {
 
 const AutoComplete = ({ className }) => {
   const { pageName } = useParams();
-  const tableData = useSelector(selectorsMap[pageName]);
+  const tableData = useSelector(selectorsMap[pageName]).map(x => ({
+    value: x,
+    label: x,
+  }));
 
   const { filterData } = useActions();
   const handleFilter = useDebounceCallback(filterData, 1000, false);
   return (
     <AutoCompleteLong
       className={className}
-      dataSource={tableData}
+      options={tableData}
       onSearch={handleFilter}
       onSelect={handleFilter}
       placeholder="Filter Entities 🎉"

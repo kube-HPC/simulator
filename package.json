@@ -33,8 +33,10 @@
     ]
   },
   "dependencies": {
-    "express": "^4.17.1",
-    "dotenv": "^8.2.0"
+    "@ant-design/compatible": "^1.0.8",
+    "@ant-design/icons": "^4.6.2",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
   },
   "devDependencies": {
     "@hkube/consts": "^1.0.35",
@@ -50,7 +52,7 @@
     "@types/react-router-dom": "^5.1.7",
     "@types/vis": "^4.21.21",
     "ansi-to-react": "^5.1.0",
-    "antd": "^3.25.3",
+    "antd": "^4.16.10",
     "axios": "^0.21.1",
     "babel-eslint": "^10.0.3",
     "chonky": "^2.0.5",

@@ -1,7 +1,9 @@
 import React, { useState, forwardRef, memo } from 'react';
 import cronParser from 'cron-parser';
 import cronstrue from 'cronstrue';
-import { Popover, Typography, Icon, Input, Switch } from 'antd';
+
+import Icon, { CheckOutlined, WarningOutlined } from '@ant-design/icons';
+import { Popover, Typography, Input, Switch } from 'antd';
 import useWizardContext from 'Routes/SidebarRight/AddPipeline/useWizardContext';
 
 const { Text } = Typography;
@@ -24,7 +26,7 @@ const CronInput = forwardRef(() => {
   const addonBefore = (
     <Icon
       style={{ color: !readablePattern && 'red', fontSize: '15px' }}
-      type={readablePattern ? 'check' : 'warning'}
+      type={readablePattern ? <CheckOutlined /> : <WarningOutlined />}
     />
   );
 

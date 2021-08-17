@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Tooltip, Input, Icon } from 'antd';
+import Icon, { CheckOutlined, WarningOutlined } from '@ant-design/icons';
+import { Tooltip, Input } from 'antd';
 import { DeleteButton } from 'Routes/SidebarRight/AddPipeline/Steps/FormUtils';
 import styled from 'styled-components';
 
@@ -40,7 +41,7 @@ const InputField = ({
           addonAfter={
             <Icon
               style={{ color: !isValid && 'red', fontSize: '15px' }}
-              type={isValid ? 'check' : 'warning'}
+              type={isValid ? <CheckOutlined /> : <WarningOutlined />}
             />
           }
         />

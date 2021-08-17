@@ -1,7 +1,10 @@
 import React, { useReducer } from 'react';
 import PropTypes, { oneOfType } from 'prop-types';
 import styled from 'styled-components';
-import { Form as AntdForm, Divider as AntdDivider, Icon } from 'antd';
+import { Form as AntdForm } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import Icon, { CaretDownOutlined, CaretRightOutlined } from '@ant-design/icons';
+import { Divider as AntdDivider } from 'antd';
 
 const DEFAULT_SPAN = 5;
 const formItemLayout = {
@@ -48,7 +51,7 @@ const Collapsible = ({ title, children, defaultExpanded }) => {
       <DividerWrapper>
         {title}{' '}
         <Icon
-          type={isExpanded ? 'caret-down' : 'caret-right'}
+          type={isExpanded ? <CaretDownOutlined /> : <CaretRightOutlined />}
           onClick={toggle}
         />
       </DividerWrapper>

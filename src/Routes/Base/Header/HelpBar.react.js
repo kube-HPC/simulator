@@ -1,5 +1,11 @@
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
+import {
+  ToolOutlined,
+  GlobalOutlined,
+  GithubOutlined,
+  QuestionCircleOutlined,
+} from '@ant-design/icons';
 import styled from 'styled-components';
 import { Popover } from 'antd';
 import { selectors } from 'reducers';
@@ -41,11 +47,17 @@ const HelpBar = () => {
     <Container className={USER_GUIDE.HEADER.SOCIALS}>
       <ConnectionStatus />
       <Popover content={<Settings />} placement="bottomRight">
-        <Icons.Hover type="tool" />
+        <Icons.Hover type={<ToolOutlined />} />
       </Popover>
-      <Icons.Hover type="global" onClick={openUrl(appInfo.websiteUrl)} />
-      <Icons.Hover type="github" onClick={openUrl(appInfo.githubUrl)} />
-      <Icons.Hover type="question-circle" onClick={onGuideClick} />
+      <Icons.Hover
+        type={<GlobalOutlined />}
+        onClick={openUrl(appInfo.websiteUrl)}
+      />
+      <Icons.Hover
+        type={<GithubOutlined />}
+        onClick={openUrl(appInfo.githubUrl)}
+      />
+      <Icons.Hover type={<QuestionCircleOutlined />} onClick={onGuideClick} />
       <DarkText as="span">{hkubeSystemVersion}</DarkText>
     </Container>
   );

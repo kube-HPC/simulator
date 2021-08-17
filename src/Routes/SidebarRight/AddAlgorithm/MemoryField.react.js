@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Input, InputNumber, Select, Tooltip, Icon } from 'antd';
+
+import Icon from '@ant-design/icons';
+import { Input, InputNumber, Select, Tooltip } from 'antd';
 import parseUnit from 'parse-unit';
 
 const selectStyle = { width: '90px' };

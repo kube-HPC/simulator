@@ -1,6 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Alert, Input, Icon, Form } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Alert, Input } from 'antd';
 import UploadDragger, { useDragger } from 'components/UploadDragger';
 import { RightAlignedButton, PanelButton } from 'components/Drawer';
 import useToggle from 'hooks/useToggle';
@@ -147,9 +150,7 @@ const EditMode = ({
               ],
             })(
               <Input
-                prefix={
-                  <Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }} />
-                }
+                prefix={<EditOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
                 placeholder="update comment"
                 allowClear
               />

@@ -1,5 +1,6 @@
 import React from 'react';
 import Moment from 'react-moment';
+import { CloseOutlined, RedoOutlined } from '@ant-design/icons';
 import { Button, Progress } from 'antd';
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import Ellipsis from 'components/common/Ellipsis.react';
@@ -106,14 +107,14 @@ const getColumns = ({ cancelBuild, rerunBuild, currentTime }) => [
         <Button
           type="danger"
           shape="circle"
-          icon="close"
+          icon={<CloseOutlined />}
           onClick={() => cancelBuild(record.buildId)}
         />
       ) : (
         <Button
           type="default"
           shape="circle"
-          icon="redo"
+          icon={<RedoOutlined />}
           onClick={() => rerunBuild(record.buildId)}
         />
       );

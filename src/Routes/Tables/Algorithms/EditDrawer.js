@@ -32,6 +32,7 @@ const EditDrawer = () => {
 
   return (
     <Drawer
+      getContainer={false}
       isOpened={isOn}
       onClose={setOff}
       onDidClose={goTo.root}
@@ -44,6 +45,7 @@ const EditDrawer = () => {
         </TabDrawer>
         {activeAlgorithm ? (
           <DrawerEditor
+            getContainer={false}
             value={value}
             submitText="submit"
             onSubmit={onSubmitUpdate}

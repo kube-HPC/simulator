@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Alert, Icon, Input, Typography, Upload } from 'antd';
+import { InboxOutlined } from '@ant-design/icons';
+import { Alert, Input, Typography, Upload } from 'antd';
 import { FlexBox, Form } from 'components/common';
 import { COLOR } from 'styles';
 import { notification } from 'utils';
@@ -81,7 +82,7 @@ const CodeBuild = ({ required, getFieldDecorator, fileList, setFileList }) => (
       <Upload.Dragger
         // eslint-disable-next-line
         {...setDraggerProps({ fileList, setFileList })}>
-        <Icon type="inbox" style={inboxStyle} />
+        <InboxOutlined style={inboxStyle} />
         <br />
         <Text>Click or drag Algorithm Source code to this area to upload</Text>
         <br />

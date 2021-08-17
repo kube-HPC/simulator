@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { CopyOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Popover, Input } from 'antd';
 import { copyToClipboard } from 'utils';
 
@@ -32,7 +33,7 @@ const Field = ({ title, value }) => (
         <Button
           style={{ marginLeft: '0.5ch' }}
           onClick={() => copyToClipboard(value)}
-          icon="copy"
+          icon={<CopyOutlined />}
           type="dashed"
         />
       </Tooltip>
@@ -71,7 +72,7 @@ const RemoteDetails = ({ storage, git }) => (
         </Group>
       </PopoverContainer>
     }>
-    <Button icon="info-circle" style={{ marginLeft: 'auto' }} />
+    <Button icon={<InfoCircleOutlined />} style={{ marginLeft: 'auto' }} />
   </Popover>
 );
 

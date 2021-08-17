@@ -1,7 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Layout, Icon, Menu, Badge } from 'antd';
+import Icon from '@ant-design/icons';
+import { Layout, Menu, Badge } from 'antd';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useErrorLogs } from 'hooks';
 import useStats from 'hooks/useStats';
@@ -17,7 +18,12 @@ const SiderLight = styled(Layout.Sider)`
   border: none;
 `;
 
-const centerIconStyle = { fontSize: '25px', marginLeft: '-14px' };
+const IconStyleBar = styled(Icon)`
+  font-size: 25px !important;
+  span {
+    font-size: 25px !important;
+  }
+`;
 
 const topMargin = { marginTop: '20%' };
 const noItemSelect = [];
@@ -73,11 +79,7 @@ const SidebarRight = ({ isTop, className }) => {
                 count={count}
                 overflowCount={100}
                 offset={[0, 11]}>
-                <Icon
-                  type={type}
-                  component={component}
-                  style={centerIconStyle}
-                />
+                <IconStyleBar type={type} component={component} />
               </Badge>
             </Menu.Item>
           )

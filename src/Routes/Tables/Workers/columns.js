@@ -1,5 +1,6 @@
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
-import { Icon, Tag } from 'antd';
+import { FireFilled, PauseCircleTwoTone } from '@ant-design/icons';
+import { Tag } from 'antd';
 import Ellipsis from 'components/common/Ellipsis.react';
 import { Count as CountTag } from 'components/StatusTag';
 import React from 'react';
@@ -20,12 +21,8 @@ const WorkerState = (_, { workerStatus, jobStatus }) => {
 
 const HotWorker = (_, { workerPaused, hotWorker }) => (
   <>
-    {workerPaused && (
-      <Icon type="pause-circle" theme="twoTone" twoToneColor="red" />
-    )}
-    {hotWorker && (
-      <Icon type="fire" theme="filled" style={{ color: 'orange' }} />
-    )}
+    {workerPaused && <PauseCircleTwoTone twoToneColor="red" />}
+    {hotWorker && <FireFilled style={{ color: 'orange' }} />}
   </>
 );
 

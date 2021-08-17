@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { RedoOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import { JsonSwitch } from 'components/common';
 import { useTraceData } from 'hooks';
@@ -32,7 +33,7 @@ const JobInfo = ({ job }) => {
   ]);
 
   const refreshButton = currentTab === TABS.TRACE && (
-    <Button onClick={fetchJobTrace} icon="redo">
+    <Button onClick={fetchJobTrace} icon={<RedoOutlined />}>
       Refresh
     </Button>
   );

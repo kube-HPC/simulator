@@ -1,4 +1,5 @@
-import { Icon, Tag as AntTag, Tooltip, Typography } from 'antd';
+import { DisconnectOutlined } from '@ant-design/icons';
+import { Tag as AntTag, Tooltip, Typography } from 'antd';
 import { useConnectionStatus } from 'hooks';
 import React from 'react';
 import styled from 'styled-components';
@@ -23,7 +24,7 @@ const ConnectionStatus = () => {
         <Tooltip title="Reconnecting to Socket...">
           <Content>
             <Typography.Text>Offline Mode</Typography.Text>
-            <Icon type="disconnect" style={{ marginLeft: '1ch' }} />
+            <DisconnectOutlined style={{ marginLeft: '1ch' }} />
           </Content>
         </Tooltip>
       </Tag>

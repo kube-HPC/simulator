@@ -1,6 +1,9 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Icon, Form } from 'antd';
+import { CameraOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input } from 'antd';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { snapshotsActions } from 'reducers/dataSources';
@@ -136,9 +139,7 @@ const QueryMode = ({ dataSource, form, onDownload }) => {
               ],
             })(
               <Input
-                prefix={
-                  <Icon type="camera" style={{ color: 'rgba(0,0,0,.25)' }} />
-                }
+                prefix={<CameraOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
                 placeholder="Snapshot Name"
                 allowClear
               />

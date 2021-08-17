@@ -17,29 +17,31 @@ const CapitalizedTag = styled(Tag)`
 
 const JobTypes = ({ types, fullName }) => (
   <Overflow justify="start" gutter={0}>
-    {types.map(type =>
-      fullName ? (
-        <CapitalizedTag key={type} color={COLOR_PIPELINE_TYPES[type]}>
-          {type}
-        </CapitalizedTag>
-      ) : (
-        <Tooltip key={type} placement="top" title={toUpper(type)}>
-          <CapitalizedTag color={COLOR_PIPELINE_TYPES[type]}>
-            {type.slice(0, 2)}
+    {types !== undefined &&
+      types.map(type =>
+        fullName ? (
+          <CapitalizedTag key={type} color={COLOR_PIPELINE_TYPES[type]}>
+            {type}
           </CapitalizedTag>
-        </Tooltip>
-      )
-    )}
+        ) : (
+          <Tooltip key={type} placement="top" title={toUpper(type)}>
+            <CapitalizedTag color={COLOR_PIPELINE_TYPES[type]}>
+              {type.slice(0, 2)}
+            </CapitalizedTag>
+          </Tooltip>
+        )
+      )}
   </Overflow>
 );
 
 JobTypes.propTypes = {
-  types: PropTypes.arrayOf(PropTypes.string).isRequired,
+  types: PropTypes.arrayOf(PropTypes.string),
   fullName: PropTypes.bool,
 };
 
 JobTypes.defaultProps = {
   fullName: true,
+  types: [],
 };
 
 export default React.memo(JobTypes);

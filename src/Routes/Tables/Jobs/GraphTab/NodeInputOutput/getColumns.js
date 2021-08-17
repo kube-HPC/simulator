@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { DownloadOutlined } from '@ant-design/icons';
 import { Button, Tag, Tooltip } from 'antd';
 import humanizeDuration from 'humanize-duration';
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
@@ -51,7 +52,7 @@ const Results = ({ record, url }) => (
         type="default"
         disabled={!record.output}
         shape="circle"
-        icon="download"
+        icon={<DownloadOutlined />}
       />
     </a>
   </Tooltip>
