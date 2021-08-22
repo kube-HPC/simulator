@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
   ApartmentOutlined,
   FolderOutlined,
@@ -8,55 +7,47 @@ import {
 import { Input } from 'antd';
 import { FormItem } from './styles';
 
-const StorageConfig = ({ getFieldDecorator }) => (
+const StorageConfig = () => (
   <>
-    <FormItem label="Endpoint">
-      {getFieldDecorator('storageEndpoint', {
-        rules: [
-          { required: true, message: 'Please provide an S3 host endpoint' },
-        ],
-      })(
-        <Input
-          prefix={<ApartmentOutlined />}
-          placeholder="Storage Endpoint"
-          required
-        />
-      )}
+    <FormItem
+      label="Endpoint"
+      name="storageEndpoint"
+      rules={[
+        { required: true, message: 'Please provide an S3 host endpoint' },
+      ]}>
+      <Input
+        prefix={<ApartmentOutlined />}
+        placeholder="Storage Endpoint"
+        required
+      />
     </FormItem>
-    <FormItem label="Bucket Name">
-      {getFieldDecorator('storageBucketName', {
-        rules: [
-          { required: true, message: 'Please provide an S3 bucket name' },
-        ],
-      })(
-        <Input prefix={<FolderOutlined />} placeholder="Bucket Name" required />
-      )}
+    <FormItem
+      label="Bucket Name"
+      name="storageBucketName"
+      rules={[{ required: true, message: 'Please provide an S3 bucket name' }]}>
+      <Input prefix={<FolderOutlined />} placeholder="Bucket Name" required />
     </FormItem>
-    <FormItem label="Access key ID">
-      {getFieldDecorator('storageAccessKeyId', {
-        rules: [
-          { required: true, message: 'Please provide an S3 Access key ID' },
-        ],
-      })(<Input placeholder="Access key ID" required />)}
+    <FormItem
+      label="Access key ID"
+      name="storageAccessKeyId"
+      rules={[
+        { required: true, message: 'Please provide an S3 Access key ID' },
+      ]}>
+      <Input placeholder="Access key ID" required />
     </FormItem>
-    <FormItem label="Secret access key">
-      {getFieldDecorator('storageSecretAccessKey', {
-        rules: [
-          { required: true, message: 'Please provide an S3 Secret access key' },
-        ],
-      })(
-        <Input
-          prefix={<KeyOutlined />}
-          placeholder="Secret access key"
-          required
-        />
-      )}
+    <FormItem
+      label="Secret access key"
+      name="storageSecretAccessKey"
+      rules={[
+        { required: true, message: 'Please provide an S3 Secret access key' },
+      ]}>
+      <Input
+        prefix={<KeyOutlined />}
+        placeholder="Secret access key"
+        required
+      />
     </FormItem>
   </>
 );
-
-StorageConfig.propTypes = {
-  getFieldDecorator: PropTypes.func.isRequired,
-};
 
 export default StorageConfig;

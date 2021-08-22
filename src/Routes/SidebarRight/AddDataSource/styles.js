@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-import { Form } from '@ant-design/compatible';
-import '@ant-design/compatible/assets/index.css';
+import { Form } from 'antd';
 
 export const FormItem = styled(Form.Item)`
-  margin-bottom: 0;
+  margin-bottom: 15px;
 `;

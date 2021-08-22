@@ -1,13 +1,13 @@
 /* a patch to override ant's behavior on form.item component */
 .ant-form-item-control {
-  display: contents;
+  /* display: contents;*/
 }
 .ant-form-item-children {
   height: 100%;
 }
 
 .ant-input-affix-wrapper {
-  display: contents;
+  /*display: contents;*/
 }
 
 textarea.ant-input {

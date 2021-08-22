@@ -4,7 +4,7 @@ import { InboxOutlined } from '@ant-design/icons';
 import { Alert, Input, Typography, Upload } from 'antd';
 import { FlexBox, Form } from 'components/common';
 import { COLOR } from 'styles';
-import { notification } from 'utils';
+import { notification, splitByDot } from 'utils';
 import schema from '../schema';
 import SelectEnvOptions from '../SelectEnvOptions.react';
 
@@ -60,23 +60,23 @@ const {
   CODE: { ENVIRONMENT, ENTRY_POINT, BASE_IMAGE, DIVIDERS },
 } = schema.BUILD_TYPES;
 
-const CodeBuild = ({ required, getFieldDecorator, fileList, setFileList }) => (
+const CodeBuild = ({ required, fileList, setFileList }) => (
   <>
     <Form.Divider>{DIVIDERS.BUILD}</Form.Divider>
-    <Form.Item label={ENVIRONMENT.label}>
-      {getFieldDecorator(ENVIRONMENT.field, {
-        rules: [{ required, message: ENVIRONMENT.message }],
-      })(<SelectEnvOptions placeholder={ENVIRONMENT.placeholder} />)}
+    <Form.Item
+      name={splitByDot(ENVIRONMENT.field)}
+      label={ENVIRONMENT.label}
+      rules={[{ required, message: ENVIRONMENT.message }]}>
+      <SelectEnvOptions placeholder={ENVIRONMENT.placeholder} />
     </Form.Item>
-    <Form.Item label={ENTRY_POINT.label}>
-      {getFieldDecorator(ENTRY_POINT.field, {
-        rules: [{ required, message: ENTRY_POINT.message }],
-      })(<Input placeholder={ENTRY_POINT.placeholder} />)}
+    <Form.Item
+      name={splitByDot(ENTRY_POINT.field)}
+      label={ENTRY_POINT.label}
+      rules={[{ required, message: ENTRY_POINT.message }]}>
+      <Input placeholder={ENTRY_POINT.placeholder} />
     </Form.Item>
-    <Form.Item label={BASE_IMAGE.label}>
-      {getFieldDecorator(BASE_IMAGE.field)(
-        <Input placeholder={BASE_IMAGE.placeholder} />
-      )}
+    <Form.Item label={BASE_IMAGE.label} name={splitByDot(BASE_IMAGE.field)}>
+      <Input placeholder={BASE_IMAGE.placeholder} />
     </Form.Item>
     <Form.Item wrapperCol={null} style={marginTop}>
       <Upload.Dragger
@@ -102,7 +102,6 @@ const CodeBuild = ({ required, getFieldDecorator, fileList, setFileList }) => (
 );
 
 CodeBuild.propTypes = {
-  getFieldDecorator: PropTypes.func.isRequired,
   required: PropTypes.bool.isRequired,
   setFileList: PropTypes.func.isRequired,
   // TODO: detail the props

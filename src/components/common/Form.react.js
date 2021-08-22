@@ -1,10 +1,8 @@
 import React, { useReducer } from 'react';
 import PropTypes, { oneOfType } from 'prop-types';
 import styled from 'styled-components';
-import { Form as AntdForm } from '@ant-design/compatible';
-import '@ant-design/compatible/assets/index.css';
 import Icon, { CaretDownOutlined, CaretRightOutlined } from '@ant-design/icons';
-import { Divider as AntdDivider } from 'antd';
+import { Divider as AntdDivider, Form as AntdForm } from 'antd';
 
 const DEFAULT_SPAN = 5;
 const formItemLayout = {
@@ -15,7 +13,11 @@ const formItemLayout = {
 
 const Form = styled(AntdForm)`
   .ant-form-item {
-    margin-bottom: 0px;
+    margin-bottom: 15px;
+  }
+
+  .ant-form-item-control {
+    display: inline-block;
   }
 `;
 

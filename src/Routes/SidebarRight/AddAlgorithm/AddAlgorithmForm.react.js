@@ -15,6 +15,7 @@ import {
   notification,
   stringify,
   toUpperCaseFirstLetter,
+  splitByDot,
 } from 'utils';
 import { CodeBuild, GitBuild, ImageBuild } from './BuildTypes';
 import MemoryField from './MemoryField.react';
@@ -71,33 +72,33 @@ const getBuildTypes = ({ buildType, ...props }) => {
 };
 // #endregion
 
-const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
+const AddAlgorithmForm = ({ onToggle, onSubmit }) => {
+  const [form] = Form.useForm();
+  form.setFieldsValue(formTemplate);
+
   const [fileList, setFileList] = useState([]);
   const [buildType, setBuildType] = useState(BUILD_TYPES.CODE.field);
 
   const onBuildTypeChange = e => setBuildType(e.target.value);
 
   // Injected from Form.create
-  const { getFieldDecorator, validateFields } = form;
+  const { validateFields } = form;
 
   // #region  Submit Handle
   const buildTypes = getBuildTypes({
     buildType,
-    getFieldDecorator,
     fileList,
     setFileList,
   });
 
   const { applyAlgorithm } = useActions();
 
-  const onFormSubmit = e => {
-    e.preventDefault();
-
-    validateFields((err, formObject) => {
-      if (err || (buildType === BUILD_TYPES.CODE.field && !fileList.length)) {
+  const onFormSubmit = () => {
+    validateFields().then(formObject => {
+      if (buildType === BUILD_TYPES.CODE.field && !fileList.length) {
         notification({
           message: `Error`,
-          description: err || `Please provide a file!`,
+          description: `Please provide a file!`,
         });
         return;
       }
@@ -158,17 +159,14 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
   // #endregion
 
   return (
-    <Form onSubmit={onFormSubmit} style={{ display: 'contents' }}>
-      <Form.Item label={MAIN.NAME.label}>
-        {getFieldDecorator(MAIN.NAME.field, {
-          rules: [
-            {
-              required: true,
-              message: MAIN.NAME.message,
-              pattern: ALGO_REGEX,
-            },
-          ],
-        })(<Input placeholder={MAIN.NAME.placeholder} />)}
+    <Form form={form} onFinish={onFormSubmit} style={{ display: 'contents' }}>
+      <Form.Item
+        name={splitByDot(MAIN.NAME.field)}
+        label={MAIN.NAME.label}
+        rules={[
+          { required: true, message: MAIN.NAME.message, pattern: ALGO_REGEX },
+        ]}>
+        <Input placeholder={MAIN.NAME.placeholder} />
       </Form.Item>
       <Form.Item label="Build Type">
         <Radio.Group
@@ -179,46 +177,50 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
         </Radio.Group>
       </Form.Item>
       <Form.Divider>{MAIN.DIVIDER.RESOURCES}</Form.Divider>
-      <Form.Item label={MAIN.CPU.label}>
-        {getFieldDecorator(MAIN.CPU.field)(<InputNumber min={0.1} />)}
+      <Form.Item name={splitByDot(MAIN.CPU.field)} label={MAIN.CPU.label}>
+        <InputNumber min={0.1} />
       </Form.Item>
-      <Form.Item label={MAIN.GPU.label}>
-        {getFieldDecorator(MAIN.GPU.field)(<InputNumber min={0} />)}
+      <Form.Item name={splitByDot(MAIN.GPU.field)} label={MAIN.GPU.label}>
+        <InputNumber min={0} />
       </Form.Item>
-      <Form.Item label={MAIN.MEMORY.label} labelAlign="left">
-        {getFieldDecorator(MAIN.MEMORY.field)(
-          <MemoryField>
-            {MAIN.MEMORY.types.map(value => (
-              <Select.Option key={value} value={value}>
-                {value}
-              </Select.Option>
-            ))}
-          </MemoryField>
-        )}
+
+      <Form.Item
+        name={splitByDot(MAIN.MEMORY.field)}
+        label={MAIN.MEMORY.label}
+        labelAlign="left">
+        <MemoryField>
+          {MAIN.MEMORY.types.map(value => (
+            <Select.Option key={value} value={value}>
+              {value}
+            </Select.Option>
+          ))}
+        </MemoryField>
       </Form.Item>
       <Form.Divider>{MAIN.DIVIDER.ADVANCED}</Form.Divider>
-      <Form.Item label={MAIN.RESERVE_MEMORY.label} labelAlign="left">
-        {getFieldDecorator(MAIN.RESERVE_MEMORY.field)(
-          <MemoryField min={0} tooltipTitle={MAIN.RESERVE_MEMORY.tooltip}>
-            {MAIN.RESERVE_MEMORY.types.map(value => (
-              <Select.Option key={value} value={value}>
-                {value}
-              </Select.Option>
-            ))}
-          </MemoryField>
-        )}
+      <Form.Item
+        name={splitByDot(MAIN.RESERVE_MEMORY.field)}
+        label={MAIN.RESERVE_MEMORY.label}
+        labelAlign="left">
+        <MemoryField min={0} tooltipTitle={MAIN.RESERVE_MEMORY.tooltip}>
+          {MAIN.RESERVE_MEMORY.types.map(value => (
+            <Select.Option key={value} value={value}>
+              {value}
+            </Select.Option>
+          ))}
+        </MemoryField>
       </Form.Item>
-      <Form.Item label={MAIN.WORKERS.label}>
-        {getFieldDecorator(MAIN.WORKERS.field)(<InputNumber min={0} />)}
+      <Form.Item
+        name={splitByDot(MAIN.WORKERS.field)}
+        label={MAIN.WORKERS.label}>
+        <InputNumber min={0} />
       </Form.Item>
-      <Form.Item label={MAIN.OPTIONS.label}>
-        {getFieldDecorator(MAIN.OPTIONS.field, {
-          initialValue: mainAdvancedOptions,
-        })(
-          <Select mode="tags" placeholder={MAIN.OPTIONS.placeholder}>
-            {insertAlgorithmOptions(MAIN.OPTIONS.types)}
-          </Select>
-        )}
+      <Form.Item
+        name={splitByDot(MAIN.OPTIONS.field)}
+        label={MAIN.OPTIONS.label}
+        initialValue={mainAdvancedOptions}>
+        <Select mode="tags" placeholder={MAIN.OPTIONS.placeholder}>
+          {insertAlgorithmOptions(MAIN.OPTIONS.types)}
+        </Select>
       </Form.Item>
       {buildTypes[buildType]}
       <BottomPanel style={{ marginTop: 'auto' }}>
@@ -234,7 +236,7 @@ const AddAlgorithmForm = ({ form, onToggle, onSubmit }) => {
 AddAlgorithmForm.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
-  form: PropTypes.object.isRequired,
+
   onToggle: PropTypes.func.isRequired,
   onSubmit: PropTypes.func,
 };
@@ -243,7 +245,4 @@ AddAlgorithmForm.defaultProps = {
   onSubmit: () => {},
 };
 
-const mapper = ({ value }) => Form.createFormField({ value });
-const mapPropsToFields = () => mapObjValues({ obj: formTemplate, mapper });
-
-export default memo(Form.create({ mapPropsToFields })(AddAlgorithmForm));
+export default memo(AddAlgorithmForm);

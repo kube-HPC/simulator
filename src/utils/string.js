@@ -7,3 +7,5 @@ export const sorter = (a, b) =>
   Number.isNaN(Number(a)) && Number.isNaN(Number(b))
     ? (a || '').localeCompare(b || '')
     : a - b;
+
+export const splitByDot = str => str.split('.');
