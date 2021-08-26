@@ -1,13 +1,23 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import Icon, { CheckOutlined, WarningOutlined } from '@ant-design/icons';
+import {
+  CheckOutlined,
+  WarningOutlined,
+  MinusCircleOutlined,
+} from '@ant-design/icons';
 import { Tooltip, Input } from 'antd';
-import { DeleteButton } from 'Routes/SidebarRight/AddPipeline/Steps/FormUtils';
+
 import styled from 'styled-components';
 
 const Field = styled.div`
   display: flex;
   align-items: center;
+`;
+
+const IconDelete = styled(MinusCircleOutlined)`
+  color: #999;
+  font-size: 1.5em;
+  margin-left: 1ch;
 `;
 
 const InputField = ({
@@ -28,9 +38,6 @@ const InputField = ({
     <Field style={{ marginTop: '0.5em' }}>
       <Tooltip title={isValid ? '' : tooltip}>
         <Input
-          style={{
-            width: hasRemove ? '60ch' : '100%',
-          }}
           ref={inputRef}
           id={id}
           onChange={onChange}
@@ -39,20 +46,15 @@ const InputField = ({
           placeholder={placeholder}
           allowClear
           addonAfter={
-            <Icon
-              style={{ color: !isValid && 'red', fontSize: '15px' }}
-              type={isValid ? <CheckOutlined /> : <WarningOutlined />}
-            />
+            isValid ? (
+              <CheckOutlined style={{ fontSize: '15px' }} />
+            ) : (
+              <WarningOutlined style={{ color: 'red', fontSize: '15px' }} />
+            )
           }
         />
       </Tooltip>
-      {hasRemove && (
-        <DeleteButton
-          type="minus-circle"
-          style={{ color: '#999', fontSize: '1em', marginLeft: '1ch' }}
-          onClick={onRemove}
-        />
-      )}
+      {hasRemove && <IconDelete onClick={onRemove} />}
     </Field>
   );
 };

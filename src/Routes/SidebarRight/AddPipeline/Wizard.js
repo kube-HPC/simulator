@@ -1,18 +1,13 @@
 import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Form as AntdForm } from '@ant-design/compatible';
-import Icon, {
-  CheckOutlined,
-  RightOutlined,
-  LeftOutlined,
-} from '@ant-design/icons';
-import '@ant-design/compatible/assets/index.css';
-import { Steps } from 'antd';
+
+import { CheckOutlined, RightOutlined, LeftOutlined } from '@ant-design/icons';
+
+import { Steps, Form as AntdForm } from 'antd';
 import { JsonView } from 'components/common';
 import styled from 'styled-components';
 import { COLOR_LAYOUT } from 'styles';
-import { pickBy, identity, get } from 'lodash';
-import template from 'config/template/addPipeline.template';
+import { pickBy, identity } from 'lodash';
 import {
   BottomPanel,
   PanelButton,
@@ -36,7 +31,7 @@ export const Body = styled.div`
   max-height: 81vh;
 `;
 
-const stepNames = ['Initial', 'Nodes', 'Options'];
+const stepNames = ['Initial', 'Nodes', 'Options']; // 'Nodes', 'Options'
 const stepComponents = [Initial, Nodes, Options];
 
 const steps = stepNames.map(name => (
@@ -72,17 +67,13 @@ const Wizard = ({
   onSubmit,
   initialState,
   setEditorState,
-  form,
   setStepIdx,
   stepIdx,
   wizardClear,
 }) => {
-  const {
-    setFieldsValue,
-    getFieldsValue,
-    getFieldDecorator,
-    getFieldValue,
-  } = form;
+  const [form] = Form.useForm();
+
+  const { setFieldsValue, getFieldsValue, getFieldValue } = form;
   const { subscribe } = useSubscribe();
 
   useEffect(() => {
@@ -109,18 +100,6 @@ const Wizard = ({
   );
 
   useEffect(() => subscribe(persistForm), [subscribe, persistForm]);
-
-  // NOTE:: this is a workaround!
-  // filtering unchanged values removes the initial values from the form
-  const fieldDecorator = useCallback(
-    /** @type {typeof getFieldDecorator} */
-    (field, props) =>
-      getFieldDecorator(field, {
-        initialValue: get(template, field),
-        ...props,
-      }),
-    [getFieldDecorator]
-  );
 
   const isLastStep = stepIdx === steps.length - 1;
 
@@ -178,12 +157,13 @@ const Wizard = ({
 
       <Body>
         <Form
+          form={form}
+          name="create-pipeline"
           layout="horizontal"
           hideRequiredMark
           onSubmit={handleSubmit}
           style={{ padding: '0 2ch' }}>
-          <context.Provider
-            value={{ form, initialState, fieldDecorator, isStreamingPipeline }}>
+          <context.Provider value={{ form, initialState, isStreamingPipeline }}>
             {stepComponents.map((StepComponent, ii) => (
               <StepComponent
                 key={`step-component-${stepNames[ii]}`}
@@ -216,7 +196,7 @@ const Wizard = ({
           form="create-pipeline"
           htmlType="submit">
           {isLastStep ? 'Submit' : 'Next'}
-          <Icon type={isLastStep ? <CheckOutlined /> : <RightOutlined />} />
+          {isLastStep ? <CheckOutlined /> : <RightOutlined />}
         </RightAlignedButton>
       </BottomPanel>
     </>
@@ -228,7 +208,6 @@ Wizard.propTypes = {
   toggle: PropTypes.func.isRequired,
   setEditorState: PropTypes.func.isRequired,
   form: PropTypes.shape({
-    getFieldDecorator: PropTypes.func.isRequired,
     setFieldsValue: PropTypes.func.isRequired,
     getFieldsValue: PropTypes.func.isRequired,
     getFieldValue: PropTypes.func.isRequired,
@@ -242,4 +221,4 @@ Wizard.propTypes = {
   wizardClear: PropTypes.object.isRequired,
 };
 
-export default Form.create({ name: 'create-pipeline' })(Wizard);
+export default Wizard;

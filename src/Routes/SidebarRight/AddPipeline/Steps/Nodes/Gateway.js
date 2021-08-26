@@ -15,19 +15,14 @@ const Field = props => {
   const { form } = useWizardContext();
   const { rootId } = useContext(ctx);
   return (
-    <RawField
-      {...props}
-      getFieldValue={form.getFieldValue}
-      getFieldDecorator={form.getFieldDecorator}
-      rootId={rootId}
-    />
+    <RawField {...props} getFieldValue={form.getFieldValue} rootId={rootId} />
   );
 };
 
 const GatewayNode = ({ id }) => {
   const { initialState } = useWizardContext();
   return (
-    <ctx.Provider value={{ rootId: `nodes.${id}.spec` }}>
+    <ctx.Provider value={{ rootId: ['nodes', id, 'spec'] }}>
       <Field name="name" title="Name">
         <Input placeholder="Name Gateway" />
       </Field>

@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Icon from '@ant-design/icons';
-import { Form } from '@ant-design/compatible';
-import '@ant-design/compatible/assets/index.css';
+import { Form } from 'antd';
 
 import { COLOR } from 'styles';
 
@@ -29,7 +28,6 @@ export const Field = ({
   required,
   skipValidation,
   small,
-  getFieldDecorator,
   rootId,
   extraRules,
   initialValue,
@@ -45,26 +43,24 @@ export const Field = ({
     }
     labelCol={{ span: DEFAULT_SPAN }}
     wrapperCol={{ span: 24 - DEFAULT_SPAN }}
+    name={rootId ? rootId.concat(name) : name}
+    {...(skipValidation
+      ? { initialValue }
+      : {
+          initialValue,
+          validateTrigger: ['onChange', 'onBlur'],
+          rules: [
+            {
+              required,
+              whitespace: true,
+              type,
+              message: `${title} is required`,
+            },
+            ...extraRules,
+          ],
+        })}
     {...overrides}>
-    {getFieldDecorator(
-      rootId ? `${rootId}.${name}` : name,
-      /** @type {import('antd/lib/form/Form').GetFieldDecoratorOptions} */
-      (skipValidation
-        ? { initialValue }
-        : {
-            initialValue,
-            validateTrigger: ['onChange', 'onBlur'],
-            rules: [
-              {
-                required,
-                whitespace: true,
-                type,
-                message: `${title} is required`,
-              },
-              ...extraRules,
-            ],
-          })
-    )(children)}
+    {children}
   </Form.Item>
 );
 
@@ -76,7 +72,7 @@ Field.propTypes = {
   required: PropTypes.bool,
   skipValidation: PropTypes.bool,
   small: PropTypes.bool,
-  getFieldDecorator: PropTypes.func.isRequired,
+
   rootId: PropTypes.string,
   /* eslint-disable */
   extraRules: PropTypes.object,

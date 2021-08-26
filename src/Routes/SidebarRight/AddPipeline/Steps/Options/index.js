@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Checkbox, InputNumber, Select } from 'antd';
 import { FlexBox, Form } from 'components/common';
+
 import SliderNumber from './SliderNumber';
 import Triggers from './Triggers';
 import Webhooks from './Webhooks';
@@ -21,21 +22,14 @@ const Grow = styled(FlexBox.Item)`
 const verbosityLevels = ['info', 'trace', 'debug', 'warn', 'error', 'critical'];
 
 const Options = ({ style }) => {
-  const {
-    fieldDecorator,
-    form: { getFieldDecorator },
-    isStreamingPipeline,
-  } = useWizardContext();
+  const { isStreamingPipeline } = useWizardContext();
 
   return (
     <div style={style}>
       {isStreamingPipeline !== false && (
         <>
           <Form.Divider>Streaming Flows</Form.Divider>
-          <Field
-            name="flows"
-            getFieldDecorator={getFieldDecorator}
-            skipValidation>
+          <Field name="flows" skipValidation>
             <JsonEditor style={{ height: '20em', width: '65ch' }} />
           </Field>
         </>
@@ -49,45 +43,50 @@ const Options = ({ style }) => {
         label="Batch Tolerance"
         labelCol={{}}
         wrapperCol={{ style: { whiteSpace: 'nowrap' } }}>
-        {fieldDecorator('options.batchTolerance')(<SliderNumber />)}
+        <SliderNumber name={['options', 'batchTolerance']} />
+      </Form.Item>
+
+      <FlexBox>
+        <Grow>
+          <Form.Item
+            label="Concurrent Amount"
+            labelCol={{}}
+            wrapperCol={{ style: { whiteSpace: 'nowrap' } }}>
+            <SliderNumber
+              min={1}
+              name={['options', 'concurrentPipelines', 'amount']}
+            />
+          </Form.Item>
+        </Grow>
+        <FlexBox.Item>
+          Reject on Failure:{' '}
+          <Form.Item
+            name={['options', 'concurrentPipelines', 'rejectOnFailure']}
+            valuePropName="checked">
+            <Checkbox />
+          </Form.Item>
+        </FlexBox.Item>
+      </FlexBox>
+
+      <Form.Item label="Pipeline TTL" name={['options', 'ttl']}>
+        <InputNumber />
       </Form.Item>
       <Form.Item
-        label="Concurrent Amount"
-        labelCol={{}}
-        wrapperCol={{ style: { whiteSpace: 'nowrap' } }}>
-        <FlexBox>
-          <Grow>
-            {fieldDecorator('options.concurrentPipelines.amount')(
-              <SliderNumber min={1} />
-            )}
-          </Grow>
-          <FlexBox.Item>
-            Reject on Failure:{' '}
-            {fieldDecorator('options.concurrentPipelines.rejectOnFailure', {
-              valuePropName: 'checked',
-            })(<Checkbox />)}
-          </FlexBox.Item>
-        </FlexBox>
+        label="Verbosity Level"
+        name={['options', 'progressVerbosityLevel']}>
+        <Select style={smallSelectStyle}>
+          {verbosityLevels.map(level => (
+            <Select.Option
+              key={`verbosity-level-${level}`}
+              value={level}
+              style={{ textTransform: 'capitalize' }}>
+              {level}
+            </Select.Option>
+          ))}
+        </Select>
       </Form.Item>
-      <Form.Item label="Pipeline TTL">
-        {fieldDecorator('options.ttl')(<InputNumber />)}
-      </Form.Item>
-      <Form.Item label="Verbosity Level">
-        {fieldDecorator('options.progressVerbosityLevel')(
-          <Select style={smallSelectStyle}>
-            {verbosityLevels.map(level => (
-              <Select.Option
-                key={`verbosity-level-${level}`}
-                value={level}
-                style={{ textTransform: 'capitalize' }}>
-                {level}
-              </Select.Option>
-            ))}
-          </Select>
-        )}
-      </Form.Item>
-      <Form.Item label="Priority">
-        {fieldDecorator('priority')(<InputNumber max={5} min={1} />)}
+      <Form.Item label="Priority" name="priority">
+        <InputNumber max={5} min={1} />
       </Form.Item>
     </div>
   );

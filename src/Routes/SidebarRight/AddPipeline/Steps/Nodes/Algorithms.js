@@ -14,14 +14,8 @@ const ctx = createContext();
 
 /** @type {import('./../FormUtils').FieldProps} */
 const Field = props => {
-  const { getFieldDecorator, rootId } = useContext(ctx);
-  return (
-    <RawField
-      {...props}
-      getFieldDecorator={getFieldDecorator}
-      rootId={rootId}
-    />
-  );
+  const { rootId } = useContext(ctx);
+  return <RawField {...props} rootId={rootId} />;
 };
 
 const overrides = {
@@ -36,10 +30,7 @@ const overrides = {
 };
 
 const AlgorithmNode = ({ id }) => {
-  const {
-    form: { getFieldDecorator },
-    isStreamingPipeline,
-  } = useWizardContext();
+  const { isStreamingPipeline } = useWizardContext();
   const { collection } = useAlgorithm();
 
   const sortedAlgorithms = useMemo(
@@ -47,9 +38,9 @@ const AlgorithmNode = ({ id }) => {
     [collection]
   );
 
-  const rootId = `nodes.${id}`;
+  const rootId = ['nodes', id];
   return (
-    <ctx.Provider value={{ rootId, getFieldDecorator }}>
+    <ctx.Provider value={{ rootId }}>
       <Field name="algorithmName" title="Algorithm name">
         <AutoComplete
           disabled={collection.length === 0}
@@ -72,12 +63,12 @@ const AlgorithmNode = ({ id }) => {
       <Collapsible title="Retry">
         <HorizontalRow>
           <Field
-            name="retry.policy"
+            name={['retry', 'policy']}
             title="Policy"
             initialValue="OnCrash"
             overrides={{
               labelAlign: undefined,
-              labelCol: { span: 5 },
+              labelCol: { span: 3 },
               wrapperCol: { span: 24 },
             }}
             skipValidation>
@@ -91,7 +82,7 @@ const AlgorithmNode = ({ id }) => {
           <Field
             inline={false}
             title="Retry Limit"
-            name="retry.limit"
+            name={['retry', 'limit']}
             initialValue={3}
             skipValidation
             overrides={{
@@ -110,7 +101,7 @@ const AlgorithmNode = ({ id }) => {
             title="Batch Operation"
             skipValidation
             initialValue="indexed">
-            <Radio.Group style={{ marginLeft: '-0.5ch' }} buttonStyle="solid">
+            <Radio.Group buttonStyle="solid">
               <Radio.Button value="indexed">indexed</Radio.Button>
               <Radio.Button value="cartesian">cartesian</Radio.Button>
             </Radio.Group>
@@ -138,7 +129,7 @@ const AlgorithmNode = ({ id }) => {
         <Field
           overrides={overrides}
           title="Create A Tensorboard"
-          name="metrics.tensorboard"
+          name={['metrics', 'tensorboard']}
           skipValidation
           initialValue
           small>

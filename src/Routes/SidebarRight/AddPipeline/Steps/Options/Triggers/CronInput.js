@@ -1,17 +1,13 @@
 import React, { useState, forwardRef, memo } from 'react';
 import cronParser from 'cron-parser';
 import cronstrue from 'cronstrue';
-
-import Icon, { CheckOutlined, WarningOutlined } from '@ant-design/icons';
-import { Popover, Typography, Input, Switch } from 'antd';
-import useWizardContext from 'Routes/SidebarRight/AddPipeline/useWizardContext';
+import { CheckOutlined, WarningOutlined } from '@ant-design/icons';
+import { Popover, Typography, Input, Switch, Form } from 'antd';
 
 const { Text } = Typography;
 
 const CronInput = forwardRef(() => {
-  const { fieldDecorator } = useWizardContext();
-
-  const [readablePattern, setReadablePattern] = useState(undefined);
+  const [readablePattern, setReadablePattern] = useState(true);
 
   // #region  Helpers
   const content = readablePattern ? (
@@ -23,16 +19,20 @@ const CronInput = forwardRef(() => {
     'Invalid Cron Expression'
   );
 
-  const addonBefore = (
-    <Icon
-      style={{ color: !readablePattern && 'red', fontSize: '15px' }}
-      type={readablePattern ? <CheckOutlined /> : <WarningOutlined />}
-    />
+  const addonBefore = readablePattern ? (
+    <CheckOutlined style={{ fontSize: '15px' }} />
+  ) : (
+    <WarningOutlined style={{ color: 'red', fontSize: '15px' }} />
   );
 
-  const addonAfter = fieldDecorator('triggers.cron.enabled', {
-    valuePropName: 'checked',
-  })(<Switch />);
+  const addonAfter = (
+    <Form.Item
+      name={['triggers', 'cron', 'enabled']}
+      valuePropName="checked"
+      noStyle>
+      <Switch />
+    </Form.Item>
+  );
 
   const normalize = value => {
     try {
@@ -48,9 +48,12 @@ const CronInput = forwardRef(() => {
 
   return (
     <Popover content={content} trigger="focus">
-      {fieldDecorator('triggers.cron.pattern', {
-        normalize,
-      })(<Input addonBefore={addonBefore} addonAfter={addonAfter} />)}
+      <Form.Item
+        label="Progress"
+        name={['triggers', 'cron', 'pattern']}
+        normalize={normalize}>
+        <Input addonBefore={addonBefore} addonAfter={addonAfter} />
+      </Form.Item>
     </Popover>
   );
 });

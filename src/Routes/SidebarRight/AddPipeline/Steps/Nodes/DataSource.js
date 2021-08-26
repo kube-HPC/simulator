@@ -12,15 +12,8 @@ const ctx = React.createContext();
 
 /** @type {import('./../FormUtils').FieldProps} */
 const Field = props => {
-  const { form } = useWizardContext();
   const { rootId } = useContext(ctx);
-  return (
-    <RawField
-      {...props}
-      getFieldDecorator={form.getFieldDecorator}
-      rootId={rootId}
-    />
-  );
+  return <RawField {...props} rootId={rootId} />;
 };
 
 const MODES = {
@@ -42,7 +35,7 @@ const DataSourceNode = ({ id }) => {
       : MODES.LATEST
   );
 
-  const activeName = form.getFieldValue(`nodes.${id}.spec.name`);
+  const activeName = form.getFieldValue(['nodes', id, 'spec', 'name']);
   const versionsCollection = useVersions({ name: activeName });
   const snapshots = useSnapshots({ dataSourceName: activeName });
 
@@ -55,7 +48,7 @@ const DataSourceNode = ({ id }) => {
   const disableVersions = !versionsCollection?.versions;
 
   return (
-    <ctx.Provider value={{ rootId: `nodes.${id}.spec` }}>
+    <ctx.Provider value={{ rootId: ['nodes', id, 'spec'] }}>
       <Field name="name" title="DataSource Name">
         <Select disabled={collection.length === 0}>
           {collection.map(({ name }) => (
