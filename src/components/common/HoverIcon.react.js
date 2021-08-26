@@ -11,7 +11,7 @@ const DarkHoverStyle = styled.div`
   :hover {
     color: black;
   }
-  font-size: 25px;
+  font-size: 22px;
   cursor: pointer;
 `;
 

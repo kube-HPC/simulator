@@ -12,6 +12,10 @@ const GlobalStyle = createGlobalStyle`
     background-color: white;
     color: black;
   }
+  
+  .ant-layout-content{
+    overflow-x: hidden;
+  }
 
   .ant-layout-sider-light .ant-layout-sider-trigger {
     border-right: 1px solid ${COLOR_LAYOUT.border};

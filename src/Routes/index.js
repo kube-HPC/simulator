@@ -15,6 +15,7 @@ const LayoutFullHeight = styled(Layout)`
   height: 100vh;
   background: white;
   transition: all 0.5s;
+  overflow: hidden;
 `;
 
 const ContentMargin = styled(Layout.Content)`
