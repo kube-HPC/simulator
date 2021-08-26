@@ -36,6 +36,7 @@ export default {
       amount: 10,
       rejectOnFailure: true,
     },
+    batchOperation: 'indexed',
     progressVerbosityLevel: 'info',
     ttl: 3600,
   },

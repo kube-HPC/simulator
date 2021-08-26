@@ -30,9 +30,14 @@ const formItemLayout = {
 const AddDataSource = () => {
   const [form] = Form.useForm();
   const context = useContext(ctx);
-  const { validateFields, getFieldValue } = form;
-  const gitKind = getFieldValue('gitKind');
-  const storageKind = getFieldValue('storageKind');
+  const { validateFields } = form;
+
+  const [gitKind, setGitKind] = useState('internal');
+  const onBuildTypeGitChange = e => setGitKind(e.target.value);
+
+  const [storageKind, setStorageKind] = useState('internal');
+  const onBuildTypeStorageChange = e => setStorageKind(e.target.value);
+
   const actions = useActions();
 
   const [addedFiles, setAddedFiles] = useState(initialFilesList);
@@ -84,7 +89,7 @@ const AddDataSource = () => {
       form={form}
       initialValues={{ gitKind: 'internal', storageKind: 'internal' }}
       {...formItemLayout}
-      onSubmit={onSubmit}
+      onFinish={onSubmit}
       layout="horizontal"
       style={{ overflow: 'auto', maxHeight: '90vh' }}>
       <FormItem
@@ -102,7 +107,7 @@ const AddDataSource = () => {
       {/* -------------------------- git -------------------------- */}
       <CommonForm.Divider>Git</CommonForm.Divider>
       <FormItem label="Provider" name="gitKind" defaultValue="internal">
-        <Radio.Group>
+        <Radio.Group onChange={onBuildTypeGitChange}>
           <Radio.Button value="github">
             <GithubOutlined /> Github
           </Radio.Button>
@@ -116,7 +121,7 @@ const AddDataSource = () => {
       {/* -------------------------- storage -------------------------- */}
       <CommonForm.Divider>Storage</CommonForm.Divider>
       <FormItem label="Provider" name="storageKind">
-        <Radio.Group>
+        <Radio.Group onChange={onBuildTypeStorageChange}>
           <Radio.Button value="S3">S3</Radio.Button>
           <Radio.Button value="internal">Internal</Radio.Button>
         </Radio.Group>

@@ -34,24 +34,29 @@ const AlgorithmNode = ({ id }) => {
   const { collection } = useAlgorithm();
 
   const sortedAlgorithms = useMemo(
-    () => collection.map(item => item.name).sort(),
+    () =>
+      collection
+        .map(item => ({
+          value: item.name,
+        }))
+        .sort((a, b) => (a.value > b.value ? 1 : -1)),
     [collection]
   );
 
   const rootId = ['nodes', id];
   return (
     <ctx.Provider value={{ rootId }}>
-      <Field name="algorithmName" title="Algorithm name">
+      <Field name={['algorithmName']} title="Algorithm name">
         <AutoComplete
           disabled={collection.length === 0}
-          dataSource={sortedAlgorithms}
+          options={sortedAlgorithms}
           filterOption={(inputValue, option) =>
-            option.props.children.indexOf(inputValue) !== -1
+            option.value.indexOf(inputValue) !== -1
           }
         />
       </Field>
       {isStreamingPipeline && (
-        <Field name="stateType" title="State Type" required>
+        <Field name={['stateType']} title="State Type" required>
           <Radio.Group buttonStyle="solid">
             <Radio.Button value="stateless">stateless</Radio.Button>
             <Radio.Button value="stateful">stateful</Radio.Button>
@@ -97,7 +102,7 @@ const AlgorithmNode = ({ id }) => {
         {!isStreamingPipeline && (
           <Field
             overrides={overrides}
-            name="batchOperation"
+            name={['batchOperation']}
             title="Batch Operation"
             skipValidation
             initialValue="indexed">
@@ -109,7 +114,7 @@ const AlgorithmNode = ({ id }) => {
         )}
         <Field
           title="Node TTL"
-          name="ttl"
+          name={['ttl']}
           initialValue={0}
           skipValidation
           overrides={overrides}
@@ -118,22 +123,21 @@ const AlgorithmNode = ({ id }) => {
         </Field>
 
         <Field
-          overrides={overrides}
+          overrides={{ ...overrides, ...{ valuePropName: 'checked' } }}
           title="Include In Pipeline Results"
-          name="includeInResult"
+          name={['includeInResult']}
           skipValidation
-          initialValue={false}
           small>
           <Switch />
         </Field>
+
         <Field
-          overrides={overrides}
+          overrides={{ ...overrides, ...{ valuePropName: 'checked' } }}
           title="Create A Tensorboard"
           name={['metrics', 'tensorboard']}
           skipValidation
-          initialValue
           small>
-          <Switch defaultChecked />
+          <Switch />
         </Field>
       </Collapsible>
     </ctx.Provider>

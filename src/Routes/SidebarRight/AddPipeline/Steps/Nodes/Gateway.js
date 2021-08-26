@@ -23,11 +23,11 @@ const GatewayNode = ({ id }) => {
   const { initialState } = useWizardContext();
   return (
     <ctx.Provider value={{ rootId: ['nodes', id, 'spec'] }}>
-      <Field name="name" title="Name">
+      <Field name={['name']} title="Name">
         <Input placeholder="Name Gateway" />
       </Field>
 
-      <Field name="description" title="Description">
+      <Field name={['description']} title="Description">
         <Input placeholder="Description" />
       </Field>
       <Field
@@ -46,7 +46,7 @@ const GatewayNode = ({ id }) => {
           ))}
         </MemoryField>
       </Field>
-      <Field name="cpu" title="Cpu" initialValue="0.5">
+      <Field name={['cpu']} title="Cpu" initialValue="0.5">
         <InputNumber placeholder="Cpu" />
       </Field>
     </ctx.Provider>

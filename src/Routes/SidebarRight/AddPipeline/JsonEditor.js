@@ -15,6 +15,7 @@ const emptyEditorStates = ['""', null, 'null', ''];
  */
 const JsonEditor = ({ onChange, value: _value, style }) => {
   const [value, setValue] = useState(JSON.stringify(_value, null, 2));
+
   useEffect(() => {
     if (
       emptyEditorStates.includes(value) &&
@@ -22,6 +23,7 @@ const JsonEditor = ({ onChange, value: _value, style }) => {
     )
       setValue(JSON.stringify(_value, null, 2));
   }, [value, setValue, _value]);
+
   const [hasFailed, setFail] = useState(false);
   const onApply = useCallback(() => {
     const onSuccess = ({ parsed }) => {
@@ -62,12 +64,13 @@ const JsonEditor = ({ onChange, value: _value, style }) => {
 
 JsonEditor.propTypes = {
   onChange: PropTypes.func,
-  value: PropTypes.string,
+  // eslint-disable-next-line react/forbid-prop-types
+  value: PropTypes.object,
   // eslint-disable-next-line
   style: PropTypes.object,
 };
 JsonEditor.defaultProps = {
-  value: '',
+  value: {},
   style: {},
   onChange: () => {},
 };

@@ -3,13 +3,12 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Checkbox, InputNumber, Select } from 'antd';
 import { FlexBox, Form } from 'components/common';
-
+import JsonEditor from './../../JsonEditor';
 import SliderNumber from './SliderNumber';
 import Triggers from './Triggers';
 import Webhooks from './Webhooks';
 import useWizardContext from '../../useWizardContext';
 import { Field } from '../FormUtils';
-import JsonEditor from './../../JsonEditor';
 
 export { Triggers, Webhooks };
 
@@ -26,10 +25,10 @@ const Options = ({ style }) => {
 
   return (
     <div style={style}>
-      {isStreamingPipeline !== false && (
+      {!isStreamingPipeline !== false && (
         <>
           <Form.Divider>Streaming Flows</Form.Divider>
-          <Field name="flows" skipValidation>
+          <Field name={['flows']} skipValidation>
             <JsonEditor style={{ height: '20em', width: '65ch' }} />
           </Field>
         </>

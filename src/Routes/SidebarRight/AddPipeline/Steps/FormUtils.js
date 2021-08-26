@@ -65,7 +65,8 @@ export const Field = ({
 );
 
 Field.propTypes = {
-  name: PropTypes.string.isRequired,
+  /* eslint-disable */
+  name: PropTypes.array.isRequired,
   children: PropTypes.node.isRequired,
   title: PropTypes.string,
   type: PropTypes.string,
@@ -73,9 +74,10 @@ Field.propTypes = {
   skipValidation: PropTypes.bool,
   small: PropTypes.bool,
 
-  rootId: PropTypes.string,
   /* eslint-disable */
-  extraRules: PropTypes.object,
+  rootId: PropTypes.array,
+  /* eslint-disable */
+  extraRules: PropTypes.array,
   overrides: PropTypes.object,
   /* eslint-enable */
   initialValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),

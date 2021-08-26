@@ -49,7 +49,7 @@ const DataSourceNode = ({ id }) => {
 
   return (
     <ctx.Provider value={{ rootId: ['nodes', id, 'spec'] }}>
-      <Field name="name" title="DataSource Name">
+      <Field name={['name']} title="DataSource Name">
         <Select disabled={collection.length === 0}>
           {collection.map(({ name }) => (
             <Select.Option key={`nodes.${id}.spec.name`} value={name}>
@@ -68,7 +68,7 @@ const DataSourceNode = ({ id }) => {
         </Radio.Button>
       </Radio.Group>
       {mode === MODES.SNAPSHOT ? (
-        <Field name="snapshot.name" title="Snapshot Name">
+        <Field name={['snapshot', 'name']} title="Snapshot Name">
           <Select disabled={disableSnapshot}>
             {snapshots?.collection?.map(entry => (
               <Select.Option
@@ -85,7 +85,7 @@ const DataSourceNode = ({ id }) => {
           </Select>
         </Field>
       ) : mode === MODES.VERSION ? (
-        <Field name="id" title="Version" skipValidation>
+        <Field name={['id']} title="Version" skipValidation>
           <Select disabled={disableVersions}>
             {versionsCollection?.versions.map(entry => (
               <Select.Option

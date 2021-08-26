@@ -38,7 +38,7 @@ const BaseTag = ({
 
 BaseTag.propTypes = {
   children: PropTypes.node.isRequired,
-  status: PropTypes.string.isRequired,
+  status: PropTypes.string,
   colorMap: PropTypes.objectOf(PropTypes.string),
   tooltip: PropTypes.string,
   taskColorMap: PropTypes.bool,
@@ -47,6 +47,7 @@ BaseTag.propTypes = {
 };
 
 BaseTag.defaultProps = {
+  status: null,
   colorMap: COLOR_PIPELINE_STATUS,
   tooltip: null,
   taskColorMap: false,
@@ -61,12 +62,13 @@ const Count = ({ status, count, taskColorMap }) => (
 );
 
 Count.propTypes = {
-  status: PropTypes.string.isRequired,
+  status: PropTypes.string,
   count: PropTypes.number,
   taskColorMap: PropTypes.bool,
 };
 
 Count.defaultProps = {
+  status: null,
   count: null,
   taskColorMap: true,
 };

@@ -28,7 +28,7 @@ const Initial = ({ style }) => (
         <Radio.Button value="stream">Streaming</Radio.Button>
       </Radio.Group>
     </Form.Item>
-    <Form.Item label="Flow Input" name="flowInput">
+    <Form.Item label="Flow Input" name={['flowInput']}>
       <JsonEditor style={{ height: '30em' }} />
     </Form.Item>
   </div>

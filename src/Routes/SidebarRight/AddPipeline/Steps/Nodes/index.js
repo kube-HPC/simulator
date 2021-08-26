@@ -70,11 +70,11 @@ const TagByName = styled(Tag)`
   color: ${props => props.colors.white};
   font-weight: 500;
   background-color: ${props =>
-    props.tagColor === 'gateway'
+    props.tagcolor === 'gateway'
       ? props.colors.greenDark
-      : props.tagColor === 'dataSource'
+      : props.tagcolor === 'dataSource'
       ? props.colors.darkPurple
-      : props.tagColor === 'algorithm'
+      : props.tagcolor === 'algorithm'
       ? props.colors.pink
       : ''};
   border-radius: 50px;
@@ -157,7 +157,7 @@ const Nodes = ({ style }) => {
           {ids.map(id => (
             <NodeSelectRadioButton key={`node-radio-${id}`} value={id}>
               <TagByName
-                tagColor={getFieldValue(['nodes', id, 'kind'])}
+                tagcolor={getFieldValue(['nodes', id, 'kind'])}
                 colors={COLOR}>
                 {getShortName(getFieldValue(['nodes', id, 'kind']))}
               </TagByName>{' '}
@@ -217,7 +217,7 @@ const Nodes = ({ style }) => {
 
             <Field
               title="Node Name"
-              name="nodeName"
+              name={['nodeName']}
               rootId={['nodes', id]}
               extraRules={[
                 {
@@ -228,7 +228,9 @@ const Nodes = ({ style }) => {
               <Input placeholder="Node Name" />
             </Field>
 
-            <Node id={id} kind={getFieldValue(['nodes', id, 'kind'])} />
+            {getFieldValue(['nodes', id, 'kind']) && (
+              <Node id={id} kind={getFieldValue(['nodes', id, 'kind'])} />
+            )}
           </h2>
         </BoldedFormField>
       ))}

@@ -64,6 +64,7 @@ const parseInitialState = initialState => {
 /** @param {import('antd/lib/form').FormProps} props.form */
 const Wizard = ({
   toggle,
+  form,
   onSubmit,
   initialState,
   setEditorState,
@@ -71,8 +72,6 @@ const Wizard = ({
   stepIdx,
   wizardClear,
 }) => {
-  const [form] = Form.useForm();
-
   const { setFieldsValue, getFieldsValue, getFieldValue } = form;
   const { subscribe } = useSubscribe();
 
@@ -218,7 +217,7 @@ Wizard.propTypes = {
   // eslint-disable-next-line
   initialState: PropTypes.object.isRequired,
   // eslint-disable-next-line
-  wizardClear: PropTypes.object.isRequired,
+  wizardClear: PropTypes.func.isRequired,
 };
 
 export default Wizard;

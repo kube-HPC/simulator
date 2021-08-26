@@ -2,10 +2,10 @@ import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { addPipelineTemplate } from 'config';
 import cleanDeep from 'clean-deep';
 import { usePipeline } from 'hooks';
+import { Form } from 'antd';
 import packageJson from './../../../../package.json';
 import Editor from './Editor';
 import Wizard from './Wizard';
-
 /** @param {import('./fields').DataSourceNode} node */
 const formatDataSourceNode = node =>
   // if used datasource by id, avoid all other parameters
@@ -38,6 +38,7 @@ const formatNode = node => {
 const LOCAL_STORAGE_KEY = 'add-pipeline-form-state';
 
 const AddPipeline = () => {
+  const [form] = Form.useForm();
   const [status, setStatus] = useState('IDLE');
   const [isEditorVisible, toggle] = useReducer(visible => !visible, false);
   const [editorState, setEditorState] = useState(addPipelineTemplate);
@@ -109,6 +110,7 @@ const AddPipeline = () => {
     />
   ) : (
     <Wizard
+      form={form}
       toggle={toggle}
       onSubmit={handleSubmit}
       initialState={editorState}

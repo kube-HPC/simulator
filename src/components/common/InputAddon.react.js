@@ -116,7 +116,7 @@ const InputAddon = forwardRef(
 
 InputAddon.displayName = `InputAddon`;
 InputAddon.propTypes = {
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
   before: arrayOrStringType,
   after: arrayOrStringType,
   placeholder: PropTypes.string,
@@ -128,6 +128,7 @@ InputAddon.defaultProps = {
   after: '',
   placeholder: '',
   onChange: undefined,
+  value: '',
 };
 
 export default memo(InputAddon);
