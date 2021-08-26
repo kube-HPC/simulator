@@ -1,9 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { PlusOutlined } from '@ant-design/icons';
-import { Form } from '@ant-design/compatible';
-import '@ant-design/compatible/assets/index.css';
-import { Button } from 'antd';
+import { Form, Button } from 'antd';
 import styled from 'styled-components';
 import RawInputField from 'components/InputField';
 import { tryParse } from 'utils';
@@ -50,22 +48,24 @@ InputField.propTypes = {
   idx: PropTypes.number.isRequired,
 };
 
-const InputsCollection = ({ getFieldDecorator }) => {
+const InputsCollection = () => {
   const [ids, appendKey, dropKey] = useIds([0]);
   return (
     <>
-      {ids.map(id =>
-        getFieldDecorator(`inputs.${id}`, {
-          validateTrigger: ['onChange', 'onBlur'],
-          rules: [
+      {ids.map(id => (
+        <Form.Item
+          name={['inputs', id]}
+          validateTrigger={['onChange', 'onBlur']}
+          rules={[
             {
               required: true,
               whitespace: true,
               message: "Please input algorithm's name or delete this field.",
             },
-          ],
-        })(<InputField onRemove={ids.length > 1 ? dropKey : null} idx={id} />)
-      )}
+          ]}>
+          <InputField onRemove={ids.length > 1 ? dropKey : null} idx={id} />
+        </Form.Item>
+      ))}
       <ButtonGroupCenter>
         <Button block icon={<PlusOutlined />} type="dashed" onClick={appendKey}>
           Add Input
@@ -73,10 +73,6 @@ const InputsCollection = ({ getFieldDecorator }) => {
       </ButtonGroupCenter>
     </>
   );
-};
-
-InputsCollection.propTypes = {
-  getFieldDecorator: PropTypes.func.isRequired,
 };
 
 /**
@@ -98,8 +94,8 @@ const AlgorithmRun = ({ onRun, form, buttonTitle }) => {
     }
   }, [form, onRun]);
   return (
-    <Form direction="column" full gutter={[0, 10]}>
-      <InputsCollection getFieldDecorator={form.getFieldDecorator} />
+    <Form name="run algorithm" direction="column" full gutter={[0, 10]}>
+      <InputsCollection />
       <Button type="primary" block size="small" onClick={handleRun}>
         {buttonTitle}
       </Button>
@@ -110,10 +106,9 @@ const AlgorithmRun = ({ onRun, form, buttonTitle }) => {
 AlgorithmRun.propTypes = {
   onRun: PropTypes.func.isRequired,
   form: PropTypes.shape({
-    getFieldDecorator: PropTypes.func.isRequired,
     getFieldsValue: PropTypes.func.isRequired,
   }).isRequired,
   buttonTitle: PropTypes.string.isRequired,
 };
 
-export default Form.create({ name: 'run algorithm' })(AlgorithmRun);
+export default AlgorithmRun;

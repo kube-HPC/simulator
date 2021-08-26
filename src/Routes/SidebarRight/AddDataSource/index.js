@@ -6,7 +6,6 @@ import {
   GithubOutlined,
   GitlabOutlined,
 } from '@ant-design/icons';
-import { Icon as LegacyIcon } from '@ant-design/compatible';
 
 import { Form, Input, Button, Alert, Radio } from 'antd';
 import { BottomContent, Form as CommonForm } from 'components/common';
@@ -110,9 +109,7 @@ const AddDataSource = () => {
           <Radio.Button value="gitlab">
             <GitlabOutlined /> Gitlab
           </Radio.Button>
-          <Radio.Button value="internal">
-            <LegacyIcon type="internal" /> Internal
-          </Radio.Button>
+          <Radio.Button value="internal">Internal</Radio.Button>
         </Radio.Group>
       </FormItem>
       {gitKind === 'internal' ? null : <GitConfig kind={gitKind} />}
@@ -120,12 +117,8 @@ const AddDataSource = () => {
       <CommonForm.Divider>Storage</CommonForm.Divider>
       <FormItem label="Provider" name="storageKind">
         <Radio.Group>
-          <Radio.Button value="S3">
-            <LegacyIcon type="S3" /> S3
-          </Radio.Button>
-          <Radio.Button value="internal">
-            <LegacyIcon type="internal" /> Internal
-          </Radio.Button>
+          <Radio.Button value="S3">S3</Radio.Button>
+          <Radio.Button value="internal">Internal</Radio.Button>
         </Radio.Group>
       </FormItem>
       {storageKind === 'internal' ? null : <StorageConfig />}

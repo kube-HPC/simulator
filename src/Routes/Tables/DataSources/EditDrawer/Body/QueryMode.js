@@ -1,9 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { CameraOutlined } from '@ant-design/icons';
-import { Form } from '@ant-design/compatible';
-import '@ant-design/compatible/assets/index.css';
-import { Input } from 'antd';
+import { Form, Input } from 'antd';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { snapshotsActions } from 'reducers/dataSources';
@@ -108,7 +106,10 @@ const QueryMode = ({ dataSource, form, onDownload }) => {
   );
 
   return (
-    <Form onSubmit={handleSubmit} style={{ display: 'contents' }}>
+    <Form
+      onSubmit={handleSubmit}
+      style={{ display: 'contents' }}
+      initialValues={{ comment: '' }}>
       <FileBrowserContainer>
         <FileBrowser
           isReadOnly
@@ -120,30 +121,28 @@ const QueryMode = ({ dataSource, form, onDownload }) => {
       <FormContainer>
         <Row style={{ flex: 1 }}>
           <FormItem
+            name={['query']}
+            rules={[{ message: 'please enter a query', required: true }]}
             style={{ display: 'contents' }}
             wrapperCol={{ style: { display: 'contents' } }}>
-            {form.getFieldDecorator('query', {
-              rules: [{ message: 'please enter a query', required: true }],
-            })(<Input.TextArea placeholder="Query" allowClear />)}
+            <Input.TextArea placeholder="Query" allowClear />
           </FormItem>
         </Row>
         <Row>
-          <Form.Item>
-            {form.getFieldDecorator('snapshotName', {
-              rules: [
-                {
-                  message: 'please enter a snapshot name',
-                  max: 25,
-                  required: true,
-                },
-              ],
-            })(
-              <Input
-                prefix={<CameraOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-                placeholder="Snapshot Name"
-                allowClear
-              />
-            )}
+          <Form.Item
+            name={['snapshotName']}
+            rules={[
+              {
+                message: 'please enter a snapshot name',
+                max: 25,
+                required: true,
+              },
+            ]}>
+            <Input
+              prefix={<CameraOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
+              placeholder="Snapshot Name"
+              allowClear
+            />
           </Form.Item>
         </Row>
       </FormContainer>
@@ -175,11 +174,10 @@ QueryMode.propTypes = {
     isSnapshot: PropTypes.bool,
   }).isRequired,
   form: PropTypes.shape({
-    getFieldDecorator: PropTypes.func.isRequired,
     validateFields: PropTypes.func.isRequired,
     getFieldValue: PropTypes.func.isRequired,
   }).isRequired,
   onDownload: PropTypes.func.isRequired,
 };
 
-export default Form.create({ comment: '' })(QueryMode);
+export default QueryMode;
