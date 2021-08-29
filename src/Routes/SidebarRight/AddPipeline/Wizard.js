@@ -132,11 +132,12 @@ const Wizard = ({
 
     if (isStreamingPipeline === false) {
       const { nodes } = getFieldsValue();
-      nodes.forEach((node, index) => {
-        if (node.kind === 'gateway') {
-          setFieldsValue({ [`nodes.${index}.kind`]: 'algorithm' });
-        }
-      });
+      nodes &&
+        nodes.forEach((node, index) => {
+          if (node.kind === 'gateway') {
+            setFieldsValue({ [`nodes.${index}.kind`]: 'algorithm' });
+          }
+        });
     }
   }, [isStreamingPipeline, getFieldsValue, setFieldsValue]);
 
@@ -157,6 +158,7 @@ const Wizard = ({
       <Body>
         <Form
           form={form}
+          onValuesChange={persistForm}
           name="create-pipeline"
           layout="horizontal"
           hideRequiredMark
@@ -174,7 +176,7 @@ const Wizard = ({
           </context.Provider>
         </Form>
         <JsonView
-          src={getFormattedFormValues()}
+          src={initialState}
           collapsed={undefined}
           style={{ flex: 1 }}
         />

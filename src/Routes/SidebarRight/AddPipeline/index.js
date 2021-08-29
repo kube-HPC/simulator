@@ -64,6 +64,7 @@ const AddPipeline = () => {
     }
 
     if (status === 'CLEAR') {
+      form.resetFields();
       window.localStorage.removeItem(LOCAL_STORAGE_KEY);
       setEditorState(addPipelineTemplate);
       setWizardStepIdx(0);
@@ -78,7 +79,7 @@ const AddPipeline = () => {
         JSON.stringify({ ...editorState, stateVersion: packageJson.version })
       );
     };
-  }, [setEditorState, editorState, status, setStatus]);
+  }, [setEditorState, editorState, status, setStatus, form]);
 
   const handleSubmit = useCallback(
     formData => {

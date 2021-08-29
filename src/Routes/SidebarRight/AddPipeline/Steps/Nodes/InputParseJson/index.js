@@ -29,7 +29,7 @@ const Controller = ({ nodeIdx }) => {
           rules={[
             {
               required: true,
-              whitespace: true,
+
               message: "Please input algorithm's name or delete this field.",
             },
           ]}>

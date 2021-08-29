@@ -46,8 +46,8 @@ const GatewayNode = ({ id }) => {
           ))}
         </MemoryField>
       </Field>
-      <Field name={['cpu']} title="Cpu" initialValue="0.5">
-        <InputNumber placeholder="Cpu" />
+      <Field name={['cpu']} title="Cpu" skipValidation>
+        <InputNumber min={0} defaultValue={0.5} />
       </Field>
     </ctx.Provider>
   );

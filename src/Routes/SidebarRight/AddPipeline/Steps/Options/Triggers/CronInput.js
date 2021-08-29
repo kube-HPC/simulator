@@ -34,15 +34,15 @@ const CronInput = forwardRef(() => {
     </Form.Item>
   );
 
-  const normalize = value => {
+  const normalize = e => {
     try {
+      const { value } = e.target;
       const readable = cronstrue.toString(value, { use24HourTimeFormat: true });
       const next = cronParser.parseExpression(value).next().toString();
       setReadablePattern({ readable, next });
     } catch (err) {
       setReadablePattern(undefined);
     }
-    return value;
   };
   // #endregion
 
@@ -51,7 +51,8 @@ const CronInput = forwardRef(() => {
       <Form.Item
         label="Progress"
         name={['triggers', 'cron', 'pattern']}
-        normalize={normalize}>
+        onFocus={normalize}
+        onChange={normalize}>
         <Input addonBefore={addonBefore} addonAfter={addonAfter} />
       </Form.Item>
     </Popover>

@@ -83,8 +83,15 @@ const InputAddon = forwardRef(
           .replace(beforeValue, '')
           .replace(afterValue, '')
       );
-      onChange(_value ? `${beforeValue}${_value}${after}` : '');
-    }, [after, before, inputValue, onChange, selectAfter, selectBefore]);
+
+      const lastValue = value
+        .replace(beforeValue, '')
+        .replace(beforeValue, '')
+        .replace(afterValue, '');
+
+      if (lastValue !== inputValue)
+        onChange(_value ? `${beforeValue}${_value}${after}` : '');
+    }, [after, before, inputValue, onChange, selectAfter, selectBefore, value]);
 
     const addonBefore = useMemo(
       () =>
