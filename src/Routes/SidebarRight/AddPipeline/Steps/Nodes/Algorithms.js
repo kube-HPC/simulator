@@ -105,7 +105,8 @@ const AlgorithmNode = ({ id }) => {
             name={['batchOperation']}
             title="Batch Operation"
             skipValidation
-            initialValue="indexed">
+            initialValue="indexed"
+            small>
             <Radio.Group buttonStyle="solid">
               <Radio.Button value="indexed">indexed</Radio.Button>
               <Radio.Button value="cartesian">cartesian</Radio.Button>

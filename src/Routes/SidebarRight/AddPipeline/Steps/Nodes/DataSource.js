@@ -5,6 +5,7 @@ import useVersions from 'hooks/dataSources/useVersions';
 import useDataSources from 'hooks/dataSources/useDataSources';
 import useSnapshots from 'hooks/dataSources/useSnapshots';
 import { VersionRow, checkLatest } from 'components/dataSourceVersions';
+import styled from 'styled-components';
 import useWizardContext from '../../useWizardContext';
 import { Field as RawField } from './../FormUtils';
 
@@ -21,6 +22,10 @@ const MODES = {
   VERSION: 'Version',
   SNAPSHOT: 'Snapshot',
 };
+
+const RadioGroup = styled(Radio.Group)`
+  margin-top: 20px;
+`;
 
 const DataSourceNode = ({ id }) => {
   const { form, initialState } = useWizardContext();
@@ -58,7 +63,8 @@ const DataSourceNode = ({ id }) => {
           ))}
         </Select>
       </Field>
-      <Radio.Group value={mode} onChange={handleChangeMode}>
+
+      <RadioGroup value={mode} onChange={handleChangeMode}>
         <Radio.Button value={MODES.LATEST}>{MODES.LATEST}</Radio.Button>
         <Radio.Button value={MODES.VERSION} disabled={disableVersions}>
           {MODES.VERSION}
@@ -66,7 +72,8 @@ const DataSourceNode = ({ id }) => {
         <Radio.Button value={MODES.SNAPSHOT} disabled={disableSnapshot}>
           {MODES.SNAPSHOT}
         </Radio.Button>
-      </Radio.Group>
+      </RadioGroup>
+
       {mode === MODES.SNAPSHOT ? (
         <Field name={['snapshot', 'name']} title="Snapshot Name">
           <Select disabled={disableSnapshot}>

@@ -13,7 +13,7 @@ const formItemLayout = {
 
 const Form = styled(AntdForm)`
   .ant-form-item {
-    margin-bottom: 15px;
+    margin-bottom: 8px;
   }
 
   .ant-form-item-control {

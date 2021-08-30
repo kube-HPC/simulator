@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Input, InputNumber, Radio, Select } from 'antd';
@@ -74,7 +74,10 @@ const getBuildTypes = ({ buildType, ...props }) => {
 
 const AddAlgorithmForm = ({ onToggle, onSubmit }) => {
   const [form] = Form.useForm();
-  form.setFieldsValue(formTemplate);
+
+  useMemo(() => {
+    form.setFieldsValue(formTemplate);
+  }, [form]);
 
   const [fileList, setFileList] = useState([]);
   const [buildType, setBuildType] = useState(BUILD_TYPES.CODE.field);
