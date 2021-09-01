@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
 import { Table } from 'components';
 import { Card, JsonSwitch } from 'components/common';
+import { RightOutlined, DownOutlined } from '@ant-design/icons';
 import getColumns from './getColumns';
 
 const NodeInputOutput = ({ algorithm = {}, payload }) => {
@@ -37,11 +38,20 @@ const NodeInputOutput = ({ algorithm = {}, payload }) => {
       rowKey={({ taskId }) => `input-output-table-task-${taskId}`}
       columns={getColumns(socketUrl)}
       dataSource={dataSource}
-      expandedRowRender={record => (
-        <Card>
-          <JsonSwitch obj={record} />
-        </Card>
-      )}
+      expandable={{
+        expandedRowRender: record => (
+          <Card>
+            <JsonSwitch obj={record} />
+          </Card>
+        ),
+        // eslint-disable-next-line react/prop-types
+        expandIcon: ({ expanded, onExpand, record }) =>
+          expanded ? (
+            <DownOutlined onClick={e => onExpand(record, e)} />
+          ) : (
+            <RightOutlined onClick={e => onExpand(record, e)} />
+          ),
+      }}
     />
   );
 };

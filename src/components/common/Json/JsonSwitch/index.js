@@ -14,6 +14,11 @@ const TABS = {
 const Wrapper = styled.div`
   max-width: 80vw;
 `;
+const ContainerTabs = styled.div`
+  .ant-tabs-nav .ant-tabs-nav-wrap {
+    flex: inherit;
+  }
+`;
 
 const onCopy = () =>
   notification({
@@ -29,25 +34,27 @@ const JsonSwitch = ({ obj, options, jobId }) => {
     </CopyToClipboard>
   );
   return (
-    <Tabs tabPosition="left" tabBarExtraContent={extra} type="card">
-      <Tabs.TabPane key={TABS.TABLE} tab={TABS.TABLE}>
-        <Wrapper>
-          <JsonTable
-            obj={obj}
-            jobId={jobId}
+    <ContainerTabs>
+      <Tabs tabPosition="left" tabBarExtraContent={extra} type="card">
+        <Tabs.TabPane key={TABS.TABLE} tab={TABS.TABLE}>
+          <Wrapper>
+            <JsonTable
+              obj={obj}
+              jobId={jobId}
+              // eslint-disable-next-line
+              {...table}
+            />
+          </Wrapper>
+        </Tabs.TabPane>
+        <Tabs.TabPane key={TABS.JSON} tab={TABS.JSON}>
+          <JsonView.Card
+            jsonObject={obj}
             // eslint-disable-next-line
-            {...table}
+            {...view}
           />
-        </Wrapper>
-      </Tabs.TabPane>
-      <Tabs.TabPane key={TABS.JSON} tab={TABS.JSON}>
-        <JsonView.Card
-          jsonObject={obj}
-          // eslint-disable-next-line
-          {...view}
-        />
-      </Tabs.TabPane>
-    </Tabs>
+        </Tabs.TabPane>
+      </Tabs>
+    </ContainerTabs>
   );
 };
 

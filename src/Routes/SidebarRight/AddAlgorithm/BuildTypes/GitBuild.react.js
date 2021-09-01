@@ -61,7 +61,7 @@ const GitBuild = ({ required }) => (
         {insertGitKindOptions({ options: GIT_KIND.types })}
       </Radio.Group>
     </Form.Item>
-    )
+
     <Form.Item
       name={splitByDot(URL.field)}
       label={URL.label}

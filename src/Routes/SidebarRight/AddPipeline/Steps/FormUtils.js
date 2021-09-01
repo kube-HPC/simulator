@@ -98,7 +98,10 @@ export const HorizontalRow = styled.div`
   display: flex;
   justify-content: space-evenly;
 `;
-
+export const HorizontalStartRow = styled.div`
+  display: flex;
+  justify-content: start;
+`;
 export const DeleteButton = styled(Icon)`
   margin-left: auto;
   color: ${COLOR.red};

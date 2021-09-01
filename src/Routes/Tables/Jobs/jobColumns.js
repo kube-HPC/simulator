@@ -62,7 +62,7 @@ const jobColumns = [
   },
   {
     title: `Pipeline Name`,
-    dataIndex: `pipeline.name`,
+    dataIndex: ['pipeline', 'name'],
     key: `pipeline`,
     width: `10%`,
     sorter: sortPipelineName,
@@ -70,7 +70,7 @@ const jobColumns = [
   },
   {
     title: `Start Time`,
-    dataIndex: `pipeline.startTime`,
+    dataIndex: ['pipeline', 'startTime'],
     key: `Start timestamp`,
     width: `10%`,
     sorter: sortStartTime,
@@ -78,14 +78,14 @@ const jobColumns = [
   },
   {
     title: `Pipeline Type`,
-    dataIndex: `pipeline.types`,
+    dataIndex: ['pipeline', 'types'],
     key: `types`,
     width: `10%`,
     render: Types,
   },
   {
     title: `Priority`,
-    dataIndex: `pipeline.priority`,
+    dataIndex: ['pipeline', 'priority'],
     key: `priority`,
     align: `center`,
     width: `15ch`,
@@ -94,7 +94,7 @@ const jobColumns = [
   },
   {
     title: `Nodes Stats`,
-    dataIndex: `status`,
+    dataIndex: ['status'],
     key: `node-status`,
     align: `center`,
     width: `20ch`,
@@ -102,7 +102,7 @@ const jobColumns = [
   },
   {
     title: `Status`,
-    dataIndex: `status`,
+    dataIndex: ['status'],
     key: `job-status`,
     filterMultiple: true,
     filters: statusFilter,

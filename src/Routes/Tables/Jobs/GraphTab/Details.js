@@ -20,6 +20,9 @@ const OverflowContainer = styled.div`
   height: 100%;
   overflow: auto;
 `;
+const ContainerTabs = styled.div`
+  padding-left: 15px;
+`;
 
 const NodeInfo = ({ node, jobId }) => {
   const algorithmDetails = useSelector(state =>
@@ -68,22 +71,21 @@ const NodeInfo = ({ node, jobId }) => {
   ) : null;
 
   return node ? (
-    <Tabs defaultActiveKey="logs-tab" tabBarExtraContent={extra}>
-      <Pane
-        tab="Logs"
-        key="logs-tab"
-        style={{ display: 'flex', flexDirection: 'column' }}>
-        <NodeLogs node={node} taskDetails={taskDetails} onChange={setIndex} />
-      </Pane>
-      <Tabs.TabPane tab="Algorithm Details" key="algorithms-tab">
-        <OverflowContainer>
-          <JsonSwitch obj={algorithmDetails} jobId={jobId} />
-        </OverflowContainer>
-      </Tabs.TabPane>
-      <Tabs.TabPane tab="Input Output Details" key="io-details-tab">
-        <NodeInputOutput payload={node} algorithm={algorithmDetails} />
-      </Tabs.TabPane>
-    </Tabs>
+    <ContainerTabs>
+      <Tabs defaultActiveKey="logs-tab" tabBarExtraContent={extra}>
+        <Pane tab="Logs" key="logs-tab">
+          <NodeLogs node={node} taskDetails={taskDetails} onChange={setIndex} />
+        </Pane>
+        <Tabs.TabPane tab="Algorithm Details" key="algorithms-tab">
+          <OverflowContainer>
+            <JsonSwitch obj={algorithmDetails} jobId={jobId} />
+          </OverflowContainer>
+        </Tabs.TabPane>
+        <Tabs.TabPane tab="Input Output Details" key="io-details-tab">
+          <NodeInputOutput payload={node} algorithm={algorithmDetails} />
+        </Tabs.TabPane>
+      </Tabs>
+    </ContainerTabs>
   ) : (
     <Empty />
   );

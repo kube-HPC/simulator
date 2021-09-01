@@ -39,13 +39,13 @@ const JobId = jobId => {
 export const workersTableStats = [
   {
     title: '',
-    dataIndex: 'workerStatus',
+    dataIndex: ['workerStatus'],
     key: 'workerStatusIcon',
     render: HotWorker,
   },
   {
     title: 'Pod Name',
-    dataIndex: 'podName',
+    dataIndex: ['podName'],
     key: 'podName',
     onFilter: (value, record) => record.podName.includes(value),
     render: PodName,
@@ -54,13 +54,13 @@ export const workersTableStats = [
   },
   {
     title: 'Worker State',
-    dataIndex: 'workerStatus',
+    dataIndex: ['workerStatus'],
     key: 'workerStatus',
     render: WorkerState,
   },
   {
     title: 'Job ID',
-    dataIndex: 'jobId',
+    dataIndex: ['jobId'],
     key: 'jobId',
     render: JobId,
   },
@@ -92,7 +92,7 @@ export const workersColumns = [
   {
     title: 'Algorithm Name',
     key: 'algorithmName',
-    dataIndex: 'algorithmName',
+    dataIndex: ['algorithmName'],
     sorter: (a, b) => sorter(a.algorithmName, b.algorithmName),
     defaultSortOrder: 'ascend',
     render: Name,
@@ -100,19 +100,19 @@ export const workersColumns = [
   {
     title: 'Ready Count',
     key: 'readyCount',
-    dataIndex: 'ready',
+    dataIndex: ['ready'],
     render: ReadyCount,
   },
   {
     title: 'Working Count',
     key: 'workingCount',
-    dataIndex: 'working',
+    dataIndex: ['working'],
     render: WorkingCount,
   },
   {
     title: 'Init Count',
     key: 'initCount',
-    dataIndex: 'init',
+    dataIndex: ['init'],
     render: InitCount,
   },
   {
@@ -124,13 +124,13 @@ export const workersColumns = [
   {
     title: 'Hot Count',
     key: 'hotCount',
-    dataIndex: 'hot',
+    dataIndex: ['hot'],
     render: HotCount,
   },
   {
     title: 'Count',
     key: 'count',
-    dataIndex: 'count',
+    dataIndex: ['count'],
     render: Count,
   },
 ];

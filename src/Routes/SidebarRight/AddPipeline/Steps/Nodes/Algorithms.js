@@ -6,7 +6,7 @@ import { Form as CommonForm } from 'components/common';
 import useAlgorithm from 'hooks/useAlgorithm';
 import Controller from './InputParseJson';
 import useWizardContext from '../../useWizardContext';
-import { Field as RawField, HorizontalRow } from './../FormUtils';
+import { Field as RawField } from './../FormUtils';
 
 const { Divider, Collapsible } = CommonForm;
 
@@ -16,17 +16,6 @@ const ctx = createContext();
 const Field = props => {
   const { rootId } = useContext(ctx);
   return <RawField {...props} rootId={rootId} />;
-};
-
-const overrides = {
-  labelCol: {
-    span: 10,
-  },
-  wrapperCol: {
-    style: {
-      textAlign: 'left',
-    },
-  },
 };
 
 const AlgorithmNode = ({ id }) => {
@@ -66,78 +55,57 @@ const AlgorithmNode = ({ id }) => {
       <Divider>Inputs</Divider>
       <Controller placeholder="Input" tooltip="Input" nodeIdx={id} />
       <Collapsible title="Retry">
-        <HorizontalRow>
-          <Field
-            name={['retry', 'policy']}
-            title="Policy"
-            initialValue="OnCrash"
-            overrides={{
-              labelAlign: undefined,
-              labelCol: { span: 3 },
-              wrapperCol: { span: 24 },
-            }}
-            skipValidation>
-            <Radio.Group buttonStyle="solid">
-              <Radio.Button value="Never">Never</Radio.Button>
-              <Radio.Button value="Always">Always</Radio.Button>
-              <Radio.Button value="OnError">OnError</Radio.Button>
-              <Radio.Button value="OnCrash">OnCrash</Radio.Button>
-            </Radio.Group>
-          </Field>
-          <Field
-            inline={false}
-            title="Retry Limit"
-            name={['retry', 'limit']}
-            initialValue={3}
-            skipValidation
-            overrides={{
-              labelAlign: undefined,
-              labelCol: { span: 10 },
-            }}>
-            <InputNumber min={0} />
-          </Field>
-        </HorizontalRow>
+        <Field
+          name={['retry', 'policy']}
+          title="Policy"
+          initialValue="OnCrash"
+          skipValidation>
+          <Radio.Group buttonStyle="solid">
+            <Radio.Button value="Never">Never</Radio.Button>
+            <Radio.Button value="Always">Always</Radio.Button>
+            <Radio.Button value="OnError">OnError</Radio.Button>
+            <Radio.Button value="OnCrash">OnCrash</Radio.Button>
+          </Radio.Group>
+        </Field>
+        <Field
+          inline={false}
+          title="Retry Limit"
+          name={['retry', 'limit']}
+          initialValue={3}
+          skipValidation>
+          <InputNumber min={0} />
+        </Field>
       </Collapsible>
       <Collapsible title="Options">
         {!isStreamingPipeline && (
           <Field
-            overrides={overrides}
             name={['batchOperation']}
             title="Batch Operation"
             skipValidation
-            initialValue="indexed"
-            small>
+            initialValue="indexed">
             <Radio.Group buttonStyle="solid">
               <Radio.Button value="indexed">indexed</Radio.Button>
               <Radio.Button value="cartesian">cartesian</Radio.Button>
             </Radio.Group>
           </Field>
         )}
-        <Field
-          title="Node TTL"
-          name={['ttl']}
-          initialValue={0}
-          skipValidation
-          overrides={overrides}
-          small>
+        <Field title="Node TTL" name={['ttl']} initialValue={0} skipValidation>
           <InputNumber min={0} />
         </Field>
 
         <Field
-          overrides={{ ...overrides, ...{ valuePropName: 'checked' } }}
+          overrides={{ ...{ valuePropName: 'checked' } }}
           title="Include In Pipeline Results"
           name={['includeInResult']}
-          skipValidation
-          small>
+          skipValidation>
           <Switch />
         </Field>
 
         <Field
-          overrides={{ ...overrides, ...{ valuePropName: 'checked' } }}
+          overrides={{ ...{ valuePropName: 'checked' } }}
           title="Create A Tensorboard"
           name={['metrics', 'tensorboard']}
-          skipValidation
-          small>
+          skipValidation>
           <Switch />
         </Field>
       </Collapsible>

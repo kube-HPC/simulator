@@ -15,20 +15,20 @@ const sortByName = (a, b) => sorter(a.name, b.name);
 export default [
   {
     title: 'Pipeline Name',
-    dataIndex: 'name',
+    dataIndex: ['name'],
     key: 'name',
     sorter: sortByName,
     render: PipelineName,
   },
   {
     title: 'Cron Job',
-    dataIndex: 'cron',
+    dataIndex: ['cron'],
     key: 'cron',
     render: Cron,
   },
   {
     title: 'Pipeline Stats',
-    dataIndex: 'name',
+    dataIndex: ['name'],
     key: 'status',
     render: Stats,
   },
