@@ -4,8 +4,6 @@ import { Icon, Spin, Table as AntTable } from 'antd';
 import styled from 'styled-components';
 
 import { USER_GUIDE } from 'const';
-import { useQuery } from '@apollo/client';
-import { JOB_QUERY } from 'graphql/queries';
 
 const ExpandIcon = ({ expanded, onExpand, record }) => (
   <Icon type={expanded ? 'down' : 'right'} onClick={e => onExpand(record, e)} />
@@ -48,24 +46,17 @@ ExpandIcon.propTypes = {
 const antIcon = <Icon type="loading" style={{ fontSize: 40 }} spin />;
 Spin.setDefaultIndicator(antIcon);
 
-const Table = ({ ...props }) => {
-  const { loading, data, startPolling } = useQuery(JOB_QUERY);
-
-  startPolling(3000);
-  console.log(data);
-  return (
-    <TableWhite
-      loading={loading}
-      className={USER_GUIDE.TABLE}
-      expandIcon={ExpandIcon}
-      //   dataSource={dataSource}
-      dataSource={data ? data.jobsAggregated.jobs : []}
-      pagination={false}
-      size="middle"
-      {...props}
-    />
-  );
-};
+const Table = ({ dataSource, loading, ...props }) => (
+  <TableWhite
+    loading={loading}
+    className={USER_GUIDE.TABLE}
+    expandIcon={ExpandIcon}
+    dataSource={dataSource}
+    pagination={false}
+    size="middle"
+    {...props}
+  />
+);
 
 Table.propTypes = {
   dataSource: PropTypes.arrayOf(PropTypes.object),
