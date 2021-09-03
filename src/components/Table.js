@@ -48,7 +48,7 @@ ExpandIcon.propTypes = {
 const antIcon = <Icon type="loading" style={{ fontSize: 40 }} spin />;
 Spin.setDefaultIndicator(antIcon);
 
-const Table = ({ dataSource, loading2, ...props }) => {
+const Table = ({ ...props }) => {
   const { loading, data, startPolling } = useQuery(JOB_QUERY);
 
   startPolling(3000);
