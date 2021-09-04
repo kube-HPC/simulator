@@ -17,7 +17,9 @@ const shouldSliceJobs = Number.isInteger(jobsAmount) && jobsAmount > 0;
 export { default as jobColumns } from './jobColumns';
 const rowKey = job => `job-${job.key}`;
 const JobsTable = () => {
-  const query = useQuery(JOB_QUERY);
+  const query = useQuery(JOB_QUERY, {
+    variables: { limit: 10 },
+  });
 
   usePolling(query, 3000);
   const { goTo } = usePath();
