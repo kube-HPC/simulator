@@ -1,10 +1,10 @@
-import React, { useCallback, useMemo, useEffect } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Route } from 'react-router-dom';
 import styled from 'styled-components';
 import useQueryHook from 'hooks/useQuery';
 import { Table } from 'components';
 import { Card } from 'components/common';
-import { useJobs } from 'hooks';
+import { useJobs, usePolling } from 'hooks';
 import { useQuery } from '@apollo/client';
 import { JOB_QUERY } from 'graphql/queries';
 import GridView from './GridView';
@@ -19,14 +19,7 @@ const rowKey = job => `job-${job.key}`;
 const JobsTable = () => {
   const query = useQuery(JOB_QUERY);
 
-  useEffect(() => {
-    query.startPolling(3000);
-    console.log('polling');
-    return () => {
-      query.stopPolling();
-      console.log('stop polling');
-    };
-  }, [query]);
+  usePolling(query, 3000);
   const { goTo } = usePath();
   const { columns } = useJobs();
   const onRow = useCallback(

@@ -23,6 +23,7 @@ export { default as useSettings } from './useSettings';
 export { default as useStats } from './useStats';
 export { default as useTraceData } from './useTraceData';
 export { default as useVersions } from './useVersions';
+export { default as usePolling } from './graphql/usePolling';
 
 export const dataSources = {
   useSnapshots: useDataSourceSnapshots,

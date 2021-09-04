@@ -6,19 +6,27 @@ import Text from 'antd/lib/typography/Text';
 import { sortBy } from 'lodash';
 import { FlexBox } from 'components/common';
 import { Count } from 'components/StatusTag';
-import { useBoards, usePipeline } from 'hooks';
+import { useBoards, usePolling } from 'hooks';
+import { PIPELINE_STATS_QUERY } from 'graphql/queries';
+import { useQuery } from '@apollo/client';
 import BoardStatus from './TensorflowBoards/BoardStatus.react';
 
 const PipelineStats = ({ name, nodes }) => {
   // TODO: replace with selector
-  const { dataStats } = usePipeline();
-
+  // const { dataStats } = usePipeline();
+  const query = useQuery(PIPELINE_STATS_QUERY);
+  usePolling(query, 10000);
   const { hasMetrics, boards, boardUrl } = useBoards({ pipelineName: name });
 
   // array flat one-liner
   const pipelineStats = useMemo(
-    () => sortBy(dataStats.find(s => s.name === name)?.stats, ['status']),
-    [dataStats, name]
+    () =>
+      query && query.data
+        ? sortBy(query.data.pipelineStats.find(s => s.name === name)?.stats, [
+            'status',
+          ])
+        : [],
+    [query.data, name]
   );
 
   const hasStats = pipelineStats?.length !== 0;
@@ -37,7 +45,7 @@ const PipelineStats = ({ name, nodes }) => {
       {hasStats &&
         pipelineStats.map(s => (
           <Count
-            key={`${dataStats.name}-${s.status}`}
+            key={`${query.data?.name}-${s.status}`}
             status={s.status}
             count={s.count}
             taskColorMap={false}
