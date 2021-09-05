@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import { Table } from 'components';
-// import { useAlgorithm } from 'hooks';
+import { usePolling } from 'hooks';
 import { useQuery } from '@apollo/client';
 import { ALGORITHMS_QUERY } from 'graphql/queries';
 import algorithmColumns from './columns';
@@ -14,8 +14,8 @@ const rowKey = ({ name }) => name;
 const AlgorithmsTable = () => {
   // const { collection } = useAlgorithm();
   const { goTo } = usePath();
-  const query = useQuery(ALGORITHMS_QUERY, 10000);
-  // usePolling(query, 3000);
+  const query = useQuery(ALGORITHMS_QUERY);
+  usePolling(query, 10000);
 
   const onRow = ({ name }) => ({
     onDoubleClick: () => goTo.overview({ nextAlgorithmId: name }),
