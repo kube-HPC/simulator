@@ -9,6 +9,7 @@ import { ReusableProvider } from 'reusable';
 import { GlobalStyle } from 'styles';
 import { init } from 'actions/connection.action';
 import { selectors } from 'reducers';
+import mergeDeep from 'utils/deep-merge';
 import _ from 'lodash';
 import {
   createHttpLink,
@@ -42,7 +43,10 @@ const cache = new InMemoryCache({
             //   merged[offset + i] = incoming.jobs[i];
             // }
             // return merged;
-            const merged = _.merge(existing, incoming);
+            const merged = {
+              cursor: incoming.cursor,
+              jobs: mergeDeep(existing?.jobs, incoming?.jobs, true),
+            };
             return merged;
           },
 
@@ -66,6 +70,7 @@ const cache = new InMemoryCache({
     },
   },
 });
+
 // eslint-disable-next-line
 function offsetFromCursor(items, cursor, readField) {
   // Search from the back of the list because the cursor we're
@@ -102,16 +107,6 @@ const ConfigProvider = () => {
 
   const { hasConfig } = useSelector(selectors.config);
 
-  /**
-   * The base url sets the basename because the app is not always served from
-   * the host's root.
-   *
-   * Changing the basename of the router after initial render does not work it
-   * has to be set on initial render only!
-   *
-   * Return null to avoid inner redirects/data fetching inside the app itself
-   * until we are all set
-   */
   return hasConfig ? (
     <Router>
       <ReusableProvider>

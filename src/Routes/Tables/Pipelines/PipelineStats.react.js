@@ -21,12 +21,13 @@ const PipelineStats = ({ name, nodes }) => {
   // array flat one-liner
   const pipelineStats = useMemo(
     () =>
-      query && query.data
-        ? sortBy(query.data.pipelineStats.find(s => s.name === name)?.stats, [
-            'status',
-          ])
+      query && query.data && query.data.pipelineStats
+        ? sortBy(
+            query?.data?.pipelineStats?.find(s => s.name === name)?.stats,
+            ['status']
+          )
         : [],
-    [query.data, name]
+    [query, name]
   );
 
   const hasStats = pipelineStats?.length !== 0;
