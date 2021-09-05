@@ -36,7 +36,8 @@
     "@apollo/client": "^3.4.10",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "graphql": "^15.5.2"
+    "graphql": "^15.5.2",
+    "virtualizedtableforantd4": "^1.1.2"
   },
   "devDependencies": {
     "@hkube/consts": "^1.0.35",
@@ -53,6 +54,7 @@
     "@types/vis": "^4.21.21",
     "ansi-to-react": "^5.1.0",
     "antd": "^3.25.3",
+    "antd4": "npm:antd@^4.16.13",
     "axios": "^0.21.1",
     "babel-eslint": "^10.0.3",
     "chonky": "^2.0.5",

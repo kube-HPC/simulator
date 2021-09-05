@@ -31,7 +31,11 @@ const cache = new InMemoryCache({
         jobsAggregated: {
           keyArgs: ['type'],
           // eslint-skip-next-line
-          merge(existing, incoming, { args: { cursor }, readField }) {
+          merge(
+            existing = { jobs: [], cursor: '' },
+            incoming,
+            { args: { cursor }, readField }
+          ) {
             // const merged = existing ? existing.slice(0) : [];
             // let offset = offsetFromCursor(merged, cursor, readField);
             // // If we couldn't find the cursor, default to appending to
@@ -45,7 +49,11 @@ const cache = new InMemoryCache({
             // return merged;
             const merged = {
               cursor: incoming.cursor,
-              jobs: mergeDeep(existing?.jobs, incoming?.jobs, true),
+              jobs: _.unionBy(
+                Object.values(existing?.jobs),
+                Object.values(incoming?.jobs),
+                'key'
+              ),
             };
             return merged;
           },
@@ -53,18 +61,18 @@ const cache = new InMemoryCache({
           // If you always want to return the whole list, you can omit
           // this read function.
           // eslint-disable-next-line
-          read(
-            existing,
-            { args: { cursor, limit = existing?.length }, readField }
-          ) {
-            if (existing) {
-              return {
-                cursor: existing.cursor,
-                jobs: Object.values(existing.jobs),
-              };
-            }
-            return {};
-          },
+          // read(
+          //   existing,
+          //   { args: { cursor, limit = existing?.length }, readField }
+          // ) {
+          //   if (existing) {
+          //     return {
+          //       cursor: existing.cursor,
+          //       jobs: existing.jobs,
+          //     };
+          //   }
+          //   return {};
+          // },
         },
       },
     },

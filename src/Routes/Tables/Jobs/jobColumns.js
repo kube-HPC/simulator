@@ -15,16 +15,21 @@ import JobTypes from './JobTypes';
 const Id = jobID => (
   <Ellipsis className={USER_GUIDE.TABLE_JOB.ID_SELECT} copyable text={jobID} />
 );
-const Name = pipelineName => <Ellipsis text={pipelineName} />;
+// const Name = pipelineName => <Ellipsis text={pipelineName} />;
+const Name = (text, record) => <Ellipsis text={record.pipeline.name} />;
 const StartTime = (startTime, { results }) => (
   <JobTime startTime={startTime} results={results} />
 );
 const Status = status => <JobStatus status={status} />;
 const Stats = status => <NodeStats status={status} />;
-const Priority = priority => <JobPriority priority={priority} />;
-
-const Types = types => <JobTypes types={types} fullName={false} />;
-
+// const Priority = priority => <JobPriority priority={priority} />;
+const Priority = (text, record) => (
+  <JobPriority priority={record.pipeline.priority} />
+);
+// const Types = types => <JobTypes types={types} fullName={false} />;
+const Types = (text, record) => (
+  <JobTypes types={record.pipeline.types} fullName={false} />
+);
 const ProgressContainer = styled.div`
   display: flex;
   flex-wrap: nowrap;
@@ -52,16 +57,83 @@ const statusFilter = Object.values(PIPELINE_STATUS).map(status => ({
   value: status,
 }));
 
+// const jobColumns = [
+//   {
+//     title: `Job ID`,
+//     dataIndex: `key`,
+//     key: `key`,
+//     width: `10ch`,
+//     render: Id,
+//   },
+//   {
+//     title: `Pipeline Name`,
+//     dataIndex: `pipeline.name`,
+//     key: `pipeline`,
+//     width: `10%`,
+//     sorter: sortPipelineName,
+//     render: Name,
+//   },
+//   {
+//     title: `Start Time`,
+//     dataIndex: `pipeline.startTime`,
+//     key: `Start timestamp`,
+//     width: `10%`,
+//     sorter: sortStartTime,
+//     render: StartTime,
+//   },
+//   {
+//     title: `Pipeline Type`,
+//     dataIndex: `pipeline.types`,
+//     key: `types`,
+//     width: `10%`,
+//     render: Types,
+//   },
+//   {
+//     title: `Priority`,
+//     dataIndex: `pipeline.priority`,
+//     key: `priority`,
+//     align: `center`,
+//     width: `15ch`,
+//     sorter: sortPriority,
+//     render: Priority,
+//   },
+//   {
+//     title: `Nodes Stats`,
+//     dataIndex: `status`,
+//     key: `node-status`,
+//     align: `center`,
+//     width: `20ch`,
+//     render: Stats,
+//   },
+//   {
+//     title: `Status`,
+//     dataIndex: `status`,
+//     key: `job-status`,
+//     filterMultiple: true,
+//     filters: statusFilter,
+//     width: `8%`,
+//     align: `center`,
+//     sorter: sortStatus,
+//     onFilter: onStatusFilter,
+//     render: Status,
+//   },
+//   {
+//     title: `Progress`,
+//     key: `progress`,
+//     render: Progress,
+//     align: `center`,
+//   },
+// ];
 const jobColumns = [
   {
     title: `Job ID`,
     dataIndex: `key`,
     key: `key`,
-    width: `10ch`,
+    width: `10%`,
     render: Id,
   },
   {
-    title: `Pipeline Name`,
+    title: `Name`,
     dataIndex: `pipeline.name`,
     key: `pipeline`,
     width: `10%`,
@@ -72,7 +144,7 @@ const jobColumns = [
     title: `Start Time`,
     dataIndex: `pipeline.startTime`,
     key: `Start timestamp`,
-    width: `10%`,
+    width: `18%`,
     sorter: sortStartTime,
     render: StartTime,
   },
@@ -81,6 +153,9 @@ const jobColumns = [
     dataIndex: `pipeline.types`,
     key: `types`,
     width: `10%`,
+    // render: (text, record, index) => {
+    //   console.log(`types:${record}`)
+    // }
     render: Types,
   },
   {
@@ -119,5 +194,4 @@ const jobColumns = [
     align: `center`,
   },
 ];
-
 export default jobColumns;

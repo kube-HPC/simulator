@@ -1,6 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 import { COLOR_LAYOUT, COLOR } from 'styles/colors';
 import 'antd/dist/antd.css';
+import 'antd4/dist/antd.css';
 
 const GlobalStyle = createGlobalStyle`
   * {
