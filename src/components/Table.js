@@ -72,7 +72,7 @@ const Table = ({ dataSource, loading, ...props }) => {
       expandIcon={ExpandIcon}
       dataSource={dataSource}
       pagination={false}
-      //   size="middle"
+      size="middle"
       {...props}
     />
   );

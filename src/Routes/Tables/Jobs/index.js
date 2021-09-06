@@ -1,12 +1,15 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Route } from 'react-router-dom';
 import styled from 'styled-components';
 import useQueryHook from 'hooks/useQuery';
 import { Table } from 'components';
 import { Card } from 'components/common';
 import { useJobs, usePolling } from 'hooks';
-import { useQuery } from '@apollo/client';
+import { useQuery, useReactiveVar } from '@apollo/client';
 import { JOB_QUERY } from 'graphql/queries';
+import { Collapse } from 'react-collapse';
+import { filterToggeledVar } from 'cache';
+// import { _ } from 'core-js';
 import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
@@ -16,10 +19,14 @@ const jobsAmount = parseInt(process.env.REACT_APP_SLICE_JOBS, 10);
 const shouldSliceJobs = Number.isInteger(jobsAmount) && jobsAmount > 0;
 let limitAmount = 20;
 export { default as jobColumns } from './jobColumns';
+
 const rowKey = job => `job-${job.key}`;
+
 const JobsTable = () => {
+  const [queryParams, setQueryParams] = useState({ limit: 20 });
+  const filterToggeled = useReactiveVar(filterToggeledVar);
   const query = useQuery(JOB_QUERY, {
-    variables: { limit: limitAmount },
+    variables: queryParams,
   });
   limitAmount = query?.data?.jobsAggregated.jobs?.length || limitAmount;
   usePolling(query, 3000);
@@ -44,12 +51,33 @@ const JobsTable = () => {
 
   return (
     <>
-      <QueryForm />
+      <Collapse isOpened={filterToggeled}>
+        <QueryForm
+          onSubmit={values => {
+            let datesRange = null;
+            const { time, ...other } = values;
+            time
+              ? (datesRange = {
+                  from: time[0]?.toISOString(),
+                  to: time[1]?.toISOString(),
+                })
+              : null;
+            Object.values(other).forEach((element, index) => {
+              element === ''
+                ? (other[Object.keys(other)[index]] = undefined)
+                : null;
+            });
+            console.log({ ...other, datesRange });
+            setQueryParams({ ...queryParams, ...other, datesRange });
+          }}
+        />
+      </Collapse>
       <Table
         fetchMore={() =>
           query.fetchMore({
             variables: {
               cursor: query?.data?.jobsAggregated?.cursor,
+              ...queryParams,
             },
           })
         }

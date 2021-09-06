@@ -1,83 +1,110 @@
-import React, { useState } from 'react';
-import { Form, Input, Button, DatePicker } from 'antd4';
+import React from 'react';
+import { Form, Button, DatePicker, AutoComplete } from 'antd4';
+import PropTypes from 'prop-types';
+import { pipelineStatuses } from '@hkube/consts';
+import { useQuery } from '@apollo/client';
+import { ALGORITHM_AND_PIPELINE_NAMES } from 'graphql/queries';
+
+// import { filterToggeledVar } from 'cache';
 
 const { RangePicker } = DatePicker;
-const QueryForm = () => {
-  const [form] = Form.useForm();
-  const [formLayout, setFormLayout] = useState('inline');
 
-  const onFormLayoutChange = ({ layout }) => {
-    setFormLayout(layout);
+const QueryForm = ({ onSubmit }) => {
+  //  const filterToggeled = useReactiveVar(filterToggeledVar);
+  const [form] = Form.useForm();
+  const query = useQuery(ALGORITHM_AND_PIPELINE_NAMES);
+
+  const onFinish = values => {
+    console.log('Received values of form: ', values);
+    onSubmit(values);
   };
 
-  const formItemLayout =
-    formLayout === 'inline'
-      ? {
-          labelCol: {
-            span: 10,
-          },
-          wrapperCol: {
-            span: 12,
-          },
-        }
-      : null;
-
-  const dateItemLayout =
-    formLayout === 'inline'
-      ? {
-          labelCol: {
-            span: 4,
-          },
-          wrapperCol: {
-            span: 20,
-          },
-        }
-      : null;
-  const buttonItemLayout =
-    formLayout === 'inline'
-      ? {
-          wrapperCol: {
-            span: 1,
-            offset: 8,
-          },
-        }
-      : null;
+  const buttonItemLayout = {
+    wrapperCol: {
+      span: 1,
+      offset: 4,
+    },
+  };
+  const algorithmOptions = query?.data?.algorithms?.map(algorithm => ({
+    value: algorithm.name,
+    label: algorithm.name,
+  }));
+  const pipelineOptions = query?.data?.pipelines.map(pipeline => ({
+    value: pipeline.name,
+    label: pipeline.name,
+  }));
+  const pipelineStatusOptions = Object.values(pipelineStatuses).map(status => ({
+    value: status,
+    label: status,
+  }));
   return (
     <Form
-      {...formItemLayout}
-      layout={formLayout}
+      layout="inline"
       form={form}
-      initialValues={{
-        layout: formLayout,
-      }}
+      initialValues={
+        {
+          //     layout: formLayout,
+        }
+      }
       style={{
-        justifyContent: 'space-evenly',
+        justifyContent: 'space-around',
         border: '1px solid #d9d9d9',
         borderRadius: '2px',
         margin: '4px',
         padding: '8px',
         background: 'aliceblue',
-        boxShadow: 'box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px',
+        boxShadow: 'box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 2px',
       }}
       size="medium"
-      onValuesChange={onFormLayoutChange}>
-      <Form.Item label="Time" {...dateItemLayout}>
-        <RangePicker />
+      onFinish={onFinish}>
+      <Form.Item label="Time" name="time">
+        <RangePicker
+          style={{ width: '16vw', marginLeft: '1vw' }}
+          showTime={{ format: 'HH:mm' }}
+          format="YYYY-MM-DD HH:mm"
+        />
       </Form.Item>
-      <Form.Item label=" Pipeline Name">
-        <Input placeholder="input placeholder" />
+
+      <Form.Item label="Pipeline Name" name="pipelineName">
+        <AutoComplete
+          style={{ width: '8vw', marginLeft: '1vw' }}
+          options={pipelineOptions}
+          filterOption={(inputValue, option) =>
+            option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+          }
+        />
       </Form.Item>
-      <Form.Item label="Pipeline Status">
-        <Input placeholder="input placeholder" />
+      <Form.Item label="Pipeline Status" name="pipelineStatus">
+        <AutoComplete
+          style={{ width: '8vw', marginLeft: '1vw' }}
+          options={pipelineStatusOptions}
+          filterOption={(inputValue, option) =>
+            option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+          }
+        />
       </Form.Item>
-      <Form.Item label="Algorithm Name">
-        <Input placeholder="input placeholder" />
+      <Form.Item label="Algorithm Name" name="algorithmName">
+        <AutoComplete
+          style={{ width: '8vw', marginLeft: '1vw' }}
+          options={algorithmOptions}
+          filterOption={(inputValue, option) =>
+            option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+          }
+        />
       </Form.Item>
       <Form.Item {...buttonItemLayout}>
-        <Button type="primary">Submit</Button>
+        <Button type="primary" htmlType="submit">
+          Submit
+        </Button>
       </Form.Item>
     </Form>
   );
 };
 
+QueryForm.propTypes = {
+  onSubmit: PropTypes.func,
+};
+QueryForm.defaultProps = {
+  onSubmit: () => {},
+};
 export default React.memo(QueryForm);
