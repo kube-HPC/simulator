@@ -2,6 +2,7 @@ import { InMemoryCache, makeVar } from '@apollo/client';
 import _ from 'lodash';
 
 export const filterToggeledVar = makeVar(false);
+export const inactiveModeVar = makeVar(false);
 const cache = new InMemoryCache({
   typePolicies: {
     Query: {
@@ -41,6 +42,11 @@ const cache = new InMemoryCache({
         toggleFilter: {
           read() {
             return filterToggeledVar();
+          },
+        },
+        inactiveMode: {
+          read() {
+            return inactiveModeVar();
           },
         },
       },

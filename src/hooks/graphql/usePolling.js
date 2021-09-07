@@ -1,7 +1,8 @@
 // eslint-disable no-console
 
 import { useEffect } from 'react';
-import { debounce, throttle } from 'lodash';
+import { throttle } from 'lodash';
+import { inactiveModeVar } from 'cache';
 
 const queryArry = [];
 let isTrottle = false;
@@ -35,6 +36,7 @@ const trottleCheck = () => {
       });
       if (isPolling) {
         // prettier-ignore
+        inactiveModeVar(true);
         console.log('polling stopped count:', queryArry?.length);
         isPolling = false;
       }
@@ -45,6 +47,7 @@ const trottleCheck = () => {
           query.startPolling(3000);
         });
         isPolling = true;
+        inactiveModeVar(false);
         // prettier-ignore
         console.log('polling started count:', queryArry?.length);
       }

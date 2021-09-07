@@ -9,6 +9,7 @@ import { useActions, useLeftSidebar } from 'hooks';
 import { FlexBox, Icons } from 'components/common';
 import { appInfo } from 'config';
 import ConnectionStatus from './ConnectionStatus.react';
+import InactiveModeTag from './InactiveMode';
 import Settings from './Settings/Settings.react';
 
 const DarkText = styled(Icons.DarkHoverStyle)`
@@ -40,6 +41,7 @@ const HelpBar = () => {
   return (
     <Container className={USER_GUIDE.HEADER.SOCIALS}>
       <ConnectionStatus />
+      <InactiveModeTag />
       <Popover content={<Settings />} placement="bottomRight">
         <Icons.Hover type="tool" />
       </Popover>
