@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Checkbox, InputNumber, Select } from 'antd';
@@ -21,23 +21,60 @@ const Grow = styled(FlexBox.Item)`
 const verbosityLevels = ['info', 'trace', 'debug', 'warn', 'error', 'critical'];
 
 const Options = ({ style }) => {
+  const [listFlow, setListFlow] = useState([]);
+  const [arrlistFlow, setArrListFlow] = useState([]);
+
   const {
     fieldDecorator,
     form: { getFieldDecorator },
     isStreamingPipeline,
   } = useWizardContext();
 
+  const overrides = {
+    labelCol: {
+      span: 5,
+    },
+  };
+
+  useEffect(() => {
+    if (listFlow !== undefined)
+      setArrListFlow(['No Default', ...Object.keys(listFlow)]);
+  }, [listFlow]);
+
   return (
     <div style={style}>
       {isStreamingPipeline !== false && (
         <>
           <Form.Divider>Streaming Flows</Form.Divider>
+
           <Field
-            name="flows"
+            title="Flow"
+            name="streaming.flows"
             getFieldDecorator={getFieldDecorator}
+            overrides={overrides}
             skipValidation>
-            <JsonEditor style={{ height: '20em', width: '65ch' }} />
+            <JsonEditor
+              style={{ height: '20em', width: '68ch' }}
+              onChange={setListFlow}
+            />
           </Field>
+
+          {arrlistFlow.length > 1 && (
+            <Form.Item label="Default Flow">
+              {fieldDecorator('streaming.defaultFlow')(
+                <Select style={smallSelectStyle}>
+                  {arrlistFlow.map((item, index) => (
+                    <Select.Option
+                      key={`default-list-flow-${item}`}
+                      value={index > 0 ? item : ''}
+                      style={{ textTransform: 'capitalize' }}>
+                      {item}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+            </Form.Item>
+          )}
         </>
       )}
       <Form.Divider>Webhooks</Form.Divider>
