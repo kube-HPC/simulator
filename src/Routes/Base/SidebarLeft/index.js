@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { animated, useSpring } from 'react-spring';
 import styled from 'styled-components';
-//import isEqual from 'lodash/isEqual';
+// import isEqual from 'lodash/isEqual';
 import { useLeftSidebar } from 'hooks';
 import { Icon, Layout, Menu, Tag } from 'antd';
 import { Link, useLocation, useParams } from 'react-router-dom';
