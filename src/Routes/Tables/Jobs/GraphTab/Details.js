@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import { Button, Empty, Tooltip } from 'antd';
 import { FlexBox, JsonSwitch } from 'components/common';
 import { useActions, useLogs, useSettings } from 'hooks';
-import { selectors } from 'reducers';
+//import { selectors } from 'reducers';
+import { useAlgorithmByName } from 'hooks/graphql';
 import { getTaskDetails } from '../graphUtils';
 import NodeInputOutput from './NodeInputOutput';
 import NodeLogs from '../NodeLogs';
@@ -16,11 +17,18 @@ const OverflowContainer = styled.div`
   overflow: auto;
 `;
 
-const NodeInfo = ({ node, jobId }) => {
-  const algorithmDetails = useSelector(state =>
-    selectors.algorithms.collection.byId(state, node.algorithmName)
-  );
+const Details = ({ node, jobId }) => {
+  // const algorithmDetails = useSelector(state =>
+  //   selectors.algorithms.collection.byId(state, node.algorithmName)
+  // );
+  let algorithmDetails = null;
+  // node && node.algorithmName && useAlgorithmByName(node.algorithmName);
 
+  const query = useAlgorithmByName(node.algorithmName);
+  query &&
+    query.data &&
+    query.data.algorithmsByName &&
+    (algorithmDetails = query.data.algorithmsByName);
   const [index, setIndex] = useState(0);
   const { getCaching } = useActions();
   const { getLogs } = useLogs();
@@ -63,32 +71,34 @@ const NodeInfo = ({ node, jobId }) => {
   ) : null;
 
   return node ? (
-    <Tabs defaultActiveKey="logs-tab" tabBarExtraContent={extra}>
-      <Pane
-        tab="Logs"
-        key="logs-tab"
-        style={{ display: 'flex', flexDirection: 'column' }}>
-        <NodeLogs node={node} taskDetails={taskDetails} onChange={setIndex} />
-      </Pane>
-      <Tabs.TabPane tab="Algorithm Details" key="algorithms-tab">
-        <OverflowContainer>
-          <JsonSwitch obj={algorithmDetails} jobId={jobId} />
-        </OverflowContainer>
-      </Tabs.TabPane>
-      <Tabs.TabPane tab="Input Output Details" key="io-details-tab">
-        <NodeInputOutput payload={node} algorithm={algorithmDetails} />
-      </Tabs.TabPane>
-    </Tabs>
+    algorithmDetails && (
+      <Tabs defaultActiveKey="logs-tab" tabBarExtraContent={extra}>
+        <Pane
+          tab="Logs"
+          key="logs-tab"
+          style={{ display: 'flex', flexDirection: 'column' }}>
+          <NodeLogs node={node} taskDetails={taskDetails} onChange={setIndex} />
+        </Pane>
+        <Tabs.TabPane tab="Algorithm Details" key="algorithms-tab">
+          <OverflowContainer>
+            <JsonSwitch obj={algorithmDetails} jobId={jobId} />
+          </OverflowContainer>
+        </Tabs.TabPane>
+        <Tabs.TabPane tab="Input Output Details" key="io-details-tab">
+          <NodeInputOutput payload={node} algorithm={algorithmDetails} />
+        </Tabs.TabPane>
+      </Tabs>
+    )
   ) : (
     <Empty />
   );
 };
 
-NodeInfo.propTypes = {
+Details.propTypes = {
   jobId: PropTypes.string.isRequired,
   // TODO: detail the props
   // eslint-disable-next-line
   node: PropTypes.object,
 };
 
-export default React.memo(NodeInfo);
+export default React.memo(Details);

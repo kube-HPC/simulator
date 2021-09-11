@@ -3,6 +3,14 @@ import _ from 'lodash';
 
 export const filterToggeledVar = makeVar(false);
 export const inactiveModeVar = makeVar(false);
+export const instanceCounterVar = makeVar({
+  jobs: 0,
+  pipelines: 0,
+  algorithms: 0,
+  drivers: 0,
+  workers: 0,
+  dataSources: 0,
+});
 const cache = new InMemoryCache({
   typePolicies: {
     Query: {
@@ -36,6 +44,10 @@ const cache = new InMemoryCache({
                 );
               }
             });
+            instanceCounterVar({
+              ...instanceCounterVar(),
+              jobs: merged?.jobs?.length,
+            });
             return merged;
           },
         },
@@ -47,6 +59,34 @@ const cache = new InMemoryCache({
         inactiveMode: {
           read() {
             return inactiveModeVar();
+          },
+        },
+        algorithms: {
+          merge(_existing = { algorithms: [] }, incoming) {
+            instanceCounterVar({
+              ...instanceCounterVar(),
+              algorithms: incoming.length,
+            });
+            return incoming;
+          },
+        },
+        pipelines: {
+          merge(_existing = { pipelines: [] }, incoming) {
+            instanceCounterVar({
+              ...instanceCounterVar(),
+              pipelines: incoming.length,
+            });
+            return incoming;
+          },
+        },
+        discovery: {
+          merge(_existing = { pipelineDriver: [], worker: [] }, incoming) {
+            instanceCounterVar({
+              ...instanceCounterVar(),
+              drivers: incoming?.pipelineDriver?.length,
+              workers: incoming?.worker?.length,
+            });
+            return incoming;
           },
         },
       },

@@ -1,4 +1,4 @@
-import { Tabs as AntTabs } from 'antd';
+import { Tabs as AntTabs } from 'antd4';
 import styled from 'styled-components';
 
 export const Tabs = styled(AntTabs)`

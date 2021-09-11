@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { animated, useSpring } from 'react-spring';
 import styled from 'styled-components';
-import isEqual from 'lodash/isEqual';
+//import isEqual from 'lodash/isEqual';
 import { useLeftSidebar } from 'hooks';
 import { Icon, Layout, Menu, Tag } from 'antd';
 import { Link, useLocation, useParams } from 'react-router-dom';
@@ -17,8 +17,11 @@ import { ReactComponent as LogoFish } from 'images/logo-fish.svg';
 import { ReactComponent as LogoTitle } from 'images/logo-title.svg';
 import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
 import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
+import { instanceCounterVar } from 'cache';
 import { COLOR_LAYOUT } from 'styles';
 import { selectors } from 'reducers';
+import { useDiscovery } from 'hooks/graphql';
+import { useReactiveVar } from '@apollo/client';
 
 const Border = styled.div`
   border-right: 1px solid ${COLOR_LAYOUT.border};
@@ -71,13 +74,22 @@ const LogoContainer = styled.div`
   display: flex;
 `;
 
-const sidebarSelector = state => ({
-  [LEFT_SIDEBAR_NAMES.JOBS]: selectors.jobs.count(state),
-  [LEFT_SIDEBAR_NAMES.PIPELINES]: selectors.pipelines.collection.count(state),
-  [LEFT_SIDEBAR_NAMES.ALGORITHMS]: selectors.algorithms.collection.count(state),
-  [LEFT_SIDEBAR_NAMES.WORKERS]: selectors.workers.count(state),
-  [LEFT_SIDEBAR_NAMES.DRIVERS]: selectors.drivers.count(state),
-  [LEFT_SIDEBAR_NAMES.DATASOURCES]: selectors.dataSources.count(state),
+// const sidebarSelector = state => ({
+//   [LEFT_SIDEBAR_NAMES.JOBS]: selectors.jobs.count(state),
+//   [LEFT_SIDEBAR_NAMES.PIPELINES]: selectors.pipelines.collection.count(state),
+//   [LEFT_SIDEBAR_NAMES.ALGORITHMS]: selectors.algorithms.collection.count(state),
+//   [LEFT_SIDEBAR_NAMES.WORKERS]: selectors.workers.count(state),
+//   [LEFT_SIDEBAR_NAMES.DRIVERS]: selectors.drivers.count(state),
+//   [LEFT_SIDEBAR_NAMES.DATASOURCES]: selectors.dataSources.count(state),
+// });
+
+const instanceCounterAdapter = obj => ({
+  [LEFT_SIDEBAR_NAMES.JOBS]: obj.jobs,
+  [LEFT_SIDEBAR_NAMES.PIPELINES]: obj.pipelines,
+  [LEFT_SIDEBAR_NAMES.ALGORITHMS]: obj.algorithms,
+  [LEFT_SIDEBAR_NAMES.WORKERS]: obj.workers,
+  [LEFT_SIDEBAR_NAMES.DRIVERS]: obj.drivers,
+  [LEFT_SIDEBAR_NAMES.DATASOURCES]: obj.dataSources,
 });
 
 const menuItems = [
@@ -94,7 +106,10 @@ const Name = styled.span`
 `;
 
 const SidebarLeft = () => {
-  const dataCountSource = useSelector(sidebarSelector, isEqual);
+  useDiscovery();
+  const instanceCounter = useReactiveVar(instanceCounterVar);
+  // const dataCountSource = useSelector(sidebarSelector, isEqual);
+  const dataCountSource = instanceCounterAdapter(instanceCounter);
   const { isOn } = useSelector(selectors.userGuide);
   const location = useLocation();
   const dataCount = isOn ? dataCountMock : dataCountSource;

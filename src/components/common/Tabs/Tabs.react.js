@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Tabs as AntTabs } from 'antd';
+import { Tabs as AntTabs } from 'antd4';
 
 const tabsAnimation = { inkBar: false, tabPane: false };
 
