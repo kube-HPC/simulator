@@ -57,7 +57,7 @@ const Table = ({ dataSource, loading, ...props }) => {
           console.log('loadDataByChunk');
         }
       },
-      scroll: { y: 2000 },
+      scroll: { y: '80vh' },
       // debug: true,
     }),
     [dataSource]
@@ -67,7 +67,9 @@ const Table = ({ dataSource, loading, ...props }) => {
     <TableWhite
       loading={loading}
       components={vt}
-      scroll={{ y: '90vh' }}
+      scroll={{ y: '88vh' }}
+      // scroll={{ y: 'calc(80vh - 4em)' }}
+
       className={USER_GUIDE.TABLE}
       expandIcon={ExpandIcon}
       dataSource={dataSource}

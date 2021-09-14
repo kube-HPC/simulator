@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import moment from 'moment';
 import { Form, Button, DatePicker, AutoComplete } from 'antd4';
 import PropTypes from 'prop-types';
 import { pipelineStatuses } from '@hkube/consts';
@@ -8,11 +9,15 @@ import { ALGORITHM_AND_PIPELINE_NAMES } from 'graphql/queries';
 // import { filterToggeledVar } from 'cache';
 
 const { RangePicker } = DatePicker;
-
-const QueryForm = ({ onSubmit }) => {
+let num = 1;
+let localValueTimeChanged = "1";
+const QueryForm = ({ onSubmit, params, zoomDate }) => {
   //  const filterToggeled = useReactiveVar(filterToggeledVar);
+
   const [form] = Form.useForm();
+  params && params.datesRange && zoomDate > localValueTimeChanged && form.setFieldsValue({ time: [moment(params.datesRange?.from), moment(params.datesRange?.to)] });
   const query = useQuery(ALGORITHM_AND_PIPELINE_NAMES);
+
 
   const onFinish = values => {
     console.log('Received values of form: ', values);
@@ -37,14 +42,24 @@ const QueryForm = ({ onSubmit }) => {
     value: status,
     label: status,
   }));
+
+  const getName = () => num = num + 1 && `bla ${num}`
+
   return (
     <Form
       layout="inline"
       form={form}
-      initialValues={
-        {
-          //     layout: formLayout,
-        }
+      initialValues={params && {
+        //   time: [moment(params.datesRange?.from), moment(params.datesRange?.to)],
+        // algorithmName: getName()
+      }
+
+
+
+        // algorithm: params.algorithm,
+        // pipeline: params.pipeline,
+        //   pipelineStatus: params.pipelineStatus,
+
       }
       style={{
         justifyContent: 'space-around',
@@ -56,12 +71,13 @@ const QueryForm = ({ onSubmit }) => {
         boxShadow: 'box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 2px',
       }}
       size="medium"
-      onFinish={onFinish}>
+      onFinish={onFinish} >
       <Form.Item label="Time" name="time">
         <RangePicker
           style={{ width: '16vw', marginLeft: '1vw' }}
           showTime={{ format: 'HH:mm' }}
           format="YYYY-MM-DD HH:mm"
+          onOpenChange={time => localValueTimeChanged = Date.now()}
         />
       </Form.Item>
 
@@ -97,7 +113,7 @@ const QueryForm = ({ onSubmit }) => {
           Submit
         </Button>
       </Form.Item>
-    </Form>
+    </Form >
   );
 };
 
@@ -105,6 +121,6 @@ QueryForm.propTypes = {
   onSubmit: PropTypes.func,
 };
 QueryForm.defaultProps = {
-  onSubmit: () => {},
+  onSubmit: () => { },
 };
 export default React.memo(QueryForm);

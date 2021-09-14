@@ -6,7 +6,7 @@ import { Table } from 'components';
 import { Card } from 'components/common';
 import { useJobs, usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
-import { JOB_QUERY } from 'graphql/queries';
+import { DISCOVERY_QUERY, JOB_QUERY } from 'graphql/queries';
 import { Collapse } from 'react-collapse';
 import { filterToggeledVar } from 'cache';
 // import { _ } from 'core-js';
@@ -22,8 +22,9 @@ let limitAmount = 20;
 export { default as jobColumns } from './jobColumns';
 
 const rowKey = job => `job-${job.key}`;
-
+let zoomedChangedDate = Date.now();
 const JobsTable = () => {
+
   const [queryParams, setQueryParams] = useState({ limit: 20 });
   const filterToggeled = useReactiveVar(filterToggeledVar);
   const query = useQuery(JOB_QUERY, {
@@ -50,18 +51,23 @@ const JobsTable = () => {
     return [];
   }, [query]);
 
+  const params = useMemo(() => {
+    return queryParams || {};
+  }, [queryParams]);
+
+
   return (
     <>
       <Collapse isOpened={filterToggeled}>
-        <QueryForm
+        <QueryForm zoomDate={zoomedChangedDate}
           onSubmit={values => {
             let datesRange = null;
             const { time, ...other } = values;
             time
               ? (datesRange = {
-                  from: time[0]?.toISOString(),
-                  to: time[1]?.toISOString(),
-                })
+                from: time[0]?.toISOString(),
+                to: time[1]?.toISOString(),
+              })
               : null;
             Object.values(other).forEach((element, index) => {
               element === ''
@@ -71,8 +77,21 @@ const JobsTable = () => {
             console.log({ ...other, datesRange });
             setQueryParams({ ...queryParams, ...other, datesRange });
           }}
+          params={params}
         />
-        <QueryDateChart dataSource={_dataSource} />
+        <QueryDateChart dataSource={_dataSource} onZoom={data => {
+          const datesRange = {
+            from: new Date(data.min).toISOString(),
+            to: new Date(data.max).toISOString(),
+          };
+          setQueryParams({ ...queryParams, datesRange, limit: 0 });
+          zoomedChangedDate = Date.now();
+          query.fetchMore({ variables: { ...queryParams, datesRange, limit: 0 } });
+
+
+
+
+        }} />
       </Collapse>
       <Table
         fetchMore={() =>
