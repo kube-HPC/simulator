@@ -105,3 +105,21 @@ export const DeleteButton = styled(Icon)`
   font-size: 1.5em;
   line-height: 100%;
 `;
+
+export const FormItemLabelWrapper = styled(Form.Item)`
+  display: flex;
+
+  .ant-form-item-label {
+    text-align: left;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 33.33333333%;
+  }
+
+  .ant-form-item-control-wrapper {
+    display: block;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 66.66666667%;
+  }
+`;

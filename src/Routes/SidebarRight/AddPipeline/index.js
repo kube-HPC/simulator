@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { addPipelineTemplate } from 'config';
-import { useActions } from 'hooks';
 import cleanDeep from 'clean-deep';
-import Wizard from './Wizard';
-import Editor from './Editor';
+import { usePipeline } from 'hooks';
 import packageJson from './../../../../package.json';
+import Editor from './Editor';
+import Wizard from './Wizard';
 
 /** @param {import('./fields').DataSourceNode} node */
 const formatDataSourceNode = node =>
@@ -42,10 +42,11 @@ const AddPipeline = () => {
   const [isEditorVisible, toggle] = useReducer(visible => !visible, false);
   const [editorState, setEditorState] = useState(addPipelineTemplate);
   const [wizardStepIdx, setWizardStepIdx] = useState(0);
-  const { addPipeline } = useActions();
+  const { addNewPipeline } = usePipeline();
 
   useEffect(() => {
     // avoid infinite looping
+
     if (status === 'IDLE') {
       const rawData = window.localStorage.getItem(LOCAL_STORAGE_KEY);
       try {
@@ -59,6 +60,13 @@ const AddPipeline = () => {
         console.info('did not load form state from storage');
       }
       setStatus('READY');
+    }
+
+    if (status === 'CLEAR') {
+      window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+      setEditorState(addPipelineTemplate);
+      setWizardStepIdx(0);
+      setStatus('IDLE');
     }
 
     return () => {
@@ -78,13 +86,18 @@ const AddPipeline = () => {
         ...formData,
         nodes: formData.nodes.map(formatNode),
       };
-      addPipeline(cleanDeep(formattedData));
-      window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+
+      addNewPipeline(cleanDeep(formattedData), LOCAL_STORAGE_KEY);
+
       // prevent re-saving to localStorage
       setStatus('SUBMITTED');
     },
-    [addPipeline, setStatus]
+    [addNewPipeline, setStatus]
   );
+
+  const wizardClear = useCallback(() => {
+    setStatus('CLEAR');
+  }, [setStatus]);
 
   if (status === 'IDLE') return null;
   return isEditorVisible ? (
@@ -102,6 +115,7 @@ const AddPipeline = () => {
       setEditorState={setEditorState}
       setStepIdx={setWizardStepIdx}
       stepIdx={wizardStepIdx}
+      wizardClear={wizardClear}
     />
   );
 };

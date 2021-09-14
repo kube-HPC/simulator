@@ -172,15 +172,17 @@ const Versions = ({
     let payload = null;
     if (!snapshotName) {
       payload = {
-        dataSource: {
-          id: dataSource.id,
+        spec: {
+          name: dataSource.name,
         },
       };
     } else {
       payload = {
-        dataSource: dataSource.name,
-        snapshot: {
-          name: snapshotName,
+        spec: {
+          name: dataSource.name,
+          snapshot: {
+            name: snapshotName,
+          },
         },
       };
     }

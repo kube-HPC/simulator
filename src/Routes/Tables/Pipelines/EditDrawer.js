@@ -1,7 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
+import { TabDrawerText, TabDrawer } from 'styles';
 import PropTypes from 'prop-types';
 import { stringify } from 'utils';
-import { DRAWER_SIZE } from 'const';
+import { DRAWER_SIZE, DRAWER_TITLES } from 'const';
 import Drawer from 'components/Drawer';
 import useToggle from 'hooks/useToggle';
 import DrawerEditor from 'components/Drawer/DrawerEditor.react';
@@ -40,6 +41,9 @@ const EditDrawer = () => {
       ) : (
         <MissingIdError />
       )}
+      <TabDrawer>
+        <TabDrawerText>{DRAWER_TITLES.EDIT_PIPELINE}</TabDrawerText>
+      </TabDrawer>
     </Drawer>
   );
 };

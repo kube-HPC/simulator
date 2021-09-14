@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
+import { TabDrawerText, TabDrawer } from 'styles';
 import { stringify } from 'utils';
 import { DRAWER_SIZE } from 'const';
 import Drawer from 'components/Drawer';
@@ -8,6 +9,7 @@ import MissingIdError from 'components/MissingIdError';
 import { useActions } from 'hooks';
 import usePath from './usePath';
 import useActiveAlgorithm from './useActiveAlgorithm';
+import { DRAWER_TITLES } from '../../../const';
 
 const EditDrawer = () => {
   const { goTo } = usePath();
@@ -36,15 +38,20 @@ const EditDrawer = () => {
       width={DRAWER_SIZE.ALGORITHM_INFO}
       title={activeAlgorithm?.name ?? algorithmId}
       asFlex>
-      {activeAlgorithm ? (
-        <DrawerEditor
-          value={value}
-          submitText="submit"
-          onSubmit={onSubmitUpdate}
-        />
-      ) : (
-        <MissingIdError />
-      )}
+      <>
+        <TabDrawer>
+          <TabDrawerText>{DRAWER_TITLES.ALGORITHM_EDIT}</TabDrawerText>
+        </TabDrawer>
+        {activeAlgorithm ? (
+          <DrawerEditor
+            value={value}
+            submitText="submit"
+            onSubmit={onSubmitUpdate}
+          />
+        ) : (
+          <MissingIdError />
+        )}
+      </>
     </Drawer>
   );
 };

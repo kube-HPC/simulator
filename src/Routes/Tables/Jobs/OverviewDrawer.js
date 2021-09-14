@@ -1,4 +1,5 @@
 import React from 'react';
+import { TabDrawerText, TabDrawer } from 'styles';
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
 import Drawer from 'components/Drawer';
@@ -7,6 +8,7 @@ import MissingIdError from 'components/MissingIdError';
 import useToggle from 'hooks/useToggle';
 import Info from './Info';
 import usePath from './usePath';
+import { DRAWER_TITLES } from '../../../const';
 
 const OverviewDrawer = () => {
   const { goTo, jobId } = usePath();
@@ -21,7 +23,12 @@ const OverviewDrawer = () => {
       onClose={setOff}
       width={DRAWER_SIZE.JOB_INFO}
       title={item?.pipeline?.name ?? jobId}>
-      {item ? <Info job={item} /> : <MissingIdError />}
+      <>
+        <TabDrawer>
+          <TabDrawerText>{DRAWER_TITLES.JOB_INFO}</TabDrawerText>
+        </TabDrawer>
+        {item ? <Info job={item} /> : <MissingIdError />}
+      </>
     </Drawer>
   );
 };

@@ -1,4 +1,4 @@
-const memoryTypes = [
+export const memoryTypes = [
   'Ki',
   'M',
   'Mi',

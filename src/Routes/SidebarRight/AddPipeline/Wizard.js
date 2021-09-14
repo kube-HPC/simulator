@@ -18,13 +18,15 @@ import useSubscribe from '../useSubscribe';
 const pruneObject = obj => pickBy(obj, identity);
 
 const Form = styled(AntdForm)`
-  width: 70ch;
+  width: 90ch;
 `;
 
 export const Body = styled.div`
   display: flex;
   flex: 1;
-  height: 0;
+
+  overflow-y: scroll;
+  max-height: 81vh;
 `;
 
 const stepNames = ['Initial', 'Nodes', 'Options'];
@@ -66,6 +68,7 @@ const Wizard = ({
   form,
   setStepIdx,
   stepIdx,
+  wizardClear,
 }) => {
   const {
     setFieldsValue,
@@ -74,6 +77,7 @@ const Wizard = ({
     getFieldValue,
   } = form;
   const { subscribe } = useSubscribe();
+
   useEffect(() => {
     setFieldsValue(pruneObject(parseInitialState(initialState)));
   }, [setFieldsValue, initialState]);
@@ -138,19 +142,39 @@ const Wizard = ({
     getFieldValue('kind')
   );
 
+  useEffect(() => {
+    // remove gateway option from nodes and reset them to algorithm option
+
+    if (isStreamingPipeline === false) {
+      const { nodes } = getFieldsValue();
+      nodes.forEach((node, index) => {
+        if (node.kind === 'gateway') {
+          setFieldsValue({ [`nodes.${index}.kind`]: 'algorithm' });
+        }
+      });
+    }
+  }, [isStreamingPipeline, getFieldsValue, setFieldsValue]);
+
   return (
     <>
+      <Steps
+        type="navigation"
+        size="small"
+        current={stepIdx}
+        onChange={setStepIdx}
+        style={{
+          borderBottom: `1px solid ${COLOR_LAYOUT.border}`,
+          marginBottom: '20px',
+        }}>
+        {steps}
+      </Steps>
+
       <Body>
-        <JsonView
-          src={getFormattedFormValues()}
-          collapsed={undefined}
-          style={{ flex: 1, overflow: 'auto' }}
-        />
         <Form
           layout="horizontal"
           hideRequiredMark
           onSubmit={handleSubmit}
-          style={{ overflow: 'auto', padding: '0 2ch' }}>
+          style={{ padding: '0 2ch' }}>
           <context.Provider
             value={{ form, initialState, fieldDecorator, isStreamingPipeline }}>
             {stepComponents.map((StepComponent, ii) => (
@@ -163,17 +187,17 @@ const Wizard = ({
             ))}
           </context.Provider>
         </Form>
+        <JsonView
+          src={getFormattedFormValues()}
+          collapsed={undefined}
+          style={{ flex: 1 }}
+        />
       </Body>
-      <Steps
-        type="navigation"
-        size="small"
-        current={stepIdx}
-        onChange={setStepIdx}
-        style={{ borderTop: `1px solid ${COLOR_LAYOUT.border}` }}>
-        {steps}
-      </Steps>
 
       <BottomPanel>
+        <PanelButton type="danger" onClick={wizardClear}>
+          Clear
+        </PanelButton>
         <PanelButton onClick={handleToggle}>Editor View</PanelButton>
         <PanelButton disabled={stepIdx === 0} onClick={onPrevious}>
           <Icon type="left" />
@@ -201,11 +225,14 @@ Wizard.propTypes = {
     setFieldsValue: PropTypes.func.isRequired,
     getFieldsValue: PropTypes.func.isRequired,
     getFieldValue: PropTypes.func.isRequired,
+    resetFields: PropTypes.func.isRequired,
   }).isRequired,
   setStepIdx: PropTypes.func.isRequired,
   stepIdx: PropTypes.number.isRequired,
   // eslint-disable-next-line
   initialState: PropTypes.object.isRequired,
+  // eslint-disable-next-line
+  wizardClear: PropTypes.object.isRequired,
 };
 
 export default Form.create({ name: 'create-pipeline' })(Wizard);
