@@ -19,7 +19,7 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
 
   useMemo(() => {
     params && params.datesRange && form.setFieldsValue({ time: [moment(params.datesRange?.from), moment(params.datesRange?.to)] });
-    form.setFieldsValue({ algorithmName: params?.algorithmName, pipelineName: params?.pipelineName, status: params?.pipelineStatus });
+    form.setFieldsValue({ algorithmName: params?.algorithmName, pipelineName: params?.pipelineName, pipelineStatus: params?.pipelineStatus });
 
   }, [params, zoomDate]);
   const query = useQuery(ALGORITHM_AND_PIPELINE_NAMES);
