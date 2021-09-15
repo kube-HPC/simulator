@@ -18,10 +18,10 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
   const [form] = Form.useForm();
 
   useMemo(() => {
-    params && params.datesRange && zoomDate > localValueTimeChanged && form.setFieldsValue({ time: [moment(params.datesRange?.from), moment(params.datesRange?.to)] });
+    params && params.datesRange && form.setFieldsValue({ time: [moment(params.datesRange?.from), moment(params.datesRange?.to)] });
     form.setFieldsValue({ algorithmName: params?.algorithmName, pipelineName: params?.pipelineName, status: params?.pipelineStatus });
 
-  });
+  }, [params, zoomDate]);
   const query = useQuery(ALGORITHM_AND_PIPELINE_NAMES);
   const onFinish = values => {
     console.log('Received values of form: ', values);
@@ -54,10 +54,10 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
       layout="inline"
       form={form}
       initialValues={params && {
-        //  time: [moment(params.datesRange?.from), moment(params.datesRange?.to)],
-        algorithmName: params.algorithmName,
-        pipelineName: params.pipelineName,
-        pipelineStatus: params.pipelineStatus,
+        // //  time: [moment(params.datesRange?.from), moment(params.datesRange?.to)],
+        // algorithmName: params.algorithmName,
+        // pipelineName: params.pipelineName,
+        // pipelineStatus: params.pipelineStatus,
       }
 
 
