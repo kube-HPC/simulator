@@ -1,24 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import moment from 'moment';
 import { Form, Button, DatePicker, AutoComplete } from 'antd4';
 import PropTypes from 'prop-types';
 import { pipelineStatuses } from '@hkube/consts';
 import { useQuery } from '@apollo/client';
 import { ALGORITHM_AND_PIPELINE_NAMES } from 'graphql/queries';
+import { formatNode } from '../graphUtils';
 
 // import { filterToggeledVar } from 'cache';
 
 const { RangePicker } = DatePicker;
 let num = 1;
-let localValueTimeChanged = "1";
+let localValueTimeChanged = 1;
 const QueryForm = ({ onSubmit, params, zoomDate }) => {
   //  const filterToggeled = useReactiveVar(filterToggeledVar);
 
   const [form] = Form.useForm();
-  params && params.datesRange && zoomDate > localValueTimeChanged && form.setFieldsValue({ time: [moment(params.datesRange?.from), moment(params.datesRange?.to)] });
+
+  useMemo(() => {
+    params && params.datesRange && zoomDate > localValueTimeChanged && form.setFieldsValue({ time: [moment(params.datesRange?.from), moment(params.datesRange?.to)] });
+    form.setFieldsValue({ algorithmName: params?.algorithmName, pipelineName: params?.pipelineName, status: params?.pipelineStatus });
+
+  });
   const query = useQuery(ALGORITHM_AND_PIPELINE_NAMES);
-
-
   const onFinish = values => {
     console.log('Received values of form: ', values);
     onSubmit(values);
@@ -43,15 +47,17 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
     label: status,
   }));
 
-  const getName = () => num = num + 1 && `bla ${num}`
+
 
   return (
     <Form
       layout="inline"
       form={form}
       initialValues={params && {
-        //   time: [moment(params.datesRange?.from), moment(params.datesRange?.to)],
-        // algorithmName: getName()
+        //  time: [moment(params.datesRange?.from), moment(params.datesRange?.to)],
+        algorithmName: params.algorithmName,
+        pipelineName: params.pipelineName,
+        pipelineStatus: params.pipelineStatus,
       }
 
 
