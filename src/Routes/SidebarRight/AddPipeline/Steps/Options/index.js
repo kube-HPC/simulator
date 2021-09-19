@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Checkbox, InputNumber, Select, Input } from 'antd';
@@ -25,7 +25,15 @@ const FlexBoxCheckBoxStart = styled(FlexBox)`
 const verbosityLevels = ['info', 'trace', 'debug', 'warn', 'error', 'critical'];
 
 const Options = ({ style }) => {
+  const [listFlow, setListFlow] = useState([]);
+  const [arrlistFlow, setArrListFlow] = useState([]);
+
   const { isStreamingPipeline } = useWizardContext();
+
+  useEffect(() => {
+    if (listFlow !== undefined)
+      setArrListFlow(['No Default', ...Object.keys(listFlow)]);
+  }, [listFlow]);
 
   return (
     <div style={style}>
@@ -36,8 +44,26 @@ const Options = ({ style }) => {
             <Input />
           </Form.Item>
           <Field name={['streaming', 'flows']} skipValidation>
-            <JsonEditor style={{ height: '20em', width: '65ch' }} />
+            <JsonEditor
+              style={{ height: '20em', width: '65ch' }}
+              onChange={setListFlow}
+            />
           </Field>
+
+          {arrlistFlow.length > 1 && (
+            <Form.Item label="Default Flow" name={['streaming', 'defaultFlow']}>
+              <Select style={smallSelectStyle}>
+                {arrlistFlow.map((item, index) => (
+                  <Select.Option
+                    key={`default-list-flow-${item}`}
+                    value={index > 0 ? item : ''}
+                    style={{ textTransform: 'capitalize' }}>
+                    {item}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          )}
         </>
       )}
       <Form.Divider>Webhooks</Form.Divider>
