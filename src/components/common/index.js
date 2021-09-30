@@ -18,3 +18,4 @@ export { default as LogsViewer } from 'components/common/LogsViewer';
 export { default as MdEditor } from 'components/common/Markdown/MdEditor';
 export { default as Tabs } from 'components/common/Tabs/Tabs.react';
 export { default as ErrorBoundary } from 'components/ErrorBoundary';
+export { default as VirtualKeyboard } from 'components/common/VirtualKeyboard.react';

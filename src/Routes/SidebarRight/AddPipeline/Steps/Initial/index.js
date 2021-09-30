@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Input, Radio } from 'antd';
 import { Form } from 'components/common';
-
-import JsonEditor from '../../JsonEditor';
+import ControllerKeyValue from '../Nodes/inputKeyValueJson';
 
 /** @param {{ style: import('react').CSSProperties }} props */
 const Initial = ({ style }) => (
@@ -28,8 +27,9 @@ const Initial = ({ style }) => (
         <Radio.Button value="stream">Streaming</Radio.Button>
       </Radio.Group>
     </Form.Item>
+
     <Form.Item label="Flow Input" name={['flowInput']}>
-      <JsonEditor style={{ height: '30em' }} />
+      <ControllerKeyValue nameRef={['flowInput']} />
     </Form.Item>
   </div>
 );
