@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Checkbox, InputNumber, Select } from 'antd';
 import { FlexBox, Form } from 'components/common';
+import has from 'lodash/has';
 import SliderNumber from './SliderNumber';
 import Triggers from './Triggers';
 import Webhooks from './Webhooks';
@@ -21,25 +22,53 @@ const Grow = styled(FlexBox.Item)`
 const verbosityLevels = ['info', 'trace', 'debug', 'warn', 'error', 'critical'];
 
 const Options = ({ style }) => {
-  const [listFlow, setListFlow] = useState([]);
-  const [arrlistFlow, setArrListFlow] = useState([]);
-
-  const {
-    fieldDecorator,
-    form: { getFieldDecorator },
-    isStreamingPipeline,
-  } = useWizardContext();
-
   const overrides = {
     labelCol: {
       span: 5,
     },
   };
 
+  const {
+    fieldDecorator,
+    form: { getFieldDecorator, setFieldsValue, getFieldValue },
+    isStreamingPipeline,
+    initialState,
+  } = useWizardContext();
+
+  const [listFlow, setListFlow] = useState(
+    initialState?.streaming?.flows || []
+  );
+  const [arrayListFlow, setArrayListFlow] = useState(
+    ['No Default', ...Object.keys(listFlow)] || []
+  );
+
   useEffect(() => {
-    if (listFlow !== undefined)
-      setArrListFlow(['No Default', ...Object.keys(listFlow)]);
-  }, [listFlow]);
+    if (
+      initialState?.streaming?.flows &&
+      !has(initialState?.streaming?.flows, initialState?.streaming?.defaultFlow)
+    ) {
+      if (Object.keys(initialState.streaming.flows).length === 0) {
+        initialState.streaming.defaultFlow = '';
+      }
+    } else {
+      setFieldsValue({
+        'streaming.defaultFlow': initialState?.streaming?.defaultFlow || '',
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    const listFlowKeys = Object.keys(listFlow);
+    setArrayListFlow(['No Default', ...listFlowKeys]);
+
+    const defaultFlowValue = getFieldValue('streaming.defaultFlow');
+
+    if (!has(listFlow, defaultFlowValue)) {
+      setTimeout(() => {
+        setFieldsValue({ 'streaming.defaultFlow': '' });
+      }, 100);
+    }
+  }, [getFieldValue, listFlow, setFieldsValue]);
 
   return (
     <div style={style}>
@@ -59,15 +88,14 @@ const Options = ({ style }) => {
             />
           </Field>
 
-          {arrlistFlow.length > 1 && (
+          {arrayListFlow.length > 1 && (
             <Form.Item label="Default Flow">
               {fieldDecorator('streaming.defaultFlow')(
                 <Select style={smallSelectStyle}>
-                  {arrlistFlow.map((item, index) => (
+                  {arrayListFlow.map((item, index) => (
                     <Select.Option
                       key={`default-list-flow-${item}`}
-                      value={index > 0 ? item : ''}
-                      style={{ textTransform: 'capitalize' }}>
+                      value={index > 0 ? item : ''}>
                       {item}
                     </Select.Option>
                   ))}

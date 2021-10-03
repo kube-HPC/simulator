@@ -16,7 +16,7 @@ const useAlgorithm = () => {
     builds: buildsSource[item.name],
   }));
 
-  return { collection };
+  return { collection, algorithmsCollection };
 };
 
 export default useAlgorithm;
