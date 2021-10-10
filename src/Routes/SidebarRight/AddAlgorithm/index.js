@@ -15,10 +15,13 @@ import AddAlgorithmForm from './AddAlgorithmForm.react';
 const DEFAULT_EDITOR_VALUE = stringify(addAlgorithmTemplate);
 const noop = () => {};
 
-const AddAlgorithm = ({ onSubmit = noop }) => {
+const AddAlgorithm = ({ onSubmit = noop, algorithmValue }) => {
   // #region  Editor State
   const [editorIsVisible, setEditorIsVisible] = useState(false);
-  const [editorValue, setEditorValue] = useState(DEFAULT_EDITOR_VALUE);
+
+  const [editorValue, setEditorValue] = useState(
+    algorithmValue || DEFAULT_EDITOR_VALUE
+  );
 
   const toggleEditor = () => setEditorIsVisible(prev => !prev);
 
@@ -65,13 +68,19 @@ const AddAlgorithm = ({ onSubmit = noop }) => {
       </BottomPanel>
     </>
   ) : (
-    <AddAlgorithmForm onToggle={toggleEditor} onSubmit={onSubmit} />
+    <AddAlgorithmForm
+      algorithmValue={algorithmValue}
+      onToggle={toggleEditor}
+      onSubmit={onSubmit}
+    />
   );
 };
 
 AddAlgorithm.propTypes = {
   // eslint-disable-next-line
   onSubmit: PropTypes.func,
+  // eslint-disable-next-line react/forbid-prop-types
+  algorithmValue: PropTypes.object.isRequired,
 };
 
 export default memo(AddAlgorithm);

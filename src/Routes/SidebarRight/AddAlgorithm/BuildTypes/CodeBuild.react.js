@@ -52,6 +52,7 @@ const setDraggerProps = ({ fileList, setFileList }) => ({
 
 const marginTop = { marginTop: 15 };
 const inboxStyle = { fontSize: 50, color: COLOR.blueLight };
+const inboxDisplayedStyle = { fontSize: 50, color: COLOR.grey };
 
 const { Text } = Typography;
 // #endregion
@@ -60,7 +61,7 @@ const {
   CODE: { ENVIRONMENT, ENTRY_POINT, BASE_IMAGE, DIVIDERS },
 } = schema.BUILD_TYPES;
 
-const CodeBuild = ({ required, fileList, setFileList }) => (
+const CodeBuild = ({ required, fileList, setFileList, isEdit }) => (
   <>
     <Form.Divider>{DIVIDERS.BUILD}</Form.Divider>
     <Form.Item
@@ -78,24 +79,32 @@ const CodeBuild = ({ required, fileList, setFileList }) => (
     <Form.Item label={BASE_IMAGE.label} name={splitByDot(BASE_IMAGE.field)}>
       <Input placeholder={BASE_IMAGE.placeholder} />
     </Form.Item>
+
     <Form.Item wrapperCol={null} style={marginTop}>
       <Upload.Dragger
+        disabled={isEdit}
         // eslint-disable-next-line
         {...setDraggerProps({ fileList, setFileList })}>
-        <InboxOutlined style={inboxStyle} />
+        <InboxOutlined style={isEdit ? inboxDisplayedStyle : inboxStyle} />
         <br />
-        <Text>Click or drag Algorithm Source code to this area to upload</Text>
+        <Text disabled={isEdit}>
+          Click or drag Algorithm Source code to this area to upload
+        </Text>
         <br />
-        <Text type="secondary">Support for zip or tar.gz only</Text>
-        <FlexBox justify="center" style={marginTop}>
-          <FlexBox.Item>
-            <Alert
-              message={`File ${fileList.length ? 'Uploaded' : 'Required'}`}
-              type={fileList.length ? 'info' : 'warning'}
-              showIcon
-            />
-          </FlexBox.Item>
-        </FlexBox>
+        <Text type="secondary" disabled={isEdit}>
+          Support for zip or tar.gz only
+        </Text>
+        {!isEdit && (
+          <FlexBox justify="center" style={marginTop}>
+            <FlexBox.Item>
+              <Alert
+                message={`File ${fileList.length ? 'Uploaded' : 'Required'}`}
+                type={fileList.length ? 'info' : 'warning'}
+                showIcon
+              />
+            </FlexBox.Item>
+          </FlexBox>
+        )}
       </Upload.Dragger>
     </Form.Item>
   </>
@@ -107,6 +116,7 @@ CodeBuild.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
   fileList: PropTypes.array.isRequired,
+  isEdit: PropTypes.bool.isRequired,
 };
 
 export default CodeBuild;

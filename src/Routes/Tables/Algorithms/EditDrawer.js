@@ -1,12 +1,12 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { TabDrawerText, TabDrawer } from 'styles';
 import { stringify } from 'utils';
 import { DRAWER_SIZE } from 'const';
 import Drawer from 'components/Drawer';
 import useToggle from 'hooks/useToggle';
-import DrawerEditor from 'components/Drawer/DrawerEditor.react';
 import MissingIdError from 'components/MissingIdError';
-import { useActions } from 'hooks';
+
+import AddAlgorithm from '../../SidebarRight/AddAlgorithm';
 import usePath from './usePath';
 import useActiveAlgorithm from './useActiveAlgorithm';
 import { DRAWER_TITLES } from '../../../const';
@@ -14,18 +14,9 @@ import { DRAWER_TITLES } from '../../../const';
 const EditDrawer = () => {
   const { goTo } = usePath();
   const { activeAlgorithm, algorithmId } = useActiveAlgorithm();
-  const { applyAlgorithm } = useActions();
   const { setOff, isOn } = useToggle(true);
-  const onSubmitUpdate = useCallback(
-    payload => {
-      const formData = new FormData();
-      formData.append('payload', payload);
-      applyAlgorithm(formData);
-    },
-    [applyAlgorithm]
-  );
 
-  const value = useMemo(() => {
+  const algorithmValue = useMemo(() => {
     const { builds, ...rest } = activeAlgorithm || {};
     return stringify(rest);
   }, [activeAlgorithm]);
@@ -44,12 +35,7 @@ const EditDrawer = () => {
           <TabDrawerText>{DRAWER_TITLES.ALGORITHM_EDIT}</TabDrawerText>
         </TabDrawer>
         {activeAlgorithm ? (
-          <DrawerEditor
-            getContainer={false}
-            value={value}
-            submitText="submit"
-            onSubmit={onSubmitUpdate}
-          />
+          <AddAlgorithm getContainer={false} algorithmValue={algorithmValue} />
         ) : (
           <MissingIdError />
         )}

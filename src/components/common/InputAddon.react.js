@@ -49,10 +49,14 @@ const InputAddon = forwardRef(
     const [selectAfter, setSelectAfter] = useState(initialByType(after));
     const [inputValue, setInputValue] = useState(value);
 
-    const onInputChange = useCallback(
-      ({ target: { value: _value } }) => setInputValue(_value),
-      []
-    );
+    const onInputChange = useCallback(({ target: { value: _value } }) => {
+      setInputValue(_value);
+    }, []);
+
+    useEffect(() => {
+      if (inputValue === '' || value.indexOf(inputValue) === -1)
+        setInputValue(value);
+    }, [value]);
 
     useEffect(() => {
       if (Array.isArray(before)) {
@@ -62,7 +66,7 @@ const InputAddon = forwardRef(
       } else {
         setSelectBefore(before);
       }
-    }, [after, before, inputValue, selectAfter, selectBefore]);
+    }, [after, before, inputValue]);
 
     useEffect(() => {
       if (Array.isArray(after)) {
@@ -71,7 +75,7 @@ const InputAddon = forwardRef(
       } else {
         setSelectAfter(after);
       }
-    }, [after, before, inputValue, selectAfter, selectBefore]);
+    }, [after, before, inputValue]);
 
     useEffect(() => {
       const beforeValue = selectBefore || initialByType(before);
@@ -91,7 +95,7 @@ const InputAddon = forwardRef(
 
       if (lastValue !== inputValue)
         onChange(_value ? `${beforeValue}${_value}${after}` : '');
-    }, [after, before, inputValue, onChange, selectAfter, selectBefore, value]);
+    }, [after, before, inputValue]);
 
     const addonBefore = useMemo(
       () =>

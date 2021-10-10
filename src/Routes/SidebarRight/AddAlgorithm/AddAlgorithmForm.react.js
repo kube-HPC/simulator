@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Input, InputNumber, Radio, Select } from 'antd';
@@ -16,6 +16,8 @@ import {
   stringify,
   toUpperCaseFirstLetter,
   splitByDot,
+  deepCopyFromKeyValue,
+  flattenObjKeyValue,
 } from 'utils';
 import { CodeBuild, GitBuild, ImageBuild } from './BuildTypes';
 import MemoryField from './MemoryField.react';
@@ -23,7 +25,7 @@ import schema from './schema';
 
 // #region  Helpers
 const { MAIN, BUILD_TYPES } = schema;
-
+const { Collapsible } = Form;
 // https://github.com/kube-HPC/hkube/blob/master/core/api-server/lib/consts/regex.js
 const ALGO_REGEX = /^[a-z0-9][-a-z0-9\\.]*[a-z0-9]$/;
 
@@ -44,9 +46,17 @@ const toReadableBuildType = buildType =>
     buildType === BUILD_TYPES.GIT.field ? `GIT` : buildType
   );
 
-const insertRadioButtons = buildTypes =>
+const toSelectedBuildType = buildType =>
+  buildType.toLowerCase() === 'git'
+    ? BUILD_TYPES.GIT.field
+    : buildType.toLowerCase();
+
+const insertRadioButtons = (buildTypes, selectedKey, isEdit) =>
   Object.keys(buildTypes).map(key => (
-    <Radio.Button key={key} value={key}>
+    <Radio.Button
+      key={key}
+      value={key}
+      disabled={isEdit && key !== selectedKey}>
       {toReadableBuildType(key)}
     </Radio.Button>
   ));
@@ -63,24 +73,48 @@ const getBuildTypes = ({ buildType, ...props }) => {
   const isRequired = type => type === buildType;
   return {
     // eslint-disable-next-line
+    [GIT.field]: <GitBuild required={isRequired(GIT.field)} {...props} />,
+    // eslint-disable-next-line
     [CODE.field]: <CodeBuild required={isRequired(CODE.field)} {...props} />,
     // eslint-disable-next-line
     [IMAGE.field]: <ImageBuild required={isRequired(IMAGE.field)} {...props} />,
-    // eslint-disable-next-line
-    [GIT.field]: <GitBuild required={isRequired(GIT.field)} {...props} />,
   };
 };
 // #endregion
 
-const AddAlgorithmForm = ({ onToggle, onSubmit }) => {
+const AddAlgorithmForm = ({ onToggle, onSubmit, algorithmValue }) => {
+  const isEdit = algorithmValue !== undefined;
+
+  const keyValueObject =
+    (algorithmValue && JSON.parse(algorithmValue)) || undefined;
   const [form] = Form.useForm();
+  const [fileList, setFileList] = useState([]);
+
+  const [buildType, setBuildType] = useState(
+    (keyValueObject && toSelectedBuildType(keyValueObject?.type)) ||
+      BUILD_TYPES.GIT.field
+  );
 
   useMemo(() => {
     form.setFieldsValue(formTemplate);
   }, [form]);
 
-  const [fileList, setFileList] = useState([]);
-  const [buildType, setBuildType] = useState(BUILD_TYPES.CODE.field);
+  useEffect(() => {
+    // init values in fields
+    if (keyValueObject !== undefined) {
+      // Edit algorithm
+      const schemaObjectForm = form.getFieldsValue();
+      const objValuesForm = deepCopyFromKeyValue(
+        schemaObjectForm,
+        flattenObjKeyValue(keyValueObject)
+      );
+      setBuildType(toSelectedBuildType(keyValueObject.type));
+      form.setFieldsValue(objValuesForm);
+    } else {
+      // add new algorithm
+      form.setFieldsValue(formTemplate);
+    }
+  }, []);
 
   const onBuildTypeChange = e => setBuildType(e.target.value);
 
@@ -92,13 +126,14 @@ const AddAlgorithmForm = ({ onToggle, onSubmit }) => {
     buildType,
     fileList,
     setFileList,
+    isEdit,
   });
 
   const { applyAlgorithm } = useActions();
 
   const onFormSubmit = () => {
     validateFields().then(formObject => {
-      if (buildType === BUILD_TYPES.CODE.field && !fileList.length) {
+      if (buildType === BUILD_TYPES.CODE.field && !fileList.length && !isEdit) {
         notification({
           message: `Error`,
           description: `Please provide a file!`,
@@ -169,63 +204,68 @@ const AddAlgorithmForm = ({ onToggle, onSubmit }) => {
         rules={[
           { required: true, message: MAIN.NAME.message, pattern: ALGO_REGEX },
         ]}>
-        <Input placeholder={MAIN.NAME.placeholder} />
+        <Input disabled={isEdit} placeholder={MAIN.NAME.placeholder} />
       </Form.Item>
       <Form.Item label="Build Type">
         <Radio.Group
           defaultValue={buildType}
           buttonStyle="solid"
           onChange={onBuildTypeChange}>
-          {insertRadioButtons(buildTypes)}
+          {insertRadioButtons(buildTypes, buildType, isEdit)}
         </Radio.Group>
       </Form.Item>
-      <Form.Divider>{MAIN.DIVIDER.RESOURCES}</Form.Divider>
-      <Form.Item name={splitByDot(MAIN.CPU.field)} label={MAIN.CPU.label}>
-        <InputNumber min={0.1} />
-      </Form.Item>
-      <Form.Item name={splitByDot(MAIN.GPU.field)} label={MAIN.GPU.label}>
-        <InputNumber min={0} />
-      </Form.Item>
 
-      <Form.Item
-        name={splitByDot(MAIN.MEMORY.field)}
-        label={MAIN.MEMORY.label}
-        labelAlign="left">
-        <MemoryField>
-          {MAIN.MEMORY.types.map(value => (
-            <Select.Option key={value} value={value}>
-              {value}
-            </Select.Option>
-          ))}
-        </MemoryField>
-      </Form.Item>
-      <Form.Divider>{MAIN.DIVIDER.ADVANCED}</Form.Divider>
-      <Form.Item
-        name={splitByDot(MAIN.RESERVE_MEMORY.field)}
-        label={MAIN.RESERVE_MEMORY.label}
-        labelAlign="left">
-        <MemoryField min={0} tooltipTitle={MAIN.RESERVE_MEMORY.tooltip}>
-          {MAIN.RESERVE_MEMORY.types.map(value => (
-            <Select.Option key={value} value={value}>
-              {value}
-            </Select.Option>
-          ))}
-        </MemoryField>
-      </Form.Item>
-      <Form.Item
-        name={splitByDot(MAIN.WORKERS.field)}
-        label={MAIN.WORKERS.label}>
-        <InputNumber min={0} />
-      </Form.Item>
-      <Form.Item
-        name={splitByDot(MAIN.OPTIONS.field)}
-        label={MAIN.OPTIONS.label}
-        initialValue={mainAdvancedOptions}>
-        <Select mode="tags" placeholder={MAIN.OPTIONS.placeholder}>
-          {insertAlgorithmOptions(MAIN.OPTIONS.types)}
-        </Select>
-      </Form.Item>
       {buildTypes[buildType]}
+
+      <Collapsible title={MAIN.DIVIDER.RESOURCES}>
+        <Form.Item name={splitByDot(MAIN.CPU.field)} label={MAIN.CPU.label}>
+          <InputNumber min={0.1} />
+        </Form.Item>
+        <Form.Item name={splitByDot(MAIN.GPU.field)} label={MAIN.GPU.label}>
+          <InputNumber min={0} />
+        </Form.Item>
+
+        <Form.Item
+          name={splitByDot(MAIN.MEMORY.field)}
+          label={MAIN.MEMORY.label}
+          labelAlign="left">
+          <MemoryField>
+            {MAIN.MEMORY.types.map(valueItem => (
+              <Select.Option key={valueItem} value={valueItem}>
+                {valueItem}
+              </Select.Option>
+            ))}
+          </MemoryField>
+        </Form.Item>
+      </Collapsible>
+      <Collapsible title={MAIN.DIVIDER.ADVANCED}>
+        <Form.Item
+          name={splitByDot(MAIN.RESERVE_MEMORY.field)}
+          label={MAIN.RESERVE_MEMORY.label}
+          labelAlign="left">
+          <MemoryField min={0} tooltipTitle={MAIN.RESERVE_MEMORY.tooltip}>
+            {MAIN.RESERVE_MEMORY.types.map(valueItem => (
+              <Select.Option key={valueItem} value={valueItem}>
+                {valueItem}
+              </Select.Option>
+            ))}
+          </MemoryField>
+        </Form.Item>
+        <Form.Item
+          name={splitByDot(MAIN.WORKERS.field)}
+          label={MAIN.WORKERS.label}>
+          <InputNumber min={0} />
+        </Form.Item>
+        <Form.Item
+          name={splitByDot(MAIN.OPTIONS.field)}
+          label={MAIN.OPTIONS.label}
+          initialValue={mainAdvancedOptions}>
+          <Select mode="tags" placeholder={MAIN.OPTIONS.placeholder}>
+            {insertAlgorithmOptions(MAIN.OPTIONS.types)}
+          </Select>
+        </Form.Item>
+      </Collapsible>
+
       <BottomPanel style={{ marginTop: 'auto' }}>
         <PanelButton onClick={onToggle}>Editor View</PanelButton>
         <RightAlignedButton type="primary" htmlType="submit">
@@ -239,13 +279,14 @@ const AddAlgorithmForm = ({ onToggle, onSubmit }) => {
 AddAlgorithmForm.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
-
+  algorithmValue: PropTypes.object,
   onToggle: PropTypes.func.isRequired,
   onSubmit: PropTypes.func,
 };
 
 AddAlgorithmForm.defaultProps = {
   onSubmit: () => {},
+  algorithmValue: undefined,
 };
 
 export default memo(AddAlgorithmForm);

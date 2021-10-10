@@ -16,3 +16,4 @@ export {
   toUpperCaseFirstLetter,
   splitByDot,
 } from './string';
+export { deepCopyFromKeyValue, flattenObjKeyValue } from './objects';
