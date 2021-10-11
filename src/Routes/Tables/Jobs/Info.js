@@ -39,7 +39,7 @@ const JobInfo = ({ job }) => {
 
   useEffect(() => {
     if (currentTab === TABS.TRACE) fetchJobTrace();
-  }, [currentTab, fetchJobTrace]);
+  }, [currentTab]);
 
   return (
     <Tabs

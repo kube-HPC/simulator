@@ -40,11 +40,11 @@ const AlgorithmNode = ({ id }) => {
     form: { getFieldDecorator },
     isStreamingPipeline,
   } = useWizardContext();
-  const { collection } = useAlgorithm();
+  const { algorithmsCollection } = useAlgorithm();
 
   const sortedAlgorithms = useMemo(
-    () => collection.map(item => item.name).sort(),
-    [collection]
+    () => algorithmsCollection.map(item => item.name).sort(),
+    [algorithmsCollection]
   );
 
   const rootId = `nodes.${id}`;
@@ -52,7 +52,7 @@ const AlgorithmNode = ({ id }) => {
     <ctx.Provider value={{ rootId, getFieldDecorator }}>
       <Field name="algorithmName" title="Algorithm name">
         <AutoComplete
-          disabled={collection.length === 0}
+          disabled={algorithmsCollection.length === 0}
           dataSource={sortedAlgorithms}
           filterOption={(inputValue, option) =>
             option.props.children.indexOf(inputValue) !== -1
