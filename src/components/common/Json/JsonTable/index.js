@@ -41,16 +41,15 @@ const ItemByValueType = ({
   );
 
   const columns = useMemo(() => getColumns({ obj, vertical }), [obj, vertical]);
-
+  if (name === 'flowInput') {
+    return (
+      <>
+        <Button onClick={handleDownload}>Download</Button>
+        <DownloadLink href={downloadHref} />
+      </>
+    );
+  }
   if (isObject(obj)) {
-    if (name === 'flowInput' && obj.truncated) {
-      return (
-        <>
-          <Button onClick={handleDownload}>Download</Button>
-          <DownloadLink href={downloadHref} />
-        </>
-      );
-    }
     return (
       <Margin column={columns} vertical={vertical} hasMargin={hasMargin}>
         {
