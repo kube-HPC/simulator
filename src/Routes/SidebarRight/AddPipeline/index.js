@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import PropTypes from 'prop-types';
 import { addPipelineTemplate } from 'config';
 import cleanDeep from 'clean-deep';
 import { usePipeline } from 'hooks';
+
 import { Form } from 'antd';
 import packageJson from './../../../../package.json';
 import Editor from './Editor';
@@ -37,29 +39,35 @@ const formatNode = node => {
 
 const LOCAL_STORAGE_KEY = 'add-pipeline-form-state';
 
-const AddPipeline = () => {
+const AddPipeline = ({ jsonPipeline }) => {
   const [form] = Form.useForm();
   const [status, setStatus] = useState('IDLE');
   const [isEditorVisible, toggle] = useReducer(visible => !visible, false);
   const [editorState, setEditorState] = useState(addPipelineTemplate);
   const [wizardStepIdx, setWizardStepIdx] = useState(0);
-  const { addNewPipeline } = usePipeline();
+  const [isEdit] = useState(jsonPipeline !== undefined);
+  const { addUpdatePipeline } = usePipeline();
 
   useEffect(() => {
     // avoid infinite looping
 
     if (status === 'IDLE') {
-      const rawData = window.localStorage.getItem(LOCAL_STORAGE_KEY);
-      try {
-        const parsedState = JSON.parse(rawData);
-        if (parsedState?.stateVersion !== packageJson.version) {
-          window.localStorage.removeItem(LOCAL_STORAGE_KEY);
-        } else if (parsedState) {
-          setEditorState(parsedState);
+      if (isEdit) {
+        setEditorState(JSON.parse(jsonPipeline));
+      } else {
+        const rawData = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+        try {
+          const parsedState = JSON.parse(rawData);
+          if (parsedState?.stateVersion !== packageJson.version) {
+            window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+          } else if (parsedState) {
+            setEditorState(parsedState);
+          }
+        } catch (error) {
+          console.info('did not load form state from storage');
         }
-      } catch (error) {
-        console.info('did not load form state from storage');
       }
+
       setStatus('READY');
     }
 
@@ -79,7 +87,15 @@ const AddPipeline = () => {
         JSON.stringify({ ...editorState, stateVersion: packageJson.version })
       );
     };
-  }, [setEditorState, editorState, status, setStatus, form]);
+  }, [
+    setEditorState,
+    editorState,
+    status,
+    setStatus,
+    form,
+    jsonPipeline,
+    isEdit,
+  ]);
 
   const handleSubmit = useCallback(
     formData => {
@@ -89,12 +105,12 @@ const AddPipeline = () => {
         nodes: formData.nodes.map(formatNode),
       };
 
-      addNewPipeline(cleanDeep(formattedData), LOCAL_STORAGE_KEY);
+      addUpdatePipeline(cleanDeep(formattedData), LOCAL_STORAGE_KEY, isEdit);
 
       // prevent re-saving to localStorage
       setStatus('SUBMITTED');
     },
-    [addNewPipeline, setStatus]
+    [addUpdatePipeline, isEdit]
   );
 
   const wizardClear = useCallback(() => {
@@ -108,6 +124,7 @@ const AddPipeline = () => {
       onSubmit={handleSubmit}
       initialState={editorState}
       setEditorState={setEditorState}
+      isEdit={isEdit}
     />
   ) : (
     <Wizard
@@ -119,8 +136,17 @@ const AddPipeline = () => {
       setStepIdx={setWizardStepIdx}
       stepIdx={wizardStepIdx}
       wizardClear={wizardClear}
+      isEdit={isEdit}
     />
   );
+};
+
+AddPipeline.defaultProps = {
+  jsonPipeline: undefined,
+};
+AddPipeline.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  jsonPipeline: PropTypes.object,
 };
 
 export default AddPipeline;

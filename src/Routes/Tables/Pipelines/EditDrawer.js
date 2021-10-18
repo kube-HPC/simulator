@@ -1,26 +1,22 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { TabDrawerText, TabDrawer } from 'styles';
 import PropTypes from 'prop-types';
 import { stringify } from 'utils';
 import { DRAWER_SIZE, DRAWER_TITLES } from 'const';
 import Drawer from 'components/Drawer';
 import useToggle from 'hooks/useToggle';
-import DrawerEditor from 'components/Drawer/DrawerEditor.react';
 import MissingIdError from 'components/MissingIdError';
-import { useActions } from 'hooks';
+
 import usePath from './usePath';
 import useActivePipeline from './useActivePipeline';
+import AddPipeline from '../../SidebarRight/AddPipeline';
 
 const EditDrawer = () => {
   const { goTo } = usePath();
   const { pipeline, pipelineId } = useActivePipeline();
-  const { updateStored } = useActions();
+
   const { setOff, isOn } = useToggle(true);
 
-  const onSubmitUpdate = useCallback(
-    payload => updateStored(JSON.parse(payload)),
-    [updateStored]
-  );
   const value = useMemo(() => stringify(pipeline), [pipeline]);
 
   return (
@@ -34,12 +30,7 @@ const EditDrawer = () => {
       title={pipeline?.name ?? pipelineId}
       asFlex>
       {pipeline ? (
-        <DrawerEditor
-          getContainer={false}
-          value={value}
-          submitText="submit"
-          onSubmit={onSubmitUpdate}
-        />
+        <AddPipeline getContainer={false} jsonPipeline={value} />
       ) : (
         <MissingIdError />
       )}

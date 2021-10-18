@@ -7,6 +7,7 @@ import useWizardContext from 'Routes/SidebarRight/AddPipeline/useWizardContext';
 import useIds from '../useIds';
 import InputField from './InputField';
 
+const listAddOn = ['', '@', '#', '#@'];
 const ButtonGroupCenter = styled(Button.Group)`
   display: flex;
   justify-content: center;
@@ -25,15 +26,17 @@ const Controller = ({ nodeIdx }) => {
       {ids.map(id => (
         <Form.Item
           name={['nodes', nodeIdx, 'input', id]}
-          validateTrigger={['onChange', 'onBlur']}
           rules={[
             {
               required: true,
-
               message: "Please input algorithm's name or delete this field.",
             },
           ]}>
-          <InputField onRemove={ids.length > 1 ? dropKey : null} idx={id} />
+          <InputField
+            onRemove={ids.length > 1 ? dropKey : null}
+            idx={id}
+            addonBefore={listAddOn}
+          />
         </Form.Item>
       ))}
 

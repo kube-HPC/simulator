@@ -71,6 +71,7 @@ const Wizard = ({
   setStepIdx,
   stepIdx,
   wizardClear,
+  isEdit,
 }) => {
   const { setFieldsValue, getFieldsValue, getFieldValue } = form;
   const { subscribe } = useSubscribe();
@@ -154,6 +155,7 @@ const Wizard = ({
         style={{
           borderBottom: `1px solid ${COLOR_LAYOUT.border}`,
           marginBottom: '20px',
+          paddingTop: '0px',
         }}>
         {steps}
       </Steps>
@@ -167,7 +169,8 @@ const Wizard = ({
           hideRequiredMark
           onSubmit={handleSubmit}
           style={{ padding: '0 2ch' }}>
-          <context.Provider value={{ form, initialState, isStreamingPipeline }}>
+          <context.Provider
+            value={{ form, initialState, isStreamingPipeline, isEdit }}>
             {stepComponents.map((StepComponent, ii) => (
               <StepComponent
                 key={`step-component-${stepNames[ii]}`}
@@ -223,6 +226,7 @@ Wizard.propTypes = {
   initialState: PropTypes.object.isRequired,
   // eslint-disable-next-line
   wizardClear: PropTypes.func.isRequired,
+  isEdit: PropTypes.bool.isRequired,
 };
 
 export default Wizard;

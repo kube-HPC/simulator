@@ -38,11 +38,15 @@ const usePipeline = () => {
     }
   }, []);
 
-  const addNewPipeline = useCallback(
-    async (data, LOCAL_STORAGE_KEY) => {
+  const addUpdatePipeline = useCallback(
+    async (data, LOCAL_STORAGE_KEY, isEdit) => {
       try {
-        const res = await client.post('store/pipelines', { ...data });
-        message.success(successMsg(res.data).PIPELINE_ADD);
+        let res = null;
+
+        if (isEdit) res = await client.put('store/pipelines', { ...data });
+        else res = await client.post('store/pipelines', { ...data });
+
+        message.success(successMsg(res.data).PIPELINE_UPDATE);
         window.localStorage.removeItem(LOCAL_STORAGE_KEY);
         history.push('/pipelines');
       } catch (res) {
@@ -57,7 +61,7 @@ const usePipeline = () => {
     dataStats,
     updateCron,
     rerunPipeline,
-    addNewPipeline,
+    addUpdatePipeline,
   };
 };
 

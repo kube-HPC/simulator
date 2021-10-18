@@ -29,6 +29,7 @@ const InputField = ({
   onChange,
   value,
   placeholder,
+  addonBefore,
 }) => {
   const inputRef = useRef();
   useEffect(() => {
@@ -52,6 +53,7 @@ const InputField = ({
               <WarningOutlined style={{ color: 'red', fontSize: '15px' }} />
             )
           }
+          addonBefore={addonBefore}
         />
       </Tooltip>
       {hasRemove && <IconDelete onClick={onRemove} />}
@@ -68,6 +70,7 @@ InputField.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,
+  addonBefore: PropTypes.func.isRequired,
 };
 
 export default InputField;

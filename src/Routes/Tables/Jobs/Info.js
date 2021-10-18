@@ -27,7 +27,6 @@ const JobInfo = ({ job }) => {
   const { key, graph, userPipeline = {}, pipeline } = job;
   const algorithms = pipeline.nodes.map(n => n.algorithmName);
   const fetchJobTrace = useCallback(() => fetch({ jobId: key, algorithms }), [
-    algorithms,
     fetch,
     key,
   ]);

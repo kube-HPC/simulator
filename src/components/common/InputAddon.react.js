@@ -1,4 +1,4 @@
-import { Input, Select } from 'antd';
+import { Input } from 'antd';
 import PropTypes from 'prop-types';
 import React, {
   forwardRef,
@@ -8,32 +8,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-
-const selectWidth = { width: 90 };
-
-const Addon = ({ state, options, callback }) =>
-  Array.isArray(options) ? (
-    <Select value={state} style={selectWidth} onChange={callback}>
-      {options.map(option => (
-        <Select.Option key={option} value={option}>
-          {option}
-        </Select.Option>
-      ))}
-    </Select>
-  ) : (
-    state
-  );
-
-const arrayOrStringType = PropTypes.oneOfType([
-  PropTypes.array,
-  PropTypes.string,
-]);
-
-Addon.propTypes = {
-  state: PropTypes.string.isRequired,
-  options: arrayOrStringType.isRequired,
-  callback: PropTypes.func.isRequired,
-};
+import Addon from './Addon.react';
 
 const initialByType = target => () => {
   const [first] = Array.isArray(target) ? target : [target];
@@ -106,6 +81,7 @@ const InputAddon = forwardRef(
         }),
       [before, selectBefore]
     );
+
     const addonAfter = useMemo(
       () =>
         Addon({ state: selectAfter, options: after, callback: setSelectAfter }),
@@ -128,8 +104,8 @@ const InputAddon = forwardRef(
 InputAddon.displayName = `InputAddon`;
 InputAddon.propTypes = {
   value: PropTypes.string,
-  before: arrayOrStringType,
-  after: arrayOrStringType,
+  before: Addon.arrayOrStringType,
+  after: Addon.arrayOrStringType,
   placeholder: PropTypes.string,
   onChange: PropTypes.func,
 };
