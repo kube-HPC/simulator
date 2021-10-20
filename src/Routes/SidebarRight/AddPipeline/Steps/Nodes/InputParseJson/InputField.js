@@ -46,7 +46,7 @@ function getWord(input, word) {
   return input;
 }
 
-const InputField = ({ placeholder, tooltip, onRemove, idx, ...antFields }) => {
+const InputField = ({ placeholder, tooltip, idx, ...antFields }) => {
   const [selectBefore, setSelectBefore] = useState(
     getSignInWord(antFields?.value, antFields?.addonBefore) || ''
   );
@@ -57,7 +57,6 @@ const InputField = ({ placeholder, tooltip, onRemove, idx, ...antFields }) => {
   const [value, setValue] = useState(
     getWord(antFields?.value, selectBefore) || ''
   );
-  const hasRemove = !!onRemove;
 
   useEffect(() => {
     /**
@@ -131,9 +130,7 @@ const InputField = ({ placeholder, tooltip, onRemove, idx, ...antFields }) => {
     <RawInputField
       id={antFields.id}
       tooltip={tooltip}
-      hasRemove={hasRemove}
       isValid={isValid}
-      onRemove={() => onRemove(idx)}
       value={value}
       onChange={onInputChange}
       placeholder={placeholder}
@@ -145,7 +142,7 @@ const InputField = ({ placeholder, tooltip, onRemove, idx, ...antFields }) => {
 InputField.propTypes = {
   placeholder: PropTypes.string,
   tooltip: PropTypes.string,
-  onRemove: PropTypes.func,
+
   idx: PropTypes.string.isRequired,
   // under antFields
   value: PropTypes.node,
@@ -155,7 +152,6 @@ InputField.propTypes = {
 };
 
 InputField.defaultProps = {
-  onRemove: null,
   placeholder: null,
   tooltip: null,
   value: undefined,

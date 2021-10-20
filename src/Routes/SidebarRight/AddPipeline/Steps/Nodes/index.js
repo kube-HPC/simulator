@@ -108,6 +108,8 @@ const Nodes = ({ style }) => {
     isStreamingPipeline,
   } = useWizardContext();
 
+  console.log('step1 >> ', getFieldValue(['nodes']));
+
   const getShortName = name => {
     if (name !== undefined) {
       const arrName = name.split(/(?=[A-Z])/);
@@ -137,6 +139,7 @@ const Nodes = ({ style }) => {
       })();
       const nextId = ids[nextIdx];
       dropKey(id);
+
       setActiveNodeId(nextId);
     },
     [dropKey, setActiveNodeId, ids]

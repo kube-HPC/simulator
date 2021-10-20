@@ -82,7 +82,6 @@ const Wizard = ({
 
   const getFormattedFormValues = useCallback(() => {
     const formValues = getFieldsValue();
-
     delete formValues.listKeyValue;
 
     const nodes = Object.values(formValues.nodes || {})
@@ -97,10 +96,9 @@ const Wizard = ({
     return pruneObject({ ...formValues, nodes });
   }, [getFieldsValue]);
 
-  const persistForm = useCallback(
-    () => setEditorState(getFormattedFormValues()),
-    [setEditorState, getFormattedFormValues]
-  );
+  const persistForm = useCallback(() => {
+    setEditorState(getFormattedFormValues());
+  }, [setEditorState, getFormattedFormValues]);
 
   useEffect(() => subscribe(persistForm), [subscribe, persistForm]);
 
@@ -182,7 +180,7 @@ const Wizard = ({
           </context.Provider>
         </Form>
         <JsonView
-          src={initialState}
+          src={getFormattedFormValues()}
           collapsed={undefined}
           style={{ flex: 1 }}
         />
