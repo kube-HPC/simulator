@@ -77,6 +77,7 @@ const Wizard = ({
   const { subscribe } = useSubscribe();
 
   useEffect(() => {
+    console.log(11);
     setFieldsValue(pruneObject(parseInitialState(initialState)));
   }, [setFieldsValue, initialState]);
 
@@ -84,15 +85,16 @@ const Wizard = ({
     const formValues = getFieldsValue();
     delete formValues.listKeyValue;
 
-    const nodes = Object.values(formValues.nodes || {})
-      .filter(item => item.kind)
+    const nodes = Object.values(formValues?.nodes || {})
+      .filter(item => item?.kind)
       .map(item => {
-        if (!item.input) return item;
+        if (!item?.input) return item;
         return {
           ...item,
-          input: Object.values(item.input),
+          input: Object.values(item?.input),
         };
       });
+
     return pruneObject({ ...formValues, nodes });
   }, [getFieldsValue]);
 
@@ -136,7 +138,7 @@ const Wizard = ({
       const { nodes } = getFieldsValue();
       nodes &&
         nodes.forEach((node, index) => {
-          if (node.kind === 'gateway') {
+          if (node?.kind === 'gateway') {
             setFieldsValue({ [`nodes.${index}.kind`]: 'algorithm' });
           }
         });
@@ -161,7 +163,6 @@ const Wizard = ({
       <Body>
         <Form
           form={form}
-          onValuesChange={persistForm}
           name="create-pipeline"
           layout="horizontal"
           hideRequiredMark

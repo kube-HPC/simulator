@@ -80,8 +80,8 @@ const ControllerKeyValue = ({
 
   // get list nodes
   const nodeNames = useMemo(
-    () => initialState.nodes.map(item => item.nodeName),
-    [initialState.nodes]
+    () => initialState?.nodes?.map(item => item?.nodeName),
+    [initialState?.nodes]
   );
 
   // build popup button of  virtual keyboard
