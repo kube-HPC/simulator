@@ -46,6 +46,7 @@ const ControllerKeyValue = ({
   }, [form, initialState, nameRef]);
 
   useEffect(() => {
+    // in init update all values from initialState put in all fields list
     convertObjectToKeyListKeyValue();
   }, []);
 
@@ -79,10 +80,10 @@ const ControllerKeyValue = ({
   }, [form, nameRef, submitChange]);
 
   // get list nodes
-  const nodeNames = useMemo(
-    () => initialState?.nodes?.map(item => item?.nodeName),
-    [initialState?.nodes]
-  );
+  const nodeNames = useMemo(() => {
+    const formValue = form.getFieldValue();
+    return formValue?.nodes?.map(item => item?.nodeName);
+  }, [form]);
 
   // build popup button of  virtual keyboard
   const keyboardView = [

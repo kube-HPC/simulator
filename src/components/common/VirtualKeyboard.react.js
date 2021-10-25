@@ -94,7 +94,7 @@ const VirtualKeyboard = ({
   return (
     <Popover
       key={`popoverVKey${indexKey}`}
-      content={content(indexKey, fieldKey, name)}
+      content={content(fieldKey, name)}
       title={title(name)}
       trigger="click"
       overlayStyle={{ width: '400px' }}>

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { CheckOutlined, RightOutlined, LeftOutlined } from '@ant-design/icons';
@@ -43,6 +43,7 @@ const normalize = collection =>
   collection.reduce((acc, item, ii) => ({ ...acc, [ii]: item }), {});
 
 // converts arrays to objects on selected fields to match ant requirement
+// eslint-disable-next-line no-unused-vars
 const parseInitialState = initialState => {
   const nodes =
     initialState?.nodes?.map(item =>
@@ -73,12 +74,12 @@ const Wizard = ({
   wizardClear,
   isEdit,
 }) => {
+  const [, setValueState] = useState({});
   const { setFieldsValue, getFieldsValue, getFieldValue } = form;
   const { subscribe } = useSubscribe();
 
   useEffect(() => {
-    console.log(11);
-    setFieldsValue(pruneObject(parseInitialState(initialState)));
+    setFieldsValue(pruneObject(initialState));
   }, [setFieldsValue, initialState]);
 
   const getFormattedFormValues = useCallback(() => {
@@ -145,6 +146,10 @@ const Wizard = ({
     }
   }, [isStreamingPipeline, getFieldsValue, setFieldsValue]);
 
+  const setForm = useCallback(() => {
+    setValueState(getFormattedFormValues());
+  }, [getFormattedFormValues, setValueState]);
+
   return (
     <>
       <Steps
@@ -163,6 +168,7 @@ const Wizard = ({
       <Body>
         <Form
           form={form}
+          onValuesChange={setForm}
           name="create-pipeline"
           layout="horizontal"
           hideRequiredMark

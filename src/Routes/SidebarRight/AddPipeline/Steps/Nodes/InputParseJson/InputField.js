@@ -5,6 +5,8 @@ import { tryParse } from 'utils';
 import RawInputField from 'components/InputField';
 import Addon from '../../../../../../components/common/Addon.react';
 
+const SignsOfObjectArray = ['{', '}', '[', ']'];
+
 function checkInput(input, words) {
   if (input !== undefined) {
     if (Array.isArray(input) && input.length > 1) return true;
@@ -20,13 +22,13 @@ function checkInput(input, words) {
 }
 
 function getSignInWord(input, words) {
+  if (checkInput(input, SignsOfObjectArray)) return '';
+
   let res = '';
-
-  if (input !== null && input !== undefined && input.length === 1) {
+  if (input !== null && input !== undefined) {
     words.sort((a, b) => b.length - a.length);
-
     words.forEach(item => {
-      if (res === '' && input[0].toLowerCase().indexOf(item) !== -1) {
+      if (res === '' && input.toString().toLowerCase().indexOf(item) !== -1) {
         res = item;
       }
     });
@@ -36,10 +38,12 @@ function getSignInWord(input, words) {
 }
 
 function getWord(input, word) {
+  if (checkInput(input, SignsOfObjectArray)) return input;
+
   let res = '';
 
-  if (input !== null && input !== undefined && input.length === 1) {
-    res = input[0].replace(word, '');
+  if (input !== null && input !== undefined) {
+    res = input.toString().replace(word, '');
     return res;
   }
 
@@ -66,7 +70,7 @@ const InputField = ({ placeholder, tooltip, idx, ...antFields }) => {
      * invalid characters from the user making it unusable
      */
     if (isValid || value === undefined) {
-      if (checkInput(value, ['{', '}', '[', ']'])) {
+      if (checkInput(value, SignsOfObjectArray)) {
         setValue(JSON.stringify(antFields.value));
       } else {
         setValue(value);
@@ -75,8 +79,8 @@ const InputField = ({ placeholder, tooltip, idx, ...antFields }) => {
   }, [antFields, value, isValid, selectBefore]);
 
   useEffect(() => {
-    if (!checkInput(value, ['{', '}', '[', ']'])) {
-      antFields.onChange([`${selectBefore}${value}`]);
+    if (!checkInput(value, SignsOfObjectArray)) {
+      antFields.onChange(`${selectBefore}${value}`);
       setIsValid(true);
     } else {
       antFields.onChange(value);
@@ -107,24 +111,17 @@ const InputField = ({ placeholder, tooltip, idx, ...antFields }) => {
       if (src === '') {
         onSuccess({ parsed: undefined });
         setIsValid(false);
-      } else if (checkInput(src, ['{', '}', '[', ']'])) {
+      } else if (checkInput(src, SignsOfObjectArray)) {
         tryParse({ src, onSuccess, onFail });
         setAddonIsDisabled(true);
       } else {
-        antFields.onChange([`${selectBefore}${src}`]);
+        antFields.onChange(`${selectBefore}${src}`);
         setAddonIsDisabled(false);
         setIsValid(true);
       }
     },
     [antFields, selectBefore]
   );
-
-  //  useEffect(()=>{
-
-  //   console.log("initialState >>> ",initialState.nodes[0].input)
-
-  // },[onRemove]
-  // )
 
   return (
     <RawInputField

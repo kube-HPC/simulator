@@ -82,10 +82,13 @@ const AddPipeline = ({ jsonPipeline }) => {
     return () => {
       // avoid infinite looping
       if (status !== 'READY') return;
-      window.localStorage.setItem(
-        LOCAL_STORAGE_KEY,
-        JSON.stringify({ ...editorState, stateVersion: packageJson.version })
-      );
+
+      if (!isEdit) {
+        window.localStorage.setItem(
+          LOCAL_STORAGE_KEY,
+          JSON.stringify({ ...editorState, stateVersion: packageJson.version })
+        );
+      } else window.localStorage.removeItem(LOCAL_STORAGE_KEY);
     };
   }, [
     setEditorState,

@@ -7,7 +7,7 @@ import InputField from './InputField';
 const listAddOn = ['', '@', '#', '#@'];
 
 const Controller = ({ nodeIdx }) => (
-  <Form.List name={['nodes', nodeIdx, 'Input']}>
+  <Form.List name={['nodes', nodeIdx, 'input']}>
     {(fields, { add, remove }) => (
       <>
         {fields.map(({ key, name, fieldKey, ...restField }) => (
