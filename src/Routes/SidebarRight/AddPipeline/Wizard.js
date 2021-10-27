@@ -74,7 +74,7 @@ const Wizard = ({
   wizardClear,
   isEdit,
 }) => {
-  const [, setValueState] = useState({});
+  const [valuesState, setValuesState] = useState({});
   const { setFieldsValue, getFieldsValue, getFieldValue } = form;
   const { subscribe } = useSubscribe();
 
@@ -147,8 +147,8 @@ const Wizard = ({
   }, [isStreamingPipeline, getFieldsValue, setFieldsValue]);
 
   const setForm = useCallback(() => {
-    setValueState(getFormattedFormValues());
-  }, [getFormattedFormValues, setValueState]);
+    setValuesState(getFormattedFormValues());
+  }, [getFormattedFormValues, setValuesState]);
 
   return (
     <>
@@ -175,7 +175,13 @@ const Wizard = ({
           onSubmit={handleSubmit}
           style={{ padding: '0 2ch' }}>
           <context.Provider
-            value={{ form, initialState, isStreamingPipeline, isEdit }}>
+            value={{
+              form,
+              initialState,
+              isStreamingPipeline,
+              isEdit,
+              valuesState,
+            }}>
             {stepComponents.map((StepComponent, ii) => (
               <StepComponent
                 key={`step-component-${stepNames[ii]}`}

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Checkbox, InputNumber, Select } from 'antd';
 import { FlexBox, Form } from 'components/common';
-
+import has from 'lodash/has';
 import SliderNumber from './SliderNumber';
 import Triggers from './Triggers';
 import Webhooks from './Webhooks';
@@ -27,26 +27,40 @@ const verbosityLevels = ['info', 'trace', 'debug', 'warn', 'error', 'critical'];
 
 const Options = ({ style }) => {
   const { isStreamingPipeline, form, initialState } = useWizardContext();
-  const [listFlow, setListFlow] = useState([]);
-  const [arrlistFlow, setArrListFlow] = useState([]);
+
+  const [listFlow, setListFlow] = useState(
+    initialState?.streaming?.flows || []
+  );
+  const [arrayListFlow, setArrayListFlow] = useState(
+    ['No Default', ...Object.keys(listFlow)] || []
+  );
 
   useEffect(() => {
-    const listFlowKeys = Object.keys(listFlow);
-    setArrListFlow(['No Default', ...listFlowKeys]);
-
     if (
-      initialState?.streaming?.defaultFlow &&
-      Object.keys(initialState.streaming.flows).findIndex(
-        x => x === initialState.streaming.defaultFlow
-      ) === -1
+      initialState?.streaming?.flows &&
+      !has(initialState?.streaming?.flows, initialState?.streaming?.defaultFlow)
     ) {
-      form.setFieldsValue({ streaming: { defaultFlow: '' } });
-
       if (Object.keys(initialState.streaming.flows).length === 0) {
         initialState.streaming.defaultFlow = '';
       }
+    } else {
+      form.setFieldsValue({
+        streaming: { defaultFlow: initialState?.streaming?.defaultFlow || '' },
+      });
     }
-  }, [form, initialState.streaming, listFlow]);
+  }, []);
+
+  useEffect(() => {
+    const listFlowKeys = Object.keys(listFlow);
+    setArrayListFlow(['No Default', ...listFlowKeys]);
+
+    const defaultFlowValue = form.getFieldValue(['streaming', 'defaultFlow']);
+    if (!has(listFlow, defaultFlowValue)) {
+      setTimeout(() => {
+        form.setFieldsValue({ streaming: { defaultFlow: '' } });
+      }, 100);
+    }
+  }, [form, listFlow]);
 
   return (
     <div style={style}>
@@ -63,18 +77,19 @@ const Options = ({ style }) => {
               nameRef={['streaming', 'flows']}
             />
           </Form.Item>
-
-          <Form.Item label="Default Flow" name={['streaming', 'defaultFlow']}>
-            <Select style={smallSelectStyle}>
-              {arrlistFlow.map((item, index) => (
-                <Select.Option
-                  key={`default-list-flow-${item}`}
-                  value={index > 0 ? item : ''}>
-                  {item}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
+          {arrayListFlow.length > 1 && (
+            <Form.Item label="Default Flow" name={['streaming', 'defaultFlow']}>
+              <Select style={smallSelectStyle}>
+                {arrayListFlow.map((item, index) => (
+                  <Select.Option
+                    key={`default-list-flow-${item}`}
+                    value={index > 0 ? item : ''}>
+                    {item}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          )}
         </>
       )}
       <Form.Divider>Webhooks</Form.Divider>

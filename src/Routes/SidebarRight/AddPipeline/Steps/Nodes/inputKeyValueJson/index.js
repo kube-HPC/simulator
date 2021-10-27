@@ -26,7 +26,7 @@ const ControllerKeyValue = ({
   valuePlaceholder,
   titleKeyboard,
 }) => {
-  const { initialState, form } = useWizardContext();
+  const { initialState, form, valuesState } = useWizardContext();
   const [value, setValue] = useState(JSON.stringify(_value, null, 2));
 
   const convertObjectToKeyListKeyValue = useCallback(() => {
@@ -80,10 +80,10 @@ const ControllerKeyValue = ({
   }, [form, nameRef, submitChange]);
 
   // get list nodes
-  const nodeNames = useMemo(() => {
-    const formValue = form.getFieldValue();
-    return formValue?.nodes?.map(item => item?.nodeName);
-  }, [form]);
+  const nodeNames = useMemo(
+    () => valuesState?.nodes?.map(item => item?.nodeName),
+    [valuesState]
+  );
 
   // build popup button of  virtual keyboard
   const keyboardView = [

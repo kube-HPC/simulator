@@ -136,8 +136,8 @@ const Nodes = ({ style }) => {
         return idx - 1;
       })();
       const nextId = ids[nextIdx];
-      dropKey(id);
 
+      dropKey(id);
       setActiveNodeId(nextId);
     },
     [dropKey, setActiveNodeId, ids]
