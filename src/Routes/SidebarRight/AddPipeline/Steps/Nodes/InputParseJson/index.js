@@ -6,7 +6,7 @@ import InputField from './InputField';
 
 const listAddOn = ['', '@', '#', '#@'];
 
-const Controller = ({ nodeIdx }) => (
+const Controller = ({ nodeIdx, isRequired }) => (
   <Form.List name={['nodes', nodeIdx, 'input']}>
     {(fields, { add, remove }) => (
       <>
@@ -29,7 +29,11 @@ const Controller = ({ nodeIdx }) => (
               </Form.Item>
             </Col>
             <Col>
-              <MinusCircleOutlined onClick={() => remove(name)} />
+              {name === 0 && isRequired ? (
+                ''
+              ) : (
+                <MinusCircleOutlined onClick={() => remove(name)} />
+              )}
             </Col>
           </Row>
         ))}
@@ -46,9 +50,12 @@ const Controller = ({ nodeIdx }) => (
     )}
   </Form.List>
 );
-
+Controller.defaultProps = {
+  isRequired: false,
+};
 Controller.propTypes = {
   nodeIdx: PropTypes.node.isRequired,
+  isRequired: PropTypes.bool,
 };
 
 export default Controller;
