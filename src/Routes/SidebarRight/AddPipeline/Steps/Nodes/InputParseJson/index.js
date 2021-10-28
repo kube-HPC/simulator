@@ -1,41 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
-import { Form, Button, Row, Col } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { Form, Button } from 'antd';
 import InputField from './InputField';
 
 const listAddOn = ['', '@', '#', '#@'];
 
-const Controller = ({ nodeIdx, isRequired }) => (
+const Controller = ({ nodeIdx }) => (
   <Form.List name={['nodes', nodeIdx, 'input']}>
     {(fields, { add, remove }) => (
       <>
         {fields.map(({ key, name, fieldKey, ...restField }) => (
-          <Row key={key} justify="space-between" align="middle">
-            <Col span={22}>
-              <Form.Item
-                style={{ marginBottom: 10 }}
-                {...restField}
-                name={[name]}
-                fieldKey={[fieldKey]}
-                rules={[
-                  {
-                    required: true,
-                    message:
-                      "Please input algorithm's name or delete this field.",
-                  },
-                ]}>
-                <InputField addonBefore={listAddOn} />
-              </Form.Item>
-            </Col>
-            <Col>
-              {name === 0 && isRequired ? (
-                ''
-              ) : (
-                <MinusCircleOutlined onClick={() => remove(name)} />
-              )}
-            </Col>
-          </Row>
+          <Form.Item
+            style={{ marginBottom: 10 }}
+            {...restField}
+            name={[name]}
+            fieldKey={[fieldKey]}
+            validateTrigger={['onChange', 'onBlur']}>
+            <InputField
+              addonBefore={listAddOn}
+              onRemove={name > 0 ? () => remove(name) : null}
+            />
+          </Form.Item>
         ))}
         <Form.Item>
           <Button
@@ -50,12 +36,9 @@ const Controller = ({ nodeIdx, isRequired }) => (
     )}
   </Form.List>
 );
-Controller.defaultProps = {
-  isRequired: false,
-};
+
 Controller.propTypes = {
   nodeIdx: PropTypes.node.isRequired,
-  isRequired: PropTypes.bool,
 };
 
 export default Controller;

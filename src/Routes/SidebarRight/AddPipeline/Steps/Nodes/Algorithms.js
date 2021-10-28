@@ -53,7 +53,12 @@ const AlgorithmNode = ({ id }) => {
         </Field>
       )}
       <Divider>Inputs</Divider>
-      <Controller placeholder="Input" tooltip="Input" nodeIdx={id} />
+      <Controller
+        placeholder="Input"
+        tooltip="Input"
+        nodeIdx={id}
+        isRequired={false}
+      />
       <Collapsible title="Retry">
         <Field
           name={['retry', 'policy']}

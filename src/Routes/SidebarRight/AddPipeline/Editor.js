@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { CheckOutlined } from '@ant-design/icons';
@@ -26,6 +26,21 @@ const Editor = ({ toggle, onSubmit, initialState, setEditorState }) => {
     JSON.stringify(initialState, null, 4)
   );
 
+  const setValuesState = useCallback(
+    isToggle => {
+      tryParse({
+        src: innerState,
+        onSuccess: ({ parsed }) => {
+          setEditorState(parsed);
+
+          if (isToggle) toggle();
+        },
+        onFail: () => {},
+      });
+    },
+    [innerState, setEditorState, toggle]
+  );
+
   const onEditorSubmit = () =>
     tryParse({
       src: innerState,
@@ -37,17 +52,11 @@ const Editor = ({ toggle, onSubmit, initialState, setEditorState }) => {
   const onDefault = () => setInnerState(INITIAL_EDITOR_VALUE);
   const onClear = () => setInnerState('');
 
-  useEffect(
-    () => () =>
-      tryParse({
-        src: innerState,
-        onSuccess: ({ parsed }) => {
-          setEditorState(parsed);
-        },
-        onFail: () => {},
-      }),
-    [innerState, setEditorState]
-  );
+  useEffect(() => setValuesState(false), [
+    innerState,
+    setEditorState,
+    setValuesState,
+  ]);
 
   return (
     <>
@@ -62,7 +71,7 @@ const Editor = ({ toggle, onSubmit, initialState, setEditorState }) => {
 
       <BottomPanel width={DRAWER_SIZE.ADD_PIPELINE}>
         {/* <PanelButton key="Editor" onClick={handleToggle}> */}
-        <PanelButton key="Editor" onClick={toggle}>
+        <PanelButton key="Editor" onClick={() => setValuesState(true)}>
           Wizard View
         </PanelButton>
         <PanelButton

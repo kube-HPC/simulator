@@ -50,7 +50,8 @@ function getWord(input, word) {
   return input;
 }
 
-const InputField = ({ placeholder, tooltip, idx, ...antFields }) => {
+const InputField = ({ placeholder, tooltip, idx, onRemove, ...antFields }) => {
+  const hasRemove = !!onRemove;
   const [selectBefore, setSelectBefore] = useState(
     getSignInWord(antFields?.value, antFields?.addonBefore) || ''
   );
@@ -127,7 +128,9 @@ const InputField = ({ placeholder, tooltip, idx, ...antFields }) => {
     <RawInputField
       id={antFields.id}
       tooltip={tooltip}
+      hasRemove={hasRemove}
       isValid={isValid}
+      onRemove={() => onRemove(idx)}
       value={value}
       onChange={onInputChange}
       placeholder={placeholder}
@@ -139,7 +142,7 @@ const InputField = ({ placeholder, tooltip, idx, ...antFields }) => {
 InputField.propTypes = {
   placeholder: PropTypes.string,
   tooltip: PropTypes.string,
-
+  onRemove: PropTypes.func,
   idx: PropTypes.string.isRequired,
   // under antFields
   value: PropTypes.node,
@@ -151,6 +154,7 @@ InputField.propTypes = {
 InputField.defaultProps = {
   placeholder: null,
   tooltip: null,
+  onRemove: null,
   value: undefined,
   id: undefined,
   onChange: undefined,

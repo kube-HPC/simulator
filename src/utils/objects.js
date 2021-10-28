@@ -1,3 +1,11 @@
+export const tryParseJson = val => {
+  try {
+    return JSON.parse(val);
+  } catch {
+    return val;
+  }
+};
+
 export const deepCopyFromKeyValue = (schemaObject, keyValueObject) => {
   if (typeof schemaObject !== 'object' || schemaObject === null)
     return schemaObject;

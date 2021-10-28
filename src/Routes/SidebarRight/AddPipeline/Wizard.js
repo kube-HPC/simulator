@@ -84,7 +84,7 @@ const Wizard = ({
 
   const getFormattedFormValues = useCallback(() => {
     const formValues = getFieldsValue();
-    delete formValues.listKeyValue;
+    formValues.listKeyValue;
 
     const nodes = Object.values(formValues?.nodes || {})
       .filter(item => item?.kind)
@@ -132,19 +132,25 @@ const Wizard = ({
     getFieldValue('kind')
   );
 
-  useEffect(() => {
-    // remove gateway option from nodes and reset them to algorithm option
-
-    if (isStreamingPipeline === false) {
+  const resetKind = useCallback(
+    typeKind => {
       const { nodes } = getFieldsValue();
       nodes &&
         nodes.forEach((node, index) => {
-          if (node?.kind === 'gateway') {
-            setFieldsValue({ [`nodes.${index}.kind`]: 'algorithm' });
+          if (node?.kind === typeKind) {
+            nodes[index].kind = 'algorithm';
+            setFieldsValue({ nodes });
           }
         });
-    }
-  }, [isStreamingPipeline, getFieldsValue, setFieldsValue]);
+    },
+    [getFieldsValue, setFieldsValue]
+  );
+
+  useEffect(() => {
+    // remove gateway or output option from nodes and reset them to algorithm option
+    if (isStreamingPipeline) resetKind('output');
+    else resetKind('gateway');
+  }, [isStreamingPipeline, resetKind]);
 
   const setForm = useCallback(() => {
     setValuesState(getFormattedFormValues());

@@ -46,7 +46,9 @@ const usePipeline = () => {
         if (isEdit) res = await client.put('store/pipelines', { ...data });
         else res = await client.post('store/pipelines', { ...data });
 
-        message.success(successMsg(res.data).PIPELINE_UPDATE);
+        if (isEdit) message.success(successMsg(res.data).PIPELINE_UPDATE);
+        else message.success(successMsg(res.data).PIPELINE_ADD);
+
         window.localStorage.removeItem(LOCAL_STORAGE_KEY);
         history.push('/pipelines');
       } catch (res) {

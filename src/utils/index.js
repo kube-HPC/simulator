@@ -17,4 +17,8 @@ export {
   splitByDot,
   isJsonString,
 } from './string';
-export { deepCopyFromKeyValue, flattenObjKeyValue } from './objects';
+export {
+  deepCopyFromKeyValue,
+  flattenObjKeyValue,
+  tryParseJson,
+} from './objects';

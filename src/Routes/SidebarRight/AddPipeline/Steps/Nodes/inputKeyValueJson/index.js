@@ -3,7 +3,7 @@ import { Form, Button, Space, Input } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import useWizardContext from 'Routes/SidebarRight/AddPipeline/useWizardContext';
-import { tryParse } from 'utils';
+import { tryParse, tryParseJson } from 'utils';
 import { useDebouncedCallback } from 'use-debounce';
 import { VirtualKeyboard } from 'components/common';
 import PropTypes from 'prop-types';
@@ -27,7 +27,8 @@ const ControllerKeyValue = ({
   titleKeyboard,
 }) => {
   const { initialState, form, valuesState } = useWizardContext();
-  const [value, setValue] = useState(JSON.stringify(_value, null, 2));
+
+  const [value, setValue] = useState(JSON.stringify(_value));
 
   const convertObjectToKeyListKeyValue = useCallback(() => {
     const valueInitialState = _.get(initialState, [...nameRef]);
@@ -37,7 +38,7 @@ const ControllerKeyValue = ({
       const currentNameField = ['listKeyValue', ...nameRef];
       const resKeyValue = Object.keys(valueInitialState).map(key => ({
         key,
-        value: valueInitialState[key],
+        value: JSON.stringify(valueInitialState[key]),
       }));
 
       _.set(resFields, currentNameField, resKeyValue);
@@ -55,7 +56,7 @@ const ControllerKeyValue = ({
       emptyEditorStatesKeyValue.includes(value) &&
       !emptyEditorStatesKeyValue.includes(_value)
     )
-      setValue(JSON.stringify(_value, null, 2));
+      setValue(JSON.stringify(_value));
   }, [value, setValue, _value]);
 
   const onApply = useCallback(() => {
@@ -71,11 +72,11 @@ const ControllerKeyValue = ({
   const handleChange = useCallback(() => {
     const res = form
       .getFieldValue(['listKeyValue', ...nameRef])
-      .reduce((acc, item) => ({ ...acc, [item?.key]: item?.value }), {});
-    // console.log(`listKeyValue${id}`)
-    // console.log(JSON.stringify(res))
+      .reduce(
+        (acc, item) => ({ ...acc, [item?.key]: tryParseJson(item?.value) }),
+        {}
+      );
     setValue(JSON.stringify(res));
-
     submitChange();
   }, [form, nameRef, submitChange]);
 
