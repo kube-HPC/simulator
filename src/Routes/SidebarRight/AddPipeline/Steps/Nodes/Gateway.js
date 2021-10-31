@@ -32,7 +32,7 @@ const GatewayNode = ({ id }) => {
         <Input placeholder="Name Gateway" />
       </Field>
 
-      <Field name="description" title="Description">
+      <Field name="description" title="Description" skipValidation>
         <Input placeholder="Description" />
       </Field>
       <Field
