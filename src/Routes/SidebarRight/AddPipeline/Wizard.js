@@ -84,7 +84,7 @@ const Wizard = ({
 
   const getFormattedFormValues = useCallback(() => {
     const formValues = getFieldsValue();
-    formValues.listKeyValue;
+    delete formValues.listKeyValue;
 
     const nodes = Object.values(formValues?.nodes || {})
       .filter(item => item?.kind)

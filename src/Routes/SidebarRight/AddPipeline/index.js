@@ -53,7 +53,17 @@ const AddPipeline = ({ jsonPipeline }) => {
 
     if (status === 'IDLE') {
       if (isEdit) {
-        setEditorState(JSON.parse(jsonPipeline));
+        const jsonEdit = JSON.parse(jsonPipeline);
+        if (jsonEdit.nodes) {
+          jsonEdit.nodes.forEach(item => {
+            if (item.kind === undefined) {
+              // eslint-disable-next-line no-param-reassign
+              item.kind = 'algorithm';
+            }
+          });
+        }
+
+        setEditorState(jsonEdit);
       } else {
         const rawData = window.localStorage.getItem(LOCAL_STORAGE_KEY);
         try {
