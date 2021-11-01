@@ -77,7 +77,7 @@ spec:
                   fieldPath: metadata.namespace
             - name: HKUBE_BASE_URL
               value: /hkube/dashboard-${PR_NAME}
-          image: hkube/simulator:${PR_NAME}
+          image: hkube/simulator:${TAG}
           imagePullPolicy: Always
           name: simulator
           ports:

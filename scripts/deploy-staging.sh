@@ -6,7 +6,9 @@ echo TRAVIS_PULL_REQUEST_BRANCH=$TRAVIS_PULL_REQUEST_BRANCH
 # export PR_NAME="${TRAVIS_PULL_REQUEST_BRANCH,,}"
 export PR_NAME="${PR_NAME,,}"
 export PR_NAME="${PR_NAME//_/-}"
-echo TAG=$PR_NAME
+export TAG="${PR_NAME}"
+export PR_NAME="${PR_NAME//./-}"
+echo TAG=$TAG
 envsubst < ${DIR}/staging-template.yaml > /tmp/staging.yaml
 kubectl apply -f /tmp/staging.yaml
 kubectl patch deployment dashboard-${PR_NAME} -p "{\"spec\": {\"template\": {\"metadata\": { \"labels\": {  \"redeploy\": \"$(date +%s)\"}}}}}"
