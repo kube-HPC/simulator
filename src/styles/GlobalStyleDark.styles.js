@@ -1,18 +1,12 @@
 import { createGlobalStyle } from 'styled-components';
 import { COLOR_LAYOUT, COLOR } from 'styles/colors';
-import 'antd/dist/antd.css';
+import 'antd/dist/antd.dark.css';
 
 const GlobalStyle = createGlobalStyle`
   * {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
       Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
-
-  .ant-layout {
-    background-color: white!important;
-  }
-
-
 
   .ant-tooltip-inner {
     background-color: white;
@@ -25,6 +19,10 @@ const GlobalStyle = createGlobalStyle`
 
   .ant-layout-sider-light .ant-layout-sider-trigger {
     border-right: 1px solid ${COLOR_LAYOUT.border};
+  }
+  .ant-layout-sider-light
+  {
+    background-color: black!important;
   }
 
   .ant-table-fixed-header .ant-table-scroll .ant-table-header {

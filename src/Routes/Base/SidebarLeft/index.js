@@ -20,6 +20,7 @@ import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
 import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
 import { COLOR_LAYOUT } from 'styles';
 import { selectors } from 'reducers';
+import { useSiteDarkMode } from './../../../hooks';
 
 const Border = styled.div`
   border-right: 1px solid ${COLOR_LAYOUT.border};
@@ -101,11 +102,13 @@ const SidebarLeft = () => {
   const dataCount = isOn ? dataCountMock : dataCountSource;
   const { isCollapsed, toggle } = useLeftSidebar();
   const { pageName } = useParams();
+  const { isDarkMode } = useSiteDarkMode();
+
   return (
     <Border>
       <Sider
         className={USER_GUIDE.SIDEBAR_LEFT}
-        theme="light"
+        theme={isDarkMode ? 'dark' : 'light'}
         onCollapse={toggle}
         collapsed={isCollapsed}>
         <LogoContainer>

@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
 export const TabDrawerText = styled.div`
-  color: #333333;
+  color: ${props => (props.theme.isDarkMode ? '#ffffff' : '#333333')};
+
   letter-spacing: 7px;
   -webkit-transform-origin: 0 0;
   -moz-transform-origin: 0 0;
@@ -16,7 +17,8 @@ export const TabDrawerText = styled.div`
   margin-top: 19px;
 `;
 export const TabDrawer = styled.div`
-  background: #ffffff;
+  background: ${props => (props.theme.isDarkMode ? '#000000' : '#ffffff')};
+  border: 1px solid #ffffff;
   min-width: 200px;
   position: fixed;
   text-align: center;

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Layout, message } from 'antd';
-import styled from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 import { Route } from 'react-router-dom';
 import { COLOR, COLOR_LAYOUT } from 'styles';
 import { useActions, useConnectionStatus } from 'hooks';
@@ -10,6 +10,7 @@ import SidebarLeft from './Base/SidebarLeft';
 import UserGuide from './Base/UserGuide';
 import LoadingScreen from './Base/LoadingScreen';
 import Tables from './Tables';
+import { useSiteDarkMode } from './../hooks';
 
 const LayoutFullHeight = styled(Layout)`
   height: 100vh;
@@ -42,6 +43,7 @@ message.config({
 
 const Routes = () => {
   const { socketInit } = useActions();
+  const { isDarkMode } = useSiteDarkMode();
 
   useEffect(() => {
     socketInit();
@@ -50,7 +52,7 @@ const Routes = () => {
   const { isDataAvailable } = useConnectionStatus();
 
   return isDataAvailable ? (
-    <>
+    <ThemeProvider theme={{ isDarkMode }}>
       <UserGuide />
       <LayoutFullHeight>
         <Route path="/:pageName" component={SidebarLeft} />
@@ -71,7 +73,7 @@ const Routes = () => {
           </LayoutFullHeight>
         </Layout>
       </LayoutFullHeight>
-    </>
+    </ThemeProvider>
   ) : (
     <LoadingScreen />
   );

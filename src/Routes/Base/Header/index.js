@@ -1,11 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Route } from 'react-router-dom';
-import { useLeftSidebar } from 'hooks';
+import { useLeftSidebar, useSiteDarkMode } from 'hooks';
 import { FlexBox, Icons } from 'components/common';
 import { USER_GUIDE } from 'const';
 import { COLOR_LAYOUT } from 'styles';
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  BulbFilled,
+} from '@ant-design/icons';
 import AutoComplete from './AutoComplete';
 import ExperimentPicker from './ExperimentPicker.react';
 import HelpBar from './HelpBar.react';
@@ -17,7 +21,7 @@ import ViewType from './ViewType.react';
 
 const Container = styled(FlexBox)`
   padding: 1em 2ch;
-  background: white;
+  /*background: white;*/
   border-bottom: 1px solid ${COLOR_LAYOUT.border};
 `;
 
@@ -39,6 +43,7 @@ const MiddleContainer = styled(FlexBox)`
 
 const Header = () => {
   const { toggle, isCollapsed } = useLeftSidebar();
+  const { toggleTheme } = useSiteDarkMode();
 
   return (
     <Container className={USER_GUIDE.WELCOME}>
@@ -47,6 +52,7 @@ const Header = () => {
           type={isCollapsed ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
           onClick={toggle}
         />
+        <Icons.Hover type={<BulbFilled />} onClick={toggleTheme} />
         <Route exact path="/jobs" component={ViewType} />
       </ButtonsContainer>
       <MiddleContainer>
