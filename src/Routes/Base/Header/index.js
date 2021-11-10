@@ -21,7 +21,7 @@ import ViewType from './ViewType.react';
 
 const Container = styled(FlexBox)`
   padding: 1em 2ch;
-  /*background: white;*/
+
   border-bottom: 1px solid ${COLOR_LAYOUT.border};
 `;
 
