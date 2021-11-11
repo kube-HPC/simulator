@@ -46,7 +46,7 @@ const HelpBar = () => {
   return (
     <Container className={USER_GUIDE.HEADER.SOCIALS}>
       <ConnectionStatus />
-      <Popover content={<Settings />} placement="bottomRight">
+      <Popover content={<Settings />} placement="bottomRight" trigger="click">
         <Icons.Hover type={<ToolOutlined />} />
       </Popover>
       <Icons.Hover
