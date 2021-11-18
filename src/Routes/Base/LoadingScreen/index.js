@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-
 import { animated, useSpring } from 'react-spring';
 import Particles from 'react-particles-js';
 
@@ -8,6 +7,16 @@ import { ReactComponent as Fish } from 'images/logo-no-shadow.svg';
 import { ReactComponent as Title } from 'images/title.svg';
 
 import { particlesTemplate } from 'config';
+import { useSiteDarkMode } from 'hooks';
+
+const TitleDark = styled.div`
+  color: #ffffff;
+`;
+const ImageStyle = styled.div`
+  .textTitleHkube {
+    fill: ${props => (props.theme.isDarkMode ? '#ffffff' : '#0F2744')};
+  }
+`;
 
 const Container = styled.div`
   display: flex;
@@ -18,7 +27,10 @@ const Container = styled.div`
   width: 100%;
   height: 100vh;
   z-index: 11;
-  background-image: linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);
+  background-image: ${props =>
+    props.theme.isDarkMode
+      ? 'linear-gradient(to top,#1c325c 0%,#001b3e 100%)'
+      : 'linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%)'};
 `;
 
 const AbsoluteDiv = styled(animated.div)`
@@ -67,6 +79,7 @@ const resizeSizes = {
 const scaleChange = x => `scale(${x})`;
 
 const LoadingScreen = () => {
+  const { isDarkMode } = useSiteDarkMode();
   const opacity = useSpring(fadeIn);
   const { radians } = useSpring(moveRepeat);
   const { x } = useSpring(resize);
@@ -101,7 +114,12 @@ const LoadingScreen = () => {
         </animated.svg>
       </ItemMargin>
       <ItemMargin style={opacity} margin={20}>
-        <Title style={{ width: 500, height: 100 }} />
+        <ImageStyle>
+          <Title style={{ width: 500, height: 100 }} />
+        </ImageStyle>
+      </ItemMargin>
+      <ItemMargin margin={5}>
+        <TitleDark>{isDarkMode ? 'Dark Mode' : ''} </TitleDark>
       </ItemMargin>
     </Container>
   );

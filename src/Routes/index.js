@@ -75,7 +75,9 @@ const Routes = () => {
       </LayoutFullHeight>
     </ThemeProvider>
   ) : (
-    <LoadingScreen />
+    <ThemeProvider theme={{ isDarkMode }}>
+      <LoadingScreen />
+    </ThemeProvider>
   );
 };
 export default Routes;
