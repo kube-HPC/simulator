@@ -9,7 +9,7 @@ const DarkHoverStyle = styled.div`
   ${mixins.transition};
   color: ${COLOR_LAYOUT.darkBorder};
   :hover {
-    color: black;
+    color: ${props => (props.theme.isDarkMode ? '#ffffff' : '#black')};
   }
   font-size: 22px;
   cursor: pointer;

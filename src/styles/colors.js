@@ -4,9 +4,10 @@ import {
   pipelineTypes as TYPES,
   taskStatuses as TASK,
 } from '@hkube/consts';
+
 import { SERVICES } from '../const/services';
 
-export const COLOR = {
+const COLOR_LIGHT_MODE = {
   blue: `#307fe6`,
   blueDark: `#0065E5`,
   blueLight: `#45a9ec`,
@@ -32,10 +33,46 @@ export const COLOR = {
   transparentGrey: `#bfbfbf21`,
   turquoise: `#36DFB9`,
   white: `white`,
+  whiteDark: `#e8e8e8`,
   yellow: `#eeda13`,
   yellowPale: '#f6ed88',
   darkCharcoal: `#333333`,
 };
+
+const COLOR_DARK_MODE = {
+  blue: `#1b6eda`,
+  blueDark: `#0054c2`,
+  blueLight: `#1d96e7`,
+  blueExtraLight: `#47a9eb`,
+  cyan: `#57c4e5`,
+  darkGrey: `#807c7c`,
+  green: `#54a432`,
+  greenLight: `#62bf3b`,
+  greenDark: `#006618`,
+  grey: `#999999`,
+  lightGrey: `#586a93`,
+  orange: `#cb7710`,
+  orangeLight: `#e29940`,
+  orangePale: `#ffa305`,
+  pink: `#c51b92`,
+  pinkLight: `#ff1f80`,
+  purple: `#b436bf`,
+  darkPurple: '#691f70',
+  red: `#c32918`,
+  redPale: `#ff5638`,
+  transparentBlack: `#ffffffdb`,
+  transparentWhite: `#c9c9c9de`,
+  transparentGrey: `#bfbfbf52`,
+  turquoise: `#0fae8b`,
+  white: `white`,
+  whiteDark: `#e8e8e8`,
+  yellow: `#b0a30c`,
+  yellowPale: '#c7b80f',
+  darkCharcoal: `#454545`,
+};
+
+export const COLOR =
+  localStorage.getItem('theme') === 'dark' ? COLOR_DARK_MODE : COLOR_LIGHT_MODE;
 
 export const COLOR_STORAGE = {
   FREE: COLOR.grey,
@@ -176,4 +213,15 @@ export const COLOR_EXPERIMENTS = [
   'cyan',
   'purple',
   'lime',
+];
+
+export const GRAPH_PALETTE_DARK = [
+  '#e4e7eb',
+  '#abcae7',
+  '#82bad9',
+  '#4fa0cf',
+  '#357fb1',
+  '#1d5d96',
+  '#04407b',
+  '#06224c',
 ];

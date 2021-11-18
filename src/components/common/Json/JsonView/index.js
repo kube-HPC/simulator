@@ -12,7 +12,7 @@ const JsonView = props => {
 
   return (
     <ReactJsonView
-      theme={isDarkMode ? 'paraiso' : ''}
+      theme={isDarkMode ? 'paraiso' : 'rjv-default'}
       iconStyle="triangle"
       name={false}
       displayDataTypes={false}

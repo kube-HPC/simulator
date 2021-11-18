@@ -2,17 +2,27 @@ import { ResponsiveBar } from '@nivo/bar';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import { COLOR } from 'styles/colors';
+import { COLOR, GRAPH_PALETTE_DARK } from 'styles/colors';
 import useMetric from 'hooks/useMetric';
+import { useSiteDarkMode } from 'hooks';
 
 const Container = styled.div`
   font-size: 20px;
   height: 70vh;
+
+  svg + div {
+    color: #000000;
+  }
 `;
 
 // https://nivo.rocks/bar/ customization
 const NodeStatistics = ({ metric }) => {
+  const { isDarkMode } = useSiteDarkMode();
   const { data, legend } = useMetric(metric);
+
+  const whiteColor = isDarkMode ? COLOR.whiteDark : COLOR.white;
+  const textColor = isDarkMode ? COLOR.whiteDark : COLOR.darkGrey;
+
   return (
     <Container>
       <ResponsiveBar
@@ -24,16 +34,19 @@ const NodeStatistics = ({ metric }) => {
           axis: {
             ticks: {
               line: {
-                stroke: COLOR.darkGrey,
+                stroke: textColor,
               },
               text: {
                 fontSize: 16,
                 marginRight: '10px',
+                fill: textColor,
               },
             },
             legend: {
               text: {
-                fontSize: 16,
+                fontSize: 19,
+
+                fill: whiteColor,
               },
             },
           },
@@ -46,14 +59,14 @@ const NodeStatistics = ({ metric }) => {
         padding={0.1}
         borderWidth={1}
         layout="horizontal"
-        colors={{ scheme: 'blues' }}
+        colors={isDarkMode ? GRAPH_PALETTE_DARK : { scheme: 'blues' }}
         colorBy="id"
         defs={[
           {
             id: 'dots',
             type: 'patternDots',
             background: 'inherit',
-            color: COLOR.white,
+            color: whiteColor,
             size: 4,
             padding: 3,
             stagger: true,
@@ -62,7 +75,7 @@ const NodeStatistics = ({ metric }) => {
             id: 'lines',
             type: 'patternLines',
             background: 'inherit',
-            color: COLOR.white,
+            color: whiteColor,
             rotation: -45,
             lineWidth: 1,
             spacing: 10,
@@ -105,6 +118,7 @@ const NodeStatistics = ({ metric }) => {
         motionDamping={27}
         legends={[
           {
+            itemTextColor: textColor,
             dataFrom: 'keys',
             anchor: 'bottom-right',
             direction: 'column',
@@ -115,13 +129,13 @@ const NodeStatistics = ({ metric }) => {
             itemWidth: 100,
             itemHeight: 40,
             itemDirection: 'left-to-right',
-            itemOpacity: 0.85,
+            itemOpacity: 1,
             symbolSize: 30,
             effects: [
               {
                 on: 'hover',
                 style: {
-                  itemOpacity: 1,
+                  itemOpacity: 0.85,
                 },
               },
             ],

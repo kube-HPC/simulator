@@ -1,0 +1,98 @@
+.react-json-view,
+.ant-table,
+.ant-menu,
+.ant-layout-sider-dark,
+.ant-layout,
+.ant-drawer-content,
+.ant-layout-sider-light {
+  background: #182039 !important;
+}
+
+input:-internal-autofill-selected {
+  background: #182039 !important;
+}
+
+.ant-table-thead
+  > tr
+  > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+  background-color: #1e4976 !important;
+}
+
+.ant-table-thead th.ant-table-column-has-sorters:hover,
+.ant-table-thead > tr > th.ant-table-cell,
+.ant-table-tbody > tr > td {
+  border-bottom: 1px solid #1e4976 !important;
+}
+.ant-drawer .ant-table thead > tr > th {
+  background: #373e60;
+}
+
+.ant-typography {
+  color: #d9d9d9;
+}
+.ant-typography.ant-typography-secondary {
+  color: #ffffffa3;
+}
+
+.ant-menu-item-selected a,
+.ant-menu-item-selected a:hover,
+.ant-menu-item-selected {
+  background-color: #1e2753 !important;
+  color: #e9e9e9;
+  font-weight: 500;
+}
+
+.ant-table-row:hover {
+  background-color: #1e2753 !important;
+  transition: all 1s ease !important;
+}
+
+.ant-drawer .ant-table tbody > tr.ant-table-row:hover > td,
+.ant-table-tbody > tr.ant-table-row:hover > td {
+  background: inherit;
+}
+/* popup */
+.ant-drawer-header {
+  background: #242c48;
+  border-bottom: 1px solid #424856;
+}
+.ant-drawer-content {
+  border-left: 1px solid #586a93;
+}
+.ant-popover-inner {
+  background: #2c3c60;
+  border-radius: 10px 10px;
+  padding: 20px;
+}
+
+.ant-card {
+  background: #182039;
+}
+.ant-card-grid {
+  box-shadow: 1px 0 0 0 #586a93, 0 1px 0 0 #586a93, 1px 1px 0 0 #586a93,
+    1px 0 0 0 #586a93 inset, 0 1px 0 0 #586a93 inset;
+}
+.ant-drawer .ant-card {
+  background-color: #202b4c;
+}
+
+.ant-drawer .ant-table tbody > tr > td {
+  border-bottom: 1px solid #586a93;
+}
+
+.ant-descriptions-bordered .ant-descriptions-row,
+.ant-card-bordered {
+  border: 1px solid #586a93;
+}
+
+.ant-drawer tr.ant-table-expanded-row > td,
+.ant-drawer tr.ant-table-expanded-row:hover > td {
+  background: #182039;
+}
+.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab-active {
+  background: #393e66;
+}
+
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #b9c3cd;
+}

@@ -5,11 +5,9 @@ import { useLeftSidebar, useSiteDarkMode } from 'hooks';
 import { FlexBox, Icons } from 'components/common';
 import { USER_GUIDE } from 'const';
 import { COLOR_LAYOUT } from 'styles';
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  BulbFilled,
-} from '@ant-design/icons';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import { ReactComponent as IconSun } from 'images/sun-icon.svg';
+import { ReactComponent as IconMoon } from 'images/moon-icon.svg';
 import AutoComplete from './AutoComplete';
 import ExperimentPicker from './ExperimentPicker.react';
 import HelpBar from './HelpBar.react';
@@ -43,7 +41,7 @@ const MiddleContainer = styled(FlexBox)`
 
 const Header = () => {
   const { toggle, isCollapsed } = useLeftSidebar();
-  const { toggleTheme } = useSiteDarkMode();
+  const { toggleTheme, isDarkMode } = useSiteDarkMode();
 
   return (
     <Container className={USER_GUIDE.WELCOME}>
@@ -52,7 +50,18 @@ const Header = () => {
           type={isCollapsed ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
           onClick={toggle}
         />
-        <Icons.Hover type={<BulbFilled />} onClick={toggleTheme} />
+        <Icons.Hover
+          type={
+            <span
+              role="img"
+              aria-label="menu-unfold"
+              className="anticon anticon-menu-unfold">
+              {isDarkMode ? <IconSun /> : <IconMoon />}
+            </span>
+          }
+          onClick={toggleTheme}
+        />
+
         <Route exact path="/jobs" component={ViewType} />
       </ButtonsContainer>
       <MiddleContainer>

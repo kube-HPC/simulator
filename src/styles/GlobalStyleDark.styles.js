@@ -1,8 +1,9 @@
-import { createGlobalStyle } from 'styled-components';
 import { COLOR_LAYOUT, COLOR } from 'styles/colors';
 import 'antd/dist/antd.dark.css';
+import './../styles/dark-mode-style.css';
+import { createGlobalStyle } from 'styled-components';
 
-const GlobalStyle = createGlobalStyle`
+const GlobalStyleDark = createGlobalStyle`
   * {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
       Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -20,10 +21,7 @@ const GlobalStyle = createGlobalStyle`
   .ant-layout-sider-light .ant-layout-sider-trigger {
     border-right: 1px solid ${COLOR_LAYOUT.border};
   }
-  .ant-layout-sider-light
-  {
-    background-color: black!important;
-  }
+
 
   .ant-table-fixed-header .ant-table-scroll .ant-table-header {
     overflow: hidden !important;
@@ -47,6 +45,9 @@ const GlobalStyle = createGlobalStyle`
     border: 0.5px solid ${COLOR.grey};
     background-color: ${COLOR_LAYOUT.border};
   }
+
+
+
 `;
 
-export default GlobalStyle;
+export default GlobalStyleDark;

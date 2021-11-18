@@ -44,7 +44,6 @@ const useSiteDarkMode = () => {
       }
 
       // getStylesheetLink().href = stylesheets[t]
-      console.log(refContainer.current);
     },
     [history]
   );
