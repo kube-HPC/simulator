@@ -7,7 +7,7 @@ import { HashRouter as Router } from 'react-router-dom';
 import { ReusableProvider } from 'reusable';
 import { init } from 'actions/connection.action';
 import { selectors } from 'reducers';
-import GlobalStyleFx from './styles/GlobalStyleFx';
+import GlobalStyle from './styles/GlobalStyle.styles';
 import Root from './Routes';
 import store from './store';
 
@@ -35,7 +35,7 @@ const ConfigProvider = () => {
     <Router>
       <ReusableProvider>
         <ErrorBoundary>
-          <GlobalStyleFx />
+          <GlobalStyle />
           <Root />
         </ErrorBoundary>
       </ReusableProvider>

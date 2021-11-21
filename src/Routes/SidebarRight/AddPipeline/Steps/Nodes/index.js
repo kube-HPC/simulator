@@ -39,7 +39,8 @@ const NodeSelectRadioButton = styled(Radio.Button)`
   text-transform: none;
 
   &.ant-radio-button-wrapper-checked {
-    background-color: #f4faff;
+    background-color: ${props =>
+      props.theme.isDarkMode ? '#bed3e5' : '#f4faff'};
   }
 `;
 const AddNodeButton = styled(Button)`
