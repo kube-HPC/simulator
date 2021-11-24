@@ -3,6 +3,7 @@ export const DRAWER_TITLES = {
   ADD_ALGORITHM: 'Algorithm Wizard',
   ADD_DATASOURCE: ' Datasource wizard',
   EDIT_DATASOURCE: ' Datasource editor',
+  ADD_DEVENV: ' Add Devenv',
   RUN_RAW_PIPELINE: 'Run  Pipeline',
   STORAGE: 'Storage monitor',
   CPU: 'CPU monitor',

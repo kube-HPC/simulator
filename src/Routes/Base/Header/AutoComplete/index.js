@@ -19,6 +19,7 @@ const selectorsMap = {
   drivers: selectors.drivers.ids,
   workers: selectors.workers.ids,
   datasources: selectors.dataSources.names,
+  devenvs: selectors.devenvs.collection.names,
 };
 
 const AutoComplete = ({ className }) => {

@@ -48,6 +48,13 @@ import {
   postVersion as postDataSourceVersion,
 } from './dataSources';
 
+import {
+  deleteDevenv,
+  startDevenv,
+  stopDevenv,
+  createDevenv,
+} from './devenvs.action';
+
 const actions = {
   addExperiment,
   addPipeline,
@@ -93,6 +100,10 @@ const actions = {
   fetchSnapshots,
   createDataSource,
   postDataSourceVersion,
+  deleteDevenv,
+  startDevenv,
+  stopDevenv,
+  createDevenv,
 };
 
 export default actions;
