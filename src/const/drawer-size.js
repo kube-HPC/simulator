@@ -2,6 +2,7 @@ export default {
   ADD_PIPELINE: '150ch',
   ADD_ALGORITHM: '40vw',
   ADD_DATASOURCE: '40vw',
+  ADD_DEVENV: '40vw',
   EDIT_DATASOURCE: '50vw',
   RUN_RAW_PIPELINE: '40vw',
   STORAGE: '60vw',

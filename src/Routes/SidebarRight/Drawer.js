@@ -7,6 +7,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import AddAlgorithm from './AddAlgorithm';
 import AddPipeline from './AddPipeline';
 import AddDataSource from './AddDataSource';
+import AddDevenv from './AddDevenv';
 import ErrorLogsTable from './ErrorLogs';
 import RunRawPipeline from './RunRawPipeline';
 import MemoryAndStorage from './MemoryAndStorage';
@@ -22,6 +23,7 @@ const operationSelector = {
   [RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM]: AddAlgorithm,
   [RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE]: RunRawPipeline,
   [RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE]: AddDataSource,
+  [RIGHT_SIDEBAR_NAMES.ADD_DEVENV]: AddDevenv,
   [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: ErrorLogsTable,
   [RIGHT_SIDEBAR_NAMES.MEMORY]: MemoryAndStorage,
   [RIGHT_SIDEBAR_NAMES.CPU]: () => <NodeStatistics metric="cpu" />,
@@ -34,6 +36,7 @@ const titleSelector = {
   [RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM]: DRAWER_TITLES.ADD_ALGORITHM,
   [RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE]: DRAWER_TITLES.RUN_RAW_PIPELINE,
   [RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE]: DRAWER_TITLES.ADD_DATASOURCE,
+  [RIGHT_SIDEBAR_NAMES.ADD_DEVENV]: DRAWER_TITLES.ADD_DEVENV,
   [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: DRAWER_TITLES.ERROR_LOGS,
   [RIGHT_SIDEBAR_NAMES.CPU]: DRAWER_TITLES.CPU,
   [RIGHT_SIDEBAR_NAMES.MEMORY]: DRAWER_TITLES.MEMORY,

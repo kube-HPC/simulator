@@ -26,6 +26,11 @@ const rightSidebarContent = {
       </>
     ),
   },
+  [RIGHT_SIDEBAR_NAMES.ADD_DEVENV]: {
+    width: DRAWER_SIZE.ADD_DEVENV,
+    title: RIGHT_SIDEBAR_NAMES.ADD_DEVENV,
+    description: <>Create a new integrated development environment.</>,
+  },
   [RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE]: {
     width: DRAWER_SIZE.ADD_DATASOURCE,
     title: RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE,

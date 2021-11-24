@@ -15,6 +15,7 @@ const link = url => (
 );
 
 const Name = name => <Ellipsis text={name} />;
+const Type = type => <Ellipsis text={type} />;
 const Url = url => link(url);
 const Status = status => <Ellipsis text={status} />;
 const renderAction = (_, record) => <DevenvsActions record={record} />;
@@ -28,6 +29,12 @@ export default [
     key: 'name',
     sorter: sortByName,
     render: Name,
+  },
+  {
+    title: 'Type',
+    dataIndex: 'type',
+    key: 'type',
+    render: Type,
   },
   {
     title: 'URL',

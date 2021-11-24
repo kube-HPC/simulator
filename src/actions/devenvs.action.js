@@ -23,3 +23,15 @@ export const startDevenv = name => ({
     actionType: actions.DEVENV_START,
   },
 });
+
+export const createDevenv = ({ name, type }) => ({
+  type: actions.REST_REQ_POST,
+  payload: {
+    url: 'devenv',
+    actionType: actions.DEVENV_CREATE,
+    body: {
+      name,
+      type,
+    },
+  },
+});

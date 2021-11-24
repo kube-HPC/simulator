@@ -48,7 +48,12 @@ import {
   postVersion as postDataSourceVersion,
 } from './dataSources';
 
-import { deleteDevenv, startDevenv, stopDevenv } from './devenvs.action';
+import {
+  deleteDevenv,
+  startDevenv,
+  stopDevenv,
+  createDevenv,
+} from './devenvs.action';
 
 const actions = {
   addExperiment,
@@ -98,6 +103,7 @@ const actions = {
   deleteDevenv,
   startDevenv,
   stopDevenv,
+  createDevenv,
 };
 
 export default actions;
