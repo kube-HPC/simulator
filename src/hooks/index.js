@@ -4,6 +4,7 @@ import useDataSourceVersions from './dataSources/useVersions';
 
 export { default as useActions } from './useActions';
 export { default as useAlgorithm } from './useAlgorithm';
+export { default as useDevenvs } from './useDevenvs';
 export { default as useBoards } from './useBoards';
 export { default as useConnectionStatus } from './useConnectionStatus';
 export { default as useDrawer } from './useDrawer';

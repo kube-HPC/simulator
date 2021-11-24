@@ -7,6 +7,7 @@ import DriversTable from './Drivers';
 import PipelinesTable from './Pipelines';
 import WorkersTable from './Workers';
 import DataSources from './DataSources';
+import Devenvs from './Devenvs';
 
 const Body = () => (
   <Switch>
@@ -28,6 +29,7 @@ const Body = () => (
       path={['/datasources', '/datasources/:datasourceId?/*']}
       component={DataSources}
     />
+    <Route exact path="/devenvs/:empty?" component={Devenvs} />
     <Redirect to="/jobs" replace />
   </Switch>
 );

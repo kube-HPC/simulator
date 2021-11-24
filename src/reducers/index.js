@@ -60,6 +60,10 @@ import {
   selectors as boardsSelector,
 } from 'reducers/tensorflow.reducer';
 import {
+  reducer as devenvs,
+  selectors as devenvsSelector,
+} from 'reducers/devenvs.reducer';
+import {
   reducer as userGuide,
   selectors as userGuideSelectors,
 } from 'reducers/userGuide.reducer';
@@ -72,6 +76,7 @@ const store = {
   algorithms,
   meta,
   boards,
+  devenvs,
   connection,
   drivers,
   errorLogs,
@@ -106,6 +111,7 @@ export const selectors = {
   storage: storageSelectors,
   settings: settingsSelectors,
   boards: boardsSelector,
+  devenvs: devenvsSelector,
   userGuide: userGuideSelectors,
   autoCompleteFilter: autoCompleteFilterSelectors,
 };

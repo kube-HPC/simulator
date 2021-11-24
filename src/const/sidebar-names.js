@@ -5,6 +5,7 @@ export const LEFT_SIDEBAR_NAMES = {
   WORKERS: 'workers',
   DRIVERS: 'drivers',
   DATASOURCES: 'datasources',
+  DEVENVS: 'devenvs',
 };
 
 export const RIGHT_SIDEBAR_NAMES = {
