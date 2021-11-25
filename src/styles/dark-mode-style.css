@@ -115,3 +115,26 @@ input:-internal-autofill-selected {
 .MuiBox-root {
   background-color: #212840 !important;
 }
+
+/* html editor */
+.rc-md-editor {
+  border: 1px solid #586a93;
+}
+.rc-md-navigation {
+  background-color: #202f5e;
+}
+
+.rc-md-editor .editor-container .sec-html .html-code,
+.rc-md-editor .editor-container .sec-md .input {
+  background: rgb(28, 27, 71);
+  color: rgb(255, 255, 255);
+}
+
+.rc-md-editor h1,
+.rc-md-editor h2,
+.rc-md-editor h3,
+.rc-md-editor h4,
+.rc-md-editor h5,
+.rc-md-editor h6 {
+  color: black;
+}
