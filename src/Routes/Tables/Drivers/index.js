@@ -3,12 +3,15 @@ import { useSelector } from 'react-redux';
 import { Table } from 'components';
 import { Card } from 'components/common';
 import { selectors } from 'reducers';
-import { driversTableColumns, driverJobsTableColumns } from './DriversTableColumns.react';
+import { DownOutlined, RightOutlined } from '@ant-design/icons';
+import {
+  driversTableColumns,
+  driverJobsTableColumns,
+} from './DriversTableColumns.react';
 import DriverLogs from './DriverLogs';
 
-
 const ExpandedRow = collection => record => {
-  const { driverId, podName } = record
+  const { driverId, podName } = record;
   const driver = collection.find(c => c.driverId === driverId);
   const jobs = driver?.jobs || [];
   return (
@@ -31,9 +34,18 @@ const DriversTable = () => {
       rowKey={record => record.driverId}
       columns={driversTableColumns}
       dataSource={collection}
-      expandedRowRender={ExpandedRow(collection)}
+      expandable={{
+        expandedRowRender: ExpandedRow(collection),
+        // eslint-disable-next-line react/prop-types
+        expandIcon: ({ expanded, onExpand, record }) =>
+          expanded ? (
+            <DownOutlined onClick={e => onExpand(record, e)} />
+          ) : (
+            <RightOutlined onClick={e => onExpand(record, e)} />
+          ),
+      }}
     />
   );
-}
+};
 
-export default DriversTable
+export default DriversTable;

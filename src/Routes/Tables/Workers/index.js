@@ -5,6 +5,7 @@ import { Table } from 'components';
 import { Card, JsonSwitch, Tabs } from 'components/common';
 import defaultWorkerData from 'config/template/worker.template';
 import { selectors } from 'reducers';
+import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import { workersColumns, workersTableStats } from './columns';
 
 const generateTab = (key, value) => (
@@ -13,6 +14,12 @@ const generateTab = (key, value) => (
       <JsonSwitch obj={value} />
     </Card>
   </Tabs.TabPane>
+);
+
+const expandedRowRender = row => (
+  <Card isMargin>
+    <Tabs>{generateTab('Information', row)}</Tabs>
+  </Card>
 );
 
 const ExpandedRow = collection => record => {
@@ -24,11 +31,16 @@ const ExpandedRow = collection => record => {
         rowKey={row => row.podName}
         columns={workersTableStats}
         dataSource={entries}
-        expandedRowRender={row => (
-          <Card isMargin>
-            <Tabs>{generateTab('Information', row)}</Tabs>
-          </Card>
-        )}
+        expandable={{
+          expandedRowRender,
+          // eslint-disable-next-line react/prop-types
+          expandIcon: ({ expanded, onExpand, row }) =>
+            expanded ? (
+              <DownOutlined onClick={e => onExpand(row, e)} />
+            ) : (
+              <RightOutlined onClick={e => onExpand(row, e)} />
+            ),
+        }}
       />
     </Card>
   );

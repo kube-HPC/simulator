@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { useErrorLogs } from 'hooks';
 import { Table } from 'components';
 import { JsonSwitch, Card } from 'components/common';
+import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import errorLogsTableColumns from './ErrorLogsTableColumns.react';
 
 const expandedRowRender = record => (
@@ -25,7 +26,16 @@ const ErrorLogsTable = () => {
       rowKey={extractId}
       columns={errorLogsTableColumns}
       dataSource={dataSource}
-      expandedRowRender={expandedRowRender}
+      expandable={{
+        expandedRowRender,
+        // eslint-disable-next-line react/prop-types
+        expandIcon: ({ expanded, onExpand, record }) =>
+          expanded ? (
+            <DownOutlined onClick={e => onExpand(record, e)} />
+          ) : (
+            <RightOutlined onClick={e => onExpand(record, e)} />
+          ),
+      }}
     />
   );
 };

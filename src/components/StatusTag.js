@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Tag, Tooltip } from 'antd';
 import { COLOR_PIPELINE_STATUS, COLOR, COLOR_TASK_STATUS } from 'styles/colors';
 import { toUpperCaseFirstLetter } from 'utils/string';
+import { useSiteDarkMode } from 'hooks';
 
 const BaseTag = ({
   status,
@@ -12,6 +13,7 @@ const BaseTag = ({
   taskColorMap,
   style,
 }) => {
+  const { isDarkMode } = useSiteDarkMode();
   let _colorMap = colorMap;
   if (taskColorMap) {
     _colorMap = COLOR_TASK_STATUS;
@@ -24,10 +26,14 @@ const BaseTag = ({
       placement="top"
       title={tooltip || (status && toUpperCaseFirstLetter(status))}>
       <Tag
-        color={color}
+        color={isDarkMode ? '' : color}
         style={{
           color: textColor,
-          border: isBright ? `1px solid ${COLOR.lightGrey}` : undefined,
+          border: isDarkMode
+            ? `1px solid ${color}`
+            : isBright
+            ? `1px solid ${COLOR.lightGrey}`
+            : undefined,
           ...style,
         }}>
         {children}

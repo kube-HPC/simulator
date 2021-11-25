@@ -63,7 +63,7 @@ const Bars = ({ data, legend, colorScheme = 'blues' }) => {
             type: 'patternDots',
             background: 'inherit',
             color: whiteColor,
-            size: 4,
+            size: 2,
             padding: 3,
             stagger: true,
           },
@@ -74,7 +74,7 @@ const Bars = ({ data, legend, colorScheme = 'blues' }) => {
             color: whiteColor,
             rotation: -45,
             lineWidth: 1,
-            spacing: 10,
+            spacing: 25,
           },
         ]}
         fill={[
@@ -101,11 +101,22 @@ const Bars = ({ data, legend, colorScheme = 'blues' }) => {
           legendOffset: 50,
         }}
         axisLeft={{
+          format: v =>
+            v.length > 15 ? (
+              <tspan>
+                {`${v.substring(0, 15)}...`}
+                <title>{v}</title>
+              </tspan>
+            ) : (
+              v
+            ),
           tickSize: 5,
           tickPadding: 5,
-          tickRotation: 50,
+          tickRotation: 20,
+          legend: 'Nodes',
           legendPosition: 'middle',
-          legendOffset: -90,
+          legendOffset: -50,
+          fontSize: 10,
         }}
         labelSkipWidth={12}
         labelSkipHeight={12}

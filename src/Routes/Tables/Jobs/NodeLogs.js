@@ -11,7 +11,7 @@ import { notification } from 'utils';
 
 const Container = styled.div`
   margin-top: 1em;
-  max-height: 22.5em;
+  height: 100px;
   flex: 1 1 0%;
   overflow: visible;
 `;

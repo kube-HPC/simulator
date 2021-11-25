@@ -25,7 +25,6 @@ const VersionsTable = ({ algorithmName, currentVersion, isFetch }) => {
     <Table
       rowKey={rowKey}
       loading={!dataSource}
-      expandedRowRender={expandedRowRender}
       dataSource={dataSource}
       columns={columns}
       expandable={{

@@ -7,8 +7,9 @@ import useMetric from 'hooks/useMetric';
 import { useSiteDarkMode } from 'hooks';
 
 const Container = styled.div`
+  margin-top: 150px;
   font-size: 20px;
-  height: 70vh;
+  height: 50vh;
 
   svg + div {
     color: #000000;
@@ -20,7 +21,7 @@ const NodeStatistics = ({ metric }) => {
   const { isDarkMode } = useSiteDarkMode();
   const { data, legend } = useMetric(metric);
 
-  const whiteColor = isDarkMode ? COLOR.whiteDark : COLOR.white;
+  const whiteColor = isDarkMode ? COLOR.blueLight : COLOR.white;
   const textColor = isDarkMode ? COLOR.whiteDark : COLOR.darkGrey;
 
   return (
@@ -37,7 +38,7 @@ const NodeStatistics = ({ metric }) => {
                 stroke: textColor,
               },
               text: {
-                fontSize: 16,
+                fontSize: 13,
                 marginRight: '10px',
                 fill: textColor,
               },
@@ -67,7 +68,7 @@ const NodeStatistics = ({ metric }) => {
             type: 'patternDots',
             background: 'inherit',
             color: whiteColor,
-            size: 4,
+            size: 2,
             padding: 3,
             stagger: true,
           },
@@ -78,7 +79,7 @@ const NodeStatistics = ({ metric }) => {
             color: whiteColor,
             rotation: -45,
             lineWidth: 1,
-            spacing: 10,
+            spacing: 25,
           },
         ]}
         fill={[
@@ -105,12 +106,22 @@ const NodeStatistics = ({ metric }) => {
           legendOffset: 50,
         }}
         axisLeft={{
+          format: v =>
+            v.length > 15 ? (
+              <tspan>
+                {`${v.substring(0, 15)}...`}
+                <title>{v}</title>
+              </tspan>
+            ) : (
+              v
+            ),
           tickSize: 5,
           tickPadding: 5,
-          tickRotation: 50,
+          tickRotation: 20,
           legend: 'Nodes',
           legendPosition: 'middle',
-          legendOffset: -90,
+          legendOffset: -50,
+          fontSize: 10,
         }}
         labelSkipWidth={12}
         labelSkipHeight={12}

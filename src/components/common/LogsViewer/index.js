@@ -32,9 +32,11 @@ const ContainerBase = styled.div`
 `;
 
 const ValidContainer = styled(ContainerBase)`
-  background-color: black;
+  background-color: ${props =>
+    props.theme.isDarkMode ? '#0e1422' : '#000000'};
+  border: 1px solid #858899;
   color: white;
-  height: 100%;
+  height: 28vh;
 `;
 
 const InvalidContainer = styled(ContainerBase)`

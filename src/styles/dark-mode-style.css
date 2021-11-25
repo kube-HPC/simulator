@@ -34,6 +34,10 @@ input:-internal-autofill-selected {
   color: #ffffffa3;
 }
 
+.ant-menu-item {
+  color: #d9d9d9;
+}
+
 .ant-menu-item-selected a,
 .ant-menu-item-selected a:hover,
 .ant-menu-item-selected {
@@ -59,6 +63,8 @@ input:-internal-autofill-selected {
 .ant-drawer-content {
   border-left: 1px solid #586a93;
 }
+
+.ant-select-dropdown,
 .ant-popover-inner {
   background: #2c3c60;
   border-radius: 10px 10px;
@@ -95,4 +101,17 @@ input:-internal-autofill-selected {
 
 .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
   color: #b9c3cd;
+}
+
+.ant-table-cell .ant-tag,
+.ant-table-cell .ant-tag-has-color {
+  color: #d9d9d9 !important;
+}
+.ant-progress-bg {
+  filter: brightness(0.65);
+}
+
+.chonky-chonkyRoot,
+.MuiBox-root {
+  background-color: #212840 !important;
 }

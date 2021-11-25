@@ -22,6 +22,7 @@ const OverflowContainer = styled.div`
 `;
 const ContainerTabs = styled.div`
   padding-left: 15px;
+  padding-right: 15px;
 `;
 
 const NodeInfo = ({ node, jobId }) => {

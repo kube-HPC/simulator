@@ -4,14 +4,8 @@ import styled from 'styled-components';
 export const Tabs = styled(AntTabs)`
   .ant-tabs-content {
     flex: 1;
-    height: 100%;
   }
 
-  .ant-tabs-content-holder {
-    height: 32vh;
-  }
-
-  height: 100%;
   display: flex;
   flex-direction: column;
   flex: 1;

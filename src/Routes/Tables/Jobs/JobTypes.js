@@ -5,6 +5,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { COLOR_PIPELINE_TYPES } from 'styles';
 import { toUpperCaseFirstLetter as toUpper } from 'utils';
+import { useSiteDarkMode } from 'hooks';
 
 const Overflow = styled(FlexBox.Auto)`
   overflow: auto;
@@ -15,24 +16,41 @@ const CapitalizedTag = styled(Tag)`
   text-transform: capitalize;
 `;
 
-const JobTypes = ({ types, fullName }) => (
-  <Overflow justify="start" gutter={0}>
-    {types !== undefined &&
-      types.map(type =>
-        fullName ? (
-          <CapitalizedTag key={type} color={COLOR_PIPELINE_TYPES[type]}>
-            {type}
-          </CapitalizedTag>
-        ) : (
-          <Tooltip key={type} placement="top" title={toUpper(type)}>
-            <CapitalizedTag color={COLOR_PIPELINE_TYPES[type]}>
-              {type.slice(0, 2)}
+const JobTypes = ({ types, fullName }) => {
+  const { isDarkMode } = useSiteDarkMode();
+
+  return (
+    <Overflow justify="start" gutter={0}>
+      {types !== undefined &&
+        types.map(type =>
+          fullName ? (
+            <CapitalizedTag
+              key={type}
+              color={isDarkMode ? '' : COLOR_PIPELINE_TYPES[type]}
+              style={{
+                border: isDarkMode
+                  ? `1px solid ${COLOR_PIPELINE_TYPES[type]}`
+                  : undefined,
+              }}>
+              {type}
             </CapitalizedTag>
-          </Tooltip>
-        )
-      )}
-  </Overflow>
-);
+          ) : (
+            <Tooltip key={type} placement="top" title={toUpper(type)}>
+              <CapitalizedTag
+                color={isDarkMode ? '' : COLOR_PIPELINE_TYPES[type]}
+                style={{
+                  border: isDarkMode
+                    ? `1px solid ${COLOR_PIPELINE_TYPES[type]}`
+                    : undefined,
+                }}>
+                {type.slice(0, 2)}
+              </CapitalizedTag>
+            </Tooltip>
+          )
+        )}
+    </Overflow>
+  );
+};
 
 JobTypes.propTypes = {
   types: PropTypes.arrayOf(PropTypes.string),

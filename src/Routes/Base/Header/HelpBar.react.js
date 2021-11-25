@@ -11,9 +11,11 @@ import { Popover } from 'antd';
 import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
 import { USER_GUIDE } from 'const';
-import { useActions, useLeftSidebar } from 'hooks';
+import { useActions, useLeftSidebar, useSiteDarkMode } from 'hooks';
 import { FlexBox, Icons } from 'components/common';
 import { appInfo } from 'config';
+import { ReactComponent as IconSun } from 'images/sun-icon.svg';
+import { ReactComponent as IconMoon } from 'images/moon-icon.svg';
 import ConnectionStatus from './ConnectionStatus.react';
 import Settings from './Settings/Settings.react';
 
@@ -31,6 +33,8 @@ const Container = styled(FlexBox.Auto)`
 const openUrl = url => () => window.open(url);
 
 const HelpBar = () => {
+  const { toggleTheme, isDarkMode } = useSiteDarkMode();
+
   const history = useHistory();
   const { setCollapsed } = useLeftSidebar();
 
@@ -46,6 +50,18 @@ const HelpBar = () => {
   return (
     <Container className={USER_GUIDE.HEADER.SOCIALS}>
       <ConnectionStatus />
+      <Icons.Hover
+        type={
+          <span
+            role="img"
+            aria-label="menu-unfold"
+            className="anticon anticon-menu-unfold">
+            {isDarkMode ? <IconSun /> : <IconMoon />}
+          </span>
+        }
+        onClick={toggleTheme}
+      />
+
       <Popover content={<Settings />} placement="bottomRight" trigger="click">
         <Icons.Hover type={<ToolOutlined />} />
       </Popover>
