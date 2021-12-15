@@ -20,6 +20,11 @@ import {
   selectors as jobsSelectors,
 } from 'reducers/jobs.reducer';
 import {
+  reducer as qOrderJobs,
+  selectors as qOrderJobsSelectors,
+} from 'reducers/qOrderJobs.reducer';
+
+import {
   reducer as dataSources,
   selectors as dataSourcesSelectors,
 } from 'reducers/dataSources';
@@ -77,6 +82,7 @@ const store = {
   errorLogs,
   experiments,
   jobs,
+  qOrderJobs,
   nodeStatistics,
   storage,
   pipelines,
@@ -96,6 +102,7 @@ export const selectors = {
   workers: workersSelectors,
   drivers: driversSelectors,
   jobs: jobsSelectors,
+  qOrderJobs: qOrderJobsSelectors,
   dataSources: dataSourcesSelectors,
   errorLogs: errorLogsSelectors,
   connection: connectionSelectors,

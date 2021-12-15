@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import isEqual from 'lodash/isEqual';
 import { useLeftSidebar } from 'hooks';
 import Icon from '@ant-design/icons';
+
 import { Layout, Menu, Tag } from 'antd';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { FlexBox } from 'components/common';
@@ -75,6 +76,7 @@ const LogoContainer = styled.div`
 
 const sidebarSelector = state => ({
   [LEFT_SIDEBAR_NAMES.JOBS]: selectors.jobs.count(state),
+  [LEFT_SIDEBAR_NAMES.QORDERJOBS]: selectors.qOrderJobs.count(state),
   [LEFT_SIDEBAR_NAMES.PIPELINES]: selectors.pipelines.collection.count(state),
   [LEFT_SIDEBAR_NAMES.ALGORITHMS]: selectors.algorithms.collection.count(state),
   [LEFT_SIDEBAR_NAMES.WORKERS]: selectors.workers.count(state),
@@ -84,6 +86,7 @@ const sidebarSelector = state => ({
 
 const menuItems = [
   [LEFT_SIDEBAR_NAMES.JOBS, JobsIcon, '/jobs'],
+  [LEFT_SIDEBAR_NAMES.QORDERJOBS, JobsIcon, '/qorderjobs'],
   [LEFT_SIDEBAR_NAMES.PIPELINES, PipelineIcon, '/pipelines'],
   [LEFT_SIDEBAR_NAMES.ALGORITHMS, AlgorithmIcon, '/algorithms'],
   [LEFT_SIDEBAR_NAMES.DATASOURCES, DataSourceIcon, '/datasources'],

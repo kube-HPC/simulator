@@ -1,5 +1,6 @@
 export const LEFT_SIDEBAR_NAMES = {
   JOBS: 'jobs',
+  QORDERJOBS: 'queue',
   PIPELINES: 'pipelines',
   ALGORITHMS: 'algorithms',
   WORKERS: 'workers',

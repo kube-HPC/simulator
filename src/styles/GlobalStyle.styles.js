@@ -62,7 +62,18 @@ const GlobalStyle = () => {
   .ant-layout {
     background-color:  white;
   }
-
+  .row-dragging {
+   
+   
+  }
+  
+  .row-dragging td {
+    padding: 16px;
+  }
+  
+  .row-dragging .drag-visible {
+    visibility: visible;
+  }
 `;
 
   return (

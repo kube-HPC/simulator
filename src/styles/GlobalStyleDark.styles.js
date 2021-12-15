@@ -46,7 +46,17 @@ const GlobalStyleDark = createGlobalStyle`
     background-color: ${COLOR_LAYOUT.border};
   }
 
+  .row-dragging {
 
+  }
+  
+  .row-dragging td {
+    padding: 16px;
+  }
+  
+  .row-dragging .drag-visible {
+    visibility: visible;
+  }
 
 `;
 
