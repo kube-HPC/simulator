@@ -1,4 +1,5 @@
 import { useEffect, useCallback, useState, useReducer } from 'react';
+import { WIZARD_STATE } from 'const';
 import { addPipelineTemplate } from 'config';
 import cleanDeep from 'clean-deep';
 import { usePipeline } from 'hooks';
@@ -38,7 +39,7 @@ const LOCAL_STORAGE_KEY = 'add-pipeline-form-state';
 
 const useWizardAddPipeline = jsonPipeline => {
   const [form] = Form.useForm();
-  const [status, setStatus] = useState('IDLE');
+  const [status, setStatus] = useState(WIZARD_STATE.IDLE);
   const [isEditorVisible, toggle] = useReducer(visible => !visible, false);
   const [editorState, setEditorState] = useState(addPipelineTemplate);
   const [wizardStepIdx, setWizardStepIdx] = useState(0);
@@ -48,7 +49,7 @@ const useWizardAddPipeline = jsonPipeline => {
   useEffect(() => {
     // avoid infinite looping
 
-    if (status === 'IDLE') {
+    if (status === WIZARD_STATE.IDLE) {
       if (isEdit) {
         const jsonEdit = JSON.parse(jsonPipeline);
         if (jsonEdit.nodes) {
@@ -75,20 +76,20 @@ const useWizardAddPipeline = jsonPipeline => {
         }
       }
 
-      setStatus('READY');
+      setStatus(WIZARD_STATE.READY);
     }
 
-    if (status === 'CLEAR') {
+    if (status === WIZARD_STATE.CLEAR) {
       form.resetFields();
       window.localStorage.removeItem(LOCAL_STORAGE_KEY);
       setEditorState(addPipelineTemplate);
       setWizardStepIdx(0);
-      setStatus('IDLE');
+      setStatus(WIZARD_STATE.IDLE);
     }
 
     return () => {
       // avoid infinite looping
-      if (status !== 'READY') return;
+      if (status !== WIZARD_STATE.READY) return;
 
       if (!isEdit) {
         window.localStorage.setItem(
@@ -122,13 +123,13 @@ const useWizardAddPipeline = jsonPipeline => {
       }
 
       // prevent re-saving to localStorage
-      setStatus('SUBMITTED');
+      setStatus(WIZARD_STATE.SUBMITTED);
     },
     [addPipeline, updatePipeline, isEdit]
   );
 
   const wizardClear = useCallback(() => {
-    setStatus('CLEAR');
+    setStatus(WIZARD_STATE.CLEAR);
   }, [setStatus]);
 
   return {

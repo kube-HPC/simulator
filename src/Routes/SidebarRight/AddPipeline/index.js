@@ -1,4 +1,5 @@
 import React from 'react';
+import { WIZARD_STATE } from 'const';
 import PropTypes from 'prop-types';
 import { useWizardAddPipeline } from 'hooks';
 import Editor from './Editor';
@@ -19,7 +20,7 @@ const AddPipeline = ({ jsonPipeline }) => {
     status,
   } = useWizardAddPipeline(jsonPipeline);
 
-  if (status === 'IDLE') return null;
+  if (status === WIZARD_STATE.IDLE) return null;
 
   return isEditorVisible ? (
     <Editor
