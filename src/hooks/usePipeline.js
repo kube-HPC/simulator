@@ -38,16 +38,29 @@ const usePipeline = () => {
     }
   }, []);
 
-  const addUpdatePipeline = useCallback(
-    async (data, LOCAL_STORAGE_KEY, isEdit) => {
+  const updatePipeline = useCallback(
+    async (data, LOCAL_STORAGE_KEY) => {
       try {
         let res = null;
 
-        if (isEdit) res = await client.put('store/pipelines', { ...data });
-        else res = await client.post('store/pipelines', { ...data });
+        res = await client.put('store/pipelines', { ...data });
+        message.success(successMsg(res.data).PIPELINE_UPDATE);
+        window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+        history.push('/pipelines');
+      } catch (res) {
+        message.error(res.response.data.error.message);
+      }
+    },
+    [history]
+  );
 
-        if (isEdit) message.success(successMsg(res.data).PIPELINE_UPDATE);
-        else message.success(successMsg(res.data).PIPELINE_ADD);
+  const addPipeline = useCallback(
+    async (data, LOCAL_STORAGE_KEY) => {
+      try {
+        let res = null;
+        res = await client.post('store/pipelines', { ...data });
+
+        message.success(successMsg(res.data).PIPELINE_ADD);
 
         window.localStorage.removeItem(LOCAL_STORAGE_KEY);
         history.push('/pipelines');
@@ -63,7 +76,8 @@ const usePipeline = () => {
     dataStats,
     updateCron,
     rerunPipeline,
-    addUpdatePipeline,
+    addPipeline,
+    updatePipeline,
   };
 };
 

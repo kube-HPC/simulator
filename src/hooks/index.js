@@ -24,6 +24,7 @@ export { default as useStats } from './useStats';
 export { default as useTraceData } from './useTraceData';
 export { default as useVersions } from './useVersions';
 export { default as useSiteDarkMode } from './useSiteDarkMode.react';
+export { default as useWizardAddPipeline } from './useWizardAddPipeline';
 
 export const dataSources = {
   useSnapshots: useDataSourceSnapshots,
