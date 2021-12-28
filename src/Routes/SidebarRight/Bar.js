@@ -16,12 +16,8 @@ import { getBottomActions, topActions } from './schema';
 
 const SiderLight = styled(Layout.Sider)`
   border: none;
-`;
-
-const IconStyleBar = styled(Icon)`
-  font-size: 25px !important;
-  span {
-    font-size: 25px !important;
+  .ant-menu.ant-menu-inline-collapsed > .ant-menu-item .anticon {
+    font-size: 25px;
   }
 `;
 
@@ -79,7 +75,7 @@ const SidebarRight = ({ isTop, className }) => {
                 count={count}
                 overflowCount={100}
                 offset={[0, 11]}>
-                <IconStyleBar type={type} component={component} />
+                <Icon type={type} component={component} />
               </Badge>
             </Menu.Item>
           )

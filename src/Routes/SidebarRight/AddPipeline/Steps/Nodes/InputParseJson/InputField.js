@@ -3,7 +3,7 @@ import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { tryParse } from 'utils';
 import RawInputField from 'components/InputField';
-import Addon from '../../../../../../components/common/Addon.react';
+import SignInputAddOn from '../../../../../../components/common/SignInputAddOn.react';
 
 const SignsOfObjectArray = ['{', '}', '[', ']'];
 
@@ -92,7 +92,7 @@ const InputField = ({ placeholder, tooltip, idx, onRemove, ...antFields }) => {
 
   const addonBefore = useMemo(
     () =>
-      Addon({
+      SignInputAddOn({
         state: selectBefore,
         options: antFields?.addonBefore || [],
         callback: setSelectBefore,

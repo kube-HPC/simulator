@@ -72,7 +72,7 @@ const Options = ({ style }) => {
             <ControllerKeyValue
               onChange={setListFlow}
               ValuePlaceholder="ex : a >> b >> c"
-              isValueVirtualKeyboard
+              isValueSignBoard
               titleKeyboard="Builder flow :"
               nameRef={['streaming', 'flows']}
             />

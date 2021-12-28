@@ -8,7 +8,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import Addon from './Addon.react';
+import SignInputAddOn from './SignInputAddOn.react';
 
 const initialByType = target => () => {
   const [first] = Array.isArray(target) ? target : [target];
@@ -74,7 +74,7 @@ const InputAddon = forwardRef(
 
     const addonBefore = useMemo(
       () =>
-        Addon({
+        SignInputAddOn({
           state: selectBefore,
           options: before,
           callback: setSelectBefore,
@@ -84,7 +84,11 @@ const InputAddon = forwardRef(
 
     const addonAfter = useMemo(
       () =>
-        Addon({ state: selectAfter, options: after, callback: setSelectAfter }),
+        SignInputAddOn({
+          state: selectAfter,
+          options: after,
+          callback: setSelectAfter,
+        }),
       [after, selectAfter]
     );
 
@@ -104,8 +108,8 @@ const InputAddon = forwardRef(
 InputAddon.displayName = `InputAddon`;
 InputAddon.propTypes = {
   value: PropTypes.string,
-  before: Addon.arrayOrStringType,
-  after: Addon.arrayOrStringType,
+  before: SignInputAddOn.arrayOrStringType,
+  after: SignInputAddOn.arrayOrStringType,
   placeholder: PropTypes.string,
   onChange: PropTypes.func,
 };

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Form, Button, Space, Popover, Divider, Row, Col, Input } from 'antd';
 import _ from 'lodash';
 
-const VirtualKeyboard = ({
+const SignBoard = ({
   onChange,
   type,
   form,
@@ -125,7 +125,7 @@ const VirtualKeyboard = ({
   );
 };
 
-VirtualKeyboard.defaultProps = {
+SignBoard.defaultProps = {
   width: 380,
   type: 'text',
   placeholder: '',
@@ -139,7 +139,7 @@ VirtualKeyboard.defaultProps = {
   restField: [],
 };
 
-VirtualKeyboard.propTypes = {
+SignBoard.propTypes = {
   width: PropTypes.number,
   indexKey: PropTypes.number.isRequired,
   // eslint-disable-next-line
@@ -168,4 +168,4 @@ VirtualKeyboard.propTypes = {
   nameRef: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
-export default VirtualKeyboard;
+export default SignBoard;

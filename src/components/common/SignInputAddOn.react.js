@@ -4,7 +4,7 @@ import React from 'react';
 
 const selectWidth = { width: 90 };
 
-const Addon = ({ state, options, callback, isDisabled }) =>
+const SignInputAddOn = ({ state, options, callback, isDisabled }) =>
   Array.isArray(options) ? (
     <Select
       value={state}
@@ -25,14 +25,14 @@ const arrayOrStringType = PropTypes.oneOfType([
   PropTypes.array,
   PropTypes.string,
 ]);
-Addon.defaultProps = {
+SignInputAddOn.defaultProps = {
   isDisabled: false,
 };
-Addon.propTypes = {
+SignInputAddOn.propTypes = {
   state: PropTypes.string.isRequired,
   options: arrayOrStringType.isRequired,
   callback: PropTypes.func.isRequired,
   isDisabled: PropTypes.bool,
 };
 
-export default Addon;
+export default SignInputAddOn;

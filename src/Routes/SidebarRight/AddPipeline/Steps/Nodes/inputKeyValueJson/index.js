@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import useWizardContext from 'Routes/SidebarRight/AddPipeline/useWizardContext';
 import { tryParse, tryParseJson } from 'utils';
 import { useDebouncedCallback } from 'use-debounce';
-import { VirtualKeyboard } from 'components/common';
+import { SignBoard } from 'components/common';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
@@ -22,7 +22,7 @@ const ControllerKeyValue = ({
   nameRef,
   onChange,
   value: _value,
-  isValueVirtualKeyboard,
+  isValueSignBoard,
   valuePlaceholder,
   titleKeyboard,
 }) => {
@@ -115,8 +115,8 @@ const ControllerKeyValue = ({
                 <Input key={`inputN${key}`} placeholder="Name key" />
               </Form.Item>
 
-              {isValueVirtualKeyboard ? (
-                <VirtualKeyboard
+              {isValueSignBoard ? (
+                <SignBoard
                   {...restField}
                   nameRef={nameRef}
                   onChange={() => handleChange()}
@@ -129,7 +129,7 @@ const ControllerKeyValue = ({
                   titleKeyboard={titleKeyboard}
                   keyboardView={keyboardView}
                   indexKey={key}
-                  key={`VirtualKeyboard${key}`}
+                  key={`SignBoard${key}`}
                   width={380}
                 />
               ) : (
@@ -176,7 +176,7 @@ ControllerKeyValue.propTypes = {
   value: PropTypes.object,
   // eslint-disable-next-line
   style: PropTypes.object,
-  isValueVirtualKeyboard: PropTypes.bool,
+  isValueSignBoard: PropTypes.bool,
   valuePlaceholder: PropTypes.string,
   titleKeyboard: PropTypes.string,
   nameRef: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -185,7 +185,7 @@ ControllerKeyValue.defaultProps = {
   value: {},
   style: {},
   onChange: () => {},
-  isValueVirtualKeyboard: false,
+  isValueSignBoard: false,
   valuePlaceholder: '',
   titleKeyboard: '',
 };
