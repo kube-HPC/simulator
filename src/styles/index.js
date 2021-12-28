@@ -1,11 +1,14 @@
 export { default as BottomPosition } from './BottomPosition.styles';
 export {
+  Theme,
   COLOR,
   COLOR_BOARDS,
   COLOR_LAYOUT,
   COLOR_PIPELINE_STATUS,
   COLOR_PIPELINE_TYPES,
+  COLOR_PIPELINE_TYPES_TEMPLATE,
   COLOR_PRIORITY,
+  COLOR_PRIORITY_TEMPLATE,
   COLOR_SERVICE,
   COLOR_TASK_STATUS,
 } from './colors';

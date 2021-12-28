@@ -102,13 +102,13 @@ const SidebarLeft = () => {
   const dataCount = isOn ? dataCountMock : dataCountSource;
   const { isCollapsed, toggle } = useLeftSidebar();
   const { pageName } = useParams();
-  const { isDarkMode } = useSiteDarkMode();
+  const { themeName } = useSiteDarkMode();
 
   return (
     <Border>
       <Sider
         className={USER_GUIDE.SIDEBAR_LEFT}
-        theme={isDarkMode ? 'dark' : 'light'}
+        theme={themeName}
         onCollapse={toggle}
         collapsed={isCollapsed}>
         <LogoContainer>

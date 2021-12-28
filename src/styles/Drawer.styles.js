@@ -1,7 +1,8 @@
 import styled from 'styled-components';
+import { Theme } from 'styles/colors';
 
 export const TabDrawerText = styled.div`
-  color: ${props => (props.theme.isDarkMode ? '#ffffff' : '#333333')};
+  color: ${Theme.Styles.tabDrawerText.color};
 
   letter-spacing: 1px;
   -webkit-transform-origin: 0 0;
@@ -17,8 +18,8 @@ export const TabDrawerText = styled.div`
   margin-top: 11px;
 `;
 export const TabDrawer = styled.div`
-  background: ${props => (props.theme.isDarkMode ? '#182039' : '#ffffff')};
-  border: 1px solid ${props => (props.theme.isDarkMode ? '#586a93' : '#ffffff')};
+  background: ${Theme.Styles.tabDrawer.background};
+  border: 1px solid ${Theme.Styles.tabDrawer.border};
   border-top: 0px;
   min-width: 193px;
   position: fixed;

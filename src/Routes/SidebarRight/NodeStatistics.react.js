@@ -2,9 +2,8 @@ import { ResponsiveBar } from '@nivo/bar';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import { COLOR, GRAPH_PALETTE_DARK } from 'styles/colors';
+import { Theme } from 'styles/colors';
 import useMetric from 'hooks/useMetric';
-import { useSiteDarkMode } from 'hooks';
 
 const Container = styled.div`
   margin-top: 150px;
@@ -18,11 +17,10 @@ const Container = styled.div`
 
 // https://nivo.rocks/bar/ customization
 const NodeStatistics = ({ metric }) => {
-  const { isDarkMode } = useSiteDarkMode();
   const { data, legend } = useMetric(metric);
 
-  const whiteColor = isDarkMode ? COLOR.blueLight : COLOR.white;
-  const textColor = isDarkMode ? COLOR.whiteDark : COLOR.darkGrey;
+  const whiteColor = Theme.Styles.nodeStatistics.color;
+  const textColor = Theme.Styles.nodeStatistics.text;
 
   return (
     <Container>
@@ -60,7 +58,7 @@ const NodeStatistics = ({ metric }) => {
         padding={0.1}
         borderWidth={1}
         layout="horizontal"
-        colors={isDarkMode ? GRAPH_PALETTE_DARK : { scheme: 'blues' }}
+        colors={Theme.GRAPH_PALETTE}
         colorBy="id"
         defs={[
           {
@@ -96,7 +94,7 @@ const NodeStatistics = ({ metric }) => {
             id: 'lines',
           },
         ]}
-        borderColor={COLOR.grey}
+        borderColor={Theme.COLOR.grey}
         axisBottom={{
           tickSize: 5,
           tickPadding: 5,

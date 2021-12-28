@@ -1,9 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Tag, Tooltip } from 'antd';
+import styled from 'styled-components';
 import { COLOR_PIPELINE_STATUS, COLOR, COLOR_TASK_STATUS } from 'styles/colors';
 import { toUpperCaseFirstLetter } from 'utils/string';
 import { useSiteDarkMode } from 'hooks';
+
+const TagTheme = styled(Tag)`
+  color: ${props => props.textColor};
+  ${props =>
+    props.theme.isDarkMode
+      ? `border: 1px solid ${props.borderColor}`
+      : props.isBright
+      ? `border: 1px solid${COLOR.lightGrey}`
+      : undefined}
+`;
 
 const BaseTag = ({
   status,
@@ -21,23 +32,19 @@ const BaseTag = ({
   const color = _colorMap[status];
   const isBright = [COLOR.lightGrey, COLOR.white].includes(color) || !color;
   const textColor = isBright ? COLOR.transparentBlack : COLOR.white;
+
   return (
     <Tooltip
       placement="top"
       title={tooltip || (status && toUpperCaseFirstLetter(status))}>
-      <Tag
+      <TagTheme
+        textColor={textColor}
+        borderColor={color}
+        isBright={isBright}
         color={isDarkMode ? '' : color}
-        style={{
-          color: textColor,
-          border: isDarkMode
-            ? `1px solid ${color}`
-            : isBright
-            ? `1px solid ${COLOR.lightGrey}`
-            : undefined,
-          ...style,
-        }}>
+        style={{ ...style }}>
         {children}
-      </Tag>
+      </TagTheme>
     </Tooltip>
   );
 };

@@ -1,5 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import React from 'react';
+import { COLOR, Theme } from 'styles/colors';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Ansi from 'ansi-to-react';
@@ -7,7 +8,6 @@ import { CopyOutlined } from '@ant-design/icons';
 import { Empty, Tooltip } from 'antd';
 import Moment from 'react-moment';
 import styled from 'styled-components';
-import { COLOR } from 'styles/colors';
 import { notification } from 'utils';
 import {
   List as VirtualizedList,
@@ -32,8 +32,7 @@ const ContainerBase = styled.div`
 `;
 
 const ValidContainer = styled(ContainerBase)`
-  background-color: ${props =>
-    props.theme.isDarkMode ? '#0e1422' : '#000000'};
+  background-color: ${Theme.Styles.validContainer.background};
   border: 1px solid #858899;
   color: white;
   height: 28vh;

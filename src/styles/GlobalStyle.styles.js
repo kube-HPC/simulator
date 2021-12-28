@@ -1,10 +1,11 @@
 import React, { useEffect, Suspense } from 'react';
+import { THEMES_NAMES } from 'const';
 import { createGlobalStyle } from 'styled-components';
 import { COLOR_LAYOUT, COLOR } from 'styles/colors';
 import { useSiteDarkMode } from 'hooks';
 
 // create in began styles
-if (localStorage.getItem('theme') === 'dark') {
+if (localStorage.getItem('theme') === THEMES_NAMES.Dark) {
   import('antd/dist/antd.dark.css');
 } else {
   import('antd/dist/antd.css');
@@ -14,8 +15,8 @@ if (localStorage.getItem('theme') === 'dark') {
 const GlobalStyleDark = React.lazy(() => import('./GlobalStyleDark.styles'));
 
 const GlobalStyle = () => {
-  const { isDarkMode, setTheme } = useSiteDarkMode();
-  useEffect(() => setTheme(isDarkMode ? 'dark' : 'light'), []);
+  const { isDarkMode, setTheme, themeName } = useSiteDarkMode();
+  useEffect(() => setTheme(themeName), []);
 
   const GlobalStyleHead = createGlobalStyle`
   * {

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { COLOR } from 'styles/colors';
+import { Theme } from 'styles/colors';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { CloseCircleOutlined, PlusOutlined } from '@ant-design/icons';
@@ -39,8 +39,7 @@ const NodeSelectRadioButton = styled(Radio.Button)`
   text-transform: none;
 
   &.ant-radio-button-wrapper-checked {
-    background-color: ${props =>
-      props.theme.isDarkMode ? '#bed3e5' : '#f4faff'};
+    background-color: ${Theme.Styles.nodeSelectRadioButton.bgButton};
   }
 `;
 const AddNodeButton = styled(Button)`
@@ -165,7 +164,7 @@ const Nodes = ({ style }) => {
             <NodeSelectRadioButton key={`node-radio-${id}`} value={id}>
               <TagByName
                 tagcolor={getFieldValue(['nodes', id, 'kind'])}
-                colors={COLOR}>
+                colors={Theme.COLOR}>
                 {getShortName(getFieldValue(['nodes', id, 'kind']))}
               </TagByName>{' '}
               {getFieldValue(['nodes', id, 'nodeName']) || `node-${id}`}

@@ -10,7 +10,7 @@ const JsonEditor = ({
   innerRef = { current: undefined },
   ...props
 }) => {
-  const { isDarkMode } = useSiteDarkMode();
+  const { themeName } = useSiteDarkMode();
   const [value, setValue] = useState(controlledValue);
   const handleEditorChange = (_, _value) => setValue(_value);
 
@@ -31,7 +31,7 @@ const JsonEditor = ({
     <AutoSizer>
       {({ width, height }) => (
         <ControlledEditor
-          theme={isDarkMode ? 'dark' : 'light'}
+          theme={themeName}
           {...props}
           width={width}
           height={height}

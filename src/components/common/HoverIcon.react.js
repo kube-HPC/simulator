@@ -1,7 +1,7 @@
 import React from 'react';
+import { Theme, COLOR_LAYOUT } from 'styles/colors';
 import styled from 'styled-components';
 import { mixins } from 'styles';
-import { COLOR_LAYOUT } from 'styles/colors';
 import PropTypes from 'prop-types';
 import Icon from '@ant-design/icons';
 
@@ -9,7 +9,7 @@ const DarkHoverStyle = styled.div`
   ${mixins.transition};
   color: ${COLOR_LAYOUT.darkBorder};
   :hover {
-    color: ${props => (props.theme.isDarkMode ? '#ffffff' : '#black')};
+    color: ${Theme.Styles.darkHoverStyle.colorHover};
   }
   font-size: 22px;
   cursor: pointer;

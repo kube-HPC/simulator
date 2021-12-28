@@ -1,63 +1,52 @@
 import { useCallback, useState, useRef } from 'react';
+import { THEMES_NAMES } from 'const';
 import { createStore } from 'reusable';
 import { useHistory } from 'react-router';
 
 const useSiteDarkMode = () => {
   const history = useHistory();
 
-  // const stylesheets = {
-  //  light: 'https://cdnjs.cloudflare.com/ajax/libs/antd/4.16.10/antd.min.css',
-  //  dark:
-  //   'https://cdnjs.cloudflare.com/ajax/libs/antd/4.16.10/antd.dark.min.css',
-  // };
-
-  // const createStylesheetLink = () => {
-  //  const link = document.createElement('link');
-  // link.rel = 'stylesheet';
-  //  link.id = 'antd-stylesheet';
-  // document.head.appendChild(link);
-  //  return link;
-  // };
-
-  // const getStylesheetLink = () =>
-  //   document.head.querySelector('#antd-stylesheet') || createStylesheetLink();
-
+  // get theme from system this is configuration from user browser
   const systemTheme = () =>
     window.matchMedia &&
     window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light';
+      ? THEMES_NAMES.Dark
+      : THEMES_NAMES.Light;
 
+  // get state theme from user local storage
   const getTheme = () => localStorage.getItem('theme') || systemTheme();
-  const [isDarkMode, setDarkMode] = useState(getTheme() === 'dark');
 
+  // set if is state dark mode
+  const [themeName, setThemeName] = useState(getTheme());
+  const [isDarkMode, setDarkMode] = useState(themeName === THEMES_NAMES.Dark);
   const refContainer = useRef(0);
 
   const setTheme = useCallback(
-    t => {
-      localStorage.setItem('theme', t);
-
+    nameTheme => {
+      localStorage.setItem('theme', nameTheme);
+      setThemeName(nameTheme);
+      // reloads the page after change theme.
       if (refContainer.current > 0) history.go(0);
       else {
-        setDarkMode(t === 'dark');
+        setDarkMode(nameTheme === THEMES_NAMES.Dark);
         refContainer.current = 1;
       }
-
-      // getStylesheetLink().href = stylesheets[t]
     },
     [history]
   );
 
-  const toggleTheme = () => setTheme(getTheme() === 'dark' ? 'light' : 'dark');
+  // toggle switch between dark and light
+  const toggleTheme = () =>
+    setTheme(
+      getTheme() === THEMES_NAMES.Dark ? THEMES_NAMES.Light : THEMES_NAMES.Dark
+    );
 
-  // const toggleMode = useCallback(() => setDarkMode(state => !state), [
-  //  setDarkMode,
-  // ]);
   return {
     isDarkMode,
     setDarkMode,
     toggleTheme,
     setTheme,
+    themeName,
   };
 };
 

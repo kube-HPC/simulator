@@ -2,8 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { ResponsiveBar } from '@nivo/bar';
-import { COLOR, GRAPH_PALETTE_DARK } from 'styles/colors';
-import { useSiteDarkMode } from 'hooks';
+import { Theme } from 'styles/colors';
 
 const Container = styled.div`
   font-size: 20px;
@@ -14,11 +13,9 @@ const Container = styled.div`
 `;
 
 // https://nivo.rocks/bar/ customization
-const Bars = ({ data, legend, colorScheme = 'blues' }) => {
-  const { isDarkMode } = useSiteDarkMode();
-
-  const whiteColor = isDarkMode ? COLOR.whiteDark : COLOR.white;
-  const textColor = isDarkMode ? COLOR.whiteDark : COLOR.darkGrey;
+const Bars = ({ data, legend, colorScheme }) => {
+  const whiteColor = Theme.Styles.barColor.color;
+  const textColor = Theme.Styles.barColor.text;
 
   return (
     <Container>
@@ -55,7 +52,9 @@ const Bars = ({ data, legend, colorScheme = 'blues' }) => {
         padding={0.1}
         borderWidth={1}
         layout="horizontal"
-        colors={isDarkMode ? GRAPH_PALETTE_DARK : { scheme: colorScheme }}
+        colors={
+          colorScheme !== '' ? Theme.GRAPH_PALETTE : { scheme: colorScheme }
+        }
         colorBy="id"
         defs={[
           {
@@ -91,7 +90,7 @@ const Bars = ({ data, legend, colorScheme = 'blues' }) => {
             id: 'lines',
           },
         ]}
-        borderColor={COLOR.grey}
+        borderColor={Theme.COLOR.grey}
         axisBottom={{
           tickSize: 5,
           tickPadding: 5,
