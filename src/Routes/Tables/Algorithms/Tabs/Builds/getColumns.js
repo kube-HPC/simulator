@@ -7,7 +7,7 @@ import Ellipsis from 'components/common/Ellipsis.react';
 import humanizeDuration from 'humanize-duration';
 import { COLOR_TASK_STATUS } from 'styles/colors';
 import StatusTag from 'components/StatusTag';
-import { sorter } from 'utils/string';
+import { sorter } from 'utils/stringHelper';
 
 const BuildId = buildId => (
   <Ellipsis copyable type="secondary" text={buildId} />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Checkbox, InputNumber, Select } from 'antd';
@@ -8,8 +8,7 @@ import SliderNumber from './SliderNumber';
 import Triggers from './Triggers';
 import Webhooks from './Webhooks';
 import useWizardContext from '../../useWizardContext';
-
-import ControllerKeyValue from '../Nodes/inputKeyValueJson';
+import StreamingFlows from './StreamingFlows';
 
 export { Triggers, Webhooks };
 
@@ -28,13 +27,6 @@ const verbosityLevels = ['info', 'trace', 'debug', 'warn', 'error', 'critical'];
 const Options = ({ style }) => {
   const { isStreamingPipeline, form, initialState } = useWizardContext();
 
-  const [listFlow, setListFlow] = useState(
-    initialState?.streaming?.flows || []
-  );
-  const [arrayListFlow, setArrayListFlow] = useState(
-    ['No Default', ...Object.keys(listFlow)] || []
-  );
-
   useEffect(() => {
     if (
       initialState?.streaming?.flows &&
@@ -50,47 +42,10 @@ const Options = ({ style }) => {
     }
   }, []);
 
-  useEffect(() => {
-    const listFlowKeys = Object.keys(listFlow);
-    setArrayListFlow(['No Default', ...listFlowKeys]);
-
-    const defaultFlowValue = form.getFieldValue(['streaming', 'defaultFlow']);
-    if (!has(listFlow, defaultFlowValue)) {
-      setTimeout(() => {
-        form.setFieldsValue({ streaming: { defaultFlow: '' } });
-      }, 100);
-    }
-  }, [form, listFlow]);
-
   return (
     <div style={style}>
       {isStreamingPipeline !== false && (
-        <>
-          <Form.Divider>Streaming Flows</Form.Divider>
-
-          <Form.Item label="Flows" name={['streaming', 'flows']}>
-            <ControllerKeyValue
-              onChange={setListFlow}
-              ValuePlaceholder="ex : a >> b >> c"
-              isValueSignBoard
-              titleKeyboard="Builder flow :"
-              nameRef={['streaming', 'flows']}
-            />
-          </Form.Item>
-          {arrayListFlow.length > 1 && (
-            <Form.Item label="Default Flow" name={['streaming', 'defaultFlow']}>
-              <Select style={smallSelectStyle}>
-                {arrayListFlow.map((item, index) => (
-                  <Select.Option
-                    key={`default-list-flow-${item}`}
-                    value={index > 0 ? item : ''}>
-                    {item}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-          )}
-        </>
+        <StreamingFlows form={form} initialState={initialState} />
       )}
       <Form.Divider>Webhooks</Form.Divider>
       <Webhooks />

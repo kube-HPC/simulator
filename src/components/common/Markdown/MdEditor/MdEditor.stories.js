@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Typography } from 'antd';
 import MdEditor from 'components/common/Markdown/MdEditor';
 import addPipelineTemplate from 'config/template/addPipeline.template';
-import { stringify } from 'utils/string';
+import { stringify } from 'utils/stringHelper';
 import { SB_SECTIONS } from 'const';
 import Drawer, { DrawerEditorMD } from 'components/Drawer';
 

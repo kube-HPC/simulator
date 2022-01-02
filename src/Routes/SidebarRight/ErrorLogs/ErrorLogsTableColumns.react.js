@@ -4,7 +4,7 @@ import { SERVICES } from 'const/services';
 import React from 'react';
 import Moment from 'react-moment';
 import { COLOR_SERVICE } from 'styles/colors';
-import { sorter, stringify } from 'utils/string';
+import { sorter, stringify } from 'utils/stringHelper';
 
 const errorLogsTableColumns = [
   {

@@ -28,8 +28,8 @@ export const TabDrawer = styled.div`
   margin-top: 15px;
   z-index: 1000;
 
-  border-bottom-left-radius: 30px;
-  border-bottom-right-radius: 30px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 
   -webkit-transform-origin: 0 0;
   -moz-transform-origin: 0 0;

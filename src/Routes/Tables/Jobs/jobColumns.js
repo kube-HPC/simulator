@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import { Ellipsis } from 'components/common';
 import { USER_GUIDE } from 'const';
-import { sorter, toUpperCaseFirstLetter } from 'utils/string';
+import { sorter, toUpperCaseFirstLetter } from 'utils/stringHelper';
 import JobActions from './JobActions';
 import NodeStats from './NodeStats';
 import JobPriority from './JobPriority';

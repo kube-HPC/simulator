@@ -16,9 +16,9 @@ export {
   toUpperCaseFirstLetter,
   splitByDot,
   isJsonString,
-} from './string';
+} from './stringHelper';
 export {
   deepCopyFromKeyValue,
   flattenObjKeyValue,
   tryParseJson,
-} from './objects';
+} from './objectManipulation';

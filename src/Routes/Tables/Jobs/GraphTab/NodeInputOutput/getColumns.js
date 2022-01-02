@@ -4,7 +4,7 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { Button, Tag, Tooltip } from 'antd';
 import humanizeDuration from 'humanize-duration';
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
-import { toUpperCaseFirstLetter } from 'utils/string';
+import { toUpperCaseFirstLetter } from 'utils/stringHelper';
 import StatusTag from 'components/StatusTag';
 
 const getStatusFilter = () =>

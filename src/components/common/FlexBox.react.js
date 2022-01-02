@@ -5,8 +5,8 @@ import styled from 'styled-components';
 import { ifProp, prop } from 'styled-tools';
 
 const FlexAligned = styled(Row)`
-  align-items: ${prop('align', 'center')}!important;
-  flex-direction: ${prop('direction', 'row')}!important;
+  align-items: ${prop('align', 'center')};
+  flex-direction: ${prop('direction', 'row')};
 `;
 
 const FlexBox = ({

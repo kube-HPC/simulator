@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Tag, Tooltip } from 'antd';
 import styled from 'styled-components';
 import { COLOR_PIPELINE_STATUS, COLOR, COLOR_TASK_STATUS } from 'styles/colors';
-import { toUpperCaseFirstLetter } from 'utils/string';
+import { toUpperCaseFirstLetter } from 'utils/stringHelper';
 import { useSiteDarkMode } from 'hooks';
 
 const TagTheme = styled(Tag)`

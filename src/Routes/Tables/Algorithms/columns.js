@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tag } from 'antd';
 import { Ellipsis } from 'components/common';
-import { sorter } from 'utils/string';
+import { sorter } from 'utils/stringHelper';
 import AlgorithmActions from './AlgorithmActions.react';
 import AlgorithmBuildStats from './AlgorithmBuildStats.react';
 

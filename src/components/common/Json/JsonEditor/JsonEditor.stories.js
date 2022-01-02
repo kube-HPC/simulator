@@ -2,7 +2,7 @@ import { Card } from 'antd';
 import template from 'config/template/addPipeline.template';
 import React from 'react';
 import styled from 'styled-components';
-import { stringify } from 'utils/string';
+import { stringify } from 'utils/stringHelper';
 import { SB_SECTIONS } from 'const';
 import JsonEditor from '.';
 

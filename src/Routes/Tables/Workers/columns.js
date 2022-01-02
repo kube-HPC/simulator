@@ -5,7 +5,7 @@ import Ellipsis from 'components/common/Ellipsis.react';
 import { Count as CountTag } from 'components/StatusTag';
 import React from 'react';
 import { COLOR_TASK_STATUS } from 'styles/colors';
-import { sorter, toUpperCaseFirstLetter } from 'utils/string';
+import { sorter, toUpperCaseFirstLetter } from 'utils/stringHelper';
 
 const undefinedStateFilter = state => state || 'Creating';
 

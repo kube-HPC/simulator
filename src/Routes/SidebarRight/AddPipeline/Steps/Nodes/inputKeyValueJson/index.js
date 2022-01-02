@@ -17,7 +17,6 @@ const IconDelete = styled(MinusCircleOutlined)`
 
 const emptyEditorStatesKeyValue = ['""', null, 'null', ''];
 
-// Component [ControllerKeyValue]
 const ControllerKeyValue = ({
   nameRef,
   onChange,
@@ -30,7 +29,7 @@ const ControllerKeyValue = ({
 
   const [value, setValue] = useState(JSON.stringify(_value));
 
-  const convertObjectToKeyListKeyValue = useCallback(() => {
+  const convertObjectToKeyListKeyValue = () => {
     const valueInitialState = _.get(initialState, [...nameRef]);
 
     if (valueInitialState) {
@@ -44,7 +43,7 @@ const ControllerKeyValue = ({
       _.set(resFields, currentNameField, resKeyValue);
       form.setFieldsValue(resFields);
     }
-  }, [form, initialState, nameRef]);
+  };
 
   useEffect(() => {
     // in init update all values from initialState put in all fields list

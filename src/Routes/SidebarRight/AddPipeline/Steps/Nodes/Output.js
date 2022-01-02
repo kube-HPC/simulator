@@ -10,7 +10,6 @@ import { memoryTypes } from '../../../AddAlgorithm/schema';
 
 const ctx = React.createContext();
 
-/** @type {import('../FormUtils').FieldProps} */
 const Field = props => {
   const { form } = useWizardContext();
   const { rootId } = useContext(ctx);
