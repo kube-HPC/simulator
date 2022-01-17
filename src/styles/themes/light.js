@@ -50,6 +50,7 @@ const Styles = {
   barColor: { color: COLOR.white, text: COLOR.darkGrey },
   nodeStatistics: { color: COLOR.white, text: COLOR.darkGrey },
   UserGuideTooltip: { TooltipBody: '#ffffff' },
+  isTagFill: true,
 };
 
 const COLOR_PIPELINE_TYPES = {

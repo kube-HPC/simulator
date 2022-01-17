@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Tag } from 'antd';
 import { FlexBox } from 'components/common';
-import { Count } from 'components/StatusTag';
+import { StatusTag } from 'components/StatusTag';
 
 const AlgorithmBuildStats = ({ builds }) => {
   if (builds.length === 0) return <Tag>No Builds</Tag>;
@@ -16,7 +16,7 @@ const AlgorithmBuildStats = ({ builds }) => {
     <FlexBox justify="start" gutter={0} style={{ flexWrap: 'nowrap' }}>
       {Object.entries(statusCounter).map(([status, count]) => (
         <FlexBox.Item key={status}>
-          <Count status={status} count={count} taskColorMap={false} />
+          <StatusTag status={status} count={count} />
         </FlexBox.Item>
       ))}
     </FlexBox>

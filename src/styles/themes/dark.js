@@ -62,6 +62,7 @@ const Styles = {
   barColor: { color: COLOR.whiteDark, text: COLOR.whiteDark },
   nodeStatistics: { color: COLOR.blueLight, text: COLOR.whiteDark },
   UserGuideTooltip: { TooltipBody: '#182039' },
+  isTagFill: false,
 };
 
 const COLOR_PIPELINE_TYPES = {

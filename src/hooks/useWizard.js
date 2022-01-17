@@ -121,8 +121,7 @@ const useWizard = (
 
   useEffect(() => {
     // remove gateway or output option from nodes and reset them to algorithm option
-    if (isStreamingPipeline) resetKind('output');
-    else resetKind('gateway');
+    resetKind(isStreamingPipeline ? 'output' : 'gateway');
   }, [isStreamingPipeline, resetKind]);
 
   const setForm = useCallback(() => {
