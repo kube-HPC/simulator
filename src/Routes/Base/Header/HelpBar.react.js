@@ -14,8 +14,7 @@ import { USER_GUIDE } from 'const';
 import { useActions, useLeftSidebar, useSiteDarkMode } from 'hooks';
 import { FlexBox, Icons } from 'components/common';
 import { appInfo } from 'config';
-import { ReactComponent as IconSun } from 'images/sun-icon.svg';
-import { ReactComponent as IconMoon } from 'images/moon-icon.svg';
+import { iconsThemes } from '../../../styles/themes/HelperThemes';
 import ConnectionStatus from './ConnectionStatus.react';
 import Settings from './Settings/Settings.react';
 
@@ -33,7 +32,7 @@ const Container = styled(FlexBox.Auto)`
 const openUrl = url => () => window.open(url);
 
 const HelpBar = () => {
-  const { toggleTheme, isDarkMode } = useSiteDarkMode();
+  const { toggleTheme, themeName } = useSiteDarkMode();
 
   const history = useHistory();
   const { setCollapsed } = useLeftSidebar();
@@ -56,7 +55,7 @@ const HelpBar = () => {
             role="img"
             aria-label="menu-unfold"
             className="anticon anticon-menu-unfold">
-            {isDarkMode ? <IconSun /> : <IconMoon />}
+            {iconsThemes[themeName.toUpperCase()]}
           </span>
         }
         onClick={toggleTheme}

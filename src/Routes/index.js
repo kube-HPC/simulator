@@ -10,7 +10,6 @@ import SidebarLeft from './Base/SidebarLeft';
 import UserGuide from './Base/UserGuide';
 import LoadingScreen from './Base/LoadingScreen';
 import Tables from './Tables';
-import { useSiteDarkMode } from './../hooks';
 
 const LayoutFullHeight = styled(Layout)`
   height: 100vh;
@@ -43,7 +42,6 @@ message.config({
 
 const Routes = () => {
   const { socketInit } = useActions();
-  const { isDarkMode } = useSiteDarkMode();
 
   useEffect(() => {
     socketInit();
@@ -52,7 +50,7 @@ const Routes = () => {
   const { isDataAvailable } = useConnectionStatus();
 
   return isDataAvailable ? (
-    <ThemeProvider theme={{ isDarkMode }}>
+    <ThemeProvider theme={{}}>
       <UserGuide />
       <LayoutFullHeight>
         <Route path="/:pageName" component={SidebarLeft} />
@@ -75,7 +73,7 @@ const Routes = () => {
       </LayoutFullHeight>
     </ThemeProvider>
   ) : (
-    <ThemeProvider theme={{ isDarkMode }}>
+    <ThemeProvider theme={{}}>
       <LoadingScreen />
     </ThemeProvider>
   );
