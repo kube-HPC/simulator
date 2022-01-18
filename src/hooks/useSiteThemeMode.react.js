@@ -4,7 +4,7 @@ import { THEMES_NAMES } from 'const';
 import { createStore } from 'reusable';
 import { useHistory } from 'react-router';
 
-const useSiteDarkMode = () => {
+const useSiteThemeMode = () => {
   const history = useHistory();
 
   // get theme from system this is configuration from user browser
@@ -54,4 +54,4 @@ const useSiteDarkMode = () => {
   };
 };
 
-export default createStore(useSiteDarkMode);
+export default createStore(useSiteThemeMode);

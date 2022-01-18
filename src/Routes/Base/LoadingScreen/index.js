@@ -2,19 +2,18 @@ import React from 'react';
 import styled from 'styled-components';
 import { animated, useSpring } from 'react-spring';
 import Particles from 'react-particles-js';
-import { Theme } from 'styles/colors';
 import { ReactComponent as Fish } from 'images/logo-no-shadow.svg';
 import { ReactComponent as Title } from 'images/title.svg';
 
 import { particlesTemplate } from 'config';
-import { useSiteDarkMode } from 'hooks';
+import { useSiteThemeMode } from 'hooks';
 
 const TitleDark = styled.div`
   color: #ffffff;
 `;
 const ImageStyle = styled.div`
   .textTitleHkube {
-    fill: ${Theme.Styles.imageStyle.fill};
+    fill: ${props => props.theme.Styles.imageStyle.fill};
   }
 `;
 
@@ -29,7 +28,7 @@ const Container = styled.div`
   z-index: 11;
   background-image: linear-gradient(
     to top,
-    ${Theme.Styles.container.background}
+    ${props => props.theme.Styles.container.background}
   );
 `;
 
@@ -79,7 +78,7 @@ const resizeSizes = {
 const scaleChange = x => `scale(${x})`;
 
 const LoadingScreen = () => {
-  const { themeName } = useSiteDarkMode();
+  const { themeName } = useSiteThemeMode();
   const opacity = useSpring(fadeIn);
   const { radians } = useSpring(moveRepeat);
   const { x } = useSpring(resize);

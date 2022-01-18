@@ -2,7 +2,7 @@ import { ControlledEditor } from '@monaco-editor/react';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { AutoSizer } from 'react-virtualized';
-import { useSiteDarkMode } from 'hooks';
+import { useSiteThemeMode } from 'hooks';
 
 const JsonEditor = ({
   onChange = () => {},
@@ -10,7 +10,7 @@ const JsonEditor = ({
   innerRef = { current: undefined },
   ...props
 }) => {
-  const { themeName } = useSiteDarkMode();
+  const { themeName } = useSiteThemeMode();
   const [value, setValue] = useState(controlledValue);
   const handleEditorChange = (_, _value) => setValue(_value);
 

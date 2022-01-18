@@ -9,7 +9,7 @@ const TagTheme = styled(Tag)`
   color: ${props => props.$textColor};
 
   ${props =>
-    !Theme.Styles?.isTagFill
+    !props.theme.Styles.isTagFill
       ? `border: 1px solid ${props.$borderColor}`
       : props.$isBright
       ? `border: 1px solid${COLOR.lightGrey}`
@@ -30,7 +30,7 @@ const BaseTag = ({ status, children, colorMap, tooltip, style }) => {
           $textColor={textColor}
           $borderColor={color}
           $isBright={isBright}
-          color={Theme.Styles?.isTagFill ? color : ''}
+          color={Theme.Styles?.isTagFill ? color : ''} // color is prop of Tag ANTD
           style={{ ...style }}>
           {children}
         </TagTheme>

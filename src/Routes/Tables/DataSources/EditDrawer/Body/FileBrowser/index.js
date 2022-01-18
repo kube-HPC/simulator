@@ -16,7 +16,7 @@ import {
   setChonkyDefaults,
 } from 'chonky';
 import { ChonkyIconFA } from 'chonky-icon-fontawesome';
-import { useSiteDarkMode } from 'hooks';
+import { Theme } from 'styles';
 import useFileMap from './useFileMap';
 import useFileActions from './useFileActions';
 
@@ -77,8 +77,6 @@ const FileBrowser = ({
     retrieveFiles,
     deletedFiles,
   } = useFileMap(srcFiles);
-
-  const { isDarkMode } = useSiteDarkMode();
 
   const handleDelete = useCallback(
     files => {
@@ -157,7 +155,7 @@ const FileBrowser = ({
       fileActions={actionsMap.fileActions}
       defaultFileViewActionId={ChonkyActions.EnableListView.id}
       onFileAction={actionsMap.handleFileAction}
-      darkMode={isDarkMode}>
+      darkMode={Theme.Styles.ChonkyFileBrowser.viewThemeDark}>
       <FileNavbar />
       <FileToolbar />
       <FileList />

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Layout, message } from 'antd';
 import styled, { ThemeProvider } from 'styled-components';
 import { Route } from 'react-router-dom';
-import { COLOR, COLOR_LAYOUT } from 'styles';
+import { COLOR, COLOR_LAYOUT, Theme } from 'styles';
 import { useActions, useConnectionStatus } from 'hooks';
 import Header from 'Routes/Base/Header';
 import SidebarRight, { Drawer as SiderBarRightDrawer } from './SidebarRight';
@@ -50,7 +50,7 @@ const Routes = () => {
   const { isDataAvailable } = useConnectionStatus();
 
   return isDataAvailable ? (
-    <ThemeProvider theme={{}}>
+    <ThemeProvider theme={{ ...Theme }}>
       <UserGuide />
       <LayoutFullHeight>
         <Route path="/:pageName" component={SidebarLeft} />
@@ -73,7 +73,7 @@ const Routes = () => {
       </LayoutFullHeight>
     </ThemeProvider>
   ) : (
-    <ThemeProvider theme={{}}>
+    <ThemeProvider theme={{ ...Theme }}>
       <LoadingScreen />
     </ThemeProvider>
   );

@@ -15,7 +15,8 @@ const CapitalizedTag = styled(Tag)`
   text-transform: capitalize;
   border: 1px solid
     ${props =>
-      Theme.Styles.CapitalizedTag?.borderType[props.$borderType] || 'inherit'};
+      props.theme.Styles.CapitalizedTag?.borderType[props.$borderType] ||
+      'inherit'};
 `;
 
 const JobTypes = ({ types, fullName }) => (

@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { animated, useSpring } from 'react-spring';
 import styled from 'styled-components';
 import isEqual from 'lodash/isEqual';
-import { useLeftSidebar } from 'hooks';
+import { useLeftSidebar, useSiteThemeMode } from 'hooks';
 import Icon from '@ant-design/icons';
 import { Layout, Menu, Tag } from 'antd';
 import { Link, useLocation, useParams } from 'react-router-dom';
@@ -20,7 +20,6 @@ import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
 import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
 import { COLOR_LAYOUT } from 'styles';
 import { selectors } from 'reducers';
-import { useSiteDarkMode } from './../../../hooks';
 
 const Border = styled.div`
   border-right: 1px solid ${COLOR_LAYOUT.border};
@@ -102,7 +101,7 @@ const SidebarLeft = () => {
   const dataCount = isOn ? dataCountMock : dataCountSource;
   const { isCollapsed, toggle } = useLeftSidebar();
   const { pageName } = useParams();
-  const { themeName } = useSiteDarkMode();
+  const { themeName } = useSiteThemeMode();
 
   return (
     <Border>

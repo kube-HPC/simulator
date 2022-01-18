@@ -11,7 +11,7 @@ import { Popover } from 'antd';
 import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
 import { USER_GUIDE } from 'const';
-import { useActions, useLeftSidebar, useSiteDarkMode } from 'hooks';
+import { useActions, useLeftSidebar, useSiteThemeMode } from 'hooks';
 import { FlexBox, Icons } from 'components/common';
 import { appInfo } from 'config';
 import { iconsThemes } from '../../../styles/themes/HelperThemes';
@@ -32,7 +32,7 @@ const Container = styled(FlexBox.Auto)`
 const openUrl = url => () => window.open(url);
 
 const HelpBar = () => {
-  const { toggleTheme, themeName } = useSiteDarkMode();
+  const { toggleTheme, themeName } = useSiteThemeMode();
 
   const history = useHistory();
   const { setCollapsed } = useLeftSidebar();

@@ -39,7 +39,8 @@ const NodeSelectRadioButton = styled(Radio.Button)`
   text-transform: none;
 
   &.ant-radio-button-wrapper-checked {
-    background-color: ${Theme.Styles.nodeSelectRadioButton.bgButton};
+    background-color: ${props =>
+      props.theme.Styles.nodeSelectRadioButton.bgButton};
   }
 `;
 const AddNodeButton = styled(Button)`

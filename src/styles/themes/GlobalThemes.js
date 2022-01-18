@@ -1,5 +1,5 @@
 import React, { useEffect, Suspense } from 'react';
-import { useSiteDarkMode } from 'hooks';
+import { useSiteThemeMode } from 'hooks';
 import { GlobalStyle } from 'styles';
 
 // create in began styles antd by theme name
@@ -28,7 +28,7 @@ const LazyThemeStyle = {
 };
 
 const GlobalThemes = () => {
-  const { setTheme, themeName } = useSiteDarkMode();
+  const { setTheme, themeName } = useSiteThemeMode();
   useEffect(() => setTheme(themeName), []);
 
   return (

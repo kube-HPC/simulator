@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import React from 'react';
-import { COLOR, Theme } from 'styles/colors';
+import { COLOR } from 'styles/colors';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Ansi from 'ansi-to-react';
@@ -32,7 +32,7 @@ const ContainerBase = styled.div`
 `;
 
 const ValidContainer = styled(ContainerBase)`
-  background-color: ${Theme.Styles.validContainer.background};
+  background-color: ${props => props.theme.Styles.validContainer.background};
   border: 1px solid #858899;
   color: white;
   height: 70vh;
