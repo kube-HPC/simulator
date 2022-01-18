@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { ResponsiveBar } from '@nivo/bar';
 import { Theme } from 'styles/colors';
-import useBars from './useBars';
+import settingBars from './settingBars';
 
 const Container = styled.div`
   font-size: 20px;
@@ -14,7 +14,7 @@ const Container = styled.div`
 `;
 
 // https://nivo.rocks/bar/ customization
-const Bars = ({ data, legend, colorScheme }) => {
+const Bars = ({ data, legend }) => {
   const {
     themePreferencesBar,
     designBar,
@@ -22,7 +22,7 @@ const Bars = ({ data, legend, colorScheme }) => {
     axisLeftBar,
     legendsBar,
     axisBottomBar,
-  } = useBars();
+  } = settingBars();
 
   return (
     <Container>
@@ -40,9 +40,7 @@ const Bars = ({ data, legend, colorScheme }) => {
         padding={0.1}
         borderWidth={1}
         layout="horizontal"
-        colors={
-          colorScheme !== '' ? Theme.GRAPH_PALETTE : { scheme: colorScheme }
-        }
+        colors={Theme.GRAPH_PALETTE}
         colorBy="id"
         defs={designBar}
         fill={fillBar}

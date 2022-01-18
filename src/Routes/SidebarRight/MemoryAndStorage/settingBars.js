@@ -1,7 +1,7 @@
 import React from 'react';
 import { Theme } from 'styles/colors';
 
-const useBars = () => {
+const settingBars = () => {
   const whiteColor = Theme.Styles.barColor.color;
   const textColor = Theme.Styles.barColor.text;
   const themePreferencesBar = {
@@ -124,4 +124,4 @@ const useBars = () => {
   };
 };
 
-export default useBars;
+export default settingBars;
