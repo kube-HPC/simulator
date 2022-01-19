@@ -1,19 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { pickBy, identity } from 'lodash';
-import { Steps } from 'antd';
-import {
-  Initial,
-  Nodes,
-  Options,
-} from './../Routes/SidebarRight/AddPipeline/Steps';
 import useSubscribe from './../Routes/SidebarRight/useSubscribe';
 
 const pruneObject = obj => pickBy(obj, identity);
-const stepNames = ['Initial', 'Nodes', 'Options'];
-const stepComponents = [Initial, Nodes, Options];
-const steps = stepNames.map(name => (
-  <Steps.Step key={`steps-${name}`} title={name} />
-));
 
 /** @param {[any]} collection */
 const normalize = collection =>
@@ -41,14 +30,11 @@ const parseInitialState = initialState => {
 const useWizard = (
   form,
   initialState,
-  stepIdx,
-  setStepIdx,
-  toggle,
   onSubmit,
-  setEditorState
+  setEditorState,
+  setValuesState
 ) => {
-  const [valuesState, setValuesState] = useState({});
-  const { setFieldsValue, getFieldsValue, getFieldValue } = form;
+  const { setFieldsValue, getFieldsValue } = form;
   const { subscribe } = useSubscribe();
 
   useEffect(() => {
@@ -78,31 +64,12 @@ const useWizard = (
 
   useEffect(() => subscribe(persistForm), [subscribe, persistForm]);
 
-  const isLastStep = stepIdx === steps.length - 1;
-
-  const onPrevious = useCallback(() => setStepIdx(state => state - 1), [
-    setStepIdx,
-  ]);
-
-  const onNext = useCallback(() => setStepIdx(state => state + 1), [
-    setStepIdx,
-  ]);
-
-  const handleToggle = useCallback(() => {
-    persistForm();
-    toggle();
-  }, [persistForm, toggle]);
-
   const handleSubmit = useCallback(
     e => {
       e?.preventDefault();
       onSubmit(getFormattedFormValues());
     },
     [getFormattedFormValues, onSubmit]
-  );
-  // check for undefined to avoid removing streaming only fields while initial load
-  const isStreamingPipeline = ['stream', undefined].includes(
-    getFieldValue('kind')
   );
 
   const resetKind = useCallback(
@@ -119,28 +86,17 @@ const useWizard = (
     [getFieldsValue, setFieldsValue]
   );
 
-  useEffect(() => {
-    // remove gateway or output option from nodes and reset them to algorithm option
-    resetKind(isStreamingPipeline ? 'output' : 'gateway');
-  }, [isStreamingPipeline, resetKind]);
-
   const setForm = useCallback(() => {
     setValuesState(getFormattedFormValues());
   }, [getFormattedFormValues, setValuesState]);
 
   return {
-    steps,
     setForm,
+    persistForm,
     handleSubmit,
-    isStreamingPipeline,
-    valuesState,
-    stepComponents,
-    stepNames,
     getFormattedFormValues,
-    handleToggle,
-    onPrevious,
-    isLastStep,
-    onNext,
+
+    resetKind,
   };
 };
 

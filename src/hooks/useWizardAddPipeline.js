@@ -1,9 +1,9 @@
-import { useEffect, useCallback, useState, useReducer } from 'react';
+import { useEffect, useCallback } from 'react';
 import { WIZARD_STATE } from 'const';
-import { addPipelineTemplate } from 'config';
+
 import cleanDeep from 'clean-deep';
 import { usePipeline } from 'hooks';
-import { Form } from 'antd';
+
 import packageJson from './../../package.json';
 
 /** @param {import('./fields').DataSourceNode} node */
@@ -37,13 +37,17 @@ const formatNode = node => {
 
 const LOCAL_STORAGE_KEY = 'add-pipeline-form-state';
 
-const useWizardAddPipeline = jsonPipeline => {
-  const [form] = Form.useForm();
-  const [status, setStatus] = useState(WIZARD_STATE.IDLE);
-  const [isEditorVisible, toggle] = useReducer(visible => !visible, false);
-  const [editorState, setEditorState] = useState(addPipelineTemplate);
-  const [wizardStepIdx, setWizardStepIdx] = useState(0);
-  const [isEdit] = useState(jsonPipeline !== undefined);
+const useWizardAddPipeline = (
+  jsonPipeline,
+  status,
+  isEdit,
+  setEditorState,
+  setStatus,
+  form,
+  setWizardStepIdx,
+  editorState,
+  addPipelineTemplate
+) => {
   const { addPipeline, updatePipeline } = usePipeline();
 
   useEffect(() => {
@@ -106,6 +110,8 @@ const useWizardAddPipeline = jsonPipeline => {
     form,
     jsonPipeline,
     isEdit,
+    setWizardStepIdx,
+    addPipelineTemplate,
   ]);
 
   const handleSubmit = useCallback(
@@ -125,25 +131,11 @@ const useWizardAddPipeline = jsonPipeline => {
       // prevent re-saving to localStorage
       setStatus(WIZARD_STATE.SUBMITTED);
     },
-    [addPipeline, updatePipeline, isEdit]
+    [isEdit, setStatus, updatePipeline, addPipeline]
   );
 
-  const wizardClear = useCallback(() => {
-    setStatus(WIZARD_STATE.CLEAR);
-  }, [setStatus]);
-
   return {
-    form,
-    isEdit,
-    isEditorVisible,
-    setWizardStepIdx,
-    wizardStepIdx,
-    wizardClear,
-    toggle,
     handleSubmit,
-    editorState,
-    setEditorState,
-    status,
   };
 };
 

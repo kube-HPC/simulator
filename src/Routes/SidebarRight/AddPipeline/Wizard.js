@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { CheckOutlined, RightOutlined, LeftOutlined } from '@ant-design/icons';
 import { Steps, Form as AntdForm } from 'antd';
@@ -12,6 +12,13 @@ import {
 } from 'components/Drawer';
 import { useWizard } from 'hooks';
 import { context } from './useWizardContext';
+import { Initial, Nodes, Options } from './Steps';
+
+const stepNames = ['Initial', 'Nodes', 'Options'];
+const stepComponents = [Initial, Nodes, Options];
+const steps = stepNames.map(name => (
+  <Steps.Step key={`steps-${name}`} title={name} />
+));
 
 const Form = styled(AntdForm)`
   width: 90ch;
@@ -38,28 +45,41 @@ const Wizard = ({
   wizardClear,
   isEdit,
 }) => {
+  const [valuesState, setValuesState] = useState({});
+  const { getFieldValue } = form;
+
   const {
-    steps,
     setForm,
     handleSubmit,
-    isStreamingPipeline,
-    valuesState,
-    stepComponents,
-    stepNames,
     getFormattedFormValues,
-    handleToggle,
-    onPrevious,
-    isLastStep,
-    onNext,
-  } = useWizard(
-    form,
-    initialState,
-    stepIdx,
-    setStepIdx,
-    toggle,
-    onSubmit,
-    setEditorState
+    resetKind,
+    persistForm,
+  } = useWizard(form, initialState, onSubmit, setEditorState, setValuesState);
+
+  const handleToggle = useCallback(() => {
+    persistForm();
+    toggle();
+  }, [persistForm, toggle]);
+
+  // check for undefined to avoid removing streaming only fields while initial load
+  const isStreamingPipeline = ['stream', undefined].includes(
+    getFieldValue('kind')
   );
+
+  const isLastStep = stepIdx === steps.length - 1;
+
+  const onPrevious = useCallback(() => setStepIdx(state => state - 1), [
+    setStepIdx,
+  ]);
+
+  const onNext = useCallback(() => setStepIdx(state => state + 1), [
+    setStepIdx,
+  ]);
+
+  useEffect(() => {
+    // remove gateway or output option from nodes and reset them to algorithm option
+    resetKind(isStreamingPipeline ? 'output' : 'gateway');
+  }, [isStreamingPipeline, resetKind]);
 
   return (
     <>
