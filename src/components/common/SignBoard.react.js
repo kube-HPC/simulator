@@ -16,7 +16,7 @@ const SignBoard = ({
   indexKey,
   width,
   nameRef,
-  ...restField
+  restField,
 }) => {
   const { TextArea } = Input;
 
@@ -37,6 +37,7 @@ const SignBoard = ({
     const { fields, currentNameField, lastValue } = getValuesInput(nameKey);
     _.set(fields, currentNameField, `${lastValue} ${value}`);
     form.setFieldsValue(fields);
+    onChange();
   };
 
   const DeleteCharsInInput = nameKey => {
@@ -47,6 +48,7 @@ const SignBoard = ({
       lastValue.substring(0, lastValue.lastIndexOf(' '))
     );
     form.setFieldsValue(fields);
+    onChange();
   };
 
   const title = nameKey => {
@@ -104,7 +106,7 @@ const SignBoard = ({
         fieldKey={fieldKey}
         rules={msgRules}
         initialValue=""
-        onChange={onChange()}
+        onChange={onChange}
         key={`inputTextItem${indexKey}`}>
         {type === 'text' ? (
           <Input
@@ -136,7 +138,6 @@ SignBoard.defaultProps = {
     { title: '', typeButton: 'circle', keys: ['>>', '|', '&'] },
     { title: 'Nodes', typeButton: 'primary', keys: ['test', 'test2', 'test3'] },
   ],
-  restField: [],
 };
 
 SignBoard.propTypes = {
@@ -163,7 +164,7 @@ SignBoard.propTypes = {
   // eslint-disable-next-line
   msgRules: PropTypes.array,
   // eslint-disable-next-line
-  restField: PropTypes.array,
+  restField: PropTypes.object.isRequired,
   // eslint-disable-next-line
   nameRef: PropTypes.arrayOf(PropTypes.string).isRequired,
 };

@@ -45,7 +45,7 @@ const Wizard = ({
   wizardClear,
   isEdit,
 }) => {
-  const [valuesState, setValuesState] = useState({});
+  const [valuesState, setValuesState] = useState(() => initialState);
   const { getFieldValue } = form;
 
   const {

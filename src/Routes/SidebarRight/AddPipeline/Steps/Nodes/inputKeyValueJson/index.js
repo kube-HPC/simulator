@@ -37,7 +37,10 @@ const ControllerKeyValue = ({
       const currentNameField = ['listKeyValue', ...nameRef];
       const resKeyValue = Object.keys(valueInitialState).map(key => ({
         key,
-        value: JSON.stringify(valueInitialState[key]),
+        value:
+          typeof valueInitialState[key] === 'object'
+            ? JSON.stringify(valueInitialState[key])
+            : valueInitialState[key],
       }));
 
       _.set(resFields, currentNameField, resKeyValue);
@@ -116,7 +119,7 @@ const ControllerKeyValue = ({
 
               {isValueSignBoard ? (
                 <SignBoard
-                  {...restField}
+                  restField={restField}
                   nameRef={nameRef}
                   onChange={() => handleChange()}
                   type="text"

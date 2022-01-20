@@ -31,7 +31,7 @@ const GatewayNode = ({ id }) => {
         <Input placeholder="Description" />
       </Field>
       <Field
-        name="mem"
+        name={['mem']}
         title="Mem"
         initialValue={
           initialState?.nodes[id]?.spec?.mem

@@ -108,8 +108,8 @@ const InputAddon = forwardRef(
 InputAddon.displayName = `InputAddon`;
 InputAddon.propTypes = {
   value: PropTypes.string,
-  before: SignInputAddOn.arrayOrStringType,
-  after: SignInputAddOn.arrayOrStringType,
+  before: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
+  after: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
   placeholder: PropTypes.string,
   onChange: PropTypes.func,
 };
