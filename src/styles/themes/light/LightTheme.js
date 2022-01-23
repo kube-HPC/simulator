@@ -47,8 +47,12 @@ const LightTheme = COMMON_COLOR => {
 
   const Styles = {
     reactJsonView: { theme: 'rjv-default' },
-    darkHoverStyle: { colorHover: 'black' },
-    imageStyle: { fill: '#0F2744' },
+    IconHoverStyle: { colorHover: 'black' },
+    loadingScreen: {
+      imageStyle: { fill: '#0F2744' },
+      container: { background: '#e6e9f0 0%, #eef1f5 100%' },
+      TitleMode: '#000000',
+    },
     nodeSelectRadioButton: { bgButton: '#f4faff' },
     tabDrawerText: { color: '#333333' },
     tabDrawer: {
@@ -56,7 +60,7 @@ const LightTheme = COMMON_COLOR => {
       border: '#ffffff',
     },
     validContainer: { background: '#000000' },
-    container: { background: '#e6e9f0 0%, #eef1f5 100%' },
+
     barColor: { color: COLOR.white, text: COLOR.darkGrey },
     nodeStatistics: { color: COLOR.white, text: COLOR.darkGrey },
     UserGuideTooltip: { TooltipBody: '#ffffff' },

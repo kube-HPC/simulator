@@ -8,12 +8,13 @@ import { ReactComponent as Title } from 'images/title.svg';
 import { particlesTemplate } from 'config';
 import { useSiteThemeMode } from 'hooks';
 
-const TitleDark = styled.div`
-  color: #ffffff;
+const TitleThemeMode = styled.div`
+  text-transform: capitalize;
+  color: ${props => props.theme.Styles.loadingScreen.TitleThemeMode};
 `;
 const ImageStyle = styled.div`
   .textTitleHkube {
-    fill: ${props => props.theme.Styles.imageStyle.fill};
+    fill: ${props => props.theme.Styles.loadingScreen.imageStyle.fill};
   }
 `;
 
@@ -26,9 +27,10 @@ const Container = styled.div`
   width: 100%;
   height: 100vh;
   z-index: 11;
+
   background-image: linear-gradient(
     to top,
-    ${props => props.theme.Styles.container.background}
+    ${props => props.theme.Styles.loadingScreen.container.background}
   );
 `;
 
@@ -118,7 +120,7 @@ const LoadingScreen = () => {
         </ImageStyle>
       </ItemMargin>
       <ItemMargin margin={5}>
-        <TitleDark>{themeName} Mode</TitleDark>
+        <TitleThemeMode>{themeName} Mode</TitleThemeMode>
       </ItemMargin>
     </Container>
   );

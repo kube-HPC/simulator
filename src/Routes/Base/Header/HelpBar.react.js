@@ -18,13 +18,13 @@ import { iconsThemes } from '../../../styles/themes/HelperThemes';
 import ConnectionStatus from './ConnectionStatus.react';
 import Settings from './Settings/Settings.react';
 
-const DarkText = styled(Icons.DarkHoverStyle)`
+const DarkText = styled(Icons.IconHoverStyle)`
   cursor: pointer;
 `;
 
 const Container = styled(FlexBox.Auto)`
   position: relative;
-  > ${Icons.DarkHoverStyle}, ${DarkText} {
+  > ${Icons.IconHoverStyle}, ${DarkText} {
     margin-right: 10px;
   }
 `;
