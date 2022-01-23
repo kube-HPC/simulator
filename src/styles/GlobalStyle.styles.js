@@ -47,6 +47,9 @@ const GlobalStyle = createGlobalStyle`
   background-color:  white;
 }
 
+.ant-select-item-option-content:empty:before{
+  content: '[empty]';
+}
 `;
 
 export default GlobalStyle;
