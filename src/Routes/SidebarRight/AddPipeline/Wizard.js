@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { CheckOutlined, RightOutlined, LeftOutlined } from '@ant-design/icons';
 import { Steps, Form as AntdForm } from 'antd';
@@ -45,6 +45,7 @@ const Wizard = ({
   wizardClear,
   isEdit,
 }) => {
+  const firstUpdateWizard = useRef(true);
   const [valuesState, setValuesState] = useState(() => initialState);
   const { getFieldValue } = form;
 
@@ -77,8 +78,12 @@ const Wizard = ({
   ]);
 
   useEffect(() => {
-    // remove gateway or output option from nodes and reset them to algorithm option
-    resetKind(isStreamingPipeline ? 'output' : 'gateway');
+    if (firstUpdateWizard.current) {
+      firstUpdateWizard.current = false;
+    } else {
+      // remove gateway or output option from nodes and reset them to algorithm option
+      resetKind(isStreamingPipeline ? 'output' : 'gateway');
+    }
   }, [isStreamingPipeline, resetKind]);
 
   return (

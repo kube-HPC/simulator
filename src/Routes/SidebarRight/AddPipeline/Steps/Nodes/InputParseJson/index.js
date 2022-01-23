@@ -15,6 +15,7 @@ const Controller = ({ nodeIdx }) => (
             style={{ marginBottom: 10 }}
             {...restField}
             name={[name]}
+            key={`InputField_${key}`}
             fieldKey={[fieldKey]}
             validateTrigger={['onChange', 'onBlur']}>
             <InputField

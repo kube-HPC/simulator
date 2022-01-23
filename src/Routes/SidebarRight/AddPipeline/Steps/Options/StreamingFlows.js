@@ -4,10 +4,15 @@ import { Form } from 'components/common';
 import { Select } from 'antd';
 import has from 'lodash/has';
 import ControllerKeyValue from '../Nodes/inputKeyValueJson';
+import useWizardContext from '../../useWizardContext';
 
-const smallSelectStyle = { width: '90px' };
+const smallSelectStyle = { width: '150px' };
 
 const StreamingFlows = ({ form, initialState }) => {
+  const {
+    form: { setFieldsValue },
+  } = useWizardContext();
+
   const [listFlow, setListFlow] = useState(
     initialState?.streaming?.flows || []
   );
@@ -26,6 +31,26 @@ const StreamingFlows = ({ form, initialState }) => {
       }, 100);
     }
   }, [form, listFlow]);
+
+  useEffect(() => {
+    if (
+      initialState?.streaming?.flows &&
+      !has(initialState?.streaming?.flows, initialState?.streaming?.defaultFlow)
+    ) {
+      if (Object.keys(initialState.streaming.flows).length === 0) {
+        setFieldsValue({ streaming: { defaultFlow: '' } });
+      }
+    } else {
+      setTimeout(() => {
+        setFieldsValue({
+          streaming: {
+            defaultFlow: initialState?.streaming?.defaultFlow || '',
+          },
+        });
+      }, 100);
+    }
+  }, []);
+
   return (
     <>
       <Form.Divider>Streaming Flows</Form.Divider>

@@ -64,13 +64,25 @@ const InputField = ({
 InputField.propTypes = {
   hasRemove: PropTypes.bool.isRequired,
   onRemove: PropTypes.func.isRequired,
-  isValid: PropTypes.bool.isRequired,
-  tooltip: PropTypes.string.isRequired,
+  isValid: PropTypes.bool,
+  tooltip: PropTypes.string,
   id: PropTypes.node.isRequired,
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
-  placeholder: PropTypes.string.isRequired,
-  addonBefore: PropTypes.func.isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+    PropTypes.string,
+    PropTypes.node,
+  ]).isRequired,
+  placeholder: PropTypes.string,
+  addonBefore: PropTypes.oneOfType([PropTypes.func, PropTypes.object])
+    .isRequired,
+};
+
+InputField.defaultProps = {
+  placeholder: null,
+  tooltip: null,
+  isValid: true,
 };
 
 export default InputField;

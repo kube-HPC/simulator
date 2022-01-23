@@ -3,7 +3,7 @@ import { useSiteThemeMode } from 'hooks';
 import { GlobalStyle } from 'styles';
 
 // create in began styles antd by theme name
-switch (localStorage.getItem('theme').toUpperCase()) {
+switch (localStorage.getItem('theme')?.toUpperCase()) {
   case 'LIGHT':
     import('antd/dist/antd.css');
     break;

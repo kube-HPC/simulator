@@ -75,13 +75,18 @@ const useWizard = (
   const resetKind = useCallback(
     typeKind => {
       const { nodes } = getFieldsValue();
+      let isChange = false;
       nodes &&
         nodes.forEach((node, index) => {
           if (node?.kind === typeKind) {
             nodes[index].kind = 'algorithm';
-            setFieldsValue({ nodes });
+            isChange = true;
           }
         });
+
+      if (isChange) {
+        setFieldsValue({ nodes });
+      }
     },
     [getFieldsValue, setFieldsValue]
   );

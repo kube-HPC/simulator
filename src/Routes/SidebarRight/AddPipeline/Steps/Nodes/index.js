@@ -109,7 +109,7 @@ Node.propTypes = {
  */
 const Nodes = ({ style }) => {
   const {
-    form: { getFieldValue },
+    form: { getFieldValue, getFieldsValue, setFieldsValue },
     initialState,
     isStreamingPipeline,
   } = useWizardContext();
@@ -145,8 +145,13 @@ const Nodes = ({ style }) => {
 
       dropKey(id);
       setActiveNodeId(nextId);
+
+      // delete node from Form State
+      const formFields = getFieldsValue(true);
+      formFields.nodes[id] = undefined;
+      setFieldsValue({ nodes: formFields.nodes });
     },
-    [dropKey, setActiveNodeId, ids]
+    [ids, dropKey, getFieldsValue, setFieldsValue]
   );
 
   const handleAddNode = useCallback(() => {

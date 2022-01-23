@@ -32,12 +32,18 @@ InputField.propTypes = {
   placeholder: PropTypes.string,
   tooltip: PropTypes.string,
   onRemove: PropTypes.func,
-  idx: PropTypes.string.isRequired,
+  idx: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  isValid: PropTypes.bool,
   // under antFields
-  value: PropTypes.node,
+  value: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+    PropTypes.string,
+    PropTypes.node,
+  ]),
   id: PropTypes.node,
   onChange: PropTypes.func,
-  addonBefore: PropTypes.func,
+  addonBefore: PropTypes.arrayOf(PropTypes.string),
 };
 
 InputField.defaultProps = {
@@ -48,6 +54,8 @@ InputField.defaultProps = {
   id: undefined,
   onChange: undefined,
   addonBefore: undefined,
+  idx: undefined,
+  isValid: true,
 };
 
 export default InputField;

@@ -11,18 +11,15 @@ import { memoryTypes } from '../../../AddAlgorithm/schema';
 const ctx = React.createContext();
 
 const Field = props => {
-  const { form } = useWizardContext();
   const { rootId } = useContext(ctx);
-  return (
-    <RawField {...props} getFieldValue={form.getFieldValue} rootId={rootId} />
-  );
+  return <RawField {...props} rootId={rootId} />;
 };
 
 const OutputNode = ({ id }) => {
   const { initialState } = useWizardContext();
-
+  const rootId = ['nodes', id, 'spec'];
   return (
-    <ctx.Provider value={{ rootId: ['nodes', id, 'spec'] }}>
+    <ctx.Provider value={{ rootId }}>
       <Field name={['description']} title="Description">
         <Input placeholder="Description" />
       </Field>
