@@ -14,6 +14,7 @@ import { ReactComponent as AlgorithmIcon } from 'images/algorithm-icon.svg';
 import { ReactComponent as DataSourceIcon } from 'images/datasource.svg';
 import { ReactComponent as DriversIcon } from 'images/drivers-icon.svg';
 import { ReactComponent as JobsIcon } from 'images/jobs-icon.svg';
+import { ReactComponent as QueueIcon } from 'images/Queue-icon.svg';
 import { ReactComponent as LogoFish } from 'images/logo-fish.svg';
 import { ReactComponent as LogoTitle } from 'images/logo-title.svg';
 import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
@@ -74,6 +75,7 @@ const LogoContainer = styled.div`
 
 const sidebarSelector = state => ({
   [LEFT_SIDEBAR_NAMES.JOBS]: selectors.jobs.count(state),
+  [LEFT_SIDEBAR_NAMES.QUEUE]: selectors.jobs.count(state),
   [LEFT_SIDEBAR_NAMES.PIPELINES]: selectors.pipelines.collection.count(state),
   [LEFT_SIDEBAR_NAMES.ALGORITHMS]: selectors.algorithms.collection.count(state),
   [LEFT_SIDEBAR_NAMES.WORKERS]: selectors.workers.count(state),
@@ -83,6 +85,7 @@ const sidebarSelector = state => ({
 
 const menuItems = [
   [LEFT_SIDEBAR_NAMES.JOBS, JobsIcon, '/jobs'],
+  [LEFT_SIDEBAR_NAMES.QUEUE, QueueIcon, '/queue'],
   [LEFT_SIDEBAR_NAMES.PIPELINES, PipelineIcon, '/pipelines'],
   [LEFT_SIDEBAR_NAMES.ALGORITHMS, AlgorithmIcon, '/algorithms'],
   [LEFT_SIDEBAR_NAMES.DATASOURCES, DataSourceIcon, '/datasources'],

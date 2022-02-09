@@ -14,6 +14,7 @@ const AutoCompleteLong = styled(AntAutoComplete)`
 
 const selectorsMap = {
   jobs: selectors.jobs.ids,
+  queue: selectors.jobs.ids,
   algorithms: selectors.algorithms.collection.ids,
   pipelines: selectors.pipelines.collection.names,
   drivers: selectors.drivers.ids,
