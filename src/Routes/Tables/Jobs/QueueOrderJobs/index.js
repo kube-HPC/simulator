@@ -1,14 +1,10 @@
-import React, { forwardRef } from 'react';
-import { Table, Popconfirm, Select, Tag, Button } from 'antd';
-import {
-  sortableContainer,
-  sortableElement,
-  sortableHandle,
-} from 'react-sortable-hoc';
-import { MenuOutlined, DeleteOutlined } from '@ant-design/icons';
-// import { arrayMoveImmutable } from "array-move";
-import styled from 'styled-components';
-import { toUpperCaseFirstLetter } from 'utils';
+import React from 'react';
+import { TypeTable, TypeFilter } from 'const';
+import { Popconfirm } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
+import SortableTablePreferred from './TablePreferred';
+import SortableTableQueue from './TableQueue';
+import { DividerTables } from './OrderStyles';
 
 import {
   getJobIdPosition,
@@ -19,134 +15,8 @@ import {
   deletePreferred,
   getStatusManage,
   getStatusPreferred,
+  numberJobsPerPage,
 } from './useQueueOrderJobs';
-import JobTime from '../JobTime';
-
-const ContainerQueue = styled.div`
-  tr.drop-over-downward td {
-    border-bottom: 2px dashed #1890ff;
-  }
-
-  tr.drop-over-upward td {
-    border-top: 2px dashed #1890ff;
-  }
-`;
-
-const ContainerPreferred = styled.div`
-  tr.drop-over-downward td {
-    border-bottom: 2px dashed #1890ff;
-  }
-
-  tr.drop-over-upward td {
-    border-top: 2px dashed #1890ff;
-  }
-`;
-// const MAX_NUMBER = Number.MAX_SAFE_INTEGER;
-
-const TypeTable = {
-  PREFERRED: 'preferred',
-  QUEUE: 'queue',
-};
-const TypeFilter = {
-  JOBID: 'jobId',
-  PIPELINE: 'pipeline',
-  TAG: 'tag',
-};
-
-const DragHandle = sortableHandle(() => (
-  <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />
-));
-
-const StartTime = (startTime, { results }) => (
-  <JobTime startTime={startTime} results={results} />
-);
-
-const TypeTableColumns = {
-  JOBID: [
-    {
-      title: 'Sort',
-      dataIndex: 'sort',
-      width: 30,
-      className: 'drag-visible',
-      render: () => <DragHandle />,
-    },
-    {
-      title: 'Name',
-      dataIndex: 'pipelineName',
-    },
-    {
-      title: 'Start Time',
-      dataIndex: 'entranceTime',
-      key: `Start timestamp`,
-      width: `10%`,
-      render: StartTime,
-    },
-    {
-      title: 'jobID',
-      dataIndex: 'jobId',
-      className: 'drag-visible',
-    },
-  ],
-  PIPELINE: [
-    {
-      title: 'Sort',
-      dataIndex: 'sort',
-      width: 30,
-      className: 'drag-visible',
-      render: () => <DragHandle />,
-    },
-    {
-      title: 'Pipeline Name',
-      dataIndex: 'name',
-    },
-    {
-      title: 'jobs Count',
-      dataIndex: 'count',
-    },
-  ],
-  TAG: [
-    {
-      title: 'Sort',
-      dataIndex: 'sort',
-      width: 30,
-      className: 'drag-visible',
-      render: () => <DragHandle />,
-    },
-    {
-      title: 'Tag Name',
-      dataIndex: 'name',
-      render: name => {
-        if (name) {
-          const arrayTags = name.toString().split(',');
-
-          return arrayTags.length > 0
-            ? arrayTags.map(tagName => <Tag color="purple">{tagName}</Tag>)
-            : 'No tag';
-        }
-
-        return 'No tag.';
-      },
-    },
-    {
-      title: 'jobs Count',
-      dataIndex: 'count',
-    },
-  ],
-};
-
-const SortableItem = sortableElement(props => <tr {...props} />);
-const SortableContainer = sortableContainer(props => <tbody {...props} />);
-
-const SelectFilterOptions = forwardRef((props, ref) => (
-  // eslint-disable-next-line
-  <Select ref={ref} onChange={e => props.onSelect(e)}>
-    {Object.entries(TypeFilter).map(([key, value]) => (
-      <Select.Option key={key} value={key}>
-        {toUpperCaseFirstLetter(value)}
-      </Select.Option>
-    ))}
-  </Select>
-));
 
 class QueueOrderJobs extends React.Component {
   constructor(props) {
@@ -156,7 +26,7 @@ class QueueOrderJobs extends React.Component {
       dataSourceQueue: [],
       selectTable: '',
       hoverTable: '',
-      rowSelectIndex: null,
+      // rowSelectIndex: null,
       rowOverIndex: null,
       positionOverY: null,
       isDrag: false,
@@ -166,13 +36,15 @@ class QueueOrderJobs extends React.Component {
       // Paging
       pageQueueViewJobId: '',
       pageQueueLastActionIntention: '',
-      pageQueueHasNext: '',
-      pageQueueHasPrev: '',
+      pageQueueHasNext: 0,
+      pageQueueHasPrev: 0,
+      numberRowToViewPagingQueue: numberJobsPerPage,
 
       pagePreferredViewJobId: '',
       pagePreferredLastActionIntention: '',
-      pagePreferredHasNext: '',
-      pagePreferredHasPrev: '',
+      pagePreferredHasNext: 0,
+      pagePreferredHasPrev: 0,
+      numberRowToViewPagingPreferred: numberJobsPerPage,
 
       // Table
       actionsCol: [
@@ -197,16 +69,23 @@ class QueueOrderJobs extends React.Component {
     this.getStatusManageAndPreferred = this.getStatusManageAndPreferred.bind(
       this
     );
+
+    this.dataInterval = null;
   }
 
   async componentDidMount() {
-    setInterval(async () => {
+    this.dataInterval = setInterval(async () => {
       const { isDrag } = this.state;
 
       if (!isDrag) {
         await this.getStatusManageAndPreferred();
       }
     }, 3000);
+  }
+
+  componentWillUnmount() {
+    // clearing the intervals
+    if (this.dataInterval) clearInterval(this.dataInterval);
   }
 
   handleDelete = async keyDelete => {
@@ -232,35 +111,29 @@ class QueueOrderJobs extends React.Component {
       pageQueueLastActionIntention,
       pagePreferredViewJobId,
       pagePreferredLastActionIntention,
+      numberRowToViewPagingQueue,
+      numberRowToViewPagingPreferred,
     } = this.state;
 
     const dataStatusManage = await getStatusManage(
       filterQueueVal,
       pageQueueViewJobId,
-      pageQueueLastActionIntention
+      pageQueueLastActionIntention,
+      numberRowToViewPagingQueue
     );
     const dataStatusPreferred = await getStatusPreferred(
       filterPreferredVal,
       pagePreferredViewJobId,
-      pagePreferredLastActionIntention
+      pagePreferredLastActionIntention,
+      numberRowToViewPagingPreferred
     );
 
-    this.setState({ pageQueueHasNext: dataStatusManage?.hasNext || false });
-    this.setState({ pageQueueHasPrev: dataStatusManage?.hasPrev || false });
     this.setState({
+      pageQueueHasNext: dataStatusManage?.nextCount || 0,
+      pageQueueHasPrev: dataStatusManage?.prevCount || 0,
       dataSourceQueue: dataStatusManage?.returnList || dataStatusManage,
-    });
-    console.log(dataStatusManage);
-
-    console.log(dataStatusPreferred);
-
-    this.setState({
-      pagePreferredHasNext: dataStatusPreferred?.hasNext || false,
-    });
-    this.setState({
-      pagePreferredHasPrev: dataStatusPreferred?.hasPrev || false,
-    });
-    this.setState({
+      pagePreferredHasNext: dataStatusPreferred?.nextCount || 0,
+      pagePreferredHasPrev: dataStatusPreferred?.prevCount || 0,
       dataSourcePreferred:
         dataStatusPreferred?.returnList || dataStatusPreferred,
     });
@@ -313,6 +186,16 @@ class QueueOrderJobs extends React.Component {
         this.setState({ pagePreferredViewJobId: dataSourcePreferred[0].jobId });
       }
     }
+
+    if (goToView === 'begin' || goToView === 'end') {
+      if (typeTable === TypeTable.QUEUE) {
+        this.setState({ pageQueueLastActionIntention: goToView });
+        this.setState({ pageQueueViewJobId: '' });
+      } else {
+        this.setState({ pagePreferredLastActionIntention: goToView });
+        this.setState({ pagePreferredViewJobId: '' });
+      }
+    }
   };
 
   onSortEnd = async ({ oldIndex, newIndex }) => {
@@ -328,8 +211,6 @@ class QueueOrderJobs extends React.Component {
       filterPreferredVal,
     } = this.state;
 
-    // console.log("hoverTable >> ", hoverTable, "selectTable >> ", selectTable);
-
     // PREFERRED to PREFERRED
     if (
       hoverTable === TypeTable.PREFERRED &&
@@ -344,7 +225,7 @@ class QueueOrderJobs extends React.Component {
           dataSourcePreferred,
           oldIndex
         );
-
+        console.log('rowOverIndex >> ', rowOverIndex);
         // get jobId position
         const jobIdPosition = await getJobIdPosition(
           dataSourcePreferred,
@@ -376,7 +257,6 @@ class QueueOrderJobs extends React.Component {
 
       if (filterQueueVal === TypeFilter.JOBID.toUpperCase()) {
         jobsIdToAdd = dataSourceQueue.find(x => x.index === oldIndex).jobId;
-        console.log(jobsIdToAdd);
       } else {
         // get name aggregation add to preferred
 
@@ -396,22 +276,14 @@ class QueueOrderJobs extends React.Component {
           resultAllJobs = res.returnList;
         }
 
-        console.log(
-          'get all jobsId need to move >> PIPELINE resultAllJobs >> ',
-          resultAllJobs
-        );
-
         // set all jobsId need to move preferred in array
 
         jobsIdToAdd = resultAllJobs.map(x => x.jobId);
-        console.log(jobsIdToAdd);
       }
 
       // step 2 : set jobsIds in preferred by position after or before item
       // /////////////////////////////////////////////////////////////////////
       if (dataSourcePreferred.length > 0) {
-        console.log(newIndex, rowOverIndex);
-
         // get jobId That the data is added after or before it
         if (filterPreferredVal === TypeFilter.JOBID.toUpperCase()) {
           // when aggregation is JobId
@@ -463,217 +335,111 @@ class QueueOrderJobs extends React.Component {
 
       // add all jobs to preferred
       if (jobsInsert.length > 0) {
-        console.log(jobsInsert, position, jobIdPosition);
         addPreferred(jobsInsert, position, jobIdPosition);
       }
     }
   };
 
-  DraggableContainer = props => (
-    <SortableContainer
-      useDragHandle
-      disableAutoscroll
-      helperClass="row-dragging"
-      onSortEnd={this.onSortEnd}
-      onMouseEnter={() => {
-        this.setState({ hoverTable: TypeTable.PREFERRED });
-      }}
-      {...props}
-    />
-  );
-
-  DraggableContainerQueue = props => (
-    <SortableContainer
-      useDragHandle
-      transitionDuration={0}
-      disableAutoscroll
-      helperClass="row-dragging"
-      onSortEnd={this.onSortEnd}
-      onMouseEnter={() => {
-        this.setState({ hoverTable: TypeTable.QUEUE });
-      }}
-      {...props}
-    />
-  );
-
-  DraggableBodyRow = ({ className, style, ...restProps }) => {
-    const { dataSourcePreferred } = this.state; // dataSourceQueue
-
-    const index = dataSourcePreferred.findIndex(
-      x => x?.index === restProps['data-row-key']
-    );
-    return <SortableItem index={index} {...restProps} />;
+  // handles
+  handleOnSelectedTable = selectTable => {
+    this.setState({
+      selectTable,
+      isDrag: true,
+    });
   };
 
-  DraggableBodyRowQueue = ({ className, style, ...restProps }) => {
-    const { dataSourceQueue } = this.state;
+  handleOnHoverTable = hoverTable => {
+    this.setState({ hoverTable });
+  };
 
-    const index = dataSourceQueue?.findIndex(
-      x => x?.index === restProps['data-row-key']
-    );
-    return <SortableItem index={index} {...restProps} />;
+  handleOnRowOverAndPosition = (index, pos) => {
+    this.setState({ rowOverIndex: index });
+
+    this.setState({
+      positionOverY: pos
+        ? 1 // "add bottom element"
+        : 0, // "add top element"
+    });
+  };
+
+  onChangeNumberRowPagingPreferred = value => {
+    console.log(value);
+    this.setState({ numberRowToViewPagingPreferred: value });
+  };
+
+  onChangeNumberRowPagingQueue = value => {
+    this.setState({ numberRowToViewPagingQueue: value });
   };
 
   render() {
     const {
       dataSourcePreferred,
       dataSourceQueue,
+
       hoverTable,
       rowOverIndex,
       positionOverY,
       actionsCol,
       isDrag,
-      rowSelectIndex,
+
       filterQueueVal,
       filterPreferredVal,
 
       pageQueueHasNext,
       pageQueueHasPrev,
+      numberRowToViewPagingQueue,
+
       pagePreferredHasNext,
       pagePreferredHasPrev,
+      numberRowToViewPagingPreferred,
     } = this.state;
 
     return (
       <>
-        ** hoverTable :{hoverTable} ** *** rowOverIndex : {rowOverIndex} *** ***
-        positionOverY : {positionOverY} *** *** isDrag :{isDrag.toString()}***
-        *** filterQueueVal : {filterQueueVal} **** *** filterPreferredVal :{' '}
-        {filterPreferredVal} ***
-        <ContainerPreferred
-          onMouseEnter={() => {
-            this.setState({ hoverTable: TypeTable.PREFERRED });
-          }}
-          onMouseLeave={() => {
-            this.setState({ hoverTable: '' });
-          }}>
-          <h1>Preferred </h1>
-          GroupBy : <SelectFilterOptions onSelect={this.filterPreferred} />
-          <Table
-            pagination={false}
-            dataSource={dataSourcePreferred}
-            columns={[...TypeTableColumns[filterPreferredVal], ...actionsCol]} // actionsCol
-            rowKey="index"
-            onRow={(record, index) => ({
-              onMouseDown: () => {
-                this.setState({
-                  selectTable: TypeTable.PREFERRED,
-                  isDrag: true,
-                });
-              },
-              onMouseMove: event => {
-                const rect = event.target.getBoundingClientRect();
-                const pos =
-                  event.clientY - rect.top > event.target.offsetHeight / 2;
-
-                // light border tr where the input element
-                if (isDrag) {
-                  if (pos) {
-                    event.target.parentNode.classList.add('drop-over-downward');
-
-                    event.target.parentNode.classList.remove(
-                      'drop-over-upward'
-                    );
-                  } else {
-                    event.target.parentNode.classList.add('drop-over-upward');
-                    event.target.parentNode.classList.remove(
-                      'drop-over-downward'
-                    );
-                  }
-                }
-
-                this.setState({ rowOverIndex: index });
-                this.setState({
-                  positionOverY: pos
-                    ? 1 // "add bottom element"
-                    : 0, // "add top element"
-                });
-              },
-              onMouseLeave: event => {
-                event.target.parentNode.classList.remove('drop-over-downward');
-                event.target.parentNode.classList.remove('drop-over-upward');
-              },
-            })}
-            components={{
-              body: {
-                wrapper: this.DraggableContainer,
-                row: this.DraggableBodyRow,
-              },
-            }}
+        <div style={{ display: 'flex', gap: '20px' }}>
+          <SortableTablePreferred
+            dataSourcePreferred={dataSourcePreferred}
+            onSortEnd={this.onSortEnd}
+            handleOnHoverTable={this.handleOnHoverTable}
+            handleOnSelectedTable={this.handleOnSelectedTable} //
+            handleOnRowOverAndPosition={this.handleOnRowOverAndPosition}
+            isDrag={isDrag}
+            actionsCol={actionsCol}
+            pageGoToView={this.pageGoToView}
+            filterPreferredVal={filterPreferredVal}
+            pagePreferredHasPrev={pagePreferredHasPrev}
+            pagePreferredHasNext={pagePreferredHasNext}
+            filterPreferred={this.filterPreferred}
+            onChangeNumberRowPagingPreferred={
+              this.onChangeNumberRowPagingPreferred
+            }
+            numberRowToViewPagingPreferred={numberRowToViewPagingPreferred}
           />
-          <div>
-            {pagePreferredHasPrev && (
-              <Button
-                onClick={() =>
-                  this.pageGoToView(TypeTable.PREFERRED, 'previous')
-                }
-                type="primary"
-                shape="circle">
-                {' '}
-                pre{' '}
-              </Button>
-            )}
-            {pagePreferredHasNext && (
-              <Button
-                onClick={() => this.pageGoToView(TypeTable.PREFERRED, 'next')}
-                type="primary"
-                shape="circle">
-                {' '}
-                next{' '}
-              </Button>
-            )}
-          </div>
-        </ContainerPreferred>
-        <ContainerQueue
-          onMouseEnter={() => {
-            this.setState({ hoverTable: TypeTable.QUEUE });
-          }}
-          onMouseLeave={() => {
-            this.setState({ hoverTable: '' });
-          }}>
-          <h1>Queue {rowSelectIndex}</h1>
-          GroupBy : <SelectFilterOptions onSelect={this.filterQueue} />
-          <Table
-            pagination={false}
-            dataSource={dataSourceQueue}
-            columns={TypeTableColumns[filterQueueVal]}
-            rowKey="index"
-            onRow={(record, index) => ({
-              onMouseDown: () => {
-                this.setState({
-                  selectTable: TypeTable.QUEUE,
-                  rowSelectIndex: index,
-                  isDrag: true,
-                });
-              },
-            })}
-            components={{
-              body: {
-                wrapper: this.DraggableContainerQueue,
-                row: this.DraggableBodyRowQueue,
-              },
-            }}
+
+          <DividerTables />
+          <DividerTables />
+
+          <SortableTableQueue
+            dataSourceQueue={dataSourceQueue}
+            onSortEnd={this.onSortEnd}
+            handleOnSelectedTable={this.handleOnSelectedTable} //
+            handleOnHoverTable={this.handleOnHoverTable}
+            isDrag={isDrag}
+            pageGoToView={this.pageGoToView}
+            filterQueueVal={filterQueueVal}
+            pageQueueHasPrev={pageQueueHasPrev}
+            pageQueueHasNext={pageQueueHasNext}
+            filterQueue={this.filterQueue}
+            onChangeNumberRowPagingQueue={this.onChangeNumberRowPagingQueue}
+            numberRowToViewPagingQueue={numberRowToViewPagingQueue}
           />
-          <div>
-            {pageQueueHasPrev && (
-              <Button
-                onClick={() => this.pageGoToView(TypeTable.QUEUE, 'previous')}
-                type="primary"
-                shape="circle">
-                {' '}
-                previous{' '}
-              </Button>
-            )}
-            {pageQueueHasNext && (
-              <Button
-                onClick={() => this.pageGoToView(TypeTable.QUEUE, 'next')}
-                type="primary"
-                shape="circle">
-                {' '}
-                next{' '}
-              </Button>
-            )}
-          </div>
-        </ContainerQueue>
+        </div>
+        <div style={{ display: 'none1' }}>
+          ** hoverTable :{hoverTable} ** *** rowOverIndex : {rowOverIndex} ***
+          *** positionOverY : {positionOverY} *** *** isDrag :
+          {isDrag.toString()}*** *** filterQueueVal : {filterQueueVal} **** ***
+          filterPreferredVal : {filterPreferredVal} ***
+        </div>
       </>
     );
   }

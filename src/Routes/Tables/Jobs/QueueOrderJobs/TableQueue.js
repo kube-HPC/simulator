@@ -1,0 +1,117 @@
+import React from 'react';
+import { TypeTable } from 'const';
+import PropTypes from 'prop-types';
+import { Table } from 'antd';
+import {
+  SortableItem,
+  SortableContainer,
+  SelectFilterOptions,
+  TypeTableColumns,
+} from './OrderComponents';
+import { ContainerArea, TitleTable, FilterTable } from './OrderStyles';
+import OrderPaging from './OrderPaging';
+
+class SortableTableQueue extends React.Component {
+  // eslint-disable-next-line no-useless-constructor
+  constructor(props) {
+    super(props);
+  }
+
+  DraggableContainerQueue = props => {
+    const { onSortEnd, handleOnSelectedTable, handleOnHoverTable } = this.props;
+
+    return (
+      <SortableContainer
+        useDragHandle
+        transitionDuration={0}
+        disableAutoscroll
+        helperClass="row-dragging"
+        onSortEnd={onSortEnd}
+        onSortStart={() => {
+          handleOnSelectedTable(TypeTable.QUEUE);
+        }}
+        onMouseEnter={() => {
+          handleOnHoverTable(TypeTable.QUEUE);
+        }}
+        {...props}
+      />
+    );
+  };
+
+  DraggableBodyRowQueue = ({ className, style, ...restProps }) => {
+    const { dataSourceQueue } = this.props;
+
+    const index = dataSourceQueue?.findIndex(
+      x => x?.index === restProps['data-row-key']
+    );
+    return <SortableItem index={index} {...restProps} />;
+  };
+
+  render() {
+    const {
+      dataSourceQueue,
+      handleOnHoverTable,
+      filterQueueVal,
+      pageQueueHasPrev,
+      pageQueueHasNext,
+      pageGoToView,
+      filterQueue,
+      onChangeNumberRowPagingQueue,
+      numberRowToViewPagingQueue,
+    } = this.props;
+    return (
+      <ContainerArea
+        onMouseEnter={() => {
+          handleOnHoverTable(TypeTable.QUEUE);
+        }}
+        onMouseLeave={() => {
+          handleOnHoverTable('');
+        }}>
+        <TitleTable>Queue</TitleTable>
+
+        <FilterTable>
+          GroupBy : <SelectFilterOptions onSelect={filterQueue} />
+        </FilterTable>
+        <Table
+          pagination={false}
+          dataSource={dataSourceQueue}
+          columns={TypeTableColumns[filterQueueVal]}
+          rowKey="index"
+          components={{
+            body: {
+              wrapper: this.DraggableContainerQueue,
+              row: this.DraggableBodyRowQueue,
+            },
+          }}
+        />
+
+        <OrderPaging
+          HasPrev={pageQueueHasPrev}
+          HasNext={pageQueueHasNext}
+          pageGoToView={pageGoToView}
+          numberRowToView={numberRowToViewPagingQueue}
+          onChangeNumberRow={onChangeNumberRowPagingQueue}
+          TypeTable={TypeTable.QUEUE}
+        />
+      </ContainerArea>
+    );
+  }
+}
+
+SortableTableQueue.propTypes = {
+  pageGoToView: PropTypes.func.isRequired,
+  onSortEnd: PropTypes.func.isRequired,
+  handleOnSelectedTable: PropTypes.func.isRequired,
+  handleOnHoverTable: PropTypes.func.isRequired,
+  dataSourceQueue: PropTypes.func.isRequired,
+  filterQueueVal: PropTypes.string.isRequired,
+  isDrag: PropTypes.bool.isRequired,
+
+  pageQueueHasPrev: PropTypes.number.isRequired,
+  pageQueueHasNext: PropTypes.number.isRequired,
+  filterQueue: PropTypes.func.isRequired,
+  onChangeNumberRowPagingQueue: PropTypes.func.isRequired,
+  numberRowToViewPagingQueue: PropTypes.number.isRequired,
+};
+
+export default SortableTableQueue;

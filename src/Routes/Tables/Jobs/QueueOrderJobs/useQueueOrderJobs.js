@@ -1,11 +1,7 @@
 import client from 'client';
 
 const ApiBaseURL = process.env.REACT_APP_API_SERVER_BACKEND_PATH;
-console.log(
-  'apiServerBackensd ddss>> ',
-  process.env.REACT_APP_API_SERVER_BACKEND_PATH
-);
-const numberJobsPerPage = 10;
+export const numberJobsPerPage = 2;
 const addToObjectKeyIndexId = arrayObjects => {
   const arrayResQueue = [];
   arrayObjects.map((ele, index) =>
@@ -20,7 +16,8 @@ export const getManaged = async (
   lastJobId,
   pipeLineName,
   tag,
-  pageSize
+  pageSize,
+  lastJobs
 ) => {
   const data = {
     ...(firstJobId && { firstJobId }),
@@ -28,6 +25,7 @@ export const getManaged = async (
     ...(pipeLineName && { pipeLineName }),
     ...(tag && { tag }),
     ...(pageSize && { pageSize }),
+    ...(lastJobs && { lastJobs }),
   };
 
   let res = null;
@@ -35,7 +33,7 @@ export const getManaged = async (
     res = await client.get(`${ApiBaseURL}queue/managed`, {
       params: { ...data },
     });
-    // const { returnList,hasNext,hasPrev } = res.data;
+
     res.data.returnList = addToObjectKeyIndexId(res.data.returnList);
     return res.data;
   } catch (e) {
@@ -75,7 +73,8 @@ export const getPreferred = async (
   lastJobId,
   pipeLineName,
   tag,
-  pageSize
+  pageSize,
+  lastJobs
 ) => {
   const data = {
     ...(firstJobId && { firstJobId }),
@@ -83,6 +82,7 @@ export const getPreferred = async (
     ...(pipeLineName && { pipeLineName }),
     ...(tag && { tag }),
     ...(pageSize && { pageSize }),
+    ...(lastJobs && { lastJobs }),
   };
 
   let res = null;
@@ -194,7 +194,8 @@ const TypeFilter = {
 export const getStatusManage = async (
   typeFilter,
   pageFromJobId = '',
-  intention
+  intention,
+  pageSize = numberJobsPerPage
 ) => {
   const type = typeFilter.toString().toLowerCase();
   let res = [];
@@ -203,9 +204,12 @@ export const getStatusManage = async (
   } else if (type === TypeFilter.TAG) {
     res = await getManagedByTag();
   } else if (intention === 'next') {
-    res = await getManaged(pageFromJobId, '', null, null, numberJobsPerPage);
+    res = await getManaged(pageFromJobId, '', null, null, pageSize);
+  } else if (intention === 'previous' || intention === 'begin') {
+    res = await getManaged('', pageFromJobId, null, null, pageSize);
   } else {
-    res = await getManaged('', pageFromJobId, null, null, numberJobsPerPage);
+    // goto last jobs Managed
+    res = await getManaged('', pageFromJobId, null, null, pageSize, true);
   }
 
   return res;
@@ -214,7 +218,8 @@ export const getStatusManage = async (
 export const getStatusPreferred = async (
   typeFilter,
   pageFromJobId = '',
-  intention
+  intention,
+  pageSize = numberJobsPerPage
 ) => {
   const type = typeFilter.toLowerCase();
   let res = [];
@@ -223,9 +228,12 @@ export const getStatusPreferred = async (
   } else if (type === TypeFilter.TAG) {
     res = await getPreferredByTag();
   } else if (intention === 'next') {
-    res = await getPreferred(pageFromJobId, '', null, null, numberJobsPerPage);
+    res = await getPreferred(pageFromJobId, '', null, null, pageSize);
+  } else if (intention === 'previous' || intention === 'begin') {
+    res = await getPreferred('', pageFromJobId, null, null, pageSize);
   } else {
-    res = await getPreferred('', pageFromJobId, null, null, numberJobsPerPage);
+    // goto last jobs Preferred
+    res = await getPreferred('', pageFromJobId, null, null, pageSize, true);
   }
 
   return res;
