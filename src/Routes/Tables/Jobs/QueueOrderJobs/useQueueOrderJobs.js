@@ -1,7 +1,7 @@
 import client from 'client';
 
 const ApiBaseURL = process.env.REACT_APP_API_SERVER_BACKEND_PATH;
-export const numberJobsPerPage = 2;
+export const numberJobsPerPage = 10;
 const addToObjectKeyIndexId = arrayObjects => {
   const arrayResQueue = [];
   arrayObjects.map((ele, index) =>
@@ -11,7 +11,7 @@ const addToObjectKeyIndexId = arrayObjects => {
 };
 
 // Queue Managed API
-export const getManaged = async (
+const getManaged = async (
   firstJobId,
   lastJobId,
   pipeLineName,
@@ -43,7 +43,7 @@ export const getManaged = async (
   return [];
 };
 
-export const getManagedByTag = async () => {
+const getManagedByTag = async () => {
   let res = null;
   try {
     res = await client.get(`${ApiBaseURL}/queue/managed/aggregation/tag`);
@@ -55,7 +55,7 @@ export const getManagedByTag = async () => {
   return [];
 };
 
-export const getManagedByPipeline = async () => {
+const getManagedByPipeline = async () => {
   let res = null;
   try {
     res = await client.get(`${ApiBaseURL}/queue/managed/aggregation/pipeline`);
@@ -68,7 +68,7 @@ export const getManagedByPipeline = async () => {
 };
 
 // Prefer Managed API
-export const getPreferred = async (
+const getPreferred = async (
   firstJobId,
   lastJobId,
   pipeLineName,
@@ -100,7 +100,7 @@ export const getPreferred = async (
   return [];
 };
 
-export const getPreferredByTag = async () => {
+const getPreferredByTag = async () => {
   let res = null;
   try {
     res = await client.get(`${ApiBaseURL}/queue/preferred/aggregation/tag`);
@@ -112,7 +112,7 @@ export const getPreferredByTag = async () => {
   return [];
 };
 
-export const getPreferredByPipeline = async () => {
+const getPreferredByPipeline = async () => {
   let res = null;
   try {
     res = await client.get(
@@ -126,7 +126,7 @@ export const getPreferredByPipeline = async () => {
   return [];
 };
 
-export const addPreferred = async (jobs, position, jobId) => {
+const addPreferred = async (jobs, position, jobId) => {
   // jobs      - list jobs id is need to add
   // jobId     - id of job to insert before or after (by value position value)
   // position   - can be [ first, last, before, after ]
@@ -154,7 +154,7 @@ export const addPreferred = async (jobs, position, jobId) => {
   return res;
 };
 
-export const deletePreferred = async jobs => {
+const deletePreferred = async jobs => {
   const data = { jobs };
 
   let res = null;
@@ -167,7 +167,7 @@ export const deletePreferred = async jobs => {
   return res;
 };
 
-export const movePreferred = async (jobsToMove, position, jobId) => {
+const movePreferred = async (jobsToMove, position, jobId) => {
   // jobsToMove      - list jobs id is need to move
   // jobId           - id of job to insert before or after (by value position value)
   // position        - can be [ first, last, before, after ]
@@ -191,7 +191,7 @@ const TypeFilter = {
   TAG: 'tag',
 };
 
-export const getStatusManage = async (
+const getStatusManage = async (
   typeFilter,
   pageFromJobId = '',
   intention,
@@ -215,7 +215,7 @@ export const getStatusManage = async (
   return res;
 };
 
-export const getStatusPreferred = async (
+const getStatusPreferred = async (
   typeFilter,
   pageFromJobId = '',
   intention,
@@ -239,7 +239,7 @@ export const getStatusPreferred = async (
   return res;
 };
 
-export const getJobsIdsScopePreferred = async (
+const getJobsIdsScopePreferred = async (
   filterPreferredVal,
   dataSourcePreferred,
   currentIndex
@@ -294,7 +294,7 @@ export const getJobsIdsScopePreferred = async (
   return jobsIdsScope;
 };
 
-export const getJobIdPosition = async (
+const getJobIdPosition = async (
   dataSourcePreferred,
   filterPreferredVal,
   rowOverIndex,
@@ -308,4 +308,21 @@ export const getJobIdPosition = async (
   return position && jobsIdsScope.length > 1
     ? jobsIdsScope[jobsIdsScope.length - 1]
     : jobsIdsScope[0];
+};
+
+export const orderApi = {
+  getJobsIdsScopePreferred,
+  getJobIdPosition,
+  getStatusPreferred,
+  getStatusManage,
+  movePreferred,
+  deletePreferred,
+  addPreferred,
+  getPreferredByPipeline,
+  getPreferredByTag,
+  getPreferred,
+  getManagedByPipeline,
+  getManagedByTag,
+  getManaged,
+  numberJobsPerPage,
 };

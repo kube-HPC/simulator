@@ -1,5 +1,5 @@
 import React from 'react';
-import { TypeTable } from 'const';
+import { TypeTable, TypeFilter } from 'const';
 import PropTypes from 'prop-types';
 import { Table } from 'antd';
 import {
@@ -11,7 +11,7 @@ import {
 import { ContainerArea, TitleTable, FilterTable } from './OrderStyles';
 import OrderPaging from './OrderPaging';
 
-class SortableTableQueue extends React.Component {
+class TableQueue extends React.Component {
   // eslint-disable-next-line no-useless-constructor
   constructor(props) {
     super(props);
@@ -85,20 +85,22 @@ class SortableTableQueue extends React.Component {
           }}
         />
 
-        <OrderPaging
-          HasPrev={pageQueueHasPrev}
-          HasNext={pageQueueHasNext}
-          pageGoToView={pageGoToView}
-          numberRowToView={numberRowToViewPagingQueue}
-          onChangeNumberRow={onChangeNumberRowPagingQueue}
-          TypeTable={TypeTable.QUEUE}
-        />
+        {filterQueueVal === TypeFilter.JOBID.toLocaleUpperCase() && (
+          <OrderPaging
+            HasPrev={pageQueueHasPrev}
+            HasNext={pageQueueHasNext}
+            pageGoToView={pageGoToView}
+            numberRowToView={numberRowToViewPagingQueue}
+            onChangeNumberRow={onChangeNumberRowPagingQueue}
+            TypeTable={TypeTable.QUEUE}
+          />
+        )}
       </ContainerArea>
     );
   }
 }
 
-SortableTableQueue.propTypes = {
+TableQueue.propTypes = {
   pageGoToView: PropTypes.func.isRequired,
   onSortEnd: PropTypes.func.isRequired,
   handleOnSelectedTable: PropTypes.func.isRequired,
@@ -114,4 +116,4 @@ SortableTableQueue.propTypes = {
   numberRowToViewPagingQueue: PropTypes.number.isRequired,
 };
 
-export default SortableTableQueue;
+export default TableQueue;

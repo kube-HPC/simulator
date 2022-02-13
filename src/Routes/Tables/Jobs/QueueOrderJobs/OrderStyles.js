@@ -1,6 +1,11 @@
 import styled from 'styled-components';
 import { LeftOutlined } from '@ant-design/icons';
 
+export const FlexItems = styled.div`
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+`;
 export const DividerTables = styled(LeftOutlined)`
   font-size: 24px;
   align-self: center;
@@ -13,7 +18,7 @@ export const TitleTable = styled.div`
 
 export const ContainerArea = styled.div`
   margin-left: 10px;
-  width: 50%;
+  // width: 50%;
   tr.drop-over-downward td {
     border-bottom: 2px dashed #1890ff;
   }

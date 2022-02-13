@@ -1,21 +1,35 @@
 import React from 'react';
-import { TypeTable } from 'const';
+import { TypeTable, TypeFilter } from 'const';
 import PropTypes from 'prop-types';
-import { Table } from 'antd';
+import { Table, Popconfirm } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
+import { ContainerArea, TitleTable, FilterTable } from './OrderStyles';
+import OrderPaging from './OrderPaging';
 import {
   SortableItem,
   SortableContainer,
   SelectFilterOptions,
   TypeTableColumns,
 } from './OrderComponents';
-import { ContainerArea, TitleTable, FilterTable } from './OrderStyles';
-import OrderPaging from './OrderPaging';
 
-class SortableTablePreferred extends React.Component {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(props) {
-    super(props);
-  }
+class TablePreferred extends React.Component {
+  actionsCol = [
+    {
+      title: 'action',
+      dataIndex: 'action',
+      width: 30,
+      render: (text, record) => {
+        const { dataSourcePreferred, handleDelete } = this.props;
+        return dataSourcePreferred.length >= 1 ? (
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => handleDelete(record.key)}>
+            <DeleteOutlined />
+          </Popconfirm>
+        ) : null;
+      },
+    },
+  ];
 
   DraggableContainer = props => {
     const { onSortEnd, handleOnSelectedTable, handleOnHoverTable } = this.props;
@@ -50,7 +64,7 @@ class SortableTablePreferred extends React.Component {
       dataSourcePreferred,
       handleOnHoverTable,
       filterPreferredVal,
-      actionsCol,
+
       handleOnRowOverAndPosition,
       pagePreferredHasPrev,
       pagePreferredHasNext,
@@ -76,7 +90,10 @@ class SortableTablePreferred extends React.Component {
         <Table
           pagination={false}
           dataSource={dataSourcePreferred}
-          columns={[...TypeTableColumns[filterPreferredVal], ...actionsCol]} // actionsCol
+          columns={[
+            ...TypeTableColumns[filterPreferredVal],
+            ...this.actionsCol,
+          ]}
           rowKey="index"
           onRow={(record, index) => ({
             onMouseMove: event => {
@@ -111,21 +128,22 @@ class SortableTablePreferred extends React.Component {
             },
           }}
         />
-
-        <OrderPaging
-          HasPrev={pagePreferredHasPrev}
-          HasNext={pagePreferredHasNext}
-          pageGoToView={pageGoToView}
-          numberRowToView={numberRowToViewPagingPreferred}
-          onChangeNumberRow={onChangeNumberRowPagingPreferred}
-          TypeTable={TypeTable.PREFERRED}
-        />
+        {filterPreferredVal === TypeFilter.JOBID.toLocaleUpperCase() && (
+          <OrderPaging
+            HasPrev={pagePreferredHasPrev}
+            HasNext={pagePreferredHasNext}
+            pageGoToView={pageGoToView}
+            numberRowToView={numberRowToViewPagingPreferred}
+            onChangeNumberRow={onChangeNumberRowPagingPreferred}
+            TypeTable={TypeTable.PREFERRED}
+          />
+        )}
       </ContainerArea>
     );
   }
 }
 
-SortableTablePreferred.propTypes = {
+TablePreferred.propTypes = {
   pageGoToView: PropTypes.func.isRequired,
   filterPreferred: PropTypes.func.isRequired,
   onSortEnd: PropTypes.func.isRequired,
@@ -133,13 +151,13 @@ SortableTablePreferred.propTypes = {
   handleOnHoverTable: PropTypes.func.isRequired,
   dataSourcePreferred: PropTypes.func.isRequired,
   filterPreferredVal: PropTypes.string.isRequired,
-  actionsCol: PropTypes.oneOfType([PropTypes.object]).isRequired,
   isDrag: PropTypes.bool.isRequired,
   handleOnRowOverAndPosition: PropTypes.func.isRequired,
   pagePreferredHasPrev: PropTypes.number.isRequired,
   pagePreferredHasNext: PropTypes.number.isRequired,
   onChangeNumberRowPagingPreferred: PropTypes.func.isRequired,
   numberRowToViewPagingPreferred: PropTypes.number.isRequired,
+  handleDelete: PropTypes.func.isRequired,
 };
 
-export default SortableTablePreferred;
+export default TablePreferred;

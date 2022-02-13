@@ -1,69 +1,43 @@
 import React from 'react';
 import { TypeTable, TypeFilter } from 'const';
-import { Popconfirm } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
-import SortableTablePreferred from './TablePreferred';
-import SortableTableQueue from './TableQueue';
-import { DividerTables } from './OrderStyles';
-
-import {
-  getJobIdPosition,
-  getJobsIdsScopePreferred,
-  getManaged,
-  movePreferred,
-  addPreferred,
-  deletePreferred,
-  getStatusManage,
-  getStatusPreferred,
-  numberJobsPerPage,
-} from './useQueueOrderJobs';
+import TablePreferred from './TablePreferred';
+import TableQueue from './TableQueue';
+import { FlexItems } from './OrderStyles'; // DividerTables
+import { orderApi } from './useQueueOrderJobs';
 
 class QueueOrderJobs extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
+      // data jobs
       dataSourcePreferred: [],
       dataSourceQueue: [],
-      selectTable: '',
-      hoverTable: '',
-      // rowSelectIndex: null,
-      rowOverIndex: null,
-      positionOverY: null,
-      isDrag: false,
-      filterPreferredVal: TypeFilter.JOBID.toUpperCase(),
-      filterQueueVal: TypeFilter.JOBID.toUpperCase(),
 
-      // Paging
-      pageQueueViewJobId: '',
-      pageQueueLastActionIntention: '',
-      pageQueueHasNext: 0,
-      pageQueueHasPrev: 0,
-      numberRowToViewPagingQueue: numberJobsPerPage,
+      // state table action
+      selectTable: '', // which table is start drag job
+      hoverTable: '', // hover some table
+      rowOverIndex: null, // hover on some row table
+      positionOverY: null, // Position the mouse arrow on a row, in the top half or in the bottom half
+      isDrag: false, // if action id drag jobs
 
-      pagePreferredViewJobId: '',
-      pagePreferredLastActionIntention: '',
-      pagePreferredHasNext: 0,
-      pagePreferredHasPrev: 0,
-      numberRowToViewPagingPreferred: numberJobsPerPage,
+      // filter jobs to group by pipeline or tag default is list jobs
+      filterPreferredVal: TypeFilter.JOBID.toUpperCase(), // select filter preferred, group by pipeline or tag
+      filterQueueVal: TypeFilter.JOBID.toUpperCase(), // select filter queue , group by pipeline or tag
 
-      // Table
-      actionsCol: [
-        {
-          title: 'action',
-          dataIndex: 'action',
-          width: 30,
-          render: (text, record) => {
-            const { dataSourcePreferred } = this.state;
-            return dataSourcePreferred.length >= 1 ? (
-              <Popconfirm
-                title="Sure to delete?"
-                onConfirm={() => this.handleDelete(record.key)}>
-                <DeleteOutlined />
-              </Popconfirm>
-            ) : null;
-          },
-        },
-      ],
+      // state paging queue
+      pageQueueViewJobId: '', // set jobId is view table queue
+      pageQueueLastActionIntention: '', // go to last jobId in list queue
+      pageQueueHasNext: 0, // number next jobs in table queue
+      pageQueueHasPrev: 0, // number previous jobs in table Preferred
+      numberRowToViewPagingQueue: orderApi.numberJobsPerPage, // number row to view in table queue
+
+      // state paging preferred
+      pagePreferredViewJobId: '', // set jobId is view table Preferred
+      pagePreferredLastActionIntention: '', // go to last jobId in list Preferred
+      pagePreferredHasNext: 0, // number next jobs in table Preferred
+      pagePreferredHasPrev: 0, // number previous jobs in table Preferred
+      numberRowToViewPagingPreferred: orderApi.numberJobsPerPage, // number row to view in table Preferred
     };
 
     this.getStatusManageAndPreferred = this.getStatusManageAndPreferred.bind(
@@ -92,15 +66,14 @@ class QueueOrderJobs extends React.Component {
     const { dataSourcePreferred, filterPreferredVal } = this.state;
 
     // get all jobsid need to delete
-    const jobsIdToDelete = await getJobsIdsScopePreferred(
+    const jobsIdToDelete = await orderApi.getJobsIdsScopePreferred(
       filterPreferredVal,
       dataSourcePreferred,
       keyDelete
     );
 
     // delete all jobsIds from preferred
-
-    deletePreferred([].concat(jobsIdToDelete));
+    orderApi.deletePreferred([].concat(jobsIdToDelete));
   };
 
   async getStatusManageAndPreferred() {
@@ -115,13 +88,13 @@ class QueueOrderJobs extends React.Component {
       numberRowToViewPagingPreferred,
     } = this.state;
 
-    const dataStatusManage = await getStatusManage(
+    const dataStatusManage = await orderApi.getStatusManage(
       filterQueueVal,
       pageQueueViewJobId,
       pageQueueLastActionIntention,
       numberRowToViewPagingQueue
     );
-    const dataStatusPreferred = await getStatusPreferred(
+    const dataStatusPreferred = await orderApi.getStatusPreferred(
       filterPreferredVal,
       pagePreferredViewJobId,
       pagePreferredLastActionIntention,
@@ -142,20 +115,26 @@ class QueueOrderJobs extends React.Component {
   filterPreferred = filterValue => {
     this.setState({
       filterPreferredVal: filterValue,
-      pageQueueViewJobId: '',
-      pageQueueLastActionIntention: '',
+
+      // reset paging Preferred
       pagePreferredViewJobId: '',
       pagePreferredLastActionIntention: '',
+      pagePreferredHasNext: 0,
+      pagePreferredHasPrev: 0,
+      numberRowToViewPagingPreferred: orderApi.numberJobsPerPage,
     });
   };
 
   filterQueue = filterValue => {
     this.setState({
       filterQueueVal: filterValue,
+
+      // reset paging queue
       pageQueueViewJobId: '',
       pageQueueLastActionIntention: '',
-      pagePreferredViewJobId: '',
-      pagePreferredLastActionIntention: '',
+      pageQueueHasNext: 0,
+      pageQueueHasPrev: 0,
+      numberRowToViewPagingQueue: orderApi.numberJobsPerPage,
     });
   };
 
@@ -199,7 +178,6 @@ class QueueOrderJobs extends React.Component {
   };
 
   onSortEnd = async ({ oldIndex, newIndex }) => {
-    console.log('oldIndex >> ', oldIndex, 'newIndex >>', newIndex);
     this.setState({ isDrag: false });
     const {
       dataSourcePreferred,
@@ -220,14 +198,14 @@ class QueueOrderJobs extends React.Component {
         const { positionOverY } = this.state;
 
         // get all jobsId need to move
-        const jobsToMove = await getJobsIdsScopePreferred(
+        const jobsToMove = await orderApi.getJobsIdsScopePreferred(
           filterPreferredVal,
           dataSourcePreferred,
           oldIndex
         );
         console.log('rowOverIndex >> ', rowOverIndex);
         // get jobId position
-        const jobIdPosition = await getJobIdPosition(
+        const jobIdPosition = await orderApi.getJobIdPosition(
           dataSourcePreferred,
           filterPreferredVal,
           rowOverIndex,
@@ -239,7 +217,7 @@ class QueueOrderJobs extends React.Component {
 
         const jobsInsert = [].concat(jobsToMove);
 
-        movePreferred(jobsInsert, position, jobIdPosition);
+        orderApi.movePreferred(jobsInsert, position, jobIdPosition);
       }
     } else if (
       hoverTable === TypeTable.PREFERRED &&
@@ -266,13 +244,13 @@ class QueueOrderJobs extends React.Component {
 
         // get all jobsId need to move preferred by pipeline name
         if (filterQueueVal === TypeFilter.PIPELINE.toUpperCase()) {
-          const res = await getManaged(null, null, name, null, count);
+          const res = await orderApi.getManaged(null, null, name, null, count);
           resultAllJobs = res.returnList;
         }
 
         // get all jobsId need to move preferred by tag name
         if (filterQueueVal === TypeFilter.TAG.toUpperCase()) {
-          const res = await getManaged(null, null, null, name, count);
+          const res = await orderApi.getManaged(null, null, null, name, count);
           resultAllJobs = res.returnList;
         }
 
@@ -335,7 +313,7 @@ class QueueOrderJobs extends React.Component {
 
       // add all jobs to preferred
       if (jobsInsert.length > 0) {
-        addPreferred(jobsInsert, position, jobIdPosition);
+        orderApi.addPreferred(jobsInsert, position, jobIdPosition);
       }
     }
   };
@@ -363,7 +341,6 @@ class QueueOrderJobs extends React.Component {
   };
 
   onChangeNumberRowPagingPreferred = value => {
-    console.log(value);
     this.setState({ numberRowToViewPagingPreferred: value });
   };
 
@@ -379,7 +356,6 @@ class QueueOrderJobs extends React.Component {
       hoverTable,
       rowOverIndex,
       positionOverY,
-      actionsCol,
       isDrag,
 
       filterQueueVal,
@@ -396,15 +372,14 @@ class QueueOrderJobs extends React.Component {
 
     return (
       <>
-        <div style={{ display: 'flex', gap: '20px' }}>
-          <SortableTablePreferred
+        <FlexItems>
+          <TablePreferred
             dataSourcePreferred={dataSourcePreferred}
             onSortEnd={this.onSortEnd}
             handleOnHoverTable={this.handleOnHoverTable}
             handleOnSelectedTable={this.handleOnSelectedTable} //
             handleOnRowOverAndPosition={this.handleOnRowOverAndPosition}
             isDrag={isDrag}
-            actionsCol={actionsCol}
             pageGoToView={this.pageGoToView}
             filterPreferredVal={filterPreferredVal}
             pagePreferredHasPrev={pagePreferredHasPrev}
@@ -414,12 +389,12 @@ class QueueOrderJobs extends React.Component {
               this.onChangeNumberRowPagingPreferred
             }
             numberRowToViewPagingPreferred={numberRowToViewPagingPreferred}
+            handleDelete={this.handleDelete}
           />
 
-          <DividerTables />
-          <DividerTables />
+          {/* <DividerTables /><DividerTables /> */}
 
-          <SortableTableQueue
+          <TableQueue
             dataSourceQueue={dataSourceQueue}
             onSortEnd={this.onSortEnd}
             handleOnSelectedTable={this.handleOnSelectedTable} //
@@ -433,8 +408,8 @@ class QueueOrderJobs extends React.Component {
             onChangeNumberRowPagingQueue={this.onChangeNumberRowPagingQueue}
             numberRowToViewPagingQueue={numberRowToViewPagingQueue}
           />
-        </div>
-        <div style={{ display: 'none1' }}>
+        </FlexItems>
+        <div style={{ display: 'none' }}>
           ** hoverTable :{hoverTable} ** *** rowOverIndex : {rowOverIndex} ***
           *** positionOverY : {positionOverY} *** *** isDrag :
           {isDrag.toString()}*** *** filterQueueVal : {filterQueueVal} **** ***
