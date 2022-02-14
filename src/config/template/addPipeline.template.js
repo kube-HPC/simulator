@@ -38,7 +38,7 @@ export default {
     },
     progressVerbosityLevel: 'info',
     ttl: 3600,
-    activeTtl: 3600,
+    activeTtl: '',
   },
   priority: 3,
 };
