@@ -1,10 +1,13 @@
 import React from 'react';
+import { Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { TypeTable, TypeFilter } from 'const';
 import TablePreferred from './TablePreferred';
 import TableQueue from './TableQueue';
 import { FlexItems } from './OrderStyles'; // DividerTables
 import { orderApi } from './useQueueOrderJobs';
 
+const { confirm } = Modal;
 class QueueOrderJobs extends React.Component {
   constructor(props) {
     super(props);
@@ -62,20 +65,6 @@ class QueueOrderJobs extends React.Component {
     if (this.dataInterval) clearInterval(this.dataInterval);
   }
 
-  handleDelete = async keyDelete => {
-    const { dataSourcePreferred, filterPreferredVal } = this.state;
-
-    // get all jobsid need to delete
-    const jobsIdToDelete = await orderApi.getJobsIdsScopePreferred(
-      filterPreferredVal,
-      dataSourcePreferred,
-      keyDelete
-    );
-
-    // delete all jobsIds from preferred
-    orderApi.deletePreferred([].concat(jobsIdToDelete));
-  };
-
   async getStatusManageAndPreferred() {
     const {
       filterQueueVal,
@@ -111,6 +100,37 @@ class QueueOrderJobs extends React.Component {
         dataStatusPreferred?.returnList || dataStatusPreferred,
     });
   }
+
+  showPromiseConfirmDelete = keyDelete => {
+    confirm({
+      title: 'Do you want to move these item to Queue list?',
+      icon: <ExclamationCircleOutlined />,
+
+      async onOk() {
+        try {
+          return await this.handleDelete(keyDelete);
+        } catch {
+          return console.log('Oops errors!');
+        }
+      },
+      onCancel() {},
+    });
+  };
+
+  handleDelete = async keyDelete => {
+    alert(keyDelete);
+    const { dataSourcePreferred, filterPreferredVal } = this.state;
+
+    // get all jobsid need to delete
+    const jobsIdToDelete = await orderApi.getJobsIdsScopePreferred(
+      filterPreferredVal,
+      dataSourcePreferred,
+      keyDelete
+    );
+
+    // delete all jobsIds from preferred
+    orderApi.deletePreferred([].concat(jobsIdToDelete));
+  };
 
   filterPreferred = filterValue => {
     this.setState({
@@ -315,6 +335,11 @@ class QueueOrderJobs extends React.Component {
       if (jobsInsert.length > 0) {
         orderApi.addPreferred(jobsInsert, position, jobIdPosition);
       }
+    } else if (
+      hoverTable === TypeTable.QUEUE &&
+      selectTable === TypeTable.PREFERRED
+    ) {
+      this.showPromiseConfirmDelete(oldIndex);
     }
   };
 
