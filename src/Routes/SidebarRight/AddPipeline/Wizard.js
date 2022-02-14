@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Icon, Steps, Form as AntdForm } from 'antd';
 import { JsonView } from 'components/common';
@@ -76,6 +76,7 @@ const Wizard = ({
     getFieldDecorator,
     getFieldValue,
   } = form;
+
   const { subscribe } = useSubscribe();
 
   useEffect(() => {
@@ -142,17 +143,17 @@ const Wizard = ({
     getFieldValue('kind')
   );
 
-  useEffect(() => {
-    // remove gateway option from nodes and reset them to algorithm option
-
-    if (isStreamingPipeline === false) {
-      const { nodes } = getFieldsValue();
-      nodes.forEach((node, index) => {
-        if (node.kind === 'gateway') {
-          setFieldsValue({ [`nodes.${index}.kind`]: 'algorithm' });
-        }
-      });
-    }
+  useLayoutEffect(() => {
+    // remove gateway or output option from nodes and reset them to algorithm option
+    const { nodes } = getFieldsValue();
+    nodes.forEach((node, index) => {
+      if (
+        (node.kind === 'gateway' && isStreamingPipeline === false) ||
+        (node.kind === 'output' && isStreamingPipeline)
+      ) {
+        setFieldsValue({ [`nodes.${index}.kind`]: 'algorithm' });
+      }
+    });
   }, [isStreamingPipeline, getFieldsValue, setFieldsValue]);
 
   return (

@@ -6,6 +6,7 @@ import { Button, Radio, Input, Tag } from 'antd';
 import AlgorithmNode from './Algorithms';
 import DataSourceNode from './DataSource';
 import GatewayNode from './Gateway';
+import OutputNode from './Output';
 import useIds from './useIds';
 import useWizardContext from '../../useWizardContext';
 import { BoldedFormField } from './../../styles';
@@ -71,11 +72,14 @@ const TagByName = styled(Tag)`
       ? props.colors.darkPurple
       : props.tagColor === 'algorithm'
       ? props.colors.pink
+      : props.tagColor === 'output'
+      ? props.colors.orangePale
       : ''};
   border-radius: 50px;
 `;
 
 const nodesMap = {
+  output: OutputNode,
   gateway: GatewayNode,
   dataSource: DataSourceNode,
   algorithm: AlgorithmNode,
@@ -87,7 +91,8 @@ const Node = ({ kind, id }) => {
 };
 
 Node.propTypes = {
-  kind: PropTypes.oneOf(['dataSource', 'algorithm', 'gateway']).isRequired,
+  kind: PropTypes.oneOf(['dataSource', 'algorithm', 'gateway', 'output'])
+    .isRequired,
   id: PropTypes.node.isRequired,
 };
 
@@ -187,6 +192,10 @@ const Nodes = ({ style }) => {
 
                   {isStreamingPipeline && (
                     <Radio.Button value="gateway">Gateway</Radio.Button>
+                  )}
+
+                  {!isStreamingPipeline && (
+                    <Radio.Button value="output">Output</Radio.Button>
                   )}
 
                   {ids.length > 1 ? (
