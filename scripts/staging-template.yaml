@@ -111,7 +111,7 @@ spec:
           - backend:
               serviceName: dashboard-${PR_NAME}
               servicePort: 9050
-            path: /hkube/dashboard-${PR_NAME}(/|$)(.*)
+            path: /hkube/dashboard-${ORG_PR_NAME}(/|$)(.*)
 
 ---
 apiVersion: v1
