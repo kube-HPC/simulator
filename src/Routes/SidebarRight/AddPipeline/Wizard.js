@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useRef } from 'react';
+import React, { useCallback, useLayoutEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { CheckOutlined, RightOutlined, LeftOutlined } from '@ant-design/icons';
 import { Steps, Form as AntdForm } from 'antd';
@@ -77,7 +77,7 @@ const Wizard = ({
     setStepIdx,
   ]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (firstUpdateWizard.current) {
       firstUpdateWizard.current = false;
     } else {
