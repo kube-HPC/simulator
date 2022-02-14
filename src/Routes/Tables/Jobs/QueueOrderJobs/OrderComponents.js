@@ -16,7 +16,7 @@ export const SortableContainer = sortableContainer(props => (
 ));
 
 export const DragHandle = sortableHandle(() => (
-  <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />
+  <MenuOutlined style={{ color: '#999' }} />
 ));
 
 export const StartTime = (startTime, { results }) => (

@@ -31,12 +31,25 @@ class TablePreferred extends React.Component {
     },
   ];
 
+  shouldCancelStart = e => {
+    let targetEle = e;
+    if (!targetEle.id) {
+      targetEle = e.target;
+    }
+
+    if (targetEle.tagName === 'svg' || targetEle.tagName === 'path') {
+      return true;
+    }
+
+    return false;
+  };
+
   DraggableContainer = props => {
     const { onSortEnd, handleOnSelectedTable, handleOnHoverTable } = this.props;
 
     return (
       <SortableContainer
-        useDragHandle
+        shouldCancelStart={this.shouldCancelStart}
         disableAutoscroll
         helperClass="row-dragging"
         onSortEnd={onSortEnd}

@@ -22,7 +22,6 @@ class TableQueue extends React.Component {
 
     return (
       <SortableContainer
-        useDragHandle
         transitionDuration={0}
         disableAutoscroll
         helperClass="row-dragging"

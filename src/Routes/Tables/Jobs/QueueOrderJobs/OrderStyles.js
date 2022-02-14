@@ -26,6 +26,10 @@ export const ContainerArea = styled.div`
   tr.drop-over-upward td {
     border-top: 2px dashed #1890ff;
   }
+
+  tbody {
+    cursor: move;
+  }
 `;
 
 export const FilterTable = styled.div`
