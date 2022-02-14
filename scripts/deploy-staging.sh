@@ -5,7 +5,9 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 echo TRAVIS_PULL_REQUEST_BRANCH=$TRAVIS_PULL_REQUEST_BRANCH
 # export PR_NAME="${TRAVIS_PULL_REQUEST_BRANCH,,}"
 export PR_NAME="${PR_NAME,,}"
+export ORG_PR_NAME=${PR_NAME}
 export PR_NAME="${PR_NAME//_/-}"
+export PR_NAME="${PR_NAME//./-}"
 echo TAG=$PR_NAME
 envsubst < ${DIR}/staging-template.yaml > /tmp/staging.yaml
 kubectl apply -f /tmp/staging.yaml

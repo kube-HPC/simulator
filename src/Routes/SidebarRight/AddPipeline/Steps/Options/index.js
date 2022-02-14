@@ -137,6 +137,9 @@ const Options = ({ style }) => {
       <Form.Item label="Pipeline TTL">
         {fieldDecorator('options.ttl')(<InputNumber />)}
       </Form.Item>
+      <Form.Item label="Active TTL">
+        {fieldDecorator('options.activeTtl')(<InputNumber />)}
+      </Form.Item>
       <Form.Item label="Verbosity Level">
         {fieldDecorator('options.progressVerbosityLevel')(
           <Select style={smallSelectStyle}>

@@ -11,6 +11,9 @@ echo npm_package_version=${npm_package_version}
 VERSION="v${npm_package_version}"
 if [ "${TRAVIS_PULL_REQUEST:-"false"}" != "false" ]; then
   VERSION=${PR_NAME}
+  VERSION="${VERSION,,}"
+  VERSION="${VERSION//_/-}"
+  VERSION="${VERSION//./-}"
 fi
 TAG_VER="${IMAGE_NAME}:${VERSION}"
 
