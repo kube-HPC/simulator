@@ -175,6 +175,9 @@ const Versions = ({
       payload = {
         spec: {
           name: dataSource.name,
+          dataSource: {
+            id: dataSource.id,
+          },
         },
       };
     } else {
