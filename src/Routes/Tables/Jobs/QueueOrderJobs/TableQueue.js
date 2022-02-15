@@ -2,13 +2,19 @@ import React from 'react';
 import { TypeTable, TypeFilter } from 'const';
 import PropTypes from 'prop-types';
 import { Table } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 import {
   SortableItem,
   SortableContainer,
   SelectFilterOptions,
   TypeTableColumns,
 } from './OrderComponents';
-import { ContainerArea, TitleTable, FilterTable } from './OrderStyles';
+import {
+  ContainerArea,
+  TitleTable,
+  FilterTable,
+  DeleteOverTable,
+} from './OrderStyles';
 import OrderPaging from './OrderPaging';
 
 class TableQueue extends React.Component {
@@ -57,9 +63,12 @@ class TableQueue extends React.Component {
       filterQueue,
       onChangeNumberRowPagingQueue,
       numberRowToViewPagingQueue,
+      viewTableColumnOrRow,
+      isDeleteOverTable,
     } = this.props;
     return (
       <ContainerArea
+        $isDirectionColumn={viewTableColumnOrRow}
         onMouseEnter={() => {
           handleOnHoverTable(TypeTable.QUEUE);
         }}
@@ -71,6 +80,12 @@ class TableQueue extends React.Component {
         <FilterTable>
           GroupBy : <SelectFilterOptions onSelect={filterQueue} />
         </FilterTable>
+
+        <DeleteOverTable $isDisplay={isDeleteOverTable}>
+          <DeleteOutlined />
+          <br />
+          Release to move the item to the queue
+        </DeleteOverTable>
         <Table
           pagination={false}
           dataSource={dataSourceQueue}
@@ -113,6 +128,8 @@ TableQueue.propTypes = {
   filterQueue: PropTypes.func.isRequired,
   onChangeNumberRowPagingQueue: PropTypes.func.isRequired,
   numberRowToViewPagingQueue: PropTypes.number.isRequired,
+  viewTableColumnOrRow: PropTypes.bool.isRequired,
+  isDeleteOverTable: PropTypes.bool.isRequired,
 };
 
 export default TableQueue;

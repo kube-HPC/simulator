@@ -22,7 +22,7 @@ class TablePreferred extends React.Component {
         const { dataSourcePreferred, handleDelete } = this.props;
         return dataSourcePreferred.length >= 1 ? (
           <Popconfirm
-            title="Sure to delete?"
+            title="Do you want to move these item to Queue list?"
             onConfirm={() => handleDelete(record.key)}>
             <DeleteOutlined />
           </Popconfirm>
@@ -37,7 +37,7 @@ class TablePreferred extends React.Component {
       targetEle = e.target;
     }
 
-    if (targetEle.tagName === 'svg' || targetEle.tagName === 'path') {
+    if (targetEle.outerHTML.indexOf('delete') > -1) {
       return true;
     }
 
@@ -86,16 +86,21 @@ class TablePreferred extends React.Component {
       filterPreferred,
       onChangeNumberRowPagingPreferred,
       numberRowToViewPagingPreferred,
+      handleViewTableColumnOrRow,
+      viewTableColumnOrRow,
     } = this.props;
     return (
       <ContainerArea
+        $isDirectionColumn={viewTableColumnOrRow}
         onMouseEnter={() => {
           handleOnHoverTable(TypeTable.PREFERRED);
         }}
         onMouseLeave={() => {
           handleOnHoverTable('');
         }}>
-        <TitleTable>Preferred </TitleTable>
+        <TitleTable onClick={() => handleViewTableColumnOrRow()}>
+          Preferred{' '}
+        </TitleTable>
 
         <FilterTable>
           GroupBy : <SelectFilterOptions onSelect={filterPreferred} />
@@ -171,6 +176,8 @@ TablePreferred.propTypes = {
   onChangeNumberRowPagingPreferred: PropTypes.func.isRequired,
   numberRowToViewPagingPreferred: PropTypes.number.isRequired,
   handleDelete: PropTypes.func.isRequired,
+  handleViewTableColumnOrRow: PropTypes.func.isRequired,
+  viewTableColumnOrRow: PropTypes.bool.isRequired,
 };
 
 export default TablePreferred;
