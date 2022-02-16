@@ -39,7 +39,7 @@ export default {
     batchOperation: 'indexed',
     progressVerbosityLevel: 'info',
     ttl: 3600,
-    activeTtl: 3600,
+    activeTtl: '',
   },
   priority: 3,
 };
