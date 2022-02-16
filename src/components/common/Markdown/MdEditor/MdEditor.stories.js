@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Typography } from 'antd';
 import MdEditor from 'components/common/Markdown/MdEditor';
 import addPipelineTemplate from 'config/template/addPipeline.template';
-import { stringify } from 'utils/string';
+import { stringify } from 'utils/stringHelper';
 import { SB_SECTIONS } from 'const';
 import Drawer, { DrawerEditorMD } from 'components/Drawer';
 
@@ -18,13 +18,14 @@ export const Default = () => <MdEditor value={source} />;
 export const Empty = () => <MdEditor value={undefined} config={config} />;
 
 export const InDrawer = () => (
-  <Drawer visible>
+  <Drawer visible getContainer={false}>
     <MdEditor value={source} />
   </Drawer>
 );
 
 export const DrawerEditorComponent = () => (
   <DrawerEditorMD
+    getContainer={false}
     title="Update Pipeline"
     description={
       <>

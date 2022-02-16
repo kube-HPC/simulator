@@ -35,6 +35,7 @@ const EditDrawer = () => {
 
   return (
     <Drawer
+      getContainer={false}
       isOpened={isOn}
       onClose={setOff}
       onDidClose={goTo.root}

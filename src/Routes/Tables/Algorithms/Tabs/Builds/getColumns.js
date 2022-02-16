@@ -1,12 +1,13 @@
 import React from 'react';
 import Moment from 'react-moment';
+import { CloseOutlined, RedoOutlined } from '@ant-design/icons';
 import { Button, Progress } from 'antd';
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import Ellipsis from 'components/common/Ellipsis.react';
 import humanizeDuration from 'humanize-duration';
 import { COLOR_TASK_STATUS } from 'styles/colors';
-import StatusTag from 'components/StatusTag';
-import { sorter } from 'utils/string';
+import { StatusTag } from 'components/StatusTag';
+import { sorter } from 'utils/stringHelper';
 
 const BuildId = buildId => (
   <Ellipsis copyable type="secondary" text={buildId} />
@@ -106,14 +107,14 @@ const getColumns = ({ cancelBuild, rerunBuild, currentTime }) => [
         <Button
           type="danger"
           shape="circle"
-          icon="close"
+          icon={<CloseOutlined />}
           onClick={() => cancelBuild(record.buildId)}
         />
       ) : (
         <Button
           type="default"
           shape="circle"
-          icon="redo"
+          icon={<RedoOutlined />}
           onClick={() => rerunBuild(record.buildId)}
         />
       );

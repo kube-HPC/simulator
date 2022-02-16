@@ -1,21 +1,24 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useLayoutEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Steps, Form as AntdForm } from 'antd';
+import { CheckOutlined, RightOutlined, LeftOutlined } from '@ant-design/icons';
+import { Steps, Form as AntdForm } from 'antd';
 import { JsonView } from 'components/common';
 import styled from 'styled-components';
 import { COLOR_LAYOUT } from 'styles';
-import { pickBy, identity, get } from 'lodash';
-import template from 'config/template/addPipeline.template';
 import {
   BottomPanel,
   PanelButton,
   RightAlignedButton,
 } from 'components/Drawer';
-import { Initial, Nodes, Options } from './Steps';
+import { useWizard } from 'hooks';
 import { context } from './useWizardContext';
-import useSubscribe from '../useSubscribe';
+import { Initial, Nodes, Options } from './Steps';
 
-const pruneObject = obj => pickBy(obj, identity);
+const stepNames = ['Initial', 'Nodes', 'Options'];
+const stepComponents = [Initial, Nodes, Options];
+const steps = stepNames.map(name => (
+  <Steps.Step key={`steps-${name}`} title={name} />
+));
 
 const Form = styled(AntdForm)`
   width: 90ch;
@@ -29,90 +32,39 @@ export const Body = styled.div`
   max-height: 81vh;
 `;
 
-const stepNames = ['Initial', 'Nodes', 'Options'];
-const stepComponents = [Initial, Nodes, Options];
-
-const steps = stepNames.map(name => (
-  <Steps.Step key={`steps-${name}`} title={name} />
-));
-
-/** @param {[any]} collection */
-const normalize = collection =>
-  collection.reduce((acc, item, ii) => ({ ...acc, [ii]: item }), {});
-
-// converts arrays to objects on selected fields to match ant requirement
-const parseInitialState = initialState => {
-  const nodes =
-    initialState?.nodes?.map(item =>
-      !item.input
-        ? item
-        : {
-            ...item,
-            input: normalize(item.input),
-          }
-    ) ?? [];
-  const state = {
-    ...initialState,
-    nodes: normalize(nodes),
-  };
-  return state;
-};
-
 /** @param {object} props */
 /** @param {import('antd/lib/form').FormProps} props.form */
 const Wizard = ({
   toggle,
+  form,
   onSubmit,
   initialState,
   setEditorState,
-  form,
   setStepIdx,
   stepIdx,
   wizardClear,
+  isEdit,
 }) => {
+  const firstUpdateWizard = useRef(true);
+  const [valuesState, setValuesState] = useState(() => initialState);
+  const { getFieldValue } = form;
+
   const {
-    setFieldsValue,
-    getFieldsValue,
-    getFieldDecorator,
-    getFieldValue,
-  } = form;
-  const { subscribe } = useSubscribe();
+    setForm,
+    handleSubmit,
+    getFormattedFormValues,
+    resetKind,
+    persistForm,
+  } = useWizard(form, initialState, onSubmit, setEditorState, setValuesState);
 
-  useEffect(() => {
-    setFieldsValue(pruneObject(parseInitialState(initialState)));
-  }, [setFieldsValue, initialState]);
+  const handleToggle = useCallback(() => {
+    persistForm();
+    toggle();
+  }, [persistForm, toggle]);
 
-  const getFormattedFormValues = useCallback(() => {
-    const formValues = getFieldsValue();
-    const nodes = Object.values(formValues.nodes || {})
-      .filter(item => item.kind)
-      .map(item => {
-        if (!item.input) return item;
-        return {
-          ...item,
-          input: Object.values(item.input),
-        };
-      });
-    return pruneObject({ ...formValues, nodes });
-  }, [getFieldsValue]);
-
-  const persistForm = useCallback(
-    () => setEditorState(getFormattedFormValues()),
-    [setEditorState, getFormattedFormValues]
-  );
-
-  useEffect(() => subscribe(persistForm), [subscribe, persistForm]);
-
-  // NOTE:: this is a workaround!
-  // filtering unchanged values removes the initial values from the form
-  const fieldDecorator = useCallback(
-    /** @type {typeof getFieldDecorator} */
-    (field, props) =>
-      getFieldDecorator(field, {
-        initialValue: get(template, field),
-        ...props,
-      }),
-    [getFieldDecorator]
+  // check for undefined to avoid removing streaming only fields while initial load
+  const isStreamingPipeline = ['stream', undefined].includes(
+    getFieldValue('kind')
   );
 
   const isLastStep = stepIdx === steps.length - 1;
@@ -125,35 +77,14 @@ const Wizard = ({
     setStepIdx,
   ]);
 
-  const handleToggle = useCallback(() => {
-    persistForm();
-    toggle();
-  }, [persistForm, toggle]);
-
-  const handleSubmit = useCallback(
-    e => {
-      e?.preventDefault();
-      onSubmit(getFormattedFormValues());
-    },
-    [getFormattedFormValues, onSubmit]
-  );
-  // check for undefined to avoid removing streaming only fields while initial load
-  const isStreamingPipeline = ['stream', undefined].includes(
-    getFieldValue('kind')
-  );
-
-  useEffect(() => {
-    // remove gateway option from nodes and reset them to algorithm option
-
-    if (isStreamingPipeline === false) {
-      const { nodes } = getFieldsValue();
-      nodes.forEach((node, index) => {
-        if (node.kind === 'gateway') {
-          setFieldsValue({ [`nodes.${index}.kind`]: 'algorithm' });
-        }
-      });
+  useLayoutEffect(() => {
+    if (firstUpdateWizard.current) {
+      firstUpdateWizard.current = false;
+    } else {
+      // remove gateway or output option from nodes and reset them to algorithm option
+      resetKind(isStreamingPipeline ? 'output' : 'gateway');
     }
-  }, [isStreamingPipeline, getFieldsValue, setFieldsValue]);
+  }, [isStreamingPipeline, resetKind]);
 
   return (
     <>
@@ -165,18 +96,28 @@ const Wizard = ({
         style={{
           borderBottom: `1px solid ${COLOR_LAYOUT.border}`,
           marginBottom: '20px',
+          paddingTop: '0px',
         }}>
         {steps}
       </Steps>
 
       <Body>
         <Form
+          form={form}
+          onValuesChange={setForm}
+          name="create-pipeline"
           layout="horizontal"
           hideRequiredMark
           onSubmit={handleSubmit}
           style={{ padding: '0 2ch' }}>
           <context.Provider
-            value={{ form, initialState, fieldDecorator, isStreamingPipeline }}>
+            value={{
+              form,
+              initialState,
+              isStreamingPipeline,
+              isEdit,
+              valuesState,
+            }}>
             {stepComponents.map((StepComponent, ii) => (
               <StepComponent
                 key={`step-component-${stepNames[ii]}`}
@@ -200,7 +141,7 @@ const Wizard = ({
         </PanelButton>
         <PanelButton onClick={handleToggle}>Editor View</PanelButton>
         <PanelButton disabled={stepIdx === 0} onClick={onPrevious}>
-          <Icon type="left" />
+          <LeftOutlined />
           Back
         </PanelButton>
         <RightAlignedButton
@@ -209,7 +150,7 @@ const Wizard = ({
           form="create-pipeline"
           htmlType="submit">
           {isLastStep ? 'Submit' : 'Next'}
-          <Icon type={isLastStep ? 'check' : 'right'} />
+          {isLastStep ? <CheckOutlined /> : <RightOutlined />}
         </RightAlignedButton>
       </BottomPanel>
     </>
@@ -221,7 +162,6 @@ Wizard.propTypes = {
   toggle: PropTypes.func.isRequired,
   setEditorState: PropTypes.func.isRequired,
   form: PropTypes.shape({
-    getFieldDecorator: PropTypes.func.isRequired,
     setFieldsValue: PropTypes.func.isRequired,
     getFieldsValue: PropTypes.func.isRequired,
     getFieldValue: PropTypes.func.isRequired,
@@ -232,7 +172,8 @@ Wizard.propTypes = {
   // eslint-disable-next-line
   initialState: PropTypes.object.isRequired,
   // eslint-disable-next-line
-  wizardClear: PropTypes.object.isRequired,
+  wizardClear: PropTypes.func.isRequired,
+  isEdit: PropTypes.bool.isRequired,
 };
 
-export default Form.create({ name: 'create-pipeline' })(Wizard);
+export default Wizard;

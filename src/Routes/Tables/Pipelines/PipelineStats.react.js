@@ -5,7 +5,7 @@ import { Tag, Tooltip } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import { sortBy } from 'lodash';
 import { FlexBox } from 'components/common';
-import { Count } from 'components/StatusTag';
+import { StatusTag } from 'components/StatusTag';
 import { useBoards, usePipeline } from 'hooks';
 import BoardStatus from './TensorflowBoards/BoardStatus.react';
 
@@ -36,7 +36,7 @@ const PipelineStats = ({ name, nodes }) => {
     <>
       {hasStats &&
         pipelineStats.map(s => (
-          <Count
+          <StatusTag
             key={`${dataStats.name}-${s.status}`}
             status={s.status}
             count={s.count}

@@ -1,7 +1,8 @@
 import React from 'react';
+import { CheckOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Button, Modal, Tooltip, Typography, Tag } from 'antd';
 import Moment from 'react-moment';
-import { sorter } from 'utils/string';
+import { sorter } from 'utils/stringHelper';
 import { Ellipsis, FlexBox } from 'components/common';
 import { COLOR_PIPELINE_STATUS } from 'styles';
 
@@ -78,7 +79,7 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion }) => {
             <Button
               type="dashed"
               shape="circle"
-              icon="check"
+              icon={<CheckOutlined />}
               onClick={() => currentConfirmAction(onApply, record)}
             />
           </Tooltip>
@@ -88,7 +89,7 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion }) => {
             <Button
               type="dashed"
               shape="circle"
-              icon="delete"
+              icon={<DeleteOutlined />}
               onClick={() => deleteConfirmAction(onDelete, record)}
             />
           </Tooltip>

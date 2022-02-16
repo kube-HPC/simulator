@@ -1,4 +1,4 @@
-import { Input, Select } from 'antd';
+import { Input } from 'antd';
 import PropTypes from 'prop-types';
 import React, {
   forwardRef,
@@ -8,32 +8,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-
-const selectWidth = { width: 90 };
-
-const Addon = ({ state, options, callback }) =>
-  Array.isArray(options) ? (
-    <Select value={state} style={selectWidth} onChange={callback}>
-      {options.map(option => (
-        <Select.Option key={option} value={option}>
-          {option}
-        </Select.Option>
-      ))}
-    </Select>
-  ) : (
-    state
-  );
-
-const arrayOrStringType = PropTypes.oneOfType([
-  PropTypes.array,
-  PropTypes.string,
-]);
-
-Addon.propTypes = {
-  state: PropTypes.string.isRequired,
-  options: arrayOrStringType.isRequired,
-  callback: PropTypes.func.isRequired,
-};
+import SignInputAddOn from './SignInputAddOn.react';
 
 const initialByType = target => () => {
   const [first] = Array.isArray(target) ? target : [target];
@@ -49,10 +24,14 @@ const InputAddon = forwardRef(
     const [selectAfter, setSelectAfter] = useState(initialByType(after));
     const [inputValue, setInputValue] = useState(value);
 
-    const onInputChange = useCallback(
-      ({ target: { value: _value } }) => setInputValue(_value),
-      []
-    );
+    const onInputChange = useCallback(({ target: { value: _value } }) => {
+      setInputValue(_value);
+    }, []);
+
+    useEffect(() => {
+      if (inputValue === '' || value.indexOf(inputValue) === -1)
+        setInputValue(value);
+    }, [value]);
 
     useEffect(() => {
       if (Array.isArray(before)) {
@@ -62,7 +41,7 @@ const InputAddon = forwardRef(
       } else {
         setSelectBefore(before);
       }
-    }, [after, before, inputValue, selectAfter, selectBefore]);
+    }, [after, before, inputValue]);
 
     useEffect(() => {
       if (Array.isArray(after)) {
@@ -71,33 +50,37 @@ const InputAddon = forwardRef(
       } else {
         setSelectAfter(after);
       }
-    }, [after, before, inputValue, selectAfter, selectBefore]);
+    }, [after, before, inputValue]);
 
     useEffect(() => {
       const beforeValue = selectBefore || initialByType(before);
       const afterValue = selectAfter || initialByType(after);
       const _value = inputValue || '';
-      setInputValue(
-        _value
-          .replace(beforeValue, '')
-          .replace(beforeValue, '')
-          .replace(afterValue, '')
-      );
-      onChange(_value ? `${beforeValue}${_value}${after}` : '');
-    }, [after, before, inputValue, onChange, selectAfter, selectBefore]);
+      setInputValue(_value.replace(beforeValue, '').replace(afterValue, ''));
+
+      const lastValue = value.replace(beforeValue, '').replace(afterValue, '');
+
+      if (lastValue !== inputValue)
+        onChange(_value ? `${beforeValue}${_value}${after}` : '');
+    }, [inputValue, selectBefore]);
 
     const addonBefore = useMemo(
       () =>
-        Addon({
+        SignInputAddOn({
           state: selectBefore,
           options: before,
           callback: setSelectBefore,
         }),
       [before, selectBefore]
     );
+
     const addonAfter = useMemo(
       () =>
-        Addon({ state: selectAfter, options: after, callback: setSelectAfter }),
+        SignInputAddOn({
+          state: selectAfter,
+          options: after,
+          callback: setSelectAfter,
+        }),
       [after, selectAfter]
     );
 
@@ -116,9 +99,9 @@ const InputAddon = forwardRef(
 
 InputAddon.displayName = `InputAddon`;
 InputAddon.propTypes = {
-  value: PropTypes.string.isRequired,
-  before: arrayOrStringType,
-  after: arrayOrStringType,
+  value: PropTypes.string,
+  before: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
+  after: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
   placeholder: PropTypes.string,
   onChange: PropTypes.func,
 };
@@ -128,6 +111,7 @@ InputAddon.defaultProps = {
   after: '',
   placeholder: '',
   onChange: undefined,
+  value: '',
 };
 
 export default memo(InputAddon);

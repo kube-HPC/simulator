@@ -10,4 +10,15 @@ export { default as mapObjValues } from './mapObjValues';
 export { deleteConfirmAction } from './modal';
 export { default as notification, copyToClipboard } from './notification';
 export { default as selector } from './selector';
-export { sorter, stringify, toUpperCaseFirstLetter } from './string';
+export {
+  sorter,
+  stringify,
+  toUpperCaseFirstLetter,
+  splitByDot,
+  isJsonString,
+} from './stringHelper';
+export {
+  deepCopyFromKeyValue,
+  flattenObjKeyValue,
+  tryParseJson,
+} from './objectManipulation';

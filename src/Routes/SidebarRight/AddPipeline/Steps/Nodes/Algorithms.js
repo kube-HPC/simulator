@@ -6,7 +6,7 @@ import { Form as CommonForm } from 'components/common';
 import useAlgorithm from 'hooks/useAlgorithm';
 import Controller from './InputParseJson';
 import useWizardContext from '../../useWizardContext';
-import { Field as RawField, HorizontalRow } from './../FormUtils';
+import { Field as RawField } from './../FormUtils';
 
 const { Divider, Collapsible } = CommonForm;
 
@@ -14,53 +14,38 @@ const ctx = createContext();
 
 /** @type {import('./../FormUtils').FieldProps} */
 const Field = props => {
-  const { getFieldDecorator, rootId } = useContext(ctx);
-  return (
-    <RawField
-      {...props}
-      getFieldDecorator={getFieldDecorator}
-      rootId={rootId}
-    />
-  );
-};
-
-const overrides = {
-  labelCol: {
-    span: 10,
-  },
-  wrapperCol: {
-    style: {
-      textAlign: 'left',
-    },
-  },
+  const { rootId } = useContext(ctx);
+  return <RawField {...props} rootId={rootId} />;
 };
 
 const AlgorithmNode = ({ id }) => {
-  const {
-    form: { getFieldDecorator },
-    isStreamingPipeline,
-  } = useWizardContext();
+  const { isStreamingPipeline } = useWizardContext();
   const { algorithmsCollection } = useAlgorithm();
 
   const sortedAlgorithms = useMemo(
-    () => algorithmsCollection.map(item => item.name).sort(),
+    () =>
+      algorithmsCollection
+        .map(item => ({
+          value: item.name,
+        }))
+        .sort((a, b) => (a.value > b.value ? 1 : -1)),
     [algorithmsCollection]
   );
 
-  const rootId = `nodes.${id}`;
+  const rootId = ['nodes', id];
   return (
-    <ctx.Provider value={{ rootId, getFieldDecorator }}>
-      <Field name="algorithmName" title="Algorithm name">
+    <ctx.Provider value={{ rootId }}>
+      <Field name={['algorithmName']} title="Algorithm name">
         <AutoComplete
           disabled={algorithmsCollection.length === 0}
-          dataSource={sortedAlgorithms}
+          options={sortedAlgorithms}
           filterOption={(inputValue, option) =>
-            option.props.children.indexOf(inputValue) !== -1
+            option.value.indexOf(inputValue) !== -1
           }
         />
       </Field>
       {isStreamingPipeline && (
-        <Field name="stateType" title="State Type" required>
+        <Field name={['stateType']} title="State Type" required>
           <Radio.Group buttonStyle="solid">
             <Radio.Button value="stateless">stateless</Radio.Button>
             <Radio.Button value="stateful">stateful</Radio.Button>
@@ -68,81 +53,65 @@ const AlgorithmNode = ({ id }) => {
         </Field>
       )}
       <Divider>Inputs</Divider>
-      <Controller placeholder="Input" tooltip="Input" nodeIdx={id} />
+      <Controller
+        placeholder="Input"
+        tooltip="Input"
+        nodeIdx={id}
+        isRequired={false}
+      />
       <Collapsible title="Retry">
-        <HorizontalRow>
-          <Field
-            name="retry.policy"
-            title="Policy"
-            initialValue="OnCrash"
-            overrides={{
-              labelAlign: undefined,
-              labelCol: { span: 5 },
-              wrapperCol: { span: 24 },
-            }}
-            skipValidation>
-            <Radio.Group buttonStyle="solid">
-              <Radio.Button value="Never">Never</Radio.Button>
-              <Radio.Button value="Always">Always</Radio.Button>
-              <Radio.Button value="OnError">OnError</Radio.Button>
-              <Radio.Button value="OnCrash">OnCrash</Radio.Button>
-            </Radio.Group>
-          </Field>
-          <Field
-            inline={false}
-            title="Retry Limit"
-            name="retry.limit"
-            initialValue={3}
-            skipValidation
-            overrides={{
-              labelAlign: undefined,
-              labelCol: { span: 10 },
-            }}>
-            <InputNumber min={0} />
-          </Field>
-        </HorizontalRow>
+        <Field
+          name={['retry', 'policy']}
+          title="Policy"
+          initialValue="OnCrash"
+          skipValidation>
+          <Radio.Group buttonStyle="solid">
+            <Radio.Button value="Never">Never</Radio.Button>
+            <Radio.Button value="Always">Always</Radio.Button>
+            <Radio.Button value="OnError">OnError</Radio.Button>
+            <Radio.Button value="OnCrash">OnCrash</Radio.Button>
+          </Radio.Group>
+        </Field>
+        <Field
+          inline={false}
+          title="Retry Limit"
+          name={['retry', 'limit']}
+          initialValue={3}
+          skipValidation>
+          <InputNumber min={0} />
+        </Field>
       </Collapsible>
       <Collapsible title="Options">
         {!isStreamingPipeline && (
           <Field
-            overrides={overrides}
-            name="batchOperation"
+            name={['batchOperation']}
             title="Batch Operation"
             skipValidation
             initialValue="indexed">
-            <Radio.Group style={{ marginLeft: '-0.5ch' }} buttonStyle="solid">
+            <Radio.Group buttonStyle="solid">
               <Radio.Button value="indexed">indexed</Radio.Button>
               <Radio.Button value="cartesian">cartesian</Radio.Button>
             </Radio.Group>
           </Field>
         )}
-        <Field
-          title="Node TTL"
-          name="ttl"
-          initialValue={0}
-          skipValidation
-          overrides={overrides}
-          small>
+        <Field title="Node TTL" name={['ttl']} initialValue={0} skipValidation>
           <InputNumber min={0} />
         </Field>
 
         <Field
-          overrides={overrides}
+          overrides={{ ...{ valuePropName: 'checked' } }}
           title="Include In Pipeline Results"
-          name="includeInResult"
-          skipValidation
-          initialValue={false}
-          small>
+          name={['includeInResult']}
+          skipValidation>
           <Switch />
         </Field>
+
         <Field
-          overrides={overrides}
+          overrides={{ ...{ valuePropName: 'checked' } }}
           title="Create A Tensorboard"
-          name="metrics.tensorboard"
-          skipValidation
-          initialValue
-          small>
-          <Switch defaultChecked />
+          name={['metrics', 'tensorboard']}
+          skipValidation>
+          <Switch />
         </Field>
       </Collapsible>
     </ctx.Provider>

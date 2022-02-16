@@ -42,6 +42,7 @@ const ExecuteDrawer = () => {
 
   return (
     <Drawer
+      getContainer={false}
       isOpened={isOn}
       onDidClose={goTo.root}
       onClose={setOff}
@@ -49,7 +50,12 @@ const ExecuteDrawer = () => {
       title={record?.name ?? pipelineId}
       asFlex>
       {record ? (
-        <DrawerEditor value={value} submitText="Run" onSubmit={onSubmit} />
+        <DrawerEditor
+          getContainer={false}
+          value={value}
+          submitText="Run"
+          onSubmit={onSubmit}
+        />
       ) : (
         <MissingIdError />
       )}

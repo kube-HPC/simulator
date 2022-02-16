@@ -2,6 +2,11 @@ import React, { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+import {
+  BugOutlined,
+  PlayCircleOutlined,
+  RedoOutlined,
+} from '@ant-design/icons';
 import { Button, Empty, Tooltip } from 'antd';
 import { FlexBox, JsonSwitch } from 'components/common';
 import { useActions, useLogs, useSettings } from 'hooks';
@@ -14,6 +19,10 @@ import { Tabs, Pane } from './../styles';
 const OverflowContainer = styled.div`
   height: 100%;
   overflow: auto;
+`;
+const ContainerTabs = styled.div`
+  padding-left: 15px;
+  padding-right: 15px;
 `;
 
 const NodeInfo = ({ node, jobId }) => {
@@ -45,7 +54,7 @@ const NodeInfo = ({ node, jobId }) => {
           key="run-node"
           type="ghost"
           onClick={onRunNode}
-          icon="play-circle"
+          icon={<PlayCircleOutlined />}
         />
       </Tooltip>
       <Tooltip title={`Debug from node ${node.nodeName}`}>
@@ -53,32 +62,31 @@ const NodeInfo = ({ node, jobId }) => {
           key="debug-node"
           type="ghost"
           onClick={onDebugNode}
-          icon="bug"
+          icon={<BugOutlined />}
         />
       </Tooltip>
-      <Button key="refresh" icon="redo" onClick={onRefresh}>
+      <Button key="refresh" icon={<RedoOutlined />} onClick={onRefresh}>
         Refresh Logs
       </Button>
     </FlexBox.Auto>
   ) : null;
 
   return node ? (
-    <Tabs defaultActiveKey="logs-tab" tabBarExtraContent={extra}>
-      <Pane
-        tab="Logs"
-        key="logs-tab"
-        style={{ display: 'flex', flexDirection: 'column' }}>
-        <NodeLogs node={node} taskDetails={taskDetails} onChange={setIndex} />
-      </Pane>
-      <Tabs.TabPane tab="Algorithm Details" key="algorithms-tab">
-        <OverflowContainer>
-          <JsonSwitch obj={algorithmDetails} jobId={jobId} />
-        </OverflowContainer>
-      </Tabs.TabPane>
-      <Tabs.TabPane tab="Input Output Details" key="io-details-tab">
-        <NodeInputOutput payload={node} algorithm={algorithmDetails} />
-      </Tabs.TabPane>
-    </Tabs>
+    <ContainerTabs>
+      <Tabs defaultActiveKey="logs-tab" tabBarExtraContent={extra}>
+        <Pane tab="Logs" key="logs-tab">
+          <NodeLogs node={node} taskDetails={taskDetails} onChange={setIndex} />
+        </Pane>
+        <Tabs.TabPane tab="Algorithm Details" key="algorithms-tab">
+          <OverflowContainer>
+            <JsonSwitch obj={algorithmDetails} jobId={jobId} />
+          </OverflowContainer>
+        </Tabs.TabPane>
+        <Tabs.TabPane tab="Input Output Details" key="io-details-tab">
+          <NodeInputOutput payload={node} algorithm={algorithmDetails} />
+        </Tabs.TabPane>
+      </Tabs>
+    </ContainerTabs>
   ) : (
     <Empty />
   );

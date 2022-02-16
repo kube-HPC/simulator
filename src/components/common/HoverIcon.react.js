@@ -1,30 +1,31 @@
-import { Icon } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 import { mixins } from 'styles';
-import { COLOR_LAYOUT } from 'styles/colors';
+import PropTypes from 'prop-types';
+import Icon from '@ant-design/icons';
 
-const DarkHoverStyle = styled(Icon)`
+const IconHoverStyle = styled.div`
   ${mixins.transition};
-  color: ${COLOR_LAYOUT.darkBorder};
+  color: ${props => props.theme.COLOR_LAYOUT.darkBorder};
   :hover {
-    color: black;
+    color: ${props => props.theme.Styles.IconHoverStyle.colorHover};
   }
+  font-size: 22px;
+  cursor: pointer;
 `;
 
-const iconStyle = { fontSize: 22 };
+const Hover = ({ type, onClick, ...props }) => {
+  const componentIcon = type || <Icon {...props} />;
 
-const Hover = ({ type, onClick, ...props }) => (
-  <DarkHoverStyle
-    type={type}
-    style={iconStyle}
-    onClick={onClick}
-    // eslint-disable-next-line
-    {...props}
-  />
-);
+  return <IconHoverStyle onClick={onClick}>{componentIcon}</IconHoverStyle>;
+};
 
 const HoverMemo = Hover;
-export default { Hover: HoverMemo, DarkHoverStyle };
+export default { Hover: HoverMemo, IconHoverStyle };
 
-Hover.propTypes = Icon.propTypes;
+Hover.propTypes = {
+  // eslint-disable-next-line react/require-default-props
+  type: PropTypes.node,
+  // eslint-disable-next-line react/require-default-props
+  onClick: PropTypes.func,
+};

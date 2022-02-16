@@ -1,46 +1,17 @@
 // eslint-disable-next-line
-import React, { useState, useCallback, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { tryParse } from 'utils';
 import RawInputField from 'components/InputField';
+import useInputField from './useInputField';
 
-const InputField = ({ placeholder, tooltip, onRemove, idx, ...antFields }) => {
-  const [isValid, setIsValid] = useState(true);
-  const [value, setValue] = useState();
-  const hasRemove = !!onRemove;
-  useEffect(() => {
-    /**
-     * IsValid will override the field most of the time, this is useful when you
-     * delete an entry - ant needs to re-write this field you don't want ant to
-     * override a field if it is invalid, it will show an "x" and hide the extra
-     * invalid characters from the user making it unusable
-     */
-    if (isValid || value === undefined) {
-      if (Number.isNaN(value)) {
-        setValue(value);
-      } else {
-        setValue(JSON.stringify(antFields.value));
-      }
-    }
-  }, [antFields, value, isValid]);
-
-  const onInputChange = useCallback(
-    ({ target: { value: src } }) => {
-      setValue(src);
-      const onFail = () => setIsValid(src === '');
-      const onSuccess = ({ parsed }) => {
-        antFields.onChange(parsed);
-        setIsValid(true);
-      };
-      if (src === '') {
-        onSuccess({ parsed: undefined });
-        setIsValid(false);
-      } else {
-        tryParse({ src, onSuccess, onFail });
-      }
-    },
-    [antFields]
-  );
+const InputField = ({ placeholder, tooltip, idx, onRemove, ...antFields }) => {
+  const {
+    addonBefore,
+    onInputChange,
+    hasRemove,
+    isValid,
+    value,
+  } = useInputField(antFields, onRemove);
 
   return (
     <RawInputField
@@ -52,6 +23,7 @@ const InputField = ({ placeholder, tooltip, onRemove, idx, ...antFields }) => {
       value={value}
       onChange={onInputChange}
       placeholder={placeholder}
+      addonBefore={addonBefore}
     />
   );
 };
@@ -60,20 +32,30 @@ InputField.propTypes = {
   placeholder: PropTypes.string,
   tooltip: PropTypes.string,
   onRemove: PropTypes.func,
-  idx: PropTypes.string.isRequired,
+  idx: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  isValid: PropTypes.bool,
   // under antFields
-  value: PropTypes.node,
+  value: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+    PropTypes.string,
+    PropTypes.node,
+  ]),
   id: PropTypes.node,
   onChange: PropTypes.func,
+  addonBefore: PropTypes.arrayOf(PropTypes.string),
 };
 
 InputField.defaultProps = {
-  onRemove: null,
   placeholder: null,
   tooltip: null,
+  onRemove: null,
   value: undefined,
   id: undefined,
   onChange: undefined,
+  addonBefore: undefined,
+  idx: undefined,
+  isValid: true,
 };
 
 export default InputField;

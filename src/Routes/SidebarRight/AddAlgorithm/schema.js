@@ -52,6 +52,7 @@ const addAlgorithmSchema = {
       DIVIDERS: {
         BUILD: `Build Configuration`,
         GIT: `Git Configuration`,
+        ADVANCED: `Git Advance Configuration`,
       },
       BASE_IMAGE: {
         field: 'gitRepository.baseImage',

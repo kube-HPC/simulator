@@ -5,9 +5,9 @@ import { render } from 'react-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { HashRouter as Router } from 'react-router-dom';
 import { ReusableProvider } from 'reusable';
-import { GlobalStyle } from 'styles';
 import { init } from 'actions/connection.action';
 import { selectors } from 'reducers';
+import GlobalThemes from './styles/themes/GlobalThemes';
 import Root from './Routes';
 import store from './store';
 
@@ -35,7 +35,7 @@ const ConfigProvider = () => {
     <Router>
       <ReusableProvider>
         <ErrorBoundary>
-          <GlobalStyle />
+          <GlobalThemes />
           <Root />
         </ErrorBoundary>
       </ReusableProvider>

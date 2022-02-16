@@ -15,6 +15,9 @@ import {
 const PieContainer = styled.div`
   height: 10em;
   flex: 1;
+  svg + div {
+    color: #000000;
+  }
 `;
 
 const BoxesContainer = styled.div`

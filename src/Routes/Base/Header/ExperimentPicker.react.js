@@ -6,6 +6,7 @@ import { FlexBox, Icons } from 'components/common';
 import { useExperiments } from 'hooks';
 import { schema } from 'hooks/useExperiments';
 import { COLOR, COLOR_EXPERIMENTS } from 'styles/colors';
+import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
 
 const BigTag = styled(Tag)`
   line-height: 30px;
@@ -87,7 +88,7 @@ const ExperimentPicker = () => {
                   <Text type="secondary">{description}</Text>
                 </Grow>
                 <FlexBox.Item>
-                  <Icons.Hover onClick={onRemove} type="minus" />
+                  <Icons.Hover onClick={onRemove} type={<MinusOutlined />} />
                 </FlexBox.Item>
               </ItemDisabled>
             </Menu.Item>
@@ -99,7 +100,7 @@ const ExperimentPicker = () => {
         <FlexBox.Auto>
           <Input onChange={onNameChange} placeholder="Experiment Name" />
           <Input onChange={onDescriptionChange} placeholder="Description" />
-          <Icons.Hover onClick={onAdd} type="plus" />
+          <Icons.Hover onClick={onAdd} type={<PlusOutlined />} />
         </FlexBox.Auto>
       </Menu.Item>
       <Menu.Item>

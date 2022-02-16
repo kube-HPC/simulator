@@ -1,3 +1,4 @@
+import { CopyOutlined } from '@ant-design/icons';
 import { Button, Select, Tag, Tooltip } from 'antd';
 import { FlexBox } from 'components/common';
 import LogsViewer from 'components/common/LogsViewer';
@@ -10,8 +11,8 @@ import { notification } from 'utils';
 
 const Container = styled.div`
   margin-top: 1em;
-  max-height: 22.5em;
-  flex: 1;
+  height: 100px;
+  flex: 1 1 0%;
   overflow: visible;
 `;
 
@@ -90,7 +91,7 @@ const NodeLogs = ({ node, taskDetails, onChange }) => {
         </ItemGrow>
         <FlexBox.Item>
           <CopyToClipboard text={currentTask} onCopy={onCopy}>
-            <Button icon="copy">Copy Task ID to Clipboard</Button>
+            <Button icon={<CopyOutlined />}>Copy Task ID to Clipboard</Button>
           </CopyToClipboard>
         </FlexBox.Item>
       </FlexBox>

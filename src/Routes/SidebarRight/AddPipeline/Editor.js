@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Icon } from 'antd';
+import { CheckOutlined } from '@ant-design/icons';
 import { COLOR_LAYOUT } from 'styles';
 import { DRAWER_SIZE } from 'const';
 import { JsonEditor } from 'components/common';
@@ -89,7 +89,7 @@ const Editor = ({ toggle, onSubmit, initialState, setEditorState }) => {
           form="add-pipeline"
           htmlType="submit">
           Submit
-          <Icon type="check" />
+          <CheckOutlined />
         </RightAlignedButton>
       </BottomPanel>
     </>

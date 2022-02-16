@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
-import { IconCardView, IconListView } from 'components/Icons';
 import { Icons } from 'components/common';
 import useQuery from 'hooks/useQuery';
 import { Link, useLocation } from 'react-router-dom';
+import { IconCardView, IconListView } from 'components/Icons';
 
 const ViewType = () => {
   const query = useQuery();

@@ -1,12 +1,13 @@
 /* eslint-disable max-classes-per-file */
 import React from 'react';
+import { COLOR } from 'styles/colors';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Ansi from 'ansi-to-react';
-import { Empty, Icon, Tooltip } from 'antd';
+import { CopyOutlined } from '@ant-design/icons';
+import { Empty, Tooltip } from 'antd';
 import Moment from 'react-moment';
 import styled from 'styled-components';
-import { COLOR } from 'styles/colors';
 import { notification } from 'utils';
 import {
   List as VirtualizedList,
@@ -31,9 +32,10 @@ const ContainerBase = styled.div`
 `;
 
 const ValidContainer = styled(ContainerBase)`
-  background-color: black;
+  background-color: ${props => props.theme.Styles.validContainer.background};
+  border: 1px solid #858899;
   color: white;
-  height: 100%;
+  height: 70vh;
 `;
 
 const InvalidContainer = styled(ContainerBase)`
@@ -134,7 +136,7 @@ class Entry extends React.PureComponent {
         <Message>{message}</Message>
         <Tooltip title="Copy log to clipboard" placement="left">
           <CopyButton onClick={this.onCopy} type="button">
-            <Icon type="copy" />
+            <CopyOutlined />
           </CopyButton>
         </Tooltip>
         <Tag data-log-level={level}>{level}</Tag>

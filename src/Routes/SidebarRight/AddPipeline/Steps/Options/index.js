@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Checkbox, InputNumber, Select } from 'antd';
@@ -8,8 +8,7 @@ import SliderNumber from './SliderNumber';
 import Triggers from './Triggers';
 import Webhooks from './Webhooks';
 import useWizardContext from '../../useWizardContext';
-import { Field } from '../FormUtils';
-import JsonEditor from './../../JsonEditor';
+import StreamingFlows from './StreamingFlows';
 
 export { Triggers, Webhooks };
 
@@ -18,29 +17,15 @@ const smallSelectStyle = { width: '90px' };
 const Grow = styled(FlexBox.Item)`
   flex-grow: 1;
 `;
-
+const FlexBoxCheckBoxStart = styled(FlexBox)`
+  .ant-form-item-control-input {
+    align-items: start;
+  }
+`;
 const verbosityLevels = ['info', 'trace', 'debug', 'warn', 'error', 'critical'];
 
 const Options = ({ style }) => {
-  const overrides = {
-    labelCol: {
-      span: 5,
-    },
-  };
-
-  const {
-    fieldDecorator,
-    form: { getFieldDecorator, setFieldsValue, getFieldValue },
-    isStreamingPipeline,
-    initialState,
-  } = useWizardContext();
-
-  const [listFlow, setListFlow] = useState(
-    initialState?.streaming?.flows || []
-  );
-  const [arrayListFlow, setArrayListFlow] = useState(
-    ['No Default', ...Object.keys(listFlow)] || []
-  );
+  const { isStreamingPipeline, form, initialState } = useWizardContext();
 
   useEffect(() => {
     if (
@@ -51,59 +36,16 @@ const Options = ({ style }) => {
         initialState.streaming.defaultFlow = '';
       }
     } else {
-      setFieldsValue({
-        'streaming.defaultFlow': initialState?.streaming?.defaultFlow || '',
+      form.setFieldsValue({
+        streaming: { defaultFlow: initialState?.streaming?.defaultFlow || '' },
       });
     }
   }, []);
 
-  useEffect(() => {
-    const listFlowKeys = Object.keys(listFlow);
-    setArrayListFlow(['No Default', ...listFlowKeys]);
-
-    const defaultFlowValue = getFieldValue('streaming.defaultFlow');
-
-    if (!has(listFlow, defaultFlowValue)) {
-      setTimeout(() => {
-        setFieldsValue({ 'streaming.defaultFlow': '' });
-      }, 100);
-    }
-  }, [getFieldValue, listFlow, setFieldsValue]);
-
   return (
     <div style={style}>
       {isStreamingPipeline !== false && (
-        <>
-          <Form.Divider>Streaming Flows</Form.Divider>
-
-          <Field
-            title="Flow"
-            name="streaming.flows"
-            getFieldDecorator={getFieldDecorator}
-            overrides={overrides}
-            skipValidation>
-            <JsonEditor
-              style={{ height: '20em', width: '68ch' }}
-              onChange={setListFlow}
-            />
-          </Field>
-
-          {arrayListFlow.length > 1 && (
-            <Form.Item label="Default Flow">
-              {fieldDecorator('streaming.defaultFlow')(
-                <Select style={smallSelectStyle}>
-                  {arrayListFlow.map((item, index) => (
-                    <Select.Option
-                      key={`default-list-flow-${item}`}
-                      value={index > 0 ? item : ''}>
-                      {item}
-                    </Select.Option>
-                  ))}
-                </Select>
-              )}
-            </Form.Item>
-          )}
-        </>
+        <StreamingFlows form={form} initialState={initialState} />
       )}
       <Form.Divider>Webhooks</Form.Divider>
       <Webhooks />
@@ -114,45 +56,57 @@ const Options = ({ style }) => {
         label="Batch Tolerance"
         labelCol={{}}
         wrapperCol={{ style: { whiteSpace: 'nowrap' } }}>
-        {fieldDecorator('options.batchTolerance')(<SliderNumber />)}
+        <SliderNumber name={['options', 'batchTolerance']} />
       </Form.Item>
+
+      <FlexBox align="baseline">
+        <Grow>
+          <Form.Item
+            label="Concurrent Amount"
+            labelCol={{}}
+            wrapperCol={{ style: { whiteSpace: 'nowrap' } }}>
+            <SliderNumber
+              min={1}
+              name={['options', 'concurrentPipelines', 'amount']}
+            />
+          </Form.Item>
+        </Grow>
+        <FlexBox.Auto align="start">
+          <FlexBox.Item>Reject on Failure:</FlexBox.Item>
+          <FlexBoxCheckBoxStart align="start">
+            <Form.Item
+              name={['options', 'concurrentPipelines', 'rejectOnFailure']}
+              valuePropName="checked">
+              <Checkbox />
+            </Form.Item>
+          </FlexBoxCheckBoxStart>
+        </FlexBox.Auto>
+      </FlexBox>
+
+      <Form.Item label="Pipeline TTL" name={['options', 'ttl']}>
+        <InputNumber />
+      </Form.Item>
+
+      <Form.Item label="Active TTL" name={['options', 'activeTtl']}>
+        <InputNumber />
+      </Form.Item>
+
       <Form.Item
-        label="Concurrent Amount"
-        labelCol={{}}
-        wrapperCol={{ style: { whiteSpace: 'nowrap' } }}>
-        <FlexBox>
-          <Grow>
-            {fieldDecorator('options.concurrentPipelines.amount')(
-              <SliderNumber min={1} />
-            )}
-          </Grow>
-          <FlexBox.Item>
-            Reject on Failure:{' '}
-            {fieldDecorator('options.concurrentPipelines.rejectOnFailure', {
-              valuePropName: 'checked',
-            })(<Checkbox />)}
-          </FlexBox.Item>
-        </FlexBox>
+        label="Verbosity Level"
+        name={['options', 'progressVerbosityLevel']}>
+        <Select style={smallSelectStyle}>
+          {verbosityLevels.map(level => (
+            <Select.Option
+              key={`verbosity-level-${level}`}
+              value={level}
+              style={{ textTransform: 'capitalize' }}>
+              {level}
+            </Select.Option>
+          ))}
+        </Select>
       </Form.Item>
-      <Form.Item label="Pipeline TTL">
-        {fieldDecorator('options.ttl')(<InputNumber />)}
-      </Form.Item>
-      <Form.Item label="Verbosity Level">
-        {fieldDecorator('options.progressVerbosityLevel')(
-          <Select style={smallSelectStyle}>
-            {verbosityLevels.map(level => (
-              <Select.Option
-                key={`verbosity-level-${level}`}
-                value={level}
-                style={{ textTransform: 'capitalize' }}>
-                {level}
-              </Select.Option>
-            ))}
-          </Select>
-        )}
-      </Form.Item>
-      <Form.Item label="Priority">
-        {fieldDecorator('priority')(<InputNumber max={5} min={1} />)}
+      <Form.Item label="Priority" name="priority">
+        <InputNumber max={5} min={1} />
       </Form.Item>
     </div>
   );

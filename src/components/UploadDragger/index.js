@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Typography, Upload } from 'antd';
+import { InboxOutlined } from '@ant-design/icons';
+import { Typography, Upload } from 'antd';
 import styled from 'styled-components';
 import { COLOR } from 'styles';
 import { notification } from 'utils';
@@ -91,7 +92,7 @@ const FileDragger = ({
     fileList={fileList}
     onChange={onChange}>
     <DraggerContent>
-      <Icon type="inbox" style={{ fontSize: 50, color: COLOR.blueLight }} />
+      <InboxOutlined style={{ fontSize: 50, color: COLOR.blueLight }} />
       <DraggerDescription>
         <Text>Click or drag files to upload</Text>
         <Text type="secondary">

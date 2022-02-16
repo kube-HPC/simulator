@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Alert, Input, Icon, Form } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
+import { Form, Alert, Input } from 'antd';
 import UploadDragger, { useDragger } from 'components/UploadDragger';
 import { RightAlignedButton, PanelButton } from 'components/Drawer';
 import useToggle from 'hooks/useToggle';
@@ -108,7 +109,10 @@ const EditMode = ({
   );
 
   return (
-    <Form onSubmit={handleSubmit} style={{ display: 'contents' }}>
+    <Form
+      onSubmit={handleSubmit}
+      initialValues={{ comment: '' }}
+      style={{ display: 'contents' }}>
       <FileBrowserContainer>
         <FileBrowser
           files={dataSource.files}
@@ -137,23 +141,19 @@ const EditMode = ({
           </UploadDragger>
         </Row>
         <Row>
-          <Form.Item>
-            {form.getFieldDecorator('comment', {
-              rules: [
-                {
-                  required: true,
-                  message: 'please enter a comment describing the update',
-                },
-              ],
-            })(
-              <Input
-                prefix={
-                  <Icon type="edit" style={{ color: 'rgba(0,0,0,.25)' }} />
-                }
-                placeholder="update comment"
-                allowClear
-              />
-            )}
+          <Form.Item
+            name={['comment']}
+            rules={[
+              {
+                required: true,
+                message: 'please enter a comment describing the update',
+              },
+            ]}>
+            <Input
+              prefix={<EditOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
+              placeholder="update comment"
+              allowClear
+            />
           </Form.Item>
         </Row>
       </div>
@@ -194,7 +194,6 @@ EditMode.propTypes = {
   }).isRequired,
   onCreateVersion: PropTypes.func.isRequired,
   form: PropTypes.shape({
-    getFieldDecorator: PropTypes.func.isRequired,
     validateFields: PropTypes.func.isRequired,
   }).isRequired,
   submittingStatus: PropTypes.string,
@@ -205,4 +204,4 @@ EditMode.defaultProps = {
   submittingStatus: null,
 };
 
-export default Form.create({ comment: '' })(EditMode);
+export default EditMode;

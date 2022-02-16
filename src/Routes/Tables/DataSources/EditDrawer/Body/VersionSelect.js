@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown, Menu, Button, Icon, Tooltip } from 'antd';
+import { CopyOutlined } from '@ant-design/icons';
+import { Dropdown, Menu, Button, Tooltip } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import _ from 'lodash';
@@ -174,6 +175,9 @@ const Versions = ({
       payload = {
         spec: {
           name: dataSource.name,
+          dataSource: {
+            id: dataSource.id,
+          },
         },
       };
     } else {
@@ -209,7 +213,7 @@ const Versions = ({
             : 'Copy DataSource ID'
         }>
         <CopyButton onClick={handleCopy} type="dashed">
-          <Icon type="copy" />
+          <CopyOutlined />
         </CopyButton>
       </Tooltip>
       <VersionDescription>

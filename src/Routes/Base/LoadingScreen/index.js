@@ -1,13 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
-
 import { animated, useSpring } from 'react-spring';
 import Particles from 'react-particles-js';
-
 import { ReactComponent as Fish } from 'images/logo-no-shadow.svg';
 import { ReactComponent as Title } from 'images/title.svg';
 
 import { particlesTemplate } from 'config';
+import { useSiteThemeMode } from 'hooks';
+
+const TitleThemeMode = styled.div`
+  text-transform: capitalize;
+  color: ${props => props.theme.Styles.loadingScreen.TitleThemeMode};
+`;
+const ImageStyle = styled.div`
+  .textTitleHkube {
+    fill: ${props => props.theme.Styles.loadingScreen.imageStyle.fill};
+  }
+`;
 
 const Container = styled.div`
   display: flex;
@@ -18,7 +27,11 @@ const Container = styled.div`
   width: 100%;
   height: 100vh;
   z-index: 11;
-  background-image: linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);
+
+  background-image: linear-gradient(
+    to top,
+    ${props => props.theme.Styles.loadingScreen.container.background}
+  );
 `;
 
 const AbsoluteDiv = styled(animated.div)`
@@ -67,6 +80,7 @@ const resizeSizes = {
 const scaleChange = x => `scale(${x})`;
 
 const LoadingScreen = () => {
+  const { themeName } = useSiteThemeMode();
   const opacity = useSpring(fadeIn);
   const { radians } = useSpring(moveRepeat);
   const { x } = useSpring(resize);
@@ -101,7 +115,12 @@ const LoadingScreen = () => {
         </animated.svg>
       </ItemMargin>
       <ItemMargin style={opacity} margin={20}>
-        <Title style={{ width: 500, height: 100 }} />
+        <ImageStyle>
+          <Title style={{ width: 500, height: 100 }} />
+        </ImageStyle>
+      </ItemMargin>
+      <ItemMargin margin={5}>
+        <TitleThemeMode>{themeName} Mode</TitleThemeMode>
       </ItemMargin>
     </Container>
   );

@@ -1,0 +1,6 @@
+export const WIZARD_STATE = {
+  IDLE: 'IDLE',
+  READY: 'READY',
+  CLEAR: 'CLEAR',
+  SUBMITTED: 'SUBMITTED',
+};

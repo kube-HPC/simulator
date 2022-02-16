@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Form, Icon } from 'antd';
+import Icon from '@ant-design/icons';
+import { Form } from 'antd';
 
 import { COLOR } from 'styles';
 
@@ -27,7 +28,6 @@ export const Field = ({
   required,
   skipValidation,
   small,
-  getFieldDecorator,
   rootId,
   extraRules,
   initialValue,
@@ -43,41 +43,41 @@ export const Field = ({
     }
     labelCol={{ span: DEFAULT_SPAN }}
     wrapperCol={{ span: 24 - DEFAULT_SPAN }}
+    name={rootId ? rootId.concat(name) : name}
+    {...(skipValidation
+      ? { initialValue }
+      : {
+          initialValue,
+          validateTrigger: ['onChange', 'onBlur'],
+          rules: [
+            {
+              required,
+              whitespace: true,
+              type,
+              message: `${title} is required`,
+            },
+            ...extraRules,
+          ],
+        })}
     {...overrides}>
-    {getFieldDecorator(
-      rootId ? `${rootId}.${name}` : name,
-      /** @type {import('antd/lib/form/Form').GetFieldDecoratorOptions} */
-      (skipValidation
-        ? { initialValue }
-        : {
-            initialValue,
-            validateTrigger: ['onChange', 'onBlur'],
-            rules: [
-              {
-                required,
-                whitespace: true,
-                type,
-                message: `${title} is required`,
-              },
-              ...extraRules,
-            ],
-          })
-    )(children)}
+    {children}
   </Form.Item>
 );
 
 Field.propTypes = {
-  name: PropTypes.string.isRequired,
+  /* eslint-disable */
+  name: PropTypes.array.isRequired,
   children: PropTypes.node.isRequired,
   title: PropTypes.string,
   type: PropTypes.string,
   required: PropTypes.bool,
   skipValidation: PropTypes.bool,
   small: PropTypes.bool,
-  getFieldDecorator: PropTypes.func.isRequired,
-  rootId: PropTypes.string,
+
   /* eslint-disable */
-  extraRules: PropTypes.object,
+  rootId: PropTypes.array,
+  /* eslint-disable */
+  extraRules: PropTypes.array,
   overrides: PropTypes.object,
   /* eslint-enable */
   initialValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -98,7 +98,10 @@ export const HorizontalRow = styled.div`
   display: flex;
   justify-content: space-evenly;
 `;
-
+export const HorizontalStartRow = styled.div`
+  display: flex;
+  justify-content: start;
+`;
 export const DeleteButton = styled(Icon)`
   margin-left: auto;
   color: ${COLOR.red};

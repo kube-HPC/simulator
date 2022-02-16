@@ -16,6 +16,7 @@ import {
   setChonkyDefaults,
 } from 'chonky';
 import { ChonkyIconFA } from 'chonky-icon-fontawesome';
+import { Theme } from 'styles';
 import useFileMap from './useFileMap';
 import useFileActions from './useFileActions';
 
@@ -153,7 +154,8 @@ const FileBrowser = ({
       folderChain={folderChain}
       fileActions={actionsMap.fileActions}
       defaultFileViewActionId={ChonkyActions.EnableListView.id}
-      onFileAction={actionsMap.handleFileAction}>
+      onFileAction={actionsMap.handleFileAction}
+      darkMode={Theme.Styles.ChonkyFileBrowser.viewThemeDark}>
       <FileNavbar />
       <FileToolbar />
       <FileList />

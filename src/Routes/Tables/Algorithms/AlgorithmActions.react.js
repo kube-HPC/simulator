@@ -1,5 +1,14 @@
 import React, { useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
+
+import {
+  BugOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  InfoCircleOutlined,
+  PlayCircleOutlined,
+} from '@ant-design/icons';
+
 import { Button, Modal, Popover, Typography, Tooltip } from 'antd';
 import { useActions } from 'hooks';
 import RunForm from './RunForm';
@@ -93,7 +102,7 @@ const AlgorithmActions = ({ record }) => {
           content={popOverContentRun}
           getPopupContainer={setPopupContainer}
           mouseLeaveDelay={0.5}>
-          <Button icon="play-circle" onClick={() => onRun()} />
+          <Button icon={<PlayCircleOutlined />} onClick={() => onRun()} />
         </Popover>
         <Popover
           overlayStyle={overlayStyle}
@@ -102,16 +111,16 @@ const AlgorithmActions = ({ record }) => {
           content={popOverContentDebug}
           getPopupContainer={setPopupContainer}
           mouseLeaveDelay={0.5}>
-          <Button icon="bug" onClick={() => onDebug()} />
+          <Button icon={<BugOutlined />} onClick={() => onDebug()} />
         </Popover>
         <Tooltip title="edit algorithm">
-          <Button icon="edit" onClick={onEdit} />
+          <Button icon={<EditOutlined />} onClick={onEdit} />
         </Tooltip>
         <Tooltip title="delete algorithm">
-          <Button icon="delete" onClick={onClickDelete} />
+          <Button icon={<DeleteOutlined />} onClick={onClickDelete} />
         </Tooltip>
         <Tooltip title="show overview">
-          <Button icon="info-circle" onClick={onMoreInfo} />
+          <Button icon={<InfoCircleOutlined />} onClick={onMoreInfo} />
         </Tooltip>
       </Button.Group>
     </div>

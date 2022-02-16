@@ -5,7 +5,7 @@ import { message } from 'antd';
 import styled from 'styled-components';
 import { LogsViewer, Card } from 'components/common';
 import client from 'client';
-import useSettings from '../../../hooks/useSettings';
+import useSettings from 'hooks/useSettings';
 
 const CardOverflow = styled(Card)`
   max-height: 80vh;
@@ -19,11 +19,12 @@ const DriverLogs = ({ driverId, podName }) => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await client.get(`/logs?${qs.stringify({ podName, source, nodeKind: 'driver' })}`);
+        const res = await client.get(
+          `/logs?${qs.stringify({ podName, source, nodeKind: 'driver' })}`
+        );
         const logsMap = res.data.map((value, key) => ({ key, ...value }));
         setLogs(logsMap);
-      }
-      catch (e) {
+      } catch (e) {
         message.error(e.message);
       }
     }
@@ -35,7 +36,7 @@ const DriverLogs = ({ driverId, podName }) => {
       <LogsViewer dataSource={logs} id={driverId} />
     </CardOverflow>
   );
-}
+};
 
 DriverLogs.propTypes = {
   driverId: PropTypes.string.isRequired,

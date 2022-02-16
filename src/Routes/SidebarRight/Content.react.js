@@ -26,6 +26,7 @@ const rightSidebarContent = {
       </>
     ),
   },
+
   [RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE]: {
     width: DRAWER_SIZE.ADD_DATASOURCE,
     title: RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE,

@@ -3,12 +3,11 @@ import LOCAL_STORAGE_KEYS from 'const/local-storage';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { COLOR } from 'styles/colors';
 import { getBooleanLSItem, getLsItem, setLsItem } from 'utils/localStorage';
 
 const TooltipBody = styled.div`
   text-align: center;
-  background-color: ${COLOR.white};
+  background-color: ${props => props.theme.Styles.UserGuideTooltip.TooltipBody};
   min-width: 300px;
   max-width: 500px;
   position: relative;

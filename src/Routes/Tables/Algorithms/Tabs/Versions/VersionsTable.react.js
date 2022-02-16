@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Table } from 'components';
 import { JsonSwitch, Card } from 'components/common';
 import { useVersions } from 'hooks';
+import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import getVersionsColumns from './getVersionsColumns.react';
 
 const expandedRowRender = record => (
@@ -24,9 +25,18 @@ const VersionsTable = ({ algorithmName, currentVersion, isFetch }) => {
     <Table
       rowKey={rowKey}
       loading={!dataSource}
-      expandedRowRender={expandedRowRender}
       dataSource={dataSource}
       columns={columns}
+      expandable={{
+        expandedRowRender: record => expandedRowRender(record),
+        // eslint-disable-next-line react/prop-types
+        expandIcon: ({ expanded, onExpand, record }) =>
+          expanded ? (
+            <DownOutlined onClick={e => onExpand(record, e)} />
+          ) : (
+            <RightOutlined onClick={e => onExpand(record, e)} />
+          ),
+      }}
     />
   );
 };

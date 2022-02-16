@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactJsonView from 'react-json-view';
 import { Card } from 'components/common';
-
+import { Theme } from 'styles/colors';
 /** @typedef {import('react-json-view').ReactJsonViewProps} ReactJsonViewProps */
 
 /** @param {ReactJsonViewProps} props */
 const JsonView = props => (
   <ReactJsonView
+    theme={Theme.Styles.reactJsonView.theme}
     iconStyle="triangle"
     name={false}
     displayDataTypes={false}

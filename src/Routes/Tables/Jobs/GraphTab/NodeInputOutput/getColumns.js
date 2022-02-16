@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { COLOR_TASK_STATUS } from 'styles/colors';
+import { DownloadOutlined } from '@ant-design/icons';
 import { Button, Tag, Tooltip } from 'antd';
 import humanizeDuration from 'humanize-duration';
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
-import { toUpperCaseFirstLetter } from 'utils/string';
-import StatusTag from 'components/StatusTag';
+import { toUpperCaseFirstLetter } from 'utils/stringHelper';
+import { StatusTag } from 'components/StatusTag';
 
 const getStatusFilter = () =>
   [
@@ -19,7 +21,7 @@ const getStatusFilter = () =>
 const Index = index => <Tag>{index}</Tag>;
 
 const Status = status => (
-  <StatusTag status={status} taskColorMap>
+  <StatusTag status={status} colorMap={COLOR_TASK_STATUS}>
     {status}
   </StatusTag>
 );
@@ -51,7 +53,7 @@ const Results = ({ record, url }) => (
         type="default"
         disabled={!record.output}
         shape="circle"
-        icon="download"
+        icon={<DownloadOutlined />}
       />
     </a>
   </Tooltip>

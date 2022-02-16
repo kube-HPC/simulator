@@ -1,4 +1,12 @@
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
+import {
+  PauseOutlined,
+  CaretRightOutlined,
+  DownloadOutlined,
+  InfoCircleOutlined,
+  RedoOutlined,
+  StopOutlined,
+} from '@ant-design/icons';
 import { Button, Tooltip } from 'antd';
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
@@ -31,10 +39,7 @@ const JobActions = ({ job }) => {
   const { rerunPipeline } = usePipeline();
   const { stopPipeline, pausePipeline, resumePipeline } = useActions();
   const downloadLinkRef = useRef();
-  const onReRun = useCallback(() => rerunPipeline(key), [
-    rerunPipeline,
-    key,
-  ]);
+  const onReRun = useCallback(() => rerunPipeline(key), [rerunPipeline, key]);
 
   const onStop = useCallback(() => stopPipeline(key), [stopPipeline, key]);
 
@@ -58,32 +63,32 @@ const JobActions = ({ job }) => {
     <>
       <Button.Group className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
         <Tooltip title="re-run pipeline">
-          <Button icon="redo" onClick={onReRun} />
+          <Button icon={<RedoOutlined />} onClick={onReRun} />
         </Tooltip>
         <Tooltip title="stop">
           <Button
             type="danger"
             disabled={isStopDisabled}
-            icon="stop"
+            icon={<StopOutlined />}
             onClick={onStop}
           />
         </Tooltip>
         <Tooltip title={canPause ? 'pause' : 'resume'}>
           <Button
             disabled={isStopDisabled}
-            icon={canPause ? 'pause' : 'caret-right'}
+            icon={canPause ? <PauseOutlined /> : <CaretRightOutlined />}
             onClick={onPause}
           />
         </Tooltip>
         <Tooltip title="download results">
           <Button
             disabled={isDownloadDisabled}
-            icon="download"
+            icon={<DownloadOutlined />}
             onClick={handleDownload}
           />
         </Tooltip>
         <Tooltip title="show overview">
-          <Button onClick={onMoreInfo} icon="info-circle" />
+          <Button onClick={onMoreInfo} icon={<InfoCircleOutlined />} />
         </Tooltip>
       </Button.Group>
       <a

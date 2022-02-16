@@ -1,10 +1,11 @@
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
-import { Icon, Tag } from 'antd';
+import { FireFilled, PauseCircleTwoTone } from '@ant-design/icons';
+import { Tag } from 'antd';
 import Ellipsis from 'components/common/Ellipsis.react';
-import { Count as CountTag } from 'components/StatusTag';
+import { StatusTag as CountTag } from 'components/StatusTag';
 import React from 'react';
 import { COLOR_TASK_STATUS } from 'styles/colors';
-import { sorter, toUpperCaseFirstLetter } from 'utils/string';
+import { sorter, toUpperCaseFirstLetter } from 'utils/stringHelper';
 
 const undefinedStateFilter = state => state || 'Creating';
 
@@ -20,12 +21,8 @@ const WorkerState = (_, { workerStatus, jobStatus }) => {
 
 const HotWorker = (_, { workerPaused, hotWorker }) => (
   <>
-    {workerPaused && (
-      <Icon type="pause-circle" theme="twoTone" twoToneColor="red" />
-    )}
-    {hotWorker && (
-      <Icon type="fire" theme="filled" style={{ color: 'orange' }} />
-    )}
+    {workerPaused && <PauseCircleTwoTone twoToneColor="red" />}
+    {hotWorker && <FireFilled style={{ color: 'orange' }} />}
   </>
 );
 
@@ -42,13 +39,13 @@ const JobId = jobId => {
 export const workersTableStats = [
   {
     title: '',
-    dataIndex: 'workerStatus',
+    dataIndex: ['workerStatus'],
     key: 'workerStatusIcon',
     render: HotWorker,
   },
   {
     title: 'Pod Name',
-    dataIndex: 'podName',
+    dataIndex: ['podName'],
     key: 'podName',
     onFilter: (value, record) => record.podName.includes(value),
     render: PodName,
@@ -57,13 +54,13 @@ export const workersTableStats = [
   },
   {
     title: 'Worker State',
-    dataIndex: 'workerStatus',
+    dataIndex: ['workerStatus'],
     key: 'workerStatus',
     render: WorkerState,
   },
   {
     title: 'Job ID',
-    dataIndex: 'jobId',
+    dataIndex: ['jobId'],
     key: 'jobId',
     render: JobId,
   },
@@ -95,7 +92,7 @@ export const workersColumns = [
   {
     title: 'Algorithm Name',
     key: 'algorithmName',
-    dataIndex: 'algorithmName',
+    dataIndex: ['algorithmName'],
     sorter: (a, b) => sorter(a.algorithmName, b.algorithmName),
     defaultSortOrder: 'ascend',
     render: Name,
@@ -103,19 +100,19 @@ export const workersColumns = [
   {
     title: 'Ready Count',
     key: 'readyCount',
-    dataIndex: 'ready',
+    dataIndex: ['ready'],
     render: ReadyCount,
   },
   {
     title: 'Working Count',
     key: 'workingCount',
-    dataIndex: 'working',
+    dataIndex: ['working'],
     render: WorkingCount,
   },
   {
     title: 'Init Count',
     key: 'initCount',
-    dataIndex: 'init',
+    dataIndex: ['init'],
     render: InitCount,
   },
   {
@@ -127,13 +124,13 @@ export const workersColumns = [
   {
     title: 'Hot Count',
     key: 'hotCount',
-    dataIndex: 'hot',
+    dataIndex: ['hot'],
     render: HotCount,
   },
   {
     title: 'Count',
     key: 'count',
-    dataIndex: 'count',
+    dataIndex: ['count'],
     render: Count,
   },
 ];

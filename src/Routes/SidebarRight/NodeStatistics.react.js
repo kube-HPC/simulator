@@ -2,17 +2,26 @@ import { ResponsiveBar } from '@nivo/bar';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import { COLOR } from 'styles/colors';
+import { Theme } from 'styles/colors';
 import useMetric from 'hooks/useMetric';
 
 const Container = styled.div`
+  margin-top: 150px;
   font-size: 20px;
-  height: 70vh;
+  height: 50vh;
+
+  svg + div {
+    color: #000000;
+  }
 `;
 
 // https://nivo.rocks/bar/ customization
 const NodeStatistics = ({ metric }) => {
   const { data, legend } = useMetric(metric);
+
+  const whiteColor = Theme.Styles.nodeStatistics.color;
+  const textColor = Theme.Styles.nodeStatistics.text;
+
   return (
     <Container>
       <ResponsiveBar
@@ -24,16 +33,19 @@ const NodeStatistics = ({ metric }) => {
           axis: {
             ticks: {
               line: {
-                stroke: COLOR.darkGrey,
+                stroke: textColor,
               },
               text: {
-                fontSize: 16,
+                fontSize: 13,
                 marginRight: '10px',
+                fill: textColor,
               },
             },
             legend: {
               text: {
-                fontSize: 16,
+                fontSize: 19,
+
+                fill: whiteColor,
               },
             },
           },
@@ -46,15 +58,15 @@ const NodeStatistics = ({ metric }) => {
         padding={0.1}
         borderWidth={1}
         layout="horizontal"
-        colors={{ scheme: 'blues' }}
+        colors={Theme.GRAPH_PALETTE}
         colorBy="id"
         defs={[
           {
             id: 'dots',
             type: 'patternDots',
             background: 'inherit',
-            color: COLOR.white,
-            size: 4,
+            color: whiteColor,
+            size: 2,
             padding: 3,
             stagger: true,
           },
@@ -62,10 +74,10 @@ const NodeStatistics = ({ metric }) => {
             id: 'lines',
             type: 'patternLines',
             background: 'inherit',
-            color: COLOR.white,
+            color: whiteColor,
             rotation: -45,
             lineWidth: 1,
-            spacing: 10,
+            spacing: 25,
           },
         ]}
         fill={[
@@ -82,7 +94,7 @@ const NodeStatistics = ({ metric }) => {
             id: 'lines',
           },
         ]}
-        borderColor={COLOR.grey}
+        borderColor={Theme.COLOR.grey}
         axisBottom={{
           tickSize: 5,
           tickPadding: 5,
@@ -92,12 +104,22 @@ const NodeStatistics = ({ metric }) => {
           legendOffset: 50,
         }}
         axisLeft={{
+          format: v =>
+            v.length > 15 ? (
+              <tspan>
+                {`${v.substring(0, 15)}...`}
+                <title>{v}</title>
+              </tspan>
+            ) : (
+              v
+            ),
           tickSize: 5,
           tickPadding: 5,
-          tickRotation: 50,
+          tickRotation: 20,
           legend: 'Nodes',
           legendPosition: 'middle',
-          legendOffset: -90,
+          legendOffset: -50,
+          fontSize: 10,
         }}
         labelSkipWidth={12}
         labelSkipHeight={12}
@@ -105,6 +127,7 @@ const NodeStatistics = ({ metric }) => {
         motionDamping={27}
         legends={[
           {
+            itemTextColor: textColor,
             dataFrom: 'keys',
             anchor: 'bottom-right',
             direction: 'column',
@@ -115,13 +138,13 @@ const NodeStatistics = ({ metric }) => {
             itemWidth: 100,
             itemHeight: 40,
             itemDirection: 'left-to-right',
-            itemOpacity: 0.85,
+            itemOpacity: 1,
             symbolSize: 30,
             effects: [
               {
                 on: 'hover',
                 style: {
-                  itemOpacity: 1,
+                  itemOpacity: 0.85,
                 },
               },
             ],

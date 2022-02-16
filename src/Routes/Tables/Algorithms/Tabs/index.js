@@ -1,3 +1,4 @@
+import { CheckOutlined, RedoOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import { Card, JsonSwitch, MdEditor, Tabs } from 'components/common';
 import { useReadme, useVersions } from 'hooks';
@@ -30,11 +31,11 @@ const AlgorithmsTabs = ({ algorithm }) => {
 
   const extra =
     activeKey === TABS.DESCRIPTION ? (
-      <Button onClick={onApply} icon="check">
+      <Button onClick={onApply} icon={<CheckOutlined />}>
         Apply Markdown
       </Button>
     ) : activeKey === TABS.VERSIONS ? (
-      <Button onClick={fetch} icon="redo">
+      <Button onClick={fetch} icon={<RedoOutlined />}>
         Refresh
       </Button>
     ) : null;

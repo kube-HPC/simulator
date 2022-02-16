@@ -1,7 +1,13 @@
 import React, { useCallback, useContext, useState } from 'react';
-import PropTypes from 'prop-types';
+
 import { useSelector } from 'react-redux';
-import { Input, Icon, Form, Button, Alert, Radio } from 'antd';
+import {
+  DatabaseOutlined,
+  GithubOutlined,
+  GitlabOutlined,
+} from '@ant-design/icons';
+
+import { Form, Input, Button, Alert, Radio } from 'antd';
 import { BottomContent, Form as CommonForm } from 'components/common';
 import UploadDragger, { useDragger } from 'components/UploadDragger';
 import pruneObject from 'utils/pruneObject';
@@ -21,11 +27,17 @@ const formItemLayout = {
   wrapperCol: { span: 15 },
 };
 
-const AddDataSource = ({ form }) => {
+const AddDataSource = () => {
+  const [form] = Form.useForm();
   const context = useContext(ctx);
-  const { getFieldDecorator, validateFields, getFieldValue } = form;
-  const gitKind = getFieldValue('gitKind');
-  const storageKind = getFieldValue('storageKind');
+  const { validateFields } = form;
+
+  const [gitKind, setGitKind] = useState('internal');
+  const onBuildTypeGitChange = e => setGitKind(e.target.value);
+
+  const [storageKind, setStorageKind] = useState('internal');
+  const onBuildTypeStorageChange = e => setStorageKind(e.target.value);
+
   const actions = useActions();
 
   const [addedFiles, setAddedFiles] = useState(initialFilesList);
@@ -33,108 +45,89 @@ const AddDataSource = ({ form }) => {
     setFileList: setAddedFiles,
   });
   const SubmittingStatus = useSelector(selectors.dataSources.createStatus);
-  const onSubmit = useCallback(
-    e => {
-      e.preventDefault();
-      validateFields((err, formObject) => {
-        if (err) return;
-        const { gitKind: _gitKind, storageKind: _storageKind } = formObject;
-        const payload = {
-          name: formObject.name,
-          storage: {
-            kind: formObject.storageKind,
-            ...(_storageKind === 'internal'
-              ? {}
-              : {
-                  accessKeyId: formObject.storageAccessKeyId,
-                  secretAccessKey: formObject.storageSecretAccessKey,
-                  endpoint: formObject.storageEndpoint,
-                  bucketName: formObject.storageBucketName,
-                }),
-          },
-          git: {
-            kind: _gitKind,
-            ...(_gitKind === 'internal'
-              ? {}
-              : {
-                  repositoryUrl: formObject.repositoryUrl,
-                  token: formObject.gitToken,
-                  tokenName:
-                    _gitKind === 'gitlab' ? formObject.gitTokenTokenName : null,
-                }),
-          },
-        };
 
-        const prunedPayload = pruneObject(payload);
-        actions.createDataSource(
-          { files: addedFiles, ...prunedPayload },
-          { onSuccess: context.closeDrawer }
-        );
-      });
-    },
-    [actions, validateFields, addedFiles, context]
-  );
+  const onSubmit = useCallback(() => {
+    validateFields().then(formObject => {
+      const { gitKind: _gitKind, storageKind: _storageKind } = formObject;
+      const payload = {
+        name: formObject.name,
+        storage: {
+          kind: formObject.storageKind,
+          ...(_storageKind === 'internal'
+            ? {}
+            : {
+                accessKeyId: formObject.storageAccessKeyId,
+                secretAccessKey: formObject.storageSecretAccessKey,
+                endpoint: formObject.storageEndpoint,
+                bucketName: formObject.storageBucketName,
+              }),
+        },
+        git: {
+          kind: _gitKind,
+          ...(_gitKind === 'internal'
+            ? {}
+            : {
+                repositoryUrl: formObject.repositoryUrl,
+                token: formObject.gitToken,
+                tokenName:
+                  _gitKind === 'gitlab' ? formObject.gitTokenTokenName : null,
+              }),
+        },
+      };
+
+      const prunedPayload = pruneObject(payload);
+      actions.createDataSource(
+        { files: addedFiles, ...prunedPayload },
+        { onSuccess: context.closeDrawer }
+      );
+    });
+  }, [actions, validateFields, addedFiles, context]);
 
   return (
     <Form
+      name="create-dataSource"
+      form={form}
+      initialValues={{ gitKind: 'internal', storageKind: 'internal' }}
       {...formItemLayout}
-      onSubmit={onSubmit}
+      onFinish={onSubmit}
       layout="horizontal"
       style={{ overflow: 'auto', maxHeight: '90vh' }}>
-      <FormItem label="DataSource Name">
-        {getFieldDecorator('name', {
-          rules: [
-            {
-              required: true,
-              message: 'Please insert a name for the new DataSource',
-            },
-          ],
-        })(
-          <Input
-            prefix={<Icon type="database" />}
-            placeholder="name"
-            required
-          />
-        )}
+      <FormItem
+        name="name"
+        label="DataSource Name"
+        rules={[
+          {
+            required: true,
+            message: 'Please insert a name for the new DataSource',
+          },
+        ]}>
+        <Input prefix={<DatabaseOutlined />} placeholder="name" required />
       </FormItem>
+
       {/* -------------------------- git -------------------------- */}
       <CommonForm.Divider>Git</CommonForm.Divider>
-      <FormItem label="Provider">
-        {getFieldDecorator('gitKind', { initialValue: 'internal' })(
-          <Radio.Group>
-            <Radio.Button value="github">
-              <Icon type="github" /> Github
-            </Radio.Button>
-            <Radio.Button value="gitlab">
-              <Icon type="gitlab" /> Gitlab
-            </Radio.Button>
-            <Radio.Button value="internal">
-              <Icon type="internal" /> Internal
-            </Radio.Button>
-          </Radio.Group>
-        )}
+      <FormItem label="Provider" name="gitKind" defaultValue="internal">
+        <Radio.Group onChange={onBuildTypeGitChange}>
+          <Radio.Button value="github">
+            <GithubOutlined /> Github
+          </Radio.Button>
+          <Radio.Button value="gitlab">
+            <GitlabOutlined /> Gitlab
+          </Radio.Button>
+          <Radio.Button value="internal">Internal</Radio.Button>
+        </Radio.Group>
       </FormItem>
-      {gitKind === 'internal' ? null : (
-        <GitConfig kind={gitKind} getFieldDecorator={getFieldDecorator} />
-      )}
+      {gitKind === 'internal' ? null : <GitConfig kind={gitKind} />}
       {/* -------------------------- storage -------------------------- */}
       <CommonForm.Divider>Storage</CommonForm.Divider>
-      <FormItem label="Provider">
-        {getFieldDecorator('storageKind', { initialValue: 'internal' })(
-          <Radio.Group>
-            <Radio.Button value="S3">
-              <Icon type="S3" /> S3
-            </Radio.Button>
-            <Radio.Button value="internal">
-              <Icon type="internal" /> Internal
-            </Radio.Button>
-          </Radio.Group>
-        )}
+      <FormItem label="Provider" name="storageKind">
+        <Radio.Group onChange={onBuildTypeStorageChange}>
+          <Radio.Button value="S3">S3</Radio.Button>
+          <Radio.Button value="internal">Internal</Radio.Button>
+        </Radio.Group>
       </FormItem>
-      {storageKind === 'internal' ? null : (
-        <StorageConfig getFieldDecorator={getFieldDecorator} />
-      )}
-      <Form.Item wrapperCol={null} style={{ marginTop: '1em' }}>
+      {storageKind === 'internal' ? null : <StorageConfig />}
+      <Form.Item wrapperCol={17} style={{ marginTop: '1em' }}>
         <UploadDragger
           onChange={onChange}
           fileList={addedFiles}
@@ -165,11 +158,5 @@ const AddDataSource = ({ form }) => {
     </Form>
   );
 };
-AddDataSource.propTypes = {
-  form: PropTypes.shape({
-    getFieldDecorator: PropTypes.func.isRequired,
-    validateFields: PropTypes.func.isRequired,
-    getFieldValue: PropTypes.func.isRequired,
-  }).isRequired,
-};
-export default Form.create({ name: 'create-dataSource' })(AddDataSource);
+
+export default AddDataSource;

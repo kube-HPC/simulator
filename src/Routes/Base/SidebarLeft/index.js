@@ -3,8 +3,9 @@ import { useSelector } from 'react-redux';
 import { animated, useSpring } from 'react-spring';
 import styled from 'styled-components';
 import isEqual from 'lodash/isEqual';
-import { useLeftSidebar } from 'hooks';
-import { Icon, Layout, Menu, Tag } from 'antd';
+import { useLeftSidebar, useSiteThemeMode } from 'hooks';
+import Icon from '@ant-design/icons';
+import { Layout, Menu, Tag } from 'antd';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { FlexBox } from 'components/common';
 import { dataCountMock } from 'config';
@@ -100,11 +101,13 @@ const SidebarLeft = () => {
   const dataCount = isOn ? dataCountMock : dataCountSource;
   const { isCollapsed, toggle } = useLeftSidebar();
   const { pageName } = useParams();
+  const { themeName } = useSiteThemeMode();
+
   return (
     <Border>
       <Sider
         className={USER_GUIDE.SIDEBAR_LEFT}
-        theme="light"
+        theme={themeName}
         onCollapse={toggle}
         collapsed={isCollapsed}>
         <LogoContainer>

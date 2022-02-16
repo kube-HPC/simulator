@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { RedoOutlined, GithubOutlined } from '@ant-design/icons';
+
 import { Result, Button, Typography, Collapse } from 'antd';
 import styled from 'styled-components';
 import { Icons, FlexBox } from 'components/common';
@@ -54,14 +56,14 @@ class ErrorBoundary extends React.Component {
                 </Paragraph>
               </FlexBox.Item>
               <FlexBox.Item>
-                <Icons.Hover type="github" onClick={openGithub} />
+                <Icons.Hover type={<GithubOutlined />} onClick={openGithub} />
               </FlexBox.Item>
             </FlexBox>
           }
           extra={[
             <Button
               type="primary"
-              icon="redo"
+              icon={<RedoOutlined />}
               key="refresh"
               onClick={reloadPage}>
               Refresh

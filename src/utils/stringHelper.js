@@ -7,3 +7,15 @@ export const sorter = (a, b) =>
   Number.isNaN(Number(a)) && Number.isNaN(Number(b))
     ? (a || '').localeCompare(b || '')
     : a - b;
+
+export const splitByDot = str => str.split('.');
+
+export const isJsonString = str => {
+  try {
+    // eslint-disable-next-line no-unused-vars
+    const obj = JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+};

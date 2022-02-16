@@ -1,5 +1,6 @@
 import React from 'react';
-import { Divider, Icon, Tag, Typography } from 'antd';
+import { QuestionCircleOutlined, RightOutlined } from '@ant-design/icons';
+import { Divider, Tag, Typography } from 'antd';
 import { USER_GUIDE } from 'const';
 import { COLOR_LAYOUT } from 'styles';
 
@@ -50,8 +51,7 @@ const steps = [
         Visit <Text strong>HKube&apos;s</Text> <Text code>Website</Text> and{' '}
         <Text code>Github</Text> repository.
         <br />
-        You can run the tutorial any time by pressing{' '}
-        <Icon type="question-circle" />
+        You can run the tutorial any time by pressing <QuestionCircleOutlined />
       </Paragraph>
     ),
     placement: 'bottom',
@@ -208,7 +208,7 @@ const steps = [
       <Paragraph>
         By clicking on{' '}
         <Text code>
-          <Icon type="right" />
+          <RightOutlined />
         </Text>{' '}
         you can expend the row.
         <br />
