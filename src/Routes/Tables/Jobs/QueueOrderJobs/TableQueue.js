@@ -1,7 +1,7 @@
 import React from 'react';
 import { TypeTable, TypeFilter } from 'const';
 import PropTypes from 'prop-types';
-import { Table } from 'antd';
+import { Table, Empty } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import {
   SortableItem,
@@ -87,6 +87,14 @@ class TableQueue extends React.Component {
           Release to move the item to the queue
         </DeleteOverTable>
         <Table
+          locale={{
+            emptyText: (
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description="There are no pending jobs"
+              />
+            ),
+          }}
           pagination={false}
           dataSource={dataSourceQueue}
           columns={TypeTableColumns[filterQueueVal]}

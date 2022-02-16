@@ -37,7 +37,7 @@ export const SelectFilterOptions = forwardRef((props, ref) => (
 export const TypeTableColumns = {
   JOBID: [
     {
-      title: 'Sort',
+      title: '',
       dataIndex: 'sort',
       width: 30,
       className: 'drag-visible',
@@ -62,7 +62,7 @@ export const TypeTableColumns = {
   ],
   PIPELINE: [
     {
-      title: 'Sort',
+      title: '',
       dataIndex: 'sort',
       width: 30,
       className: 'drag-visible',
@@ -80,7 +80,7 @@ export const TypeTableColumns = {
   ],
   TAG: [
     {
-      title: 'Sort',
+      title: '',
       dataIndex: 'sort',
       width: 30,
       className: 'drag-visible',
