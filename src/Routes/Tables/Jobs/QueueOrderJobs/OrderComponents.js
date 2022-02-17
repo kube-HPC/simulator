@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import { TypeFilter } from 'const';
-import { toUpperCaseFirstLetter } from 'utils';
+import { toUpperCaseFirstLetter, getColorByName } from 'utils';
 import { MenuOutlined } from '@ant-design/icons';
 import { Select, Tag } from 'antd';
 import {
@@ -25,10 +25,10 @@ export const StartTime = (startTime, { results }) => (
 
 export const SelectFilterOptions = forwardRef((props, ref) => (
   // eslint-disable-next-line
-  <Select ref={ref} onChange={e => props.onSelect(e)} defaultValue="Select">
+  <Select ref={ref} onChange={e => props.onSelect(e)} defaultValue="-------">
     {Object.entries(TypeFilter).map(([key, value]) => (
       <Select.Option key={key} value={key}>
-        {toUpperCaseFirstLetter(value === TypeFilter.JOBID ? 'Select' : value)}
+        {toUpperCaseFirstLetter(value === TypeFilter.JOBID ? '-------' : value)}
       </Select.Option>
     ))}
   </Select>
@@ -94,7 +94,9 @@ export const TypeTableColumns = {
           const arrayTags = name.toString().split(',');
 
           return arrayTags.length > 0
-            ? arrayTags.map(tagName => <Tag color="purple">{tagName}</Tag>)
+            ? arrayTags.map(tagName => (
+                <Tag color={getColorByName(tagName)}>{tagName}</Tag>
+              ))
             : 'No tag';
         }
 
