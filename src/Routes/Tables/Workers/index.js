@@ -2,10 +2,10 @@ import React, { useMemo } from 'react';
 // import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Table } from 'components';
+import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import { Card, JsonSwitch, Tabs } from 'components/common';
 import defaultWorkerData from 'config/template/worker.template';
 import { selectors } from 'reducers';
-import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import { workersColumns, workersTableStats } from './columns';
 
 const generateTab = (key, value) => (
@@ -16,14 +16,9 @@ const generateTab = (key, value) => (
   </Tabs.TabPane>
 );
 
-const expandedRowRender = row => (
-  <Card isMargin>
-    <Tabs>{generateTab('Information', row)}</Tabs>
-  </Card>
-);
+const ExpandedRow = collection => recordRow => {
+  const entries = collection[recordRow?.algorithmName] || [];
 
-const ExpandedRow = collection => record => {
-  const entries = collection[record?.algorithmName] || [];
   return (
     <Card isMargin>
       <Table
@@ -32,13 +27,18 @@ const ExpandedRow = collection => record => {
         columns={workersTableStats}
         dataSource={entries}
         expandable={{
-          expandedRowRender,
+          expandedRowRender: row => (
+            <Card isMargin>
+              <Tabs>{generateTab('Information', row)}</Tabs>
+            </Card>
+          ),
+
           // eslint-disable-next-line react/prop-types
-          expandIcon: ({ expanded, onExpand, row }) =>
+          expandIcon: ({ expanded, onExpand, record }) =>
             expanded ? (
-              <DownOutlined onClick={e => onExpand(row, e)} />
+              <DownOutlined onClick={e => onExpand(record, e)} />
             ) : (
-              <RightOutlined onClick={e => onExpand(row, e)} />
+              <RightOutlined onClick={e => onExpand(record, e)} />
             ),
         }}
       />
@@ -64,7 +64,16 @@ const WorkersTable = () => {
       rowKey={record => record.algorithmName}
       columns={workersColumns}
       dataSource={statsMergedWithDefault}
-      expandedRowRender={ExpandedRow(collection)}
+      expandable={{
+        expandedRowRender: ExpandedRow(collection),
+        // eslint-disable-next-line react/prop-types
+        expandIcon: ({ expanded, onExpand, record }) =>
+          expanded ? (
+            <DownOutlined onClick={e => onExpand(record, e)} />
+          ) : (
+            <RightOutlined onClick={e => onExpand(record, e)} />
+          ),
+      }}
     />
   );
 };

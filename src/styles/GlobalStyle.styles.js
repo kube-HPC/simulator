@@ -50,6 +50,9 @@ const GlobalStyle = createGlobalStyle`
 .ant-select-item-option-content:empty:before{
   content: '[empty]';
 }
+.ant-tag{
+    border-radius:4px;
+  }
 `;
 
 export default GlobalStyle;

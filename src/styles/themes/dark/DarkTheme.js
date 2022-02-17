@@ -76,6 +76,7 @@ const DarkTheme = COMMON_COLOR => {
     isTagFill: false,
     CapitalizedTag: { borderType: COLOR_PIPELINE_TYPES },
     ChonkyFileBrowser: { viewThemeDark: true },
+    SidebarLeft: { colorTagNumber: COLOR.grey },
   };
 
   return {

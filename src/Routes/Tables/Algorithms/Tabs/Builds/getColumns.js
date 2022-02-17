@@ -6,7 +6,7 @@ import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import Ellipsis from 'components/common/Ellipsis.react';
 import humanizeDuration from 'humanize-duration';
 import { COLOR_TASK_STATUS } from 'styles/colors';
-import { StatusTag } from 'components/StatusTag';
+import BaseTag from 'components/BaseTag';
 import { sorter } from 'utils/stringHelper';
 
 const BuildId = buildId => (
@@ -16,7 +16,7 @@ const StartTime = startTime => (
   <Moment format="DD/MM/YY HH:mm:ss">{startTime}</Moment>
 );
 
-const Status = status => <StatusTag status={status}>{status}</StatusTag>;
+const Status = status => <BaseTag status={status}>{status}</BaseTag>;
 
 const RenderProgress = (_, record) => {
   const failed = record.status === PIPELINE_STATUS.FAILED;

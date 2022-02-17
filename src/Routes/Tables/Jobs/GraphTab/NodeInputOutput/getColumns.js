@@ -6,7 +6,7 @@ import { Button, Tag, Tooltip } from 'antd';
 import humanizeDuration from 'humanize-duration';
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import { toUpperCaseFirstLetter } from 'utils/stringHelper';
-import { StatusTag } from 'components/StatusTag';
+import BaseTag from 'components/BaseTag';
 
 const getStatusFilter = () =>
   [
@@ -21,9 +21,9 @@ const getStatusFilter = () =>
 const Index = index => <Tag>{index}</Tag>;
 
 const Status = status => (
-  <StatusTag status={status} colorMap={COLOR_TASK_STATUS}>
+  <BaseTag status={status} colorMap={COLOR_TASK_STATUS}>
     {status}
-  </StatusTag>
+  </BaseTag>
 );
 
 const Duration = (_, record) =>

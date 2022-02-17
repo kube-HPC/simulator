@@ -67,6 +67,7 @@ const LightTheme = COMMON_COLOR => {
     isTagFill: true,
     CapitalizedTag: { borderType: 'inherit' },
     ChonkyFileBrowser: { viewThemeDark: false },
+    SidebarLeft: { colorTagNumber: COLOR.blue },
   };
 
   return {

@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StatusTag } from 'components/StatusTag';
+import BaseTag from 'components/BaseTag';
 
 /** @param {{ status: string; style: React.CSSProperties }} */
-const JobStatus = ({ status, style }) =>
-  status && (
-    <StatusTag status={status.status} tooltip={status.error} style={style}>
-      {status.status}
-    </StatusTag>
-  );
+const JobStatus = ({ status, style }) => (
+  <BaseTag status={status.status} tooltip={status.error} style={style}>
+    {status.status}
+  </BaseTag>
+);
 
 JobStatus.propTypes = {
   // TODO: detail the props

@@ -18,7 +18,7 @@ import { ReactComponent as LogoFish } from 'images/logo-fish.svg';
 import { ReactComponent as LogoTitle } from 'images/logo-title.svg';
 import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
 import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
-import { COLOR_LAYOUT } from 'styles';
+import { Theme, COLOR_LAYOUT } from 'styles';
 import { selectors } from 'reducers';
 
 const Border = styled.div`
@@ -37,7 +37,7 @@ const MenuMargin = styled(Menu)`
   margin-top: 10px;
 `;
 
-const tagStyle = { color: COLOR_LAYOUT.colorPrimary };
+const tagStyle = { color: Theme.Styles.SidebarLeft.colorTagNumber };
 
 const IconStyle = {
   fontSize: 22,
