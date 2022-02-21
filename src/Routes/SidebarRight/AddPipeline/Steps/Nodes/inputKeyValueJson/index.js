@@ -111,10 +111,10 @@ const ControllerKeyValue = ({
                 {...restField}
                 name={[name, 'key']}
                 fieldKey={[fieldKey, 'key']}
-                rules={[{ required: true, message: 'Missing name key' }]}
+                rules={[{ required: true, message: 'Missing flow key' }]}
                 key={`inputName${key}`}
                 onChange={() => handleChange()}>
-                <Input key={`inputN${key}`} placeholder="Name key" />
+                <Input key={`inputN${key}`} placeholder="Flow key" />
               </Form.Item>
 
               {isValueSignBoard ? (

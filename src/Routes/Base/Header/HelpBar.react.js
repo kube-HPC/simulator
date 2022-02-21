@@ -20,6 +20,7 @@ import Settings from './Settings/Settings.react';
 
 const DarkText = styled(Icons.IconHoverStyle)`
   cursor: pointer;
+  font-size: 14px;
 `;
 
 const Container = styled(FlexBox.Auto)`

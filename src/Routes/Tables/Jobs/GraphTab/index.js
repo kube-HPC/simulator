@@ -4,21 +4,26 @@ import { Empty } from 'antd';
 import styled from 'styled-components';
 import { Fallback, FallbackComponent } from 'components/common';
 import { useNodeInfo, useSettings } from 'hooks';
-import { COLOR_LAYOUT } from 'styles';
 import { generateStyles, formatEdge, formatNode } from '../graphUtils';
 import Details from './Details';
 
 const Card = styled.div`
-  border: 1px solid ${COLOR_LAYOUT.border};
+  padding-top: 2px;
   overflow: auto;
   flex: 1;
+  height: 94vh;
+  -webkit-box-shadow: -7px -8px 2px -4px rgba(0, 0, 0, 0.07);
+  box-shadow: -7px -8px 2px -4px rgba(0, 0, 0, 0.07);
 `;
 
 const Graph = lazy(() => import(`react-graph-vis`));
 
 const GraphContainer = styled.div`
-  flex: 1;
-  max-height: 40vh;
+  /*flex: 1;*/
+  /*height:40vh;
+  min-height: 40vh;
+  max-height: 80vh;*/
+
   .vis-network {
     height: 100% !important;
   }
@@ -96,6 +101,7 @@ const GraphTab = ({ graph, pipeline }) => {
         style={{
           pointerEvents: `all`,
           maxWidth: `100%`,
+          flex: '1',
         }}>
         {isValidGraph ? (
           showGraph ? (

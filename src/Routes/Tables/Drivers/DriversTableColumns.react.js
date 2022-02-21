@@ -1,6 +1,7 @@
 import React from 'react';
 import Ellipsis from 'components/common/Ellipsis.react';
 import { StatusTag as CountTag } from 'components/StatusTag';
+import { sorter } from 'utils/stringHelper';
 
 const DriverId = driverId => <Ellipsis text={driverId} />;
 const PodName = podName => <Ellipsis copyable text={podName} />;
@@ -10,6 +11,8 @@ const Max = count => <CountTag count={count} />;
 const Capacity = count => <CountTag count={count} />;
 const JobId = jobId => <Ellipsis text={jobId} />;
 const Active = active => <Ellipsis text={active ? 'active' : 'inActive'} />;
+
+const sortDriverId = (a, b) => sorter(a.driverId, b.driverId);
 
 export const driverJobsTableColumns = [
   {
@@ -35,6 +38,8 @@ export const driversTableColumns = [
     dataIndex: 'driverId',
     width: '20%',
     render: DriverId,
+    sorter: sortDriverId,
+    defaultSortOrder: 'descend',
   },
   {
     title: 'Pod Name',

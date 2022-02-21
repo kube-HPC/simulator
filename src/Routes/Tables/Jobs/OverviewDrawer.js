@@ -1,5 +1,6 @@
 import React from 'react';
 import { TabDrawerText, TabDrawer } from 'styles';
+import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
 import Drawer from 'components/Drawer';
@@ -10,6 +11,13 @@ import Info from './Info';
 import usePath from './usePath';
 import { DRAWER_TITLES } from '../../../const';
 
+const DrawerOverView = styled(Drawer)`
+  .ant-drawer-body {
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+`;
+
 const OverviewDrawer = () => {
   const { goTo, jobId } = usePath();
   const { setOff, isOn } = useToggle(true);
@@ -17,7 +25,7 @@ const OverviewDrawer = () => {
   const item = useSelector(state => selectors.jobs.byId(state, jobId));
 
   return (
-    <Drawer
+    <DrawerOverView
       getContainer={false}
       isOpened={isOn}
       onDidClose={goTo.root}
@@ -30,7 +38,7 @@ const OverviewDrawer = () => {
         </TabDrawer>
         {item ? <Info job={item} /> : <MissingIdError />}
       </>
-    </Drawer>
+    </DrawerOverView>
   );
 };
 
