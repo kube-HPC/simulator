@@ -35,7 +35,7 @@ const JsonSwitch = ({ obj, options, jobId, jsonViewHeaderNode }) => {
   );
   return (
     <ContainerTabs>
-      <Tabs tabPosition="left" tabBarExtraContent={extra} type="card">
+      <Tabs tabPosition="top" tabBarExtraContent={extra} type="card">
         <Tabs.TabPane key={TABS.TABLE} tab={TABS.TABLE}>
           <Wrapper>
             <JsonTable
