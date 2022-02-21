@@ -16,6 +16,10 @@ const DrawerOverView = styled(Drawer)`
     padding-top: 0px;
     padding-bottom: 0px;
   }
+
+  .ant-drawer-header {
+    border-bottom: 1px solid #b1b1b1;
+  }
 `;
 
 const OverviewDrawer = () => {
@@ -23,7 +27,7 @@ const OverviewDrawer = () => {
   const { setOff, isOn } = useToggle(true);
 
   const item = useSelector(state => selectors.jobs.byId(state, jobId));
-
+  console.log(item);
   return (
     <DrawerOverView
       getContainer={false}
@@ -31,7 +35,8 @@ const OverviewDrawer = () => {
       onDidClose={goTo.root}
       onClose={setOff}
       width={DRAWER_SIZE.JOB_INFO}
-      title={item?.pipeline?.name ?? jobId}>
+      title={` ${item?.pipeline?.name} - ${item?.graph?.jobId}`}
+      extra={<div>{item?.graph?.jobId}</div>}>
       <>
         <TabDrawer>
           <TabDrawerText>{DRAWER_TITLES.JOB_INFO}</TabDrawerText>

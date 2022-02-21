@@ -8,7 +8,7 @@ import DownloadLink from 'components/DownloadLink';
 import GraphTab from './GraphTab';
 import Trace from './Trace';
 import usePath, { OVERVIEW_TABS as TABS } from './usePath';
-import { Tabs, PaneRow, LinkDownload } from './styles';
+import { Tabs, PaneRow, LinkDownload, PanePadding } from './styles';
 
 const options = {
   view: {
@@ -70,11 +70,12 @@ const JobInfo = ({ job }) => {
       <PaneRow tab={TABS.GRAPH} key={TABS.GRAPH}>
         <GraphTab graph={{ ...graph, jobId: key }} pipeline={pipeline} />
       </PaneRow>
-      <Tabs.TabPane tab={TABS.TRACE} key={TABS.TRACE}>
+      <PanePadding tab={TABS.TRACE} key={TABS.TRACE}>
         <Trace data={traceData} />
-      </Tabs.TabPane>
-      <Tabs.TabPane tab={TABS.INFO} key={TABS.INFO}>
+      </PanePadding>
+      <PanePadding tab={TABS.INFO} key={TABS.INFO}>
         <JsonSwitch
+          tabPosition="top"
           obj={removeFlowInputNull(userPipeline)}
           options={options}
           jobId={key}
@@ -91,9 +92,10 @@ const JobInfo = ({ job }) => {
             </LinkDownload>
           }
         />
-      </Tabs.TabPane>
-      <Tabs.TabPane tab={TABS.MORE_INFO} key={TABS.MORE_INFO}>
+      </PanePadding>
+      <PanePadding tab={TABS.MORE_INFO} key={TABS.MORE_INFO}>
         <JsonSwitch
+          tabPosition="top"
           obj={removeFlowInputNull(pipeline)}
           options={options}
           jobId={key}
@@ -110,7 +112,7 @@ const JobInfo = ({ job }) => {
             </LinkDownload>
           }
         />
-      </Tabs.TabPane>
+      </PanePadding>
     </Tabs>
   );
 };

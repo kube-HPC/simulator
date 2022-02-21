@@ -22,6 +22,10 @@ export const PaneRow = styled(Tabs.TabPane)`
   flex-direction: row;
 `;
 
+export const PanePadding = styled(Tabs.TabPane)`
+  padding-top: 10px;
+`;
+
 export const LinkDownload = styled.div`
   margin-bottom: 15px;
 `;
