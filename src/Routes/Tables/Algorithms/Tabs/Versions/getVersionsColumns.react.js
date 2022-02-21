@@ -101,7 +101,7 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion }) => {
   return [
     {
       title: 'Version',
-      dataIndex: 'version',
+      dataIndex: ['version'],
       key: 'version',
       onFilter: (value, record) => record.version.includes(value),
       sorter: (a, b) => sorter(a.version, b.version),
@@ -109,7 +109,7 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion }) => {
     },
     {
       title: 'Image',
-      dataIndex: 'algorithm.algorithmImage',
+      dataIndex: ['algorithm', 'algorithmImage'],
       key: 'algorithm.algorithmImage',
       onFilter: (value, record) =>
         record.algorithm.algorithmImage.includes(value),
@@ -118,28 +118,28 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion }) => {
     },
     {
       title: 'Created',
-      dataIndex: 'created',
+      dataIndex: ['created'],
       key: 'created',
       sorter: (a, b) => sorter(a.created, b.created),
       render: Created,
     },
     {
       title: 'CPU',
-      dataIndex: 'algorithm.cpu',
+      dataIndex: ['algorithm', 'cpu'],
       key: 'algorithm.cpu',
       sorter: (a, b) => sorter(a.algorithm.cpu, b.algorithm.cpu),
       render: Cpu,
     },
     {
       title: 'Mem',
-      dataIndex: 'algorithm.mem',
+      dataIndex: ['algorithm', 'mem'],
       key: 'algorithm.mem',
       sorter: (a, b) => sorter(a.algorithm.mem, b.algorithm.mem),
       render: Mem,
     },
     {
       title: 'Min Hot',
-      dataIndex: 'algorithm.minHotWorkers',
+      dataIndex: ['algorithm', 'minHotWorkers'],
       key: 'algorithm.minHotWorkers',
       sorter: (a, b) =>
         sorter(a.algorithm.minHotWorkers, b.algorithm.minHotWorkers),
@@ -147,14 +147,14 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion }) => {
     },
     {
       title: 'Type',
-      dataIndex: 'algorithm.type',
+      dataIndex: ['algorithm', 'type'],
       key: 'algorithm.type',
       sorter: (a, b) => sorter(a.algorithm.type, b.algorithm.type),
       render: Type,
     },
     {
       title: 'Action',
-      dataIndex: 'action',
+      dataIndex: ['action'],
       key: 'action',
       render: Action,
     },

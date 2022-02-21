@@ -40,33 +40,33 @@ const sortByStatus = (a, b) => sorter(a.status, b.status);
 const getColumns = ({ cancelBuild, rerunBuild, currentTime }) => [
   {
     title: 'Build Id',
-    dataIndex: 'buildId',
+    dataIndex: ['buildId'],
     key: 'buildId',
     sorter: sortByBuildId,
     render: BuildId,
   },
   {
     title: 'Env',
-    dataIndex: 'env',
+    dataIndex: ['env'],
     key: 'env',
     sorter: sortByEnv,
   },
   {
     title: 'Image Tag',
-    dataIndex: 'imageTag',
+    dataIndex: ['imageTag'],
     key: 'imageTag',
     sorter: sortByImageTag,
   },
   {
     title: 'Start Time',
-    dataIndex: 'startTime',
+    dataIndex: ['startTime'],
     key: 'startTime',
     sorter: sortByStartTime,
     render: StartTime,
   },
   {
     title: 'Running time',
-    dataIndex: 'timeTook',
+    dataIndex: ['timeTook'],
     key: 'timeTook',
     sorter: sortByRunningTime,
     render: (_, { startTime, endTime }) => (
@@ -83,13 +83,13 @@ const getColumns = ({ cancelBuild, rerunBuild, currentTime }) => [
   {
     title: 'Status',
     key: 'status',
-    dataIndex: 'status',
+    dataIndex: ['status'],
     sorter: sortByStatus,
     render: Status,
   },
   {
     title: 'Progress',
-    dataIndex: 'Progress',
+    dataIndex: ['Progress'],
     key: 'progress',
     width: '20%',
     render: RenderProgress,

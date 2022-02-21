@@ -73,13 +73,13 @@ Results.defaultProps = {
 const getNodeIOColumns = url => [
   {
     title: 'index',
-    dataIndex: 'index',
+    dataIndex: ['index'],
     key: 'index',
     render: Index,
   },
   {
     title: 'status',
-    dataIndex: 'status',
+    dataIndex: ['status'],
     key: 'status',
     filterMultiple: true,
     filters: getStatusFilter(),
@@ -88,19 +88,19 @@ const getNodeIOColumns = url => [
   },
   {
     title: 'duration',
-    dataIndex: 'duration',
+    dataIndex: ['duration'],
     key: 'duration',
     render: Duration,
   },
   {
     title: 'retries',
-    dataIndex: 'retries',
+    dataIndex: ['retries'],
     key: 'retries',
     render: Retries,
   },
   {
     title: 'Results',
-    dataIndex: 'results',
+    dataIndex: ['results'],
     key: 'results',
     render: (_, record) => <Results url={url} record={record} />,
   },
