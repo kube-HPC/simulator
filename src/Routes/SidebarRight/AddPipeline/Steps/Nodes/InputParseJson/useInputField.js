@@ -1,27 +1,33 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { tryParse } from 'utils';
+import { tryParse, tryParseJson } from 'utils';
 import SignInputAddOn from '../../../../../../components/common/SignInputAddOn.react';
 
 const useInputField = (antFields, onRemove) => {
   const hasRemove = !!onRemove;
-  const SignsOfObjectArray = ['{', '}', '[', ']'];
+  const SignsOfObjectArray = ['{', '}'];
 
-  const checkInput = (input, words) => {
+  const checkInputObject = (input, words) => {
     if (input !== undefined) {
-      if (Array.isArray(input) && input.length > 1) return true;
+      // console.log((Array.isArray(input) && input.length > 1))
+      // if (Array.isArray(input) && input.length > 1) return true;
 
       if (typeof input === 'object' && input !== null) return true;
 
-      return words.some(word =>
-        input.toString().toLowerCase().includes(word.toLowerCase())
-      );
+      if (
+        words.some(word =>
+          input.toString().toLowerCase().includes(word.toLowerCase())
+        )
+      )
+        return true;
+
+      return false;
     }
 
     return false;
   };
 
   const getSignInWord = (input, words) => {
-    if (checkInput(input, SignsOfObjectArray)) return '';
+    if (checkInputObject(input, SignsOfObjectArray)) return '';
 
     let res = '';
     if (input !== null && input !== undefined) {
@@ -37,7 +43,7 @@ const useInputField = (antFields, onRemove) => {
   };
 
   const getWord = (input, word) => {
-    if (checkInput(input, SignsOfObjectArray)) return input;
+    if (checkInputObject(input, SignsOfObjectArray)) return input;
 
     let res = '';
 
@@ -47,6 +53,19 @@ const useInputField = (antFields, onRemove) => {
     }
 
     return input;
+  };
+
+  const isArrayValue = (input, selectSign) => {
+    if (selectSign === '' && input[0] === '[' && input.slice(-1) === ']') {
+      const arrayInput = tryParseJson(input);
+      if (Array.isArray(arrayInput) && arrayInput.length > 1) {
+        return true;
+      }
+
+      return false;
+    }
+
+    return false;
   };
 
   const [selectBefore, setSelectBefore] = useState(
@@ -62,28 +81,40 @@ const useInputField = (antFields, onRemove) => {
 
   useEffect(() => {
     /**
-     * IsValid will override the field most of the time, this is useful when
-     * you delete an entry - ant needs to re-write this field you don't want
-     * ant to override a field if it is invalid, it will show an "x" and hide
-     * the extra invalid characters from the user making it unusable
+     * IsValid will override the field most of the time, this is useful when you
+     * delete an entry - ant needs to re-write this field you don't want ant to
+     * override a field if it is invalid, it will show an "x" and hide the extra
+     * invalid characters from the user making it unusable
      */
     if (isValid || value === undefined) {
-      if (checkInput(value, SignsOfObjectArray)) {
+      if (checkInputObject(value, SignsOfObjectArray)) {
         setValue(JSON.stringify(antFields.value));
+        setSelectBefore('');
+        setAddonIsDisabled(true);
       } else {
         setValue(value);
+        setAddonIsDisabled(false);
       }
+    } else {
+      setAddonIsDisabled(false);
     }
-  }, [antFields, value, isValid, selectBefore]);
+  }, [antFields, value, isValid]);
 
   useEffect(() => {
-    if (!checkInput(value, SignsOfObjectArray)) {
-      antFields.onChange(`${selectBefore}${value}`);
-      setIsValid(true);
-    } else {
-      antFields.onChange(value);
-      setAddonIsDisabled(true);
-      setIsValid(true);
+    if (!addonIsDisabled) {
+      if (!checkInputObject(value, SignsOfObjectArray)) {
+        if (isArrayValue(value, selectBefore)) {
+          antFields.onChange(tryParseJson(value));
+          setIsValid(true);
+        } else {
+          antFields.onChange(`${selectBefore}${value}`);
+          setIsValid(true);
+        }
+      } else {
+        antFields.onChange(value);
+        setAddonIsDisabled(true);
+        setIsValid(true);
+      }
     }
   }, [selectBefore]);
 
@@ -106,12 +137,17 @@ const useInputField = (antFields, onRemove) => {
         antFields.onChange(parsed);
         setIsValid(true);
       };
+
       if (src === '') {
         onSuccess({ parsed: undefined });
         setIsValid(false);
-      } else if (checkInput(src, SignsOfObjectArray)) {
+      } else if (checkInputObject(src, SignsOfObjectArray)) {
         tryParse({ src, onSuccess, onFail });
+
         setAddonIsDisabled(true);
+      } else if (isArrayValue(src, selectBefore)) {
+        tryParse({ src, onSuccess, onFail });
+        setAddonIsDisabled(false);
       } else {
         antFields.onChange(`${selectBefore}${src}`);
         setAddonIsDisabled(false);
