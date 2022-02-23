@@ -28,7 +28,7 @@ const OverviewDrawer = () => {
   const { setOff, isOn } = useToggle(true);
 
   const item = useSelector(state => selectors.jobs.byId(state, jobId));
-  console.log(item);
+
   return (
     <DrawerOverView
       getContainer={false}

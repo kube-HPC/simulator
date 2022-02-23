@@ -47,11 +47,19 @@ const TitleDataJob = ({ job }) => (
       <b> {Name(job?.pipeline?.name)} </b>
     </Item>
     <ItemRightFlex>{Id(job?.key)}</ItemRightFlex>
-    <Item> {StartTime(job?.pipeline?.startTime, job.results)}</Item>
-    <Item> {Types(job?.pipeline?.types)}</Item>
-    <Item>{Priority(job?.pipeline?.priority)}</Item>
-    <Item> {Stats(job?.status)}</Item>
-    <Item> {Status(job?.status)}</Item>
+    <Item>
+      {' '}
+      {(job?.results &&
+        job?.pipeline?.startTime &&
+        StartTime(job?.pipeline?.startTime, job?.results)) ||
+        ''}
+    </Item>
+    <Item> {(job?.pipeline?.types && Types(job?.pipeline?.types)) || ''}</Item>
+    <Item>
+      {(job?.pipeline?.priority && Priority(job?.pipeline?.priority)) || ''}
+    </Item>
+    <Item> {(job?.status && Stats(job?.status)) || ''}</Item>
+    <Item> {(job?.status && Status(job?.status)) || ''}</Item>
   </TitleFlex>
 );
 
@@ -60,4 +68,4 @@ TitleDataJob.propTypes = {
   job: PropTypes.object.isRequired,
 };
 
-export default React.memo(TitleDataJob);
+export default TitleDataJob;
