@@ -36,12 +36,17 @@ const Item = styled.div`
   padding-left: 23px;
 `;
 
+const ItemRightFlex = styled.div`
+  padding-left: 23px;
+  margin-right: auto;
+`;
+
 const TitleDataJob = ({ job }) => (
   <TitleFlex>
     <Item>
       <b> {Name(job?.pipeline?.name)} </b>
     </Item>
-    <Item>{Id(job?.key)}</Item>
+    <ItemRightFlex>{Id(job?.key)}</ItemRightFlex>
     <Item> {StartTime(job?.pipeline?.startTime, job.results)}</Item>
     <Item> {Types(job?.pipeline?.types)}</Item>
     <Item>{Priority(job?.pipeline?.priority)}</Item>
