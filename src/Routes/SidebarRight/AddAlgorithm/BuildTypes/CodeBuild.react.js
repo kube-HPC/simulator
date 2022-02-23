@@ -77,7 +77,10 @@ const CodeBuild = ({ required, fileList, setFileList, isEdit }) => (
       <Input placeholder={ENTRY_POINT.placeholder} />
     </Form.Item>
     <Form.Item label={BASE_IMAGE.label} name={splitByDot(BASE_IMAGE.field)}>
-      <Input placeholder={BASE_IMAGE.placeholder} />
+      <Input
+        disabled={isEdit && fileList.length === 0}
+        placeholder={BASE_IMAGE.placeholder}
+      />
     </Form.Item>
 
     <Form.Item wrapperCol={null} style={marginTop}>
@@ -90,15 +93,17 @@ const CodeBuild = ({ required, fileList, setFileList, isEdit }) => (
         <br />
         <Text type="secondary">Support for zip or tar.gz only</Text>
 
-        <FlexBox justify="center" style={marginTop}>
-          <FlexBox.Item>
-            <Alert
-              message={`File ${fileList.length ? 'Uploaded' : 'Required'}`}
-              type={fileList.length ? 'info' : 'warning'}
-              showIcon
-            />
-          </FlexBox.Item>
-        </FlexBox>
+        {!isEdit && (
+          <FlexBox justify="center" style={marginTop}>
+            <FlexBox.Item>
+              <Alert
+                message={`File ${fileList.length ? 'Uploaded' : 'Required'}`}
+                type={fileList.length ? 'info' : 'warning'}
+                showIcon
+              />
+            </FlexBox.Item>
+          </FlexBox>
+        )}
       </Upload.Dragger>
     </Form.Item>
   </>

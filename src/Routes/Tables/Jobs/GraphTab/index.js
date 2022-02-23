@@ -11,9 +11,9 @@ const Card = styled.div`
   padding-top: 2px;
   overflow: auto;
   flex: 1;
-  height: 94vh;
-  -webkit-box-shadow: -7px -8px 2px -4px rgba(0, 0, 0, 0.07);
-  box-shadow: -7px -8px 2px -4px rgba(0, 0, 0, 0.07);
+  height: 95vh;
+  -webkit-box-shadow: -7px -8px 2px -4px ${props => props.theme.Styles.line};
+  box-shadow: -7px -8px 2px -4px ${props => props.theme.Styles.line};
 `;
 
 const Graph = lazy(() => import(`react-graph-vis`));

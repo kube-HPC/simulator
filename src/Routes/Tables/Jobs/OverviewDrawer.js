@@ -10,6 +10,7 @@ import useToggle from 'hooks/useToggle';
 import Info from './Info';
 import usePath from './usePath';
 import { DRAWER_TITLES } from '../../../const';
+import TitleDataJob from './TitleDataJob';
 
 const DrawerOverView = styled(Drawer)`
   .ant-drawer-body {
@@ -34,10 +35,9 @@ const OverviewDrawer = () => {
       isOpened={isOn}
       onDidClose={goTo.root}
       onClose={setOff}
-      width={DRAWER_SIZE.JOB_INFO}
-      title={` ${item?.pipeline?.name} - ${item?.graph?.jobId}`}
-      extra={<div>{item?.graph?.jobId}</div>}>
+      width={DRAWER_SIZE.JOB_INFO}>
       <>
+        <TitleDataJob job={item} />
         <TabDrawer>
           <TabDrawerText>{DRAWER_TITLES.JOB_INFO}</TabDrawerText>
         </TabDrawer>

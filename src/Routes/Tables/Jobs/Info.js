@@ -6,6 +6,7 @@ import { JsonSwitch } from 'components/common';
 import { useTraceData } from 'hooks';
 import DownloadLink from 'components/DownloadLink';
 import GraphTab from './GraphTab';
+
 import Trace from './Trace';
 import usePath, { OVERVIEW_TABS as TABS } from './usePath';
 import { Tabs, PaneRow, LinkDownload, PanePadding } from './styles';
