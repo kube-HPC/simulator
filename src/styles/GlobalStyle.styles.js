@@ -53,6 +53,11 @@ const GlobalStyle = createGlobalStyle`
 .ant-tag{
     border-radius:4px;
   }
+
+.JaegerTrace .TimelineCollapser
+{
+  display:none;
+}
 `;
 
 export default GlobalStyle;
