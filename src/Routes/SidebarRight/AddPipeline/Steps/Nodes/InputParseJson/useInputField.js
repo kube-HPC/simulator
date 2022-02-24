@@ -7,10 +7,7 @@ const useInputField = (antFields, onRemove) => {
   const SignsOfObjectArray = ['{', '}'];
 
   const checkInputObject = (input, words) => {
-    if (input !== undefined) {
-      // console.log((Array.isArray(input) && input.length > 1))
-      // if (Array.isArray(input) && input.length > 1) return true;
-
+    if (input !== null && input !== undefined) {
       if (typeof input === 'object' && input !== null) return true;
 
       if (
