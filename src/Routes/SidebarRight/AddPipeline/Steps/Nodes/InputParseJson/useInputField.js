@@ -145,6 +145,9 @@ const useInputField = (antFields, onRemove) => {
       } else if (isArrayValue(src, selectBefore)) {
         tryParse({ src, onSuccess, onFail });
         setAddonIsDisabled(false);
+      } else if (src.startsWith('"') || src.endsWith('"')) {
+        onSuccess({ parsed: undefined });
+        setIsValid(false);
       } else {
         antFields.onChange(`${selectBefore}${src}`);
         setAddonIsDisabled(false);
