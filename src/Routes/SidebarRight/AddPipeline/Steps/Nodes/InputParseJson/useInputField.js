@@ -8,7 +8,7 @@ const useInputField = (antFields, onRemove) => {
 
   const checkInputObject = (input, words) => {
     if (input !== null && input !== undefined) {
-      if (typeof input === 'object' && input !== null) return true;
+      if (typeof input === 'object') return true;
 
       if (
         words.some(word =>
