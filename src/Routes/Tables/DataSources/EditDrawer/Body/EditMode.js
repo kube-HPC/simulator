@@ -36,11 +36,12 @@ const initialState = [];
 const EditMode = ({
   dataSource,
   onCreateVersion,
-  form,
   submittingStatus,
   onDownload,
   onDelete,
 }) => {
+  const [form] = Form.useForm();
+
   const {
     isOn: isModalDisplayed,
     setOn: showModal,
@@ -76,23 +77,20 @@ const EditMode = ({
     setFileList: setAddedFiles,
   });
 
-  const handleSubmit = useCallback(
-    /** @param {import('react').SyntheticEvent} e */
-    e => {
-      e.preventDefault();
-      if (!fileBrowserRef.current) return;
-      form.validateFields((err, values) => {
-        if (err) return null;
-        return onCreateVersion({
+  const handleSubmit = useCallback(() => {
+    if (!fileBrowserRef.current) return;
+    form
+      .validateFields()
+      .then(values =>
+        onCreateVersion({
           files: addedFiles,
           droppedFileIds: fileBrowserRef.current.getDeleteFiles(),
           mapping: fileBrowserRef.current.ls(),
           versionDescription: values.comment,
-        });
-      });
-    },
-    [fileBrowserRef, addedFiles, onCreateVersion, form]
-  );
+        })
+      )
+      .catch(null);
+  }, [fileBrowserRef, addedFiles, onCreateVersion, form]);
 
   useEffect(() => {
     setAddedFiles([]);
@@ -110,7 +108,8 @@ const EditMode = ({
 
   return (
     <Form
-      onSubmit={handleSubmit}
+      form={form}
+      onFinish={handleSubmit}
       initialValues={{ comment: '' }}
       style={{ display: 'contents' }}>
       <FileBrowserContainer>
@@ -193,9 +192,6 @@ EditMode.propTypes = {
     }).isRequired,
   }).isRequired,
   onCreateVersion: PropTypes.func.isRequired,
-  form: PropTypes.shape({
-    validateFields: PropTypes.func.isRequired,
-  }).isRequired,
   submittingStatus: PropTypes.string,
   onDownload: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
