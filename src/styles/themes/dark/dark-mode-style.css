@@ -143,7 +143,9 @@ input:-internal-autofill-selected {
 .rc-md-editor h6 {
   color: black;
 }
-
+.ant-radio-inner {
+  border-color: #a1a1a1;
+}
 /*--------------------------------------------------------- */
 /* trace Dark */
 /*--------------------------------------------------------- */
