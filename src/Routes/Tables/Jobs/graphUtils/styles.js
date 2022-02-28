@@ -82,7 +82,7 @@ export default ({ direction, isMinified = false }) => ({
     shadow: false,
   },
   edges: {
-    selectionWidth: 2,
+    selectionWidth: 1,
     color: {
       highlight: COLOR.yellowPale,
     },

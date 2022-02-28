@@ -118,7 +118,7 @@ export const workersColumns = [
   {
     title: 'Exit Count',
     key: 'exitCount',
-    dataIndex: 'exit',
+    dataIndex: ['exit'],
     render: ExitCount,
   },
   {

@@ -18,6 +18,9 @@ const ContainerTabs = styled.div`
   .ant-tabs-nav .ant-tabs-nav-wrap {
     flex: inherit;
   }
+  .ant-tabs-extra-content {
+    margin-left: auto;
+  }
 `;
 
 const onCopy = () =>
@@ -26,7 +29,13 @@ const onCopy = () =>
     type: notification.TYPES.SUCCESS,
   });
 
-const JsonSwitch = ({ obj, options, jobId }) => {
+const JsonSwitch = ({
+  obj,
+  options,
+  jobId,
+  jsonViewHeaderNode,
+  tabPosition,
+}) => {
   const { view = {}, table = {} } = options;
   const extra = (
     <CopyToClipboard text={stringify(obj)} onCopy={onCopy}>
@@ -35,7 +44,7 @@ const JsonSwitch = ({ obj, options, jobId }) => {
   );
   return (
     <ContainerTabs>
-      <Tabs tabPosition="left" tabBarExtraContent={extra} type="card">
+      <Tabs tabPosition={tabPosition} tabBarExtraContent={extra} type="card">
         <Tabs.TabPane key={TABS.TABLE} tab={TABS.TABLE}>
           <Wrapper>
             <JsonTable
@@ -47,6 +56,7 @@ const JsonSwitch = ({ obj, options, jobId }) => {
           </Wrapper>
         </Tabs.TabPane>
         <Tabs.TabPane key={TABS.JSON} tab={TABS.JSON}>
+          {jsonViewHeaderNode}
           <JsonView.Card
             jsonObject={obj}
             // eslint-disable-next-line
@@ -64,11 +74,15 @@ JsonSwitch.propTypes = {
   // eslint-disable-next-line
   options: PropTypes.object,
   jobId: PropTypes.string,
+  jsonViewHeaderNode: PropTypes.node,
+  tabPosition: PropTypes.string,
 };
 JsonSwitch.defaultProps = {
   obj: {},
   options: {},
   jobId: null,
+  jsonViewHeaderNode: undefined,
+  tabPosition: 'left',
 };
 
 export default JsonSwitch;

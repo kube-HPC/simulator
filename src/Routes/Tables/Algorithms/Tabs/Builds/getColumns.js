@@ -6,7 +6,7 @@ import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import Ellipsis from 'components/common/Ellipsis.react';
 import humanizeDuration from 'humanize-duration';
 import { COLOR_TASK_STATUS } from 'styles/colors';
-import { StatusTag } from 'components/StatusTag';
+import BaseTag from 'components/BaseTag';
 import { sorter } from 'utils/stringHelper';
 
 const BuildId = buildId => (
@@ -16,7 +16,7 @@ const StartTime = startTime => (
   <Moment format="DD/MM/YY HH:mm:ss">{startTime}</Moment>
 );
 
-const Status = status => <StatusTag status={status}>{status}</StatusTag>;
+const Status = status => <BaseTag status={status}>{status}</BaseTag>;
 
 const RenderProgress = (_, record) => {
   const failed = record.status === PIPELINE_STATUS.FAILED;
@@ -40,33 +40,33 @@ const sortByStatus = (a, b) => sorter(a.status, b.status);
 const getColumns = ({ cancelBuild, rerunBuild, currentTime }) => [
   {
     title: 'Build Id',
-    dataIndex: 'buildId',
+    dataIndex: ['buildId'],
     key: 'buildId',
     sorter: sortByBuildId,
     render: BuildId,
   },
   {
     title: 'Env',
-    dataIndex: 'env',
+    dataIndex: ['env'],
     key: 'env',
     sorter: sortByEnv,
   },
   {
     title: 'Image Tag',
-    dataIndex: 'imageTag',
+    dataIndex: ['imageTag'],
     key: 'imageTag',
     sorter: sortByImageTag,
   },
   {
     title: 'Start Time',
-    dataIndex: 'startTime',
+    dataIndex: ['startTime'],
     key: 'startTime',
     sorter: sortByStartTime,
     render: StartTime,
   },
   {
     title: 'Running time',
-    dataIndex: 'timeTook',
+    dataIndex: ['timeTook'],
     key: 'timeTook',
     sorter: sortByRunningTime,
     render: (_, { startTime, endTime }) => (
@@ -83,13 +83,13 @@ const getColumns = ({ cancelBuild, rerunBuild, currentTime }) => [
   {
     title: 'Status',
     key: 'status',
-    dataIndex: 'status',
+    dataIndex: ['status'],
     sorter: sortByStatus,
     render: Status,
   },
   {
     title: 'Progress',
-    dataIndex: 'Progress',
+    dataIndex: ['Progress'],
     key: 'progress',
     width: '20%',
     render: RenderProgress,

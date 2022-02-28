@@ -46,6 +46,7 @@ const LightTheme = COMMON_COLOR => {
   const { COLOR_EXPERIMENTS } = COMMON_COLOR;
 
   const Styles = {
+    line: 'rgba(0, 0, 0, 0.07)',
     reactJsonView: { theme: 'rjv-default' },
     IconHoverStyle: { colorHover: 'black' },
     loadingScreen: {
@@ -67,6 +68,8 @@ const LightTheme = COMMON_COLOR => {
     isTagFill: true,
     CapitalizedTag: { borderType: 'inherit' },
     ChonkyFileBrowser: { viewThemeDark: false },
+    SidebarLeft: { colorTagNumber: COLOR.blue },
+    TitleDataJob: { titleBottom: '#f0f0f0' },
   };
 
   return {

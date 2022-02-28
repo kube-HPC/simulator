@@ -15,7 +15,9 @@ const radioStyle = {
 };
 
 const Container = styled(Radio.Group)`
-  max-height: 30vh;
+  min-height: 10vh;
+  max-height: 20vh;
+
   overflow: auto;
   width: 100%;
   min-width: 300px;
