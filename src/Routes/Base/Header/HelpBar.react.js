@@ -18,16 +18,13 @@ import { iconsThemes } from '../../../styles/themes/HelperThemes';
 import ConnectionStatus from './ConnectionStatus.react';
 import Settings from './Settings/Settings.react';
 
-const DarkText = styled(Icons.IconHoverStyle)`
+const DarkText = styled.div`
   cursor: pointer;
   font-size: 14px;
 `;
 
 const Container = styled(FlexBox.Auto)`
   position: relative;
-  > ${Icons.IconHoverStyle}, ${DarkText} {
-    margin-right: 10px;
-  }
 `;
 
 const openUrl = url => () => window.open(url);
