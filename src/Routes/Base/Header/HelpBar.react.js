@@ -21,6 +21,7 @@ import Settings from './Settings/Settings.react';
 const DarkText = styled.div`
   cursor: pointer;
   font-size: 14px;
+  color: #cccccc;
 `;
 
 const Container = styled(FlexBox.Auto)`
