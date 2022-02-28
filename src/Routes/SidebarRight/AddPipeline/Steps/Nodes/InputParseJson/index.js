@@ -12,10 +12,7 @@ const Controller = ({ nodeIdx, isRequired }) => {
   const inputValues = form.getFieldValue(['nodes', nodeIdx, 'input']);
 
   const isRequiredMsg = () =>
-    isRequired &&
-    (inputValues === undefined ||
-      inputValues[0] === '' ||
-      inputValues[0] === undefined) ? (
+    isRequired && inputValues && !inputValues[0] ? (
       <Alert
         type="error"
         message="You must put in at least one input."
