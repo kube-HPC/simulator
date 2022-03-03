@@ -1,9 +1,14 @@
 import React from 'react';
 import { TypeTable, TypeFilter } from 'const';
 import PropTypes from 'prop-types';
-import { Table, Popconfirm } from 'antd';
+import { Popconfirm } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
-import { ContainerArea, TitleTable, FilterTable } from './OrderStyles';
+import {
+  ContainerArea,
+  TitleTable,
+  FilterTable,
+  TableItem,
+} from './OrderStyles';
 import OrderPaging from './OrderPaging';
 import {
   SortableItem,
@@ -88,6 +93,7 @@ class TablePreferred extends React.Component {
       numberRowToViewPagingPreferred,
       handleViewTableColumnOrRow,
       viewTableColumnOrRow,
+      isLoadData,
     } = this.props;
     return (
       <ContainerArea
@@ -105,7 +111,8 @@ class TablePreferred extends React.Component {
         <FilterTable>
           GroupBy : <SelectFilterOptions onSelect={filterPreferred} />
         </FilterTable>
-        <Table
+        <TableItem
+          loading={isLoadData}
           pagination={false}
           dataSource={dataSourcePreferred}
           columns={[
@@ -178,6 +185,7 @@ TablePreferred.propTypes = {
   handleDelete: PropTypes.func.isRequired,
   handleViewTableColumnOrRow: PropTypes.func.isRequired,
   viewTableColumnOrRow: PropTypes.bool.isRequired,
+  isLoadData: PropTypes.bool.isRequired,
 };
 
 export default TablePreferred;

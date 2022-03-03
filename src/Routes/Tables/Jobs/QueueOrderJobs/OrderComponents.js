@@ -35,6 +35,41 @@ export const SelectFilterOptions = forwardRef((props, ref) => (
 ));
 
 export const TypeTableColumns = {
+  ALLJOBID: [
+    {
+      title: 'jobID',
+      dataIndex: 'jobId',
+      className: 'drag-visible',
+    },
+    {
+      title: 'Start Time',
+      dataIndex: 'entranceTime',
+      key: `Start timestamp`,
+
+      render: StartTime,
+    },
+    {
+      title: 'Name',
+      dataIndex: 'pipelineName',
+    },
+    {
+      title: 'Tags',
+      dataIndex: 'name',
+      render: name => {
+        if (name) {
+          const arrayTags = name.toString().split(',');
+
+          return arrayTags.length > 0
+            ? arrayTags.map(tagName => (
+                <Tag color={getColorByName(tagName)}>{tagName}</Tag>
+              ))
+            : 'No tag';
+        }
+
+        return 'No tag.';
+      },
+    },
+  ],
   JOBID: [
     {
       title: '',
@@ -52,12 +87,29 @@ export const TypeTableColumns = {
       title: 'Start Time',
       dataIndex: 'entranceTime',
       key: `Start timestamp`,
-      width: `10%`,
+
       render: StartTime,
     },
     {
       title: 'Name',
       dataIndex: 'pipelineName',
+    },
+    {
+      title: 'Tags',
+      dataIndex: 'name',
+      render: name => {
+        if (name) {
+          const arrayTags = name.toString().split(',');
+
+          return arrayTags.length > 0
+            ? arrayTags.map(tagName => (
+                <Tag color={getColorByName(tagName)}>{tagName}</Tag>
+              ))
+            : 'No tag';
+        }
+
+        return 'No tag.';
+      },
     },
   ],
   PIPELINE: [
@@ -87,7 +139,7 @@ export const TypeTableColumns = {
       render: () => <DragHandle />,
     },
     {
-      title: 'Tag Name',
+      title: 'Tags',
       dataIndex: 'name',
       render: name => {
         if (name) {

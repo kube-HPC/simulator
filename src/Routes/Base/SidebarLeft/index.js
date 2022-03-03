@@ -75,7 +75,7 @@ const LogoContainer = styled.div`
 
 const sidebarSelector = state => ({
   [LEFT_SIDEBAR_NAMES.JOBS]: selectors.jobs.count(state),
-  [LEFT_SIDEBAR_NAMES.QUEUE]: selectors.jobs.count(state),
+  [LEFT_SIDEBAR_NAMES.QUEUE]: '',
   [LEFT_SIDEBAR_NAMES.PIPELINES]: selectors.pipelines.collection.count(state),
   [LEFT_SIDEBAR_NAMES.ALGORITHMS]: selectors.algorithms.collection.count(state),
   [LEFT_SIDEBAR_NAMES.WORKERS]: selectors.workers.count(state),
@@ -85,10 +85,10 @@ const sidebarSelector = state => ({
 
 const menuItems = [
   [LEFT_SIDEBAR_NAMES.JOBS, JobsIcon, '/jobs'],
-  [LEFT_SIDEBAR_NAMES.QUEUE, QueueIcon, '/queue'],
   [LEFT_SIDEBAR_NAMES.PIPELINES, PipelineIcon, '/pipelines'],
   [LEFT_SIDEBAR_NAMES.ALGORITHMS, AlgorithmIcon, '/algorithms'],
   [LEFT_SIDEBAR_NAMES.DATASOURCES, DataSourceIcon, '/datasources'],
+  [LEFT_SIDEBAR_NAMES.QUEUE, QueueIcon, '/queue'],
   [LEFT_SIDEBAR_NAMES.WORKERS, WorkerIcon, '/workers'],
   [LEFT_SIDEBAR_NAMES.DRIVERS, DriversIcon, '/drivers'],
 ];

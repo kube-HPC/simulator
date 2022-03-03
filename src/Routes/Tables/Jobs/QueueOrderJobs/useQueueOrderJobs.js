@@ -1,13 +1,14 @@
 import client from 'client';
+import { TypeFilter, TypeTable } from 'const';
 
 const ApiBaseURL = process.env.REACT_APP_API_SERVER_BACKEND_PATH;
 export const numberJobsPerPage = 10;
-const addToObjectKeyIndexId = arrayObjects => {
-  const arrayResQueue = [];
+const addToObjectKeyIndexId = (arrayObjects, typeElement) => {
+  const arrayRes = [];
   arrayObjects.map((ele, index) =>
-    arrayResQueue.push({ ...ele, key: index, id: index, index })
+    arrayRes.push({ ...ele, key: index, id: index, index, typeElement })
   );
-  return arrayResQueue;
+  return arrayRes;
 };
 
 // Queue Managed API
@@ -34,7 +35,11 @@ const getManaged = async (
       params: { ...data },
     });
 
-    res.data.returnList = addToObjectKeyIndexId(res.data.returnList);
+    res.data.returnList = addToObjectKeyIndexId(
+      res.data.returnList,
+      TypeTable.QUEUE
+    );
+
     return res.data;
   } catch (e) {
     console.error(res);
@@ -47,7 +52,7 @@ const getManagedByTag = async () => {
   let res = null;
   try {
     res = await client.get(`${ApiBaseURL}/queue/managed/aggregation/tag`);
-    return addToObjectKeyIndexId(res.data);
+    return addToObjectKeyIndexId(res.data, TypeTable.QUEUE);
   } catch (e) {
     console.error(res.response.data.error.message);
   }
@@ -59,7 +64,7 @@ const getManagedByPipeline = async () => {
   let res = null;
   try {
     res = await client.get(`${ApiBaseURL}/queue/managed/aggregation/pipeline`);
-    return addToObjectKeyIndexId(res.data);
+    return addToObjectKeyIndexId(res.data, TypeTable.QUEUE);
   } catch (e) {
     console.error(res.response.data.error.message);
   }
@@ -91,7 +96,10 @@ const getPreferred = async (
       params: { ...data },
     });
 
-    res.data.returnList = addToObjectKeyIndexId(res.data.returnList);
+    res.data.returnList = addToObjectKeyIndexId(
+      res.data.returnList,
+      TypeTable.PREFERRED
+    );
     return res.data;
   } catch (e) {
     console.error(res);
@@ -104,7 +112,7 @@ const getPreferredByTag = async () => {
   let res = null;
   try {
     res = await client.get(`${ApiBaseURL}/queue/preferred/aggregation/tag`);
-    return addToObjectKeyIndexId(res.data);
+    return addToObjectKeyIndexId(res.data, TypeTable.PREFERRED);
   } catch (e) {
     console.error(res);
   }
@@ -118,7 +126,7 @@ const getPreferredByPipeline = async () => {
     res = await client.get(
       `${ApiBaseURL}/queue/preferred/aggregation/pipeline`
     );
-    return addToObjectKeyIndexId(res.data);
+    return addToObjectKeyIndexId(res.data, TypeTable.PREFERRED);
   } catch (e) {
     console.error(res);
   }
@@ -184,12 +192,6 @@ const movePreferred = async (jobsToMove, position, jobId) => {
 };
 
 // get data filter by pipeline or tag or only by job id
-
-const TypeFilter = {
-  JOBID: 'jobId',
-  PIPELINE: 'pipeline',
-  TAG: 'tag',
-};
 
 const getStatusManage = async (
   typeFilter,
@@ -290,7 +292,7 @@ const getJobsIdsScopePreferred = async (
       }
     }
   }
-  console.log(jobsIdsScope);
+
   return jobsIdsScope;
 };
 

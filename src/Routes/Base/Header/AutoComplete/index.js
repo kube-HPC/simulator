@@ -14,16 +14,17 @@ const AutoCompleteLong = styled(AntAutoComplete)`
 
 const selectorsMap = {
   jobs: selectors.jobs.ids,
-  queue: selectors.jobs.ids,
+  queue: () => [],
   algorithms: selectors.algorithms.collection.ids,
   pipelines: selectors.pipelines.collection.names,
   drivers: selectors.drivers.ids,
   workers: selectors.workers.ids,
   datasources: selectors.dataSources.names,
 };
-
+const disableFilter = ['queue'];
 const AutoComplete = ({ className }) => {
   const { pageName } = useParams();
+  const isDisabled = disableFilter.includes(pageName);
   const tableData = useSelector(selectorsMap[pageName]).map(x => ({
     value: x,
     label: x,
@@ -38,7 +39,8 @@ const AutoComplete = ({ className }) => {
       onSearch={handleFilter}
       onSelect={handleFilter}
       placeholder="Filter Entities 🎉"
-      dropdownMatchSelectWidth>
+      dropdownMatchSelectWidth
+      disabled={isDisabled}>
       <Input.Search allowClear />
     </AutoCompleteLong>
   );

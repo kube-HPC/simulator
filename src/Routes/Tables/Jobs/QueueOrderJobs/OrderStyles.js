@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { LeftOutlined } from '@ant-design/icons';
+import { Table } from 'antd';
 
 export const DeleteOverTable = styled.div`
   position: absolute;
@@ -20,9 +20,11 @@ export const FlexItems = styled.div`
 
   flex-direction: ${props => (props.$isDirectionColumn ? 'column' : 'row')};
 `;
-export const DividerTables = styled(LeftOutlined)`
-  font-size: 24px;
-  align-self: center;
+export const DividerTables = styled.div`
+  margin-left: 15px;
+  margin-right: 5px;
+  width: 1px;
+  border: 1px solid #0072ff0a;
 `;
 
 export const TitleTable = styled.div`
@@ -63,4 +65,28 @@ export const ContainerArea = styled.div`
 export const FilterTable = styled.div`
   margin-top: 10px;
   margin-bottom: 10px;
+`;
+
+export const TableItem = styled(Table)`
+  .ant-table-thead > tr > th {
+    background: none;
+  }
+`;
+
+export const TableAllInOne = styled(Table)`
+  .ant-table-thead > tr > th {
+    background: none;
+  }
+  [data-row-key*='queue'] {
+    background-color: #0072ff0a;
+  }
+`;
+export const HeaderTitlePreferred = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+
+  h1 {
+    font-size: 24px;
+  }
 `;

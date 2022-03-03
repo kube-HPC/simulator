@@ -1,7 +1,7 @@
 import React from 'react';
 import { TypeTable, TypeFilter } from 'const';
 import PropTypes from 'prop-types';
-import { Table, Empty } from 'antd';
+import { Empty } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import {
   SortableItem,
@@ -14,6 +14,7 @@ import {
   TitleTable,
   FilterTable,
   DeleteOverTable,
+  TableItem,
 } from './OrderStyles';
 import OrderPaging from './OrderPaging';
 
@@ -65,7 +66,9 @@ class TableQueue extends React.Component {
       numberRowToViewPagingQueue,
       viewTableColumnOrRow,
       isDeleteOverTable,
+      isLoadData,
     } = this.props;
+
     return (
       <ContainerArea
         $isDirectionColumn={viewTableColumnOrRow}
@@ -86,7 +89,7 @@ class TableQueue extends React.Component {
           <br />
           Release to move the item to the queue
         </DeleteOverTable>
-        <Table
+        <TableItem
           locale={{
             emptyText: (
               <Empty
@@ -95,6 +98,7 @@ class TableQueue extends React.Component {
               />
             ),
           }}
+          loading={isLoadData}
           pagination={false}
           dataSource={dataSourceQueue}
           columns={TypeTableColumns[filterQueueVal]}
@@ -130,7 +134,7 @@ TableQueue.propTypes = {
   dataSourceQueue: PropTypes.func.isRequired,
   filterQueueVal: PropTypes.string.isRequired,
   isDrag: PropTypes.bool.isRequired,
-
+  isLoadData: PropTypes.bool.isRequired,
   pageQueueHasPrev: PropTypes.number.isRequired,
   pageQueueHasNext: PropTypes.number.isRequired,
   filterQueue: PropTypes.func.isRequired,
@@ -139,5 +143,7 @@ TableQueue.propTypes = {
   viewTableColumnOrRow: PropTypes.bool.isRequired,
   isDeleteOverTable: PropTypes.bool.isRequired,
 };
+
+// const areEqual = (prev, next) => prev.dataSourceQueue === next.dataSourceQueue;
 
 export default TableQueue;

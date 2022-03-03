@@ -1,12 +1,14 @@
 import React from 'react';
-import { Modal } from 'antd';
+import { Button, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { TypeTable, TypeFilter } from 'const';
+import TableOrderConsolidated from './TableOrderConsolidated';
 import TablePreferred from './TablePreferred';
 import TableQueue from './TableQueue';
-import { FlexItems, DividerTables } from './OrderStyles';
+import { FlexItems, DividerTables, HeaderTitlePreferred } from './OrderStyles';
 import { orderApi } from './useQueueOrderJobs';
 
+const PAGE_SIZE_TABLE = 10;
 class QueueOrderJobs extends React.Component {
   constructor(props) {
     super(props);
@@ -15,7 +17,8 @@ class QueueOrderJobs extends React.Component {
       // data jobs
       dataSourcePreferred: [],
       dataSourceQueue: [],
-
+      isLoadDataQueue: false,
+      isLoadDataPreferred: false,
       // state table action
       selectTable: '', // which table is start drag job
       hoverTable: '', // hover some table
@@ -40,7 +43,10 @@ class QueueOrderJobs extends React.Component {
       pagePreferredHasNext: 0, // number next jobs in table Preferred
       pagePreferredHasPrev: 0, // number previous jobs in table Preferred
       numberRowToViewPagingPreferred: orderApi.numberJobsPerPage, // number row to view in table Preferred
+
       viewTableColumnOrRow: false,
+      isEditOrder: false,
+      TableOrderConsolidatedSize: PAGE_SIZE_TABLE,
     };
 
     this.getStatusManageAndPreferred = this.getStatusManageAndPreferred.bind(
@@ -75,22 +81,43 @@ class QueueOrderJobs extends React.Component {
       pagePreferredLastActionIntention,
       numberRowToViewPagingQueue,
       numberRowToViewPagingPreferred,
+      isEditOrder,
+      TableOrderConsolidatedSize,
     } = this.state;
 
-    const dataStatusManage = await orderApi.getStatusManage(
-      filterQueueVal,
-      pageQueueViewJobId,
-      pageQueueLastActionIntention,
-      numberRowToViewPagingQueue
-    );
-    const dataStatusPreferred = await orderApi.getStatusPreferred(
-      filterPreferredVal,
-      pagePreferredViewJobId,
-      pagePreferredLastActionIntention,
-      numberRowToViewPagingPreferred
-    );
+    let dataStatusManage = [];
+    let dataStatusPreferred = [];
 
+    if (!isEditOrder) {
+      dataStatusManage = await orderApi.getStatusManage(
+        TypeFilter.JOBID.toUpperCase(),
+        null,
+        null,
+        TableOrderConsolidatedSize
+      );
+      dataStatusPreferred = await orderApi.getStatusPreferred(
+        TypeFilter.JOBID.toUpperCase(),
+        null,
+        null,
+        TableOrderConsolidatedSize
+      );
+    } else {
+      dataStatusManage = await orderApi.getStatusManage(
+        filterQueueVal,
+        pageQueueViewJobId,
+        pageQueueLastActionIntention,
+        numberRowToViewPagingQueue
+      );
+      dataStatusPreferred = await orderApi.getStatusPreferred(
+        filterPreferredVal,
+        pagePreferredViewJobId,
+        pagePreferredLastActionIntention,
+        numberRowToViewPagingPreferred
+      );
+    }
     this.setState({
+      isLoadDataPreferred: false,
+      isLoadDataQueue: false,
       pageQueueHasNext: dataStatusManage?.nextCount || 0,
       pageQueueHasPrev: dataStatusManage?.prevCount || 0,
       dataSourceQueue: dataStatusManage?.returnList || dataStatusManage,
@@ -122,7 +149,7 @@ class QueueOrderJobs extends React.Component {
       dataSourcePreferred,
       keyDelete
     );
-
+    this.setState({ isLoadDataPreferred: true, isLoadDataQueue: true });
     // delete all jobsIds from preferred
     await orderApi.deletePreferred([].concat(jobsIdToDelete));
     this.setState({ selectTable: '' });
@@ -131,7 +158,7 @@ class QueueOrderJobs extends React.Component {
   filterPreferred = filterValue => {
     this.setState({
       filterPreferredVal: filterValue,
-
+      isLoadDataPreferred: true,
       // reset paging Preferred
       pagePreferredViewJobId: '',
       pagePreferredLastActionIntention: '',
@@ -143,6 +170,7 @@ class QueueOrderJobs extends React.Component {
 
   filterQueue = filterValue => {
     this.setState({
+      isLoadDataQueue: true,
       filterQueueVal: filterValue,
 
       // reset paging queue
@@ -159,11 +187,13 @@ class QueueOrderJobs extends React.Component {
 
     if (goToView === 'next') {
       if (typeTable === TypeTable.QUEUE) {
+        this.setState({ isLoadDataQueue: true });
         this.setState({ pageQueueLastActionIntention: goToView });
         this.setState({
           pageQueueViewJobId: dataSourceQueue[dataSourceQueue.length - 1].jobId,
         });
       } else {
+        this.setState({ isLoadDataPreferred: true });
         this.setState({ pagePreferredLastActionIntention: goToView });
         this.setState({
           pagePreferredViewJobId:
@@ -174,9 +204,11 @@ class QueueOrderJobs extends React.Component {
 
     if (goToView === 'previous') {
       if (typeTable === TypeTable.QUEUE) {
+        this.setState({ isLoadDataQueue: true });
         this.setState({ pageQueueLastActionIntention: goToView });
         this.setState({ pageQueueViewJobId: dataSourceQueue[0].jobId });
       } else {
+        this.setState({ isLoadDataPreferred: true });
         this.setState({ pagePreferredLastActionIntention: goToView });
         this.setState({ pagePreferredViewJobId: dataSourcePreferred[0].jobId });
       }
@@ -184,9 +216,11 @@ class QueueOrderJobs extends React.Component {
 
     if (goToView === 'begin' || goToView === 'end') {
       if (typeTable === TypeTable.QUEUE) {
+        this.setState({ isLoadDataQueue: true });
         this.setState({ pageQueueLastActionIntention: goToView });
         this.setState({ pageQueueViewJobId: '' });
       } else {
+        this.setState({ isLoadDataPreferred: true });
         this.setState({ pagePreferredLastActionIntention: goToView });
         this.setState({ pagePreferredViewJobId: '' });
       }
@@ -211,15 +245,17 @@ class QueueOrderJobs extends React.Component {
       selectTable === TypeTable.PREFERRED
     ) {
       if (oldIndex !== newIndex) {
+        this.setState({ isLoadDataPreferred: true, isLoadDataQueue: true });
         const { positionOverY } = this.state;
 
         // get all jobsId need to move
+
         const jobsToMove = await orderApi.getJobsIdsScopePreferred(
           filterPreferredVal,
           dataSourcePreferred,
           oldIndex
         );
-        console.log('rowOverIndex >> ', rowOverIndex);
+
         // get jobId position
         const jobIdPosition = await orderApi.getJobIdPosition(
           dataSourcePreferred,
@@ -234,12 +270,14 @@ class QueueOrderJobs extends React.Component {
         const jobsInsert = [].concat(jobsToMove);
 
         orderApi.movePreferred(jobsInsert, position, jobIdPosition);
+
         await this.getStatusManageAndPreferred();
       }
     } else if (
       hoverTable === TypeTable.PREFERRED &&
       selectTable === TypeTable.QUEUE
     ) {
+      this.setState({ isLoadDataPreferred: true, isLoadDataQueue: true });
       // QUEUE to PREFERRED
       const { positionOverY } = this.state;
       let jobsInsert = [];
@@ -282,6 +320,8 @@ class QueueOrderJobs extends React.Component {
         // get jobId That the data is added after or before it
         if (filterPreferredVal === TypeFilter.JOBID.toUpperCase()) {
           // when aggregation is JobId
+
+          // Unhandled Rejection (TypeError): Cannot read properties of undefined (reading 'jobId')
           jobIdPosition = dataSourcePreferred.find(
             x => x.index === rowOverIndex
           ).jobId;
@@ -378,6 +418,19 @@ class QueueOrderJobs extends React.Component {
     this.setState({ viewTableColumnOrRow: !viewTableColumnOrRow });
   };
 
+  toggleEdit = () => {
+    const { isEditOrder } = this.state;
+    this.setState({ isEditOrder: !isEditOrder });
+    this.setState({ TableOrderConsolidatedSize: PAGE_SIZE_TABLE });
+  };
+
+  handleTableSize = () => {
+    const { TableOrderConsolidatedSize } = this.state;
+    this.setState({
+      TableOrderConsolidatedSize: TableOrderConsolidatedSize + PAGE_SIZE_TABLE,
+    });
+  };
+
   render() {
     const {
       dataSourcePreferred,
@@ -400,59 +453,75 @@ class QueueOrderJobs extends React.Component {
       pagePreferredHasPrev,
       numberRowToViewPagingPreferred,
       viewTableColumnOrRow,
+      isEditOrder,
+      isLoadDataPreferred,
+      isLoadDataQueue,
     } = this.state;
 
     return (
       <>
-        <FlexItems $isDirectionColumn={viewTableColumnOrRow}>
-          <TablePreferred
-            dataSourcePreferred={dataSourcePreferred}
-            onSortEnd={this.onSortEnd}
-            handleOnHoverTable={this.handleOnHoverTable}
-            handleOnSelectedTable={this.handleOnSelectedTable} //
-            handleOnRowOverAndPosition={this.handleOnRowOverAndPosition}
-            isDrag={isDrag}
-            pageGoToView={this.pageGoToView}
-            filterPreferredVal={filterPreferredVal}
-            pagePreferredHasPrev={pagePreferredHasPrev}
-            pagePreferredHasNext={pagePreferredHasNext}
-            filterPreferred={this.filterPreferred}
-            onChangeNumberRowPagingPreferred={
-              this.onChangeNumberRowPagingPreferred
-            }
-            numberRowToViewPagingPreferred={numberRowToViewPagingPreferred}
-            handleDelete={this.handleDelete}
-            handleViewTableColumnOrRow={this.handleViewTableColumnOrRow}
-            viewTableColumnOrRow={viewTableColumnOrRow}
-          />
+        <HeaderTitlePreferred>
+          {!isEditOrder && <h1>Preferred</h1>}
+          <Button type="primary" onClick={() => this.toggleEdit()}>
+            {!isEditOrder ? 'Edit' : '<< Back To Preferred'}
+          </Button>
+        </HeaderTitlePreferred>
 
-          {!viewTableColumnOrRow && (
-            <>
-              <DividerTables />
-              <DividerTables />
-            </>
-          )}
-
-          <TableQueue
-            dataSourceQueue={dataSourceQueue}
-            onSortEnd={this.onSortEnd}
-            handleOnSelectedTable={this.handleOnSelectedTable} //
-            handleOnHoverTable={this.handleOnHoverTable}
-            isDrag={isDrag}
-            pageGoToView={this.pageGoToView}
-            filterQueueVal={filterQueueVal}
-            pageQueueHasPrev={pageQueueHasPrev}
-            pageQueueHasNext={pageQueueHasNext}
-            filterQueue={this.filterQueue}
-            onChangeNumberRowPagingQueue={this.onChangeNumberRowPagingQueue}
-            numberRowToViewPagingQueue={numberRowToViewPagingQueue}
-            viewTableColumnOrRow={viewTableColumnOrRow}
-            isDeleteOverTable={
-              hoverTable === TypeTable.QUEUE &&
-              selectTable === TypeTable.PREFERRED
-            }
+        {!isEditOrder && (
+          <TableOrderConsolidated
+            handlePageSize={this.handleTableSize}
+            dataSourceAllJobs={[...dataSourcePreferred, ...dataSourceQueue]}
           />
-        </FlexItems>
+        )}
+
+        {isEditOrder && (
+          <FlexItems $isDirectionColumn={viewTableColumnOrRow}>
+            <TablePreferred
+              dataSourcePreferred={dataSourcePreferred}
+              isLoadData={isLoadDataPreferred}
+              onSortEnd={this.onSortEnd}
+              handleOnHoverTable={this.handleOnHoverTable}
+              handleOnSelectedTable={this.handleOnSelectedTable} //
+              handleOnRowOverAndPosition={this.handleOnRowOverAndPosition}
+              isDrag={isDrag}
+              pageGoToView={this.pageGoToView}
+              filterPreferredVal={filterPreferredVal}
+              pagePreferredHasPrev={pagePreferredHasPrev}
+              pagePreferredHasNext={pagePreferredHasNext}
+              filterPreferred={this.filterPreferred}
+              onChangeNumberRowPagingPreferred={
+                this.onChangeNumberRowPagingPreferred
+              }
+              numberRowToViewPagingPreferred={numberRowToViewPagingPreferred}
+              handleDelete={this.handleDelete}
+              handleViewTableColumnOrRow={this.handleViewTableColumnOrRow}
+              viewTableColumnOrRow={viewTableColumnOrRow}
+            />
+
+            {!viewTableColumnOrRow && <DividerTables />}
+
+            <TableQueue
+              dataSourceQueue={dataSourceQueue}
+              isLoadData={isLoadDataQueue}
+              onSortEnd={this.onSortEnd}
+              handleOnSelectedTable={this.handleOnSelectedTable} //
+              handleOnHoverTable={this.handleOnHoverTable}
+              isDrag={isDrag}
+              pageGoToView={this.pageGoToView}
+              filterQueueVal={filterQueueVal}
+              pageQueueHasPrev={pageQueueHasPrev}
+              pageQueueHasNext={pageQueueHasNext}
+              filterQueue={this.filterQueue}
+              onChangeNumberRowPagingQueue={this.onChangeNumberRowPagingQueue}
+              numberRowToViewPagingQueue={numberRowToViewPagingQueue}
+              viewTableColumnOrRow={viewTableColumnOrRow}
+              isDeleteOverTable={
+                hoverTable === TypeTable.QUEUE &&
+                selectTable === TypeTable.PREFERRED
+              }
+            />
+          </FlexItems>
+        )}
         <div style={{ display: 'none' }}>
           ** hoverTable :{hoverTable} ** *** rowOverIndex : {rowOverIndex} ***
           *** positionOverY : {positionOverY} *** *** isDrag :
