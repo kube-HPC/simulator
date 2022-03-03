@@ -20,7 +20,7 @@ const OutputNode = ({ id }) => {
   const rootId = ['nodes', id, 'spec'];
   return (
     <ctx.Provider value={{ rootId }}>
-      <Field name={['description']} title="Description">
+      <Field name={['description']} title="Description" skipValidation>
         <Input placeholder="Description" />
       </Field>
       <Field

@@ -7,12 +7,25 @@ export const Tabs = styled(AntTabs)`
   }
 
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   flex: 1;
 `;
 
 export const Pane = styled(Tabs.TabPane)`
   height: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+`;
+export const PaneRow = styled(Tabs.TabPane)`
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+`;
+
+export const PanePadding = styled(Tabs.TabPane)`
+  padding-top: 10px;
+`;
+
+export const LinkDownload = styled.div`
+  margin-bottom: 15px;
 `;

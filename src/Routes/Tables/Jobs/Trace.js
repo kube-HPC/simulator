@@ -15,7 +15,9 @@ const Trace = ({ data }) =>
   data === null ? (
     <Result status="warning" title="No trace has been found." />
   ) : data ? (
-    <JaegerTrace trace={{ data }} />
+    <div className="JaegerTrace">
+      <JaegerTrace trace={{ data }} />
+    </div>
   ) : (
     <CenterDiv>
       <Spin size="large" tip="Fetching Trace Data 🔎..." />

@@ -53,15 +53,15 @@ const RemoteDetails = ({ storage, git }) => (
         <H2>remote details</H2>
         <Group>
           <H3>git</H3>
-          {git.kind !== 'internal' ? (
+          {git && git.kind !== 'internal' ? (
             <Field title="repository url" value={git.repositoryUrl} />
           ) : (
             <H4> internal</H4>
           )}
         </Group>
         <Group>
-          <H3>storage</H3>
-          {storage.kind !== 'internal' ? (
+          <H3>storage </H3>
+          {storage && storage.kind !== 'internal' ? (
             <>
               <Field title="endpoint" value={storage.endpoint} />
               <Field title="bucket name" value={storage.bucketName} />
@@ -78,13 +78,13 @@ const RemoteDetails = ({ storage, git }) => (
 
 RemoteDetails.propTypes = {
   git: PropTypes.shape({
-    kind: PropTypes.string.isRequired,
-    repositoryUrl: PropTypes.string.isRequired,
+    kind: PropTypes.string,
+    repositoryUrl: PropTypes.string,
   }),
   storage: PropTypes.shape({
-    kind: PropTypes.string.isRequired,
-    endpoint: PropTypes.string.isRequired,
-    bucketName: PropTypes.string.isRequired,
+    kind: PropTypes.string,
+    endpoint: PropTypes.string,
+    bucketName: PropTypes.string,
   }),
 };
 

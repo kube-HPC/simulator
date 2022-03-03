@@ -16,6 +16,14 @@ import NodeInputOutput from './NodeInputOutput';
 import NodeLogs from '../NodeLogs';
 import { Tabs, Pane } from './../styles';
 
+export const TabsLog = styled(Tabs)`
+  flex-direction: column;
+`;
+
+export const PaneLog = styled(Pane)`
+  flex-direction: column;
+`;
+
 const OverflowContainer = styled.div`
   height: 100%;
   overflow: auto;
@@ -23,6 +31,7 @@ const OverflowContainer = styled.div`
 const ContainerTabs = styled.div`
   padding-left: 15px;
   padding-right: 15px;
+  height: 800px;
 `;
 
 const NodeInfo = ({ node, jobId }) => {
@@ -73,10 +82,10 @@ const NodeInfo = ({ node, jobId }) => {
 
   return node ? (
     <ContainerTabs>
-      <Tabs defaultActiveKey="logs-tab" tabBarExtraContent={extra}>
-        <Pane tab="Logs" key="logs-tab">
+      <TabsLog defaultActiveKey="logs-tab" tabBarExtraContent={extra}>
+        <PaneLog tab="Logs" key="logs-tab">
           <NodeLogs node={node} taskDetails={taskDetails} onChange={setIndex} />
-        </Pane>
+        </PaneLog>
         <Tabs.TabPane tab="Algorithm Details" key="algorithms-tab">
           <OverflowContainer>
             <JsonSwitch obj={algorithmDetails} jobId={jobId} />
@@ -85,7 +94,7 @@ const NodeInfo = ({ node, jobId }) => {
         <Tabs.TabPane tab="Input Output Details" key="io-details-tab">
           <NodeInputOutput payload={node} algorithm={algorithmDetails} />
         </Tabs.TabPane>
-      </Tabs>
+      </TabsLog>
     </ContainerTabs>
   ) : (
     <Empty />

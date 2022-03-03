@@ -39,8 +39,10 @@ const FormItem = styled(Form.Item)`
  *   form: import('antd/lib/form/Form').WrappedFormUtils;
  * }} props
  */
-const QueryMode = ({ dataSource, form, onDownload }) => {
+const QueryMode = ({ dataSource, onDownload }) => {
   /** @type {{ current?: RefContent }} */
+
+  const [form] = Form.useForm();
   const fileBrowserRef = useRef();
   const dispatch = useDispatch();
   const [previewFiles, setPreviewFiles] = useState([]);
@@ -52,20 +54,22 @@ const QueryMode = ({ dataSource, form, onDownload }) => {
   ]);
 
   const handleTryQuery = useCallback(async () => {
-    form.validateFields(['query'], async (err, values) => {
-      if (err) return null;
-      try {
-        /** @type {import('axios').AxiosResponse<FileMeta[]>} */
-        const response = await client.post(
-          `/datasource/id/${dataSource.id}/snapshot/preview`,
-          { query: values.query }
-        );
-        setShowQuery(true);
-        return setPreviewFiles(response.data);
-      } catch (e) {
-        return notification({ message: e.message, type: 'error' });
-      }
-    });
+    form
+      .validateFields(['query'])
+      .then(async values => {
+        try {
+          /** @type {import('axios').AxiosResponse<FileMeta[]>} */
+          const response = await client.post(
+            `/datasource/id/${dataSource.id}/snapshot/preview`,
+            { query: values.query }
+          );
+          setShowQuery(true);
+          return setPreviewFiles(response.data);
+        } catch (e) {
+          return notification({ message: e.message, type: 'error' });
+        }
+      })
+      .catch(null);
   }, [dataSource, form, setPreviewFiles]);
 
   const filteredFiles = useMemo(
@@ -73,11 +77,10 @@ const QueryMode = ({ dataSource, form, onDownload }) => {
     [showQuery, previewFiles, dataSource]
   );
 
-  const handleSubmit = useCallback(
-    e => {
-      e.preventDefault();
-      form.validateFields(async (err, values) => {
-        if (err) return null;
+  const handleSubmit = useCallback(() => {
+    form
+      .validateFields()
+      .then(async values => {
         try {
           setPending(true);
           /** @type {import('axios').AxiosResponse<Snapshot>} */
@@ -99,15 +102,15 @@ const QueryMode = ({ dataSource, form, onDownload }) => {
             type: 'error',
           });
         }
-      });
-      return null;
-    },
-    [dispatch, dataSource, form, setPending, goTo]
-  );
+      })
+      .catch(null);
+    return null;
+  }, [dispatch, dataSource, form, setPending, goTo]);
 
   return (
     <Form
-      onSubmit={handleSubmit}
+      form={form}
+      onFinish={handleSubmit}
       style={{ display: 'contents' }}
       initialValues={{ comment: '' }}>
       <FileBrowserContainer>
@@ -172,10 +175,6 @@ QueryMode.propTypes = {
     name: PropTypes.string.isRequired,
     files: PropTypes.arrayOf(PropTypes.object).isRequired,
     isSnapshot: PropTypes.bool,
-  }).isRequired,
-  form: PropTypes.shape({
-    validateFields: PropTypes.func.isRequired,
-    getFieldValue: PropTypes.func.isRequired,
   }).isRequired,
   onDownload: PropTypes.func.isRequired,
 };

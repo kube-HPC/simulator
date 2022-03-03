@@ -1,6 +1,7 @@
 import React from 'react';
 import Ellipsis from 'components/common/Ellipsis.react';
 import { StatusTag as CountTag } from 'components/StatusTag';
+import { sorter } from 'utils/stringHelper';
 
 const DriverId = driverId => <Ellipsis text={driverId} />;
 const PodName = podName => <Ellipsis copyable text={podName} />;
@@ -11,18 +12,20 @@ const Capacity = count => <CountTag count={count} />;
 const JobId = jobId => <Ellipsis text={jobId} />;
 const Active = active => <Ellipsis text={active ? 'active' : 'inActive'} />;
 
+const sortDriverId = (a, b) => sorter(a.driverId, b.driverId);
+
 export const driverJobsTableColumns = [
   {
     title: 'jobId',
     key: 'jobId',
-    dataIndex: 'jobId',
+    dataIndex: ['jobId'],
     width: '40%',
     render: JobId,
   },
   {
     title: 'active',
     key: 'active',
-    dataIndex: 'active',
+    dataIndex: ['active'],
     width: '60%',
     render: Active,
   },
@@ -32,42 +35,44 @@ export const driversTableColumns = [
   {
     title: 'Driver Id',
     key: 'driverId',
-    dataIndex: 'driverId',
+    dataIndex: ['driverId'],
     width: '20%',
     render: DriverId,
+    sorter: sortDriverId,
+    defaultSortOrder: 'descend',
   },
   {
     title: 'Pod Name',
     key: 'podName',
-    dataIndex: 'podName',
+    dataIndex: ['podName'],
     width: '20%',
     render: PodName,
   },
   {
     title: 'Status',
     key: 'status',
-    dataIndex: 'status',
+    dataIndex: ['status'],
     width: '15%',
     render: Status,
   },
   {
     title: 'Current Jobs',
     key: 'jobs',
-    dataIndex: 'jobs',
+    dataIndex: ['jobs'],
     width: '15%',
     render: Jobs,
   },
   {
     title: 'Max Jobs',
     key: 'max',
-    dataIndex: 'max',
+    dataIndex: ['max'],
     width: '15%',
     render: Max,
   },
   {
     title: 'Total Capacity',
     key: 'capacity',
-    dataIndex: 'capacity',
+    dataIndex: ['capacity'],
     width: '15%',
     render: Capacity,
   },

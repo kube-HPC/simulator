@@ -6,7 +6,7 @@ import { Button, Tag, Tooltip } from 'antd';
 import humanizeDuration from 'humanize-duration';
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import { toUpperCaseFirstLetter } from 'utils/stringHelper';
-import { StatusTag } from 'components/StatusTag';
+import BaseTag from 'components/BaseTag';
 
 const getStatusFilter = () =>
   [
@@ -21,9 +21,9 @@ const getStatusFilter = () =>
 const Index = index => <Tag>{index}</Tag>;
 
 const Status = status => (
-  <StatusTag status={status} colorMap={COLOR_TASK_STATUS}>
+  <BaseTag status={status} colorMap={COLOR_TASK_STATUS}>
     {status}
-  </StatusTag>
+  </BaseTag>
 );
 
 const Duration = (_, record) =>
@@ -73,13 +73,13 @@ Results.defaultProps = {
 const getNodeIOColumns = url => [
   {
     title: 'index',
-    dataIndex: 'index',
+    dataIndex: ['index'],
     key: 'index',
     render: Index,
   },
   {
     title: 'status',
-    dataIndex: 'status',
+    dataIndex: ['status'],
     key: 'status',
     filterMultiple: true,
     filters: getStatusFilter(),
@@ -88,19 +88,19 @@ const getNodeIOColumns = url => [
   },
   {
     title: 'duration',
-    dataIndex: 'duration',
+    dataIndex: ['duration'],
     key: 'duration',
     render: Duration,
   },
   {
     title: 'retries',
-    dataIndex: 'retries',
+    dataIndex: ['retries'],
     key: 'retries',
     render: Retries,
   },
   {
     title: 'Results',
-    dataIndex: 'results',
+    dataIndex: ['results'],
     key: 'results',
     render: (_, record) => <Results url={url} record={record} />,
   },

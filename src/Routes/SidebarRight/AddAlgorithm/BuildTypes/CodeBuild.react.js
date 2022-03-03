@@ -77,23 +77,22 @@ const CodeBuild = ({ required, fileList, setFileList, isEdit }) => (
       <Input placeholder={ENTRY_POINT.placeholder} />
     </Form.Item>
     <Form.Item label={BASE_IMAGE.label} name={splitByDot(BASE_IMAGE.field)}>
-      <Input placeholder={BASE_IMAGE.placeholder} />
+      <Input
+        disabled={isEdit && fileList.length === 0}
+        placeholder={BASE_IMAGE.placeholder}
+      />
     </Form.Item>
 
     <Form.Item wrapperCol={null} style={marginTop}>
       <Upload.Dragger
-        disabled={isEdit}
         // eslint-disable-next-line
         {...setDraggerProps({ fileList, setFileList })}>
         <InboxOutlined style={isEdit ? inboxDisplayedStyle : inboxStyle} />
         <br />
-        <Text disabled={isEdit}>
-          Click or drag Algorithm Source code to this area to upload
-        </Text>
+        <Text>Click or drag Algorithm Source code to this area to upload</Text>
         <br />
-        <Text type="secondary" disabled={isEdit}>
-          Support for zip or tar.gz only
-        </Text>
+        <Text type="secondary">Support for zip or tar.gz only</Text>
+
         {!isEdit && (
           <FlexBox justify="center" style={marginTop}>
             <FlexBox.Item>

@@ -86,8 +86,8 @@ const COMMON_COLOR = () => {
     [TASK.ACTIVE]: COLOR.blueLight,
     [TASK.STORING]: COLOR.blueLight,
     // IDLE
-    [TASK.PRESCHEDULE]: COLOR.lightGrey,
-    [TASK.CREATING]: COLOR.lightGrey,
+    [TASK.PRESCHEDULE]: COLOR.orangeLight,
+    [TASK.CREATING]: COLOR.yellow,
     [TASK.PENDING]: COLOR.lightGrey,
     // SUCCEED
     [TASK.COMPLETED]: COLOR.greenLight,

@@ -9,7 +9,7 @@ import { sorter, stringify } from 'utils/stringHelper';
 const errorLogsTableColumns = [
   {
     title: 'Service Name',
-    dataIndex: 'serviceName',
+    dataIndex: ['serviceName'],
     key: 'serviceName',
     width: '10%',
     sorter: (a, b) => sorter(a.serviceName, b.serviceName),
@@ -30,14 +30,14 @@ const errorLogsTableColumns = [
   },
   {
     title: 'Pod Name',
-    dataIndex: 'podName',
+    dataIndex: ['podName'],
     key: 'podName',
     width: '10%',
     render: podName => <Ellipsis copyable text={podName} />,
   },
   {
     title: 'Message',
-    dataIndex: 'message',
+    dataIndex: ['message'],
     key: 'message',
     render: message => (
       <Typography.Paragraph strong>
@@ -47,7 +47,7 @@ const errorLogsTableColumns = [
   },
   {
     title: 'Time Stamp',
-    dataIndex: 'timestamp',
+    dataIndex: ['timestamp'],
     key: 'timestamp',
     width: '10%',
     sorter: (a, b) => sorter(a.timestamp, b.timestamp),

@@ -10,7 +10,7 @@ const TagTheme = styled(Tag)`
 
   ${props =>
     !props.theme.Styles.isTagFill
-      ? `border: 1px solid ${props.$borderColor}`
+      ? `border: 1px solid ${props.$borderColor};background-color:${props.$borderColor}22`
       : props.$isBright
       ? `border: 1px solid${COLOR.lightGrey}`
       : undefined}
@@ -22,20 +22,18 @@ const BaseTag = ({ status, children, colorMap, tooltip, style }) => {
   const textColor = isBright ? COLOR.transparentBlack : COLOR.white;
 
   return (
-    status && (
-      <Tooltip
-        placement="top"
-        title={tooltip || (status && toUpperCaseFirstLetter(status))}>
-        <TagTheme
-          $textColor={textColor}
-          $borderColor={color}
-          $isBright={isBright}
-          color={Theme.Styles?.isTagFill ? color : ''} // color is prop of Tag ANTD
-          style={{ ...style }}>
-          {children}
-        </TagTheme>
-      </Tooltip>
-    )
+    <Tooltip
+      placement="top"
+      title={tooltip || (status && toUpperCaseFirstLetter(status))}>
+      <TagTheme
+        $textColor={textColor}
+        $borderColor={color}
+        $isBright={isBright}
+        color={Theme.Styles?.isTagFill ? color : ''} // color is prop of Tag ANTD
+        style={{ ...style }}>
+        {children}
+      </TagTheme>
+    </Tooltip>
   );
 };
 

@@ -143,3 +143,138 @@ input:-internal-autofill-selected {
 .rc-md-editor h6 {
   color: black;
 }
+.ant-radio-inner {
+  border-color: #a1a1a1;
+}
+/*--------------------------------------------------------- */
+/* trace Dark */
+/*--------------------------------------------------------- */
+.JaegerTrace button {
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid #434343;
+}
+
+.JaegerTrace .Tracepage--headerSection {
+  background: none;
+  color: #d9d9d9;
+}
+
+.JaegerTrace .Tracepage--headerSection .ub-relative {
+  background: #182039;
+}
+
+.JaegerTrace .VirtualizedTraceView--spans {
+  background: #182039;
+}
+
+.JaegerTrace .span-name-wrapper {
+  background: #373e60;
+}
+
+.JaegerTrace .span-name {
+  color: #d9d9d9;
+}
+
+.JaegerTrace .endpoint-name {
+  color: #ececec;
+}
+
+.JaegerTrace .span-row:hover .span-view {
+  background-color: #334c66;
+  outline: 1px solid #385e8d;
+  color: #d9d9d9;
+}
+.JaegerTrace .span-row:hover .span-name-wrapper {
+  background: #334c66;
+  background: linear-gradient(90deg, #334c66, #334c66 75%, #334c66);
+  outline: 1px solid #385e8d;
+  color: #d9d9d9;
+}
+
+.JaegerTrace .TimelineHeaderRow {
+  background: #383e60;
+  /*      border: 1px solid #3c4f89;*/
+  color: #cccccc;
+}
+
+.JaegerTrace .ViewingLayer--inactive {
+  fill: #373e60;
+}
+
+.JaegerTrace .CanvasSpanGraph {
+  height: 60px;
+  position: absolute;
+  width: 100%;
+  opacity: 0.4;
+}
+
+.JaegerTrace .Scrubber.isDragging .Scrubber--handle,
+.JaegerTrace .Scrubber--handles:hover > .Scrubber--handle {
+  fill: rgb(39, 39, 136);
+}
+
+.JaegerTrace .Scrubber--line {
+  pointer-events: none;
+  stroke: #555;
+}
+
+.JaegerTrace .Scrubber.isDragging > .Scrubber--line,
+.JaegerTrace .Scrubber--handles:hover + .Scrubber--line {
+  stroke: rgb(42, 42, 156);
+}
+
+.JaegerTrace .Scrubber--handleExpansion {
+  cursor: col-resize;
+  fill-opacity: 0;
+  fill: rgb(39, 39, 148);
+}
+
+.JaegerTrace .Scrubber--handle {
+  cursor: col-resize;
+  fill: #555;
+}
+
+.JaegerTrace .ViewingLayer--draggedEdge.isReframeDrag {
+  fill: rgb(98, 28, 28);
+}
+
+.JaegerTrace .ViewingLayer--inactive {
+  fill: rgba(214, 214, 214, 0.5);
+}
+
+.JaegerTrace .ViewingLayer--cursorGuide {
+  stroke: rgb(143, 37, 37);
+  stroke-width: 1;
+}
+
+.JaegerTrace .TickLabels--label {
+  color: #bebdbd;
+  font-size: 0.7rem;
+  position: absolute;
+  user-select: none;
+}
+
+.JaegerTrace .AccordianLogs--content {
+  border-top: 1px solid #373e60;
+}
+
+.JaegerTrace .AccordianLogs {
+  border: 1px solid #373e60;
+}
+
+.JaegerTrace .span-row.is-expanded .SpanBar--label,
+.JaegerTrace .span-row:hover .SpanBar--label {
+  color: #d7d7d7;
+}
+.JaegerTrace .SpanTreeOffset {
+  color: #d7d7d7;
+}
+
+.JaegerTrace .span-name-wrapper.is-matching-filter,
+.JaegerTrace .span-row.is-matching-filter {
+  background-color: #343f52;
+}
+
+/*--------------------------------------------------------- */
+/* end trace Dark */
+/*--------------------------------------------------------- */

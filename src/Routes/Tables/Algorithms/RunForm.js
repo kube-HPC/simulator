@@ -55,14 +55,7 @@ const InputsCollection = () => {
       {ids.map(id => (
         <Form.Item
           name={['inputs', id]}
-          validateTrigger={['onChange', 'onBlur']}
-          rules={[
-            {
-              required: true,
-              whitespace: true,
-              message: "Please input algorithm's name or delete this field.",
-            },
-          ]}>
+          validateTrigger={['onChange', 'onBlur']}>
           <InputField onRemove={ids.length > 1 ? dropKey : null} idx={id} />
         </Form.Item>
       ))}
@@ -81,9 +74,12 @@ const InputsCollection = () => {
  *   onRum: {};
  * } & import('antd/lib/form').FormComponentProps} props
  */
-const AlgorithmRun = ({ onRun, form, buttonTitle }) => {
+const AlgorithmRun = ({ onRun, buttonTitle }) => {
+  const [form] = Form.useForm();
+
   const handleRun = useCallback(() => {
     const values = form.getFieldsValue();
+
     const _values = Object.values(values.inputs)?.filter(
       item => item !== undefined
     );
@@ -93,8 +89,14 @@ const AlgorithmRun = ({ onRun, form, buttonTitle }) => {
       onRun();
     }
   }, [form, onRun]);
+
   return (
-    <Form name="run algorithm" direction="column" full gutter={[0, 10]}>
+    <Form
+      form={form}
+      name="runAlgorithm"
+      direction="column"
+      full
+      gutter={[0, 10]}>
       <InputsCollection />
       <Button type="primary" block size="small" onClick={handleRun}>
         {buttonTitle}
@@ -105,9 +107,7 @@ const AlgorithmRun = ({ onRun, form, buttonTitle }) => {
 
 AlgorithmRun.propTypes = {
   onRun: PropTypes.func.isRequired,
-  form: PropTypes.shape({
-    getFieldsValue: PropTypes.func.isRequired,
-  }).isRequired,
+
   buttonTitle: PropTypes.string.isRequired,
 };
 

@@ -56,6 +56,7 @@ const DarkTheme = COMMON_COLOR => {
   const { COLOR_EXPERIMENTS } = COMMON_COLOR;
 
   const Styles = {
+    line: 'rgba(48,48, 48, 0.07)',
     reactJsonView: { theme: 'paraiso' },
     IconHoverStyle: { colorHover: '#ffffff' },
     loadingScreen: {
@@ -76,6 +77,8 @@ const DarkTheme = COMMON_COLOR => {
     isTagFill: false,
     CapitalizedTag: { borderType: COLOR_PIPELINE_TYPES },
     ChonkyFileBrowser: { viewThemeDark: true },
+    SidebarLeft: { colorTagNumber: COLOR.grey },
+    TitleDataJob: { titleBottom: '#303030' },
   };
 
   return {

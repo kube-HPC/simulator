@@ -63,6 +63,14 @@ const GlobalStyle = createGlobalStyle`
 .row-dragging .drag-visible {
   visibility: visible;
 }
+.ant-tag{
+    border-radius:4px;
+  }
+
+.JaegerTrace .TimelineCollapser
+{
+  display:none;
+}
 `;
 
 export default GlobalStyle;

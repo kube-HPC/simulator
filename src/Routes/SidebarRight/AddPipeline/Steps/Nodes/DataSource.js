@@ -92,7 +92,7 @@ const DataSourceNode = ({ id }) => {
           </Select>
         </Field>
       ) : mode === MODES.VERSION ? (
-        <Field name={['id']} title="Version" skipValidation>
+        <Field name={['dataSource', 'id']} title="Version" skipValidation>
           <Select disabled={disableVersions}>
             {versionsCollection?.versions.map(entry => (
               <Select.Option

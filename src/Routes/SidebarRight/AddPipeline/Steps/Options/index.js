@@ -86,6 +86,11 @@ const Options = ({ style }) => {
       <Form.Item label="Pipeline TTL" name={['options', 'ttl']}>
         <InputNumber />
       </Form.Item>
+
+      <Form.Item label="Active TTL" name={['options', 'activeTtl']}>
+        <InputNumber />
+      </Form.Item>
+
       <Form.Item
         label="Verbosity Level"
         name={['options', 'progressVerbosityLevel']}>
