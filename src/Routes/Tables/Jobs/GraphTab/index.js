@@ -88,6 +88,24 @@ const GraphTab = ({ graph, pipeline }) => {
     [direction]
   );
 
+  const isDisabledBtnRunDebug = useMemo(() => {
+    let res = false;
+
+    if (pipeline?.kind === 'stream') {
+      res = true;
+    } else if (
+      node != null &&
+      node !== {} &&
+      (node?.kind === 'output' ||
+        node?.kind === 'dataSource' ||
+        node?.nodeName?.toString().indexOf(':') > -1)
+    ) {
+      res = true;
+    }
+
+    return res;
+  }, [node, pipeline?.kind]);
+
   useEffect(() => {
     toggleForceUpdate();
     setTimeout(() => {
@@ -121,7 +139,12 @@ const GraphTab = ({ graph, pipeline }) => {
       </GraphContainer>
       {isValidGraph && (
         <Card>
-          <Details node={node} jobId={graph.jobId} />
+          {isDisabledBtnRunDebug.toString()}
+          <Details
+            node={node}
+            jobId={graph.jobId}
+            isDisabledBtnRunDebug={isDisabledBtnRunDebug}
+          />
         </Card>
       )}
     </>
