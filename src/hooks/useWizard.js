@@ -78,7 +78,7 @@ const useWizard = (
       let isChange = false;
       nodes &&
         nodes.forEach((node, index) => {
-          if (node?.kind === typeKind) {
+          if (node.kind == null || node.kind === '' || node.kind === typeKind) {
             nodes[index].kind = 'algorithm';
             isChange = true;
           }

@@ -34,7 +34,7 @@ const ContainerTabs = styled.div`
   height: 800px;
 `;
 
-const NodeInfo = ({ node, jobId }) => {
+const NodeInfo = ({ node, jobId, isDisabledBtnRunDebug }) => {
   const algorithmDetails = useSelector(state =>
     selectors.algorithms.collection.byId(state, node.algorithmName)
   );
@@ -64,6 +64,7 @@ const NodeInfo = ({ node, jobId }) => {
           type="ghost"
           onClick={onRunNode}
           icon={<PlayCircleOutlined />}
+          disabled={isDisabledBtnRunDebug}
         />
       </Tooltip>
       <Tooltip title={`Debug from node ${node.nodeName}`}>
@@ -72,6 +73,7 @@ const NodeInfo = ({ node, jobId }) => {
           type="ghost"
           onClick={onDebugNode}
           icon={<BugOutlined />}
+          disabled={isDisabledBtnRunDebug}
         />
       </Tooltip>
       <Button key="refresh" icon={<RedoOutlined />} onClick={onRefresh}>
@@ -106,6 +108,10 @@ NodeInfo.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
   node: PropTypes.object,
+  isDisabledBtnRunDebug: PropTypes.bool,
 };
 
+NodeInfo.defaultProps = {
+  isDisabledBtnRunDebug: false,
+};
 export default React.memo(NodeInfo);

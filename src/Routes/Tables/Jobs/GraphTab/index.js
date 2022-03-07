@@ -55,6 +55,9 @@ const EmptyHeight = styled(Empty)`
 `;
 
 const GraphTab = ({ graph, pipeline }) => {
+  console.log('graph', graph);
+  console.log('pipeline', pipeline);
+
   const normalizedPipeline = useMemo(
     () =>
       pipeline.nodes.reduce(
@@ -87,6 +90,25 @@ const GraphTab = ({ graph, pipeline }) => {
     () => ({ ...generateStyles({ direction }), height: '100px' }),
     [direction]
   );
+
+  const isDisabledBtnRunDebug = useMemo(() => {
+    let res = false;
+    const nodesNames = pipeline.nodes.map(item => item.nodeName);
+
+    if (pipeline?.kind === 'stream') {
+      res = true;
+    } else if (
+      node != null &&
+      node !== {} &&
+      (node?.kind === 'output' ||
+        node?.kind === 'dataSource' ||
+        !nodesNames.includes(node?.nodeName))
+    ) {
+      res = true;
+    }
+
+    return res;
+  }, [node, pipeline?.kind, pipeline.nodes]);
 
   useEffect(() => {
     toggleForceUpdate();
@@ -121,7 +143,12 @@ const GraphTab = ({ graph, pipeline }) => {
       </GraphContainer>
       {isValidGraph && (
         <Card>
-          <Details node={node} jobId={graph.jobId} />
+          {isDisabledBtnRunDebug.toString()}
+          <Details
+            node={node}
+            jobId={graph.jobId}
+            isDisabledBtnRunDebug={isDisabledBtnRunDebug}
+          />
         </Card>
       )}
     </>
