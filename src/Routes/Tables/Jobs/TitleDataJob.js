@@ -13,7 +13,7 @@ const Id = jobID => (
   <Ellipsis className={USER_GUIDE.TABLE_JOB.ID_SELECT} copyable text={jobID} />
 );
 const Name = pipelineName => <Ellipsis text={pipelineName} />;
-const StartTime = (startTime, { results }) => (
+const StartTime = (startTime, results) => (
   <JobTime startTime={startTime} results={results} />
 );
 const Status = status => <JobStatus status={status} />;
