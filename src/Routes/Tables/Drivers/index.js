@@ -4,6 +4,7 @@ import { Table } from 'components';
 import { Card } from 'components/common';
 import { selectors } from 'reducers';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
+import { useFilter } from 'hooks/useSearch';
 import {
   driversTableColumns,
   driverJobsTableColumns,
@@ -29,11 +30,13 @@ const ExpandedRow = collection => record => {
 
 const DriversTable = () => {
   const collection = useSelector(selectors.drivers.all);
+  const filtered = useFilter(collection, ['podName', 'pipelineName', 'jobs']);
+
   return (
     <Table
       rowKey={record => record.driverId}
       columns={driversTableColumns}
-      dataSource={collection}
+      dataSource={filtered}
       expandable={{
         expandedRowRender: ExpandedRow(collection),
         // eslint-disable-next-line react/prop-types

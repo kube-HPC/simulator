@@ -143,7 +143,6 @@ const GraphTab = ({ graph, pipeline }) => {
       </GraphContainer>
       {isValidGraph && (
         <Card>
-          {isDisabledBtnRunDebug.toString()}
           <Details
             node={node}
             jobId={graph.jobId}

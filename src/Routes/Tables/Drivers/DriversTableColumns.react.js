@@ -23,10 +23,16 @@ export const driverJobsTableColumns = [
     render: JobId,
   },
   {
+    title: 'Pipeline Name',
+    key: 'pipelineName',
+    dataIndex: ['pipelineName'],
+    width: '40%',
+  },
+  {
     title: 'active',
     key: 'active',
     dataIndex: ['active'],
-    width: '60%',
+    width: '20%',
     render: Active,
   },
 ];
