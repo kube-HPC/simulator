@@ -7,12 +7,13 @@ class TableOrderConsolidated extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: false,
+      isLoading: true,
     };
   }
 
   componentDidMount() {
-    const { handlePageSize } = this.props;
+    const { handlePageSize, dataSourceAllJobs } = this.props;
+
     const tableContent = document.querySelector(
       '.TableAllInOne div.ant-table-body'
     );
@@ -24,6 +25,10 @@ class TableOrderConsolidated extends React.Component {
         handlePageSize();
       }
     });
+
+    if (dataSourceAllJobs.length > 0) {
+      this.setState({ isLoading: false });
+    }
   }
 
   componentDidUpdate() {

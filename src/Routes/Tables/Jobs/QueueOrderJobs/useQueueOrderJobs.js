@@ -2,7 +2,7 @@ import client from 'client';
 import { TypeFilter, TypeTable } from 'const';
 
 const ApiBaseURL = process.env.REACT_APP_API_SERVER_BACKEND_PATH;
-export const numberJobsPerPage = 10;
+export const numberJobsPerPage = 9;
 const addToObjectKeyIndexId = (arrayObjects, typeElement) => {
   const arrayRes = [];
   arrayObjects.map((ele, index) =>
@@ -249,8 +249,6 @@ const getJobsIdsScopePreferred = async (
   const jobsIdsScope = [];
 
   if (filterPreferredVal === TypeFilter.JOBID.toUpperCase()) {
-    console.log(currentIndex);
-    console.log(dataSourcePreferred.find(x => x.index === currentIndex).jobId);
     jobsIdsScope.push(
       dataSourcePreferred.find(x => x.index === currentIndex).jobId
     );
@@ -260,7 +258,6 @@ const getJobsIdsScopePreferred = async (
     const { name, count, lastJob } = dataSourcePreferred.find(
       x => x.index === currentIndex
     );
-    console.log(dataSourcePreferred);
 
     const res = await getPreferred(null, lastJob, null, null, count);
     const resultAllJobs = res.returnList;
