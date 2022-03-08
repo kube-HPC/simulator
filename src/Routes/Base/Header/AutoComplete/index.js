@@ -16,7 +16,7 @@ const selectorsMap = {
   jobs: selectors.jobs.ids,
   algorithms: selectors.algorithms.collection.ids,
   pipelines: selectors.pipelines.collection.names,
-  drivers: selectors.drivers.ids,
+  drivers: selectors.drivers.allDataAutocomplete,
   workers: selectors.workers.ids,
   datasources: selectors.dataSources.names,
 };

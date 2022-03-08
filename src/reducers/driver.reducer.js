@@ -9,6 +9,7 @@ import sum from 'hash-sum';
  *   collection: Driver[];
  *   sum: string;
  * }} DriversState
+ *
  * @typedef {{ drivers: DriversState }} State
  */
 
@@ -36,5 +37,24 @@ export const selectors = {
     /** @param {State} state */
     state => state.drivers.collection,
     collection => collection.map(item => item.podName)
+  ),
+  allDataAutocomplete: createSelector(
+    /** @param {State} state */
+    state => state.drivers.collection,
+    collection => {
+      const resJobs = [];
+      const resPipeLineName = [];
+      const podName = [];
+
+      collection.forEach(item => {
+        resJobs.push(item.podName);
+        item.jobs.forEach(el => {
+          resJobs.push(el.jobId);
+          resPipeLineName.push(el.pipelineName);
+        });
+      });
+
+      return [...podName, ...resJobs, ...resPipeLineName];
+    }
   ),
 };
