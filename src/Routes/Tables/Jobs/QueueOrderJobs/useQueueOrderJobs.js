@@ -31,7 +31,7 @@ const getManaged = async (
 
   let res = null;
   try {
-    res = await client.get(`${ApiBaseURL}queue/managed`, {
+    res = await client.get(`${ApiBaseURL}/queue/managed`, {
       params: { ...data },
     });
 
@@ -92,7 +92,7 @@ const getPreferred = async (
 
   let res = null;
   try {
-    res = await client.get(`${ApiBaseURL}queue/preferred`, {
+    res = await client.get(`${ApiBaseURL}/queue/preferred`, {
       params: { ...data },
     });
 

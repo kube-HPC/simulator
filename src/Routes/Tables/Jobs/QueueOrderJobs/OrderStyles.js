@@ -56,6 +56,8 @@ export const ContainerArea = styled.div`
     position: sticky;
     top: 0;
     z-index: 1000;
+    background-color: ${props => props.theme.Styles?.backgroundTheme};
+  }
   }
   table {
     border-collapse: collapse;

@@ -25,10 +25,16 @@ export const StartTime = (startTime, { results }) => (
 
 export const SelectFilterOptions = forwardRef((props, ref) => (
   // eslint-disable-next-line
-  <Select ref={ref} onChange={e => props.onSelect(e)} defaultValue="-------">
+  <Select
+    ref={ref}
+    // eslint-disable-next-line react/prop-types
+    onChange={e => props.onSelect(e)}
+    defaultValue="-------------">
     {Object.entries(TypeFilter).map(([key, value]) => (
       <Select.Option key={key} value={key}>
-        {toUpperCaseFirstLetter(value === TypeFilter.JOBID ? '-------' : value)}
+        {toUpperCaseFirstLetter(
+          value === TypeFilter.JOBID ? '-------------' : value
+        )}
       </Select.Option>
     ))}
   </Select>
@@ -38,25 +44,25 @@ export const TypeTableColumns = {
   ALLJOBID: [
     {
       title: 'jobID',
-      dataIndex: 'jobId',
+      dataIndex: ['jobId'],
       className: 'drag-visible',
     },
     {
       title: 'Start Time',
-      dataIndex: 'entranceTime',
+      dataIndex: ['entranceTime'],
       key: `Start timestamp`,
 
       render: StartTime,
     },
     {
       title: 'Name',
-      dataIndex: 'pipelineName',
+      dataIndex: ['pipelineName'],
     },
     {
       title: 'Tags',
-      dataIndex: 'name',
+      dataIndex: ['tags'],
       render: name => {
-        if (name) {
+        if (name && name.length > 0) {
           const arrayTags = name.toString().split(',');
 
           return arrayTags.length > 0
@@ -73,32 +79,32 @@ export const TypeTableColumns = {
   JOBID: [
     {
       title: '',
-      dataIndex: 'sort',
+      dataIndex: ['sort'],
       width: 30,
       className: 'drag-visible',
       render: () => <DragHandle />,
     },
     {
       title: 'jobID',
-      dataIndex: 'jobId',
+      dataIndex: ['jobId'],
       className: 'drag-visible',
     },
     {
       title: 'Start Time',
-      dataIndex: 'entranceTime',
+      dataIndex: ['entranceTime'],
       key: `Start timestamp`,
 
       render: StartTime,
     },
     {
       title: 'Name',
-      dataIndex: 'pipelineName',
+      dataIndex: ['pipelineName'],
     },
     {
       title: 'Tags',
-      dataIndex: 'name',
+      dataIndex: ['tags'],
       render: name => {
-        if (name) {
+        if (name && name.length > 0) {
           const arrayTags = name.toString().split(',');
 
           return arrayTags.length > 0
@@ -115,14 +121,14 @@ export const TypeTableColumns = {
   PIPELINE: [
     {
       title: '',
-      dataIndex: 'sort',
+      dataIndex: ['sort'],
       width: 30,
       className: 'drag-visible',
       render: () => <DragHandle />,
     },
     {
       title: 'Pipeline Name',
-      dataIndex: 'name',
+      dataIndex: ['name'],
       render: name => <b>{name}</b>,
     },
     {
@@ -133,14 +139,14 @@ export const TypeTableColumns = {
   TAG: [
     {
       title: '',
-      dataIndex: 'sort',
+      dataIndex: ['sort'],
       width: 30,
       className: 'drag-visible',
       render: () => <DragHandle />,
     },
     {
       title: 'Tags',
-      dataIndex: 'name',
+      dataIndex: ['name'],
       render: name => {
         if (name) {
           const arrayTags = name.toString().split(',');
@@ -157,7 +163,7 @@ export const TypeTableColumns = {
     },
     {
       title: 'jobs Count',
-      dataIndex: 'count',
+      dataIndex: ['count'],
     },
   ],
 };
