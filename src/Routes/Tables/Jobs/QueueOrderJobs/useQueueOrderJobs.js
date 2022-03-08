@@ -1,7 +1,6 @@
 import client from 'client';
 import { TypeFilter, TypeTable } from 'const';
 
-const ApiBaseURL = process.env.REACT_APP_API_SERVER_BACKEND_PATH;
 export const numberJobsPerPage = 9;
 const addToObjectKeyIndexId = (arrayObjects, typeElement) => {
   const arrayRes = [];
@@ -31,7 +30,7 @@ const getManaged = async (
 
   let res = null;
   try {
-    res = await client.get(`${ApiBaseURL}/queue/managed`, {
+    res = await client.get(`/queue/managed`, {
       params: { ...data },
     });
 
@@ -51,7 +50,7 @@ const getManaged = async (
 const getManagedByTag = async () => {
   let res = null;
   try {
-    res = await client.get(`${ApiBaseURL}/queue/managed/aggregation/tag`);
+    res = await client.get(`/queue/managed/aggregation/tag`);
     return addToObjectKeyIndexId(res.data, TypeTable.QUEUE);
   } catch (e) {
     console.error(res.response.data.error.message);
@@ -63,7 +62,7 @@ const getManagedByTag = async () => {
 const getManagedByPipeline = async () => {
   let res = null;
   try {
-    res = await client.get(`${ApiBaseURL}/queue/managed/aggregation/pipeline`);
+    res = await client.get(`/queue/managed/aggregation/pipeline`);
     return addToObjectKeyIndexId(res.data, TypeTable.QUEUE);
   } catch (e) {
     console.error(res.response.data.error.message);
@@ -92,7 +91,7 @@ const getPreferred = async (
 
   let res = null;
   try {
-    res = await client.get(`${ApiBaseURL}/queue/preferred`, {
+    res = await client.get(`/queue/preferred`, {
       params: { ...data },
     });
 
@@ -111,7 +110,7 @@ const getPreferred = async (
 const getPreferredByTag = async () => {
   let res = null;
   try {
-    res = await client.get(`${ApiBaseURL}/queue/preferred/aggregation/tag`);
+    res = await client.get(`/queue/preferred/aggregation/tag`);
     return addToObjectKeyIndexId(res.data, TypeTable.PREFERRED);
   } catch (e) {
     console.error(res);
@@ -123,9 +122,7 @@ const getPreferredByTag = async () => {
 const getPreferredByPipeline = async () => {
   let res = null;
   try {
-    res = await client.get(
-      `${ApiBaseURL}/queue/preferred/aggregation/pipeline`
-    );
+    res = await client.get(`/queue/preferred/aggregation/pipeline`);
     return addToObjectKeyIndexId(res.data, TypeTable.PREFERRED);
   } catch (e) {
     console.error(res);
@@ -154,7 +151,7 @@ const addPreferred = async (jobs, position, jobId) => {
 
   let res = null;
   try {
-    res = await client.post(`${ApiBaseURL}/queue/preferred`, { ...data });
+    res = await client.post(`/queue/preferred`, { ...data });
   } catch (e) {
     console.error(res);
   }
@@ -167,7 +164,7 @@ const deletePreferred = async jobs => {
 
   let res = null;
   try {
-    res = await client.post(`${ApiBaseURL}/queue/preferred/deletes`, data);
+    res = await client.post(`/queue/preferred/deletes`, data);
   } catch (e) {
     console.error(res);
   }
