@@ -8,6 +8,7 @@ import {
   sortableElement,
   sortableHandle,
 } from 'react-sortable-hoc';
+import PropTypes from 'prop-types';
 import JobTime from '../JobTime';
 
 export const SortableItem = sortableElement(props => <tr {...props} />);
@@ -27,7 +28,6 @@ export const SelectFilterOptions = forwardRef((props, ref) => (
   // eslint-disable-next-line
   <Select
     ref={ref}
-    // eslint-disable-next-line react/prop-types
     onChange={e => props.onSelect(e)}
     defaultValue="-------------">
     {Object.entries(TypeFilter).map(([key, value]) => (
@@ -39,6 +39,10 @@ export const SelectFilterOptions = forwardRef((props, ref) => (
     ))}
   </Select>
 ));
+
+SelectFilterOptions.propTypes = {
+  onSelect: PropTypes.func.isRequired,
+};
 
 export const TypeTableColumns = {
   ALLJOBID: [
