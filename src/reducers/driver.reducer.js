@@ -42,19 +42,19 @@ export const selectors = {
     /** @param {State} state */
     state => state.drivers.collection,
     collection => {
-      const resJobs = [];
       const resPipeLineName = [];
       const podName = [];
 
       collection.forEach(item => {
-        resJobs.push(item.podName);
+        podName.push(item.podName);
         item.jobs.forEach(el => {
-          resJobs.push(el.jobId);
-          resPipeLineName.push(el.pipelineName);
+          if (!resPipeLineName.includes(el.pipelineName)) {
+            resPipeLineName.push(el.pipelineName);
+          }
         });
       });
 
-      return [...podName, ...resJobs, ...resPipeLineName];
+      return [...resPipeLineName, ...podName];
     }
   ),
 };

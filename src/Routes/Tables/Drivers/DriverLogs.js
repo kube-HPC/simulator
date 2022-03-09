@@ -7,10 +7,7 @@ import { LogsViewer, Card } from 'components/common';
 import client from 'client';
 import useSettings from 'hooks/useSettings';
 
-const CardOverflow = styled(Card)`
-  max-height: 80vh;
-  min-height: 20em;
-`;
+const CardOverflow = styled(Card)``;
 
 const DriverLogs = ({ driverId, podName }) => {
   const [logs, setLogs] = useState([]);
