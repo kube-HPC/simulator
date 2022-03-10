@@ -3,28 +3,22 @@ import PropTypes from 'prop-types';
 import { TypeTableColumns } from './OrderComponents';
 import { TableAllInOne } from './OrderStyles';
 
+const scrollElement = '.TableAllInOne div.ant-table-body';
 class TableOrderConsolidated extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isLoading: true,
     };
+
+    this.handleScroll = this.handleScroll.bind(this);
   }
 
   componentDidMount() {
-    const { handlePageSize, dataSourceAllJobs } = this.props;
+    const { dataSourceAllJobs } = this.props;
 
-    const tableContent = document.querySelector(
-      '.TableAllInOne div.ant-table-body'
-    );
-    tableContent.addEventListener('scroll', event => {
-      const maxScroll = event.target.scrollHeight - event.target.clientHeight;
-      const currentScroll = event.target.scrollTop;
-      if (currentScroll === maxScroll) {
-        this.setState({ isLoading: true });
-        handlePageSize();
-      }
-    });
+    const tableContent = document.querySelector(scrollElement);
+    tableContent.addEventListener('scroll', this.handleScroll);
 
     if (dataSourceAllJobs.length > 0) {
       this.setState({ isLoading: false });
@@ -35,6 +29,22 @@ class TableOrderConsolidated extends React.Component {
     const { isLoading } = this.state;
     if (isLoading) {
       setTimeout(() => this.setState({ isLoading: false }), 1500);
+    }
+  }
+
+  componentWillUnmount() {
+    const tableContent = document.querySelector(scrollElement);
+    tableContent.removeEventListener('scroll', this.handleScroll);
+  }
+
+  handleScroll(event) {
+    const { handlePageSize } = this.props;
+
+    const maxScroll = event.target.scrollHeight - event.target.clientHeight;
+    const currentScroll = event.target.scrollTop;
+    if (currentScroll === maxScroll) {
+      this.setState({ isLoading: true });
+      handlePageSize();
     }
   }
 
