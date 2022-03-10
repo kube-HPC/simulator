@@ -58,6 +58,11 @@ const GlobalStyle = createGlobalStyle`
 {
   display:none;
 }
+
+.mark 
+{
+  background-color:yellow;
+}
 `;
 
 export default GlobalStyle;
