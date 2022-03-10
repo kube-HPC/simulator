@@ -14,7 +14,7 @@ const addToObjectKeyIndexId = (arrayObjects, typeElement) => {
 const getManaged = async (
   firstJobId,
   lastJobId,
-  pipeLineName,
+  pipelineName,
   tag,
   pageSize,
   lastJobs
@@ -22,7 +22,7 @@ const getManaged = async (
   const data = {
     ...(firstJobId && { firstJobId }),
     ...(lastJobId && { lastJobId }),
-    ...(pipeLineName && { pipeLineName }),
+    ...(pipelineName && { pipelineName }),
     ...(tag && { tag }),
     ...(pageSize && { pageSize }),
     ...(lastJobs && { lastJobs }),
@@ -40,32 +40,30 @@ const getManaged = async (
     );
 
     return res.data;
-  } catch (e) {
-    console.error(res);
+  } catch (error) {
+    console.error(error);
   }
 
   return [];
 };
 
 const getManagedByTag = async () => {
-  let res = null;
   try {
-    res = await client.get(`/queue/managed/aggregation/tag`);
+    const res = await client.get(`/queue/managed/aggregation/tag`);
     return addToObjectKeyIndexId(res.data, TypeTable.QUEUE);
-  } catch (e) {
-    console.error(res.response.data.error.message);
+  } catch (error) {
+    console.error(error);
   }
 
   return [];
 };
 
 const getManagedByPipeline = async () => {
-  let res = null;
   try {
-    res = await client.get(`/queue/managed/aggregation/pipeline`);
+    const res = await client.get(`/queue/managed/aggregation/pipeline`);
     return addToObjectKeyIndexId(res.data, TypeTable.QUEUE);
-  } catch (e) {
-    console.error(res.response.data.error.message);
+  } catch (error) {
+    console.error(error);
   }
 
   return [];
@@ -75,7 +73,7 @@ const getManagedByPipeline = async () => {
 const getPreferred = async (
   firstJobId,
   lastJobId,
-  pipeLineName,
+  pipelineName,
   tag,
   pageSize,
   lastJobs
@@ -83,14 +81,15 @@ const getPreferred = async (
   const data = {
     ...(firstJobId && { firstJobId }),
     ...(lastJobId && { lastJobId }),
-    ...(pipeLineName && { pipeLineName }),
+    ...(pipelineName && { pipelineName }),
     ...(tag && { tag }),
     ...(pageSize && { pageSize }),
     ...(lastJobs && { lastJobs }),
   };
 
-  let res = null;
   try {
+    let res = null;
+
     res = await client.get(`/queue/preferred`, {
       params: { ...data },
     });
@@ -99,33 +98,32 @@ const getPreferred = async (
       res.data.returnList,
       TypeTable.PREFERRED
     );
+
     return res.data;
-  } catch (e) {
-    console.error(res);
+  } catch (error) {
+    console.error(error);
   }
 
   return [];
 };
 
 const getPreferredByTag = async () => {
-  let res = null;
   try {
-    res = await client.get(`/queue/preferred/aggregation/tag`);
+    const res = await client.get(`/queue/preferred/aggregation/tag`);
     return addToObjectKeyIndexId(res.data, TypeTable.PREFERRED);
-  } catch (e) {
-    console.error(res);
+  } catch (error) {
+    console.error(error);
   }
 
   return [];
 };
 
 const getPreferredByPipeline = async () => {
-  let res = null;
   try {
-    res = await client.get(`/queue/preferred/aggregation/pipeline`);
+    const res = await client.get(`/queue/preferred/aggregation/pipeline`);
     return addToObjectKeyIndexId(res.data, TypeTable.PREFERRED);
-  } catch (e) {
-    console.error(res);
+  } catch (error) {
+    console.error(error);
   }
 
   return [];
@@ -149,27 +147,20 @@ const addPreferred = async (jobs, position, jobId) => {
     };
   }
 
-  let res = null;
   try {
-    res = await client.post(`/queue/preferred`, { ...data });
-  } catch (e) {
-    console.error(res);
+    await client.post(`/queue/preferred`, { ...data });
+  } catch (error) {
+    console.error(error);
   }
-
-  return res;
 };
 
 const deletePreferred = async jobs => {
   const data = { jobs };
-
-  let res = null;
   try {
-    res = await client.post(`/queue/preferred/deletes`, data);
-  } catch (e) {
-    console.error(res);
+    await client.post(`/queue/preferred/deletes`, data);
+  } catch (error) {
+    console.error(error);
   }
-
-  return res;
 };
 
 const movePreferred = async (jobsToMove, position, jobId) => {
@@ -184,8 +175,6 @@ const movePreferred = async (jobsToMove, position, jobId) => {
   } catch (e) {
     console.error(res);
   }
-
-  return res;
 };
 
 // get data filter by pipeline or tag or only by job id
@@ -198,20 +187,27 @@ const getStatusManage = async (
 ) => {
   const type = typeFilter.toString().toLowerCase();
   let res = [];
-  if (type === TypeFilter.PIPELINE) {
-    res = await getManagedByPipeline();
-  } else if (type === TypeFilter.TAG) {
-    res = await getManagedByTag();
-  } else if (intention === 'next') {
-    res = await getManaged(pageFromJobId, '', null, null, pageSize);
-  } else if (intention === 'previous' || intention === 'begin') {
-    res = await getManaged('', pageFromJobId, null, null, pageSize);
-  } else {
-    // goto last jobs Managed
-    res = await getManaged('', pageFromJobId, null, null, pageSize, true);
+  try {
+    if (type === TypeFilter.PIPELINE) {
+      res = await getManagedByPipeline();
+    } else if (type === TypeFilter.TAG) {
+      res = await getManagedByTag();
+    } else if (intention === 'next') {
+      res = await getManaged(pageFromJobId, '', null, null, pageSize);
+    } else if (intention === 'end') {
+      res = await getManaged(null, null, null, null, pageSize, true);
+    } else if (intention === 'previous' || intention === 'begin') {
+      res = await getManaged('', pageFromJobId, null, null, pageSize);
+    } else {
+      res = await getManaged(null, null, null, null, pageSize);
+    }
+
+    return res;
+  } catch (e) {
+    console.error(res);
   }
 
-  return res;
+  return [];
 };
 
 const getStatusPreferred = async (
@@ -222,20 +218,29 @@ const getStatusPreferred = async (
 ) => {
   const type = typeFilter.toLowerCase();
   let res = [];
-  if (type === TypeFilter.PIPELINE) {
-    res = await getPreferredByPipeline();
-  } else if (type === TypeFilter.TAG) {
-    res = await getPreferredByTag();
-  } else if (intention === 'next') {
-    res = await getPreferred(pageFromJobId, '', null, null, pageSize);
-  } else if (intention === 'previous' || intention === 'begin') {
-    res = await getPreferred('', pageFromJobId, null, null, pageSize);
-  } else {
-    // goto last jobs Preferred
-    res = await getPreferred('', pageFromJobId, null, null, pageSize, true);
+
+  try {
+    if (type === TypeFilter.PIPELINE) {
+      res = await getPreferredByPipeline();
+    } else if (type === TypeFilter.TAG) {
+      res = await getPreferredByTag();
+    } else if (intention === 'next') {
+      res = await getPreferred(pageFromJobId, '', null, null, pageSize);
+    } else if (intention === 'end') {
+      res = await getPreferred(null, null, null, null, pageSize, true);
+    } else if (intention === 'previous' || intention === 'begin') {
+      res = await getPreferred('', pageFromJobId, null, null, pageSize);
+    } else {
+      // goto last jobs Preferred
+      res = await getPreferred(null, null, null, null, pageSize);
+    }
+
+    return res;
+  } catch (e) {
+    console.error(res);
   }
 
-  return res;
+  return [];
 };
 
 const getJobsIdsScopePreferred = async (
