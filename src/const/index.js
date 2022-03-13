@@ -8,3 +8,4 @@ export { LEFT_SIDEBAR_NAMES, RIGHT_SIDEBAR_NAMES } from './sidebar-names';
 export { userGuideStepIndexes, USER_GUIDE } from './user-guide';
 export { THEMES_NAMES } from 'const/themesNames';
 export { WIZARD_STATE } from 'const/wizard-state';
+export { TypeTable, TypeFilter } from 'const/order-preferred';

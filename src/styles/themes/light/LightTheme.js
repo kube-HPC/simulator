@@ -46,6 +46,7 @@ const LightTheme = COMMON_COLOR => {
   const { COLOR_EXPERIMENTS } = COMMON_COLOR;
 
   const Styles = {
+    backgroundTheme: '#ffffff',
     line: 'rgba(0, 0, 0, 0.07)',
     reactJsonView: { theme: 'rjv-default' },
     IconHoverStyle: { colorHover: 'black' },
