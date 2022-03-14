@@ -78,10 +78,14 @@ class TableQueue extends React.Component {
         onMouseLeave={() => {
           handleOnHoverTable('');
         }}>
-        <TitleTable>Queue</TitleTable>
+        <TitleTable>Managed</TitleTable>
 
         <FilterTable>
-          GroupBy : <SelectFilterOptions onSelect={filterQueue} />
+          GroupBy :{' '}
+          <SelectFilterOptions
+            onSelect={filterQueue}
+            filterVal={filterQueueVal}
+          />
         </FilterTable>
 
         <DeleteOverTable $isDisplay={isDeleteOverTable}>
@@ -99,7 +103,7 @@ class TableQueue extends React.Component {
             ),
           }}
           loading={isLoadData}
-          pagination={false}
+          pagination={filterQueueVal !== TypeFilter.JOBID.toLocaleUpperCase()}
           dataSource={dataSourceQueue}
           columns={TypeTableColumns[filterQueueVal]}
           rowKey="index"

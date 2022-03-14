@@ -109,11 +109,17 @@ class TablePreferred extends React.Component {
         </TitleTable>
 
         <FilterTable>
-          GroupBy : <SelectFilterOptions onSelect={filterPreferred} />
+          GroupBy :{' '}
+          <SelectFilterOptions
+            onSelect={filterPreferred}
+            filterVal={filterPreferredVal}
+          />
         </FilterTable>
         <TableItem
           loading={isLoadData}
-          pagination={false}
+          pagination={
+            filterPreferredVal !== TypeFilter.JOBID.toLocaleUpperCase()
+          }
           dataSource={dataSourcePreferred}
           columns={[
             ...TypeTableColumns[filterPreferredVal],

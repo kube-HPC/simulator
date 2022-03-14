@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Table } from 'antd';
+import { Table, Select } from 'antd';
 
 export const DeleteOverTable = styled.div`
   position: absolute;
@@ -80,7 +80,7 @@ export const TableAllInOne = styled(Table)`
     background: none;
   }
   [data-row-key*='queue'] {
-    background-color: #0072ff0a;
+    background-color: #7a7a7a52;
   }
 `;
 export const HeaderTitlePreferred = styled.div`
@@ -91,4 +91,8 @@ export const HeaderTitlePreferred = styled.div`
   h1 {
     font-size: 24px;
   }
+`;
+
+export const SelectGroupBy = styled(Select)`
+  width: 200px;
 `;

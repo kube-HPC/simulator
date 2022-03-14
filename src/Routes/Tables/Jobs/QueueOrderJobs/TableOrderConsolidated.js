@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TypeTableColumns } from './OrderComponents';
-import { TableAllInOne } from './OrderStyles';
+import {
+  TableAllInOneTypeColumns,
+  SelectFilterOptions,
+} from './OrderComponents';
+import { TableAllInOne, FilterTable } from './OrderStyles';
 
 const scrollElement = '.TableAllInOne div.ant-table-body';
 class TableOrderConsolidated extends React.Component {
@@ -12,6 +15,7 @@ class TableOrderConsolidated extends React.Component {
     };
 
     this.handleScroll = this.handleScroll.bind(this);
+    this.onSelectFilter = this.onSelectFilter.bind(this);
   }
 
   componentDidMount() {
@@ -48,20 +52,37 @@ class TableOrderConsolidated extends React.Component {
     }
   }
 
+  onSelectFilter(selectValue) {
+    const { filterTableAllInOne } = this.props;
+
+    filterTableAllInOne(selectValue);
+    this.setState({ isLoading: true });
+  }
+
   render() {
-    const { dataSourceAllJobs } = this.props;
+    const { dataSourceAllJobs, filterTableAllInOneVal } = this.props;
     const { isLoading } = this.state;
 
     return (
-      <TableAllInOne
-        className="TableAllInOne"
-        pagination={false}
-        dataSource={dataSourceAllJobs}
-        columns={TypeTableColumns.ALLJOBID}
-        rowKey={record => `${record.key}_${record.typeElement}`}
-        scroll={{ y: '80vh' }}
-        loading={isLoading}
-      />
+      <>
+        <FilterTable>
+          GroupBy :{' '}
+          <SelectFilterOptions
+            onSelect={this.onSelectFilter}
+            filterVal={filterTableAllInOneVal}
+          />
+        </FilterTable>
+
+        <TableAllInOne
+          className="TableAllInOne"
+          pagination={false}
+          dataSource={dataSourceAllJobs}
+          columns={TableAllInOneTypeColumns[filterTableAllInOneVal]}
+          rowKey={record => `${record.key}_${record.typeElement}`}
+          scroll={{ y: '80vh' }}
+          loading={isLoading}
+        />
+      </>
     );
   }
 }
@@ -69,6 +90,8 @@ class TableOrderConsolidated extends React.Component {
 TableOrderConsolidated.propTypes = {
   dataSourceAllJobs: PropTypes.arrayOf(PropTypes.object).isRequired,
   handlePageSize: PropTypes.func.isRequired,
+  filterTableAllInOne: PropTypes.func.isRequired,
+  filterTableAllInOneVal: PropTypes.string.isRequired,
 };
 
 export default TableOrderConsolidated;

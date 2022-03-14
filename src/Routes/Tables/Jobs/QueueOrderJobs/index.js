@@ -8,7 +8,7 @@ import TableQueue from './TableQueue';
 import { FlexItems, DividerTables, HeaderTitlePreferred } from './OrderStyles';
 import { orderApi } from './useQueueOrderJobs';
 
-const PAGE_SIZE_TABLE = 10;
+const PAGE_SIZE_TABLE = 50;
 class QueueOrderJobs extends React.Component {
   constructor(props) {
     super(props);
@@ -29,6 +29,7 @@ class QueueOrderJobs extends React.Component {
       // filter jobs to group by pipeline or tag default is list jobs
       filterPreferredVal: TypeFilter.JOBID.toUpperCase(), // select filter preferred, group by pipeline or tag
       filterQueueVal: TypeFilter.JOBID.toUpperCase(), // select filter queue , group by pipeline or tag
+      filterTableAllInOneVal: TypeFilter.JOBID.toUpperCase(),
 
       // state paging queue
       pageQueueViewJobId: '', // set jobId is view table queue
@@ -83,24 +84,31 @@ class QueueOrderJobs extends React.Component {
       numberRowToViewPagingPreferred,
       isEditOrder,
       TableOrderConsolidatedSize,
+      filterTableAllInOneVal,
     } = this.state;
 
     let dataStatusManage = [];
     let dataStatusPreferred = [];
 
     if (!isEditOrder) {
-      dataStatusManage = await orderApi.getStatusManage(
-        TypeFilter.JOBID.toUpperCase(),
-        null,
-        null,
-        TableOrderConsolidatedSize
-      );
       dataStatusPreferred = await orderApi.getStatusPreferred(
-        TypeFilter.JOBID.toUpperCase(),
+        filterTableAllInOneVal,
         null,
         null,
         TableOrderConsolidatedSize
       );
+
+      if (
+        TableOrderConsolidatedSize > dataStatusPreferred?.returnList?.length ||
+        TableOrderConsolidatedSize > dataStatusPreferred?.length
+      ) {
+        dataStatusManage = await orderApi.getStatusManage(
+          filterTableAllInOneVal,
+          null,
+          null,
+          TableOrderConsolidatedSize
+        );
+      }
     } else {
       dataStatusManage = await orderApi.getStatusManage(
         filterQueueVal,
@@ -180,6 +188,10 @@ class QueueOrderJobs extends React.Component {
       pageQueueHasPrev: 0,
       numberRowToViewPagingQueue: orderApi.numberJobsPerPage,
     });
+  };
+
+  filterTableAllInOne = filterValue => {
+    this.setState({ filterTableAllInOneVal: filterValue });
   };
 
   pageGoToView = (typeTable, goToView) => {
@@ -444,6 +456,7 @@ class QueueOrderJobs extends React.Component {
 
       filterQueueVal,
       filterPreferredVal,
+      filterTableAllInOneVal,
 
       pageQueueHasNext,
       pageQueueHasPrev,
@@ -461,9 +474,8 @@ class QueueOrderJobs extends React.Component {
     return (
       <>
         <HeaderTitlePreferred>
-          {!isEditOrder && <h1>Preferred</h1>}
           <Button type="primary" onClick={() => this.toggleEdit()}>
-            {!isEditOrder ? 'Edit' : '<< Back To Preferred'}
+            {!isEditOrder ? 'Edit' : '<< Back'}
           </Button>
         </HeaderTitlePreferred>
 
@@ -471,6 +483,8 @@ class QueueOrderJobs extends React.Component {
           <TableOrderConsolidated
             handlePageSize={this.handleTableSize}
             dataSourceAllJobs={[...dataSourcePreferred, ...dataSourceQueue]}
+            filterTableAllInOne={this.filterTableAllInOne}
+            filterTableAllInOneVal={filterTableAllInOneVal}
           />
         )}
 
