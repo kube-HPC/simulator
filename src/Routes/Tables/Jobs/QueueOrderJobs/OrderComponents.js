@@ -1,8 +1,13 @@
 import React, { forwardRef } from 'react';
 import { TypeFilter, TypeTable } from 'const';
 import { toUpperCaseFirstLetter, getColorByName } from 'utils';
-import { MenuOutlined, StarTwoTone, StarOutlined } from '@ant-design/icons';
-import { Select, Tag } from 'antd';
+import {
+  MenuOutlined,
+  StarTwoTone,
+  StarOutlined,
+  PauseCircleOutlined,
+} from '@ant-design/icons';
+import { Select, Tag, Tooltip } from 'antd';
 import {
   sortableContainer,
   sortableElement,
@@ -26,6 +31,15 @@ export const StartTime = (startTime, { results }) => (
 );
 export const TypeRow = type =>
   type === TypeTable.PREFERRED ? <StarTwoTone /> : <StarOutlined />;
+
+export const Concurrency = isConcurrency =>
+  isConcurrency ? (
+    <Tooltip title="Concurrency">
+      <PauseCircleOutlined />
+    </Tooltip>
+  ) : (
+    ''
+  );
 
 export const SelectFilterOptions = forwardRef((props, ref) => (
   // eslint-disable-next-line
@@ -179,6 +193,10 @@ export const TableAllInOneTypeColumns = {
         return 'No tag.';
       },
     },
+    {
+      dataIndex: ['maxExceeded'],
+      render: Concurrency,
+    },
   ],
 
   PIPELINE: [
@@ -186,7 +204,7 @@ export const TableAllInOneTypeColumns = {
       title: '',
       dataIndex: ['typeElement'],
       width: '2%',
-      render: () => <TypeRow />,
+      render: TypeRow,
     },
 
     {
@@ -204,7 +222,7 @@ export const TableAllInOneTypeColumns = {
       title: '',
       dataIndex: ['typeElement'],
       width: '2%',
-      render: () => <TypeRow />,
+      render: TypeRow,
     },
     {
       title: 'Tags',

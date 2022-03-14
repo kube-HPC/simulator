@@ -126,7 +126,7 @@ class TablePreferred extends React.Component {
             ...this.actionsCol,
           ]}
           rowKey="index"
-          onRow={(record, index) => ({
+          onRow={record => ({
             onMouseMove: event => {
               const rect = event.target.getBoundingClientRect();
               const pos =
@@ -145,7 +145,7 @@ class TablePreferred extends React.Component {
                 }
               }
 
-              handleOnRowOverAndPosition(index, pos);
+              handleOnRowOverAndPosition(record.index, pos);
             },
             onMouseLeave: event => {
               event.target.parentNode.classList.remove('drop-over-downward');
