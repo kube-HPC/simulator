@@ -103,7 +103,11 @@ class TableQueue extends React.Component {
             ),
           }}
           loading={isLoadData}
-          pagination={filterQueueVal !== TypeFilter.JOBID.toLocaleUpperCase()}
+          pagination={
+            filterQueueVal !== TypeFilter.JOBID.toLocaleUpperCase()
+              ? { position: ['bottomCenter', 'bottomCenter'] }
+              : false
+          }
           dataSource={dataSourceQueue}
           columns={TypeTableColumns[filterQueueVal]}
           rowKey="index"

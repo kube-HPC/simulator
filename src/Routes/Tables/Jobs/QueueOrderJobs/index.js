@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Modal } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, EditOutlined } from '@ant-design/icons';
 import { TypeTable, TypeFilter } from 'const';
 import TableOrderConsolidated from './TableOrderConsolidated';
 import TablePreferred from './TablePreferred';
@@ -45,7 +45,6 @@ class QueueOrderJobs extends React.Component {
       pagePreferredHasPrev: 0, // number previous jobs in table Preferred
       numberRowToViewPagingPreferred: orderApi.numberJobsPerPage, // number row to view in table Preferred
 
-      viewTableColumnOrRow: false,
       isEditOrder: false,
       TableOrderConsolidatedSize: PAGE_SIZE_TABLE,
     };
@@ -425,11 +424,6 @@ class QueueOrderJobs extends React.Component {
     this.setState({ numberRowToViewPagingQueue: value });
   };
 
-  handleViewTableColumnOrRow = () => {
-    const { viewTableColumnOrRow } = this.state;
-    this.setState({ viewTableColumnOrRow: !viewTableColumnOrRow });
-  };
-
   toggleEdit = () => {
     const { isEditOrder } = this.state;
     this.setState({ isEditOrder: !isEditOrder });
@@ -465,7 +459,7 @@ class QueueOrderJobs extends React.Component {
       pagePreferredHasNext,
       pagePreferredHasPrev,
       numberRowToViewPagingPreferred,
-      viewTableColumnOrRow,
+
       isEditOrder,
       isLoadDataPreferred,
       isLoadDataQueue,
@@ -474,8 +468,12 @@ class QueueOrderJobs extends React.Component {
     return (
       <>
         <HeaderTitlePreferred>
-          <Button type="primary" onClick={() => this.toggleEdit()}>
-            {!isEditOrder ? 'Edit' : '<< Back'}
+          <Button
+            onClick={() => this.toggleEdit()}
+            type="primary"
+            icon={!isEditOrder ? <EditOutlined /> : ''}
+            size="large">
+            {!isEditOrder ? 'Edit List' : '<< Back'}
           </Button>
         </HeaderTitlePreferred>
 
@@ -489,7 +487,7 @@ class QueueOrderJobs extends React.Component {
         )}
 
         {isEditOrder && (
-          <FlexItems $isDirectionColumn={viewTableColumnOrRow}>
+          <FlexItems>
             <TablePreferred
               dataSourcePreferred={dataSourcePreferred}
               isLoadData={isLoadDataPreferred}
@@ -508,11 +506,9 @@ class QueueOrderJobs extends React.Component {
               }
               numberRowToViewPagingPreferred={numberRowToViewPagingPreferred}
               handleDelete={this.handleDelete}
-              handleViewTableColumnOrRow={this.handleViewTableColumnOrRow}
-              viewTableColumnOrRow={viewTableColumnOrRow}
             />
 
-            {!viewTableColumnOrRow && <DividerTables />}
+            <DividerTables />
 
             <TableQueue
               dataSourceQueue={dataSourceQueue}
@@ -528,7 +524,6 @@ class QueueOrderJobs extends React.Component {
               filterQueue={this.filterQueue}
               onChangeNumberRowPagingQueue={this.onChangeNumberRowPagingQueue}
               numberRowToViewPagingQueue={numberRowToViewPagingQueue}
-              viewTableColumnOrRow={viewTableColumnOrRow}
               isDeleteOverTable={
                 hoverTable === TypeTable.QUEUE &&
                 selectTable === TypeTable.PREFERRED

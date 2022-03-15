@@ -60,6 +60,20 @@ SelectFilterOptions.propTypes = {
   filterVal: PropTypes.string.isRequired,
 };
 
+export const TagColoByName = name => {
+  if (name && name.length > 0) {
+    const arrayTags = name.toString().split(',');
+
+    return arrayTags.length > 0
+      ? arrayTags.map(tagName => (
+          <Tag color={getColorByName(tagName)}>{tagName}</Tag>
+        ))
+      : 'No tag';
+  }
+
+  return 'No tag.';
+};
+
 export const TypeTableColumns = {
   JOBID: [
     {
@@ -88,19 +102,7 @@ export const TypeTableColumns = {
     {
       title: 'Tags',
       dataIndex: ['tags'],
-      render: name => {
-        if (name && name.length > 0) {
-          const arrayTags = name.toString().split(',');
-
-          return arrayTags.length > 0
-            ? arrayTags.map(tagName => (
-                <Tag color={getColorByName(tagName)}>{tagName}</Tag>
-              ))
-            : 'No tag';
-        }
-
-        return 'No tag.';
-      },
+      render: TagColoByName,
     },
   ],
   PIPELINE: [
@@ -132,19 +134,7 @@ export const TypeTableColumns = {
     {
       title: 'Tags',
       dataIndex: ['name'],
-      render: name => {
-        if (name) {
-          const arrayTags = name.toString().split(',');
-
-          return arrayTags.length > 0
-            ? arrayTags.map(tagName => (
-                <Tag color={getColorByName(tagName)}>{tagName}</Tag>
-              ))
-            : 'No tag';
-        }
-
-        return 'No tag.';
-      },
+      render: TagColoByName,
     },
     {
       title: 'jobs Count',
@@ -179,19 +169,7 @@ export const TableAllInOneTypeColumns = {
     {
       title: 'Tags',
       dataIndex: ['tags'],
-      render: name => {
-        if (name && name.length > 0) {
-          const arrayTags = name.toString().split(',');
-
-          return arrayTags.length > 0
-            ? arrayTags.map(tagName => (
-                <Tag color={getColorByName(tagName)}>{tagName}</Tag>
-              ))
-            : 'No tag';
-        }
-
-        return 'No tag.';
-      },
+      render: TagColoByName,
     },
     {
       dataIndex: ['maxExceeded'],
@@ -227,19 +205,7 @@ export const TableAllInOneTypeColumns = {
     {
       title: 'Tags',
       dataIndex: ['name'],
-      render: name => {
-        if (name) {
-          const arrayTags = name.toString().split(',');
-
-          return arrayTags.length > 0
-            ? arrayTags.map(tagName => (
-                <Tag color={getColorByName(tagName)}>{tagName}</Tag>
-              ))
-            : 'No tag';
-        }
-
-        return 'No tag.';
-      },
+      render: TagColoByName,
     },
     {
       title: 'jobs Count',

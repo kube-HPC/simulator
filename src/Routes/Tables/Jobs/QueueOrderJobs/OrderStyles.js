@@ -18,7 +18,7 @@ export const DeleteOverTable = styled.div`
 export const FlexItems = styled.div`
   display: flex;
 
-  flex-direction: ${props => (props.$isDirectionColumn ? 'column' : 'row')};
+  flex-direction: 'column';
 `;
 export const DividerTables = styled.div`
   margin-left: 15px;
@@ -70,6 +70,9 @@ export const FilterTable = styled.div`
 `;
 
 export const TableItem = styled(Table)`
+  .ant-table {
+    border-bottom: solid 1px ${props => props.theme.Styles?.line};
+  }
   .ant-table-thead > tr > th {
     background: none;
   }
@@ -84,13 +87,9 @@ export const TableAllInOne = styled(Table)`
   }
 `;
 export const HeaderTitlePreferred = styled.div`
-  display: flex;
-  justify-content: space-between;
+  position: absolute;
+  right: 64px;
   padding: 5px;
-
-  h1 {
-    font-size: 24px;
-  }
 `;
 
 export const SelectGroupBy = styled(Select)`

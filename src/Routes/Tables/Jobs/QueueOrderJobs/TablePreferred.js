@@ -91,22 +91,18 @@ class TablePreferred extends React.Component {
       filterPreferred,
       onChangeNumberRowPagingPreferred,
       numberRowToViewPagingPreferred,
-      handleViewTableColumnOrRow,
-      viewTableColumnOrRow,
+
       isLoadData,
     } = this.props;
     return (
       <ContainerArea
-        $isDirectionColumn={viewTableColumnOrRow}
         onMouseEnter={() => {
           handleOnHoverTable(TypeTable.PREFERRED);
         }}
         onMouseLeave={() => {
           handleOnHoverTable('');
         }}>
-        <TitleTable onClick={() => handleViewTableColumnOrRow()}>
-          Preferred{' '}
-        </TitleTable>
+        <TitleTable>Preferred</TitleTable>
 
         <FilterTable>
           GroupBy :{' '}
@@ -119,6 +115,8 @@ class TablePreferred extends React.Component {
           loading={isLoadData}
           pagination={
             filterPreferredVal !== TypeFilter.JOBID.toLocaleUpperCase()
+              ? { position: ['bottomCenter', 'bottomCenter'] }
+              : false
           }
           dataSource={dataSourcePreferred}
           columns={[
@@ -189,8 +187,7 @@ TablePreferred.propTypes = {
   onChangeNumberRowPagingPreferred: PropTypes.func.isRequired,
   numberRowToViewPagingPreferred: PropTypes.number.isRequired,
   handleDelete: PropTypes.func.isRequired,
-  handleViewTableColumnOrRow: PropTypes.func.isRequired,
-  viewTableColumnOrRow: PropTypes.bool.isRequired,
+
   isLoadData: PropTypes.bool.isRequired,
 };
 
