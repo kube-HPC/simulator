@@ -305,7 +305,6 @@ class QueueOrderJobs extends React.Component {
         // get name aggregation add to preferred
 
         const { name, count } = dataSourceQueue.find(x => x.index === oldIndex);
-
         let resultAllJobs = [];
 
         // get all jobsId need to move preferred by pipeline name
@@ -316,7 +315,9 @@ class QueueOrderJobs extends React.Component {
 
         // get all jobsId need to move preferred by tag name
         if (filterQueueVal === TypeFilter.TAG.toUpperCase()) {
-          const res = await orderApi.getManaged(null, null, null, name, count);
+          const tag = name.length > 0 ? name : 'NO-TAG';
+
+          const res = await orderApi.getManaged(null, null, null, tag, count);
           resultAllJobs = res.returnList;
         }
 
