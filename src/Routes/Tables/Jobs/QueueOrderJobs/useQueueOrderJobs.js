@@ -23,7 +23,7 @@ const getManaged = async (
     ...(firstJobId && { firstJobId }),
     ...(lastJobId && { lastJobId }),
     ...(pipelineName && { pipelineName }),
-    ...(tag && { tag }),
+    ...(tag !== null && { tag }),
     ...(pageSize && { pageSize }),
     ...(lastJobs && { lastJobs }),
   };
@@ -311,7 +311,20 @@ const getJobIdPosition = async (
     : jobsIdsScope[0];
 };
 
+const getQueueCount = async () => {
+  try {
+    const res = await client.get(`/queue/count`);
+
+    return res.data.managed + res.data.preferred;
+  } catch (error) {
+    console.error(error);
+  }
+
+  return [];
+};
+
 export const orderApi = {
+  getQueueCount,
   getJobsIdsScopePreferred,
   getJobIdPosition,
   getStatusPreferred,

@@ -315,7 +315,7 @@ class QueueOrderJobs extends React.Component {
 
         // get all jobsId need to move preferred by tag name
         if (filterQueueVal === TypeFilter.TAG.toUpperCase()) {
-          const tag = name.length > 0 ? name : 'NO-TAG';
+          const tag = name.length > 0 ? name : '';
 
           const res = await orderApi.getManaged(null, null, null, tag, count);
           resultAllJobs = res.returnList;
