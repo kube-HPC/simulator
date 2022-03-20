@@ -11,10 +11,20 @@ import {
 } from './DriversTableColumns.react';
 import DriverLogs from './DriverLogs';
 
-const ExpandedRow = collection => record => {
+const ExpandedRow = (collection, filterValue) => record => {
   const { driverId, podName } = record;
+
   const driver = collection.find(c => c.driverId === driverId);
-  const jobs = driver?.jobs || [];
+
+  const jobs =
+    (filterValue &&
+      podName !== filterValue &&
+      driver?.jobs.filter(
+        job => job.jobId === filterValue || job.pipelineName === filterValue
+      )) ||
+    driver?.jobs ||
+    [];
+
   return (
     <Card isMargin>
       <Table
@@ -31,6 +41,7 @@ const ExpandedRow = collection => record => {
 const DriversTable = () => {
   const collection = useSelector(selectors.drivers.all);
   const filtered = useFilter(collection, ['podName', 'pipelineName', 'jobs']);
+  const filterValue = useSelector(selectors.autoCompleteFilter);
 
   return (
     <Table
@@ -38,7 +49,8 @@ const DriversTable = () => {
       columns={driversTableColumns}
       dataSource={filtered}
       expandable={{
-        expandedRowRender: ExpandedRow(collection),
+        expandedRowRender: ExpandedRow(collection, filterValue),
+        defaultExpandAllRows: filterValue != null && filterValue !== '',
         // eslint-disable-next-line react/prop-types
         expandIcon: ({ expanded, onExpand, record }) =>
           expanded ? (
