@@ -21,7 +21,7 @@ import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
 import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
 import { Theme, COLOR_LAYOUT } from 'styles';
 import { selectors } from 'reducers';
-import { orderApi } from '../../../Routes/Tables/Jobs/QueueOrderJobs/useQueueOrderJobs';
+import { orderApi } from '../../../Routes/Tables/QueueOrderJobs/useQueueOrderJobs';
 
 const Border = styled.div`
   border-right: 1px solid ${COLOR_LAYOUT.border};

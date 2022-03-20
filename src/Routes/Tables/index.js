@@ -2,7 +2,7 @@ import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
 import Jobs from './Jobs';
-import QueueOrderJobs from './Jobs/QueueOrderJobs';
+import QueueOrderJobs from './QueueOrderJobs';
 import AlgorithmsTable from './Algorithms';
 import DriversTable from './Drivers';
 import PipelinesTable from './Pipelines';

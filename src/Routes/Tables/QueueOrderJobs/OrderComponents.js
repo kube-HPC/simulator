@@ -15,7 +15,7 @@ import {
 } from 'react-sortable-hoc';
 import PropTypes from 'prop-types';
 import { SelectGroupBy } from './OrderStyles';
-import JobTime from '../JobTime';
+import JobTime from '../Jobs/JobTime';
 
 export const SortableItem = sortableElement(props => <tr {...props} />);
 export const SortableContainer = sortableContainer(props => (
