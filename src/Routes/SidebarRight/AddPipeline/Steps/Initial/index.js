@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Input, Radio } from 'antd';
-import { Form } from 'components/common';
+import { Form, EditableTagGroup } from 'components/common';
 import ControllerKeyValue from '../Nodes/inputKeyValueJson';
 import useWizardContext from '../../useWizardContext';
 
 /** @param {{ style: import('react').CSSProperties }} props */
 const Initial = ({ style }) => {
-  const { isEdit } = useWizardContext();
+  const { isEdit, isRunPipeline } = useWizardContext();
 
   return (
     <div style={style}>
@@ -19,18 +19,30 @@ const Initial = ({ style }) => {
         <Input disabled={isEdit} placeholder="Unique Identifier" />
       </Form.Item>
       <Form.Item label="Description" name="description">
-        <Input placeholder="Pipeline Description" />
+        <Input disabled={isRunPipeline} placeholder="Pipeline Description" />
       </Form.Item>
       <Form.Item
         label="Pipeline Kind"
         name="kind"
         rules={[{ required: true }]}
         initialValue="batch">
-        <Radio.Group>
+        <Radio.Group disabled={isRunPipeline}>
           <Radio.Button value="batch">Batch</Radio.Button>
           <Radio.Button value="stream">Streaming</Radio.Button>
         </Radio.Group>
       </Form.Item>
+
+      {isRunPipeline && (
+        <>
+          <Form.Item label="experimentName" name={['experimentName']}>
+            <Input />
+          </Form.Item>
+
+          <Form.Item label="Tags" name={['tags']}>
+            <EditableTagGroup />
+          </Form.Item>
+        </>
+      )}
 
       <Form.Item label="Flow Input" name={['flowInput']}>
         <ControllerKeyValue nameRef={['flowInput']} />

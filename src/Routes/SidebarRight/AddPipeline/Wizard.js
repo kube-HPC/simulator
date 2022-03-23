@@ -4,6 +4,7 @@ import React, {
   useLayoutEffect,
   useState,
   useRef,
+  useMemo,
 } from 'react';
 import PropTypes from 'prop-types';
 import { CheckOutlined, RightOutlined, LeftOutlined } from '@ant-design/icons';
@@ -19,12 +20,6 @@ import {
 import { useWizard } from 'hooks';
 import { context } from './useWizardContext';
 import { Initial, Nodes, Options } from './Steps';
-
-const stepNames = ['Initial', 'Nodes', 'Options'];
-const stepComponents = [Initial, Nodes, Options];
-const steps = stepNames.map(name => (
-  <Steps.Step key={`steps-${name}`} title={name} />
-));
 
 const Form = styled(AntdForm)`
   width: 90ch;
@@ -50,6 +45,7 @@ const Wizard = ({
   stepIdx,
   wizardClear,
   isEdit,
+  isRunPipeline,
 }) => {
   const firstUpdateWizard = useRef(true);
   const [valuesState, setValuesState] = useState(() => initialState);
@@ -61,7 +57,29 @@ const Wizard = ({
     getFormattedFormValues,
     resetKind,
     persistForm,
-  } = useWizard(form, initialState, onSubmit, setEditorState, setValuesState);
+  } = useWizard(
+    form,
+    initialState,
+    onSubmit,
+    setEditorState,
+    setValuesState,
+    isRunPipeline
+  );
+
+  const stepComponents = useMemo(
+    () => (isRunPipeline ? [Initial, Options] : [Initial, Nodes, Options]),
+    [isRunPipeline]
+  );
+  const stepNames = useMemo(
+    () =>
+      isRunPipeline ? ['Initial', 'Options'] : ['Initial', 'Nodes', 'Options'],
+    [isRunPipeline]
+  );
+  const steps = useMemo(
+    () =>
+      stepNames.map(name => <Steps.Step key={`steps-${name}`} title={name} />),
+    [stepNames]
+  );
 
   const handleToggle = useCallback(() => {
     persistForm();
@@ -128,6 +146,7 @@ const Wizard = ({
               isStreamingPipeline,
               isEdit,
               valuesState,
+              isRunPipeline,
             }}>
             {stepComponents.map((StepComponent, ii) => (
               <StepComponent
@@ -160,7 +179,7 @@ const Wizard = ({
           onClick={!isLastStep ? onNext : handleSubmit}
           form="create-pipeline"
           htmlType="submit">
-          {isLastStep ? 'Submit' : 'Next'}
+          {isLastStep ? (isRunPipeline ? 'Run' : 'Submit') : 'Next'}
           {isLastStep ? <CheckOutlined /> : <RightOutlined />}
         </RightAlignedButton>
       </BottomPanel>
@@ -185,6 +204,7 @@ Wizard.propTypes = {
   // eslint-disable-next-line
   wizardClear: PropTypes.func.isRequired,
   isEdit: PropTypes.bool.isRequired,
+  isRunPipeline: PropTypes.bool.isRequired,
 };
 
 export default Wizard;

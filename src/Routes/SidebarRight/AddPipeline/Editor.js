@@ -21,7 +21,13 @@ const JsonViewWrapper = styled.div`
   flex: 1;
 `;
 
-const Editor = ({ toggle, onSubmit, initialState, setEditorState }) => {
+const Editor = ({
+  toggle,
+  onSubmit,
+  initialState,
+  setEditorState,
+  isRunPipeline,
+}) => {
   const [innerState, setInnerState] = useState(
     JSON.stringify(initialState, null, 4)
   );
@@ -88,7 +94,7 @@ const Editor = ({ toggle, onSubmit, initialState, setEditorState }) => {
           onClick={onEditorSubmit}
           form="add-pipeline"
           htmlType="submit">
-          Submit
+          {isRunPipeline ? 'Run' : 'Submit'}
           <CheckOutlined />
         </RightAlignedButton>
       </BottomPanel>
@@ -102,6 +108,7 @@ Editor.propTypes = {
   toggle: PropTypes.func.isRequired,
   // eslint-disable-next-line
   initialState: PropTypes.object.isRequired,
+  isRunPipeline: PropTypes.bool.isRequired,
 };
 
 export default Editor;

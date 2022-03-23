@@ -13,7 +13,8 @@ const usePipeline = () => {
 
   const dataStats = useSelector(selectors.pipelines.stats.all);
   const filtered = useFilter(collection, ['name']);
-  const { updateStored } = useActions();
+  const { updateStored, execStored } = useActions();
+
   const history = useHistory();
 
   const updateCron = useCallback(
@@ -27,6 +28,14 @@ const usePipeline = () => {
       });
     },
     [updateStored]
+  );
+
+  const runPipeline = useCallback(
+    nextValue => {
+      const parsedValue = JSON.parse(nextValue);
+      execStored(parsedValue);
+    },
+    [execStored]
   );
 
   const rerunPipeline = useCallback(async jobId => {
@@ -78,6 +87,7 @@ const usePipeline = () => {
     rerunPipeline,
     addPipeline,
     updatePipeline,
+    runPipeline,
   };
 };
 
