@@ -9,7 +9,11 @@ export const QCount = ({ nameCount, selectorsData, status, isShow }) => {
     <>
       {!isShow && <TitleTable>{nameCount}</TitleTable>}
       {isShow && (
-        <BadgeCount count={counter} status={status} size="large">
+        <BadgeCount
+          overflowCount={9999}
+          count={counter}
+          status={status}
+          size="large">
           <TitleTable>{nameCount}</TitleTable>
         </BadgeCount>
       )}

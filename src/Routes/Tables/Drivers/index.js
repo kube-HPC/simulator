@@ -19,8 +19,8 @@ const ExpandedRow = (collection, filterValue) => record => {
       podName !== filterValue &&
       driver?.jobs.filter(
         job =>
-          job.jobId.indexOf(filterValue) !== -1 ||
-          job.pipelineName.indexOf(filterValue) !== -1
+          job.jobId?.indexOf(filterValue) !== -1 ||
+          job.pipelineName?.indexOf(filterValue) !== -1
       )) ||
     driver?.jobs ||
     [];
