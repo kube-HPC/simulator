@@ -55,9 +55,6 @@ const EmptyHeight = styled(Empty)`
 `;
 
 const GraphTab = ({ graph, pipeline }) => {
-  console.log('graph', graph);
-  console.log('pipeline', pipeline);
-
   const normalizedPipeline = useMemo(
     () =>
       pipeline.nodes.reduce(
@@ -95,14 +92,11 @@ const GraphTab = ({ graph, pipeline }) => {
     let res = false;
     const nodesNames = pipeline.nodes.map(item => item.nodeName);
 
-    if (pipeline?.kind === 'stream') {
-      res = true;
-    } else if (
-      node != null &&
-      node !== {} &&
-      (node?.kind === 'output' ||
-        node?.kind === 'dataSource' ||
-        !nodesNames.includes(node?.nodeName))
+    if (
+      pipeline?.kind === 'stream' ||
+      (node &&
+        node !== {} &&
+        (node?.kind !== 'algorithm' || !nodesNames.includes(node?.nodeName)))
     ) {
       res = true;
     }

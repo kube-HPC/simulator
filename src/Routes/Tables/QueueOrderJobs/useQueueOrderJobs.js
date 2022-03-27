@@ -187,6 +187,7 @@ const getStatusManage = async (
 ) => {
   const type = typeFilter.toString().toLowerCase();
   let res = [];
+
   try {
     if (type === TypeFilter.PIPELINE) {
       res = await getManagedByPipeline();

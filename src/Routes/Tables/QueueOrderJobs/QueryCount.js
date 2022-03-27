@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { TitleTable, BadgeCount } from './OrderStyles';
 
-export const QCount = ({ nameCount, selectorsData, status, isShow }) => {
+export const QueryCount = ({ nameCount, selectorsData, status, isShow }) => {
   const counter = useSelector(selectorsData);
   return (
     <>
@@ -21,7 +21,7 @@ export const QCount = ({ nameCount, selectorsData, status, isShow }) => {
   );
 };
 
-QCount.propTypes = {
+QueryCount.propTypes = {
   nameCount: PropTypes.string,
   // eslint-disable-next-line react/forbid-prop-types
   selectorsData: PropTypes.object.isRequired,
@@ -29,7 +29,7 @@ QCount.propTypes = {
   isShow: PropTypes.bool,
 };
 
-QCount.defaultProps = {
+QueryCount.defaultProps = {
   nameCount: 'preferred',
   status: 'success',
   isShow: true,

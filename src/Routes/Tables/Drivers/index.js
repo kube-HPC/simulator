@@ -11,19 +11,21 @@ import {
 } from './DriversTableColumns.react';
 import DriverLogs from './DriverLogs';
 
+const filterJobs = (driver, podName, filterValue) =>
+  (filterValue &&
+    podName !== filterValue &&
+    driver?.jobs.filter(
+      job =>
+        job.jobId?.indexOf(filterValue) !== -1 ||
+        job.pipelineName?.indexOf(filterValue) !== -1
+    )) ||
+  driver?.jobs ||
+  [];
+
 const ExpandedRow = (collection, filterValue) => record => {
   const { driverId, podName } = record;
   const driver = collection.find(c => c.driverId === driverId);
-  const jobs =
-    (filterValue &&
-      podName !== filterValue &&
-      driver?.jobs.filter(
-        job =>
-          job.jobId?.indexOf(filterValue) !== -1 ||
-          job.pipelineName?.indexOf(filterValue) !== -1
-      )) ||
-    driver?.jobs ||
-    [];
+  const jobs = filterJobs(driver, podName, filterValue);
 
   return (
     <Card isMargin>

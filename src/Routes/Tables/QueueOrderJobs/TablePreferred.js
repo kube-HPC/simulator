@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Popconfirm } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { selectors } from 'reducers';
-import { QCount } from './QCount';
+import { QueryCount } from './QueryCount';
 import { ContainerArea, FilterTable, TableItem } from './OrderStyles';
 import OrderPaging from './OrderPaging';
 import {
@@ -12,7 +12,7 @@ import {
   SortableContainer,
   SelectFilterOptions,
   TypeTableColumns,
-} from './OrderComponents';
+} from './QueueOrderComponents';
 
 class TablePreferred extends React.Component {
   actionsCol = [
@@ -74,13 +74,31 @@ class TablePreferred extends React.Component {
     return <SortableItem index={index} {...restProps} />;
   };
 
+  paintDragLocation = (event, record, isDrag) => {
+    const { handleOnRowOverAndPosition } = this.props;
+    const rect = event.target.getBoundingClientRect();
+    const pos = event.clientY - rect.top > event.target.offsetHeight / 2;
+
+    // light border tr where the input element
+    if (isDrag) {
+      if (pos) {
+        event.target.parentNode.classList.add('drop-over-downward');
+        event.target.parentNode.classList.remove('drop-over-upward');
+      } else {
+        event.target.parentNode.classList.add('drop-over-upward');
+        event.target.parentNode.classList.remove('drop-over-downward');
+      }
+    }
+
+    handleOnRowOverAndPosition(record.index, pos);
+  };
+
   render() {
     const {
       dataSourcePreferred,
       handleOnHoverTable,
       filterPreferredVal,
 
-      handleOnRowOverAndPosition,
       pagePreferredHasPrev,
       pagePreferredHasNext,
       isDrag,
@@ -99,7 +117,7 @@ class TablePreferred extends React.Component {
         onMouseLeave={() => {
           handleOnHoverTable('');
         }}>
-        <QCount
+        <QueryCount
           isShow={dataSourcePreferred.length > 0}
           nameCount="Preferred"
           status="processing"
@@ -127,26 +145,7 @@ class TablePreferred extends React.Component {
           ]}
           rowKey="index"
           onRow={record => ({
-            onMouseMove: event => {
-              const rect = event.target.getBoundingClientRect();
-              const pos =
-                event.clientY - rect.top > event.target.offsetHeight / 2;
-
-              // light border tr where the input element
-              if (isDrag) {
-                if (pos) {
-                  event.target.parentNode.classList.add('drop-over-downward');
-                  event.target.parentNode.classList.remove('drop-over-upward');
-                } else {
-                  event.target.parentNode.classList.add('drop-over-upward');
-                  event.target.parentNode.classList.remove(
-                    'drop-over-downward'
-                  );
-                }
-              }
-
-              handleOnRowOverAndPosition(record.index, pos);
-            },
+            onMouseMove: event => this.paintDragLocation(event, record, isDrag),
             onMouseLeave: event => {
               event.target.parentNode.classList.remove('drop-over-downward');
               event.target.parentNode.classList.remove('drop-over-upward');

@@ -4,13 +4,13 @@ import PropTypes from 'prop-types';
 import { Empty } from 'antd';
 import { selectors } from 'reducers';
 import { DeleteOutlined } from '@ant-design/icons';
-import { QCount } from './QCount';
+import { QueryCount } from './QueryCount';
 import {
   SortableItem,
   SortableContainer,
   SelectFilterOptions,
   TypeTableColumns,
-} from './OrderComponents';
+} from './QueueOrderComponents';
 import {
   ContainerArea,
   FilterTable,
@@ -79,7 +79,7 @@ class TableQueue extends React.Component {
         onMouseLeave={() => {
           handleOnHoverTable('');
         }}>
-        <QCount
+        <QueryCount
           isShow={dataSourceQueue.length > 0}
           nameCount="Managed"
           status="success"

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   TableAllInOneTypeColumns,
   SelectFilterOptions,
-} from './OrderComponents';
+} from './QueueOrderComponents';
 import { TableAllInOne, FilterTable } from './OrderStyles';
 
 const scrollElement = '.TableAllInOne div.ant-table-body';
