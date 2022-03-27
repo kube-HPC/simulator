@@ -3,12 +3,9 @@ import { TypeTable, TypeFilter } from 'const';
 import PropTypes from 'prop-types';
 import { Popconfirm } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
-import {
-  ContainerArea,
-  TitleTable,
-  FilterTable,
-  TableItem,
-} from './OrderStyles';
+import { selectors } from 'reducers';
+import { QCount } from './QCount';
+import { ContainerArea, FilterTable, TableItem } from './OrderStyles';
 import OrderPaging from './OrderPaging';
 import {
   SortableItem,
@@ -102,7 +99,12 @@ class TablePreferred extends React.Component {
         onMouseLeave={() => {
           handleOnHoverTable('');
         }}>
-        <TitleTable>Preferred</TitleTable>
+        <QCount
+          isShow={dataSourcePreferred.length > 0}
+          nameCount="Preferred"
+          status="processing"
+          selectorsData={selectors.queue.preferred}
+        />
 
         <FilterTable>
           GroupBy :{' '}

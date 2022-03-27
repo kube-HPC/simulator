@@ -2,7 +2,9 @@ import React from 'react';
 import { TypeTable, TypeFilter } from 'const';
 import PropTypes from 'prop-types';
 import { Empty } from 'antd';
+import { selectors } from 'reducers';
 import { DeleteOutlined } from '@ant-design/icons';
+import { QCount } from './QCount';
 import {
   SortableItem,
   SortableContainer,
@@ -11,7 +13,6 @@ import {
 } from './OrderComponents';
 import {
   ContainerArea,
-  TitleTable,
   FilterTable,
   DeleteOverTable,
   TableItem,
@@ -78,7 +79,12 @@ class TableQueue extends React.Component {
         onMouseLeave={() => {
           handleOnHoverTable('');
         }}>
-        <TitleTable>Managed</TitleTable>
+        <QCount
+          isShow={dataSourceQueue.length > 0}
+          nameCount="Managed"
+          status="success"
+          selectorsData={selectors.queue.managed}
+        />
 
         <FilterTable>
           GroupBy :{' '}

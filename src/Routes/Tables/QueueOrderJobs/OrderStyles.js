@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Table, Select } from 'antd';
+import { Table, Select, Badge } from 'antd';
 
 export const DeleteOverTable = styled.div`
   position: absolute;
@@ -30,6 +30,7 @@ export const DividerTables = styled.div`
 export const TitleTable = styled.div`
   font-size: 24px;
   margin-top: 20px;
+  display: inline-block;
 `;
 
 export const ContainerArea = styled.div`
@@ -94,4 +95,12 @@ export const HeaderTitlePreferred = styled.div`
 
 export const SelectGroupBy = styled(Select)`
   width: 200px;
+`;
+
+export const BadgeCount = styled(Badge)`
+  sup {
+    position: relative;
+    left: 10px;
+    font-size: 14px;
+  }
 `;

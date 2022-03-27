@@ -13,14 +13,12 @@ import DriverLogs from './DriverLogs';
 
 const ExpandedRow = (collection, filterValue) => record => {
   const { driverId, podName } = record;
-
   const driver = collection.find(c => c.driverId === driverId);
-
   const jobs =
     (filterValue &&
       podName !== filterValue &&
       driver?.jobs.filter(
-        job => job.jobId === filterValue || job.pipelineName === filterValue
+        job => job.pipelineName.indexOf(filterValue) !== -1
       )) ||
     driver?.jobs ||
     [];
@@ -40,7 +38,7 @@ const ExpandedRow = (collection, filterValue) => record => {
 
 const DriversTable = () => {
   const collection = useSelector(selectors.drivers.all);
-  const filtered = useFilter(collection, ['podName', 'pipelineName', 'jobs']);
+  const filtered = useFilter(collection, ['podName', 'jobs']);
   const filterValue = useSelector(selectors.autoCompleteFilter);
 
   return (
@@ -50,7 +48,7 @@ const DriversTable = () => {
       dataSource={filtered}
       expandable={{
         expandedRowRender: ExpandedRow(collection, filterValue),
-        defaultExpandAllRows: filterValue != null && filterValue !== '',
+
         // eslint-disable-next-line react/prop-types
         expandIcon: ({ expanded, onExpand, record }) =>
           expanded ? (

@@ -1,7 +1,12 @@
 import React from 'react';
 import { Button, Modal } from 'antd';
-import { ExclamationCircleOutlined, EditOutlined } from '@ant-design/icons';
+import {
+  ExclamationCircleOutlined,
+  EditOutlined,
+  ArrowLeftOutlined,
+} from '@ant-design/icons';
 import { TypeTable, TypeFilter } from 'const';
+import { Link } from 'react-router-dom';
 import TableOrderConsolidated from './TableOrderConsolidated';
 import TablePreferred from './TablePreferred';
 import TableQueue from './TableQueue';
@@ -9,9 +14,12 @@ import { FlexItems, DividerTables, HeaderTitlePreferred } from './OrderStyles';
 import { orderApi } from './useQueueOrderJobs';
 
 const PAGE_SIZE_TABLE = 50;
+
 class QueueOrderJobs extends React.Component {
   constructor(props) {
     super(props);
+    // eslint-disable-next-line react/prop-types
+    const { location } = this.props;
 
     this.state = {
       // data jobs
@@ -45,7 +53,8 @@ class QueueOrderJobs extends React.Component {
       pagePreferredHasPrev: 0, // number previous jobs in table Preferred
       numberRowToViewPagingPreferred: orderApi.numberJobsPerPage, // number row to view in table Preferred
 
-      isEditOrder: false,
+      // eslint-disable-next-line react/prop-types
+      isEditOrder: new URLSearchParams(location.search).get('edit') || false,
       TableOrderConsolidatedSize: PAGE_SIZE_TABLE,
     };
 
@@ -166,6 +175,7 @@ class QueueOrderJobs extends React.Component {
     this.setState({
       filterPreferredVal: filterValue,
       isLoadDataPreferred: true,
+      dataSourcePreferred: [],
       // reset paging Preferred
       pagePreferredViewJobId: '',
       pagePreferredLastActionIntention: '',
@@ -179,7 +189,7 @@ class QueueOrderJobs extends React.Component {
     this.setState({
       isLoadDataQueue: true,
       filterQueueVal: filterValue,
-
+      dataSourceQueue: [],
       // reset paging queue
       pageQueueViewJobId: '',
       pageQueueLastActionIntention: '',
@@ -334,9 +344,9 @@ class QueueOrderJobs extends React.Component {
           // when aggregation is JobId
 
           // Unhandled Rejection (TypeError): Cannot read properties of undefined (reading 'jobId')
-          jobIdPosition = dataSourcePreferred.find(
-            x => x.index === rowOverIndex
-          ).jobId;
+          jobIdPosition =
+            dataSourcePreferred.find(x => x.index === rowOverIndex)?.jobId ||
+            undefined;
 
           // get position to need add jobsID
           position = positionOverY ? 'after' : 'before';
@@ -469,13 +479,15 @@ class QueueOrderJobs extends React.Component {
     return (
       <>
         <HeaderTitlePreferred>
-          <Button
-            onClick={() => this.toggleEdit()}
-            type="primary"
-            icon={!isEditOrder ? <EditOutlined /> : ''}
-            size="large">
-            {!isEditOrder ? 'Edit List' : '<< Back'}
-          </Button>
+          <Link to={isEditOrder ? '/queue' : '/queue?edit=true'}>
+            <Button
+              onClick={() => this.toggleEdit()}
+              type="primary"
+              icon={!isEditOrder ? <EditOutlined /> : <ArrowLeftOutlined />}
+              size="large">
+              {!isEditOrder ? 'Edit List' : 'Back'}
+            </Button>
+          </Link>
         </HeaderTitlePreferred>
 
         {!isEditOrder && (

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { animated, useSpring } from 'react-spring';
 import styled from 'styled-components';
@@ -21,7 +21,7 @@ import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
 import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
 import { Theme, COLOR_LAYOUT } from 'styles';
 import { selectors } from 'reducers';
-import { orderApi } from '../../../Routes/Tables/QueueOrderJobs/useQueueOrderJobs';
+// import { orderApi } from '../../../Routes/Tables/QueueOrderJobs/useQueueOrderJobs';
 
 const Border = styled.div`
   border-right: 1px solid ${COLOR_LAYOUT.border};
@@ -76,7 +76,7 @@ const LogoContainer = styled.div`
 
 const sidebarSelector = state => ({
   [LEFT_SIDEBAR_NAMES.JOBS]: selectors.jobs.count(state),
-  [LEFT_SIDEBAR_NAMES.QUEUE]: 0,
+  [LEFT_SIDEBAR_NAMES.QUEUE]: selectors.queue.count(state) || 0,
   [LEFT_SIDEBAR_NAMES.PIPELINES]: selectors.pipelines.collection.count(state),
   [LEFT_SIDEBAR_NAMES.ALGORITHMS]: selectors.algorithms.collection.count(state),
   [LEFT_SIDEBAR_NAMES.WORKERS]: selectors.workers.count(state),
@@ -99,7 +99,6 @@ const Name = styled.span`
 `;
 
 const SidebarLeft = () => {
-  const [queueCount, setQueueCount] = useState(0);
   const dataCountSource = useSelector(sidebarSelector, isEqual);
   const { isOn } = useSelector(selectors.userGuide);
   const location = useLocation();
@@ -107,15 +106,6 @@ const SidebarLeft = () => {
   const { isCollapsed, toggle } = useLeftSidebar();
   const { pageName } = useParams();
   const { themeName } = useSiteThemeMode();
-
-  useEffect(() => {
-    const intervalQueueCount = setInterval(async () => {
-      setQueueCount(await orderApi.getQueueCount());
-    }, 10000);
-    return () => clearInterval(intervalQueueCount);
-  }, []);
-
-  dataCount[LEFT_SIDEBAR_NAMES.QUEUE] = queueCount;
 
   return (
     <Border>
