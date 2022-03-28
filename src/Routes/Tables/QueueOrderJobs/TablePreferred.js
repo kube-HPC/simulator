@@ -11,8 +11,8 @@ import {
   SortableItem,
   SortableContainer,
   SelectFilterOptions,
-  TypeTableColumns,
 } from './QueueOrderComponents';
+import { TypeTableColumns } from './QueueOrderComponents/TypeTableColumns';
 
 class TablePreferred extends React.Component {
   actionsCol = [

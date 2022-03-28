@@ -1,91 +1,72 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {
-  TableAllInOneTypeColumns,
-  SelectFilterOptions,
-} from './QueueOrderComponents';
+import { SelectFilterOptions } from './QueueOrderComponents';
+import { TableAllInOneTypeColumns } from './QueueOrderComponents/TableAllInOneTypeColumns';
 import { TableAllInOne, FilterTable } from './OrderStyles';
 
 const scrollElement = '.TableAllInOne div.ant-table-body';
-class TableOrderConsolidated extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: true,
-    };
 
-    this.handleScroll = this.handleScroll.bind(this);
-    this.onSelectFilter = this.onSelectFilter.bind(this);
-  }
+const TableOrderConsolidated = ({
+  dataSourceAllJobs,
+  handlePageSize,
+  filterTableAllInOne,
+  filterTableAllInOneVal,
+}) => {
+  const [isLoading, setIsLoading] = useState(true);
 
-  componentDidMount() {
-    const { dataSourceAllJobs } = this.props;
-
-    const tableContent = document.querySelector(scrollElement);
-    tableContent.addEventListener('scroll', this.handleScroll);
-
-    if (dataSourceAllJobs.length > 0) {
-      this.setState({ isLoading: false });
-    }
-  }
-
-  componentDidUpdate() {
-    const { isLoading } = this.state;
-    if (isLoading) {
-      setTimeout(() => this.setState({ isLoading: false }), 1500);
-    }
-  }
-
-  componentWillUnmount() {
-    const tableContent = document.querySelector(scrollElement);
-    tableContent.removeEventListener('scroll', this.handleScroll);
-  }
-
-  handleScroll(event) {
-    const { handlePageSize } = this.props;
-
+  const handleScroll = event => {
     const maxScroll = event.target.scrollHeight - event.target.clientHeight;
     const currentScroll = event.target.scrollTop;
     if (currentScroll === maxScroll) {
-      this.setState({ isLoading: true });
+      setIsLoading(true);
       handlePageSize();
     }
-  }
+  };
 
-  onSelectFilter(selectValue) {
-    const { filterTableAllInOne } = this.props;
-
+  const onSelectFilter = selectValue => {
     filterTableAllInOne(selectValue);
-    this.setState({ isLoading: true });
-  }
+    setIsLoading(true);
+  };
 
-  render() {
-    const { dataSourceAllJobs, filterTableAllInOneVal } = this.props;
-    const { isLoading } = this.state;
+  useEffect(() => {
+    const tableContent = document.querySelector(scrollElement);
+    tableContent.addEventListener('scroll', handleScroll);
 
-    return (
-      <>
-        <FilterTable>
-          GroupBy :{' '}
-          <SelectFilterOptions
-            onSelect={this.onSelectFilter}
-            filterVal={filterTableAllInOneVal}
-          />
-        </FilterTable>
+    if (dataSourceAllJobs.length > 0) {
+      setIsLoading(false);
+    }
 
-        <TableAllInOne
-          className="TableAllInOne"
-          pagination={false}
-          dataSource={dataSourceAllJobs}
-          columns={TableAllInOneTypeColumns[filterTableAllInOneVal]}
-          rowKey={record => `${record.key}_${record.typeElement}`}
-          scroll={{ y: '80vh' }}
-          loading={isLoading}
+    return () => {
+      tableContent.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => setIsLoading(false), 1500);
+  }, [isLoading]);
+
+  return (
+    <>
+      <FilterTable>
+        GroupBy :{' '}
+        <SelectFilterOptions
+          onSelect={onSelectFilter}
+          filterVal={filterTableAllInOneVal}
         />
-      </>
-    );
-  }
-}
+      </FilterTable>
+
+      <TableAllInOne
+        className="TableAllInOne"
+        pagination={false}
+        dataSource={dataSourceAllJobs}
+        columns={TableAllInOneTypeColumns[filterTableAllInOneVal]}
+        rowKey={record => `${record.key}_${record.typeElement}`}
+        scroll={{ y: '80vh' }}
+        loading={isLoading}
+      />
+    </>
+  );
+};
 
 TableOrderConsolidated.propTypes = {
   dataSourceAllJobs: PropTypes.arrayOf(PropTypes.object).isRequired,

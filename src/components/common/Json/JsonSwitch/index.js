@@ -29,6 +29,18 @@ const onCopy = () =>
     type: notification.TYPES.SUCCESS,
   });
 
+const removeFlowInputNull = obj => {
+  if (
+    Object.prototype.hasOwnProperty.call(obj, 'flowInput') &&
+    obj.flowInput === null
+  ) {
+    const { flowInput, ...cObj } = obj;
+    return cObj;
+  }
+
+  return obj;
+};
+
 const JsonSwitch = ({
   obj,
   options,
@@ -44,7 +56,11 @@ const JsonSwitch = ({
   );
   return (
     <ContainerTabs>
-      <Tabs tabPosition={tabPosition} tabBarExtraContent={extra} type="card">
+      <Tabs
+        defaultActiveKey={TABS.JSON}
+        tabPosition={tabPosition}
+        tabBarExtraContent={extra}
+        type="card">
         <Tabs.TabPane key={TABS.TABLE} tab={TABS.TABLE}>
           <Wrapper>
             <JsonTable
@@ -58,7 +74,7 @@ const JsonSwitch = ({
         <Tabs.TabPane key={TABS.JSON} tab={TABS.JSON}>
           {jsonViewHeaderNode}
           <JsonView.Card
-            jsonObject={obj}
+            jsonObject={removeFlowInputNull(obj)}
             // eslint-disable-next-line
             {...view}
           />

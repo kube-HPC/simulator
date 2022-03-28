@@ -455,8 +455,6 @@ class QueueOrderJobs extends React.Component {
 
       hoverTable,
       selectTable,
-      rowOverIndex,
-      positionOverY,
       isDrag,
 
       filterQueueVal,
@@ -544,12 +542,6 @@ class QueueOrderJobs extends React.Component {
             />
           </FlexItems>
         )}
-        <div style={{ display: 'none' }}>
-          ** hoverTable :{hoverTable} ** *** rowOverIndex : {rowOverIndex} ***
-          *** positionOverY : {positionOverY} *** *** isDrag :
-          {isDrag.toString()}*** *** filterQueueVal : {filterQueueVal} **** ***
-          filterPreferredVal : {filterPreferredVal} ***
-        </div>
       </>
     );
   }
