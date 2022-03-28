@@ -16,6 +16,7 @@ export {
   toUpperCaseFirstLetter,
   splitByDot,
   isJsonString,
+  getColorByName,
 } from './stringHelper';
 export {
   deepCopyFromKeyValue,

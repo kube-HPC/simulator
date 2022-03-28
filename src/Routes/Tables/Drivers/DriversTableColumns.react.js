@@ -9,9 +9,7 @@ const Status = status => <Ellipsis text={status} />;
 const Jobs = jobs => <CountTag count={jobs.length} />;
 const Max = count => <CountTag count={count} />;
 const Capacity = count => <CountTag count={count} />;
-const JobId = jobId => <Ellipsis text={jobId} />;
 const Active = active => <Ellipsis text={active ? 'active' : 'inActive'} />;
-
 const sortDriverId = (a, b) => sorter(a.driverId, b.driverId);
 
 export const driverJobsTableColumns = [
@@ -20,13 +18,18 @@ export const driverJobsTableColumns = [
     key: 'jobId',
     dataIndex: ['jobId'],
     width: '40%',
-    render: JobId,
+  },
+  {
+    title: 'Pipeline Name',
+    key: 'pipelineName',
+    dataIndex: ['pipelineName'],
+    width: '40%',
   },
   {
     title: 'active',
     key: 'active',
     dataIndex: ['active'],
-    width: '60%',
+    width: '20%',
     render: Active,
   },
 ];

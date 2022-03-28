@@ -35,7 +35,7 @@ const ValidContainer = styled(ContainerBase)`
   background-color: ${props => props.theme.Styles.validContainer.background};
   border: 1px solid #858899;
   color: white;
-  height: 70vh;
+  height: inherit;
 `;
 
 const InvalidContainer = styled(ContainerBase)`

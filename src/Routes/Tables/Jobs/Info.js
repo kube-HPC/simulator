@@ -1,15 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { RedoOutlined } from '@ant-design/icons';
-import { Button, Alert } from 'antd';
+import { Button } from 'antd';
 import { JsonSwitch } from 'components/common';
 import { useTraceData } from 'hooks';
-import DownloadLink from 'components/DownloadLink';
 import GraphTab from './GraphTab';
-
 import Trace from './Trace';
 import usePath, { OVERVIEW_TABS as TABS } from './usePath';
-import { Tabs, PaneRow, LinkDownload, PanePadding } from './styles';
+import { Tabs, PaneRow, PanePadding } from './styles';
+import DownloadFlowinput from './DownloadFlowinput';
 
 const options = {
   view: {
@@ -39,27 +38,9 @@ const JobInfo = ({ job }) => {
     </Button>
   );
 
-  const removeFlowInputNull = obj => {
-    if (
-      Object.prototype.hasOwnProperty.call(obj, 'flowInput') &&
-      obj.flowInput === null
-    ) {
-      const { flowInput, ...cObj } = obj;
-      return cObj;
-    }
-
-    return obj;
-  };
-
   useEffect(() => {
     if (currentTab === TABS.TRACE) fetchJobTrace();
   }, [currentTab, fetchJobTrace]);
-
-  const [downloadHref, setDownloadHref] = useState(null);
-  const handleDownload = useCallback(
-    () => setDownloadHref(`/flowInput/${key}?download=true`),
-    [key, setDownloadHref]
-  );
 
   return (
     <Tabs
@@ -77,41 +58,19 @@ const JobInfo = ({ job }) => {
       <PanePadding tab={TABS.INFO} key={TABS.INFO}>
         <JsonSwitch
           tabPosition="top"
-          obj={removeFlowInputNull(userPipeline)}
+          obj={userPipeline}
           options={options}
           jobId={key}
-          jsonViewHeaderNode={
-            <LinkDownload>
-              <Button onClick={handleDownload} type="link" size="small">
-                <Alert
-                  message="Click here to download flowInput"
-                  type="info"
-                  showIcon
-                />{' '}
-              </Button>
-              <DownloadLink href={downloadHref} />
-            </LinkDownload>
-          }
+          jsonViewHeaderNode={<DownloadFlowinput keyValue={key} />}
         />
       </PanePadding>
       <PanePadding tab={TABS.MORE_INFO} key={TABS.MORE_INFO}>
         <JsonSwitch
           tabPosition="top"
-          obj={removeFlowInputNull(pipeline)}
+          obj={pipeline}
           options={options}
           jobId={key}
-          jsonViewHeaderNode={
-            <LinkDownload>
-              <Button onClick={handleDownload} type="link" size="small">
-                <Alert
-                  message="Click here to download flowInput"
-                  type="info"
-                  showIcon
-                />{' '}
-              </Button>
-              <DownloadLink href={downloadHref} />
-            </LinkDownload>
-          }
+          jsonViewHeaderNode={<DownloadFlowinput keyValue={key} />}
         />
       </PanePadding>
     </Tabs>

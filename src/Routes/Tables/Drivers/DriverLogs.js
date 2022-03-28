@@ -8,8 +8,7 @@ import client from 'client';
 import useSettings from 'hooks/useSettings';
 
 const CardOverflow = styled(Card)`
-  max-height: 80vh;
-  min-height: 20em;
+  padding-bottom: 20px;
 `;
 
 const DriverLogs = ({ driverId, podName }) => {

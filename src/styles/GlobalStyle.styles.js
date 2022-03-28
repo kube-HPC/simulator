@@ -50,6 +50,19 @@ const GlobalStyle = createGlobalStyle`
 .ant-select-item-option-content:empty:before{
   content: '[empty]';
 }
+
+.row-dragging {
+  background: #fafafa;
+  border: 1px solid #ccc;
+}
+
+.row-dragging td {
+  padding: 16px;
+}
+
+.row-dragging .drag-visible {
+  visibility: visible;
+}
 .ant-tag{
     border-radius:4px;
   }
@@ -57,6 +70,11 @@ const GlobalStyle = createGlobalStyle`
 .JaegerTrace .TimelineCollapser
 {
   display:none;
+}
+
+.mark 
+{
+  background-color:yellow;
 }
 `;
 

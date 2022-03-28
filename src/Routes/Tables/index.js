@@ -2,6 +2,7 @@ import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
 import Jobs from './Jobs';
+import QueueOrderJobs from './QueueOrderJobs';
 import AlgorithmsTable from './Algorithms';
 import DriversTable from './Drivers';
 import PipelinesTable from './Pipelines';
@@ -11,6 +12,11 @@ import DataSources from './DataSources';
 const Body = () => (
   <Switch>
     <Route exact path={['/jobs', '/jobs/:jobId?/*']} component={Jobs} />
+    <Route
+      exact
+      path={['/queue', '/queue/:edit?/*']}
+      component={QueueOrderJobs}
+    />
     <Route
       exact
       path={['/pipelines', '/pipelines/:pipelineId?/*']}

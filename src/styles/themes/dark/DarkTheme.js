@@ -56,6 +56,7 @@ const DarkTheme = COMMON_COLOR => {
   const { COLOR_EXPERIMENTS } = COMMON_COLOR;
 
   const Styles = {
+    backgroundTheme: '#182039',
     line: 'rgba(48,48, 48, 0.07)',
     reactJsonView: { theme: 'paraiso' },
     IconHoverStyle: { colorHover: '#ffffff' },

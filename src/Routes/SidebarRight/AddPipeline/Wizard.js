@@ -1,4 +1,10 @@
-import React, { useCallback, useLayoutEffect, useState, useRef } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+  useRef,
+} from 'react';
 import PropTypes from 'prop-types';
 import { CheckOutlined, RightOutlined, LeftOutlined } from '@ant-design/icons';
 import { Steps, Form as AntdForm } from 'antd';
@@ -76,6 +82,11 @@ const Wizard = ({
   const onNext = useCallback(() => setStepIdx(state => state + 1), [
     setStepIdx,
   ]);
+
+  useEffect(() => {
+    // if kind is undefined then is value default algorithm
+    resetKind(undefined);
+  }, []);
 
   useLayoutEffect(() => {
     if (firstUpdateWizard.current) {

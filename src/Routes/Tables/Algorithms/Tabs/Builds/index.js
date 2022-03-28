@@ -16,6 +16,7 @@ const IDs = {
 const CardOverflow = styled(Card)`
   max-height: 60vh;
   min-height: 20em;
+  padding-bottom: 20px;
 `;
 
 const expandedRowRender = record => (

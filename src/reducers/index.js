@@ -40,6 +40,10 @@ import {
   selectors as metaSelectors,
 } from 'reducers/meta.reducer';
 import {
+  reducer as queue,
+  selectors as queueSelectors,
+} from 'reducers/queue.reducer';
+import {
   reducer as nodeStatistics,
   selectors as nodeStatisticsSelectors,
 } from 'reducers/nodeStatistics.reducer';
@@ -71,6 +75,7 @@ import {
 const store = {
   algorithms,
   meta,
+  queue,
   boards,
   connection,
   drivers,
@@ -96,6 +101,7 @@ export const selectors = {
   workers: workersSelectors,
   drivers: driversSelectors,
   jobs: jobsSelectors,
+  queue: queueSelectors,
   dataSources: dataSourcesSelectors,
   errorLogs: errorLogsSelectors,
   connection: connectionSelectors,
