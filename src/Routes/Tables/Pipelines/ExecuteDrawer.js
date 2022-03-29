@@ -14,7 +14,7 @@ const ExecuteDrawer = () => {
   const { goTo, pipelineId } = usePath();
   const { pipeline: record } = useActivePipeline();
   const { setOff, isOn } = useToggle(true);
-  const { nodes, description, triggers, ...executePipeline } = record || {};
+  const { ...executePipeline } = record || {};
 
   const { experimentId: experimentName } = useExperiments();
   const value = useMemo(

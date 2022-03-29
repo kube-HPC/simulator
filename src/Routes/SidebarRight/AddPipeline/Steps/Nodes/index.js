@@ -67,6 +67,10 @@ const NodeSelectRadioGroup = styled(Radio.Group)`
   width: 100%;
 `;
 
+const DataNode = styled.div`
+  /* pointer-events:none;*/
+`;
+
 const TagByName = styled(Tag)`
   border: 0px;
   color: ${props => props.colors.white};
@@ -183,72 +187,75 @@ const Nodes = ({ style }) => {
           />
         </NodeSelectRadioGroup>
       </NodeBrowserContainer>
+
       {ids.map(id => (
-        <BoldedFormField
-          key={`node::id-${id}`}
-          style={{
-            display: activeNodeId === id ? '' : 'none',
-            margin: 0,
-          }}
-          required={false}>
-          <TitleNode>
-            {getFieldValue(['nodes', id, 'nodeName']) || `node-${id}`}
-          </TitleNode>
+        <DataNode>
+          <BoldedFormField
+            key={`node::id-${id}`}
+            style={{
+              display: activeNodeId === id ? '' : 'none',
+              margin: 0,
+            }}
+            required={false}>
+            <TitleNode>
+              {getFieldValue(['nodes', id, 'nodeName']) || `node-${id}`}
+            </TitleNode>
 
-          <h2>
-            <FormItemLabelWrapper
-              label="Kind"
-              name={['nodes', id, 'kind']}
-              initialValue={
-                initialState?.nodes[id]?.kind
-                  ? initialState.nodes[id].kind
-                  : 'algorithm'
-              }>
-              <Radio.Group
-                buttonStyle="solid"
-                style={{ display: 'flex', alignItems: 'center' }}>
-                <Radio.Button value="algorithm">Algorithm</Radio.Button>
-                <Radio.Button value="dataSource">DataSource</Radio.Button>
+            <h2>
+              <FormItemLabelWrapper
+                label="Kind"
+                name={['nodes', id, 'kind']}
+                initialValue={
+                  initialState?.nodes[id]?.kind
+                    ? initialState.nodes[id].kind
+                    : 'algorithm'
+                }>
+                <Radio.Group
+                  buttonStyle="solid"
+                  style={{ display: 'flex', alignItems: 'center' }}>
+                  <Radio.Button value="algorithm">Algorithm</Radio.Button>
+                  <Radio.Button value="dataSource">DataSource</Radio.Button>
 
-                {isStreamingPipeline && (
-                  <Radio.Button value="gateway">Gateway</Radio.Button>
-                )}
+                  {isStreamingPipeline && (
+                    <Radio.Button value="gateway">Gateway</Radio.Button>
+                  )}
 
-                {!isStreamingPipeline && (
-                  <Radio.Button value="output">Output</Radio.Button>
-                )}
+                  {!isStreamingPipeline && (
+                    <Radio.Button value="output">Output</Radio.Button>
+                  )}
 
-                {ids.length > 1 ? (
-                  <Button
-                    icon={<CloseCircleOutlined />}
-                    ghost
-                    onClick={() => handleDelete(id)}
-                    type="danger"
-                    style={{ marginLeft: 'auto' }}>
-                    Delete Node
-                  </Button>
-                ) : null}
-              </Radio.Group>
-            </FormItemLabelWrapper>
+                  {ids.length > 1 ? (
+                    <Button
+                      icon={<CloseCircleOutlined />}
+                      ghost
+                      onClick={() => handleDelete(id)}
+                      type="danger"
+                      style={{ marginLeft: 'auto' }}>
+                      Delete Node
+                    </Button>
+                  ) : null}
+                </Radio.Group>
+              </FormItemLabelWrapper>
 
-            <Field
-              title="Node Name"
-              name={['nodeName']}
-              rootId={['nodes', id]}
-              extraRules={[
-                {
-                  max: 32,
-                  message: 'Node Name has to be shorter than 32 characters',
-                },
-              ]}>
-              <Input placeholder="Node Name" />
-            </Field>
+              <Field
+                title="Node Name"
+                name={['nodeName']}
+                rootId={['nodes', id]}
+                extraRules={[
+                  {
+                    max: 32,
+                    message: 'Node Name has to be shorter than 32 characters',
+                  },
+                ]}>
+                <Input placeholder="Node Name" />
+              </Field>
 
-            {getFieldValue(['nodes', id, 'kind']) && (
-              <Node id={id} kind={getFieldValue(['nodes', id, 'kind'])} />
-            )}
-          </h2>
-        </BoldedFormField>
+              {getFieldValue(['nodes', id, 'kind']) && (
+                <Node id={id} kind={getFieldValue(['nodes', id, 'kind'])} />
+              )}
+            </h2>
+          </BoldedFormField>
+        </DataNode>
       ))}
     </div>
   );

@@ -67,12 +67,15 @@ const Wizard = ({
   );
 
   const stepComponents = useMemo(
-    () => (isRunPipeline ? [Initial, Options] : [Initial, Nodes, Options]),
+    () =>
+      isRunPipeline ? [Initial, Nodes, Options] : [Initial, Nodes, Options],
     [isRunPipeline]
   );
   const stepNames = useMemo(
     () =>
-      isRunPipeline ? ['Initial', 'Options'] : ['Initial', 'Nodes', 'Options'],
+      isRunPipeline
+        ? ['Initial', 'Nodes', 'Options']
+        : ['Initial', 'Nodes', 'Options'],
     [isRunPipeline]
   );
   const steps = useMemo(
