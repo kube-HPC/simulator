@@ -114,7 +114,8 @@
     "socket.io-client": "^2.3.0",
     "styled-components": "^5.3.3",
     "styled-tools": "^1.7.2",
-    "use-debounce": "^6.0.0"
+    "use-debounce": "^6.0.0",
+    "virtualizedtableforantd4": "^1.1.4"
   },
   "husky": {
     "hooks": {

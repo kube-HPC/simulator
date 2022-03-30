@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Table, Select, Badge } from 'antd';
+import { FieldTimeOutlined } from '@ant-design/icons';
 
 export const DeleteOverTable = styled.div`
   position: absolute;
@@ -83,9 +84,6 @@ export const TableAllInOne = styled(Table)`
   .ant-table-thead > tr > th {
     background: none;
   }
-  [data-row-key*='queue'] {
-    background-color: #7a7a7a52;
-  }
 `;
 export const HeaderTitlePreferred = styled.div`
   position: absolute;
@@ -103,4 +101,9 @@ export const BadgeCount = styled(Badge)`
     left: 10px;
     font-size: 14px;
   }
+`;
+
+export const IconConcurrency = styled(FieldTimeOutlined)`
+  font-size: 22px;
+  color: #ff7700;
 `;

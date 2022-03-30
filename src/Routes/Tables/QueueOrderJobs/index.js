@@ -13,7 +13,7 @@ import TableQueue from './TableQueue';
 import { FlexItems, DividerTables, HeaderTitlePreferred } from './OrderStyles';
 import { orderApi } from './useQueueOrderJobs';
 
-const PAGE_SIZE_TABLE = 50;
+const PAGE_SIZE_TABLE = 30;
 
 class QueueOrderJobs extends React.Component {
   constructor(props) {
