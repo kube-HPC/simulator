@@ -23,7 +23,7 @@ const TableOrderConsolidated = ({
         }
       },
       scroll: { y: 2000 },
-      debug: true,
+      debug: false,
     }),
     [dataSourceAllJobs]
   );
