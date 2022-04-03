@@ -2,6 +2,7 @@ export { default as TypeRow } from 'Routes/Tables/QueueOrderJobs/QueueOrderCompo
 export { default as StartTime } from 'Routes/Tables/QueueOrderJobs/QueueOrderComponents/StartTime';
 export { default as TagColoByName } from 'Routes/Tables/QueueOrderJobs/QueueOrderComponents/TagColoByName';
 export { default as Concurrency } from 'Routes/Tables/QueueOrderJobs/QueueOrderComponents/Concurrency';
+export { default as LinkToEdit } from 'Routes/Tables/QueueOrderJobs/QueueOrderComponents/LinkToEdit';
 export { default as SelectFilterOptions } from 'Routes/Tables/QueueOrderJobs/QueueOrderComponents/SelectFilterOptions';
 export { default as SortableContainer } from 'Routes/Tables/QueueOrderJobs/QueueOrderComponents/SortableContainer';
 export { default as SortableItem } from 'Routes/Tables/QueueOrderJobs/QueueOrderComponents/SortableItem';

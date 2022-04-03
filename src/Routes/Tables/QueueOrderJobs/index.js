@@ -1,25 +1,20 @@
 import React from 'react';
-import { Button, Modal } from 'antd';
-import {
-  ExclamationCircleOutlined,
-  EditOutlined,
-  ArrowLeftOutlined,
-} from '@ant-design/icons';
+import { Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { TypeTable, TypeFilter } from 'const';
-import { Link } from 'react-router-dom';
+
 import TableOrderConsolidated from './TableOrderConsolidated';
 import TablePreferred from './TablePreferred';
 import TableQueue from './TableQueue';
-import { FlexItems, DividerTables, HeaderTitlePreferred } from './OrderStyles';
+import { FlexItems, DividerTables } from './OrderStyles';
 import { orderApi } from './useQueueOrderJobs';
+import { LinkToEdit } from './QueueOrderComponents';
 
 const PAGE_SIZE_TABLE = 30;
 
 class QueueOrderJobs extends React.Component {
   constructor(props) {
     super(props);
-    // eslint-disable-next-line react/prop-types
-    const { location } = this.props;
 
     this.state = {
       // data jobs
@@ -54,7 +49,8 @@ class QueueOrderJobs extends React.Component {
       numberRowToViewPagingPreferred: orderApi.numberJobsPerPage, // number row to view in table Preferred
 
       // eslint-disable-next-line react/prop-types
-      isEditOrder: new URLSearchParams(location.search).get('edit') || false,
+      isEditOrder:
+        new URLSearchParams(window.location.search).get('queueEdit') || false,
       TableOrderConsolidatedSize: PAGE_SIZE_TABLE,
     };
 
@@ -476,17 +472,7 @@ class QueueOrderJobs extends React.Component {
 
     return (
       <>
-        <HeaderTitlePreferred>
-          <Link to={isEditOrder ? '/queue' : '/queue?edit=true'}>
-            <Button
-              onClick={() => this.toggleEdit()}
-              type="primary"
-              icon={!isEditOrder ? <EditOutlined /> : <ArrowLeftOutlined />}
-              size="large">
-              {!isEditOrder ? 'Edit List' : 'Back'}
-            </Button>
-          </Link>
-        </HeaderTitlePreferred>
+        <LinkToEdit toggleEdit={this.toggleEdit} />
 
         {!isEditOrder && (
           <TableOrderConsolidated
