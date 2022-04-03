@@ -7,19 +7,10 @@ import { useHistory } from 'react-router';
 const useSiteThemeMode = () => {
   const history = useHistory();
 
-  // get theme from system this is configuration from user browser
-  const systemTheme = () =>
-    window.matchMedia &&
-    window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? THEMES_NAMES.DARK
-      : THEMES_NAMES.LIGHT;
-
   // get state theme from user local storage
   const getTheme = () => {
-    const themeName = localStorage.getItem('theme') || systemTheme();
-    return themeName !== null && typeof themeName !== 'undefined'
-      ? themeName
-      : 'light';
+    const themeName = localStorage.getItem('theme');
+    return themeName != null ? themeName : 'light';
   };
 
   // set if is state dark mode

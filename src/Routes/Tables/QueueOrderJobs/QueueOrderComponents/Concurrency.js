@@ -1,11 +1,11 @@
 import React from 'react';
-import { PauseCircleOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd';
+import { IconConcurrency } from '../OrderStyles';
 
 const Concurrency = isConcurrency =>
   isConcurrency ? (
     <Tooltip title="Concurrency">
-      <PauseCircleOutlined />
+      <IconConcurrency />
     </Tooltip>
   ) : (
     ''
