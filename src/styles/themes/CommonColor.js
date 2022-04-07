@@ -5,6 +5,8 @@ import {
   taskStatuses as TASK,
 } from '@hkube/consts';
 
+import { KIND_NODE_NAME } from 'const';
+
 import { SERVICES } from '../../const/services';
 
 const COMMON_COLOR = () => {
@@ -127,6 +129,14 @@ const COMMON_COLOR = () => {
     [TYPES.TRIGGER]: COLOR.turquoise,
   });
 
+  const NODE_KINDS_COLOR = COLOR => ({
+    [KIND_NODE_NAME.algorithm]: COLOR.pink,
+    [KIND_NODE_NAME.dataSource]: COLOR.darkPurple,
+    [KIND_NODE_NAME.gateway]: COLOR.greenDark,
+    [KIND_NODE_NAME.hyperparamsTuner]: COLOR.blueDark,
+    [KIND_NODE_NAME.output]: COLOR.orangePale,
+  });
+
   const COLOR_PRIORITY = COLOR => ({
     1: { color: COLOR.red, name: `Highest` },
     2: { color: COLOR.darkOrange, name: `High` },
@@ -158,6 +168,7 @@ const COMMON_COLOR = () => {
     COLOR_LAYOUT,
     COLOR_TASK_STATUS,
     COLOR_PIPELINE_STATUS,
+    NODE_KINDS_COLOR,
     COLOR_EXPERIMENTS,
   };
 };

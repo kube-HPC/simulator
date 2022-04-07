@@ -17,6 +17,7 @@ export {
   splitByDot,
   isJsonString,
   getColorByName,
+  getQueryParams,
 } from './stringHelper';
 export {
   deepCopyFromKeyValue,

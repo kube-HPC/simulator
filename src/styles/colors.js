@@ -18,4 +18,5 @@ export const {
   COLOR_TASK_STATUS,
   COLOR_EXPERIMENTS,
   COLOR_STORAGE,
+  NODE_KINDS_COLOR,
 } = Theme;

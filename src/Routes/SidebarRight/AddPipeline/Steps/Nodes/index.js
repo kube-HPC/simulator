@@ -4,10 +4,14 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { CloseCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Radio, Input, Tag } from 'antd';
+import { FlexBox } from 'components/common';
+import { NODE_KINDS_COLOR } from 'styles';
+import { KIND_NODE_SHORT_NAME } from 'const';
 import AlgorithmNode from './Algorithms';
 import DataSourceNode from './DataSource';
 import GatewayNode from './Gateway';
 import OutputNode from './Output';
+import HyperParamsNode from './HyperParams';
 import useIds from './useIds';
 import useWizardContext from '../../useWizardContext';
 import { BoldedFormField } from './../../styles';
@@ -71,16 +75,7 @@ const TagByName = styled(Tag)`
   border: 0px;
   color: ${props => props.colors.white};
   font-weight: 500;
-  background-color: ${props =>
-    props.tagcolor === 'gateway'
-      ? props.colors.greenDark
-      : props.tagcolor === 'dataSource'
-      ? props.colors.darkPurple
-      : props.tagcolor === 'algorithm'
-      ? props.colors.pink
-      : props.tagcolor === 'output'
-      ? props.colors.orangePale
-      : ''};
+  background-color: ${props => props.$tagColor};
   border-radius: 50px;
 `;
 
@@ -89,6 +84,7 @@ const nodesMap = {
   gateway: GatewayNode,
   dataSource: DataSourceNode,
   algorithm: AlgorithmNode,
+  hyperparamsTuner: HyperParamsNode,
 };
 
 const Node = ({ kind, id }) => {
@@ -97,8 +93,13 @@ const Node = ({ kind, id }) => {
 };
 
 Node.propTypes = {
-  kind: PropTypes.oneOf(['dataSource', 'algorithm', 'gateway', 'output'])
-    .isRequired,
+  kind: PropTypes.oneOf([
+    'dataSource',
+    'algorithm',
+    'gateway',
+    'output',
+    'hyperparamsTuner',
+  ]).isRequired,
   id: PropTypes.node.isRequired,
 };
 
@@ -113,14 +114,6 @@ const Nodes = ({ style }) => {
     initialState,
     isStreamingPipeline,
   } = useWizardContext();
-
-  const getShortName = name => {
-    if (name !== undefined) {
-      const arrName = name.split(/(?=[A-Z])/);
-      return arrName.map(i => i[0].toUpperCase());
-    }
-    return ' ';
-  };
 
   const [ids, appendKey, dropKey] = useIds(Object.keys(initialState.nodes));
 
@@ -166,16 +159,21 @@ const Nodes = ({ style }) => {
           value={activeNodeId}
           buttonStyle="outline"
           onChange={selectActiveNode}>
-          {ids.map(id => (
-            <NodeSelectRadioButton key={`node-radio-${id}`} value={id}>
-              <TagByName
-                tagcolor={getFieldValue(['nodes', id, 'kind'])}
-                colors={Theme.COLOR}>
-                {getShortName(getFieldValue(['nodes', id, 'kind']))}
-              </TagByName>{' '}
-              {getFieldValue(['nodes', id, 'nodeName']) || `node-${id}`}
-            </NodeSelectRadioButton>
-          ))}
+          {ids.map(id => {
+            const kindName = getFieldValue(['nodes', id, 'kind']);
+
+            return (
+              <NodeSelectRadioButton key={`node-radio-${id}`} value={id}>
+                <TagByName
+                  $tagColor={NODE_KINDS_COLOR[kindName]}
+                  colors={Theme.COLOR}>
+                  {KIND_NODE_SHORT_NAME[kindName]}
+                </TagByName>{' '}
+                {getFieldValue(['nodes', id, 'nodeName']) || `node-${id}`}
+              </NodeSelectRadioButton>
+            );
+          })}
+
           <AddNodeButton
             icon={<PlusOutlined />}
             type="dashed"
@@ -191,10 +189,21 @@ const Nodes = ({ style }) => {
             margin: 0,
           }}
           required={false}>
-          <TitleNode>
-            {getFieldValue(['nodes', id, 'nodeName']) || `node-${id}`}
-          </TitleNode>
-
+          <FlexBox align="normal">
+            <TitleNode>
+              {getFieldValue(['nodes', id, 'nodeName']) || `node-${id}`}
+            </TitleNode>
+            {ids.length > 1 ? (
+              <Button
+                icon={<CloseCircleOutlined />}
+                ghost
+                onClick={() => handleDelete(id)}
+                type="danger"
+                style={{ marginLeft: 'auto' }}>
+                Delete Node
+              </Button>
+            ) : null}
+          </FlexBox>
           <h2>
             <FormItemLabelWrapper
               label="Kind"
@@ -215,19 +224,13 @@ const Nodes = ({ style }) => {
                 )}
 
                 {!isStreamingPipeline && (
-                  <Radio.Button value="output">Output</Radio.Button>
+                  <>
+                    <Radio.Button value="output">Output</Radio.Button>
+                    <Radio.Button value="hyperparamsTuner">
+                      HyperParams
+                    </Radio.Button>
+                  </>
                 )}
-
-                {ids.length > 1 ? (
-                  <Button
-                    icon={<CloseCircleOutlined />}
-                    ghost
-                    onClick={() => handleDelete(id)}
-                    type="danger"
-                    style={{ marginLeft: 'auto' }}>
-                    Delete Node
-                  </Button>
-                ) : null}
               </Radio.Group>
             </FormItemLabelWrapper>
 

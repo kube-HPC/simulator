@@ -93,7 +93,9 @@ const Wizard = ({
       firstUpdateWizard.current = false;
     } else {
       // remove gateway or output option from nodes and reset them to algorithm option
-      resetKind(isStreamingPipeline ? 'output' : 'gateway');
+      resetKind(
+        isStreamingPipeline ? ['output', 'hyperparamsTuner'] : ['gateway']
+      );
     }
   }, [isStreamingPipeline, resetKind]);
 

@@ -84,11 +84,3 @@ AddAlgorithm.propTypes = {
 };
 
 export default memo(AddAlgorithm);
-
-// <BottomContent.Divider />
-// <BottomContent
-//   width={DRAWER_SIZE.ADD_ALGORITHM}
-//   extra={[
-//   ]}>
-//
-// </BottomContent>

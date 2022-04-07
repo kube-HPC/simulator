@@ -10,6 +10,7 @@ import { useFilter } from './useSearch';
 
 const usePipeline = () => {
   const collection = useSelector(selectors.pipelines.collection.all);
+  const pipelinesCollection = useSelector(selectors.pipelines.collection.all);
 
   const dataStats = useSelector(selectors.pipelines.stats.all);
   const filtered = useFilter(collection, ['name']);
@@ -73,6 +74,7 @@ const usePipeline = () => {
 
   return {
     collection: filtered,
+    pipelinesCollection,
     dataStats,
     updateCron,
     rerunPipeline,

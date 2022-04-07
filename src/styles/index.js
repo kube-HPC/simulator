@@ -10,6 +10,7 @@ export {
   COLOR_PRIORITY,
   COLOR_SERVICE,
   COLOR_TASK_STATUS,
+  NODE_KINDS_COLOR,
 } from './colors';
 
 export { default as Display } from './Display.styles';
