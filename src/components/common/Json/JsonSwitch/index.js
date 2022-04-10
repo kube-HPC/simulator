@@ -47,6 +47,7 @@ const JsonSwitch = ({
   jobId,
   jsonViewHeaderNode,
   tabPosition,
+  typeDefaultView,
 }) => {
   const { view = {}, table = {} } = options;
   const extra = (
@@ -57,7 +58,7 @@ const JsonSwitch = ({
   return (
     <ContainerTabs>
       <Tabs
-        defaultActiveKey={TABS.JSON}
+        defaultActiveKey={typeDefaultView}
         tabPosition={tabPosition}
         tabBarExtraContent={extra}
         type="card">
@@ -92,6 +93,7 @@ JsonSwitch.propTypes = {
   jobId: PropTypes.string,
   jsonViewHeaderNode: PropTypes.node,
   tabPosition: PropTypes.string,
+  typeDefaultView: PropTypes.string,
 };
 JsonSwitch.defaultProps = {
   obj: {},
@@ -99,6 +101,7 @@ JsonSwitch.defaultProps = {
   jobId: null,
   jsonViewHeaderNode: undefined,
   tabPosition: 'left',
+  typeDefaultView: TABS.JSON,
 };
 
 export default JsonSwitch;

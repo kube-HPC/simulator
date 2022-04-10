@@ -90,7 +90,11 @@ const NodeInfo = ({ node, jobId, isDisabledBtnRunDebug }) => {
         </PaneLog>
         <Tabs.TabPane tab="Algorithm Details" key="algorithms-tab">
           <OverflowContainer>
-            <JsonSwitch obj={algorithmDetails} jobId={jobId} />
+            <JsonSwitch
+              obj={algorithmDetails}
+              jobId={jobId}
+              typeDefaultView="Table"
+            />
           </OverflowContainer>
         </Tabs.TabPane>
         <Tabs.TabPane tab="Input Output Details" key="io-details-tab">
