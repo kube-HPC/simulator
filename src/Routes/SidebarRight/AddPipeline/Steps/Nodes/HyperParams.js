@@ -64,10 +64,10 @@ const HyperParamsNode = ({ id }) => {
                   <Col span={12}>
                     <Form.Item
                       {...restField}
-                      name={[name, 'nameParam']}
+                      name={[name, 'name']}
                       rules={[{ required: true, message: 'Missing name' }]}
                       label="Name"
-                      key={`nameParam_${key}`}
+                      key={`name_${key}`}
                       initialValue="">
                       <Input placeholder="Name" />
                     </Form.Item>
