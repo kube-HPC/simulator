@@ -8,7 +8,7 @@ import useWizardContext from '../../../useWizardContext';
 const listAddOn = ['', '@', '#', '#@'];
 
 const Controller = ({ nodeIdx, isRequired }) => {
-  const { form } = useWizardContext();
+  const { form, isRunPipeline } = useWizardContext();
   const inputValues = form.getFieldValue(['nodes', nodeIdx, 'input']);
 
   const isRequiredMsg = () =>
@@ -44,16 +44,18 @@ const Controller = ({ nodeIdx, isRequired }) => {
               />
             </Form.Item>
           ))}
-          <Form.Item>
-            <Button
-              type="dashed"
-              onClick={() => add()}
-              block
-              icon={<PlusOutlined />}>
-              Add input
-            </Button>
-            {isRequiredMsg()}
-          </Form.Item>
+          {!isRunPipeline && (
+            <Form.Item>
+              <Button
+                type="dashed"
+                onClick={() => add()}
+                block
+                icon={<PlusOutlined />}>
+                Add input
+              </Button>
+              {isRequiredMsg()}
+            </Form.Item>
+          )}
         </>
       )}
     </Form.List>

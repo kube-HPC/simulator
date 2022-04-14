@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
-import { Layout, message } from 'antd';
+import { Layout, message, BackTop } from 'antd';
+
 import styled, { ThemeProvider } from 'styled-components';
 import { Route } from 'react-router-dom';
 import { COLOR, COLOR_LAYOUT, Theme } from 'styles';
 import { useActions, useConnectionStatus } from 'hooks';
 import Header from 'Routes/Base/Header';
+import { ReactComponent as IconBackUp } from 'images/backUp.svg';
 import SidebarRight, { Drawer as SiderBarRightDrawer } from './SidebarRight';
 import SidebarLeft from './Base/SidebarLeft';
 import UserGuide from './Base/UserGuide';
@@ -40,6 +42,8 @@ message.config({
   maxCount: 3,
 });
 
+const BackToTop = () => document.getElementById('globalContent');
+
 const Routes = () => {
   const { socketInit } = useActions();
 
@@ -57,8 +61,11 @@ const Routes = () => {
         <Layout>
           <Route path="/:pageName" component={Header} />
           <LayoutFullHeight>
-            <ContentMargin>
+            <ContentMargin id="globalContent">
               <Tables />
+              <BackTop target={BackToTop}>
+                <IconBackUp />
+              </BackTop>
             </ContentMargin>
             <RightContainer>
               <Route path="/:root" component={SidebarRight} />

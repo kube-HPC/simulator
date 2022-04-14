@@ -20,12 +20,6 @@ import { useWizard } from 'hooks';
 import { context } from './useWizardContext';
 import { Initial, Nodes, Options } from './Steps';
 
-const stepNames = ['Initial', 'Nodes', 'Options'];
-const stepComponents = [Initial, Nodes, Options];
-const steps = stepNames.map(name => (
-  <Steps.Step key={`steps-${name}`} title={name} />
-));
-
 const Form = styled(AntdForm)`
   width: 90ch;
 `;
@@ -37,6 +31,12 @@ export const Body = styled.div`
   overflow-y: scroll;
   max-height: 81vh;
 `;
+
+const stepNames = ['Initial', 'Nodes', 'Options'];
+const stepComponents = [Initial, Nodes, Options];
+const steps = stepNames.map(name => (
+  <Steps.Step key={`steps-${name}`} title={name} />
+));
 
 /** @param {object} props */
 /** @param {import('antd/lib/form').FormProps} props.form */
@@ -50,6 +50,7 @@ const Wizard = ({
   stepIdx,
   wizardClear,
   isEdit,
+  isRunPipeline,
 }) => {
   const firstUpdateWizard = useRef(true);
   const [valuesState, setValuesState] = useState(() => initialState);
@@ -61,7 +62,14 @@ const Wizard = ({
     getFormattedFormValues,
     resetKind,
     persistForm,
-  } = useWizard(form, initialState, onSubmit, setEditorState, setValuesState);
+  } = useWizard(
+    form,
+    initialState,
+    onSubmit,
+    setEditorState,
+    setValuesState,
+    isRunPipeline
+  );
 
   const handleToggle = useCallback(() => {
     persistForm();
@@ -130,6 +138,7 @@ const Wizard = ({
               isStreamingPipeline,
               isEdit,
               valuesState,
+              isRunPipeline,
             }}>
             {stepComponents.map((StepComponent, ii) => (
               <StepComponent
@@ -149,9 +158,11 @@ const Wizard = ({
       </Body>
 
       <BottomPanel>
-        <PanelButton type="danger" onClick={wizardClear}>
-          Clear
-        </PanelButton>
+        {!isRunPipeline && (
+          <PanelButton type="danger" onClick={wizardClear}>
+            Clear
+          </PanelButton>
+        )}
         <PanelButton onClick={handleToggle}>Editor View</PanelButton>
         <PanelButton disabled={stepIdx === 0} onClick={onPrevious}>
           <LeftOutlined />
@@ -162,7 +173,7 @@ const Wizard = ({
           onClick={!isLastStep ? onNext : handleSubmit}
           form="create-pipeline"
           htmlType="submit">
-          {isLastStep ? 'Submit' : 'Next'}
+          {isLastStep ? (isRunPipeline ? 'Run' : 'Submit') : 'Next'}
           {isLastStep ? <CheckOutlined /> : <RightOutlined />}
         </RightAlignedButton>
       </BottomPanel>
@@ -187,6 +198,7 @@ Wizard.propTypes = {
   // eslint-disable-next-line
   wizardClear: PropTypes.func.isRequired,
   isEdit: PropTypes.bool.isRequired,
+  isRunPipeline: PropTypes.bool.isRequired,
 };
 
 export default Wizard;
