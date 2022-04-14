@@ -1,13 +1,24 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Radio } from 'antd';
+import { Input, Radio, Select } from 'antd';
 import { Form, EditableTagGroup } from 'components/common';
+import { useExperiments } from 'hooks';
 import ControllerKeyValue from '../Nodes/inputKeyValueJson';
 import useWizardContext from '../../useWizardContext';
 
+const { Option } = Select;
+
 /** @param {{ style: import('react').CSSProperties }} props */
 const Initial = ({ style }) => {
-  const { isEdit, isRunPipeline } = useWizardContext();
+  const { isEdit, isRunPipeline, valuesState } = useWizardContext();
+
+  // get list nodes
+  const nodeNames = useMemo(
+    () => valuesState?.nodes?.map(item => item?.nodeName),
+    [valuesState]
+  );
+
+  const { experiments } = useExperiments();
 
   return (
     <div style={style}>
@@ -34,8 +45,24 @@ const Initial = ({ style }) => {
 
       {isRunPipeline && (
         <>
-          <Form.Item label="experimentName" name={['experimentName']}>
-            <Input />
+          <Form.Item label="experiments" name={['experimentName']}>
+            <Select style={{ width: '100%' }}>
+              {experiments.map(experiment => (
+                <Option key={experiment.name}>{experiment.name}</Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item label="Debug Override" name={['debugOverride']}>
+            <Select
+              mode="multiple"
+              allowClear
+              style={{ width: '100%' }}
+              placeholder="Please select">
+              {nodeNames.map(nodeName => (
+                <Option key={nodeName}>{nodeName}</Option>
+              ))}
+            </Select>
           </Form.Item>
 
           <Form.Item label="Tags" name={['tags']}>

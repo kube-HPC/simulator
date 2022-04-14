@@ -68,7 +68,30 @@ const NodeSelectRadioGroup = styled(Radio.Group)`
 `;
 
 const DataNode = styled.div`
-  /* pointer-events:none;*/
+  ${props =>
+    props.$isDisabled &&
+    `
+
+        pointer-events:none;
+
+        .ant-divider{
+          pointer-events:auto;
+        }
+
+        .ant-select-selector,
+        .ant-switch-checked,
+        .ant-radio-button-wrapper,
+        .ant-input-affix-wrapper,input
+        {
+          color: rgba(0, 0, 0, 0.25);
+          background-color: #f5f5f5;
+          cursor: not-allowed;
+          opacity: 1;
+        
+        }
+
+       
+    `}
 `;
 
 const TagByName = styled(Tag)`
@@ -116,6 +139,7 @@ const Nodes = ({ style }) => {
     form: { getFieldValue, getFieldsValue, setFieldsValue },
     initialState,
     isStreamingPipeline,
+    isRunPipeline,
   } = useWizardContext();
 
   const getShortName = name => {
@@ -180,16 +204,18 @@ const Nodes = ({ style }) => {
               {getFieldValue(['nodes', id, 'nodeName']) || `node-${id}`}
             </NodeSelectRadioButton>
           ))}
-          <AddNodeButton
-            icon={<PlusOutlined />}
-            type="dashed"
-            onClick={handleAddNode}
-          />
+          {!isRunPipeline && (
+            <AddNodeButton
+              icon={<PlusOutlined />}
+              type="dashed"
+              onClick={handleAddNode}
+            />
+          )}
         </NodeSelectRadioGroup>
       </NodeBrowserContainer>
 
       {ids.map(id => (
-        <DataNode>
+        <DataNode $isDisabled={isRunPipeline}>
           <BoldedFormField
             key={`node::id-${id}`}
             style={{
@@ -224,7 +250,7 @@ const Nodes = ({ style }) => {
                     <Radio.Button value="output">Output</Radio.Button>
                   )}
 
-                  {ids.length > 1 ? (
+                  {!isRunPipeline && ids.length > 1 ? (
                     <Button
                       icon={<CloseCircleOutlined />}
                       ghost

@@ -31,9 +31,11 @@ const usePipeline = () => {
   );
 
   const runPipeline = useCallback(
-    nextValue => {
-      const parsedValue = JSON.parse(nextValue);
-      execStored(parsedValue);
+    objVal => {
+      const objPipeline = JSON.parse(JSON.stringify(objVal));
+      delete objPipeline.nodes;
+
+      execStored(objPipeline);
     },
     [execStored]
   );

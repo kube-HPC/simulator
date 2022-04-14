@@ -4,7 +4,6 @@ import React, {
   useLayoutEffect,
   useState,
   useRef,
-  useMemo,
 } from 'react';
 import PropTypes from 'prop-types';
 import { CheckOutlined, RightOutlined, LeftOutlined } from '@ant-design/icons';
@@ -32,6 +31,12 @@ export const Body = styled.div`
   overflow-y: scroll;
   max-height: 81vh;
 `;
+
+const stepNames = ['Initial', 'Nodes', 'Options'];
+const stepComponents = [Initial, Nodes, Options];
+const steps = stepNames.map(name => (
+  <Steps.Step key={`steps-${name}`} title={name} />
+));
 
 /** @param {object} props */
 /** @param {import('antd/lib/form').FormProps} props.form */
@@ -64,24 +69,6 @@ const Wizard = ({
     setEditorState,
     setValuesState,
     isRunPipeline
-  );
-
-  const stepComponents = useMemo(
-    () =>
-      isRunPipeline ? [Initial, Nodes, Options] : [Initial, Nodes, Options],
-    [isRunPipeline]
-  );
-  const stepNames = useMemo(
-    () =>
-      isRunPipeline
-        ? ['Initial', 'Nodes', 'Options']
-        : ['Initial', 'Nodes', 'Options'],
-    [isRunPipeline]
-  );
-  const steps = useMemo(
-    () =>
-      stepNames.map(name => <Steps.Step key={`steps-${name}`} title={name} />),
-    [stepNames]
   );
 
   const handleToggle = useCallback(() => {
@@ -169,9 +156,11 @@ const Wizard = ({
       </Body>
 
       <BottomPanel>
-        <PanelButton type="danger" onClick={wizardClear}>
-          Clear
-        </PanelButton>
+        {!isRunPipeline && (
+          <PanelButton type="danger" onClick={wizardClear}>
+            Clear
+          </PanelButton>
+        )}
         <PanelButton onClick={handleToggle}>Editor View</PanelButton>
         <PanelButton disabled={stepIdx === 0} onClick={onPrevious}>
           <LeftOutlined />
