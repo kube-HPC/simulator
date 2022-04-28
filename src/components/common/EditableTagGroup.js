@@ -116,7 +116,7 @@ const EditableTagGroup = ({ value, onChange }) => {
       )}
       {!inputVisible && (
         <Tag className="site-tag-plus" onClick={showInput}>
-          <PlusOutlined /> New Tag
+          <PlusOutlined />
         </Tag>
       )}
     </>

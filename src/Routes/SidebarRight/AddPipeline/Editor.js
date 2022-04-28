@@ -49,7 +49,7 @@ const Editor = ({
       4
     )
   );
-  console.log(nodes);
+
   const setValuesState = useCallback(
     isToggle => {
       tryParse({

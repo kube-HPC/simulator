@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
+import { EditableTagGroup, SignBoard } from 'components/common';
 import { Form, Button, Space, Input } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import useWizardContext from 'Routes/SidebarRight/AddPipeline/useWizardContext';
 import { tryParse, tryParseJson } from 'utils';
 import { useDebouncedCallback } from 'use-debounce';
-import { SignBoard } from 'components/common';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
@@ -24,6 +24,8 @@ const ControllerKeyValue = ({
   isValueSignBoard,
   valuePlaceholder,
   titleKeyboard,
+  isValueArray,
+  placeholderKey,
 }) => {
   const { initialState, form, valuesState } = useWizardContext();
 
@@ -111,10 +113,12 @@ const ControllerKeyValue = ({
                 {...restField}
                 name={[name, 'key']}
                 fieldKey={[fieldKey, 'key']}
-                rules={[{ required: true, message: 'Missing flow key' }]}
+                rules={[
+                  { required: true, message: `Missing ${placeholderKey}` },
+                ]}
                 key={`inputName${key}`}
                 onChange={() => handleChange()}>
-                <Input key={`inputN${key}`} placeholder="Flow key" />
+                <Input key={`inputN${key}`} placeholder={placeholderKey} />
               </Form.Item>
 
               {isValueSignBoard ? (
@@ -134,6 +138,13 @@ const ControllerKeyValue = ({
                   key={`SignBoard${key}`}
                   width={380}
                 />
+              ) : isValueArray ? (
+                <Form.Item
+                  name={[name, 'value']}
+                  fieldKey={[fieldKey, 'value']}
+                  key={`inputValueItemArray${key}`}>
+                  <EditableTagGroup onChange={() => handleChange()} />
+                </Form.Item>
               ) : (
                 <Form.Item
                   name={[name, 'value']}
@@ -179,8 +190,10 @@ ControllerKeyValue.propTypes = {
   // eslint-disable-next-line
   style: PropTypes.object,
   isValueSignBoard: PropTypes.bool,
+  isValueArray: PropTypes.bool,
   valuePlaceholder: PropTypes.string,
   titleKeyboard: PropTypes.string,
+  placeholderKey: PropTypes.string,
   nameRef: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 ControllerKeyValue.defaultProps = {
@@ -188,7 +201,9 @@ ControllerKeyValue.defaultProps = {
   style: {},
   onChange: () => {},
   isValueSignBoard: false,
+  isValueArray: false,
   valuePlaceholder: '',
   titleKeyboard: '',
+  placeholderKey: 'Flow key',
 };
 export default React.memo(ControllerKeyValue);
