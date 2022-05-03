@@ -57,6 +57,7 @@ const useWizardAddPipeline = (
     if (status === WIZARD_STATE.IDLE) {
       if (isEdit) {
         const jsonEdit = JSON.parse(jsonPipeline);
+
         if (jsonEdit.nodes) {
           jsonEdit.nodes.forEach(item => {
             if (item.kind === undefined) {

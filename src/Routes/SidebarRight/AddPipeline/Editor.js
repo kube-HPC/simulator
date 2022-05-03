@@ -50,7 +50,7 @@ const Editor = ({
     )
   );
 
-  const setValuesState = useCallback(
+  const setValuesItemsState = useCallback(
     isToggle => {
       tryParse({
         src: innerState,
@@ -66,7 +66,7 @@ const Editor = ({
         onFail: () => {},
       });
     },
-    [innerState, setEditorState, toggle]
+    [innerState, isRunPipeline, nodes, setEditorState, toggle]
   );
 
   const onEditorSubmit = () =>
@@ -80,10 +80,10 @@ const Editor = ({
   const onDefault = () => setInnerState(INITIAL_EDITOR_VALUE);
   const onClear = () => setInnerState('');
 
-  useEffect(() => setValuesState(false), [
+  useEffect(() => setValuesItemsState(false), [
     innerState,
     setEditorState,
-    setValuesState,
+    setValuesItemsState,
   ]);
 
   return (
@@ -99,7 +99,7 @@ const Editor = ({
 
       <BottomPanel width={DRAWER_SIZE.ADD_PIPELINE}>
         {/* <PanelButton key="Editor" onClick={handleToggle}> */}
-        <PanelButton key="Editor" onClick={() => setValuesState(true)}>
+        <PanelButton key="Editor" onClick={() => setValuesItemsState(true)}>
           Wizard View
         </PanelButton>
         {!isRunPipeline && (

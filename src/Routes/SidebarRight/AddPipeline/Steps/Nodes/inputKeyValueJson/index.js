@@ -15,6 +15,12 @@ const IconDelete = styled(MinusCircleOutlined)`
   margin-left: 1ch;
 `;
 
+const SpaceStyle = styled(Space)`
+  .ant-space-item:last-of-type {
+    margin-left: ${props => (props.$isAutoLeft ? 'auto' : 'none')};
+  }
+`;
+
 const emptyEditorStatesKeyValue = ['""', null, 'null', ''];
 
 const ControllerKeyValue = ({
@@ -80,6 +86,7 @@ const ControllerKeyValue = ({
         (acc, item) => ({ ...acc, [item?.key]: tryParseJson(item?.value) }),
         {}
       );
+
     setValue(JSON.stringify(res));
     submitChange();
   }, [form, nameRef, submitChange]);
@@ -101,7 +108,8 @@ const ControllerKeyValue = ({
       {(fields, { add, remove }) => (
         <>
           {fields.map(({ key, name, fieldKey, index, ...restField }) => (
-            <Space
+            <SpaceStyle
+              $isAutoLeft={isValueArray}
               style={{
                 display: 'flex',
                 marginBottom: 8,
@@ -143,7 +151,10 @@ const ControllerKeyValue = ({
                   name={[name, 'value']}
                   fieldKey={[fieldKey, 'value']}
                   key={`inputValueItemArray${key}`}>
-                  <EditableTagGroup onChange={() => handleChange()} />
+                  <EditableTagGroup
+                    duplicateValue
+                    onChange={() => handleChange()}
+                  />
                 </Form.Item>
               ) : (
                 <Form.Item
@@ -166,7 +177,7 @@ const ControllerKeyValue = ({
                   handleChange();
                 }}
               />
-            </Space>
+            </SpaceStyle>
           ))}
           <Form.Item>
             <Button

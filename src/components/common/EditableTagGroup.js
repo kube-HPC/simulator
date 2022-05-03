@@ -2,12 +2,39 @@ import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Tag, Input, Tooltip } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { isArray } from 'lodash';
+import styled from 'styled-components';
 
-const EditableTagGroup = ({ value, onChange }) => {
+const convertToValueArray = val => {
+  if (!isArray(val)) {
+    return JSON.parse(val);
+  }
+
+  return val;
+};
+const TagPlus = styled(Tag)`
+  border-radius: 1em;
+  background: #1890ff;
+  color: #ffffff;
+  font-size: 15px;
+
+  border: 1px solid #1890ff;
+`;
+const InputStyle = styled(Input)`
+  width: 70px;
+`;
+
+const ItemBox = styled.div`
+  min-height: 32px;
+  padding: 3px;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+`;
+const EditableTagGroup = ({ value, onChange, duplicateValue }) => {
   const saveInputRef = useRef(null);
   const saveEditInputRef = useRef(null);
 
-  const [tags, setTags] = useState(value || []);
+  const [tags, setTags] = useState(convertToValueArray(value) || []);
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [editInputIndex, setEditInputIndex] = useState(-1);
@@ -31,12 +58,15 @@ const EditableTagGroup = ({ value, onChange }) => {
   };
 
   const handleInputChange = e => {
-    setInputValue(e.target.value);
+    const itemValue = e.target.value;
+    setInputValue(parseInt(itemValue, 10) || itemValue);
   };
 
   const handleInputConfirm = () => {
-    if (inputValue && tags.indexOf(inputValue) === -1) {
-      setTags([...tags, inputValue]);
+    if (duplicateValue) {
+      setTags([...tags, parseInt(inputValue, 10) || inputValue]);
+    } else if (inputValue && tags.indexOf(inputValue) === -1) {
+      setTags([...tags, parseInt(inputValue, 10) || inputValue]);
     }
 
     setInputVisible(false);
@@ -57,11 +87,11 @@ const EditableTagGroup = ({ value, onChange }) => {
   };
 
   return (
-    <>
-      {tags.map((tag, index) => {
+    <ItemBox>
+      {tags?.map((tag, index) => {
         if (editInputIndex === index) {
           return (
-            <Input
+            <InputStyle
               ref={saveEditInputRef}
               key={tag}
               size="small"
@@ -103,7 +133,7 @@ const EditableTagGroup = ({ value, onChange }) => {
         );
       })}
       {inputVisible && (
-        <Input
+        <InputStyle
           ref={saveInputRef}
           type="text"
           size="small"
@@ -115,21 +145,23 @@ const EditableTagGroup = ({ value, onChange }) => {
         />
       )}
       {!inputVisible && (
-        <Tag className="site-tag-plus" onClick={showInput}>
+        <TagPlus className="site-tag-plus" onClick={showInput}>
           <PlusOutlined />
-        </Tag>
+        </TagPlus>
       )}
-    </>
+    </ItemBox>
   );
 };
 
 EditableTagGroup.propTypes = {
   value: PropTypes.arrayOf(PropTypes.string),
   onChange: PropTypes.func.isRequired,
+  duplicateValue: PropTypes.bool,
 };
 
 EditableTagGroup.defaultProps = {
   value: [],
+  duplicateValue: false,
 };
 
 export default EditableTagGroup;

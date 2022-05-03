@@ -34,8 +34,7 @@ const Field = props => {
 };
 
 const HyperParamsNode = ({ id }) => {
-  const { form } = useWizardContext();
-  const [isGridSampler, setIsGridSampler] = useState(false);
+  const { form, initialState } = useWizardContext();
 
   const rootId = ['nodes', id, 'spec'];
 
@@ -50,6 +49,13 @@ const HyperParamsNode = ({ id }) => {
         .sort((a, b) => (a.value > b.value ? 1 : -1)),
     [pipelinesCollection]
   );
+
+  const isSampler = () => {
+    const objSpec = initialState?.nodes[id]?.spec;
+    return objSpec ? Object.hasOwn(objSpec, 'sampler') : false;
+  };
+
+  const [isGridSampler, setIsGridSampler] = useState(() => isSampler());
 
   const isCategorical = (fields, index) =>
     fields.nodes[id]?.spec.hyperParams[index]?.suggest === 'categorical';
@@ -71,6 +77,7 @@ const HyperParamsNode = ({ id }) => {
    lastObjFields[index].isCategorical = isCategorical
    setIsSuggestCategorical(lastObjFields); */
   };
+
   const onChangeGridSampler = val => {
     setIsGridSampler(val);
   };
@@ -103,8 +110,11 @@ const HyperParamsNode = ({ id }) => {
         />
       </Field>
 
-      <Field name={['isGridSampler']} title="Sampler Grid" skipValidation>
-        <Switch onChange={value => onChangeGridSampler(value)} />
+      <Field overrides={{ name: null }} title="Sampler Grid" skipValidation>
+        <Switch
+          checked={isGridSampler}
+          onChange={value => onChangeGridSampler(value)}
+        />
       </Field>
 
       <Field name={['numberOfTrials']} title="Number Of Trials" skipValidation>
@@ -112,7 +122,7 @@ const HyperParamsNode = ({ id }) => {
       </Field>
 
       <Divider orientation="left">
-        {isGridSampler ? 'Sampler Params' : 'Params'}
+        {isGridSampler ? 'Sampler Search Space Params' : 'Params'}
       </Divider>
       {!isGridSampler ? (
         <Form.List name={['nodes', id, 'spec', 'hyperParams']}>
@@ -174,6 +184,7 @@ const HyperParamsNode = ({ id }) => {
 
                     <Col span={14}>
                       <Form.Item
+                        noStyle
                         shouldUpdate={(prevValues, currentValues) =>
                           isCategorical(currentValues, name)
                         }>
@@ -193,7 +204,7 @@ const HyperParamsNode = ({ id }) => {
                               key={`choices_${key}`}
                               label="Choices"
                               name={[name, 'choices']}>
-                              <EditableTagGroup />
+                              <EditableTagGroup duplicateValue />
                             </Form.Item>
                           ) : (
                             <FlexDiv>
@@ -205,7 +216,7 @@ const HyperParamsNode = ({ id }) => {
                                 ]}
                                 label="Low"
                                 key={`low_${key}`}
-                                initialValue="-10">
+                                initialValue={-10}>
                                 <InputNumber placeholder="low" />
                               </Form.Item>
                               <Form.Item
@@ -216,7 +227,7 @@ const HyperParamsNode = ({ id }) => {
                                 ]}
                                 label="High"
                                 key={`high_${key}`}
-                                initialValue="10">
+                                initialValue={10}>
                                 <InputNumber placeholder="high" />
                               </Form.Item>
                             </FlexDiv>
@@ -242,6 +253,15 @@ const HyperParamsNode = ({ id }) => {
         </Form.List>
       ) : (
         <>
+          <Form.Item name={['nodes', id, 'spec', 'sampler', 'search_space']}>
+            <ControllerKeyValue
+              onChange={onChangeGridSamplerSearchSpace}
+              isValueArray
+              placeholderKey="Param Name"
+              nameRef={['nodes', id, 'spec', 'sampler', 'search_space']}
+            />
+          </Form.Item>
+
           <Field
             noStyle
             hidden
@@ -250,17 +270,6 @@ const HyperParamsNode = ({ id }) => {
             skipValidation>
             <Input type="hidden" />
           </Field>
-
-          <Form.Item
-            label="Search Space"
-            name={['nodes', id, 'spec', 'sampler', 'search_space']}>
-            <ControllerKeyValue
-              onChange={onChangeGridSamplerSearchSpace}
-              isValueArray
-              placeholderKey="Name Param"
-              nameRef={['nodes', id, 'spec', 'sampler', 'search_space']}
-            />
-          </Form.Item>
         </>
       )}
     </ctx.Provider>

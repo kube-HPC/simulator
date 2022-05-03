@@ -32,8 +32,7 @@ const useWizard = (
   initialState,
   onSubmit,
   setEditorState,
-  setValuesState,
-  isRunPipeline
+  setValuesState
 ) => {
   const { setFieldsValue, getFieldsValue } = form;
   const { subscribe } = useSubscribe();
@@ -45,11 +44,6 @@ const useWizard = (
   const getFormattedFormValues = useCallback(() => {
     const formValues = getFieldsValue();
     delete formValues.listKeyValue;
-
-    if (isRunPipeline) {
-      return pruneObject({ ...formValues });
-    }
-
     const nodes = Object.values(formValues?.nodes || {})
       .filter(item => item?.kind)
       .map(item => {

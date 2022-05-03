@@ -202,11 +202,13 @@ const Nodes = ({ style }) => {
             );
           })}
 
-          <AddNodeButton
-            icon={<PlusOutlined />}
-            type="dashed"
-            onClick={handleAddNode}
-          />
+          {!isRunPipeline && (
+            <AddNodeButton
+              icon={<PlusOutlined />}
+              type="dashed"
+              onClick={handleAddNode}
+            />
+          )}
         </NodeSelectRadioGroup>
       </NodeBrowserContainer>
 
@@ -257,7 +259,7 @@ const Nodes = ({ style }) => {
                     <>
                       <Radio.Button value="output">Output</Radio.Button>
                       <Radio.Button value="hyperparamsTuner">
-                        HyperParams
+                        Hyper Params
                       </Radio.Button>
                     </>
                   )}

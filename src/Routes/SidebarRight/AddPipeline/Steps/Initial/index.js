@@ -26,21 +26,26 @@ const Initial = ({ style }) => {
         label="Name"
         name="name"
         rules={[{ required: true, message: 'Pipeline name is required' }]}
-        required>
+        required
+        hidden={isRunPipeline}>
         <Input disabled={isEdit} placeholder="Unique Identifier" />
       </Form.Item>
-      <Form.Item label="Description" name="description">
-        <Input disabled={isRunPipeline} placeholder="Pipeline Description" />
+      <Form.Item hidden={isRunPipeline} label="Description" name="description">
+        <Input placeholder="Pipeline Description" />
       </Form.Item>
       <Form.Item
         label="Pipeline Kind"
         name="kind"
         rules={[{ required: true }]}
         initialValue="batch">
-        <Radio.Group disabled={isRunPipeline}>
-          <Radio.Button value="batch">Batch</Radio.Button>
-          <Radio.Button value="stream">Streaming</Radio.Button>
-        </Radio.Group>
+        {isRunPipeline ? (
+          valuesState?.kind
+        ) : (
+          <Radio.Group>
+            <Radio.Button value="batch">Batch</Radio.Button>
+            <Radio.Button value="stream">Streaming</Radio.Button>
+          </Radio.Group>
+        )}
       </Form.Item>
 
       {isRunPipeline && (
@@ -53,7 +58,7 @@ const Initial = ({ style }) => {
             </Select>
           </Form.Item>
 
-          <Form.Item label="Debug Override" name={['debugOverride']}>
+          <Form.Item label="Debugged Nodes" name={['debugOverride']}>
             <Select
               mode="multiple"
               allowClear

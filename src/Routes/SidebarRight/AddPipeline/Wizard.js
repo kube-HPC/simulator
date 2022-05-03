@@ -4,6 +4,7 @@ import React, {
   useLayoutEffect,
   useState,
   useRef,
+  useMemo,
 } from 'react';
 import PropTypes from 'prop-types';
 import { CheckOutlined, RightOutlined, LeftOutlined } from '@ant-design/icons';
@@ -23,6 +24,14 @@ import { Initial, Nodes, Options } from './Steps';
 const Form = styled(AntdForm)`
   width: 90ch;
 `;
+const StepItem = styled(Steps.Step)`
+  .ant-steps-item-icon {
+    ${props =>
+      props.$isRunPipeline && props.$StepName === 'Options'
+        ? 'border-color:#459efd;color:#459efd!important'
+        : ''}
+  }
+`;
 
 export const Body = styled.div`
   display: flex;
@@ -33,10 +42,10 @@ export const Body = styled.div`
 `;
 
 const stepNames = ['Initial', 'Nodes', 'Options'];
+const RunPipelineStepNames = ['Initial', 'Options', 'Nodes Info'];
+
 const stepComponents = [Initial, Nodes, Options];
-const steps = stepNames.map(name => (
-  <Steps.Step key={`steps-${name}`} title={name} />
-));
+const RunPipelineStepComponents = [Initial, Options, Nodes];
 
 /** @param {object} props */
 /** @param {import('antd/lib/form').FormProps} props.form */
@@ -52,7 +61,28 @@ const Wizard = ({
   isEdit,
   isRunPipeline,
 }) => {
+  const [initStepNames] = useState(
+    isRunPipeline ? RunPipelineStepNames : stepNames
+  );
+  const [initStepComponents] = useState(
+    isRunPipeline ? RunPipelineStepComponents : stepComponents
+  );
+
+  const steps = useMemo(
+    () =>
+      initStepNames.map(name => (
+        <StepItem
+          key={`steps-${name}`}
+          title={name}
+          $StepName={name}
+          $isRunPipeline={isRunPipeline}
+        />
+      )),
+    [initStepNames, isRunPipeline]
+  );
+
   const firstUpdateWizard = useRef(true);
+
   const [valuesState, setValuesState] = useState(() => initialState);
   const { getFieldValue } = form;
 
@@ -140,7 +170,7 @@ const Wizard = ({
               valuesState,
               isRunPipeline,
             }}>
-            {stepComponents.map((StepComponent, ii) => (
+            {initStepComponents.map((StepComponent, ii) => (
               <StepComponent
                 key={`step-component-${stepNames[ii]}`}
                 style={{
