@@ -101,6 +101,7 @@ const AddAlgorithmForm = ({ onToggle, onSubmit, algorithmValue }) => {
 
   useEffect(() => {
     // init values in fields
+
     if (keyValueObject !== undefined) {
       // Edit algorithm
       const schemaObjectForm = form.getFieldsValue();
@@ -109,6 +110,7 @@ const AddAlgorithmForm = ({ onToggle, onSubmit, algorithmValue }) => {
         flattenObjKeyValue(keyValueObject)
       );
       setBuildType(toSelectedBuildType(keyValueObject.type));
+
       form.setFieldsValue(objValuesForm);
     } else {
       // add new algorithm
@@ -279,7 +281,7 @@ const AddAlgorithmForm = ({ onToggle, onSubmit, algorithmValue }) => {
 AddAlgorithmForm.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
-  algorithmValue: PropTypes.object,
+  algorithmValue: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   onToggle: PropTypes.func.isRequired,
   onSubmit: PropTypes.func,
 };

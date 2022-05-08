@@ -80,7 +80,8 @@ AddAlgorithm.propTypes = {
   // eslint-disable-next-line
   onSubmit: PropTypes.func,
   // eslint-disable-next-line react/forbid-prop-types
-  algorithmValue: PropTypes.object.isRequired,
+  algorithmValue: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
+    .isRequired,
 };
 
 export default memo(AddAlgorithm);
