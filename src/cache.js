@@ -62,6 +62,7 @@ const cache = new InMemoryCache({
           },
         },
         algorithms: {
+          // eslint-disable-next-line no-unused-vars
           merge(_existing = { algorithms: [] }, incoming) {
             instanceCounterVar({
               ...instanceCounterVar(),
@@ -71,6 +72,7 @@ const cache = new InMemoryCache({
           },
         },
         pipelines: {
+          // eslint-disable-next-line no-unused-vars
           merge(_existing = { pipelines: [] }, incoming) {
             instanceCounterVar({
               ...instanceCounterVar(),
@@ -80,6 +82,7 @@ const cache = new InMemoryCache({
           },
         },
         discovery: {
+          // eslint-disable-next-line no-unused-vars
           merge(_existing = { pipelineDriver: [], worker: [] }, incoming) {
             instanceCounterVar({
               ...instanceCounterVar(),
