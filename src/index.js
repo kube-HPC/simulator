@@ -23,7 +23,7 @@ import Root from './Routes';
 import store from './store';
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:3000/graphql',
+  uri: 'https://dev1.hkube.io/hkube/api-server/graphql',
 });
 
 const client = new ApolloClient({
