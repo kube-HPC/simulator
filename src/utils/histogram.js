@@ -1,4 +1,4 @@
-const isNumber = require("isnumber")
+const isNumber = require('isnumber');
 
 const numbers = vals => {
   const nums = [];
@@ -16,16 +16,20 @@ const histogram = (vals, bins) => {
   if (vals == null) {
     return null;
   }
+  // eslint-disable-next-line no-param-reassign
   vals = nsort(numbers(vals));
   if (vals.length === 0) {
     return null;
   }
   if (bins == null) {
     // pick bins by simple method: Math.sqrt(n)
+    // eslint-disable-next-line no-param-reassign
     bins = Math.sqrt(vals.length);
   }
+  // eslint-disable-next-line no-param-reassign
   bins = Math.round(bins);
   if (bins < 1) {
+    // eslint-disable-next-line no-param-reassign
     bins = 1;
   }
 
@@ -47,7 +51,9 @@ const histogram = (vals, bins) => {
 
   const tempLeftEdge = midpoint - binWidth * Math.floor(bins / 2);
   const leftEdge = Math.round(tempLeftEdge);
-  const sections = Array(10).fill().map((_, i) => (i + 1) * binWidth + leftEdge);
+  const sections = Array(10)
+    .fill()
+    .map((_, i) => (i + 1) * binWidth + leftEdge);
   // if (bins % 2 !== 0) {
   //     // odd bin count, center middle bin on midpoint
   //     var leftEdge = (midpoint - (binWidth / 2)) - (binWidth * Math.floor(bins / 2))

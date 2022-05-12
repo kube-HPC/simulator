@@ -1,26 +1,33 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import moment from 'moment';
 import { Form, Button, DatePicker, AutoComplete } from 'antd4';
 import PropTypes from 'prop-types';
 import { pipelineStatuses } from '@hkube/consts';
 import { useQuery } from '@apollo/client';
 import { ALGORITHM_AND_PIPELINE_NAMES } from 'graphql/queries';
-import { formatNode } from '../graphUtils';
+// import { formatNode } from '../graphUtils';
 
 // import { filterToggeledVar } from 'cache';
 
 const { RangePicker } = DatePicker;
-let num = 1;
-let localValueTimeChanged = 1;
+// let num = 1;
+// let localValueTimeChanged = 1;
 const QueryForm = ({ onSubmit, params, zoomDate }) => {
   //  const filterToggeled = useReactiveVar(filterToggeledVar);
 
   const [form] = Form.useForm();
 
   useMemo(() => {
-    params && params.datesRange && form.setFieldsValue({ time: [moment(params.datesRange?.from), moment(params.datesRange?.to)] });
-    form.setFieldsValue({ algorithmName: params?.algorithmName, pipelineName: params?.pipelineName, pipelineStatus: params?.pipelineStatus });
-
+    params &&
+      params.datesRange &&
+      form.setFieldsValue({
+        time: [moment(params.datesRange?.from), moment(params.datesRange?.to)],
+      });
+    form.setFieldsValue({
+      algorithmName: params?.algorithmName,
+      pipelineName: params?.pipelineName,
+      pipelineStatus: params?.pipelineStatus,
+    });
   }, [params, zoomDate]);
   const query = useQuery(ALGORITHM_AND_PIPELINE_NAMES);
   const onFinish = values => {
@@ -47,25 +54,22 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
     label: status,
   }));
 
-
-
   return (
     <Form
       layout="inline"
       form={form}
-      initialValues={params && {
-        // //  time: [moment(params.datesRange?.from), moment(params.datesRange?.to)],
-        // algorithmName: params.algorithmName,
-        // pipelineName: params.pipelineName,
-        // pipelineStatus: params.pipelineStatus,
-      }
-
-
+      initialValues={
+        params &&
+        {
+          // //  time: [moment(params.datesRange?.from), moment(params.datesRange?.to)],
+          // algorithmName: params.algorithmName,
+          // pipelineName: params.pipelineName,
+          // pipelineStatus: params.pipelineStatus,
+        }
 
         // algorithm: params.algorithm,
         // pipeline: params.pipeline,
         //   pipelineStatus: params.pipelineStatus,
-
       }
       style={{
         justifyContent: 'space-around',
@@ -77,13 +81,13 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
         boxShadow: 'box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 2px',
       }}
       size="medium"
-      onFinish={onFinish} >
+      onFinish={onFinish}>
       <Form.Item label="Time" name="time">
         <RangePicker
           style={{ width: '16vw', marginLeft: '1vw' }}
           showTime={{ format: 'HH:mm' }}
           format="YYYY-MM-DD HH:mm"
-          onOpenChange={time => localValueTimeChanged = Date.now()}
+          onOpenChange={Date.now()} // time => localValueTimeChanged = Date.now()
         />
       </Form.Item>
 
@@ -119,14 +123,17 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
           Submit
         </Button>
       </Form.Item>
-    </Form >
+    </Form>
   );
 };
 
 QueryForm.propTypes = {
   onSubmit: PropTypes.func,
+  params: PropTypes.objectOf(PropTypes.string).isRequired,
+  zoomDate: PropTypes.instanceOf(Date),
 };
 QueryForm.defaultProps = {
-  onSubmit: () => { },
+  onSubmit: () => {},
+  zoomDate: Date.now(),
 };
 export default React.memo(QueryForm);
