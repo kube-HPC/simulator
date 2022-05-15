@@ -18,7 +18,7 @@ export { default as jobColumns } from './jobColumns';
 const rowKey = job => `job-${job.key}`;
 const JobsTable = () => {
   const query = useQuery(JOB_QUERY, {
-    variables: { limit: 10 },
+    variables: { limit: 20 },
   });
 
   usePolling(query, 3000);
@@ -44,6 +44,13 @@ const JobsTable = () => {
 
   return (
     <Table
+      fetchMore={() =>
+        query.fetchMore({
+          variables: {
+            cursor: query?.data?.jobsAggregated?.cursor,
+          },
+        })
+      }
       loading={query.loading}
       onRow={onRow}
       rowKey={rowKey}

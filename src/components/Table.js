@@ -8,6 +8,7 @@ import Icon, {
 } from '@ant-design/icons';
 import { Spin, Table as AntTable } from 'antd';
 import styled from 'styled-components';
+import { useVT } from 'virtualizedtableforantd4';
 
 import { USER_GUIDE } from 'const';
 
@@ -28,7 +29,7 @@ const TableWhite = styled(AntTable)`
     transition: all 1s ease;
     .${TABLE_JOB.ACTIONS_SELECT} {
       transition: all 1s ease;
-      height: 32px;
+      height: 40px; //  height: 32px;
       overflow: hidden;
       opacity: 0;
       width: 0;
@@ -55,17 +56,36 @@ ExpandIcon.propTypes = {
 const antIcon = <LoadingOutlined style={{ fontSize: 40 }} spin />;
 Spin.setDefaultIndicator(antIcon);
 
-const Table = ({ dataSource, loading, ...props }) => (
-  <TableWhite
-    loading={loading}
-    className={USER_GUIDE.TABLE}
-    expandIcon={ExpandIcon}
-    dataSource={dataSource}
-    pagination={false}
-    size="middle"
-    {...props}
-  />
-);
+const Table = ({ dataSource, loading, ...props }) => {
+  const [vt] = useVT(
+    () => ({
+      initTop: 1,
+      onScroll: ({ isEnd }) => {
+        if (isEnd) {
+          props.fetchMore();
+          //  console.log('loadDataByChunk');
+        }
+      },
+      scroll: { y: 2000 },
+      debug: true,
+    }),
+    [dataSource]
+  );
+
+  return (
+    <TableWhite
+      loading={loading}
+      components={vt}
+      scroll={{ y: 900 }}
+      className={USER_GUIDE.TABLE}
+      expandIcon={ExpandIcon}
+      dataSource={dataSource}
+      pagination={false}
+      //   size="middle"
+      {...props}
+    />
+  );
+};
 
 Table.propTypes = {
   dataSource: PropTypes.arrayOf(PropTypes.object),

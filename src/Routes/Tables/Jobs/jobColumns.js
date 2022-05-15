@@ -15,15 +15,24 @@ import JobTypes from './JobTypes';
 const Id = jobID => (
   <Ellipsis className={USER_GUIDE.TABLE_JOB.ID_SELECT} copyable text={jobID} />
 );
-const Name = pipelineName => <Ellipsis text={pipelineName} />;
+
+// const Name = pipelineName => <Ellipsis text={pipelineName} />;
+const Name = (text, record) => <Ellipsis text={record.pipeline.name} />;
+
 const StartTime = (startTime, { results }) => (
   <JobTime startTime={startTime} results={results} />
 );
 const Status = status => <JobStatus status={status} />;
 const Stats = status => <NodeStats status={status} />;
-const Priority = priority => <JobPriority priority={priority} />;
+// const Priority = priority => <JobPriority priority={priority} />;
+const Priority = (text, record) => (
+  <JobPriority priority={record.pipeline.priority} />
+);
 
-const Types = types => <JobTypes types={types} fullName={false} />;
+// const Types = types => <JobTypes types={types} fullName={false} />;
+const Types = (text, record) => (
+  <JobTypes types={record.pipeline.types} fullName={false} />
+);
 
 const ProgressContainer = styled.div`
   display: flex;
@@ -57,14 +66,14 @@ const jobColumns = [
     title: `Job ID`,
     dataIndex: `key`,
     key: `key`,
-    width: `10ch`,
+    width: `10%`,
     render: Id,
   },
   {
     title: `Pipeline Name`,
     dataIndex: ['pipeline', 'name'],
     key: `pipeline`,
-    width: `10%`,
+    width: `18%`,
     sorter: sortPipelineName,
     render: Name,
   },
