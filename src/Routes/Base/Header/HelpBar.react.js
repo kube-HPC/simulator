@@ -16,6 +16,7 @@ import { FlexBox, Icons } from 'components/common';
 import { appInfo } from 'config';
 import { iconsThemes } from '../../../styles/themes/HelperThemes';
 import ConnectionStatus from './ConnectionStatus.react';
+import InactiveModeTag from './InactiveMode';
 import Settings from './Settings/Settings.react';
 
 const DarkText = styled.div`
@@ -48,6 +49,7 @@ const HelpBar = () => {
   return (
     <Container className={USER_GUIDE.HEADER.SOCIALS}>
       <ConnectionStatus />
+      <InactiveModeTag />
       <Icons.Hover
         type={
           <span
