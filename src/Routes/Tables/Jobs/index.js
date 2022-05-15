@@ -1,10 +1,12 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useEffect } from 'react';
 import { Route } from 'react-router-dom';
 import styled from 'styled-components';
-import useQuery from 'hooks/useQuery';
+import useQueryHook from 'hooks/useQuery';
 import { Table } from 'components';
 import { Card } from 'components/common';
 import { useJobs } from 'hooks';
+import { useQuery } from '@apollo/client';
+import { JOB_QUERY } from './../../../qraphql/queries';
 import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
@@ -15,22 +17,39 @@ const shouldSliceJobs = Number.isInteger(jobsAmount) && jobsAmount > 0;
 export { default as jobColumns } from './jobColumns';
 const rowKey = job => `job-${job.key}`;
 const JobsTable = () => {
+  const query = useQuery(JOB_QUERY);
+
+  useEffect(() => {
+    query.startPolling(3000);
+    //  console.log('polling');
+    return () => {
+      query.stopPolling();
+      //   console.log('stop polling');
+    };
+  }, [query]);
+
   const { goTo } = usePath();
-  const { columns, dataSource, loading } = useJobs();
+  const { columns } = useJobs();
   const onRow = useCallback(
     job => ({
       onDoubleClick: () => goTo.overview({ nextJobId: job.key }),
     }),
     [goTo]
   );
-  const _dataSource = useMemo(
-    () => (shouldSliceJobs ? dataSource.slice(0, jobsAmount) : dataSource),
-    [dataSource]
-  );
+
+  const _dataSource = useMemo(() => {
+    if (query && query.data) {
+      if (shouldSliceJobs) {
+        return query.data.jobsAggregated.jobs.slice(0, jobsAmount);
+      }
+      return query.data.jobsAggregated.jobs;
+    }
+    return [];
+  }, [query]);
 
   return (
     <Table
-      loading={loading}
+      loading={query.loading}
       onRow={onRow}
       rowKey={rowKey}
       expandIcon={false}
@@ -54,7 +73,7 @@ const GridViewWrapper = React.memo(() => (
 ));
 
 const Jobs = () => {
-  const query = useQuery();
+  const query = useQueryHook();
   const showGrid = useMemo(() => query.get('view') === 'grid', [query]);
   return (
     <>
