@@ -26,6 +26,7 @@ export { default as useVersions } from './useVersions';
 export { default as useSiteThemeMode } from './useSiteThemeMode.react';
 export { default as useWizardAddPipeline } from './useWizardAddPipeline';
 export { default as useWizard } from './useWizard';
+export { default as usePolling } from './../qraphql/usePolling';
 
 export const dataSources = {
   useSnapshots: useDataSourceSnapshots,
