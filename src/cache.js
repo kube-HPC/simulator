@@ -3,6 +3,14 @@ import _ from 'lodash';
 
 export const filterToggeledVar = makeVar(false);
 export const inactiveModeVar = makeVar(false);
+export const instanceCounterVar = makeVar({
+  jobs: 0,
+  pipelines: 0,
+  algorithms: 0,
+  drivers: 0,
+  workers: 0,
+  dataSources: 0,
+});
 const cache = new InMemoryCache({
   typePolicies: {
     Query: {
@@ -36,6 +44,10 @@ const cache = new InMemoryCache({
                 );
               }
             });
+            instanceCounterVar({
+              ...instanceCounterVar(),
+              jobs: merged?.jobs?.length,
+            });
             return merged;
           },
         },
@@ -47,6 +59,37 @@ const cache = new InMemoryCache({
         inactiveMode: {
           read() {
             return inactiveModeVar();
+          },
+        },
+        algorithms: {
+          // eslint-disable-next-line no-unused-vars
+          merge(_existing = { algorithms: [] }, incoming) {
+            instanceCounterVar({
+              ...instanceCounterVar(),
+              algorithms: incoming.length,
+            });
+            return incoming;
+          },
+        },
+        pipelines: {
+          // eslint-disable-next-line no-unused-vars
+          merge(_existing = { pipelines: [] }, incoming) {
+            instanceCounterVar({
+              ...instanceCounterVar(),
+              pipelines: incoming.length,
+            });
+            return incoming;
+          },
+        },
+        discovery: {
+          // eslint-disable-next-line no-unused-vars
+          merge(_existing = { pipelineDriver: [], worker: [] }, incoming) {
+            instanceCounterVar({
+              ...instanceCounterVar(),
+              drivers: incoming?.pipelineDriver?.length,
+              workers: incoming?.worker?.length,
+            });
+            return incoming;
           },
         },
       },

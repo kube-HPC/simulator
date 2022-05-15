@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { animated, useSpring } from 'react-spring';
 import styled from 'styled-components';
-import isEqual from 'lodash/isEqual';
+// import isEqual from 'lodash/isEqual';
 import { useLeftSidebar, useSiteThemeMode } from 'hooks';
 import Icon from '@ant-design/icons';
 import { Layout, Menu, Tag } from 'antd';
@@ -19,8 +19,12 @@ import { ReactComponent as LogoFish } from 'images/logo-fish.svg';
 import { ReactComponent as LogoTitle } from 'images/logo-title.svg';
 import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
 import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
+import { instanceCounterVar } from 'cache';
 import { Theme, COLOR_LAYOUT } from 'styles';
 import { selectors } from 'reducers';
+import { useDiscovery } from 'hooks/qraphql';
+import { useReactiveVar } from '@apollo/client';
+
 // import { orderApi } from '../../../Routes/Tables/QueueOrderJobs/useQueueOrderJobs';
 
 const Border = styled.div`
@@ -73,7 +77,7 @@ const LogoContainer = styled.div`
   margin-top: 10px;
   display: flex;
 `;
-
+/*
 const sidebarSelector = state => ({
   [LEFT_SIDEBAR_NAMES.JOBS]: selectors.jobs.count(state),
   [LEFT_SIDEBAR_NAMES.QUEUE]: selectors.queue.count(state) || 0,
@@ -82,6 +86,17 @@ const sidebarSelector = state => ({
   [LEFT_SIDEBAR_NAMES.WORKERS]: selectors.workers.count(state),
   [LEFT_SIDEBAR_NAMES.DRIVERS]: selectors.drivers.count(state),
   [LEFT_SIDEBAR_NAMES.DATASOURCES]: selectors.dataSources.count(state),
+});
+*/
+
+const instanceCounterAdapter = obj => ({
+  [LEFT_SIDEBAR_NAMES.JOBS]: obj.jobs,
+  [LEFT_SIDEBAR_NAMES.QUEUE]: obj.queue || 0,
+  [LEFT_SIDEBAR_NAMES.PIPELINES]: obj.pipelines,
+  [LEFT_SIDEBAR_NAMES.ALGORITHMS]: obj.algorithms,
+  [LEFT_SIDEBAR_NAMES.WORKERS]: obj.workers,
+  [LEFT_SIDEBAR_NAMES.DRIVERS]: obj.drivers,
+  [LEFT_SIDEBAR_NAMES.DATASOURCES]: obj.dataSources,
 });
 
 const menuItems = [
@@ -99,7 +114,10 @@ const Name = styled.span`
 `;
 
 const SidebarLeft = () => {
-  const dataCountSource = useSelector(sidebarSelector, isEqual);
+  useDiscovery();
+  const instanceCounter = useReactiveVar(instanceCounterVar);
+  // const dataCountSource = useSelector(sidebarSelector, isEqual);
+  const dataCountSource = instanceCounterAdapter(instanceCounter);
   const { isOn } = useSelector(selectors.userGuide);
   const location = useLocation();
   const dataCount = isOn ? dataCountMock : dataCountSource;

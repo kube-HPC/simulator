@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import {
   BugOutlined,
@@ -10,7 +10,8 @@ import {
 import { Button, Empty, Tooltip } from 'antd';
 import { FlexBox, JsonSwitch } from 'components/common';
 import { useActions, useLogs, useSettings } from 'hooks';
-import { selectors } from 'reducers';
+// import { selectors } from 'reducers';
+import { useAlgorithmByName } from 'hooks/qraphql';
 import { getTaskDetails } from '../graphUtils';
 import NodeInputOutput from './NodeInputOutput';
 import NodeLogs from '../NodeLogs';
@@ -34,10 +35,17 @@ const ContainerTabs = styled.div`
   height: 800px;
 `;
 
-const NodeInfo = ({ node, jobId, isDisabledBtnRunDebug }) => {
-  const algorithmDetails = useSelector(state =>
-    selectors.algorithms.collection.byId(state, node.algorithmName)
-  );
+const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
+  //  const algorithmDetails = useSelector(state =>
+  //    selectors.algorithms.collection.byId(state, node.algorithmName)
+  //  );
+  let algorithmDetails = null;
+  // node && node.algorithmName && useAlgorithmByName(node.algorithmName);
+  const query = useAlgorithmByName(node.algorithmName);
+  query &&
+    query.data &&
+    query.data.algorithmsByName &&
+    (algorithmDetails = query.data.algorithmsByName);
 
   const [index, setIndex] = useState(0);
   const { getCaching } = useActions();
@@ -83,31 +91,37 @@ const NodeInfo = ({ node, jobId, isDisabledBtnRunDebug }) => {
   ) : null;
 
   return node ? (
-    <ContainerTabs>
-      <TabsLog defaultActiveKey="logs-tab" tabBarExtraContent={extra}>
-        <PaneLog tab="Logs" key="logs-tab">
-          <NodeLogs node={node} taskDetails={taskDetails} onChange={setIndex} />
-        </PaneLog>
-        <Tabs.TabPane tab="Algorithm Details" key="algorithms-tab">
-          <OverflowContainer>
-            <JsonSwitch
-              obj={algorithmDetails}
-              jobId={jobId}
-              typeDefaultView="Table"
+    algorithmDetails && (
+      <ContainerTabs>
+        <TabsLog defaultActiveKey="logs-tab" tabBarExtraContent={extra}>
+          <PaneLog tab="Logs" key="logs-tab">
+            <NodeLogs
+              node={node}
+              taskDetails={taskDetails}
+              onChange={setIndex}
             />
-          </OverflowContainer>
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="Input Output Details" key="io-details-tab">
-          <NodeInputOutput payload={node} algorithm={algorithmDetails} />
-        </Tabs.TabPane>
-      </TabsLog>
-    </ContainerTabs>
+          </PaneLog>
+          <Tabs.TabPane tab="Algorithm Details" key="algorithms-tab">
+            <OverflowContainer>
+              <JsonSwitch
+                obj={algorithmDetails}
+                jobId={jobId}
+                typeDefaultView="Table"
+              />
+            </OverflowContainer>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Input Output Details" key="io-details-tab">
+            <NodeInputOutput payload={node} algorithm={algorithmDetails} />
+          </Tabs.TabPane>
+        </TabsLog>
+      </ContainerTabs>
+    )
   ) : (
     <Empty />
   );
 };
 
-NodeInfo.propTypes = {
+Details.propTypes = {
   jobId: PropTypes.string.isRequired,
   // TODO: detail the props
   // eslint-disable-next-line
@@ -115,7 +129,7 @@ NodeInfo.propTypes = {
   isDisabledBtnRunDebug: PropTypes.bool,
 };
 
-NodeInfo.defaultProps = {
+Details.defaultProps = {
   isDisabledBtnRunDebug: false,
 };
-export default React.memo(NodeInfo);
+export default React.memo(Details);
