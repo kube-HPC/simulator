@@ -7,9 +7,24 @@ import { HashRouter as Router } from 'react-router-dom';
 import { ReusableProvider } from 'reusable';
 import { init } from 'actions/connection.action';
 import { selectors } from 'reducers';
+import {
+  createHttpLink,
+  InMemoryCache,
+  ApolloProvider,
+  ApolloClient,
+} from '@apollo/client';
 import GlobalThemes from './styles/themes/GlobalThemes';
 import Root from './Routes';
 import store from './store';
+
+const httpLink = createHttpLink({
+  uri: 'http://localhost:3000/graphql',
+});
+
+const client = new ApolloClient({
+  link: httpLink,
+  cache: new InMemoryCache(),
+});
 
 const ConfigProvider = () => {
   // do not use the useActions hook
@@ -44,9 +59,11 @@ const ConfigProvider = () => {
 };
 
 render(
-  <Provider store={store}>
-    <ConfigProvider />
-  </Provider>,
+  <ApolloProvider client={client}>
+    <Provider store={store}>
+      <ConfigProvider />
+    </Provider>
+  </ApolloProvider>,
   document.getElementById('root')
 );
 

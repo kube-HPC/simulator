@@ -90,10 +90,11 @@ spec:
       restartPolicy: Always
 
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
+    kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
   labels:
@@ -109,9 +110,12 @@ spec:
     - http:
         paths:
           - backend:
-              serviceName: dashboard-${PR_NAME}
-              servicePort: 9050
+              service:
+                name: dashboard-${PR_NAME}
+                port:
+                  number: 9050
             path: /hkube/dashboard-${PR_NAME}(/|$)(.*)
+            pathType: ImplementationSpecific
 
 ---
 apiVersion: v1
