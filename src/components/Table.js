@@ -54,7 +54,7 @@ const Table = ({ dataSource, loading, ...props }) => {
       onScroll: ({ isEnd }) => {
         if (isEnd) {
           props.fetchMore();
-          console.log('loadDataByChunk');
+          //  console.log('loadDataByChunk');
         }
       },
       scroll: { y: '80vh' },

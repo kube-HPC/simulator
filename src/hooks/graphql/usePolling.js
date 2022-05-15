@@ -19,7 +19,7 @@ let isPolling = true;
 
 const _throttled = throttle(
   () => {
-    console.log('throttle');
+    //   console.log('throttle');
     isTrottle = true;
   },
   10000,
@@ -37,7 +37,7 @@ const trottleCheck = () => {
       if (isPolling) {
         // prettier-ignore
         inactiveModeVar(true);
-        console.log('polling stopped count:', queryArry?.length);
+        //     console.log('polling stopped count:', queryArry?.length);
         isPolling = false;
       }
     } else {
@@ -49,7 +49,7 @@ const trottleCheck = () => {
         isPolling = true;
         inactiveModeVar(false);
         // prettier-ignore
-        console.log('polling started count:', queryArry?.length);
+        //    console.log('polling started count:', queryArry?.length);
       }
     }
     trottleCheck();
@@ -61,12 +61,12 @@ const usePolling = (query, interval) => {
     queryArry.push(query);
     query.startPolling(interval);
     // prettier-ignore
-    console.log('polling');
+    //   console.log('polling');
     return () => {
       queryArry.splice(queryArry.indexOf(query), 1);
       query.stopPolling();
       // prettier-ignore
-      console.log('stop polling');
+    //  console.log('stop polling');
     };
   }, [query, interval]);
 };

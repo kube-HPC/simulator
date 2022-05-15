@@ -28,10 +28,11 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
       pipelineName: params?.pipelineName,
       pipelineStatus: params?.pipelineStatus,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params, zoomDate]);
   const query = useQuery(ALGORITHM_AND_PIPELINE_NAMES);
   const onFinish = values => {
-    console.log('Received values of form: ', values);
+    //   console.log('Received values of form: ', values);
     onSubmit(values);
   };
 

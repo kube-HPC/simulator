@@ -50,7 +50,7 @@ const JobsTable = () => {
     });
 
     return mergedParams;
-  }, [queryParams]);
+  }, [history, queryParams, urlParams.pathname, urlParams.search]); // [queryParams]
   // console.log(urlParams);
   const filterToggeled = useReactiveVar(filterToggeledVar);
   const query = useQuery(JOB_QUERY, {
@@ -74,9 +74,11 @@ const JobsTable = () => {
           ...initMergedParams,
         },
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [query, queryParams]
   );
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onZoomChanged = useCallback(data => {
     const datesRange = {
       from: new Date(data.min).toISOString(),
@@ -89,6 +91,7 @@ const JobsTable = () => {
     });
   });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onQuerySubmit = useCallback(values => {
     let datesRange = null;
     const { time, ...other } = values;
@@ -101,7 +104,7 @@ const JobsTable = () => {
     Object.values(other).forEach((element, index) => {
       element === '' ? (other[Object.keys(other)[index]] = undefined) : null;
     });
-    console.log({ ...other, datesRange });
+    //  console.log({ ...other, datesRange });
     setQueryParams({ ...initMergedParams, ...other, datesRange });
   });
 

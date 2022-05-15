@@ -25,7 +25,11 @@ const JobInfo = ({ job }) => {
   );
   const { key, graph, userPipeline = {}, pipeline } = job;
   const algorithms = pipeline.nodes.map(n => n.algorithmName);
-  const fetchJobTrace = useCallback(() => fetch({ jobId: key, algorithms }), [fetch, key]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const fetchJobTrace = useCallback(() => fetch({ jobId: key, algorithms }), [
+    fetch,
+    key,
+  ]);
 
   const refreshButton = currentTab === TABS.TRACE && (
     <Button onClick={fetchJobTrace} icon="redo">

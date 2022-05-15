@@ -53,15 +53,17 @@ const QueryDateChart = props => {
         },
         events: {
           zoomed(chartContext, { xaxis, yaxis }) {
+            // eslint-disable-next-line no-console
             console.log(chartContext, { xaxis, yaxis });
             props.onZoom(xaxis);
           },
           click(event, chartContext, config) {
+            // eslint-disable-next-line no-console
             console.log(event, chartContext, config);
           },
           dataPointSelection: (event, chartContext, config) => {
-            console.log(chartContext, config);
-            console.log(_histogram);
+            //  console.log(chartContext, config);
+            //  console.log(_histogram);
             props.onZoom({
               min:
                 _histogram.sections[config.dataPointIndex] -
