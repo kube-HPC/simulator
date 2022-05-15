@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
+// import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import { Ellipsis } from 'components/common';
 import { USER_GUIDE } from 'const';
-import { sorter, toUpperCaseFirstLetter } from 'utils/stringHelper';
+import { sorter } from 'utils/stringHelper';
 import JobActions from './JobActions';
 import NodeStats from './NodeStats';
 import JobPriority from './JobPriority';
@@ -19,8 +19,8 @@ const Id = jobID => (
 // const Name = pipelineName => <Ellipsis text={pipelineName} />;
 const Name = (text, record) => <Ellipsis text={record.pipeline.name} />;
 
-const StartTime = (startTime, { results }) => (
-  <JobTime startTime={startTime} results={results} />
+const StartTime = (text, record) => (
+  <JobTime startTime={record.pipeline.startTime} results={record.results} />
 );
 const Status = status => <JobStatus status={status} />;
 const Stats = status => <NodeStats status={status} />;
@@ -53,13 +53,13 @@ const Progress = (_, job) => (
 const sortPipelineName = (a, b) => sorter(a.pipeline.name, b.pipeline.name);
 const sortStartTime = (a, b) => a.pipeline.startTime - b.pipeline.startTime;
 const sortPriority = (a, b) => sorter(a.pipeline.priority, b.pipeline.priority);
-const onStatusFilter = (value, record) => record.status.status === value;
+// const onStatusFilter = (value, record) => record.status.status === value;
 const sortStatus = (a, b) => sorter(a.status.status, b.status.status);
 
-const statusFilter = Object.values(PIPELINE_STATUS).map(status => ({
-  text: toUpperCaseFirstLetter(status),
-  value: status,
-}));
+// const statusFilter = Object.values(PIPELINE_STATUS).map(status => ({
+//  text: toUpperCaseFirstLetter(status),
+//  value: status,
+// }));
 
 const jobColumns = [
   {
@@ -113,12 +113,12 @@ const jobColumns = [
     title: `Status`,
     dataIndex: ['status'],
     key: `job-status`,
-    filterMultiple: true,
-    filters: statusFilter,
+    //  filterMultiple: true,
+    //  filters: statusFilter,
     width: `8%`,
     align: `center`,
     sorter: sortStatus,
-    onFilter: onStatusFilter,
+    //  onFilter: onStatusFilter,
     render: Status,
   },
   {

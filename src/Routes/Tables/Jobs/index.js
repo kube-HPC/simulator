@@ -10,17 +10,18 @@ import { JOB_QUERY } from './../../../qraphql/queries';
 import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
+import QueryForm from './QueryTable/QueryForm';
 
 const jobsAmount = parseInt(process.env.REACT_APP_SLICE_JOBS, 10);
 const shouldSliceJobs = Number.isInteger(jobsAmount) && jobsAmount > 0;
-
+let limitAmount = 20;
 export { default as jobColumns } from './jobColumns';
 const rowKey = job => `job-${job.key}`;
 const JobsTable = () => {
   const query = useQuery(JOB_QUERY, {
-    variables: { limit: 20 },
+    variables: { limit: limitAmount },
   });
-
+  limitAmount = query?.data?.jobsAggregated.jobs?.length || limitAmount;
   usePolling(query, 3000);
 
   const { goTo } = usePath();
@@ -43,22 +44,25 @@ const JobsTable = () => {
   }, [query]);
 
   return (
-    <Table
-      fetchMore={() =>
-        query.fetchMore({
-          variables: {
-            cursor: query?.data?.jobsAggregated?.cursor,
-          },
-        })
-      }
-      loading={query.loading}
-      onRow={onRow}
-      rowKey={rowKey}
-      expandIcon={false}
-      columns={columns}
-      dataSource={_dataSource}
-      pagination={false}
-    />
+    <>
+      <QueryForm />
+      <Table
+        fetchMore={() =>
+          query.fetchMore({
+            variables: {
+              cursor: query?.data?.jobsAggregated?.cursor,
+            },
+          })
+        }
+        loading={query.loading}
+        onRow={onRow}
+        rowKey={rowKey}
+        expandIcon={false}
+        columns={columns}
+        dataSource={_dataSource}
+        pagination={false}
+      />
+    </>
   );
 };
 

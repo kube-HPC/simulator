@@ -10,6 +10,7 @@ import { useDebounceCallback } from '@react-hook/debounce';
 
 const AutoCompleteLong = styled(AntAutoComplete)`
   width: 100%;
+  /*border: 1px #e3dcdc;*/
 `;
 
 const selectorsMap = {
