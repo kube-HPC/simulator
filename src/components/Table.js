@@ -67,7 +67,7 @@ const Table = ({ dataSource, loading, ...props }) => {
         }
       },
       scroll: { y: 2000 },
-      debug: true,
+      //  debug: true,
     }),
     [dataSource]
   );
@@ -76,7 +76,7 @@ const Table = ({ dataSource, loading, ...props }) => {
     <TableWhite
       loading={loading}
       components={vt}
-      scroll={{ y: 900 }}
+      scroll={{ y: '90vh' }}
       className={USER_GUIDE.TABLE}
       expandIcon={ExpandIcon}
       dataSource={dataSource}
