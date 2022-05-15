@@ -1,5 +1,6 @@
 /* eslint-disable */
 import 'core-js/features/array';
+import './assets/collapseTransition.css';
 import { ErrorBoundary } from 'components';
 import React, { useEffect } from 'react';
 import { render } from 'react-dom';
@@ -7,6 +8,7 @@ import { Provider, useDispatch, useSelector } from 'react-redux';
 import { HashRouter as Router } from 'react-router-dom';
 import { ReusableProvider } from 'reusable';
 import { init } from 'actions/connection.action';
+import cache from 'cache';
 import { selectors } from 'reducers';
 import {
   createHttpLink,
@@ -21,52 +23,6 @@ import _ from 'lodash';
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:3000/graphql',
-});
-
-const cache = new InMemoryCache({
-  typePolicies: {
-    Query: {
-      fields: {
-        jobsAggregated: {
-          keyArgs: ['type'],
-          // eslint-skip-next-line
-          merge(existing = { jobs: [], cursor: '' }, incoming) {
-            const merged = {
-              cursor: incoming.cursor,
-              jobs: _.unionBy(
-                Object.values(existing?.jobs),
-                Object.values(incoming?.jobs),
-                'key'
-              ).sort((a, b) => {
-                return a.pipeline.startTime > b.pipeline.startTime ? -1 : 1;
-              }),
-            };
-            Object.values(merged.jobs).forEach((a, i) => {
-              if (Object.values(incoming.jobs).find(b => b.key === a.key)) {
-                merged.jobs[i] = Object.values(incoming.jobs).find(
-                  b => b.key === a.key
-                );
-              }
-            });
-            return merged;
-          },
-
-          read(
-            existing,
-            { args: { cursor, limit = existing?.length }, readField }
-          ) {
-            if (existing) {
-              return {
-                cursor: existing.cursor,
-                jobs: Object.values(existing.jobs),
-              };
-            }
-            return {};
-          },
-        },
-      },
-    },
-  },
 });
 
 const client = new ApolloClient({

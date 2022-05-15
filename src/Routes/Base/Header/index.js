@@ -1,11 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Route } from 'react-router-dom';
 import { FlexBox, Icons } from 'components/common';
 import { USER_GUIDE } from 'const';
 import { COLOR_LAYOUT } from 'styles';
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  FilterOutlined,
+} from '@ant-design/icons';
 import { useLeftSidebar } from 'hooks';
+import { filterToggeledVar } from 'cache';
+import { Badge } from 'antd';
+
 import AutoComplete from './AutoComplete';
 import ExperimentPicker from './ExperimentPicker.react';
 import HelpBar from './HelpBar.react';
@@ -37,6 +44,22 @@ const MiddleContainer = styled(FlexBox)`
   min-width: 60ch;
 `;
 
+const FilterButton = () => {
+  const [isFilterToggeled, setIsFilterToggeledColor] = useState(false);
+  const _color = isFilterToggeled ? '#2db7f5' : COLOR_LAYOUT.darkBorder;
+  return (
+    <Badge dot>
+      <FilterOutlined
+        style={{ fontSize: '24px', color: _color }}
+        onClick={() => {
+          filterToggeledVar(!filterToggeledVar());
+          setIsFilterToggeledColor(!isFilterToggeled);
+        }}
+      />
+    </Badge>
+  );
+};
+
 const Header = () => {
   const { toggle, isCollapsed } = useLeftSidebar();
 
@@ -49,6 +72,7 @@ const Header = () => {
         />
 
         <Route exact path="/jobs" component={ViewType} />
+        <Route exact path="/jobs" component={FilterButton} />
       </ButtonsContainer>
       <MiddleContainer>
         <ExperimentPicker />

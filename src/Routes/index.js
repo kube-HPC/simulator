@@ -28,6 +28,7 @@ const ContentMargin = styled(Layout.Content)`
   ::-webkit-scrollbar-thumb {
     border: 1px solid ${COLOR.darkGrey};
   }
+  overflow: hidden;
 `;
 
 const RightContainer = styled.aside`
