@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 const JOB_QUERY = gql`
-  query ExampleQuery {
-    jobsAggregated {
+query Query($cursor: String, $limit: Int) {
+  jobsAggregated(cursor: $cursor, limit: $limit) {
       jobs {
         key
         status {
@@ -46,6 +46,7 @@ const JOB_QUERY = gql`
 
         }
       }
+      cursor
     }
   }
 `;
