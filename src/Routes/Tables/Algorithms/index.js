@@ -14,7 +14,7 @@ const rowKey = ({ name }) => name;
 const AlgorithmsTable = () => {
   // const { collection } = useAlgorithm();
   const { goTo } = usePath();
-  const query = useQuery(ALGORITHMS_QUERY);
+  const query = useQuery(ALGORITHMS_QUERY, 10000);
   // usePolling(query, 3000);
 
   const onRow = ({ name }) => ({
