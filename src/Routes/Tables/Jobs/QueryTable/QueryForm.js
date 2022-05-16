@@ -20,7 +20,6 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
   useMemo(() => {
     params &&
       params.datesRange &&
-      zoomDate > localValueTimeChanged &&
       form.setFieldsValue({
         time: [moment(params.datesRange?.from), moment(params.datesRange?.to)],
       });
@@ -29,18 +28,10 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
       pipelineName: params?.pipelineName,
       status: params?.pipelineStatus,
     });
-  });
-
-  params &&
-    params.datesRange &&
-    zoomDate > localValueTimeChanged &&
-    form.setFieldsValue({
-      time: [moment(params.datesRange?.from), moment(params.datesRange?.to)],
-    });
+  }, [params, zoomDate]);
   const query = useQuery(ALGORITHM_AND_PIPELINE_NAMES);
-
   const onFinish = values => {
-    console.log('Received values of form: ', values);
+    // console.log('Received values of form: ', values);
     onSubmit(values);
   };
 
@@ -63,18 +54,17 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
     label: status,
   }));
 
-  // const getName = () => num = num + 1 && `bla ${num}`
-
   return (
     <Form
       layout="inline"
       form={form}
       initialValues={
-        params && {
-          //   time: [moment(params.datesRange?.from), moment(params.datesRange?.to)],
-          algorithmName: params.algorithmName,
-          pipelineName: params.pipelineName,
-          pipelineStatus: params.pipelineStatus,
+        params &&
+        {
+          // //  time: [moment(params.datesRange?.from), moment(params.datesRange?.to)],
+          // algorithmName: params.algorithmName,
+          // pipelineName: params.pipelineName,
+          // pipelineStatus: params.pipelineStatus,
         }
 
         // algorithm: params.algorithm,
@@ -98,6 +88,7 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
           showTime={{ format: 'HH:mm' }}
           format="YYYY-MM-DD HH:mm"
           onOpenChange={() => {
+            // eslint-disable-next-line no-unused-vars
             localValueTimeChanged = Date.now();
           }}
         />
@@ -137,6 +128,13 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
       </Form.Item>
     </Form>
   );
+};
+
+QueryForm.propTypes = {
+  onSubmit: PropTypes.func,
+};
+QueryForm.defaultProps = {
+  onSubmit: () => {},
 };
 
 QueryForm.propTypes = {
