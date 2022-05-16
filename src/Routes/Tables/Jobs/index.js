@@ -13,6 +13,8 @@ import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
 import QueryForm from './QueryTable/QueryForm';
+import QueryDateChart from './QueryTable/QueryDateChart';
+
 // import { _ } from 'core-js';
 
 const jobsAmount = parseInt(process.env.REACT_APP_SLICE_JOBS, 10);
@@ -70,6 +72,7 @@ const JobsTable = () => {
             setQueryParams({ ...queryParams, ...other, datesRange });
           }}
         />
+        <QueryDateChart dataSource={_dataSource} />
       </Collapse>
       <Table
         fetchMore={() =>
