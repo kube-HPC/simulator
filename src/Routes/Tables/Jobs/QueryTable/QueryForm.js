@@ -26,7 +26,7 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
     form.setFieldsValue({
       algorithmName: params?.algorithmName,
       pipelineName: params?.pipelineName,
-      status: params?.pipelineStatus,
+      pipelineStatus: params?.pipelineStatus,
     });
   }, [params, zoomDate]);
   const query = useQuery(ALGORITHM_AND_PIPELINE_NAMES);

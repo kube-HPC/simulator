@@ -33,10 +33,11 @@ const JobsTable = () => {
   const mergedParams = useMemo(() => {
     const locationParsed = qs.parse(urlParams.search, {
       ignoreQueryPrefix: true,
+      allowDots: true,
     });
     // const locationParsed = tempLocationParsed?.from && tempLocationParsed?.to ? { from: tempLocationParsed.from, to: tempLocationParsed.to } : null;
     const mergedItemsParams = { ...locationParsed, ...queryParams };
-    const _qParams = qs.stringify(mergedItemsParams);
+    const _qParams = qs.stringify(mergedParams, { allowDots: true });
     // const { datesRange, ...rest } = mergedItemsParams;
     // const _qParams = datesRange ?
     //   new URLSearchParams({ ...rest, from: datesRange?.from, to: datesRange?.to }).toString()
@@ -82,9 +83,9 @@ const JobsTable = () => {
       from: new Date(data.min).toISOString(),
       to: new Date(data.max).toISOString(),
     };
-    setQueryParams({ ...mergedParams, datesRange, limit: 0 });
+    setQueryParams({ ...mergedParams, datesRange, limit: 20 });
     zoomedChangedDate = Date.now();
-    query.fetchMore({ variables: { ...mergedParams, datesRange, limit: 0 } });
+    query.fetchMore({ variables: { ...mergedParams, datesRange, limit: 20 } });
   });
 
   const onQuerySubmit = useCallback(values => {
