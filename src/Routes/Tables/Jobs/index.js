@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, useHistory, useLocation } from 'react-router-dom';
+import qs from 'qs';
 import styled from 'styled-components';
 import useQueryHook from 'hooks/useQuery';
 import { Table } from 'components';
@@ -25,9 +26,34 @@ const rowKey = job => `job-${job.key}`;
 let zoomedChangedDate = Date.now();
 const JobsTable = () => {
   const [queryParams, setQueryParams] = useState({ limit: 20 });
+
+  const history = useHistory();
+  const urlParams = useLocation();
+
+  const mergedParams = useMemo(() => {
+    const locationParsed = qs.parse(urlParams.search, {
+      ignoreQueryPrefix: true,
+    });
+    // const locationParsed = tempLocationParsed?.from && tempLocationParsed?.to ? { from: tempLocationParsed.from, to: tempLocationParsed.to } : null;
+    const mergedItemsParams = { ...locationParsed, ...queryParams };
+    const _qParams = qs.stringify(mergedItemsParams);
+    // const { datesRange, ...rest } = mergedItemsParams;
+    // const _qParams = datesRange ?
+    //   new URLSearchParams({ ...rest, from: datesRange?.from, to: datesRange?.to }).toString()
+    //   : new URLSearchParams({ ...rest }).toString();
+
+    history.push({
+      pathname: urlParams.pathname,
+      //   search: urlParams.search === '' ? `?${_qParams}` : `${urlParams.search}&&${_qParams}`
+      search: `?${_qParams}`,
+    });
+
+    return mergedItemsParams;
+  }, [queryParams]);
+  // console.log(urlParams);
   const filterToggeled = useReactiveVar(filterToggeledVar);
   const query = useQuery(JOB_QUERY, {
-    variables: queryParams,
+    variables: mergedParams,
   });
   limitAmount = query?.data?.jobsAggregated.jobs?.length || limitAmount;
   usePolling(query, 3000);
@@ -40,6 +66,43 @@ const JobsTable = () => {
     }),
     [goTo]
   );
+  const onFetchMore = useCallback(
+    () =>
+      query.fetchMore({
+        variables: {
+          cursor: query?.data?.jobsAggregated?.cursor,
+          ...mergedParams,
+        },
+      }),
+    [query, queryParams]
+  );
+
+  const onZoomChanged = useCallback(data => {
+    const datesRange = {
+      from: new Date(data.min).toISOString(),
+      to: new Date(data.max).toISOString(),
+    };
+    setQueryParams({ ...mergedParams, datesRange, limit: 0 });
+    zoomedChangedDate = Date.now();
+    query.fetchMore({ variables: { ...mergedParams, datesRange, limit: 0 } });
+  });
+
+  const onQuerySubmit = useCallback(values => {
+    let datesRange = null;
+    const { time, ...other } = values;
+    time
+      ? (datesRange = {
+          from: time[0]?.toISOString(),
+          to: time[1]?.toISOString(),
+        })
+      : null;
+    Object.values(other).forEach((element, index) => {
+      element === '' ? (other[Object.keys(other)[index]] = undefined) : null;
+    });
+    console.log({ ...other, datesRange });
+
+    setQueryParams({ ...mergedParams, ...other, datesRange });
+  });
 
   const _dataSource = useMemo(() => {
     if (query && query.data) {
@@ -51,55 +114,22 @@ const JobsTable = () => {
     return [];
   }, [query]);
 
-  const params = useMemo(() => queryParams || {}, [queryParams]);
+  // const params = useMemo(() => {
+  //   return queryParams || {};
+  // }, [queryParams]);
 
   return (
     <>
       <Collapse isOpened={filterToggeled}>
         <QueryForm
           zoomDate={zoomedChangedDate}
-          onSubmit={values => {
-            let datesRange = null;
-            const { time, ...other } = values;
-            time
-              ? (datesRange = {
-                  from: time[0]?.toISOString(),
-                  to: time[1]?.toISOString(),
-                })
-              : null;
-            Object.values(other).forEach((element, index) => {
-              element === ''
-                ? (other[Object.keys(other)[index]] = undefined)
-                : null;
-            });
-            //  console.log({ ...other, datesRange });
-            setQueryParams({ ...queryParams, ...other, datesRange });
-          }}
-          params={params}
+          onSubmit={onQuerySubmit}
+          params={mergedParams}
         />
-        <QueryDateChart
-          dataSource={_dataSource}
-          onZoom={data => {
-            const datesRange = {
-              from: new Date(data.min).toISOString(),
-              to: new Date(data.max).toISOString(),
-            };
-            setQueryParams({ ...queryParams, datesRange, limit: 0 });
-            zoomedChangedDate = Date.now();
-            query.fetchMore({
-              variables: { ...queryParams, datesRange, limit: 0 },
-            });
-          }}
-        />
+        <QueryDateChart dataSource={_dataSource} onZoom={onZoomChanged} />
       </Collapse>
       <Table
-        fetchMore={() =>
-          query.fetchMore({
-            variables: {
-              cursor: query?.data?.jobsAggregated?.cursor,
-            },
-          })
-        }
+        fetchMore={onFetchMore}
         loading={query.loading}
         onRow={onRow}
         rowKey={rowKey}

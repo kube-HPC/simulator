@@ -1,20 +1,36 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import moment from 'moment';
 import { Form, Button, DatePicker, AutoComplete } from 'antd';
 import PropTypes from 'prop-types';
 import { pipelineStatuses } from '@hkube/consts';
 import { useQuery } from '@apollo/client';
 import { ALGORITHM_AND_PIPELINE_NAMES } from '../../../../qraphql/queries';
+// import { formatNode } from '../graphUtils';
 
 // import { filterToggeledVar } from 'cache';
 
 const { RangePicker } = DatePicker;
 // let num = 1;
-let localValueTimeChanged = '1';
+let localValueTimeChanged = 1;
 const QueryForm = ({ onSubmit, params, zoomDate }) => {
   //  const filterToggeled = useReactiveVar(filterToggeledVar);
 
   const [form] = Form.useForm();
+
+  useMemo(() => {
+    params &&
+      params.datesRange &&
+      zoomDate > localValueTimeChanged &&
+      form.setFieldsValue({
+        time: [moment(params.datesRange?.from), moment(params.datesRange?.to)],
+      });
+    form.setFieldsValue({
+      algorithmName: params?.algorithmName,
+      pipelineName: params?.pipelineName,
+      status: params?.pipelineStatus,
+    });
+  });
+
   params &&
     params.datesRange &&
     zoomDate > localValueTimeChanged &&
@@ -54,10 +70,11 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
       layout="inline"
       form={form}
       initialValues={
-        params &&
-        {
+        params && {
           //   time: [moment(params.datesRange?.from), moment(params.datesRange?.to)],
-          // algorithmName: getName()
+          algorithmName: params.algorithmName,
+          pipelineName: params.pipelineName,
+          pipelineStatus: params.pipelineStatus,
         }
 
         // algorithm: params.algorithm,
