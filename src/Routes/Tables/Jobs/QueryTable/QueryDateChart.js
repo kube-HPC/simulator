@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
-import _ from 'lodash';
+// import _ from 'lodash';
 import histogram from 'utils/histogram';
 import PropTypes from 'prop-types';
 
@@ -9,51 +9,78 @@ const QueryDateChart = props => {
 
   const dataForHistogram = dataSource?.map(d => ({
     id: d.key,
-    time: d.results.startTime,
+    time: d.results?.startTime,
   }));
-
-  // eslint-disable-next-line no-unused-vars
   const _histogram = histogram(
     dataForHistogram.map(d => d.time),
-    10
+    8
   );
 
-  _.groupBy(dataSource, 'results.timestamp');
-  console.log(dataSource);
+  //  _.groupBy(dataSource, 'results.timestamp');
+
+  // let calledFromZoomOut = false;
   const data = {
     series: [
       {
-        name: 'PRODUCT A',
-        data: [44, 55, 41, 67, 22, 43],
+        name: 'Hits',
+        data: _histogram?.values,
+        //  data: [13, 23, 20, 8, 13, 27, 41, 67, 22, 43],
       },
-      {
-        name: 'PRODUCT B',
-        data: [13, 23, 20, 8, 13, 27],
-      },
-      {
-        name: 'PRODUCT C',
-        data: [11, 17, 15, 15, 21, 14],
-      },
-      {
-        name: 'PRODUCT D',
-        data: [21, 7, 25, 13, 22, 8],
-      },
+      // {
+      //   name: 'PRODUCT B',
+      //   data: [13, 23, 20, 8, 13, 27, 41, 67, 22, 43],
+      // },
+      // {
+      //   name: 'PRODUCT C',
+      //   data: [11, 17, 15, 15, 21, 14, 41, 67, 22, 43],
+      // },
+      // {
+      //   name: 'PRODUCT D',
+      //   data: [21, 7, 25, 13, 22, 8, 41, 67, 22, 43],
+      // },
     ],
     options: {
       chart: {
         type: 'bar',
-        height: 350,
+        height: 250,
         stacked: true,
         toolbar: {
           show: true,
         },
+
         zoom: {
           enabled: true,
+        },
+        events: {
+          zoomed(chartContext, { xaxis, yaxis }) {
+            console.log(chartContext, { xaxis, yaxis });
+            props.onZoom(xaxis);
+          },
+          click(event, chartContext, config) {
+            console.log(event, chartContext, config);
+          },
+          dataPointSelection: (event, chartContext, config) => {
+            console.log(chartContext, config);
+            console.log(_histogram);
+            props.onZoom({
+              min:
+                _histogram.sections[config.dataPointIndex] -
+                _histogram.binWidth,
+              max:
+                _histogram.sections[config.dataPointIndex] +
+                _histogram.binWidth,
+            });
+          },
+          // updated: function (chartContext, config) {
+          //   console.log(chartContext, config);
+          //   chartContext.ctx.toolbar.handleZoomOut()
+          //   calledFromZoomOut = true;
+          // }
         },
       },
       responsive: [
         {
-          breakpoint: 480,
+          breakpoint: 100,
           options: {
             legend: {
               position: 'bottom',
@@ -66,26 +93,28 @@ const QueryDateChart = props => {
       plotOptions: {
         bar: {
           horizontal: false,
-          borderRadius: 10,
+          borderRadius: 2,
+          columnWidth: '70%',
+          barHeight: '70%',
+          // distributed: true,
         },
       },
       xaxis: {
         type: 'datetime',
-        categories: [
-          '01/01/2011 GMT',
-          '01/02/2011 GMT',
-          '01/03/2011 GMT',
-          '01/04/2011 GMT',
-          '01/05/2011 GMT',
-          '01/06/2011 GMT',
-        ],
+        categories:
+          _histogram && _histogram.sections && _histogram.sections.length > 0
+            ? _histogram?.sections?.map(s => new Date(s).toLocaleString())
+            : [],
       },
       legend: {
         position: 'right',
         offsetY: 40,
       },
       fill: {
+        //  type: 'pattern',
         opacity: 1,
+        colors: ['#4682b4'],
+        //  pattern: ''
       },
     },
   };
@@ -95,7 +124,7 @@ const QueryDateChart = props => {
         options={data.options}
         series={data.series}
         type="bar"
-        height={350}
+        height="250"
       />
     </div>
   );
@@ -103,8 +132,10 @@ const QueryDateChart = props => {
 QueryDateChart.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   dataSource: PropTypes.object,
+  onZoom: PropTypes.func.isRequired,
 };
 QueryDateChart.defaultProps = {
   dataSource: () => {},
 };
-export default QueryDateChart;
+
+export default React.memo(QueryDateChart);

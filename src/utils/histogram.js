@@ -1,9 +1,11 @@
+const isNumber = require('isnumber');
+
 const numbers = vals => {
   const nums = [];
   if (vals == null) return nums;
 
   for (let i = 0; i < vals.length; i++) {
-    if (this.isNumber(vals[i])) nums.push(+vals[i]);
+    if (isNumber(vals[i])) nums.push(+vals[i]);
   }
   return nums;
 };
@@ -49,7 +51,9 @@ const histogram = (vals, bins) => {
 
   const tempLeftEdge = midpoint - binWidth * Math.floor(bins / 2);
   const leftEdge = Math.round(tempLeftEdge);
-  const sections = vals.map(v => v + binWidth).filter(v => v >= leftEdge);
+  const sections = Array(10)
+    .fill()
+    .map((_, i) => (i + 1) * binWidth + leftEdge);
   // if (bins % 2 !== 0) {
   //     // odd bin count, center middle bin on midpoint
   //     var leftEdge = (midpoint - (binWidth / 2)) - (binWidth * Math.floor(bins / 2))

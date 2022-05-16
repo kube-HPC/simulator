@@ -22,6 +22,7 @@ const shouldSliceJobs = Number.isInteger(jobsAmount) && jobsAmount > 0;
 let limitAmount = 20;
 export { default as jobColumns } from './jobColumns';
 const rowKey = job => `job-${job.key}`;
+let zoomedChangedDate = Date.now();
 const JobsTable = () => {
   const [queryParams, setQueryParams] = useState({ limit: 20 });
   const filterToggeled = useReactiveVar(filterToggeledVar);
@@ -50,10 +51,13 @@ const JobsTable = () => {
     return [];
   }, [query]);
 
+  const params = useMemo(() => queryParams || {}, [queryParams]);
+
   return (
     <>
       <Collapse isOpened={filterToggeled}>
         <QueryForm
+          zoomDate={zoomedChangedDate}
           onSubmit={values => {
             let datesRange = null;
             const { time, ...other } = values;
@@ -71,8 +75,22 @@ const JobsTable = () => {
             //  console.log({ ...other, datesRange });
             setQueryParams({ ...queryParams, ...other, datesRange });
           }}
+          params={params}
         />
-        <QueryDateChart dataSource={_dataSource} />
+        <QueryDateChart
+          dataSource={_dataSource}
+          onZoom={data => {
+            const datesRange = {
+              from: new Date(data.min).toISOString(),
+              to: new Date(data.max).toISOString(),
+            };
+            setQueryParams({ ...queryParams, datesRange, limit: 0 });
+            zoomedChangedDate = Date.now();
+            query.fetchMore({
+              variables: { ...queryParams, datesRange, limit: 0 },
+            });
+          }}
+        />
       </Collapse>
       <Table
         fetchMore={() =>
