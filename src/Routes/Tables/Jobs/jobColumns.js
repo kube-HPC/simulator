@@ -23,6 +23,7 @@ const StartTime = (text, record) => (
   <JobTime startTime={record.pipeline.startTime} results={record.results} />
 );
 const Status = status => <JobStatus status={status} />;
+
 const Stats = status => <NodeStats status={status} />;
 // const Priority = priority => <JobPriority priority={priority} />;
 const Priority = (text, record) => (
@@ -73,7 +74,7 @@ const jobColumns = [
     title: `Pipeline Name`,
     dataIndex: ['pipeline', 'name'],
     key: `pipeline`,
-    width: `18%`,
+    width: `10%`,
     sorter: sortPipelineName,
     render: Name,
   },
@@ -81,7 +82,7 @@ const jobColumns = [
     title: `Start Time`,
     dataIndex: ['pipeline', 'startTime'],
     key: `Start timestamp`,
-    width: `10%`,
+    width: `15%`,
     sorter: sortStartTime,
     render: StartTime,
   },
@@ -97,7 +98,7 @@ const jobColumns = [
     dataIndex: ['pipeline', 'priority'],
     key: `priority`,
     align: `center`,
-    width: `15ch`,
+    width: `10%`,
     sorter: sortPriority,
     render: Priority,
   },
@@ -106,7 +107,7 @@ const jobColumns = [
     dataIndex: ['status'],
     key: `node-status`,
     align: `center`,
-    width: `20ch`,
+    width: `10%`,
     render: Stats,
   },
   {

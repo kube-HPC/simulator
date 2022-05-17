@@ -24,8 +24,12 @@ let limitAmount = 20;
 export { default as jobColumns } from './jobColumns';
 const rowKey = job => `job-${job.key}`;
 let zoomedChangedDate = Date.now();
+// const dateObj = new Date();
 const JobsTable = () => {
-  const [queryParams, setQueryParams] = useState({ limit: 20 });
+  const [queryParams, setQueryParams] = useState({
+    limit: 20,
+    // datesRange:{from:dateObj.setDate(dateObj.getDate()),to:dateObj.setDate(dateObj.getDate()-7)}
+  });
 
   const history = useHistory();
   const urlParams = useLocation();
@@ -37,7 +41,8 @@ const JobsTable = () => {
     });
     // const locationParsed = tempLocationParsed?.from && tempLocationParsed?.to ? { from: tempLocationParsed.from, to: tempLocationParsed.to } : null;
     const mergedItemsParams = { ...locationParsed, ...queryParams };
-    const _qParams = qs.stringify(mergedParams, { allowDots: true });
+    console.log('mergedItemsParams=', mergedItemsParams);
+    const _qParams = qs.stringify(mergedItemsParams, { allowDots: true });
     // const { datesRange, ...rest } = mergedItemsParams;
     // const _qParams = datesRange ?
     //   new URLSearchParams({ ...rest, from: datesRange?.from, to: datesRange?.to }).toString()

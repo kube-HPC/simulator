@@ -1,24 +1,24 @@
 import { gql } from '@apollo/client';
 
 const JOB_QUERY = gql`
-query Query(
-  $experimentName: String
-  $pipelineName: String
-  $algorithmName: String
-  $pipelineStatus: String
-  $datesRange: Range
-  $cursor: String
-  $limit: Int
-) {
-  jobsAggregated(
-    experimentName: $experimentName
-    pipelineName: $pipelineName
-    algorithmName: $algorithmName
-    pipelineStatus: $pipelineStatus
-    datesRange: $datesRange
-    cursor: $cursor
-    limit: $limit
+  query Query(
+    $experimentName: String
+    $pipelineName: String
+    $algorithmName: String
+    $pipelineStatus: String
+    $datesRange: Range
+    $cursor: String
+    $limit: Int
   ) {
+    jobsAggregated(
+      experimentName: $experimentName
+      pipelineName: $pipelineName
+      algorithmName: $algorithmName
+      pipelineStatus: $pipelineStatus
+      datesRange: $datesRange
+      cursor: $cursor
+      limit: $limit
+    ) {
       jobs {
         key
         status {
@@ -36,7 +36,6 @@ query Query(
         }
         cursor
         timeTook
-
         results {
           startTime
           pipeline
@@ -51,7 +50,7 @@ query Query(
             }
           }
           name
-
+        }
         pipeline {
           name
           experimentName
@@ -59,7 +58,6 @@ query Query(
           priority
           startTime
           types
-
         }
       }
       cursor
