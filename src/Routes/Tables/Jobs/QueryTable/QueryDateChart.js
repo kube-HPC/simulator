@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
-// import _ from 'lodash';
 import histogram from 'utils/histogram';
 import PropTypes from 'prop-types';
 
@@ -15,29 +14,13 @@ const QueryDateChart = props => {
     dataForHistogram.map(d => d.time),
     8
   );
-
-  //  _.groupBy(dataSource, 'results.timestamp');
-
   // let calledFromZoomOut = false;
   const data = {
     series: [
       {
         name: 'Hits',
         data: _histogram?.values,
-        //  data: [13, 23, 20, 8, 13, 27, 41, 67, 22, 43],
       },
-      // {
-      //   name: 'PRODUCT B',
-      //   data: [13, 23, 20, 8, 13, 27, 41, 67, 22, 43],
-      // },
-      // {
-      //   name: 'PRODUCT C',
-      //   data: [11, 17, 15, 15, 21, 14, 41, 67, 22, 43],
-      // },
-      // {
-      //   name: 'PRODUCT D',
-      //   data: [21, 7, 25, 13, 22, 8, 41, 67, 22, 43],
-      // },
     ],
     options: {
       chart: {
@@ -52,16 +35,17 @@ const QueryDateChart = props => {
           enabled: true,
         },
         events: {
-          zoomed(chartContext, { xaxis, yaxis }) {
-            console.log(chartContext, { xaxis, yaxis });
+          zoomed(chartContext, { xaxis }) {
+            // yaxis
+            //  console.log(chartContext, { xaxis, yaxis });
             props.onZoom(xaxis);
           },
-          click(event, chartContext, config) {
-            console.log(event, chartContext, config);
-          },
+          // click(event, chartContext, config) {
+          //  console.log(event, chartContext, config);
+          // },
           dataPointSelection: (event, chartContext, config) => {
-            console.log(chartContext, config);
-            console.log(_histogram);
+            //  console.log(chartContext, config);
+            //  console.log(_histogram);
             props.onZoom({
               min:
                 _histogram.sections[config.dataPointIndex] -
@@ -93,7 +77,7 @@ const QueryDateChart = props => {
       plotOptions: {
         bar: {
           horizontal: false,
-          borderRadius: 2,
+          borderRadius: 7,
           columnWidth: '70%',
           barHeight: '70%',
           // distributed: true,
@@ -103,7 +87,7 @@ const QueryDateChart = props => {
         type: 'datetime',
         categories:
           _histogram && _histogram.sections && _histogram.sections.length > 0
-            ? _histogram?.sections?.map(s => new Date(s).toLocaleString())
+            ? _histogram?.sections?.map(s => new Date(s).toISOString())
             : [],
       },
       legend: {
@@ -113,7 +97,7 @@ const QueryDateChart = props => {
       fill: {
         //  type: 'pattern',
         opacity: 1,
-        colors: ['#4682b4'],
+        colors: ['#008FFB'],
         //  pattern: ''
       },
     },

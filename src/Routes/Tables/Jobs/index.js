@@ -41,7 +41,7 @@ const JobsTable = () => {
     });
     // const locationParsed = tempLocationParsed?.from && tempLocationParsed?.to ? { from: tempLocationParsed.from, to: tempLocationParsed.to } : null;
     const mergedItemsParams = { ...locationParsed, ...queryParams };
-    console.log('mergedItemsParams=', mergedItemsParams);
+
     const _qParams = qs.stringify(mergedItemsParams, { allowDots: true });
     // const { datesRange, ...rest } = mergedItemsParams;
     // const _qParams = datesRange ?
@@ -56,7 +56,7 @@ const JobsTable = () => {
 
     return mergedItemsParams;
   }, [queryParams]);
-  // console.log(urlParams);
+
   const filterToggeled = useReactiveVar(filterToggeledVar);
   const query = useQuery(JOB_QUERY, {
     variables: mergedParams,
@@ -105,7 +105,7 @@ const JobsTable = () => {
     Object.values(other).forEach((element, index) => {
       element === '' ? (other[Object.keys(other)[index]] = undefined) : null;
     });
-    console.log({ ...other, datesRange });
+    // console.log({ ...other, datesRange });
 
     setQueryParams({ ...mergedParams, ...other, datesRange });
   });
@@ -143,6 +143,7 @@ const JobsTable = () => {
         columns={columns}
         dataSource={_dataSource}
         pagination={false}
+        isInfinity
       />
     </>
   );

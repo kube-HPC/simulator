@@ -12,6 +12,7 @@ export const instanceCounterVar = makeVar({
   dataSources: 0,
 });
 const cache = new InMemoryCache({
+  addTypename: false,
   typePolicies: {
     Query: {
       fields: {
