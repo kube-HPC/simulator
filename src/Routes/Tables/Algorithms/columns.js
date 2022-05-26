@@ -41,7 +41,7 @@ export default [
   },
   {
     title: 'Builds Stats',
-    dataIndex: ['builds'],
+    dataIndex: ['buildStats'],
     key: 'builds',
     render: BuildStats,
   },

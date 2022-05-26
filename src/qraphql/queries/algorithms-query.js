@@ -16,6 +16,15 @@ const ALGORITHMS_QUERY = gql`
       type
       algorithmImage
       version
+      buildStats {
+        total
+        pending
+        creating
+        active
+        completed
+        failed
+        stopped
+      }
       options {
         debug
         pending
