@@ -1,11 +1,10 @@
 import React, { useMemo } from 'react';
-// import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
 import { Table } from 'components';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import { Card, JsonSwitch, Tabs } from 'components/common';
 import defaultWorkerData from 'config/template/worker.template';
-import { selectors } from 'reducers';
+import { useWorkers } from 'hooks/qraphql';
+
 import { workersColumns, workersTableStats } from './columns';
 
 const generateTab = (key, value) => (
@@ -47,9 +46,7 @@ const ExpandedRow = collection => recordRow => {
 };
 
 const WorkersTable = () => {
-  const stats = useSelector(selectors.workers.stats);
-  const collection = useSelector(selectors.workers.all);
-
+  const { collection, stats } = useWorkers();
   const statsMergedWithDefault = useMemo(
     () =>
       stats?.stats?.map(algorithm => ({
