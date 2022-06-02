@@ -1,39 +1,31 @@
-import qs from 'querystring';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { message } from 'antd';
+
 import styled from 'styled-components';
 import { LogsViewer, Card } from 'components/common';
-import client from 'client';
 import useSettings from 'hooks/useSettings';
+import useLogs from 'hooks/qraphql/useLogs';
 
 const CardOverflow = styled(Card)`
   padding-bottom: 20px;
 `;
 
 const DriverLogs = ({ driverId, podName }) => {
-  const [logs, setLogs] = useState([]);
+  const [logsItems, setLogsItems] = useState([]);
   const { logSource: source } = useSettings();
 
+  const { logs } = useLogs({ podName, source, nodeKind: 'driver' });
+
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await client.get(
-          `/logs?${qs.stringify({ podName, source, nodeKind: 'driver' })}`
-        );
-        const logsMap = res.data.map((value, key) => ({ key, ...value }));
-        setLogs(logsMap);
-      } catch (e) {
-        message.error(e.message);
-      }
-    }
-    fetchData();
-  }, [podName, source]);
+    setLogsItems(logs.map((value, key) => ({ key, ...value } || [])));
+  }, [logs, podName, source]);
 
   return (
-    <CardOverflow bodyStyle={{ height: '20em' }}>
-      <LogsViewer dataSource={logs} id={driverId} />
-    </CardOverflow>
+    logsItems?.length > 0 && (
+      <CardOverflow bodyStyle={{ height: '20em' }}>
+        <LogsViewer dataSource={logsItems} id={driverId} />
+      </CardOverflow>
+    )
   );
 };
 

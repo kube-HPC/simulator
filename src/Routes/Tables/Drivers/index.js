@@ -5,6 +5,7 @@ import { Card } from 'components/common';
 import { selectors } from 'reducers';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import { useFilter } from 'hooks/useSearch';
+import useDrivers from 'hooks/qraphql/useDrivers';
 import {
   driversTableColumns,
   driverJobsTableColumns,
@@ -41,7 +42,8 @@ const ExpandedRow = (collection, filterValue) => record => {
 };
 
 const DriversTable = () => {
-  const collection = useSelector(selectors.drivers.all);
+  const { collection } = useDrivers();
+
   const filtered = useFilter(collection, ['podName', 'jobs']);
   const filterValue = useSelector(selectors.autoCompleteFilter);
 

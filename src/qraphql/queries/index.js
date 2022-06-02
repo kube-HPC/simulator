@@ -7,6 +7,9 @@ export { default as JOB_BY_ID_QUERY } from './job-by-id-query';
 export { default as ALGORITHM_BY_NAME_QUERY } from './algorithm-by-name-query';
 export { default as DISCOVERY_QUERY } from './discovery-query';
 export { default as WORKERS_ALL_QUERY } from './Workers/workers-query';
+export { default as DRIVERS_ALL_QUERY } from './Drivers/drivers-query';
+export { default as LOGS_QUERY } from './logs-query';
+
 export const names = {
   JOB_QUERY: 'JOB_QUERY',
   PIPELINE_QUERY: 'PIPELINE_QUERY',
@@ -17,4 +20,6 @@ export const names = {
   ALGORITHM_BY_NAME_QUERY: 'ALGORITHM_BY_NAME_QUERY',
   DISCOVERY_QUERY: 'DISCOVERY_QUERY',
   WORKERS_ALL_QUERY: 'WORKERS_ALL_QUERY',
+  DRIVERS_ALL_QUERY: 'DRIVERS_ALL_QUERY',
+  LOGS_QUERY: 'LOGS_QUERY',
 };
