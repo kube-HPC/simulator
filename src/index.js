@@ -8,27 +8,13 @@ import { Provider, useDispatch, useSelector } from 'react-redux';
 import { HashRouter as Router } from 'react-router-dom';
 import { ReusableProvider } from 'reusable';
 import { init } from 'actions/connection.action';
-import cache from 'cache';
 import { selectors } from 'reducers';
-import {
-  createHttpLink,
-  InMemoryCache,
-  ApolloProvider,
-  ApolloClient,
-} from '@apollo/client';
+import { ApolloProvider } from '@apollo/client';
+import { apolloClient } from 'qraphql/config';
 import GlobalThemes from './styles/themes/GlobalThemes';
 import Root from './Routes';
 import store from './store';
 import _ from 'lodash';
-
-const httpLink = createHttpLink({
-  uri: 'https://dev1.hkube.io/hkube/api-server/graphql',
-});
-
-const client = new ApolloClient({
-  link: httpLink,
-  cache,
-});
 
 const ConfigProvider = () => {
   // do not use the useActions hook
@@ -53,7 +39,7 @@ const ConfigProvider = () => {
 };
 
 render(
-  <ApolloProvider client={client}>
+  <ApolloProvider client={apolloClient}>
     <Provider store={store}>
       <ConfigProvider />
     </Provider>

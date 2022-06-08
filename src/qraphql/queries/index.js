@@ -10,6 +10,14 @@ export { default as WORKERS_ALL_QUERY } from './Workers/workers-query';
 export { default as DRIVERS_ALL_QUERY } from './Drivers/drivers-query';
 export { default as LOGS_QUERY } from './logs-query';
 
+export { default as MANAGED_LIST } from './QueueOrderJobs/managed-list-query';
+export { default as MANAGED_LIST_TAGS } from './QueueOrderJobs/managed-list-tags-query';
+export { default as MANAGED_LIST_PIPELINE } from './QueueOrderJobs/managed-list-pipeline-query';
+
+export { default as PREFERRED_LIST } from './QueueOrderJobs/preferred-list-query';
+export { default as PREFERRED_LIST_TAGS } from './QueueOrderJobs/preferred-list-tags-query';
+export { default as PREFERRED_LIST_PIPELINE } from './QueueOrderJobs/preferred-list-pipeline-query';
+
 export const names = {
   JOB_QUERY: 'JOB_QUERY',
   PIPELINE_QUERY: 'PIPELINE_QUERY',
@@ -21,5 +29,10 @@ export const names = {
   DISCOVERY_QUERY: 'DISCOVERY_QUERY',
   WORKERS_ALL_QUERY: 'WORKERS_ALL_QUERY',
   DRIVERS_ALL_QUERY: 'DRIVERS_ALL_QUERY',
-  LOGS_QUERY: 'LOGS_QUERY',
+  MANAGED_LIST: 'MANAGED_LIST',
+  MANAGED_LIST_TAGS: 'MANAGED_LIST_TAGS',
+  MANAGED_LIST_PIPELINE: 'MANAGED_LIST_PIPELINE',
+  PREFERRED_LIST: 'PREFERRED_LIST',
+  PREFERRED_LIST_TAGS: 'PREFERRED_LIST_TAGS',
+  PREFERRED_LIST_PIPELINE: 'PREFERRED_LIST_PIPELINE',
 };

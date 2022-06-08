@@ -314,16 +314,25 @@ class QueueOrderJobs extends React.Component {
 
         // get all jobsId need to move preferred by pipeline name
         if (filterQueueVal === TypeFilter.PIPELINE.toUpperCase()) {
-          const res = await orderApi.getManaged(null, null, name, null, count);
-          resultAllJobs = res.returnList;
+          resultAllJobs = await orderApi.getManaged(
+            null,
+            null,
+            name,
+            null,
+            count
+          );
         }
 
         // get all jobsId need to move preferred by tag name
         if (filterQueueVal === TypeFilter.TAG.toUpperCase()) {
           const tag = name.length > 0 ? name : '';
-
-          const res = await orderApi.getManaged(null, null, null, tag, count);
-          resultAllJobs = res.returnList;
+          resultAllJobs = await orderApi.getManaged(
+            null,
+            null,
+            null,
+            tag,
+            count
+          );
         }
 
         // set all jobsId need to move preferred in array
