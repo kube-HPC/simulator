@@ -3,7 +3,7 @@ import { Route } from 'react-router-dom';
 import { Table } from 'components';
 import { usePolling } from 'hooks';
 import { useQuery } from '@apollo/client';
-import { ALGORITHMS_QUERY } from 'qraphql/queries';
+import { ALGORITHMS_QUERY } from 'graphql/queries';
 import algorithmColumns from './columns';
 import usePath from './usePath';
 import OverviewDrawer from './OverviewDrawer';

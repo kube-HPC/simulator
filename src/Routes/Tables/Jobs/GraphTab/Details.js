@@ -11,7 +11,7 @@ import { Button, Empty, Tooltip } from 'antd';
 import { FlexBox, JsonSwitch } from 'components/common';
 import { useActions, useLogs, useSettings } from 'hooks';
 // import { selectors } from 'reducers';
-import { useAlgorithmByName } from 'hooks/qraphql';
+import { useAlgorithmByName } from 'hooks/graphql';
 import { getTaskDetails } from '../graphUtils';
 import NodeInputOutput from './NodeInputOutput';
 import NodeLogs from '../NodeLogs';

@@ -4,7 +4,7 @@ import { Form, Button, DatePicker, AutoComplete } from 'antd';
 import PropTypes from 'prop-types';
 import { pipelineStatuses } from '@hkube/consts';
 import { useQuery } from '@apollo/client';
-import { ALGORITHM_AND_PIPELINE_NAMES } from '../../../../qraphql/queries';
+import { ALGORITHM_AND_PIPELINE_NAMES } from '../../../../graphql/queries';
 // import { formatNode } from '../graphUtils';
 
 // import { filterToggeledVar } from 'cache';

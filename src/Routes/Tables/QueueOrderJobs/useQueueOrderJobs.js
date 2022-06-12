@@ -1,6 +1,6 @@
 import client from 'client';
 
-import { apolloClient } from 'qraphql/config';
+import { apolloClient } from 'graphql/config';
 
 import { TypeFilter, TypeTable } from 'const';
 import {
@@ -10,7 +10,7 @@ import {
   PREFERRED_LIST,
   PREFERRED_LIST_PIPELINE,
   PREFERRED_LIST_TAGS,
-} from 'qraphql/queries';
+} from 'graphql/queries';
 
 export const numberJobsPerPage = 9;
 const addToObjectKeyIndexId = (arrayObjects, typeElement) => {

@@ -1,4 +1,4 @@
-import { DRIVERS_ALL_QUERY } from 'qraphql/queries';
+import { DRIVERS_ALL_QUERY } from 'graphql/queries';
 import { usePolling } from 'hooks';
 import { useQuery } from '@apollo/client';
 

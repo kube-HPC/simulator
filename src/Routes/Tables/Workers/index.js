@@ -3,7 +3,7 @@ import { Table } from 'components';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import { Card, JsonSwitch, Tabs } from 'components/common';
 import defaultWorkerData from 'config/template/worker.template';
-import { useWorkers } from 'hooks/qraphql';
+import { useWorkers } from 'hooks/graphql';
 
 import { workersColumns, workersTableStats } from './columns';
 

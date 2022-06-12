@@ -10,7 +10,7 @@ import { ReusableProvider } from 'reusable';
 import { init } from 'actions/connection.action';
 import { selectors } from 'reducers';
 import { ApolloProvider } from '@apollo/client';
-import { apolloClient } from 'qraphql/config';
+import { apolloClient } from 'graphql/config';
 import GlobalThemes from './styles/themes/GlobalThemes';
 import Root from './Routes';
 import store from './store';

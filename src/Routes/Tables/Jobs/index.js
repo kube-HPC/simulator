@@ -9,7 +9,7 @@ import { useJobs, usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { Collapse } from 'react-collapse';
 import { filterToggeledVar } from 'cache';
-import { JOB_QUERY } from './../../../qraphql/queries';
+import { JOB_QUERY } from '../../../graphql/queries';
 import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';

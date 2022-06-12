@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { LogsViewer, Card } from 'components/common';
 import useSettings from 'hooks/useSettings';
-import useLogs from 'hooks/qraphql/useLogs';
+import useLogs from 'hooks/graphql/useLogs';
 
 const CardOverflow = styled(Card)`
   padding-bottom: 20px;

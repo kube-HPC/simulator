@@ -1,4 +1,4 @@
-import { LOGS_QUERY } from 'qraphql/queries';
+import { LOGS_QUERY } from 'graphql/queries';
 import { usePolling } from 'hooks';
 import { useQuery } from '@apollo/client';
 

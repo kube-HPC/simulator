@@ -22,7 +22,7 @@ import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
 import { instanceCounterVar } from 'cache';
 import { Theme, COLOR_LAYOUT } from 'styles';
 import { selectors } from 'reducers';
-import { useDiscovery } from 'hooks/qraphql';
+import { useDiscovery } from 'hooks/graphql';
 import { useReactiveVar } from '@apollo/client';
 
 // import { orderApi } from '../../../Routes/Tables/QueueOrderJobs/useQueueOrderJobs';

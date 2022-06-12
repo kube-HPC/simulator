@@ -1,5 +1,5 @@
 const { useQuery } = require('@apollo/client');
-const { ALGORITHM_BY_NAME_QUERY } = require('../../qraphql/queries');
+const { ALGORITHM_BY_NAME_QUERY } = require('../../graphql/queries');
 // const {usePolling} =require('./usePolling')
 
 const useAlgorithmByName = algorithmName =>

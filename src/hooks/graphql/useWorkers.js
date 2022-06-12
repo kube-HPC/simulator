@@ -1,4 +1,4 @@
-import { WORKERS_ALL_QUERY } from 'qraphql/queries';
+import { WORKERS_ALL_QUERY } from 'graphql/queries';
 import { usePolling } from 'hooks';
 import { useQuery } from '@apollo/client';
 import sum from 'hash-sum';

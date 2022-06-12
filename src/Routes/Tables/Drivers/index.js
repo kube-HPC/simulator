@@ -5,7 +5,7 @@ import { Card } from 'components/common';
 import { selectors } from 'reducers';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import { useFilter } from 'hooks/useSearch';
-import useDrivers from 'hooks/qraphql/useDrivers';
+import useDrivers from 'hooks/graphql/useDrivers';
 import {
   driversTableColumns,
   driverJobsTableColumns,

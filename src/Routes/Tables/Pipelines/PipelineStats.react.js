@@ -8,7 +8,7 @@ import { FlexBox } from 'components/common';
 import { StatusTag } from 'components/StatusTag';
 import { useBoards, usePolling } from 'hooks';
 import { useQuery } from '@apollo/client';
-import { PIPELINE_STATS_QUERY } from './../../../qraphql/queries';
+import { PIPELINE_STATS_QUERY } from '../../../graphql/queries';
 import BoardStatus from './TensorflowBoards/BoardStatus.react';
 
 const PipelineStats = ({ name, nodes }) => {
