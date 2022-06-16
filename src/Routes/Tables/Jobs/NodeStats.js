@@ -15,7 +15,6 @@ const NodeStats = ({ status, ...props }) => (
     style={style}
     // eslint-disable-next-line
     {...props}>
-    {console.log('status:', status)}
     {hasStatus(status) ? (
       Object.entries(status.data.states).map(
         // TODO: rename status field

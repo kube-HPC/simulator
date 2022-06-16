@@ -1,10 +1,15 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import moment from 'moment';
 import { Form, Button, DatePicker, AutoComplete } from 'antd';
+import {
+  ReloadOutlined,
+  SearchOutlined,
+  LoadingOutlined,
+} from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import { pipelineStatuses } from '@hkube/consts';
 import { useQuery } from '@apollo/client';
-import { ALGORITHM_AND_PIPELINE_NAMES } from '../../../../graphql/queries';
+import { ALGORITHM_AND_PIPELINE_NAMES } from 'graphql/queries';
 // import { formatNode } from '../graphUtils';
 
 // import { filterToggeledVar } from 'cache';
@@ -14,9 +19,18 @@ const { RangePicker } = DatePicker;
 let localValueTimeChanged = 1;
 const QueryForm = ({ onSubmit, params, zoomDate }) => {
   //  const filterToggeled = useReactiveVar(filterToggeledVar);
+  const [loadingJobs, setLoadingJobs] = useState(false);
 
   const [form] = Form.useForm();
 
+  const SubmitForm = () => {
+    setLoadingJobs(true);
+    form.submit();
+  };
+  const onReset = () => {
+    form.resetFields();
+    SubmitForm();
+  };
   useMemo(() => {
     params &&
       params.datesRange &&
@@ -54,6 +68,9 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
     label: status,
   }));
 
+  useEffect(() => {
+    setTimeout(setLoadingJobs(false), 3000);
+  }, [loadingJobs]);
   return (
     <Form
       layout="inline"
@@ -91,6 +108,7 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
             // eslint-disable-next-line no-unused-vars
             localValueTimeChanged = Date.now();
           }}
+          onChange={SubmitForm}
         />
       </Form.Item>
 
@@ -101,29 +119,42 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
           filterOption={(inputValue, option) =>
             option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
           }
+          allowClear
+          onChange={SubmitForm}
         />
       </Form.Item>
       <Form.Item label="Pipeline Status" name="pipelineStatus">
         <AutoComplete
+          allowClear
           style={{ width: '8vw', marginLeft: '1vw' }}
           options={pipelineStatusOptions}
           filterOption={(inputValue, option) =>
             option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
           }
+          onChange={SubmitForm}
         />
       </Form.Item>
       <Form.Item label="Algorithm Name" name="algorithmName">
         <AutoComplete
+          allowClear
           style={{ width: '8vw', marginLeft: '1vw' }}
           options={algorithmOptions}
           filterOption={(inputValue, option) =>
             option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
           }
+          onChange={SubmitForm}
         />
       </Form.Item>
+
       <Form.Item {...buttonItemLayout}>
-        <Button type="primary" htmlType="submit">
-          Submit
+        <Button htmlType="button" onClick={onReset} title="Reset">
+          <ReloadOutlined />
+        </Button>
+      </Form.Item>
+
+      <Form.Item {...buttonItemLayout}>
+        <Button type="primary" htmlType="submit" title="Search">
+          {loadingJobs ? <LoadingOutlined /> : <SearchOutlined />}
         </Button>
       </Form.Item>
     </Form>

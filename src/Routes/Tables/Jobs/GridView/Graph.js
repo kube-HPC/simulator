@@ -24,10 +24,10 @@ const EmptyHeight = styled(Empty)`
 const JobGraph = ({ graph, pipeline }) => {
   const normalizedPipeline = useMemo(
     () =>
-      pipeline.nodes.reduce(
+      pipeline.nodes?.reduce(
         (acc, item) => ({ ...acc, [item.nodeName]: item }),
         {}
-      ),
+      ) || {},
     [pipeline]
   );
 

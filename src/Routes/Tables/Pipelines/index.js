@@ -3,7 +3,7 @@ import { Route } from 'react-router-dom';
 import { Table } from 'components';
 import { usePolling } from 'hooks';
 import { useQuery } from '@apollo/client';
-import { PIPELINE_QUERY } from '../../../graphql/queries';
+import { PIPELINE_QUERY } from 'graphql/queries';
 import pipelineColumns from './pipelineColumns';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';

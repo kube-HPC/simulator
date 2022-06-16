@@ -9,7 +9,7 @@ import MissingIdError from 'components/MissingIdError';
 import useToggle from 'hooks/useToggle';
 import { useQuery } from '@apollo/client';
 import { usePolling } from 'hooks';
-import { JOB_BY_ID_QUERY } from '../../../graphql/queries';
+import { JOB_BY_ID_QUERY } from 'graphql/queries';
 import Info from './Info';
 import usePath from './usePath';
 import { DRAWER_TITLES } from '../../../const';

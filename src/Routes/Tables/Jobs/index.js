@@ -9,7 +9,7 @@ import { useJobs, usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { Collapse } from 'react-collapse';
 import { filterToggeledVar } from 'cache';
-import { JOB_QUERY } from '../../../graphql/queries';
+import { JOB_QUERY } from 'graphql/queries';
 import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
@@ -28,6 +28,7 @@ let zoomedChangedDate = Date.now();
 const JobsTable = () => {
   const [queryParams, setQueryParams] = useState({
     limit: 20,
+    // datesRange:null
     // datesRange:{from:dateObj.setDate(dateObj.getDate()),to:dateObj.setDate(dateObj.getDate()-7)}
   });
 
@@ -38,9 +39,13 @@ const JobsTable = () => {
     const locationParsed = qs.parse(urlParams.search, {
       ignoreQueryPrefix: true,
       allowDots: true,
+      skipNulls: true,
     });
     // const locationParsed = tempLocationParsed?.from && tempLocationParsed?.to ? { from: tempLocationParsed.from, to: tempLocationParsed.to } : null;
+
     const mergedItemsParams = { ...locationParsed, ...queryParams };
+    if (mergedItemsParams.datesRange === '')
+      delete mergedItemsParams.datesRange;
 
     const _qParams = qs.stringify(mergedItemsParams, { allowDots: true });
     // const { datesRange, ...rest } = mergedItemsParams;
@@ -84,10 +89,13 @@ const JobsTable = () => {
   );
 
   const onZoomChanged = useCallback(data => {
-    const datesRange = {
-      from: new Date(data.min).toISOString(),
-      to: new Date(data.max).toISOString(),
-    };
+    let datesRange = null;
+    if (data.min) {
+      datesRange = {
+        from: new Date(data.min).toISOString(),
+        to: new Date(data.max).toISOString(),
+      };
+    }
     setQueryParams({ ...mergedParams, datesRange, limit: 20 });
     zoomedChangedDate = Date.now();
     query.fetchMore({ variables: { ...mergedParams, datesRange, limit: 20 } });
@@ -117,6 +125,7 @@ const JobsTable = () => {
       }
       return query.data.jobsAggregated.jobs;
     }
+
     return [];
   }, [query]);
 

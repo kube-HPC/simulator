@@ -15,6 +15,7 @@ const QueryDateChart = props => {
     8
   );
   // let calledFromZoomOut = false;
+
   const data = {
     series: [
       {
@@ -22,30 +23,41 @@ const QueryDateChart = props => {
         data: _histogram?.values,
       },
     ],
+
     options: {
+      stroke: {
+        width: 0,
+      },
       chart: {
         type: 'bar',
         height: 250,
         stacked: true,
         toolbar: {
-          show: true,
+          tools: {
+            download: true,
+            selection: true,
+            zoom: true,
+            zoomin: true,
+            zoomout: true,
+            pan: false,
+            reset: false,
+            customIcons: [],
+          },
         },
 
         zoom: {
           enabled: true,
         },
         events: {
-          zoomed(chartContext, { xaxis }) {
+          zoomed(chartContext, { xaxis, yaxis }) {
             // yaxis
-            //  console.log(chartContext, { xaxis, yaxis });
+            console.log(chartContext, { xaxis, yaxis });
             props.onZoom(xaxis);
           },
           // click(event, chartContext, config) {
           //  console.log(event, chartContext, config);
           // },
           dataPointSelection: (event, chartContext, config) => {
-            //  console.log(chartContext, config);
-            //  console.log(_histogram);
             props.onZoom({
               min:
                 _histogram.sections[config.dataPointIndex] -
@@ -68,7 +80,7 @@ const QueryDateChart = props => {
           options: {
             legend: {
               position: 'bottom',
-              offsetX: -10,
+              offsetX: 10,
               offsetY: 0,
             },
           },
@@ -89,6 +101,7 @@ const QueryDateChart = props => {
           _histogram && _histogram.sections && _histogram.sections.length > 0
             ? _histogram?.sections?.map(s => new Date(s).toISOString())
             : [],
+        //  categories: _histogram && _histogram.sections && _histogram.sections.length > 0 ? _histogram?.sections?.map(s => new Date(s).toLocaleString()) : [],
       },
       legend: {
         position: 'right',

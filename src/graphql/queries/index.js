@@ -1,9 +1,10 @@
-export { default as JOB_QUERY } from './job-query';
+export { default as JOB_QUERY } from './Jobs/job-query';
+export { default as JOB_GRID_VIEW_QUERY } from './Jobs/jobs-grid-view-query';
 export { default as PIPELINE_QUERY } from './pipeline-query';
 export { default as PIPELINE_STATS_QUERY } from './pipeline-stats-query';
 export { default as ALGORITHMS_QUERY } from './algorithms-query';
 export { default as ALGORITHM_AND_PIPELINE_NAMES } from './algorithm-pipeline-names';
-export { default as JOB_BY_ID_QUERY } from './job-by-id-query';
+export { default as JOB_BY_ID_QUERY } from './Jobs/job-by-id-query';
 export { default as ALGORITHM_BY_NAME_QUERY } from './algorithm-by-name-query';
 export { default as DISCOVERY_QUERY } from './discovery-query';
 export { default as WORKERS_ALL_QUERY } from './Workers/workers-query';
@@ -20,6 +21,7 @@ export { default as PREFERRED_LIST_PIPELINE } from './QueueOrderJobs/preferred-l
 
 export const names = {
   JOB_QUERY: 'JOB_QUERY',
+  JOB_GRID_VIEW_QUERY: 'JOB_GRID_VIEW_QUERY',
   PIPELINE_QUERY: 'PIPELINE_QUERY',
   PIPELINE_STATS_QUERY: 'PIPELINE_STATS_QUERY',
   ALGORITHMS_QUERY: 'ALGORITHMS_QUERY',

@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Card, Ellipsis, FlexBox } from 'components/common';
-import { useJobs } from 'hooks';
+import { useJobsGrid } from 'hooks/graphql';
 import Graph from './Graph';
 import { generateStyles } from '../graphUtils';
 import JobActions from '../JobActions';
@@ -123,8 +123,10 @@ GridItems.propTypes = {
 };
 
 const JobsGridView = () => {
-  const { dataSource } = useJobs();
-  return <GridItems jobs={dataSource} />;
+  //  const { dataSource } = useJobs();
+  const { collection } = useJobsGrid();
+
+  return <GridItems jobs={collection} />;
 };
 
 export default memo(JobsGridView);
