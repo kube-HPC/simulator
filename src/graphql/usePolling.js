@@ -19,10 +19,11 @@ let isPolling = true;
 
 const _throttled = throttle(
   () => {
-    //  console.log('throttle');
+    // console.log('throttle Inactive Mode');
     isTrottle = true;
   },
-  10000,
+  1800,
+
   { trailing: false }
 );
 
@@ -53,7 +54,7 @@ const trottleCheck = () => {
       }
     }
     trottleCheck();
-  }, 30000);
+  }, 300000); // counter of "Inactive Mode"
 };
 
 const usePolling = (query, interval) => {

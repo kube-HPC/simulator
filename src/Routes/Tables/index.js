@@ -31,7 +31,7 @@ const Body = () => (
     <Route exact path="/drivers/:empty?" component={DriversTable} />
     <Route
       exact
-      path={['/datasources', '/datasources/:datasourceId?/*']}
+      path={['/datasources', '/datasources/:dataSourceId?/:dataSourceName?/*']}
       component={DataSources}
     />
     <Redirect to="/jobs" replace />

@@ -41,5 +41,5 @@ VersionRow.defaultProps = {
  */
 export const checkLatest = (collection, entry) => {
   if (!entry || !collection) return false;
-  return _.last(collection).id === entry.id;
+  return _.last(collection)?.id === entry?.id;
 };

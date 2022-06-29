@@ -49,9 +49,9 @@ const QueryDateChart = props => {
           enabled: true,
         },
         events: {
-          zoomed(chartContext, { xaxis, yaxis }) {
+          zoomed(chartContext, { xaxis }) {
             // yaxis
-            console.log(chartContext, { xaxis, yaxis });
+            // console.log(chartContext, { xaxis, yaxis });
             props.onZoom(xaxis);
           },
           // click(event, chartContext, config) {

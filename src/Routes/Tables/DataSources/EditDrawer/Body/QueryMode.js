@@ -1,4 +1,10 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import PropTypes from 'prop-types';
 import { CameraOutlined } from '@ant-design/icons';
 import { Form, Input } from 'antd';
@@ -7,6 +13,8 @@ import { useDispatch } from 'react-redux';
 import { snapshotsActions } from 'reducers/dataSources';
 import { RightAlignedButton, PanelButton } from 'components/Drawer';
 import { notification } from 'utils';
+import { usePreviewQuery } from 'hooks/graphql';
+
 import client from '../../../../../client';
 import FileBrowser from './FileBrowser';
 import {
@@ -47,30 +55,36 @@ const QueryMode = ({ dataSource, onDownload }) => {
   const dispatch = useDispatch();
   const [previewFiles, setPreviewFiles] = useState([]);
   const [showQuery, setShowQuery] = useState(false);
+  const [valuesPreviewQuery, setValuesPreviewQuery] = useState('');
   const [isPending, setPending] = useState(false);
   const { goTo } = usePath();
+
   const handleToggleQuery = useCallback(() => setShowQuery(state => !state), [
     setShowQuery,
   ]);
 
-  const handleTryQuery = useCallback(async () => {
+  const { dataPreviewQuery } = usePreviewQuery(
+    dataSource.id,
+    valuesPreviewQuery
+  );
+
+  useEffect(() => {
+    if (showQuery) {
+      setPreviewFiles(dataPreviewQuery);
+    }
+  }, [dataPreviewQuery, showQuery, valuesPreviewQuery]);
+
+  const handleTryQuery = useCallback(() => {
     form
       .validateFields(['query'])
-      .then(async values => {
-        try {
-          /** @type {import('axios').AxiosResponse<FileMeta[]>} */
-          const response = await client.post(
-            `/datasource/id/${dataSource.id}/snapshot/preview`,
-            { query: values.query }
-          );
-          setShowQuery(true);
-          return setPreviewFiles(response.data);
-        } catch (e) {
-          return notification({ message: e.message, type: 'error' });
-        }
+      .then(values => {
+        setValuesPreviewQuery(values);
+        setShowQuery(true);
+
+        // return notification({ message: e.message, type: 'error' });
       })
       .catch(null);
-  }, [dataSource, form, setPreviewFiles]);
+  }, [form]);
 
   const filteredFiles = useMemo(
     () => (showQuery ? previewFiles : dataSource.files),

@@ -172,8 +172,8 @@ const EditMode = ({
         onClose={hideModal}
         dataSource={dataSource}
         onAccept={onDelete}
-        isInternalGit={dataSource.git.kind === 'internal'}
-        isInternalStorage={dataSource.storage.kind === 'internal'}
+        isInternalGit={dataSource?.git?.kind === 'internal'}
+        isInternalStorage={dataSource?.storage?.kind === 'internal'}
       />
     </Form>
   );

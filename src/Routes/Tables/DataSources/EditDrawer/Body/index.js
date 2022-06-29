@@ -7,9 +7,12 @@ import { postVersion } from 'actions/dataSources';
 import DownloadLink from 'components/DownloadLink';
 import client from 'client';
 import { useActions } from 'hooks';
-import useVersions from 'hooks/dataSources/useVersions';
+
+// import useVersions from 'hooks/dataSources/useVersions';
+import { useVersions } from 'hooks/graphql';
+
 import { notification } from 'utils';
-import useActiveDataSource from '../../useActiveDataSource';
+// import useActiveDataSource from '../../useActiveDataSource';
 import TopPanel from './TopPanel';
 import EditMode from './EditMode';
 import ReadOnly from './ReadOnly';
@@ -19,22 +22,27 @@ import useActiveSnapshot from './useActiveSnapshot';
 
 /**
  * @typedef {import('./FileBrowser').RefContent} RefContent
+ *
  * @typedef {import('./stratifier').FlatFile} FlatFile
+ *
  * @typedef {import('antd/lib/upload/interface').UploadFile} UploadFile
+ *
  * @typedef {import('reducers/dataSources/datasource').DataSource} DataSource
+ *
  * @typedef {import('reducers/dataSources/datasource').Snapshot} Snapshot
+ *
  * @typedef {DataSource & { snapshot?: Snapshot; isSnapshot: boolean }} ExtendedDataSource
  */
 
-const Body = ({ goTo, mode }) => {
-  const { dataSource } = useActiveDataSource();
-  const versionsCollection = useVersions(dataSource);
+const Body = ({ goTo, mode, dataSource }) => {
+  const { versionsCollection } = useVersions(dataSource);
   const {
-    collection: snapshots,
+    snapshots,
     isReady: hasSnapshots,
     activeSnapshot,
     snapshotName,
-  } = useActiveSnapshot({ dataSourceName: dataSource.name });
+  } = useActiveSnapshot({ dataSourceName: dataSource?.name || '' });
+
   const dispatch = useDispatch();
   const { deleteDataSource } = useActions();
   const handleDelete = useCallback(
@@ -86,8 +94,8 @@ const Body = ({ goTo, mode }) => {
   );
 
   const isEditable = versionsCollection
-    ? dataSource.id === _.last(versionsCollection.versions).id &&
-      !dataSource.isSnapshot
+    ? dataSource?.id === _.last(versionsCollection.versions)?.id &&
+      !dataSource?.isSnapshot
     : false;
 
   return (
@@ -103,7 +111,7 @@ const Body = ({ goTo, mode }) => {
       <Switch>
         <Route
           exact
-          path="/datasources/:dataSourceId/:mode/snapshot/:snapshotName"
+          path="/datasources/:dataSourceId/:dataSourceName/:mode/snapshot/:snapshotName"
           render={() => (
             <PreviewSnapshot
               onDownload={onDownload}
@@ -114,16 +122,18 @@ const Body = ({ goTo, mode }) => {
         />
         <Route
           exact
-          path="/datasources/:dataSourceId/query"
-          render={() => (
-            <QueryMode onDownload={onDownload} dataSource={dataSource} />
-          )}
+          path="/datasources/:dataSourceId/:dataSourceName/query"
+          render={() =>
+            dataSource && (
+              <QueryMode onDownload={onDownload} dataSource={dataSource} />
+            )
+          }
         />
         <Route
           exact
-          path="/datasources/:dataSourceId/edit"
+          path="/datasources/:dataSourceId/:dataSourceName/edit"
           render={() =>
-            isEditable ? (
+            isEditable && dataSource ? (
               <EditMode
                 onDownload={onDownload}
                 onCreateVersion={onCreateVersion}
@@ -132,7 +142,9 @@ const Body = ({ goTo, mode }) => {
                 submittingStatus={versionsCollection.submittingStatus}
               />
             ) : (
-              <ReadOnly onDownload={onDownload} dataSource={dataSource} />
+              dataSource && (
+                <ReadOnly onDownload={onDownload} dataSource={dataSource} />
+              )
             )
           }
         />
@@ -148,6 +160,19 @@ Body.propTypes = {
     root: PropTypes.func.isRequired,
   }).isRequired,
   mode: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  dataSource: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    isSnapshot: PropTypes.bool.isRequired,
+    name: PropTypes.string.isRequired,
+    files: PropTypes.arrayOf(PropTypes.object).isRequired,
+    git: PropTypes.shape({
+      kind: PropTypes.string.isRequired,
+    }).isRequired,
+    storage: PropTypes.shape({
+      kind: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
 };
 
 export default Body;

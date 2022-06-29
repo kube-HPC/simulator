@@ -3,25 +3,39 @@ import { useHistory, useLocation, useParams } from 'react-router';
 /** @typedef {'query' | 'edit'} SideBarMode */
 
 export default () => {
-  const { dataSourceId, tabKey, mode, snapshotName } = useParams();
+  const {
+    dataSourceId,
+    dataSourceName,
+    tabKey,
+    mode,
+    snapshotName,
+  } = useParams();
+
   const history = useHistory();
   const location = useLocation();
 
   const paths = useMemo(
     () => ({
       root: '/datasources',
-      edit: ({ nextDataSourceId = dataSourceId } = {}) =>
-        `/datasources/${nextDataSourceId}/edit`,
-      query: ({ nextDataSourceId = dataSourceId } = {}) =>
-        `/datasources/${nextDataSourceId}/query`,
+      edit: ({
+        nextDataSourceId = dataSourceId,
+        nextDataSourceName = dataSourceName,
+      } = {}) => `/datasources/${nextDataSourceId}/${nextDataSourceName}/edit`,
+
+      query: ({
+        nextDataSourceId = dataSourceId,
+        nextDataSourceName = dataSourceName,
+      } = {}) => `/datasources/${nextDataSourceId}/${nextDataSourceName}/query`,
+
       snapshot: ({
         nextDataSourceId = dataSourceId,
+        nextDataSourceName = dataSourceName,
         nextSnapshotName = snapshotName,
         mode: _mode = mode,
       } = {}) =>
-        `/datasources/${nextDataSourceId}/${_mode}/snapshot/${nextSnapshotName}`,
+        `/datasources/${nextDataSourceId}/${nextDataSourceName}/${_mode}/snapshot/${nextSnapshotName}`,
     }),
-    [dataSourceId, mode, snapshotName]
+    [dataSourceId, dataSourceName, mode, snapshotName]
   );
 
   const goTo = useMemo(
@@ -31,20 +45,26 @@ export default () => {
           pathname: paths.root,
           search: location.search,
         }),
-      edit: ({ nextDataSourceId } = {}) =>
+      edit: ({ nextDataSourceId, nextDataSourceName } = {}) =>
         history.push({
-          pathname: paths.edit({ nextDataSourceId }),
+          pathname: paths.edit({ nextDataSourceId, nextDataSourceName }),
           search: location.search,
         }),
-      query: ({ nextDataSourceId } = {}) =>
+      query: ({ nextDataSourceId, nextDataSourceName } = {}) =>
         history.push({
-          pathname: paths.query({ nextDataSourceId }),
+          pathname: paths.query({ nextDataSourceId, nextDataSourceName }),
           search: location.search,
         }),
-      snapshot: ({ nextDataSourceId, nextSnapshotName, mode: _mode } = {}) =>
+      snapshot: ({
+        nextDataSourceId,
+        nextDataSourceName,
+        nextSnapshotName,
+        mode: _mode,
+      } = {}) =>
         history.push({
           pathname: paths.snapshot({
             nextDataSourceId,
+            nextDataSourceName,
             nextSnapshotName,
             mode: _mode,
           }),
@@ -56,6 +76,7 @@ export default () => {
 
   return {
     dataSourceId,
+    dataSourceName,
     goTo,
     paths,
     tabKey,

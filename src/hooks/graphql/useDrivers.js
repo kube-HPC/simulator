@@ -7,7 +7,7 @@ const useDrivers = () => {
   usePolling(query, 3000);
 
   const collection =
-    (query.data?.discovery && query.data?.discovery.pipelineDriver) || [];
+    (query.data?.discovery && query.data?.discovery?.pipelineDriver) || [];
 
   return {
     collection,

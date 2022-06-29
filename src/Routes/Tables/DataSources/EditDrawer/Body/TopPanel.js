@@ -7,7 +7,9 @@ import VersionSelect from './VersionSelect';
 
 /**
  * @typedef {import('reducers/dataSources/datasource').DataSource} DataSource
+ *
  * @typedef {import('reducers/dataSources/versions').VersionsStateEntry} Version
+ *
  * @typedef {import('reducers/dataSources/snapshots').Snapshot} Snapshot
  */
 const Container = styled.section`
@@ -46,6 +48,7 @@ const TopBar = ({
     typeof goTo[e.target.value] === 'function'
       ? goTo[e.target.value]({ nextDataSourceId: dataSource.id })
       : null;
+
   const isLatest = checkLatest(versionsCollection.versions, dataSource);
   return (
     <Container>

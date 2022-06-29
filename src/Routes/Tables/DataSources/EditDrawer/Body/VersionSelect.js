@@ -47,7 +47,6 @@ const Selector = ({
 }) => {
   const { paths, mode, goTo } = usePath();
   const location = useLocation();
-
   const isLatest = checkLatest(versions, dataSource);
 
   if (mode === 'edit' && !isLatest) goTo.query();
@@ -165,8 +164,9 @@ const Versions = ({
       []
     );
   }, [snapshots, versionsCollection]);
+
   const { snapshotName } = useActiveSnapshot({
-    dataSourceName: dataSource.name,
+    dataSourceName: dataSource?.name,
   });
 
   const handleCopy = useCallback(() => {
@@ -221,7 +221,7 @@ const Versions = ({
           ? ''
           : hasMissingSnapshot
           ? '<- version selector'
-          : dataSource.versionDescription}
+          : dataSource?.versionDescription}
       </VersionDescription>
     </>
   );

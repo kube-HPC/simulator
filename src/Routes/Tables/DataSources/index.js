@@ -8,8 +8,8 @@ const DataSourcesTables = () => (
     <DataSourcesGrid />
     <Route
       path={[
-        '/datasources/:dataSourceId/:mode/snapshot/:snapshotName',
-        '/datasources/:dataSourceId/:mode',
+        '/datasources/:dataSourceId/:dataSourceName/:mode/snapshot/:snapshotName',
+        '/datasources/:dataSourceId/:dataSourceName/:mode',
       ]}
       component={EditDrawer}
     />
