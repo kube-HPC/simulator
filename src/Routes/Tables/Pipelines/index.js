@@ -29,7 +29,7 @@ const PipelinesTable = () => {
       <Table
         rowKey={rowKey}
         //  dataSource={collection}
-        dataSource={query.data?.pipelines}
+        dataSource={query.data?.pipelines?.list}
         columns={pipelineColumns}
         onRow={onRow}
         expandIcon={false}

@@ -1,44 +1,47 @@
 import { gql } from '@apollo/client';
 
 const PIPELINE_QUERY = gql`
-  query Query {
+  query Pipelines {
     pipelines {
-      modified
-      kind
-      name
-      priority
-      experimentName
-      triggers {
-        cron {
-          enabled
-          pattern
+      list {
+        modified
+        kind
+        name
+        priority
+        experimentName
+        triggers {
+          cron {
+            enabled
+            pattern
+          }
+        }
+        options {
+          debug
+          pending
+          batchTolerance
+          progressVerbosityLevel
+          ttl
+          concurrentPipelines {
+            amount
+            rejectOnFailure
+          }
+        }
+        nodes {
+          nodeName
+          algorithmName
+          ttl
+          includeInResult
+          batchOperation
+          metrics {
+            tensorboard
+          }
+          retry {
+            policy
+            limit
+          }
         }
       }
-      options {
-        debug
-        pending
-        batchTolerance
-        progressVerbosityLevel
-        ttl
-        concurrentPipelines {
-          amount
-          rejectOnFailure
-        }
-      }
-      nodes {
-        nodeName
-        algorithmName
-        ttl
-        includeInResult
-        batchOperation
-        metrics {
-          tensorboard
-        }
-        retry {
-          policy
-          limit
-        }
-      }
+      pipelinesCount
     }
   }
 `;

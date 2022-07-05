@@ -67,7 +67,7 @@ const cache = new InMemoryCache({
           merge(_existing = { algorithms: [] }, incoming) {
             instanceCounterVar({
               ...instanceCounterVar(),
-              algorithms: incoming.length,
+              algorithms: incoming.list.length,
             });
             return incoming;
           },
@@ -77,7 +77,7 @@ const cache = new InMemoryCache({
           merge(_existing = { pipelines: [] }, incoming) {
             instanceCounterVar({
               ...instanceCounterVar(),
-              pipelines: incoming.length,
+              pipelines: incoming.list.length,
             });
             return incoming;
           },

@@ -27,7 +27,7 @@ const AlgorithmsTable = () => {
         onRow={onRow}
         rowKey={rowKey}
         columns={algorithmColumns}
-        dataSource={query.data?.algorithms}
+        dataSource={query.data?.algorithms?.list}
         expandIcon={false}
       />
       <Route
