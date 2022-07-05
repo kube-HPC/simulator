@@ -12,13 +12,13 @@ import { dataCountMock } from 'config';
 import { LEFT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
 import { ReactComponent as AlgorithmIcon } from 'images/algorithm-icon.svg';
 import { ReactComponent as DataSourceIcon } from 'images/datasource.svg';
-import { ReactComponent as DriversIcon } from 'images/drivers-icon.svg';
+
 import { ReactComponent as JobsIcon } from 'images/jobs-icon.svg';
 import { ReactComponent as QueueIcon } from 'images/Queue-icon.svg';
 import { ReactComponent as LogoFish } from 'images/logo-fish.svg';
 import { ReactComponent as LogoTitle } from 'images/logo-title.svg';
 import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
-import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
+
 import { instanceCounterVar } from 'cache';
 import { Theme, COLOR_LAYOUT } from 'styles';
 import { selectors } from 'reducers';
@@ -105,8 +105,8 @@ const menuItems = [
   [LEFT_SIDEBAR_NAMES.ALGORITHMS, AlgorithmIcon, '/algorithms'],
   [LEFT_SIDEBAR_NAMES.DATASOURCES, DataSourceIcon, '/datasources'],
   [LEFT_SIDEBAR_NAMES.QUEUE, QueueIcon, '/queue'],
-  [LEFT_SIDEBAR_NAMES.WORKERS, WorkerIcon, '/workers'],
-  [LEFT_SIDEBAR_NAMES.DRIVERS, DriversIcon, '/drivers'],
+  //  [LEFT_SIDEBAR_NAMES.WORKERS, WorkerIcon, '/workers'],
+  //  [LEFT_SIDEBAR_NAMES.DRIVERS, DriversIcon, '/drivers'],
 ];
 
 const Name = styled.span`
