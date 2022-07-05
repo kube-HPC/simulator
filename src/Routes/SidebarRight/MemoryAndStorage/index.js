@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import useMetric from 'hooks/useMetric';
 import { Empty } from 'antd';
-import { useStorage } from 'hooks';
+import { useStorage, useMetric } from 'hooks/graphql';
 import Bars from './Bars.react';
 import Storage from './Storage';
 import { Header } from './styles';

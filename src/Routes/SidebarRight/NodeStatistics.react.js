@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import { Theme } from 'styles/colors';
-import useMetric from 'hooks/useMetric';
+import { useMetric } from 'hooks/graphql';
 
 const Container = styled.div`
   margin-top: 150px;

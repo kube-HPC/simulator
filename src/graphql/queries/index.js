@@ -28,6 +28,10 @@ export { default as DATASOURCE_VERSIONS_QUERY } from './DataSources/datasource-v
 export { default as DATASOURCE_SNAPANSHOTS_QUERY } from './DataSources/dataSource-snapanshots-query';
 export { default as DATASOURCE_PREVIEW_QUERY } from './DataSources/dataSource-preview-query';
 
+export { default as ERROR_LOG_QUERY } from './error-log-query';
+export { default as DISK_SPACE_QUERY } from './disk-space-query';
+export { default as NODE_STATISTICS_QUERY } from './node-statistics-query';
+
 export const names = {
   JOB_QUERY: 'JOB_QUERY',
   JOB_GRID_VIEW_QUERY: 'JOB_GRID_VIEW_QUERY',
@@ -51,4 +55,7 @@ export const names = {
   DATASOURCE_VERSIONS_QUERY: 'DATASOURCE_VERSIONS_QUERY',
   DATASOURCE_SNAPANSHOTS_QUERY: 'DATASOURCE_SNAPANSHOTS_QUERY',
   DATASOURCES_LIST_QUERY: 'DATASOURCES_LIST_QUERY',
+  ERROR_LOG_QUERY: 'ERROR_LOG_QUERY',
+  DISK_SPACE_QUERY: 'DISK_SPACE_QUERY',
+  NODE_STATISTICS_QUERY: 'NODE_STATISTICS_QUERY',
 };

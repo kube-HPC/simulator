@@ -4,9 +4,8 @@ import styled from 'styled-components';
 import Icon from '@ant-design/icons';
 import { Layout, Menu, Badge } from 'antd';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { useErrorLogs } from 'hooks';
-import useStats from 'hooks/useStats';
-import useStorage from 'hooks/useStorage';
+import { useErrorLogs, useStats, useStorage } from 'hooks/graphql';
+// import useStorage from 'hooks/useStorage';
 import {
   getColorStatus,
   getStorageColorStatus,

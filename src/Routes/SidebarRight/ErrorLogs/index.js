@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 
-import { useErrorLogs } from 'hooks';
+// import { useErrorLogs } from 'hooks';
+import { useErrorLogs } from 'hooks/graphql';
 import { Table } from 'components';
 import { JsonSwitch, Card } from 'components/common';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
