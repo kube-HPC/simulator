@@ -13,8 +13,6 @@ const useVersions = dataSource => {
 
   const versionsCollection =
     {
-      active: '62a9d6097841d5cb5acb0435',
-      status: 'SUCCESS',
       versions: query.data?.DataSourceVersions || [],
     } || [];
 

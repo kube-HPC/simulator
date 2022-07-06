@@ -1,9 +1,9 @@
 import React, { useContext, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Radio, Select } from 'antd';
-import useVersions from 'hooks/dataSources/useVersions';
-import useDataSources from 'hooks/dataSources/useDataSources';
-import useSnapshots from 'hooks/dataSources/useSnapshots';
+import useVersions from 'hooks/graphql/DataSources/useVersions';
+import useDataSources from 'hooks/graphql/DataSources/useDataSource';
+import useSnapshots from 'hooks/graphql/DataSources/useSnapshots';
 import { VersionRow, checkLatest } from 'components/dataSourceVersions';
 import styled from 'styled-components';
 import useWizardContext from '../../useWizardContext';
@@ -41,15 +41,13 @@ const DataSourceNode = ({ id }) => {
   );
 
   const activeName = form.getFieldValue(['nodes', id, 'spec', 'name']);
-  const versionsCollection = useVersions({ name: activeName });
-  const snapshots = useSnapshots({ dataSourceName: activeName });
+  const { versionsCollection } = useVersions({ name: activeName });
+  const { snapshots } = useSnapshots({ dataSourceName: activeName });
 
   const handleChangeMode = useCallback(e => setMode(e.target.value), []);
 
-  const disableSnapshot =
-    !snapshots?.isReady ||
-    !snapshots?.collection ||
-    snapshots?.collection.length === 0;
+  const disableSnapshot = snapshots.length === 0;
+
   const disableVersions = !versionsCollection?.versions;
 
   return (
@@ -77,7 +75,7 @@ const DataSourceNode = ({ id }) => {
       {mode === MODES.SNAPSHOT ? (
         <Field name={['snapshot', 'name']} title="Snapshot Name">
           <Select disabled={disableSnapshot}>
-            {snapshots?.collection?.map(entry => (
+            {snapshots?.map(entry => (
               <Select.Option
                 key={`nodes.${id}.spec.version.${entry.id}`}
                 value={entry.name}>
