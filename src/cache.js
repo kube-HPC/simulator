@@ -11,6 +11,7 @@ export const instanceCounterVar = makeVar({
   workers: 0,
   dataSources: 0,
 });
+
 const cache = new InMemoryCache({
   addTypename: false,
   typePolicies: {
@@ -30,24 +31,27 @@ const cache = new InMemoryCache({
             const merged = {
               cursor: incoming.cursor,
               query: rest,
-              jobs: _.unionBy(
-                Object.values(existing?.jobs),
-                Object.values(incoming?.jobs),
-                'key'
-              ).sort((a, b) =>
-                a.pipeline.startTime > b.pipeline.startTime ? -1 : 1
-              ),
+              jobs:
+                incoming?.jobs &&
+                _.unionBy(
+                  Object.values(existing?.jobs),
+                  Object.values(incoming?.jobs),
+                  'key'
+                ).sort((a, b) =>
+                  a.pipeline.startTime > b.pipeline.startTime ? -1 : 1
+                ),
             };
-            Object.values(merged.jobs).forEach((a, i) => {
-              if (Object.values(incoming.jobs).find(b => b.key === a.key)) {
-                merged.jobs[i] = Object.values(incoming.jobs).find(
-                  b => b.key === a.key
-                );
-              }
-            });
+            merged.jobs &&
+              Object.values(merged.jobs).forEach((a, i) => {
+                if (Object.values(incoming.jobs).find(b => b.key === a.key)) {
+                  merged.jobs[i] = Object.values(incoming.jobs).find(
+                    b => b.key === a.key
+                  );
+                }
+              });
             instanceCounterVar({
               ...instanceCounterVar(),
-              jobs: merged?.jobs?.length,
+              jobs: merged?.jobs?.length || incoming.jobsCount || 0,
             });
             return merged;
           },
@@ -67,7 +71,8 @@ const cache = new InMemoryCache({
           merge(_existing = { algorithms: [] }, incoming) {
             instanceCounterVar({
               ...instanceCounterVar(),
-              algorithms: incoming.list.length,
+              algorithms:
+                incoming?.list?.length || incoming?.algorithmsCount || 0,
             });
             return incoming;
           },
@@ -77,7 +82,8 @@ const cache = new InMemoryCache({
           merge(_existing = { pipelines: [] }, incoming) {
             instanceCounterVar({
               ...instanceCounterVar(),
-              pipelines: incoming.list.length,
+              pipelines:
+                incoming?.list?.length || incoming?.pipelinesCount || 0,
             });
             return incoming;
           },

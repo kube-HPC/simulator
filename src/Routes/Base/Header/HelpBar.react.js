@@ -18,6 +18,7 @@ import { iconsThemes } from '../../../styles/themes/HelperThemes';
 import ConnectionStatus from './ConnectionStatus.react';
 import InactiveModeTag from './InactiveMode';
 import Settings from './Settings/Settings.react';
+import ExperimentPicker from './ExperimentPicker.react';
 
 const DarkText = styled.div`
   cursor: pointer;
@@ -50,6 +51,8 @@ const HelpBar = () => {
     <Container className={USER_GUIDE.HEADER.SOCIALS}>
       <ConnectionStatus />
       <InactiveModeTag />
+
+      <ExperimentPicker />
       <Icons.Hover
         type={
           <span

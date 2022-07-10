@@ -22,8 +22,10 @@ import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
 import { instanceCounterVar } from 'cache';
 import { Theme, COLOR_LAYOUT } from 'styles';
 import { selectors } from 'reducers';
-import { useDiscovery } from 'hooks/graphql';
+// import { useDiscovery } from 'hooks/graphql';
 import { useReactiveVar } from '@apollo/client';
+
+import { useCounters } from 'hooks/graphql';
 
 // import { orderApi } from '../../../Routes/Tables/QueueOrderJobs/useQueueOrderJobs';
 
@@ -94,8 +96,8 @@ const instanceCounterAdapter = obj => ({
   [LEFT_SIDEBAR_NAMES.QUEUE]: obj.queue || 0,
   [LEFT_SIDEBAR_NAMES.PIPELINES]: obj.pipelines,
   [LEFT_SIDEBAR_NAMES.ALGORITHMS]: obj.algorithms,
-  [LEFT_SIDEBAR_NAMES.WORKERS]: obj.workers,
-  [LEFT_SIDEBAR_NAMES.DRIVERS]: obj.drivers,
+  // [LEFT_SIDEBAR_NAMES.WORKERS]: obj.workers,
+  // [LEFT_SIDEBAR_NAMES.DRIVERS]: obj.drivers,
   [LEFT_SIDEBAR_NAMES.DATASOURCES]: obj.dataSources,
 });
 
@@ -114,9 +116,11 @@ const Name = styled.span`
 `;
 
 const SidebarLeft = () => {
-  useDiscovery();
+  // useDiscovery();
+  useCounters();
   const instanceCounter = useReactiveVar(instanceCounterVar);
   // const dataCountSource = useSelector(sidebarSelector, isEqual);
+
   const dataCountSource = instanceCounterAdapter(instanceCounter);
   const { isOn } = useSelector(selectors.userGuide);
   const location = useLocation();

@@ -31,6 +31,7 @@ export { default as DATASOURCE_PREVIEW_QUERY } from './DataSources/dataSource-pr
 export { default as ERROR_LOG_QUERY } from './error-log-query';
 export { default as DISK_SPACE_QUERY } from './disk-space-query';
 export { default as NODE_STATISTICS_QUERY } from './node-statistics-query';
+export { default as COUNTERS_QUERY } from './counters-query';
 
 export const names = {
   JOB_QUERY: 'JOB_QUERY',
@@ -58,4 +59,5 @@ export const names = {
   ERROR_LOG_QUERY: 'ERROR_LOG_QUERY',
   DISK_SPACE_QUERY: 'DISK_SPACE_QUERY',
   NODE_STATISTICS_QUERY: 'NODE_STATISTICS_QUERY',
+  COUNTERS_QUERY: 'COUNTERS_QUERY',
 };

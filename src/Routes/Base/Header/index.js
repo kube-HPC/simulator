@@ -14,7 +14,7 @@ import { filterToggeledVar } from 'cache';
 import { Badge } from 'antd';
 
 import AutoComplete from './AutoComplete';
-import ExperimentPicker from './ExperimentPicker.react';
+
 import HelpBar from './HelpBar.react';
 
 // DO NOT REMOVE! This is important to preload the monaco instance into the global window!!!
@@ -75,7 +75,6 @@ const Header = () => {
         <Route exact path="/jobs" component={FilterButton} />
       </ButtonsContainer>
       <MiddleContainer>
-        <ExperimentPicker />
         <Grow>
           <AutoComplete className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
         </Grow>
