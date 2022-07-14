@@ -14,7 +14,7 @@ const useCounters = () => {
     queue:
       (query?.data?.queueCount?.managed || 0) +
       (query?.data?.queueCount?.preferred || 0),
-    dataSources: 0,
+    dataSources: query?.data?.dataSources?.dataSourcesCount,
   };
 
   return {

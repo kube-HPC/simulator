@@ -1,12 +1,16 @@
 const { default: gql } = require('graphql-tag');
 
 const ALGORITHM_AND_PIPELINE_NAMES = gql`
-  query Query {
+  query List {
     algorithms {
-      name
+      list {
+        name
+      }
     }
     pipelines {
-      name
+      list {
+        name
+      }
     }
   }
 `;

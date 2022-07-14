@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Route, useHistory, useLocation } from 'react-router-dom';
 import qs from 'qs';
+// import moment from 'moment';
 import styled from 'styled-components';
 import useQueryHook from 'hooks/useQuery';
 import { Table } from 'components';
@@ -8,7 +9,7 @@ import { Card } from 'components/common';
 import { useJobs, usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { Collapse } from 'react-collapse';
-import { filterToggeledVar } from 'cache';
+import { filterToggeledVar, instanceFiltersVar } from 'cache';
 import { JOB_QUERY } from 'graphql/queries';
 import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
@@ -26,6 +27,8 @@ const rowKey = job => `job-${job.key}`;
 let zoomedChangedDate = Date.now();
 // const dateObj = new Date();
 const JobsTable = () => {
+  const instanceFilters = useReactiveVar(instanceFiltersVar);
+
   const [queryParams, setQueryParams] = useState({
     limit: 20,
     // datesRange:null
@@ -41,18 +44,35 @@ const JobsTable = () => {
       allowDots: true,
       skipNulls: true,
     });
-    // const locationParsed = tempLocationParsed?.from && tempLocationParsed?.to ? { from: tempLocationParsed.from, to: tempLocationParsed.to } : null;
 
-    const mergedItemsParams = { ...locationParsed, ...queryParams };
+    const iJobs = instanceFilters.jobs;
+    let itemsParams = { ...locationParsed };
+    if (
+      iJobs.pipelineName ||
+      iJobs.algorithmName ||
+      iJobs.pipelineStatus ||
+      (iJobs.datesRange.from && iJobs?.datesRange?.to)
+    ) {
+      itemsParams = {
+        ...(iJobs?.algorithmName && { algorithmName: iJobs?.algorithmName }),
+        ...(iJobs?.pipelineName && { pipelineName: iJobs?.pipelineName }),
+        ...(iJobs?.pipelineStatus && { pipelineStatus: iJobs?.pipelineStatus }),
+        ...(iJobs?.datesRange?.from &&
+          iJobs?.datesRange?.to && {
+            datesRange: {
+              from: iJobs?.datesRange?.from,
+              to: iJobs?.datesRange?.to,
+            },
+          }),
+      };
+    }
+
+    const mergedItemsParams = { ...itemsParams, ...queryParams };
+
     if (mergedItemsParams.datesRange === '')
       delete mergedItemsParams.datesRange;
 
     const _qParams = qs.stringify(mergedItemsParams, { allowDots: true });
-    // const { datesRange, ...rest } = mergedItemsParams;
-    // const _qParams = datesRange ?
-    //   new URLSearchParams({ ...rest, from: datesRange?.from, to: datesRange?.to }).toString()
-    //   : new URLSearchParams({ ...rest }).toString();
-
     history.push({
       pathname: urlParams.pathname,
       //   search: urlParams.search === '' ? `?${_qParams}` : `${urlParams.search}&&${_qParams}`

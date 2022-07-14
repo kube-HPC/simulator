@@ -7,7 +7,7 @@ const useDataSource = () => {
   const query = useQuery(DATASOURCES_LIST_QUERY);
   usePolling(query, 12000);
 
-  const dataSources = query.data?.dataSources || [];
+  const dataSources = query.data?.dataSources?.list || [];
 
   return {
     dataSources,

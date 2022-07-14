@@ -11,6 +11,21 @@ export const instanceCounterVar = makeVar({
   workers: 0,
   dataSources: 0,
 });
+export const instanceFiltersVar = makeVar({
+  jobs: {
+    limit: null,
+    pipelineName: null,
+    algorithmName: null,
+    pipelineStatus: null,
+    datesRange: { from: null, to: null },
+  },
+  pipelines: {
+    qPipelineName: null,
+  },
+  algorithms: {
+    qAlgorithmName: null,
+  },
+});
 
 const cache = new InMemoryCache({
   addTypename: false,
@@ -84,6 +99,17 @@ const cache = new InMemoryCache({
               ...instanceCounterVar(),
               pipelines:
                 incoming?.list?.length || incoming?.pipelinesCount || 0,
+            });
+            return incoming;
+          },
+        },
+        dataSources: {
+          // eslint-disable-next-line no-unused-vars
+          merge(_existing = { dataSources: [] }, incoming) {
+            instanceCounterVar({
+              ...instanceCounterVar(),
+              dataSources:
+                incoming?.list?.length || incoming?.dataSourcesCount || 0,
             });
             return incoming;
           },

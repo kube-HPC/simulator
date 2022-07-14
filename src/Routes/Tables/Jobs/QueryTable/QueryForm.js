@@ -8,17 +8,20 @@ import {
 } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import { pipelineStatuses } from '@hkube/consts';
-import { useQuery } from '@apollo/client';
+import { useQuery, useReactiveVar } from '@apollo/client';
 import { ALGORITHM_AND_PIPELINE_NAMES } from 'graphql/queries';
+
 // import { formatNode } from '../graphUtils';
 
 // import { filterToggeledVar } from 'cache';
+import { instanceFiltersVar } from 'cache';
 
 const { RangePicker } = DatePicker;
 // let num = 1;
 let localValueTimeChanged = 1;
 const QueryForm = ({ onSubmit, params, zoomDate }) => {
-  //  const filterToggeled = useReactiveVar(filterToggeledVar);
+  const instanceFilters = useReactiveVar(instanceFiltersVar);
+  console.log(instanceFilters);
   const [loadingJobs, setLoadingJobs] = useState(false);
 
   const [form] = Form.useForm();
@@ -31,12 +34,26 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
     form.resetFields();
     SubmitForm();
   };
+
   useMemo(() => {
+    const jobs = {
+      limit: 20,
+      algorithmName: params?.algorithmName || null,
+      pipelineName: params?.pipelineName || null,
+      pipelineStatus: params?.pipelineStatus || null,
+      datesRange: {
+        from: params?.datesRange?.from || null,
+        to: params?.datesRange?.to || null,
+      },
+    };
+    instanceFiltersVar({ ...instanceFiltersVar(), jobs });
+
     params &&
       params.datesRange &&
       form.setFieldsValue({
         time: [moment(params.datesRange?.from), moment(params.datesRange?.to)],
       });
+
     form.setFieldsValue({
       algorithmName: params?.algorithmName,
       pipelineName: params?.pipelineName,
@@ -55,11 +72,12 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
       offset: 4,
     },
   };
-  const algorithmOptions = query?.data?.algorithms?.map(algorithm => ({
+
+  const algorithmOptions = query?.data?.algorithms.list?.map(algorithm => ({
     value: algorithm.name,
     label: algorithm.name,
   }));
-  const pipelineOptions = query?.data?.pipelines.map(pipeline => ({
+  const pipelineOptions = query?.data?.pipelines.list.map(pipeline => ({
     value: pipeline.name,
     label: pipeline.name,
   }));

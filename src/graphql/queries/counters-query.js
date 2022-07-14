@@ -15,6 +15,9 @@ const COUNTERS_QUERY = gql`
       managed
       preferred
     }
+    dataSources {
+      dataSourcesCount
+    }
   }
 `;
 

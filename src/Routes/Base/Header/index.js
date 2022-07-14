@@ -16,6 +16,7 @@ import { Badge } from 'antd';
 import AutoComplete from './AutoComplete';
 
 import HelpBar from './HelpBar.react';
+import TagsFiltersViews from './TagsFiltersViews';
 
 // DO NOT REMOVE! This is important to preload the monaco instance into the global window!!!
 // eslint-disable-next-line
@@ -36,6 +37,11 @@ const Grow = styled(Item)`
 
 const ButtonsContainer = styled(FlexBox.Auto)`
   padding: 0 1ch;
+
+  div:empty {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
 `;
 
 const MiddleContainer = styled(FlexBox)`
@@ -73,6 +79,18 @@ const Header = () => {
 
         <Route exact path="/jobs" component={ViewType} />
         <Route exact path="/jobs" component={FilterButton} />
+        <Route exact path="/pipelines" component={FilterButton} />
+        <Route exact path="/algorithms" component={FilterButton} />
+
+        <Route exact path="/jobs">
+          <TagsFiltersViews filterName="jobs" />
+        </Route>
+        <Route exact path="/pipelines">
+          <TagsFiltersViews filterName="pipelines" />
+        </Route>
+        <Route exact path="/algorithms">
+          <TagsFiltersViews filterName="algorithms" />
+        </Route>
       </ButtonsContainer>
       <MiddleContainer>
         <Grow>
