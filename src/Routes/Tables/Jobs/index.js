@@ -1,7 +1,5 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { Route, useHistory, useLocation } from 'react-router-dom';
-import qs from 'qs';
-// import moment from 'moment';
+import React, { useCallback, useMemo } from 'react';
+import { Route } from 'react-router-dom';
 import styled from 'styled-components';
 import useQueryHook from 'hooks/useQuery';
 import { Table } from 'components';
@@ -17,8 +15,6 @@ import usePath from './usePath';
 import QueryForm from './QueryTable/QueryForm';
 import QueryDateChart from './QueryTable/QueryDateChart';
 
-// import { _ } from 'core-js';
-
 const jobsAmount = parseInt(process.env.REACT_APP_SLICE_JOBS, 10);
 const shouldSliceJobs = Number.isInteger(jobsAmount) && jobsAmount > 0;
 let limitAmount = 20;
@@ -28,75 +24,51 @@ let zoomedChangedDate = Date.now();
 // const dateObj = new Date();
 const JobsTable = () => {
   const instanceFilters = useReactiveVar(instanceFiltersVar);
-
-  const [queryParams, setQueryParams] = useState({
-    limit: 20,
-    // datesRange:null
-    // datesRange:{from:dateObj.setDate(dateObj.getDate()),to:dateObj.setDate(dateObj.getDate()-7)}
-  });
-
-  const history = useHistory();
-  const urlParams = useLocation();
-
-  const mergedParams = useMemo(() => {
-    const locationParsed = qs.parse(urlParams.search, {
-      ignoreQueryPrefix: true,
-      allowDots: true,
-      skipNulls: true,
-    });
-
-    const iJobs = instanceFilters.jobs;
-    let itemsParams = { ...locationParsed };
-    if (
-      iJobs.pipelineName ||
-      iJobs.algorithmName ||
-      iJobs.pipelineStatus ||
-      (iJobs.datesRange.from && iJobs?.datesRange?.to)
-    ) {
-      itemsParams = {
-        ...(iJobs?.algorithmName && { algorithmName: iJobs?.algorithmName }),
-        ...(iJobs?.pipelineName && { pipelineName: iJobs?.pipelineName }),
-        ...(iJobs?.pipelineStatus && { pipelineStatus: iJobs?.pipelineStatus }),
-        ...(iJobs?.datesRange?.from &&
-          iJobs?.datesRange?.to && {
-            datesRange: {
-              from: iJobs?.datesRange?.from,
-              to: iJobs?.datesRange?.to,
-            },
-          }),
-      };
-    }
-
-    const mergedItemsParams = { ...itemsParams, ...queryParams };
-
-    if (mergedItemsParams.datesRange === '')
-      delete mergedItemsParams.datesRange;
-
-    const _qParams = qs.stringify(mergedItemsParams, { allowDots: true });
-    history.push({
-      pathname: urlParams.pathname,
-      //   search: urlParams.search === '' ? `?${_qParams}` : `${urlParams.search}&&${_qParams}`
-      search: `?${_qParams}`,
-    });
-
-    return mergedItemsParams;
-  }, [queryParams]);
-
   const filterToggeled = useReactiveVar(filterToggeledVar);
-  const query = useQuery(JOB_QUERY, {
-    variables: mergedParams,
-  });
-  limitAmount = query?.data?.jobsAggregated.jobs?.length || limitAmount;
-  usePolling(query, 3000);
 
   const { goTo } = usePath();
   const { columns } = useJobs();
+
+  const mergedParams = useMemo(() => {
+    const iJobs = instanceFilters.jobs;
+
+    const items = {
+      algorithmName: iJobs?.algorithmName || undefined,
+      pipelineName: iJobs?.pipelineName || undefined,
+      pipelineStatus: iJobs?.pipelineStatus || undefined,
+      ...(iJobs?.datesRange?.from &&
+        iJobs?.datesRange?.to && {
+          datesRange: {
+            from: iJobs?.datesRange?.from,
+            to: iJobs?.datesRange?.to,
+          },
+        }),
+      limit: 20,
+    };
+
+    return items;
+  }, [
+    instanceFilters.jobs.algorithmName,
+    instanceFilters.jobs.pipelineName,
+    instanceFilters.jobs.pipelineStatus,
+    instanceFilters.jobs?.datesRange?.from,
+    instanceFilters.jobs?.datesRange?.to,
+  ]);
+
+  const query = useQuery(JOB_QUERY, {
+    variables: mergedParams,
+  });
+
+  limitAmount = query?.data?.jobsAggregated.jobs?.length || limitAmount;
+  usePolling(query, 3000);
+
   const onRow = useCallback(
     job => ({
       onDoubleClick: () => goTo.overview({ nextJobId: job.key }),
     }),
     [goTo]
   );
+
   const onFetchMore = useCallback(
     () =>
       query.fetchMore({
@@ -105,7 +77,7 @@ const JobsTable = () => {
           ...mergedParams,
         },
       }),
-    [query, queryParams]
+    [query]
   );
 
   const onZoomChanged = useCallback(data => {
@@ -116,7 +88,8 @@ const JobsTable = () => {
         to: new Date(data.max).toISOString(),
       };
     }
-    setQueryParams({ ...mergedParams, datesRange, limit: 20 });
+    // setQueryParams({ ...mergedParams, datesRange, limit: 20 });
+
     zoomedChangedDate = Date.now();
     query.fetchMore({ variables: { ...mergedParams, datesRange, limit: 20 } });
   });
@@ -124,18 +97,24 @@ const JobsTable = () => {
   const onQuerySubmit = useCallback(values => {
     let datesRange = null;
     const { time, ...other } = values;
+
     time
       ? (datesRange = {
           from: time[0]?.toISOString(),
           to: time[1]?.toISOString(),
         })
       : null;
+
     Object.values(other).forEach((element, index) => {
       element === '' ? (other[Object.keys(other)[index]] = undefined) : null;
     });
-    // console.log({ ...other, datesRange });
 
-    setQueryParams({ ...mergedParams, ...other, datesRange });
+    const stateInstanceFilter = { ...instanceFiltersVar() };
+    stateInstanceFilter.jobs = { ...other, datesRange };
+
+    instanceFiltersVar(stateInstanceFilter);
+
+    // setQueryParams({ ...mergedParams, ...other, datesRange });
   });
 
   const _dataSource = useMemo(() => {

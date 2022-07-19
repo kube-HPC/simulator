@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { filterToggeledVar, instanceFiltersVar } from 'cache';
 import styled from 'styled-components';
 import { Route } from 'react-router-dom';
 import { FlexBox, Icons } from 'components/common';
@@ -9,11 +10,10 @@ import {
   MenuUnfoldOutlined,
   FilterOutlined,
 } from '@ant-design/icons';
-import { useLeftSidebar } from 'hooks';
-import { filterToggeledVar } from 'cache';
+import { useLeftSidebar, useCacheFilters } from 'hooks';
 import { Badge } from 'antd';
 
-import AutoComplete from './AutoComplete';
+// import AutoComplete from './AutoComplete';
 
 import HelpBar from './HelpBar.react';
 import TagsFiltersViews from './TagsFiltersViews';
@@ -29,11 +29,11 @@ const Container = styled(FlexBox)`
   border-bottom: 1px solid ${COLOR_LAYOUT.border};
 `;
 
-const { Item } = FlexBox;
+// const { Item } = FlexBox;
 
-const Grow = styled(Item)`
+/* const Grow = styled(Item)`
   flex-grow: 1;
-`;
+`; */
 
 const ButtonsContainer = styled(FlexBox.Auto)`
   padding: 0 1ch;
@@ -44,11 +44,11 @@ const ButtonsContainer = styled(FlexBox.Auto)`
   }
 `;
 
-const MiddleContainer = styled(FlexBox)`
+/* const MiddleContainer = styled(FlexBox)`
   white-space: nowrap;
   flex-basis: 30%;
   min-width: 60ch;
-`;
+`; */
 
 const FilterButton = () => {
   const [isFilterToggeled, setIsFilterToggeledColor] = useState(false);
@@ -69,6 +69,12 @@ const FilterButton = () => {
 const Header = () => {
   const { toggle, isCollapsed } = useLeftSidebar();
 
+  const { filtersInitCacheItems } = useCacheFilters();
+
+  useEffect(() => {
+    instanceFiltersVar(filtersInitCacheItems);
+  }, []);
+
   return (
     <Container className={USER_GUIDE.WELCOME}>
       <ButtonsContainer>
@@ -83,20 +89,20 @@ const Header = () => {
         <Route exact path="/algorithms" component={FilterButton} />
 
         <Route exact path="/jobs">
-          <TagsFiltersViews filterName="jobs" />
+          <TagsFiltersViews sectionName="jobs" />
         </Route>
         <Route exact path="/pipelines">
-          <TagsFiltersViews filterName="pipelines" />
+          <TagsFiltersViews sectionName="pipelines" />
         </Route>
         <Route exact path="/algorithms">
-          <TagsFiltersViews filterName="algorithms" />
+          <TagsFiltersViews sectionName="algorithms" />
         </Route>
       </ButtonsContainer>
-      <MiddleContainer>
+      {/*  <MiddleContainer>
         <Grow>
           <AutoComplete className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
         </Grow>
-      </MiddleContainer>
+  </MiddleContainer> */}
       <HelpBar />
     </Container>
   );

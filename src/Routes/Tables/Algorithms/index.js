@@ -3,25 +3,22 @@ import { Route } from 'react-router-dom';
 import { Table } from 'components';
 import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
+import { Collapse } from 'react-collapse';
 import { filterToggeledVar } from 'cache';
 import { ALGORITHMS_QUERY } from 'graphql/queries';
-import { Collapse } from 'react-collapse';
-
-import algorithmColumns from './columns';
-import usePath from './usePath';
 import OverviewDrawer from './OverviewDrawer';
+import usePath from './usePath';
 import EditDrawer from './EditDrawer';
-
+import algorithmColumns from './columns';
 import AlgorithmsQueryTable from './AlgorithmsQueryTable';
 
-const rowKey = ({ name }) => name;
+const rowKey = ({ name }) => `algorithm-${name}`;
 
 const AlgorithmsTable = () => {
-  // const { collection } = useAlgorithm();
   const filterToggeled = useReactiveVar(filterToggeledVar);
-  const [algorithmsFilterList, setAlgorithmsFilterList] = useState([]);
-
+  const [algorithmFilterList, setAlgorithmFilterList] = useState([]);
   const { goTo } = usePath();
+
   const query = useQuery(ALGORITHMS_QUERY);
   usePolling(query, 10000);
 
@@ -30,13 +27,14 @@ const AlgorithmsTable = () => {
   });
 
   const onSubmitFilter = useCallback(values => {
-    if (values.qAlgorithmName) {
-      const filterPipeline = query.data?.algorithms?.list.filter(item =>
+    if (values?.qAlgorithmName) {
+      const filterAlgorithm = query.data?.algorithms?.list.filter(item =>
         item.name.includes(values.qAlgorithmName)
       );
-      setAlgorithmsFilterList(filterPipeline);
+
+      setAlgorithmFilterList(filterAlgorithm);
     } else {
-      setAlgorithmsFilterList(query.data?.algorithms?.list);
+      setAlgorithmFilterList(query.data?.algorithms?.list);
     }
   });
 
@@ -48,11 +46,13 @@ const AlgorithmsTable = () => {
           onSubmit={onSubmitFilter}
         />
       </Collapse>
+
       <Table
-        onRow={onRow}
         rowKey={rowKey}
+        //  dataSource={collection}
+        dataSource={algorithmFilterList}
         columns={algorithmColumns}
-        dataSource={algorithmsFilterList}
+        onRow={onRow}
         expandIcon={false}
       />
       <Route
@@ -65,4 +65,4 @@ const AlgorithmsTable = () => {
   );
 };
 
-export default React.memo(AlgorithmsTable);
+export default AlgorithmsTable;

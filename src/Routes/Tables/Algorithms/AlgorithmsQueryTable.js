@@ -1,34 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Form, AutoComplete } from 'antd';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import qs from 'qs';
-
-import { useReactiveVar } from '@apollo/client'; // useReactiveVar
-// import { ALGORITHM_AND_PIPELINE_NAMES } from 'graphql/queries';
+import { useReactiveVar } from '@apollo/client';
 import { instanceFiltersVar } from 'cache';
 
 const AlgorithmsQueryTable = ({ onSubmit, algorithmsList }) => {
-  const history = useHistory();
+  const firstUpdate = useRef(true);
   const urlParams = useLocation();
-
   const instanceFilters = useReactiveVar(instanceFiltersVar);
-
-  // const [loadingPipeLines, setLoadingPipeLines] = useState(false);
 
   const [form] = Form.useForm();
 
   const SubmitForm = values => {
-    const _qParams = qs.stringify(
-      { qAlgorithmName: values },
-      { allowDots: true }
-    );
-
-    history.push({
-      pathname: urlParams.pathname,
-      search: values !== '' ? `?${_qParams}` : '',
-    });
-
     const algorithms = {
       qAlgorithmName: values || null,
     };
@@ -38,31 +23,40 @@ const AlgorithmsQueryTable = ({ onSubmit, algorithmsList }) => {
     form.submit();
   };
 
-  // const onReset = () => {
-  //  form.resetFields();
-  //  SubmitForm();
-  // };
-
   useEffect(() => {
-    const locationParsedParams = qs.parse(urlParams.search, {
-      ignoreQueryPrefix: true,
-      allowDots: true,
-      skipNulls: true,
-    });
-
-    const AlgorithmNameParam =
-      instanceFilters?.algorithms?.qAlgorithmName ||
-      locationParsedParams?.qAlgorithmName ||
-      '';
-
-    if (AlgorithmNameParam) {
-      form.setFieldsValue({
-        qAlgorithmName: AlgorithmNameParam,
+    const isFilterObjEmpty = !Object.values(instanceFilters.algorithms).some(
+      x => x != null
+    );
+    let paramsAlgorithm;
+    if (isFilterObjEmpty) {
+      const paramsUrl = qs.parse(urlParams.search, {
+        ignoreQueryPrefix: true,
+        allowDots: true,
+        skipNulls: true,
       });
+      paramsAlgorithm = paramsUrl.qAlgorithmsName;
+    } else {
+      paramsAlgorithm = instanceFilters.algorithms.qAlgorithmName;
     }
 
-    SubmitForm(AlgorithmNameParam);
+    form.setFieldsValue({
+      qAlgorithmName: paramsAlgorithm,
+    });
+    SubmitForm(paramsAlgorithm || null);
   }, [algorithmsList]);
+
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+
+    if (!instanceFilters.algorithms.qAlgorithmName) {
+      form.resetFields();
+
+      form.submit();
+    }
+  }, [instanceFilters.algorithms.qAlgorithmName]);
 
   const onFinish = values => {
     onSubmit(values);
@@ -73,15 +67,11 @@ const AlgorithmsQueryTable = ({ onSubmit, algorithmsList }) => {
     label: algorithm.name,
   }));
 
-  // useEffect(() => {
-  // setTimeout(setLoadingPipeLines(false), 3000);
-  // }, [loadingPipeLines]);
   return (
     <Form
       layout="inline"
       form={form}
       style={{
-        justifyContent: 'space-around',
         border: '1px solid #d9d9d9',
         borderRadius: '2px',
         margin: '4px',
@@ -120,4 +110,4 @@ AlgorithmsQueryTable.propTypes = {
 AlgorithmsQueryTable.defaultProps = {
   onSubmit: () => {},
 };
-export default React.memo(AlgorithmsQueryTable);
+export default AlgorithmsQueryTable;

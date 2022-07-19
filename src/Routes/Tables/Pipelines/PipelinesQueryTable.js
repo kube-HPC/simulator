@@ -1,34 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Form, AutoComplete } from 'antd';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import qs from 'qs';
-
-import { useReactiveVar } from '@apollo/client'; // useReactiveVar
-// import { ALGORITHM_AND_PIPELINE_NAMES } from 'graphql/queries';
+import { useReactiveVar } from '@apollo/client';
 import { instanceFiltersVar } from 'cache';
 
 const PipelinesQueryTable = ({ onSubmit, pipelinesList }) => {
-  const history = useHistory();
+  const firstUpdate = useRef(true);
   const urlParams = useLocation();
-
   const instanceFilters = useReactiveVar(instanceFiltersVar);
-
-  // const [loadingPipeLines, setLoadingPipeLines] = useState(false);
 
   const [form] = Form.useForm();
 
   const SubmitForm = values => {
-    const _qParams = qs.stringify(
-      { qPipelineName: values },
-      { allowDots: true }
-    );
-
-    history.push({
-      pathname: urlParams.pathname,
-      search: values !== '' ? `?${_qParams}` : '',
-    });
-
     const pipelines = {
       qPipelineName: values || null,
     };
@@ -38,35 +23,40 @@ const PipelinesQueryTable = ({ onSubmit, pipelinesList }) => {
     form.submit();
   };
 
-  // const onReset = () => {
-  //  form.resetFields();
-  //  SubmitForm();
-  // };
-
   useEffect(() => {
-    console.log(instanceFilters);
-  }, [instanceFilters]);
-
-  useEffect(() => {
-    const locationParsedParams = qs.parse(urlParams.search, {
-      ignoreQueryPrefix: true,
-      allowDots: true,
-      skipNulls: true,
-    });
-
-    const pipelineNameParam =
-      instanceFilters?.pipelines?.qPipelineName ||
-      locationParsedParams?.qPipelineName ||
-      '';
-
-    if (pipelineNameParam) {
-      form.setFieldsValue({
-        qPipelineName: pipelineNameParam,
+    const isFilterObjEmpty = !Object.values(instanceFilters.pipelines).some(
+      x => x != null
+    );
+    let paramsPipeline;
+    if (isFilterObjEmpty) {
+      const paramsUrl = qs.parse(urlParams.search, {
+        ignoreQueryPrefix: true,
+        allowDots: true,
+        skipNulls: true,
       });
+      paramsPipeline = paramsUrl.qPipelineName;
+    } else {
+      paramsPipeline = instanceFilters.pipelines.qPipelineName;
     }
 
-    SubmitForm(pipelineNameParam);
+    form.setFieldsValue({
+      qPipelineName: paramsPipeline,
+    });
+    SubmitForm(paramsPipeline || null);
   }, [pipelinesList]);
+
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+
+    if (!instanceFilters.pipelines.qPipelineName) {
+      form.resetFields();
+
+      form.submit();
+    }
+  }, [instanceFilters.pipelines.qPipelineName]);
 
   const onFinish = values => {
     onSubmit(values);
@@ -77,15 +67,11 @@ const PipelinesQueryTable = ({ onSubmit, pipelinesList }) => {
     label: pipeline.name,
   }));
 
-  // useEffect(() => {
-  // setTimeout(setLoadingPipeLines(false), 3000);
-  // }, [loadingPipeLines]);
   return (
     <Form
       layout="inline"
       form={form}
       style={{
-        justifyContent: 'space-around',
         border: '1px solid #d9d9d9',
         borderRadius: '2px',
         margin: '4px',
@@ -124,4 +110,4 @@ PipelinesQueryTable.propTypes = {
 PipelinesQueryTable.defaultProps = {
   onSubmit: () => {},
 };
-export default React.memo(PipelinesQueryTable);
+export default PipelinesQueryTable;

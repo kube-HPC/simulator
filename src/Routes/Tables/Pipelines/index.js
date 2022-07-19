@@ -6,6 +6,7 @@ import { useQuery, useReactiveVar } from '@apollo/client';
 import { PIPELINE_QUERY } from 'graphql/queries';
 import { Collapse } from 'react-collapse';
 import { filterToggeledVar } from 'cache';
+
 import pipelineColumns from './pipelineColumns';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
@@ -18,10 +19,9 @@ const rowKey = ({ name }) => `pipeline-${name}`;
 const PipelinesTable = () => {
   const filterToggeled = useReactiveVar(filterToggeledVar);
   const [pipelineFilterList, setPipelineFilterList] = useState([]);
-  //  const { collection } = usePipeline();
   const { goTo } = usePath();
-  const query = useQuery(PIPELINE_QUERY);
 
+  const query = useQuery(PIPELINE_QUERY);
   usePolling(query, 3000);
 
   const onRow = useCallback(
@@ -32,10 +32,11 @@ const PipelinesTable = () => {
   );
 
   const onSubmitFilter = useCallback(values => {
-    if (values.qPipelineName) {
+    if (values?.qPipelineName) {
       const filterPipeline = query.data?.pipelines?.list.filter(item =>
         item.name.includes(values.qPipelineName)
       );
+
       setPipelineFilterList(filterPipeline);
     } else {
       setPipelineFilterList(query.data?.pipelines?.list);
@@ -69,4 +70,4 @@ const PipelinesTable = () => {
   );
 };
 
-export default React.memo(PipelinesTable);
+export default PipelinesTable;

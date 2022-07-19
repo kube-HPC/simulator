@@ -1,7 +1,7 @@
 import { InMemoryCache, makeVar } from '@apollo/client';
 import _ from 'lodash';
 
-export const filterToggeledVar = makeVar(false);
+export const filterToggeledVar = makeVar(true);
 export const inactiveModeVar = makeVar(false);
 export const instanceCounterVar = makeVar({
   jobs: 0,
@@ -76,11 +76,18 @@ const cache = new InMemoryCache({
             return filterToggeledVar();
           },
         },
+        instanceFilters: {
+          read() {
+            return instanceFiltersVar();
+          },
+        },
+
         inactiveMode: {
           read() {
             return inactiveModeVar();
           },
         },
+
         algorithms: {
           // eslint-disable-next-line no-unused-vars
           merge(_existing = { algorithms: [] }, incoming) {
