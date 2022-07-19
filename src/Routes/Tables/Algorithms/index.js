@@ -54,6 +54,9 @@ const AlgorithmsTable = () => {
         columns={algorithmColumns}
         onRow={onRow}
         expandIcon={false}
+        scroll={{
+          y: '80vh',
+        }}
       />
       <Route
         exact

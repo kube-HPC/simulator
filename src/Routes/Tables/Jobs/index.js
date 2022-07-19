@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Route } from 'react-router-dom';
 import styled from 'styled-components';
 import useQueryHook from 'hooks/useQuery';
@@ -26,6 +26,9 @@ const JobsTable = () => {
   const instanceFilters = useReactiveVar(instanceFiltersVar);
   const filterToggeled = useReactiveVar(filterToggeledVar);
 
+  const [jobsCursor, setJobsCursor] = useState(null);
+  const [isFetchMore, setIsFetchMore] = useState(0);
+
   const { goTo } = usePath();
   const { columns } = useJobs();
 
@@ -36,18 +39,16 @@ const JobsTable = () => {
       algorithmName: iJobs?.algorithmName || undefined,
       pipelineName: iJobs?.pipelineName || undefined,
       pipelineStatus: iJobs?.pipelineStatus || undefined,
-      ...(iJobs?.datesRange?.from &&
-        iJobs?.datesRange?.to && {
-          datesRange: {
-            from: iJobs?.datesRange?.from,
-            to: iJobs?.datesRange?.to,
-          },
-        }),
+      datesRange: {
+        from: iJobs?.datesRange?.from || null,
+        to: iJobs?.datesRange?.to || null,
+      },
       limit: 20,
     };
 
     return items;
   }, [
+    instanceFilters.jobs,
     instanceFilters.jobs.algorithmName,
     instanceFilters.jobs.pipelineName,
     instanceFilters.jobs.pipelineStatus,
@@ -56,11 +57,17 @@ const JobsTable = () => {
   ]);
 
   const query = useQuery(JOB_QUERY, {
-    variables: mergedParams,
+    variables: {
+      cursor: jobsCursor,
+      ...mergedParams,
+    },
   });
-
   limitAmount = query?.data?.jobsAggregated.jobs?.length || limitAmount;
   usePolling(query, 3000);
+
+  useEffect(() => {
+    setJobsCursor(query?.data?.jobsAggregated?.cursor);
+  }, [isFetchMore]);
 
   const onRow = useCallback(
     job => ({
@@ -69,16 +76,9 @@ const JobsTable = () => {
     [goTo]
   );
 
-  const onFetchMore = useCallback(
-    () =>
-      query.fetchMore({
-        variables: {
-          cursor: query?.data?.jobsAggregated?.cursor,
-          ...mergedParams,
-        },
-      }),
-    [query]
-  );
+  const onFetchMore = useCallback(() => {
+    setIsFetchMore(isFetchMore + 1);
+  }, [query?.data?.jobsAggregated?.cursor]);
 
   const onZoomChanged = useCallback(data => {
     let datesRange = null;
@@ -91,7 +91,15 @@ const JobsTable = () => {
     // setQueryParams({ ...mergedParams, datesRange, limit: 20 });
 
     zoomedChangedDate = Date.now();
-    query.fetchMore({ variables: { ...mergedParams, datesRange, limit: 20 } });
+
+    const stateInstanceFilter = { ...instanceFiltersVar() };
+    stateInstanceFilter.jobs = { ...mergedParams, datesRange };
+
+    instanceFiltersVar(stateInstanceFilter);
+
+    setJobsCursor(null);
+
+    // query.fetchMore({ variables: { ...mergedParams, datesRange, limit: 20 } });
   });
 
   const onQuerySubmit = useCallback(values => {
@@ -108,11 +116,11 @@ const JobsTable = () => {
     Object.values(other).forEach((element, index) => {
       element === '' ? (other[Object.keys(other)[index]] = undefined) : null;
     });
-
     const stateInstanceFilter = { ...instanceFiltersVar() };
     stateInstanceFilter.jobs = { ...other, datesRange };
 
     instanceFiltersVar(stateInstanceFilter);
+    setJobsCursor(null);
 
     // setQueryParams({ ...mergedParams, ...other, datesRange });
   });

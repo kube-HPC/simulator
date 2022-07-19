@@ -54,7 +54,7 @@ const FilterButton = () => {
   const [isFilterToggeled, setIsFilterToggeledColor] = useState(false);
   const _color = isFilterToggeled ? '#2db7f5' : COLOR_LAYOUT.darkBorder;
   return (
-    <Badge dot>
+    <Badge>
       <FilterOutlined
         style={{ fontSize: '24px', color: _color }}
         onClick={() => {

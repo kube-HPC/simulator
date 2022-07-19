@@ -44,7 +44,7 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
     }; */
     // instanceFiltersVar({ ...instanceFiltersVar(), jobs });
 
-    if (params && params.datesRange) {
+    if (params?.datesRange?.from && params?.datesRange?.to) {
       form.setFieldsValue({
         time: [
           moment(params.datesRange.from, 'YYYY-MM-DD HH:mm'),

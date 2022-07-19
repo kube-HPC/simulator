@@ -5,7 +5,7 @@ import styled from 'styled-components';
 // import isEqual from 'lodash/isEqual';
 import { useLeftSidebar, useSiteThemeMode } from 'hooks';
 import Icon from '@ant-design/icons';
-import { Layout, Menu, Tag } from 'antd';
+import { Layout, Menu, Tag, Badge } from 'antd';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { FlexBox } from 'components/common';
 import { dataCountMock } from 'config';
@@ -19,7 +19,7 @@ import { ReactComponent as LogoFish } from 'images/logo-fish.svg';
 import { ReactComponent as LogoTitle } from 'images/logo-title.svg';
 import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
 
-import { instanceCounterVar } from 'cache';
+import { instanceCounterVar, instanceFiltersVar } from 'cache';
 import { Theme, COLOR_LAYOUT } from 'styles';
 import { selectors } from 'reducers';
 // import { useDiscovery } from 'hooks/graphql';
@@ -119,6 +119,7 @@ const SidebarLeft = () => {
   // useDiscovery();
   useCounters();
   const instanceCounter = useReactiveVar(instanceCounterVar);
+  const instanceFilters = useReactiveVar(instanceFiltersVar);
   // const dataCountSource = useSelector(sidebarSelector, isEqual);
 
   const dataCountSource = instanceCounterAdapter(instanceCounter);
@@ -141,29 +142,40 @@ const SidebarLeft = () => {
           {!isCollapsed && <AnimatedTitle />}
         </LogoContainer>
         <MenuMargin selectedKeys={[`left-sidebar-${pageName}`]}>
-          {menuItems.map(([name, component, path]) => (
-            <Menu.Item
-              key={`left-sidebar-${name}`}
-              className={USER_GUIDE.TABLE_SELECT[name]}>
-              <Link to={{ pathname: path, search: location.search }}>
-                <FlexBox>
-                  <FlexBox.Item>
-                    <Icon
-                      type={component}
-                      component={component}
-                      style={IconStyle}
-                    />
-                    <Name>{name}</Name>
-                  </FlexBox.Item>
-                  {Number.isInteger(dataCount[name]) && (
+          {menuItems.map(([name, component, path]) => {
+            const isFilters =
+              (instanceFilters[name] &&
+                Object.values(
+                  (instanceFilters[name] && instanceFilters[name]) || {}
+                ).some(x => x != null)) ||
+              false;
+
+            return (
+              <Menu.Item
+                key={`left-sidebar-${name}`}
+                className={USER_GUIDE.TABLE_SELECT[name]}>
+                <Link to={{ pathname: path, search: location.search }}>
+                  <FlexBox>
                     <FlexBox.Item>
-                      <Tag style={tagStyle}>{dataCount[name]}</Tag>
+                      <Icon
+                        type={component}
+                        component={component}
+                        style={IconStyle}
+                      />
+                      <Name>{name}</Name>
                     </FlexBox.Item>
-                  )}
-                </FlexBox>
-              </Link>
-            </Menu.Item>
-          ))}
+                    {Number.isInteger(dataCount[name]) && (
+                      <FlexBox.Item>
+                        <Badge dot={isFilters}>
+                          <Tag style={tagStyle}>{dataCount[name]}</Tag>
+                        </Badge>
+                      </FlexBox.Item>
+                    )}
+                  </FlexBox>
+                </Link>
+              </Menu.Item>
+            );
+          })}
         </MenuMargin>
       </Sider>
     </Border>

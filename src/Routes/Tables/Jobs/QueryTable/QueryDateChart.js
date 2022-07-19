@@ -30,7 +30,7 @@ const QueryDateChart = props => {
       },
       chart: {
         type: 'bar',
-        height: 250,
+        height: 170,
         stacked: true,
         toolbar: {
           tools: {
@@ -121,7 +121,7 @@ const QueryDateChart = props => {
         options={data.options}
         series={data.series}
         type="bar"
-        height="250"
+        height="170"
       />
     </div>
   );

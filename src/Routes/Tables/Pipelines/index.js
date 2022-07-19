@@ -59,6 +59,9 @@ const PipelinesTable = () => {
         columns={pipelineColumns}
         onRow={onRow}
         expandIcon={false}
+        scroll={{
+          y: '80vh',
+        }}
       />
       <Route
         path="/pipelines/:pipelineId/overview/:tabKey?"
