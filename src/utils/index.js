@@ -23,4 +23,5 @@ export {
   deepCopyFromKeyValue,
   flattenObjKeyValue,
   tryParseJson,
+  isValuesFiltersEmpty,
 } from './objectManipulation';

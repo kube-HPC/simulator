@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import qs from 'qs';
 import { useReactiveVar } from '@apollo/client';
 import { instanceFiltersVar } from 'cache';
+import { isValuesFiltersEmpty } from 'utils';
 
 const AlgorithmsQueryTable = ({ onSubmit, algorithmsList }) => {
   const firstUpdate = useRef(true);
@@ -24,17 +25,16 @@ const AlgorithmsQueryTable = ({ onSubmit, algorithmsList }) => {
   };
 
   useEffect(() => {
-    const isFilterObjEmpty = !Object.values(instanceFilters.algorithms).some(
-      x => x != null
-    );
+    const isFilterObjEmpty = isValuesFiltersEmpty(instanceFilters.algorithms);
+
     let paramsAlgorithm;
-    if (isFilterObjEmpty) {
+    if (!isFilterObjEmpty) {
       const paramsUrl = qs.parse(urlParams.search, {
         ignoreQueryPrefix: true,
         allowDots: true,
         skipNulls: true,
       });
-      paramsAlgorithm = paramsUrl.qAlgorithmsName;
+      paramsAlgorithm = paramsUrl.qAlgorithmName;
     } else {
       paramsAlgorithm = instanceFilters.algorithms.qAlgorithmName;
     }

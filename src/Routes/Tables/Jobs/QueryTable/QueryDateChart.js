@@ -28,6 +28,9 @@ const QueryDateChart = props => {
       stroke: {
         width: 0,
       },
+      grid: {
+        show: false,
+      },
       chart: {
         type: 'bar',
         height: 170,

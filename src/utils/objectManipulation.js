@@ -36,3 +36,12 @@ export const flattenObjKeyValue = obj =>
       );
     })(obj)
   );
+
+export const isValuesFiltersEmpty = obj =>
+  (obj &&
+    Object.values((obj && obj) || {}).some(x =>
+      typeof x === 'object'
+        ? Object.values((x && x) || {}).some(y => y != null)
+        : x != null
+    )) ||
+  false;

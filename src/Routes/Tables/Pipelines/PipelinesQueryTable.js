@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import qs from 'qs';
 import { useReactiveVar } from '@apollo/client';
 import { instanceFiltersVar } from 'cache';
+import { isValuesFiltersEmpty } from 'utils';
 
 const PipelinesQueryTable = ({ onSubmit, pipelinesList }) => {
   const firstUpdate = useRef(true);
@@ -24,11 +25,9 @@ const PipelinesQueryTable = ({ onSubmit, pipelinesList }) => {
   };
 
   useEffect(() => {
-    const isFilterObjEmpty = !Object.values(instanceFilters.pipelines).some(
-      x => x != null
-    );
+    const isFilterObjEmpty = isValuesFiltersEmpty(instanceFilters.pipelines);
     let paramsPipeline;
-    if (isFilterObjEmpty) {
+    if (!isFilterObjEmpty) {
       const paramsUrl = qs.parse(urlParams.search, {
         ignoreQueryPrefix: true,
         allowDots: true,

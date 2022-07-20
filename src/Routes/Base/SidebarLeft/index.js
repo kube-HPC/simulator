@@ -27,6 +27,8 @@ import { useReactiveVar } from '@apollo/client';
 
 import { useCounters } from 'hooks/graphql';
 
+import { isValuesFiltersEmpty } from 'utils';
+
 // import { orderApi } from '../../../Routes/Tables/QueueOrderJobs/useQueueOrderJobs';
 
 const Border = styled.div`
@@ -143,13 +145,7 @@ const SidebarLeft = () => {
         </LogoContainer>
         <MenuMargin selectedKeys={[`left-sidebar-${pageName}`]}>
           {menuItems.map(([name, component, path]) => {
-            const isFilters =
-              (instanceFilters[name] &&
-                Object.values(
-                  (instanceFilters[name] && instanceFilters[name]) || {}
-                ).some(x => x != null)) ||
-              false;
-
+            const isFilters = isValuesFiltersEmpty(instanceFilters[name]);
             return (
               <Menu.Item
                 key={`left-sidebar-${name}`}
@@ -166,7 +162,7 @@ const SidebarLeft = () => {
                     </FlexBox.Item>
                     {Number.isInteger(dataCount[name]) && (
                       <FlexBox.Item>
-                        <Badge dot={isFilters}>
+                        <Badge dot={isFilters} offset={[-7, 0]}>
                           <Tag style={tagStyle}>{dataCount[name]}</Tag>
                         </Badge>
                       </FlexBox.Item>
