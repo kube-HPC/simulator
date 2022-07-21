@@ -52,7 +52,7 @@ const ButtonsContainer = styled(FlexBox.Auto)`
 
 const FilterButton = () => {
   const [isFilterToggeled, setIsFilterToggeledColor] = useState(false);
-  const _color = isFilterToggeled ? '#2db7f5' : COLOR_LAYOUT.darkBorder;
+  const _color = !isFilterToggeled ? '#2db7f5' : COLOR_LAYOUT.darkBorder;
   return (
     <Badge>
       <FilterOutlined

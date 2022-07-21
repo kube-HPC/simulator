@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Route } from 'react-router-dom';
 import styled from 'styled-components';
 import useQueryHook from 'hooks/useQuery';
@@ -27,6 +33,7 @@ const topTableScroll = () => {
 };
 
 const JobsTable = () => {
+  const firstRender = useRef(true);
   const instanceFilters = useReactiveVar(instanceFiltersVar);
   const filterToggeled = useReactiveVar(filterToggeledVar);
   const metaMode = useReactiveVar(metaVar);
@@ -75,7 +82,11 @@ const JobsTable = () => {
   usePolling(query, 3000);
 
   useEffect(() => {
-    setJobsCursor(query?.data?.jobsAggregated?.cursor);
+    if (firstRender.current) {
+      firstRender.current = false;
+    } else {
+      setJobsCursor(query?.data?.jobsAggregated?.cursor);
+    }
   }, [isFetchMore]);
 
   const onRow = useCallback(
@@ -86,9 +97,9 @@ const JobsTable = () => {
   );
 
   const onFetchMore = useCallback(() => {
-    setIsFetchMore(isFetchMore + 1);
     setIsTableLoad(true);
-  }, [query?.data?.jobsAggregated?.cursor]);
+    setIsFetchMore(isFetchMore + 1);
+  }, [isFetchMore]);
 
   const onZoomChanged = useCallback(
     data => {
