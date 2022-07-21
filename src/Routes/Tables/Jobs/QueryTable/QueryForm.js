@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import moment from 'moment';
 import { Form, DatePicker, AutoComplete } from 'antd';
 import PropTypes from 'prop-types';
@@ -10,34 +10,23 @@ import { FiltersForms } from 'styles';
 const { RangePicker } = DatePicker;
 // let num = 1;
 let localValueTimeChanged = 1;
+const DateFormat = 'YYYY-MM-DD HH:mm';
 const QueryForm = ({ onSubmit, params, zoomDate }) => {
-  const [loadingJobs, setLoadingJobs] = useState(false);
+  // const [loadingJobs, setLoadingJobs] = useState(false);
 
   const [form] = Form.useForm();
 
   const SubmitForm = () => {
-    setLoadingJobs(true);
+    //  setLoadingJobs(true);
     form.submit();
   };
 
   useMemo(() => {
-    /*  const jobs = {
-      limit: 20,
-      algorithmName: params?.algorithmName || null,
-      pipelineName: params?.pipelineName || null,
-      pipelineStatus: params?.pipelineStatus || null,
-      datesRange: {
-        from: params?.datesRange?.from || null,
-        to: params?.datesRange?.to || null,
-      },
-    }; */
-    // instanceFiltersVar({ ...instanceFiltersVar(), jobs });
-
     if (params?.datesRange?.from && params?.datesRange?.to) {
       form.setFieldsValue({
         time: [
-          moment(params.datesRange.from, 'YYYY-MM-DD HH:mm'),
-          moment(params.datesRange.to, 'YYYY-MM-DD HH:mm'),
+          moment(params.datesRange.from, DateFormat),
+          moment(params.datesRange.to, DateFormat),
         ],
       });
     } else {
@@ -63,36 +52,48 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
     }
   }, [params, zoomDate]);
 
-  const query = useQuery(ALGORITHM_AND_PIPELINE_NAMES);
-
   const onFinish = values => {
-    // console.log('Received values of form: ', values);
     onSubmit(values);
   };
 
-  const algorithmOptions = query?.data?.algorithms.list?.map(algorithm => ({
-    value: algorithm.name,
-    label: algorithm.name,
-  }));
-  const pipelineOptions = query?.data?.pipelines.list.map(pipeline => ({
-    value: pipeline.name,
-    label: pipeline.name,
-  }));
-  const pipelineStatusOptions = Object.values(pipelineStatuses).map(status => ({
-    value: status,
-    label: status,
-  }));
+  const query = useQuery(ALGORITHM_AND_PIPELINE_NAMES);
+  const algorithmOptions = useMemo(
+    () =>
+      query?.data?.algorithms.list?.map(algorithm => ({
+        value: algorithm.name,
+        label: algorithm.name,
+      })),
+    [query?.data?.algorithms.list]
+  );
 
-  useEffect(() => {
-    setTimeout(setLoadingJobs(false), 3000);
-  }, [loadingJobs]);
+  const pipelineOptions = useMemo(
+    () =>
+      query?.data?.pipelines.list.map(pipeline => ({
+        value: pipeline.name,
+        label: pipeline.name,
+      })),
+    [query?.data?.pipelines.list]
+  );
+
+  const pipelineStatusOptions = useMemo(
+    () =>
+      Object.values(pipelineStatuses).map(status => ({
+        value: status,
+        label: status,
+      })),
+    []
+  );
+
+  // useEffect(() => {
+  //  setTimeout(setLoadingJobs(false), 3000);
+  // }, [loadingJobs]);
   return (
     <FiltersForms layout="inline" form={form} size="medium" onFinish={onFinish}>
       <Form.Item label="Time" name="time">
         <RangePicker
           style={{ width: '16vw', marginLeft: '1vw' }}
           showTime={{ format: 'HH:mm' }}
-          format="YYYY-MM-DD HH:mm"
+          format={DateFormat}
           onOpenChange={() => {
             // eslint-disable-next-line no-unused-vars
             localValueTimeChanged = Date.now();
@@ -134,18 +135,6 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
           onChange={SubmitForm}
         />
       </Form.Item>
-
-      {/*    <Form.Item {...buttonItemLayout}>
-        <Button htmlType="button" onClick={onReset} title="Reset">
-          <ReloadOutlined />
-        </Button>
-      </Form.Item>
-
-      <Form.Item {...buttonItemLayout}>
-        <Button type="primary" htmlType="submit" title="Search">
-          {loadingJobs ? <LoadingOutlined /> : <SearchOutlined />}
-        </Button>
-        </Form.Item> */}
     </FiltersForms>
   );
 };

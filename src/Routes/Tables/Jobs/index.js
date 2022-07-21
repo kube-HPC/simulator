@@ -23,7 +23,7 @@ import QueryDateChart from './QueryTable/QueryDateChart';
 
 const jobsAmount = parseInt(process.env.REACT_APP_SLICE_JOBS, 10);
 const shouldSliceJobs = Number.isInteger(jobsAmount) && jobsAmount > 0;
-let limitAmount = 20;
+// let limitAmount = 20;
 export { default as jobColumns } from './jobColumns';
 const rowKey = job => `job-${job.key}`;
 let zoomedChangedDate = Date.now();
@@ -56,7 +56,6 @@ const JobsTable = () => {
         from: iJobs?.datesRange?.from || null,
         to: iJobs?.datesRange?.to || null,
       },
-      limit: 20,
     };
 
     return items;
@@ -75,10 +74,13 @@ const JobsTable = () => {
     variables: {
       experimentName: metaMode?.experimentName || null,
       cursor: jobsCursor,
+      limit: 20,
       ...mergedParams,
     },
   });
-  limitAmount = query?.data?.jobsAggregated.jobs?.length || limitAmount;
+
+  // limitAmount = query?.data?.jobsAggregated.jobs?.length || limitAmount;
+
   usePolling(query, 3000);
 
   useEffect(() => {
@@ -88,13 +90,6 @@ const JobsTable = () => {
       setJobsCursor(query?.data?.jobsAggregated?.cursor);
     }
   }, [isFetchMore]);
-
-  const onRow = useCallback(
-    job => ({
-      onDoubleClick: () => goTo.overview({ nextJobId: job.key }),
-    }),
-    [goTo]
-  );
 
   const onFetchMore = useCallback(() => {
     setIsTableLoad(true);
@@ -158,6 +153,13 @@ const JobsTable = () => {
 
     return [];
   }, [query]);
+
+  const onRow = useCallback(
+    job => ({
+      onDoubleClick: () => goTo.overview({ nextJobId: job.key }),
+    }),
+    [goTo]
+  );
 
   return (
     <>
