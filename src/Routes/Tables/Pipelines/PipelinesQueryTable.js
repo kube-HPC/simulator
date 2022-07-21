@@ -98,4 +98,4 @@ PipelinesQueryTable.propTypes = {
 PipelinesQueryTable.defaultProps = {
   onSubmit: () => {},
 };
-export default PipelinesQueryTable;
+export default React.memo(PipelinesQueryTable);

@@ -99,4 +99,4 @@ AlgorithmsQueryTable.propTypes = {
 AlgorithmsQueryTable.defaultProps = {
   onSubmit: () => {},
 };
-export default AlgorithmsQueryTable;
+export default React.memo(AlgorithmsQueryTable);

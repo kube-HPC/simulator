@@ -73,4 +73,4 @@ const PipelinesTable = () => {
   );
 };
 
-export default PipelinesTable;
+export default React.memo(PipelinesTable);
