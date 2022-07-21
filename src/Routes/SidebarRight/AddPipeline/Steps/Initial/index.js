@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Input, Radio, Select } from 'antd';
 import { Form, EditableTagGroup } from 'components/common';
-import { useExperiments } from 'hooks';
+import { useExperiments } from 'hooks/graphql';
 import ControllerKeyValue from '../Nodes/inputKeyValueJson';
 import useWizardContext from '../../useWizardContext';
 

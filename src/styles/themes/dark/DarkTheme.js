@@ -81,6 +81,7 @@ const DarkTheme = COMMON_COLOR => {
     ChonkyFileBrowser: { viewThemeDark: true },
     SidebarLeft: { colorTagNumber: COLOR.grey },
     TitleDataJob: { titleBottom: '#303030' },
+    filters: { backgroundColor: '#2f306c30', borderColor: '#053054' },
   };
 
   return {

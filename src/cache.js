@@ -26,6 +26,9 @@ export const instanceFiltersVar = makeVar({
     qAlgorithmName: null,
   },
 });
+export const metaVar = makeVar({
+  experimentName: 'main',
+});
 
 const cache = new InMemoryCache({
   addTypename: false,
@@ -81,13 +84,16 @@ const cache = new InMemoryCache({
             return instanceFiltersVar();
           },
         },
-
         inactiveMode: {
           read() {
             return inactiveModeVar();
           },
         },
-
+        metaMode: {
+          read() {
+            return metaVar();
+          },
+        },
         algorithms: {
           // eslint-disable-next-line no-unused-vars
           merge(_existing = { algorithms: [] }, incoming) {

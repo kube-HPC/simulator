@@ -1,5 +1,5 @@
 import { Tag } from 'antd';
-import { instanceFiltersVar } from 'cache';
+import { instanceFiltersVar, metaVar } from 'cache';
 import { useReactiveVar } from '@apollo/client';
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
@@ -8,11 +8,13 @@ import PropTypes from 'prop-types';
 import { useHistory, useLocation } from 'react-router-dom';
 import qs from 'qs';
 import moment from 'moment';
+
 // import { isNaN } from 'lodash';
 
 const FORMAT_DATE_TIME = 'MM-DD-YYYY HH:mm';
 const TagsFiltersViews = ({ sectionName }) => {
   const instanceFilters = useReactiveVar(instanceFiltersVar);
+  const metaMode = useReactiveVar(metaVar);
 
   const history = useHistory();
   const urlParams = useLocation();
@@ -64,9 +66,13 @@ const TagsFiltersViews = ({ sectionName }) => {
       skipNulls: true,
     });
 
+    const { experimentName } = metaMode;
+
+    const _qMoreParam = experimentName && `&experiment=${experimentName}`;
+
     history.push({
       pathname: urlParams.pathname,
-      search: `?${_qParams}`,
+      search: `?${_qParams}${_qMoreParam}`,
     });
 
     //  console.log("initFilters push history _qParams>>>",_qParams)

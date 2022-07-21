@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { ifProp } from 'styled-tools';
 import { Button, Dropdown, Input, Menu, Tag, Typography } from 'antd';
 import { FlexBox, Icons } from 'components/common';
-import { useExperiments } from 'hooks';
-import { schema } from 'hooks/useExperiments';
+import { useExperiments } from 'hooks/graphql';
+import { schema } from 'hooks/graphql/useExperiments';
 import { COLOR, COLOR_EXPERIMENTS } from 'styles/colors';
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
 

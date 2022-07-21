@@ -6,6 +6,7 @@ import qs from 'qs';
 import { useReactiveVar } from '@apollo/client';
 import { instanceFiltersVar } from 'cache';
 import { isValuesFiltersEmpty } from 'utils';
+import { FiltersForms } from 'styles';
 
 const PipelinesQueryTable = ({ onSubmit, pipelinesList }) => {
   const firstUpdate = useRef(true);
@@ -67,19 +68,7 @@ const PipelinesQueryTable = ({ onSubmit, pipelinesList }) => {
   }));
 
   return (
-    <Form
-      layout="inline"
-      form={form}
-      style={{
-        border: '1px solid #d9d9d9',
-        borderRadius: '2px',
-        margin: '4px',
-        padding: '8px',
-        background: 'aliceblue',
-        boxShadow: 'box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 2px',
-      }}
-      size="medium"
-      onFinish={onFinish}>
+    <FiltersForms layout="inline" form={form} size="medium" onFinish={onFinish}>
       <Form.Item label="Pipeline Name" name="qPipelineName">
         <AutoComplete
           style={{ width: '8vw', marginLeft: '1vw' }}
@@ -91,7 +80,7 @@ const PipelinesQueryTable = ({ onSubmit, pipelinesList }) => {
           onChange={SubmitForm}
         />
       </Form.Item>
-    </Form>
+    </FiltersForms>
   );
 };
 

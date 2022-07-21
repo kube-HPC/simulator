@@ -61,6 +61,7 @@ const usePolling = (query, interval) => {
   useEffect(() => {
     queryArry.push(query);
     query.startPolling(interval);
+
     // prettier-ignore
     // 'polling');
     return () => {

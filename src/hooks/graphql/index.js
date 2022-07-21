@@ -12,3 +12,4 @@ export { default as useStorage } from './useStorage';
 export { default as useStats } from './useStats';
 export { default as useMetric } from './useMetric';
 export { default as useCounters } from './useCounters';
+export { default as useExperiments } from './useExperiments';

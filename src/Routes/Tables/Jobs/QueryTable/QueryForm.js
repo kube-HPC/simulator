@@ -1,23 +1,16 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import moment from 'moment';
 import { Form, DatePicker, AutoComplete } from 'antd';
-// import { ReloadOutlined,  SearchOutlined,  LoadingOutlined,} from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import { pipelineStatuses } from '@hkube/consts';
 import { useQuery } from '@apollo/client';
 import { ALGORITHM_AND_PIPELINE_NAMES } from 'graphql/queries';
-
-// import { formatNode } from '../graphUtils';
-
-// import { filterToggeledVar } from 'cache';
-// import { instanceFiltersVar } from 'cache';
+import { FiltersForms } from 'styles';
 
 const { RangePicker } = DatePicker;
 // let num = 1;
 let localValueTimeChanged = 1;
 const QueryForm = ({ onSubmit, params, zoomDate }) => {
-  // const instanceFilters = useReactiveVar(instanceFiltersVar);
-  // console.log(instanceFilters);
   const [loadingJobs, setLoadingJobs] = useState(false);
 
   const [form] = Form.useForm();
@@ -26,10 +19,6 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
     setLoadingJobs(true);
     form.submit();
   };
-  // const onReset = () => {
-  //    form.resetFields();
-  // SubmitForm();
-  // };
 
   useMemo(() => {
     /*  const jobs = {
@@ -72,16 +61,6 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
     } else {
       form.resetFields(['pipelineStatus']);
     }
-
-    // form.setFieldsValue({
-    //    algorithmName: params?.algorithmName||undefined,
-    //   pipelineName: params?.pipelineName||undefined,
-    //    pipelineStatus: params?.pipelineStatus||undefined,
-    //  });
-
-    // (params?.algorithmName==null) && form.resetFields(['algorithmName'])
-    // (params?.pipelineName==null) &&  form.resetFields(['pipelineName'])
-    // (params?.pipelineStatus==null) && form.resetFields(['pipelineStatus'])
   }, [params, zoomDate]);
 
   const query = useQuery(ALGORITHM_AND_PIPELINE_NAMES);
@@ -90,13 +69,6 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
     // console.log('Received values of form: ', values);
     onSubmit(values);
   };
-
-  /* const buttonItemLayout = {
-    wrapperCol: {
-      span: 1,
-      offset: 4,
-    },
-  }; */
 
   const algorithmOptions = query?.data?.algorithms.list?.map(algorithm => ({
     value: algorithm.name,
@@ -115,33 +87,7 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
     setTimeout(setLoadingJobs(false), 3000);
   }, [loadingJobs]);
   return (
-    <Form
-      layout="inline"
-      form={form}
-      initialValues={
-        params &&
-        {
-          // //  time: [moment(params.datesRange?.from), moment(params.datesRange?.to)],
-          // algorithmName: params.algorithmName,
-          // pipelineName: params.pipelineName,
-          // pipelineStatus: params.pipelineStatus,
-        }
-
-        // algorithm: params.algorithm,
-        // pipeline: params.pipeline,
-        //   pipelineStatus: params.pipelineStatus,
-      }
-      style={{
-        justifyContent: 'space-around',
-        border: '1px solid #d9d9d9',
-        borderRadius: '2px',
-        margin: '4px',
-        padding: '8px',
-        background: 'aliceblue',
-        boxShadow: 'box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 2px',
-      }}
-      size="medium"
-      onFinish={onFinish}>
+    <FiltersForms layout="inline" form={form} size="medium" onFinish={onFinish}>
       <Form.Item label="Time" name="time">
         <RangePicker
           style={{ width: '16vw', marginLeft: '1vw' }}
@@ -200,7 +146,7 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
           {loadingJobs ? <LoadingOutlined /> : <SearchOutlined />}
         </Button>
         </Form.Item> */}
-    </Form>
+    </FiltersForms>
   );
 };
 

@@ -6,6 +6,7 @@ import qs from 'qs';
 import { useReactiveVar } from '@apollo/client';
 import { instanceFiltersVar } from 'cache';
 import { isValuesFiltersEmpty } from 'utils';
+import { FiltersForms } from 'styles';
 
 const AlgorithmsQueryTable = ({ onSubmit, algorithmsList }) => {
   const firstUpdate = useRef(true);
@@ -68,19 +69,7 @@ const AlgorithmsQueryTable = ({ onSubmit, algorithmsList }) => {
   }));
 
   return (
-    <Form
-      layout="inline"
-      form={form}
-      style={{
-        border: '1px solid #d9d9d9',
-        borderRadius: '2px',
-        margin: '4px',
-        padding: '8px',
-        background: 'aliceblue',
-        boxShadow: 'box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 2px',
-      }}
-      size="medium"
-      onFinish={onFinish}>
+    <FiltersForms layout="inline" form={form} size="medium" onFinish={onFinish}>
       <Form.Item label="Algorithm Name" name="qAlgorithmName">
         <AutoComplete
           style={{ width: '8vw', marginLeft: '1vw' }}
@@ -92,7 +81,7 @@ const AlgorithmsQueryTable = ({ onSubmit, algorithmsList }) => {
           onChange={SubmitForm}
         />
       </Form.Item>
-    </Form>
+    </FiltersForms>
   );
 };
 

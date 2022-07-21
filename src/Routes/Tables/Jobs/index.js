@@ -7,7 +7,7 @@ import { Card } from 'components/common';
 import { useJobs, usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { Collapse } from 'react-collapse';
-import { filterToggeledVar, instanceFiltersVar } from 'cache';
+import { filterToggeledVar, instanceFiltersVar, metaVar } from 'cache';
 import { JOB_QUERY } from 'graphql/queries';
 import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
@@ -21,13 +21,19 @@ let limitAmount = 20;
 export { default as jobColumns } from './jobColumns';
 const rowKey = job => `job-${job.key}`;
 let zoomedChangedDate = Date.now();
-// const dateObj = new Date();
+const topTableScroll = () => {
+  const el = document.querySelector('.ant-table-body');
+  if (el) el.scrollTop = 0;
+};
+
 const JobsTable = () => {
   const instanceFilters = useReactiveVar(instanceFiltersVar);
   const filterToggeled = useReactiveVar(filterToggeledVar);
+  const metaMode = useReactiveVar(metaVar);
 
   const [jobsCursor, setJobsCursor] = useState(null);
   const [isFetchMore, setIsFetchMore] = useState(0);
+  const [isTableLoad, setIsTableLoad] = useState(true);
 
   const { goTo } = usePath();
   const { columns } = useJobs();
@@ -57,7 +63,10 @@ const JobsTable = () => {
   ]);
 
   const query = useQuery(JOB_QUERY, {
+    notifyOnNetworkStatusChange: true,
+    onCompleted: () => setIsTableLoad(false),
     variables: {
+      experimentName: metaMode?.experimentName || null,
       cursor: jobsCursor,
       ...mergedParams,
     },
@@ -78,29 +87,32 @@ const JobsTable = () => {
 
   const onFetchMore = useCallback(() => {
     setIsFetchMore(isFetchMore + 1);
+    setIsTableLoad(true);
   }, [query?.data?.jobsAggregated?.cursor]);
 
-  const onZoomChanged = useCallback(data => {
-    let datesRange = null;
-    if (data.min) {
-      datesRange = {
-        from: new Date(data.min).toISOString(),
-        to: new Date(data.max).toISOString(),
-      };
-    }
-    // setQueryParams({ ...mergedParams, datesRange, limit: 20 });
+  const onZoomChanged = useCallback(
+    data => {
+      let datesRange = null;
+      if (data.min) {
+        datesRange = {
+          from: new Date(data.min).toISOString(),
+          to: new Date(data.max).toISOString(),
+        };
+      }
 
-    zoomedChangedDate = Date.now();
+      zoomedChangedDate = Date.now();
 
-    const stateInstanceFilter = { ...instanceFiltersVar() };
-    stateInstanceFilter.jobs = { ...mergedParams, datesRange };
+      const stateInstanceFilter = { ...instanceFiltersVar() };
+      stateInstanceFilter.jobs = { ...mergedParams, datesRange };
 
-    instanceFiltersVar(stateInstanceFilter);
-
-    setJobsCursor(null);
-
-    // query.fetchMore({ variables: { ...mergedParams, datesRange, limit: 20 } });
-  });
+      instanceFiltersVar(stateInstanceFilter);
+      setIsTableLoad(true);
+      setJobsCursor(null);
+      topTableScroll();
+      // query.fetchMore({ variables: { ...mergedParams, datesRange, limit: 20 } });
+    },
+    [mergedParams]
+  );
 
   const onQuerySubmit = useCallback(values => {
     let datesRange = null;
@@ -121,9 +133,9 @@ const JobsTable = () => {
 
     instanceFiltersVar(stateInstanceFilter);
     setJobsCursor(null);
-
-    // setQueryParams({ ...mergedParams, ...other, datesRange });
-  });
+    topTableScroll();
+    setIsTableLoad(true);
+  }, []);
 
   const _dataSource = useMemo(() => {
     if (query && query.data) {
@@ -136,10 +148,6 @@ const JobsTable = () => {
     return [];
   }, [query]);
 
-  // const params = useMemo(() => {
-  //   return queryParams || {};
-  // }, [queryParams]);
-
   return (
     <>
       <Collapse isOpened={filterToggeled}>
@@ -151,8 +159,9 @@ const JobsTable = () => {
         <QueryDateChart dataSource={_dataSource} onZoom={onZoomChanged} />
       </Collapse>
       <Table
+        id="jobsTable"
         fetchMore={onFetchMore}
-        loading={query.loading}
+        loading={isTableLoad}
         onRow={onRow}
         rowKey={rowKey}
         expandIcon={false}
