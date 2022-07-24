@@ -1,8 +1,8 @@
 const { default: gql } = require('graphql-tag');
 
-const ALGORITHM_BY_ID_QUERY = gql`
-  query Query($algorithmName: String!) {
-    algorithmsByName(name: $algorithmName) {
+const ALGORITHM_BY_NAME_QUERY = gql`
+  query AlgorithmsByName($name: String!) {
+    algorithmsByName(name: $name) {
       name
       cpu
       created
@@ -39,8 +39,17 @@ const ALGORITHM_BY_ID_QUERY = gql`
           message
         }
       }
+      buildStats {
+        total
+        pending
+        creating
+        active
+        completed
+        failed
+        stopped
+      }
     }
   }
 `;
 
-export default ALGORITHM_BY_ID_QUERY;
+export default ALGORITHM_BY_NAME_QUERY;

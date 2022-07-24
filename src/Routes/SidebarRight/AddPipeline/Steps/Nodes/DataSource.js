@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback } from 'react';
+import React, { useContext, useState, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Radio, Select } from 'antd';
 import useVersions from 'hooks/graphql/DataSources/useVersions';
@@ -46,9 +46,13 @@ const DataSourceNode = ({ id }) => {
 
   const handleChangeMode = useCallback(e => setMode(e.target.value), []);
 
-  const disableSnapshot = snapshots.length === 0;
+  const disableSnapshot = useMemo(() => snapshots?.length === 0 || true, [
+    snapshots?.length,
+  ]);
 
-  const disableVersions = !versionsCollection?.versions;
+  const disableVersions = useMemo(() => !versionsCollection?.versions || true, [
+    versionsCollection?.versions,
+  ]);
 
   return (
     <ctx.Provider value={{ rootId: ['nodes', id, 'spec'] }}>

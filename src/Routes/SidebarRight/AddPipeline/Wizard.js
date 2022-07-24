@@ -8,15 +8,11 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import { CheckOutlined, RightOutlined, LeftOutlined } from '@ant-design/icons';
-import { Steps, Form as AntdForm } from 'antd';
+import { Button, Steps, Form as AntdForm } from 'antd';
 import { JsonView } from 'components/common';
 import styled from 'styled-components';
 import { COLOR_LAYOUT } from 'styles';
-import {
-  BottomPanel,
-  PanelButton,
-  RightAlignedButton,
-} from 'components/Drawer';
+import { BottomPanel, PanelButton, RightAlignedBox } from 'components/Drawer';
 import { useWizard } from 'hooks';
 import { context } from './useWizardContext';
 import { Initial, Nodes, Options } from './Steps';
@@ -39,6 +35,9 @@ export const Body = styled.div`
 
   overflow-y: scroll;
   max-height: 81vh;
+`;
+export const ButtonRun = styled(Button)`
+  margin-left: 20px;
 `;
 
 const stepNames = ['Initial', 'Nodes', 'Options'];
@@ -198,14 +197,30 @@ const Wizard = ({
           <LeftOutlined />
           Back
         </PanelButton>
-        <RightAlignedButton
-          type={isLastStep ? 'primary' : 'default'}
-          onClick={!isLastStep ? onNext : handleSubmit}
-          form="create-pipeline"
-          htmlType="submit">
-          {isLastStep ? (isRunPipeline ? 'Run' : 'Submit') : 'Next'}
-          {isLastStep ? <CheckOutlined /> : <RightOutlined />}
-        </RightAlignedButton>
+
+        <RightAlignedBox>
+          {(!isRunPipeline || (isRunPipeline && !isLastStep)) && (
+            <Button
+              type={isLastStep ? 'primary' : 'default'}
+              onClick={!isLastStep ? onNext : handleSubmit}
+              form="create-pipeline"
+              htmlType="submit">
+              {isLastStep ? 'Submit' : 'Next'}
+              {isLastStep ? <CheckOutlined /> : <RightOutlined />}
+            </Button>
+          )}
+
+          {isRunPipeline && (
+            <ButtonRun
+              type="primary"
+              onClick={handleSubmit}
+              form="create-pipeline"
+              htmlType="submit">
+              Run
+              <CheckOutlined />
+            </ButtonRun>
+          )}
+        </RightAlignedBox>
       </BottomPanel>
     </>
   );

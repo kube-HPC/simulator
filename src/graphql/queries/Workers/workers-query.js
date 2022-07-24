@@ -11,7 +11,6 @@ const WORKERS_ALL_QUERY = gql`
             count
             results
             status
-            ready
           }
         }
       }

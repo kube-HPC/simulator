@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Layout, message, BackTop } from 'antd';
 
 import styled, { ThemeProvider } from 'styled-components';
 import { Route } from 'react-router-dom';
 import { COLOR, COLOR_LAYOUT, Theme } from 'styles';
-import { useActions, useConnectionStatus } from 'hooks';
+import { useActions } from 'hooks'; // useConnectionStatus
 import Header from 'Routes/Base/Header';
 import { ReactComponent as IconBackUp } from 'images/backUp.svg';
 import SidebarRight, { Drawer as SiderBarRightDrawer } from './SidebarRight';
@@ -46,13 +46,14 @@ message.config({
 const BackToTop = () => document.getElementById('globalContent');
 
 const Routes = () => {
+  const [isDataAvailable, setIsDataAvailable] = useState(false);
+
   const { socketInit } = useActions();
 
   useEffect(() => {
     socketInit();
+    setTimeout(() => setIsDataAvailable(true), 2000);
   }, [socketInit]);
-
-  const { isDataAvailable } = useConnectionStatus();
 
   return isDataAvailable ? (
     <ThemeProvider theme={{ ...Theme }}>

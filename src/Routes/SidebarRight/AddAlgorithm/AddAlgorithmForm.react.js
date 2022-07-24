@@ -102,7 +102,7 @@ const AddAlgorithmForm = ({ onToggle, onSubmit, algorithmValue }) => {
   useEffect(() => {
     // init values in fields
 
-    if (keyValueObject !== undefined) {
+    if (keyValueObject != null) {
       // Edit algorithm
       const schemaObjectForm = form.getFieldsValue();
       const objValuesForm = deepCopyFromKeyValue(
