@@ -12,7 +12,7 @@ import usePath from './usePath';
 
 const ExecuteDrawer = () => {
   const { goTo, pipelineId } = usePath();
-  const { pipeline: record } = useActivePipeline();
+  const { pipeline: record, loading } = useActivePipeline();
   const { setOff, isOn } = useToggle(true);
   const { ...executePipeline } = record || {};
 
@@ -32,6 +32,7 @@ const ExecuteDrawer = () => {
     [executePipeline, experimentName]
   );
 
+  if (loading) return 'Loading...';
   return (
     <Drawer
       getContainer={false}

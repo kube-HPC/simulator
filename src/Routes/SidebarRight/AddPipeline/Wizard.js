@@ -168,6 +168,7 @@ const Wizard = ({
               isEdit,
               valuesState,
               isRunPipeline,
+              setForm,
             }}>
             {initStepComponents.map((StepComponent, ii) => (
               <StepComponent

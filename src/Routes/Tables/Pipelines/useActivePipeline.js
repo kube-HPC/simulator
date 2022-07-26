@@ -6,7 +6,8 @@ export default () => {
   const { pipelineId } = usePath();
 
   const query = useQuery(PIPELINE_QUERY);
+  const { loading } = query;
   const pipeline = query.data?.pipelines?.list.find(x => x.name === pipelineId);
 
-  return { pipeline, pipelineId };
+  return { pipeline, pipelineId, loading };
 };

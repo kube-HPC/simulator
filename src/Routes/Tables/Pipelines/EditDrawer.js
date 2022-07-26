@@ -13,12 +13,12 @@ import AddPipeline from '../../SidebarRight/AddPipeline';
 
 const EditDrawer = () => {
   const { goTo } = usePath();
-  const { pipeline, pipelineId } = useActivePipeline();
+  const { pipeline, pipelineId, loading } = useActivePipeline();
 
   const { setOff, isOn } = useToggle(true);
 
   const value = useMemo(() => stringify(pipeline), [pipeline]);
-
+  if (loading) return 'Loading...';
   return (
     <Drawer
       getContainer={false}

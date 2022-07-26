@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Input, Radio, Select } from 'antd';
 import { Form, EditableTagGroup } from 'components/common';
@@ -12,11 +12,10 @@ const { Option } = Select;
 const Initial = ({ style }) => {
   const { isEdit, isRunPipeline, valuesState } = useWizardContext();
 
-  // get list nodes
-  const nodeNames = useMemo(
-    () => valuesState?.nodes?.map(item => item?.nodeName),
-    [valuesState]
+  const [nodeNames] = useState(
+    valuesState?.nodes?.map(item => item?.nodeName) || []
   );
+  // get list nodes
 
   const { experiments } = useExperiments();
 
@@ -64,9 +63,10 @@ const Initial = ({ style }) => {
               allowClear
               style={{ width: '100%' }}
               placeholder="Please select">
-              {nodeNames.map(nodeName => (
-                <Option key={nodeName}>{nodeName}</Option>
-              ))}
+              {nodeNames &&
+                nodeNames.map(nodeName => (
+                  <Option key={nodeName}>{nodeName}</Option>
+                ))}
             </Select>
           </Form.Item>
 

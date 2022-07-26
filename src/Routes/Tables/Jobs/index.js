@@ -14,7 +14,7 @@ import { useJobs, usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { Collapse } from 'react-collapse';
 import { filterToggeledVar, instanceFiltersVar, metaVar } from 'cache';
-import { JOB_QUERY } from 'graphql/queries';
+import { JOB_QUERY, JOB_QUERY_GRAPH } from 'graphql/queries';
 import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
@@ -70,7 +70,11 @@ const JobsTable = () => {
 
   const query = useQuery(JOB_QUERY, {
     notifyOnNetworkStatusChange: true,
-    onCompleted: () => setIsTableLoad(false),
+
+    onCompleted: () =>
+      setTimeout(() => {
+        setIsTableLoad(false);
+      }, 3000),
     variables: {
       experimentName: metaMode?.experimentName || null,
       cursor: jobsCursor,
@@ -78,21 +82,45 @@ const JobsTable = () => {
       ...mergedParams,
     },
   });
-
-  // limitAmount = query?.data?.jobsAggregated.jobs?.length || limitAmount;
-
   usePolling(query, 3000);
 
+  const queryGraph = useQuery(JOB_QUERY_GRAPH, {
+    notifyOnNetworkStatusChange: true,
+    displayName: 'JOB_QUERY_GRAPH',
+    variables: {
+      experimentName: metaMode?.experimentName || null,
+      limit: 100000,
+      ...mergedParams,
+    },
+  });
+  usePolling(queryGraph, 3000);
+  // limitAmount = query?.data?.jobsAggregated.jobs?.length || limitAmount;
+
   useEffect(() => {
+    setIsTableLoad(true);
     if (firstRender.current) {
       firstRender.current = false;
     } else {
       setJobsCursor(query?.data?.jobsAggregated?.cursor);
     }
   }, [isFetchMore]);
-
+  /*
+  const onFetchMore = useCallback(() =>
+  {
+  console.log("query?.data?.jobsAggregated?.cursor",query?.data?.jobsAggregated?.cursor)
+  query.fetchMore({
+    variables: {
+      experimentName: metaMode?.experimentName || null,
+      cursor: query?.data?.jobsAggregated?.cursor,
+      limit: 20,
+      updateQuery: () => {console.log(222);setTimeout(()=>{setIsFetchMore(isFetchMore + 1)},100 )}  ,
+      ...mergedParams,
+    },
+  })
+  }
+  , [isFetchMore, mergedParams, metaMode?.experimentName, query]);
+*/
   const onFetchMore = useCallback(() => {
-    setIsTableLoad(true);
     setIsFetchMore(isFetchMore + 1);
   }, [isFetchMore]);
 
@@ -143,6 +171,17 @@ const JobsTable = () => {
     setIsTableLoad(true);
   }, []);
 
+  const _dataSourceGraph = useMemo(() => {
+    if (queryGraph && queryGraph.data) {
+      if (shouldSliceJobs) {
+        return queryGraph.data.jobsAggregated.jobs.slice(0, jobsAmount);
+      }
+      return queryGraph.data.jobsAggregated.jobs;
+    }
+
+    return [];
+  }, [queryGraph]);
+
   const _dataSource = useMemo(() => {
     if (query && query.data) {
       if (shouldSliceJobs) {
@@ -169,7 +208,7 @@ const JobsTable = () => {
           onSubmit={onQuerySubmit}
           params={mergedParams}
         />
-        <QueryDateChart dataSource={_dataSource} onZoom={onZoomChanged} />
+        <QueryDateChart dataSource={_dataSourceGraph} onZoom={onZoomChanged} />
       </Collapse>
       <Table
         id="jobsTable"

@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Form,
@@ -14,7 +14,7 @@ import {
 } from 'antd';
 import styled from 'styled-components';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
-import { usePipeline } from 'hooks';
+import { useGetLists } from 'hooks/graphql';
 import { EditableTagGroup } from 'components/common';
 import { unset } from 'lodash';
 import { Field as RawField } from '../FormUtils';
@@ -38,17 +38,7 @@ const HyperParamsNode = ({ id }) => {
 
   const rootId = ['nodes', id, 'spec'];
 
-  const { pipelinesCollection } = usePipeline();
-
-  const sortedPipelines = useMemo(
-    () =>
-      pipelinesCollection
-        .map(item => ({
-          value: item.name,
-        }))
-        .sort((a, b) => (a.value > b.value ? 1 : -1)),
-    [pipelinesCollection]
-  );
+  const { pipelines: pipelinesCollection } = useGetLists();
 
   const isSampler = () => {
     const objSpec = initialState?.nodes[id]?.spec;
@@ -102,8 +92,8 @@ const HyperParamsNode = ({ id }) => {
     <ctx.Provider value={{ rootId }}>
       <Field name={['objectivePipeline']} title="Objective Pipeline">
         <AutoComplete
-          disabled={pipelinesCollection.length === 0}
-          options={sortedPipelines}
+          disabled={pipelinesCollection?.length === 0}
+          options={pipelinesCollection}
           filterOption={(inputValue, option) =>
             option.value.indexOf(inputValue) !== -1
           }
