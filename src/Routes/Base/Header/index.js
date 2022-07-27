@@ -11,7 +11,6 @@ import {
   FilterOutlined,
 } from '@ant-design/icons';
 import { useLeftSidebar, useCacheFilters } from 'hooks';
-import { Badge } from 'antd';
 
 // import AutoComplete from './AutoComplete';
 
@@ -21,7 +20,6 @@ import TagsFiltersViews from './TagsFiltersViews';
 // DO NOT REMOVE! This is important to preload the monaco instance into the global window!!!
 // eslint-disable-next-line
 import * as monaco from 'monaco-editor';
-import ViewType from './ViewType.react';
 
 const Container = styled(FlexBox)`
   padding: 1em 2ch;
@@ -54,15 +52,13 @@ const FilterButton = () => {
   const [isFilterToggeled, setIsFilterToggeledColor] = useState(false);
   const _color = !isFilterToggeled ? '#2db7f5' : COLOR_LAYOUT.darkBorder;
   return (
-    <Badge>
-      <FilterOutlined
-        style={{ fontSize: '24px', color: _color }}
-        onClick={() => {
-          filterToggeledVar(!filterToggeledVar());
-          setIsFilterToggeledColor(!isFilterToggeled);
-        }}
-      />
-    </Badge>
+    <FilterOutlined
+      style={{ fontSize: '24px', color: _color }}
+      onClick={() => {
+        filterToggeledVar(!filterToggeledVar());
+        setIsFilterToggeledColor(!isFilterToggeled);
+      }}
+    />
   );
 };
 
@@ -83,7 +79,6 @@ const Header = () => {
           onClick={toggle}
         />
 
-        <Route exact path="/jobs" component={ViewType} />
         <Route exact path="/jobs" component={FilterButton} />
         <Route exact path="/pipelines" component={FilterButton} />
         <Route exact path="/algorithms" component={FilterButton} />

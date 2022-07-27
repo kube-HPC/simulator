@@ -10,6 +10,7 @@ export const instanceCounterVar = makeVar({
   drivers: 0,
   workers: 0,
   dataSources: 0,
+  queue: 0,
 });
 export const instanceFiltersVar = makeVar({
   jobs: {
@@ -67,9 +68,12 @@ const cache = new InMemoryCache({
                   );
                 }
               });
+
+            console.log('incoming.jobsCount', incoming.jobsCount);
+            console.log('merged?.jobs?.length', merged?.jobs?.length);
             instanceCounterVar({
               ...instanceCounterVar(),
-              jobs: merged?.jobs?.length || incoming.jobsCount || 0,
+              jobs: incoming?.jobsCount || merged?.jobs?.length || 0,
             });
             return merged;
           },
@@ -134,6 +138,16 @@ const cache = new InMemoryCache({
               ...instanceCounterVar(),
               drivers: incoming?.pipelineDriver?.length,
               workers: incoming?.worker?.length,
+            });
+            return incoming;
+          },
+        },
+        queueCount: {
+          // eslint-disable-next-line no-unused-vars
+          merge(_existing = { queueCount: [] }, incoming) {
+            instanceCounterVar({
+              ...instanceCounterVar(),
+              queue: incoming.managed + incoming.preferred,
             });
             return incoming;
           },

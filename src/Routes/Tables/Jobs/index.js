@@ -15,6 +15,7 @@ import { useQuery, useReactiveVar } from '@apollo/client';
 import { Collapse } from 'react-collapse';
 import { filterToggeledVar, instanceFiltersVar, metaVar } from 'cache';
 import { JOB_QUERY, JOB_QUERY_GRAPH } from 'graphql/queries';
+import { Empty } from 'antd';
 import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
@@ -184,10 +185,14 @@ const JobsTable = () => {
 
   const _dataSource = useMemo(() => {
     if (query && query.data) {
+      const { jobs } = query.data.jobsAggregated;
+
+      const jobsNoPending = jobs.filter(x => x.status.status !== 'pending');
+
       if (shouldSliceJobs) {
-        return query.data.jobsAggregated.jobs.slice(0, jobsAmount);
+        return jobsNoPending.slice(0, jobsAmount);
       }
-      return query.data.jobsAggregated.jobs;
+      return jobsNoPending;
     }
 
     return [];
@@ -208,20 +213,34 @@ const JobsTable = () => {
           onSubmit={onQuerySubmit}
           params={mergedParams}
         />
-        <QueryDateChart dataSource={_dataSourceGraph} onZoom={onZoomChanged} />
+        {_dataSourceGraph.length > 0 && (
+          <QueryDateChart
+            dataSource={_dataSourceGraph}
+            onZoom={onZoomChanged}
+          />
+        )}
       </Collapse>
-      <Table
-        id="jobsTable"
-        fetchMore={onFetchMore}
-        loading={isTableLoad}
-        onRow={onRow}
-        rowKey={rowKey}
-        expandIcon={false}
-        columns={columns}
-        dataSource={_dataSource}
-        pagination={false}
-        isInfinity
-      />
+      {_dataSource.length > 0 && (
+        <Table
+          id="jobsTable"
+          fetchMore={onFetchMore}
+          loading={isTableLoad}
+          onRow={onRow}
+          rowKey={rowKey}
+          expandIcon={false}
+          columns={columns}
+          dataSource={_dataSource}
+          pagination={false}
+          isInfinity
+        />
+      )}
+
+      {_dataSource.length === 0 && (
+        <Empty
+          style={{ marginTop: 70 }}
+          description={<span>No results match your search criteria</span>}
+        />
+      )}
     </>
   );
 };

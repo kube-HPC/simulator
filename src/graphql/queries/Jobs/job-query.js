@@ -70,6 +70,7 @@ const JOB_QUERY = gql`
         }
       }
       cursor
+      jobsCount
     }
   }
 `;

@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+
+import { useHistory, Route } from 'react-router-dom';
 import {
   ToolOutlined,
   GlobalOutlined,
@@ -15,10 +16,10 @@ import { useActions, useLeftSidebar, useSiteThemeMode } from 'hooks';
 import { FlexBox, Icons } from 'components/common';
 import { appInfo } from 'config';
 import { iconsThemes } from '../../../styles/themes/HelperThemes';
-import ConnectionStatus from './ConnectionStatus.react';
 import InactiveModeTag from './InactiveMode';
 import Settings from './Settings/Settings.react';
 import ExperimentPicker from './ExperimentPicker.react';
+import ViewType from './ViewType.react';
 
 const DarkText = styled.div`
   cursor: pointer;
@@ -49,10 +50,10 @@ const HelpBar = () => {
 
   return (
     <Container className={USER_GUIDE.HEADER.SOCIALS}>
-      <ConnectionStatus />
       <InactiveModeTag />
 
       <ExperimentPicker />
+      <Route exact path="/jobs" component={ViewType} />
       <Icons.Hover
         type={
           <span

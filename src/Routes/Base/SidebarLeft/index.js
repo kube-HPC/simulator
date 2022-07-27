@@ -105,10 +105,11 @@ const instanceCounterAdapter = obj => ({
 
 const menuItems = [
   [LEFT_SIDEBAR_NAMES.JOBS, JobsIcon, '/jobs'],
+  [LEFT_SIDEBAR_NAMES.QUEUE, QueueIcon, '/queue'],
   [LEFT_SIDEBAR_NAMES.PIPELINES, PipelineIcon, '/pipelines'],
   [LEFT_SIDEBAR_NAMES.ALGORITHMS, AlgorithmIcon, '/algorithms'],
   [LEFT_SIDEBAR_NAMES.DATASOURCES, DataSourceIcon, '/datasources'],
-  [LEFT_SIDEBAR_NAMES.QUEUE, QueueIcon, '/queue'],
+
   //  [LEFT_SIDEBAR_NAMES.WORKERS, WorkerIcon, '/workers'],
   //  [LEFT_SIDEBAR_NAMES.DRIVERS, DriversIcon, '/drivers'],
 ];

@@ -11,9 +11,9 @@ const useCounters = () => {
     jobs: query?.data?.jobsAggregated?.jobsCount || 0,
     pipelines: query?.data?.pipelines?.pipelinesCount || 0,
     algorithms: query?.data?.algorithms?.algorithmsCount || 0,
-    queue:
-      (query?.data?.queueCount?.managed || 0) +
-      (query?.data?.queueCount?.preferred || 0),
+    queue: 7,
+    // (query?.data?.queueCount?.managed || 0) +
+    //  (query?.data?.queueCount?.preferred || 0),
     dataSources: query?.data?.dataSources?.dataSourcesCount,
   };
 
