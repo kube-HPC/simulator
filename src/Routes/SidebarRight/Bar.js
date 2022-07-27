@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Icon from '@ant-design/icons';
 import { Layout, Menu, Badge } from 'antd';
-import { useHistory, useLocation, useParams, Link } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useErrorLogs, useStats, useStorage } from 'hooks/graphql';
 // import useStorage from 'hooks/useStorage';
 import {
@@ -11,7 +11,7 @@ import {
   getStorageColorStatus,
   combineStatus,
 } from 'utils/warningColorStatus';
-import { RIGHT_SIDEBAR_NAMES } from 'const';
+
 import { getBottomActions, topActions } from './schema';
 
 const SiderLight = styled(Layout.Sider)`
@@ -53,15 +53,10 @@ const SidebarRight = ({ isTop, className }) => {
   );
 
   // const menuSelect = useCallback(({ key }) => openDrawer(key), [openDrawer]);
-  const cancelClickMenu = [
-    RIGHT_SIDEBAR_NAMES.WORKERS,
-    RIGHT_SIDEBAR_NAMES.DRIVERS,
-  ];
+
   const menuSelect = useCallback(
     ({ key }) => {
-      !cancelClickMenu.includes(key)
-        ? history.push(`/${root}/${key}${location.search}`)
-        : false;
+      history.push(`/${root}/${key}${location.search}`);
     },
     [history, root, location]
   );
@@ -78,20 +73,14 @@ const SidebarRight = ({ isTop, className }) => {
         style={topMargin}
         selectedKeys={noItemSelect}>
         {(isTop ? top : bottom).map(
-          ({ name, isTypeLink, type, component, count, status }) => (
+          ({ name, type, component, count, status }) => (
             <Menu.Item key={name} title={name}>
               <Badge
                 status={status}
                 count={count}
                 overflowCount={100}
                 offset={[0, 11]}>
-                {!isTypeLink ? (
-                  <Icon type={type} component={component} />
-                ) : (
-                  <Link to={{ pathname: `/${name}`, search: location.search }}>
-                    <Icon type={type} component={component} />
-                  </Link>
-                )}
+                <Icon type={type} component={component} />
               </Badge>
             </Menu.Item>
           )

@@ -1,4 +1,6 @@
 export const DRAWER_TITLES = {
+  WORKERS: 'Workers',
+  DRIVERS: 'Drivers',
   ADD_PIPELINE: 'Pipeline Wizard',
   ADD_ALGORITHM: 'Algorithm Wizard',
   ADD_DATASOURCE: ' Datasource wizard',

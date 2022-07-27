@@ -14,4 +14,6 @@ export default {
   PIPELINE_INFO: '70vw',
   ALGORITHM_EDIT: '40vw',
   TF_RUN: '30vw',
+  WORKERS: '90vw',
+  DRIVERS: '90vw',
 };

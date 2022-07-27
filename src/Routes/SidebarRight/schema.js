@@ -40,12 +40,10 @@ export const getBottomActions = ({
 }) => {
   const ret = [
     {
-      isTypeLink: true,
       name: RIGHT_SIDEBAR_NAMES.WORKERS,
       component: WorkerIcon,
     },
     {
-      isTypeLink: true,
       name: RIGHT_SIDEBAR_NAMES.DRIVERS,
       component: DriversIcon,
     },
