@@ -40,8 +40,10 @@ const cache = new InMemoryCache({
           keyArgs: ['type'],
           // eslint-skip-next-line
           merge(existing = { jobs: [], cursor: '' }, incoming, { args }) {
+            console.log('RUN jobsAggregated cursor', incoming);
             // the  cursor remove was done to avoid uncorrect equality since the cursor is a unneeded field for the query
             const { cursor, ...rest } = args;
+            console.log('rest', rest);
             if (!_.isEqual(rest, existing?.query)) {
               // if is not equal then it means that the existing value is not relevant anymore
               // eslint-disable-next-line
@@ -68,13 +70,12 @@ const cache = new InMemoryCache({
                   );
                 }
               });
-
-            console.log('incoming.jobsCount', incoming.jobsCount);
-            console.log('merged?.jobs?.length', merged?.jobs?.length);
             instanceCounterVar({
               ...instanceCounterVar(),
               jobs: incoming?.jobsCount || merged?.jobs?.length || 0,
             });
+
+            console.log('res merged', merged);
             return merged;
           },
         },

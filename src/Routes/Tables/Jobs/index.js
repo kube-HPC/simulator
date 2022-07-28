@@ -1,8 +1,8 @@
 import React, {
   useCallback,
-  useEffect,
+  // useEffect,
   useMemo,
-  useRef,
+  // useRef,
   useState,
 } from 'react';
 import { Route } from 'react-router-dom';
@@ -14,8 +14,8 @@ import { useJobs, usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { Collapse } from 'react-collapse';
 import { filterToggeledVar, instanceFiltersVar, metaVar } from 'cache';
-import { JOB_QUERY, JOB_QUERY_GRAPH } from 'graphql/queries';
-import { Empty } from 'antd';
+import { JOB_QUERY } from 'graphql/queries'; // JOB_QUERY_GRAPH
+// import { Empty } from 'antd';
 import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
@@ -29,18 +29,19 @@ export { default as jobColumns } from './jobColumns';
 const rowKey = job => `job-${job.key}`;
 let zoomedChangedDate = Date.now();
 const topTableScroll = () => {
+  console.log('topTableScroll');
   const el = document.querySelector('.ant-table-body');
   if (el) el.scrollTop = 0;
 };
 
 const JobsTable = () => {
-  const firstRender = useRef(true);
+  // const firstRender = useRef(true);
   const instanceFilters = useReactiveVar(instanceFiltersVar);
   const filterToggeled = useReactiveVar(filterToggeledVar);
   const metaMode = useReactiveVar(metaVar);
 
   const [jobsCursor, setJobsCursor] = useState(null);
-  const [isFetchMore, setIsFetchMore] = useState(0);
+  // const [isFetchMore, setIsFetchMore] = useState(0);
   const [isTableLoad, setIsTableLoad] = useState(true);
 
   const { goTo } = usePath();
@@ -78,14 +79,14 @@ const JobsTable = () => {
       }, 3000),
     variables: {
       experimentName: metaMode?.experimentName || null,
-      cursor: jobsCursor,
+      //   cursor: jobsCursor,
       limit: 20,
       ...mergedParams,
     },
   });
   usePolling(query, 3000);
 
-  const queryGraph = useQuery(JOB_QUERY_GRAPH, {
+  /* const queryGraph = useQuery(JOB_QUERY_GRAPH, {
     notifyOnNetworkStatusChange: true,
     displayName: 'JOB_QUERY_GRAPH',
     variables: {
@@ -93,10 +94,10 @@ const JobsTable = () => {
       limit: 100000,
       ...mergedParams,
     },
-  });
-  usePolling(queryGraph, 3000);
+  }); */
+  // usePolling(queryGraph, 3000);
   // limitAmount = query?.data?.jobsAggregated.jobs?.length || limitAmount;
-
+  /*
   useEffect(() => {
     setIsTableLoad(true);
     if (firstRender.current) {
@@ -105,25 +106,29 @@ const JobsTable = () => {
       setJobsCursor(query?.data?.jobsAggregated?.cursor);
     }
   }, [isFetchMore]);
-  /*
-  const onFetchMore = useCallback(() =>
-  {
-  console.log("query?.data?.jobsAggregated?.cursor",query?.data?.jobsAggregated?.cursor)
-  query.fetchMore({
-    variables: {
-      experimentName: metaMode?.experimentName || null,
-      cursor: query?.data?.jobsAggregated?.cursor,
-      limit: 20,
-      updateQuery: () => {console.log(222);setTimeout(()=>{setIsFetchMore(isFetchMore + 1)},100 )}  ,
-      ...mergedParams,
-    },
-  })
-  }
-  , [isFetchMore, mergedParams, metaMode?.experimentName, query]);
-*/
+ */
   const onFetchMore = useCallback(() => {
-    setIsFetchMore(isFetchMore + 1);
-  }, [isFetchMore]);
+    console.log('before cursor', query?.data?.jobsAggregated?.cursor);
+    query
+      .fetchMore({
+        variables: {
+          // experimentName: metaMode?.experimentName || null,
+          cursor: jobsCursor || query?.data?.jobsAggregated?.cursor,
+          //  limit: 20,
+          // updateQuery: () => {console.log(222);setTimeout(()=>{setIsFetchMore(isFetchMore + 1)},100 )}  ,
+          // ...mergedParams,
+        },
+      })
+      .then(res => {
+        console.log('after cursor=', res.data.jobsAggregated?.cursor);
+
+        setJobsCursor(res.data.jobsAggregated.cursor);
+      });
+  }, [jobsCursor, query]);
+
+  //  const onFetchMore = useCallback(() => {
+  //    setIsFetchMore(isFetchMore + 1);
+  // }, [isFetchMore]);
 
   const onZoomChanged = useCallback(
     data => {
@@ -172,7 +177,7 @@ const JobsTable = () => {
     setIsTableLoad(true);
   }, []);
 
-  const _dataSourceGraph = useMemo(() => {
+  /* const _dataSourceGraph = useMemo(() => {
     if (queryGraph && queryGraph.data) {
       if (shouldSliceJobs) {
         return queryGraph.data.jobsAggregated.jobs.slice(0, jobsAmount);
@@ -181,9 +186,10 @@ const JobsTable = () => {
     }
 
     return [];
-  }, [queryGraph]);
-
+  }, [queryGraph]); */
+  /*
   const _dataSource = useMemo(() => {
+    console.log("update _dataSource")
     if (query && query.data) {
       const { jobs } = query.data.jobsAggregated;
 
@@ -197,6 +203,19 @@ const JobsTable = () => {
 
     return [];
   }, [query]);
+*/
+  const _dataSource = useMemo(() => {
+    if (query && query.data) {
+      if (shouldSliceJobs) {
+        console.log(1);
+        return query.data.jobsAggregated.jobs.slice(0, jobsAmount);
+      }
+      console.log('2 ', query.data.jobsAggregated.jobs);
+      return query.data.jobsAggregated.jobs;
+    }
+    console.log(3);
+    return [];
+  }, [query]);
 
   const onRow = useCallback(
     job => ({
@@ -204,7 +223,7 @@ const JobsTable = () => {
     }),
     [goTo]
   );
-
+  /*
   const NoDataTable = len =>
     setTimeout(
       () =>
@@ -216,7 +235,7 @@ const JobsTable = () => {
         ),
       2000
     );
-
+*/
   return (
     <>
       <Collapse isOpened={filterToggeled}>
@@ -225,30 +244,22 @@ const JobsTable = () => {
           onSubmit={onQuerySubmit}
           params={mergedParams}
         />
-        {_dataSource.length > 0 && (
-          <QueryDateChart
-            dataSource={_dataSourceGraph}
-            onZoom={onZoomChanged}
-          />
-        )}
+
+        <QueryDateChart dataSource={_dataSource} onZoom={onZoomChanged} />
       </Collapse>
 
-      {_dataSource.length > 0 && (
-        <Table
-          id="jobsTable"
-          fetchMore={onFetchMore}
-          loading={isTableLoad}
-          onRow={onRow}
-          rowKey={rowKey}
-          expandIcon={false}
-          columns={columns}
-          dataSource={_dataSource}
-          pagination={false}
-          isInfinity
-        />
-      )}
-
-      <NoDataTable len={_dataSource.length} />
+      <Table
+        id="jobsTable"
+        fetchMore={onFetchMore}
+        loading={isTableLoad}
+        onRow={onRow}
+        rowKey={rowKey}
+        expandIcon={false}
+        columns={columns}
+        dataSource={_dataSource}
+        pagination={false}
+        isInfinity
+      />
     </>
   );
 };
