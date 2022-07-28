@@ -25,6 +25,7 @@ const sortByMinHotWorkers = (a, b) => sorter(a.workerImage, b.workerImage);
 
 export default [
   {
+    width: '15%',
     title: 'Algorithm Name',
     dataIndex: ['name'],
     key: 'name',
@@ -40,25 +41,28 @@ export default [
     render: Image,
   },
   {
+    width: '10%',
     title: 'Builds Stats',
     dataIndex: ['buildStats'],
     key: 'builds',
     render: BuildStats,
   },
   {
+    width: '10%',
     title: 'CPU',
     dataIndex: ['cpu'],
     key: 'cpu',
     render: Cpu,
   },
   {
+    width: '10%',
     title: 'Mem',
     dataIndex: ['mem'],
     key: 'mem',
-    width: '10%',
     render: Memory,
   },
   {
+    width: '10%',
     title: 'Min Hot Workers',
     dataIndex: ['minHotWorkers'],
     key: 'minHotWorkers',
@@ -66,6 +70,7 @@ export default [
     render: HotWorkers,
   },
   {
+    width: '20%',
     title: 'Action',
     dataIndex: ['action'],
     key: 'action',

@@ -205,6 +205,18 @@ const JobsTable = () => {
     [goTo]
   );
 
+  const NoDataTable = len =>
+    setTimeout(
+      () =>
+        len.length === 0 && (
+          <Empty
+            style={{ marginTop: 70 }}
+            description={<span>No results match your search criteria</span>}
+          />
+        ),
+      2000
+    );
+
   return (
     <>
       <Collapse isOpened={filterToggeled}>
@@ -213,13 +225,14 @@ const JobsTable = () => {
           onSubmit={onQuerySubmit}
           params={mergedParams}
         />
-        {_dataSourceGraph.length > 0 && (
+        {_dataSource.length > 0 && (
           <QueryDateChart
             dataSource={_dataSourceGraph}
             onZoom={onZoomChanged}
           />
         )}
       </Collapse>
+
       {_dataSource.length > 0 && (
         <Table
           id="jobsTable"
@@ -235,12 +248,7 @@ const JobsTable = () => {
         />
       )}
 
-      {_dataSource.length === 0 && (
-        <Empty
-          style={{ marginTop: 70 }}
-          description={<span>No results match your search criteria</span>}
-        />
-      )}
+      <NoDataTable len={_dataSource.length} />
     </>
   );
 };

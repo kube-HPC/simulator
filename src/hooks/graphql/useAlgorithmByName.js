@@ -5,7 +5,7 @@ const { ALGORITHM_BY_NAME_QUERY } = require('../../graphql/queries');
 const useAlgorithmByName = algorithmName =>
   useQuery(ALGORITHM_BY_NAME_QUERY, {
     variables: {
-      algorithmName,
+      name: algorithmName,
     },
   });
 export default useAlgorithmByName;
