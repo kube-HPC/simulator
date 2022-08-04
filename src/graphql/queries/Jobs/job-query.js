@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 const JOB_QUERY = gql`
-  query Query(
+  query jobsAggregatedList(
     $experimentName: String
     $pipelineName: String
     $algorithmName: String
@@ -24,7 +24,7 @@ const JOB_QUERY = gql`
         status {
           pipeline
           level
-          timestamp
+
           status
           data {
             progress
@@ -70,7 +70,6 @@ const JOB_QUERY = gql`
         }
       }
       cursor
-      jobsCount
     }
   }
 `;

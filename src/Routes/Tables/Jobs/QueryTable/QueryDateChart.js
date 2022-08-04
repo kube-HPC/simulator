@@ -53,13 +53,9 @@ const QueryDateChart = props => {
         },
         events: {
           zoomed(chartContext, { xaxis }) {
-            // yaxis
-            // console.log(chartContext, { xaxis, yaxis });
             props.onZoom(xaxis);
           },
-          // click(event, chartContext, config) {
-          //  console.log(event, chartContext, config);
-          // },
+
           dataPointSelection: (event, chartContext, config) => {
             props.onZoom({
               min:
@@ -70,11 +66,6 @@ const QueryDateChart = props => {
                 _histogram.binWidth,
             });
           },
-          // updated: function (chartContext, config) {
-          //   console.log(chartContext, config);
-          //   chartContext.ctx.toolbar.handleZoomOut()
-          //   calledFromZoomOut = true;
-          // }
         },
       },
       responsive: [

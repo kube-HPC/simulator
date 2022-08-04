@@ -1,47 +1,52 @@
-import React, {
-  useCallback,
-  // useEffect,
-  useMemo,
-  // useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Route } from 'react-router-dom';
 import styled from 'styled-components';
 import useQueryHook from 'hooks/useQuery';
 import { Table } from 'components';
 import { Card } from 'components/common';
 import { useJobs, usePolling } from 'hooks';
-import { useQuery, useReactiveVar } from '@apollo/client';
+import { useQuery, useReactiveVar, useLazyQuery } from '@apollo/client';
 import { Collapse } from 'react-collapse';
 import { filterToggeledVar, instanceFiltersVar, metaVar } from 'cache';
-import { JOB_QUERY } from 'graphql/queries'; // JOB_QUERY_GRAPH
-// import { Empty } from 'antd';
+import {
+  JOB_QUERY,
+  JOB_QUERY_GRAPH,
+  JOB_QUERY_ACTIVE,
+  JOB_BY_ID_QUERY,
+} from 'graphql/queries';
+import { Empty } from 'antd';
 import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
 import QueryForm from './QueryTable/QueryForm';
 import QueryDateChart from './QueryTable/QueryDateChart';
 
-const jobsAmount = parseInt(process.env.REACT_APP_SLICE_JOBS, 10);
-const shouldSliceJobs = Number.isInteger(jobsAmount) && jobsAmount > 0;
+// const jobsAmount = parseInt(process.env.REACT_APP_SLICE_JOBS, 10);
+// const shouldSliceJobs = Number.isInteger(jobsAmount) && jobsAmount > 0;
 // let limitAmount = 20;
 export { default as jobColumns } from './jobColumns';
 const rowKey = job => `job-${job.key}`;
 let zoomedChangedDate = Date.now();
 const topTableScroll = () => {
-  console.log('topTableScroll');
   const el = document.querySelector('.ant-table-body');
   if (el) el.scrollTop = 0;
 };
 
+const localeEmpty = {
+  emptyText: (
+    <Empty description={<span>No results match your search criteria</span>} />
+  ),
+};
+
 const JobsTable = () => {
-  // const firstRender = useRef(true);
   const instanceFilters = useReactiveVar(instanceFiltersVar);
   const filterToggeled = useReactiveVar(filterToggeledVar);
   const metaMode = useReactiveVar(metaVar);
 
-  const [jobsCursor, setJobsCursor] = useState(null);
-  // const [isFetchMore, setIsFetchMore] = useState(0);
+  const [JobsActive, setJobsActive] = useState([]);
+  const [jobsActiveCompleted, setJobsActiveCompleted] = useState([]);
+  const [dataSourceJobs, setDataSourceJobs] = useState([]);
+
   const [isTableLoad, setIsTableLoad] = useState(true);
 
   const { goTo } = usePath();
@@ -70,65 +75,46 @@ const JobsTable = () => {
     instanceFilters.jobs?.datesRange?.to,
   ]);
 
-  const query = useQuery(JOB_QUERY, {
-    notifyOnNetworkStatusChange: true,
+  // all limit Jobs
 
-    onCompleted: () =>
-      setTimeout(() => {
-        setIsTableLoad(false);
-      }, 3000),
+  const query = useQuery(JOB_QUERY, {
+    //  notifyOnNetworkStatusChange: true,
     variables: {
       experimentName: metaMode?.experimentName || null,
-      //   cursor: jobsCursor,
-      limit: 20,
+      limit: 10,
       ...mergedParams,
     },
+    onCompleted: () => {
+      setIsTableLoad(false);
+    },
   });
-  usePolling(query, 3000);
+  // usePolling(query, 3000);
 
-  /* const queryGraph = useQuery(JOB_QUERY_GRAPH, {
-    notifyOnNetworkStatusChange: true,
+  // all Jobs to Graph
+  const queryGraph = useQuery(JOB_QUERY_GRAPH, {
+    // notifyOnNetworkStatusChange: true,
+
     displayName: 'JOB_QUERY_GRAPH',
     variables: {
       experimentName: metaMode?.experimentName || null,
       limit: 100000,
       ...mergedParams,
     },
-  }); */
+    onCompleted: () => {
+      setIsTableLoad(false);
+    },
+  });
   // usePolling(queryGraph, 3000);
+
   // limitAmount = query?.data?.jobsAggregated.jobs?.length || limitAmount;
-  /*
-  useEffect(() => {
-    setIsTableLoad(true);
-    if (firstRender.current) {
-      firstRender.current = false;
-    } else {
-      setJobsCursor(query?.data?.jobsAggregated?.cursor);
-    }
-  }, [isFetchMore]);
- */
+
   const onFetchMore = useCallback(() => {
-    console.log('before cursor', query?.data?.jobsAggregated?.cursor);
-    query
-      .fetchMore({
-        variables: {
-          // experimentName: metaMode?.experimentName || null,
-          cursor: jobsCursor || query?.data?.jobsAggregated?.cursor,
-          //  limit: 20,
-          // updateQuery: () => {console.log(222);setTimeout(()=>{setIsFetchMore(isFetchMore + 1)},100 )}  ,
-          // ...mergedParams,
-        },
-      })
-      .then(res => {
-        console.log('after cursor=', res.data.jobsAggregated?.cursor);
-
-        setJobsCursor(res.data.jobsAggregated.cursor);
-      });
-  }, [jobsCursor, query]);
-
-  //  const onFetchMore = useCallback(() => {
-  //    setIsFetchMore(isFetchMore + 1);
-  // }, [isFetchMore]);
+    query.fetchMore({
+      variables: {
+        cursor: query?.data?.jobsAggregated?.cursor,
+      },
+    });
+  }, [query]);
 
   const onZoomChanged = useCallback(
     data => {
@@ -147,75 +133,129 @@ const JobsTable = () => {
 
       instanceFiltersVar(stateInstanceFilter);
       setIsTableLoad(true);
-      setJobsCursor(null);
+      // setJobsCursor(null);
       topTableScroll();
       // query.fetchMore({ variables: { ...mergedParams, datesRange, limit: 20 } });
+
+      query.refetch();
+      queryGraph.refetch();
     },
-    [mergedParams]
+    [mergedParams, query, queryGraph]
   );
 
-  const onQuerySubmit = useCallback(values => {
-    let datesRange = null;
-    const { time, ...other } = values;
+  const onQuerySubmit = useCallback(
+    values => {
+      let datesRange = null;
+      const { time, ...other } = values;
 
-    time
-      ? (datesRange = {
-          from: time[0]?.toISOString(),
-          to: time[1]?.toISOString(),
-        })
-      : null;
+      time
+        ? (datesRange = {
+            from: time[0]?.toISOString(),
+            to: time[1]?.toISOString(),
+          })
+        : null;
 
-    Object.values(other).forEach((element, index) => {
-      element === '' ? (other[Object.keys(other)[index]] = undefined) : null;
-    });
-    const stateInstanceFilter = { ...instanceFiltersVar() };
-    stateInstanceFilter.jobs = { ...other, datesRange };
+      Object.values(other).forEach((element, index) => {
+        element === '' ? (other[Object.keys(other)[index]] = undefined) : null;
+      });
+      const stateInstanceFilter = { ...instanceFiltersVar() };
+      stateInstanceFilter.jobs = { ...other, datesRange };
 
-    instanceFiltersVar(stateInstanceFilter);
-    setJobsCursor(null);
-    topTableScroll();
-    setIsTableLoad(true);
-  }, []);
+      instanceFiltersVar(stateInstanceFilter);
 
-  /* const _dataSourceGraph = useMemo(() => {
+      topTableScroll();
+      setIsTableLoad(true);
+
+      query.refetch();
+      queryGraph.refetch();
+    },
+    [query, queryGraph]
+  );
+
+  const _dataSourceGraph = useMemo(() => {
     if (queryGraph && queryGraph.data) {
-      if (shouldSliceJobs) {
-        return queryGraph.data.jobsAggregated.jobs.slice(0, jobsAmount);
-      }
       return queryGraph.data.jobsAggregated.jobs;
     }
 
     return [];
-  }, [queryGraph]); */
-  /*
-  const _dataSource = useMemo(() => {
-    console.log("update _dataSource")
-    if (query && query.data) {
-      const { jobs } = query.data.jobsAggregated;
+  }, [queryGraph]);
 
-      const jobsNoPending = jobs.filter(x => x.status.status !== 'pending');
+  // Active Jobs
+  const [getJobByID] = useLazyQuery(JOB_BY_ID_QUERY, {
+    onCompleted: jobCompleted => {
+      const { job } = jobCompleted;
+      setJobsActiveCompleted(previousState => [job, ...previousState]);
+      const newJobsActive = JobsActive.filter(ele => ele.key !== job.key);
+      setJobsActive(newJobsActive);
+    },
+  });
+  const margeActiveCompletedJobs = jobsActive => {
+    setJobsActive(previousState => [...previousState, ...jobsActive]);
 
-      if (shouldSliceJobs) {
-        return jobsNoPending.slice(0, jobsAmount);
-      }
-      return jobsNoPending;
+    const allIdsJobsInTable = dataSourceJobs.map(x => x.key);
+    const allArrayJobsActive = JobsActive;
+
+    allArrayJobsActive &&
+      allArrayJobsActive.forEach(jobItem => {
+        if (!allIdsJobsInTable.includes(jobItem.key)) {
+          getJobByID({ variables: { jobId: jobItem.key } });
+        }
+      });
+  };
+
+  const queryActive = useQuery(JOB_QUERY_ACTIVE, {
+    //  notifyOnNetworkStatusChange: true,
+    displayName: 'JOB_QUERY_ACTIVE',
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'no-cache',
+    variables: {
+      limit: 200000,
+      pipelineStatus: 'active',
+      datesRange: {
+        from: null,
+        to: null,
+      },
+    },
+    onCompleted: res => {
+      margeActiveCompletedJobs(
+        res?.jobsAggregated?.jobs.filter(x => x.pipeline.name != null)
+      );
+    },
+  });
+  usePolling(queryActive, 2000);
+
+  const _dataSourceActive = useMemo(() => {
+    if (queryActive && queryActive.data) {
+      return queryActive.data.jobsAggregated.jobs.filter(
+        x => x.pipeline.name != null
+      );
     }
 
     return [];
-  }, [query]);
-*/
+  }, [queryActive]);
+
   const _dataSource = useMemo(() => {
     if (query && query.data) {
-      if (shouldSliceJobs) {
-        console.log(1);
-        return query.data.jobsAggregated.jobs.slice(0, jobsAmount);
-      }
-      console.log('2 ', query.data.jobsAggregated.jobs);
-      return query.data.jobsAggregated.jobs;
+      const dsAllJobs = [
+        ..._dataSourceActive,
+        ...jobsActiveCompleted,
+        ...query.data.jobsAggregated.jobs,
+      ];
+      setDataSourceJobs([
+        ..._dataSourceActive,
+        ...query.data.jobsAggregated.jobs,
+      ]);
+
+      return dsAllJobs;
     }
-    console.log(3);
+
     return [];
-  }, [query]);
+  }, [_dataSourceActive, jobsActiveCompleted, query]);
+
+  useEffect(() => {
+    query.refetch();
+    queryGraph.refetch();
+  }, [mergedParams]);
 
   const onRow = useCallback(
     job => ({
@@ -223,19 +263,7 @@ const JobsTable = () => {
     }),
     [goTo]
   );
-  /*
-  const NoDataTable = len =>
-    setTimeout(
-      () =>
-        len.length === 0 && (
-          <Empty
-            style={{ marginTop: 70 }}
-            description={<span>No results match your search criteria</span>}
-          />
-        ),
-      2000
-    );
-*/
+
   return (
     <>
       <Collapse isOpened={filterToggeled}>
@@ -245,7 +273,12 @@ const JobsTable = () => {
           params={mergedParams}
         />
 
-        <QueryDateChart dataSource={_dataSource} onZoom={onZoomChanged} />
+        {_dataSourceGraph && (
+          <QueryDateChart
+            dataSource={_dataSourceGraph}
+            onZoom={onZoomChanged}
+          />
+        )}
       </Collapse>
 
       <Table
@@ -259,6 +292,8 @@ const JobsTable = () => {
         dataSource={_dataSource}
         pagination={false}
         isInfinity
+        heightScroll="58vh"
+        locale={localeEmpty}
       />
     </>
   );

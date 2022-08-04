@@ -1,7 +1,7 @@
 const { default: gql } = require('graphql-tag');
 
 const JOB_GRID_VIEW_QUERY = gql`
-  query Query(
+  query jobsAggregatedGrid(
     $experimentName: String
     $pipelineName: String
     $algorithmName: String

@@ -1,7 +1,7 @@
 const { default: gql } = require('graphql-tag');
 
 const JOB_BY_ID_QUERY = gql`
-  query Query($jobId: String!) {
+  query JobsAggregatedByID($jobId: String!) {
     job(id: $jobId) {
       key
       results {

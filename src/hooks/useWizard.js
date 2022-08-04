@@ -43,7 +43,7 @@ const useWizard = (
 
   const getFormattedFormValues = useCallback(() => {
     const formValues = getFieldsValue();
-    console.log(formValues);
+
     delete formValues.listKeyValue;
     const nodes = Object.values(formValues?.nodes || {})
       .filter(item => item?.kind)
@@ -96,7 +96,6 @@ const useWizard = (
   );
 
   const setForm = useCallback(() => {
-    console.log('setForm');
     setValuesState(getFormattedFormValues());
   }, [getFormattedFormValues, setValuesState]);
 

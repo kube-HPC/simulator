@@ -59,7 +59,6 @@ const TagsFiltersViews = ({ sectionName }) => {
   //  },[])
 
   useEffect(() => {
-    //  console.log("initFilters befor history instanceFilters>>>",instanceFilters)
     const _qParams = qs.stringify(instanceFilters[sectionName], {
       ignoreQueryPrefix: true,
       allowDots: true,
@@ -74,8 +73,6 @@ const TagsFiltersViews = ({ sectionName }) => {
       pathname: urlParams.pathname,
       search: `?${_qParams}${_qMoreParam}`,
     });
-
-    //  console.log("initFilters push history _qParams>>>",_qParams)
   }, [history, instanceFilters, sectionName, urlParams.pathname]);
 
   return (

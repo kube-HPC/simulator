@@ -7,15 +7,6 @@ import { inactiveModeVar } from 'cache';
 const queryArry = [];
 let isTrottle = false;
 let isPolling = true;
-// let _debounced = null;
-// const _stopPolling = () => {
-//   queryArry.forEach(query => {
-//     query.stopPolling();
-
-//   })
-//   console.log('debounced');
-// }
-// const _debounced = debounce(() => console.log('debounced'), 20000, { maxWait: 20000 });
 
 const _throttled = throttle(
   () => {

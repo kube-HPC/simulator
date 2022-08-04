@@ -56,17 +56,16 @@ ExpandIcon.propTypes = {
 const antIcon = <LoadingOutlined style={{ fontSize: 40 }} spin />;
 Spin.setDefaultIndicator(antIcon);
 
-const Table = ({ dataSource, loading, isInfinity, ...props }) => {
+const Table = ({ dataSource, loading, isInfinity, heightScroll, ...props }) => {
   const [vt] = useVT(
     () => ({
       initTop: 1,
       onScroll: ({ isEnd }) => {
         if (isEnd) {
           props.fetchMore();
-          //  console.log('loadDataByChunk');
         }
       },
-      scroll: { y: '80vh' },
+      scroll: { y: heightScroll },
       //  debug: true,
     }),
     [dataSource]
@@ -76,7 +75,7 @@ const Table = ({ dataSource, loading, isInfinity, ...props }) => {
     <TableWhite
       loading={loading}
       components={isInfinity ? vt : null}
-      scroll={isInfinity ? { y: '88vh' } : {}}
+      scroll={isInfinity ? { y: heightScroll } : {}}
       // scroll={{ y: 'calc(80vh - 4em)' }}
       className={USER_GUIDE.TABLE}
       expandIcon={ExpandIcon}
@@ -92,12 +91,14 @@ Table.propTypes = {
   dataSource: PropTypes.arrayOf(PropTypes.object),
   loading: PropTypes.bool,
   isInfinity: PropTypes.bool,
+  heightScroll: PropTypes.string,
   ...AntTable.propTypes,
 };
 Table.defaultProps = {
   dataSource: [],
   loading: false,
   isInfinity: false,
+  heightScroll: '88vh',
 };
 
 export default React.memo(Table);

@@ -2,6 +2,7 @@ export { default as JOB_QUERY } from './Jobs/job-query';
 export { default as JOB_GRID_VIEW_QUERY } from './Jobs/jobs-grid-view-query';
 export { default as JOB_BY_ID_QUERY } from './Jobs/job-by-id-query';
 export { default as JOB_QUERY_GRAPH } from './Jobs/job-query-graph';
+export { default as JOB_QUERY_ACTIVE } from './Jobs/job-active-query';
 
 export { default as PIPELINE_QUERY } from './pipeline-query';
 export { default as PIPELINE_STATS_QUERY } from './pipeline-stats-query';

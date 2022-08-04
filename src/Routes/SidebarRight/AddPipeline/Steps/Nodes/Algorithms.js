@@ -22,7 +22,6 @@ const AlgorithmNode = ({ id }) => {
   const { isStreamingPipeline } = useWizardContext();
   const { algorithms: sortedAlgorithms } = useGetLists();
 
-  console.log(sortedAlgorithms);
   const rootId = ['nodes', id];
   return (
     <ctx.Provider value={{ rootId }}>

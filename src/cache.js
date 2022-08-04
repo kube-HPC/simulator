@@ -37,46 +37,50 @@ const cache = new InMemoryCache({
     Query: {
       fields: {
         jobsAggregated: {
-          keyArgs: ['type'],
+          keyArgs: ['limit', 'type'],
           // eslint-skip-next-line
           merge(existing = { jobs: [], cursor: '' }, incoming, { args }) {
-            console.log('RUN jobsAggregated cursor', incoming);
-            // the  cursor remove was done to avoid uncorrect equality since the cursor is a unneeded field for the query
-            const { cursor, ...rest } = args;
-            console.log('rest', rest);
-            if (!_.isEqual(rest, existing?.query)) {
-              // if is not equal then it means that the existing value is not relevant anymore
-              // eslint-disable-next-line
-              existing = { jobs: [], cursor: '' };
-            }
-            const merged = {
-              cursor: incoming.cursor,
-              query: rest,
-              jobs:
-                incoming?.jobs &&
-                _.unionBy(
-                  Object.values(existing?.jobs),
-                  Object.values(incoming?.jobs),
-                  'key'
-                ).sort((a, b) =>
-                  a.pipeline.startTime > b.pipeline.startTime ? -1 : 1
-                ),
-            };
-            merged.jobs &&
-              Object.values(merged.jobs).forEach((a, i) => {
-                if (Object.values(incoming.jobs).find(b => b.key === a.key)) {
-                  merged.jobs[i] = Object.values(incoming.jobs).find(
-                    b => b.key === a.key
-                  );
-                }
-              });
-            instanceCounterVar({
-              ...instanceCounterVar(),
-              jobs: incoming?.jobsCount || merged?.jobs?.length || 0,
-            });
+            if (args.limit === 10) {
+              // the  cursor remove was done to avoid uncorrect equality since the cursor is a unneeded field for the query
+              const { cursor, ...rest } = args;
 
-            console.log('res merged', merged);
-            return merged;
+              if (!_.isEqual(rest, existing?.query)) {
+                // if is not equal then it means that the existing value is not relevant anymore
+                // eslint-disable-next-line
+                existing = { jobs: [], cursor: '' };
+              }
+
+              const merged = {
+                cursor: incoming.cursor,
+                query: rest,
+                jobs:
+                  incoming?.jobs &&
+                  _.unionBy(
+                    Object.values(existing?.jobs),
+                    Object.values(incoming?.jobs),
+                    'key'
+                  ).sort((a, b) =>
+                    a.pipeline.startTime > b.pipeline.startTime ? -1 : 1
+                  ),
+              };
+              merged.jobs &&
+                Object.values(merged.jobs).forEach((a, i) => {
+                  if (Object.values(incoming.jobs).find(b => b.key === a.key)) {
+                    merged.jobs[i] = Object.values(incoming.jobs).find(
+                      b => b.key === a.key
+                    );
+                  }
+                });
+
+              instanceCounterVar({
+                ...instanceCounterVar(),
+                jobs: merged?.jobs?.length || 0,
+              });
+
+              return merged;
+            }
+
+            return incoming.jobs;
           },
         },
         toggleFilter: {

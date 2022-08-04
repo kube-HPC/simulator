@@ -88,7 +88,12 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
   //  setTimeout(setLoadingJobs(false), 3000);
   // }, [loadingJobs]);
   return (
-    <FiltersForms layout="inline" form={form} size="medium" onFinish={onFinish}>
+    <FiltersForms
+      layout="inline"
+      form={form}
+      size="medium"
+      onFinish={onFinish}
+      isSpaceAround>
       <Form.Item label="Time" name="time">
         <RangePicker
           style={{ width: '16vw', marginLeft: '1vw' }}

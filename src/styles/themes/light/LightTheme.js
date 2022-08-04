@@ -72,7 +72,7 @@ const LightTheme = COMMON_COLOR => {
     ChonkyFileBrowser: { viewThemeDark: false },
     SidebarLeft: { colorTagNumber: COLOR.blue },
     TitleDataJob: { titleBottom: '#f0f0f0' },
-    filters: { backgroundColor: '#f8fcff', borderColor: '#dce7f7' },
+    filters: { backgroundColor: '#fbfbfb', borderColor: '#ededed' },
   };
 
   return {

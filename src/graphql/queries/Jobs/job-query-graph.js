@@ -19,8 +19,6 @@ const JOB_QUERY_GRAPH = gql`
       cursor: $cursor
       limit: $limit
     ) {
-      cursor
-      jobsCount
       jobs {
         key
         results {
