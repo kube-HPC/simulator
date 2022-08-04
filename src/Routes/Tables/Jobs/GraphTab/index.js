@@ -89,17 +89,17 @@ const GraphTab = ({ graph, pipeline }) => {
   );
 
   const isDisabledBtnRunDebug = useMemo(() => {
-    let res = false;
-    const nodesNames = pipeline.nodes.map(item => item.nodeName);
+    const res = false;
+    // const nodesNames = pipeline.nodes.map(item => item.nodeName);
 
-    if (
+    /*  if (
       pipeline?.kind === 'stream' ||
       (node &&
         node !== {} &&
         (node?.kind !== 'algorithm' || !nodesNames.includes(node?.nodeName)))
     ) {
       res = true;
-    }
+    } */
 
     return res;
   }, [node, pipeline?.kind, pipeline.nodes]);
