@@ -81,7 +81,7 @@ const JobsTable = () => {
     //  notifyOnNetworkStatusChange: true,
     variables: {
       experimentName: metaMode?.experimentName || null,
-      limit: 10,
+      limit: 100,
       ...mergedParams,
     },
     onCompleted: () => {
@@ -135,7 +135,6 @@ const JobsTable = () => {
       setIsTableLoad(true);
       // setJobsCursor(null);
       topTableScroll();
-      // query.fetchMore({ variables: { ...mergedParams, datesRange, limit: 20 } });
 
       query.refetch();
       queryGraph.refetch();
@@ -292,7 +291,7 @@ const JobsTable = () => {
         dataSource={_dataSource}
         pagination={false}
         isInfinity
-        heightScroll="58vh"
+        heightScroll={filterToggeled ? '58vh' : '88vh'}
         locale={localeEmpty}
       />
     </>

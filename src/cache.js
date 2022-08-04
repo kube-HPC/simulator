@@ -40,7 +40,7 @@ const cache = new InMemoryCache({
           keyArgs: ['limit', 'type'],
           // eslint-skip-next-line
           merge(existing = { jobs: [], cursor: '' }, incoming, { args }) {
-            if (args.limit === 10) {
+            if (args.limit === 100) {
               // the  cursor remove was done to avoid uncorrect equality since the cursor is a unneeded field for the query
               const { cursor, ...rest } = args;
 
