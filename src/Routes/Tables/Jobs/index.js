@@ -14,7 +14,7 @@ import {
   JOB_QUERY_ACTIVE,
   JOB_BY_ID_QUERY,
 } from 'graphql/queries';
-import { Empty } from 'antd';
+import { Divider, Empty } from 'antd';
 import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
@@ -43,6 +43,7 @@ const JobsTable = () => {
   const filterToggeled = useReactiveVar(filterToggeledVar);
   const metaMode = useReactiveVar(metaVar);
 
+  const [dataSourceGraph, setDataSourceGraph] = useState([]);
   const [JobsActive, setJobsActive] = useState([]);
   const [jobsActiveCompleted, setJobsActiveCompleted] = useState([]);
   const [dataSourceJobs, setDataSourceJobs] = useState([]);
@@ -91,6 +92,7 @@ const JobsTable = () => {
   // usePolling(query, 3000);
 
   // all Jobs to Graph
+
   const queryGraph = useQuery(JOB_QUERY_GRAPH, {
     // notifyOnNetworkStatusChange: true,
 
@@ -100,7 +102,13 @@ const JobsTable = () => {
       limit: 100000,
       ...mergedParams,
     },
-    onCompleted: () => {
+    onCompleted: resGraph => {
+      if (resGraph && resGraph?.jobsAggregated?.jobs) {
+        setDataSourceGraph(resGraph.jobsAggregated.jobs);
+      } else {
+        setDataSourceGraph([]);
+      }
+
       setIsTableLoad(false);
     },
   });
@@ -170,14 +178,6 @@ const JobsTable = () => {
     },
     [query, queryGraph]
   );
-
-  const _dataSourceGraph = useMemo(() => {
-    if (queryGraph && queryGraph.data) {
-      return queryGraph.data.jobsAggregated.jobs;
-    }
-
-    return [];
-  }, [queryGraph]);
 
   // Active Jobs
   const [getJobByID] = useLazyQuery(JOB_BY_ID_QUERY, {
@@ -272,14 +272,11 @@ const JobsTable = () => {
           params={mergedParams}
         />
 
-        {_dataSourceGraph && (
-          <QueryDateChart
-            dataSource={_dataSourceGraph}
-            onZoom={onZoomChanged}
-          />
+        {dataSourceGraph && (
+          <QueryDateChart dataSource={dataSourceGraph} onZoom={onZoomChanged} />
         )}
       </Collapse>
-
+      <Divider />
       <Table
         id="jobsTable"
         fetchMore={onFetchMore}

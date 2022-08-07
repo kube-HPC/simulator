@@ -89,6 +89,9 @@ const QueryDateChart = props => {
           // distributed: true,
         },
       },
+      yaxis: {
+        show: false,
+      },
       xaxis: {
         type: 'datetime',
         categories:
