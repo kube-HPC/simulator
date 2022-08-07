@@ -88,7 +88,7 @@ const JobGraph = ({ graph, pipeline }) => {
 JobGraph.propTypes = {
   pipeline: PropTypes.shape({
     kind: PropTypes.string.isRequired,
-    nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
+    nodes: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
   graph: PropTypes.shape({
     nodes: PropTypes.arrayOf(PropTypes.object).isRequired,

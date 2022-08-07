@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import moment from 'moment';
 import { Form, DatePicker, AutoComplete } from 'antd';
 import PropTypes from 'prop-types';
@@ -21,7 +21,7 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
     form.submit();
   };
 
-  useMemo(() => {
+  useEffect(() => {
     if (params?.datesRange?.from && params?.datesRange?.to) {
       form.setFieldsValue({
         time: [
@@ -93,7 +93,7 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
       form={form}
       size="medium"
       onFinish={onFinish}
-      isSpaceAround>
+      spacearound={1}>
       <Form.Item label="Time" name="time">
         <RangePicker
           style={{ width: '16vw', marginLeft: '1vw' }}
@@ -153,8 +153,17 @@ QueryForm.defaultProps = {
 
 QueryForm.propTypes = {
   onSubmit: PropTypes.func,
-  params: PropTypes.objectOf(PropTypes.string).isRequired,
-  zoomDate: PropTypes.instanceOf(Date),
+  params: PropTypes.shape({
+    algorithmName: PropTypes.string,
+    pipelineName: PropTypes.string,
+    pipelineStatus: PropTypes.string,
+    datesRange: PropTypes.shape({
+      from: PropTypes.string,
+      to: PropTypes.string,
+    }).isRequired,
+  }).isRequired,
+
+  zoomDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
 };
 QueryForm.defaultProps = {
   onSubmit: () => {},

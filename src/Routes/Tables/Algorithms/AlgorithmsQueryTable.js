@@ -90,11 +90,12 @@ AlgorithmsQueryTable.propTypes = {
 };
 AlgorithmsQueryTable.defaultProps = {
   onSubmit: () => {},
+  algorithmsList: undefined,
 };
 
 AlgorithmsQueryTable.propTypes = {
   onSubmit: PropTypes.func,
-  algorithmsList: PropTypes.objectOf(PropTypes.string).isRequired,
+  algorithmsList: PropTypes.arrayOf(PropTypes.object),
 };
 AlgorithmsQueryTable.defaultProps = {
   onSubmit: () => {},

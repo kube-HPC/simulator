@@ -2,8 +2,7 @@ import styled from 'styled-components';
 import { Form } from 'antd';
 
 export const FiltersForms = styled(Form)`
-    justify-content: ${props =>
-      props.isSpaceAround ? 'space-around' : 'start'};
+    justify-content: ${props => (props.spacearound ? 'space-around' : 'start')};
     border: 1px solid ${props => props.theme.Styles.filters.borderColor};
     border-radius: 10px;
     margin: 4px;

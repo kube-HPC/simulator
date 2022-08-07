@@ -23,7 +23,10 @@ const AlgorithmBuildStats = ({ builds }) => {
 };
 
 AlgorithmBuildStats.propTypes = {
-  builds: PropTypes.arrayOf(PropTypes.shape({ status: PropTypes.string })),
+  builds: PropTypes.shape({
+    status: PropTypes.string,
+    total: PropTypes.number,
+  }),
 };
 
 AlgorithmBuildStats.defaultProps = {

@@ -89,11 +89,12 @@ PipelinesQueryTable.propTypes = {
 };
 PipelinesQueryTable.defaultProps = {
   onSubmit: () => {},
+  pipelinesList: undefined,
 };
 
 PipelinesQueryTable.propTypes = {
   onSubmit: PropTypes.func,
-  pipelinesList: PropTypes.objectOf(PropTypes.string).isRequired,
+  pipelinesList: PropTypes.arrayOf(PropTypes.object),
 };
 PipelinesQueryTable.defaultProps = {
   onSubmit: () => {},

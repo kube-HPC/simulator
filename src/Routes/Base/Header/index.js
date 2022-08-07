@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { filterToggeledVar, instanceFiltersVar } from 'cache';
+import useQueryHook from 'hooks/useQuery';
 import styled from 'styled-components';
 import { Route } from 'react-router-dom';
 import { FlexBox, Icons } from 'components/common';
@@ -49,16 +50,21 @@ const ButtonsContainer = styled(FlexBox.Auto)`
 `; */
 
 const FilterButton = () => {
+  const query = useQueryHook();
+
+  const showFilterByProp = useMemo(() => query.get('view') === 'grid', [query]);
   const [isFilterToggeled, setIsFilterToggeledColor] = useState(false);
   const _color = !isFilterToggeled ? '#2db7f5' : COLOR_LAYOUT.darkBorder;
   return (
-    <FilterOutlined
-      style={{ fontSize: '24px', color: _color }}
-      onClick={() => {
-        filterToggeledVar(!filterToggeledVar());
-        setIsFilterToggeledColor(!isFilterToggeled);
-      }}
-    />
+    !showFilterByProp && (
+      <FilterOutlined
+        style={{ fontSize: '24px', color: _color }}
+        onClick={() => {
+          filterToggeledVar(!filterToggeledVar());
+          setIsFilterToggeledColor(!isFilterToggeled);
+        }}
+      />
+    )
   );
 };
 

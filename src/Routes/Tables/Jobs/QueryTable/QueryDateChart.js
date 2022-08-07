@@ -20,7 +20,7 @@ const QueryDateChart = props => {
     series: [
       {
         name: 'Hits',
-        data: _histogram?.values,
+        data: _histogram?.values || [],
       },
     ],
 
@@ -122,7 +122,7 @@ const QueryDateChart = props => {
 };
 QueryDateChart.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
-  dataSource: PropTypes.object,
+  dataSource: PropTypes.arrayOf(PropTypes.object),
   onZoom: PropTypes.func.isRequired,
 };
 QueryDateChart.defaultProps = {
