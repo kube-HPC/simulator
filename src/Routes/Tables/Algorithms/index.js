@@ -4,6 +4,7 @@ import { Table } from 'components';
 import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { Collapse } from 'react-collapse';
+import { Space } from 'antd';
 import { filterToggeledVar } from 'cache';
 import { ALGORITHMS_QUERY } from 'graphql/queries';
 import OverviewDrawer from './OverviewDrawer';
@@ -40,24 +41,31 @@ const AlgorithmsTable = () => {
 
   return (
     <>
-      <Collapse isOpened={filterToggeled}>
-        <AlgorithmsQueryTable
-          algorithmsList={query.data?.algorithms?.list}
-          onSubmit={onSubmitFilter}
-        />
-      </Collapse>
+      <Space
+        direction="vertical"
+        size="middle"
+        style={{
+          display: 'flex',
+        }}>
+        <Collapse isOpened={filterToggeled}>
+          <AlgorithmsQueryTable
+            algorithmsList={query.data?.algorithms?.list}
+            onSubmit={onSubmitFilter}
+          />
+        </Collapse>
 
-      <Table
-        rowKey={rowKey}
-        //  dataSource={collection}
-        dataSource={algorithmFilterList}
-        columns={algorithmColumns}
-        onRow={onRow}
-        expandIcon={false}
-        scroll={{
-          y: '80vh',
-        }}
-      />
+        <Table
+          rowKey={rowKey}
+          //  dataSource={collection}
+          dataSource={algorithmFilterList}
+          columns={algorithmColumns}
+          onRow={onRow}
+          expandIcon={false}
+          scroll={{
+            y: '80vh',
+          }}
+        />
+      </Space>
       <Route
         exact
         path="/algorithms/:algorithmId/overview/:tabKey"

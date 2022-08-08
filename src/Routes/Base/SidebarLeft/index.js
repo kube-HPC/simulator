@@ -94,7 +94,8 @@ const sidebarSelector = state => ({
 */
 
 const instanceCounterAdapter = obj => ({
-  [LEFT_SIDEBAR_NAMES.JOBS]: obj.jobs,
+  [LEFT_SIDEBAR_NAMES.JOBS]:
+    obj.jobsActive > 0 ? `${obj.jobs} / ${obj.jobsActive}` : obj.jobs,
   [LEFT_SIDEBAR_NAMES.QUEUE]: obj.queue || 0,
   [LEFT_SIDEBAR_NAMES.PIPELINES]: obj.pipelines,
   [LEFT_SIDEBAR_NAMES.ALGORITHMS]: obj.algorithms,
@@ -162,13 +163,12 @@ const SidebarLeft = () => {
                       />
                       <Name>{name}</Name>
                     </FlexBox.Item>
-                    {Number.isInteger(dataCount[name]) && (
-                      <FlexBox.Item>
-                        <Badge dot={isFilters} offset={[-7, 0]}>
-                          <Tag style={tagStyle}>{dataCount[name]}</Tag>
-                        </Badge>
-                      </FlexBox.Item>
-                    )}
+
+                    <FlexBox.Item>
+                      <Badge dot={isFilters} offset={[-7, 0]}>
+                        <Tag style={tagStyle}>{dataCount[name]}</Tag>
+                      </Badge>
+                    </FlexBox.Item>
                   </FlexBox>
                 </Link>
               </Menu.Item>

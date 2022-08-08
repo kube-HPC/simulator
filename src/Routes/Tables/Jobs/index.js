@@ -275,8 +275,10 @@ const JobsTable = () => {
         {dataSourceGraph && (
           <QueryDateChart dataSource={dataSourceGraph} onZoom={onZoomChanged} />
         )}
+
+        <Divider />
       </Collapse>
-      <Divider />
+
       <Table
         id="jobsTable"
         fetchMore={onFetchMore}

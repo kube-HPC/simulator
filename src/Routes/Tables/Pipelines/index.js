@@ -6,7 +6,7 @@ import { useQuery, useReactiveVar } from '@apollo/client';
 import { PIPELINE_QUERY } from 'graphql/queries';
 import { Collapse } from 'react-collapse';
 import { filterToggeledVar } from 'cache';
-
+import { Space } from 'antd';
 import pipelineColumns from './pipelineColumns';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
@@ -45,24 +45,32 @@ const PipelinesTable = () => {
 
   return (
     <>
-      <Collapse isOpened={filterToggeled}>
-        <PipelinesQueryTable
-          pipelinesList={query.data?.pipelines?.list}
-          onSubmit={onSubmitFilter}
-        />
-      </Collapse>
+      <Space
+        direction="vertical"
+        size="middle"
+        style={{
+          display: 'flex',
+        }}>
+        <Collapse isOpened={filterToggeled}>
+          <PipelinesQueryTable
+            pipelinesList={query.data?.pipelines?.list}
+            onSubmit={onSubmitFilter}
+          />
+        </Collapse>
 
-      <Table
-        rowKey={rowKey}
-        //  dataSource={collection}
-        dataSource={pipelineFilterList}
-        columns={pipelineColumns}
-        onRow={onRow}
-        expandIcon={false}
-        scroll={{
-          y: '80vh',
-        }}
-      />
+        <Table
+          rowKey={rowKey}
+          //  dataSource={collection}
+          dataSource={pipelineFilterList}
+          columns={pipelineColumns}
+          onRow={onRow}
+          expandIcon={false}
+          scroll={{
+            y: '80vh',
+          }}
+        />
+      </Space>
+
       <Route
         path="/pipelines/:pipelineId/overview/:tabKey?"
         component={OverviewDrawer}

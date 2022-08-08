@@ -5,6 +5,7 @@ export const filterToggeledVar = makeVar(true);
 export const inactiveModeVar = makeVar(false);
 export const instanceCounterVar = makeVar({
   jobs: 0,
+  jobsActive: 0,
   pipelines: 0,
   algorithms: 0,
   drivers: 0,
@@ -40,7 +41,25 @@ const cache = new InMemoryCache({
           keyArgs: ['limit', 'type'],
           // eslint-skip-next-line
           merge(existing = { jobs: [], cursor: '' }, incoming, { args }) {
+            if (args.limit === 100000) {
+              // total jobs
+              instanceCounterVar({
+                ...instanceCounterVar(),
+                jobs: incoming?.jobs?.length || 0,
+              });
+            }
+
+            if (args.limit === 200000) {
+              // active jobs
+
+              instanceCounterVar({
+                ...instanceCounterVar(),
+                jobsActive: incoming?.jobs?.length || 0,
+              });
+            }
+
             if (args.limit === 100) {
+              // scroll jobs
               // the  cursor remove was done to avoid uncorrect equality since the cursor is a unneeded field for the query
               const { cursor, ...rest } = args;
 
@@ -71,11 +90,6 @@ const cache = new InMemoryCache({
                     );
                   }
                 });
-
-              instanceCounterVar({
-                ...instanceCounterVar(),
-                jobs: merged?.jobs?.length || 0,
-              });
 
               return merged;
             }
