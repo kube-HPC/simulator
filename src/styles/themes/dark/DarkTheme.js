@@ -82,6 +82,11 @@ const DarkTheme = COMMON_COLOR => {
     SidebarLeft: { colorTagNumber: COLOR.grey },
     TitleDataJob: { titleBottom: '#303030' },
     filters: { backgroundColor: '#2f306c30', borderColor: '#053054' },
+    jobsGraph: {
+      mode: 'dark',
+      backgroundBarColor: '#0b426b',
+      borderBarColor: '#147cc2',
+    },
   };
 
   return {

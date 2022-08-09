@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Route } from 'react-router-dom';
 import styled from 'styled-components';
+import { useDebouncedCallback } from 'use-debounce';
 import useQueryHook from 'hooks/useQuery';
 import { Table } from 'components';
 import { Card } from 'components/common';
@@ -149,6 +150,7 @@ const JobsTable = () => {
     },
     [mergedParams, query, queryGraph]
   );
+  const debouncedZoomChanged = useDebouncedCallback(onZoomChanged, 1000);
 
   const onQuerySubmit = useCallback(
     values => {
@@ -273,7 +275,10 @@ const JobsTable = () => {
         />
 
         {dataSourceGraph && (
-          <QueryDateChart dataSource={dataSourceGraph} onZoom={onZoomChanged} />
+          <QueryDateChart
+            dataSource={dataSourceGraph}
+            onZoom={debouncedZoomChanged}
+          />
         )}
 
         <Divider />

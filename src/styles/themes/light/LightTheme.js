@@ -73,6 +73,11 @@ const LightTheme = COMMON_COLOR => {
     SidebarLeft: { colorTagNumber: COLOR.blue },
     TitleDataJob: { titleBottom: '#f0f0f0' },
     filters: { backgroundColor: '#fbfbfb', borderColor: '#ededed' },
+    jobsGraph: {
+      mode: 'light',
+      backgroundBarColor: '#008FFB',
+      borderBarColor: '#147cc2',
+    },
   };
 
   return {

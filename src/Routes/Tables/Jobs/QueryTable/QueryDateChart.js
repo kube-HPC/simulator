@@ -1,4 +1,5 @@
 import React from 'react';
+import { Theme } from 'styles/colors';
 import ReactApexChart from 'react-apexcharts';
 import histogram from 'utils/histogram';
 import PropTypes from 'prop-types';
@@ -25,14 +26,12 @@ const QueryDateChart = props => {
     ],
 
     options: {
-      stroke: {
-        width: 0,
-      },
       grid: {
         show: false,
       },
       chart: {
         type: 'bar',
+        background: 'none',
         height: 170,
         stacked: true,
         toolbar: {
@@ -105,10 +104,21 @@ const QueryDateChart = props => {
         offsetY: 40,
       },
       fill: {
-        //  type: 'pattern',
         opacity: 1,
-        colors: ['#008FFB'],
-        //  pattern: ''
+        colors: [Theme.Styles.jobsGraph.backgroundBarColor],
+      },
+
+      stroke: {
+        show: true,
+        curve: 'smooth',
+        lineCap: 'butt',
+        colors: [Theme.Styles.jobsGraph.borderBarColor],
+        width: 1,
+        dashArray: 0,
+      },
+
+      theme: {
+        mode: Theme.Styles.jobsGraph.mode,
       },
     },
   };
