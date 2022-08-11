@@ -3,6 +3,7 @@ export { default as JOB_GRID_VIEW_QUERY } from './Jobs/jobs-grid-view-query';
 export { default as JOB_BY_ID_QUERY } from './Jobs/job-by-id-query';
 export { default as JOB_QUERY_GRAPH } from './Jobs/job-query-graph';
 export { default as JOB_QUERY_ACTIVE } from './Jobs/job-active-query';
+export { default as JOB_ACTIVE_BY_ID_QUERY } from './Jobs/job-active-by-id-query';
 
 export { default as PIPELINE_QUERY } from './pipeline-query';
 export { default as PIPELINE_STATS_QUERY } from './pipeline-stats-query';
@@ -41,6 +42,8 @@ export const names = {
   JOB_QUERY: 'JOB_QUERY',
   JOB_QUERY_GRAPH: 'JOB_QUERY_GRAPH',
   JOB_GRID_VIEW_QUERY: 'JOB_GRID_VIEW_QUERY',
+  JOB_QUERY_ACTIVE: 'JOB_QUERY_ACTIVE',
+  JOB_ACTIVE_BY_ID_QUERY: 'JOB_ACTIVE_BY_ID_QUERY',
   PIPELINE_QUERY: 'PIPELINE_QUERY',
   PIPELINE_STATS_QUERY: 'PIPELINE_STATS_QUERY',
   ALGORITHMS_QUERY: 'ALGORITHMS_QUERY',

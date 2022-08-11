@@ -13,7 +13,7 @@ import {
   JOB_QUERY,
   JOB_QUERY_GRAPH,
   JOB_QUERY_ACTIVE,
-  JOB_BY_ID_QUERY,
+  JOB_ACTIVE_BY_ID_QUERY,
 } from 'graphql/queries';
 import { Divider, Empty } from 'antd';
 import GridView from './GridView';
@@ -47,7 +47,7 @@ const JobsTable = () => {
   const [dataSourceGraph, setDataSourceGraph] = useState([]);
   const [JobsActive, setJobsActive] = useState([]);
   const [jobsActiveCompleted, setJobsActiveCompleted] = useState([]);
-  const [dataSourceJobs, setDataSourceJobs] = useState([]);
+  const [dataSourceActiveJobs, setDataSourceActiveJobs] = useState([]);
 
   const [isTableLoad, setIsTableLoad] = useState(true);
 
@@ -79,7 +79,7 @@ const JobsTable = () => {
 
   // all limit Jobs
 
-  const query = useQuery(JOB_QUERY, {
+  const queryAllJobs = useQuery(JOB_QUERY, {
     //  notifyOnNetworkStatusChange: true,
     variables: {
       experimentName: metaMode?.experimentName || null,
@@ -118,12 +118,12 @@ const JobsTable = () => {
   // limitAmount = query?.data?.jobsAggregated.jobs?.length || limitAmount;
 
   const onFetchMore = useCallback(() => {
-    query.fetchMore({
+    queryAllJobs.fetchMore({
       variables: {
-        cursor: query?.data?.jobsAggregated?.cursor,
+        cursor: queryAllJobs?.data?.jobsAggregated?.cursor,
       },
     });
-  }, [query]);
+  }, [queryAllJobs]);
 
   const onZoomChanged = useCallback(
     data => {
@@ -145,10 +145,10 @@ const JobsTable = () => {
       // setJobsCursor(null);
       topTableScroll();
 
-      query.refetch();
+      queryAllJobs.refetch();
       queryGraph.refetch();
     },
-    [mergedParams, query, queryGraph]
+    [mergedParams, queryAllJobs, queryGraph]
   );
   const debouncedZoomChanged = useDebouncedCallback(onZoomChanged, 1000);
 
@@ -175,37 +175,44 @@ const JobsTable = () => {
       topTableScroll();
       setIsTableLoad(true);
 
-      query.refetch();
+      queryAllJobs.refetch();
       queryGraph.refetch();
     },
-    [query, queryGraph]
+    [queryAllJobs, queryGraph]
   );
 
   // Active Jobs
-  const [getJobByID] = useLazyQuery(JOB_BY_ID_QUERY, {
+  const [getJobByID] = useLazyQuery(JOB_ACTIVE_BY_ID_QUERY, {
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'no-cache',
     onCompleted: jobCompleted => {
       const { job } = jobCompleted;
+      console.log('getJobByID job');
       setJobsActiveCompleted(previousState => [job, ...previousState]);
       const newJobsActive = JobsActive.filter(ele => ele.key !== job.key);
       setJobsActive(newJobsActive);
     },
   });
-  const margeActiveCompletedJobs = jobsActive => {
-    setJobsActive(previousState => [...previousState, ...jobsActive]);
+  const margeActiveCompletedJobs = jobsActiveFromDB => {
+    setJobsActive(previousState => [...previousState, ...jobsActiveFromDB]);
 
-    const allIdsJobsInTable = dataSourceJobs.map(x => x.key);
-    const allArrayJobsActive = JobsActive;
+    console.log('JobsActive', JobsActive);
+    const allIdsJobsActiveInTable = dataSourceActiveJobs.map(x => x.key);
+    console.log('allIdsJobsActiveInTable', allIdsJobsActiveInTable);
 
-    allArrayJobsActive &&
-      allArrayJobsActive.forEach(jobItem => {
-        if (!allIdsJobsInTable.includes(jobItem.key)) {
-          getJobByID({ variables: { jobId: jobItem.key } });
-        }
-      });
+    JobsActive.forEach(jobItem => {
+      console.log(
+        'allIdsJobsActiveInTable.includes(jobItem.key)',
+        allIdsJobsActiveInTable.includes(jobItem.key),
+        jobItem.key
+      );
+      if (!allIdsJobsActiveInTable.includes(jobItem.key)) {
+        getJobByID({ variables: { jobId: jobItem.key } });
+      }
+    });
   };
 
   const queryActive = useQuery(JOB_QUERY_ACTIVE, {
-    //  notifyOnNetworkStatusChange: true,
     displayName: 'JOB_QUERY_ACTIVE',
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'no-cache',
@@ -236,25 +243,31 @@ const JobsTable = () => {
   }, [queryActive]);
 
   const _dataSource = useMemo(() => {
-    if (query && query.data) {
+    if (queryAllJobs && queryAllJobs.data) {
       const dsAllJobs = [
         ..._dataSourceActive,
         ...jobsActiveCompleted,
-        ...query.data.jobsAggregated.jobs,
+        ...queryAllJobs.data.jobsAggregated.jobs.filter(
+          x => x.status.status !== 'active'
+        ),
       ];
-      setDataSourceJobs([
+
+      setDataSourceActiveJobs([
         ..._dataSourceActive,
-        ...query.data.jobsAggregated.jobs,
+        ...queryAllJobs.data.jobsAggregated.jobs.filter(
+          x => x.status.status === 'active'
+        ),
       ]);
 
       return dsAllJobs;
     }
 
     return [];
-  }, [_dataSourceActive, jobsActiveCompleted, query]);
+  }, [_dataSourceActive, jobsActiveCompleted, queryAllJobs]);
 
   useEffect(() => {
-    query.refetch();
+    setJobsActiveCompleted([]);
+    queryAllJobs.refetch();
     queryGraph.refetch();
   }, [mergedParams]);
 
