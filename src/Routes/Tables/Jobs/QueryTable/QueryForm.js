@@ -1,17 +1,24 @@
 import React, { useEffect, useMemo } from 'react';
 import moment from 'moment';
-import { Form, DatePicker, AutoComplete } from 'antd';
+import { Form, DatePicker, AutoComplete, Button } from 'antd';
 import PropTypes from 'prop-types';
 import { pipelineStatuses } from '@hkube/consts';
 import { useQuery } from '@apollo/client';
 import { ALGORITHM_AND_PIPELINE_NAMES } from 'graphql/queries';
 import { FiltersForms } from 'styles';
+import { PushpinOutlined } from '@ant-design/icons';
 
 const { RangePicker } = DatePicker;
 // let num = 1;
 let localValueTimeChanged = 1;
 const DateFormat = 'YYYY-MM-DD HH:mm';
-const QueryForm = ({ onSubmit, params, zoomDate }) => {
+const QueryForm = ({
+  onSubmit,
+  params,
+  zoomDate,
+  setIsPinActiveJobs,
+  isPinActiveJobs,
+}) => {
   // const [loadingJobs, setLoadingJobs] = useState(false);
 
   const [form] = Form.useForm();
@@ -54,6 +61,10 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
 
   const onFinish = values => {
     onSubmit(values);
+  };
+
+  const onPinActive = () => {
+    setIsPinActiveJobs(p => !p);
   };
 
   const query = useQuery(ALGORITHM_AND_PIPELINE_NAMES);
@@ -140,6 +151,15 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
           onChange={SubmitForm}
         />
       </Form.Item>
+      <Form.Item>
+        <Button
+          type={isPinActiveJobs ? 'primary' : 'dashed'}
+          htmlType="button"
+          onClick={onPinActive}
+          title="Pin Active">
+          <PushpinOutlined /> Active
+        </Button>
+      </Form.Item>
     </FiltersForms>
   );
 };
@@ -164,6 +184,8 @@ QueryForm.propTypes = {
   }).isRequired,
 
   zoomDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+  setIsPinActiveJobs: PropTypes.func.isRequired,
+  isPinActiveJobs: PropTypes.bool.isRequired,
 };
 QueryForm.defaultProps = {
   onSubmit: () => {},

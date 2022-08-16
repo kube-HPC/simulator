@@ -82,6 +82,10 @@ const GlobalStyle = createGlobalStyle`
 {
   background-color:yellow;
 }
+
+.active-row {
+  background-color:#f5faff;
+}
 `;
 
 export default GlobalStyle;

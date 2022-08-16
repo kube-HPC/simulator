@@ -16,6 +16,7 @@ import {
   JOB_ACTIVE_BY_ID_QUERY,
 } from 'graphql/queries';
 import { Divider, Empty } from 'antd';
+import moment from 'moment';
 import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
@@ -48,16 +49,28 @@ const JobsTable = () => {
   const [JobsActive, setJobsActive] = useState([]);
   const [jobsActiveCompleted, setJobsActiveCompleted] = useState([]);
   const [dataSourceActiveJobs, setDataSourceActiveJobs] = useState([]);
+  const [isPinActiveJobs, setIsPinActiveJobs] = useState(false);
 
   const [isTableLoad, setIsTableLoad] = useState(true);
 
   const { goTo } = usePath();
   const { columns } = useJobs();
 
+  const mergedParamsReset = {
+    algorithmName: undefined,
+    pipelineName: undefined,
+    pipelineStatus: undefined,
+    datesRange: {
+      from: null,
+      to: null,
+    },
+  };
+
   const mergedParams = useMemo(() => {
     const iJobs = instanceFilters.jobs;
 
     const items = {
+      experimentName: metaMode?.experimentName || null,
       algorithmName: iJobs?.algorithmName || undefined,
       pipelineName: iJobs?.pipelineName || undefined,
       pipelineStatus: iJobs?.pipelineStatus || undefined,
@@ -75,14 +88,41 @@ const JobsTable = () => {
     instanceFilters.jobs.pipelineStatus,
     instanceFilters.jobs?.datesRange?.from,
     instanceFilters.jobs?.datesRange?.to,
+    metaMode?.experimentName,
   ]);
 
-  // all limit Jobs
+  const filterListJobs = listJobs => {
+    let filterJobs = [];
+    if (mergedParams.datesRange?.from && mergedParams.datesRange?.to)
+      filterJobs = listJobs.filter(x =>
+        moment(x.pipeline.startTime).isBetween(
+          mergedParams.datesRange?.from,
+          mergedParams.datesRange?.to
+        )
+      );
 
+    if (mergedParams.pipelineName)
+      filterJobs = listJobs.filter(
+        x => x.pipelineName === mergedParams.pipelineName
+      );
+
+    if (mergedParams.pipelineStatus)
+      filterJobs = listJobs.filter(
+        x => x.pipelineStatus === mergedParams.pipelineStatus
+      );
+
+    if (mergedParams.algorithmName)
+      filterJobs = listJobs.filter(
+        x => x.algorithmName === mergedParams.algorithmName
+      );
+
+    return filterJobs;
+  };
+
+  // all limit Jobs
   const queryAllJobs = useQuery(JOB_QUERY, {
     //  notifyOnNetworkStatusChange: true,
     variables: {
-      experimentName: metaMode?.experimentName || null,
       limit: 100,
       ...mergedParams,
     },
@@ -90,16 +130,13 @@ const JobsTable = () => {
       setIsTableLoad(false);
     },
   });
-  // usePolling(query, 3000);
 
   // all Jobs to Graph
-
   const queryGraph = useQuery(JOB_QUERY_GRAPH, {
     // notifyOnNetworkStatusChange: true,
 
     displayName: 'JOB_QUERY_GRAPH',
     variables: {
-      experimentName: metaMode?.experimentName || null,
       limit: 100000,
       ...mergedParams,
     },
@@ -113,7 +150,6 @@ const JobsTable = () => {
       setIsTableLoad(false);
     },
   });
-  // usePolling(queryGraph, 3000);
 
   // limitAmount = query?.data?.jobsAggregated.jobs?.length || limitAmount;
 
@@ -181,13 +217,12 @@ const JobsTable = () => {
     [queryAllJobs, queryGraph]
   );
 
-  // Active Jobs
+  // Active Jobs push after Completed
   const [getJobByID] = useLazyQuery(JOB_ACTIVE_BY_ID_QUERY, {
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'no-cache',
     onCompleted: jobCompleted => {
       const { job } = jobCompleted;
-      console.log('getJobByID job');
       setJobsActiveCompleted(previousState => [job, ...previousState]);
       const newJobsActive = JobsActive.filter(ele => ele.key !== job.key);
       setJobsActive(newJobsActive);
@@ -195,38 +230,27 @@ const JobsTable = () => {
   });
   const margeActiveCompletedJobs = jobsActiveFromDB => {
     setJobsActive(previousState => [...previousState, ...jobsActiveFromDB]);
-
-    console.log('JobsActive', JobsActive);
     const allIdsJobsActiveInTable = dataSourceActiveJobs.map(x => x.key);
-    console.log('allIdsJobsActiveInTable', allIdsJobsActiveInTable);
-
     JobsActive.forEach(jobItem => {
-      console.log(
-        'allIdsJobsActiveInTable.includes(jobItem.key)',
-        allIdsJobsActiveInTable.includes(jobItem.key),
-        jobItem.key
-      );
       if (!allIdsJobsActiveInTable.includes(jobItem.key)) {
         getJobByID({ variables: { jobId: jobItem.key } });
       }
     });
   };
 
+  // Get all active jobs
   const queryActive = useQuery(JOB_QUERY_ACTIVE, {
     displayName: 'JOB_QUERY_ACTIVE',
-    notifyOnNetworkStatusChange: true,
+    // notifyOnNetworkStatusChange: true,
     fetchPolicy: 'no-cache',
     variables: {
+      ...(!isPinActiveJobs ? mergedParams : mergedParamsReset),
       limit: 200000,
       pipelineStatus: 'active',
-      datesRange: {
-        from: null,
-        to: null,
-      },
     },
     onCompleted: res => {
       margeActiveCompletedJobs(
-        res?.jobsAggregated?.jobs.filter(x => x.pipeline.name != null)
+        res?.jobsAggregated?.jobs?.filter(x => x.pipeline.name != null) || []
       );
     },
   });
@@ -234,19 +258,21 @@ const JobsTable = () => {
 
   const _dataSourceActive = useMemo(() => {
     if (queryActive && queryActive.data) {
-      return queryActive.data.jobsAggregated.jobs.filter(
-        x => x.pipeline.name != null
+      return (
+        queryActive.data.jobsAggregated.jobs?.filter(
+          x => x.pipeline.name != null
+        ) || []
       );
     }
 
     return [];
-  }, [queryActive]);
+  }, [queryActive, isPinActiveJobs]);
 
   const _dataSource = useMemo(() => {
     if (queryAllJobs && queryAllJobs.data) {
       const dsAllJobs = [
         ..._dataSourceActive,
-        ...jobsActiveCompleted,
+        ...filterListJobs(jobsActiveCompleted),
         ...queryAllJobs.data.jobsAggregated.jobs.filter(
           x => x.status.status !== 'active'
         ),
@@ -263,7 +289,7 @@ const JobsTable = () => {
     }
 
     return [];
-  }, [_dataSourceActive, jobsActiveCompleted, queryAllJobs]);
+  }, [_dataSourceActive, jobsActiveCompleted, queryAllJobs, isPinActiveJobs]);
 
   useEffect(() => {
     setJobsActiveCompleted([]);
@@ -285,6 +311,8 @@ const JobsTable = () => {
           zoomDate={zoomedChangedDate}
           onSubmit={onQuerySubmit}
           params={mergedParams}
+          setIsPinActiveJobs={setIsPinActiveJobs}
+          isPinActiveJobs={isPinActiveJobs}
         />
 
         {dataSourceGraph && (
@@ -310,6 +338,12 @@ const JobsTable = () => {
         isInfinity
         heightScroll={filterToggeled ? '58vh' : '88vh'}
         locale={localeEmpty}
+        rowClassName={record => {
+          if (record.status.status === 'active') {
+            return 'active-row';
+          }
+          return null;
+        }}
       />
     </>
   );
