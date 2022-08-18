@@ -52,6 +52,7 @@ const JobsTable = () => {
   const [isPinActiveJobs, setIsPinActiveJobs] = useState(false);
 
   const [isTableLoad, setIsTableLoad] = useState(true);
+  const [isGraphLoad, setIsGraphLoad] = useState(true);
 
   const { goTo } = usePath();
   const { columns } = useJobs();
@@ -147,7 +148,7 @@ const JobsTable = () => {
         setDataSourceGraph([]);
       }
 
-      setIsTableLoad(false);
+      setIsGraphLoad(false);
     },
   });
 
@@ -178,7 +179,7 @@ const JobsTable = () => {
 
       instanceFiltersVar(stateInstanceFilter);
       setIsTableLoad(true);
-      // setJobsCursor(null);
+      setIsGraphLoad(true);
       topTableScroll();
 
       queryAllJobs.refetch();
@@ -210,6 +211,7 @@ const JobsTable = () => {
 
       topTableScroll();
       setIsTableLoad(true);
+      setIsGraphLoad(true);
 
       queryAllJobs.refetch();
       queryGraph.refetch();
@@ -274,7 +276,7 @@ const JobsTable = () => {
         ..._dataSourceActive,
         ...filterListJobs(jobsActiveCompleted),
         ...queryAllJobs.data.jobsAggregated.jobs.filter(
-          x => x.status.status !== 'active'
+          x => x.status.status !== 'active' && x.status.status !== 'pending'
         ),
       ];
 
@@ -328,7 +330,7 @@ const JobsTable = () => {
       <Table
         id="jobsTable"
         fetchMore={onFetchMore}
-        loading={isTableLoad}
+        loading={isTableLoad && isGraphLoad}
         onRow={onRow}
         rowKey={rowKey}
         expandIcon={false}

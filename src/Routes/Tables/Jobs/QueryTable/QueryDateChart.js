@@ -66,6 +66,20 @@ const QueryDateChart = props => {
             });
           },
         },
+
+        animations: {
+          enabled: true,
+          easing: 'easein',
+          speed: 100,
+          animateGradually: {
+            enabled: true,
+            delay: 150,
+          },
+          dynamicAnimation: {
+            enabled: true,
+            speed: 350,
+          },
+        },
       },
       responsive: [
         {

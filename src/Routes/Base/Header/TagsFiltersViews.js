@@ -78,7 +78,7 @@ const TagsFiltersViews = ({ sectionName }) => {
   return (
     propFilters &&
     Object.entries(propFilters).map(([key, value]) => {
-      if (key !== 'limit') {
+      if (key !== 'limit' && key !== 'experimentName') {
         if (key === 'datesRange' && value) {
           return (
             value?.from &&
