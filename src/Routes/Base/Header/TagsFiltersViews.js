@@ -75,10 +75,11 @@ const TagsFiltersViews = ({ sectionName }) => {
     });
   }, [history, instanceFilters, sectionName, urlParams.pathname]);
 
+  const cancelPropFilter = ['experimentName', 'limit'];
   return (
     propFilters &&
     Object.entries(propFilters).map(([key, value]) => {
-      if (key !== 'limit' && key !== 'experimentName') {
+      if (!cancelPropFilter.includes(key)) {
         if (key === 'datesRange' && value) {
           return (
             value?.from &&

@@ -1,6 +1,7 @@
 import { InMemoryCache, makeVar } from '@apollo/client';
 import _ from 'lodash';
 
+export const isPinActiveJobVar = makeVar(true);
 export const filterToggeledVar = makeVar(true);
 export const inactiveModeVar = makeVar(false);
 export const instanceCounterVar = makeVar({
@@ -100,6 +101,11 @@ const cache = new InMemoryCache({
         toggleFilter: {
           read() {
             return filterToggeledVar();
+          },
+        },
+        isPinActiveJobs: {
+          read() {
+            return isPinActiveJobVar();
           },
         },
         instanceFilters: {

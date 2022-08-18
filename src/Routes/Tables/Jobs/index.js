@@ -8,7 +8,12 @@ import { Card } from 'components/common';
 import { useJobs, usePolling } from 'hooks';
 import { useQuery, useReactiveVar, useLazyQuery } from '@apollo/client';
 import { Collapse } from 'react-collapse';
-import { filterToggeledVar, instanceFiltersVar, metaVar } from 'cache';
+import {
+  filterToggeledVar,
+  instanceFiltersVar,
+  metaVar,
+  isPinActiveJobVar,
+} from 'cache';
 import {
   JOB_QUERY,
   JOB_QUERY_GRAPH,
@@ -43,13 +48,14 @@ const localeEmpty = {
 const JobsTable = () => {
   const instanceFilters = useReactiveVar(instanceFiltersVar);
   const filterToggeled = useReactiveVar(filterToggeledVar);
+  const isPinActiveJobs = useReactiveVar(isPinActiveJobVar);
+
   const metaMode = useReactiveVar(metaVar);
 
   const [dataSourceGraph, setDataSourceGraph] = useState([]);
   const [JobsActive, setJobsActive] = useState([]);
   const [jobsActiveCompleted, setJobsActiveCompleted] = useState([]);
   const [dataSourceActiveJobs, setDataSourceActiveJobs] = useState([]);
-  const [isPinActiveJobs, setIsPinActiveJobs] = useState(false);
 
   const [isTableLoad, setIsTableLoad] = useState(true);
   const [isGraphLoad, setIsGraphLoad] = useState(true);
@@ -313,8 +319,6 @@ const JobsTable = () => {
           zoomDate={zoomedChangedDate}
           onSubmit={onQuerySubmit}
           params={mergedParams}
-          setIsPinActiveJobs={setIsPinActiveJobs}
-          isPinActiveJobs={isPinActiveJobs}
         />
 
         {dataSourceGraph && (

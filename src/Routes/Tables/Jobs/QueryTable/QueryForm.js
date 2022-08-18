@@ -3,24 +3,18 @@ import moment from 'moment';
 import { Form, DatePicker, AutoComplete, Button } from 'antd';
 import PropTypes from 'prop-types';
 import { pipelineStatuses } from '@hkube/consts';
-import { useQuery } from '@apollo/client';
+import { useQuery, useReactiveVar } from '@apollo/client';
 import { ALGORITHM_AND_PIPELINE_NAMES } from 'graphql/queries';
 import { FiltersForms } from 'styles';
 import { PushpinOutlined } from '@ant-design/icons';
+import { isPinActiveJobVar } from 'cache';
 
 const { RangePicker } = DatePicker;
 // let num = 1;
 let localValueTimeChanged = 1;
 const DateFormat = 'YYYY-MM-DD HH:mm';
-const QueryForm = ({
-  onSubmit,
-  params,
-  zoomDate,
-  setIsPinActiveJobs,
-  isPinActiveJobs,
-}) => {
-  // const [loadingJobs, setLoadingJobs] = useState(false);
-
+const QueryForm = ({ onSubmit, params, zoomDate }) => {
+  const isPinActiveJobs = useReactiveVar(isPinActiveJobVar);
   const [form] = Form.useForm();
 
   const SubmitForm = () => {
@@ -64,7 +58,7 @@ const QueryForm = ({
   };
 
   const onPinActive = () => {
-    setIsPinActiveJobs(p => !p);
+    isPinActiveJobVar(!isPinActiveJobs);
   };
 
   const query = useQuery(ALGORITHM_AND_PIPELINE_NAMES);
@@ -184,8 +178,6 @@ QueryForm.propTypes = {
   }).isRequired,
 
   zoomDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-  setIsPinActiveJobs: PropTypes.func.isRequired,
-  isPinActiveJobs: PropTypes.bool.isRequired,
 };
 QueryForm.defaultProps = {
   onSubmit: () => {},
