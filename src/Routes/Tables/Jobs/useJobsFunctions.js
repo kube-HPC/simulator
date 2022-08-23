@@ -78,9 +78,9 @@ const useJobsFunctions = () => {
   ]);
 
   const filterListJobs = listJobs => {
-    let filterJobs = [];
+    let filterJobs = listJobs;
     if (mergedParams.datesRange?.from && mergedParams.datesRange?.to)
-      filterJobs = listJobs.filter(x =>
+      filterJobs = filterJobs.filter(x =>
         moment(x.pipeline.startTime).isBetween(
           mergedParams.datesRange?.from,
           mergedParams.datesRange?.to
@@ -88,17 +88,17 @@ const useJobsFunctions = () => {
       );
 
     if (mergedParams.pipelineName)
-      filterJobs = listJobs.filter(
+      filterJobs = filterJobs.filter(
         x => x.pipelineName === mergedParams.pipelineName
       );
 
     if (mergedParams.pipelineStatus)
-      filterJobs = listJobs.filter(
+      filterJobs = filterJobs.filter(
         x => x.pipelineStatus === mergedParams.pipelineStatus
       );
 
     if (mergedParams.algorithmName)
-      filterJobs = listJobs.filter(
+      filterJobs = filterJobs.filter(
         x => x.algorithmName === mergedParams.algorithmName
       );
 
@@ -211,16 +211,26 @@ const useJobsFunctions = () => {
     onCompleted: jobCompleted => {
       const { job } = jobCompleted;
       setJobsActiveCompleted(previousState => [job, ...previousState]);
-      const newJobsActive = JobsActive.filter(ele => ele.key !== job.key);
+
+      const newJobsActive = JobsActive.filter(ele => ele !== job.key);
+
       setJobsActive(newJobsActive);
     },
   });
   const margeActiveCompletedJobs = jobsActiveFromDB => {
-    setJobsActive(previousState => [...previousState, ...jobsActiveFromDB]);
+    const newActiveJobs = [];
+    jobsActiveFromDB.forEach(activeJobItem => {
+      if (!JobsActive.includes(activeJobItem.key)) {
+        newActiveJobs.push(activeJobItem.key);
+      }
+    });
+
+    setJobsActive(previousState => [...previousState, ...newActiveJobs]);
     const allIdsJobsActiveInTable = dataSourceActiveJobs.map(x => x.key);
+
     JobsActive.forEach(jobItem => {
-      if (!allIdsJobsActiveInTable.includes(jobItem.key)) {
-        getJobByID({ variables: { jobId: jobItem.key } });
+      if (!allIdsJobsActiveInTable.includes(jobItem)) {
+        getJobByID({ variables: { jobId: jobItem } });
       }
     });
   };
