@@ -25,7 +25,7 @@ import { selectors } from 'reducers';
 // import { useDiscovery } from 'hooks/graphql';
 import { useReactiveVar } from '@apollo/client';
 
-// import { useCounters } from 'hooks/graphql';
+import { useCounters } from 'hooks/graphql';
 
 import { isValuesFiltersEmpty } from 'utils';
 
@@ -121,7 +121,11 @@ const Name = styled.span`
 
 const SidebarLeft = () => {
   // useDiscovery();
-  // const { counters } = useCounters();
+  const { counters } = useCounters();
+  instanceCounterVar({
+    ...instanceCounterVar(),
+    ...counters,
+  });
 
   const instanceCounter = useReactiveVar(instanceCounterVar);
   const instanceFilters = useReactiveVar(instanceFiltersVar);
