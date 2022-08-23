@@ -42,16 +42,6 @@ const useJobsFunctions = () => {
   const { goTo } = usePath();
   const { columns } = useJobs();
 
-  const mergedParamsReset = {
-    algorithmName: undefined,
-    pipelineName: undefined,
-    pipelineStatus: undefined,
-    datesRange: {
-      from: null,
-      to: null,
-    },
-  };
-
   const mergedParams = useMemo(() => {
     const iJobs = instanceFilters.jobs;
 
@@ -241,7 +231,7 @@ const useJobsFunctions = () => {
     // notifyOnNetworkStatusChange: true,
     fetchPolicy: 'no-cache',
     variables: {
-      ...(!isPinActiveJobs ? mergedParams : mergedParamsReset),
+      //  ...(!isPinActiveJobs ? mergedParams : mergedParamsReset),
       limit: 200000,
       pipelineStatus: 'active',
     },
@@ -268,7 +258,9 @@ const useJobsFunctions = () => {
   const _dataSource = useMemo(() => {
     if (queryAllJobs && queryAllJobs.data) {
       const dsAllJobs = [
-        ..._dataSourceActive,
+        ...(isPinActiveJobs
+          ? _dataSourceActive
+          : filterListJobs(_dataSourceActive)),
         ...filterListJobs(jobsActiveCompleted),
         ...queryAllJobs.data.jobsAggregated.jobs.filter(
           x => x.status.status !== 'active' && x.status.status !== 'pending'
