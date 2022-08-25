@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Layout, message, BackTop } from 'antd';
-
+import { Layout, message, BackTop, Button } from 'antd';
+import { ArrowUpOutlined } from '@ant-design/icons';
 import styled, { ThemeProvider } from 'styled-components';
 import { Route } from 'react-router-dom';
 import { COLOR, COLOR_LAYOUT, Theme } from 'styles';
 import { useActions } from 'hooks'; // useConnectionStatus
 import Header from 'Routes/Base/Header';
-import { ReactComponent as IconBackUp } from 'images/backUp.svg';
 import SidebarRight, { Drawer as SiderBarRightDrawer } from './SidebarRight';
 import SidebarLeft from './Base/SidebarLeft';
 import UserGuide from './Base/UserGuide';
@@ -66,7 +65,13 @@ const Routes = () => {
             <ContentMargin id="globalContent">
               <Tables />
               <BackTop target={BackToTop}>
-                <IconBackUp />
+                <Button
+                  style={{ opacity: '0.7' }}
+                  type="primary"
+                  shape="circle"
+                  size="large"
+                  icon={<ArrowUpOutlined />}
+                />
               </BackTop>
             </ContentMargin>
             <RightContainer>

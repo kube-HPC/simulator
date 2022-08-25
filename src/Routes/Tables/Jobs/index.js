@@ -5,7 +5,8 @@ import useQueryHook from 'hooks/useQuery';
 import { Table } from 'components';
 import { Card } from 'components/common';
 import { Collapse } from 'react-collapse';
-import { Divider, Empty } from 'antd';
+import { Divider, Empty, BackTop, Button } from 'antd';
+import { ArrowUpOutlined } from '@ant-design/icons';
 import useJobsFunctions from './useJobsFunctions';
 import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
@@ -21,6 +22,8 @@ const localeEmpty = {
     <Empty description={<span>No results match your search criteria</span>} />
   ),
 };
+
+const BackToTop = () => document.querySelector('#jobsTable .ant-table-body');
 
 const JobsTable = () => {
   const {
@@ -77,6 +80,15 @@ const JobsTable = () => {
           return null;
         }}
       />
+      <BackTop target={BackToTop}>
+        <Button
+          style={{ opacity: '0.7' }}
+          type="primary"
+          shape="circle"
+          size="large"
+          icon={<ArrowUpOutlined />}
+        />
+      </BackTop>
     </>
   );
 };
