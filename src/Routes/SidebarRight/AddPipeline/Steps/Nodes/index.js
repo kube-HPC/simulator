@@ -213,7 +213,7 @@ const Nodes = ({ style }) => {
       </NodeBrowserContainer>
 
       {ids.map(id => (
-        <DataNode $isDisabled={isRunPipeline}>
+        <DataNode key={`dataNode::id-${id}`} $isDisabled={isRunPipeline}>
           <BoldedFormField
             key={`node::id-${id}`}
             style={{

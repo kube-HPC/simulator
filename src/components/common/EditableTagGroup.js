@@ -155,13 +155,14 @@ const EditableTagGroup = ({ value, onChange, duplicateValue }) => {
 
 EditableTagGroup.propTypes = {
   value: PropTypes.arrayOf(PropTypes.string),
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
   duplicateValue: PropTypes.bool,
 };
 
 EditableTagGroup.defaultProps = {
   value: [],
   duplicateValue: false,
+  onChange: () => {},
 };
 
 export default EditableTagGroup;

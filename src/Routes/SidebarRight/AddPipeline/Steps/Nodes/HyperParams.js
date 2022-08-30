@@ -152,7 +152,6 @@ const HyperParamsNode = ({ id }) => {
                         key={`suggest_${key}`}
                         initialValue="uniform">
                         <Select
-                          defaultValue="uniform"
                           style={{ width: '185px' }}
                           onChange={value =>
                             SwitchBySuggest(fields, value, name)
