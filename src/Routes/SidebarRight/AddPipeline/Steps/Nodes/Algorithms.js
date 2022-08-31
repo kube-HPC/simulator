@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useMemo } from 'react';
+import React, { createContext, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { InputNumber, Switch, Radio, AutoComplete } from 'antd';
 
 import { Form as CommonForm } from 'components/common';
-import useAlgorithm from 'hooks/useAlgorithm';
+import { useGetLists } from 'hooks/graphql';
 import Controller from './InputParseJson';
 import useWizardContext from '../../useWizardContext';
 import { Field as RawField } from './../FormUtils';
@@ -20,24 +20,14 @@ const Field = props => {
 
 const AlgorithmNode = ({ id }) => {
   const { isStreamingPipeline } = useWizardContext();
-  const { algorithmsCollection } = useAlgorithm();
-
-  const sortedAlgorithms = useMemo(
-    () =>
-      algorithmsCollection
-        .map(item => ({
-          value: item.name,
-        }))
-        .sort((a, b) => (a.value > b.value ? 1 : -1)),
-    [algorithmsCollection]
-  );
+  const { algorithms: sortedAlgorithms } = useGetLists();
 
   const rootId = ['nodes', id];
   return (
     <ctx.Provider value={{ rootId }}>
       <Field name={['algorithmName']} title="Algorithm name">
         <AutoComplete
-          disabled={algorithmsCollection.length === 0}
+          disabled={sortedAlgorithms?.length === 0}
           options={sortedAlgorithms}
           filterOption={(inputValue, option) =>
             option.value.indexOf(inputValue) !== -1

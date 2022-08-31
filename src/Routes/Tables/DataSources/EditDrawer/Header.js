@@ -3,21 +3,22 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import RemoteDetails from './RemoteDetails';
 
-const options = {
+/* const options = {
   SUCCESS: (_, dataSourceName) => dataSourceName,
   PENDING: () => 'loading...',
-};
+}; */
 
 const HeaderContainer = styled.header`
   display: flex;
   align-items: center;
 `;
 
-const Header = ({ status, dataSourceId, dataSourceName, git, storage }) =>
+const Header = ({ status, dataSourceName, git, storage }) =>
   ['FAIL', 'NOT_FOUND'].includes(status) ? null : (
     <HeaderContainer>
       <h2>
-        {options[status] ? options[status](dataSourceId, dataSourceName) : ''}
+        {/* options[status] ? options[status](dataSourceId, dataSourceName) : '' */}
+        {dataSourceName}
       </h2>
       <RemoteDetails storage={storage} git={git} />
     </HeaderContainer>

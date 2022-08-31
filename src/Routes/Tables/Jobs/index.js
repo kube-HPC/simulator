@@ -1,43 +1,95 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Route } from 'react-router-dom';
 import styled from 'styled-components';
-import useQuery from 'hooks/useQuery';
+import useQueryHook from 'hooks/useQuery';
 import { Table } from 'components';
 import { Card } from 'components/common';
-import { useJobs } from 'hooks';
+import { Collapse } from 'react-collapse';
+import { Divider, Empty, BackTop, Button } from 'antd';
+import { ArrowUpOutlined } from '@ant-design/icons';
+import useJobsFunctions from './useJobsFunctions';
 import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
-import usePath from './usePath';
-
-const jobsAmount = parseInt(process.env.REACT_APP_SLICE_JOBS, 10);
-const shouldSliceJobs = Number.isInteger(jobsAmount) && jobsAmount > 0;
+import QueryForm from './QueryTable/QueryForm';
+import QueryDateChart from './QueryTable/QueryDateChart';
 
 export { default as jobColumns } from './jobColumns';
+
 const rowKey = job => `job-${job.key}`;
+
+const localeEmpty = {
+  emptyText: (
+    <Empty description={<span>No results match your search criteria</span>} />
+  ),
+};
+
+const BackToTop = () => document.querySelector('#jobsTable .ant-table-body');
+
 const JobsTable = () => {
-  const { goTo } = usePath();
-  const { columns, dataSource, loading } = useJobs();
-  const onRow = useCallback(
-    job => ({
-      onDoubleClick: () => goTo.overview({ nextJobId: job.key }),
-    }),
-    [goTo]
-  );
-  const _dataSource = useMemo(
-    () => (shouldSliceJobs ? dataSource.slice(0, jobsAmount) : dataSource),
-    [dataSource]
-  );
+  const {
+    zoomedChangedDate,
+    filterToggeled,
+    onQuerySubmit,
+    mergedParams,
+    dataSourceGraph,
+    debouncedZoomChanged,
+    onFetchMore,
+    isGraphLoad,
+    isTableLoad,
+    onRow,
+    columns,
+    _dataSource,
+  } = useJobsFunctions();
 
   return (
-    <Table
-      loading={loading}
-      onRow={onRow}
-      rowKey={rowKey}
-      expandIcon={false}
-      columns={columns}
-      dataSource={_dataSource}
-      pagination={false}
-    />
+    <>
+      <Collapse isOpened={filterToggeled}>
+        <QueryForm
+          zoomDate={zoomedChangedDate}
+          onSubmit={onQuerySubmit}
+          params={mergedParams}
+        />
+
+        {dataSourceGraph && (
+          <QueryDateChart
+            dataSource={dataSourceGraph}
+            onZoom={debouncedZoomChanged}
+          />
+        )}
+
+        <Divider />
+      </Collapse>
+
+      <Table
+        id="jobsTable"
+        fetchMore={onFetchMore}
+        loading={isTableLoad && isGraphLoad}
+        onRow={onRow}
+        rowKey={rowKey}
+        expandIcon={false}
+        columns={columns}
+        dataSource={_dataSource}
+        pagination={false}
+        isInfinity
+        heightScroll={filterToggeled ? '58vh' : '88vh'}
+        locale={localeEmpty}
+        rowClassName={record => {
+          if (record.status.status === 'active') {
+            return 'active-row';
+          }
+          return null;
+        }}
+      />
+      <BackTop target={BackToTop}>
+        <Button
+          style={{ opacity: '0.7' }}
+          type="primary"
+          shape="circle"
+          size="large"
+          icon={<ArrowUpOutlined />}
+        />
+      </BackTop>
+    </>
   );
 };
 
@@ -54,7 +106,7 @@ const GridViewWrapper = React.memo(() => (
 ));
 
 const Jobs = () => {
-  const query = useQuery();
+  const query = useQueryHook();
   const showGrid = useMemo(() => query.get('view') === 'grid', [query]);
   return (
     <>

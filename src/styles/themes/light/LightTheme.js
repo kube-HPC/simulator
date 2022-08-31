@@ -43,6 +43,7 @@ const LightTheme = COMMON_COLOR => {
   const COLOR_LAYOUT = COMMON_COLOR.COLOR_LAYOUT(COLOR);
   const COLOR_TASK_STATUS = COMMON_COLOR.COLOR_TASK_STATUS(COLOR);
   const COLOR_PIPELINE_STATUS = COMMON_COLOR.COLOR_PIPELINE_STATUS(COLOR);
+  const NODE_KINDS_COLOR = COMMON_COLOR.NODE_KINDS_COLOR(COLOR);
   const { COLOR_EXPERIMENTS } = COMMON_COLOR;
 
   const Styles = {
@@ -71,6 +72,12 @@ const LightTheme = COMMON_COLOR => {
     ChonkyFileBrowser: { viewThemeDark: false },
     SidebarLeft: { colorTagNumber: COLOR.blue },
     TitleDataJob: { titleBottom: '#f0f0f0' },
+    filters: { backgroundColor: '#fbfbfb', borderColor: '#ededed' },
+    jobsGraph: {
+      mode: 'light',
+      backgroundBarColor: '#008FFB',
+      borderBarColor: '#147cc2',
+    },
   };
 
   return {
@@ -85,6 +92,7 @@ const LightTheme = COMMON_COLOR => {
     COLOR_LAYOUT,
     COLOR_TASK_STATUS,
     COLOR_PIPELINE_STATUS,
+    NODE_KINDS_COLOR,
     COLOR_EXPERIMENTS,
   };
 };

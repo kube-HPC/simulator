@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
-import { useActions } from 'hooks';
-import { COLOR_LAYOUT, COLOR } from 'styles/colors';
-import useDataSources from 'hooks/dataSources/useDataSources';
+// import { ExclamationCircleOutlined } from '@ant-design/icons';
+// import { Button } from 'antd';
+// import { useActions } from 'hooks';
+// import { COLOR_LAYOUT } from 'styles/colors';
+// import useDataSources from 'hooks/dataSources/useDataSources';
+import useDataSources from 'hooks/graphql/DataSources/useDataSource';
 import usePath from './usePath';
 import GridItem from './GridItem';
 
@@ -15,7 +16,7 @@ const Grid = styled.div`
   padding-top: 1em;
   position: relative;
 `;
-
+/*
 const FailedMessageContainer = styled.div`
   position: absolute;
   top: 1.5em;
@@ -32,8 +33,8 @@ const FailedMessageContainer = styled.div`
 const FailedMessageContent = styled.span`
   margin: 0 1ch;
 `;
-
-const FailedMessage = () => {
+*/
+/* const FailedMessage = () => {
   const { retryFetchDataSources } = useActions();
   return (
     <FailedMessageContainer>
@@ -46,10 +47,11 @@ const FailedMessage = () => {
       </Button>
     </FailedMessageContainer>
   );
-};
+}; */
 
 const DataSourcesGrid = () => {
-  const { dataSources, status } = useDataSources();
+  const { dataSources } = useDataSources();
+
   const sortedDataSources = useMemo(
     () => dataSources.slice().sort((a, b) => b.id - a.id),
     [dataSources]
@@ -57,10 +59,10 @@ const DataSourcesGrid = () => {
   const { goTo } = usePath();
   return (
     <Grid>
-      {status === 'FAIL' ? <FailedMessage /> : null}
+      {/* status === 'FAIL' ? <FailedMessage /> : null */}
       {sortedDataSources.map(dataSource => (
         <GridItem
-          key={`datasource-${dataSource.id}`}
+          key={`datasource-${dataSource.name}-${dataSource.id}`}
           dataSource={dataSource}
           goTo={goTo}
         />

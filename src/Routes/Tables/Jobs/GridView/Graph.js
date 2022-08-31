@@ -24,10 +24,10 @@ const EmptyHeight = styled(Empty)`
 const JobGraph = ({ graph, pipeline }) => {
   const normalizedPipeline = useMemo(
     () =>
-      pipeline.nodes.reduce(
+      pipeline.nodes?.reduce(
         (acc, item) => ({ ...acc, [item.nodeName]: item }),
         {}
-      ),
+      ) || {},
     [pipeline]
   );
 
@@ -88,7 +88,7 @@ const JobGraph = ({ graph, pipeline }) => {
 JobGraph.propTypes = {
   pipeline: PropTypes.shape({
     kind: PropTypes.string.isRequired,
-    nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
+    nodes: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
   graph: PropTypes.shape({
     nodes: PropTypes.arrayOf(PropTypes.object).isRequired,

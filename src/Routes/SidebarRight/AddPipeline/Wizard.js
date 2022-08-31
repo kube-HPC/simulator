@@ -4,30 +4,29 @@ import React, {
   useLayoutEffect,
   useState,
   useRef,
+  useMemo,
 } from 'react';
 import PropTypes from 'prop-types';
 import { CheckOutlined, RightOutlined, LeftOutlined } from '@ant-design/icons';
-import { Steps, Form as AntdForm } from 'antd';
+import { Button, Steps, Form as AntdForm } from 'antd';
 import { JsonView } from 'components/common';
 import styled from 'styled-components';
 import { COLOR_LAYOUT } from 'styles';
-import {
-  BottomPanel,
-  PanelButton,
-  RightAlignedButton,
-} from 'components/Drawer';
+import { BottomPanel, PanelButton, RightAlignedBox } from 'components/Drawer';
 import { useWizard } from 'hooks';
 import { context } from './useWizardContext';
 import { Initial, Nodes, Options } from './Steps';
 
-const stepNames = ['Initial', 'Nodes', 'Options'];
-const stepComponents = [Initial, Nodes, Options];
-const steps = stepNames.map(name => (
-  <Steps.Step key={`steps-${name}`} title={name} />
-));
-
 const Form = styled(AntdForm)`
   width: 90ch;
+`;
+const StepItem = styled(Steps.Step)`
+  .ant-steps-item-icon {
+    ${props =>
+      props.$isRunPipeline && props.$StepName === 'Options'
+        ? 'border-color:#459efd;color:#459efd!important'
+        : ''}
+  }
 `;
 
 export const Body = styled.div`
@@ -37,6 +36,15 @@ export const Body = styled.div`
   overflow-y: scroll;
   max-height: 81vh;
 `;
+export const ButtonRun = styled(Button)`
+  margin-left: 20px;
+`;
+
+const stepNames = ['Initial', 'Nodes', 'Options'];
+const RunPipelineStepNames = ['Initial', 'Options', 'Nodes Info'];
+
+const stepComponents = [Initial, Nodes, Options];
+const RunPipelineStepComponents = [Initial, Options, Nodes];
 
 /** @param {object} props */
 /** @param {import('antd/lib/form').FormProps} props.form */
@@ -50,8 +58,30 @@ const Wizard = ({
   stepIdx,
   wizardClear,
   isEdit,
+  isRunPipeline,
 }) => {
+  const [initStepNames] = useState(
+    isRunPipeline ? RunPipelineStepNames : stepNames
+  );
+  const [initStepComponents] = useState(
+    isRunPipeline ? RunPipelineStepComponents : stepComponents
+  );
+
+  const steps = useMemo(
+    () =>
+      initStepNames.map(name => (
+        <StepItem
+          key={`steps-${name}`}
+          title={name}
+          $StepName={name}
+          $isRunPipeline={isRunPipeline}
+        />
+      )),
+    [initStepNames, isRunPipeline]
+  );
+
   const firstUpdateWizard = useRef(true);
+
   const [valuesState, setValuesState] = useState(() => initialState);
   const { getFieldValue } = form;
 
@@ -61,7 +91,14 @@ const Wizard = ({
     getFormattedFormValues,
     resetKind,
     persistForm,
-  } = useWizard(form, initialState, onSubmit, setEditorState, setValuesState);
+  } = useWizard(
+    form,
+    initialState,
+    onSubmit,
+    setEditorState,
+    setValuesState,
+    isRunPipeline
+  );
 
   const handleToggle = useCallback(() => {
     persistForm();
@@ -93,7 +130,9 @@ const Wizard = ({
       firstUpdateWizard.current = false;
     } else {
       // remove gateway or output option from nodes and reset them to algorithm option
-      resetKind(isStreamingPipeline ? 'output' : 'gateway');
+      resetKind(
+        isStreamingPipeline ? ['output', 'hyperparamsTuner'] : ['gateway']
+      );
     }
   }, [isStreamingPipeline, resetKind]);
 
@@ -128,8 +167,10 @@ const Wizard = ({
               isStreamingPipeline,
               isEdit,
               valuesState,
+              isRunPipeline,
+              setForm,
             }}>
-            {stepComponents.map((StepComponent, ii) => (
+            {initStepComponents.map((StepComponent, ii) => (
               <StepComponent
                 key={`step-component-${stepNames[ii]}`}
                 style={{
@@ -147,22 +188,40 @@ const Wizard = ({
       </Body>
 
       <BottomPanel>
-        <PanelButton type="danger" onClick={wizardClear}>
-          Clear
-        </PanelButton>
+        {!isRunPipeline && (
+          <PanelButton type="danger" onClick={wizardClear}>
+            Clear
+          </PanelButton>
+        )}
         <PanelButton onClick={handleToggle}>Editor View</PanelButton>
         <PanelButton disabled={stepIdx === 0} onClick={onPrevious}>
           <LeftOutlined />
           Back
         </PanelButton>
-        <RightAlignedButton
-          type={isLastStep ? 'primary' : 'default'}
-          onClick={!isLastStep ? onNext : handleSubmit}
-          form="create-pipeline"
-          htmlType="submit">
-          {isLastStep ? 'Submit' : 'Next'}
-          {isLastStep ? <CheckOutlined /> : <RightOutlined />}
-        </RightAlignedButton>
+
+        <RightAlignedBox>
+          {(!isRunPipeline || (isRunPipeline && !isLastStep)) && (
+            <Button
+              type={isLastStep ? 'primary' : 'default'}
+              onClick={!isLastStep ? onNext : handleSubmit}
+              form="create-pipeline"
+              htmlType="submit">
+              {isLastStep ? 'Submit' : 'Next'}
+              {isLastStep ? <CheckOutlined /> : <RightOutlined />}
+            </Button>
+          )}
+
+          {isRunPipeline && (
+            <ButtonRun
+              type="primary"
+              onClick={handleSubmit}
+              form="create-pipeline"
+              htmlType="submit">
+              Run
+              <CheckOutlined />
+            </ButtonRun>
+          )}
+        </RightAlignedBox>
       </BottomPanel>
     </>
   );
@@ -185,6 +244,7 @@ Wizard.propTypes = {
   // eslint-disable-next-line
   wizardClear: PropTypes.func.isRequired,
   isEdit: PropTypes.bool.isRequired,
+  isRunPipeline: PropTypes.bool.isRequired,
 };
 
 export default Wizard;

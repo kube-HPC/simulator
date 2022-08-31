@@ -1,18 +1,28 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Route } from 'react-router-dom';
 import { Table } from 'components';
-import { usePipeline } from 'hooks';
+import { usePolling } from 'hooks';
+import { useQuery, useReactiveVar } from '@apollo/client';
+import { PIPELINE_QUERY } from 'graphql/queries';
+import { Collapse } from 'react-collapse';
+import { filterToggeledVar } from 'cache';
+import { Space } from 'antd';
 import pipelineColumns from './pipelineColumns';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
 import EditDrawer from './EditDrawer';
 import ExecuteDrawer from './ExecuteDrawer';
+import PipelinesQueryTable from './PipelinesQueryTable';
 
 const rowKey = ({ name }) => `pipeline-${name}`;
 
 const PipelinesTable = () => {
-  const { collection } = usePipeline();
+  const filterToggeled = useReactiveVar(filterToggeledVar);
+  const [pipelineFilterList, setPipelineFilterList] = useState([]);
   const { goTo } = usePath();
+
+  const query = useQuery(PIPELINE_QUERY);
+  usePolling(query, 3000);
 
   const onRow = useCallback(
     record => ({
@@ -20,15 +30,47 @@ const PipelinesTable = () => {
     }),
     [goTo]
   );
+
+  const onSubmitFilter = useCallback(values => {
+    if (values?.qPipelineName) {
+      const filterPipeline = query.data?.pipelines?.list.filter(item =>
+        item.name.includes(values.qPipelineName)
+      );
+
+      setPipelineFilterList(filterPipeline);
+    } else {
+      setPipelineFilterList(query.data?.pipelines?.list);
+    }
+  });
+
   return (
     <>
-      <Table
-        rowKey={rowKey}
-        dataSource={collection}
-        columns={pipelineColumns}
-        onRow={onRow}
-        expandIcon={false}
-      />
+      <Space
+        direction="vertical"
+        size="middle"
+        style={{
+          display: 'flex',
+        }}>
+        <Collapse isOpened={filterToggeled}>
+          <PipelinesQueryTable
+            pipelinesList={query.data?.pipelines?.list}
+            onSubmit={onSubmitFilter}
+          />
+        </Collapse>
+
+        <Table
+          rowKey={rowKey}
+          //  dataSource={collection}
+          dataSource={pipelineFilterList}
+          columns={pipelineColumns}
+          onRow={onRow}
+          expandIcon={false}
+          scroll={{
+            y: '80vh',
+          }}
+        />
+      </Space>
+
       <Route
         path="/pipelines/:pipelineId/overview/:tabKey?"
         component={OverviewDrawer}

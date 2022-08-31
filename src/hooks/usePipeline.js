@@ -10,10 +10,12 @@ import { useFilter } from './useSearch';
 
 const usePipeline = () => {
   const collection = useSelector(selectors.pipelines.collection.all);
+  const pipelinesCollection = useSelector(selectors.pipelines.collection.all);
 
   const dataStats = useSelector(selectors.pipelines.stats.all);
   const filtered = useFilter(collection, ['name']);
-  const { updateStored } = useActions();
+  const { updateStored, execStored } = useActions();
+
   const history = useHistory();
 
   const updateCron = useCallback(
@@ -27,6 +29,16 @@ const usePipeline = () => {
       });
     },
     [updateStored]
+  );
+
+  const runPipeline = useCallback(
+    objVal => {
+      const objPipeline = JSON.parse(JSON.stringify(objVal));
+      delete objPipeline.nodes;
+
+      execStored(objPipeline);
+    },
+    [execStored]
   );
 
   const rerunPipeline = useCallback(async jobId => {
@@ -73,11 +85,13 @@ const usePipeline = () => {
 
   return {
     collection: filtered,
+    pipelinesCollection,
     dataStats,
     updateCron,
     rerunPipeline,
     addPipeline,
     updatePipeline,
+    runPipeline,
   };
 };
 

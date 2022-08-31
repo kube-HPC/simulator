@@ -4,19 +4,23 @@ import styled from 'styled-components';
 import Icon from '@ant-design/icons';
 import { Layout, Menu, Badge } from 'antd';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { useErrorLogs } from 'hooks';
-import useStats from 'hooks/useStats';
-import useStorage from 'hooks/useStorage';
+import { useErrorLogs, useStats, useStorage } from 'hooks/graphql';
+// import useStorage from 'hooks/useStorage';
 import {
   getColorStatus,
   getStorageColorStatus,
   combineStatus,
 } from 'utils/warningColorStatus';
+
 import { getBottomActions, topActions } from './schema';
 
 const SiderLight = styled(Layout.Sider)`
   border: none;
   .ant-menu.ant-menu-inline-collapsed > .ant-menu-item .anticon {
+    font-size: 25px;
+  }
+
+  .ant-menu.ant-menu-inline-collapsed .anticon {
     font-size: 25px;
   }
 `;
@@ -49,6 +53,7 @@ const SidebarRight = ({ isTop, className }) => {
   );
 
   // const menuSelect = useCallback(({ key }) => openDrawer(key), [openDrawer]);
+
   const menuSelect = useCallback(
     ({ key }) => {
       history.push(`/${root}/${key}${location.search}`);

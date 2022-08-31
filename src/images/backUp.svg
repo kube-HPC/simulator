@@ -1,0 +1,19 @@
+<svg width="57" height="57" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <filter id="svg_3_blur">
+   <feGaussianBlur in="SourceGraphic" stdDeviation="2"/>
+  </filter>
+  <filter id="_blur">
+   <feGaussianBlur stdDeviation="0.5" in="SourceGraphic"/>
+  </filter>
+ </defs>
+ <g>
+  <title>Layer 1</title>
+  <ellipse fill="#32a8fd" cx="27.91658" cy="28.49999" id="svg_1" rx="27.08342" ry="26.5" stroke="#dbdbdb"/>
+  <path fill="#DDDDDD" d="m11.09989,28.38404l0,0c-2.81503,-1.90234 -1.1719,-8.07351 3.67214,-13.78515c4.84341,-5.7109 11.05214,-8.7979 13.86717,-6.89557l0,0c-3.67445,1.3568 -7.86796,4.54984 -11.31823,8.61808s-5.75457,8.53681 -6.22107,12.06263l-0.00001,0.00001z" id="svg_3" filter="url(#svg_3_blur)" stroke="#ffffff" transform="rotate(4.30878 19.1817 17.7629)"/>
+  <g filter="url(#_blur)" transform="rotate(179.525 27.6181 29.1185)" fill="#0E353B" stroke="null">
+   <title fill="#f4f9ff" stroke="null">down-arrow</title>
+   <path fill="#f4f9ff" stroke="null" d="m21.6485,27.99458a2.68236,2.55604 0 0 0 -3.7619,3.64575l7.95012,7.4554a2.68236,2.55604 0 0 0 3.7619,0l7.79642,-7.31243a2.68236,2.55604 0 0 0 -3.75824,-3.64575l-3.29349,3.08433l-0.05306,-10.31656c-0.0183,-3.36156 -5.38302,-3.31274 -5.36656,0.04185l0.05306,10.17185l-3.32825,-3.12443z"/>
+  </g>
+ </g>
+</svg>

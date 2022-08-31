@@ -94,6 +94,24 @@ const rightSidebarContent = {
       </>
     ),
   },
+  [RIGHT_SIDEBAR_NAMES.WORKERS]: {
+    width: DRAWER_SIZE.WORKERS,
+    title: 'Workers',
+    description: (
+      <>
+        Hover the <Text code>Nodes</Text> for an additional information.
+      </>
+    ),
+  },
+  [RIGHT_SIDEBAR_NAMES.DRIVERS]: {
+    width: DRAWER_SIZE.DRIVERS,
+    title: 'Drivers',
+    description: (
+      <>
+        Hover the <Text code>Nodes</Text> for an additional information.
+      </>
+    ),
+  },
 };
 
 export default rightSidebarContent;

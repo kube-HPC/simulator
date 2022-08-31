@@ -19,21 +19,24 @@ const NodeStats = ({ status, ...props }) => (
       Object.entries(status.data.states).map(
         // TODO: rename status field
         // eslint-disable-next-line
-        ([status, count]) => (
-          <StatusTag
-            key={`${status}`}
-            status={status}
-            count={count}
-            colorMap={COLOR_TASK_STATUS}
-          />
-        )
+        ([status, count]) => {
+          return (
+            count && (
+              <StatusTag
+                key={`${status}`}
+                status={status}
+                count={count}
+                colorMap={COLOR_TASK_STATUS}
+              />
+            )
+          );
+        }
       )
     ) : (
       <StatusTag count={null} />
     )}
   </FlexBox.Auto>
 );
-
 NodeStats.propTypes = {
   // eslint-disable-next-line
   status: PropTypes.object.isRequired,

@@ -28,8 +28,7 @@ const SignBoard = ({
     const fields = form.getFieldsValue();
     const currentNameField = ['listKeyValue', ...nameRef, ...nameKey];
     const field = form.getFieldInstance(currentNameField);
-    const lastValue = field?.state?.value || '';
-
+    const lastValue = field?.input?.value || '';
     return { fields, currentNameField, lastValue };
   };
 

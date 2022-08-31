@@ -13,7 +13,12 @@ const GlobalStyle = createGlobalStyle`
 }
 
 .ant-layout-content{
-  overflow-x: hidden;
+  overflow-x:${({ location: { pathname } = {} } = {}) =>
+    ['/jobs', '/algorithms', '/pipelines'].includes(pathname)
+      ? 'none'
+      : 'hidden'};
+
+  
 }
 
 .ant-layout-sider-light .ant-layout-sider-trigger {
@@ -34,13 +39,14 @@ const GlobalStyle = createGlobalStyle`
   background-color: none;
 }
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
   height: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  border: 0.5px solid ${COLOR.grey};
+  border: 1px solid ${COLOR.grey};
   background-color: ${COLOR_LAYOUT.border};
+  border-radius: 10px;
 }
 
 .ant-layout {
@@ -75,6 +81,10 @@ const GlobalStyle = createGlobalStyle`
 .mark 
 {
   background-color:yellow;
+}
+
+.active-row {
+  background-color:#f5faff;
 }
 `;
 

@@ -11,6 +11,7 @@ const smallSelectStyle = { width: '150px' };
 const StreamingFlows = ({ form, initialState }) => {
   const {
     form: { setFieldsValue },
+    setForm,
   } = useWizardContext();
 
   const [listFlow, setListFlow] = useState(
@@ -28,6 +29,7 @@ const StreamingFlows = ({ form, initialState }) => {
     if (!has(listFlow, defaultFlowValue)) {
       setTimeout(() => {
         form.setFieldsValue({ streaming: { defaultFlow: '' } });
+        setForm();
       }, 100);
     }
   }, [form, listFlow]);

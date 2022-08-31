@@ -9,3 +9,4 @@ export { userGuideStepIndexes, USER_GUIDE } from './user-guide';
 export { THEMES_NAMES } from 'const/themesNames';
 export { WIZARD_STATE } from 'const/wizard-state';
 export { TypeTable, TypeFilter } from 'const/order-preferred';
+export { KIND_NODE_NAME, KIND_NODE_SHORT_NAME } from 'const/kinds';

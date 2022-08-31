@@ -1,5 +1,16 @@
 import client from 'client';
+
+import { apolloClient } from 'graphql/config';
+
 import { TypeFilter, TypeTable } from 'const';
+import {
+  MANAGED_LIST,
+  MANAGED_LIST_PIPELINE,
+  MANAGED_LIST_TAGS,
+  PREFERRED_LIST,
+  PREFERRED_LIST_PIPELINE,
+  PREFERRED_LIST_TAGS,
+} from 'graphql/queries';
 
 export const numberJobsPerPage = 9;
 const addToObjectKeyIndexId = (arrayObjects, typeElement) => {
@@ -28,18 +39,21 @@ const getManaged = async (
     ...(lastJobs && { lastJobs }),
   };
 
-  let res = null;
   try {
-    res = await client.get(`/queue/managed`, {
-      params: { ...data },
+    const res = await apolloClient.query({
+      query: MANAGED_LIST,
+      fetchPolicy: 'no-cache',
+      variables: {
+        ...data,
+      },
     });
 
-    res.data.returnList = addToObjectKeyIndexId(
-      res.data.returnList,
+    const dataKeys = addToObjectKeyIndexId(
+      res.data.managedList.returnList,
       TypeTable.QUEUE
     );
 
-    return res.data;
+    return dataKeys;
   } catch (error) {
     console.error(error);
   }
@@ -49,8 +63,15 @@ const getManaged = async (
 
 const getManagedByTag = async () => {
   try {
-    const res = await client.get(`/queue/managed/aggregation/tag`);
-    return addToObjectKeyIndexId(res.data, TypeTable.QUEUE);
+    const res = await apolloClient.query({
+      query: MANAGED_LIST_TAGS,
+      fetchPolicy: 'no-cache',
+    });
+
+    return addToObjectKeyIndexId(
+      res.data.aggregatedTagsManaged,
+      TypeTable.QUEUE
+    );
   } catch (error) {
     console.error(error);
   }
@@ -60,8 +81,17 @@ const getManagedByTag = async () => {
 
 const getManagedByPipeline = async () => {
   try {
-    const res = await client.get(`/queue/managed/aggregation/pipeline`);
-    return addToObjectKeyIndexId(res.data, TypeTable.QUEUE);
+    // const res = await client.get(`/queue/managed/aggregation/pipeline`);
+
+    const res = await apolloClient.query({
+      query: MANAGED_LIST_PIPELINE,
+      fetchPolicy: 'no-cache',
+    });
+
+    return addToObjectKeyIndexId(
+      res.data.aggregatedPipelineManaged,
+      TypeTable.QUEUE
+    );
   } catch (error) {
     console.error(error);
   }
@@ -88,18 +118,20 @@ const getPreferred = async (
   };
 
   try {
-    let res = null;
-
-    res = await client.get(`/queue/preferred`, {
-      params: { ...data },
+    const res = await apolloClient.query({
+      query: PREFERRED_LIST,
+      fetchPolicy: 'no-cache',
+      variables: {
+        ...data,
+      },
     });
 
-    res.data.returnList = addToObjectKeyIndexId(
-      res.data.returnList,
+    const dataKey = addToObjectKeyIndexId(
+      res.data.preferedList.returnList,
       TypeTable.PREFERRED
     );
 
-    return res.data;
+    return dataKey;
   } catch (error) {
     console.error(error);
   }
@@ -109,8 +141,14 @@ const getPreferred = async (
 
 const getPreferredByTag = async () => {
   try {
-    const res = await client.get(`/queue/preferred/aggregation/tag`);
-    return addToObjectKeyIndexId(res.data, TypeTable.PREFERRED);
+    const res = await apolloClient.query({
+      query: PREFERRED_LIST_TAGS,
+      fetchPolicy: 'no-cache',
+    });
+    return addToObjectKeyIndexId(
+      res.data.aggregatedTagsPrefered,
+      TypeTable.PREFERRED
+    );
   } catch (error) {
     console.error(error);
   }
@@ -120,8 +158,15 @@ const getPreferredByTag = async () => {
 
 const getPreferredByPipeline = async () => {
   try {
-    const res = await client.get(`/queue/preferred/aggregation/pipeline`);
-    return addToObjectKeyIndexId(res.data, TypeTable.PREFERRED);
+    const res = await apolloClient.query({
+      query: PREFERRED_LIST_PIPELINE,
+      fetchPolicy: 'no-cache',
+    });
+
+    return addToObjectKeyIndexId(
+      res.data.aggregatedPipelinePrefered,
+      TypeTable.PREFERRED
+    );
   } catch (error) {
     console.error(error);
   }
@@ -262,8 +307,7 @@ const getJobsIdsScopePreferred = async (
       x => x.index === currentIndex
     );
 
-    const res = await getPreferred(null, lastJob, null, null, count);
-    const resultAllJobs = res.returnList;
+    const resultAllJobs = await getPreferred(null, lastJob, null, null, count);
 
     // get all jobsId need to delete from preferred
     if (filterPreferredVal === TypeFilter.PIPELINE.toUpperCase()) {

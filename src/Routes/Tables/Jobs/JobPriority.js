@@ -9,11 +9,11 @@ const TagTheme = styled(Tag)`
 `;
 
 const JobPriority = ({ priority }) => (
-  <Tooltip placement="top" title={COLOR_PRIORITY[priority].name}>
+  <Tooltip placement="top" title={priority && COLOR_PRIORITY[priority].name}>
     <TagTheme
       color={Theme.Styles.isTagFill ? COLOR_PRIORITY[priority]?.color : ''}
-      $priorityColor={COLOR_PRIORITY[priority].color}>
-      {COLOR_PRIORITY[priority].name.slice(0, 1)}
+      $priorityColor={priority && COLOR_PRIORITY[priority].color}>
+      {priority && COLOR_PRIORITY[priority].name.slice(0, 1)}
     </TagTheme>
   </Tooltip>
 );

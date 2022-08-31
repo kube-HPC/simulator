@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
+
+// import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import { Ellipsis } from 'components/common';
 import { USER_GUIDE } from 'const';
-import { sorter, toUpperCaseFirstLetter } from 'utils/stringHelper';
+import { sorter } from 'utils/stringHelper';
 import JobActions from './JobActions';
 import NodeStats from './NodeStats';
 import JobPriority from './JobPriority';
@@ -11,19 +12,32 @@ import JobProgress from './JobProgress';
 import JobStatus from './JobStatus';
 import JobTime from './JobTime';
 import JobTypes from './JobTypes';
+import PinActiveJobs from './pinActiveJobs';
 
 const Id = jobID => (
   <Ellipsis className={USER_GUIDE.TABLE_JOB.ID_SELECT} copyable text={jobID} />
 );
-const Name = pipelineName => <Ellipsis text={pipelineName} />;
-const StartTime = (startTime, { results }) => (
-  <JobTime startTime={startTime} results={results} />
-);
-const Status = status => <JobStatus status={status} />;
-const Stats = status => <NodeStats status={status} />;
-const Priority = priority => <JobPriority priority={priority} />;
 
-const Types = types => <JobTypes types={types} fullName={false} />;
+// const Name = pipelineName => <Ellipsis text={pipelineName} />;
+const Name = (text, record) => <Ellipsis text={record.pipeline.name} />;
+
+const StartTime = (text, record) => (
+  <JobTime startTime={record.pipeline.startTime} results={record.results} />
+);
+
+const pinActiveJobs = status => <PinActiveJobs status={status} />;
+const Status = status => <JobStatus status={status} />;
+
+const Stats = status => <NodeStats status={status} />;
+// const Priority = priority => <JobPriority priority={priority} />;
+const Priority = (text, record) => (
+  <JobPriority priority={record.pipeline.priority} />
+);
+
+// const Types = types => <JobTypes types={types} fullName={false} />;
+const Types = (text, record) => (
+  <JobTypes types={record.pipeline.types} fullName={false} />
+);
 
 const ProgressContainer = styled.div`
   display: flex;
@@ -44,20 +58,27 @@ const Progress = (_, job) => (
 const sortPipelineName = (a, b) => sorter(a.pipeline.name, b.pipeline.name);
 const sortStartTime = (a, b) => a.pipeline.startTime - b.pipeline.startTime;
 const sortPriority = (a, b) => sorter(a.pipeline.priority, b.pipeline.priority);
-const onStatusFilter = (value, record) => record.status.status === value;
+// const onStatusFilter = (value, record) => record.status.status === value;
 const sortStatus = (a, b) => sorter(a.status.status, b.status.status);
 
-const statusFilter = Object.values(PIPELINE_STATUS).map(status => ({
-  text: toUpperCaseFirstLetter(status),
-  value: status,
-}));
+// const statusFilter = Object.values(PIPELINE_STATUS).map(status => ({
+//  text: toUpperCaseFirstLetter(status),
+//  value: status,
+// }));
 
 const jobColumns = [
+  {
+    dataIndex: ['status'],
+    key: `job-status-pin`,
+    width: `2%`,
+    align: `center`,
+    render: pinActiveJobs,
+  },
   {
     title: `Job ID`,
     dataIndex: `key`,
     key: `key`,
-    width: `10ch`,
+    width: `10%`,
     render: Id,
   },
   {
@@ -72,7 +93,7 @@ const jobColumns = [
     title: `Start Time`,
     dataIndex: ['pipeline', 'startTime'],
     key: `Start timestamp`,
-    width: `10%`,
+    width: `15%`,
     sorter: sortStartTime,
     render: StartTime,
   },
@@ -88,7 +109,7 @@ const jobColumns = [
     dataIndex: ['pipeline', 'priority'],
     key: `priority`,
     align: `center`,
-    width: `15ch`,
+    width: `10%`,
     sorter: sortPriority,
     render: Priority,
   },
@@ -97,19 +118,19 @@ const jobColumns = [
     dataIndex: ['status'],
     key: `node-status`,
     align: `center`,
-    width: `20ch`,
+    width: `10%`,
     render: Stats,
   },
   {
     title: `Status`,
     dataIndex: ['status'],
     key: `job-status`,
-    filterMultiple: true,
-    filters: statusFilter,
+    //  filterMultiple: true,
+    //  filters: statusFilter,
     width: `8%`,
     align: `center`,
     sorter: sortStatus,
-    onFilter: onStatusFilter,
+    //  onFilter: onStatusFilter,
     render: Status,
   },
   {

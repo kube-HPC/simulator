@@ -65,7 +65,11 @@ const TitleDataJob = ({ job }) => (
 
 TitleDataJob.propTypes = {
   // eslint-disable-next-line
-  job: PropTypes.object.isRequired,
+  job: PropTypes.object,
+};
+
+TitleDataJob.defaultProps = {
+  job: {},
 };
 
 export default TitleDataJob;

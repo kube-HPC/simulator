@@ -1,6 +1,6 @@
 export type Node = {
   nodeName: string;
-  kind: 'dataSource' | 'algorithm' | 'gateway' | 'output';
+  kind: 'dataSource' | 'algorithm' | 'gateway' | 'output' | 'hyperparamsTuner';
 };
 
 export type DataSourceNode = Node & {

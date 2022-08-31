@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
+import { EditableTagGroup, SignBoard } from 'components/common';
 import { Form, Button, Space, Input } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import useWizardContext from 'Routes/SidebarRight/AddPipeline/useWizardContext';
 import { tryParse, tryParseJson } from 'utils';
 import { useDebouncedCallback } from 'use-debounce';
-import { SignBoard } from 'components/common';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
@@ -13,6 +13,12 @@ const IconDelete = styled(MinusCircleOutlined)`
   color: #999;
   font-size: 1.5em;
   margin-left: 1ch;
+`;
+
+const SpaceStyle = styled(Space)`
+  .ant-space-item:last-of-type {
+    margin-left: ${props => (props.$isAutoLeft ? 'auto' : 'none')};
+  }
 `;
 
 const emptyEditorStatesKeyValue = ['""', null, 'null', ''];
@@ -24,6 +30,8 @@ const ControllerKeyValue = ({
   isValueSignBoard,
   valuePlaceholder,
   titleKeyboard,
+  isValueArray,
+  placeholderKey,
 }) => {
   const { initialState, form, valuesState } = useWizardContext();
 
@@ -78,6 +86,7 @@ const ControllerKeyValue = ({
         (acc, item) => ({ ...acc, [item?.key]: tryParseJson(item?.value) }),
         {}
       );
+
     setValue(JSON.stringify(res));
     submitChange();
   }, [form, nameRef, submitChange]);
@@ -99,7 +108,8 @@ const ControllerKeyValue = ({
       {(fields, { add, remove }) => (
         <>
           {fields.map(({ key, name, fieldKey, index, ...restField }) => (
-            <Space
+            <SpaceStyle
+              $isAutoLeft={isValueArray}
               style={{
                 display: 'flex',
                 marginBottom: 8,
@@ -111,10 +121,12 @@ const ControllerKeyValue = ({
                 {...restField}
                 name={[name, 'key']}
                 fieldKey={[fieldKey, 'key']}
-                rules={[{ required: true, message: 'Missing flow key' }]}
+                rules={[
+                  { required: true, message: `Missing ${placeholderKey}` },
+                ]}
                 key={`inputName${key}`}
                 onChange={() => handleChange()}>
-                <Input key={`inputN${key}`} placeholder="Flow key" />
+                <Input key={`inputN${key}`} placeholder={placeholderKey} />
               </Form.Item>
 
               {isValueSignBoard ? (
@@ -134,6 +146,16 @@ const ControllerKeyValue = ({
                   key={`SignBoard${key}`}
                   width={380}
                 />
+              ) : isValueArray ? (
+                <Form.Item
+                  name={[name, 'value']}
+                  fieldKey={[fieldKey, 'value']}
+                  key={`inputValueItemArray${key}`}>
+                  <EditableTagGroup
+                    duplicateValue
+                    onChange={() => handleChange()}
+                  />
+                </Form.Item>
               ) : (
                 <Form.Item
                   name={[name, 'value']}
@@ -155,7 +177,7 @@ const ControllerKeyValue = ({
                   handleChange();
                 }}
               />
-            </Space>
+            </SpaceStyle>
           ))}
           <Form.Item>
             <Button
@@ -179,8 +201,10 @@ ControllerKeyValue.propTypes = {
   // eslint-disable-next-line
   style: PropTypes.object,
   isValueSignBoard: PropTypes.bool,
+  isValueArray: PropTypes.bool,
   valuePlaceholder: PropTypes.string,
   titleKeyboard: PropTypes.string,
+  placeholderKey: PropTypes.string,
   nameRef: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 ControllerKeyValue.defaultProps = {
@@ -188,7 +212,9 @@ ControllerKeyValue.defaultProps = {
   style: {},
   onChange: () => {},
   isValueSignBoard: false,
+  isValueArray: false,
   valuePlaceholder: '',
   titleKeyboard: '',
+  placeholderKey: 'Flow key',
 };
 export default React.memo(ControllerKeyValue);

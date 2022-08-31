@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { CheckOutlined } from '@ant-design/icons';
@@ -21,24 +21,52 @@ const JsonViewWrapper = styled.div`
   flex: 1;
 `;
 
-const Editor = ({ toggle, onSubmit, initialState, setEditorState }) => {
-  const [innerState, setInnerState] = useState(
-    JSON.stringify(initialState, null, 4)
+const removeNodesPipeline = InitialState => {
+  const obj = { ...InitialState };
+  delete obj.nodes;
+  return obj;
+};
+
+const addNodesPipeline = (currentPipeline, nodes) => {
+  const obj = { ...currentPipeline };
+  obj.nodes = nodes;
+  return obj;
+};
+
+const Editor = ({
+  toggle,
+  onSubmit,
+  initialState,
+  setEditorState,
+  isRunPipeline,
+}) => {
+  const nodes = useMemo(() => initialState?.nodes, []);
+
+  const [innerState, setInnerState] = useState(() =>
+    JSON.stringify(
+      isRunPipeline ? removeNodesPipeline(initialState) : initialState,
+      null,
+      4
+    )
   );
 
-  const setValuesState = useCallback(
+  const setValuesItemsState = useCallback(
     isToggle => {
       tryParse({
         src: innerState,
         onSuccess: ({ parsed }) => {
-          setEditorState(parsed);
+          if (isToggle && isRunPipeline) {
+            setEditorState(addNodesPipeline(parsed, nodes));
+          } else {
+            setEditorState(parsed);
+          }
 
           if (isToggle) toggle();
         },
         onFail: () => {},
       });
     },
-    [innerState, setEditorState, toggle]
+    [innerState, isRunPipeline, nodes, setEditorState, toggle]
   );
 
   const onEditorSubmit = () =>
@@ -52,10 +80,10 @@ const Editor = ({ toggle, onSubmit, initialState, setEditorState }) => {
   const onDefault = () => setInnerState(INITIAL_EDITOR_VALUE);
   const onClear = () => setInnerState('');
 
-  useEffect(() => setValuesState(false), [
+  useEffect(() => setValuesItemsState(false), [
     innerState,
     setEditorState,
-    setValuesState,
+    setValuesItemsState,
   ]);
 
   return (
@@ -71,24 +99,28 @@ const Editor = ({ toggle, onSubmit, initialState, setEditorState }) => {
 
       <BottomPanel width={DRAWER_SIZE.ADD_PIPELINE}>
         {/* <PanelButton key="Editor" onClick={handleToggle}> */}
-        <PanelButton key="Editor" onClick={() => setValuesState(true)}>
+        <PanelButton key="Editor" onClick={() => setValuesItemsState(true)}>
           Wizard View
         </PanelButton>
-        <PanelButton
-          type="dashed"
-          onClick={onDefault}
-          style={{ margin: '0 1ch' }}>
-          Default
-        </PanelButton>
-        <PanelButton type="danger" onClick={onClear}>
-          Clear
-        </PanelButton>
+        {!isRunPipeline && (
+          <>
+            <PanelButton
+              type="dashed"
+              onClick={onDefault}
+              style={{ margin: '0 1ch' }}>
+              Default
+            </PanelButton>
+            <PanelButton type="danger" onClick={onClear}>
+              Clear
+            </PanelButton>
+          </>
+        )}
         <RightAlignedButton
           type="primary"
           onClick={onEditorSubmit}
           form="add-pipeline"
           htmlType="submit">
-          Submit
+          {isRunPipeline ? 'Run' : 'Submit'}
           <CheckOutlined />
         </RightAlignedButton>
       </BottomPanel>
@@ -102,6 +134,7 @@ Editor.propTypes = {
   toggle: PropTypes.func.isRequired,
   // eslint-disable-next-line
   initialState: PropTypes.object.isRequired,
+  isRunPipeline: PropTypes.bool.isRequired,
 };
 
 export default Editor;

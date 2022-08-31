@@ -17,3 +17,7 @@ export const PanelButton = styled(Button)`
 export const RightAlignedButton = styled(Button)`
   margin-left: auto;
 `;
+
+export const RightAlignedBox = styled.div`
+  margin-left: auto;
+`;

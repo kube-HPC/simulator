@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Icon from '@ant-design/icons';
@@ -12,18 +12,22 @@ const MemoryField = React.forwardRef(
   // eslint-disable-next-line
   ({ onChange, children, value, tooltipTitle, min, iconType }, ref) => {
     const [numberInitial, unitInitial] = parseUnit(value);
-
-    const [number, setNumber] = useState(numberInitial);
+    const [numberMem, setNumberMem] = useState(numberInitial);
     const [unit, setUnit] = useState(unitInitial);
 
+    useEffect(() => {
+      setNumberMem(numberInitial);
+      setUnit(unitInitial);
+    }, [numberInitial, unitInitial]);
+
     const onNumber = target => {
-      setNumber(target);
+      setNumberMem(target);
       onChange(target === null || target === '' ? null : `${target}${unit}`);
     };
 
     const onSelect = target => {
       setUnit(target);
-      onChange(number === null ? null : `${number}${target}`);
+      onChange(numberMem === null ? null : `${numberMem}${target}`);
     };
 
     const Wrapper = tooltipTitle ? Tooltip : React.Fragment;
@@ -34,7 +38,7 @@ const MemoryField = React.forwardRef(
       <Wrapper {...wrapperProps}>
         <Input.Group compact>
           {iconType && <Icon type={iconType} />}
-          <InputNumber min={min} value={number} onChange={onNumber} />
+          <InputNumber min={min} value={numberMem} onChange={onNumber} />
           <Select style={selectStyle} value={unit} onChange={onSelect}>
             {children}
           </Select>

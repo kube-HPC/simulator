@@ -15,9 +15,13 @@ import CONTENT_CONFIG from './Content.react';
 import ctx from './ctx';
 import useSubscribe from './useSubscribe';
 import { DRAWER_TITLES } from '../../const';
+import WorkersTable from './../Tables/Workers';
+import DriversTable from './../Tables/Drivers';
 
 const operationSelector = {
   // eslint-disable-next-line
+  [RIGHT_SIDEBAR_NAMES.WORKERS]: WorkersTable,
+  [RIGHT_SIDEBAR_NAMES.DRIVERS]: DriversTable,
   [RIGHT_SIDEBAR_NAMES.ADD_PIPELINE]: AddPipeline,
   [RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM]: AddAlgorithm,
   [RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE]: RunRawPipeline,
@@ -30,6 +34,8 @@ const operationSelector = {
 
 const titleSelector = {
   // eslint-disable-next-line
+  [RIGHT_SIDEBAR_NAMES.WORKERS]: DRAWER_TITLES.WORKERS,
+  [RIGHT_SIDEBAR_NAMES.DRIVERS]: DRAWER_TITLES.DRIVERS,
   [RIGHT_SIDEBAR_NAMES.ADD_PIPELINE]: DRAWER_TITLES.ADD_PIPELINE,
   [RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM]: DRAWER_TITLES.ADD_ALGORITHM,
   [RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE]: DRAWER_TITLES.RUN_RAW_PIPELINE,
@@ -37,7 +43,6 @@ const titleSelector = {
   [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: DRAWER_TITLES.ERROR_LOGS,
   [RIGHT_SIDEBAR_NAMES.CPU]: DRAWER_TITLES.CPU,
   [RIGHT_SIDEBAR_NAMES.MEMORY]: DRAWER_TITLES.MEMORY,
-  [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: DRAWER_TITLES.ERROR_LOGS,
 };
 
 const DashboardDrawer = () => {

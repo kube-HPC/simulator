@@ -1,6 +1,7 @@
 import React, { useEffect, Suspense } from 'react';
 import { useSiteThemeMode } from 'hooks';
 import { GlobalStyle } from 'styles';
+import { useLocation } from 'react-router-dom';
 
 // create in began styles antd by theme name
 switch (localStorage.getItem('theme')?.toUpperCase()) {
@@ -29,11 +30,12 @@ const LazyThemeStyle = {
 
 const GlobalThemes = () => {
   const { setTheme, themeName } = useSiteThemeMode();
+  const location = useLocation();
   useEffect(() => setTheme(themeName), []);
 
   return (
     <>
-      <GlobalStyle />
+      <GlobalStyle location={location} />
       <Suspense fallback="">{LazyThemeStyle[themeName.toUpperCase()]}</Suspense>
     </>
   );

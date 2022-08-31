@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { TypeTable, TypeFilter } from 'const';
+import { getQueryParams } from 'utils';
 
 import TableOrderConsolidated from './TableOrderConsolidated';
 import TablePreferred from './TablePreferred';
@@ -11,7 +12,6 @@ import { orderApi } from './useQueueOrderJobs';
 import { LinkToEdit } from './QueueOrderComponents';
 
 const PAGE_SIZE_TABLE = 30;
-
 class QueueOrderJobs extends React.Component {
   constructor(props) {
     super(props);
@@ -49,8 +49,7 @@ class QueueOrderJobs extends React.Component {
       numberRowToViewPagingPreferred: orderApi.numberJobsPerPage, // number row to view in table Preferred
 
       // eslint-disable-next-line react/prop-types
-      isEditOrder:
-        new URLSearchParams(window.location.search).get('queueEdit') || false,
+      isEditOrder: getQueryParams('queueEdit') || false,
       TableOrderConsolidatedSize: PAGE_SIZE_TABLE,
     };
 
@@ -315,16 +314,25 @@ class QueueOrderJobs extends React.Component {
 
         // get all jobsId need to move preferred by pipeline name
         if (filterQueueVal === TypeFilter.PIPELINE.toUpperCase()) {
-          const res = await orderApi.getManaged(null, null, name, null, count);
-          resultAllJobs = res.returnList;
+          resultAllJobs = await orderApi.getManaged(
+            null,
+            null,
+            name,
+            null,
+            count
+          );
         }
 
         // get all jobsId need to move preferred by tag name
         if (filterQueueVal === TypeFilter.TAG.toUpperCase()) {
           const tag = name.length > 0 ? name : '';
-
-          const res = await orderApi.getManaged(null, null, null, tag, count);
-          resultAllJobs = res.returnList;
+          resultAllJobs = await orderApi.getManaged(
+            null,
+            null,
+            null,
+            tag,
+            count
+          );
         }
 
         // set all jobsId need to move preferred in array

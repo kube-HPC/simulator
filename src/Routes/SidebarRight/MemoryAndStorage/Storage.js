@@ -47,7 +47,8 @@ const adaptedData = ({ free, used }) => {
 };
 
 const Storage = ({ storage }) => {
-  const { size, free } = storage;
+  const free = parseInt(storage.free, 30);
+  const size = parseInt(storage.size, 30);
   const used = size - free;
   const ratio = free / size;
   const usedP = parseFloat((1 - ratio).toFixed(2));

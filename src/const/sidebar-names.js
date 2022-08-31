@@ -13,8 +13,12 @@ export const RIGHT_SIDEBAR_NAMES = {
   ADD_ALGORITHM: 'add-algorithm',
   ADD_DATASOURCE: 'add-datasource',
   RUN_RAW_PIPELINE: 'run-raw-pipeline',
+
   CPU: 'cpu',
   GPU: 'gpu',
   MEMORY: 'memory-and-storage',
   ERROR_LOGS: 'error-logs',
+
+  WORKERS: 'workers',
+  DRIVERS: 'drivers',
 };

@@ -1,12 +1,15 @@
 import React from 'react';
 import { TabDrawerText, TabDrawer } from 'styles';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
-import { selectors } from 'reducers';
+// import { useSelector } from 'react-redux';
+// import { selectors } from 'reducers';
 import Drawer from 'components/Drawer';
 import { DRAWER_SIZE } from 'const';
 import MissingIdError from 'components/MissingIdError';
 import useToggle from 'hooks/useToggle';
+import { useQuery } from '@apollo/client';
+import { usePolling } from 'hooks';
+import { JOB_BY_ID_QUERY } from 'graphql/queries';
 import Info from './Info';
 import usePath from './usePath';
 import { DRAWER_TITLES } from '../../../const';
@@ -26,8 +29,11 @@ const DrawerOverView = styled(Drawer)`
 const OverviewDrawer = () => {
   const { goTo, jobId } = usePath();
   const { setOff, isOn } = useToggle(true);
-
-  const item = useSelector(state => selectors.jobs.byId(state, jobId));
+  const query = useQuery(JOB_BY_ID_QUERY, {
+    variables: { jobId },
+  });
+  usePolling(query, 3000);
+  // const item = useSelector(state => selectors.jobs.byId(state, jobId));
 
   return (
     <DrawerOverView
@@ -37,11 +43,16 @@ const OverviewDrawer = () => {
       onClose={setOff}
       width={DRAWER_SIZE.JOB_INFO}>
       <>
-        <TitleDataJob job={item} />
+        <TitleDataJob job={query?.data?.job} />
         <TabDrawer>
           <TabDrawerText>{DRAWER_TITLES.JOB_INFO}</TabDrawerText>
         </TabDrawer>
-        {item ? <Info job={item} /> : <MissingIdError />}
+        {/* item ? <Info job={item} /> : <MissingIdError /> */}
+        {query?.data?.job ? (
+          <Info job={query?.data?.job} />
+        ) : (
+          <MissingIdError />
+        )}
       </>
     </DrawerOverView>
   );

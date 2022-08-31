@@ -33,6 +33,7 @@ const useJobs = () => {
   }, [collection, searchFilter, filters]);
 
   const loading = useSelector(selectors.experiments.loadingState);
+
   return {
     dataSource: filtered,
     columns: jobColumns,

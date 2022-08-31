@@ -27,3 +27,7 @@ export const getColorByName = stringInput => {
   );
   return `hsl(${stringUniqueHash % 360}, 95%, 35%)`;
 };
+export const getQueryParams = nameParam => {
+  const url = new URL(window.location.href.replace('#', ''));
+  return new URLSearchParams(url.search).get(nameParam);
+};

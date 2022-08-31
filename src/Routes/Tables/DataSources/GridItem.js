@@ -67,10 +67,12 @@ const SummaryBar = styled.div`
 `;
 
 const GridItem = ({ goTo, dataSource }) => {
-  const handleDoubleClick = useCallback(
-    () => goTo.edit({ nextDataSourceId: dataSource.id }),
-    [goTo, dataSource.id]
-  );
+  const handleDoubleClick = useCallback(() => {
+    goTo.edit({
+      nextDataSourceId: dataSource.id,
+      nextDataSourceName: dataSource.name,
+    });
+  }, [goTo, dataSource.id, dataSource.name]);
 
   const handleCopy = useCallback(() => copyToClipboard(dataSource.id), [
     dataSource,
@@ -78,7 +80,7 @@ const GridItem = ({ goTo, dataSource }) => {
 
   return (
     <GridItemCard
-      key={`datasource-${dataSource.id}`}
+      key={`datasource-${dataSource.name}-${dataSource.id}`}
       onDoubleClick={handleDoubleClick}
       hoverable>
       <Header>
@@ -94,7 +96,7 @@ const GridItem = ({ goTo, dataSource }) => {
         {dataSource.fileTypes.map(type => (
           <Tooltip
             title={type}
-            key={`dataSource-${dataSource.id}-icon-${type}`}>
+            key={`dataSource-${dataSource.id}-${dataSource.name}-icon-${type}`}>
             <FileIcon data-category={fileTypes[type]?.category}>
               {fileTypes[type]?.name ?? fileTypes.default.name}
             </FileIcon>

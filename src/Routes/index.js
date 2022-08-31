@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
-import { Layout, message } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Layout, message, BackTop, Button } from 'antd';
+import { ArrowUpOutlined } from '@ant-design/icons';
 import styled, { ThemeProvider } from 'styled-components';
 import { Route } from 'react-router-dom';
 import { COLOR, COLOR_LAYOUT, Theme } from 'styles';
-import { useActions, useConnectionStatus } from 'hooks';
+import { useActions } from 'hooks'; // useConnectionStatus
 import Header from 'Routes/Base/Header';
 import SidebarRight, { Drawer as SiderBarRightDrawer } from './SidebarRight';
 import SidebarLeft from './Base/SidebarLeft';
@@ -26,6 +27,7 @@ const ContentMargin = styled(Layout.Content)`
   ::-webkit-scrollbar-thumb {
     border: 1px solid ${COLOR.darkGrey};
   }
+  /* overflow: hidden; */
 `;
 
 const RightContainer = styled.aside`
@@ -40,14 +42,17 @@ message.config({
   maxCount: 3,
 });
 
+const BackToTop = () => document.getElementById('globalContent');
+
 const Routes = () => {
+  const [isDataAvailable, setIsDataAvailable] = useState(false);
+
   const { socketInit } = useActions();
 
   useEffect(() => {
     socketInit();
+    setTimeout(() => setIsDataAvailable(true), 2000);
   }, [socketInit]);
-
-  const { isDataAvailable } = useConnectionStatus();
 
   return isDataAvailable ? (
     <ThemeProvider theme={{ ...Theme }}>
@@ -57,8 +62,17 @@ const Routes = () => {
         <Layout>
           <Route path="/:pageName" component={Header} />
           <LayoutFullHeight>
-            <ContentMargin>
+            <ContentMargin id="globalContent">
               <Tables />
+              <BackTop target={BackToTop}>
+                <Button
+                  style={{ opacity: '0.7' }}
+                  type="primary"
+                  shape="circle"
+                  size="large"
+                  icon={<ArrowUpOutlined />}
+                />
+              </BackTop>
             </ContentMargin>
             <RightContainer>
               <Route path="/:root" component={SidebarRight} />

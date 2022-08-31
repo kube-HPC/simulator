@@ -46,9 +46,10 @@ const useWizardAddPipeline = (
   form,
   setWizardStepIdx,
   editorState,
-  addPipelineTemplate
+  addPipelineTemplate,
+  isRunPipeline
 ) => {
-  const { addPipeline, updatePipeline } = usePipeline();
+  const { addPipeline, updatePipeline, runPipeline } = usePipeline();
 
   useEffect(() => {
     // avoid infinite looping
@@ -56,6 +57,7 @@ const useWizardAddPipeline = (
     if (status === WIZARD_STATE.IDLE) {
       if (isEdit) {
         const jsonEdit = JSON.parse(jsonPipeline);
+
         if (jsonEdit.nodes) {
           jsonEdit.nodes.forEach(item => {
             if (item.kind === undefined) {
@@ -123,7 +125,11 @@ const useWizardAddPipeline = (
       };
 
       if (isEdit) {
-        updatePipeline(cleanDeep(formattedData), LOCAL_STORAGE_KEY);
+        if (isRunPipeline) {
+          runPipeline(cleanDeep(formattedData));
+        } else {
+          updatePipeline(cleanDeep(formattedData), LOCAL_STORAGE_KEY);
+        }
       } else {
         addPipeline(cleanDeep(formattedData), LOCAL_STORAGE_KEY);
       }
@@ -131,7 +137,7 @@ const useWizardAddPipeline = (
       // prevent re-saving to localStorage
       setStatus(WIZARD_STATE.SUBMITTED);
     },
-    [isEdit, setStatus, updatePipeline, addPipeline]
+    [isEdit, setStatus, isRunPipeline, runPipeline, updatePipeline, addPipeline]
   );
 
   return {
