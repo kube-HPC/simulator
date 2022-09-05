@@ -1,14 +1,35 @@
 import { useEffect, useMemo, useState } from 'react';
 import isEqual from 'lodash/isEqual';
 import { findNode } from 'Routes/Tables/Jobs/graphUtils';
-import useLogs from './useLogs';
 import useSettings from './useSettings';
+
+import useLogs from './useLogs';
+
+// import  useLazeLogs  from './graphql/useLazeLogs';
 
 const EMPTY_NODE = {};
 
 const useNodeInfo = ({ graph, pipeline }) => {
   const [node, setNode] = useState(EMPTY_NODE);
+  /*
+  export const getKubernetesLogsData = ({
+    podName,
+    taskId,
+    source = 'k8s',
+    nodeKind,
+    logMode,
+  }) => ({
+    type: actions.REST_REQ_GET,
+    payload: {
+      url: `logs?${qs.stringify(
+        filterEmptyValues({ podName, taskId, source, nodeKind, logMode })
+      )}`,
+      actionType: actions.JOBS_KUBERNETES_LOGS,
+    },
+  }); */
+
   const { getLogs } = useLogs();
+  // const { getLogs } = useLazeLogs();
   const { logSource: source, logMode } = useSettings();
   const findNodeByName = findNode({ graph, pipeline });
 
@@ -33,6 +54,7 @@ const useNodeInfo = ({ graph, pipeline }) => {
       if (!isEqual(node, newNode)) {
         const { taskId, podName } = newNode;
         getLogs({ taskId, podName, source, logMode });
+
         setNode(newNode);
       }
     }
