@@ -43,7 +43,7 @@ const usePipeline = () => {
 
   const rerunPipeline = useCallback(async jobId => {
     try {
-      const res = await client.post('/exec/rerun', { jobId });
+      const res = await client.post(`/exec/rerun`, { jobId });
       message.success(successMsg(res.data).PIPELINE_START);
     } catch (error) {
       message.error(error.message);
@@ -55,7 +55,7 @@ const usePipeline = () => {
       try {
         let res = null;
 
-        res = await client.put('store/pipelines', { ...data });
+        res = await client.put(`/store/pipelines`, { ...data });
         message.success(successMsg(res.data).PIPELINE_UPDATE);
         window.localStorage.removeItem(LOCAL_STORAGE_KEY);
         history.push('/pipelines');
@@ -70,7 +70,7 @@ const usePipeline = () => {
     async (data, LOCAL_STORAGE_KEY) => {
       try {
         let res = null;
-        res = await client.post('store/pipelines', { ...data });
+        res = await client.post(`/store/pipelines`, { ...data });
 
         message.success(successMsg(res.data).PIPELINE_ADD);
 

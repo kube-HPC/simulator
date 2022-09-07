@@ -3,9 +3,12 @@ import { createSlice } from '@reduxjs/toolkit';
 
 /**
  * @typedef {typeof initialState} ConfigState
+ *
  * @typedef {{ config: ConfigState }} State
  */
 const initialState = {
+  backendApiUrl: '',
+  backendUrl: '',
   baseUrl: '',
   hasConfig: false,
 };
@@ -17,6 +20,13 @@ const config = createSlice({
   extraReducers: {
     [`${actionType.SOCKET_GET_CONFIG}_SUCCESS`]: (state, { payload }) => ({
       ...state,
+      backendApiUrl:
+        payload.config.monitorBackend.schema +
+        payload.config.monitorBackend.host +
+        payload.config.monitorBackend.path,
+      backendUrl:
+        payload.config.monitorBackend.schema +
+        payload.config.monitorBackend.host,
       baseUrl: payload.config.baseUrl,
       hasConfig: true,
     }),
