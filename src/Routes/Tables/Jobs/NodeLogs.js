@@ -2,7 +2,8 @@ import { CopyOutlined } from '@ant-design/icons';
 import { Button, Select, Tag, Tooltip } from 'antd';
 import { FlexBox } from 'components/common';
 import LogsViewer from 'components/common/LogsViewer';
-import { useLogs, useSettings } from 'hooks';
+import { useSettings } from 'hooks';
+import { useLazyLogs } from 'hooks/graphql';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -47,8 +48,9 @@ OptionBox.defaultProps = {
   taskId: null,
 };
 
-const NodeLogs = ({ node, taskDetails, onChange }) => {
-  const { logs, getLogs } = useLogs();
+const NodeLogs = ({ node, taskDetails, onChange, logs, setLogs }) => {
+  const { getLogsLazyQuery } = useLazyLogs();
+
   const [currentTask, setCurrentTask] = useState(undefined);
   const { logSource: source, logMode } = useSettings();
 
@@ -58,9 +60,13 @@ const NodeLogs = ({ node, taskDetails, onChange }) => {
     const { taskId, podName } = task;
     if (taskId !== currentTask) {
       setCurrentTask(taskId);
-      getLogs({ taskId, podName, source, nodeKind: node.kind, logMode });
+      getLogsLazyQuery({
+        variables: { taskId, podName, source, nodeKind: node.kind, logMode },
+      }).then(resLogs => {
+        setLogs(resLogs.data.logsByQuery);
+      });
     }
-  }, [currentTask, taskDetails, getLogs, source, node, logMode]);
+  }, [currentTask, taskDetails, getLogsLazyQuery, source, node, logMode]);
 
   const options = taskDetails.map((task, index) => (
     // TODO: implement a better key
@@ -83,7 +89,11 @@ const NodeLogs = ({ node, taskDetails, onChange }) => {
                 const { taskId, podName } = taskDetails[index];
                 onChange(index);
                 setCurrentTask(taskId);
-                getLogs({ taskId, podName, source, logMode });
+                getLogsLazyQuery({
+                  variables: { taskId, podName, source, logMode },
+                }).then(resLogs => {
+                  setLogs(resLogs.data.logsByQuery);
+                });
               }}>
               {options}
             </SelectFull>
@@ -111,5 +121,7 @@ NodeLogs.propTypes = {
     kind: PropTypes.string,
     nodeName: PropTypes.string,
   }).isRequired,
+  logs: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setLogs: PropTypes.func.isRequired,
 };
 export default React.memo(NodeLogs);
