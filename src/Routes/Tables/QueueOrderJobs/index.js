@@ -3,18 +3,27 @@ import { Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { TypeTable, TypeFilter } from 'const';
 import { getQueryParams } from 'utils';
-
+import PropTypes from 'prop-types';
 import TableOrderConsolidated from './TableOrderConsolidated';
 import TablePreferred from './TablePreferred';
 import TableQueue from './TableQueue';
 import { FlexItems, DividerTables } from './OrderStyles';
-import { orderApi } from './useQueueOrderJobs';
 import { LinkToEdit } from './QueueOrderComponents';
+import useQueueOrderJobs from './useQueueOrderJobs';
+
+// need HOC function to pass hook "useQueueOrderJobs" function to class component
+export const queueOrderJobsHOC = QueueOrderJobs => props => {
+  const { orderApi } = useQueueOrderJobs();
+
+  return <QueueOrderJobs orderApi={orderApi} {...props} />;
+};
 
 const PAGE_SIZE_TABLE = 30;
 class QueueOrderJobs extends React.Component {
   constructor(props) {
     super(props);
+
+    const { orderApi } = this.props;
 
     this.state = {
       // data jobs
@@ -90,6 +99,8 @@ class QueueOrderJobs extends React.Component {
       filterTableAllInOneVal,
     } = this.state;
 
+    const { orderApi } = this.props;
+
     let dataStatusManage = [];
     let dataStatusPreferred = [];
 
@@ -153,7 +164,7 @@ class QueueOrderJobs extends React.Component {
 
   handleDelete = async keyDelete => {
     const { dataSourcePreferred, filterPreferredVal } = this.state;
-
+    const { orderApi } = this.props;
     // get all jobsid need to delete
     const jobsIdToDelete = await orderApi.getJobsIdsScopePreferred(
       filterPreferredVal,
@@ -167,6 +178,7 @@ class QueueOrderJobs extends React.Component {
   };
 
   filterPreferred = filterValue => {
+    const { orderApi } = this.props;
     this.setState({
       filterPreferredVal: filterValue,
       isLoadDataPreferred: true,
@@ -181,6 +193,7 @@ class QueueOrderJobs extends React.Component {
   };
 
   filterQueue = filterValue => {
+    const { orderApi } = this.props;
     this.setState({
       isLoadDataQueue: true,
       filterQueueVal: filterValue,
@@ -244,6 +257,7 @@ class QueueOrderJobs extends React.Component {
   };
 
   onSortEnd = async ({ oldIndex, newIndex }) => {
+    const { orderApi } = this.props;
     this.setState({ isDrag: false });
     const {
       dataSourcePreferred,
@@ -541,4 +555,9 @@ class QueueOrderJobs extends React.Component {
   }
 }
 
-export default React.memo(QueueOrderJobs);
+QueueOrderJobs.propTypes = {
+  orderApi: PropTypes.objectOf(PropTypes.func).isRequired,
+};
+
+export default queueOrderJobsHOC(QueueOrderJobs);
+// export default React.memo(QueueOrderJobs);
