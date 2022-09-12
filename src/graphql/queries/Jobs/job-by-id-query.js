@@ -36,7 +36,14 @@ const JOB_BY_ID_QUERY = gql`
           startTime
           endTime
           level
-          batch
+          batch {
+            taskId
+            podName
+            status
+            batchIndex
+            startTime
+            endTime
+          }
           boards
           output {
             taskId
@@ -130,7 +137,14 @@ const JOB_BY_ID_QUERY = gql`
           startTime
           endTime
           level
-          batch
+          batch {
+            taskId
+            podName
+            status
+            batchIndex
+            startTime
+            endTime
+          }
           boards
           output {
             taskId
@@ -186,7 +200,14 @@ const JOB_BY_ID_QUERY = gql`
           startTime
           endTime
           level
-          batch
+          batch {
+            taskId
+            podName
+            status
+            batchIndex
+            startTime
+            endTime
+          }
           boards
           output {
             taskId
