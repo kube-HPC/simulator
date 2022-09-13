@@ -37,7 +37,14 @@ const useNodeInfo = ({ graph, pipeline }) => {
       if (!isEqual(node, newNode)) {
         const { taskId, podName } = newNode;
 
-        getLogsLazyQuery({ variables: { taskId, podName, source, logMode } });
+        getLogsLazyQuery({
+          variables: {
+            taskId: taskId || '',
+            podName,
+            source: source || 'k8s',
+            logMode,
+          },
+        });
 
         setNode(newNode);
       }

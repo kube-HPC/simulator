@@ -61,12 +61,26 @@ const NodeLogs = ({ node, taskDetails, onChange, logs, setLogs }) => {
     if (taskId !== currentTask) {
       setCurrentTask(taskId);
       getLogsLazyQuery({
-        variables: { taskId, podName, source, nodeKind: node.kind, logMode },
+        variables: {
+          taskId: taskId || '',
+          podName,
+          source: source || 'k8s',
+          nodeKind: node.kind,
+          logMode,
+        },
       }).then(resLogs => {
         setLogs(resLogs.data.logsByQuery);
       });
     }
-  }, [currentTask, taskDetails, getLogsLazyQuery, source, node, logMode]);
+  }, [
+    currentTask,
+    taskDetails,
+    getLogsLazyQuery,
+    source,
+    node,
+    logMode,
+    setLogs,
+  ]);
 
   const options = taskDetails.map((task, index) => (
     // TODO: implement a better key
@@ -90,7 +104,12 @@ const NodeLogs = ({ node, taskDetails, onChange, logs, setLogs }) => {
                 onChange(index);
                 setCurrentTask(taskId);
                 getLogsLazyQuery({
-                  variables: { taskId, podName, source, logMode },
+                  variables: {
+                    taskId: taskId || '',
+                    podName,
+                    source: source || 'k8s',
+                    logMode,
+                  },
                 }).then(resLogs => {
                   setLogs(resLogs.data.logsByQuery);
                 });

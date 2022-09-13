@@ -61,8 +61,15 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
 
   const onRefresh = useCallback(() => {
     const { taskId, podName } = taskDetails[index];
+
     getLogsLazyQuery({
-      variables: { taskId, podName, source, nodeKind: node.kind, logMode },
+      variables: {
+        taskId: taskId || '',
+        podName,
+        source: source || 'k8s',
+        nodeKind: node.kind,
+        logMode,
+      },
     }).then(resLogs => {
       setLogs(resLogs.data.logsByQuery);
     });
