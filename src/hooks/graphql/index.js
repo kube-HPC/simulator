@@ -14,3 +14,5 @@ export { default as useMetric } from './useMetric';
 export { default as useCounters } from './useCounters';
 export { default as useExperiments } from './useExperiments';
 export { default as useGetLists } from './useGetLists';
+export { default as useLogs } from './useLogs';
+export { default as useLazyLogs } from './useLazyLogs';

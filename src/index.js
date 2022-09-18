@@ -3,14 +3,12 @@ import 'core-js/features/array';
 import './assets/collapseTransition.css';
 import { ErrorBoundary } from 'components';
 import React, { useEffect } from 'react';
-import { render } from 'react-dom';
+import ReactDOM from 'react-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { HashRouter as Router } from 'react-router-dom';
 import { ReusableProvider } from 'reusable';
 import { init } from 'actions/connection.action';
 import { selectors } from 'reducers';
-import { ApolloProvider } from '@apollo/client';
-import { apolloClient } from 'graphql/config';
 import GlobalThemes from './styles/themes/GlobalThemes';
 import Root from './Routes';
 import store from './store';
@@ -25,6 +23,7 @@ const ConfigProvider = () => {
   }, [dispatch]);
 
   const { hasConfig } = useSelector(selectors.config);
+  // const  apolloClient2  = useApolloClient();
 
   return hasConfig ? (
     <Router>
@@ -38,14 +37,15 @@ const ConfigProvider = () => {
   ) : null;
 };
 
-render(
-  <ApolloProvider client={apolloClient}>
+const App = () => {
+  return (
     <Provider store={store}>
       <ConfigProvider />
     </Provider>
-  </ApolloProvider>,
-  document.getElementById('root')
-);
+  );
+};
+
+ReactDOM.render(<App />, document.getElementById('root'));
 
 // webpack Hot Module Replacement API
 if (module.hot) {

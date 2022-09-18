@@ -46,7 +46,6 @@ const useJobsFunctions = () => {
     const iJobs = instanceFilters.jobs;
 
     const items = {
-      experimentName: metaMode?.experimentName || null,
       algorithmName: iJobs?.algorithmName || undefined,
       pipelineName: iJobs?.pipelineName || undefined,
       pipelineStatus: iJobs?.pipelineStatus || undefined,
@@ -55,6 +54,13 @@ const useJobsFunctions = () => {
         to: iJobs?.datesRange?.to || null,
       },
     };
+
+    if (
+      metaMode?.experimentName != null &&
+      metaMode?.experimentName !== 'show-all'
+    ) {
+      items.experimentName = metaMode.experimentName;
+    }
 
     return items;
   }, [

@@ -9,9 +9,8 @@ import {
 } from '@ant-design/icons';
 import { Button, Empty, Tooltip } from 'antd';
 import { FlexBox, JsonSwitch } from 'components/common';
-import { useActions, useLogs, useSettings } from 'hooks';
-// import { selectors } from 'reducers';
-import { useAlgorithmByName } from 'hooks/graphql';
+import { useActions, useSettings } from 'hooks';
+import { useAlgorithmByName, useLazyLogs } from 'hooks/graphql';
 import { getTaskDetails } from '../graphUtils';
 import NodeInputOutput from './NodeInputOutput';
 import NodeLogs from '../NodeLogs';
@@ -48,8 +47,9 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
     (algorithmDetails = query.data.algorithmsByName);
 
   const [index, setIndex] = useState(0);
+  const [logs, setLogs] = useState([]);
   const { getCaching } = useActions();
-  const { getLogs } = useLogs();
+  const { getLogsLazyQuery } = useLazyLogs();
   const { logSource: source, logMode } = useSettings();
 
   const onRunNode = () =>
@@ -61,8 +61,19 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
 
   const onRefresh = useCallback(() => {
     const { taskId, podName } = taskDetails[index];
-    getLogs({ taskId, podName, source, nodeKind: node.kind, logMode });
-  }, [taskDetails, getLogs, index, logMode, node, source]);
+
+    getLogsLazyQuery({
+      variables: {
+        taskId: taskId || '',
+        podName,
+        source: source || 'k8s',
+        nodeKind: node.kind,
+        logMode,
+      },
+    }).then(resLogs => {
+      setLogs(resLogs.data.logsByQuery);
+    });
+  }, [taskDetails, getLogsLazyQuery, index, logMode, node, source]);
 
   const extra = node ? (
     <FlexBox.Auto>
@@ -99,6 +110,8 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
               node={node}
               taskDetails={taskDetails}
               onChange={setIndex}
+              logs={logs}
+              setLogs={setLogs}
             />
           </PaneLog>
           <Tabs.TabPane tab="Algorithm Details" key="algorithms-tab">

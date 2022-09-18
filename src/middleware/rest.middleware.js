@@ -3,15 +3,19 @@ import AT from 'const/application-actions';
 import client from './../client';
 import actions from '../actions';
 
+const API_URL = '/api/v1';
+
 const setMonitorPath = monitorBackend =>
   monitorBackend.useLocation
-    ? `${window.location.origin}${monitorBackend.path}`
-    : `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}${monitorBackend.path}`;
+    ? `${window.location.origin}${monitorBackend.path}${API_URL}`
+    : `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}${monitorBackend.path}${API_URL}`;
+// : `${monitorBackend.schema}${monitorBackend.host}${monitorBackend.path}${API_URL}`;
 
 const setBoardPath = board =>
   board.useLocation
     ? `${window.location.origin}${board.path}`
     : `${board.schema}${board.host}:${board.port}${board.path}`;
+// : `${board.schema}${board.host}${board.path}`;
 
 const DEFAULT_ERROR_MSG = 'Unexpected Error';
 

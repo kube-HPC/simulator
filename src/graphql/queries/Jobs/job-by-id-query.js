@@ -36,7 +36,9 @@ const JOB_BY_ID_QUERY = gql`
           startTime
           endTime
           level
-          batch
+          batch {
+            podName
+          }
           boards
           output {
             taskId
@@ -130,7 +132,9 @@ const JOB_BY_ID_QUERY = gql`
           startTime
           endTime
           level
-          batch
+          batch {
+            podName
+          }
           boards
           output {
             taskId
@@ -149,6 +153,9 @@ const JOB_BY_ID_QUERY = gql`
           input {
             path
           }
+          kind
+          ttl
+          batchOperation
         }
       }
       userPipeline {
@@ -186,7 +193,9 @@ const JOB_BY_ID_QUERY = gql`
           startTime
           endTime
           level
-          batch
+          batch {
+            podName
+          }
           boards
           output {
             taskId

@@ -1,14 +1,18 @@
 import { useEffect, useMemo, useState } from 'react';
 import isEqual from 'lodash/isEqual';
 import { findNode } from 'Routes/Tables/Jobs/graphUtils';
-import useLogs from './useLogs';
+import { useLazyLogs } from 'hooks/graphql';
 import useSettings from './useSettings';
+
+// import useLogs from './useLogs';
 
 const EMPTY_NODE = {};
 
 const useNodeInfo = ({ graph, pipeline }) => {
   const [node, setNode] = useState(EMPTY_NODE);
-  const { getLogs } = useLogs();
+
+  // const { getLogs } = useLogs();
+  const { getLogsLazyQuery } = useLazyLogs();
   const { logSource: source, logMode } = useSettings();
   const findNodeByName = findNode({ graph, pipeline });
 
@@ -32,11 +36,20 @@ const useNodeInfo = ({ graph, pipeline }) => {
       const newNode = findNodeByName(nodeName);
       if (!isEqual(node, newNode)) {
         const { taskId, podName } = newNode;
-        getLogs({ taskId, podName, source, logMode });
+
+        getLogsLazyQuery({
+          variables: {
+            taskId: taskId || '',
+            podName,
+            source: source || 'k8s',
+            logMode,
+          },
+        });
+
         setNode(newNode);
       }
     }
-  }, [findNodeByName, getLogs, graph, node, source, logMode]);
+  }, [findNodeByName, getLogsLazyQuery, graph, node, source, logMode]);
 
   const events = useMemo(
     () => ({
