@@ -71,7 +71,7 @@ const Routes = () => {
                 <Tables />
                 <BackTop target={BackToTop}>
                   <Button
-                    style={{ opacity: '0.7' }}
+                    style={{ opacity: '0.5' }}
                     type="primary"
                     shape="circle"
                     size="large"

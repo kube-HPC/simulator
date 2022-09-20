@@ -1,5 +1,7 @@
-import { CopyOutlined } from '@ant-design/icons';
-import { Button, Select, Tag, Tooltip } from 'antd';
+import BaseTag from 'components/BaseTag';
+import { COLOR_TASK_STATUS } from 'styles/colors';
+import { CopyOutlined, LoadingOutlined } from '@ant-design/icons';
+import { Button, Select, Tag, Tooltip, Spin } from 'antd';
 import { FlexBox } from 'components/common';
 import LogsViewer from 'components/common/LogsViewer';
 import { useSettings } from 'hooks';
@@ -31,21 +33,26 @@ const onCopy = () =>
     type: notification.TYPES.SUCCESS,
   });
 
-const OptionBox = ({ index, taskId }) => (
+const OptionBox = ({ index, taskId, status }) => (
   <FlexBox justify="start">
     <FlexBox.Item>
       <Tag>{index}</Tag>
     </FlexBox.Item>
     <FlexBox.Item>{taskId}</FlexBox.Item>
+    <BaseTag status={status} colorMap={COLOR_TASK_STATUS}>
+      {status}
+    </BaseTag>
   </FlexBox>
 );
 
 OptionBox.propTypes = {
   index: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   taskId: PropTypes.string,
+  status: PropTypes.string,
 };
 OptionBox.defaultProps = {
   taskId: null,
+  status: null,
 };
 
 const NodeLogs = ({ node, taskDetails, onChange, logs, setLogs }) => {
@@ -53,23 +60,26 @@ const NodeLogs = ({ node, taskDetails, onChange, logs, setLogs }) => {
 
   const [currentTask, setCurrentTask] = useState(undefined);
   const { logSource: source, logMode } = useSettings();
-
+  const [isLoadLog, setIsLoadLog] = useState(true);
   useEffect(() => {
     const task =
       taskDetails.find(t => t.taskId === currentTask) || taskDetails[0];
+
     const { taskId, podName } = task;
+
     if (taskId !== currentTask) {
       setCurrentTask(taskId);
       getLogsLazyQuery({
         variables: {
           taskId: taskId || '',
-          podName,
+          podName: podName || '',
           source: source || 'k8s',
           nodeKind: node.kind,
           logMode,
         },
       }).then(resLogs => {
         setLogs(resLogs.data.logsByQuery);
+        setIsLoadLog(false);
       });
     }
   }, [
@@ -86,7 +96,7 @@ const NodeLogs = ({ node, taskDetails, onChange, logs, setLogs }) => {
     // TODO: implement a better key
     // eslint-disable-next-line
     <Select.Option key={index} value={index}>
-      <OptionBox index={index + 1} taskId={task.taskId} />
+      <OptionBox index={index + 1} taskId={task.taskId} status={task.status} />
     </Select.Option>
   ));
 
@@ -106,12 +116,13 @@ const NodeLogs = ({ node, taskDetails, onChange, logs, setLogs }) => {
                 getLogsLazyQuery({
                   variables: {
                     taskId: taskId || '',
-                    podName,
+                    podName: podName || '',
                     source: source || 'k8s',
                     logMode,
                   },
                 }).then(resLogs => {
                   setLogs(resLogs.data.logsByQuery);
+                  setIsLoadLog(false);
                 });
               }}>
               {options}
@@ -125,7 +136,11 @@ const NodeLogs = ({ node, taskDetails, onChange, logs, setLogs }) => {
         </FlexBox.Item>
       </FlexBox>
       <Container>
-        <LogsViewer dataSource={logs} id={node?.nodeName ?? ''} />
+        {isLoadLog ? (
+          <Spin indicator={LoadingOutlined} />
+        ) : (
+          <LogsViewer dataSource={logs} id={node?.nodeName ?? ''} />
+        )}
       </Container>
     </>
   );

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
-import { Table } from 'components';
+import { Table } from 'antd';
 import { Card, JsonSwitch } from 'components/common';
 import { RightOutlined, DownOutlined } from '@ant-design/icons';
 import getColumns from './getColumns';
@@ -35,6 +35,12 @@ const NodeInputOutput = ({ algorithm = {}, payload }) => {
 
   return (
     <Table
+      pagination={{
+        defaultPageSize: 10,
+        showSizeChanger: true,
+        pageSizeOptions: ['10', '20'],
+        hideOnSinglePage: true,
+      }}
       rowKey={({ taskId }) => `input-output-table-task-${taskId}`}
       columns={getColumns(socketUrl)}
       dataSource={dataSource}

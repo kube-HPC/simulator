@@ -57,7 +57,15 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
   const onDebugNode = () =>
     node && getCaching({ jobId, nodeName: node.nodeName, debug: true });
 
-  const taskDetails = useMemo(() => getTaskDetails(node), [node]);
+  // const taskDetails = useMemo(() => getTaskDetails(node), [node]);
+
+  const taskDetails = useMemo(() => {
+    const taskData = getTaskDetails(node);
+
+    return taskData.length > 1
+      ? [...taskData].sort(a => (a?.status === 'failed' ? 1 : -1)) || {}
+      : taskData;
+  }, [node]);
 
   const onRefresh = useCallback(() => {
     const { taskId, podName } = taskDetails[index];
@@ -65,7 +73,7 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
     getLogsLazyQuery({
       variables: {
         taskId: taskId || '',
-        podName,
+        podName: podName || '',
         source: source || 'k8s',
         nodeKind: node.kind,
         logMode,
