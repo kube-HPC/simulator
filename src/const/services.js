@@ -17,4 +17,5 @@ export const SERVICES = {
   worker: 'Worker',
   'caching-service': 'Caching Service',
   'datasources-service': 'Datasource Service',
+  'gc-service': 'GC Service',
 };
