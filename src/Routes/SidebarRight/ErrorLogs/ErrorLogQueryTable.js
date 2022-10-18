@@ -75,7 +75,7 @@ const ErrorLogQueryTable = ({ onSubmit, ErrorLogList }) => {
     <FiltersForms layout="inline" form={form} size="medium" onFinish={onFinish}>
       <Form.Item label="Search" name="qSearch">
         <AutoComplete
-          style={{ width: '8vw', marginLeft: '1vw' }}
+          style={{ width: '10vw', marginLeft: '1vw' }}
           options={LogOptions}
           filterOption={(inputValue, option) =>
             option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1

@@ -52,8 +52,10 @@ const ErrorLogsTable = () => {
     if (values?.qSearch || values?.qErrorLogTime) {
       const filterErrorLogs = dataSource.filter(
         item =>
-          (item.type.includes(values.qSearch) ||
-            item.message.includes(values.qSearch)) &&
+          (item.type.toLowerCase().includes(values.qSearch.toLowerCase()) ||
+            item.message
+              .toLowerCase()
+              .includes(values.qSearch.toLowerCase())) &&
           (values.qErrorLogTime != null
             ? moment(+item.timestamp).isBetween(
                 values?.qErrorLogTime[0],
