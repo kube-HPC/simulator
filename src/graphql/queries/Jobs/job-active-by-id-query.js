@@ -76,12 +76,7 @@ const JOB_ACTIVE_BY_ID_QUERY = gql`
             rejectOnFailure
           }
         }
-        flowInput {
-          files {
-            link
-          }
-          data
-        }
+        flowInput
         nodes {
           nodeName
           algorithmName
@@ -139,12 +134,7 @@ const JOB_ACTIVE_BY_ID_QUERY = gql`
             rejectOnFailure
           }
         }
-        flowInput {
-          files {
-            link
-          }
-          data
-        }
+        flowInput
         nodes {
           nodeName
           algorithmName

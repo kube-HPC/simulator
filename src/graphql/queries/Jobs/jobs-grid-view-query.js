@@ -130,13 +130,7 @@ const JOB_GRID_VIEW_QUERY = gql`
               rejectOnFailure
             }
           }
-          flowInput {
-            files {
-              link
-            }
-            mul
-            data
-          }
+          flowInput
         }
         userPipeline {
           name
