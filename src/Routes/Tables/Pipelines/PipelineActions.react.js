@@ -1,13 +1,13 @@
 import React, { memo, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
-import Icon, {
+import {
   DeleteOutlined,
   EditOutlined,
   InfoCircleOutlined,
   PlayCircleOutlined,
 } from '@ant-design/icons';
 import { Button, Empty, Popover, Tooltip } from 'antd';
-import { IconTensorFlow } from 'components/Icons';
+
 import { USER_GUIDE } from 'const';
 import { useActions } from 'hooks';
 import isEqual from 'lodash/isEqual';
@@ -76,9 +76,10 @@ const PipelineActions = ({ pipeline, className }) => {
           placement="left"
           getPopupContainer={setPopupContainer}
           mouseLeaveDelay={0.5}>
-          <Button className="ant-btn-icon-only">
-            <Icon component={IconTensorFlow} />
-          </Button>
+          {/* This feature has been removed due to lack of customer use
+             <Button className="ant-btn-icon-only">
+              <Icon component={IconTensorFlow} />
+             </Button> */}
         </Popover>
         <Tooltip title="run pipeline">
           <Button icon={<PlayCircleOutlined />} onClick={onExecute} />
