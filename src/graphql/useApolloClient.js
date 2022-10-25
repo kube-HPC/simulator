@@ -5,8 +5,9 @@ import cache from 'cache';
 
 const useApolloClient = () => {
   const { backendApiUrl } = useSelector(selectors.config);
+
   const httpLink = createHttpLink({
-    uri: `${backendApiUrl}/graphql`,
+    uri: `${backendApiUrl.replace('/api/v1', '')}/graphql`,
   });
 
   const apolloClient = new ApolloClient({

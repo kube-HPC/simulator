@@ -12,7 +12,7 @@ import JobProgress from './JobProgress';
 import JobStatus from './JobStatus';
 import JobTime from './JobTime';
 import JobTypes from './JobTypes';
-import PinActiveJobs from './pinActiveJobs';
+// import PinActiveJobs from './pinActiveJobs';
 
 const Id = jobID => (
   <Ellipsis className={USER_GUIDE.TABLE_JOB.ID_SELECT} copyable text={jobID} />
@@ -25,7 +25,7 @@ const StartTime = (text, record) => (
   <JobTime startTime={record.pipeline.startTime} results={record.results} />
 );
 
-const pinActiveJobs = status => <PinActiveJobs status={status} />;
+// const pinActiveJobs = status => <PinActiveJobs status={status} />;
 const Status = status => <JobStatus status={status} />;
 
 const Stats = status => <NodeStats status={status} />;
@@ -67,13 +67,13 @@ const sortStatus = (a, b) => sorter(a.status.status, b.status.status);
 // }));
 
 const jobColumns = [
-  {
+  /* {
     dataIndex: ['status'],
     key: `job-status-pin`,
     width: `2%`,
     align: `center`,
     render: pinActiveJobs,
-  },
+  }, */
   {
     title: `Job ID`,
     dataIndex: `key`,

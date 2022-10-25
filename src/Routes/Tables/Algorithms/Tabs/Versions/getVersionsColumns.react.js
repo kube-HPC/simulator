@@ -48,7 +48,7 @@ const Mem = mem => <Tag>{mem || 'No Memory Specified'}</Tag>;
 const MinHotWorkers = minHotWorkers => <Tag>{minHotWorkers}</Tag>;
 const Type = type => <Tag>{type}</Tag>;
 const Created = created => (
-  <Moment format="DD/MM/YY HH:mm:ss">{created}</Moment>
+  <Moment format="DD/MM/YY HH:mm:ss">{+created}</Moment>
 );
 
 const getVersionsColumns = ({ onDelete, onApply, currentVersion }) => {

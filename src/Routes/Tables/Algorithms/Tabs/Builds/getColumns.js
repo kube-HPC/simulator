@@ -13,7 +13,7 @@ const BuildId = buildId => (
   <Ellipsis copyable type="secondary" text={buildId} />
 );
 const StartTime = startTime => (
-  <Moment format="DD/MM/YY HH:mm:ss">{startTime}</Moment>
+  <Moment format="DD/MM/YY HH:mm:ss">{+startTime}</Moment>
 );
 
 const Status = status => <BaseTag status={status}>{status}</BaseTag>;

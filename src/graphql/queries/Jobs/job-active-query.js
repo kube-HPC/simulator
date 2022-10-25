@@ -67,6 +67,9 @@ const JOB_QUERY_ACTIVE = gql`
           priority
           startTime
           types
+          nodes {
+            algorithmName
+          }
         }
       }
     }

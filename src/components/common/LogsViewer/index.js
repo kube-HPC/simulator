@@ -114,7 +114,7 @@ class Entry extends React.PureComponent {
       log: { timestamp, message, level },
     } = this.props;
     window.navigator.clipboard.writeText(
-      `${moment.unix(timestamp).format(timeFormat)} ${message} Level:${level}`
+      `${moment(+timestamp).format(timeFormat)} ${message} Level:${level}`
     );
     notification({
       message: 'Log Line Copied to clipboard',
@@ -132,7 +132,7 @@ class Entry extends React.PureComponent {
     return (
       <LogLine style={style}>
         <LineNumber>{index + 1}</LineNumber>
-        <Timestamp format={timeFormat}>{timestamp}</Timestamp>
+        <Timestamp format={timeFormat}>{+timestamp}</Timestamp>
         <Message>{message}</Message>
         <Tooltip title="Copy log to clipboard" placement="left">
           <CopyButton onClick={this.onCopy} type="button">
