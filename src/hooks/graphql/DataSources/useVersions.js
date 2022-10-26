@@ -17,7 +17,7 @@ const useVersions = dataSource => {
     const dataSourcesVersions = query.data?.DataSourceVersions || [];
     if (dataSourcesVersions.length > 0) {
       setVersionsCollection({
-        versions: query.data?.DataSourceVersions || [],
+        versions: dataSourcesVersions,
       });
     }
   }, [query.data?.DataSourceVersions]);
