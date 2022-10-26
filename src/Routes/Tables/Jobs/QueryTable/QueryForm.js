@@ -1,20 +1,19 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import moment from 'moment';
 import { Form, DatePicker, AutoComplete, Button } from 'antd';
 import PropTypes from 'prop-types';
 import { pipelineStatuses } from '@hkube/consts';
-import { useQuery, useReactiveVar } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { ALGORITHM_AND_PIPELINE_NAMES } from 'graphql/queries';
 import { FiltersForms } from 'styles';
-import { PushpinOutlined } from '@ant-design/icons';
-import { isPinActiveJobVar } from 'cache';
+// import { isPinActiveJobVar } from 'cache';
 
 const { RangePicker } = DatePicker;
 // let num = 1;
 let localValueTimeChanged = 1;
 const DateFormat = 'YYYY-MM-DD HH:mm';
 const QueryForm = ({ onSubmit, params, zoomDate }) => {
-  const isPinActiveJobs = useReactiveVar(isPinActiveJobVar);
+  // const isPinActiveJobs = useReactiveVar(isPinActiveJobVar);
   const [form] = Form.useForm();
 
   const SubmitForm = () => {
@@ -57,8 +56,20 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
     onSubmit(values);
   };
 
+  const isShowActive = useCallback(
+    () => form.getFieldValue('pipelineStatus') === 'active',
+    [form]
+  );
+
   const onPinActive = () => {
-    isPinActiveJobVar(!isPinActiveJobs);
+    // isPinActiveJobVar(!isPinActiveJobs);
+
+    if (form.getFieldValue('pipelineStatus') === 'active') {
+      form.setFieldsValue({ pipelineStatus: null });
+    } else {
+      form.setFieldsValue({ pipelineStatus: 'active' });
+    }
+    SubmitForm();
   };
 
   const query = useQuery(ALGORITHM_AND_PIPELINE_NAMES);
@@ -120,7 +131,8 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
             option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
           }
           allowClear
-          onChange={SubmitForm}
+          onSelect={SubmitForm}
+          onClear={SubmitForm}
         />
       </Form.Item>
       <Form.Item label="Pipeline Status" name="pipelineStatus">
@@ -131,7 +143,8 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
           filterOption={(inputValue, option) =>
             option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
           }
-          onChange={SubmitForm}
+          onSelect={SubmitForm}
+          onClear={SubmitForm}
         />
       </Form.Item>
       <Form.Item label="Algorithm Name" name="algorithmName">
@@ -142,16 +155,17 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
           filterOption={(inputValue, option) =>
             option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
           }
-          onChange={SubmitForm}
+          onSelect={SubmitForm}
+          onClear={SubmitForm}
         />
       </Form.Item>
       <Form.Item>
         <Button
-          type={isPinActiveJobs ? 'primary' : 'dashed'}
+          type={isShowActive() ? 'primary' : 'dashed'}
           htmlType="button"
           onClick={onPinActive}
-          title="Pin Active">
-          <PushpinOutlined /> Active
+          title="Show Active">
+          Show Active
         </Button>
       </Form.Item>
     </FiltersForms>

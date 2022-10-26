@@ -53,9 +53,7 @@ const errorLogsTableColumns = [
     sorter: (a, b) => sorter(a.timestamp, b.timestamp),
     render: timestamp => (
       <Tag>
-        <Moment format="DD/MM/YY HH:mm:ss" unix>
-          {timestamp}
-        </Moment>
+        <Moment format="DD/MM/YY HH:mm:ss">{+timestamp}</Moment>
       </Tag>
     ),
   },

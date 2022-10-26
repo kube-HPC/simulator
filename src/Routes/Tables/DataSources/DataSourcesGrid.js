@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 // import { ExclamationCircleOutlined } from '@ant-design/icons';
 // import { Button } from 'antd';
@@ -50,12 +50,8 @@ const FailedMessageContent = styled.span`
 }; */
 
 const DataSourcesGrid = () => {
-  const { dataSources } = useDataSources();
+  const { sortedDataSources } = useDataSources();
 
-  const sortedDataSources = useMemo(
-    () => dataSources.slice().sort((a, b) => b.id - a.id),
-    [dataSources]
-  );
   const { goTo } = usePath();
   return (
     <Grid>

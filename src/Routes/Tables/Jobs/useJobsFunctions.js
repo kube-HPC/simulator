@@ -75,6 +75,7 @@ const useJobsFunctions = () => {
 
   const filterListJobs = listJobs => {
     let filterJobs = listJobs;
+
     if (mergedParams.datesRange?.from && mergedParams.datesRange?.to)
       filterJobs = filterJobs.filter(x =>
         moment(x.pipeline.startTime).isBetween(
@@ -85,17 +86,20 @@ const useJobsFunctions = () => {
 
     if (mergedParams.pipelineName)
       filterJobs = filterJobs.filter(
-        x => x.pipelineName === mergedParams.pipelineName
+        x => x.pipeline.name === mergedParams.pipelineName
       );
 
-    if (mergedParams.pipelineStatus)
+    if (mergedParams.pipelineStatus) {
       filterJobs = filterJobs.filter(
-        x => x.pipelineStatus === mergedParams.pipelineStatus
+        x => x.status.status === mergedParams.pipelineStatus
       );
+    }
 
     if (mergedParams.algorithmName)
-      filterJobs = filterJobs.filter(
-        x => x.algorithmName === mergedParams.algorithmName
+      filterJobs = filterJobs.filter(x =>
+        x.pipeline.nodes.some(
+          node => node.algorithmName === mergedParams.algorithmName
+        )
       );
 
     return filterJobs;
@@ -264,9 +268,10 @@ const useJobsFunctions = () => {
   const _dataSource = useMemo(() => {
     if (queryAllJobs && queryAllJobs.data) {
       const dsAllJobs = [
-        ...(isPinActiveJobs
-          ? _dataSourceActive
-          : filterListJobs(_dataSourceActive)),
+        // ...(isPinActiveJobs
+        //   ? _dataSourceActive
+        //   : filterListJobs(_dataSourceActive)),
+        ...filterListJobs(_dataSourceActive),
         ...filterListJobs(jobsActiveCompleted),
         ...queryAllJobs.data.jobsAggregated.jobs.filter(
           x => x.status.status !== 'active' && x.status.status !== 'pending'
@@ -284,7 +289,7 @@ const useJobsFunctions = () => {
     }
 
     return [];
-  }, [_dataSourceActive, jobsActiveCompleted, queryAllJobs, isPinActiveJobs]);
+  }, [_dataSourceActive, jobsActiveCompleted, queryAllJobs]);
 
   useEffect(() => {
     setJobsActiveCompleted([]);
