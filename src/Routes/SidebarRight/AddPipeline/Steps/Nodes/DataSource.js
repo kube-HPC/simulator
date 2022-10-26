@@ -55,17 +55,17 @@ const DataSourceNode = ({ id }) => {
   const disableSnapshot = useMemo(() => snapshots?.length === 0, [
     snapshots?.length,
   ]);
-  const disableVersions = useMemo(
-    () => versionsCollection?.versions?.length === 0,
-    [versionsCollection?.versions]
-  );
+
+  const disableVersions = useMemo(() => versionsCollection?.length === 0, [
+    versionsCollection?.length,
+  ]);
 
   return (
     <ctx.Provider value={{ rootId: ['nodes', id, 'spec'] }}>
       <Field name={['name']} title="DataSource Name">
         <Select disabled={collection && collection.length === 0}>
           {collection.map(({ name }) => (
-            <Select.Option key={`nodes.${id}.spec.name`} value={name}>
+            <Select.Option key={`nodes.${id}.spec.name_${name}`} value={name}>
               {name}
             </Select.Option>
           ))}
@@ -102,7 +102,7 @@ const DataSourceNode = ({ id }) => {
       ) : mode === MODES.VERSION ? (
         <Field name={['dataSource', 'id']} title="Version" skipValidation>
           <Select disabled={disableVersions} allowClear>
-            {versionsCollection?.versions.map(entry => (
+            {versionsCollection?.versions?.map(entry => (
               <Select.Option
                 key={`nodes.${id}.spec.version.${entry.id}`}
                 value={entry.id}>
