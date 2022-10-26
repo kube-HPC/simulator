@@ -16,7 +16,7 @@ const useSnapshots = ({ dataSourceName }) => {
 
   useEffect(() => {
     const dataSourcesSnapanshots = query?.data?.DataSourceSnapanshots || [];
-    if (dataSourcesSnapanshots.length > 0) {
+    if (dataSourcesSnapanshots != null && dataSourcesSnapanshots.length > 0) {
       setSnapshots(
         dataSourcesSnapanshots.slice().sort((a, b) => (b.id > a.id ? 1 : -1))
       );

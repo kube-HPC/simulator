@@ -15,7 +15,7 @@ const useVersions = dataSource => {
 
   useEffect(() => {
     const dataSourcesVersions = query.data?.DataSourceVersions || [];
-    if (dataSourcesVersions.length > 0) {
+    if (dataSourcesVersions != null && dataSourcesVersions.length > 0) {
       setVersionsCollection({
         versions: dataSourcesVersions,
       });

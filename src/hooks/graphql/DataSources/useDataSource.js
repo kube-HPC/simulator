@@ -11,7 +11,7 @@ const useDataSource = () => {
 
   useEffect(() => {
     const dataSources = query.data?.dataSources?.list || [];
-    if (dataSources.length > 0) {
+    if (dataSources != null && dataSources.length > 0) {
       setSortedDataSources(
         dataSources.slice().sort((a, b) => (b.id > a.id ? 1 : -1))
       );

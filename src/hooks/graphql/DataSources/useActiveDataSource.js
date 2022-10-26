@@ -17,7 +17,7 @@ const useActiveDataSource = (dataSourceName, dataSourceId) => {
   useEffect(() => {
     const dsActiveDataSource = query.data?.dataSource || {};
 
-    if (dsActiveDataSource.length !== {}) {
+    if (dsActiveDataSource != null && dsActiveDataSource.length !== {}) {
       setActiveDataSource(dsActiveDataSource);
     }
   }, [query.data?.dataSource]);

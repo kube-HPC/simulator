@@ -15,7 +15,7 @@ const usePreviewQuery = (dataSourcePreviewQueryId, previewQuery) => {
 
   useEffect(() => {
     const dataSourcePreviewQuery = query?.data?.DataSourcePreviewQuery || [];
-    if (dataSourcePreviewQuery.length > 0) {
+    if (dataSourcePreviewQuery != null && dataSourcePreviewQuery.length > 0) {
       setDataPreviewQuery(dataSourcePreviewQuery);
     }
   }, [query?.data?.DataSourcePreviewQuery]);
