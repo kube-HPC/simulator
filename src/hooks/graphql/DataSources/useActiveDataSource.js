@@ -5,7 +5,7 @@ import { useQuery } from '@apollo/client';
 // import sum from 'hash-sum';
 
 const useActiveDataSource = (dataSourceName, dataSourceId) => {
-  const [activeDataSource, setActiveDataSource] = useState([]);
+  const [activeDataSource, setActiveDataSource] = useState({});
   const query = useQuery(DATASOURCE_BY_ID_QUERY, {
     variables: {
       name: dataSourceName,
@@ -15,9 +15,9 @@ const useActiveDataSource = (dataSourceName, dataSourceId) => {
   usePolling(query, 3000);
 
   useEffect(() => {
-    const dsActiveDataSource = query.data?.dataSource || {};
+    const dsActiveDataSource = query?.data?.dataSource || {};
 
-    if (dsActiveDataSource != null && dsActiveDataSource.length !== {}) {
+    if (dsActiveDataSource && dsActiveDataSource !== {}) {
       setActiveDataSource(dsActiveDataSource);
     }
   }, [query.data?.dataSource]);

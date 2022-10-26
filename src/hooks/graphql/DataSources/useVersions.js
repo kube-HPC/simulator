@@ -15,12 +15,13 @@ const useVersions = dataSource => {
 
   useEffect(() => {
     const dataSourcesVersions = query.data?.DataSourceVersions || [];
-    if (dataSourcesVersions != null && dataSourcesVersions.length > 0) {
+
+    if (dataSource && dataSourcesVersions && dataSourcesVersions.length > 0) {
       setVersionsCollection({
         versions: dataSourcesVersions,
       });
     }
-  }, [query.data?.DataSourceVersions]);
+  }, [dataSource, query.data?.DataSourceVersions]);
 
   return { versionsCollection };
 };
