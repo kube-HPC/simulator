@@ -28,9 +28,9 @@ const RadioGroup = styled(Radio.Group)`
 `;
 
 const DataSourceNode = ({ id }) => {
-  const { form, initialState } = useWizardContext();
+  const { form, initialState, setForm } = useWizardContext();
 
-  const { dataSources: collection } = useDataSources();
+  const { sortedDataSources: collection } = useDataSources();
 
   const [mode, setMode] = useState(
     initialState?.nodes[id]?.spec?.snapshot
@@ -44,20 +44,26 @@ const DataSourceNode = ({ id }) => {
   const { versionsCollection } = useVersions({ name: activeName });
   const { snapshots } = useSnapshots({ dataSourceName: activeName });
 
-  const handleChangeMode = useCallback(e => setMode(e.target.value), []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleChangeMode = useCallback(e => {
+    setTimeout(() => {
+      setForm();
+    }, 500);
 
-  const disableSnapshot = useMemo(() => snapshots?.length === 0 || true, [
+    return setMode(e.target.value);
+  });
+  const disableSnapshot = useMemo(() => snapshots?.length === 0, [
     snapshots?.length,
   ]);
-
-  const disableVersions = useMemo(() => !versionsCollection?.versions || true, [
-    versionsCollection?.versions,
-  ]);
+  const disableVersions = useMemo(
+    () => versionsCollection?.versions?.length === 0,
+    [versionsCollection?.versions]
+  );
 
   return (
     <ctx.Provider value={{ rootId: ['nodes', id, 'spec'] }}>
       <Field name={['name']} title="DataSource Name">
-        <Select disabled={collection.length === 0}>
+        <Select disabled={collection && collection.length === 0}>
           {collection.map(({ name }) => (
             <Select.Option key={`nodes.${id}.spec.name`} value={name}>
               {name}
@@ -78,7 +84,7 @@ const DataSourceNode = ({ id }) => {
 
       {mode === MODES.SNAPSHOT ? (
         <Field name={['snapshot', 'name']} title="Snapshot Name">
-          <Select disabled={disableSnapshot}>
+          <Select disabled={disableSnapshot} allowClear>
             {snapshots?.map(entry => (
               <Select.Option
                 key={`nodes.${id}.spec.version.${entry.id}`}
@@ -95,7 +101,7 @@ const DataSourceNode = ({ id }) => {
         </Field>
       ) : mode === MODES.VERSION ? (
         <Field name={['dataSource', 'id']} title="Version" skipValidation>
-          <Select disabled={disableVersions}>
+          <Select disabled={disableVersions} allowClear>
             {versionsCollection?.versions.map(entry => (
               <Select.Option
                 key={`nodes.${id}.spec.version.${entry.id}`}

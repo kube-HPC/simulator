@@ -1,5 +1,5 @@
 import { DATASOURCE_PREVIEW_QUERY } from 'graphql/queries';
-// import { usePolling } from 'hooks';
+import { usePolling } from 'hooks';
 import { useQuery } from '@apollo/client';
 
 const usePreviewQuery = (dataSourcePreviewQueryId, previewQuery) => {
@@ -9,7 +9,7 @@ const usePreviewQuery = (dataSourcePreviewQueryId, previewQuery) => {
       query: previewQuery?.query || '',
     },
   });
-  // usePolling(query, 3000);
+  usePolling(query, 3000);
 
   const dataPreviewQuery = query?.data?.DataSourcePreviewQuery;
 
