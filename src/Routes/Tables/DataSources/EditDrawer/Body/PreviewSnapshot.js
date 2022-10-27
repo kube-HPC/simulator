@@ -1,4 +1,6 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Row, Col, Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { COLOR_LAYOUT } from 'styles';
@@ -29,15 +31,50 @@ const Header = styled.h3`
 const PreviewSnapshot = ({ activeSnapshot, onDownload, snapshotName }) => {
   /** @type {RefContent} */
   const fileBrowserRef = useRef();
-  if (!activeSnapshot)
+  const [isErrorTimer, setIsErrorTimer] = useState(false);
+  useEffect(() => {
+    setTimeout(() => {
+      setIsErrorTimer(true);
+    }, 10000);
+  }, []);
+  // could not find snapshot
+  if (!activeSnapshot) {
     return (
-      <ErrorPage>
-        could not find snapshot <Bold>{snapshotName}</Bold>
-        <span style={{ display: 'block' }}>
-          Please select another version or snapshot from the dropdown above
-        </span>
-      </ErrorPage>
+      <>
+        <Row
+          type="flex"
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: '120px',
+          }}>
+          <Col>
+            <Spin
+              indicator={LoadingOutlined}
+              style={{
+                verticalAlign: 'middle',
+              }}
+            />
+          </Col>
+          <Col style={{ marginLeft: '20px' }}>
+            <h3>
+              snapshot <b>{snapshotName}</b> loading
+            </h3>
+          </Col>
+        </Row>
+
+        {isErrorTimer && (
+          <ErrorPage>
+            could not find snapshot <Bold>{snapshotName}</Bold>
+            <span style={{ display: 'block' }}>
+              Please select another version or snapshot from the dropdown above
+            </span>
+          </ErrorPage>
+        )}
+      </>
     );
+  }
+
   return (
     <div style={{ display: 'contents' }}>
       <FileBrowserContainer>
