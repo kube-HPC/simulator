@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { DATASOURCE_BY_ID_QUERY } from 'graphql/queries';
 import { usePolling } from 'hooks';
 import { useQuery } from '@apollo/client';
+import _ from 'lodash';
 // import sum from 'hash-sum';
 
 const useActiveDataSource = (dataSourceName, dataSourceId) => {
@@ -17,7 +18,7 @@ const useActiveDataSource = (dataSourceName, dataSourceId) => {
   useEffect(() => {
     const dsActiveDataSource = query?.data?.dataSource || {};
 
-    if (dsActiveDataSource && dsActiveDataSource !== {}) {
+    if (dsActiveDataSource && !_.isEmpty(dsActiveDataSource)) {
       setActiveDataSource(dsActiveDataSource);
     }
   }, [query.data?.dataSource]);
