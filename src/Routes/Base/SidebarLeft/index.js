@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { animated, useSpring } from 'react-spring';
 import styled from 'styled-components';
@@ -7,7 +7,7 @@ import { useLeftSidebar, useSiteThemeMode } from 'hooks';
 import Icon from '@ant-design/icons';
 import { Layout, Menu, Tag, Badge } from 'antd';
 import { Link, useLocation, useParams } from 'react-router-dom';
-import { FlexBox } from 'components/common';
+
 import { dataCountMock } from 'config';
 import { LEFT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
 import { ReactComponent as AlgorithmIcon } from 'images/algorithm-icon.svg';
@@ -118,6 +118,11 @@ const menuItems = [
 const Name = styled.span`
   text-transform: capitalize;
 `;
+const BadgeStyle = styled(Badge)`
+  margin-top: 9px;
+  right: 16px;
+  position: absolute;
+`;
 
 const SidebarLeft = () => {
   // useDiscovery();
@@ -130,14 +135,36 @@ const SidebarLeft = () => {
   const instanceCounter = useReactiveVar(instanceCounterVar);
   const instanceFilters = useReactiveVar(instanceFiltersVar);
   // const dataCountSource = useSelector(sidebarSelector, isEqual);
-
+  const location = useLocation();
   const dataCountSource = instanceCounterAdapter(instanceCounter);
   const { isOn } = useSelector(selectors.userGuide);
-  const location = useLocation();
   const dataCount = isOn ? dataCountMock : dataCountSource;
   const { isCollapsed, toggle } = useLeftSidebar();
   const { pageName } = useParams();
   const { themeName } = useSiteThemeMode();
+
+  const menuItemsJson = useMemo(() => {
+    const items = [];
+
+    menuItems.forEach(([name, component, path]) => {
+      const isFilters = isValuesFiltersEmpty(instanceFilters[name]);
+      items.push({
+        label: (
+          <Link to={{ pathname: path, search: location.search }}>
+            <Name>{name}</Name>{' '}
+            <BadgeStyle dot={isFilters} offset={[-7, 0]}>
+              <Tag style={tagStyle}>{dataCount[name]}</Tag>
+            </BadgeStyle>
+          </Link>
+        ),
+        key: `left-sidebar-${name}`,
+        className: USER_GUIDE.TABLE_SELECT[name],
+        icon: <Icon type={component} component={component} style={IconStyle} />,
+      });
+    });
+
+    return items;
+  }, [dataCount, instanceFilters, location.search]);
 
   return (
     <Border>
@@ -150,35 +177,10 @@ const SidebarLeft = () => {
           <IconLogo component={LogoFish} />
           {!isCollapsed && <AnimatedTitle />}
         </LogoContainer>
-        <MenuMargin selectedKeys={[`left-sidebar-${pageName}`]}>
-          {menuItems.map(([name, component, path]) => {
-            const isFilters = isValuesFiltersEmpty(instanceFilters[name]);
-            return (
-              <Menu.Item
-                key={`left-sidebar-${name}`}
-                className={USER_GUIDE.TABLE_SELECT[name]}>
-                <Link to={{ pathname: path, search: location.search }}>
-                  <FlexBox>
-                    <FlexBox.Item>
-                      <Icon
-                        type={component}
-                        component={component}
-                        style={IconStyle}
-                      />
-                      <Name>{name}</Name>
-                    </FlexBox.Item>
-
-                    <FlexBox.Item>
-                      <Badge dot={isFilters} offset={[-7, 0]}>
-                        <Tag style={tagStyle}>{dataCount[name]}</Tag>
-                      </Badge>
-                    </FlexBox.Item>
-                  </FlexBox>
-                </Link>
-              </Menu.Item>
-            );
-          })}
-        </MenuMargin>
+        <MenuMargin
+          items={menuItemsJson}
+          selectedKeys={[`left-sidebar-${pageName}`]}
+        />
       </Sider>
     </Border>
   );

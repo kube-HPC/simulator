@@ -14,7 +14,7 @@ const Container = () => {
     <>
       <Button onClick={toggle}>Open Drawer</Button>
       <JsonView.Card jsonObject={value} />
-      <Drawer visible={isOpen} operation="Add Algorithm" onClose={toggle}>
+      <Drawer open={isOpen} operation="Add Algorithm" onClose={toggle}>
         <AddAlgorithm onSubmit={({ payload }) => setValue(payload)} />
       </Drawer>
     </>
