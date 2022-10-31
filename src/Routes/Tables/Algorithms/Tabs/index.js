@@ -1,9 +1,9 @@
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { CheckOutlined, RedoOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import { Card, JsonSwitch, MdEditor, Tabs } from 'components/common';
 import { useReadme, useVersions } from 'hooks';
 import PropTypes from 'prop-types';
-import React, { useCallback, useEffect, useState } from 'react';
 import AlgorithmBuildsTable from './Builds';
 import { VersionsTable } from './Versions';
 import usePath, { OVERVIEW_TABS as TABS } from './../usePath';
@@ -40,26 +40,47 @@ const AlgorithmsTabs = ({ algorithm }) => {
       </Button>
     ) : null;
 
-  return (
-    <Card isMargin>
-      <Tabs activeKey={activeKey} onChange={setActiveKey} extra={extra}>
-        <Tabs.TabPane tab={TABS.VERSIONS} key={TABS.VERSIONS}>
+  const TabsItemsJson = useMemo(
+    () => [
+      {
+        label: TABS.VERSIONS,
+        key: TABS.VERSIONS,
+        children: (
           <VersionsTable
             algorithmName={algorithm.name}
             currentVersion={algorithm.version}
             isFetch={activeKey === TABS.VERSIONS}
           />
-        </Tabs.TabPane>
-        <Tabs.TabPane tab={TABS.BUILDS} key={TABS.BUILDS}>
-          <AlgorithmBuildsTable builds={algorithm.builds} />
-        </Tabs.TabPane>
-        <Tabs.TabPane tab={TABS.INFO} key={TABS.INFO} forceRender>
-          <JsonSwitch obj={algorithm} />
-        </Tabs.TabPane>
-        <Tabs.TabPane tab={TABS.DESCRIPTION} key={TABS.DESCRIPTION}>
-          <MdEditor value={readme} onChange={setReadme} />
-        </Tabs.TabPane>
-      </Tabs>
+        ),
+      },
+      {
+        label: TABS.BUILDS,
+        key: TABS.BUILDS,
+        children: <AlgorithmBuildsTable builds={algorithm.builds} />,
+      },
+      {
+        label: TABS.INFO,
+        key: TABS.INFO,
+        forceRender: true,
+        children: <JsonSwitch obj={algorithm} />,
+      },
+      {
+        label: TABS.DESCRIPTION,
+        key: TABS.DESCRIPTION,
+        children: <MdEditor value={readme} onChange={setReadme} />,
+      },
+    ],
+    [activeKey, algorithm, readme]
+  );
+
+  return (
+    <Card isMargin>
+      <Tabs
+        items={TabsItemsJson}
+        activeKey={activeKey}
+        onChange={setActiveKey}
+        extra={extra}
+      />
     </Card>
   );
 };

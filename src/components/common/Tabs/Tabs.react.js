@@ -14,9 +14,13 @@ const Tabs = ({ children, extra, onTabClick, ...props }) => (
   </AntTabs>
 );
 
-const TabPane = ({ children, ...props }) => (
-  <AntTabs.TabPane {...props}>{children}</AntTabs.TabPane>
-);
+const TabPane = ({ children, key, label }) => [
+  {
+    label,
+    key,
+    children,
+  },
+];
 
 Tabs.TabPane = TabPane;
 Tabs.propTypes = {
