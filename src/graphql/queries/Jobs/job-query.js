@@ -57,6 +57,10 @@ const JOB_QUERY = gql`
             states {
               succeed
             }
+            storageInfo {
+              path
+              size
+            }
           }
           name
         }
