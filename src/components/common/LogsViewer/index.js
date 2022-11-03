@@ -147,7 +147,7 @@ class Entry extends React.PureComponent {
 
 Entry.propTypes = {
   log: PropTypes.shape({
-    timestamp: PropTypes.number.isRequired,
+    timestamp: PropTypes.string.isRequired,
     message: PropTypes.string.isRequired,
     level: PropTypes.string.isRequired,
   }).isRequired,

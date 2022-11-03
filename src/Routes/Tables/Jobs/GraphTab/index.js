@@ -54,6 +54,10 @@ const EmptyHeight = styled(Empty)`
   height: 136px;
 `;
 
+const FlexContainer = styled.div`
+  display: flex;
+`;
+
 const GraphTab = ({ graph, pipeline }) => {
   const normalizedPipeline = useMemo(
     () =>
@@ -112,7 +116,7 @@ const GraphTab = ({ graph, pipeline }) => {
   }, [direction]);
 
   return (
-    <>
+    <FlexContainer>
       <GraphContainer
         style={{
           pointerEvents: `all`,
@@ -144,7 +148,7 @@ const GraphTab = ({ graph, pipeline }) => {
           />
         </Card>
       )}
-    </>
+    </FlexContainer>
   );
 };
 
