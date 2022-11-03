@@ -15,6 +15,15 @@ const JOB_ACTIVE_BY_ID_QUERY = gql`
           details
           states {
             succeed
+            failed
+            stopped
+            active
+            creating
+            preschedule
+            pending
+            skipped
+            stalled
+            warning
           }
         }
         name
