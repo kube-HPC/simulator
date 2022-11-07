@@ -7,7 +7,7 @@ import { LinkDownload } from './styles';
 const DownloadFlowinput = ({ keyValue }) => {
   const [downloadHref, setDownloadHref] = useState(null);
   const handleDownload = useCallback(
-    () => setDownloadHref(`exec/flowInput/${keyValue}?download=true`),
+    () => setDownloadHref(`api/v1/exec/flowInput/${keyValue}?download=true`),
     [keyValue, setDownloadHref]
   );
 

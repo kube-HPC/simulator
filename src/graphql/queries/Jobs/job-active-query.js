@@ -66,6 +66,10 @@ const JOB_QUERY_ACTIVE = gql`
               stalled
               warning
             }
+            storageInfo {
+              path
+              size
+            }
           }
           name
         }
