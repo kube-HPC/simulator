@@ -25,6 +25,10 @@ const JOB_ACTIVE_BY_ID_QUERY = gql`
             stalled
             warning
           }
+          storageInfo {
+            path
+            size
+          }
         }
         name
         algorithmsData {
