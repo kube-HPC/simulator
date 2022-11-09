@@ -36,7 +36,7 @@ const ItemByValueType = ({
 }) => {
   const [downloadHref, setDownloadHref] = useState(null);
   const handleDownload = useCallback(
-    () => setDownloadHref(`/flowInput/${jobId}?download=true`),
+    () => setDownloadHref(`api/v1/flowInput/${jobId}?download=true`),
     [jobId, setDownloadHref]
   );
 

@@ -25,6 +25,10 @@ const JOB_BY_ID_QUERY = gql`
             stalled
             warning
           }
+          storageInfo {
+            path
+            size
+          }
         }
         name
         algorithmsData {
@@ -52,6 +56,11 @@ const JOB_BY_ID_QUERY = gql`
             batchIndex
             startTime
             endTime
+            output {
+              storageInfo {
+                path
+              }
+            }
           }
           batchInfo {
             idle
