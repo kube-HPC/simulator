@@ -68,7 +68,7 @@ const JobsTable = () => {
         columns={columns}
         dataSource={_dataSource}
         pagination={false}
-        scroll={{ y: filterToggeled ? '50vh' : '88vh' }}
+        scroll={{ y: filterToggeled ? '50vh' : '80vh' }}
         locale={localeEmpty}
       />
 

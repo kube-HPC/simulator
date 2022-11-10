@@ -21,12 +21,11 @@ const topTableScroll = () => {
 
 const numberLimitJobs = 100;
 const useJobsFunctionsLimit = () => {
-  let zoomedChangedDate = Date.now();
-
   const instanceFilters = useReactiveVar(instanceFiltersVar);
   const filterToggeled = useReactiveVar(filterToggeledVar);
   const metaMode = useReactiveVar(metaVar);
   const [dataSourceGraph, setDataSourceGraph] = useState([]);
+  const [zoomedChangedDate, setZoomedChangedDate] = useState(Date.now());
   const [isTableLoad, setIsTableLoad] = useState(true);
   const [isGraphLoad, setIsGraphLoad] = useState(true);
   const [limitGetJobs, setLimitGetJobs] = useState(numberLimitJobs);
@@ -116,8 +115,7 @@ const useJobsFunctionsLimit = () => {
         };
       }
 
-      zoomedChangedDate = Date.now();
-
+      setZoomedChangedDate(Date.now());
       const stateInstanceFilter = { ...instanceFiltersVar() };
       stateInstanceFilter.jobs = { ...mergedParams, datesRange };
 
@@ -162,7 +160,7 @@ const useJobsFunctionsLimit = () => {
       queryAllJobs.refetch();
       queryGraph.refetch();
     },
-    [queryAllJobs, queryGraph]
+    [queryGraph]
   );
 
   useEffect(() => {
@@ -196,8 +194,10 @@ const useJobsFunctionsLimit = () => {
     const tableContent = document.querySelector('#jobsTable .ant-table-body');
     tableContent.addEventListener('scroll', event => {
       const maxScroll = event.target.scrollHeight - event.target.clientHeight;
+
       const currentScroll = event.target.scrollTop;
-      if (isGetMore && currentScroll === maxScroll) {
+
+      if (isGetMore && currentScroll > maxScroll - 10) {
         setIsTableLoad(true);
         setIsGetMore(false);
         onFetchMore();
