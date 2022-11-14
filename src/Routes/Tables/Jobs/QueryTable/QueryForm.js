@@ -91,14 +91,14 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
     [query?.data?.pipelines.list]
   );
 
-  const pipelineStatusOptions = useMemo(
-    () =>
-      Object.values(pipelineStatuses).map(status => ({
-        value: status,
-        label: status,
-      })),
-    []
-  );
+  const pipelineStatusOptions = useMemo(() => {
+    delete pipelineStatuses.PENDING;
+
+    return Object.values(pipelineStatuses).map(status => ({
+      value: status,
+      label: status,
+    }));
+  }, []);
 
   // useEffect(() => {
   //  setTimeout(setLoadingJobs(false), 3000);
