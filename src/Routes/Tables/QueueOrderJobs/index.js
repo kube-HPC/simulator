@@ -351,7 +351,7 @@ class QueueOrderJobs extends React.Component {
 
         // set all jobsId need to move preferred in array
 
-        jobsIdToAdd = resultAllJobs.map(x => x.jobId);
+        jobsIdToAdd = resultAllJobs.returnList.map(x => x.jobId);
       }
 
       // step 2 : set jobsIds in preferred by position after or before item
