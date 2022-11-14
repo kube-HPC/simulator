@@ -178,12 +178,7 @@ const useJobsFunctionsLimit = () => {
 
   const _dataSource = useMemo(() => {
     if (queryAllJobs && queryAllJobs.data) {
-      const dsAllJobs = [
-        ...queryAllJobs.data.jobsAggregated.jobs.filter(
-          x => x.status.status !== 'pending'
-        ),
-      ];
-
+      const dsAllJobs = queryAllJobs.data.jobsAggregated.jobs;
       return dsAllJobs;
     }
 
