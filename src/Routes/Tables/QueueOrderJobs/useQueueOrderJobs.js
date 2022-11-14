@@ -54,7 +54,7 @@ const useQueueOrderJobs = () => {
         TypeTable.QUEUE
       );
 
-      return dataKeys;
+      return { ...res.data.managedList, returnList: dataKeys };
     } catch (error) {
       console.error(error);
     }
@@ -127,12 +127,12 @@ const useQueueOrderJobs = () => {
         },
       });
 
-      const dataKey = addToObjectKeyIndexId(
+      const dataKeys = addToObjectKeyIndexId(
         res.data.preferedList.returnList,
         TypeTable.PREFERRED
       );
 
-      return dataKey;
+      return { ...res.data.preferedList, returnList: dataKeys };
     } catch (error) {
       console.error(error);
     }

@@ -2,12 +2,12 @@ import React, { useMemo } from 'react';
 import { Route } from 'react-router-dom';
 import styled from 'styled-components';
 import useQueryHook from 'hooks/useQuery';
-import { Table } from 'components';
+import { WTable } from 'components';
 import { Card } from 'components/common';
 import { Collapse } from 'react-collapse';
 import { Divider, Empty, BackTop, Button } from 'antd';
 import { ArrowUpOutlined } from '@ant-design/icons';
-import useJobsFunctions from './useJobsFunctions';
+import useJobsFunctionsLimit from './useJobsFunctionsLimit';
 import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
 import QueryForm from './QueryTable/QueryForm';
@@ -33,13 +33,12 @@ const JobsTable = () => {
     mergedParams,
     dataSourceGraph,
     debouncedZoomChanged,
-    onFetchMore,
     isGraphLoad,
     isTableLoad,
     onRow,
     columns,
     _dataSource,
-  } = useJobsFunctions();
+  } = useJobsFunctionsLimit();
 
   return (
     <>
@@ -60,26 +59,19 @@ const JobsTable = () => {
         <Divider />
       </Collapse>
 
-      <Table
+      <WTable
         id="jobsTable"
-        fetchMore={onFetchMore}
-        loading={isTableLoad && isGraphLoad}
+        loading={isTableLoad || isGraphLoad}
         onRow={onRow}
         rowKey={rowKey}
         expandIcon={false}
         columns={columns}
         dataSource={_dataSource}
         pagination={false}
-        isInfinity
-        heightScroll={filterToggeled ? '58vh' : '88vh'}
+        scroll={{ y: filterToggeled ? '50vh' : '80vh' }}
         locale={localeEmpty}
-        rowClassName={record => {
-          if (record.status.status === 'active') {
-            return 'active-row';
-          }
-          return null;
-        }}
       />
+
       <BackTop target={BackToTop}>
         <Button
           style={{ opacity: '0.5' }}
