@@ -52,6 +52,8 @@ const useJobsFunctionsLimit = () => {
       metaMode?.experimentName !== 'show-all'
     ) {
       items.experimentName = metaMode.experimentName;
+    } else {
+      items.experimentName = undefined;
     }
 
     return items;
