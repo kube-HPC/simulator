@@ -59,7 +59,27 @@ const cache = new InMemoryCache({
               });
             }
 
-            if (args.limit === 100) {
+            if (args.limit < 100000) {
+              // scroll jobs
+              // the  cursor remove was done to avoid uncorrect equality since the cursor is a unneeded field for the query
+              const { cursor, ...rest } = args;
+
+              if (!_.isEqual(rest, existing?.query)) {
+                // if is not equal then it means that the existing value is not relevant anymore
+                // eslint-disable-next-line
+                existing = { jobs: [], cursor: '' };
+              }
+
+              const merged = {
+                cursor: incoming.cursor,
+                query: rest,
+                jobs: incoming?.jobs,
+              };
+
+              return merged;
+            }
+
+            if (false) {
               // scroll jobs
               // the  cursor remove was done to avoid uncorrect equality since the cursor is a unneeded field for the query
               const { cursor, ...rest } = args;

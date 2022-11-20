@@ -7,11 +7,7 @@ import PropTypes from 'prop-types';
 // import { Route, useHistory, useLocation } from 'react-router-dom';
 import { useHistory, useLocation } from 'react-router-dom';
 import qs from 'qs';
-import moment from 'moment';
 
-// import { isNaN } from 'lodash';
-
-const FORMAT_DATE_TIME = 'MM-DD-YYYY HH:mm';
 const TagsFiltersViews = ({ sectionName }) => {
   const instanceFilters = useReactiveVar(instanceFiltersVar);
   const metaMode = useReactiveVar(metaVar);
@@ -23,12 +19,10 @@ const TagsFiltersViews = ({ sectionName }) => {
   const closeFilter = key => {
     const resetKey = { ...instanceFiltersVar() };
 
-    if (key === 'datesRange') {
-      resetKey[sectionName][key].from = null;
-      resetKey[sectionName][key].to = null;
-    } else {
-      resetKey[sectionName][key] = null;
-    }
+    if (key === 'datesRange.from') resetKey[sectionName].datesRange.from = null;
+    else if (key === 'datesRange.to')
+      resetKey[sectionName].datesRange.to = null;
+    else resetKey[sectionName][key] = null;
 
     instanceFiltersVar(resetKey);
   };
@@ -75,31 +69,43 @@ const TagsFiltersViews = ({ sectionName }) => {
     });
   }, [history, instanceFilters, sectionName, urlParams.pathname]);
 
-  const cancelPropFilter = ['experimentName', 'limit'];
-  return (
-    propFilters &&
+  const cancelPropFilter = ['datesRange', 'experimentName', 'limit'];
+  const allTags = [];
+  propFilters &&
     Object.entries(propFilters).map(([key, value]) => {
       if (!cancelPropFilter.includes(key)) {
-        if (key === 'datesRange' && value) {
-          return (
-            value?.from &&
-            value?.to && (
-              <Tag
-                title={key}
-                key={key}
-                closable
-                onClose={() => {
-                  closeFilter(key);
-                }}>
-                {moment(value.from).format(FORMAT_DATE_TIME)} -{' '}
-                {moment(value.to).format(FORMAT_DATE_TIME)}
-              </Tag>
-            )
-          );
-        }
+        /*  if (key === 'datesRange') {
 
-        return (
-          value && (
+                          if (value?.from) {allTags.push(   <Tag
+                              title={`${key}from`}
+                              key={`${key}from`}
+                              closable
+                              onClose={() => {
+                                closeFilter(`${key}.from`);
+                              }}>
+                              {moment(value.from).utc().format(FORMAT_DATE_TIME)}
+                      
+                            </Tag>)}
+
+                        
+
+                          if(value?.to) {
+                             allTags.push(  <Tag
+                                title={`${key}to`}
+                                key={`${key}to`}
+                                closable
+                                onClose={() => {
+                                  closeFilter(`${key}.to`);
+                                }}>
+                                {moment(value.to).utc().format(FORMAT_DATE_TIME)}
+                        
+                              </Tag>)
+  
+                          }
+                        }
+                        else */
+        if (value) {
+          allTags.push(
             <Tag
               title={key}
               key={key}
@@ -109,13 +115,13 @@ const TagsFiltersViews = ({ sectionName }) => {
               }}>
               {value}
             </Tag>
-          )
-        );
+          );
+        }
       }
 
       return null;
-    })
-  );
+    });
+  return allTags;
 };
 TagsFiltersViews.propTypes = {
   sectionName: PropTypes.string.isRequired,

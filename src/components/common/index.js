@@ -20,3 +20,4 @@ export { default as Tabs } from 'components/common/Tabs/Tabs.react';
 export { default as ErrorBoundary } from 'components/ErrorBoundary';
 export { default as SignBoard } from 'components/common/SignBoard.react';
 export { default as EditableTagGroup } from 'components/common/EditableTagGroup';
+export { default as RangePickerNow } from 'components/common/RangePickerNow';

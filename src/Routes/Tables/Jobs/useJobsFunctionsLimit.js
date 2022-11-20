@@ -10,6 +10,7 @@ import {
 } from 'cache';
 import { JOB_QUERY, JOB_QUERY_GRAPH } from 'graphql/queries';
 
+import moment from 'moment';
 import usePath from './usePath';
 
 export { default as jobColumns } from './jobColumns';
@@ -19,13 +20,28 @@ const topTableScroll = () => {
   if (el) el.scrollTop = 0;
 };
 
+const getDateTimeZoneString = date => {
+  if (date?.isValid()) {
+    const tzoffset = new Date().getTimezoneOffset() * 60000; // offset in milliseconds
+    const localISOTime = new Date(date - tzoffset).toISOString();
+
+    return localISOTime;
+  }
+
+  return undefined;
+};
+
 const numberLimitJobs = 100;
+const dateNow = new Date();
+dateNow.setHours(-24);
+
 const useJobsFunctionsLimit = () => {
   const instanceFilters = useReactiveVar(instanceFiltersVar);
   const filterToggeled = useReactiveVar(filterToggeledVar);
   const metaMode = useReactiveVar(metaVar);
   const [dataSourceGraph, setDataSourceGraph] = useState([]);
   const [zoomedChangedDate, setZoomedChangedDate] = useState(Date.now());
+  const [defDate] = useState(getDateTimeZoneString(moment(dateNow)));
   const [isTableLoad, setIsTableLoad] = useState(true);
   const [isGraphLoad, setIsGraphLoad] = useState(true);
   const [limitGetJobs, setLimitGetJobs] = useState(numberLimitJobs);
@@ -52,6 +68,8 @@ const useJobsFunctionsLimit = () => {
       metaMode?.experimentName !== 'show-all'
     ) {
       items.experimentName = metaMode.experimentName;
+    } else {
+      items.experimentName = undefined;
     }
 
     return items;
@@ -66,12 +84,18 @@ const useJobsFunctionsLimit = () => {
   ]);
 
   // all limit Jobs
+
   const queryAllJobs = useQuery(JOB_QUERY, {
     notifyOnNetworkStatusChange: true,
     // fetchPolicy: 'no-cache',
     variables: {
       limit: limitGetJobs,
+
       ...mergedParams,
+
+      ...(mergedParams?.datesRange?.from === null && {
+        datesRange: { from: defDate, to: mergedParams?.datesRange?.to || null },
+      }),
     },
 
     onCompleted: () => {
@@ -89,6 +113,9 @@ const useJobsFunctionsLimit = () => {
     variables: {
       limit: 100000,
       ...mergedParams,
+      ...(mergedParams?.datesRange?.from === null && {
+        datesRange: { from: defDate, to: mergedParams?.datesRange?.to || null },
+      }),
     },
     onCompleted: resGraph => {
       if (resGraph && resGraph?.jobsAggregated?.jobs) {
@@ -138,17 +165,19 @@ const useJobsFunctionsLimit = () => {
       let datesRange = null;
       const { time, ...other } = values;
 
-      time
-        ? (datesRange = {
-            from: time[0]?.toISOString(),
-            to: time[1]?.toISOString(),
-          })
-        : null;
+      if (time) {
+        datesRange = {
+          from: getDateTimeZoneString(time?.datesRange?.from) || undefined,
+          to: getDateTimeZoneString(time?.datesRange?.to) || undefined,
+        };
+      }
 
       Object.values(other).forEach((element, index) => {
         element === '' ? (other[Object.keys(other)[index]] = undefined) : null;
       });
+
       const stateInstanceFilter = { ...instanceFiltersVar() };
+
       stateInstanceFilter.jobs = { ...other, datesRange };
 
       instanceFiltersVar(stateInstanceFilter);
