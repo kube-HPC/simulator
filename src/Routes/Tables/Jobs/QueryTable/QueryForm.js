@@ -1,19 +1,15 @@
 import React, { useEffect, useMemo, useCallback } from 'react';
 import moment from 'moment';
-import { Form, DatePicker, AutoComplete, Button } from 'antd';
+import { Form, AutoComplete, Button } from 'antd';
 import PropTypes from 'prop-types';
 import { pipelineStatuses } from '@hkube/consts';
 import { useQuery } from '@apollo/client';
 import { ALGORITHM_AND_PIPELINE_NAMES } from 'graphql/queries';
 import { FiltersForms } from 'styles';
-// import { isPinActiveJobVar } from 'cache';
+import { RangePickerNow } from 'components/common';
 
-const { RangePicker } = DatePicker;
-// let num = 1;
-let localValueTimeChanged = 1;
 const DateFormat = 'YYYY-MM-DD HH:mm';
 const QueryForm = ({ onSubmit, params, zoomDate }) => {
-  // const isPinActiveJobs = useReactiveVar(isPinActiveJobVar);
   const [form] = Form.useForm();
 
   const SubmitForm = () => {
@@ -22,12 +18,14 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
   };
 
   useEffect(() => {
-    if (params?.datesRange?.from && params?.datesRange?.to) {
+    if (params?.datesRange?.from || params?.datesRange?.to) {
       form.setFieldsValue({
-        time: [
-          moment(params.datesRange.from, DateFormat),
-          moment(params.datesRange.to, DateFormat),
-        ],
+        time: {
+          datesRange: {
+            from: moment(params.datesRange.from, DateFormat),
+            to: moment(params.datesRange.to, DateFormat),
+          },
+        },
       });
     } else {
       form.resetFields(['time']);
@@ -111,18 +109,8 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
       onFinish={onFinish}
       spacearound={1}>
       <Form.Item label="Time" name="time">
-        <RangePicker
-          style={{ width: '16vw', marginLeft: '1vw' }}
-          showTime={{ format: 'HH:mm' }}
-          format={DateFormat}
-          onOpenChange={() => {
-            // eslint-disable-next-line no-unused-vars
-            localValueTimeChanged = Date.now();
-          }}
-          onChange={SubmitForm}
-        />
+        <RangePickerNow onChange={SubmitForm} />
       </Form.Item>
-
       <Form.Item label="Pipeline Name" name="pipelineName">
         <AutoComplete
           style={{ width: '8vw', marginLeft: '1vw' }}

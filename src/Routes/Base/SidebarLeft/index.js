@@ -152,7 +152,15 @@ const SidebarLeft = () => {
         </LogoContainer>
         <MenuMargin selectedKeys={[`left-sidebar-${pageName}`]}>
           {menuItems.map(([name, component, path]) => {
-            const isFilters = isValuesFiltersEmpty(instanceFilters[name]);
+            const filterList = { ...instanceFilters[name] };
+
+            if (name === 'jobs') {
+              delete filterList.datesRange; // not show filter when select time
+              delete filterList.experimentName;
+            }
+
+            const isFilters = isValuesFiltersEmpty(filterList);
+
             return (
               <Menu.Item
                 key={`left-sidebar-${name}`}
