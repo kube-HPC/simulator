@@ -67,6 +67,7 @@ const RangePickerNow = forwardRef(({ onChange, value }) => {
         }
         onChange={valueDate => onChangeHandel(valueDate, 'from')}
         placeholder="Start Date"
+        allowClear={false}
       />
 
       <ArrowRightOutlined style={{ padding: '2px', fontSize: '12px' }} />
@@ -77,9 +78,7 @@ const RangePickerNow = forwardRef(({ onChange, value }) => {
         format={DateFormat}
         showTime={{ format: 'HH:mm' }}
         placeholder="End Date"
-        disabledDate={date =>
-          date.isSameOrBefore(stateDate?.datesRange?.from, 'day')
-        }
+        disabledDate={date => date.isBefore(stateDate?.datesRange?.from, 'day')}
         onChange={valueDate => onChangeHandel(valueDate, 'to')}
       />
     </>
