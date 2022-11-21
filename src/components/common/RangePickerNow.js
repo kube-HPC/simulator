@@ -7,7 +7,7 @@ import moment from 'moment';
 const DateFormat = 'YYYY-MM-DD HH:mm';
 const dateNow = new Date();
 dateNow.setHours(-24);
-const RangePickerNow = forwardRef(({ onChange, value }) => {
+const RangePickerNow = forwardRef(({ onChange, value, isDisabled }) => {
   const [stateDate, setStateDate] = useState(value);
 
   const onChangeHandel = (momentDate, param) => {
@@ -68,6 +68,7 @@ const RangePickerNow = forwardRef(({ onChange, value }) => {
         onChange={valueDate => onChangeHandel(valueDate, 'from')}
         placeholder="Start Date"
         allowClear={false}
+        disabled={isDisabled}
       />
 
       <ArrowRightOutlined style={{ padding: '2px', fontSize: '12px' }} />
@@ -80,6 +81,7 @@ const RangePickerNow = forwardRef(({ onChange, value }) => {
         placeholder="End Date"
         disabledDate={date => date.isBefore(stateDate?.datesRange?.from, 'day')}
         onChange={valueDate => onChangeHandel(valueDate, 'to')}
+        disabled={isDisabled}
       />
     </>
   );
@@ -93,7 +95,8 @@ RangePickerNow.propTypes = {
     PropTypes.string,
     PropTypes.node,
   ]).isRequired,
+  isDisabled: PropTypes.bool,
 };
 
-RangePickerNow.defaultProps = {};
+RangePickerNow.defaultProps = { isDisabled: false };
 export default memo(RangePickerNow);

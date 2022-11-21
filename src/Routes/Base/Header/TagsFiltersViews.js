@@ -1,5 +1,5 @@
 import { Tag } from 'antd';
-import { instanceFiltersVar, metaVar } from 'cache';
+import { instanceFiltersVar, metaVar, isPinActiveJobVar } from 'cache';
 import { useReactiveVar } from '@apollo/client';
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
@@ -10,6 +10,7 @@ import qs from 'qs';
 
 const TagsFiltersViews = ({ sectionName }) => {
   const instanceFilters = useReactiveVar(instanceFiltersVar);
+  const isPinActiveJobs = useReactiveVar(isPinActiveJobVar);
   const metaMode = useReactiveVar(metaVar);
 
   const history = useHistory();
@@ -53,7 +54,12 @@ const TagsFiltersViews = ({ sectionName }) => {
   //  },[])
 
   useEffect(() => {
-    const _qParams = qs.stringify(instanceFilters[sectionName], {
+    const paramsToUrl = { ...instanceFilters[sectionName] };
+    if (sectionName === 'jobs') {
+      delete paramsToUrl.datesRange;
+    }
+
+    const _qParams = qs.stringify(paramsToUrl, {
       ignoreQueryPrefix: true,
       allowDots: true,
       skipNulls: true,
@@ -70,6 +76,11 @@ const TagsFiltersViews = ({ sectionName }) => {
   }, [history, instanceFilters, sectionName, urlParams.pathname]);
 
   const cancelPropFilter = ['datesRange', 'experimentName', 'limit'];
+
+  if (isPinActiveJobs) {
+    cancelPropFilter.push('pipelineStatus');
+  }
+
   const allTags = [];
   propFilters &&
     Object.entries(propFilters).map(([key, value]) => {

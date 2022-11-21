@@ -6,7 +6,7 @@ import {
   filterToggeledVar,
   instanceFiltersVar,
   metaVar,
-  // isPinActiveJobVar,
+  isPinActiveJobVar,
 } from 'cache';
 import { JOB_QUERY, JOB_QUERY_GRAPH } from 'graphql/queries';
 
@@ -38,6 +38,8 @@ dateNow.setHours(-24);
 const useJobsFunctionsLimit = () => {
   const instanceFilters = useReactiveVar(instanceFiltersVar);
   const filterToggeled = useReactiveVar(filterToggeledVar);
+  const isPinActiveJob = useReactiveVar(isPinActiveJobVar);
+
   const metaMode = useReactiveVar(metaVar);
   const [dataSourceGraph, setDataSourceGraph] = useState([]);
   const [zoomedChangedDate, setZoomedChangedDate] = useState(Date.now());
@@ -58,8 +60,8 @@ const useJobsFunctionsLimit = () => {
       pipelineName: iJobs?.pipelineName || undefined,
       pipelineStatus: iJobs?.pipelineStatus || undefined,
       datesRange: {
-        from: iJobs?.datesRange?.from || null,
-        to: iJobs?.datesRange?.to || null,
+        from: isPinActiveJob ? null : iJobs?.datesRange?.from || null,
+        to: isPinActiveJob ? null : iJobs?.datesRange?.to || null,
       },
     };
 
@@ -94,7 +96,10 @@ const useJobsFunctionsLimit = () => {
       ...mergedParams,
 
       ...(mergedParams?.datesRange?.from === null && {
-        datesRange: { from: defDate, to: mergedParams?.datesRange?.to || null },
+        datesRange: {
+          from: isPinActiveJob ? null : defDate,
+          to: isPinActiveJob ? null : mergedParams?.datesRange?.to || null,
+        },
       }),
     },
 
@@ -114,7 +119,10 @@ const useJobsFunctionsLimit = () => {
       limit: 100000,
       ...mergedParams,
       ...(mergedParams?.datesRange?.from === null && {
-        datesRange: { from: defDate, to: mergedParams?.datesRange?.to || null },
+        datesRange: {
+          from: isPinActiveJob ? null : defDate,
+          to: isPinActiveJob ? null : mergedParams?.datesRange?.to || null,
+        },
       }),
     },
     onCompleted: resGraph => {
@@ -167,8 +175,8 @@ const useJobsFunctionsLimit = () => {
 
       if (time) {
         datesRange = {
-          from: getDateTimeZoneString(time?.datesRange?.from) || undefined,
-          to: getDateTimeZoneString(time?.datesRange?.to) || undefined,
+          from: time?.datesRange?.from || undefined,
+          to: time?.datesRange?.to || undefined,
         };
       }
 
