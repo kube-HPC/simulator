@@ -54,9 +54,12 @@ const TagsFiltersViews = ({ sectionName }) => {
   //  },[])
 
   useEffect(() => {
+    // write query string params
     const paramsToUrl = { ...instanceFilters[sectionName] };
+
     if (sectionName === 'jobs') {
       delete paramsToUrl.datesRange;
+      isPinActiveJobs && delete paramsToUrl.pipelineStatus;
     }
 
     const _qParams = qs.stringify(paramsToUrl, {

@@ -60,8 +60,8 @@ const useJobsFunctionsLimit = () => {
       pipelineName: iJobs?.pipelineName || undefined,
       pipelineStatus: iJobs?.pipelineStatus || undefined,
       datesRange: {
-        from: isPinActiveJob ? null : iJobs?.datesRange?.from || null,
-        to: isPinActiveJob ? null : iJobs?.datesRange?.to || null,
+        from: iJobs?.datesRange?.from || null,
+        to: iJobs?.datesRange?.to || null,
       },
     };
 
@@ -97,8 +97,15 @@ const useJobsFunctionsLimit = () => {
 
       ...(mergedParams?.datesRange?.from === null && {
         datesRange: {
-          from: isPinActiveJob ? null : defDate,
-          to: isPinActiveJob ? null : mergedParams?.datesRange?.to || null,
+          from: defDate,
+          to: mergedParams?.datesRange?.to || null,
+        },
+      }),
+
+      ...(isPinActiveJob && {
+        datesRange: {
+          from: null,
+          to: null,
         },
       }),
     },
