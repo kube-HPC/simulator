@@ -1,17 +1,18 @@
-import React, { useEffect, useMemo, useCallback } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import moment from 'moment';
 import { Form, AutoComplete, Button } from 'antd';
 import PropTypes from 'prop-types';
 import { pipelineStatuses } from '@hkube/consts';
-import { useQuery } from '@apollo/client';
+import { useQuery, useReactiveVar } from '@apollo/client';
 import { ALGORITHM_AND_PIPELINE_NAMES } from 'graphql/queries';
 import { FiltersForms } from 'styles';
 import { RangePickerNow } from 'components/common';
+import { isPinActiveJobVar } from 'cache';
 
 const DateFormat = 'YYYY-MM-DD HH:mm';
 const QueryForm = ({ onSubmit, params, zoomDate }) => {
   const [form] = Form.useForm();
-
+  const isPinActiveJobs = useReactiveVar(isPinActiveJobVar);
   const SubmitForm = () => {
     //  setLoadingJobs(true);
     form.submit();
@@ -54,19 +55,15 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
     onSubmit(values);
   };
 
-  const isShowActive = useCallback(
-    () => form.getFieldValue('pipelineStatus') === 'active',
-    [form]
-  );
-
   const onPinActive = () => {
-    // isPinActiveJobVar(!isPinActiveJobs);
-
-    if (form.getFieldValue('pipelineStatus') === 'active') {
-      form.setFieldsValue({ pipelineStatus: null });
-    } else {
+    if (!isPinActiveJobs) {
       form.setFieldsValue({ pipelineStatus: 'active' });
+    } else {
+      form.setFieldsValue({ pipelineStatus: null });
     }
+
+    isPinActiveJobVar(!isPinActiveJobs);
+
     SubmitForm();
   };
 
@@ -109,7 +106,7 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
       onFinish={onFinish}
       spacearound={1}>
       <Form.Item label="Time" name="time">
-        <RangePickerNow onChange={SubmitForm} />
+        <RangePickerNow isDisabled={isPinActiveJobs} onChange={SubmitForm} />
       </Form.Item>
       <Form.Item label="Pipeline Name" name="pipelineName">
         <AutoComplete
@@ -133,6 +130,7 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
           }
           onSelect={SubmitForm}
           onClear={SubmitForm}
+          disabled={isPinActiveJobs}
         />
       </Form.Item>
       <Form.Item label="Algorithm Name" name="algorithmName">
@@ -149,7 +147,7 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
       </Form.Item>
       <Form.Item>
         <Button
-          type={isShowActive() ? 'primary' : 'dashed'}
+          type={isPinActiveJobs ? 'primary' : 'dashed'}
           htmlType="button"
           onClick={onPinActive}
           title="Show Active">

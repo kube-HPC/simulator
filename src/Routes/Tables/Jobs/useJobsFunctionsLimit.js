@@ -6,7 +6,7 @@ import {
   filterToggeledVar,
   instanceFiltersVar,
   metaVar,
-  // isPinActiveJobVar,
+  isPinActiveJobVar,
 } from 'cache';
 import { JOB_QUERY, JOB_QUERY_GRAPH } from 'graphql/queries';
 
@@ -38,6 +38,8 @@ dateNow.setHours(-24);
 const useJobsFunctionsLimit = () => {
   const instanceFilters = useReactiveVar(instanceFiltersVar);
   const filterToggeled = useReactiveVar(filterToggeledVar);
+  const isPinActiveJob = useReactiveVar(isPinActiveJobVar);
+
   const metaMode = useReactiveVar(metaVar);
   const [dataSourceGraph, setDataSourceGraph] = useState([]);
   const [zoomedChangedDate, setZoomedChangedDate] = useState(Date.now());
@@ -94,7 +96,17 @@ const useJobsFunctionsLimit = () => {
       ...mergedParams,
 
       ...(mergedParams?.datesRange?.from === null && {
-        datesRange: { from: defDate, to: mergedParams?.datesRange?.to || null },
+        datesRange: {
+          from: defDate,
+          to: mergedParams?.datesRange?.to || null,
+        },
+      }),
+
+      ...(isPinActiveJob && {
+        datesRange: {
+          from: null,
+          to: null,
+        },
       }),
     },
 
@@ -114,7 +126,10 @@ const useJobsFunctionsLimit = () => {
       limit: 100000,
       ...mergedParams,
       ...(mergedParams?.datesRange?.from === null && {
-        datesRange: { from: defDate, to: mergedParams?.datesRange?.to || null },
+        datesRange: {
+          from: isPinActiveJob ? null : defDate,
+          to: isPinActiveJob ? null : mergedParams?.datesRange?.to || null,
+        },
       }),
     },
     onCompleted: resGraph => {
@@ -167,8 +182,8 @@ const useJobsFunctionsLimit = () => {
 
       if (time) {
         datesRange = {
-          from: getDateTimeZoneString(time?.datesRange?.from) || undefined,
-          to: getDateTimeZoneString(time?.datesRange?.to) || undefined,
+          from: time?.datesRange?.from || undefined,
+          to: time?.datesRange?.to || undefined,
         };
       }
 
