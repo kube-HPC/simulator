@@ -33,7 +33,7 @@ const JobsTable = () => {
     mergedParams,
     dataSourceGraph,
     debouncedZoomChanged,
-    isGraphLoad,
+
     isTableLoad,
     onRow,
     columns,
@@ -61,7 +61,7 @@ const JobsTable = () => {
 
       <WTable
         id="jobsTable"
-        loading={isTableLoad || isGraphLoad}
+        loading={isTableLoad}
         onRow={onRow}
         rowKey={rowKey}
         expandIcon={false}
