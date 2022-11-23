@@ -125,11 +125,19 @@ const useJobsFunctionsLimit = () => {
     variables: {
       limit: 100000,
       ...mergedParams,
+
       ...(mergedParams?.datesRange?.from === null && {
         datesRange: {
           from: isPinActiveJob ? null : defDate,
           to: isPinActiveJob ? null : mergedParams?.datesRange?.to || null,
         },
+
+        ...(isPinActiveJob && {
+          datesRange: {
+            from: null,
+            to: null,
+          },
+        }),
       }),
     },
     onCompleted: resGraph => {
