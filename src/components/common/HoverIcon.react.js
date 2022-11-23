@@ -14,10 +14,14 @@ const IconHoverStyle = styled.div`
   cursor: pointer;
 `;
 
-const Hover = ({ type, onClick, ...props }) => {
+const Hover = ({ type, onClick, styleIcon, ...props }) => {
   const componentIcon = type || <Icon {...props} />;
 
-  return <IconHoverStyle onClick={onClick}>{componentIcon}</IconHoverStyle>;
+  return (
+    <IconHoverStyle onClick={onClick} style={styleIcon}>
+      {componentIcon}
+    </IconHoverStyle>
+  );
 };
 
 const HoverMemo = Hover;
@@ -28,4 +32,10 @@ Hover.propTypes = {
   type: PropTypes.node,
   // eslint-disable-next-line react/require-default-props
   onClick: PropTypes.func,
+
+  styleIcon: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+};
+
+Hover.defaultProps = {
+  styleIcon: null,
 };
