@@ -110,6 +110,19 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
     </FlexBox.Auto>
   ) : null;
 
+  const algorithmDetailsDataView = useMemo(() => {
+    if (algorithmDetails?.debugUrl) {
+      return {
+        name: algorithmDetails.name,
+        debugUrl: algorithmDetails.debugUrl,
+      };
+    }
+
+    if (algorithmDetails) return removeNullUndefined(algorithmDetails);
+
+    return {};
+  }, [algorithmDetails]);
+
   return node ? (
     algorithmDetails && (
       <ContainerTabs>
@@ -126,7 +139,7 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
           <Tabs.TabPane tab="Algorithm Details" key="algorithms-tab">
             <OverflowContainer>
               <JsonSwitch
-                obj={removeNullUndefined(algorithmDetails)}
+                obj={algorithmDetailsDataView}
                 jobId={jobId}
                 typeDefaultView="Table"
               />

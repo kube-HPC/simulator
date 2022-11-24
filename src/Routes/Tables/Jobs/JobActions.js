@@ -54,7 +54,9 @@ const JobActions = ({ job }) => {
     canPause ? pausePipeline(key) : resumePipeline(key);
   }, [canPause, pausePipeline, key, resumePipeline]);
   const isStopDisabled = useMemo(() => !canPauseOrStop(status), [status]);
-
+  const isJobStreaming = useMemo(() => job?.pipeline?.kind === 'stream', [
+    job?.pipeline?.kind,
+  ]);
   const isDownloadDisabled = !results?.data?.storageInfo;
   const handleDownload = useCallback(() => downloadLinkRef.current?.click(), [
     downloadLinkRef,
@@ -75,7 +77,7 @@ const JobActions = ({ job }) => {
         </Tooltip>
         <Tooltip title={canPause ? 'pause' : 'resume'}>
           <Button
-            disabled={isStopDisabled}
+            disabled={isStopDisabled || isJobStreaming}
             icon={canPause ? <PauseOutlined /> : <CaretRightOutlined />}
             onClick={onPause}
           />
