@@ -4,6 +4,7 @@ import {
   ALGORITHM_BUILDS_FRAGMENTS,
 } from 'graphql/queries';
 import { useQuery } from '@apollo/client';
+import { usePolling } from 'hooks';
 import usePath from './usePath';
 
 export default () => {
@@ -14,12 +15,16 @@ export default () => {
       name: algorithmId,
     },
   });
+  usePolling(queryAlgorithmsByName, 3000);
+
   const algorithmBase = queryAlgorithmsByName.data?.algorithmsByName;
   const queryAlgorithmBuilds = useQuery(ALGORITHM_BUILDS_FRAGMENTS, {
     variables: {
       algorithmName: algorithmId,
     },
   });
+  usePolling(queryAlgorithmBuilds, 3000);
+
   const algorithmBuild = queryAlgorithmBuilds.data?.algorithmBuilds;
 
   const activeAlgorithm = useMemo(

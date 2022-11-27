@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
+import { removeNullUndefined } from 'utils';
 import PropTypes from 'prop-types';
 // import { useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -130,7 +131,7 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
         children: (
           <OverflowContainer>
             <JsonSwitch
-              obj={algorithmDetails}
+              obj={removeNullUndefined(algorithmDetails)}
               jobId={jobId}
               typeDefaultView="Table"
             />

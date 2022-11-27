@@ -17,6 +17,7 @@ const ALGORITHMS_QUERY = gql`
         type
         algorithmImage
         version
+        debugUrl
         options {
           debug
           pending

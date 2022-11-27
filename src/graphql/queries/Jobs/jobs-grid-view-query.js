@@ -42,6 +42,10 @@ const JOB_GRID_VIEW_QUERY = gql`
               stalled
               warning
             }
+            storageInfo {
+              path
+              size
+            }
           }
           name
           algorithmsData {

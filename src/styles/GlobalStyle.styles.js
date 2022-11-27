@@ -20,6 +20,13 @@ const GlobalStyle = createGlobalStyle`
       : 'hidden'};
 }
 
+  overflow-x:${({ location: { pathname, search } = {} } = {}) =>
+    ['/algorithms', '/pipelines'].includes(pathname) ||
+    (['/jobs'].includes(pathname) && !search.indexOf('view=grid') > 0)
+      ? 'none'
+      : 'hidden'};
+  
+}
 .ant-layout-sider-light .ant-layout-sider-trigger {
   border-right: 1px solid ${COLOR_LAYOUT.border};
 }

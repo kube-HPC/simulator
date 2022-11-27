@@ -15,6 +15,19 @@ const JOB_BY_ID_QUERY = gql`
           details
           states {
             succeed
+            failed
+            stopped
+            active
+            creating
+            preschedule
+            pending
+            skipped
+            stalled
+            warning
+          }
+          storageInfo {
+            path
+            size
           }
         }
         name
@@ -43,6 +56,11 @@ const JOB_BY_ID_QUERY = gql`
             batchIndex
             startTime
             endTime
+            output {
+              storageInfo {
+                path
+              }
+            }
           }
           batchInfo {
             idle

@@ -60,6 +60,7 @@ class OrderPaging extends React.PureComponent {
           defaultValue={numberRowToView}
           onChange={onChangeNumberRow}
         />
+
         <Button
           type="text"
           disabled={!HasNext > 0}

@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import styled from 'styled-components';
 import { Route } from 'react-router-dom';
 import { Table } from 'components';
 import { usePolling } from 'hooks';
@@ -39,6 +40,12 @@ const AlgorithmsTable = () => {
     }
   });
 
+  const TableAlgorithms = styled(Table)`
+    .ant-table-body {
+      min-height: 80vh;
+    }
+  `;
+
   return (
     <>
       <Space
@@ -54,7 +61,7 @@ const AlgorithmsTable = () => {
           />
         </Collapse>
 
-        <Table
+        <TableAlgorithms
           rowKey={rowKey}
           //  dataSource={collection}
           dataSource={algorithmFilterList}
