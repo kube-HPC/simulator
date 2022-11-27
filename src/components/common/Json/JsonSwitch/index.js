@@ -1,7 +1,7 @@
 import { Button } from 'antd';
 import { JsonTable, JsonView, Tabs } from 'components/common';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled from 'styled-components';
 import { notification, stringify } from 'utils';
@@ -55,14 +55,13 @@ const JsonSwitch = ({
       <Button type="dashed">Copy</Button>
     </CopyToClipboard>
   );
-  return (
-    <ContainerTabs>
-      <Tabs
-        defaultActiveKey={typeDefaultView}
-        tabPosition={tabPosition}
-        tabBarExtraContent={extra}
-        type="card">
-        <Tabs.TabPane key={TABS.TABLE} tab={TABS.TABLE}>
+
+  const TabsItemsJson = useMemo(
+    () => [
+      {
+        label: TABS.TABLE,
+        key: TABS.TABLE,
+        children: (
           <Wrapper>
             <JsonTable
               obj={obj}
@@ -71,16 +70,35 @@ const JsonSwitch = ({
               {...table}
             />
           </Wrapper>
-        </Tabs.TabPane>
-        <Tabs.TabPane key={TABS.JSON} tab={TABS.JSON}>
-          {jsonViewHeaderNode}
-          <JsonView.Card
-            jsonObject={removeFlowInputNull(obj)}
-            // eslint-disable-next-line
-            {...view}
-          />
-        </Tabs.TabPane>
-      </Tabs>
+        ),
+      },
+      {
+        label: TABS.JSON,
+        key: TABS.JSON,
+        children: (
+          <>
+            {jsonViewHeaderNode}
+            <JsonView.Card
+              jsonObject={removeFlowInputNull(obj)}
+              // eslint-disable-next-line
+              {...view}
+            />
+          </>
+        ),
+      },
+    ],
+    [jobId, jsonViewHeaderNode, obj, table, view]
+  );
+
+  return (
+    <ContainerTabs>
+      <Tabs
+        defaultActiveKey={typeDefaultView}
+        tabPosition={tabPosition}
+        tabBarExtraContent={extra}
+        type="card"
+        items={TabsItemsJson}
+      />
     </ContainerTabs>
   );
 };

@@ -13,13 +13,11 @@ const GlobalStyle = createGlobalStyle`
 }
 
 .ant-layout-content{
-
   overflow-x:${({ location: { pathname, search } = {} } = {}) =>
     ['/algorithms', '/pipelines'].includes(pathname) ||
     (['/jobs'].includes(pathname) && !search.indexOf('view=grid') > 0)
       ? 'none'
       : 'hidden'};
-  
 }
 
   overflow-x:${({ location: { pathname, search } = {} } = {}) =>

@@ -7,13 +7,17 @@ import { useWorkers } from 'hooks/graphql';
 
 import { workersColumns, workersTableStats } from './columns';
 
-const generateTab = (key, value) => (
-  <Tabs.TabPane tab={key} key={key}>
-    <Card>
-      <JsonSwitch obj={value} />
-    </Card>
-  </Tabs.TabPane>
-);
+const generateTab = (key, value) => [
+  {
+    label: key,
+    key,
+    children: (
+      <Card>
+        <JsonSwitch obj={value} />
+      </Card>
+    ),
+  },
+];
 
 const ExpandedRow = collection => recordRow => {
   const entries = collection[recordRow?.algorithmName] || [];
@@ -28,7 +32,7 @@ const ExpandedRow = collection => recordRow => {
         expandable={{
           expandedRowRender: row => (
             <Card isMargin>
-              <Tabs>{generateTab('Information', row)}</Tabs>
+              <Tabs items={generateTab('Information', row)} />
             </Card>
           ),
 

@@ -110,32 +110,53 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
     </FlexBox.Auto>
   ) : null;
 
+  const TabsItemsJson = useMemo(
+    () => [
+      {
+        label: 'Logs',
+        key: 'logs-tab',
+        children: (
+          <NodeLogs
+            node={node}
+            taskDetails={taskDetails}
+            onChange={setIndex}
+            logs={logs}
+            setLogs={setLogs}
+          />
+        ),
+      },
+      {
+        label: 'Algorithm Details',
+        key: 'algorithms-tab',
+        children: (
+          <OverflowContainer>
+            <JsonSwitch
+              obj={removeNullUndefined(algorithmDetails)}
+              jobId={jobId}
+              typeDefaultView="Table"
+            />
+          </OverflowContainer>
+        ),
+      },
+      {
+        label: 'Input Output Details',
+        key: 'io-details-tab',
+        children: (
+          <NodeInputOutput payload={node} algorithm={algorithmDetails} />
+        ),
+      },
+    ],
+    [algorithmDetails, jobId, logs, node, taskDetails]
+  );
+
   return node ? (
     algorithmDetails && (
       <ContainerTabs>
-        <TabsLog defaultActiveKey="logs-tab" tabBarExtraContent={extra}>
-          <PaneLog tab="Logs" key="logs-tab">
-            <NodeLogs
-              node={node}
-              taskDetails={taskDetails}
-              onChange={setIndex}
-              logs={logs}
-              setLogs={setLogs}
-            />
-          </PaneLog>
-          <Tabs.TabPane tab="Algorithm Details" key="algorithms-tab">
-            <OverflowContainer>
-              <JsonSwitch
-                obj={removeNullUndefined(algorithmDetails)}
-                jobId={jobId}
-                typeDefaultView="Table"
-              />
-            </OverflowContainer>
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="Input Output Details" key="io-details-tab">
-            <NodeInputOutput payload={node} algorithm={algorithmDetails} />
-          </Tabs.TabPane>
-        </TabsLog>
+        <TabsLog
+          items={TabsItemsJson}
+          defaultActiveKey="logs-tab"
+          tabBarExtraContent={extra}
+        />
       </ContainerTabs>
     )
   ) : (

@@ -49,39 +49,46 @@ const Selector = ({
   const location = useLocation();
   const isLatest = checkLatest(versions, dataSource);
 
+  const menuItemsJson = useMemo(() => {
+    const items = [];
+
+    entries.forEach(entry => {
+      const isSnapshot = !!entry.query;
+
+      items.push({
+        label: (
+          <Link
+            to={{
+              pathname: isSnapshot
+                ? paths.snapshot({
+                    nextDataSourceId: entry.dataSource.id,
+                    nextSnapshotName: entry.name,
+                  })
+                : paths[mode]({ nextDataSourceId: entry.id }),
+              search: location.search,
+            }}>
+            <VersionRow
+              title={isSnapshot ? entry.name : entry.id}
+              isLatest={checkLatest(versions, entry)}
+              isSnapshot={isSnapshot}
+              collection={entries}
+            />
+          </Link>
+        ),
+        key: `dataSource-versions-entry-${entry.id}`,
+      });
+    });
+
+    return items;
+  }, [entries, location.search, mode, paths, versions]);
+
   if (mode === 'edit' && !isLatest) goTo.query();
 
-  if (isPending || entries.length === 0 || !dataSource)
+  if (isPending || entries.length === 0 || !dataSource) {
     return <Button loading>loading versions</Button>;
+  }
 
-  const menu = (
-    <Menu>
-      {entries.map(entry => {
-        const isSnapshot = !!entry.query;
-        return (
-          <Menu.Item key={`dataSource-versions-entry-${entry.id}`}>
-            <Link
-              to={{
-                pathname: isSnapshot
-                  ? paths.snapshot({
-                      nextDataSourceId: entry.dataSource.id,
-                      nextSnapshotName: entry.name,
-                    })
-                  : paths[mode]({ nextDataSourceId: entry.id }),
-                search: location.search,
-              }}>
-              <VersionRow
-                title={isSnapshot ? entry.name : entry.id}
-                isLatest={checkLatest(versions, entry)}
-                isSnapshot={isSnapshot}
-                collection={entries}
-              />
-            </Link>
-          </Menu.Item>
-        );
-      })}
-    </Menu>
-  );
+  const menu = <Menu items={menuItemsJson} />;
 
   return (
     <Dropdown overlay={menu} placement="bottomLeft">

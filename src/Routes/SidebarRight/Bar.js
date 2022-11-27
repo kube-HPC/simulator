@@ -61,6 +61,29 @@ const SidebarRight = ({ isTop, className }) => {
     [history, root, location]
   );
 
+  const menuItemsJson = useMemo(() => {
+    const items = [];
+
+    (isTop ? top : bottom).forEach(
+      ({ name, type, component, count, status }) => {
+        items.push({
+          label: (
+            <Badge
+              status={status}
+              count={count}
+              overflowCount={100}
+              offset={[0, 11]}>
+              <Icon type={type} component={component} />
+            </Badge>
+          ),
+          key: `${name}`,
+        });
+      }
+    );
+
+    return items;
+  }, [bottom, isTop, top]);
+
   return (
     <SiderLight
       className={className}
@@ -68,24 +91,12 @@ const SidebarRight = ({ isTop, className }) => {
       collapsedWidth={60}
       collapsed>
       <Menu
+        items={menuItemsJson}
+        style={topMargin}
         mode="vertical"
         onSelect={menuSelect}
-        style={topMargin}
-        selectedKeys={noItemSelect}>
-        {(isTop ? top : bottom).map(
-          ({ name, type, component, count, status }) => (
-            <Menu.Item key={name} title={name}>
-              <Badge
-                status={status}
-                count={count}
-                overflowCount={100}
-                offset={[0, 11]}>
-                <Icon type={type} component={component} />
-              </Badge>
-            </Menu.Item>
-          )
-        )}
-      </Menu>
+        selectedKeys={noItemSelect}
+      />
     </SiderLight>
   );
 };

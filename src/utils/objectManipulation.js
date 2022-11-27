@@ -48,6 +48,7 @@ export const isValuesFiltersEmpty = obj =>
   false;
 
 export const removeNullUndefined = obj =>
+  obj &&
   Object.entries(obj)
     // eslint-disable-next-line no-unused-vars
     .filter(([_, v]) => v != null)

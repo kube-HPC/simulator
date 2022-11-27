@@ -19,6 +19,7 @@ const ActionsHidden = styled(JobActions)``;
 const GridItem = styled(Grid)`
   width: 25%;
   padding: 2em;
+  float: left;
   .ant-card-meta {
     margin: 0px;
   }
