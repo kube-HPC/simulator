@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState } from 'react';
+import React, { memo, useCallback, useState, useMemo } from 'react';
 import styled from 'styled-components';
 import { ifProp } from 'styled-tools';
 import { Button, Dropdown, Input, Menu, Tag, Typography } from 'antd';
@@ -45,70 +45,99 @@ const ExperimentPicker = () => {
     setExperiment,
     experimentId,
   } = useExperiments();
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [nameExperiment, setNameExperiment] = useState('');
+  const [descriptionExperiment, setDescriptionExperiment] = useState('');
 
-  const onAdd = useCallback(() => add({ name, description }), [
-    add,
-    description,
-    name,
-  ]);
+  const onAdd = useCallback(
+    () => add({ nameExperiment, descriptionExperiment }),
+    [add, descriptionExperiment, nameExperiment]
+  );
 
-  const onNameChange = useCallback(e => setName(e.target.value), [setName]);
-  const onDescriptionChange = useCallback(e => setDescription(e.target.value), [
-    setDescription,
+  const onNameChange = useCallback(e => setNameExperiment(e.target.value), [
+    setNameExperiment,
   ]);
+  const onDescriptionChange = useCallback(
+    e => setDescriptionExperiment(e.target.value),
+    [setDescriptionExperiment]
+  );
 
   const onShowAll = useCallback(() => setExperiment(schema.SHOW_ALL), [
     setExperiment,
   ]);
 
-  const menu = (
-    <MenuDisabledItems selectedKeys={[experimentId]} subMenuCloseDelay={0.5}>
-      {
-        // eslint-disable-next-line
-        experiments.map(({ name, description }, index) => {
-          const onRemove = () => {
-            remove(name);
-            if (name === experimentId) {
-              onChange(schema.SHOW_ALL);
-            }
-          };
-          const onSelect = () => setExperiment(name);
-          const isDisabled = name === experimentId;
+  const menuJson = useMemo(() => {
+    const items = [];
 
-          return (
-            <Menu.Item key={name} disabled={isDisabled}>
-              <ItemDisabled disabled={isDisabled}>
-                <Grow onClick={isDisabled ? NOOP : onSelect}>
-                  <Tag
-                    color={COLOR_EXPERIMENTS[index % COLOR_EXPERIMENTS.length]}>
-                    {name}
-                  </Tag>
-                  <Text type="secondary">{description}</Text>
-                </Grow>
-                <FlexBox.Item>
-                  <Icons.Hover onClick={onRemove} type={<MinusOutlined />} />
-                </FlexBox.Item>
-              </ItemDisabled>
-            </Menu.Item>
-          );
-        })
-      }
-      <Menu.Divider />
-      <Menu.Item disabled>
+    experiments.forEach(({ name, description }, index) => {
+      const onRemove = () => {
+        remove(name);
+        if (name === experimentId) {
+          onChange(schema.SHOW_ALL);
+        }
+      };
+      const onSelect = () => setExperiment(name);
+      const isDisabled = name === experimentId;
+
+      items.push({
+        label: (
+          <ItemDisabled disabled={isDisabled}>
+            <Grow onClick={isDisabled ? NOOP : onSelect}>
+              <Tag color={COLOR_EXPERIMENTS[index % COLOR_EXPERIMENTS.length]}>
+                {name}
+              </Tag>
+              <Text type="secondary">{description}</Text>
+            </Grow>
+            <FlexBox.Item>
+              <Icons.Hover onClick={onRemove} type={<MinusOutlined />} />
+            </FlexBox.Item>
+          </ItemDisabled>
+        ),
+        key: name,
+        disabled: isDisabled,
+      });
+    });
+
+    items.push({
+      label: (
         <FlexBox.Auto>
           <Input onChange={onNameChange} placeholder="Experiment Name" />
           <Input onChange={onDescriptionChange} placeholder="Description" />
           <Icons.Hover onClick={onAdd} type={<PlusOutlined />} />
         </FlexBox.Auto>
-      </Menu.Item>
-      <Menu.Item>
+      ),
+      key: 'DescriptionChange',
+      disabled: true,
+    });
+
+    items.push({
+      label: (
         <Button onClick={onShowAll} block size="small" type="primary">
           Show All
         </Button>
-      </Menu.Item>
-    </MenuDisabledItems>
+      ),
+      key: 'ShowAll',
+      disabled: true,
+    });
+
+    return items;
+  }, [
+    experimentId,
+    experiments,
+    onAdd,
+    onChange,
+    onDescriptionChange,
+    onNameChange,
+    onShowAll,
+    remove,
+    setExperiment,
+  ]);
+
+  const menu = (
+    <MenuDisabledItems
+      items={menuJson}
+      selectedKeys={[experimentId]}
+      subMenuCloseDelay={0.5}
+    />
   );
 
   const tagColor =
