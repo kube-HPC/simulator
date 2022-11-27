@@ -85,7 +85,7 @@
     "jaeger-react-trace-component": "^2.0.1",
     "lint-staged": "^9.5.0",
     "lodash": "^4.17.21",
-    "markdown-it": "^10.0.0",
+    "markdown-it": "^12.3.2",
     "moment": "^2.24.0",
     "monaco-editor": "^0.19.3",
     "monaco-editor-webpack-plugin": "^1.8.2",
