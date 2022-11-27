@@ -56,6 +56,19 @@ const JOB_QUERY_ACTIVE = gql`
             details
             states {
               succeed
+              failed
+              stopped
+              active
+              creating
+              preschedule
+              pending
+              skipped
+              stalled
+              warning
+            }
+            storageInfo {
+              path
+              size
             }
           }
           name
@@ -67,6 +80,9 @@ const JOB_QUERY_ACTIVE = gql`
           priority
           startTime
           types
+          nodes {
+            algorithmName
+          }
         }
       }
     }

@@ -57,7 +57,7 @@ const Initial = ({ style }) => {
             </Select>
           </Form.Item>
 
-          <Form.Item label="Debugged Nodes" name={['debugOverride']}>
+          <Form.Item label="Debugged Nodes" name={['options', 'debugOverride']}>
             <Select
               mode="multiple"
               allowClear

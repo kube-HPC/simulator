@@ -119,10 +119,17 @@ const useWizardAddPipeline = (
   const handleSubmit = useCallback(
     formData => {
       /** @type {import('./fields').PipelineDescriptor} */
-      const formattedData = {
-        ...formData,
-        nodes: formData.nodes.map(formatNode),
-      };
+
+      let formattedData = null;
+
+      if (formData.nodes) {
+        formattedData = {
+          ...formData,
+          nodes: formData.nodes.map(formatNode),
+        };
+      } else {
+        formattedData = formData;
+      }
 
       if (isEdit) {
         if (isRunPipeline) {

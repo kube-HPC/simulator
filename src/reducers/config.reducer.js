@@ -21,9 +21,12 @@ const config = createSlice({
       ...state,
       backendApiUrl: payload.config.monitorBackend.useLocation
         ? payload.config.monitorBackend.path
-        : payload.config.monitorBackend.schema +
-          payload.config.monitorBackend.host +
-          payload.config.monitorBackend.path,
+        : `${
+            payload.config.monitorBackend.schema +
+            payload.config.monitorBackend.host
+          }:${payload.config.monitorBackend.port}${
+            payload.config.monitorBackend.path
+          }`,
 
       baseUrl: payload.config.baseUrl,
       hasConfig: true,

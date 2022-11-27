@@ -16,6 +16,7 @@ const ALGORITHM_BY_NAME_QUERY = gql`
       type
       algorithmImage
       version
+      debugUrl
       options {
         debug
         pending

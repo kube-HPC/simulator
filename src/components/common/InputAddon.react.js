@@ -56,9 +56,12 @@ const InputAddon = forwardRef(
       const beforeValue = selectBefore || initialByType(before);
       const afterValue = selectAfter || initialByType(after);
       const _value = inputValue || '';
-      setInputValue(_value.replace(beforeValue, '').replace(afterValue, ''));
+      setInputValue(
+        _value?.replace(beforeValue, '').replace(afterValue, '') || ''
+      );
 
-      const lastValue = value.replace(beforeValue, '').replace(afterValue, '');
+      const lastValue =
+        value?.replace(beforeValue, '').replace(afterValue, '') || '';
 
       if (lastValue !== inputValue)
         onChange(_value ? `${beforeValue}${_value}${after}` : '');

@@ -85,20 +85,7 @@ const PIPELINE_QUERY = gql`
             limit
           }
         }
-        flowInput {
-          files {
-            path
-            id
-            name
-            size
-            type
-            meta
-            uploadedAt
-            link
-          }
-          mul
-          data
-        }
+        flowInput
       }
       pipelinesCount
     }

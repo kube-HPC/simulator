@@ -54,7 +54,7 @@ const useQueueOrderJobs = () => {
         TypeTable.QUEUE
       );
 
-      return dataKeys;
+      return { ...res.data.managedList, returnList: dataKeys };
     } catch (error) {
       console.error(error);
     }
@@ -127,12 +127,12 @@ const useQueueOrderJobs = () => {
         },
       });
 
-      const dataKey = addToObjectKeyIndexId(
+      const dataKeys = addToObjectKeyIndexId(
         res.data.preferedList.returnList,
         TypeTable.PREFERRED
       );
 
-      return dataKey;
+      return { ...res.data.preferedList, returnList: dataKeys };
     } catch (error) {
       console.error(error);
     }
@@ -319,9 +319,9 @@ const useQueueOrderJobs = () => {
       // get all jobsId need to delete from preferred
       if (filterPreferredVal === TypeFilter.PIPELINE.toUpperCase()) {
         // over all list to get all jobsId of aggregation
-        for (let i = 0; i < resultAllJobs.length; i++) {
-          if (resultAllJobs[i].pipelineName === name) {
-            jobsIdsScope.push(resultAllJobs[i].jobId);
+        for (let i = 0; i < resultAllJobs.returnList.length; i++) {
+          if (resultAllJobs.returnList[i].pipelineName === name) {
+            jobsIdsScope.push(resultAllJobs.returnList[i].jobId);
           } else {
             // if the search is over next aggregation then break loop
             break;
@@ -333,9 +333,9 @@ const useQueueOrderJobs = () => {
       // get all jobsId need to delete from TAG aggregation
       if (filterPreferredVal === TypeFilter.TAG.toUpperCase()) {
         // over all list to get all jobsId of aggregation TAG
-        for (let i = 0; i < resultAllJobs.length; i++) {
-          if (resultAllJobs[i].tags.toString() === name) {
-            jobsIdsScope.push(resultAllJobs[i].jobId);
+        for (let i = 0; i < resultAllJobs.returnList.length; i++) {
+          if (resultAllJobs.returnList[i].tags.toString() === name) {
+            jobsIdsScope.push(resultAllJobs.returnList[i].jobId);
           } else {
             // if the search is over next aggregation then break loop
             break;

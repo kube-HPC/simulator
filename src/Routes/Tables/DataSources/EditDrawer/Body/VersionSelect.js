@@ -154,9 +154,9 @@ const Versions = ({
   const isPending = versionsCollection?.status === 'PENDING' ?? true;
   const combinedItems = useMemo(() => {
     const { versions } = versionsCollection;
-    if (snapshots.length === 0) return versions;
+    if (snapshots && snapshots.length === 0) return versions;
     const snapshotsByVersion = _.groupBy(snapshots, 'dataSource.id');
-    return versions.reduce(
+    return versions?.reduce(
       (acc, version) =>
         snapshotsByVersion[version.id]
           ? acc.concat(version).concat(snapshotsByVersion[version.id])
@@ -195,7 +195,9 @@ const Versions = ({
     }
   }, [snapshotName, dataSource]);
   const hasMissingSnapshot = snapshotName && !activeSnapshot;
-
+  // console.log("Selector versionsCollection",versionsCollection,isPending)
+  // console.log("Selector dataSource",dataSource)
+  // console.log("Selector activeSnapshot",activeSnapshot,hasMissingSnapshot)
   return (
     <>
       <Selector

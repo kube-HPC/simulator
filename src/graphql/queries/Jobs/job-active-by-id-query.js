@@ -15,6 +15,19 @@ const JOB_ACTIVE_BY_ID_QUERY = gql`
           details
           states {
             succeed
+            failed
+            stopped
+            active
+            creating
+            preschedule
+            pending
+            skipped
+            stalled
+            warning
+          }
+          storageInfo {
+            path
+            size
           }
         }
         name
@@ -76,12 +89,7 @@ const JOB_ACTIVE_BY_ID_QUERY = gql`
             rejectOnFailure
           }
         }
-        flowInput {
-          files {
-            link
-          }
-          data
-        }
+        flowInput
         nodes {
           nodeName
           algorithmName
@@ -139,12 +147,7 @@ const JOB_ACTIVE_BY_ID_QUERY = gql`
             rejectOnFailure
           }
         }
-        flowInput {
-          files {
-            link
-          }
-          data
-        }
+        flowInput
         nodes {
           nodeName
           algorithmName

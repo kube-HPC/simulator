@@ -15,7 +15,7 @@ import { selectors } from 'reducers';
  */
 // eslint-disable-next-line
 const DownloadLink = ({ href, autoDownload }, ref) => {
-  const { socketUrl } = useSelector(selectors.connection);
+  const { backendApiUrl } = useSelector(selectors.config);
   const linkRef = useRef();
 
   const download = useCallback(
@@ -33,7 +33,7 @@ const DownloadLink = ({ href, autoDownload }, ref) => {
     <a
       style={{ display: 'none' }}
       ref={linkRef}
-      href={`${socketUrl}/${href}`}
+      href={`${backendApiUrl}/${href}`}
       download="file.zip">
       hidden download link
     </a>

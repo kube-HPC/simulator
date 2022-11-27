@@ -42,6 +42,10 @@ const JOB_GRID_VIEW_QUERY = gql`
               stalled
               warning
             }
+            storageInfo {
+              path
+              size
+            }
           }
           name
           algorithmsData {
@@ -130,13 +134,7 @@ const JOB_GRID_VIEW_QUERY = gql`
               rejectOnFailure
             }
           }
-          flowInput {
-            files {
-              link
-            }
-            mul
-            data
-          }
+          flowInput
         }
         userPipeline {
           name

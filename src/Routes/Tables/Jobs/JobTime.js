@@ -40,7 +40,7 @@ const JobTime = ({ results, startTime, length, style }) => {
   return (
     <Tag style={style}>
       <Moment format="DD/MM/YY HH:mm:ss" style={{ marginRight: '1ch' }}>
-        {startTime}
+        {+startTime}
       </Moment>
       <Text strong>{time}</Text>
     </Tag>
