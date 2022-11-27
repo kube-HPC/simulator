@@ -3,6 +3,7 @@ import { Theme } from 'styles/colors';
 import ReactApexChart from 'react-apexcharts';
 import histogram from 'utils/histogram';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 const QueryDateChart = props => {
   const { dataSource } = props;
@@ -11,20 +12,16 @@ const QueryDateChart = props => {
     id: d.key,
     time: d.results?.startTime,
   }));
+
   const _histogram = histogram(
     dataForHistogram.map(d => d.time),
     8
   );
+
   // let calledFromZoomOut = false;
 
   const data = {
-    series: [
-      {
-        name: 'Hits',
-        data: _histogram?.values || [],
-      },
-    ],
-
+    // option chart
     options: {
       grid: {
         show: false,
@@ -107,9 +104,12 @@ const QueryDateChart = props => {
       },
       xaxis: {
         type: 'datetime',
+
         categories:
           _histogram && _histogram.sections && _histogram.sections.length > 0
-            ? _histogram?.sections?.map(s => new Date(s).toISOString())
+            ? _histogram?.sections?.map(s =>
+                moment(s).utc(moment(s).format('Z')).format()
+              )
             : [],
         //  categories: _histogram && _histogram.sections && _histogram.sections.length > 0 ? _histogram?.sections?.map(s => new Date(s).toLocaleString()) : [],
       },
@@ -135,6 +135,14 @@ const QueryDateChart = props => {
         mode: Theme.Styles.jobsGraph.mode,
       },
     },
+
+    // bottom label chart
+    series: [
+      {
+        name: 'Hits',
+        data: _histogram?.values || [],
+      },
+    ],
   };
   return (
     <div id="chart">

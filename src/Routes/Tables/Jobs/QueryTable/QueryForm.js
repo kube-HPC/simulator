@@ -10,9 +10,11 @@ import { RangePickerNow } from 'components/common';
 import { isPinActiveJobVar } from 'cache';
 
 const DateFormat = 'YYYY-MM-DD HH:mm';
+
 const QueryForm = ({ onSubmit, params, zoomDate }) => {
   const [form] = Form.useForm();
   const isPinActiveJobs = useReactiveVar(isPinActiveJobVar);
+
   const SubmitForm = () => {
     //  setLoadingJobs(true);
     form.submit();

@@ -40,6 +40,7 @@ const RangePickerNow = forwardRef(({ onChange, value, isDisabled }) => {
       });
     }
   }, [value]);
+
   useEffect(() => {
     if (
       value?.datesRange?.from !== stateDate?.datesRange?.from ||
@@ -60,10 +61,9 @@ const RangePickerNow = forwardRef(({ onChange, value, isDisabled }) => {
         style={{ width: '160px' }}
         format={DateFormat}
         showTime={{ format: 'HH:mm' }}
-        // disabledDate={(date) => date.isBefore(stateDate?.datesRange?.from, 'day') }
         disabledDate={date =>
           stateDate?.datesRange?.to?.isValid() &&
-          date.isSameOrAfter(stateDate?.datesRange?.to, 'day')
+          date.isAfter(stateDate?.datesRange?.to, 'day')
         }
         onChange={valueDate => onChangeHandel(valueDate, 'from')}
         placeholder="Start Date"

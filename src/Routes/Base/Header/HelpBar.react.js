@@ -15,6 +15,7 @@ import { USER_GUIDE } from 'const';
 import { useActions, useLeftSidebar, useSiteThemeMode } from 'hooks';
 import { FlexBox, Icons } from 'components/common';
 import { appInfo } from 'config';
+import { ReactComponent as IconSwagger } from 'images/swagger.svg';
 import { iconsThemes } from '../../../styles/themes/HelperThemes';
 import InactiveModeTag from './InactiveMode';
 import Settings from './Settings/Settings.react';
@@ -76,6 +77,12 @@ const HelpBar = () => {
       <Icons.Hover
         type={<GithubOutlined />}
         onClick={openUrl(appInfo.githubUrl)}
+      />
+
+      <Icons.Hover
+        type={<IconSwagger />}
+        onClick={openUrl(appInfo.swaggerUrl)}
+        styleIcon={{ height: '25px' }}
       />
       <Icons.Hover type={<QuestionCircleOutlined />} onClick={onGuideClick} />
       <DarkText as="span">{hkubeSystemVersion}</DarkText>
