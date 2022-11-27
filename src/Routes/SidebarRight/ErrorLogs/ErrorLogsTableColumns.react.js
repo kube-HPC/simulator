@@ -22,7 +22,7 @@ const errorLogsTableColumns = [
         <Tag color={backgroundColor}>
           <Ellipsis
             style={{ color: isLight ? 'white' : 'black' }}
-            text={SERVICES[serviceName]}
+            text={SERVICES[serviceName] || serviceName}
           />
         </Tag>
       );
