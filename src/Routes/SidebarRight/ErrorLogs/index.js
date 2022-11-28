@@ -33,7 +33,7 @@ const ErrorLogsTable = () => {
       queryFilter.delete('qSearch');
     }
 
-    if (values.qErrorLogTime != null && values.qErrorLogTime !== '') {
+    if (values.qErrorLogTime != null) {
       queryFilter.set(
         'qErrorLogTime.from',
         values.qErrorLogTime[0]?.toISOString()
@@ -50,19 +50,26 @@ const ErrorLogsTable = () => {
     history.push(`${pathname}?${queryFilter.toString()}`);
 
     if (values?.qSearch || values?.qErrorLogTime) {
-      const filterErrorLogs = dataSource.filter(
-        item =>
-          (item.type.toLowerCase().includes(values.qSearch.toLowerCase()) ||
-            item.message
-              .toLowerCase()
-              .includes(values.qSearch.toLowerCase())) &&
-          (values.qErrorLogTime != null
-            ? moment(+item.timestamp).isBetween(
-                values?.qErrorLogTime[0],
-                values?.qErrorLogTime[1]
-              )
-            : true)
-      );
+      let filterErrorLogs = dataSource || [];
+
+      // Search
+      if (values?.qSearch) {
+        filterErrorLogs = filterErrorLogs.filter(
+          item =>
+            item.type.toLowerCase().includes(values.qSearch.toLowerCase()) ||
+            item.message.toLowerCase().includes(values.qSearch.toLowerCase())
+        );
+      }
+
+      // Time
+      if (values.qErrorLogTime != null) {
+        filterErrorLogs = filterErrorLogs.filter(item =>
+          moment(+item.timestamp).isBetween(
+            values?.qErrorLogTime[0],
+            values?.qErrorLogTime[1]
+          )
+        );
+      }
 
       setErrorLogsFilterList(filterErrorLogs);
     } else {
