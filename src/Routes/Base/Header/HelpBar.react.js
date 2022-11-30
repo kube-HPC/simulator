@@ -16,7 +16,10 @@ import { useActions, useLeftSidebar, useSiteThemeMode } from 'hooks';
 import { FlexBox, Icons } from 'components/common';
 import { appInfo } from 'config';
 import { ReactComponent as IconSwagger } from 'images/swagger.svg';
-import { iconsThemes } from '../../../styles/themes/HelperThemes';
+import {
+  iconsThemes,
+  iconsThemesTitle,
+} from '../../../styles/themes/HelperThemes';
 import InactiveModeTag from './InactiveMode';
 import Settings from './Settings/Settings.react';
 import ExperimentPicker from './ExperimentPicker.react';
@@ -58,6 +61,7 @@ const HelpBar = () => {
       <Icons.Hover
         type={
           <span
+            title={iconsThemesTitle[themeName.toUpperCase()]}
             role="img"
             aria-label="menu-unfold"
             className="anticon anticon-menu-unfold">
@@ -68,23 +72,30 @@ const HelpBar = () => {
       />
 
       <Popover content={<Settings />} placement="bottomRight" trigger="click">
-        <Icons.Hover type={<ToolOutlined />} />
+        <Icons.Hover type={<ToolOutlined title="Settings" />} />
       </Popover>
+
       <Icons.Hover
-        type={<GlobalOutlined />}
+        type={<GlobalOutlined title="hkube Site" />}
         onClick={openUrl(appInfo.websiteUrl)}
       />
+
       <Icons.Hover
-        type={<GithubOutlined />}
+        type={<GithubOutlined title="Github" />}
         onClick={openUrl(appInfo.githubUrl)}
       />
 
       <Icons.Hover
-        type={<IconSwagger />}
+        type={<IconSwagger title="Swagger" />}
         onClick={openUrl(appInfo.swaggerUrl)}
         styleIcon={{ height: '25px' }}
       />
-      <Icons.Hover type={<QuestionCircleOutlined />} onClick={onGuideClick} />
+
+      <Icons.Hover
+        type={<QuestionCircleOutlined title="Help" />}
+        onClick={onGuideClick}
+      />
+
       <DarkText as="span">{hkubeSystemVersion}</DarkText>
     </Container>
   );

@@ -18,7 +18,7 @@ const ViewType = () => {
   }, [location, isGridView, query]);
 
   return (
-    <Link to={nextPath}>
+    <Link to={nextPath} title="Jobs Grid View">
       <Icons.Hover component={isGridView ? IconListView : IconCardView} />
     </Link>
   );
