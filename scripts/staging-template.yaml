@@ -43,7 +43,7 @@ spec:
             - name: isSecure
               valueFrom:
                 configMapKeyRef:
-                  key: MONITOR_BACKEND_IS_SECURE
+                  key: API_SERVER_BACKEND_IS_SECURE
                   name: simulator-configmap
             - name: BOARD_PATH
               valueFrom:
