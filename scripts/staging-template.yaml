@@ -20,30 +20,30 @@ spec:
     spec:
       containers:
         - env:
-            - name: MONITOR_BACKEND_PATH
+            - name: API_SERVER_BACKEND_PATH
               valueFrom:
                 configMapKeyRef:
-                  key: MONITOR_BACKEND_PATH
+                  key: API_SERVER_BACKEND_PATH
                   name: simulator-configmap
             - name: MONITOR_BACKEND_PATH_SOCKETIO
               valueFrom:
                 configMapKeyRef:
                   key: MONITOR_BACKEND_PATH_SOCKETIO
                   name: simulator-configmap
-            - name: MONITOR_BACKEND_USE_LOCATION
+            - name: API_SERVER_BACKEND_USE_LOCATION
               valueFrom:
                 configMapKeyRef:
-                  key: MONITOR_BACKEND_USE_LOCATION
+                  key: API_SERVER_BACKEND_USE_LOCATION
                   name: simulator-configmap
-            - name: MONITOR_BACKEND_HOST
+            - name: API_SERVER_BACKEND_HOST
               valueFrom:
                 configMapKeyRef:
-                  key: MONITOR_BACKEND_HOST
+                  key: API_SERVER_BACKEND_HOST
                   name: simulator-configmap
-            - name: MONITOR_BACKEND_PORT
+            - name: API_SERVER_BACKEND_PORT
               valueFrom:
                 configMapKeyRef:
-                  key: MONITOR_BACKEND_PORT
+                  key: API_SERVER_BACKEND_PORT
                   name: simulator-configmap
             - name: isSecure
               valueFrom:
