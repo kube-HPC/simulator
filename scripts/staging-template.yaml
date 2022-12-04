@@ -25,11 +25,6 @@ spec:
                 configMapKeyRef:
                   key: API_SERVER_BACKEND_PATH
                   name: simulator-configmap
-            - name: MONITOR_BACKEND_PATH_SOCKETIO
-              valueFrom:
-                configMapKeyRef:
-                  key: MONITOR_BACKEND_PATH_SOCKETIO
-                  name: simulator-configmap
             - name: API_SERVER_BACKEND_USE_LOCATION
               valueFrom:
                 configMapKeyRef:

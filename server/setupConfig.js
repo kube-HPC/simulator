@@ -26,7 +26,7 @@ const monitorBackend = {
   host: process.env.API_SERVER_BACKEND_HOST || 'localhost',
   port: process.env.API_SERVER_BACKEND_PORT || '30010',
   path: process.env.API_SERVER_BACKEND_PATH || '',
-  socketIoPath: process.env.MONITOR_BACKEND_PATH_SOCKETIO || '',
+  // socketIoPath: process.env.MONITOR_BACKEND_PATH_SOCKETIO || '',
   schema: process.env.isSecure ? 'https://' : 'http://',
 };
 
