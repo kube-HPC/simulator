@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
-import { useJobs, usePolling } from 'hooks';
+import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar, useLazyQuery } from '@apollo/client';
 import {
   filterToggeledVar,
@@ -16,8 +16,7 @@ import {
 } from 'graphql/queries';
 import moment from 'moment';
 import usePath from './usePath';
-
-export { default as jobColumns } from './jobColumns';
+import jobColumns from './jobColumns';
 
 const topTableScroll = () => {
   const el = document.querySelector('.ant-table-body');
@@ -40,7 +39,6 @@ const useJobsFunctions = () => {
   const [isGraphLoad, setIsGraphLoad] = useState(true);
 
   const { goTo } = usePath();
-  const { columns } = useJobs();
 
   const mergedParams = useMemo(() => {
     const iJobs = instanceFilters.jobs;
@@ -315,7 +313,7 @@ const useJobsFunctions = () => {
     isGraphLoad,
     isTableLoad,
     onRow,
-    columns,
+    columns: jobColumns,
     _dataSource,
   };
 };

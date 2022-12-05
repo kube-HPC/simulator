@@ -23,7 +23,6 @@ const ConfigProvider = () => {
   }, [dispatch]);
 
   const { hasConfig } = useSelector(selectors.config);
-  // const  apolloClient2  = useApolloClient();
 
   return hasConfig ? (
     <Router>

@@ -7,6 +7,11 @@ export const iconsThemes = {
   DARK: <IconSun />,
 };
 
+export const iconsThemesTitle = {
+  LIGHT: 'Switch to Dark Mode',
+  DARK: 'Switch to Light Mode',
+};
+
 export const headCssUrlThemes = {
   LIGHT: 'antd/dist/antd.css',
   DARK: 'antd/dist/antd.dark.css',

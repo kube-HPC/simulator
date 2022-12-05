@@ -122,11 +122,7 @@ const QueryMode = ({ dataSource, onDownload }) => {
   }, [dispatch, dataSource, form, setPending, goTo]);
 
   return (
-    <Form
-      form={form}
-      onFinish={handleSubmit}
-      style={{ display: 'contents' }}
-      initialValues={{ comment: '' }}>
+    <Form form={form} onFinish={handleSubmit} initialValues={{ comment: '' }}>
       <FileBrowserContainer>
         <FileBrowser
           isReadOnly
@@ -139,9 +135,7 @@ const QueryMode = ({ dataSource, onDownload }) => {
         <Row style={{ flex: 1 }}>
           <FormItem
             name={['query']}
-            rules={[{ message: 'please enter a query', required: true }]}
-            style={{ display: 'contents' }}
-            wrapperCol={{ style: { display: 'contents' } }}>
+            rules={[{ message: 'please enter a query', required: true }]}>
             <Input.TextArea placeholder="Query" allowClear />
           </FormItem>
         </Row>

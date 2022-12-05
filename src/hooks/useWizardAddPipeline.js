@@ -133,12 +133,18 @@ const useWizardAddPipeline = (
 
       if (isEdit) {
         if (isRunPipeline) {
-          runPipeline(cleanDeep(formattedData));
+          runPipeline(cleanDeep(formattedData, { emptyArrays: false }));
         } else {
-          updatePipeline(cleanDeep(formattedData), LOCAL_STORAGE_KEY);
+          updatePipeline(
+            cleanDeep(formattedData, { emptyArrays: false }),
+            LOCAL_STORAGE_KEY
+          );
         }
       } else {
-        addPipeline(cleanDeep(formattedData), LOCAL_STORAGE_KEY);
+        addPipeline(
+          cleanDeep(formattedData, { emptyArrays: false }),
+          LOCAL_STORAGE_KEY
+        );
       }
 
       // prevent re-saving to localStorage

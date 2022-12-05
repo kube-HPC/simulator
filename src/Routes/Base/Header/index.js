@@ -58,6 +58,7 @@ const FilterButton = () => {
   return (
     !showFilterByProp && (
       <FilterOutlined
+        title="Filter"
         style={{ fontSize: '24px', color: _color }}
         onClick={() => {
           filterToggeledVar(!filterToggeledVar());
@@ -81,7 +82,13 @@ const Header = () => {
     <Container className={USER_GUIDE.WELCOME}>
       <ButtonsContainer>
         <Icons.Hover
-          type={isCollapsed ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
+          type={
+            isCollapsed ? (
+              <MenuFoldOutlined title="open menu" />
+            ) : (
+              <MenuUnfoldOutlined title="collapse menu" />
+            )
+          }
           onClick={toggle}
         />
 

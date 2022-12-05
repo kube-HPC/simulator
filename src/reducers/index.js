@@ -35,10 +35,7 @@ import {
   reducer as experiments,
   selectors as experimentsSelectors,
 } from 'reducers/experiment.reducer';
-import {
-  reducer as meta,
-  selectors as metaSelectors,
-} from 'reducers/meta.reducer';
+
 import {
   reducer as queue,
   selectors as queueSelectors,
@@ -74,7 +71,7 @@ import {
 
 const store = {
   algorithms,
-  meta,
+
   queue,
   boards,
   connection,
@@ -106,7 +103,6 @@ export const selectors = {
   errorLogs: errorLogsSelectors,
   connection: connectionSelectors,
   experiments: experimentsSelectors,
-  meta: metaSelectors,
   nodeStatistics: nodeStatisticsSelectors,
   config: configSelectors,
   storage: storageSelectors,

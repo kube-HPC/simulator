@@ -1,19 +1,11 @@
 import { useCallback } from 'react';
-import { useSelector } from 'react-redux';
-import { selectors } from 'reducers';
 import { message } from 'antd';
 import client from 'client';
 import successMsg from 'config/schema/success-messages.schema';
 import { useHistory } from 'react-router-dom';
 import useActions from './useActions';
-import { useFilter } from './useSearch';
 
 const usePipeline = () => {
-  const collection = useSelector(selectors.pipelines.collection.all);
-  const pipelinesCollection = useSelector(selectors.pipelines.collection.all);
-
-  const dataStats = useSelector(selectors.pipelines.stats.all);
-  const filtered = useFilter(collection, ['name']);
   const { updateStored, execStored } = useActions();
 
   const history = useHistory();
@@ -84,9 +76,6 @@ const usePipeline = () => {
   );
 
   return {
-    collection: filtered,
-    pipelinesCollection,
-    dataStats,
     updateCron,
     rerunPipeline,
     addPipeline,

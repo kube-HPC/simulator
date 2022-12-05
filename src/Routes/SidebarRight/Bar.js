@@ -77,6 +77,7 @@ const SidebarRight = ({ isTop, className }) => {
             </Badge>
           ),
           key: `${name}`,
+          title: `${name}`,
         });
       }
     );
