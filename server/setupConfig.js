@@ -24,7 +24,7 @@ const indexHtml = path.join(__dirname, '../build', 'index.html');
 const monitorBackend = {
   useLocation: parseBool(process.env.API_SERVER_BACKEND_USE_LOCATION),
   host: process.env.API_SERVER_BACKEND_HOST || 'localhost',
-  port: process.env.API_SERVER_BACKEND_PORT || '30010',
+  port: process.env.API_SERVER_BACKEND_PORT || '3000',
   path: process.env.API_SERVER_BACKEND_PATH || '',
   // socketIoPath: process.env.MONITOR_BACKEND_PATH_SOCKETIO || '',
   schema: process.env.isSecure ? 'https://' : 'http://',
