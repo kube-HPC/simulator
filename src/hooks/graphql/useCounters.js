@@ -1,9 +1,18 @@
 import { COUNTERS_QUERY } from 'graphql/queries';
 import { usePolling } from 'hooks';
-import { useQuery } from '@apollo/client';
+import { useQuery, useReactiveVar } from '@apollo/client';
+import { instanceFiltersVar } from 'cache';
 
 const useCounters = () => {
-  const query = useQuery(COUNTERS_QUERY);
+  const instanceFilters = useReactiveVar(instanceFiltersVar);
+  const query = useQuery(COUNTERS_QUERY, {
+    variables: {
+      datesRange: {
+        from: instanceFilters?.jobs?.datesRange?.from || null,
+        to: instanceFilters?.jobs?.datesRange?.to || null,
+      },
+    },
+  });
 
   usePolling(query, 3000);
 

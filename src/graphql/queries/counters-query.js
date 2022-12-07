@@ -1,14 +1,26 @@
 const { default: gql } = require('graphql-tag');
 
 const COUNTERS_QUERY = gql`
-  query instanceCounter($pipelineName: String) {
+  query instanceCounter(
+    $experimentName: String
+    $pipelineName: String
+    $algorithmName: String
+    $pipelineStatus: String
+    $datesRange: Range
+  ) {
     pipelines {
       pipelinesCount
     }
     algorithms {
       algorithmsCount
     }
-    jobsAggregated(pipelineName: $pipelineName) {
+    jobsAggregated(
+      experimentName: $experimentName
+      pipelineName: $pipelineName
+      algorithmName: $algorithmName
+      pipelineStatus: $pipelineStatus
+      datesRange: $datesRange
+    ) {
       jobsCount
     }
     queueCount {
