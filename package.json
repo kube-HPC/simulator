@@ -41,8 +41,8 @@
     "react-collapse": "^5.1.0",
     "qs": "^6.10.1",
     "virtualizedtableforantd4": "^1.1.2",
-    "apexcharts": "^3.28.1",
-    "react-apexcharts": "^1.3.9",
+    "apexcharts": "^3.36.3",
+    "react-apexcharts": "^1.4.0",
     "isnumber": "^1.0.0"
   },
   "devDependencies": {
