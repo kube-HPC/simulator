@@ -147,7 +147,15 @@ const SidebarLeft = () => {
     const items = [];
 
     menuItems.forEach(([name, component, path]) => {
-      const isFilters = isValuesFiltersEmpty(instanceFilters[name]);
+      const objectsFilters = { ...instanceFilters[name] };
+
+      if (name === 'jobs') {
+        delete objectsFilters.experimentName;
+        delete objectsFilters.datesRange;
+      }
+
+      const isFilters = isValuesFiltersEmpty(objectsFilters);
+
       items.push({
         label: (
           <Link to={{ pathname: path, search: location.search }}>
