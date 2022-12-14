@@ -10,7 +10,7 @@ const useCounters = () => {
   const query = useQuery(COUNTERS_QUERY, {
     variables: {
       datesRange: {
-        from: instanceFilters?.jobs?.datesRange?.from || dateTimeDefault,
+        from: instanceFilters?.jobs?.datesRange?.from || dateTimeDefault.time,
         to: instanceFilters?.jobs?.datesRange?.to || null,
       },
     },

@@ -1,8 +1,17 @@
 import { InMemoryCache, makeVar } from '@apollo/client';
 import _ from 'lodash';
 import moment from 'moment';
+import { LOCAL_STORAGE_KEYS } from 'const';
 
-export const dateTimeDefaultVar = makeVar(moment(new Date().setHours(-24)));
+const defTimeFromLocalStorage =
+  parseInt(
+    window.localStorage.getItem(LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_TIME),
+    10
+  ) || 24;
+export const dateTimeDefaultVar = makeVar({
+  hour: defTimeFromLocalStorage,
+  time: moment(new Date().setHours(-defTimeFromLocalStorage)),
+});
 export const isPinActiveJobVar = makeVar(false);
 export const filterToggeledVar = makeVar(true);
 export const inactiveModeVar = makeVar(false);

@@ -57,7 +57,7 @@ const RangePickerNow = forwardRef(({ onChange, value, isDisabled }) => {
         value={
           value?.datesRange?.from?.isValid()
             ? value?.datesRange?.from
-            : dateTimeDefault
+            : dateTimeDefault.time
         }
         style={{ width: '160px' }}
         format={DateFormat}
