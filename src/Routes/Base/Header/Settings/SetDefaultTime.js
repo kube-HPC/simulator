@@ -42,7 +42,8 @@ const SetDefaultTime = () => {
         LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_TIME,
         itemSelect
       );
-      const newDefTime = moment(new Date().setHours(-itemSelect));
+      const newDefTime = moment().add(-itemSelect, 'hours');
+
       dateTimeDefaultVar({ hour: parseInt(itemSelect, 10), time: newDefTime });
 
       instanceFilters.jobs.datesRange.from = newDefTime;

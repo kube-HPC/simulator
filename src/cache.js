@@ -10,7 +10,7 @@ const defTimeFromLocalStorage =
   ) || 24;
 export const dateTimeDefaultVar = makeVar({
   hour: defTimeFromLocalStorage,
-  time: moment(new Date().setHours(-defTimeFromLocalStorage)),
+  time: moment().add(-defTimeFromLocalStorage, 'hours'),
 });
 export const isPinActiveJobVar = makeVar(false);
 export const filterToggeledVar = makeVar(true);
