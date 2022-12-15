@@ -21,7 +21,11 @@ const SliderNumber = forwardRef(
 
     return (
       <Container>
-        <Form.Item onChange={setValue} name={name} ref={ref}>
+        <Form.Item
+          onChange={setValue}
+          name={name}
+          ref={ref}
+          style={{ width: '90%' }}>
           <Slider min={min} />
         </Form.Item>
 

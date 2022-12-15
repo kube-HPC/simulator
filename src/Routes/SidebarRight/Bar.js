@@ -1,10 +1,13 @@
 import React, { useCallback, useMemo } from 'react';
+import { configViewEnvVar } from 'cache';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Icon from '@ant-design/icons';
 import { Layout, Menu, Badge } from 'antd';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useErrorLogs, useStats, useStorage } from 'hooks/graphql';
+import { useReactiveVar } from '@apollo/client';
+import { RIGHT_SIDEBAR_NAMES } from 'const';
 // import useStorage from 'hooks/useStorage';
 import {
   getColorStatus,
@@ -29,6 +32,9 @@ const topMargin = { marginTop: '20%' };
 const noItemSelect = [];
 
 const SidebarRight = ({ isTop, className }) => {
+  // add datasources when this enable
+
+  const configViewEnv = useReactiveVar(configViewEnvVar);
   const { root } = useParams();
   const history = useHistory();
   const location = useLocation();
@@ -38,7 +44,9 @@ const SidebarRight = ({ isTop, className }) => {
   const { storage } = useStorage();
   const { top, bottom } = useMemo(
     () => ({
-      top: topActions,
+      top: configViewEnv.dataSources
+        ? topActions
+        : topActions.filter(x => x.name !== RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE),
       bottom: getBottomActions({
         warnings: totalNewWarnings,
         cpuStatus: getColorStatus(cpu),

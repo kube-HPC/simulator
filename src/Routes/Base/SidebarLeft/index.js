@@ -19,7 +19,11 @@ import { ReactComponent as LogoFish } from 'images/logo-fish.svg';
 import { ReactComponent as LogoTitle } from 'images/logo-title.svg';
 import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
 
-import { instanceCounterVar, instanceFiltersVar } from 'cache';
+import {
+  instanceCounterVar,
+  instanceFiltersVar,
+  configViewEnvVar,
+} from 'cache';
 import { Theme, COLOR_LAYOUT } from 'styles';
 import { selectors } from 'reducers';
 // import { useDiscovery } from 'hooks/graphql';
@@ -104,17 +108,6 @@ const instanceCounterAdapter = obj => ({
   [LEFT_SIDEBAR_NAMES.DATASOURCES]: obj.dataSources,
 });
 
-const menuItems = [
-  [LEFT_SIDEBAR_NAMES.JOBS, JobsIcon, '/jobs'],
-  [LEFT_SIDEBAR_NAMES.QUEUE, QueueIcon, '/queue'],
-  [LEFT_SIDEBAR_NAMES.PIPELINES, PipelineIcon, '/pipelines'],
-  [LEFT_SIDEBAR_NAMES.ALGORITHMS, AlgorithmIcon, '/algorithms'],
-  [LEFT_SIDEBAR_NAMES.DATASOURCES, DataSourceIcon, '/datasources'],
-
-  //  [LEFT_SIDEBAR_NAMES.WORKERS, WorkerIcon, '/workers'],
-  //  [LEFT_SIDEBAR_NAMES.DRIVERS, DriversIcon, '/drivers'],
-];
-
 const Name = styled.span`
   text-transform: capitalize;
 `;
@@ -125,6 +118,30 @@ const BadgeStyle = styled(Badge)`
 `;
 
 const SidebarLeft = () => {
+  // add datasources when this enable
+
+  const configViewEnv = useReactiveVar(configViewEnvVar);
+
+  const menuItems = useMemo(() => {
+    const itemsMenu = [
+      [LEFT_SIDEBAR_NAMES.JOBS, JobsIcon, '/jobs'],
+      [LEFT_SIDEBAR_NAMES.QUEUE, QueueIcon, '/queue'],
+      [LEFT_SIDEBAR_NAMES.PIPELINES, PipelineIcon, '/pipelines'],
+      [LEFT_SIDEBAR_NAMES.ALGORITHMS, AlgorithmIcon, '/algorithms'],
+      //  [LEFT_SIDEBAR_NAMES.WORKERS, WorkerIcon, '/workers'],
+      //  [LEFT_SIDEBAR_NAMES.DRIVERS, DriversIcon, '/drivers'],
+    ];
+    if (configViewEnv.dataSources) {
+      itemsMenu.push([
+        LEFT_SIDEBAR_NAMES.DATASOURCES,
+        DataSourceIcon,
+        '/datasources',
+      ]);
+    }
+
+    return itemsMenu;
+  }, []);
+
   // useDiscovery();
   const { counters } = useCounters();
   instanceCounterVar({

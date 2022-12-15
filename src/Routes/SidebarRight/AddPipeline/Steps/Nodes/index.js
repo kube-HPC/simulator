@@ -7,6 +7,8 @@ import { Button, Radio, Input, Tag } from 'antd';
 import { FlexBox } from 'components/common';
 import { NODE_KINDS_COLOR } from 'styles';
 import { KIND_NODE_SHORT_NAME } from 'const';
+import { configViewEnvVar } from 'cache';
+import { useReactiveVar } from '@apollo/client';
 import AlgorithmNode from './Algorithms';
 import DataSourceNode from './DataSource';
 import GatewayNode from './Gateway';
@@ -142,7 +144,7 @@ const Nodes = ({ style }) => {
     isStreamingPipeline,
     isRunPipeline,
   } = useWizardContext();
-
+  const configViewEnv = useReactiveVar(configViewEnvVar);
   const [ids, appendKey, dropKey] = useIds(Object.keys(initialState.nodes));
 
   const [activeNodeId, setActiveNodeId] = useState(ids[0]);
@@ -249,7 +251,10 @@ const Nodes = ({ style }) => {
                   buttonStyle="solid"
                   style={{ display: 'flex', alignItems: 'center' }}>
                   <Radio.Button value="algorithm">Algorithm</Radio.Button>
-                  <Radio.Button value="dataSource">DataSource</Radio.Button>
+
+                  {configViewEnv.dataSources && (
+                    <Radio.Button value="dataSource">DataSource</Radio.Button>
+                  )}
 
                   {isStreamingPipeline && (
                     <Radio.Button value="gateway">Gateway</Radio.Button>

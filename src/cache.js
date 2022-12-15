@@ -12,6 +12,11 @@ export const dateTimeDefaultVar = makeVar({
   hour: defTimeFromLocalStorage,
   time: moment().add(-defTimeFromLocalStorage, 'hours'),
 });
+
+export const configViewEnvVar = makeVar({
+  dataSources:
+    process.env.REACT_APP_DATA_SOURCE_IS_ENABLE.toLowerCase() !== 'false',
+});
 export const isPinActiveJobVar = makeVar(false);
 export const filterToggeledVar = makeVar(true);
 export const inactiveModeVar = makeVar(false);
