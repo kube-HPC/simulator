@@ -1,6 +1,22 @@
 import { InMemoryCache, makeVar } from '@apollo/client';
 import _ from 'lodash';
+import moment from 'moment';
+import { LOCAL_STORAGE_KEYS } from 'const';
 
+const defTimeFromLocalStorage =
+  parseInt(
+    window.localStorage.getItem(LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_TIME),
+    10
+  ) || 24;
+export const dateTimeDefaultVar = makeVar({
+  hour: defTimeFromLocalStorage,
+  time: moment().add(-defTimeFromLocalStorage, 'hours'),
+});
+
+export const configViewEnvVar = makeVar({
+  dataSources:
+    process.env.REACT_APP_DATA_SOURCE_IS_ENABLE.toLowerCase() !== 'false',
+});
 export const isPinActiveJobVar = makeVar(false);
 export const filterToggeledVar = makeVar(true);
 export const inactiveModeVar = makeVar(false);

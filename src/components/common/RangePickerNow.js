@@ -1,14 +1,15 @@
 import { DatePicker } from 'antd';
+import { dateTimeDefaultVar } from 'cache';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
+import { useReactiveVar } from '@apollo/client';
 import React, { memo, forwardRef, useEffect, useState } from 'react';
-import moment from 'moment';
 
 const DateFormat = 'YYYY-MM-DD HH:mm';
-const dateNow = new Date();
-dateNow.setHours(-24);
+
 const RangePickerNow = forwardRef(({ onChange, value, isDisabled }) => {
   const [stateDate, setStateDate] = useState(value);
+  const dateTimeDefault = useReactiveVar(dateTimeDefaultVar);
 
   const onChangeHandel = (momentDate, param) => {
     let dateNew;
@@ -56,7 +57,7 @@ const RangePickerNow = forwardRef(({ onChange, value, isDisabled }) => {
         value={
           value?.datesRange?.from?.isValid()
             ? value?.datesRange?.from
-            : moment(dateNow)
+            : dateTimeDefault.time
         }
         style={{ width: '160px' }}
         format={DateFormat}

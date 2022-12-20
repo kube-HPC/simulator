@@ -1,14 +1,16 @@
 import { COUNTERS_QUERY } from 'graphql/queries';
 import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
-import { instanceFiltersVar } from 'cache';
+import { instanceFiltersVar, dateTimeDefaultVar } from 'cache';
 
 const useCounters = () => {
   const instanceFilters = useReactiveVar(instanceFiltersVar);
+  const dateTimeDefault = useReactiveVar(dateTimeDefaultVar);
+
   const query = useQuery(COUNTERS_QUERY, {
     variables: {
       datesRange: {
-        from: instanceFilters?.jobs?.datesRange?.from || null,
+        from: instanceFilters?.jobs?.datesRange?.from || dateTimeDefault.time,
         to: instanceFilters?.jobs?.datesRange?.to || null,
       },
     },

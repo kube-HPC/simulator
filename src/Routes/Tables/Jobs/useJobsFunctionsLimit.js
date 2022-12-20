@@ -7,6 +7,7 @@ import {
   instanceFiltersVar,
   metaVar,
   isPinActiveJobVar,
+  dateTimeDefaultVar,
 } from 'cache';
 import { JOB_QUERY, JOB_QUERY_GRAPH } from 'graphql/queries';
 
@@ -38,6 +39,7 @@ const useJobsFunctionsLimit = () => {
   const instanceFilters = useReactiveVar(instanceFiltersVar);
   const filterToggeled = useReactiveVar(filterToggeledVar);
   const isPinActiveJob = useReactiveVar(isPinActiveJobVar);
+  const dateTimeDefault = useReactiveVar(dateTimeDefaultVar);
 
   const metaMode = useReactiveVar(metaVar);
   const [dataSourceGraph, setDataSourceGraph] = useState([]);
@@ -81,6 +83,7 @@ const useJobsFunctionsLimit = () => {
     instanceFilters.jobs?.datesRange?.from,
     instanceFilters.jobs?.datesRange?.to,
     metaMode?.experimentName,
+    dateTimeDefault.hour,
   ]);
 
   // all limit Jobs
@@ -248,6 +251,10 @@ const useJobsFunctionsLimit = () => {
         onFetchMore();
       }
     });
+
+    // set default time in first
+    instanceFilters.jobs.datesRange.from = dateTimeDefault.time;
+    instanceFiltersVar({ ...instanceFilters });
   }, []);
 
   return {

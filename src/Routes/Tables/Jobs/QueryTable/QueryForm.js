@@ -9,8 +9,6 @@ import { FiltersForms } from 'styles';
 import { RangePickerNow } from 'components/common';
 import { isPinActiveJobVar } from 'cache';
 
-const DateFormat = 'YYYY-MM-DD HH:mm';
-
 const QueryForm = ({ onSubmit, params, zoomDate }) => {
   const [form] = Form.useForm();
   const isPinActiveJobs = useReactiveVar(isPinActiveJobVar);
@@ -25,8 +23,8 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
       form.setFieldsValue({
         time: {
           datesRange: {
-            from: moment(params.datesRange.from, DateFormat),
-            to: moment(params.datesRange.to, DateFormat),
+            from: moment(params.datesRange.from),
+            to: moment(params.datesRange.to),
           },
         },
       });
@@ -51,7 +49,7 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
     } else {
       form.resetFields(['pipelineStatus']);
     }
-  }, [params, zoomDate]);
+  }, [params]);
 
   const onFinish = values => {
     onSubmit(values);
@@ -108,7 +106,11 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
       onFinish={onFinish}
       spacearound={1}>
       <Form.Item label="Time" name="time">
-        <RangePickerNow isDisabled={isPinActiveJobs} onChange={SubmitForm} />
+        <RangePickerNow
+          isDisabled={isPinActiveJobs}
+          onChange={SubmitForm}
+          zoomDateChange={zoomDate}
+        />
       </Form.Item>
       <Form.Item label="Pipeline Name" name="pipelineName">
         <AutoComplete

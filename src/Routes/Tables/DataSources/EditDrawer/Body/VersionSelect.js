@@ -202,9 +202,7 @@ const Versions = ({
     }
   }, [snapshotName, dataSource]);
   const hasMissingSnapshot = snapshotName && !activeSnapshot;
-  // console.log("Selector versionsCollection",versionsCollection,isPending)
-  // console.log("Selector dataSource",dataSource)
-  // console.log("Selector activeSnapshot",activeSnapshot,hasMissingSnapshot)
+
   return (
     <>
       <Selector

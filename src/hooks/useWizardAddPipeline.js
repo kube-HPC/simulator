@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from 'react';
-import { WIZARD_STATE } from 'const';
+import { WIZARD_STATE, LOCAL_STORAGE_KEYS } from 'const';
 
 import cleanDeep from 'clean-deep';
 import { usePipeline } from 'hooks';
@@ -35,8 +35,6 @@ const formatNode = node => {
   return formatter ? formatter(node) : node;
 };
 
-const LOCAL_STORAGE_KEY = 'add-pipeline-form-state';
-
 const useWizardAddPipeline = (
   jsonPipeline,
   status,
@@ -69,11 +67,15 @@ const useWizardAddPipeline = (
 
         setEditorState(jsonEdit);
       } else {
-        const rawData = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+        const rawData = window.localStorage.getItem(
+          LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_ADD_PIPELINE
+        );
         try {
           const parsedState = JSON.parse(rawData);
           if (parsedState?.stateVersion !== packageJson.version) {
-            window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+            window.localStorage.removeItem(
+              LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_ADD_PIPELINE
+            );
           } else if (parsedState) {
             setEditorState(parsedState);
           }
@@ -87,7 +89,9 @@ const useWizardAddPipeline = (
 
     if (status === WIZARD_STATE.CLEAR) {
       form.resetFields();
-      window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+      window.localStorage.removeItem(
+        LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_ADD_PIPELINE
+      );
       setEditorState(addPipelineTemplate);
       setWizardStepIdx(0);
       setStatus(WIZARD_STATE.IDLE);
@@ -99,10 +103,13 @@ const useWizardAddPipeline = (
 
       if (!isEdit) {
         window.localStorage.setItem(
-          LOCAL_STORAGE_KEY,
+          LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_ADD_PIPELINE,
           JSON.stringify({ ...editorState, stateVersion: packageJson.version })
         );
-      } else window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+      } else
+        window.localStorage.removeItem(
+          LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_ADD_PIPELINE
+        );
     };
   }, [
     setEditorState,
@@ -137,13 +144,13 @@ const useWizardAddPipeline = (
         } else {
           updatePipeline(
             cleanDeep(formattedData, { emptyArrays: false }),
-            LOCAL_STORAGE_KEY
+            LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_ADD_PIPELINE
           );
         }
       } else {
         addPipeline(
           cleanDeep(formattedData, { emptyArrays: false }),
-          LOCAL_STORAGE_KEY
+          LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_ADD_PIPELINE
         );
       }
 

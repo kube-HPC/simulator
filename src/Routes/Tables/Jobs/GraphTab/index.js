@@ -126,7 +126,6 @@ const GraphTab = ({ graph, pipeline }) => {
         {isValidGraph ? (
           showGraph ? (
             <Fallback>
-              {console.log(adaptedGraph, events)}
               <Graph
                 graph={adaptedGraph}
                 options={graphOptions}

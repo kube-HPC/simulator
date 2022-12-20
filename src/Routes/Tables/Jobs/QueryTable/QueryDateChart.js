@@ -3,7 +3,6 @@ import { Theme } from 'styles/colors';
 import ReactApexChart from 'react-apexcharts';
 import histogram from 'utils/histogram';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 
 const QueryDateChart = props => {
   const { dataSource } = props;
@@ -23,6 +22,7 @@ const QueryDateChart = props => {
   const data = {
     // option chart
     options: {
+      timezone: '',
       grid: {
         show: false,
       },
@@ -104,13 +104,14 @@ const QueryDateChart = props => {
       },
       xaxis: {
         type: 'datetime',
-
+        labels: {
+          datetimeUTC: false,
+        },
         categories:
           _histogram && _histogram.sections && _histogram.sections.length > 0
-            ? _histogram?.sections?.map(s =>
-                moment(s).utc(moment(s).format('Z')).format()
-              )
+            ? _histogram?.sections?.map(s => new Date(s).toISOString())
             : [],
+        // ? _histogram?.sections?.map(s => moment(s).utc(moment(s).format('Z')).format()): [],
         //  categories: _histogram && _histogram.sections && _histogram.sections.length > 0 ? _histogram?.sections?.map(s => new Date(s).toLocaleString()) : [],
       },
       legend: {
