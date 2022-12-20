@@ -1,4 +1,11 @@
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+} from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Input, InputNumber, Radio, Select, Checkbox, Modal } from 'antd';
@@ -97,6 +104,8 @@ const AddAlgorithmForm = ({ onToggle, onSubmit, algorithmValue }) => {
   const [isCheckForceStopAlgorithms, setIsCheckForceStopAlgorithms] = useState(
     !isEdit
   );
+  const refCheckForceStopAlgorithms = useRef(false);
+
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
   const [fileList, setFileList] = useState([]);
 
@@ -164,22 +173,22 @@ const AddAlgorithmForm = ({ onToggle, onSubmit, algorithmValue }) => {
         onOverviewAlgorithm(OVERVIEW_TABS.BUILDS);
       }
     },
-    [goTo, keyValueObject]
+    [onOverviewAlgorithm]
   );
 
   const applyAlgorithmVersion = useCallback(
     dataResponse => {
       // create new version and apply version if force
       // const errorNotification = ({ message }) => notification({ message });
-
       client
         .post(`/versions/algorithms/apply`, {
           name: dataResponse.algorithm.name,
           version: dataResponse.algorithm.version,
-          force: isCheckForceStopAlgorithms,
+          force: refCheckForceStopAlgorithms.current.state.checked,
         })
         .then(() => {
           setIsSubmitLoading(false);
+          onAfterSaveAlgorithm(dataResponse);
         })
         .catch(error => {
           const { data } = error.response;
@@ -188,13 +197,14 @@ const AddAlgorithmForm = ({ onToggle, onSubmit, algorithmValue }) => {
             title: 'WARNING : Version not upgrade',
             content: (
               <>
-                <Text>{data.error.message}</Text>
-
+                <div>
+                  <Text>{data.error.message}</Text>
+                </div>
                 <Checkbox
-                  onClick={e =>
-                    setIsCheckForceStopAlgorithms(e.target.checked)
-                  }>
-                  stop run pipelines
+                  onClick={e => {
+                    setIsCheckForceStopAlgorithms(e.target.checked);
+                  }}>
+                  Stop running algorithms.
                 </Checkbox>
               </>
             ),
@@ -212,7 +222,7 @@ const AddAlgorithmForm = ({ onToggle, onSubmit, algorithmValue }) => {
           });
         });
     },
-    [isCheckForceStopAlgorithms]
+    [onAfterSaveAlgorithm, onOverviewAlgorithm]
   );
 
   const onFormSubmit = () => {
@@ -362,8 +372,10 @@ const AddAlgorithmForm = ({ onToggle, onSubmit, algorithmValue }) => {
         <RightPanel>
           {isEdit && (
             <Checkbox
+              ref={refCheckForceStopAlgorithms}
+              checked={isCheckForceStopAlgorithms}
               onClick={e => setIsCheckForceStopAlgorithms(e.target.checked)}>
-              stop run pipelines
+              Stop running algorithms
             </Checkbox>
           )}
           <RightAlignedButton
