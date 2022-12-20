@@ -57,18 +57,11 @@ const HelpBar = () => {
       <InactiveModeTag />
 
       <ExperimentPicker />
-      <Route exact path="/jobs" component={ViewType} />
+
       <Icons.Hover
-        type={
-          <span
-            title={iconsThemesTitle[themeName.toUpperCase()]}
-            role="img"
-            aria-label="menu-unfold"
-            className="anticon anticon-menu-unfold">
-            {iconsThemes[themeName.toUpperCase()]}
-          </span>
-        }
-        onClick={toggleTheme}
+        type={<IconSwagger title="Swagger" />}
+        onClick={openUrl(appInfo.swaggerUrl)}
+        styleIcon={{ height: '25px' }}
       />
 
       <Popover content={<Settings />} placement="bottomRight" trigger="click">
@@ -86,11 +79,18 @@ const HelpBar = () => {
       />
 
       <Icons.Hover
-        type={<IconSwagger title="Swagger" />}
-        onClick={openUrl(appInfo.swaggerUrl)}
-        styleIcon={{ height: '25px' }}
+        type={
+          <span
+            title={iconsThemesTitle[themeName.toUpperCase()]}
+            role="img"
+            aria-label="menu-unfold"
+            className="anticon anticon-menu-unfold">
+            {iconsThemes[themeName.toUpperCase()]}
+          </span>
+        }
+        onClick={toggleTheme}
       />
-
+      <Route exact path="/jobs" component={ViewType} />
       <Icons.Hover
         type={<QuestionCircleOutlined title="Help" />}
         onClick={onGuideClick}

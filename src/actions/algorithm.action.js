@@ -1,12 +1,13 @@
 import actions from 'const/application-actions';
 
-export const applyAlgorithm = formData => ({
+export const applyAlgorithm = (formData, onSuccess) => ({
   type: actions.REST_REQ_POST_FORM,
   payload: {
     url: 'store/algorithms/apply',
     formData,
     actionType: actions.ALGORITHM_APPLY,
   },
+  meta: { onSuccess },
 });
 
 export const deleteAlgorithm = algorithmName => ({

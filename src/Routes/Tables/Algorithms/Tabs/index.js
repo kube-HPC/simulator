@@ -4,9 +4,10 @@ import { Button } from 'antd';
 import { Card, JsonSwitch, MdEditor, Tabs } from 'components/common';
 import { useReadme, useVersions } from 'hooks';
 import PropTypes from 'prop-types';
+import { OVERVIEW_TABS as TABS } from 'const';
 import AlgorithmBuildsTable from './Builds';
 import { VersionsTable } from './Versions';
-import usePath, { OVERVIEW_TABS as TABS } from './../usePath';
+import usePath from './../usePath';
 
 const AlgorithmsTabs = ({ algorithm }) => {
   const { tabKey: activeKey, goTo } = usePath();

@@ -33,7 +33,7 @@ const deleteConfirmAction = action => {
   });
 };
 
-const overlayStyle = { width: `60ch` };
+const overlayStyle = { width: `50ch` };
 
 const AlgorithmActions = ({ record }) => {
   const { goTo } = usePath();
@@ -98,7 +98,7 @@ const AlgorithmActions = ({ record }) => {
         <Popover
           overlayStyle={overlayStyle}
           title="Run Algorithm"
-          placement="left"
+          placement="leftBottom"
           content={popOverContentRun}
           getPopupContainer={setPopupContainer}
           mouseLeaveDelay={0.5}>
@@ -107,7 +107,7 @@ const AlgorithmActions = ({ record }) => {
         <Popover
           overlayStyle={overlayStyle}
           title="Debug Algorithm"
-          placement="left"
+          placement="leftBottom"
           content={popOverContentDebug}
           getPopupContainer={setPopupContainer}
           mouseLeaveDelay={0.5}>

@@ -1,12 +1,14 @@
-import React, { memo, useEffect, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Input, InputNumber, Radio, Select } from 'antd';
+import { Input, InputNumber, Radio, Select, Checkbox, Modal } from 'antd';
+import Text from 'antd/lib/typography/Text';
 import { Form } from 'components/common';
 import {
   BottomPanel,
   RightAlignedButton,
   PanelButton,
+  RightPanel,
 } from 'components/Drawer';
 import formTemplate from 'config/template/addAlgorithmForm.template';
 import { useActions } from 'hooks';
@@ -19,11 +21,15 @@ import {
   deepCopyFromKeyValue,
   flattenObjKeyValue,
 } from 'utils';
+import client from 'client';
+import { OVERVIEW_TABS } from 'const';
+import usePath from './../../Tables/Algorithms/usePath';
 import { CodeBuild, GitBuild, ImageBuild } from './BuildTypes';
 import MemoryField from './MemoryField.react';
 import schema from './schema';
 
 // #region  Helpers
+
 const { MAIN, BUILD_TYPES } = schema;
 const { Collapsible } = Form;
 // https://github.com/kube-HPC/hkube/blob/master/core/api-server/lib/consts/regex.js
@@ -88,6 +94,10 @@ const AddAlgorithmForm = ({ onToggle, onSubmit, algorithmValue }) => {
   const keyValueObject =
     (algorithmValue && JSON.parse(algorithmValue)) || undefined;
   const [form] = Form.useForm();
+  const [isCheckForceStopAlgorithms, setIsCheckForceStopAlgorithms] = useState(
+    !isEdit
+  );
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
   const [fileList, setFileList] = useState([]);
 
   const [buildType, setBuildType] = useState(
@@ -132,6 +142,78 @@ const AddAlgorithmForm = ({ onToggle, onSubmit, algorithmValue }) => {
   });
 
   const { applyAlgorithm } = useActions();
+  const { goTo } = usePath();
+
+  const onOverviewAlgorithm = useCallback(
+    tab => {
+      if (keyValueObject) {
+        goTo.overview({
+          nextAlgorithmId: keyValueObject?.name,
+          nextTabKey: tab || OVERVIEW_TABS.VERSIONS,
+        });
+      }
+    },
+    [goTo, keyValueObject]
+  );
+
+  const onAfterSaveAlgorithm = useCallback(
+    dataResponse => {
+      setIsSubmitLoading(false);
+
+      if (dataResponse.buildId) {
+        onOverviewAlgorithm(OVERVIEW_TABS.BUILDS);
+      }
+    },
+    [goTo, keyValueObject]
+  );
+
+  const applyAlgorithmVersion = useCallback(
+    dataResponse => {
+      // create new version and apply version if force
+      // const errorNotification = ({ message }) => notification({ message });
+
+      client
+        .post(`/versions/algorithms/apply`, {
+          name: dataResponse.algorithm.name,
+          version: dataResponse.algorithm.version,
+          force: isCheckForceStopAlgorithms,
+        })
+        .then(() => {
+          setIsSubmitLoading(false);
+        })
+        .catch(error => {
+          const { data } = error.response;
+
+          Modal.confirm({
+            title: 'WARNING : Version not upgrade',
+            content: (
+              <>
+                <Text>{data.error.message}</Text>
+
+                <Checkbox
+                  onClick={e =>
+                    setIsCheckForceStopAlgorithms(e.target.checked)
+                  }>
+                  stop run pipelines
+                </Checkbox>
+              </>
+            ),
+            okText: 'Try again',
+            okType: 'danger',
+            cancelText: 'Cancel',
+            onCancel() {
+              setIsSubmitLoading(false);
+              onOverviewAlgorithm();
+            },
+            onOk() {
+              setIsSubmitLoading(false);
+              applyAlgorithmVersion(dataResponse);
+            },
+          });
+        });
+    },
+    [isCheckForceStopAlgorithms]
+  );
 
   const onFormSubmit = () => {
     validateFields().then(formObject => {
@@ -190,8 +272,14 @@ const AddAlgorithmForm = ({ onToggle, onSubmit, algorithmValue }) => {
         predicate: isNotEmpty,
       });
       formData.append(`payload`, stringify(payloadFiltered));
-
-      applyAlgorithm(formData);
+      setIsSubmitLoading(true);
+      if (isEdit) {
+        applyAlgorithm(formData, res => {
+          applyAlgorithmVersion(res);
+        });
+      } else {
+        applyAlgorithm(formData, res => onAfterSaveAlgorithm(res));
+      }
 
       onSubmit({ formData, payload: payloadFiltered });
     });
@@ -270,9 +358,22 @@ const AddAlgorithmForm = ({ onToggle, onSubmit, algorithmValue }) => {
 
       <BottomPanel style={{ marginTop: 'auto' }}>
         <PanelButton onClick={onToggle}>Editor View</PanelButton>
-        <RightAlignedButton type="primary" htmlType="submit">
-          Submit
-        </RightAlignedButton>
+
+        <RightPanel>
+          {isEdit && (
+            <Checkbox
+              onClick={e => setIsCheckForceStopAlgorithms(e.target.checked)}>
+              stop run pipelines
+            </Checkbox>
+          )}
+          <RightAlignedButton
+            type="primary"
+            htmlType="submit"
+            loading={isSubmitLoading}
+            disabled={isSubmitLoading}>
+            Save
+          </RightAlignedButton>
+        </RightPanel>
       </BottomPanel>
     </Form>
   );
