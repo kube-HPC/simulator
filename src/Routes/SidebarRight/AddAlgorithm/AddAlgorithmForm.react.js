@@ -285,7 +285,7 @@ const AddAlgorithmForm = ({ onToggle, onSubmit, algorithmValue }) => {
       setIsSubmitLoading(true);
       if (isEdit) {
         applyAlgorithm(formData, res => {
-          if (formData.buildId) {
+          if (res.buildId) {
             onOverviewAlgorithm(OVERVIEW_TABS.BUILDS);
           } else {
             applyAlgorithmVersion(res);
