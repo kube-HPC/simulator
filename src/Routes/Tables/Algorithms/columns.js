@@ -19,7 +19,7 @@ const Image = algorithmImage =>
 const Name = (name, record) => (
   <Ellipsis>
     {name}{' '}
-    {record.errors.includes(errorsCode.NOT_LAST_VERSION_ALGORITHM) && (
+    {record?.errors?.includes(errorsCode.NOT_LAST_VERSION_ALGORITHM) && (
       <WarningOutlined
         title="Warning : Not last version algorithm"
         style={{ color: 'red', fontSize: '15px' }}
