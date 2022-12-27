@@ -1,7 +1,9 @@
 import React from 'react';
+import { WarningOutlined } from '@ant-design/icons';
 import { Tag } from 'antd';
 import { Ellipsis } from 'components/common';
 import { sorter } from 'utils/stringHelper';
+import { errorsCode } from '@hkube/consts';
 import AlgorithmActions from './AlgorithmActions.react';
 import AlgorithmBuildStats from './AlgorithmBuildStats.react';
 
@@ -14,7 +16,17 @@ const Image = algorithmImage =>
   ) : (
     <Tag>No Image</Tag>
   );
-const Name = name => <Ellipsis text={name} />;
+const Name = (name, record) => (
+  <Ellipsis>
+    {name}{' '}
+    {record.errors.includes(errorsCode.NOT_LAST_VERSION_ALGORITHM) && (
+      <WarningOutlined
+        title="Warning : Not last version algorithm"
+        style={{ color: 'red', fontSize: '15px' }}
+      />
+    )}
+  </Ellipsis>
+);
 const BuildStats = builds => <AlgorithmBuildStats builds={builds} />;
 const renderAction = (_, record) => <AlgorithmActions record={record} />;
 
