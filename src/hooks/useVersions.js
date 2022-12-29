@@ -1,34 +1,45 @@
 import { useState, useEffect, useCallback } from 'react';
 import { notification } from 'utils';
+
 import client from './../client';
 
 const errorNotification = ({ message }) => notification({ message });
 
-const fetchVersion = ({ algorithmName, callback }) =>
-  client
-    .get(`/versions/algorithms/${algorithmName}`)
-    .then(({ data }) => {
-      callback(data);
-    })
-    .catch(errorNotification);
-
-const applyVersion = ({ name, version }) =>
-  client
-    .post(`/versions/algorithms/apply`, { name, version })
-    .catch(errorNotification);
-
-const deleteVersion = ({ name, version }) =>
-  client
-    .delete(`/versions/algorithms/${name}/${version}`)
-    .catch(errorNotification);
-
-const useVersions = ({ algorithmName, isFetch }) => {
+const useVersions = ({ algorithmName, confirmPopupForceVersion, isFetch }) => {
   const [dataSource, setDataSource] = useState(undefined);
 
-  const fetch = useCallback(
-    () => fetchVersion({ algorithmName, callback: setDataSource }),
+  const fetchVersion = useCallback(
+    () =>
+      client
+        .get(`/versions/algorithms/${algorithmName}`)
+        .then(({ data }) => {
+          setDataSource(data);
+        })
+        .catch(errorNotification),
     [algorithmName]
   );
+
+  const fetch = useCallback(() => fetchVersion(), [fetchVersion]);
+
+  const deleteVersion = ({ name, version }) =>
+    client
+      .delete(`/versions/algorithms/${name}/${version}`)
+      .then(() => {
+        fetchVersion();
+      })
+      .catch(errorNotification);
+
+  const applyVersion = ({ name, version, force = false }) =>
+    client
+      .post(`/versions/algorithms/apply`, { name, version, force })
+      .catch(error => {
+        confirmPopupForceVersion(
+          error.response.data,
+          name,
+          version,
+          applyVersion
+        );
+      });
 
   useEffect(() => {
     if (isFetch) {

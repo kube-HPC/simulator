@@ -9,6 +9,7 @@ export {
   RightAlignedButton,
   PanelButton,
   RightAlignedBox,
+  RightPanel,
 } from './styles';
 export { default as DrawerEditorMD } from './DrawerEditor.react';
 

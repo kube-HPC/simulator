@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'components';
 import { JsonSwitch, Card } from 'components/common';
-import { useVersions } from 'hooks';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import getVersionsColumns from './getVersionsColumns.react';
 
@@ -14,11 +13,7 @@ const expandedRowRender = record => (
 
 const rowKey = ({ version }) => version;
 
-const VersionsTable = ({ algorithmName, currentVersion, isFetch }) => {
-  const { dataSource, onApply, onDelete } = useVersions({
-    algorithmName,
-    isFetch,
-  });
+const VersionsTable = ({ currentVersion, onApply, onDelete, dataSource }) => {
   const columns = getVersionsColumns({ currentVersion, onApply, onDelete });
 
   return (
@@ -42,9 +37,12 @@ const VersionsTable = ({ algorithmName, currentVersion, isFetch }) => {
 };
 
 VersionsTable.propTypes = {
-  algorithmName: PropTypes.string.isRequired,
   currentVersion: PropTypes.string.isRequired,
-  isFetch: PropTypes.bool.isRequired,
+  onApply: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+
+  // eslint-disable-next-line react/forbid-prop-types
+  dataSource: PropTypes.object.isRequired,
 };
 
 export default VersionsTable;

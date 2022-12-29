@@ -1,12 +1,6 @@
 import { useMemo } from 'react';
 import { useHistory, useLocation, useParams } from 'react-router';
-
-export const OVERVIEW_TABS = {
-  VERSIONS: 'Versions',
-  BUILDS: 'Builds',
-  INFO: 'Information',
-  DESCRIPTION: 'Description',
-};
+import { OVERVIEW_TABS } from 'const';
 
 export default () => {
   const { algorithmId, tabKey } = useParams();

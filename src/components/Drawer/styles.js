@@ -21,3 +21,7 @@ export const RightAlignedButton = styled(Button)`
 export const RightAlignedBox = styled.div`
   margin-left: auto;
 `;
+
+export const RightPanel = styled.div`
+  margin-left: auto;
+`;

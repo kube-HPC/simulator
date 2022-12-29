@@ -6,7 +6,7 @@ import Icon from '@ant-design/icons';
 
 const IconHoverStyle = styled.div`
   ${mixins.transition};
-  color: ${props => props.theme.COLOR_LAYOUT?.darkBorder};
+  color: ${props => props.theme.COLOR_LAYOUT?.backgroundOnModal};
   :hover {
     color: ${props => props.theme.Styles?.IconHoverStyle?.colorHover};
   }

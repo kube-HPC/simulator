@@ -1,14 +1,19 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { CheckOutlined, RedoOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { Button, Checkbox, Modal } from 'antd';
+import Text from 'antd/lib/typography/Text';
 import { Card, JsonSwitch, MdEditor, Tabs } from 'components/common';
 import { useReadme, useVersions } from 'hooks';
 import PropTypes from 'prop-types';
+import { OVERVIEW_TABS as TABS } from 'const';
 import AlgorithmBuildsTable from './Builds';
 import { VersionsTable } from './Versions';
-import usePath, { OVERVIEW_TABS as TABS } from './../usePath';
+import usePath from './../usePath';
 
 const AlgorithmsTabs = ({ algorithm }) => {
+  const [isCheckForceStopAlgorithms, setIsCheckForceStopAlgorithms] = useState(
+    false
+  );
   const { tabKey: activeKey, goTo } = usePath();
   const setActiveKey = useCallback(tab => goTo.overview({ nextTabKey: tab }), [
     goTo,
@@ -18,9 +23,43 @@ const AlgorithmsTabs = ({ algorithm }) => {
 
   const { asyncFetch, post } = useReadme(useReadme.TYPES.ALGORITHM);
 
-  const { fetch } = useVersions({ algorithmName: algorithm.name });
+  const confirmPopupForceVersion = (
+    resError,
+    name,
+    version,
+    applyVersionCallback
+  ) =>
+    Modal.confirm({
+      title: 'WARNING : Version not upgrade',
+      content: (
+        <>
+          <div>
+            <Text>{resError.error.message}</Text>
+          </div>
+          <Checkbox
+            onClick={e => {
+              setIsCheckForceStopAlgorithms(e.target.checked);
+            }}>
+            Stop running algorithms.
+          </Checkbox>
+        </>
+      ),
+      okText: 'Try again',
+      okType: 'danger',
+      cancelText: 'Cancel',
+      onCancel() {},
+      onOk() {
+        applyVersionCallback({ name, version, isCheckForceStopAlgorithms });
+      },
+    });
 
-  const onApply = useCallback(() => {
+  const { dataSource, onApply, onDelete, fetch } = useVersions({
+    algorithmName: algorithm.name,
+    confirmPopupForceVersion,
+    isFetch: true,
+  });
+
+  const onApplyApplyMarkdown = useCallback(() => {
     post({ name: algorithm.name, readme });
   }, [post, algorithm, readme]);
 
@@ -31,7 +70,7 @@ const AlgorithmsTabs = ({ algorithm }) => {
 
   const extra =
     activeKey === TABS.DESCRIPTION ? (
-      <Button onClick={onApply} icon={<CheckOutlined />}>
+      <Button onClick={onApplyApplyMarkdown} icon={<CheckOutlined />}>
         Apply Markdown
       </Button>
     ) : activeKey === TABS.VERSIONS ? (
@@ -50,6 +89,9 @@ const AlgorithmsTabs = ({ algorithm }) => {
             algorithmName={algorithm.name}
             currentVersion={algorithm.version}
             isFetch={activeKey === TABS.VERSIONS}
+            dataSource={dataSource}
+            onApply={onApply}
+            onDelete={onDelete}
           />
         ),
       },
@@ -70,7 +112,7 @@ const AlgorithmsTabs = ({ algorithm }) => {
         children: <MdEditor value={readme} onChange={setReadme} />,
       },
     ],
-    [activeKey, algorithm, readme]
+    [activeKey, algorithm, dataSource, onApply, onDelete, readme]
   );
 
   return (
