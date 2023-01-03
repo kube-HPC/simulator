@@ -1,9 +1,11 @@
-import React, { lazy, useEffect, useMemo, useReducer } from 'react';
+import React, { lazy, useEffect, useMemo, useReducer, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Empty } from 'antd';
+import { Empty, Button } from 'antd';
 import styled from 'styled-components';
 import { Fallback, FallbackComponent } from 'components/common';
-import { useNodeInfo, useSettings } from 'hooks';
+import { useNodeInfo } from 'hooks';
+import { ReactComponent as IconGraphUpToDown } from 'images/dir-graph-up.svg';
+import { ReactComponent as IconGraphLeftToRight } from 'images/dir-graph-left.svg';
 import { generateStyles, formatEdge, formatNode } from '../graphUtils';
 import Details from './Details';
 
@@ -54,6 +56,13 @@ const EmptyHeight = styled(Empty)`
   height: 136px;
 `;
 
+const ButtonStyle = styled(Button)`
+  position: absolute;
+  z-index: 9999;
+  left: 47%;
+  top: 10px;
+`;
+
 const FlexContainer = styled.div`
   display: flex;
 `;
@@ -83,13 +92,16 @@ const GraphTab = ({ graph, pipeline }) => {
   const isValidGraph = adaptedGraph.nodes.length !== 0;
   const { node, events } = useNodeInfo({ graph, pipeline });
 
-  const { graphDirection: direction } = useSettings();
-
+  // const { graphDirection: direction } = useSettings();
+  const [graphDirection, setGraphDirection] = useState('LR');
   const [showGraph, toggleForceUpdate] = useReducer(p => !p, true);
 
   const graphOptions = useMemo(
-    () => ({ ...generateStyles({ direction }), height: '100px' }),
-    [direction]
+    () => ({
+      ...generateStyles({ direction: graphDirection }),
+      height: '100px',
+    }),
+    [graphDirection]
   );
 
   const isDisabledBtnRunDebug = useMemo(() => {
@@ -113,7 +125,7 @@ const GraphTab = ({ graph, pipeline }) => {
     setTimeout(() => {
       toggleForceUpdate();
     }, 500);
-  }, [direction]);
+  }, [graphDirection]);
 
   return (
     <FlexContainer>
@@ -123,6 +135,19 @@ const GraphTab = ({ graph, pipeline }) => {
           maxWidth: `100%`,
           flex: '1',
         }}>
+        <ButtonStyle
+          onClick={() =>
+            setGraphDirection(graphDirection !== 'LR' ? 'LR' : 'UD')
+          }
+          icon={
+            graphDirection !== 'LR' ? (
+              <IconGraphUpToDown />
+            ) : (
+              <IconGraphLeftToRight />
+            )
+          }
+        />
+
         {isValidGraph ? (
           showGraph ? (
             <Fallback>

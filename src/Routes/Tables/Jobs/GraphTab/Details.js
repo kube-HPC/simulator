@@ -49,6 +49,8 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
 
   const [index, setIndex] = useState(0);
   const [logs, setLogs] = useState([]);
+  const [podStatus, setPodStatus] = useState('NORMAL');
+
   const { getCaching } = useActions();
   const { getLogsLazyQuery } = useLazyLogs();
   const { logSource: source, logMode } = useSettings();
@@ -80,7 +82,7 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
         logMode,
       },
     }).then(resLogs => {
-      setLogs(resLogs.data.logsByQuery);
+      setLogs(resLogs.data.logsByQuery.logs);
     });
   }, [taskDetails, getLogsLazyQuery, index, logMode, node, source]);
 
@@ -104,6 +106,7 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
           disabled={isDisabledBtnRunDebug}
         />
       </Tooltip>
+
       <Button key="refresh" icon={<RedoOutlined />} onClick={onRefresh}>
         Refresh Logs
       </Button>
@@ -134,6 +137,8 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
             onChange={setIndex}
             logs={logs}
             setLogs={setLogs}
+            setPodStatus={setPodStatus}
+            podStatus={podStatus}
           />
         ),
       },
