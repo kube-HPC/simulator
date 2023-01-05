@@ -1,4 +1,11 @@
-import React, { lazy, useEffect, useMemo, useReducer, useState } from 'react';
+import React, {
+  lazy,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from 'react';
 import PropTypes from 'prop-types';
 import { Empty, Button } from 'antd';
 import styled from 'styled-components';
@@ -6,9 +13,14 @@ import { Fallback, FallbackComponent } from 'components/common';
 import { useNodeInfo } from 'hooks';
 import { ReactComponent as IconGraphUpToDown } from 'images/dir-graph-up.svg';
 import { ReactComponent as IconGraphLeftToRight } from 'images/dir-graph-left.svg';
+import { LOCAL_STORAGE_KEYS } from 'const';
 import { generateStyles, formatEdge, formatNode } from '../graphUtils';
 import Details from './Details';
 
+const GRAPH_DIRECTION = {
+  LeftToRight: 'LR',
+  UpToDown: 'UD',
+};
 const Card = styled.div`
   padding-top: 2px;
   overflow: auto;
@@ -93,7 +105,11 @@ const GraphTab = ({ graph, pipeline }) => {
   const { node, events } = useNodeInfo({ graph, pipeline });
 
   // const { graphDirection: direction } = useSettings();
-  const [graphDirection, setGraphDirection] = useState('LR');
+  const [graphDirection, setGraphDirection] = useState(
+    window.localStorage.getItem(
+      LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_GRAPH_DIRECTION
+    ) || GRAPH_DIRECTION.LeftToRight
+  );
   const [showGraph, toggleForceUpdate] = useReducer(p => !p, true);
 
   const graphOptions = useMemo(
@@ -120,6 +136,18 @@ const GraphTab = ({ graph, pipeline }) => {
     return res;
   }, [node, pipeline?.kind, pipeline.nodes]);
 
+  const handleSelectDirection = useCallback(() => {
+    const directionSelect =
+      graphDirection !== GRAPH_DIRECTION.LeftToRight
+        ? GRAPH_DIRECTION.LeftToRight
+        : GRAPH_DIRECTION.UpToDown;
+    setGraphDirection(directionSelect);
+    window.localStorage.setItem(
+      LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_GRAPH_DIRECTION,
+      directionSelect
+    );
+  }, [graphDirection]);
+
   useEffect(() => {
     toggleForceUpdate();
     setTimeout(() => {
@@ -136,11 +164,9 @@ const GraphTab = ({ graph, pipeline }) => {
           flex: '1',
         }}>
         <ButtonStyle
-          onClick={() =>
-            setGraphDirection(graphDirection !== 'LR' ? 'LR' : 'UD')
-          }
+          onClick={handleSelectDirection}
           icon={
-            graphDirection !== 'LR' ? (
+            graphDirection !== GRAPH_DIRECTION.LeftToRight ? (
               <IconGraphUpToDown />
             ) : (
               <IconGraphLeftToRight />
