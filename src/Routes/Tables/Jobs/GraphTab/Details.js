@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { removeNullUndefined } from 'utils';
 import PropTypes from 'prop-types';
 // import { useSelector } from 'react-redux';
@@ -43,7 +43,6 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
     query.data.algorithmsByName &&
     (algorithmDetails = query.data.algorithmsByName);
 
-  const [, setIndex] = useState(0);
   const { getCaching } = useActions();
   const onRunNode = () =>
     node && getCaching({ jobId, nodeName: node.nodeName });
@@ -100,9 +99,7 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
       {
         label: 'Logs',
         key: 'logs-tab',
-        children: (
-          <NodeLogs node={node} taskDetails={taskDetails} onChange={setIndex} />
-        ),
+        children: <NodeLogs node={node} taskDetails={taskDetails} />,
       },
       {
         label: 'Algorithm Details',

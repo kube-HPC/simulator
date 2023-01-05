@@ -41,7 +41,7 @@ const ErrorMsg = {
   ERROR: 'Algorithm down',
 };
 
-const NodeLogs = ({ node, taskDetails, onChange }) => {
+const NodeLogs = ({ node, taskDetails }) => {
   const [currentTask, setCurrentTask] = useState(undefined);
   const [logMode, setLogMode] = useState(logModes.ALGORITHM);
   const [isLoadLog, setIsLoadLog] = useState(true);
@@ -84,11 +84,15 @@ const NodeLogs = ({ node, taskDetails, onChange }) => {
     ];
   }, [podStatus]);
 
-  const options = taskDetails.map((task, index) => (
+  const options = taskDetails.map((task, indexTaskItem) => (
     // TODO: implement a better key
     // eslint-disable-next-line
-    <Select.Option key={index} value={index}>
-      <OptionBox index={index + 1} taskId={task.taskId} status={task.status} />
+    <Select.Option key={indexTaskItem} value={indexTaskItem}>
+      <OptionBox
+        index={indexTaskItem + 1}
+        taskId={task.taskId}
+        status={task.status}
+      />
     </Select.Option>
   ));
 
@@ -111,9 +115,8 @@ const NodeLogs = ({ node, taskDetails, onChange }) => {
               <SelectStyle
                 disabled={taskDetails.length < 2}
                 value={currentTask}
-                onSelect={index => {
-                  onChange(index);
-                  setCurrentTask(taskDetails[index]);
+                onSelect={indexSelected => {
+                  setCurrentTask(taskDetails[indexSelected].taskId);
                 }}>
                 {options}
               </SelectStyle>
@@ -189,7 +192,7 @@ NodeLogs.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
   taskDetails: PropTypes.array.isRequired,
-  onChange: PropTypes.func.isRequired,
+
   node: PropTypes.shape({
     kind: PropTypes.string,
     nodeName: PropTypes.string,
