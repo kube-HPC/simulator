@@ -55,8 +55,9 @@ const SetDefaultTime = () => {
 
   return (
     <FlexBox.Auto>
-      <Typography.Text strong>Filter Default Time</Typography.Text>
+      <Typography.Text strong>Default Scoop</Typography.Text>
       <Select
+        style={{ width: '100px' }}
         defaultValue={dateTimeDefault.hour || 24}
         onChange={onChange}
         options={OptionDefaultTime}
