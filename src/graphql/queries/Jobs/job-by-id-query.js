@@ -90,6 +90,7 @@ const JOB_BY_ID_QUERY = gql`
           }
           input {
             path
+            value
           }
         }
         edges {

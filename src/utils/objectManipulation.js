@@ -1,3 +1,5 @@
+import cleanDeep from 'clean-deep';
+
 export const tryParseJson = val => {
   try {
     return JSON.parse(val);
@@ -53,3 +55,11 @@ export const removeNullUndefined = obj =>
     // eslint-disable-next-line no-unused-vars
     .filter(([_, v]) => v != null)
     .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {});
+
+export const removeNullUndefinedCleanDeep = obj =>
+  cleanDeep(obj, {
+    emptyArrays: false,
+    emptyObjects: false,
+    emptyStrings: false,
+    NaNValues: true,
+  });

@@ -47,6 +47,7 @@ const NodeLogs = ({ node, taskDetails }) => {
   const [isLoadLog, setIsLoadLog] = useState(true);
   const [sourceLogs, setSourceLogs] = useState('k8s');
   const [errorMsgImage, setErrorMsgImage] = useState(undefined);
+  const [logErrorNode, setLogErrorNode] = useState([]);
 
   const oTask = useMemo(
     () => taskDetails.find(t => t.taskId === currentTask) || taskDetails[0],
@@ -95,6 +96,22 @@ const NodeLogs = ({ node, taskDetails }) => {
       />
     </Select.Option>
   ));
+
+  useEffect(() => {
+    const { error, startTime, endTime } = node;
+
+    if (logs.length === 0) {
+      if (error != null) {
+        setLogErrorNode([
+          {
+            level: 'error',
+            timestamp: startTime || endTime || null,
+            message: error,
+          },
+        ]);
+      }
+    }
+  }, [logs, node]);
 
   return (
     <>
@@ -174,7 +191,7 @@ const NodeLogs = ({ node, taskDetails }) => {
           <Spin indicator={LoadingOutlined} />
         ) : (
           <LogsViewer
-            dataSource={logs}
+            dataSource={logs.length > 0 ? logs : logErrorNode}
             id={node?.nodeName ?? ''}
             emptyDescription={
               logMode === logModes.ALGORITHM
@@ -196,6 +213,9 @@ NodeLogs.propTypes = {
   node: PropTypes.shape({
     kind: PropTypes.string,
     nodeName: PropTypes.string,
+    error: PropTypes.string,
+    startTime: PropTypes.number,
+    endTime: PropTypes.number,
   }).isRequired,
 };
 export default React.memo(NodeLogs);
