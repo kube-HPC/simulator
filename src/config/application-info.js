@@ -6,6 +6,7 @@ const appInfo = {
   version,
   tagUrl: `https://github.com/kube-HPC/simulator/releases/tag/${version}`,
   swaggerUrl: `/hkube/api-server/swagger-ui/`,
+  specUrl: `http://hkube.io/spec/`,
 };
 
 export default appInfo;

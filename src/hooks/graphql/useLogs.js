@@ -15,10 +15,11 @@ const useLogs = ({ podName, taskId = '', source, nodeKind, logMode }) => {
 
   usePolling(query, 3000);
 
-  const logs = query?.data?.logsByQuery || [];
-
+  const logs = query?.data?.logsByQuery.logs || [];
+  const podStatus = query?.data?.logsByQuery.podStatus;
   return {
     logs,
+    podStatus,
   };
 };
 export default useLogs;

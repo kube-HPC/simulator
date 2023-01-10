@@ -17,4 +17,4 @@ export { default as Display } from './Display.styles';
 export { default as GlobalStyle } from './GlobalStyle.styles';
 export { default as mixins } from './mixins.styles';
 export { TabDrawerText, TabDrawer } from './Drawer.styles';
-export { FiltersForms } from './Filters.styles';
+export { FiltersForms, FiltersPanel } from './Filters.styles';

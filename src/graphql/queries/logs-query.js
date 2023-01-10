@@ -15,9 +15,12 @@ const LOGS_QUERY = gql`
       nodeKind: $nodeKind
       logMode: $logMode
     ) {
-      level
-      timestamp
-      message
+      logs {
+        level
+        timestamp
+        message
+      }
+      podStatus
     }
   }
 `;

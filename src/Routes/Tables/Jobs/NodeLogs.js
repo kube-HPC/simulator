@@ -1,16 +1,20 @@
-import BaseTag from 'components/BaseTag';
-import { COLOR_TASK_STATUS } from 'styles/colors';
-import { CopyOutlined, LoadingOutlined } from '@ant-design/icons';
-import { Button, Select, Tag, Tooltip, Spin } from 'antd';
-import { FlexBox } from 'components/common';
-import LogsViewer from 'components/common/LogsViewer';
-import { useSettings } from 'hooks';
-import { useLazyLogs } from 'hooks/graphql';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled from 'styled-components';
 import { notification } from 'utils';
+import { logModes } from '@hkube/consts';
+import {
+  CopyOutlined,
+  LoadingOutlined,
+  InfoCircleOutlined,
+} from '@ant-design/icons';
+import { Button, Select, Tooltip, Spin, Radio, Typography } from 'antd';
+import { FiltersPanel } from 'styles';
+import { FlexBox } from 'components/common';
+import LogsViewer from 'components/common/LogsViewer';
+import { useLogs } from 'hooks/graphql';
+import OptionBox from './GraphTab/OptionBox';
 
 const Container = styled.div`
   margin-top: 1em;
@@ -19,12 +23,12 @@ const Container = styled.div`
   overflow: visible;
 `;
 
-const SelectFull = styled(Select)`
-  width: 100%;
+const SelectStyle = styled(Select)`
+  width: 150px;
 `;
 
-const ItemGrow = styled(FlexBox.Item)`
-  flex-grow: 1;
+const RadioGroupStyle = styled(Radio.Group)`
+  margin-top: 10px;
 `;
 
 const onCopy = () =>
@@ -33,113 +37,168 @@ const onCopy = () =>
     type: notification.TYPES.SUCCESS,
   });
 
-const OptionBox = ({ index, taskId, status }) => (
-  <FlexBox justify="start">
-    <FlexBox.Item>
-      <Tag>{index}</Tag>
-    </FlexBox.Item>
-    <FlexBox.Item>{taskId}</FlexBox.Item>
-    <BaseTag status={status} colorMap={COLOR_TASK_STATUS}>
-      {status}
-    </BaseTag>
-  </FlexBox>
-);
-
-OptionBox.propTypes = {
-  index: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  taskId: PropTypes.string,
-  status: PropTypes.string,
-};
-OptionBox.defaultProps = {
-  taskId: null,
-  status: null,
+const ErrorMsg = {
+  ERROR: 'Algorithm down',
 };
 
-const NodeLogs = ({ node, taskDetails, onChange, logs, setLogs }) => {
-  const { getLogsLazyQuery } = useLazyLogs();
-
+const NodeLogs = ({ node, taskDetails }) => {
   const [currentTask, setCurrentTask] = useState(undefined);
-  const { logSource: source, logMode } = useSettings();
+  const [logMode, setLogMode] = useState(logModes.ALGORITHM);
   const [isLoadLog, setIsLoadLog] = useState(true);
-  useEffect(() => {
-    const task =
-      taskDetails.find(t => t.taskId === currentTask) || taskDetails[0];
+  const [sourceLogs, setSourceLogs] = useState('k8s');
+  const [errorMsgImage, setErrorMsgImage] = useState(undefined);
+  const [logErrorNode, setLogErrorNode] = useState([]);
 
-    const { taskId, podName } = task;
+  const oTask = useMemo(
+    () => taskDetails.find(t => t.taskId === currentTask) || taskDetails[0],
+    [currentTask, taskDetails]
+  );
+  const { taskId, podName } = oTask;
 
-    if (taskId !== currentTask) {
-      setCurrentTask(taskId);
-      getLogsLazyQuery({
-        variables: {
-          taskId: taskId || '',
-          podName: podName || '',
-          source: source || 'k8s',
-          nodeKind: node.kind,
-          logMode,
-        },
-      }).then(resLogs => {
-        setLogs(resLogs.data.logsByQuery);
-        setIsLoadLog(false);
-      });
-    }
-  }, [
-    currentTask,
-    taskDetails,
-    getLogsLazyQuery,
-    source,
-    node,
+  const { logs, podStatus } = useLogs({
+    taskId: taskId || '',
+    podName: podName || '',
+    source: sourceLogs,
+    nodeKind: node.kind,
     logMode,
-    setLogs,
-  ]);
+  });
 
-  const options = taskDetails.map((task, index) => (
+  useEffect(() => {
+    setCurrentTask(taskId);
+    setIsLoadLog(false);
+  }, [taskId]);
+
+  useEffect(() => {
+    if (podStatus === 'NO_IMAGE') setErrorMsgImage('Docker image missing');
+  }, [podStatus]);
+
+  const optionsSourceLogs = useMemo(() => {
+    let isKubernetesDisabled = false;
+    if (podStatus === 'NOT_EXIST') {
+      isKubernetesDisabled = true;
+      setSourceLogs('es');
+    }
+
+    return [
+      { label: 'online', value: 'k8s', disabled: isKubernetesDisabled },
+      { label: 'saved', value: 'es' },
+    ];
+  }, [podStatus]);
+
+  const options = taskDetails.map((task, indexTaskItem) => (
     // TODO: implement a better key
     // eslint-disable-next-line
-    <Select.Option key={index} value={index}>
-      <OptionBox index={index + 1} taskId={task.taskId} status={task.status} />
+    <Select.Option key={indexTaskItem} value={indexTaskItem}>
+      <OptionBox
+        index={indexTaskItem + 1}
+        taskId={task.taskId}
+        status={task.status}
+      />
     </Select.Option>
   ));
 
+  useEffect(() => {
+    const { error, startTime, endTime } = node;
+
+    if (logs.length === 0) {
+      if (error != null) {
+        setLogErrorNode([
+          {
+            level: 'error',
+            timestamp: startTime || endTime || null,
+            message: error,
+          },
+        ]);
+      }
+    }
+  }, [logs, node]);
+
   return (
     <>
-      <FlexBox justify="start">
-        <ItemGrow>
-          <Tooltip
-            placement="topLeft"
-            title={<OptionBox index="Index" taskId="Task ID" />}>
-            <SelectFull
-              value={currentTask}
-              onSelect={index => {
-                const { taskId, podName } = taskDetails[index];
-                onChange(index);
-                setCurrentTask(taskId);
-                getLogsLazyQuery({
-                  variables: {
-                    taskId: taskId || '',
-                    podName: podName || '',
-                    source: source || 'k8s',
-                    logMode,
-                  },
-                }).then(resLogs => {
-                  setLogs(resLogs.data.logsByQuery);
-                  setIsLoadLog(false);
-                });
-              }}>
-              {options}
-            </SelectFull>
-          </Tooltip>
-        </ItemGrow>
-        <FlexBox.Item>
-          <CopyToClipboard text={currentTask} onCopy={onCopy}>
-            <Button icon={<CopyOutlined />}>Copy Task ID to Clipboard</Button>
-          </CopyToClipboard>
-        </FlexBox.Item>
-      </FlexBox>
+      <FiltersPanel>
+        <FlexBox justify="start">
+          <Typography.Text style={{ marginLeft: '10px' }}>
+            Task ID :{' '}
+          </Typography.Text>
+          <FlexBox.Item>
+            <Tooltip
+              placement="topLeft"
+              title={
+                <>
+                  <OptionBox index="Index" taskId="Task ID" />{' '}
+                  <>Pod Status : {podStatus}</>
+                </>
+              }>
+              <SelectStyle
+                disabled={taskDetails.length < 2}
+                value={currentTask}
+                onSelect={indexSelected => {
+                  setCurrentTask(taskDetails[indexSelected].taskId);
+                }}>
+                {options}
+              </SelectStyle>
+            </Tooltip>
+          </FlexBox.Item>
+          <FlexBox.Item>
+            <CopyToClipboard text={currentTask} onCopy={onCopy}>
+              <Tooltip title="Copy Task ID to Clipboard">
+                <Button icon={<CopyOutlined />} />
+              </Tooltip>
+            </CopyToClipboard>
+          </FlexBox.Item>
+          <FlexBox.Item>
+            <Typography.Text style={{ marginLeft: '10px' }}>
+              Source :{' '}
+            </Typography.Text>
+            <SelectStyle
+              defaultValue={logModes.ALGORITHM}
+              onChange={value => setLogMode(value)}>
+              <Select.Option
+                key={logModes.ALGORITHM}
+                value={logModes.ALGORITHM}>
+                Algorithm
+              </Select.Option>
+              <Select.Option key={logModes.INTERNAL} value={logModes.INTERNAL}>
+                System
+              </Select.Option>
+              <Select.Option key={logModes.ALL} value={logModes.ALL}>
+                All
+              </Select.Option>
+            </SelectStyle>
+          </FlexBox.Item>
+        </FlexBox>
+      </FiltersPanel>
+
+      <RadioGroupStyle
+        value={sourceLogs}
+        onChange={e => setSourceLogs(e.target.value)}
+        optionType="button"
+        buttonStyle="solid"
+        options={optionsSourceLogs}
+      />
+
+      <Typography.Text type="danger">
+        {' '}
+        {ErrorMsg[podStatus] && <InfoCircleOutlined />} {ErrorMsg[podStatus]}
+      </Typography.Text>
+      <Typography.Text type="danger">
+        {' '}
+        {errorMsgImage && <InfoCircleOutlined />} {errorMsgImage}{' '}
+      </Typography.Text>
+
       <Container>
         {isLoadLog ? (
           <Spin indicator={LoadingOutlined} />
         ) : (
-          <LogsViewer dataSource={logs} id={node?.nodeName ?? ''} />
+          <LogsViewer
+            dataSource={logs.length > 0 ? logs : logErrorNode}
+            id={node?.nodeName ?? ''}
+            emptyDescription={
+              logMode === logModes.ALGORITHM
+                ? 'No algorithm logs'
+                : 'No system logs'
+            }
+          />
         )}
       </Container>
     </>
@@ -150,12 +209,13 @@ NodeLogs.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
   taskDetails: PropTypes.array.isRequired,
-  onChange: PropTypes.func.isRequired,
+
   node: PropTypes.shape({
     kind: PropTypes.string,
     nodeName: PropTypes.string,
+    error: PropTypes.string,
+    startTime: PropTypes.number,
+    endTime: PropTypes.number,
   }).isRequired,
-  logs: PropTypes.arrayOf(PropTypes.object).isRequired,
-  setLogs: PropTypes.func.isRequired,
 };
 export default React.memo(NodeLogs);

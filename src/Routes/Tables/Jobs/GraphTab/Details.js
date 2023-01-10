@@ -1,17 +1,13 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { removeNullUndefined } from 'utils';
+import React, { useMemo } from 'react';
+import { removeNullUndefined, removeNullUndefinedCleanDeep } from 'utils';
 import PropTypes from 'prop-types';
 // import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import {
-  BugOutlined,
-  PlayCircleOutlined,
-  RedoOutlined,
-} from '@ant-design/icons';
+import { BugOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { Button, Empty, Tooltip } from 'antd';
 import { FlexBox, JsonSwitch } from 'components/common';
-import { useActions, useSettings } from 'hooks';
-import { useAlgorithmByName, useLazyLogs } from 'hooks/graphql';
+import { useActions } from 'hooks';
+import { useAlgorithmByName } from 'hooks/graphql';
 import { getTaskDetails } from '../graphUtils';
 import NodeInputOutput from './NodeInputOutput';
 import NodeLogs from '../NodeLogs';
@@ -45,14 +41,11 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
   query &&
     query.data &&
     query.data.algorithmsByName &&
-    (algorithmDetails = query.data.algorithmsByName);
+    (algorithmDetails = removeNullUndefinedCleanDeep(
+      query.data.algorithmsByName
+    ));
 
-  const [index, setIndex] = useState(0);
-  const [logs, setLogs] = useState([]);
   const { getCaching } = useActions();
-  const { getLogsLazyQuery } = useLazyLogs();
-  const { logSource: source, logMode } = useSettings();
-
   const onRunNode = () =>
     node && getCaching({ jobId, nodeName: node.nodeName });
   const onDebugNode = () =>
@@ -67,22 +60,6 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
       ? [...taskData].sort(a => (a?.status === 'failed' ? 1 : -1)) || {}
       : taskData;
   }, [node]);
-
-  const onRefresh = useCallback(() => {
-    const { taskId, podName } = taskDetails[index];
-
-    getLogsLazyQuery({
-      variables: {
-        taskId: taskId || '',
-        podName: podName || '',
-        source: source || 'k8s',
-        nodeKind: node.kind,
-        logMode,
-      },
-    }).then(resLogs => {
-      setLogs(resLogs.data.logsByQuery);
-    });
-  }, [taskDetails, getLogsLazyQuery, index, logMode, node, source]);
 
   const extra = node ? (
     <FlexBox.Auto>
@@ -104,9 +81,6 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
           disabled={isDisabledBtnRunDebug}
         />
       </Tooltip>
-      <Button key="refresh" icon={<RedoOutlined />} onClick={onRefresh}>
-        Refresh Logs
-      </Button>
     </FlexBox.Auto>
   ) : null;
 
@@ -127,15 +101,7 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
       {
         label: 'Logs',
         key: 'logs-tab',
-        children: (
-          <NodeLogs
-            node={node}
-            taskDetails={taskDetails}
-            onChange={setIndex}
-            logs={logs}
-            setLogs={setLogs}
-          />
-        ),
+        children: <NodeLogs node={node} taskDetails={taskDetails} />,
       },
       {
         label: 'Algorithm Details',
@@ -158,7 +124,7 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
         ),
       },
     ],
-    [algorithmDetails, jobId, logs, node, taskDetails]
+    [algorithmDetails, jobId, node, taskDetails]
   );
 
   return node ? (

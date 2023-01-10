@@ -193,6 +193,7 @@ BuildEntry.propTypes = {
  *   dataSource: object[];
  *   isBuild: boolean;
  *   id: string;
+ *   emptyDescription: string;
  * }} LogViewerProps
  *
  * @typedef {any} LogViewerState
@@ -200,7 +201,6 @@ BuildEntry.propTypes = {
 class LogsViewer extends React.PureComponent {
   constructor(props) {
     super(props);
-
     this.renderRow = this.renderRow.bind(this);
     this.cache = new CellMeasurerCache({
       fixedWidth: true,
@@ -234,7 +234,7 @@ class LogsViewer extends React.PureComponent {
   };
 
   render() {
-    const { isBuild, dataSource } = this.props;
+    const { isBuild, dataSource, emptyDescription } = this.props;
     const [first] = dataSource;
     const isValid = isBuild || (first && first.level);
 
@@ -260,7 +260,7 @@ class LogsViewer extends React.PureComponent {
     ) : (
       <InvalidContainer>
         <Empty
-          description="No valid logs for current pod"
+          description={emptyDescription || 'No valid logs for current pod'}
           image={Empty.PRESENTED_IMAGE_SIMPLE}
         />
       </InvalidContainer>
@@ -272,6 +272,7 @@ LogsViewer.propTypes = {
   dataSource: PropTypes.arrayOf(PropTypes.object).isRequired,
   isBuild: PropTypes.bool,
   id: PropTypes.string.isRequired,
+  emptyDescription: PropTypes.string.isRequired,
 };
 LogsViewer.defaultProps = {
   isBuild: false,

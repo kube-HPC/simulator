@@ -18,6 +18,8 @@ import { useLeftSidebar, useCacheFilters } from 'hooks';
 import HelpBar from './HelpBar.react';
 import TagsFiltersViews from './TagsFiltersViews';
 
+import ViewType from './ViewType.react';
+
 // DO NOT REMOVE! This is important to preload the monaco instance into the global window!!!
 // eslint-disable-next-line
 import * as monaco from 'monaco-editor';
@@ -92,6 +94,7 @@ const Header = () => {
           onClick={toggle}
         />
 
+        <Route exact path="/jobs" component={ViewType} />
         <Route exact path="/jobs" component={FilterButton} />
         <Route exact path="/pipelines" component={FilterButton} />
         <Route exact path="/algorithms" component={FilterButton} />
