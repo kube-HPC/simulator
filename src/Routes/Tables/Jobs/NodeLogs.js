@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled from 'styled-components';
 import { notification } from 'utils';
-import { logModes } from '@hkube/consts';
+import { logModes, podStatus } from '@hkube/consts';
 import {
   CopyOutlined,
   LoadingOutlined,
@@ -55,7 +55,7 @@ const NodeLogs = ({ node, taskDetails }) => {
   );
   const { taskId, podName } = oTask;
 
-  const { logs, podStatus } = useLogs({
+  const { logs, msgPodStatus } = useLogs({
     taskId: taskId || '',
     podName: podName || '',
     source: sourceLogs,
@@ -69,12 +69,13 @@ const NodeLogs = ({ node, taskDetails }) => {
   }, [taskId]);
 
   useEffect(() => {
-    if (podStatus === 'NO_IMAGE') setErrorMsgImage('Docker image missing');
-  }, [podStatus]);
+    if (msgPodStatus === podStatus.NO_IMAGE)
+      setErrorMsgImage('Docker image missing');
+  }, [msgPodStatus]);
 
   const optionsSourceLogs = useMemo(() => {
     let isKubernetesDisabled = false;
-    if (podStatus === 'NOT_EXIST') {
+    if (msgPodStatus === podStatus.NOT_EXIST) {
       isKubernetesDisabled = true;
       setSourceLogs('es');
     }
@@ -83,7 +84,7 @@ const NodeLogs = ({ node, taskDetails }) => {
       { label: 'online', value: 'k8s', disabled: isKubernetesDisabled },
       { label: 'saved', value: 'es' },
     ];
-  }, [podStatus]);
+  }, [msgPodStatus]);
 
   const options = taskDetails.map((task, indexTaskItem) => (
     // TODO: implement a better key
@@ -126,7 +127,7 @@ const NodeLogs = ({ node, taskDetails }) => {
               title={
                 <>
                   <OptionBox index="Index" taskId="Task ID" />{' '}
-                  <>Pod Status : {podStatus}</>
+                  <>Pod Status : {msgPodStatus}</>
                 </>
               }>
               <SelectStyle
@@ -179,7 +180,8 @@ const NodeLogs = ({ node, taskDetails }) => {
 
       <Typography.Text type="danger">
         {' '}
-        {ErrorMsg[podStatus] && <InfoCircleOutlined />} {ErrorMsg[podStatus]}
+        {ErrorMsg[msgPodStatus] && <InfoCircleOutlined />}{' '}
+        {ErrorMsg[msgPodStatus]}
       </Typography.Text>
       <Typography.Text type="danger">
         {' '}
