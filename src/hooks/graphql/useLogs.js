@@ -2,7 +2,15 @@ import { LOGS_QUERY } from 'graphql/queries';
 import { usePolling } from 'hooks';
 import { useQuery } from '@apollo/client';
 
-const useLogs = ({ podName, taskId = '', source, nodeKind, logMode }) => {
+const useLogs = ({
+  podName,
+  taskId = '',
+  source,
+  nodeKind,
+  logMode,
+  searchWord,
+  taskTime,
+}) => {
   const query = useQuery(LOGS_QUERY, {
     variables: {
       podName,
@@ -10,6 +18,8 @@ const useLogs = ({ podName, taskId = '', source, nodeKind, logMode }) => {
       source,
       nodeKind,
       logMode,
+      searchWord,
+      taskTime,
     },
   });
 
