@@ -139,7 +139,7 @@ const NodeLogs = ({ node, taskDetails }) => {
       const time = new Date(new Date(node.startTime) - 20000).toISOString();
 
       setLinkKibana(
-        `${process.env.REACT_APP_DATA_SOURCE_IS_ENABLE}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',key:meta.internal.taskId,negate:!f,params:(query:${currentTask}),type:phrase),query:(match:(meta.internal.taskId:(query:${currentTask},type:phrase))))),index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',interval:auto,query:(language:lucene,query:${word}),sort:!(!('@timestamp',desc)))`
+        `${process.env.REACT_APP_KIBANA_URL}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',key:meta.internal.taskId,negate:!f,params:(query:${currentTask}),type:phrase),query:(match:(meta.internal.taskId:(query:${currentTask},type:phrase))))),index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',interval:auto,query:(language:lucene,query:${word}),sort:!(!('@timestamp',desc)))`
       );
     },
     [currentTask, node.startTime]
