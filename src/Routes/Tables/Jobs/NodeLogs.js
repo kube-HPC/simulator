@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled from 'styled-components';
 import { notification } from 'utils';
@@ -131,15 +131,25 @@ const NodeLogs = ({ node, taskDetails }) => {
     }
   }, [logs, node]);
 
-  const setWord = e => {
-    setSearchWord(e.target.value);
-    const word = e.target.value;
-    setLinkKibana(
-      `/system/kibana/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'2023-01-01T08:15:35.959Z',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',key:meta.internal.taskId,negate:!f,params:(query:${currentTask}),type:phrase),query:(match:(meta.internal.taskId:(query:${currentTask},type:phrase))))),index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',interval:auto,query:(language:lucene,query:${word}),sort:!(!('@timestamp',desc)))`
-    );
-  };
+  const setWord = useCallback(
+    e => {
+      const word = e?.target?.value || '';
+
+      setSearchWord(word);
+      const time = new Date(new Date(node.startTime) - 20000).toISOString();
+
+      setLinkKibana(
+        `${process.env.REACT_APP_DATA_SOURCE_IS_ENABLE}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',key:meta.internal.taskId,negate:!f,params:(query:${currentTask}),type:phrase),query:(match:(meta.internal.taskId:(query:${currentTask},type:phrase))))),index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',interval:auto,query:(language:lucene,query:${word}),sort:!(!('@timestamp',desc)))`
+      );
+    },
+    [currentTask, node.startTime]
+  );
 
   const handleSearchWord = useDebounceCallback(setWord, 1000, false);
+
+  useEffect(() => {
+    setWord();
+  }, []);
 
   return (
     <>
@@ -207,17 +217,21 @@ const NodeLogs = ({ node, taskDetails }) => {
               options={optionsSourceLogs}
             />
           </Col>
-          <Col>
-            <Input placeholder="Search Logs" onChange={handleSearchWord} />
-          </Col>
-          <Col span={1}>
-            <LinkOutlined style={{ marginLeft: '7px' }} />
-          </Col>
-          <Col span={1}>
-            <Button title="Search in Kibana">
-              <IconKibana onClick={() => window.open(linkKibana)} />
-            </Button>
-          </Col>
+          {sourceLogs === 'es' && (
+            <>
+              <Col>
+                <Input placeholder="Search Logs" onChange={handleSearchWord} />
+              </Col>
+              <Col span={1}>
+                <LinkOutlined style={{ marginLeft: '7px' }} />
+              </Col>
+              <Col span={1}>
+                <Button title="Search in Kibana">
+                  <IconKibana onClick={() => window.open(linkKibana)} />
+                </Button>
+              </Col>
+            </>
+          )}
         </Row>
       </RadioGroupStyle>
 
