@@ -7,6 +7,8 @@ const LOGS_QUERY = gql`
     $source: String
     $nodeKind: String
     $logMode: String
+    $searchWord: String
+    $taskTime: String
   ) {
     logsByQuery(
       podName: $podName
@@ -14,6 +16,8 @@ const LOGS_QUERY = gql`
       source: $source
       nodeKind: $nodeKind
       logMode: $logMode
+      searchWord: $searchWord
+      taskTime: $taskTime
     ) {
       logs {
         level

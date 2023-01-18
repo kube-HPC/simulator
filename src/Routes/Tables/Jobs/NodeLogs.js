@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled from 'styled-components';
 import { notification } from 'utils';
@@ -8,12 +8,25 @@ import {
   CopyOutlined,
   LoadingOutlined,
   InfoCircleOutlined,
+  LinkOutlined,
 } from '@ant-design/icons';
-import { Button, Select, Tooltip, Spin, Radio, Typography } from 'antd';
+import { ReactComponent as IconKibana } from 'images/kibana.svg';
+import {
+  Button,
+  Select,
+  Tooltip,
+  Spin,
+  Radio,
+  Typography,
+  Input,
+  Col,
+  Row,
+} from 'antd';
 import { FiltersPanel } from 'styles';
 import { FlexBox } from 'components/common';
 import LogsViewer from 'components/common/LogsViewer';
 import { useLogs } from 'hooks/graphql';
+import { useDebounceCallback } from '@react-hook/debounce';
 import OptionBox from './GraphTab/OptionBox';
 
 const Container = styled.div`
@@ -27,7 +40,7 @@ const SelectStyle = styled(Select)`
   width: 150px;
 `;
 
-const RadioGroupStyle = styled(Radio.Group)`
+const RadioGroupStyle = styled.div`
   margin-top: 10px;
 `;
 
@@ -44,10 +57,12 @@ const ErrorMsg = {
 const NodeLogs = ({ node, taskDetails }) => {
   const [currentTask, setCurrentTask] = useState(undefined);
   const [logMode, setLogMode] = useState(logModes.ALGORITHM);
+  const [searchWord, setSearchWord] = useState(null);
   const [isLoadLog, setIsLoadLog] = useState(true);
   const [sourceLogs, setSourceLogs] = useState('k8s');
   const [errorMsgImage, setErrorMsgImage] = useState(undefined);
   const [logErrorNode, setLogErrorNode] = useState([]);
+  const [linkKibana, setLinkKibana] = useState();
 
   const oTask = useMemo(
     () => taskDetails.find(t => t.taskId === currentTask) || taskDetails[0],
@@ -61,6 +76,8 @@ const NodeLogs = ({ node, taskDetails }) => {
     source: sourceLogs,
     nodeKind: node.kind,
     logMode,
+    searchWord,
+    taskTime: node.startTime.toString(),
   });
 
   useEffect(() => {
@@ -113,6 +130,26 @@ const NodeLogs = ({ node, taskDetails }) => {
       }
     }
   }, [logs, node]);
+
+  const setWord = useCallback(
+    e => {
+      const word = e?.target?.value || '';
+
+      setSearchWord(word);
+      const time = new Date(new Date(node.startTime) - 20000).toISOString();
+
+      setLinkKibana(
+        `${process.env.REACT_APP_KIBANA_URL}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',key:meta.internal.taskId,negate:!f,params:(query:${currentTask}),type:phrase),query:(match:(meta.internal.taskId:(query:${currentTask},type:phrase))))),index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',interval:auto,query:(language:lucene,query:${word}),sort:!(!('@timestamp',desc)))`
+      );
+    },
+    [currentTask, node.startTime]
+  );
+
+  const handleSearchWord = useDebounceCallback(setWord, 1000, false);
+
+  useEffect(() => {
+    setWord();
+  }, []);
 
   return (
     <>
@@ -169,14 +206,34 @@ const NodeLogs = ({ node, taskDetails }) => {
           </FlexBox.Item>
         </FlexBox>
       </FiltersPanel>
-
-      <RadioGroupStyle
-        value={sourceLogs}
-        onChange={e => setSourceLogs(e.target.value)}
-        optionType="button"
-        buttonStyle="solid"
-        options={optionsSourceLogs}
-      />
+      <RadioGroupStyle>
+        <Row justify="start" align="middle">
+          <Col span={5}>
+            <Radio.Group
+              value={sourceLogs}
+              onChange={e => setSourceLogs(e.target.value)}
+              optionType="button"
+              buttonStyle="solid"
+              options={optionsSourceLogs}
+            />
+          </Col>
+          {sourceLogs === 'es' && (
+            <>
+              <Col>
+                <Input placeholder="Search Logs" onChange={handleSearchWord} />
+              </Col>
+              <Col span={1}>
+                <LinkOutlined style={{ marginLeft: '7px' }} />
+              </Col>
+              <Col span={1}>
+                <Button title="Search in Kibana">
+                  <IconKibana onClick={() => window.open(linkKibana)} />
+                </Button>
+              </Col>
+            </>
+          )}
+        </Row>
+      </RadioGroupStyle>
 
       <Typography.Text type="danger">
         {' '}
