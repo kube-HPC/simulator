@@ -151,38 +151,8 @@ const JOB_ACTIVE_BY_ID_QUERY = gql`
         nodes {
           nodeName
           algorithmName
-          taskId
-          podName
-          status
-          startTime
-          endTime
-          level
-          batch {
-            podName
-            taskId
-            status
-            batchIndex
-            startTime
-            endTime
-          }
-          boards
-          output {
-            taskId
-            discovery {
-              host
-              port
-            }
-            metadata {
-              values
-            }
-            storageInfo {
-              path
-              size
-            }
-          }
-          input {
-            path
-          }
+          input
+          kind
         }
       }
       cursor

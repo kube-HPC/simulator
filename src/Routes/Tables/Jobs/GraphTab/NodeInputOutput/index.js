@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { removeNullUndefinedCleanDeep } from 'utils';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
@@ -43,11 +44,11 @@ const NodeInputOutput = ({ algorithm = {}, payload }) => {
       }}
       rowKey={({ taskId }) => `input-output-table-task-${taskId}`}
       columns={getColumns(socketUrl)}
-      dataSource={dataSource}
+      dataSource={removeNullUndefinedCleanDeep(dataSource)}
       expandable={{
         expandedRowRender: record => (
           <Card>
-            <JsonSwitch obj={record} />
+            <JsonSwitch obj={removeNullUndefinedCleanDeep(record)} />
           </Card>
         ),
         // eslint-disable-next-line react/prop-types
