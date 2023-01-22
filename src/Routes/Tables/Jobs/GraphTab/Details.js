@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { removeNullUndefined } from 'utils';
+import { removeNullUndefined, removeNullUndefinedCleanDeep } from 'utils';
 import PropTypes from 'prop-types';
 // import { useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -45,7 +45,9 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
   query &&
     query.data &&
     query.data.algorithmsByName &&
-    (algorithmDetails = query.data.algorithmsByName);
+    (algorithmDetails = removeNullUndefinedCleanDeep(
+      query.data.algorithmsByName
+    ));
 
   const [index, setIndex] = useState(0);
   const [logs, setLogs] = useState([]);
