@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
@@ -51,6 +51,7 @@ const useJobsFunctionsLimit = () => {
   const [changeDs, setChangeDs] = useState(0);
   const [isGetMore, setIsGetMore] = useState(true);
   const { goTo } = usePath();
+  const firstUpdate = useRef(true);
 
   const mergedParams = useMemo(() => {
     const iJobs = instanceFilters.jobs;
@@ -184,37 +185,34 @@ const useJobsFunctionsLimit = () => {
   );
   const debouncedZoomChanged = useDebouncedCallback(onZoomChanged, 1000);
 
-  const onQuerySubmit = useCallback(
-    values => {
-      let datesRange = null;
-      const { time, ...other } = values;
+  const onQuerySubmit = useCallback(values => {
+    let datesRange = null;
+    const { time, ...other } = values;
 
-      if (time) {
-        datesRange = {
-          from: time?.datesRange?.from || undefined,
-          to: time?.datesRange?.to || undefined,
-        };
-      }
+    if (time) {
+      datesRange = {
+        from: time?.datesRange?.from || undefined,
+        to: time?.datesRange?.to || undefined,
+      };
+    }
 
-      Object.values(other).forEach((element, index) => {
-        element === '' ? (other[Object.keys(other)[index]] = undefined) : null;
-      });
+    Object.values(other).forEach((element, index) => {
+      element === '' ? (other[Object.keys(other)[index]] = undefined) : null;
+    });
 
-      const stateInstanceFilter = { ...instanceFiltersVar() };
+    const stateInstanceFilter = { ...instanceFiltersVar() };
 
-      stateInstanceFilter.jobs = { ...other, datesRange };
+    stateInstanceFilter.jobs = { ...other, datesRange };
 
-      instanceFiltersVar(stateInstanceFilter);
+    instanceFiltersVar(stateInstanceFilter);
 
-      topTableScroll();
-      setIsTableLoad(true);
-      setIsGraphLoad(true);
-      setLimitGetJobs(numberLimitJobs);
-      queryAllJobs.refetch();
-      queryGraph.refetch();
-    },
-    [queryGraph]
-  );
+    topTableScroll();
+    setIsTableLoad(true);
+    setIsGraphLoad(true);
+    setLimitGetJobs(numberLimitJobs);
+    queryAllJobs.refetch();
+    queryGraph.refetch();
+  }, []);
 
   useEffect(() => {
     setLimitGetJobs(numberLimitJobs);
@@ -238,23 +236,34 @@ const useJobsFunctionsLimit = () => {
     return [];
   }, [changeDs]);
 
+  const handleMaxScroll = useCallback(event => {
+    const maxScroll = event.target.scrollHeight - event.target.clientHeight;
+
+    const currentScroll = event.target.scrollTop;
+
+    if (isGetMore && currentScroll > maxScroll - 10) {
+      setIsTableLoad(true);
+      setIsGetMore(false);
+      onFetchMore();
+    }
+  }, []);
+
   useEffect(() => {
     const tableContent = document.querySelector('#jobsTable .ant-table-body');
-    tableContent.addEventListener('scroll', event => {
-      const maxScroll = event.target.scrollHeight - event.target.clientHeight;
+    tableContent.addEventListener('scroll', handleMaxScroll);
 
-      const currentScroll = event.target.scrollTop;
+    return () => {
+      window.removeEventListener('scroll', handleMaxScroll);
+    };
+  }, [handleMaxScroll]);
 
-      if (isGetMore && currentScroll > maxScroll - 10) {
-        setIsTableLoad(true);
-        setIsGetMore(false);
-        onFetchMore();
-      }
-    });
-
-    // set default time in first
-    instanceFilters.jobs.datesRange.from = dateTimeDefault.time;
-    instanceFiltersVar({ ...instanceFilters });
+  useEffect(() => {
+    if (firstUpdate.current) {
+      const filter = { ...instanceFilters };
+      filter.jobs.datesRange.from = dateTimeDefault.time;
+      instanceFiltersVar({ ...filter });
+      firstUpdate.current = false;
+    }
   }, []);
 
   return {

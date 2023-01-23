@@ -77,7 +77,9 @@ const NodeLogs = ({ node, taskDetails }) => {
     nodeKind: node.kind,
     logMode,
     searchWord,
-    taskTime: node.startTime.toString(),
+    taskTime:
+      node?.startTime?.toString() ||
+      new Date(new Date().getTime() + 20 * 60 * 1000).toString(),
   });
 
   useEffect(() => {

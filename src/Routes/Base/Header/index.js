@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { filterToggeledVar, instanceFiltersVar } from 'cache';
+import React, { useState, useMemo } from 'react';
+import { filterToggeledVar } from 'cache';
 import useQueryHook from 'hooks/useQuery';
 import styled from 'styled-components';
 import { Route } from 'react-router-dom';
@@ -11,7 +11,7 @@ import {
   MenuUnfoldOutlined,
   FilterOutlined,
 } from '@ant-design/icons';
-import { useLeftSidebar, useCacheFilters } from 'hooks';
+import { useLeftSidebar } from 'hooks';
 
 // import AutoComplete from './AutoComplete';
 
@@ -73,12 +73,6 @@ const FilterButton = () => {
 
 const Header = () => {
   const { toggle, isCollapsed } = useLeftSidebar();
-
-  const { filtersInitCacheItems } = useCacheFilters();
-
-  useEffect(() => {
-    instanceFiltersVar(filtersInitCacheItems);
-  }, []);
 
   return (
     <Container className={USER_GUIDE.WELCOME}>
