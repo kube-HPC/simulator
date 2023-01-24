@@ -43,13 +43,13 @@ const RangePickerNow = forwardRef(({ onChange, value, isDisabled }) => {
   }, [value]);
 
   useEffect(() => {
-    const isTrue =
-      (value?.datesRange?.from.isValid() &&
+    const isChange =
+      (value?.datesRange?.from?.isValid() &&
         !value?.datesRange?.from.isSame(stateDate?.datesRange?.from)) ||
-      (value?.datesRange?.to.isValid() &&
+      (value?.datesRange?.to?.isValid() &&
         !value?.datesRange?.to.isSame(stateDate?.datesRange?.to));
 
-    if (isTrue) {
+    if (isChange) {
       onChange(stateDate);
     }
   }, [stateDate]);
