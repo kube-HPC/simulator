@@ -187,8 +187,10 @@ const useJobsFunctionsLimit = () => {
 
   const onQuerySubmit = useCallback(values => {
     let datesRange = null;
+    console.log('onQuerySubmit values 1', values);
     const { time, ...other } = values;
-
+    console.log('onQuerySubmit other', other);
+    console.log('onQuerySubmit time', time);
     if (time) {
       datesRange = {
         from: time?.datesRange?.from || undefined,
@@ -199,19 +201,19 @@ const useJobsFunctionsLimit = () => {
     Object.values(other).forEach((element, index) => {
       element === '' ? (other[Object.keys(other)[index]] = undefined) : null;
     });
-
+    console.log('onQuerySubmit other 2', other);
     const stateInstanceFilter = { ...instanceFiltersVar() };
-
+    console.log('onQuerySubmit stateInstanceFilter', stateInstanceFilter);
     stateInstanceFilter.jobs = { ...other, datesRange };
-
+    console.log('onQuerySubmit stateInstanceFilter 2', stateInstanceFilter);
     instanceFiltersVar(stateInstanceFilter);
 
     topTableScroll();
-    setIsTableLoad(true);
+    // setIsTableLoad(true);
     setIsGraphLoad(true);
     setLimitGetJobs(numberLimitJobs);
-    queryAllJobs.refetch();
-    queryGraph.refetch();
+    // queryAllJobs.refetch();
+    // queryGraph.refetch();
   }, []);
 
   useEffect(() => {

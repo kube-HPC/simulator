@@ -9,9 +9,12 @@ const DateFormat = 'YYYY-MM-DD HH:mm';
 
 const RangePickerNow = forwardRef(({ onChange, value, isDisabled }) => {
   const [stateDate, setStateDate] = useState(value);
+  const [isClearTo, setIsClearTo] = useState(false);
+
   const dateTimeDefault = useReactiveVar(dateTimeDefaultVar);
 
   const onChangeHandel = (momentDate, param) => {
+    console.log('>>>', momentDate, param);
     let dateNew;
     if (param === 'from') {
       dateNew = {
@@ -23,6 +26,8 @@ const RangePickerNow = forwardRef(({ onChange, value, isDisabled }) => {
     }
 
     if (param === 'to') {
+      setIsClearTo(momentDate === null);
+
       dateNew = {
         datesRange: {
           from: stateDate?.datesRange?.from || undefined,
@@ -43,14 +48,17 @@ const RangePickerNow = forwardRef(({ onChange, value, isDisabled }) => {
   }, [value]);
 
   useEffect(() => {
+    console.log('isValid >>>', stateDate?.datesRange?.to?.isValid());
+    console.log('isClearTo >>>', isClearTo);
     const isChange =
-      (value?.datesRange?.from?.isValid() &&
+      (stateDate?.datesRange?.from?.isValid() &&
         !value?.datesRange?.from.isSame(stateDate?.datesRange?.from)) ||
-      (value?.datesRange?.to?.isValid() &&
+      (stateDate?.datesRange?.to?.isValid() &&
         !value?.datesRange?.to.isSame(stateDate?.datesRange?.to));
 
-    if (isChange) {
+    if (isChange || isClearTo) {
       onChange(stateDate);
+      setIsClearTo(false);
     }
   }, [stateDate]);
 

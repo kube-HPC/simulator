@@ -1,15 +1,7 @@
-import React, {
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  useRef,
-} from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Input, InputNumber, Radio, Select, Checkbox, Modal } from 'antd';
-import Text from 'antd/lib/typography/Text';
+import { Input, InputNumber, Radio, Select, Checkbox } from 'antd';
 import { Form } from 'components/common';
 import {
   BottomPanel,
@@ -28,9 +20,7 @@ import {
   deepCopyFromKeyValue,
   flattenObjKeyValue,
 } from 'utils';
-import client from 'client';
 import { OVERVIEW_TABS } from 'const';
-import usePath from './../../Tables/Algorithms/usePath';
 import { CodeBuild, GitBuild, ImageBuild } from './BuildTypes';
 import MemoryField from './MemoryField.react';
 import schema from './schema';
@@ -95,20 +85,22 @@ const getBuildTypes = ({ buildType, ...props }) => {
 };
 // #endregion
 
-const AddAlgorithmForm = ({ onToggle, onSubmit, algorithmValue }) => {
-  const isEdit = algorithmValue !== undefined;
-
-  const keyValueObject =
-    (algorithmValue && JSON.parse(algorithmValue)) || undefined;
+const AddAlgorithmForm = ({
+  onToggle,
+  onSubmit,
+  isEdit,
+  keyValueObject,
+  setIsSubmitLoading,
+  onOverviewAlgorithm,
+  applyAlgorithmVersion,
+  onAfterSaveAlgorithm,
+  isCheckForceStopAlgorithms,
+  isSubmitLoading,
+  setIsCheckForceStopAlgorithms,
+  refCheckForceStopAlgorithms,
+}) => {
   const [form] = Form.useForm();
-  const [isCheckForceStopAlgorithms, setIsCheckForceStopAlgorithms] = useState(
-    !isEdit
-  );
-  const refCheckForceStopAlgorithms = useRef(false);
-
-  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
   const [fileList, setFileList] = useState([]);
-
   const [buildType, setBuildType] = useState(
     (keyValueObject && toSelectedBuildType(keyValueObject?.type)) ||
       BUILD_TYPES.GIT.field
@@ -151,80 +143,6 @@ const AddAlgorithmForm = ({ onToggle, onSubmit, algorithmValue }) => {
   });
 
   const { applyAlgorithm } = useActions();
-  const { goTo } = usePath();
-
-  const onOverviewAlgorithm = useCallback(
-    tab => {
-      if (keyValueObject) {
-        goTo.overview({
-          nextAlgorithmId: keyValueObject?.name,
-          nextTabKey: tab || OVERVIEW_TABS.VERSIONS,
-        });
-      }
-    },
-    [goTo, keyValueObject]
-  );
-
-  const onAfterSaveAlgorithm = useCallback(
-    dataResponse => {
-      setIsSubmitLoading(false);
-
-      if (dataResponse.buildId) {
-        onOverviewAlgorithm(OVERVIEW_TABS.BUILDS);
-      }
-    },
-    [onOverviewAlgorithm]
-  );
-
-  const applyAlgorithmVersion = useCallback(
-    dataResponse => {
-      // create new version and apply version if force
-      // const errorNotification = ({ message }) => notification({ message });
-      client
-        .post(`/versions/algorithms/apply`, {
-          name: dataResponse.algorithm.name,
-          version: dataResponse.algorithm.version,
-          force: refCheckForceStopAlgorithms.current.state.checked,
-        })
-        .then(() => {
-          setIsSubmitLoading(false);
-          onAfterSaveAlgorithm(dataResponse);
-        })
-        .catch(error => {
-          const { data } = error.response;
-
-          Modal.confirm({
-            title: 'WARNING : Version not upgrade',
-            content: (
-              <>
-                <div>
-                  <Text>{data.error.message}</Text>
-                </div>
-                <Checkbox
-                  onClick={e => {
-                    setIsCheckForceStopAlgorithms(e.target.checked);
-                  }}>
-                  Stop running algorithms.
-                </Checkbox>
-              </>
-            ),
-            okText: 'Try again',
-            okType: 'danger',
-            cancelText: 'Cancel',
-            onCancel() {
-              setIsSubmitLoading(false);
-              onOverviewAlgorithm();
-            },
-            onOk() {
-              setIsSubmitLoading(false);
-              applyAlgorithmVersion(dataResponse);
-            },
-          });
-        });
-    },
-    [onAfterSaveAlgorithm, onOverviewAlgorithm]
-  );
-
   const onFormSubmit = () => {
     validateFields().then(formObject => {
       if (buildType === BUILD_TYPES.CODE.field && !fileList.length && !isEdit) {
@@ -398,14 +316,26 @@ const AddAlgorithmForm = ({ onToggle, onSubmit, algorithmValue }) => {
 AddAlgorithmForm.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
-  algorithmValue: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+
+  keyValueObject: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   onToggle: PropTypes.func.isRequired,
   onSubmit: PropTypes.func,
+  isEdit: PropTypes.bool.isRequired,
+
+  setIsSubmitLoading: PropTypes.bool.isRequired,
+  onOverviewAlgorithm: PropTypes.func.isRequired,
+  applyAlgorithmVersion: PropTypes.func.isRequired,
+  onAfterSaveAlgorithm: PropTypes.func.isRequired,
+  refCheckForceStopAlgorithms: PropTypes.func.isRequired,
+  isCheckForceStopAlgorithms: PropTypes.bool.isRequired,
+  isSubmitLoading: PropTypes.bool.isRequired,
+  setIsCheckForceStopAlgorithms: PropTypes.func.isRequired,
 };
 
 AddAlgorithmForm.defaultProps = {
   onSubmit: () => {},
-  algorithmValue: undefined,
+
+  keyValueObject: undefined,
 };
 
 export default memo(AddAlgorithmForm);
