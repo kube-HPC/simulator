@@ -6,7 +6,7 @@
   "homepage": ".",
   "scripts": {
     "analyze": "npm run build; source-map-explorer 'build/static/js/*.js'",
-    "start": "REACT_APP_VERSION=$npm_package_version PORT=9050 react-app-rewired start",
+    "start": "REACT_APP_VERSION=$npm_package_version REACT_APP_KIBANA_URL=$KIBANA_URL REACT_APP_DATA_SOURCE_IS_ENABLE=$DATA_SOURCE_IS_ENABLE  PORT=9050 react-app-rewired start",
     "start:proxy": "./dev-proxy/run.sh",
     "builder": "REACT_APP_VERSION=$npm_package_version react-app-rewired --max_old_space_size=4096 build",
     "test": "react-app-rewired test",
