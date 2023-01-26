@@ -5,8 +5,9 @@ import { ArrowUpOutlined } from '@ant-design/icons';
 import styled, { ThemeProvider } from 'styled-components';
 import { Route } from 'react-router-dom';
 import { COLOR, COLOR_LAYOUT, Theme } from 'styles';
-import { useActions } from 'hooks'; // useConnectionStatus
+import { useActions, useCacheFilters } from 'hooks'; // useConnectionStatus
 import Header from 'Routes/Base/Header';
+import { instanceFiltersVar } from 'cache';
 import useApolloClient from './../graphql/useApolloClient';
 import SidebarRight, { Drawer as SiderBarRightDrawer } from './SidebarRight';
 import SidebarLeft from './Base/SidebarLeft';
@@ -47,6 +48,12 @@ message.config({
 const BackToTop = () => document.getElementById('globalContent');
 
 const Routes = () => {
+  const { filtersInitCacheItems } = useCacheFilters();
+
+  useEffect(() => {
+    instanceFiltersVar(filtersInitCacheItems);
+  }, []);
+
   const [isDataAvailable, setIsDataAvailable] = useState(false);
 
   const { socketInit } = useActions();

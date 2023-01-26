@@ -76,7 +76,7 @@ const TagsFiltersViews = ({ sectionName }) => {
       pathname: urlParams.pathname,
       search: `?${_qParams}${_qMoreParam}`,
     });
-  }, [history, instanceFilters, sectionName, urlParams.pathname]);
+  }, [instanceFilters, sectionName, urlParams.pathname]);
 
   const cancelPropFilter = ['datesRange', 'experimentName', 'limit'];
 
