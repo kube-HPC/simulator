@@ -9,7 +9,6 @@ const useLogs = ({
   nodeKind,
   logMode,
   searchWord,
-  taskTime,
 }) => {
   const query = useQuery(LOGS_QUERY, {
     variables: {
@@ -19,7 +18,6 @@ const useLogs = ({
       nodeKind,
       logMode,
       searchWord,
-      taskTime,
     },
   });
 
