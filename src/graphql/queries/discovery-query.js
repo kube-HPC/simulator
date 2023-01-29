@@ -69,6 +69,7 @@ const DISCOVERY_QUERY = gql`
           host
           port
         }
+        jobId
         error
       }
       host

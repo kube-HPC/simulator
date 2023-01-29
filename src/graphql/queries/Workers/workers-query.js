@@ -30,6 +30,7 @@ const WORKERS_ALL_QUERY = gql`
           host
           port
         }
+        jobId
       }
     }
   }
