@@ -11,7 +11,6 @@ const parseBool = value => {
 };
 
 const hkubeSystemVersion = process.env.HKUBE_SYSTEM_VERSION;
-
 const baseUrl = process.env.HKUBE_BASE_URL
   ? process.env.HKUBE_BASE_URL.replace(/^\//, '')
   : '';
