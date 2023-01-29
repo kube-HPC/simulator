@@ -23,12 +23,16 @@ export const connectionSetup = ({
   socketUrl,
   boardUrl,
   hkubeSystemVersion,
+  kibanaUrl,
+  dataSourceIsEnable,
 }) => ({
   type: actions.CONNECTION_SETUP,
   payload: {
     socketUrl,
     boardUrl,
     hkubeSystemVersion,
+    kibanaUrl,
+    dataSourceIsEnable,
   },
 });
 

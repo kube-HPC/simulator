@@ -1,4 +1,6 @@
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+import { selectors } from 'reducers';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled from 'styled-components';
@@ -55,6 +57,7 @@ const ErrorMsg = {
 };
 
 const NodeLogs = ({ node, taskDetails }) => {
+  const { kibanaUrl } = useSelector(selectors.connection);
   const [currentTask, setCurrentTask] = useState(undefined);
   const [logMode, setLogMode] = useState(logModes.ALGORITHM);
   const [searchWord, setSearchWord] = useState(null);
@@ -138,10 +141,10 @@ const NodeLogs = ({ node, taskDetails }) => {
       const time = new Date(new Date(node.startTime) - 20000).toISOString();
 
       setLinkKibana(
-        `${process.env.REACT_APP_KIBANA_URL}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',key:meta.internal.taskId,negate:!f,params:(query:${currentTask}),type:phrase),query:(match:(meta.internal.taskId:(query:${currentTask},type:phrase))))),index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',interval:auto,query:(language:lucene,query:${word}),sort:!(!('@timestamp',desc)))`
+        `${kibanaUrl}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',key:meta.internal.taskId,negate:!f,params:(query:${currentTask}),type:phrase),query:(match:(meta.internal.taskId:(query:${currentTask},type:phrase))))),index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',interval:auto,query:(language:lucene,query:${word}),sort:!(!('@timestamp',desc)))`
       );
     },
-    [currentTask, node.startTime]
+    [currentTask, kibanaUrl, node.startTime]
   );
 
   const handleSearchWord = useDebounceCallback(setWord, 1000, false);

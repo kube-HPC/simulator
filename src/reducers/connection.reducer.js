@@ -3,6 +3,7 @@ import { actionType } from 'const';
 
 /**
  * @typedef {{ connection: ConnectionStats }} ConnectionState
+ *
  * @typedef {typeof initialState} ConnectionStats
  */
 
@@ -10,6 +11,8 @@ const initialState = {
   socketUrl: null,
   boardUrl: null,
   hkubeSystemVersion: null,
+  kibanaUrl: null,
+  dataSourceIsEnable: null,
   hasData: false,
   isSocketConnected: false,
 };
@@ -25,6 +28,8 @@ const connection = createSlice({
      *     socketUrl?: string;
      *     boardUrl?: string;
      *     hkubeSystemVersion?: string;
+     *     kibanaUrl?: string;
+     *     dataSourceIsEnable?: boolean;
      *   };
      * }} action
      */

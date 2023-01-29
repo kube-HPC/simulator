@@ -19,11 +19,7 @@ import { ReactComponent as LogoFish } from 'images/logo-fish.svg';
 import { ReactComponent as LogoTitle } from 'images/logo-title.svg';
 import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
 
-import {
-  instanceCounterVar,
-  instanceFiltersVar,
-  configViewEnvVar,
-} from 'cache';
+import { instanceCounterVar, instanceFiltersVar } from 'cache';
 import { Theme, COLOR_LAYOUT } from 'styles';
 import { selectors } from 'reducers';
 // import { useDiscovery } from 'hooks/graphql';
@@ -120,7 +116,7 @@ const BadgeStyle = styled(Badge)`
 const SidebarLeft = () => {
   // add datasources when this enable
 
-  const configViewEnv = useReactiveVar(configViewEnvVar);
+  const { dataSourceIsEnable } = useSelector(selectors.connection);
 
   const menuItems = useMemo(() => {
     const itemsMenu = [
@@ -131,7 +127,7 @@ const SidebarLeft = () => {
       //  [LEFT_SIDEBAR_NAMES.WORKERS, WorkerIcon, '/workers'],
       //  [LEFT_SIDEBAR_NAMES.DRIVERS, DriversIcon, '/drivers'],
     ];
-    if (configViewEnv.dataSources) {
+    if (dataSourceIsEnable) {
       itemsMenu.push([
         LEFT_SIDEBAR_NAMES.DATASOURCES,
         DataSourceIcon,

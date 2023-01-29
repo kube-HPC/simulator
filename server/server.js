@@ -8,6 +8,8 @@ const {
   monitorBackend,
   board,
   hkubeSystemVersion,
+  kibanaUrl,
+  dataSourceIsEnable,
   indexHtml,
   baseUrl,
 } = require('./setupConfig');
@@ -25,6 +27,8 @@ app.get('*/dashboard-config.json', (req, res) => {
   res.json({
     config: {
       hkubeSystemVersion,
+      kibanaUrl,
+      dataSourceIsEnable,
       baseUrl,
       monitorBackend,
       board,

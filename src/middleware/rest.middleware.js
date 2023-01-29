@@ -79,7 +79,13 @@ let BOARD_URL = null;
 
 const restMiddleware = ({ dispatch }) => next => action => {
   if (action.type === `${AT.SOCKET_GET_CONFIG}_SUCCESS`) {
-    const { monitorBackend, board, hkubeSystemVersion } = action.payload.config;
+    const {
+      monitorBackend,
+      board,
+      hkubeSystemVersion,
+      kibanaUrl,
+      dataSourceIsEnable,
+    } = action.payload.config;
     SOCKET_URL = setMonitorPath(monitorBackend);
     BOARD_URL = setBoardPath(board);
     dispatch(
@@ -87,6 +93,8 @@ const restMiddleware = ({ dispatch }) => next => action => {
         socketUrl: SOCKET_URL,
         boardUrl: BOARD_URL,
         hkubeSystemVersion,
+        kibanaUrl,
+        dataSourceIsEnable,
       })
     );
     client.defaults.baseURL = SOCKET_URL;
