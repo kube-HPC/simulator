@@ -29,7 +29,7 @@ const useVersions = ({ algorithmName, confirmPopupForceVersion, isFetch }) => {
       })
       .catch(errorNotification);
 
-  const applyVersion = ({ name, version, force = false }) =>
+  const applyVersion = ({ name, version, force }) => {
     client
       .post(`/versions/algorithms/apply`, { name, version, force })
       .catch(error => {
@@ -40,6 +40,7 @@ const useVersions = ({ algorithmName, confirmPopupForceVersion, isFetch }) => {
           applyVersion
         );
       });
+  };
 
   useEffect(() => {
     if (isFetch) {

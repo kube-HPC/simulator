@@ -21,7 +21,7 @@ const Name = (name, record) => (
     {name}{' '}
     {record?.errors?.includes(errorsCode.NOT_LAST_VERSION_ALGORITHM) && (
       <WarningOutlined
-        title="Warning : Not last version algorithm"
+        title="Warning : Set algorithm's current version to the newly built"
         style={{ color: 'red', fontSize: '15px' }}
       />
     )}
