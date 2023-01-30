@@ -14,7 +14,6 @@ const RangePickerNow = forwardRef(({ onChange, value, isDisabled }) => {
   const dateTimeDefault = useReactiveVar(dateTimeDefaultVar);
 
   const onChangeHandel = (momentDate, param) => {
-    console.log('>>>', momentDate, param);
     let dateNew;
     if (param === 'from') {
       dateNew = {
@@ -48,8 +47,6 @@ const RangePickerNow = forwardRef(({ onChange, value, isDisabled }) => {
   }, [value]);
 
   useEffect(() => {
-    console.log('isValid >>>', stateDate?.datesRange?.to?.isValid());
-    console.log('isClearTo >>>', isClearTo);
     const isChange =
       (stateDate?.datesRange?.from?.isValid() &&
         !value?.datesRange?.from.isSame(stateDate?.datesRange?.from)) ||

@@ -7,7 +7,7 @@ module.exports = app => {
         envs: process.env,
         hkubeSystemVersion: process.env.HKUBE_SYSTEM_VERSION,
         kibanaUrl: process.env.KIBANA_URL,
-        dataSourceIsEnable: process.env.DATA_SOURCE_IS_ENABLE,
+        dataSourceIsEnable: process.env.DATA_SOURCE_IS_ENABLE === 'true',
         baseUrl: packageJSON.homepage,
         monitorBackend: {
           host: process.env.API_SERVER_BACKEND_HOST || 'localhost',

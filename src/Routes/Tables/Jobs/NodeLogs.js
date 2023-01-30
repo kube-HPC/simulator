@@ -135,23 +135,24 @@ const NodeLogs = ({ node, taskDetails }) => {
 
   const setWord = useCallback(
     e => {
+      const time = node.startTime
+        ? new Date(new Date(node.startTime) - 20000).toISOString()
+        : new Date(new Date() - 20000).toISOString();
+      const cTaskId = currentTask || taskId;
       const word = e?.target?.value || '';
-
       setSearchWord(word);
-      const time = new Date(new Date(node.startTime) - 20000).toISOString();
-
       setLinkKibana(
-        `${kibanaUrl}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',key:meta.internal.taskId,negate:!f,params:(query:${currentTask}),type:phrase),query:(match:(meta.internal.taskId:(query:${currentTask},type:phrase))))),index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',interval:auto,query:(language:lucene,query:${word}),sort:!(!('@timestamp',desc)))`
+        `${kibanaUrl}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',key:meta.internal.taskId,negate:!f,params:(query:${cTaskId}),type:phrase),query:(match:(meta.internal.taskId:(query:${cTaskId},type:phrase))))),index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',interval:auto,query:(language:lucene,query:${word}),sort:!(!('@timestamp',desc)))`
       );
     },
-    [currentTask, kibanaUrl, node.startTime]
+    [currentTask, kibanaUrl, node.startTime, taskId]
   );
 
   const handleSearchWord = useDebounceCallback(setWord, 1000, false);
 
   useEffect(() => {
     setWord();
-  }, []);
+  }, [currentTask, setWord]);
 
   return (
     <>
