@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
 import { Form, AutoComplete } from 'antd';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -24,6 +25,7 @@ const PipelinesQueryTable = ({ onSubmit, pipelinesList }) => {
 
     form.submit();
   };
+  const submitDebounced = useDebouncedCallback(SubmitForm, 500);
 
   useEffect(() => {
     const isFilterObjEmpty = isValuesFiltersEmpty(instanceFilters.pipelines);
@@ -77,7 +79,9 @@ const PipelinesQueryTable = ({ onSubmit, pipelinesList }) => {
             option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
           }
           allowClear
-          onChange={SubmitForm}
+          onSearch={submitDebounced}
+          onSelect={SubmitForm}
+          onClear={SubmitForm}
         />
       </Form.Item>
     </FiltersForms>
