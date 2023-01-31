@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Form, AutoComplete } from 'antd';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { useDebouncedCallback } from 'use-debounce';
 import qs from 'qs';
 import { useReactiveVar } from '@apollo/client';
 import { instanceFiltersVar } from 'cache';
@@ -24,6 +25,7 @@ const AlgorithmsQueryTable = ({ onSubmit, algorithmsList }) => {
 
     form.submit();
   };
+  const submitDebounced = useDebouncedCallback(SubmitForm, 500);
 
   useEffect(() => {
     const isFilterObjEmpty = isValuesFiltersEmpty(instanceFilters.algorithms);
@@ -78,7 +80,9 @@ const AlgorithmsQueryTable = ({ onSubmit, algorithmsList }) => {
             option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
           }
           allowClear
-          onChange={SubmitForm}
+          onSearch={submitDebounced}
+          onSelect={SubmitForm}
+          onClear={SubmitForm}
         />
       </Form.Item>
     </FiltersForms>
