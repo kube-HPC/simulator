@@ -11,9 +11,6 @@ import { VersionsTable } from './Versions';
 import usePath from './../usePath';
 
 const AlgorithmsTabs = ({ algorithm }) => {
-  const [isCheckForceStopAlgorithms, setIsCheckForceStopAlgorithms] = useState(
-    false
-  );
   const { tabKey: activeKey, goTo } = usePath();
   const setActiveKey = useCallback(tab => goTo.overview({ nextTabKey: tab }), [
     goTo,
@@ -28,7 +25,8 @@ const AlgorithmsTabs = ({ algorithm }) => {
     name,
     version,
     applyVersionCallback
-  ) =>
+  ) => {
+    let isForce = false;
     Modal.confirm({
       title: 'WARNING : Version not upgrade',
       content: (
@@ -38,7 +36,7 @@ const AlgorithmsTabs = ({ algorithm }) => {
           </div>
           <Checkbox
             onClick={e => {
-              setIsCheckForceStopAlgorithms(e.target.checked);
+              isForce = e.target.checked;
             }}>
             Stop running algorithms.
           </Checkbox>
@@ -49,9 +47,12 @@ const AlgorithmsTabs = ({ algorithm }) => {
       cancelText: 'Cancel',
       onCancel() {},
       onOk() {
-        applyVersionCallback({ name, version, isCheckForceStopAlgorithms });
+        setTimeout(() => {
+          applyVersionCallback({ name, version, force: isForce });
+        }, 100);
       },
     });
+  };
 
   const { dataSource, onApply, onDelete, fetch } = useVersions({
     algorithmName: algorithm.name,
