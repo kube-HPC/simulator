@@ -142,7 +142,9 @@ const NodeLogs = ({ node, taskDetails }) => {
       const word = e?.target?.value || '';
       setSearchWord(word);
       setLinkKibana(
-        `${kibanaUrl}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',key:meta.internal.taskId,negate:!f,params:(query:${cTaskId}),type:phrase),query:(match:(meta.internal.taskId:(query:${cTaskId},type:phrase))))),index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',interval:auto,query:(language:lucene,query:${word}),sort:!(!('@timestamp',desc)))`
+        `${kibanaUrl}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',key:meta.internal.taskId,negate:!f,params:(query:${cTaskId}),type:phrase),query:(match:(meta.internal.taskId:(query:${cTaskId},type:phrase))))),index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',interval:auto,query:(language:lucene${
+          word ? `,query:${word}` : ''
+        }),sort:!(!('@timestamp',desc)))`
       );
     },
     [currentTask, kibanaUrl, node.startTime, taskId]

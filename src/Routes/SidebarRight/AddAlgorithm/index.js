@@ -12,7 +12,7 @@ import Text from 'antd/lib/typography/Text';
 import { Card, JsonEditor } from 'components/common';
 import { addAlgorithmTemplate } from 'config';
 import { useActions } from 'hooks';
-import { stringify } from 'utils';
+import { stringify, notification } from 'utils';
 import tryParse from 'utils/handleParsing';
 import { OVERVIEW_TABS } from 'const';
 import usePath from './../../Tables/Algorithms/usePath';
@@ -60,6 +60,10 @@ const AddAlgorithm = ({ onSubmit = noop, algorithmValue }) => {
 
   const onAfterSaveAlgorithm = useCallback(
     dataResponse => {
+      if (dataResponse.messages) {
+        notification({ message: dataResponse.messages });
+      }
+
       setIsSubmitLoading(false);
 
       if (dataResponse.buildId) {

@@ -101,7 +101,8 @@ const AlgorithmActions = ({ record }) => {
           placement="leftBottom"
           content={popOverContentRun}
           getPopupContainer={setPopupContainer}
-          mouseLeaveDelay={0.5}>
+          mouseLeaveDelay={0.5}
+          mouseEnterDelay={0.5}>
           <Button icon={<PlayCircleOutlined />} onClick={() => onRun()} />
         </Popover>
         <Popover
@@ -110,7 +111,8 @@ const AlgorithmActions = ({ record }) => {
           placement="leftBottom"
           content={popOverContentDebug}
           getPopupContainer={setPopupContainer}
-          mouseLeaveDelay={0.5}>
+          mouseLeaveDelay={0.5}
+          mouseEnterDelay={0.5}>
           <Button icon={<BugOutlined />} onClick={() => onDebug()} />
         </Popover>
         <Tooltip title="edit algorithm">
