@@ -38,6 +38,7 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
   let algorithmDetails = null;
   // node && node.algorithmName && useAlgorithmByName(node.algorithmName);
   const query = useAlgorithmByName(node.algorithmName);
+
   query &&
     query.data &&
     query.data.algorithmsByName &&
@@ -132,7 +133,7 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
       <ContainerTabs>
         <TabsLog
           items={TabsItemsJson}
-          defaultActiveKey="logs-tab"
+          activeKey={node.kind === 'debug' ? 'algorithms-tab' : 'logs-tab'}
           tabBarExtraContent={extra}
         />
       </ContainerTabs>
