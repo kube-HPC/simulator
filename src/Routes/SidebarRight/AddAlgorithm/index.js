@@ -60,13 +60,14 @@ const AddAlgorithm = ({ onSubmit = noop, algorithmValue }) => {
 
   const onAfterSaveAlgorithm = useCallback(
     dataResponse => {
-      if (dataResponse.messages) {
+      const buildId = dataResponse?.buildId || null;
+      if (dataResponse.messages && buildId === null) {
         notification({ message: dataResponse.messages });
       }
 
       setIsSubmitLoading(false);
 
-      if (dataResponse.buildId) {
+      if (buildId) {
         onOverviewAlgorithm(OVERVIEW_TABS.BUILDS);
       }
     },
