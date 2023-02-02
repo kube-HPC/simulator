@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { removeNullUndefined, removeNullUndefinedCleanDeep } from 'utils';
 import PropTypes from 'prop-types';
 // import { useSelector } from 'react-redux';
@@ -38,7 +38,7 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
   let algorithmDetails = null;
   // node && node.algorithmName && useAlgorithmByName(node.algorithmName);
   const query = useAlgorithmByName(node.algorithmName);
-
+  const [selectTabbyKind, setSelectTabByKind] = useState('logs-tab');
   query &&
     query.data &&
     query.data.algorithmsByName &&
@@ -128,12 +128,22 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
     [algorithmDetails, jobId, node, taskDetails]
   );
 
+  const handleTabChange = activeKey => {
+    setSelectTabByKind(activeKey);
+  };
+
+  useEffect(() => {
+    setSelectTabByKind(node.kind === 'debug' ? 'algorithms-tab' : 'logs-tab');
+  }, [node.kind]);
+
   return node ? (
     algorithmDetails && (
       <ContainerTabs>
         <TabsLog
+          activeKey={selectTabbyKind}
+          onChange={handleTabChange}
           items={TabsItemsJson}
-          activeKey={node.kind === 'debug' ? 'algorithms-tab' : 'logs-tab'}
+          defaultActiveKey={selectTabbyKind}
           tabBarExtraContent={extra}
         />
       </ContainerTabs>
