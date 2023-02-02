@@ -1,5 +1,6 @@
 import { Tag, Typography, Button, notification } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { CopyOutlined } from '@ant-design/icons';
 import { Descriptions } from 'components/common';
 import PropTypes from 'prop-types';
 import React, { useState, useCallback, useMemo } from 'react';
@@ -100,6 +101,7 @@ const ItemByValueType = ({
         text={`ws://${window.location.host}/${obj.replace(firstSlash, '')}`}
         onCopy={() => notification.success({ message: 'Copied to clipboard' })}>
         <Tag color={COLOR_TASK_STATUS.active}>
+          <CopyOutlined />{' '}
           {`ws://${window.location.host}/${obj.replace(firstSlash, '')}`}
         </Tag>
       </CopyToClipboard>
