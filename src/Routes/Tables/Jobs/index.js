@@ -5,7 +5,7 @@ import useQueryHook from 'hooks/useQuery';
 import { WTable } from 'components';
 import { Card } from 'components/common';
 import { Collapse } from 'react-collapse';
-import { Divider, Empty, FloatButton, Button } from 'antd';
+import { Divider, Empty, FloatButton } from 'antd';
 import { ArrowUpOutlined } from '@ant-design/icons';
 import useJobsFunctionsLimit from './useJobsFunctionsLimit';
 import GridView from './GridView';
@@ -72,15 +72,14 @@ const JobsTable = () => {
         locale={localeEmpty}
       />
 
-      <FloatButton target={BackToTop}>
-        <Button
-          style={{ opacity: '0.5' }}
-          type="primary"
-          shape="circle"
-          size="large"
-          icon={<ArrowUpOutlined />}
-        />
-      </FloatButton>
+      <FloatButton.BackTop
+        target={BackToTop}
+        style={{ opacity: '0.7', marginRight: '70px' }}
+        type="primary"
+        shape="circle"
+        size="large"
+        icon={<ArrowUpOutlined />}
+      />
     </>
   );
 };

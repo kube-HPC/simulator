@@ -14,7 +14,7 @@ export const TabDrawerText = styled.div`
   transform: rotate(180deg) translate(-98%, -16px);
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
   font-size: 15px;
-  margin-top: 11px;
+  margin-bottom: 8px;
 `;
 export const TabDrawer = styled.div`
   background: ${props => props.theme.Styles.tabDrawer.background};
