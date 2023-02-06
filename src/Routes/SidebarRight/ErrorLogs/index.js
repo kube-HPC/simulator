@@ -6,7 +6,7 @@ import { useErrorLogs } from 'hooks/graphql';
 import { Table } from 'components';
 import { JsonSwitch, Card } from 'components/common';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import errorLogsTableColumns from './ErrorLogsTableColumns.react';
 import ErrorLogQueryTable from './ErrorLogQueryTable';
 
@@ -64,7 +64,7 @@ const ErrorLogsTable = () => {
       // Time
       if (values.qErrorLogTime != null) {
         filterErrorLogs = filterErrorLogs.filter(item =>
-          moment(+item.timestamp).isBetween(
+          dayjs(+item.timestamp).isBetween(
             values?.qErrorLogTime[0],
             values?.qErrorLogTime[1]
           )

@@ -2,6 +2,7 @@
 import 'core-js/features/array';
 import './assets/collapseTransition.css';
 import { ErrorBoundary } from 'components';
+import { ConfigProvider, theme } from 'antd';
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
@@ -14,7 +15,7 @@ import Root from './Routes';
 import store from './store';
 import _ from 'lodash';
 
-const ConfigProvider = () => {
+const ConfigProviderApp = () => {
   // do not use the useActions hook
   // ReusableProvider is not available yet at this point!
   const dispatch = useDispatch();
@@ -23,23 +24,42 @@ const ConfigProvider = () => {
   }, [dispatch]);
 
   const { hasConfig } = useSelector(selectors.config);
+  const { defaultAlgorithm, darkAlgorithm } = theme;
+
+  // create in began styles antd by theme name
+  let themeProvider = null;
+  switch (localStorage.getItem('theme')?.toUpperCase()) {
+    case 'LIGHT':
+      themeProvider = defaultAlgorithm; // import('antd/dist/antd.css');
+      break;
+    case 'DARK':
+      themeProvider = darkAlgorithm; //  import('antd/dist/antd.dark.css');
+      break;
+    default:
+      themeProvider = defaultAlgorithm; //  import('antd/dist/antd.css');
+  }
 
   return hasConfig ? (
-    <Router>
-      <ReusableProvider>
-        <ErrorBoundary>
-          <GlobalThemes />
-          <Root />
-        </ErrorBoundary>
-      </ReusableProvider>
-    </Router>
+    <ConfigProvider
+      theme={{
+        algorithm: themeProvider,
+      }}>
+      <Router>
+        <ReusableProvider>
+          <ErrorBoundary>
+            <GlobalThemes />
+            <Root />
+          </ErrorBoundary>
+        </ReusableProvider>
+      </Router>
+    </ConfigProvider>
   ) : null;
 };
 
 const App = () => {
   return (
     <Provider store={store}>
-      <ConfigProvider />
+      <ConfigProviderApp />
     </Provider>
   );
 };

@@ -11,7 +11,7 @@ import {
 } from 'cache';
 import { JOB_QUERY, JOB_QUERY_GRAPH } from 'graphql/queries';
 
-import moment from 'moment';
+import dayjs from 'dayjs';
 import usePath from './usePath';
 import jobColumns from './jobColumns';
 
@@ -44,7 +44,7 @@ const useJobsFunctionsLimit = () => {
   const metaMode = useReactiveVar(metaVar);
   const [dataSourceGraph, setDataSourceGraph] = useState([]);
   const [zoomedChangedDate, setZoomedChangedDate] = useState(Date.now());
-  const [defDate] = useState(getDateTimeZoneString(moment(dateNow)));
+  const [defDate] = useState(getDateTimeZoneString(dayjs(dateNow)));
   const [isTableLoad, setIsTableLoad] = useState(true);
   const [isGraphLoad, setIsGraphLoad] = useState(true);
   const [limitGetJobs, setLimitGetJobs] = useState(numberLimitJobs);

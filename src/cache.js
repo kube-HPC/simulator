@@ -1,6 +1,6 @@
 import { InMemoryCache, makeVar } from '@apollo/client';
 import _ from 'lodash';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { LOCAL_STORAGE_KEYS } from 'const';
 
 const defTimeFromLocalStorage =
@@ -10,7 +10,7 @@ const defTimeFromLocalStorage =
   ) || 24;
 export const dateTimeDefaultVar = makeVar({
   hour: defTimeFromLocalStorage,
-  time: moment().add(-defTimeFromLocalStorage, 'hours'),
+  time: dayjs().add(-defTimeFromLocalStorage, 'hour'),
 });
 
 export const isPinActiveJobVar = makeVar(false);

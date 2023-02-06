@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import round from 'lodash/round';
 
 import { toFloatPrecision } from './number';
@@ -32,7 +32,7 @@ const quantizeDuration = (duration, floatPrecision, conversionFactor) =>
  * @returns {string} Formatted, unit-labelled string with time in milliseconds
  */
 export function formatDate(duration) {
-  return moment(duration / ONE_MILLISECOND).format(STANDARD_DATE_FORMAT);
+  return dayjs(duration / ONE_MILLISECOND).format(STANDARD_DATE_FORMAT);
 }
 
 /**
@@ -40,7 +40,7 @@ export function formatDate(duration) {
  * @returns {string} Formatted, unit-labelled string with time in milliseconds
  */
 export function formatTime(duration) {
-  return moment(duration / ONE_MILLISECOND).format(STANDARD_TIME_FORMAT);
+  return dayjs(duration / ONE_MILLISECOND).format(STANDARD_TIME_FORMAT);
 }
 
 /**
@@ -48,7 +48,7 @@ export function formatTime(duration) {
  * @returns {string} Formatted, unit-labelled string with time in milliseconds
  */
 export function formatDatetime(duration) {
-  return moment(duration / ONE_MILLISECOND).format(STANDARD_DATETIME_FORMAT);
+  return dayjs(duration / ONE_MILLISECOND).format(STANDARD_DATETIME_FORMAT);
 }
 
 /**
@@ -61,9 +61,7 @@ export function formatMillisecondTime(duration) {
     DEFAULT_MS_PRECISION,
     ONE_MILLISECOND
   );
-  return `${moment
-    .duration(targetDuration / ONE_MILLISECOND)
-    .asMilliseconds()}ms`;
+  return `${dayjs.duration(targetDuration / ONE_MILLISECOND).as('ms')}ms`;
 }
 
 /**
@@ -76,7 +74,7 @@ export function formatSecondTime(duration) {
     DEFAULT_MS_PRECISION,
     ONE_SECOND
   );
-  return `${moment.duration(targetDuration / ONE_MILLISECOND).asSeconds()}s`;
+  return `${dayjs.duration(targetDuration / ONE_MILLISECOND).as('seconds')}s`;
 }
 
 /**
@@ -98,7 +96,7 @@ export function formatDuration(duration, inputUnit = 'microseconds') {
 }
 
 export function formatRelativeDate(value) {
-  const m = !(value instanceof moment) ? moment(value) : value;
+  const m = !(value instanceof dayjs) ? dayjs(value) : value;
   const dt = new Date();
   if (dt.getFullYear() !== m.year()) {
     return m.format('MMM D, YYYY');

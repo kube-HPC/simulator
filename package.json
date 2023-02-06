@@ -59,7 +59,7 @@
     "@types/react-router-dom": "^5.1.7",
     "@types/vis": "^4.21.21",
     "ansi-to-react": "^5.1.0",
-    "antd": "^4.23.6",
+    "antd": "^5.1.7",
     "axios": "^0.21.1",
     "babel-eslint": "^10.0.3",
     "chonky": "^2.0.5",

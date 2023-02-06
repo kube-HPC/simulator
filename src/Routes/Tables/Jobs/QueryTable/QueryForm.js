@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { Form, AutoComplete, Button } from 'antd';
 import PropTypes from 'prop-types';
 import { pipelineStatuses } from '@hkube/consts';
@@ -23,8 +23,8 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
       form.setFieldsValue({
         time: {
           datesRange: {
-            from: moment(params.datesRange.from),
-            to: moment(params.datesRange.to),
+            from: dayjs(params.datesRange.from),
+            to: dayjs(params.datesRange.to),
           },
         },
       });
@@ -176,8 +176,10 @@ QueryForm.propTypes = {
     pipelineName: PropTypes.string,
     pipelineStatus: PropTypes.string,
     datesRange: PropTypes.shape({
-      from: PropTypes.string,
-      to: PropTypes.string,
+      // eslint-disable-next-line react/forbid-prop-types
+      from: PropTypes.object,
+      // eslint-disable-next-line react/forbid-prop-types
+      to: PropTypes.object,
     }).isRequired,
   }).isRequired,
 

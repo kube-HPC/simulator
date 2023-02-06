@@ -14,7 +14,7 @@ import {
   JOB_QUERY_ACTIVE,
   JOB_ACTIVE_BY_ID_QUERY,
 } from 'graphql/queries';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import usePath from './usePath';
 import jobColumns from './jobColumns';
 
@@ -76,7 +76,7 @@ const useJobsFunctions = () => {
 
     if (mergedParams.datesRange?.from && mergedParams.datesRange?.to)
       filterJobs = filterJobs.filter(x =>
-        moment(x.pipeline.startTime).isBetween(
+        dayjs(x.pipeline.startTime).isBetween(
           mergedParams.datesRange?.from,
           mergedParams.datesRange?.to
         )
