@@ -42,13 +42,12 @@ const JobsTable = () => {
 
   return (
     <>
+      <QueryForm
+        zoomDate={zoomedChangedDate}
+        onSubmit={onQuerySubmit}
+        params={mergedParams}
+      />
       <Collapse isOpened={filterToggeled}>
-        <QueryForm
-          zoomDate={zoomedChangedDate}
-          onSubmit={onQuerySubmit}
-          params={mergedParams}
-        />
-
         {dataSourceGraph && (
           <QueryDateChart
             dataSource={dataSourceGraph}
