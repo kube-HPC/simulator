@@ -8,9 +8,7 @@ const ALGORITHM_AND_PIPELINE_NAMES = gql`
       }
     }
     pipelines {
-      list {
-        name
-      }
+      list
     }
   }
 `;
