@@ -67,7 +67,6 @@ const DashboardDrawer = () => {
   return (
     <ctx.Provider value={{ closeDrawer: setOff }}>
       <Drawer
-        getContainer={false}
         width={width}
         isOpened={isOn}
         onDidClose={handleDidClose}

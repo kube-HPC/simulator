@@ -35,7 +35,6 @@ const ExecuteDrawer = () => {
   if (loading) return 'Loading...';
   return (
     <Drawer
-      getContainer={false}
       isOpened={isOn}
       onDidClose={goTo.root}
       onClose={setOff}
@@ -43,7 +42,7 @@ const ExecuteDrawer = () => {
       title={record?.name ?? pipelineId}
       asFlex>
       {record ? (
-        <AddPipeline isRunPipeline getContainer={false} jsonPipeline={value} />
+        <AddPipeline isRunPipeline jsonPipeline={value} />
       ) : (
         <MissingIdError />
       )}
