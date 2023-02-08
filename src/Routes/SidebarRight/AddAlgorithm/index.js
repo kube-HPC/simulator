@@ -1,5 +1,6 @@
 import React, { memo, useState, useCallback, useRef } from 'react';
 import client from 'client';
+import { errorsCode } from '@hkube/consts';
 import PropTypes from 'prop-types';
 import {
   BottomPanel,
@@ -67,7 +68,7 @@ const AddAlgorithm = ({ onSubmit = noop, algorithmValue }) => {
         notification({ message: dataResponse.messages });
       }
 
-      if (buildId) {
+      if (dataResponse.messagesCode === errorsCode.NO_TRIGGER_FOR_BUILD) {
         onOverviewAlgorithm(OVERVIEW_TABS.BUILDS);
       }
     },
