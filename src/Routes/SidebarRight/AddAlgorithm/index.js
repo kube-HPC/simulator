@@ -68,7 +68,7 @@ const AddAlgorithm = ({ onSubmit = noop, algorithmValue }) => {
         notification({ message: dataResponse.messages });
       }
 
-      if (dataResponse.messagesCode === errorsCode.NO_TRIGGER_FOR_BUILD) {
+      if (dataResponse.messagesCode.includes(errorsCode.NO_TRIGGER_FOR_BUILD)) {
         onOverviewAlgorithm(OVERVIEW_TABS.BUILDS);
       }
     },
