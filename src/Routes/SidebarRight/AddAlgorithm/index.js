@@ -64,10 +64,14 @@ const AddAlgorithm = ({ onSubmit = noop, algorithmValue }) => {
       setIsSubmitLoading(false);
 
       const buildId = dataResponse?.buildId || null;
-      if (dataResponse.messagesCode.includes(errorsCode.NO_TRIGGER_FOR_BUILD)) {
-        notification(
-          'No trigger for build since there was not change in uploaded file.'
-        );
+
+      if (
+        dataResponse?.messagesCode?.includes(errorsCode.NO_TRIGGER_FOR_BUILD)
+      ) {
+        notification({
+          message:
+            'No trigger for build since there was not change in uploaded file.',
+        });
       }
 
       if (buildId) {
