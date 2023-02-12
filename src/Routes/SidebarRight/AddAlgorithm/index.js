@@ -1,5 +1,6 @@
 import React, { memo, useState, useCallback, useRef } from 'react';
 import client from 'client';
+import { errorsCode } from '@hkube/consts';
 import PropTypes from 'prop-types';
 import {
   BottomPanel,
@@ -7,21 +8,20 @@ import {
   PanelButton,
   RightPanel,
 } from 'components/Drawer';
-import { Checkbox, Modal } from 'antd';
+import { Checkbox, Modal, message } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import { Card, JsonEditor } from 'components/common';
 import { addAlgorithmTemplate } from 'config';
-import { useActions } from 'hooks';
-import { stringify, notification } from 'utils';
+
+import { stringify } from 'utils';
 import tryParse from 'utils/handleParsing';
 import { OVERVIEW_TABS } from 'const';
 import usePath from './../../Tables/Algorithms/usePath';
 import AddAlgorithmForm from './AddAlgorithmForm.react';
 
 const DEFAULT_EDITOR_VALUE = stringify(addAlgorithmTemplate);
-const noop = () => {};
 
-const AddAlgorithm = ({ onSubmit = noop, algorithmValue }) => {
+const AddAlgorithm = ({ algorithmValue }) => {
   // #region  Editor State
   const refCheckForceStopAlgorithms = useRef(false);
   const [editorIsVisible, setEditorIsVisible] = useState(false);
@@ -32,20 +32,17 @@ const AddAlgorithm = ({ onSubmit = noop, algorithmValue }) => {
     !isEdit
   );
 
+  const toggleEditor = () => setEditorIsVisible(prev => !prev);
   const [editorValue, setEditorValue] = useState(
     algorithmValue || DEFAULT_EDITOR_VALUE
   );
-
-  const toggleEditor = () => setEditorIsVisible(prev => !prev);
-
   const onClear = () => setEditorValue(``);
   const onDefault = () => setEditorValue(DEFAULT_EDITOR_VALUE);
 
-  const { applyAlgorithm } = useActions();
   const { goTo } = usePath();
-
   const keyValueObject =
     (algorithmValue && JSON.parse(algorithmValue)) || undefined;
+
   const onOverviewAlgorithm = useCallback(
     tab => {
       if (keyValueObject) {
@@ -61,14 +58,29 @@ const AddAlgorithm = ({ onSubmit = noop, algorithmValue }) => {
   const onAfterSaveAlgorithm = useCallback(
     dataResponse => {
       setIsSubmitLoading(false);
+      let isMsgApplied = true;
 
       const buildId = dataResponse?.buildId || null;
-      if (dataResponse.messages && buildId !== null) {
-        notification({ message: dataResponse.messages });
+
+      if (
+        dataResponse?.messagesCode?.includes(errorsCode.NO_TRIGGER_FOR_BUILD)
+      ) {
+        message.warning(
+          'No trigger for build since there was not change in uploaded file.'
+        );
+        isMsgApplied = false;
       }
 
       if (buildId) {
         onOverviewAlgorithm(OVERVIEW_TABS.BUILDS);
+      }
+
+      if (isMsgApplied) {
+        if (dataResponse?.error?.code === 400) {
+          message.error(dataResponse?.error?.message || 'Something is wrong!');
+        } else {
+          message.success('Algorithm Applied, check Algorithms table');
+        }
       }
     },
     [onOverviewAlgorithm]
@@ -78,6 +90,7 @@ const AddAlgorithm = ({ onSubmit = noop, algorithmValue }) => {
     dataResponse => {
       // create new version and apply version if force
       // const errorNotification = ({ message }) => notification({ message });
+
       client
         .post(`/versions/algorithms/apply`, {
           name: dataResponse.algorithm.name,
@@ -122,25 +135,38 @@ const AddAlgorithm = ({ onSubmit = noop, algorithmValue }) => {
     },
     [onAfterSaveAlgorithm, onOverviewAlgorithm]
   );
-  const onSuccess = ({ src }) => {
-    const formData = new FormData();
-    formData.append(`payload`, src);
-    onSubmit({ payload: src });
 
-    if (isEdit) {
-      applyAlgorithm(formData, res => {
-        if (res.buildId) {
-          onOverviewAlgorithm(OVERVIEW_TABS.BUILDS);
+  const onWizardSubmit = ({ formData }) => {
+    client
+      .post('store/algorithms/apply', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then(res => {
+        if (isEdit) {
+          if (res?.data?.buildId) {
+            onOverviewAlgorithm(OVERVIEW_TABS.BUILDS);
+          } else {
+            applyAlgorithmVersion(res.data);
+          }
         } else {
-          applyAlgorithmVersion(res);
+          onAfterSaveAlgorithm(res.data);
         }
+      })
+      .catch(error => {
+        message.error(error || 'Something is wrong!');
       });
-    } else {
-      applyAlgorithm(formData, res => onAfterSaveAlgorithm(res));
-    }
   };
 
-  const onEditorSubmit = () => tryParse({ src: editorValue, onSuccess });
+  const onBeforeEditorSubmit = ({ src }) => {
+    const formData = new FormData();
+    formData.append(`payload`, src);
+    onWizardSubmit({ formData });
+  };
+  const onEditorSubmit = () =>
+    tryParse({ src: editorValue, onBeforeEditorSubmit });
+
   // #endregion
 
   return editorIsVisible ? (
@@ -180,7 +206,7 @@ const AddAlgorithm = ({ onSubmit = noop, algorithmValue }) => {
   ) : (
     <AddAlgorithmForm
       onToggle={toggleEditor}
-      onSubmit={onSubmit}
+      onSubmit={onWizardSubmit}
       isEdit={isEdit}
       keyValueObject={keyValueObject}
       setIsSubmitLoading={setIsSubmitLoading}
