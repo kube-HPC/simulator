@@ -10,7 +10,7 @@ import {
   RightPanel,
 } from 'components/Drawer';
 import formTemplate from 'config/template/addAlgorithmForm.template';
-import { useActions } from 'hooks';
+
 import {
   mapObjValues,
   notification,
@@ -20,7 +20,7 @@ import {
   deepCopyFromKeyValue,
   flattenObjKeyValue,
 } from 'utils';
-import { OVERVIEW_TABS } from 'const';
+
 import { CodeBuild, GitBuild, ImageBuild } from './BuildTypes';
 import MemoryField from './MemoryField.react';
 import schema from './schema';
@@ -90,10 +90,6 @@ const AddAlgorithmForm = ({
   onSubmit,
   isEdit,
   keyValueObject,
-  setIsSubmitLoading,
-  onOverviewAlgorithm,
-  applyAlgorithmVersion,
-  onAfterSaveAlgorithm,
   isCheckForceStopAlgorithms,
   isSubmitLoading,
   setIsCheckForceStopAlgorithms,
@@ -142,7 +138,7 @@ const AddAlgorithmForm = ({
     isEdit,
   });
 
-  const { applyAlgorithm } = useActions();
+  // const { applyAlgorithm } = useActions();
   const onFormSubmit = () => {
     validateFields().then(formObject => {
       if (buildType === BUILD_TYPES.CODE.field && !fileList.length && !isEdit) {
@@ -200,19 +196,6 @@ const AddAlgorithmForm = ({
         predicate: isNotEmpty,
       });
       formData.append(`payload`, stringify(payloadFiltered));
-      setIsSubmitLoading(true);
-      if (isEdit) {
-        applyAlgorithm(formData, res => {
-          if (res.buildId) {
-            onOverviewAlgorithm(OVERVIEW_TABS.BUILDS);
-          } else {
-            applyAlgorithmVersion(res);
-          }
-        });
-      } else {
-        applyAlgorithm(formData, res => onAfterSaveAlgorithm(res));
-      }
-
       onSubmit({ formData, payload: payloadFiltered });
     });
   };
@@ -300,6 +283,7 @@ const AddAlgorithmForm = ({
               Stop running algorithms
             </Checkbox>
           )}
+
           <RightAlignedButton
             type="primary"
             htmlType="submit"
@@ -321,11 +305,6 @@ AddAlgorithmForm.propTypes = {
   onToggle: PropTypes.func.isRequired,
   onSubmit: PropTypes.func,
   isEdit: PropTypes.bool.isRequired,
-
-  setIsSubmitLoading: PropTypes.bool.isRequired,
-  onOverviewAlgorithm: PropTypes.func.isRequired,
-  applyAlgorithmVersion: PropTypes.func.isRequired,
-  onAfterSaveAlgorithm: PropTypes.func.isRequired,
   refCheckForceStopAlgorithms: PropTypes.func.isRequired,
   isCheckForceStopAlgorithms: PropTypes.bool.isRequired,
   isSubmitLoading: PropTypes.bool.isRequired,

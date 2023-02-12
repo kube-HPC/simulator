@@ -35,7 +35,7 @@ const EditDrawer = () => {
           <TabDrawerText>{DRAWER_TITLES.ALGORITHM_EDIT}</TabDrawerText>
         </TabDrawer>
         {activeAlgorithm ? (
-          <AddAlgorithm getContainer={false} algorithmValue={algorithmValue} />
+          <AddAlgorithm algorithmValue={algorithmValue} />
         ) : (
           <MissingIdError />
         )}
