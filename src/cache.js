@@ -114,55 +114,56 @@ const cache = new InMemoryCache({
             return inactiveModeVar();
           },
         },
+
         metaMode: {
           read() {
             return metaVar();
           },
         },
-        algorithms: {
-          // eslint-disable-next-line no-unused-vars
-          merge(_existing = { algorithms: [] }, incoming) {
-            instanceCounterVar({
-              ...instanceCounterVar(),
-              algorithms:
-                incoming?.list?.length || incoming?.algorithmsCount || 0,
-            });
-            return incoming;
-          },
-        },
-        pipelines: {
-          // eslint-disable-next-line no-unused-vars
-          merge(_existing = { pipelines: [] }, incoming) {
-            instanceCounterVar({
-              ...instanceCounterVar(),
-              pipelines:
-                incoming?.list?.length || incoming?.pipelinesCount || 0,
-            });
-            return incoming;
-          },
-        },
-        dataSources: {
-          // eslint-disable-next-line no-unused-vars
-          merge(_existing = { dataSources: [] }, incoming) {
-            instanceCounterVar({
-              ...instanceCounterVar(),
-              dataSources:
-                incoming?.list?.length || incoming?.dataSourcesCount || 0,
-            });
-            return incoming;
-          },
-        },
-        discovery: {
-          // eslint-disable-next-line no-unused-vars
-          merge(_existing = { pipelineDriver: [], worker: [] }, incoming) {
-            instanceCounterVar({
-              ...instanceCounterVar(),
-              //  drivers: incoming?.pipelineDriver?.length,
-              //  workers: incoming?.worker?.length,
-            });
-            return incoming;
-          },
-        },
+        /* algorithms: {
+           // eslint-disable-next-line no-unused-vars
+           merge(_existing = { algorithms: [] }, incoming) {
+             instanceCounterVar({
+               ...instanceCounterVar(),
+               algorithms:
+                 incoming?.list?.length || incoming?.algorithmsCount || 0,
+             });
+             return incoming;
+           },
+         }, */
+        /*  pipelines: {
+            // eslint-disable-next-line no-unused-vars
+            merge(_existing = { pipelines: [] }, incoming) {
+              instanceCounterVar({
+                ...instanceCounterVar(),
+                pipelines:
+                  incoming?.list?.length || incoming?.pipelinesCount || 0,
+              });
+              return incoming;
+            },
+          }, */
+        /*   dataSources: {
+             // eslint-disable-next-line no-unused-vars
+             merge(_existing = { dataSources: [] }, incoming) {
+               instanceCounterVar({
+                 ...instanceCounterVar(),
+                 dataSources:
+                   incoming?.list?.length || incoming?.dataSourcesCount || 0,
+               });
+               return incoming;
+             },
+           }, */
+        //  discovery: {
+        // eslint-disable-next-line no-unused-vars
+        //    merge(_existing = { pipelineDriver: [], worker: [] }, incoming) {
+        //      instanceCounterVar({
+        //        ...instanceCounterVar(),
+        //  drivers: incoming?.pipelineDriver?.length,
+        //  workers: incoming?.worker?.length,
+        //     });
+        //      return incoming;
+        //    },
+        // },
         queueCount: {
           // eslint-disable-next-line no-unused-vars
           merge(_existing = { queueCount: [] }, incoming) {
