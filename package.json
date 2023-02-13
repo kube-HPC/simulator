@@ -41,7 +41,7 @@
     "react-collapse": "^5.1.0",
     "qs": "^6.10.1",
     "virtualizedtableforantd4": "^1.1.2",
-    "apexcharts": "^3.36.3",
+    "apexcharts": "^3.37.0",
     "react-apexcharts": "^1.4.0",
     "isnumber": "^1.0.0"
   },
@@ -59,7 +59,7 @@
     "@types/react-router-dom": "^5.1.7",
     "@types/vis": "^4.21.21",
     "ansi-to-react": "^5.1.0",
-    "antd": "^5.1.7",
+    "antd": "^5.2.0",
     "axios": "^0.21.1",
     "babel-eslint": "^10.0.3",
     "chonky": "^2.0.5",

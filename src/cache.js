@@ -157,8 +157,8 @@ const cache = new InMemoryCache({
           merge(_existing = { pipelineDriver: [], worker: [] }, incoming) {
             instanceCounterVar({
               ...instanceCounterVar(),
-              drivers: incoming?.pipelineDriver?.length,
-              workers: incoming?.worker?.length,
+              //  drivers: incoming?.pipelineDriver?.length,
+              //  workers: incoming?.worker?.length,
             });
             return incoming;
           },

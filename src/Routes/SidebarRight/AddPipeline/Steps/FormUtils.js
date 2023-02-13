@@ -116,13 +116,9 @@ export const FormItemLabelWrapper = styled(Form.Item)`
     text-align: left;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    width: 33.33333333%;
   }
 
   .ant-form-item-control-wrapper {
-    display: block;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    width: 66.66666667%;
+    margin-left: 181px;
   }
 `;

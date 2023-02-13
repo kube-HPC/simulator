@@ -240,56 +240,55 @@ const Nodes = ({ style }) => {
                 </Button>
               ) : null}
             </FlexBox>
-            <h2>
-              <FormItemLabelWrapper
-                label="Kind"
-                name={['nodes', id, 'kind']}
-                initialValue={
-                  initialState?.nodes[id]?.kind
-                    ? initialState.nodes[id].kind
-                    : 'algorithm'
-                }>
-                <Radio.Group
-                  buttonStyle="solid"
-                  style={{ display: 'flex', alignItems: 'center' }}>
-                  <Radio.Button value="algorithm">Algorithm</Radio.Button>
 
-                  {dataSourceIsEnable && (
-                    <Radio.Button value="dataSource">DataSource</Radio.Button>
-                  )}
+            <FormItemLabelWrapper
+              label="Kind"
+              name={['nodes', id, 'kind']}
+              initialValue={
+                initialState?.nodes[id]?.kind
+                  ? initialState.nodes[id].kind
+                  : 'algorithm'
+              }>
+              <Radio.Group
+                buttonStyle="solid"
+                style={{ display: 'flex', alignItems: 'center' }}>
+                <Radio.Button value="algorithm">Algorithm</Radio.Button>
 
-                  {isStreamingPipeline && (
-                    <Radio.Button value="gateway">Gateway</Radio.Button>
-                  )}
+                {dataSourceIsEnable && (
+                  <Radio.Button value="dataSource">DataSource</Radio.Button>
+                )}
 
-                  {!isStreamingPipeline && (
-                    <>
-                      <Radio.Button value="output">Output</Radio.Button>
-                      <Radio.Button value="hyperparamsTuner">
-                        Hyper Params
-                      </Radio.Button>
-                    </>
-                  )}
-                </Radio.Group>
-              </FormItemLabelWrapper>
+                {isStreamingPipeline && (
+                  <Radio.Button value="gateway">Gateway</Radio.Button>
+                )}
 
-              <Field
-                title="Node Name"
-                name={['nodeName']}
-                rootId={['nodes', id]}
-                extraRules={[
-                  {
-                    max: 32,
-                    message: 'Node Name has to be shorter than 32 characters',
-                  },
-                ]}>
-                <Input placeholder="Node Name" />
-              </Field>
+                {!isStreamingPipeline && (
+                  <>
+                    <Radio.Button value="output">Output</Radio.Button>
+                    <Radio.Button value="hyperparamsTuner">
+                      Hyper Params
+                    </Radio.Button>
+                  </>
+                )}
+              </Radio.Group>
+            </FormItemLabelWrapper>
 
-              {getFieldValue(['nodes', id, 'kind']) && (
-                <Node id={id} kind={getFieldValue(['nodes', id, 'kind'])} />
-              )}
-            </h2>
+            <Field
+              title="Node Name"
+              name={['nodeName']}
+              rootId={['nodes', id]}
+              extraRules={[
+                {
+                  max: 32,
+                  message: 'Node Name has to be shorter than 32 characters',
+                },
+              ]}>
+              <Input placeholder="Node Name" />
+            </Field>
+
+            {getFieldValue(['nodes', id, 'kind']) && (
+              <Node id={id} kind={getFieldValue(['nodes', id, 'kind'])} />
+            )}
           </BoldedFormField>
         </DataNode>
       ))}

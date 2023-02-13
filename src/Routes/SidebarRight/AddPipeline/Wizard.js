@@ -189,7 +189,7 @@ const Wizard = ({
 
       <BottomPanel>
         {!isRunPipeline && (
-          <PanelButton type="danger" onClick={wizardClear}>
+          <PanelButton danger onClick={wizardClear}>
             Clear
           </PanelButton>
         )}
