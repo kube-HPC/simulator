@@ -85,6 +85,7 @@ const AddDataSource = () => {
 
   return (
     <Form
+      labelAlign="left"
       name="create-dataSource"
       form={form}
       initialValues={{ gitKind: 'internal', storageKind: 'internal' }}
