@@ -23,6 +23,7 @@ input:-internal-autofill-selected {
 .ant-table-tbody > tr > td {
   border-bottom: 1px solid #1e4976 !important;
 }
+
 .ant-drawer .ant-table thead > tr > th {
   background: #373e60;
 }
@@ -30,6 +31,7 @@ input:-internal-autofill-selected {
 .ant-typography {
   color: #d9d9d9;
 }
+
 .ant-typography.ant-typography-secondary {
   color: #ffffffa3;
 }
@@ -55,11 +57,13 @@ input:-internal-autofill-selected {
 .ant-table-tbody > tr.ant-table-row:hover > td {
   background: inherit;
 }
+
 /* popup */
 .ant-drawer-header {
   background: #242c48;
   border-bottom: 1px solid #424856;
 }
+
 .ant-drawer-content {
   border-left: 1px solid #586a93;
 }
@@ -79,10 +83,12 @@ input:-internal-autofill-selected {
 .ant-card {
   background: #182039;
 }
+
 .ant-card-grid {
   box-shadow: 1px 0 0 0 #586a93, 0 1px 0 0 #586a93, 1px 1px 0 0 #586a93,
     1px 0 0 0 #586a93 inset, 0 1px 0 0 #586a93 inset;
 }
+
 .ant-drawer .ant-card {
   background-color: #202b4c;
 }
@@ -100,6 +106,7 @@ input:-internal-autofill-selected {
 .ant-drawer tr.ant-table-expanded-row:hover > td {
   background: #182039;
 }
+
 .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab-active {
   background: #393e66;
 }
@@ -112,6 +119,7 @@ input:-internal-autofill-selected {
 .ant-table-cell .ant-tag-has-color {
   color: #d9d9d9 !important;
 }
+
 .ant-progress-bg {
   filter: brightness(0.65);
 }
@@ -125,15 +133,17 @@ input:-internal-autofill-selected {
 .rc-md-editor {
   border: 1px solid #586a93;
 }
+
 .rc-md-navigation {
   background-color: #202f5e;
 }
 
-.rc-md-editor .editor-container .sec-html .html-code,
-.rc-md-editor .editor-container .sec-md .input {
-  background: rgb(28, 27, 71);
-  color: rgb(255, 255, 255);
-}
+/*
+.ant-btn.css-dev-only-do-not-override-1c5r9gg.ant-btn-default.ant-btn-icon-only,
+.ant-select-selector {
+  background: transparent !important;
+  background-color: transparent !important;
+}*/
 
 .rc-md-editor h1,
 .rc-md-editor h2,
@@ -143,9 +153,17 @@ input:-internal-autofill-selected {
 .rc-md-editor h6 {
   color: black;
 }
+
 .ant-radio-inner {
   border-color: #a1a1a1;
 }
+
+:where(.css-dev-only-do-not-override-1c5r9gg).ant-btn-default {
+  background-color: #141414;
+  border-color: #424242;
+  box-shadow: 0 2px 0 rgb(255 255 255 / 4%);
+}
+
 /*--------------------------------------------------------- */
 /* trace Dark */
 /*--------------------------------------------------------- */
@@ -184,6 +202,7 @@ input:-internal-autofill-selected {
   outline: 1px solid #385e8d;
   color: #d9d9d9;
 }
+
 .JaegerTrace .span-row:hover .span-name-wrapper {
   background: #334c66;
   background: linear-gradient(90deg, #334c66, #334c66 75%, #334c66);
@@ -266,6 +285,7 @@ input:-internal-autofill-selected {
 .JaegerTrace .span-row:hover .SpanBar--label {
   color: #d7d7d7;
 }
+
 .JaegerTrace .SpanTreeOffset {
   color: #d7d7d7;
 }

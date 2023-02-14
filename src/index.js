@@ -30,20 +30,22 @@ const ConfigProviderApp = () => {
   let themeProvider = null;
   switch (localStorage.getItem('theme')?.toUpperCase()) {
     case 'LIGHT':
-      themeProvider = defaultAlgorithm; // import('antd/dist/antd.css');
+      themeProvider = { algorithm: defaultAlgorithm }; // import('antd/dist/antd.css');
       break;
     case 'DARK':
-      themeProvider = darkAlgorithm; //  import('antd/dist/antd.dark.css');
+      themeProvider = {
+        algorithm: darkAlgorithm,
+        token: {
+          colorBgBase: '#182039',
+        },
+      }; //  import('antd/dist/antd.dark.css');
       break;
     default:
-      themeProvider = defaultAlgorithm; //  import('antd/dist/antd.css');
+      themeProvider = { algorithm: defaultAlgorithm }; //  import('antd/dist/antd.css');
   }
 
   return hasConfig ? (
-    <ConfigProvider
-      theme={{
-        algorithm: themeProvider,
-      }}>
+    <ConfigProvider theme={themeProvider}>
       <Router>
         <ReusableProvider>
           <ErrorBoundary>

@@ -58,9 +58,7 @@ body{
   border-radius: 10px;
 }
 
-.ant-layout {
-  background-color:  white;
-}
+
 
 .ant-select-item-option-content:empty:before{
   content: '[empty]';
