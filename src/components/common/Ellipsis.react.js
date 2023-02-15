@@ -5,7 +5,7 @@ import { copyToClipboard } from 'utils';
 
 const { Text } = Typography;
 
-const DEFAULT_LENGTH = 20;
+const DEFAULT_LENGTH = 30;
 
 const Ellipsis = ({
   text,
@@ -22,8 +22,10 @@ const Ellipsis = ({
       style={{
         cursor: 'pointer',
         whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        display: 'inline-block',
         textOverflow: ellipsis ? 'ellipsis' : 'visible',
-        ...(length ? { width: `${length}ch` } : {}),
+        ...(length ? { width: `${length * 5}px` } : {}),
       }}
       // eslint-disable-next-line
       type={type ? type : copyable && 'secondary'}

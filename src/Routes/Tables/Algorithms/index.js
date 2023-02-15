@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+
 import styled from 'styled-components';
 import { Route } from 'react-router-dom';
 import { Table } from 'components';
@@ -33,10 +34,13 @@ const AlgorithmsTable = () => {
       const filterAlgorithm = query.data?.algorithms?.list.filter(item =>
         item.name.includes(values.qAlgorithmName)
       );
-
-      setAlgorithmFilterList(filterAlgorithm);
+      const list = [...filterAlgorithm];
+      setAlgorithmFilterList(list);
     } else {
-      setAlgorithmFilterList(query.data?.algorithms?.list);
+      const list = [...query.data?.algorithms?.list];
+      setAlgorithmFilterList(
+        list.sort((x, y) => (x.modified < y.modified ? 1 : -1))
+      );
     }
   });
 
