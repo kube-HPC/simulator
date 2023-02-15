@@ -32,4 +32,7 @@ export const MetricHeader = styled.h4`
   margin: 0;
 `;
 
-export const MetricValue = styled.span``;
+export const MetricValue = styled.h5`
+  padding: 0;
+  margin: 0;
+`;

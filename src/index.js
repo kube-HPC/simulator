@@ -30,18 +30,25 @@ const ConfigProviderApp = () => {
   let themeProvider = null;
   switch (localStorage.getItem('theme')?.toUpperCase()) {
     case 'LIGHT':
-      themeProvider = { algorithm: defaultAlgorithm }; // import('antd/dist/antd.css');
+      themeProvider = { algorithm: defaultAlgorithm };
       break;
     case 'DARK':
       themeProvider = {
         algorithm: darkAlgorithm,
         token: {
           colorBgBase: '#182039',
+          colorTextBase: '#c5c5c5',
+          colorInfo: '#180d31',
+          colorPrimary: '#2e6fca',
+
+          wireframe: false,
+          colorBgLayout: '#180d31',
+          colorPrimaryBg: '#252f58',
         },
-      }; //  import('antd/dist/antd.dark.css');
+      };
       break;
     default:
-      themeProvider = { algorithm: defaultAlgorithm }; //  import('antd/dist/antd.css');
+      themeProvider = { algorithm: defaultAlgorithm };
   }
 
   return hasConfig ? (
