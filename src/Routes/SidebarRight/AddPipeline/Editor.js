@@ -11,7 +11,9 @@ import {
   BottomPanel,
   RightAlignedButton,
   PanelButton,
+  PanelButtonWizard,
 } from 'components/Drawer';
+import { Row, Col } from 'antd';
 
 const INITIAL_EDITOR_VALUE = stringify(addPipelineTemplate);
 
@@ -19,6 +21,7 @@ const JsonViewWrapper = styled.div`
   border: 1px solid ${COLOR_LAYOUT.border};
   border-bottom: none;
   flex: 1;
+  height: 90vh;
 `;
 
 const removeNodesPipeline = InitialState => {
@@ -78,7 +81,6 @@ const Editor = ({
     });
 
   const onDefault = () => setInnerState(INITIAL_EDITOR_VALUE);
-  const onClear = () => setInnerState('');
 
   useEffect(() => setValuesItemsState(false), [
     innerState,
@@ -88,32 +90,36 @@ const Editor = ({
 
   return (
     <>
-      <JsonViewWrapper>
-        <JsonEditor
-          value={innerState}
-          onChange={setInnerState}
-          height="100%"
-          width="100%"
-        />
-      </JsonViewWrapper>
+      <Row justify="center" align="top">
+        <Col span={21}>
+          <JsonViewWrapper>
+            <JsonEditor
+              value={innerState}
+              onChange={setInnerState}
+              height="100%"
+              width="100%"
+            />
+          </JsonViewWrapper>
+        </Col>
+        <Col span={3}>
+          <PanelButtonWizard
+            key="Editor"
+            onClick={() => setValuesItemsState(true)}>
+            Wizard View
+          </PanelButtonWizard>
+        </Col>
+      </Row>
 
       <BottomPanel width={DRAWER_SIZE.ADD_PIPELINE}>
         {/* <PanelButton key="Editor" onClick={handleToggle}> */}
-        <PanelButton key="Editor" onClick={() => setValuesItemsState(true)}>
-          Wizard View
-        </PanelButton>
+
         {!isRunPipeline && (
-          <>
-            <PanelButton
-              type="dashed"
-              onClick={onDefault}
-              style={{ margin: '0 1ch' }}>
-              Default
-            </PanelButton>
-            <PanelButton type="danger" onClick={onClear}>
-              Clear
-            </PanelButton>
-          </>
+          <PanelButton
+            type="dashed"
+            onClick={onDefault}
+            style={{ margin: '0 1ch' }}>
+            Default
+          </PanelButton>
         )}
         <RightAlignedButton
           type="primary"
