@@ -60,7 +60,7 @@
     "@types/vis": "^4.21.21",
     "ansi-to-react": "^5.1.0",
     "antd": "^5.2.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "babel-eslint": "^10.0.3",
     "chonky": "^2.0.5",
     "chonky-icon-fontawesome": "^2.0.5",
