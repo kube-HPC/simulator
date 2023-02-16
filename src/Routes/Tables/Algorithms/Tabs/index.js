@@ -3,7 +3,7 @@ import { CheckOutlined, RedoOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Modal } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import { Card, JsonSwitch, MdEditor, Tabs } from 'components/common';
-import { useReadme, useVersions } from 'hooks';
+import { useReadme, useVersions, useIsFirstRender } from 'hooks';
 import PropTypes from 'prop-types';
 import { OVERVIEW_TABS as TABS } from 'const';
 import AlgorithmBuildsTable from './Builds';
@@ -17,6 +17,10 @@ const AlgorithmsTabs = ({ algorithm }) => {
   ]);
 
   const [readme, setReadme] = useState();
+  const [isBuildFirstFail] = useState(
+    algorithm?.builds[0]?.status === 'failed'
+  );
+  const isFirstRender = useIsFirstRender();
 
   const { asyncFetch, post } = useReadme(useReadme.TYPES.ALGORITHM);
 
@@ -99,7 +103,12 @@ const AlgorithmsTabs = ({ algorithm }) => {
       {
         label: TABS.BUILDS,
         key: TABS.BUILDS,
-        children: <AlgorithmBuildsTable builds={algorithm.builds} />,
+        children: (
+          <AlgorithmBuildsTable
+            builds={algorithm.builds}
+            isOpenFirstLog={isFirstRender && isBuildFirstFail}
+          />
+        ),
       },
       {
         label: TABS.INFO,
@@ -113,14 +122,23 @@ const AlgorithmsTabs = ({ algorithm }) => {
         children: <MdEditor value={readme} onChange={setReadme} />,
       },
     ],
-    [activeKey, algorithm, dataSource, onApply, onDelete, readme]
+    [
+      activeKey,
+      algorithm,
+      dataSource,
+      isBuildFirstFail,
+      isFirstRender,
+      onApply,
+      onDelete,
+      readme,
+    ]
   );
 
   return (
     <Card isMargin>
       <Tabs
         items={TabsItemsJson}
-        activeKey={activeKey}
+        activeKey={isFirstRender && isBuildFirstFail ? TABS.BUILDS : activeKey}
         onChange={setActiveKey}
         extra={extra}
       />

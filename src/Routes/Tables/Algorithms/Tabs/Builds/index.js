@@ -19,7 +19,7 @@ const CardOverflow = styled(Card)`
   padding-bottom: 20px;
 `;
 
-const Builds = ({ builds }) => {
+const Builds = ({ builds, isOpenFirstLog }) => {
   const { cancelBuild, rerunBuild } = useActions();
   const [currentTime, setCurrentTime] = useState(Date.now());
   useEffect(() => {
@@ -73,6 +73,7 @@ const Builds = ({ builds }) => {
       columns={getColumns({ cancelBuild, rerunBuild, currentTime })}
       dataSource={builds}
       expandable={{
+        defaultExpandedRowKeys: isOpenFirstLog ? [builds[0].buildId] : [],
         expandedRowRender,
         // eslint-disable-next-line react/prop-types
         expandIcon: ({ expanded, onExpand, record }) =>
@@ -90,10 +91,12 @@ Builds.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
   builds: PropTypes.array,
+  isOpenFirstLog: PropTypes.bool,
 };
 
 Builds.defaultProps = {
   builds: [],
+  isOpenFirstLog: false,
 };
 
 export default React.memo(Builds);
