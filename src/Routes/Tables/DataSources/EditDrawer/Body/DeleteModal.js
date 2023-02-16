@@ -48,7 +48,7 @@ const DeleteModal = ({
     <Modal
       width="80ch"
       title="Delete Datasource"
-      visible={isVisible}
+      open={isVisible}
       onOk={onClick}
       okType="danger"
       okButtonProps={{ disabled: inputValue !== dataSource.name }}

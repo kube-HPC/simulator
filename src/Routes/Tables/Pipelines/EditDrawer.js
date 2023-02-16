@@ -21,7 +21,6 @@ const EditDrawer = () => {
   if (loading) return 'Loading...';
   return (
     <Drawer
-      getContainer={false}
       isOpened={isOn}
       onClose={setOff}
       onDidClose={goTo.root}
@@ -29,11 +28,7 @@ const EditDrawer = () => {
       width={DRAWER_SIZE.PIPELINE_INFO}
       title={pipeline?.name ?? pipelineId}
       asFlex>
-      {pipeline ? (
-        <AddPipeline getContainer={false} jsonPipeline={value} />
-      ) : (
-        <MissingIdError />
-      )}
+      {pipeline ? <AddPipeline jsonPipeline={value} /> : <MissingIdError />}
       <TabDrawer>
         <TabDrawerText>{DRAWER_TITLES.EDIT_PIPELINE}</TabDrawerText>
       </TabDrawer>

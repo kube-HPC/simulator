@@ -4,7 +4,7 @@ import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { dateTimeDefaultVar, instanceFiltersVar } from 'cache';
 import { useReactiveVar } from '@apollo/client';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { LOCAL_STORAGE_KEYS } from 'const';
 
 const Select = styled(AntSelect)`
@@ -42,7 +42,7 @@ const SetDefaultTime = () => {
         LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_TIME,
         itemSelect
       );
-      const newDefTime = moment().add(-itemSelect, 'hours');
+      const newDefTime = dayjs().add(-itemSelect, 'hour');
 
       dateTimeDefaultVar({ hour: parseInt(itemSelect, 10), time: newDefTime });
 

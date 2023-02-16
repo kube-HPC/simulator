@@ -1,12 +1,11 @@
-import React, { useCallback, useState } from 'react';
-import styled from 'styled-components';
+import React, { useCallback, useEffect } from 'react';
 import { Route } from 'react-router-dom';
 import { Table } from 'components';
 import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { Collapse } from 'react-collapse';
 import { Space } from 'antd';
-import { filterToggeledVar } from 'cache';
+import { filterToggeledVar, algorithmsListVar } from 'cache';
 import { ALGORITHMS_QUERY } from 'graphql/queries';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
@@ -18,33 +17,36 @@ const rowKey = ({ name }) => `algorithm-${name}`;
 
 const AlgorithmsTable = () => {
   const filterToggeled = useReactiveVar(filterToggeledVar);
-  const [algorithmFilterList, setAlgorithmFilterList] = useState([]);
+  const algorithmsList = useReactiveVar(algorithmsListVar);
+
   const { goTo } = usePath();
 
   const query = useQuery(ALGORITHMS_QUERY);
-  usePolling(query, 10000);
+  usePolling(query, 3000);
 
   const onRow = ({ name }) => ({
     onDoubleClick: () => goTo.overview({ nextAlgorithmId: name }),
   });
 
-  const onSubmitFilter = useCallback(values => {
-    if (values?.qAlgorithmName) {
-      const filterAlgorithm = query.data?.algorithms?.list.filter(item =>
-        item.name.includes(values.qAlgorithmName)
-      );
+  useEffect(() => {
+    if (!query.error && !query.loading) {
+      algorithmsListVar(query.data?.algorithms?.list);
+    }
+  }, [query.data?.algorithms?.list, query.error, query.loading]);
 
-      setAlgorithmFilterList(filterAlgorithm);
-    } else {
-      setAlgorithmFilterList(query.data?.algorithms?.list);
+  const onSubmitFilter = useCallback(values => {
+    if (!query.error && !query.loading) {
+      if (values?.qAlgorithmName) {
+        const filterAlgorithm = query.data?.algorithms?.list.filter(item =>
+          item.name.includes(values.qAlgorithmName)
+        );
+
+        algorithmsListVar(filterAlgorithm);
+      } else {
+        algorithmsListVar(query.data?.algorithms?.list);
+      }
     }
   });
-
-  const TableAlgorithms = styled(Table)`
-    .ant-table-body {
-      min-height: 80vh;
-    }
-  `;
 
   return (
     <>
@@ -61,16 +63,18 @@ const AlgorithmsTable = () => {
           />
         </Collapse>
 
-        <TableAlgorithms
+        <Table
+          pagination={{
+            position: ['bottomCenter'],
+            pageSize: '12',
+            hideOnSinglePage: true,
+            showSizeChanger: false,
+            size: 'large',
+          }}
           rowKey={rowKey}
-          //  dataSource={collection}
-          dataSource={algorithmFilterList}
+          dataSource={algorithmsList}
           columns={algorithmColumns}
           onRow={onRow}
-          expandIcon={false}
-          scroll={{
-            y: '80vh',
-          }}
         />
       </Space>
       <Route

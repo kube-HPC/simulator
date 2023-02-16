@@ -1,6 +1,6 @@
 import { InMemoryCache, makeVar } from '@apollo/client';
 import _ from 'lodash';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { LOCAL_STORAGE_KEYS } from 'const';
 
 const defTimeFromLocalStorage =
@@ -10,11 +10,13 @@ const defTimeFromLocalStorage =
   ) || 24;
 export const dateTimeDefaultVar = makeVar({
   hour: defTimeFromLocalStorage,
-  time: moment().add(-defTimeFromLocalStorage, 'hours'),
+  time: dayjs().add(-defTimeFromLocalStorage, 'hour'),
 });
 
 export const isPinActiveJobVar = makeVar(false);
 export const filterToggeledVar = makeVar(true);
+export const pipelineListVar = makeVar([]);
+export const algorithmsListVar = makeVar([]);
 export const inactiveModeVar = makeVar(false);
 export const instanceCounterVar = makeVar({
   jobs: 0,
@@ -114,55 +116,57 @@ const cache = new InMemoryCache({
             return inactiveModeVar();
           },
         },
+
         metaMode: {
           read() {
             return metaVar();
           },
         },
-        algorithms: {
-          // eslint-disable-next-line no-unused-vars
-          merge(_existing = { algorithms: [] }, incoming) {
-            instanceCounterVar({
-              ...instanceCounterVar(),
-              algorithms:
-                incoming?.list?.length || incoming?.algorithmsCount || 0,
-            });
-            return incoming;
-          },
-        },
-        pipelines: {
-          // eslint-disable-next-line no-unused-vars
-          merge(_existing = { pipelines: [] }, incoming) {
-            instanceCounterVar({
-              ...instanceCounterVar(),
-              pipelines:
-                incoming?.list?.length || incoming?.pipelinesCount || 0,
-            });
-            return incoming;
-          },
-        },
-        dataSources: {
-          // eslint-disable-next-line no-unused-vars
-          merge(_existing = { dataSources: [] }, incoming) {
-            instanceCounterVar({
-              ...instanceCounterVar(),
-              dataSources:
-                incoming?.list?.length || incoming?.dataSourcesCount || 0,
-            });
-            return incoming;
-          },
-        },
-        discovery: {
-          // eslint-disable-next-line no-unused-vars
-          merge(_existing = { pipelineDriver: [], worker: [] }, incoming) {
-            instanceCounterVar({
-              ...instanceCounterVar(),
-              drivers: incoming?.pipelineDriver?.length,
-              workers: incoming?.worker?.length,
-            });
-            return incoming;
-          },
-        },
+
+        /* algorithms: {
+           // eslint-disable-next-line no-unused-vars
+           merge(_existing = { algorithms: [] }, incoming) {
+             instanceCounterVar({
+               ...instanceCounterVar(),
+               algorithms:
+                 incoming?.list?.length || incoming?.algorithmsCount || 0,
+             });
+             return incoming;
+           },
+         }, */
+        /*  pipelines: {
+            // eslint-disable-next-line no-unused-vars
+            merge(_existing = { pipelines: [] }, incoming) {
+              instanceCounterVar({
+                ...instanceCounterVar(),
+                pipelines:
+                  incoming?.list?.length || incoming?.pipelinesCount || 0,
+              });
+              return incoming;
+            },
+          }, */
+        /*   dataSources: {
+             // eslint-disable-next-line no-unused-vars
+             merge(_existing = { dataSources: [] }, incoming) {
+               instanceCounterVar({
+                 ...instanceCounterVar(),
+                 dataSources:
+                   incoming?.list?.length || incoming?.dataSourcesCount || 0,
+               });
+               return incoming;
+             },
+           }, */
+        //  discovery: {
+        // eslint-disable-next-line no-unused-vars
+        //    merge(_existing = { pipelineDriver: [], worker: [] }, incoming) {
+        //      instanceCounterVar({
+        //        ...instanceCounterVar(),
+        //  drivers: incoming?.pipelineDriver?.length,
+        //  workers: incoming?.worker?.length,
+        //     });
+        //      return incoming;
+        //    },
+        // },
         queueCount: {
           // eslint-disable-next-line no-unused-vars
           merge(_existing = { queueCount: [] }, incoming) {

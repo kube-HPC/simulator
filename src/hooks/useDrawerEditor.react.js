@@ -13,7 +13,6 @@ const useDrawerEditor = ({ onSubmit = NOOP, submitText }) => {
     value => {
       const body = (
         <DrawerEditor
-          getContainer={false}
           value={value}
           submitText={submitText}
           onSubmit={onSubmit}

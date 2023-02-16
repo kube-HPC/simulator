@@ -37,7 +37,6 @@ const OverviewDrawer = () => {
 
   return (
     <DrawerOverView
-      getContainer={false}
       isOpened={isOn}
       onDidClose={goTo.root}
       onClose={setOff}

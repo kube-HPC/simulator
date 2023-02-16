@@ -2,7 +2,7 @@
 import React from 'react';
 import { COLOR } from 'styles/colors';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import Ansi from 'ansi-to-react';
 import { CopyOutlined } from '@ant-design/icons';
 import { Empty, Tooltip } from 'antd';
@@ -114,7 +114,7 @@ class Entry extends React.PureComponent {
       log: { timestamp, message, level },
     } = this.props;
     window.navigator.clipboard.writeText(
-      `${moment(+timestamp).format(timeFormat)} ${message} Level:${level}`
+      `${dayjs(+timestamp).format(timeFormat)} ${message} Level:${level}`
     );
     notification({
       message: 'Log Line Copied to clipboard',

@@ -139,11 +139,7 @@ const SidebarLeft = () => {
   }, []);
 
   // useDiscovery();
-  const { counters } = useCounters();
-  instanceCounterVar({
-    ...instanceCounterVar(),
-    ...counters,
-  });
+  useCounters();
 
   const instanceCounter = useReactiveVar(instanceCounterVar);
   const instanceFilters = useReactiveVar(instanceFiltersVar);

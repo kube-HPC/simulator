@@ -6,13 +6,13 @@ import { useLocation } from 'react-router-dom';
 // create in began styles antd by theme name
 switch (localStorage.getItem('theme')?.toUpperCase()) {
   case 'LIGHT':
-    import('antd/dist/antd.css');
+    // import('antd/dist/antd.css');
     break;
   case 'DARK':
-    import('antd/dist/antd.dark.css');
+    //  import('antd/dist/antd.dark.css');
     break;
   default:
-    import('antd/dist/antd.css');
+  //  import('antd/dist/antd.css');
 }
 
 // create in last styles to override styles antd
