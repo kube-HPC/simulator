@@ -7,6 +7,8 @@ import { Collapse } from 'react-collapse';
 import { Space } from 'antd';
 import { filterToggeledVar, algorithmsListVar } from 'cache';
 import { ALGORITHMS_QUERY } from 'graphql/queries';
+import { useVT } from 'virtualizedtableforantd4';
+import styled from 'styled-components';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
 import EditDrawer from './EditDrawer';
@@ -14,8 +16,13 @@ import algorithmColumns from './columns';
 import AlgorithmsQueryTable from './AlgorithmsQueryTable';
 
 const rowKey = ({ name }) => `algorithm-${name}`;
-
+const TableAlgorithms = styled(Table)`
+  .ant-table-body {
+    min-height: 80vh;
+  }
+`;
 const AlgorithmsTable = () => {
+  const [vt] = useVT(() => ({ scroll: { y: 600 } }), []);
   const filterToggeled = useReactiveVar(filterToggeledVar);
   const algorithmsList = useReactiveVar(algorithmsListVar);
 
@@ -63,14 +70,9 @@ const AlgorithmsTable = () => {
           />
         </Collapse>
 
-        <Table
-          pagination={{
-            position: ['bottomCenter'],
-            pageSize: '12',
-            hideOnSinglePage: true,
-            showSizeChanger: false,
-            size: 'large',
-          }}
+        <TableAlgorithms
+          scroll={{ y: 600 }} // It's important for using VT!!! DO NOT FORGET!!!
+          components={vt}
           rowKey={rowKey}
           dataSource={algorithmsList}
           columns={algorithmColumns}

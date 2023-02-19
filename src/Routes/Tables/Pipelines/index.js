@@ -71,17 +71,13 @@ const PipelinesTable = () => {
         </Collapse>
 
         <Table
-          pagination={{
-            position: ['bottomCenter'],
-            pageSize: '11',
-            hideOnSinglePage: true,
-            showSizeChanger: false,
-            size: 'large',
-          }}
           rowKey={rowKey}
           dataSource={pipelineList}
           columns={pipelineColumns}
           onRow={onRow}
+          scroll={{
+            y: '80vh',
+          }}
         />
       </Space>
 
