@@ -1,5 +1,4 @@
-
-import React, { useCallback, useState,useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Route } from 'react-router-dom';
 import { Table } from 'components';
 import { usePolling } from 'hooks';
@@ -43,22 +42,24 @@ const AlgorithmsTable = () => {
   }, [query.data?.algorithms?.list, query.error, query.loading]);
 
   const onSubmitFilter = useCallback(values => {
-
- if (!query.error && !query.loading) {
-    if (values?.qAlgorithmName) {
-      const filterAlgorithm = query.data?.algorithms?.list.filter(item =>
-        item.name.includes(values.qAlgorithmName)
-      );
-      const list = [...filterAlgorithm];
-      algorithmsListVar(list);
-    } else {
-      const list = [...query.data?.algorithms?.list];
-      algorithmsListVar(
-        list.sort((x, y) => (x.modified < y.modified ? 1 : -1))
-      );
-
+    if (!query.error && !query.loading) {
+      if (values?.qAlgorithmName) {
+        const filterAlgorithm = query.data?.algorithms?.list.filter(item =>
+          item.name.includes(values.qAlgorithmName)
+        );
+        const list = [...filterAlgorithm];
+        algorithmsListVar(list);
+      } else {
+        const list = [...query.data?.algorithms?.list];
+        algorithmsListVar(
+          list.sort((x, y) => (x.modified < y.modified ? 1 : -1))
+        );
+      }
     }
   });
+
+  if (query.loading) return 'Loading...';
+  if (query.error) return `Error! ${query.error.message}`;
 
   return (
     <>
