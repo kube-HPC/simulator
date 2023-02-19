@@ -5,7 +5,7 @@ import useQueryHook from 'hooks/useQuery';
 import { WTable } from 'components';
 import { Card } from 'components/common';
 import { Collapse } from 'react-collapse';
-import { Divider, Empty, BackTop, Button } from 'antd';
+import { Divider, Empty, FloatButton } from 'antd';
 import { ArrowUpOutlined } from '@ant-design/icons';
 import useJobsFunctionsLimit from './useJobsFunctionsLimit';
 import GridView from './GridView';
@@ -42,13 +42,12 @@ const JobsTable = () => {
 
   return (
     <>
+      <QueryForm
+        zoomDate={zoomedChangedDate}
+        onSubmit={onQuerySubmit}
+        params={mergedParams}
+      />
       <Collapse isOpened={filterToggeled}>
-        <QueryForm
-          zoomDate={zoomedChangedDate}
-          onSubmit={onQuerySubmit}
-          params={mergedParams}
-        />
-
         {dataSourceGraph && (
           <QueryDateChart
             dataSource={dataSourceGraph}
@@ -72,15 +71,14 @@ const JobsTable = () => {
         locale={localeEmpty}
       />
 
-      <BackTop target={BackToTop}>
-        <Button
-          style={{ opacity: '0.5' }}
-          type="primary"
-          shape="circle"
-          size="large"
-          icon={<ArrowUpOutlined />}
-        />
-      </BackTop>
+      <FloatButton.BackTop
+        target={BackToTop}
+        style={{ opacity: '0.7', marginRight: '70px' }}
+        type="primary"
+        shape="circle"
+        size="large"
+        icon={<ArrowUpOutlined />}
+      />
     </>
   );
 };

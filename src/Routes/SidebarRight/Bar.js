@@ -19,12 +19,17 @@ import { getBottomActions, topActions } from './schema';
 
 const SiderLight = styled(Layout.Sider)`
   border: none;
-  .ant-menu.ant-menu-inline-collapsed > .ant-menu-item .anticon {
+  .ant-menu.ant-menu-inline-collapsed > .ant-menu-item .anticon svg {
     font-size: 25px;
+
+    margin-left: -4px;
+    margin-top: 8px;
   }
 
-  .ant-menu.ant-menu-inline-collapsed .anticon {
+  .ant-menu.ant-menu-inline-collapsed .anticon svg {
     font-size: 25px;
+    margin-left: -4px;
+    margin-top: 8px;
   }
 `;
 

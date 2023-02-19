@@ -189,6 +189,7 @@ const Wizard = ({
       </Body>
 
       <BottomPanel>
+
         <PanelButton disabled={stepIdx === 0} onClick={onPrevious}>
           <LeftOutlined />
           Back

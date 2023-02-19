@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import { Form, AutoComplete, DatePicker } from 'antd';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 import { FiltersForms } from 'styles';
 import qs from 'qs';
@@ -38,8 +38,8 @@ const ErrorLogQueryTable = ({ onSubmit, ErrorLogList }) => {
       form.setFieldsValue({
         qErrorLogTime:
           [
-            moment(paramsUrl?.qErrorLogTime?.from),
-            moment(paramsUrl?.qErrorLogTime?.to),
+            dayjs(paramsUrl?.qErrorLogTime?.from),
+            dayjs(paramsUrl?.qErrorLogTime?.to),
           ] || null,
       });
 

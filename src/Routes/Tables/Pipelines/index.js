@@ -1,12 +1,13 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Route } from 'react-router-dom';
 import { Table } from 'components';
 import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { PIPELINE_QUERY } from 'graphql/queries';
 import { Collapse } from 'react-collapse';
-import { filterToggeledVar } from 'cache';
+import { filterToggeledVar, pipelineListVar } from 'cache';
 import { Space } from 'antd';
+
 import pipelineColumns from './pipelineColumns';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
@@ -18,11 +19,17 @@ const rowKey = ({ name }) => `pipeline-${name}`;
 
 const PipelinesTable = () => {
   const filterToggeled = useReactiveVar(filterToggeledVar);
-  const [pipelineFilterList, setPipelineFilterList] = useState([]);
+  const pipelineList = useReactiveVar(pipelineListVar);
   const { goTo } = usePath();
 
   const query = useQuery(PIPELINE_QUERY);
   usePolling(query, 3000);
+
+  useEffect(() => {
+    if (!query.error && !query.loading) {
+      pipelineListVar(query.data?.pipelines?.list);
+    }
+  }, [query.data?.pipelines?.list, query.error, query.loading]);
 
   const onRow = useCallback(
     record => ({
@@ -31,17 +38,22 @@ const PipelinesTable = () => {
     [goTo]
   );
 
-  const onSubmitFilter = useCallback(values => {
-    if (values?.qPipelineName) {
-      const filterPipeline = query.data?.pipelines?.list.filter(item =>
-        item.name.includes(values.qPipelineName)
-      );
+  const onSubmitFilter = useCallback(
+    values => {
+      if (!query.error && !query.loading) {
+        if (values?.qPipelineName) {
+          const filterPipeline = query.data?.pipelines?.list.filter(item =>
+            item.name.includes(values.qPipelineName)
+          );
 
-      setPipelineFilterList(filterPipeline);
-    } else {
-      setPipelineFilterList(query.data?.pipelines?.list);
-    }
-  });
+          pipelineListVar(filterPipeline);
+        } else {
+          pipelineListVar(query.data?.pipelines?.list);
+        }
+      }
+    },
+    [query.data?.pipelines?.list, query.error, query.loading]
+  );
 
   return (
     <>
@@ -53,18 +65,16 @@ const PipelinesTable = () => {
         }}>
         <Collapse isOpened={filterToggeled}>
           <PipelinesQueryTable
-            pipelinesList={query.data?.pipelines?.list}
+            pipelinesList={pipelineList}
             onSubmit={onSubmitFilter}
           />
         </Collapse>
 
         <Table
           rowKey={rowKey}
-          //  dataSource={collection}
-          dataSource={pipelineFilterList}
+          dataSource={pipelineList}
           columns={pipelineColumns}
           onRow={onRow}
-          expandIcon={false}
           scroll={{
             y: '80vh',
           }}

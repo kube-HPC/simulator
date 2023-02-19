@@ -8,7 +8,7 @@ const BottomPosition = styled.div`
 
   padding: 0 24px;
   border-top: 1px solid ${COLOR_LAYOUT.border};
-  width: 100%;
+  width: 93%;
 `;
 
 export default BottomPosition;
