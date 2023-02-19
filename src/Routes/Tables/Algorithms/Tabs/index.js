@@ -1,9 +1,15 @@
-import React, { useCallback, useEffect, useState, useMemo } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useMemo,
+  useRef,
+} from 'react';
 import { CheckOutlined, RedoOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Modal } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import { Card, JsonSwitch, MdEditor, Tabs } from 'components/common';
-import { useReadme, useVersions, useIsFirstRender } from 'hooks';
+import { useReadme, useVersions } from 'hooks';
 import PropTypes from 'prop-types';
 import { OVERVIEW_TABS as TABS } from 'const';
 import AlgorithmBuildsTable from './Builds';
@@ -11,6 +17,18 @@ import { VersionsTable } from './Versions';
 import usePath from './../usePath';
 
 const AlgorithmsTabs = ({ algorithm }) => {
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return true;
+    }
+
+    return null;
+  }, []);
+
   const { tabKey: activeKey, goTo } = usePath();
   const setActiveKey = useCallback(tab => goTo.overview({ nextTabKey: tab }), [
     goTo,
@@ -20,7 +38,6 @@ const AlgorithmsTabs = ({ algorithm }) => {
   const [isBuildFirstFail] = useState(
     algorithm?.builds[0]?.status === 'failed'
   );
-  const isFirstRender = useIsFirstRender();
 
   const { asyncFetch, post } = useReadme(useReadme.TYPES.ALGORITHM);
 
