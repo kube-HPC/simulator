@@ -3,15 +3,10 @@ import { filterToggeledVar } from 'cache';
 import useQueryHook from 'hooks/useQuery';
 import styled from 'styled-components';
 import { Route } from 'react-router-dom';
-import { FlexBox, Icons } from 'components/common';
+import { FlexBox } from 'components/common';
 import { USER_GUIDE } from 'const';
 import { COLOR_LAYOUT } from 'styles';
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  FilterOutlined,
-} from '@ant-design/icons';
-import { useLeftSidebar } from 'hooks';
+import { FilterOutlined } from '@ant-design/icons';
 
 // import AutoComplete from './AutoComplete';
 
@@ -71,46 +66,31 @@ const FilterButton = () => {
   );
 };
 
-const Header = () => {
-  const { toggle, isCollapsed } = useLeftSidebar();
+const Header = () => (
+  <Container className={USER_GUIDE.WELCOME}>
+    <ButtonsContainer>
+      <Route exact path="/jobs" component={ViewType} />
+      <Route exact path="/jobs" component={FilterButton} />
+      <Route exact path="/pipelines" component={FilterButton} />
+      <Route exact path="/algorithms" component={FilterButton} />
 
-  return (
-    <Container className={USER_GUIDE.WELCOME}>
-      <ButtonsContainer>
-        <Icons.Hover
-          type={
-            isCollapsed ? (
-              <MenuFoldOutlined title="open menu" />
-            ) : (
-              <MenuUnfoldOutlined title="collapse menu" />
-            )
-          }
-          onClick={toggle}
-        />
-
-        <Route exact path="/jobs" component={ViewType} />
-        <Route exact path="/jobs" component={FilterButton} />
-        <Route exact path="/pipelines" component={FilterButton} />
-        <Route exact path="/algorithms" component={FilterButton} />
-
-        <Route exact path="/jobs">
-          <TagsFiltersViews sectionName="jobs" />
-        </Route>
-        <Route exact path="/pipelines">
-          <TagsFiltersViews sectionName="pipelines" />
-        </Route>
-        <Route exact path="/algorithms">
-          <TagsFiltersViews sectionName="algorithms" />
-        </Route>
-      </ButtonsContainer>
-      {/*  <MiddleContainer>
+      <Route exact path="/jobs">
+        <TagsFiltersViews sectionName="jobs" />
+      </Route>
+      <Route exact path="/pipelines">
+        <TagsFiltersViews sectionName="pipelines" />
+      </Route>
+      <Route exact path="/algorithms">
+        <TagsFiltersViews sectionName="algorithms" />
+      </Route>
+    </ButtonsContainer>
+    {/*  <MiddleContainer>
         <Grow>
           <AutoComplete className={USER_GUIDE.HEADER.AUTO_COMPLETE} />
         </Grow>
   </MiddleContainer> */}
-      <HelpBar />
-    </Container>
-  );
-};
+    <HelpBar />
+  </Container>
+);
 
 export default Header;

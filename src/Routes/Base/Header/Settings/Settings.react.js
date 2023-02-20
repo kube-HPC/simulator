@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import { useActions, useLeftSidebar, useSiteThemeMode } from 'hooks';
+import { useActions, useSiteThemeMode } from 'hooks';
 import { appInfo } from 'config';
 import { ReactComponent as IconSwagger } from 'images/swagger.svg';
 import { selectors } from 'reducers';
@@ -30,7 +30,6 @@ const Settings = () => {
   const { toggleTheme, themeName } = useSiteThemeMode();
 
   const history = useHistory();
-  const { setCollapsed } = useLeftSidebar();
 
   const { triggerUserGuide } = useActions();
   const { hkubeSystemVersion } = useSelector(selectors.connection);
@@ -38,8 +37,7 @@ const Settings = () => {
   const onGuideClick = useCallback(() => {
     triggerUserGuide();
     history.push('/jobs');
-    setCollapsed(true);
-  }, [history, setCollapsed, triggerUserGuide]);
+  }, [history, triggerUserGuide]);
 
   const openUrl = url => () => window.open(url);
 
