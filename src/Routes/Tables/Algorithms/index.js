@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { Route } from 'react-router-dom';
 import { Table } from 'components';
 import { usePolling } from 'hooks';
@@ -18,11 +18,11 @@ import AlgorithmsQueryTable from './AlgorithmsQueryTable';
 const rowKey = ({ name }) => `algorithm-${name}`;
 const TableAlgorithms = styled(Table)`
   .ant-table-body {
-    min-height: 80vh;
+    min-height: 75vh;
   }
 `;
 const AlgorithmsTable = () => {
-  const [vt] = useVT(() => ({ scroll: { y: 600 } }), []);
+  const [vt] = useVT(() => ({ scroll: { y: '75vh' } }), []);
   const filterToggeled = useReactiveVar(filterToggeledVar);
   const algorithmsList = useReactiveVar(algorithmsListVar);
 
@@ -34,12 +34,6 @@ const AlgorithmsTable = () => {
   const onRow = ({ name }) => ({
     onDoubleClick: () => goTo.overview({ nextAlgorithmId: name }),
   });
-
-  useEffect(() => {
-    if (!query.error && !query.loading) {
-      algorithmsListVar(query.data?.algorithms?.list);
-    }
-  }, [query.data?.algorithms?.list, query.error, query.loading]);
 
   const onSubmitFilter = useCallback(values => {
     if (!query.error && !query.loading) {
@@ -58,9 +52,6 @@ const AlgorithmsTable = () => {
     }
   });
 
-  if (query.loading) return 'Loading...';
-  if (query.error) return `Error! ${query.error.message}`;
-
   return (
     <>
       <Space
@@ -77,7 +68,7 @@ const AlgorithmsTable = () => {
         </Collapse>
 
         <TableAlgorithms
-          scroll={{ y: 600 }} // It's important for using VT!!! DO NOT FORGET!!!
+          scroll={{ y: '75vh' }} // It's important for using VT!!! DO NOT FORGET!!!
           components={vt}
           rowKey={rowKey}
           dataSource={algorithmsList}
