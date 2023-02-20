@@ -4,8 +4,8 @@ import { Table } from 'components';
 import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { PIPELINE_QUERY } from 'graphql/queries';
-import { Collapse } from 'react-collapse';
-import { filterToggeledVar, pipelineListVar } from 'cache';
+
+import { pipelineListVar } from 'cache';
 import { Space } from 'antd';
 
 import pipelineColumns from './pipelineColumns';
@@ -18,7 +18,6 @@ import PipelinesQueryTable from './PipelinesQueryTable';
 const rowKey = ({ name }) => `pipeline-${name}`;
 
 const PipelinesTable = () => {
-  const filterToggeled = useReactiveVar(filterToggeledVar);
   const pipelineList = useReactiveVar(pipelineListVar);
   const { goTo } = usePath();
 
@@ -63,12 +62,10 @@ const PipelinesTable = () => {
         style={{
           display: 'flex',
         }}>
-        <Collapse isOpened={filterToggeled}>
-          <PipelinesQueryTable
-            pipelinesList={pipelineList}
-            onSubmit={onSubmitFilter}
-          />
-        </Collapse>
+        <PipelinesQueryTable
+          pipelinesList={pipelineList}
+          onSubmit={onSubmitFilter}
+        />
 
         <Table
           rowKey={rowKey}

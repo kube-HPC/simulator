@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+
 import { Route } from 'react-router-dom';
 import styled from 'styled-components';
 import useQueryHook from 'hooks/useQuery';
@@ -6,7 +7,12 @@ import { WTable } from 'components';
 import { Card } from 'components/common';
 import { Collapse } from 'react-collapse';
 import { Divider, Empty, FloatButton } from 'antd';
-import { ArrowUpOutlined } from '@ant-design/icons';
+import {
+  ArrowUpOutlined,
+  CaretUpOutlined,
+  CaretDownOutlined,
+} from '@ant-design/icons';
+import { LOCAL_STORAGE_KEYS } from 'const';
 import useJobsFunctionsLimit from './useJobsFunctionsLimit';
 import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
@@ -23,12 +29,33 @@ const localeEmpty = {
   ),
 };
 
+const Container = styled(Card)`
+  & .ant-card-body {
+    padding: 5px;
+  }
+`;
+
+const CaretDownOutlinedCenter = styled(CaretDownOutlined)`
+  position: absolute;
+  z-index: 99;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+`;
+const CaretUpOutlinedCenter = styled(CaretUpOutlined)`
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  margin-top: 18px;
+`;
 const BackToTop = () => document.querySelector('#jobsTable .ant-table-body');
 
 const JobsTable = () => {
   const {
     zoomedChangedDate,
     filterToggeled,
+    filterToggeledVar,
     onQuerySubmit,
     mergedParams,
     dataSourceGraph,
@@ -40,6 +67,14 @@ const JobsTable = () => {
     _dataSource,
   } = useJobsFunctionsLimit();
 
+  const toggleCollapseGraph = val => {
+    window.localStorage.setItem(
+      LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_IS_GRAPH,
+      val
+    );
+    filterToggeledVar(val);
+  };
+
   return (
     <>
       <QueryForm
@@ -47,15 +82,26 @@ const JobsTable = () => {
         onSubmit={onQuerySubmit}
         params={mergedParams}
       />
-      <Collapse isOpened={filterToggeled}>
-        {dataSourceGraph && (
-          <QueryDateChart
-            dataSource={dataSourceGraph}
-            onZoom={debouncedZoomChanged}
-          />
+      {!filterToggeled && (
+        <CaretDownOutlinedCenter
+          title="Open Graph"
+          onClick={() => toggleCollapseGraph(true)}
+        />
+      )}
+      <Collapse isOpened={filterToggeled || false}>
+        {dataSourceGraph && filterToggeled && (
+          <>
+            <QueryDateChart
+              dataSource={dataSourceGraph}
+              onZoom={debouncedZoomChanged}
+            />
+            <CaretUpOutlinedCenter
+              title="Close Graph"
+              onClick={() => toggleCollapseGraph(false)}
+            />
+            <Divider />
+          </>
         )}
-
-        <Divider />
       </Collapse>
 
       <WTable
@@ -82,12 +128,6 @@ const JobsTable = () => {
     </>
   );
 };
-
-const Container = styled(Card)`
-  & .ant-card-body {
-    padding: 5px;
-  }
-`;
 
 const GridViewWrapper = React.memo(() => (
   <Container bordered={false}>

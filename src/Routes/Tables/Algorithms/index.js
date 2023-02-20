@@ -3,9 +3,8 @@ import { Route } from 'react-router-dom';
 import { Table } from 'components';
 import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
-import { Collapse } from 'react-collapse';
 import { Space } from 'antd';
-import { filterToggeledVar, algorithmsListVar } from 'cache';
+import { algorithmsListVar } from 'cache';
 import { ALGORITHMS_QUERY } from 'graphql/queries';
 import { useVT } from 'virtualizedtableforantd4';
 import styled from 'styled-components';
@@ -23,7 +22,7 @@ const TableAlgorithms = styled(Table)`
 `;
 const AlgorithmsTable = () => {
   const [vt] = useVT(() => ({ scroll: { y: '75vh' } }), []);
-  const filterToggeled = useReactiveVar(filterToggeledVar);
+
   const algorithmsList = useReactiveVar(algorithmsListVar);
 
   const { goTo } = usePath();
@@ -60,12 +59,10 @@ const AlgorithmsTable = () => {
         style={{
           display: 'flex',
         }}>
-        <Collapse isOpened={filterToggeled}>
-          <AlgorithmsQueryTable
-            algorithmsList={query.data?.algorithms?.list}
-            onSubmit={onSubmitFilter}
-          />
-        </Collapse>
+        <AlgorithmsQueryTable
+          algorithmsList={query.data?.algorithms?.list}
+          onSubmit={onSubmitFilter}
+        />
 
         <TableAlgorithms
           scroll={{ y: '75vh' }} // It's important for using VT!!! DO NOT FORGET!!!
