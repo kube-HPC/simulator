@@ -12,7 +12,6 @@ import {
   CaretUpOutlined,
   CaretDownOutlined,
 } from '@ant-design/icons';
-import { LOCAL_STORAGE_KEYS } from 'const';
 import useJobsFunctionsLimit from './useJobsFunctionsLimit';
 import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
@@ -68,10 +67,6 @@ const JobsTable = () => {
   } = useJobsFunctionsLimit();
 
   const toggleCollapseGraph = val => {
-    window.localStorage.setItem(
-      LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_IS_GRAPH,
-      val
-    );
     filterToggeledVar(val);
   };
 

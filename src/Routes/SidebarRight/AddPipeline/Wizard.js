@@ -185,11 +185,10 @@ const Wizard = ({
           collapsed={undefined}
           style={{ flex: 1 }}
         />
-        <PanelButton onClick={handleToggle}>Editor View</PanelButton>
+        <PanelButton onClick={handleToggle}>Text editor</PanelButton>
       </Body>
 
       <BottomPanel>
-
         <PanelButton disabled={stepIdx === 0} onClick={onPrevious}>
           <LeftOutlined />
           Back
@@ -197,7 +196,7 @@ const Wizard = ({
 
         {!isRunPipeline && (
           <PanelButton type="dashed" onClick={wizardClear}>
-            Default
+            Reset
           </PanelButton>
         )}
 

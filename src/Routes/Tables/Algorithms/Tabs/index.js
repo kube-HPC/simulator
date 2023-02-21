@@ -18,17 +18,6 @@ import usePath from './../usePath';
 
 const AlgorithmsTabs = ({ algorithm }) => {
   const isFirstRender = useRef(true);
-
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-
-      return true;
-    }
-
-    return null;
-  }, []);
-
   const { tabKey: activeKey, goTo } = usePath();
   const setActiveKey = useCallback(tab => goTo.overview({ nextTabKey: tab }), [
     goTo,
@@ -101,6 +90,15 @@ const AlgorithmsTabs = ({ algorithm }) => {
       </Button>
     ) : null;
 
+  useEffect(() => {
+    if (isFirstRender.current && isBuildFirstFail) {
+      isFirstRender.current = false;
+      setActiveKey(TABS.BUILDS);
+    }
+
+    return null;
+  }, []);
+
   const TabsItemsJson = useMemo(
     () => [
       {
@@ -155,7 +153,7 @@ const AlgorithmsTabs = ({ algorithm }) => {
     <Card isMargin>
       <Tabs
         items={TabsItemsJson}
-        activeKey={isFirstRender && isBuildFirstFail ? TABS.BUILDS : activeKey}
+        activeKey={activeKey}
         onChange={setActiveKey}
         extra={extra}
       />

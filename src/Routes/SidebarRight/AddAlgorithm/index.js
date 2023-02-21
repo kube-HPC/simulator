@@ -36,8 +36,6 @@ const AddAlgorithm = ({ algorithmValue }) => {
   const [editorValue, setEditorValue] = useState(
     algorithmValue || DEFAULT_EDITOR_VALUE
   );
-  const onClear = () => setEditorValue(``);
-  const onDefault = () => setEditorValue(DEFAULT_EDITOR_VALUE);
 
   const { goTo } = usePath();
   const keyValueObject =
@@ -176,13 +174,7 @@ const AddAlgorithm = ({ algorithmValue }) => {
       </Card>
       <BottomPanel>
         <PanelButton key="editor" onClick={toggleEditor}>
-          Form View
-        </PanelButton>
-        <PanelButton key="default" type="dashed" onClick={onDefault}>
-          Default
-        </PanelButton>
-        <PanelButton key="clear" type="danger" onClick={onClear}>
-          Clear
+          Back to form
         </PanelButton>
 
         <RightPanel>

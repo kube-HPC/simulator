@@ -9,17 +9,13 @@ const defTimeFromLocalStorage =
     10
   ) || 24;
 
-const isGraph =
-  window.localStorage.getItem(LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_IS_GRAPH) ===
-    'true' || false;
-
 export const dateTimeDefaultVar = makeVar({
   hour: defTimeFromLocalStorage,
   time: dayjs().add(-defTimeFromLocalStorage, 'hour'),
 });
 
 export const isPinActiveJobVar = makeVar(false);
-export const filterToggeledVar = makeVar(isGraph);
+export const filterToggeledVar = makeVar(true);
 export const pipelineListVar = makeVar([]);
 export const algorithmsListVar = makeVar([]);
 export const inactiveModeVar = makeVar(false);

@@ -15,13 +15,11 @@ import {
 } from 'components/Drawer';
 import { Row, Col } from 'antd';
 
-const INITIAL_EDITOR_VALUE = stringify(addPipelineTemplate);
-
 const JsonViewWrapper = styled.div`
   border: 1px solid ${COLOR_LAYOUT.border};
   border-bottom: none;
   flex: 1;
-  height: 90vh;
+  height: 80vh;
 `;
 
 const removeNodesPipeline = InitialState => {
@@ -42,7 +40,13 @@ const Editor = ({
   initialState,
   setEditorState,
   isRunPipeline,
+  isEdit,
 }) => {
+  const intervalEditorValue = useMemo(
+    () => (isEdit ? stringify(initialState) : stringify(addPipelineTemplate)),
+    []
+  );
+
   const nodes = useMemo(() => initialState?.nodes, []);
 
   const [innerState, setInnerState] = useState(() =>
@@ -80,7 +84,7 @@ const Editor = ({
       },
     });
 
-  const onDefault = () => setInnerState(INITIAL_EDITOR_VALUE);
+  const onDefault = () => setInnerState(intervalEditorValue);
 
   useEffect(() => setValuesItemsState(false), [
     innerState,
@@ -105,7 +109,7 @@ const Editor = ({
           <PanelButtonWizard
             key="Editor"
             onClick={() => setValuesItemsState(true)}>
-            Wizard View
+            Back to wizard
           </PanelButtonWizard>
         </Col>
       </Row>
@@ -118,7 +122,7 @@ const Editor = ({
             type="dashed"
             onClick={onDefault}
             style={{ margin: '0 1ch' }}>
-            Default
+            Reset
           </PanelButton>
         )}
         <RightAlignedButton
@@ -141,6 +145,7 @@ Editor.propTypes = {
   // eslint-disable-next-line
   initialState: PropTypes.object.isRequired,
   isRunPipeline: PropTypes.bool.isRequired,
+  isEdit: PropTypes.bool.isRequired,
 };
 
 export default Editor;
