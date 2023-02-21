@@ -270,6 +270,7 @@ const useJobsFunctionsLimit = () => {
   return {
     zoomedChangedDate,
     filterToggeled,
+    filterToggeledVar,
     onQuerySubmit,
     mergedParams,
     dataSourceGraph,

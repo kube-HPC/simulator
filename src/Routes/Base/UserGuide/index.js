@@ -8,7 +8,6 @@ import {
   changeStep as _changeStep,
 } from 'actions/userGuide.action';
 
-import { useLeftSidebar } from 'hooks';
 import userGuideSteps from './UserGuideSteps.react';
 import UserGuideTooltip from './UserGuideTooltip.react';
 
@@ -16,7 +15,6 @@ const stepAction = [ACTIONS.NEXT, ACTIONS.PREV, ACTIONS.INIT, ACTIONS.UPDATE];
 
 const UserGuide = () => {
   const history = useHistory();
-  const { setCollapsed } = useLeftSidebar();
 
   const { isOn } = useSelector(selectors.userGuide);
   const dispatch = useDispatch();
@@ -32,13 +30,12 @@ const UserGuide = () => {
       if (type === EVENTS.TOUR_START) {
         history.push('/jobs');
       } else if (type === EVENTS.TOUR_END) {
-        setCollapsed(false);
         trigger();
       } else if (stepAction.includes(action) && type === EVENTS.STEP_BEFORE) {
         changeStep(index);
       }
     },
-    [changeStep, history, trigger, setCollapsed]
+    [changeStep, history, trigger]
   );
 
   return (

@@ -1,11 +1,10 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { Route } from 'react-router-dom';
 import { Table } from 'components';
 import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
-import { Collapse } from 'react-collapse';
 import { Space } from 'antd';
-import { filterToggeledVar, algorithmsListVar } from 'cache';
+import { algorithmsListVar } from 'cache';
 import { ALGORITHMS_QUERY } from 'graphql/queries';
 import { useVT } from 'virtualizedtableforantd4';
 import styled from 'styled-components';
@@ -18,12 +17,12 @@ import AlgorithmsQueryTable from './AlgorithmsQueryTable';
 const rowKey = ({ name }) => `algorithm-${name}`;
 const TableAlgorithms = styled(Table)`
   .ant-table-body {
-    min-height: 80vh;
+    min-height: 75vh;
   }
 `;
 const AlgorithmsTable = () => {
-  const [vt] = useVT(() => ({ scroll: { y: 600 } }), []);
-  const filterToggeled = useReactiveVar(filterToggeledVar);
+  const [vt] = useVT(() => ({ scroll: { y: '75vh' } }), []);
+
   const algorithmsList = useReactiveVar(algorithmsListVar);
 
   const { goTo } = usePath();
@@ -35,22 +34,19 @@ const AlgorithmsTable = () => {
     onDoubleClick: () => goTo.overview({ nextAlgorithmId: name }),
   });
 
-  useEffect(() => {
-    if (!query.error && !query.loading) {
-      algorithmsListVar(query.data?.algorithms?.list);
-    }
-  }, [query.data?.algorithms?.list, query.error, query.loading]);
-
   const onSubmitFilter = useCallback(values => {
     if (!query.error && !query.loading) {
       if (values?.qAlgorithmName) {
         const filterAlgorithm = query.data?.algorithms?.list.filter(item =>
           item.name.includes(values.qAlgorithmName)
         );
-
-        algorithmsListVar(filterAlgorithm);
+        const list = [...filterAlgorithm];
+        algorithmsListVar(list);
       } else {
-        algorithmsListVar(query.data?.algorithms?.list);
+        const list = [...query.data?.algorithms?.list];
+        algorithmsListVar(
+          list.sort((x, y) => (x.modified < y.modified ? 1 : -1))
+        );
       }
     }
   });
@@ -63,15 +59,13 @@ const AlgorithmsTable = () => {
         style={{
           display: 'flex',
         }}>
-        <Collapse isOpened={filterToggeled}>
-          <AlgorithmsQueryTable
-            algorithmsList={query.data?.algorithms?.list}
-            onSubmit={onSubmitFilter}
-          />
-        </Collapse>
+        <AlgorithmsQueryTable
+          algorithmsList={query.data?.algorithms?.list}
+          onSubmit={onSubmitFilter}
+        />
 
         <TableAlgorithms
-          scroll={{ y: 600 }} // It's important for using VT!!! DO NOT FORGET!!!
+          scroll={{ y: '75vh' }} // It's important for using VT!!! DO NOT FORGET!!!
           components={vt}
           rowKey={rowKey}
           dataSource={algorithmsList}

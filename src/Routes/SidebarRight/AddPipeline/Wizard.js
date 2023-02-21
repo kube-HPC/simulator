@@ -185,19 +185,20 @@ const Wizard = ({
           collapsed={undefined}
           style={{ flex: 1 }}
         />
+        <PanelButton onClick={handleToggle}>Text editor</PanelButton>
       </Body>
 
       <BottomPanel>
-        {!isRunPipeline && (
-          <PanelButton danger onClick={wizardClear}>
-            Clear
-          </PanelButton>
-        )}
-        <PanelButton onClick={handleToggle}>Editor View</PanelButton>
         <PanelButton disabled={stepIdx === 0} onClick={onPrevious}>
           <LeftOutlined />
           Back
         </PanelButton>
+
+        {!isRunPipeline && (
+          <PanelButton type="dashed" onClick={wizardClear}>
+            Reset
+          </PanelButton>
+        )}
 
         <RightAlignedBox>
           {(!isRunPipeline || (isRunPipeline && !isLastStep)) && (

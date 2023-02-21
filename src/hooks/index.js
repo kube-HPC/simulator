@@ -2,6 +2,7 @@ import useDataSourceSnapshots from './dataSources/useSnapshots';
 import useDataSources from './dataSources/useDataSources';
 import useDataSourceVersions from './dataSources/useVersions';
 
+export { default as useIsFirstRender } from './useIsFirstRender';
 export { default as useActions } from './useActions';
 export { default as useBoards } from './useBoards';
 export { default as useDrawer } from './useDrawer';

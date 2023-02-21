@@ -272,7 +272,7 @@ const AddAlgorithmForm = ({
       </Collapsible>
 
       <BottomPanel style={{ marginTop: 'auto' }}>
-        <PanelButton onClick={onToggle}>Editor View</PanelButton>
+        <PanelButton onClick={onToggle}>Text editor</PanelButton>
 
         <RightPanel>
           {isEdit && (

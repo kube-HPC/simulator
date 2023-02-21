@@ -10,6 +10,10 @@ export const BottomPanel = styled.div`
   margin-top: 1em;
 `;
 
+export const PanelButtonWizard = styled(Button)`
+  margin-left: 2ch;
+`;
+
 export const PanelButton = styled(Button)`
   margin-right: 1ch;
 `;

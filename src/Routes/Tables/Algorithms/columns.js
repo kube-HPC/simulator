@@ -1,18 +1,24 @@
 import React from 'react';
 import { WarningOutlined } from '@ant-design/icons';
 import { Tag } from 'antd';
+import Moment from 'react-moment';
 import { Ellipsis } from 'components/common';
 import { sorter } from 'utils/stringHelper';
 import { errorsCode } from '@hkube/consts';
 import AlgorithmActions from './AlgorithmActions.react';
 import AlgorithmBuildStats from './AlgorithmBuildStats.react';
 
+const LastModified = timestamp => (
+  <Tag>
+    <Moment format="DD/MM/YY HH:mm:ss">{+timestamp}</Moment>
+  </Tag>
+);
 const HotWorkers = minHotWorkers => <Tag>{minHotWorkers}</Tag>;
 const Memory = mem => <Tag>{mem || 'No Memory Specified'}</Tag>;
 const Cpu = cpu => <Tag>{cpu || 'No CPU Assigned'}</Tag>;
 const Image = algorithmImage =>
   algorithmImage ? (
-    <Ellipsis copyable text={algorithmImage} />
+    <Ellipsis copyable text={algorithmImage} length="50" />
   ) : (
     <Tag>No Image</Tag>
   );
@@ -34,10 +40,11 @@ const sortByName = (a, b) => sorter(a.name, b.name);
 const filterByImage = (value, record) => record.algorithmImage.includes(value);
 const sortByImage = (a, b) => sorter(a.algorithmImage, b.algorithmImage);
 const sortByMinHotWorkers = (a, b) => sorter(a.workerImage, b.workerImage);
+const sortByLastModified = (a, b) => sorter(a.modified, b.modified);
 
 export default [
   {
-    width: '15%',
+    width: '12%',
     title: 'Algorithm Name',
     dataIndex: ['name'],
     key: 'name',
@@ -80,6 +87,14 @@ export default [
     key: 'minHotWorkers',
     sorter: sortByMinHotWorkers,
     render: HotWorkers,
+  },
+  {
+    width: '10%',
+    title: 'Last modified',
+    dataIndex: ['modified'],
+    key: 'modified',
+    sorter: sortByLastModified,
+    render: LastModified,
   },
   {
     width: '20%',

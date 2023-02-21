@@ -11,14 +11,15 @@ import {
   BottomPanel,
   RightAlignedButton,
   PanelButton,
+  PanelButtonWizard,
 } from 'components/Drawer';
-
-const INITIAL_EDITOR_VALUE = stringify(addPipelineTemplate);
+import { Row, Col } from 'antd';
 
 const JsonViewWrapper = styled.div`
   border: 1px solid ${COLOR_LAYOUT.border};
   border-bottom: none;
   flex: 1;
+  height: 80vh;
 `;
 
 const removeNodesPipeline = InitialState => {
@@ -39,7 +40,13 @@ const Editor = ({
   initialState,
   setEditorState,
   isRunPipeline,
+  isEdit,
 }) => {
+  const intervalEditorValue = useMemo(
+    () => (isEdit ? stringify(initialState) : stringify(addPipelineTemplate)),
+    []
+  );
+
   const nodes = useMemo(() => initialState?.nodes, []);
 
   const [innerState, setInnerState] = useState(() =>
@@ -77,8 +84,7 @@ const Editor = ({
       },
     });
 
-  const onDefault = () => setInnerState(INITIAL_EDITOR_VALUE);
-  const onClear = () => setInnerState('');
+  const onDefault = () => setInnerState(intervalEditorValue);
 
   useEffect(() => setValuesItemsState(false), [
     innerState,
@@ -88,32 +94,36 @@ const Editor = ({
 
   return (
     <>
-      <JsonViewWrapper>
-        <JsonEditor
-          value={innerState}
-          onChange={setInnerState}
-          height="100%"
-          width="100%"
-        />
-      </JsonViewWrapper>
+      <Row justify="center" align="top">
+        <Col span={21}>
+          <JsonViewWrapper>
+            <JsonEditor
+              value={innerState}
+              onChange={setInnerState}
+              height="100%"
+              width="100%"
+            />
+          </JsonViewWrapper>
+        </Col>
+        <Col span={3}>
+          <PanelButtonWizard
+            key="Editor"
+            onClick={() => setValuesItemsState(true)}>
+            Back to wizard
+          </PanelButtonWizard>
+        </Col>
+      </Row>
 
       <BottomPanel width={DRAWER_SIZE.ADD_PIPELINE}>
         {/* <PanelButton key="Editor" onClick={handleToggle}> */}
-        <PanelButton key="Editor" onClick={() => setValuesItemsState(true)}>
-          Wizard View
-        </PanelButton>
+
         {!isRunPipeline && (
-          <>
-            <PanelButton
-              type="dashed"
-              onClick={onDefault}
-              style={{ margin: '0 1ch' }}>
-              Default
-            </PanelButton>
-            <PanelButton type="danger" onClick={onClear}>
-              Clear
-            </PanelButton>
-          </>
+          <PanelButton
+            type="dashed"
+            onClick={onDefault}
+            style={{ margin: '0 1ch' }}>
+            Reset
+          </PanelButton>
         )}
         <RightAlignedButton
           type="primary"
@@ -135,6 +145,7 @@ Editor.propTypes = {
   // eslint-disable-next-line
   initialState: PropTypes.object.isRequired,
   isRunPipeline: PropTypes.bool.isRequired,
+  isEdit: PropTypes.bool.isRequired,
 };
 
 export default Editor;

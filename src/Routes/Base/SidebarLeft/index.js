@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { animated, useSpring } from 'react-spring';
 import styled from 'styled-components';
 // import isEqual from 'lodash/isEqual';
-import { useLeftSidebar, useSiteThemeMode } from 'hooks';
+import { useSiteThemeMode } from 'hooks';
 import Icon from '@ant-design/icons';
 import { Layout, Menu, Tag, Badge } from 'antd';
 import { Link, useLocation, useParams } from 'react-router-dom';
@@ -148,7 +148,6 @@ const SidebarLeft = () => {
   const dataCountSource = instanceCounterAdapter(instanceCounter);
   const { isOn } = useSelector(selectors.userGuide);
   const dataCount = isOn ? dataCountMock : dataCountSource;
-  const { isCollapsed, toggle } = useLeftSidebar();
   const { pageName } = useParams();
   const { themeName } = useSiteThemeMode();
 
@@ -185,14 +184,10 @@ const SidebarLeft = () => {
 
   return (
     <Border>
-      <Sider
-        className={USER_GUIDE.SIDEBAR_LEFT}
-        theme={themeName}
-        onCollapse={toggle}
-        collapsed={isCollapsed}>
+      <Sider className={USER_GUIDE.SIDEBAR_LEFT} theme={themeName}>
         <LogoContainer>
           <IconLogo component={LogoFish} />
-          {!isCollapsed && <AnimatedTitle />}
+          <AnimatedTitle />
         </LogoContainer>
         <MenuMargin
           items={menuItemsJson}

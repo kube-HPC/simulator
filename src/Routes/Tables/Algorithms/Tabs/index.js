@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useState, useMemo } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useMemo,
+  useRef,
+} from 'react';
 import { CheckOutlined, RedoOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Modal } from 'antd';
 import Text from 'antd/lib/typography/Text';
@@ -11,12 +17,16 @@ import { VersionsTable } from './Versions';
 import usePath from './../usePath';
 
 const AlgorithmsTabs = ({ algorithm }) => {
+  const isFirstRender = useRef(true);
   const { tabKey: activeKey, goTo } = usePath();
   const setActiveKey = useCallback(tab => goTo.overview({ nextTabKey: tab }), [
     goTo,
   ]);
 
   const [readme, setReadme] = useState();
+  const [isBuildFirstFail] = useState(
+    algorithm?.builds[0]?.status === 'failed'
+  );
 
   const { asyncFetch, post } = useReadme(useReadme.TYPES.ALGORITHM);
 
@@ -80,6 +90,15 @@ const AlgorithmsTabs = ({ algorithm }) => {
       </Button>
     ) : null;
 
+  useEffect(() => {
+    if (isFirstRender.current && isBuildFirstFail) {
+      isFirstRender.current = false;
+      setActiveKey(TABS.BUILDS);
+    }
+
+    return null;
+  }, []);
+
   const TabsItemsJson = useMemo(
     () => [
       {
@@ -99,7 +118,12 @@ const AlgorithmsTabs = ({ algorithm }) => {
       {
         label: TABS.BUILDS,
         key: TABS.BUILDS,
-        children: <AlgorithmBuildsTable builds={algorithm.builds} />,
+        children: (
+          <AlgorithmBuildsTable
+            builds={algorithm.builds}
+            isOpenFirstLog={isFirstRender && isBuildFirstFail}
+          />
+        ),
       },
       {
         label: TABS.INFO,
@@ -113,7 +137,16 @@ const AlgorithmsTabs = ({ algorithm }) => {
         children: <MdEditor value={readme} onChange={setReadme} />,
       },
     ],
-    [activeKey, algorithm, dataSource, onApply, onDelete, readme]
+    [
+      activeKey,
+      algorithm,
+      dataSource,
+      isBuildFirstFail,
+      isFirstRender,
+      onApply,
+      onDelete,
+      readme,
+    ]
   );
 
   return (

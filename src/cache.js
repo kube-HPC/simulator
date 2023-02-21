@@ -8,6 +8,7 @@ const defTimeFromLocalStorage =
     window.localStorage.getItem(LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_TIME),
     10
   ) || 24;
+
 export const dateTimeDefaultVar = makeVar({
   hour: defTimeFromLocalStorage,
   time: dayjs().add(-defTimeFromLocalStorage, 'hour'),

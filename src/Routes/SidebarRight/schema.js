@@ -1,6 +1,5 @@
 import { ReactComponent as IconAddPipeline } from 'images/no-fill/add-pipeline.svg';
 import { ReactComponent as IconAddAlgorithm } from 'images/no-fill/add-algorithm.svg';
-import { ReactComponent as IconRawFile } from 'images/raw.svg';
 import { ReactComponent as IconDataSource } from 'images/datasource.svg';
 import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
 import { ReactComponent as DriversIcon } from 'images/drivers-icon.svg';
@@ -21,10 +20,6 @@ export const topActions = [
   {
     name: RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM,
     component: IconAddAlgorithm,
-  },
-  {
-    name: RIGHT_SIDEBAR_NAMES.RUN_RAW_PIPELINE,
-    component: IconRawFile,
   },
   {
     name: RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE,
