@@ -7,7 +7,7 @@ import { BugOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { Button, Empty, Tooltip } from 'antd';
 import { FlexBox, JsonSwitch } from 'components/common';
 import { useActions } from 'hooks';
-import { useAlgorithmByName } from 'hooks/graphql';
+import { useAlgorithmByVersion } from 'hooks/graphql';
 import { getTaskDetails } from '../graphUtils';
 import NodeInputOutput from './NodeInputOutput';
 import NodeLogs from '../NodeLogs';
@@ -37,13 +37,16 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
   //  );
   let algorithmDetails = null;
   // node && node.algorithmName && useAlgorithmByName(node.algorithmName);
-  const query = useAlgorithmByName(node.algorithmName);
+  const query = useAlgorithmByVersion(
+    node.algorithmName,
+    node.algorithmVersion
+  );
   const [selectTabbyKind, setSelectTabByKind] = useState('logs-tab');
   query &&
     query.data &&
-    query.data.algorithmsByName &&
+    query.data.algorithmsByVersion &&
     (algorithmDetails = removeNullUndefinedCleanDeep(
-      query.data.algorithmsByName
+      query.data.algorithmsByVersion
     ));
 
   const { getCaching } = useActions();
@@ -89,6 +92,7 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
     if (algorithmDetails?.debugUrl) {
       return {
         name: algorithmDetails.name,
+        version: algorithmDetails.version,
         debugUrl: algorithmDetails.debugUrl,
       };
     }

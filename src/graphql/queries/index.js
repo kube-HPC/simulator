@@ -12,6 +12,7 @@ export { default as ALGORITHMS_QUERY } from './algorithms-query';
 export { default as ALGORITHM_BUILDS_FRAGMENTS } from './algorithm-builds-by-name-fragments';
 export { default as ALGORITHM_AND_PIPELINE_NAMES } from './algorithm-pipeline-names';
 export { default as ALGORITHM_BY_NAME_QUERY } from './algorithm-by-name-query';
+export { default as ALGORITHM_BY_VERSION_QUERY } from './algorithm-by-version-query';
 
 export { default as DISCOVERY_QUERY } from './discovery-query';
 export { default as WORKERS_ALL_QUERY } from './Workers/workers-query';
@@ -51,6 +52,7 @@ export const names = {
   ALGORITHM_AND_PIPELINE_NAMES: 'ALGORITHM_AND_PIPELINE_NAMES',
   JOB_BY_ID_QUERY: 'JOB_BY_ID_QUERY',
   ALGORITHM_BY_NAME_QUERY: 'ALGORITHM_BY_NAME_QUERY',
+  ALGORITHM_BY_VERSION_QUERY: 'ALGORITHM_BY_VERSION_QUERY',
   DISCOVERY_QUERY: 'DISCOVERY_QUERY',
   WORKERS_ALL_QUERY: 'WORKERS_ALL_QUERY',
   DRIVERS_ALL_QUERY: 'DRIVERS_ALL_QUERY',

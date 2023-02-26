@@ -43,6 +43,7 @@ const JOB_BY_ID_QUERY = gql`
         nodes {
           nodeName
           algorithmName
+          algorithmVersion
           taskId
           podName
           status
