@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Route } from 'react-router-dom';
 import { Table } from 'components';
 import { usePolling } from 'hooks';
@@ -6,7 +6,6 @@ import { useQuery, useReactiveVar } from '@apollo/client';
 import { Space } from 'antd';
 import { algorithmsListVar } from 'cache';
 import { ALGORITHMS_QUERY } from 'graphql/queries';
-import { useVT } from 'virtualizedtableforantd4';
 import styled from 'styled-components';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
@@ -21,8 +20,6 @@ const TableAlgorithms = styled(Table)`
   }
 `;
 const AlgorithmsTable = () => {
-  const [vt] = useVT(() => ({ scroll: { y: '75vh' } }), []);
-
   const algorithmsList = useReactiveVar(algorithmsListVar);
 
   const { goTo } = usePath();
@@ -30,26 +27,39 @@ const AlgorithmsTable = () => {
   const query = useQuery(ALGORITHMS_QUERY);
   usePolling(query, 3000);
 
+  useEffect(() => {
+    if (!query.error && !query.loading) {
+      algorithmsListVar(query.data?.algorithms?.list);
+    }
+  }, [query.data?.algorithms?.list, query.error, query.loading]);
+
   const onRow = ({ name }) => ({
     onDoubleClick: () => goTo.overview({ nextAlgorithmId: name }),
   });
 
-  const onSubmitFilter = useCallback(values => {
-    if (!query.error && !query.loading) {
-      if (values?.qAlgorithmName) {
-        const filterAlgorithm = query.data?.algorithms?.list.filter(item =>
-          item.name.includes(values.qAlgorithmName)
-        );
-        const list = [...filterAlgorithm];
-        algorithmsListVar(list);
-      } else {
-        const list = [...query.data?.algorithms?.list];
-        algorithmsListVar(
-          list.sort((x, y) => (x.modified < y.modified ? 1 : -1))
-        );
+  const onSubmitFilter = useCallback(
+    values => {
+      if (!query.error && !query.loading) {
+        if (values?.qAlgorithmName) {
+          const filterAlgorithm = query.data?.algorithms?.list.filter(item =>
+            item.name.includes(values.qAlgorithmName)
+          );
+          const list = [...filterAlgorithm];
+
+          setTimeout(() => {
+            algorithmsListVar(list);
+          }, 500);
+        } else {
+          const list = [...query.data?.algorithms?.list];
+
+          algorithmsListVar(
+            list.sort((x, y) => (x.modified < y.modified ? 1 : -1))
+          );
+        }
       }
-    }
-  });
+    },
+    [query.data?.algorithms?.list, query.error, query.loading]
+  );
 
   return (
     <>
@@ -60,17 +70,18 @@ const AlgorithmsTable = () => {
           display: 'flex',
         }}>
         <AlgorithmsQueryTable
-          algorithmsList={query.data?.algorithms?.list}
+          algorithmsList={algorithmsList}
           onSubmit={onSubmitFilter}
         />
 
         <TableAlgorithms
-          scroll={{ y: '75vh' }} // It's important for using VT!!! DO NOT FORGET!!!
-          components={vt}
           rowKey={rowKey}
           dataSource={algorithmsList}
           columns={algorithmColumns}
           onRow={onRow}
+          scroll={{
+            y: '80vh',
+          }}
         />
       </Space>
       <Route

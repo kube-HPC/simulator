@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { Form, AutoComplete } from 'antd';
 import { useLocation } from 'react-router-dom';
@@ -6,11 +6,9 @@ import PropTypes from 'prop-types';
 import qs from 'qs';
 import { useReactiveVar } from '@apollo/client';
 import { instanceFiltersVar } from 'cache';
-import { isValuesFiltersEmpty } from 'utils';
 import { FiltersForms } from 'styles';
 
 const PipelinesQueryTable = ({ onSubmit, pipelinesList }) => {
-  const firstUpdate = useRef(true);
   const urlParams = useLocation();
   const instanceFilters = useReactiveVar(instanceFiltersVar);
 
@@ -28,46 +26,39 @@ const PipelinesQueryTable = ({ onSubmit, pipelinesList }) => {
   const submitDebounced = useDebouncedCallback(SubmitForm, 500);
 
   useEffect(() => {
-    const isFilterObjEmpty = isValuesFiltersEmpty(instanceFilters.pipelines);
-    let paramsPipeline;
-    if (!isFilterObjEmpty) {
-      const paramsUrl = qs.parse(urlParams.search, {
-        ignoreQueryPrefix: true,
-        allowDots: true,
-        skipNulls: true,
-      });
-      paramsPipeline = paramsUrl.qPipelineName;
-    } else {
-      paramsPipeline = instanceFilters.pipelines.qPipelineName;
-    }
-
-    form.setFieldsValue({
-      qPipelineName: paramsPipeline,
-    });
-    SubmitForm(paramsPipeline || null);
-  }, [pipelinesList]);
-
-  useEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-      return;
-    }
-
     if (!instanceFilters.pipelines.qPipelineName) {
       form.resetFields();
-
-      form.submit();
     }
-  }, [instanceFilters.pipelines.qPipelineName]);
+  }, [form, instanceFilters.pipelines.qPipelineName]);
+
+  useEffect(() => {
+    const paramsUrl = qs.parse(urlParams.search, {
+      ignoreQueryPrefix: true,
+      allowDots: true,
+      skipNulls: true,
+    });
+
+    if (paramsUrl.qPipelineName) {
+      form.setFieldValue('qPipelineName', paramsUrl.qPipelineName);
+
+      setTimeout(() => {
+        SubmitForm(paramsUrl.qPipelineName || null);
+      }, 500);
+    }
+  }, []);
 
   const onFinish = values => {
     onSubmit(values);
   };
 
-  const pipelineOptions = pipelinesList?.map(pipeline => ({
-    value: pipeline.name,
-    label: pipeline.name,
-  }));
+  const pipelineOptions = useMemo(
+    () =>
+      pipelinesList?.map(pipeline => ({
+        value: pipeline.name,
+        label: pipeline.name,
+      })),
+    [pipelinesList]
+  );
 
   return (
     <FiltersForms layout="inline" form={form} size="medium" onFinish={onFinish}>

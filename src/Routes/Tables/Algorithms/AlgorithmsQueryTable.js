@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Form, AutoComplete } from 'antd';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -6,11 +6,9 @@ import { useDebouncedCallback } from 'use-debounce';
 import qs from 'qs';
 import { useReactiveVar } from '@apollo/client';
 import { instanceFiltersVar } from 'cache';
-import { isValuesFiltersEmpty } from 'utils';
 import { FiltersForms } from 'styles';
 
 const AlgorithmsQueryTable = ({ onSubmit, algorithmsList }) => {
-  const firstUpdate = useRef(true);
   const urlParams = useLocation();
   const instanceFilters = useReactiveVar(instanceFiltersVar);
 
@@ -28,47 +26,39 @@ const AlgorithmsQueryTable = ({ onSubmit, algorithmsList }) => {
   const submitDebounced = useDebouncedCallback(SubmitForm, 500);
 
   useEffect(() => {
-    const isFilterObjEmpty = isValuesFiltersEmpty(instanceFilters.algorithms);
-
-    let paramsAlgorithm;
-    if (!isFilterObjEmpty) {
-      const paramsUrl = qs.parse(urlParams.search, {
-        ignoreQueryPrefix: true,
-        allowDots: true,
-        skipNulls: true,
-      });
-      paramsAlgorithm = paramsUrl.qAlgorithmName;
-    } else {
-      paramsAlgorithm = instanceFilters.algorithms.qAlgorithmName;
-    }
-
-    form.setFieldsValue({
-      qAlgorithmName: paramsAlgorithm,
-    });
-    SubmitForm(paramsAlgorithm || null);
-  }, [algorithmsList]);
-
-  useEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-      return;
-    }
-
     if (!instanceFilters.algorithms.qAlgorithmName) {
       form.resetFields();
-
-      form.submit();
     }
-  }, [instanceFilters.algorithms.qAlgorithmName]);
+  }, [form, instanceFilters.algorithms.qAlgorithmName]);
+
+  useEffect(() => {
+    const paramsUrl = qs.parse(urlParams.search, {
+      ignoreQueryPrefix: true,
+      allowDots: true,
+      skipNulls: true,
+    });
+
+    if (paramsUrl.qAlgorithmName) {
+      form.setFieldValue('qAlgorithmName', paramsUrl.qAlgorithmName);
+
+      setTimeout(() => {
+        SubmitForm(paramsUrl.qAlgorithmName || null);
+      }, 500);
+    }
+  }, []);
 
   const onFinish = values => {
     onSubmit(values);
   };
 
-  const algorithmOptions = algorithmsList?.map(algorithm => ({
-    value: algorithm.name,
-    label: algorithm.name,
-  }));
+  const algorithmOptions = useMemo(
+    () =>
+      algorithmsList?.map(algorithm => ({
+        value: algorithm.name,
+        label: algorithm.name,
+      })),
+    [algorithmsList]
+  );
 
   return (
     <FiltersForms layout="inline" form={form} size="medium" onFinish={onFinish}>
