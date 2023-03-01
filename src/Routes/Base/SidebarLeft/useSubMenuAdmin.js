@@ -107,7 +107,14 @@ const useSubMenuAdmin = () => {
         ),
         key: `left-sidebar-${name}`,
         className: USER_GUIDE.TABLE_SELECT[name],
-        icon: <Icon type={component} component={component} style={IconStyle} />,
+        icon: (
+          <Icon
+            type={component}
+            component={component}
+            className="icon-left"
+            style={IconStyle}
+          />
+        ),
       });
     });
 

@@ -93,6 +93,10 @@ body{
 .active-row {
   background-color:#f5faff;
 }
+.icon-left span{
+
+  font-size: 20px !important;
+}
 `;
 
 export default GlobalStyle;
