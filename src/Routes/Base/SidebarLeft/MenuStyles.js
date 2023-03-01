@@ -21,6 +21,9 @@ export const tagStyle = { color: Theme.Styles.SidebarLeft.colorTagNumber };
 export const IconStyle = {
   fontSize: 20,
 };
+export const itemSubMenuStyle = {
+  paddingLeft: 24,
+};
 
 export const IconLogo = styled(Icon)`
   && {

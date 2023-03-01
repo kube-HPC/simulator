@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Link, useParams, useLocation } from 'react-router-dom';
-import {
+import Icon, {
   WarningOutlined,
   ClusterOutlined,
   FundOutlined,
@@ -16,7 +16,13 @@ import {
   getStorageColorStatus,
   combineStatus,
 } from 'utils/warningColorStatus';
-import { tagStyle, Name, BadgeStyle } from './MenuStyles';
+import {
+  tagStyle,
+  Name,
+  BadgeStyle,
+  IconStyle,
+  itemSubMenuStyle,
+} from './MenuStyles';
 import { getBottomActions } from './../../SidebarRight/schema';
 
 const useSubMenuAdmin = () => {
@@ -88,6 +94,7 @@ const useSubMenuAdmin = () => {
     // eslint-disable-next-line no-unused-vars
     menuAdminItems.forEach(([name, component, path, count]) => {
       items.push({
+        style: itemSubMenuStyle,
         label: (
           <Link to={{ pathname: path, search: location.search }}>
             <Name>{name}</Name>{' '}
@@ -100,7 +107,7 @@ const useSubMenuAdmin = () => {
         ),
         key: `left-sidebar-${name}`,
         className: USER_GUIDE.TABLE_SELECT[name],
-        // icon: <Icon type={component} component={component} style={IconStyle} />,
+        icon: <Icon type={component} component={component} style={IconStyle} />,
       });
     });
 

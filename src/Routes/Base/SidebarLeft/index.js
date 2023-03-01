@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { animated, useSpring } from 'react-spring';
 
 import { useSiteThemeMode } from 'hooks';
-import Icon, { SettingOutlined } from '@ant-design/icons';
+import Icon from '@ant-design/icons';
 import { Tag } from 'antd';
 import { Link, useLocation, useParams } from 'react-router-dom';
 
@@ -120,9 +120,9 @@ const SidebarLeft = () => {
     });
 
     items.push({
-      label: 'Admin',
+      label: 'Administration',
       key: `admin-link`,
-      icon: <SettingOutlined style={IconStyle} />,
+
       children: menuAdminItemsJson,
     });
 

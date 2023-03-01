@@ -1,10 +1,16 @@
-import React from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import React, { useCallback } from 'react';
+import { Link, useLocation, useParams, useHistory } from 'react-router-dom';
 import { Button, Dropdown } from 'antd';
 import { ReactComponent as IconAddPipeline } from 'images/no-fill/add-pipeline.svg';
 import { ReactComponent as IconAddAlgorithm } from 'images/no-fill/add-algorithm.svg';
 import { ReactComponent as IconDataSource } from 'images/datasource.svg';
-import { RIGHT_SIDEBAR_NAMES } from 'const';
+import {
+  LEFT_SIDEBAR_NAMES,
+  RIGHT_SIDEBAR_NAMES,
+  NEW_ITEM,
+  NEW_ITEM_PAGE,
+} from 'const';
+import { PlusOutlined } from '@ant-design/icons';
 
 const iconSize = { width: '10px', fontSize: '10px' };
 
@@ -26,6 +32,18 @@ export const topActions = [
 const NewButtonSelect = () => {
   const location = useLocation();
   const { pageName } = useParams();
+  const history = useHistory();
+
+  const gotoNewAction = useCallback(() => {
+    let page = RIGHT_SIDEBAR_NAMES.ADD_PIPELINE;
+    if (pageName === NEW_ITEM_PAGE.ALGORITHM) {
+      page = RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM;
+    } else if (pageName === NEW_ITEM_PAGE.DATASOURCE) {
+      page = RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE;
+    }
+
+    history.push(`${pageName}/${page}`);
+  }, [history, pageName]);
 
   const items = [
     {
@@ -70,10 +88,25 @@ const NewButtonSelect = () => {
     },
   ];
 
+  const isButtonNew =
+    pageName !== LEFT_SIDEBAR_NAMES.JOBS &&
+    pageName !== LEFT_SIDEBAR_NAMES.QUEUE;
   return (
-    <Dropdown menu={{ items }} placement="bottomLeft">
-      <Button>+ New </Button>
-    </Dropdown>
+    <>
+      {isButtonNew && (
+        <Button type="primary" onClick={gotoNewAction}>
+          New {NEW_ITEM[pageName]}
+        </Button>
+      )}
+      <Dropdown
+        menu={{ items }}
+        placement={isButtonNew ? 'bottomRight' : 'bottomLeft'}>
+        <Button type="primary" style={{ marginLeft: '1px' }}>
+          <PlusOutlined />
+          {!isButtonNew && 'New'}
+        </Button>
+      </Dropdown>
+    </>
   );
 };
 
