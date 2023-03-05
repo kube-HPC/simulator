@@ -9,27 +9,20 @@ import Icon, {
 import { USER_GUIDE, RIGHT_SIDEBAR_NAMES } from 'const';
 import { ReactComponent as DriversIcon } from 'images/drivers-icon.svg';
 import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
-import { useErrorLogs, useStats, useStorage } from 'hooks/graphql';
-import { Tag } from 'antd';
+import { useStats, useStorage } from 'hooks/graphql';
+import { Badge } from 'antd';
 import {
   getColorStatus,
   getStorageColorStatus,
   combineStatus,
 } from 'utils/warningColorStatus';
-import {
-  tagStyle,
-  Name,
-  BadgeStyle,
-  IconStyle,
-  itemSubMenuStyle,
-} from './MenuStyles';
+import { Name, IconStyle, itemSubMenuStyle } from './MenuStyles';
 import { getBottomActions } from './../../SidebarRight/schema';
 
-const useSubMenuAdmin = () => {
+const useSubMenuAdmin = totalNewWarnings => {
   const { pageName } = useParams();
   const location = useLocation();
 
-  const { totalNewWarnings } = useErrorLogs();
   const { cpu, memory, gpu } = useStats();
   const { storage } = useStorage();
   const dataCounters = useMemo(
@@ -99,9 +92,7 @@ const useSubMenuAdmin = () => {
           <Link to={{ pathname: path, search: location.search }}>
             <Name>{name}</Name>{' '}
             {count > 0 && (
-              <BadgeStyle offset={[-7, 0]}>
-                <Tag style={tagStyle}>{count}</Tag>
-              </BadgeStyle>
+              <Badge color="red" count={count} style={{ marginLeft: '25px' }} />
             )}
           </Link>
         ),

@@ -10,9 +10,20 @@ import {
   NEW_ITEM,
   NEW_ITEM_PAGE,
 } from 'const';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, DownOutlined } from '@ant-design/icons';
 
 const iconSize = { width: '10px', fontSize: '10px' };
+const removeLeftRaduse = {
+  borderTopLeftRadius: '0px',
+  borderBottomLeftRadius: '0px',
+  marginLeft: '1px',
+  width: '30px',
+};
+const removeRightRaduse = {
+  borderTopRightRadius: '0px',
+  borderBottomRightRadius: '0px',
+};
+const centerDownOutlined = { marginLeft: '-7px' };
 
 export const topActions = [
   {
@@ -94,15 +105,22 @@ const NewButtonSelect = () => {
   return (
     <>
       {isButtonNew && (
-        <Button type="primary" onClick={gotoNewAction}>
+        <Button
+          type="primary"
+          onClick={gotoNewAction}
+          style={removeRightRaduse}>
           New {NEW_ITEM[pageName]}
         </Button>
       )}
       <Dropdown
         menu={{ items }}
         placement={isButtonNew ? 'bottomRight' : 'bottomLeft'}>
-        <Button type="primary" style={{ marginLeft: '1px' }}>
-          <PlusOutlined />
+        <Button type="primary" style={isButtonNew ? removeLeftRaduse : null}>
+          {isButtonNew ? (
+            <DownOutlined style={centerDownOutlined} />
+          ) : (
+            <PlusOutlined />
+          )}
           {!isButtonNew && 'New'}
         </Button>
       </Dropdown>

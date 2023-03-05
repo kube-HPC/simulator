@@ -1,12 +1,12 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { animated, useSpring } from 'react-spring';
 
 import { useSiteThemeMode } from 'hooks';
 import Icon from '@ant-design/icons';
-import { Tag } from 'antd';
+import { Badge, Tag } from 'antd';
 import { Link, useLocation, useParams } from 'react-router-dom';
-
+import { useErrorLogs, useCounters } from 'hooks/graphql';
 import { dataCountMock } from 'config';
 import { LEFT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
 import { ReactComponent as AlgorithmIcon } from 'images/algorithm-icon.svg';
@@ -22,7 +22,7 @@ import { instanceCounterVar, instanceFiltersVar } from 'cache';
 import { selectors } from 'reducers';
 
 import { useReactiveVar } from '@apollo/client';
-import { useCounters } from 'hooks/graphql';
+
 import { isValuesFiltersEmpty } from 'utils';
 import {
   Border,
@@ -62,7 +62,8 @@ const instanceCounterAdapter = obj => ({
 const SidebarLeft = () => {
   const { pageName } = useParams();
   const location = useLocation();
-  const { menuAdminItemsJson } = useSubMenuAdmin();
+  const { totalNewWarnings } = useErrorLogs();
+  const { menuAdminItemsJson } = useSubMenuAdmin(totalNewWarnings);
   const { dataSourceIsEnable } = useSelector(selectors.connection);
 
   const menuMainItems = useMemo(() => {
@@ -88,8 +89,16 @@ const SidebarLeft = () => {
 
   const dataCountSource = instanceCounterAdapter(instanceCounter);
   const { isOn } = useSelector(selectors.userGuide);
+  const [isOpenMenuAdministration, setIsOpenMenuAdministration] = useState(
+    false
+  );
   const dataCount = isOn ? dataCountMock : dataCountSource;
   const { themeName } = useSiteThemeMode();
+
+  const onOpenChangeMenu = openKeys => {
+    setIsOpenMenuAdministration(openKeys.includes('admin-link'));
+    console.log(openKeys);
+  };
 
   const menuMainItemsJson = useMemo(() => {
     const items = [];
@@ -120,7 +129,17 @@ const SidebarLeft = () => {
     });
 
     items.push({
-      label: 'Administration',
+      label: isOpenMenuAdministration ? (
+        'Administration'
+      ) : (
+        <Badge
+          size="small"
+          count={totalNewWarnings}
+          color="red"
+          offset={[25, 6]}>
+          Administration
+        </Badge>
+      ),
       key: `admin-link`,
 
       children: menuAdminItemsJson,
@@ -130,9 +149,11 @@ const SidebarLeft = () => {
   }, [
     dataCount,
     instanceFilters,
+    isOpenMenuAdministration,
     location.search,
     menuAdminItemsJson,
     menuMainItems,
+    totalNewWarnings,
   ]);
 
   return (
@@ -143,6 +164,7 @@ const SidebarLeft = () => {
           <AnimatedTitle />
         </LogoContainer>
         <MenuMargin
+          onOpenChange={onOpenChangeMenu}
           mode="inline"
           items={menuMainItemsJson}
           selectedKeys={[`left-sidebar-${pageName}`]}
