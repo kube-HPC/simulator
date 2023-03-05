@@ -97,7 +97,6 @@ const SidebarLeft = () => {
 
   const onOpenChangeMenu = openKeys => {
     setIsOpenMenuAdministration(openKeys.includes('admin-link'));
-    console.log(openKeys);
   };
 
   const menuMainItemsJson = useMemo(() => {
