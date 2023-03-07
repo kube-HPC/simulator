@@ -10,16 +10,22 @@ import { USER_GUIDE, RIGHT_SIDEBAR_NAMES } from 'const';
 import { ReactComponent as DriversIcon } from 'images/drivers-icon.svg';
 import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
 import { useStats, useStorage } from 'hooks/graphql';
-import { Badge } from 'antd';
+import { Tag } from 'antd';
 import {
   getColorStatus,
   getStorageColorStatus,
   combineStatus,
 } from 'utils/warningColorStatus';
-import { Name, IconStyle, itemSubMenuStyle } from './MenuStyles';
+import {
+  Name,
+  IconStyle,
+  itemSubMenuStyle,
+  BadgeStyle,
+  tagStyle,
+} from './MenuStyles';
 import { getBottomActions } from './../../SidebarRight/schema';
 
-const useSubMenuAdmin = totalNewWarnings => {
+const useSubMenuAdmin = (totalNewWarnings, dataMoreCount) => {
   const { pageName } = useParams();
   const location = useLocation();
 
@@ -46,11 +52,13 @@ const useSubMenuAdmin = totalNewWarnings => {
         RIGHT_SIDEBAR_NAMES.WORKERS,
         WorkerIcon,
         `/${RIGHT_SIDEBAR_NAMES.WORKERS}`,
+        dataMoreCount.workers,
       ],
       [
         RIGHT_SIDEBAR_NAMES.DRIVERS,
         DriversIcon,
         `/${RIGHT_SIDEBAR_NAMES.DRIVERS}`,
+        dataMoreCount.drivers,
       ],
       [
         'Error Log',
@@ -79,7 +87,13 @@ const useSubMenuAdmin = totalNewWarnings => {
     }
 
     return itemsMenu;
-  }, [dataCounters?.gpuStatus?.total, pageName, totalNewWarnings]);
+  }, [
+    dataCounters?.gpuStatus?.total,
+    dataMoreCount.drivers,
+    dataMoreCount.workers,
+    pageName,
+    totalNewWarnings,
+  ]);
 
   const menuAdminItemsJson = useMemo(() => {
     const items = [];
@@ -92,7 +106,12 @@ const useSubMenuAdmin = totalNewWarnings => {
           <Link to={{ pathname: path, search: location.search }}>
             <Name>{name}</Name>{' '}
             {count > 0 && (
-              <Badge color="red" count={count} style={{ marginLeft: '25px' }} />
+              // <Badge color="red" count={count} style={{ marginLeft: '25px' }} />
+              <BadgeStyle offset={[-7, 0]}>
+                <Tag color={name === 'Error Log' ? 'red' : ''} style={tagStyle}>
+                  {count}
+                </Tag>
+              </BadgeStyle>
             )}
           </Link>
         ),

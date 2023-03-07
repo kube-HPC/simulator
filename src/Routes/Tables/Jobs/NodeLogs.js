@@ -118,6 +118,7 @@ const NodeLogs = ({ node, taskDetails }) => {
   ));
 
   useEffect(() => {
+    console.log(logs, node);
     const { error, startTime, endTime } = node;
 
     if (logs.length === 0) {

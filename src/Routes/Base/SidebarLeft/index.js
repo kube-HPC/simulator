@@ -57,13 +57,15 @@ const instanceCounterAdapter = obj => ({
   [LEFT_SIDEBAR_NAMES.PIPELINES]: obj.pipelines,
   [LEFT_SIDEBAR_NAMES.ALGORITHMS]: obj.algorithms,
   [LEFT_SIDEBAR_NAMES.DATASOURCES]: obj.dataSources,
+  [LEFT_SIDEBAR_NAMES.WORKERS]: obj.workers,
+  [LEFT_SIDEBAR_NAMES.DRIVERS]: obj.drivers,
 });
 
 const SidebarLeft = () => {
   const { pageName } = useParams();
   const location = useLocation();
   const { totalNewWarnings } = useErrorLogs();
-  const { menuAdminItemsJson } = useSubMenuAdmin(totalNewWarnings);
+
   const { dataSourceIsEnable } = useSelector(selectors.connection);
 
   const menuMainItems = useMemo(() => {
@@ -88,11 +90,13 @@ const SidebarLeft = () => {
   const instanceFilters = useReactiveVar(instanceFiltersVar);
 
   const dataCountSource = instanceCounterAdapter(instanceCounter);
+
   const { isOn } = useSelector(selectors.userGuide);
   const [isOpenMenuAdministration, setIsOpenMenuAdministration] = useState(
     false
   );
   const dataCount = isOn ? dataCountMock : dataCountSource;
+  const { menuAdminItemsJson } = useSubMenuAdmin(totalNewWarnings, dataCount);
   const { themeName } = useSiteThemeMode();
 
   const onOpenChangeMenu = openKeys => {

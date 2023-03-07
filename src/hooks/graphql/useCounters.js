@@ -11,6 +11,7 @@ const useCounters = () => {
   const instanceFilters = useReactiveVar(instanceFiltersVar);
   const dateTimeDefault = useReactiveVar(dateTimeDefaultVar);
   let counters = null;
+
   const query = useQuery(COUNTERS_QUERY, {
     variables: {
       datesRange: {
@@ -26,6 +27,8 @@ const useCounters = () => {
         queue:
           (data?.queueCount?.managed || 0) + (data?.queueCount?.preferred || 0),
         dataSources: data?.dataSources?.dataSourcesCount,
+        drivers: data.discovery.pipelineDriver.length,
+        workers: data.discovery.worker.length,
       };
 
       instanceCounterVar({

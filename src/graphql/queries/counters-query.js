@@ -30,6 +30,15 @@ const COUNTERS_QUERY = gql`
     dataSources {
       dataSourcesCount
     }
+    discovery {
+      pipelineDriver {
+        driverId
+      }
+
+      worker {
+        workerId
+      }
+    }
   }
 `;
 
