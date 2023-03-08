@@ -118,7 +118,6 @@ const NodeLogs = ({ node, taskDetails }) => {
   ));
 
   useEffect(() => {
-    console.log(logs, node);
     const { error, startTime, endTime } = node;
 
     if (logs.length === 0) {
@@ -136,19 +135,23 @@ const NodeLogs = ({ node, taskDetails }) => {
 
   const setWord = useCallback(
     e => {
-      const time = node.startTime
+      const startTime =
+        node.batch.length > 0
+          ? node.batch.filter(x => x.taskId === taskId)[0].startTime
+          : node.startTime;
+      const time = startTime
         ? new Date(new Date(node.startTime) - 20000).toISOString()
         : new Date(new Date() - 20000).toISOString();
       const cTaskId = currentTask || taskId;
       const word = e?.target?.value || '';
       setSearchWord(word);
       setLinkKibana(
-        `${kibanaUrl}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',key:meta.internal.taskId,negate:!f,params:(query:${cTaskId}),type:phrase),query:(match:(meta.internal.taskId:(query:${cTaskId},type:phrase))))),index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',interval:auto,query:(language:lucene${
+        `${kibanaUrl}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',key:meta.internal.taskId,negate:!f,params:(query:'${cTaskId}'),type:phrase),query:(match:(meta.internal.taskId:(query:'${cTaskId}',type:phrase))))),index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',interval:auto,query:(language:lucene${
           word ? `,query:${word}` : ''
         }),sort:!(!('@timestamp',desc)))`
       );
     },
-    [currentTask, kibanaUrl, node.startTime, taskId]
+    [currentTask, kibanaUrl, node.batch, node.startTime, taskId]
   );
 
   const handleSearchWord = useDebounceCallback(setWord, 1000, false);
@@ -281,6 +284,7 @@ NodeLogs.propTypes = {
     error: PropTypes.string,
     startTime: PropTypes.number,
     endTime: PropTypes.number,
+    batch: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
 };
 export default React.memo(NodeLogs);
