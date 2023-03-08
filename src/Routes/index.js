@@ -9,7 +9,7 @@ import { useActions, useCacheFilters } from 'hooks'; // useConnectionStatus
 import Header from 'Routes/Base/Header';
 import { instanceFiltersVar } from 'cache';
 import useApolloClient from './../graphql/useApolloClient';
-import SidebarRight, { Drawer as SiderBarRightDrawer } from './SidebarRight';
+import { Drawer as SiderBarRightDrawer } from './SidebarRight';
 import SidebarLeft from './Base/SidebarLeft';
 import UserGuide from './Base/UserGuide';
 import LoadingScreen from './Base/LoadingScreen';
@@ -87,7 +87,6 @@ const Routes = () => {
                 </BackTop>
               </ContentMargin>
               <RightContainer>
-                <Route path="/:root" component={SidebarRight} />
                 <Route
                   exact
                   path="/:root/:panelType"

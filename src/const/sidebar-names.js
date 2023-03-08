@@ -1,6 +1,17 @@
+export const NEW_ITEM_PAGE = {
+  PIPELINE: 'pipelines',
+  ALGORITHM: 'algorithms',
+  DATASOURCE: 'datasources',
+};
+export const NEW_ITEM = {
+  pipelines: 'Pipeline',
+  algorithms: 'Algorithm',
+  datasources: 'Datasource',
+};
+
 export const LEFT_SIDEBAR_NAMES = {
   JOBS: 'jobs',
-  QUEUE: 'Queue',
+  QUEUE: 'queue',
   PIPELINES: 'pipelines',
   ALGORITHMS: 'algorithms',
   WORKERS: 'workers',

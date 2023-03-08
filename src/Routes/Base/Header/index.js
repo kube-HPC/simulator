@@ -1,10 +1,10 @@
 import React from 'react';
-
-import styled from 'styled-components';
 import { Route } from 'react-router-dom';
+import styled from 'styled-components';
 import { FlexBox } from 'components/common';
 import { USER_GUIDE } from 'const';
 import { COLOR_LAYOUT } from 'styles';
+import NewButtonSelect from './NewButtonSelect';
 
 import HelpBar from './HelpBar.react';
 import TagsFiltersViews from './TagsFiltersViews';
@@ -33,6 +33,7 @@ const ButtonsContainer = styled(FlexBox.Auto)`
 const Header = () => (
   <Container className={USER_GUIDE.WELCOME}>
     <ButtonsContainer>
+      <NewButtonSelect />
       <Route exact path="/jobs" component={ViewType} />
       <Route exact path="/jobs">
         <TagsFiltersViews sectionName="jobs" />
