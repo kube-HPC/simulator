@@ -45,7 +45,9 @@ const PipelinesTable = () => {
             item.name.includes(values.qPipelineName)
           );
 
-          pipelineListVar(filterPipeline);
+          setTimeout(() => {
+            pipelineListVar(filterPipeline);
+          }, 500);
         } else {
           pipelineListVar(query.data?.pipelines?.list);
         }
