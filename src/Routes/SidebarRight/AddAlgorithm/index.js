@@ -55,7 +55,6 @@ const AddAlgorithm = ({ algorithmValue }) => {
 
   const onAfterSaveAlgorithm = useCallback(
     dataResponse => {
-      setIsSubmitLoading(false);
       let isMsgApplied = true;
 
       const buildId = dataResponse?.buildId || null;
@@ -135,6 +134,7 @@ const AddAlgorithm = ({ algorithmValue }) => {
   );
 
   const onWizardSubmit = ({ formData }) => {
+    setIsSubmitLoading(true);
     client
       .post('store/algorithms/apply', formData, {
         headers: {
@@ -142,6 +142,7 @@ const AddAlgorithm = ({ algorithmValue }) => {
         },
       })
       .then(res => {
+        setIsSubmitLoading(false);
         if (isEdit) {
           if (res?.data?.buildId) {
             onOverviewAlgorithm(OVERVIEW_TABS.BUILDS);
@@ -162,8 +163,9 @@ const AddAlgorithm = ({ algorithmValue }) => {
     formData.append(`payload`, src);
     onWizardSubmit({ formData });
   };
-  const onEditorSubmit = () =>
-    tryParse({ src: editorValue, onBeforeEditorSubmit });
+  const onEditorSubmit = () => {
+    tryParse({ src: editorValue, onSuccess: onBeforeEditorSubmit });
+  };
 
   // #endregion
 
