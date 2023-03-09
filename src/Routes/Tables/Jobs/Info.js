@@ -25,6 +25,7 @@ const JobInfo = ({ job }) => {
     nextTabKey => goTo.overview({ nextTabKey }),
     [goTo]
   );
+  console.log('job', job);
   const { key, graph, userPipeline = {}, pipeline } = job;
   const algorithms = pipeline.nodes.map(n => n.algorithmName);
   const fetchJobTrace = useCallback(() => fetch({ jobId: key, algorithms }), [
@@ -65,7 +66,9 @@ const JobInfo = ({ job }) => {
             obj={userPipeline}
             options={options}
             jobId={key}
-            jsonViewHeaderNode={<DownloadFlowinput keyValue={key} />}
+            jsonViewHeaderNode={
+              pipeline.flowInputMetadata && <DownloadFlowinput keyValue={key} />
+            }
           />
         ),
       },
@@ -78,7 +81,9 @@ const JobInfo = ({ job }) => {
             obj={pipeline}
             options={options}
             jobId={key}
-            jsonViewHeaderNode={<DownloadFlowinput keyValue={key} />}
+            jsonViewHeaderNode={
+              pipeline.flowInputMetadata && <DownloadFlowinput keyValue={key} />
+            }
           />
         ),
       },
