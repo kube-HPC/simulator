@@ -26,8 +26,11 @@ const PipelinesQueryTable = ({ onSubmit, pipelinesList }) => {
   const submitDebounced = useDebouncedCallback(SubmitForm, 500);
 
   useEffect(() => {
-    if (!instanceFilters.pipelines.qPipelineName) {
+    if (instanceFilters.pipelines.qPipelineName === null) {
       form.resetFields();
+      setTimeout(() => {
+        SubmitForm(null);
+      }, 100);
     }
   }, [form, instanceFilters.pipelines.qPipelineName]);
 
@@ -45,7 +48,7 @@ const PipelinesQueryTable = ({ onSubmit, pipelinesList }) => {
         SubmitForm(paramsUrl.qPipelineName || null);
       }, 500);
     }
-  }, []);
+  }, [urlParams.search]);
 
   const onFinish = values => {
     onSubmit(values);

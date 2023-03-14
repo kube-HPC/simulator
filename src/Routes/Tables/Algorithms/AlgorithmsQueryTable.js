@@ -26,12 +26,16 @@ const AlgorithmsQueryTable = ({ onSubmit, algorithmsList }) => {
   const submitDebounced = useDebouncedCallback(SubmitForm, 500);
 
   useEffect(() => {
-    if (!instanceFilters.algorithms.qAlgorithmName) {
+    if (instanceFilters.algorithms.qAlgorithmName === null) {
       form.resetFields();
+      setTimeout(() => {
+        SubmitForm(null);
+      }, 100);
     }
   }, [form, instanceFilters.algorithms.qAlgorithmName]);
 
   useEffect(() => {
+    console.log(urlParams.search);
     const paramsUrl = qs.parse(urlParams.search, {
       ignoreQueryPrefix: true,
       allowDots: true,
@@ -45,7 +49,7 @@ const AlgorithmsQueryTable = ({ onSubmit, algorithmsList }) => {
         SubmitForm(paramsUrl.qAlgorithmName || null);
       }, 500);
     }
-  }, []);
+  }, [urlParams.search]);
 
   const onFinish = values => {
     onSubmit(values);

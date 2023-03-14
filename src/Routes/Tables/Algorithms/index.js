@@ -31,7 +31,7 @@ const AlgorithmsTable = () => {
     if (!query.error && !query.loading) {
       algorithmsListVar(query.data?.algorithms?.list);
     }
-  }, [query.data?.algorithms?.list, query.error, query.loading]);
+  }, [query.data?.algorithms?.list.length]);
 
   const onRow = ({ name }) => ({
     onDoubleClick: () => goTo.overview({ nextAlgorithmId: name }),

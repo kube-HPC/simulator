@@ -28,7 +28,7 @@ const PipelinesTable = () => {
     if (!query.error && !query.loading) {
       pipelineListVar(query.data?.pipelines?.list);
     }
-  }, [query.data?.pipelines?.list, query.error, query.loading]);
+  }, [query.data?.pipelines?.list.length]);
 
   const onRow = useCallback(
     record => ({
