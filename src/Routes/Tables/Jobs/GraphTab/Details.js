@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 // import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { BugOutlined, PlayCircleOutlined } from '@ant-design/icons';
-import { Button, Empty, Tooltip } from 'antd';
+import { Button, Empty, Tooltip, Typography } from 'antd';
 import { FlexBox, JsonSwitch } from 'components/common';
 import { useActions } from 'hooks';
 import { useAlgorithmByVersion } from 'hooks/graphql';
@@ -29,6 +29,13 @@ const ContainerTabs = styled.div`
   padding-left: 15px;
   padding-right: 15px;
   height: 800px;
+`;
+const TitleNode = styled(Typography.Text)`
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: block;
+  font-size: 18px;
+  font-weight: bold;
 `;
 
 const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
@@ -143,6 +150,8 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
   return node ? (
     algorithmDetails && (
       <ContainerTabs>
+        <TitleNode>{node.nodeName}</TitleNode>
+
         <TabsLog
           activeKey={selectTabbyKind}
           onChange={handleTabChange}

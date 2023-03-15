@@ -44,10 +44,17 @@ const insertAlgorithmOptions = options =>
     </Select.Option>
   ));
 
-const toReadableBuildType = buildType =>
-  toUpperCaseFirstLetter(
-    buildType === BUILD_TYPES.GIT.field ? `GIT` : buildType
-  );
+const toReadableBuildType = buildType => {
+  let str = toUpperCaseFirstLetter(buildType);
+
+  if (buildType === BUILD_TYPES.GIT.field) str = 'Git';
+
+  if (buildType === BUILD_TYPES.IMAGE.field) str = 'Docker image';
+
+  if (buildType === BUILD_TYPES.CODE.field) str = 'File';
+
+  return str;
+};
 
 const toSelectedBuildType = buildType =>
   buildType.toLowerCase() === 'git'
@@ -211,7 +218,7 @@ const AddAlgorithmForm = ({
         ]}>
         <Input disabled={isEdit} placeholder={MAIN.NAME.placeholder} />
       </Form.Item>
-      <Form.Item label="Build Type">
+      <Form.Item label="Source">
         <Radio.Group
           defaultValue={buildType}
           buttonStyle="solid"
