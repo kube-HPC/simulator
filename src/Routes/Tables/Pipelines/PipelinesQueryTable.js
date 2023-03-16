@@ -48,7 +48,7 @@ const PipelinesQueryTable = ({ onSubmit, pipelinesList }) => {
         SubmitForm(paramsUrl.qPipelineName || null);
       }, 500);
     }
-  }, [urlParams.search]);
+  }, []);
 
   const onFinish = values => {
     onSubmit(values);

@@ -28,10 +28,16 @@ const useInputField = (antFields, onRemove) => {
 
     let res = '';
     if (input !== null && input !== undefined) {
-      words.sort((a, b) => b.length - a.length);
+      words.sort((a, b) => b.value.length - a.value.length);
       words.forEach(item => {
-        if (res === '' && input.toString().toLowerCase().indexOf(item) !== -1) {
-          res = item;
+        if (
+          res === '' &&
+          input
+            .toString()
+            .toLowerCase()
+            .indexOf(item.value.toString().toLowerCase()) !== -1
+        ) {
+          res = item.value;
         }
       });
     }
@@ -128,28 +134,40 @@ const useInputField = (antFields, onRemove) => {
 
   const onInputChange = useCallback(
     ({ target: { value: src } }) => {
-      setValue(src);
-      const onFail = () => setIsValid(src === '');
+      let srcValue = src;
+      if (parseInt(src, 10)) {
+        srcValue = parseInt(src, 10);
+      }
+
+      setValue(srcValue);
+      const onFail = () => setIsValid(srcValue === '');
       const onSuccess = ({ parsed }) => {
         antFields.onChange(parsed);
         setIsValid(true);
       };
 
-      if (src === '') {
+      if (srcValue === '') {
         onSuccess({ parsed: undefined });
         setIsValid(false);
-      } else if (checkInputObject(src, SignsOfObjectArray)) {
-        tryParse({ src, onSuccess, onFail });
+      } else if (checkInputObject(srcValue, SignsOfObjectArray)) {
+        tryParse({ srcValue, onSuccess, onFail });
 
         setAddonIsDisabled(true);
-      } else if (isArrayValue(src, selectBefore)) {
-        tryParse({ src, onSuccess, onFail });
+      } else if (isArrayValue(srcValue, selectBefore)) {
+        tryParse({ srcValue, onSuccess, onFail });
         setAddonIsDisabled(false);
-      } else if (src.startsWith('"') || src.endsWith('"')) {
+      } else if (
+        !Number.isInteger(srcValue) &&
+        (srcValue.startsWith('"') || srcValue.endsWith('"'))
+      ) {
         onSuccess({ parsed: undefined });
         setIsValid(false);
+      } else if (Number.isInteger(srcValue) && selectBefore === '') {
+        antFields.onChange(srcValue);
+        setAddonIsDisabled(false);
+        setIsValid(true);
       } else {
-        antFields.onChange(`${selectBefore}${src}`);
+        antFields.onChange(`${selectBefore}${srcValue}`);
         setAddonIsDisabled(false);
         setIsValid(true);
       }
