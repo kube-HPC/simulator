@@ -26,8 +26,11 @@ const AlgorithmsQueryTable = ({ onSubmit, algorithmsList }) => {
   const submitDebounced = useDebouncedCallback(SubmitForm, 500);
 
   useEffect(() => {
-    if (!instanceFilters.algorithms.qAlgorithmName) {
+    if (instanceFilters.algorithms.qAlgorithmName === null) {
       form.resetFields();
+      setTimeout(() => {
+        SubmitForm(null);
+      }, 100);
     }
   }, [form, instanceFilters.algorithms.qAlgorithmName]);
 
@@ -38,11 +41,13 @@ const AlgorithmsQueryTable = ({ onSubmit, algorithmsList }) => {
       skipNulls: true,
     });
 
-    if (paramsUrl.qAlgorithmName) {
-      form.setFieldValue('qAlgorithmName', paramsUrl.qAlgorithmName);
+    const algorithmName =
+      paramsUrl.qAlgorithmName || instanceFilters.algorithms.qAlgorithmName;
 
+    if (algorithmName) {
+      form.setFieldValue('qAlgorithmName', algorithmName);
       setTimeout(() => {
-        SubmitForm(paramsUrl.qAlgorithmName || null);
+        SubmitForm(algorithmName);
       }, 500);
     }
   }, []);

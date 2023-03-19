@@ -25,7 +25,7 @@ const JobInfo = ({ job }) => {
     nextTabKey => goTo.overview({ nextTabKey }),
     [goTo]
   );
-  console.log('job', job);
+
   const { key, graph, userPipeline = {}, pipeline } = job;
   const algorithms = pipeline.nodes.map(n => n.algorithmName);
   const fetchJobTrace = useCallback(() => fetch({ jobId: key, algorithms }), [

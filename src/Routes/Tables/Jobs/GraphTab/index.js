@@ -5,6 +5,7 @@ import React, {
   useMemo,
   useReducer,
   useState,
+  useRef,
 } from 'react';
 import PropTypes from 'prop-types';
 import { Empty, Button } from 'antd';
@@ -80,6 +81,7 @@ const FlexContainer = styled.div`
 `;
 
 const GraphTab = ({ graph, pipeline }) => {
+  const graphRef = useRef(null);
   const normalizedPipeline = useMemo(
     () =>
       pipeline.nodes.reduce(
@@ -155,6 +157,14 @@ const GraphTab = ({ graph, pipeline }) => {
     }, 500);
   }, [graphDirection]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      graphRef?.current?.Network?.setSelection({
+        nodes: [graph?.nodes[0]?.nodeName || ''],
+      });
+    }, 500);
+  }, []);
+
   return (
     <FlexContainer>
       <GraphContainer
@@ -181,6 +191,7 @@ const GraphTab = ({ graph, pipeline }) => {
                 graph={adaptedGraph}
                 options={graphOptions}
                 events={events}
+                ref={graphRef}
               />
             </Fallback>
           ) : (

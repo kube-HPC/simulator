@@ -5,7 +5,12 @@ import { Form, Button, Alert } from 'antd';
 import InputField from './InputField';
 import useWizardContext from '../../../useWizardContext';
 
-const listAddOn = ['', '@', '#', '#@'];
+const listAddOn = [
+  { value: '', label: 'Value' },
+  { value: '@', label: 'Output of' },
+  { value: '#', label: 'Output #' },
+  { value: '#@', label: 'Output array of' },
+];
 
 const Controller = ({ nodeIdx, isRequired }) => {
   const { form, isRunPipeline } = useWizardContext();

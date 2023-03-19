@@ -55,6 +55,7 @@ export default ({ direction, isMinified = false }) => ({
     },
   },
   nodes: {
+    selectable: true,
     shape: 'box',
     color: {
       background: COLOR.white,
@@ -100,5 +101,6 @@ export default ({ direction, isMinified = false }) => ({
       vadjust: 10,
     },
   },
+
   groups,
 });

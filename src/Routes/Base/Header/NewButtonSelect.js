@@ -78,7 +78,7 @@ const NewButtonSelect = () => {
             pathname: `${pageName}/${RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM}`,
             search: location.search,
           }}>
-          Algorethem
+          Algorithm
         </Link>
       ),
       icon: <IconAddAlgorithm style={iconSize} />,
