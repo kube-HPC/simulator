@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { Route } from 'react-router-dom';
 import { Table } from 'components';
 import { usePolling } from 'hooks';
@@ -18,18 +18,7 @@ import PipelinesQueryTable from './PipelinesQueryTable';
 const rowKey = ({ name }) => `pipeline-${name}`;
 
 const PipelinesTable = () => {
-  const pipelineList = useReactiveVar(pipelineListVar);
   const { goTo } = usePath();
-
-  const query = useQuery(PIPELINE_QUERY);
-  usePolling(query, 3000);
-
-  useEffect(() => {
-    if (!query.error && !query.loading) {
-      pipelineListVar(query.data?.pipelines?.list);
-    }
-  }, [query.data?.pipelines?.list.length]);
-
   const onRow = useCallback(
     record => ({
       onDoubleClick: () => goTo.overview({ nextPipelineId: record.name }),
@@ -37,24 +26,28 @@ const PipelinesTable = () => {
     [goTo]
   );
 
+  const pipelineList = useReactiveVar(pipelineListVar);
+  const query = useQuery(PIPELINE_QUERY);
+  usePolling(query, 3000);
+
   const onSubmitFilter = useCallback(
     values => {
-      if (!query.error && !query.loading) {
+      if (!query.loading) {
         if (values?.qPipelineName) {
           const filterPipeline = query.data?.pipelines?.list.filter(item =>
             item.name.includes(values.qPipelineName)
           );
-
-          setTimeout(() => {
-            pipelineListVar(filterPipeline);
-          }, 500);
+          pipelineListVar(filterPipeline);
         } else {
           pipelineListVar(query.data?.pipelines?.list);
         }
       }
     },
-    [query.data?.pipelines?.list, query.error, query.loading]
+    [query.data?.pipelines?.list]
   );
+
+  if (query.loading && pipelineList.length === 0) return 'Loading...';
+  if (query.error) return `Error! ${query.error.message}`;
 
   return (
     <>

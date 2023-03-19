@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { Route } from 'react-router-dom';
 import { Table } from 'components';
 import { usePolling } from 'hooks';
@@ -20,35 +20,24 @@ const TableAlgorithms = styled(Table)`
   }
 `;
 const AlgorithmsTable = () => {
-  const algorithmsList = useReactiveVar(algorithmsListVar);
-
   const { goTo } = usePath();
-
-  const query = useQuery(ALGORITHMS_QUERY);
-  usePolling(query, 3000);
-
-  useEffect(() => {
-    if (!query.error && !query.loading) {
-      algorithmsListVar(query.data?.algorithms?.list);
-    }
-  }, [query.data?.algorithms?.list.length]);
-
   const onRow = ({ name }) => ({
     onDoubleClick: () => goTo.overview({ nextAlgorithmId: name }),
   });
 
+  const algorithmsList = useReactiveVar(algorithmsListVar);
+  const query = useQuery(ALGORITHMS_QUERY);
+  usePolling(query, 3000);
+
   const onSubmitFilter = useCallback(
     values => {
-      if (!query.error && !query.loading) {
+      if (!query.loading) {
         if (values?.qAlgorithmName) {
           const filterAlgorithm = query.data?.algorithms?.list.filter(item =>
             item.name.includes(values.qAlgorithmName)
           );
           const list = [...filterAlgorithm];
-
-          setTimeout(() => {
-            algorithmsListVar(list);
-          }, 500);
+          algorithmsListVar(list);
         } else {
           const list = [...query.data?.algorithms?.list];
 
@@ -58,8 +47,11 @@ const AlgorithmsTable = () => {
         }
       }
     },
-    [query.data?.algorithms?.list, query.error, query.loading]
+    [query.data?.algorithms?.list]
   );
+
+  if (query.loading && algorithmsList.length === 0) return 'Loading...';
+  if (query.error) return `Error! ${query.error.message}`;
 
   return (
     <>

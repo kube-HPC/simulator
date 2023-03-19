@@ -35,21 +35,22 @@ const AlgorithmsQueryTable = ({ onSubmit, algorithmsList }) => {
   }, [form, instanceFilters.algorithms.qAlgorithmName]);
 
   useEffect(() => {
-    console.log(urlParams.search);
     const paramsUrl = qs.parse(urlParams.search, {
       ignoreQueryPrefix: true,
       allowDots: true,
       skipNulls: true,
     });
 
-    if (paramsUrl.qAlgorithmName) {
-      form.setFieldValue('qAlgorithmName', paramsUrl.qAlgorithmName);
+    const algorithmName =
+      paramsUrl.qAlgorithmName || instanceFilters.algorithms.qAlgorithmName;
 
+    if (algorithmName) {
+      form.setFieldValue('qAlgorithmName', algorithmName);
       setTimeout(() => {
-        SubmitForm(paramsUrl.qAlgorithmName || null);
+        SubmitForm(algorithmName);
       }, 500);
     }
-  }, [urlParams.search]);
+  }, []);
 
   const onFinish = values => {
     onSubmit(values);

@@ -18,9 +18,7 @@ const PipelinesQueryTable = ({ onSubmit, pipelinesList }) => {
     const pipelines = {
       qPipelineName: values || null,
     };
-
     instanceFiltersVar({ ...instanceFiltersVar(), pipelines });
-
     form.submit();
   };
   const submitDebounced = useDebouncedCallback(SubmitForm, 500);
@@ -41,11 +39,13 @@ const PipelinesQueryTable = ({ onSubmit, pipelinesList }) => {
       skipNulls: true,
     });
 
-    if (paramsUrl.qPipelineName) {
-      form.setFieldValue('qPipelineName', paramsUrl.qPipelineName);
+    const pipelineName =
+      paramsUrl.qPipelineName || instanceFilters.pipelines.qPipelineName;
 
+    if (pipelineName) {
+      form.setFieldValue('qPipelineName', pipelineName);
       setTimeout(() => {
-        SubmitForm(paramsUrl.qPipelineName || null);
+        SubmitForm(pipelineName);
       }, 500);
     }
   }, []);
