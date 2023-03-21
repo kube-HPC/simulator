@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 // import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { BugOutlined, PlayCircleOutlined } from '@ant-design/icons';
-import { Button, Empty, Tooltip, Typography } from 'antd';
+import { Button, Empty, Tooltip, Typography, Alert } from 'antd';
 import { FlexBox, JsonSwitch } from 'components/common';
 import { useActions } from 'hooks';
 import { useAlgorithmByVersion } from 'hooks/graphql';
@@ -148,7 +148,7 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
   }, [node.kind]);
 
   return node ? (
-    algorithmDetails && (
+    algorithmDetails ? (
       <ContainerTabs>
         <TitleNode>{node.nodeName}</TitleNode>
 
@@ -160,6 +160,10 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
           tabBarExtraContent={extra}
         />
       </ContainerTabs>
+    ) : node.algorithmVersion ? (
+      <Empty />
+    ) : (
+      <Alert message="Not have algorithm version" type="error" />
     )
   ) : (
     <Empty />
