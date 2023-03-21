@@ -10,7 +10,7 @@ import getColumns from './getColumns';
 
 const NodeInputOutput = ({ algorithm = {}, payload }) => {
   const { socketUrl } = useSelector(selectors.connection);
-  const mapTask = (task, { downloadFileExt }) => ({
+  const mapTask = (task, downloadFileExt) => ({
     index: task.batchIndex || 1,
     origInput: task.origInput,
     input: task.input,
@@ -29,10 +29,10 @@ const NodeInputOutput = ({ algorithm = {}, payload }) => {
   const dataSource =
     payload.batch && payload.batch.length > 0
       ? payload.batch.map(b => ({
-          ...mapTask(b, algorithm),
+          ...mapTask(b, algorithm?.downloadFileExt || ''),
           origInput: payload.origInput,
         }))
-      : [mapTask(payload, algorithm)];
+      : [mapTask(payload, algorithm?.downloadFileExt || '')];
 
   return (
     <Table

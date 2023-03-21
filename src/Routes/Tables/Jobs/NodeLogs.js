@@ -136,7 +136,7 @@ const NodeLogs = ({ node, taskDetails }) => {
   const setWord = useCallback(
     e => {
       const startTime =
-        node.batch.length > 0
+        node.batch?.length > 0
           ? node.batch.filter(x => x.taskId === taskId)[0].startTime
           : node.startTime;
       const time = startTime

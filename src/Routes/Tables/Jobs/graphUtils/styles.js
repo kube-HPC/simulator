@@ -55,7 +55,6 @@ export default ({ direction, isMinified = false }) => ({
     },
   },
   nodes: {
-    selectable: true,
     shape: 'box',
     color: {
       background: COLOR.white,

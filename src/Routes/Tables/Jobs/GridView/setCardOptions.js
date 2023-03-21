@@ -12,7 +12,7 @@ export default ({ direction }) => ({
     dragView: false,
     multiselect: false,
     navigationButtons: false,
-    selectable: false,
+    selectable: true,
     hoverConnectedEdges: false,
     hover: false,
   },
