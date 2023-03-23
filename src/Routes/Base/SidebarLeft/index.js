@@ -16,7 +16,7 @@ import { ReactComponent as JobsIcon } from 'images/jobs-icon.svg';
 import { ReactComponent as QueueIcon } from 'images/Queue-icon.svg';
 import { ReactComponent as LogoFish } from 'images/logo-fish.svg';
 
-import { ReactComponent as PipelineIcon } from 'images/pipeline-icon.svg';
+import { ReactComponent as PipelineIcon } from 'images/no-fill/add-pipeline.svg';
 
 import { instanceCounterVar, instanceFiltersVar } from 'cache';
 import { selectors } from 'reducers';
@@ -72,8 +72,8 @@ const SidebarLeft = () => {
     const itemsMenu = [
       [LEFT_SIDEBAR_NAMES.JOBS, JobsIcon, '/jobs'],
       [LEFT_SIDEBAR_NAMES.QUEUE, QueueIcon, '/queue'],
-      [LEFT_SIDEBAR_NAMES.PIPELINES, PipelineIcon, '/pipelines'],
       [LEFT_SIDEBAR_NAMES.ALGORITHMS, AlgorithmIcon, '/algorithms'],
+      [LEFT_SIDEBAR_NAMES.PIPELINES, PipelineIcon, '/pipelines'],
     ];
     if (dataSourceIsEnable) {
       itemsMenu.push([
