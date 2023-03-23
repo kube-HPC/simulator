@@ -44,7 +44,7 @@ const PipelineNameActions = ({ pipeline }) => {
 
   return (
     <PipelineNameContainer>
-      <Ellipsis text={pipeline.pipeline.name} length="40" />
+      <Ellipsis copyable text={pipeline.pipeline.name} length="40" />
 
       <Button.Group className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
         <Tooltip title={`edit pipeline ${pipeline.pipeline.name}`}>

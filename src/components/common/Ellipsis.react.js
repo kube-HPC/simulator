@@ -17,7 +17,7 @@ const Ellipsis = ({
   viewDisplayLine,
   ...props
 }) => (
-  <Tooltip title={text}>
+  <Tooltip title={copyable ? 'click to copy' : text}>
     <Text
       onClick={() => (copyable ? copyToClipboard(text) : null)}
       style={{
@@ -29,9 +29,6 @@ const Ellipsis = ({
         textOverflow: ellipsis ? 'ellipsis' : 'visible',
         ...(length ? { width: `${length * 5}px` } : {}),
       }}
-      // eslint-disable-next-line
-      type={type ? type : copyable && 'secondary'}
-      // eslint-disable-next-line
       {...props}>
       {text || children}
     </Text>

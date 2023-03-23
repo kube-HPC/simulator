@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { PlusOutlined } from '@ant-design/icons';
-import { Form, Button } from 'antd';
+import { Form, Button, Card, Space, Typography } from 'antd';
 import styled from 'styled-components';
 import RawInputField from 'components/InputField';
 import { tryParse } from 'utils';
@@ -39,7 +39,7 @@ const InputField = ({ onRemove, idx, ...antFields }) => {
       onRemove={() => onRemove(idx)}
       value={value}
       onChange={onInputChange}
-      placeholder="algorithm input"
+      placeholder='ex. {"key","value"}, ["n1","n2"], "value"'
     />
   );
 };
@@ -60,7 +60,12 @@ const InputsCollection = () => {
         </Form.Item>
       ))}
       <ButtonGroupCenter>
-        <Button block icon={<PlusOutlined />} type="dashed" onClick={appendKey}>
+        <Button
+          block
+          icon={<PlusOutlined />}
+          size="small"
+          type="primary"
+          onClick={appendKey}>
           Add Input
         </Button>
       </ButtonGroupCenter>
@@ -97,10 +102,16 @@ const AlgorithmRun = ({ onRun, buttonTitle }) => {
       direction="column"
       full
       gutter={[0, 10]}>
-      <InputsCollection />
-      <Button type="primary" block size="small" onClick={handleRun}>
-        {buttonTitle}
-      </Button>
+      <Space direction="vertical" size="large" style={{ width: '100%' }}>
+        <Card size="small">
+          <Typography.Text>Algorithm input</Typography.Text>
+          <InputsCollection />
+        </Card>
+
+        <Button type="primary" size="middle" onClick={handleRun}>
+          {buttonTitle}
+        </Button>
+      </Space>
     </Form>
   );
 };
