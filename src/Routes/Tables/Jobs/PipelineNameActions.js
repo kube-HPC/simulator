@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
-import { FilterOutlined } from '@ant-design/icons';
-import { ReactComponent as IconAddPipeline } from 'images/no-fill/add-pipeline.svg';
+import { ReactComponent as FilterOutlined } from 'images/filter-filtering-icon.svg';
+import { ReactComponent as IconAddPipeline } from 'images/forward-arrow-icon.svg';
 import { Button, Tooltip } from 'antd';
 import { USER_GUIDE } from 'const';
 import { Ellipsis } from 'components/common';
@@ -11,8 +11,12 @@ import { useReactiveVar } from '@apollo/client';
 
 import usePathPipeline from './../Pipelines/usePath';
 
-const iconSize = { width: '17px', fontSize: '12px', cursor: 'pointer' };
-const iconSizeFilter = { width: '25px', fontSize: '17px' };
+const iconSize = {
+  width: '32px',
+  marginLeft: '5px',
+  opacity: 0.6,
+  cursor: 'pointer',
+};
 
 const PipelineNameContainer = styled.div`
   display: flex;
@@ -43,14 +47,14 @@ const PipelineNameActions = ({ pipeline }) => {
       <Ellipsis text={pipeline.pipeline.name} length="40" />
 
       <Button.Group className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
-        <Tooltip title={`filter jobs by pipeline ${pipeline.pipeline.name}`}>
-          <FilterOutlined
-            style={iconSizeFilter}
-            onClick={() => filterByPipeline(pipeline.pipeline.name)}
-          />
-        </Tooltip>
         <Tooltip title={`edit pipeline ${pipeline.pipeline.name}`}>
           <IconAddPipeline style={iconSize} onClick={editByPipelineID} />
+        </Tooltip>
+        <Tooltip title={`filter jobs by pipeline ${pipeline.pipeline.name}`}>
+          <FilterOutlined
+            style={iconSize}
+            onClick={() => filterByPipeline(pipeline.pipeline.name)}
+          />
         </Tooltip>
       </Button.Group>
     </PipelineNameContainer>

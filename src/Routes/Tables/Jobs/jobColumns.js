@@ -85,7 +85,7 @@ const jobColumns = [
     title: `Pipeline Name`,
     dataIndex: ['pipeline', 'name'],
     key: `pipeline`,
-    width: `13%`,
+    width: `10%`,
     sorter: sortPipelineName,
     render: Name,
   },
