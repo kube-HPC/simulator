@@ -1,12 +1,6 @@
 import { useMemo } from 'react';
 import { useHistory, useLocation, useParams } from 'react-router';
-
-export const OVERVIEW_TABS = {
-  GRAPH: 'graph',
-  TRACE: 'trace',
-  INFO: 'pipeline',
-  MORE_INFO: 'extended pipeline',
-};
+import { OVERVIEW_JOB_TABS } from 'const';
 
 export default () => {
   const { jobId, tabKey } = useParams();
@@ -18,7 +12,7 @@ export default () => {
       root: '/jobs',
       overview: ({
         nextJobId = jobId,
-        nextTabKey = OVERVIEW_TABS.GRAPH,
+        nextTabKey = OVERVIEW_JOB_TABS.GRAPH,
       } = {}) => `/jobs/${nextJobId}/overview/${nextTabKey}`,
     }),
     [jobId]
@@ -30,7 +24,7 @@ export default () => {
         history.push({ pathname: paths.root, search: location.search }),
       overview: ({
         nextJobId = jobId,
-        nextTabKey = OVERVIEW_TABS.GRAPH,
+        nextTabKey = OVERVIEW_JOB_TABS.GRAPH,
       } = {}) =>
         history.push({
           pathname: paths.overview({ nextJobId, nextTabKey }),

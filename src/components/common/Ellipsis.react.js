@@ -14,22 +14,21 @@ const Ellipsis = ({
   type,
   ellipsis,
   children,
+  viewDisplayLine,
   ...props
 }) => (
-  <Tooltip title={text}>
+  <Tooltip title={copyable ? 'click to copy' : text}>
     <Text
       onClick={() => (copyable ? copyToClipboard(text) : null)}
       style={{
         cursor: 'pointer',
+        lineHeight: '2',
         whiteSpace: 'nowrap',
         overflow: 'hidden',
-        display: 'inline-block',
+        display: viewDisplayLine,
         textOverflow: ellipsis ? 'ellipsis' : 'visible',
         ...(length ? { width: `${length * 5}px` } : {}),
       }}
-      // eslint-disable-next-line
-      type={type ? type : copyable && 'secondary'}
-      // eslint-disable-next-line
       {...props}>
       {text || children}
     </Text>
@@ -43,6 +42,7 @@ Ellipsis.propTypes = {
   copyable: PropTypes.bool,
   type: PropTypes.string,
   ellipsis: PropTypes.bool,
+  viewDisplayLine: PropTypes.string,
 };
 
 Ellipsis.defaultProps = {
@@ -52,6 +52,7 @@ Ellipsis.defaultProps = {
   copyable: false,
   ellipsis: true,
   type: null,
+  viewDisplayLine: 'inline-flex',
 };
 
 export default Ellipsis;

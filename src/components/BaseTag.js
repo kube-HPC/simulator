@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { SyncOutlined } from '@ant-design/icons';
 import { Tag, Tooltip } from 'antd';
 import styled from 'styled-components';
 import { COLOR_PIPELINE_STATUS, COLOR, Theme } from 'styles/colors';
@@ -30,7 +31,8 @@ const BaseTag = ({ status, children, colorMap, tooltip, style }) => {
         $borderColor={color}
         $isBright={isBright}
         color={Theme.Styles?.isTagFill ? color : ''} // color is prop of Tag ANTD
-        style={{ ...style }}>
+        style={{ ...style }}
+        icon={status === 'active' ? <SyncOutlined spin /> : null}>
         {children}
       </TagTheme>
     </Tooltip>

@@ -6,6 +6,7 @@ import { Ellipsis } from 'components/common';
 import { USER_GUIDE } from 'const';
 import { sorter } from 'utils/stringHelper';
 import JobActions from './JobActions';
+import PipelineNameActions from './PipelineNameActions';
 import NodeStats from './NodeStats';
 import JobPriority from './JobPriority';
 import JobProgress from './JobProgress';
@@ -18,8 +19,7 @@ const Id = jobID => (
   <Ellipsis className={USER_GUIDE.TABLE_JOB.ID_SELECT} copyable text={jobID} />
 );
 
-// const Name = pipelineName => <Ellipsis text={pipelineName} />;
-const Name = (text, record) => <Ellipsis text={record.pipeline.name} />;
+const Name = (text, record) => <PipelineNameActions pipeline={record} />;
 
 const StartTime = (text, record) => (
   <JobTime startTime={record.pipeline.startTime} results={record.results} />
@@ -109,7 +109,7 @@ const jobColumns = [
     dataIndex: ['pipeline', 'priority'],
     key: `priority`,
     align: `center`,
-    width: `10%`,
+    width: `6%`,
     sorter: sortPriority,
     render: Priority,
   },

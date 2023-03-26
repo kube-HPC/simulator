@@ -16,3 +16,4 @@ export { WIZARD_STATE } from 'const/wizard-state';
 export { TypeTable, TypeFilter } from 'const/order-preferred';
 export { KIND_NODE_NAME, KIND_NODE_SHORT_NAME } from 'const/kinds';
 export { OVERVIEW_TABS } from 'const/algorithm-info';
+export { OVERVIEW_JOB_TABS } from 'const/job-info';

@@ -4,9 +4,10 @@ import { RedoOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import { JsonSwitch } from 'components/common';
 import { useTraceData } from 'hooks';
+import { OVERVIEW_JOB_TABS } from 'const';
 import GraphTab from './GraphTab';
 import Trace from './Trace';
-import usePath, { OVERVIEW_TABS as TABS } from './usePath';
+import usePath from './usePath';
 import { Tabs } from './styles';
 import DownloadFlowinput from './DownloadFlowinput';
 
@@ -33,33 +34,33 @@ const JobInfo = ({ job }) => {
     key,
   ]);
 
-  const refreshButton = currentTab === TABS.TRACE && (
+  const refreshButton = currentTab === OVERVIEW_JOB_TABS.TRACE && (
     <Button onClick={fetchJobTrace} icon={<RedoOutlined />}>
       Refresh
     </Button>
   );
 
   useEffect(() => {
-    if (currentTab === TABS.TRACE) fetchJobTrace();
+    if (currentTab === OVERVIEW_JOB_TABS.TRACE) fetchJobTrace();
   }, [currentTab, fetchJobTrace]);
 
   const TabsItemsJson = useMemo(
     () => [
       {
-        label: TABS.GRAPH,
-        key: TABS.GRAPH,
+        label: OVERVIEW_JOB_TABS.GRAPH,
+        key: OVERVIEW_JOB_TABS.GRAPH,
         children: (
           <GraphTab graph={{ ...graph, jobId: key }} pipeline={pipeline} />
         ),
       },
       {
-        label: TABS.TRACE,
-        key: TABS.TRACE,
+        label: OVERVIEW_JOB_TABS.TRACE,
+        key: OVERVIEW_JOB_TABS.TRACE,
         children: <Trace data={traceData} />,
       },
       {
-        label: TABS.INFO,
-        key: TABS.INFO,
+        label: OVERVIEW_JOB_TABS.INFO,
+        key: OVERVIEW_JOB_TABS.INFO,
         children: (
           <JsonSwitch
             tabPosition="top"
@@ -73,8 +74,8 @@ const JobInfo = ({ job }) => {
         ),
       },
       {
-        label: TABS.MORE_INFO,
-        key: TABS.MORE_INFO,
+        label: OVERVIEW_JOB_TABS.MORE_INFO,
+        key: OVERVIEW_JOB_TABS.MORE_INFO,
         children: (
           <JsonSwitch
             tabPosition="top"

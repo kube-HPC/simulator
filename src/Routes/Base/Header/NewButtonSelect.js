@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { Link, useLocation, useParams, useHistory } from 'react-router-dom';
 import { Button, Dropdown } from 'antd';
 import { ReactComponent as IconAddPipeline } from 'images/no-fill/add-pipeline.svg';
-import { ReactComponent as IconAddAlgorithm } from 'images/no-fill/add-algorithm.svg';
+import { ReactComponent as IconAddAlgorithm } from 'images/algorithm-icon.svg';
 import { ReactComponent as IconDataSource } from 'images/datasource.svg';
 import {
   LEFT_SIDEBAR_NAMES,

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Tag } from 'antd';
+
 import { FlexBox } from 'components/common';
 import { StatusTag } from 'components/StatusTag';
 
