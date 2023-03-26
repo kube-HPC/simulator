@@ -261,7 +261,9 @@ const useJobsFunctionsLimit = () => {
   useEffect(() => {
     if (firstUpdate.current) {
       const filter = { ...instanceFilters };
-      filter.jobs.datesRange.from = dateTimeDefault.time;
+      if (filter.jobs.datesRange.from === null) {
+        filter.jobs.datesRange.from = dateTimeDefault.time;
+      }
       instanceFiltersVar({ ...filter });
       firstUpdate.current = false;
     }
