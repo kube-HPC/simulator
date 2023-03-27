@@ -81,9 +81,11 @@ const AlgorithmsTabs = ({ algorithm }) => {
 
   const extra =
     activeKey === TABS.DESCRIPTION ? (
-      <Button onClick={onApplyApplyMarkdown} icon={<CheckOutlined />}>
-        Apply Markdown
-      </Button>
+      false && (
+        <Button onClick={onApplyApplyMarkdown} icon={<CheckOutlined />}>
+          Apply Markdown
+        </Button>
+      )
     ) : activeKey === TABS.VERSIONS ? (
       <Button onClick={fetch} icon={<RedoOutlined />}>
         Refresh
@@ -134,7 +136,7 @@ const AlgorithmsTabs = ({ algorithm }) => {
       {
         label: TABS.DESCRIPTION,
         key: TABS.DESCRIPTION,
-        children: <MdEditor value={readme} onChange={setReadme} />,
+        children: <MdEditor value={readme} onChange={setReadme} viewReadOnly />,
       },
     ],
     [
