@@ -45,7 +45,7 @@ const PipelineInfo = ({ record }) => {
       {
         label: TABS.DESCRIPTION,
         key: TABS.DESCRIPTION,
-        children: <MdEditor value={readme} onChange={setReadme} />,
+        children: <MdEditor value={readme} onChange={setReadme} viewReadOnly />,
       },
     ],
     [readme, record]
@@ -58,9 +58,8 @@ const PipelineInfo = ({ record }) => {
         activeKey={tabKey}
         onChange={handleChange}
         extra={
-          tabKey === TABS.DESCRIPTION && (
-            <Button onClick={onApply}>Apply Markdown</Button>
-          )
+          tabKey === TABS.DESCRIPTION &&
+          false && <Button onClick={onApply}>Apply Markdown</Button>
         }
       />
     </Card>

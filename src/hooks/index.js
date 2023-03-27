@@ -21,6 +21,7 @@ export { default as useWizardAddPipeline } from './useWizardAddPipeline';
 export { default as useWizard } from './useWizard';
 export { default as usePolling } from '../graphql/usePolling';
 export { default as useCacheFilters } from '../graphql/useCacheFilters';
+export { default as useReadMeFile } from './useReadMeFile';
 
 export const dataSources = {
   useSnapshots: useDataSourceSnapshots,
