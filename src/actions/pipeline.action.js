@@ -65,22 +65,24 @@ export const updateStored = pipeline => ({
   },
 });
 
-export const cronStart = (name, pattern) => ({
+export const cronStart = (name, pattern, onSuccess) => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: `cron/start`,
     body: { name, pattern },
     actionType: actions.PIPELINE_CRON_START,
   },
+  meta: { onSuccess },
 });
 
-export const cronStop = (name, pattern) => ({
+export const cronStop = (name, pattern, onSuccess) => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: `cron/stop`,
     body: { name, pattern },
     actionType: actions.PIPELINE_CRON_STOP,
   },
+  meta: { onSuccess },
 });
 
 export const execRawPipeline = pipeline => ({
