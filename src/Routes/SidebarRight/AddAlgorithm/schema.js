@@ -161,6 +161,12 @@ const addAlgorithmSchema = {
       message:
         'Lower cased letters and numbers are only allowed in Algorithm Name.',
     },
+    DESCRIPTION: {
+      field: 'main.description',
+      label: 'Description',
+      placeholder: 'Algorithm Description',
+    },
+
     OPTIONS: {
       field: 'main.options',
       label: 'Options',

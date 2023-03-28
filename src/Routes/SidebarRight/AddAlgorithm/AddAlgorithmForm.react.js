@@ -2,7 +2,7 @@ import React, { memo, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Input, InputNumber, Radio, Select, Checkbox } from 'antd';
-import { Form } from 'components/common';
+import { Form, FlexBox } from 'components/common';
 import {
   BottomPanel,
   RightAlignedButton,
@@ -24,6 +24,7 @@ import {
 import { CodeBuild, GitBuild, ImageBuild } from './BuildTypes';
 import MemoryField from './MemoryField.react';
 import schema from './schema';
+import DrawerReadMeFile from '../../../components/Drawer/DrawerReadMeFile';
 
 // #region  Helpers
 
@@ -168,6 +169,7 @@ const AddAlgorithmForm = ({
       const { env, entryPoint, baseImage, ...rest } = formObject[buildType];
 
       /* eslint-disable indent */
+
       const payload =
         buildType === BUILD_TYPES.GIT.field
           ? {
@@ -202,6 +204,7 @@ const AddAlgorithmForm = ({
         obj: payload,
         predicate: isNotEmpty,
       });
+
       formData.append(`payload`, stringify(payloadFiltered));
       onSubmit({ formData, payload: payloadFiltered });
     });
@@ -218,6 +221,27 @@ const AddAlgorithmForm = ({
         ]}>
         <Input disabled={isEdit} placeholder={MAIN.NAME.placeholder} />
       </Form.Item>
+
+      <FlexBox align="start">
+        <FlexBox.Item span={18}>
+          <Form.Item
+            name={splitByDot(MAIN.DESCRIPTION.field)}
+            label={MAIN.DESCRIPTION.label}>
+            <Input
+              placeholder={MAIN.DESCRIPTION.placeholder}
+              style={{ marginLeft: '64px' }}
+            />
+          </Form.Item>
+        </FlexBox.Item>
+        <FlexBox.Item>
+          <DrawerReadMeFile
+            name={keyValueObject?.name || null}
+            type="algorithms"
+            disabled={!isEdit}
+          />
+        </FlexBox.Item>
+      </FlexBox>
+
       <Form.Item label="Source">
         <Radio.Group
           defaultValue={buildType}

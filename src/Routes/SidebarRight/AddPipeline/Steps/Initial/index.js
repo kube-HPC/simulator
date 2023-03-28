@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Input, Radio, Select } from 'antd';
-import { Form, EditableTagGroup } from 'components/common';
+import { Form, EditableTagGroup, FlexBox } from 'components/common';
 import { useExperiments } from 'hooks/graphql';
+
 import ControllerKeyValue from '../Nodes/inputKeyValueJson';
 import useWizardContext from '../../useWizardContext';
+import DrawerReadMeFile from '../../../../../components/Drawer/DrawerReadMeFile';
 
 const { Option } = Select;
 
@@ -15,6 +17,7 @@ const Initial = ({ style }) => {
   const [nodeNames] = useState(
     valuesState?.nodes?.map(item => item?.nodeName) || []
   );
+
   // get list nodes
 
   const { experiments } = useExperiments();
@@ -29,9 +32,29 @@ const Initial = ({ style }) => {
         hidden={isRunPipeline}>
         <Input disabled={isEdit} placeholder="Unique Identifier" />
       </Form.Item>
-      <Form.Item hidden={isRunPipeline} label="Description" name="description">
-        <Input placeholder="Pipeline Description" />
-      </Form.Item>
+      {!isRunPipeline && (
+        <FlexBox align="start">
+          <FlexBox.Item span={18}>
+            <Form.Item
+              hidden={isRunPipeline}
+              label="Description"
+              name="description">
+              <Input
+                placeholder="Pipeline Description"
+                style={{ marginLeft: '34px' }}
+              />
+            </Form.Item>
+          </FlexBox.Item>
+          <FlexBox.Item>
+            <DrawerReadMeFile
+              name={valuesState.name}
+              type="pipelines"
+              disabled={!isEdit}
+            />
+          </FlexBox.Item>
+        </FlexBox>
+      )}
+
       <Form.Item
         label="Pipeline Kind"
         name="kind"
@@ -49,7 +72,7 @@ const Initial = ({ style }) => {
 
       {isRunPipeline && (
         <>
-          <Form.Item label="experiments" name={['experimentName']}>
+          <Form.Item label="Experiments" name={['experimentName']}>
             <Select style={{ width: '100%' }}>
               {experiments.map(experiment => (
                 <Option key={experiment.name}>{experiment.name}</Option>
