@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { CheckOutlined } from '@ant-design/icons';
 import { Input, Popover, Switch, Typography, Tooltip } from 'antd';
@@ -44,7 +38,7 @@ const PipelineCron = ({ pipeline }) => {
   const prevCronRef = useRef(cronIsEnabled);
   const patternIsPresent = isPattern(pipeline);
 
-  const [loading, toggleLoading] = useReducer(p => !p, false);
+  const [loading, setToggleLoading] = useState(false);
 
   const cronExpr = patternIsPresent
     ? pipeline.triggers.cron.pattern
@@ -53,10 +47,8 @@ const PipelineCron = ({ pipeline }) => {
   const [value, setValue] = useState(cronExpr);
 
   useEffect(() => {
-    if (prevCronRef.current !== cronIsEnabled) {
-      toggleLoading();
-    }
-  }, [cronIsEnabled, prevCronRef, toggleLoading]);
+    setToggleLoading(false);
+  }, [cronIsEnabled, prevCronRef, setToggleLoading]);
 
   let renderTooltip = ERROR_CRON_EXPR;
 
@@ -78,16 +70,10 @@ const PipelineCron = ({ pipeline }) => {
 
   const { name } = pipeline;
 
-  const onCronSuccess = useCallback(() => {
-    toggleLoading();
-  }, []);
-
   const onToggle = useCallback(() => {
-    toggleLoading();
-    cronIsEnabled
-      ? cronStop(name, value, onCronSuccess)
-      : cronStart(name, value, onCronSuccess);
-  }, [cronIsEnabled, cronStop, name, value, onCronSuccess, cronStart]);
+    setToggleLoading(true);
+    cronIsEnabled ? cronStop(name, value) : cronStart(name, value);
+  }, [cronIsEnabled, cronStop, name, value, cronStart]);
 
   const onSave = useCallback(
     pattern => {

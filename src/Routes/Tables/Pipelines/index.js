@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Route } from 'react-router-dom';
 import { Table } from 'components';
 import { usePolling } from 'hooks';
@@ -45,6 +45,10 @@ const PipelinesTable = () => {
     },
     [query.data?.pipelines?.list]
   );
+
+  useEffect(() => {
+    onSubmitFilter(undefined);
+  }, [onSubmitFilter, query.data?.pipelines?.list]);
 
   if (query.loading && pipelineList.length === 0) return 'Loading...';
   if (query.error) return `Error! ${query.error.message}`;
