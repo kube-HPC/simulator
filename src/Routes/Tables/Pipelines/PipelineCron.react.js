@@ -78,10 +78,16 @@ const PipelineCron = ({ pipeline }) => {
 
   const { name } = pipeline;
 
+  const onCronSuccess = useCallback(() => {
+    toggleLoading();
+  }, []);
+
   const onToggle = useCallback(() => {
     toggleLoading();
-    cronIsEnabled ? cronStop(name, value) : cronStart(name, value);
-  }, [toggleLoading, value, cronIsEnabled, cronStart, cronStop, name]);
+    cronIsEnabled
+      ? cronStop(name, value, onCronSuccess)
+      : cronStart(name, value, onCronSuccess);
+  }, [cronIsEnabled, cronStop, name, value, onCronSuccess, cronStart]);
 
   const onSave = useCallback(
     pattern => {

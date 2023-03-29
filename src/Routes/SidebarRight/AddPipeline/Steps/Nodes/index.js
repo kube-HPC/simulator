@@ -286,9 +286,10 @@ const Nodes = ({ style }) => {
               <Input placeholder="Node Name" />
             </Field>
 
-            {getFieldValue(['nodes', id, 'kind']) && (
-              <Node id={id} kind={getFieldValue(['nodes', id, 'kind'])} />
-            )}
+            <Node
+              id={id}
+              kind={getFieldValue(['nodes', id, 'kind']) || 'algorithm'}
+            />
           </BoldedFormField>
         </DataNode>
       ))}

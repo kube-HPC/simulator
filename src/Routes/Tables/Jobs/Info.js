@@ -5,6 +5,7 @@ import { Button } from 'antd';
 import { JsonSwitch } from 'components/common';
 import { useTraceData } from 'hooks';
 import { OVERVIEW_JOB_TABS } from 'const';
+import { removeNullUndefinedCleanDeep } from 'utils';
 import GraphTab from './GraphTab';
 import Trace from './Trace';
 import usePath from './usePath';
@@ -28,6 +29,15 @@ const JobInfo = ({ job }) => {
   );
 
   const { key, graph, userPipeline = {}, pipeline } = job;
+
+  const userPipelineView = useMemo(
+    () => removeNullUndefinedCleanDeep(userPipeline),
+    [userPipeline]
+  );
+  const pipelineView = useMemo(() => removeNullUndefinedCleanDeep(pipeline), [
+    pipeline,
+  ]);
+
   const algorithms = pipeline.nodes.map(n => n.algorithmName);
   const fetchJobTrace = useCallback(() => fetch({ jobId: key, algorithms }), [
     fetch,
@@ -64,7 +74,7 @@ const JobInfo = ({ job }) => {
         children: (
           <JsonSwitch
             tabPosition="top"
-            obj={userPipeline}
+            obj={userPipelineView}
             options={options}
             jobId={key}
             jsonViewHeaderNode={
@@ -79,7 +89,7 @@ const JobInfo = ({ job }) => {
         children: (
           <JsonSwitch
             tabPosition="top"
-            obj={pipeline}
+            obj={pipelineView}
             options={options}
             jobId={key}
             jsonViewHeaderNode={
@@ -89,7 +99,7 @@ const JobInfo = ({ job }) => {
         ),
       },
     ],
-    [graph, key, pipeline, traceData, userPipeline]
+    [graph, key, pipeline, pipelineView, traceData, userPipelineView]
   );
 
   return (
