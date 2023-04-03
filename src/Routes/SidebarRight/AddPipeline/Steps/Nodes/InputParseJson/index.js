@@ -6,10 +6,10 @@ import InputField from './InputField';
 import useWizardContext from '../../../useWizardContext';
 
 const listAddOn = [
-  { value: '', label: 'Value' },
-  { value: '@', label: 'Output of' },
-  { value: '#', label: 'Output #' },
-  { value: '#@', label: 'Output array of' },
+  { value: '@', label: '(@) Output of', placeholder: '1111' },
+  { value: '#@', label: '(#@) Output array of', placeholder: '2222' },
+  { value: '#', label: '(#) Output', placeholder: '333' },
+  { value: '', label: 'Value', placeholder: '4444' },
 ];
 
 const Controller = ({ nodeIdx, isRequired }) => {

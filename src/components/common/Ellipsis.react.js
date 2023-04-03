@@ -37,7 +37,7 @@ const Ellipsis = ({
 
 Ellipsis.propTypes = {
   text: PropTypes.string,
-  children: PropTypes.string,
+  children: PropTypes.node,
   length: PropTypes.number,
   copyable: PropTypes.bool,
   type: PropTypes.string,

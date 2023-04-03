@@ -19,6 +19,11 @@ if (process.env.NODE_ENV === 'development') {
 
 const store = configureStore({
   reducer: rootReducer,
-  middleware: [...getDefaultMiddleware(), ...middleware],
+  middleware: [
+    ...getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+    ...middleware,
+  ],
 });
 export default store;

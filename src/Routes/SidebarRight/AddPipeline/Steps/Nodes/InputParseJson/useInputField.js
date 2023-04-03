@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 import { tryParse, tryParseJson } from 'utils';
 import SignInputAddOn from '../../../../../../components/common/SignInputAddOn.react';
 
-const useInputField = (antFields, onRemove) => {
+const useInputField = (antFields, onRemove, selectWidth) => {
   const hasRemove = !!onRemove;
   const SignsOfObjectArray = ['{', '}'];
 
@@ -124,12 +124,13 @@ const useInputField = (antFields, onRemove) => {
   const addonBefore = useMemo(
     () =>
       SignInputAddOn({
+        selectWidth,
         state: selectBefore,
         options: antFields?.addonBefore || [],
         callback: setSelectBefore,
         isDisabled: addonIsDisabled,
       }),
-    [addonIsDisabled, antFields?.addonBefore, selectBefore]
+    [addonIsDisabled, antFields?.addonBefore, selectBefore, selectWidth]
   );
 
   const onInputChange = useCallback(

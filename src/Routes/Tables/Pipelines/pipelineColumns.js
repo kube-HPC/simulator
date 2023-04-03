@@ -7,7 +7,7 @@ import PipelineActions from './PipelineActions.react';
 import PipelineCron from './PipelineCron.react';
 import PipelineStats from './PipelineStats.react';
 
-const PipelineName = name => <Ellipsis copyable text={name} length="50" />;
+const PipelineName = name => <Ellipsis copyable text={name} length={50} />;
 const Stats = (name, { nodes }) => <PipelineStats name={name} nodes={nodes} />;
 const Cron = (_, pipeline) => <PipelineCron pipeline={pipeline} />;
 const LastModified = timestamp => (

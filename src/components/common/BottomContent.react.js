@@ -38,8 +38,11 @@ BottomContent.DefaultHeight = DEFAULT_HEIGHT;
 
 BottomContent.propTypes = {
   // eslint-disable-next-line
-  extra: PropTypes.array.isRequired,
+  extra: PropTypes.array,
   children: PropTypes.node.isRequired,
+};
+BottomContent.defaultProps = {
+  extra: [],
 };
 
 export default BottomContent;

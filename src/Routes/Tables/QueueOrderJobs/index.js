@@ -556,7 +556,17 @@ class QueueOrderJobs extends React.Component {
 }
 
 QueueOrderJobs.propTypes = {
-  orderApi: PropTypes.objectOf(PropTypes.func).isRequired,
+  orderApi: PropTypes.shape({
+    numberJobsPerPage: PropTypes.number,
+    addPreferred: PropTypes.func,
+    getManaged: PropTypes.func,
+    movePreferred: PropTypes.func,
+    getJobIdPosition: PropTypes.func,
+    getJobsIdsScopePreferred: PropTypes.func,
+    deletePreferred: PropTypes.func,
+    getStatusPreferred: PropTypes.func,
+    getStatusManage: PropTypes.func,
+  }).isRequired,
 };
 
 export default queueOrderJobsHOC(QueueOrderJobs);

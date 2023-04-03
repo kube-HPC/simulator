@@ -18,7 +18,7 @@ const Memory = mem => <Tag>{mem || 'No Memory Specified'}</Tag>;
 const Cpu = cpu => <Tag>{cpu || 'No CPU Assigned'}</Tag>;
 const Image = algorithmImage =>
   algorithmImage ? (
-    <Ellipsis copyable text={algorithmImage} length="50" />
+    <Ellipsis copyable text={algorithmImage} length={50} />
   ) : (
     <Tag>No Image</Tag>
   );

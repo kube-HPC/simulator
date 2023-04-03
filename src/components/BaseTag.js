@@ -40,7 +40,7 @@ const BaseTag = ({ status, children, colorMap, tooltip, style }) => {
 };
 
 BaseTag.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   status: PropTypes.string,
   colorMap: PropTypes.objectOf(PropTypes.string),
   tooltip: PropTypes.string,
@@ -49,6 +49,7 @@ BaseTag.propTypes = {
 };
 
 BaseTag.defaultProps = {
+  children: null,
   status: null,
   colorMap: COLOR_PIPELINE_STATUS,
   tooltip: null,

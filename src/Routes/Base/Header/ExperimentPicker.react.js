@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useState, useMemo } from 'react';
 import styled from 'styled-components';
 import { ifProp } from 'styled-tools';
-import { Button, Dropdown, Input, Menu, Tag, Typography } from 'antd';
+import { Button, Popover, Input, Menu, Tag, Typography } from 'antd';
 import { FlexBox, Icons } from 'components/common';
 import { useExperiments } from 'hooks/graphql';
 import { schema } from 'hooks/graphql/useExperiments';
@@ -38,6 +38,7 @@ const { Text } = Typography;
 
 const ExperimentPicker = () => {
   const {
+    getLazyExperiments,
     experiments,
     set: onChange,
     add,
@@ -49,8 +50,11 @@ const ExperimentPicker = () => {
   const [descriptionExperiment, setDescriptionExperiment] = useState('');
 
   const onAdd = useCallback(
-    () => add({ nameExperiment, descriptionExperiment }),
-    [add, descriptionExperiment, nameExperiment]
+    () =>
+      add(nameExperiment, descriptionExperiment, () => {
+        getLazyExperiments();
+      }),
+    [add, descriptionExperiment, getLazyExperiments, nameExperiment]
   );
 
   const onNameChange = useCallback(e => setNameExperiment(e.target.value), [
@@ -70,7 +74,9 @@ const ExperimentPicker = () => {
 
     experiments.forEach(({ name, description }, index) => {
       const onRemove = () => {
-        remove(name);
+        remove(name, () => {
+          getLazyExperiments();
+        });
         if (name === experimentId) {
           onChange(schema.SHOW_ALL);
         }
@@ -148,9 +154,9 @@ const ExperimentPicker = () => {
     ] || COLOR.blueLight;
 
   return (
-    <Dropdown overlay={menu} overlayStyle={overflow}>
+    <Popover content={menu} overlayStyle={overflow}>
       <BigTag color={tagColor}>{experimentId}</BigTag>
-    </Dropdown>
+    </Popover>
   );
 };
 

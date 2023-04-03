@@ -17,7 +17,14 @@ const initialByType = target => () => {
 
 const InputAddon = forwardRef(
   (
-    { before = '', after = '', onChange = () => {}, placeholder, value },
+    {
+      before = '',
+      after = '',
+      onChange = () => {},
+      placeholder,
+      selectWidth,
+      value,
+    },
     ref
   ) => {
     const [selectBefore, setSelectBefore] = useState(initialByType(before));
@@ -70,6 +77,7 @@ const InputAddon = forwardRef(
     const addonBefore = useMemo(
       () =>
         SignInputAddOn({
+          selectWidth,
           state: selectBefore,
           options: before,
           callback: setSelectBefore,
@@ -80,6 +88,7 @@ const InputAddon = forwardRef(
     const addonAfter = useMemo(
       () =>
         SignInputAddOn({
+          selectWidth,
           state: selectAfter,
           options: after,
           callback: setSelectAfter,
@@ -107,6 +116,7 @@ InputAddon.propTypes = {
   after: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
   placeholder: PropTypes.string,
   onChange: PropTypes.func,
+  selectWidth: PropTypes.number,
 };
 
 InputAddon.defaultProps = {
@@ -115,6 +125,7 @@ InputAddon.defaultProps = {
   placeholder: '',
   onChange: undefined,
   value: '',
+  selectWidth: null,
 };
 
 export default memo(InputAddon);

@@ -2,13 +2,17 @@ import { Select } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-const selectWidth = { width: 150 };
-
-const SignInputAddOn = ({ state, options, callback, isDisabled }) =>
+const SignInputAddOn = ({
+  state,
+  options,
+  callback,
+  isDisabled,
+  selectWidth,
+}) =>
   Array.isArray(options) ? (
     <Select
       value={state}
-      style={selectWidth}
+      style={{ width: selectWidth }}
       onChange={callback}
       disabled={isDisabled}>
       {options.map(option => {
@@ -40,12 +44,14 @@ const arrayOrStringType = PropTypes.oneOfType([
 ]);
 SignInputAddOn.defaultProps = {
   isDisabled: false,
+  selectWidth: null,
 };
 SignInputAddOn.propTypes = {
   state: PropTypes.string.isRequired,
   options: arrayOrStringType.isRequired,
   callback: PropTypes.func.isRequired,
   isDisabled: PropTypes.bool,
+  selectWidth: PropTypes.number,
 };
 
 export default SignInputAddOn;

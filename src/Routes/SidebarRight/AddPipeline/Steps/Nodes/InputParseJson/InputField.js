@@ -11,7 +11,7 @@ const InputField = ({ placeholder, tooltip, idx, onRemove, ...antFields }) => {
     hasRemove,
     isValid,
     value,
-  } = useInputField(antFields, onRemove);
+  } = useInputField(antFields, onRemove, 200);
 
   return (
     <RawInputField
@@ -43,7 +43,7 @@ InputField.propTypes = {
   ]),
   id: PropTypes.node,
   onChange: PropTypes.func,
-  addonBefore: PropTypes.arrayOf(PropTypes.string),
+  addonBefore: PropTypes.arrayOf(PropTypes.object),
 };
 
 InputField.defaultProps = {

@@ -139,6 +139,7 @@ const Wizard = ({
   return (
     <>
       <Steps
+        items={steps}
         type="navigation"
         size="small"
         current={stepIdx}
@@ -147,9 +148,8 @@ const Wizard = ({
           borderBottom: `1px solid ${COLOR_LAYOUT.border}`,
           marginBottom: '20px',
           paddingTop: '0px',
-        }}>
-        {steps}
-      </Steps>
+        }}
+      />
 
       <Body>
         <Form

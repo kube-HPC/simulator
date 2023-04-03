@@ -21,7 +21,7 @@ const DrawerReadMeFile = ({ name, type, disabled }) => {
       <Drawer open={isOpen} operation="Read Me File" onClose={toggle}>
         <Space direction="vertical" size="middle">
           <Button onClick={onApply}>Apply Markdown</Button>
-          <MdEditor value={readme} onChange={setReadme} />
+          {readme && <MdEditor value={readme} onChange={setReadme} />}
         </Space>
       </Drawer>
     </>
@@ -29,9 +29,12 @@ const DrawerReadMeFile = ({ name, type, disabled }) => {
 };
 
 DrawerReadMeFile.propTypes = {
-  name: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
+  name: PropTypes.string,
+  type: PropTypes.string,
   disabled: PropTypes.bool.isRequired,
 };
-
+DrawerReadMeFile.defaultProps = {
+  type: null,
+  name: null,
+};
 export default DrawerReadMeFile;
