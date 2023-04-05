@@ -1,5 +1,6 @@
 import React from 'react';
 import Drawer from 'components/Drawer';
+import { Button } from 'antd';
 import { TabDrawerText, TabDrawer } from 'styles';
 import useToggle from 'hooks/useToggle';
 import { DRAWER_SIZE } from 'const';
@@ -20,7 +21,12 @@ const OverviewDrawer = () => {
       onDidClose={goTo.root}
       onClose={setOff}
       width={DRAWER_SIZE.PIPELINE_INFO}
-      title={record?.name ?? pipelineId}>
+      title={record?.name ?? pipelineId}
+      extra={
+        <Button type="primary" onClick={goTo.edit}>
+          Edit
+        </Button>
+      }>
       <>
         <TabDrawer>
           <TabDrawerText>{DRAWER_TITLES.PIPELINE_INFO}</TabDrawerText>

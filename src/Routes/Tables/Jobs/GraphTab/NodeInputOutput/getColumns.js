@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { COLOR_TASK_STATUS } from 'styles/colors';
 import { DownloadOutlined } from '@ant-design/icons';
@@ -42,35 +42,46 @@ const Duration = (_, record) =>
 
 const Retries = retries => <Tag>{retries}</Tag>;
 
-const Results = ({ record, url }) => (
-  <Tooltip placement="top" title="Download Results">
-    <a
-      href={`${url ? `${url}/` : ''}storage/download/custom/${
-        record.output && record.output.path
-      }?ext=${record.downloadFileExt || ''}`}
-      download>
-      <Button
-        type="default"
-        disabled={!record.output}
-        shape="circle"
-        icon={<DownloadOutlined />}
-      />
-    </a>
-  </Tooltip>
-);
+const Results = ({ record, url, algorithmName }) => {
+  const downloadNameFile = useMemo(
+    () => `${algorithmName}_${new Date(record.startTime).toISOString()}`,
+    [algorithmName, record.startTime]
+  );
+
+  return (
+    <Tooltip placement="top" title="Download Results">
+      <a
+        href={`${url ? `${url}/` : ''}storage/download/custom/${
+          record.output && record.output.path
+        }?ext=${record.downloadFileExt || ''}&namefile=${
+          downloadNameFile || ''
+        }`}
+        download>
+        <Button
+          type="default"
+          disabled={!record.output}
+          shape="circle"
+          icon={<DownloadOutlined />}
+        />
+      </a>
+    </Tooltip>
+  );
+};
 
 Results.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
   record: PropTypes.object.isRequired,
+  algorithmName: PropTypes.string,
   url: PropTypes.string,
 };
 
 Results.defaultProps = {
+  algorithmName: '',
   url: null,
 };
 
-const getNodeIOColumns = url => [
+const getNodeIOColumns = (url, algorithmName) => [
   {
     title: 'index',
     dataIndex: ['index'],
@@ -102,7 +113,9 @@ const getNodeIOColumns = url => [
     title: 'Results',
     dataIndex: ['results'],
     key: 'results',
-    render: (_, record) => <Results url={url} record={record} />,
+    render: (_, record) => (
+      <Results url={url} record={record} algorithmName={algorithmName} />
+    ),
   },
 ];
 

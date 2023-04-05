@@ -43,7 +43,7 @@ const NodeInputOutput = ({ algorithm = {}, payload }) => {
         hideOnSinglePage: true,
       }}
       rowKey={({ taskId }) => `input-output-table-task-${taskId}`}
-      columns={getColumns(socketUrl)}
+      columns={getColumns(socketUrl, algorithm.name)}
       dataSource={removeNullUndefinedCleanDeep(dataSource)}
       expandable={{
         expandedRowRender: record => (

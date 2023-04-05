@@ -1,5 +1,6 @@
 import React from 'react';
 import { TabDrawerText, TabDrawer } from 'styles';
+import { Button } from 'antd';
 import Drawer from 'components/Drawer';
 import { DRAWER_SIZE } from 'const';
 import useToggle from 'hooks/useToggle';
@@ -20,7 +21,12 @@ const OverviewDrawer = () => {
       onDidClose={goTo.root}
       onClose={setOff}
       width={DRAWER_SIZE.ALGORITHM_INFO}
-      title={algorithmId}>
+      title={algorithmId}
+      extra={
+        <Button type="primary" onClick={goTo.edit}>
+          Edit
+        </Button>
+      }>
       <>
         <TabDrawer>
           <TabDrawerText>{DRAWER_TITLES.ALGORITHM_INFO}</TabDrawerText>
