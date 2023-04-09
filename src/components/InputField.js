@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {
   CheckOutlined,
@@ -30,38 +30,34 @@ const InputField = ({
   value,
   placeholder,
   addonBefore,
-}) => {
-  const inputRef = useRef();
-  useEffect(() => {
-    inputRef?.current?.focus();
-  }, []);
-  return (
-    <Field style={{ marginTop: '0.5em' }}>
-      <Tooltip title={isValid ? '' : tooltip}>
-        <Input
-          ref={inputRef}
-          id={id}
-          onChange={onChange}
-          defaultValue={value}
-          value={value}
-          placeholder={placeholder}
-          allowClear
-          addonAfter={
-            isValid ? (
-              <CheckOutlined style={{ fontSize: '15px' }} />
-            ) : (
-              <WarningOutlined style={{ color: 'red', fontSize: '15px' }} />
-            )
-          }
-          addonBefore={addonBefore}
-        />
-      </Tooltip>
-      {hasRemove && <IconDelete onClick={onRemove} />}
-    </Field>
-  );
-};
+  inputRef,
+}) => (
+  <Field style={{ marginTop: '0.5em' }}>
+    <Tooltip title={isValid ? '' : tooltip}>
+      <Input
+        ref={inputRef}
+        id={id}
+        onChange={onChange}
+        defaultValue={value}
+        value={value}
+        placeholder={placeholder}
+        allowClear
+        addonAfter={
+          isValid ? (
+            <CheckOutlined style={{ fontSize: '15px' }} />
+          ) : (
+            <WarningOutlined style={{ color: 'red', fontSize: '15px' }} />
+          )
+        }
+        addonBefore={addonBefore}
+      />
+    </Tooltip>
+    {hasRemove && <IconDelete onClick={onRemove} />}
+  </Field>
+);
 
 InputField.propTypes = {
+  inputRef: PropTypes.func.isRequired,
   hasRemove: PropTypes.bool.isRequired,
   onRemove: PropTypes.func.isRequired,
   isValid: PropTypes.bool,
