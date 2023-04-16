@@ -20,14 +20,6 @@ import { Initial, Nodes, Options } from './Steps';
 const Form = styled(AntdForm)`
   width: 90ch;
 `;
-const StepItem = styled(Steps.Step)`
-  .ant-steps-item-icon {
-    ${props =>
-      props.$isRunPipeline && props.$StepName === 'Options'
-        ? 'border-color:#459efd;color:#459efd!important'
-        : ''}
-  }
-`;
 
 export const Body = styled.div`
   display: flex;
@@ -69,15 +61,11 @@ const Wizard = ({
 
   const steps = useMemo(
     () =>
-      initStepNames.map(name => (
-        <StepItem
-          key={`steps-${name}`}
-          title={name}
-          $StepName={name}
-          $isRunPipeline={isRunPipeline}
-        />
-      )),
-    [initStepNames, isRunPipeline]
+      initStepNames.map(name => ({
+        key: `steps-${name}`,
+        title: name,
+      })),
+    [initStepNames]
   );
 
   const firstUpdateWizard = useRef(true);

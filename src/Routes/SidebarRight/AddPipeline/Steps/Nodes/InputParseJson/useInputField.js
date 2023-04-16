@@ -17,24 +17,34 @@ const isArray = input => {
   return false;
 };
 
-const isNode = (nodeNames, srcValue) =>
-  nodeNames.includes(srcValue.split('.')[0]);
+const isNode = (nodeNames, srcValue) => {
+  if (nodeNames.length > 0 && nodeNames?.includes(srcValue.split('.')[0])) {
+    return true;
+  }
 
-function isJsonString(str) {
+  return false;
+};
+
+const isJsonString = str => {
   try {
     JSON.parse(str);
   } catch (e) {
     return false;
   }
   return true;
-}
+};
+
+const replacePlaceholderNode = (nodeNames, text) => {
+  if (nodeNames.length > 0 && nodeNames[0] !== '') {
+    return text.toString().replace('<PrevNodeName>', nodeNames[0]);
+  }
+
+  return text;
+};
 
 const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
   const { valuesState } = useWizardContext();
-
-  const [nodeNames] = useState(
-    valuesState?.nodes?.map(item => item?.nodeName) || []
-  );
+  const nodeNames = valuesState?.nodes?.map(item => item?.nodeName) || [];
 
   const hasRemove = !!onRemove;
   const SignsOfObjectArray = ['{', '}'];
@@ -217,12 +227,6 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
 
   useEffect(() => {
     // console.log(selectBefore, antFields?.addonBefore, antFields)
-    const exampleText = antFields?.addonBefore.filter(
-      x => x.value === selectBefore
-    );
-
-    // eslint-disable-next-line no-param-reassign
-    inputRef.current.input.placeholder = exampleText[0].placeholder;
 
     onInputChange({ target: { value } });
     /*   if (!addonIsDisabled) {
@@ -241,6 +245,17 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
       }
     } */
   }, [selectBefore]);
+
+  useEffect(() => {
+    const exampleText = antFields?.addonBefore.filter(
+      x => x.value === selectBefore
+    );
+    // eslint-disable-next-line no-param-reassign
+    inputRef.current.input.placeholder = replacePlaceholderNode(
+      nodeNames,
+      exampleText[0].placeholder
+    );
+  }, [nodeNames]);
 
   return {
     addonBefore,

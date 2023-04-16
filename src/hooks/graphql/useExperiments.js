@@ -47,7 +47,6 @@ const useExperiments = () => {
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'cache-and-network',
     onCompleted: res => {
-      console.log(res);
       setExperiments(
         res?.experiments
           ?.slice()
