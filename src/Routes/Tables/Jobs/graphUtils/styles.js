@@ -60,7 +60,7 @@ export default ({ direction, isMinified = false }) => ({
       background: COLOR.white,
       border: COLOR.transparentBlack,
       highlight: {
-        background: COLOR.green,
+        //  background: COLOR.green,
         border: COLOR.transparentBlack,
       },
       hover: {

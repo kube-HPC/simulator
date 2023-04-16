@@ -44,7 +44,10 @@ const Retries = retries => <Tag>{retries}</Tag>;
 
 const Results = ({ record, url, algorithmName }) => {
   const downloadNameFile = useMemo(
-    () => `${algorithmName}_${new Date(record.startTime).toISOString()}`,
+    () =>
+      `${algorithmName}_${
+        record.startTime ? new Date(+record.startTime).toISOString() : ''
+      }`,
     [algorithmName, record.startTime]
   );
 
