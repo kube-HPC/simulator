@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ApolloProvider } from '@apollo/client';
-import { Layout, message, BackTop, Button } from 'antd';
+import { Layout, message, FloatButton, Button } from 'antd';
 import { ArrowUpOutlined } from '@ant-design/icons';
 import styled, { ThemeProvider } from 'styled-components';
 import { Route } from 'react-router-dom';
@@ -76,7 +76,7 @@ const Routes = () => {
             <LayoutFullHeight>
               <ContentMargin id="globalContent">
                 <Tables />
-                <BackTop target={BackToTop}>
+                <FloatButton.BackTop target={BackToTop}>
                   <Button
                     style={{ opacity: '0.5' }}
                     type="primary"
@@ -84,7 +84,7 @@ const Routes = () => {
                     size="large"
                     icon={<ArrowUpOutlined />}
                   />
-                </BackTop>
+                </FloatButton.BackTop>
               </ContentMargin>
               <RightContainer>
                 <Route

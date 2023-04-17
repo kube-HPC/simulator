@@ -1,17 +1,22 @@
 // eslint-disable-next-line
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import RawInputField from 'components/InputField';
 import useInputField from './useInputField';
 
 const InputField = ({ placeholder, tooltip, idx, onRemove, ...antFields }) => {
+  const inputRef = useRef();
+  useEffect(() => {
+    inputRef?.current?.focus();
+  }, []);
+
   const {
     addonBefore,
     onInputChange,
     hasRemove,
     isValid,
     value,
-  } = useInputField(antFields, onRemove);
+  } = useInputField(antFields, onRemove, inputRef, 200);
 
   return (
     <RawInputField
@@ -24,6 +29,7 @@ const InputField = ({ placeholder, tooltip, idx, onRemove, ...antFields }) => {
       onChange={onInputChange}
       placeholder={placeholder}
       addonBefore={addonBefore}
+      inputRef={inputRef}
     />
   );
 };
@@ -43,7 +49,7 @@ InputField.propTypes = {
   ]),
   id: PropTypes.node,
   onChange: PropTypes.func,
-  addonBefore: PropTypes.arrayOf(PropTypes.string),
+  addonBefore: PropTypes.arrayOf(PropTypes.object),
 };
 
 InputField.defaultProps = {

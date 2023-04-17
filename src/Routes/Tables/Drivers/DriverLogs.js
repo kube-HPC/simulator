@@ -14,11 +14,13 @@ const DriverLogs = ({ driverId, podName }) => {
   const [logsItems, setLogsItems] = useState([]);
   const { logSource: source } = useSettings();
 
-  const { logs } = useLogs({ podName, source, nodeKind: 'driver' });
+  const { logs, query } = useLogs({ podName, source, nodeKind: 'driver' });
 
   useEffect(() => {
-    setLogsItems(logs.map((value, key) => ({ key, ...value } || [])));
-  }, [logs, podName, source]);
+    if (!query.loading) {
+      setLogsItems(logs.map((value, key) => ({ key, ...value } || [])));
+    }
+  }, [logs, query.loading]);
 
   return (
     logsItems?.length > 0 && (

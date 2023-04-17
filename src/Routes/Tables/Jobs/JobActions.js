@@ -48,6 +48,14 @@ const JobActions = ({ job }) => {
     key,
   ]);
 
+  const downloadNameFile = useMemo(
+    () =>
+      `${job.pipeline.name}_${job.key}_${new Date(
+        job.pipeline.startTime
+      ).toISOString()}`,
+    [job.key, job.pipeline.name, job.pipeline.startTime]
+  );
+
   const canPause = useMemo(() => isActive(status), [status]);
 
   const onPause = useCallback(() => {
@@ -96,7 +104,7 @@ const JobActions = ({ job }) => {
       <a
         style={{ display: 'none' }}
         ref={downloadLinkRef}
-        href={`${socketUrl}/storage/download/pipeline/result/${key}`}
+        href={`${socketUrl}/storage/download/pipeline/result/${key}/${downloadNameFile}`}
         download>
         hidden download link
       </a>

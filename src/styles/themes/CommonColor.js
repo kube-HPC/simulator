@@ -101,7 +101,7 @@ const COMMON_COLOR = () => {
     [TASK.STALLED]: COLOR.orangeLight,
     [TASK.WARNING]: COLOR.orange,
     // SKIPPED
-    [TASK.SKIPPED]: COLOR.white,
+    [TASK.SKIPPED]: COLOR.grey,
   });
 
   const COLOR_PIPELINE_STATUS = COLOR => ({

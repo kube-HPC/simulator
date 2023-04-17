@@ -39,7 +39,7 @@ const InputField = ({ onRemove, idx, ...antFields }) => {
       onRemove={() => onRemove(idx)}
       value={value}
       onChange={onInputChange}
-      placeholder='ex. {"key","value"}, ["n1","n2"], "value"'
+      placeholder='ex. {"key": "value"} Or [1,"2",true]]'
     />
   );
 };

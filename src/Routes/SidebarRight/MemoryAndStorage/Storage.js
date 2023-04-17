@@ -106,8 +106,8 @@ const Storage = ({ storage }) => {
 };
 Storage.propTypes = {
   storage: PropTypes.shape({
-    size: PropTypes.number.isRequired,
-    free: PropTypes.number.isRequired,
+    size: PropTypes.string.isRequired,
+    free: PropTypes.string.isRequired,
   }).isRequired,
 };
 export default Storage;

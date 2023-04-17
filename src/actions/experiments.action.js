@@ -5,13 +5,14 @@ export const setExperimentLoading = ({ to }) => ({
   payload: to,
 });
 
-export const addExperiment = ({ name, description }) => ({
+export const addExperiment = (name, description, onSuccess) => ({
   type: actions.REST_REQ_POST,
   payload: {
     url: 'experiment',
     body: { name, description },
     actionType: actions.EXPERIMENT_ADD,
   },
+  meta: { onSuccess },
 });
 
 export const changeExperiment = experimentId => ({
@@ -19,10 +20,11 @@ export const changeExperiment = experimentId => ({
   payload: experimentId,
 });
 
-export const deleteExperiment = name => ({
+export const deleteExperiment = (name, onSuccess) => ({
   type: actions.REST_REQ_DELETE,
   payload: {
     url: `experiment/${name}`,
     actionType: actions.EXPERIMENT_DELETE,
   },
+  meta: { onSuccess },
 });

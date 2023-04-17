@@ -3,11 +3,11 @@ import { dateTimeDefaultVar } from 'cache';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import { useReactiveVar } from '@apollo/client';
-import React, { memo, forwardRef, useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 
 const DateFormat = 'YYYY-MM-DD HH:mm';
 
-const RangePickerNow = forwardRef(({ onChange, value, isDisabled }) => {
+const RangePickerNow = ({ onChange, value, isDisabled }) => {
   const [stateDate, setStateDate] = useState(value);
   const [isClearTo, setIsClearTo] = useState(false);
 
@@ -94,8 +94,11 @@ const RangePickerNow = forwardRef(({ onChange, value, isDisabled }) => {
       />
     </>
   );
-});
+};
 
+RangePickerNow.defaultProps = {
+  value: undefined,
+};
 RangePickerNow.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.oneOfType([
@@ -103,7 +106,7 @@ RangePickerNow.propTypes = {
     PropTypes.array,
     PropTypes.string,
     PropTypes.node,
-  ]).isRequired,
+  ]),
   isDisabled: PropTypes.bool,
 };
 

@@ -109,7 +109,7 @@ Drawer.propTypes = {
   bottomContent: PropTypes.object,
   width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   title: PropTypes.string,
-  isOpened: PropTypes.bool.isRequired,
+  isOpened: PropTypes.bool,
   onClose: PropTypes.func.isRequired,
   onDidClose: PropTypes.func,
   asFlex: PropTypes.bool,
@@ -121,6 +121,7 @@ Drawer.defaultProps = {
   onDidClose: undefined,
   title: '',
   asFlex: false,
+  isOpened: false,
 };
 
 export default Drawer;

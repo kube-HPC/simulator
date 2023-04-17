@@ -30,7 +30,7 @@ const PodName = podName => <Ellipsis copyable text={podName} />;
 
 const JobId = jobId => {
   const isValidJobId = jobId !== undefined;
-  const type = !isValidJobId && 'warning';
+  const type = !isValidJobId ? 'warning' : '';
   const text = jobId || 'Not Assigned';
 
   return <Ellipsis type={type} copyable={isValidJobId} text={text} />;

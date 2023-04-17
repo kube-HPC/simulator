@@ -6,10 +6,31 @@ import InputField from './InputField';
 import useWizardContext from '../../../useWizardContext';
 
 const listAddOn = [
-  { value: '', label: 'Value' },
-  { value: '@', label: 'Output of' },
-  { value: '#', label: 'Output #' },
-  { value: '#@', label: 'Output array of' },
+  {
+    value: '@',
+    label: '(@)Output of',
+    placeholder: 'ex. @<PrevNodeName>.attribute1',
+    rules: ['node'],
+  },
+  {
+    value: '#@',
+    label: '(#@)Multi output of',
+    placeholder: 'ex. #@<PrevNodeName>.attribute',
+    rules: ['node'],
+  },
+  {
+    value: '',
+    label: 'Value',
+    placeholder: 'ex. {"key": "value"} Or [1,"2",true]]',
+    rules: ['array', 'object'],
+  },
+  {
+    value: '#',
+    label: '(#) Multi Value',
+    placeholder:
+      'ex. [1,2,3,4] Each entry in given array will be processed separately',
+    rules: ['array'],
+  },
 ];
 
 const Controller = ({ nodeIdx, isRequired }) => {

@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
 import { Form, AutoComplete } from 'antd';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { useDebouncedCallback } from 'use-debounce';
 import qs from 'qs';
 import { useReactiveVar } from '@apollo/client';
 import { instanceFiltersVar } from 'cache';

@@ -336,7 +336,8 @@ AddAlgorithmForm.propTypes = {
   onToggle: PropTypes.func.isRequired,
   onSubmit: PropTypes.func,
   isEdit: PropTypes.bool.isRequired,
-  refCheckForceStopAlgorithms: PropTypes.func.isRequired,
+  refCheckForceStopAlgorithms: PropTypes.oneOfType([PropTypes.object])
+    .isRequired,
   isCheckForceStopAlgorithms: PropTypes.bool.isRequired,
   isSubmitLoading: PropTypes.bool.isRequired,
   setIsCheckForceStopAlgorithms: PropTypes.func.isRequired,

@@ -26,6 +26,7 @@ const useLogs = ({
   const logs = query?.data?.logsByQuery.logs || [];
   const msgPodStatus = query?.data?.logsByQuery.podStatus;
   return {
+    query,
     logs,
     msgPodStatus,
   };

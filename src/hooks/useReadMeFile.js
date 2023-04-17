@@ -6,15 +6,19 @@ const useReadMeFile = (name, type) => {
   const [readme, setReadme] = useState();
 
   const onApply = useCallback(() => {
-    post({ name, readme });
+    if (name != null) {
+      post({ name, readme });
+    }
   }, [post, name, readme]);
 
   useEffect(() => {
-    const fetchReadme = async () => {
-      const nextReadme = await asyncFetch({ name });
-      setReadme(nextReadme);
-    };
-    fetchReadme();
+    if (name != null) {
+      const fetchReadme = async () => {
+        const nextReadme = await asyncFetch({ name });
+        setReadme(nextReadme);
+      };
+      fetchReadme();
+    }
   }, [asyncFetch, name]);
   return {
     readme,
