@@ -36,7 +36,7 @@ const isJsonString = str => {
 
 const replacePlaceholderNode = (nodeNames, text) => {
   if (nodeNames.length > 0 && nodeNames[0] !== '') {
-    return text.toString().replace('<PrevNodeName>', nodeNames[0]);
+    return text.toString().replace('<NodeName>', nodeNames[0]);
   }
 
   return text;
