@@ -9,13 +9,13 @@ const listAddOn = [
   {
     value: '@',
     label: '(@)Output of',
-    placeholder: 'ex. @<PrevNodeName>.attribute1',
+    placeholder: '@<NodeName> Or @<NodeName>.attribute1',
     rules: ['node'],
   },
   {
     value: '#@',
     label: '(#@)Multi output of',
-    placeholder: 'ex. #@<PrevNodeName>.attribute',
+    placeholder: 'ex. #@<NodeName>.attribute',
     rules: ['node'],
   },
   {
