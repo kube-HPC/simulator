@@ -4,12 +4,13 @@ import { Input, Radio, Select } from 'antd';
 import { Form, EditableTagGroup, FlexBox } from 'components/common';
 import { useExperiments } from 'hooks/graphql';
 
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import ControllerKeyValue from '../Nodes/inputKeyValueJson';
 import useWizardContext from '../../useWizardContext';
 import DrawerReadMeFile from '../../../../../components/Drawer/DrawerReadMeFile';
 
 const { Option } = Select;
-
+const openUrl = url => () => window.open(url);
 /** @param {{ style: import('react').CSSProperties }} props */
 const Initial = ({ style }) => {
   const { isEdit, isRunPipeline, valuesState } = useWizardContext();
@@ -63,10 +64,15 @@ const Initial = ({ style }) => {
         {isRunPipeline ? (
           valuesState?.kind
         ) : (
-          <Radio.Group>
-            <Radio.Button value="batch">Batch</Radio.Button>
-            <Radio.Button value="stream">Streaming</Radio.Button>
-          </Radio.Group>
+          <>
+            <Radio.Group>
+              <Radio.Button value="batch">Batch</Radio.Button>
+              <Radio.Button value="stream">Streaming</Radio.Button>
+            </Radio.Group>
+            <QuestionCircleOutlined
+              onClick={openUrl('/hkube/site/learn/streaming/')}
+            />
+          </>
         )}
       </Form.Item>
 
