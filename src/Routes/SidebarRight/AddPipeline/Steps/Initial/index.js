@@ -72,6 +72,11 @@ const Initial = ({ style }) => {
             <QuestionCircleOutlined
               onClick={openUrl('/hkube/site/learn/streaming/')}
             />
+            <QuestionCircleOutlined
+              onClick={openUrl(
+                `${process.env.REACT_APP_SITEBASEURL}/learn/streaming/`
+              )}
+            />
           </>
         )}
       </Form.Item>
