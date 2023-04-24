@@ -1,25 +1,26 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
+
 import PropTypes from 'prop-types';
 import { Input, Radio, Select } from 'antd';
-import { Form, EditableTagGroup, FlexBox } from 'components/common';
+import {
+  Form,
+  EditableTagGroup,
+  FlexBox,
+  HelpSiteLink,
+} from 'components/common';
 import { useExperiments } from 'hooks/graphql';
-import { selectors } from 'reducers';
-import { QuestionCircleOutlined } from '@ant-design/icons';
-import client from 'client';
-import { useSelector } from 'react-redux';
+
 import ControllerKeyValue from '../Nodes/inputKeyValueJson';
 import useWizardContext from '../../useWizardContext';
 import DrawerReadMeFile from '../../../../../components/Drawer/DrawerReadMeFile';
 
-const { REACT_APP_SITEBASEURL } = process.env;
-
 const { Option } = Select;
-const openUrl = url => () => window.open(url);
 
 /** @param {{ style: import('react').CSSProperties }} props */
 const Initial = ({ style }) => {
   const { isEdit, isRunPipeline, valuesState } = useWizardContext();
-  const { hkubeSiteUrl } = useSelector(selectors.config);
+
+  const [isSelectStreaming, setIsSelectStreaming] = useState(false);
   const [nodeNames] = useState(
     valuesState?.nodes?.map(item => item?.nodeName) || []
   );
@@ -27,27 +28,6 @@ const Initial = ({ style }) => {
   // get list nodes
 
   const { experiments } = useExperiments();
-
-  const openUrlFromNet = useCallback(async url => {
-    try {
-      console.log(document.location);
-      const res = await client.get(
-        `${
-          document.location.origin + document.location.pathname
-        }/dashboard-config.json`
-      );
-      console.log(res);
-      console.log(res.data.config.monitorBackend.hkubeSiteUrl + url);
-      window.open(res.data.config.monitorBackend.hkubeSiteUrl + url);
-      window.open(
-        document.location.origin +
-          res.data.config.monitorBackend.hkubeSiteUrl +
-          url
-      );
-    } catch (error) {
-      console.log(error.message);
-    }
-  }, []);
 
   return (
     <div style={style}>
@@ -76,6 +56,7 @@ const Initial = ({ style }) => {
             <DrawerReadMeFile
               name={valuesState.name}
               type="pipelines"
+              e
               disabled={!isEdit}
             />
           </FlexBox.Item>
@@ -92,22 +73,19 @@ const Initial = ({ style }) => {
         ) : (
           <>
             <Radio.Group>
-              <Radio.Button value="batch">Batch</Radio.Button>
-              <Radio.Button value="stream">Streaming</Radio.Button>
+              <Radio.Button
+                value="batch"
+                onClick={() => setIsSelectStreaming(false)}>
+                Batch
+              </Radio.Button>
+              <Radio.Button
+                value="stream"
+                onClick={() => setIsSelectStreaming(true)}>
+                Streaming
+              </Radio.Button>
             </Radio.Group>
-            <QuestionCircleOutlined
-              onClick={openUrl('/hkube/site/learn/streaming/')}
-            />
-            <QuestionCircleOutlined
-              onClick={openUrl(`${REACT_APP_SITEBASEURL}/learn/streaming/`)}
-            />
-            <QuestionCircleOutlined
-              onClick={() => openUrlFromNet(`/learn/streaming/`)}
-            />
 
-            <QuestionCircleOutlined
-              onClick={openUrl(`${hkubeSiteUrl}/learn/streaming/`)}
-            />
+            {isSelectStreaming && <HelpSiteLink link="/learn/streaming/" />}
           </>
         )}
       </Form.Item>
