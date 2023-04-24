@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import { Input, Radio, Select } from 'antd';
 import { Form, EditableTagGroup, FlexBox } from 'components/common';
 import { useExperiments } from 'hooks/graphql';
-
+import { selectors } from 'reducers';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import client from 'client';
+import { useSelector } from 'react-redux';
 import ControllerKeyValue from '../Nodes/inputKeyValueJson';
 import useWizardContext from '../../useWizardContext';
 import DrawerReadMeFile from '../../../../../components/Drawer/DrawerReadMeFile';
@@ -18,7 +19,7 @@ const openUrl = url => () => window.open(url);
 /** @param {{ style: import('react').CSSProperties }} props */
 const Initial = ({ style }) => {
   const { isEdit, isRunPipeline, valuesState } = useWizardContext();
-
+  const { hkubeSiteUrl } = useSelector(selectors.config);
   const [nodeNames] = useState(
     valuesState?.nodes?.map(item => item?.nodeName) || []
   );
@@ -36,7 +37,13 @@ const Initial = ({ style }) => {
         }/dashboard-config.json`
       );
       console.log(res);
-      openUrl(res.data.config.monitorBackend.hkubeSiteUrl + url);
+      console.log(res.data.config.monitorBackend.hkubeSiteUrl + url);
+      window.open(res.data.config.monitorBackend.hkubeSiteUrl + url);
+      window.open(
+        document.location.origin +
+          res.data.config.monitorBackend.hkubeSiteUrl +
+          url
+      );
     } catch (error) {
       console.log(error.message);
     }
@@ -96,6 +103,10 @@ const Initial = ({ style }) => {
             />
             <QuestionCircleOutlined
               onClick={() => openUrlFromNet(`/learn/streaming/`)}
+            />
+
+            <QuestionCircleOutlined
+              onClick={openUrl(`${hkubeSiteUrl}/learn/streaming/`)}
             />
           </>
         )}

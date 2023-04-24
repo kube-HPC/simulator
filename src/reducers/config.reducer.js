@@ -29,6 +29,7 @@ const config = createSlice({
           }`,
 
       baseUrl: payload.config.baseUrl,
+      hkubeSiteUrl: payload.config.monitorBackend.hkubeSiteUrl,
       hasConfig: true,
     }),
   },
