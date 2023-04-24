@@ -29,8 +29,12 @@ const Initial = ({ style }) => {
 
   const openUrlFromNet = useCallback(async url => {
     try {
-      const res = await client.get(`dashboard-config.json`);
-      openUrl(res.monitorBackend.hkubeSiteUrl + url);
+      console.log(document.location);
+      const res = await client.get(
+        `${document.location.origin}/dashboard-config.json`
+      );
+      console.log(res);
+      openUrl(res.config.monitorBackend.hkubeSiteUrl + url);
     } catch (error) {
       console.log(error.message);
     }
@@ -89,7 +93,7 @@ const Initial = ({ style }) => {
               onClick={openUrl(`${REACT_APP_SITEBASEURL}/learn/streaming/`)}
             />
             <QuestionCircleOutlined
-              onClick={openUrlFromNet(`/learn/streaming/`)}
+              onClick={() => openUrlFromNet(`/learn/streaming/`)}
             />
           </>
         )}

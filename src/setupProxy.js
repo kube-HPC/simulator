@@ -15,6 +15,7 @@ module.exports = app => {
           path: process.env.API_SERVER_BACKEND_PATH || '',
           // socketIoPath: process.env.MONITOR_BACKEND_PATH_SOCKETIO || '',
           schema: process.env.isSecure ? 'https://' : 'http://',
+          hkubeSiteUrl: process.env.REACT_APP_SITEBASEURL || '',
         },
         board: {
           host: process.env.BOARD_HOST || 'localhost',
