@@ -1,16 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Input, Radio, Select } from 'antd';
 import { Form, EditableTagGroup, FlexBox } from 'components/common';
 import { useExperiments } from 'hooks/graphql';
 
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import client from 'client';
 import ControllerKeyValue from '../Nodes/inputKeyValueJson';
 import useWizardContext from '../../useWizardContext';
 import DrawerReadMeFile from '../../../../../components/Drawer/DrawerReadMeFile';
 
+const { REACT_APP_SITEBASEURL } = process.env;
+
 const { Option } = Select;
 const openUrl = url => () => window.open(url);
+
 /** @param {{ style: import('react').CSSProperties }} props */
 const Initial = ({ style }) => {
   const { isEdit, isRunPipeline, valuesState } = useWizardContext();
@@ -22,6 +26,19 @@ const Initial = ({ style }) => {
   // get list nodes
 
   const { experiments } = useExperiments();
+
+  const openUrlFromNet = useCallback(async url => {
+    try {
+      console.log(document.location);
+      const res = await client.get(
+        `${document.location.origin}/dashboard-config.json`
+      );
+      console.log(res);
+      openUrl(res.config.monitorBackend.hkubeSiteUrl + url);
+    } catch (error) {
+      console.log(error.message);
+    }
+  }, []);
 
   return (
     <div style={style}>
@@ -73,9 +90,10 @@ const Initial = ({ style }) => {
               onClick={openUrl('/hkube/site/learn/streaming/')}
             />
             <QuestionCircleOutlined
-              onClick={openUrl(
-                `${process.env.REACT_APP_SITEBASEURL}/learn/streaming/`
-              )}
+              onClick={openUrl(`${REACT_APP_SITEBASEURL}/learn/streaming/`)}
+            />
+            <QuestionCircleOutlined
+              onClick={() => openUrlFromNet(`/learn/streaming/`)}
             />
           </>
         )}
