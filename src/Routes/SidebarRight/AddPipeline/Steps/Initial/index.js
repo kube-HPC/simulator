@@ -36,7 +36,7 @@ const Initial = ({ style }) => {
         }/dashboard-config.json`
       );
       console.log(res);
-      openUrl(res.config.monitorBackend.hkubeSiteUrl + url);
+      openUrl(res.data.config.monitorBackend.hkubeSiteUrl + url);
     } catch (error) {
       console.log(error.message);
     }
