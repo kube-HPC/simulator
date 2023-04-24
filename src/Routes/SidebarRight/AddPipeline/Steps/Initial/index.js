@@ -31,7 +31,9 @@ const Initial = ({ style }) => {
     try {
       console.log(document.location);
       const res = await client.get(
-        `${document.location.origin}/dashboard-config.json`
+        `${
+          document.location.origin + document.location.pathname
+        }/dashboard-config.json`
       );
       console.log(res);
       openUrl(res.config.monitorBackend.hkubeSiteUrl + url);
