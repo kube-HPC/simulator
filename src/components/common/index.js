@@ -21,3 +21,4 @@ export { default as ErrorBoundary } from 'components/ErrorBoundary';
 export { default as SignBoard } from 'components/common/SignBoard.react';
 export { default as EditableTagGroup } from 'components/common/EditableTagGroup';
 export { default as RangePickerNow } from 'components/common/RangePickerNow';
+export { default as HelpSiteLink } from 'components/common/HelpSiteLink.react';
