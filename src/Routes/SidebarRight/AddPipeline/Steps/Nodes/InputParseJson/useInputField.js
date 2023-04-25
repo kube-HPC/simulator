@@ -147,11 +147,6 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
 
   const onInputChange = useCallback(
     ({ target: { value: src } }) => {
-      //   console.log("valid src=", src)
-      //  console.log("valid selectBefore=", selectBefore)
-      //  console.log("valid antFields?.addonBefore=", antFields?.addonBefore)
-      //   console.log("valid nodeNames=", nodeNames)
-
       let srcValue = src;
 
       if (parseInt(src, 10)) {
@@ -226,8 +221,6 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
   );
 
   useEffect(() => {
-    // console.log(selectBefore, antFields?.addonBefore, antFields)
-
     onInputChange({ target: { value } });
     /*   if (!addonIsDisabled) {
       if (!checkInputObject(value, SignsOfObjectArray)) {
