@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
+
 import PropTypes from 'prop-types';
 import { Input, Radio, Select } from 'antd';
-import { Form, EditableTagGroup, FlexBox } from 'components/common';
+import {
+  Form,
+  EditableTagGroup,
+  FlexBox,
+  HelpSiteLink,
+} from 'components/common';
 import { useExperiments } from 'hooks/graphql';
 
 import ControllerKeyValue from '../Nodes/inputKeyValueJson';
@@ -14,6 +20,7 @@ const { Option } = Select;
 const Initial = ({ style }) => {
   const { isEdit, isRunPipeline, valuesState } = useWizardContext();
 
+  const [isSelectStreaming, setIsSelectStreaming] = useState(false);
   const [nodeNames] = useState(
     valuesState?.nodes?.map(item => item?.nodeName) || []
   );
@@ -49,6 +56,7 @@ const Initial = ({ style }) => {
             <DrawerReadMeFile
               name={valuesState.name}
               type="pipelines"
+              e
               disabled={!isEdit}
             />
           </FlexBox.Item>
@@ -63,10 +71,22 @@ const Initial = ({ style }) => {
         {isRunPipeline ? (
           valuesState?.kind
         ) : (
-          <Radio.Group>
-            <Radio.Button value="batch">Batch</Radio.Button>
-            <Radio.Button value="stream">Streaming</Radio.Button>
-          </Radio.Group>
+          <>
+            <Radio.Group>
+              <Radio.Button
+                value="batch"
+                onClick={() => setIsSelectStreaming(false)}>
+                Batch
+              </Radio.Button>
+              <Radio.Button
+                value="stream"
+                onClick={() => setIsSelectStreaming(true)}>
+                Streaming
+              </Radio.Button>
+            </Radio.Group>
+
+            {isSelectStreaming && <HelpSiteLink link="/learn/streaming/" />}
+          </>
         )}
       </Form.Item>
 
