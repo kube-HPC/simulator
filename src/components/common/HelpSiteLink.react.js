@@ -3,13 +3,19 @@ import { selectors } from 'reducers';
 import { QuestionCircleFilled } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
-const HelpSiteLink = ({ link }) => {
+const IconHelpStyle = styled(QuestionCircleFilled)`
+  padding: 4px;
+  font-size: 18px;
+`;
+
+const HelpSiteLink = ({ link, ...prop }) => {
   const { hkubeSiteUrl } = useSelector(selectors.config);
 
   return (
-    <QuestionCircleFilled
-      style={{ padding: '5px', fontSize: '18px' }}
+    <IconHelpStyle
+      {...prop}
       onClick={() => window.open(`${hkubeSiteUrl}${link}`)}
     />
   );

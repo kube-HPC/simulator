@@ -33,7 +33,7 @@ const Initial = ({ style }) => {
     <div style={style}>
       <Form.Item
         label="Name"
-        name="name"
+        name={['name']}
         rules={[{ required: true, message: 'Pipeline name is required' }]}
         required
         hidden={isRunPipeline}>
@@ -45,7 +45,7 @@ const Initial = ({ style }) => {
             <Form.Item
               hidden={isRunPipeline}
               label="Description"
-              name="description">
+              name={['description']}>
               <Input
                 placeholder="Pipeline Description"
                 style={{ marginLeft: '34px' }}
@@ -56,40 +56,47 @@ const Initial = ({ style }) => {
             <DrawerReadMeFile
               name={valuesState.name}
               type="pipelines"
-              e
               disabled={!isEdit}
             />
           </FlexBox.Item>
         </FlexBox>
       )}
 
-      <Form.Item
-        label="Pipeline Kind"
-        name="kind"
-        rules={[{ required: true }]}
-        initialValue="batch">
-        {isRunPipeline ? (
-          valuesState?.kind
-        ) : (
-          <>
-            <Radio.Group>
-              <Radio.Button
-                value="batch"
-                onClick={() => setIsSelectStreaming(false)}>
-                Batch
-              </Radio.Button>
-              <Radio.Button
-                value="stream"
-                onClick={() => setIsSelectStreaming(true)}>
-                Streaming
-              </Radio.Button>
-            </Radio.Group>
-
-            {isSelectStreaming && <HelpSiteLink link="/learn/streaming/" />}
-          </>
-        )}
-      </Form.Item>
-
+      <FlexBox align="start">
+        <FlexBox.Item span={12}>
+          <Form.Item
+            label="Pipeline Kind"
+            name={['kind']}
+            rules={[{ required: true }]}
+            initialValue="batch"
+            labelCol={{ span: 10, offset: 0 }}>
+            {isRunPipeline ? (
+              valuesState?.kind
+            ) : (
+              <Radio.Group>
+                <Radio.Button
+                  value="batch"
+                  onClick={() => setIsSelectStreaming(false)}>
+                  Batch
+                </Radio.Button>
+                <Radio.Button
+                  value="stream"
+                  onClick={() => setIsSelectStreaming(true)}>
+                  Streaming
+                </Radio.Button>
+              </Radio.Group>
+            )}
+          </Form.Item>
+        </FlexBox.Item>
+        <FlexBox.Item span={12}>
+          {isSelectStreaming && (
+            <HelpSiteLink
+              link="/learn/streaming/"
+              style={{ position: 'absolute', marginLeft: '-33px' }}
+            />
+          )}
+        </FlexBox.Item>
+      </FlexBox>
       {isRunPipeline && (
         <>
           <Form.Item label="Experiments" name={['experimentName']}>
