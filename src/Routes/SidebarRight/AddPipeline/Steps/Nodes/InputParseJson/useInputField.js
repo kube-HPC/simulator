@@ -34,14 +34,6 @@ const isJsonString = str => {
   return true;
 };
 
-const replacePlaceholderNode = (nodeNames, text) => {
-  if (nodeNames.length > 0 && nodeNames[0] !== '') {
-    return text.toString().replace('<NodeName>', nodeNames[0]);
-  }
-
-  return text;
-};
-
 const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
   const { valuesState } = useWizardContext();
   const nodeNames = valuesState?.nodes?.map(item => item?.nodeName) || [];
@@ -244,10 +236,7 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
       x => x.value === selectBefore
     );
     // eslint-disable-next-line no-param-reassign
-    inputRef.current.input.placeholder = replacePlaceholderNode(
-      nodeNames,
-      exampleText[0].placeholder
-    );
+    inputRef.current.input.placeholder = exampleText[0].placeholder;
   }, [nodeNames]);
 
   return {
