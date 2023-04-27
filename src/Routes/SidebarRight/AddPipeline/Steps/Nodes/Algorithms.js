@@ -25,7 +25,7 @@ const AlgorithmNode = ({ id }) => {
   const rootId = ['nodes', id];
   return (
     <ctx.Provider value={{ rootId }}>
-      <Field name={['algorithmName']} title="Algorithm name">
+      <Field name={['algorithmName']} title="Algorithm">
         <AutoComplete
           disabled={sortedAlgorithms?.length === 0}
           options={sortedAlgorithms}

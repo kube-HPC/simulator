@@ -9,26 +9,26 @@ const listAddOn = [
   {
     value: '@',
     label: '(@)Output of',
-    placeholder: '@<NodeName> Or @<NodeName>.attribute1',
+    placeholder: '<Node name> Or <Node name>.<attribute>',
     rules: ['node'],
   },
   {
     value: '#@',
     label: '(#@)Multi output of',
-    placeholder: 'ex. #@<NodeName>.attribute',
+    placeholder: '<Node name>.<attribute>',
     rules: ['node'],
   },
   {
     value: '',
     label: 'Value',
-    placeholder: 'ex. {"key": "value"} Or [1,"2",true]]',
+    placeholder: '{"key": "value"} Or [1,"2",true]]',
     rules: ['array', 'object'],
   },
   {
     value: '#',
     label: '(#) Multi Value',
     placeholder:
-      'ex. [1,2,3,4] Each entry in given array will be processed separately',
+      '[1,2,3,4] Each entry in given array will be processed separately',
     rules: ['array'],
   },
 ];

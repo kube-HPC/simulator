@@ -274,16 +274,16 @@ const Nodes = ({ style }) => {
             </FormItemLabelWrapper>
 
             <Field
-              title="Node Name"
+              title="Node name"
               name={['nodeName']}
               rootId={['nodes', id]}
               extraRules={[
                 {
                   max: 32,
-                  message: 'Node Name has to be shorter than 32 characters',
+                  message: 'Node name has to be shorter than 32 characters',
                 },
               ]}>
-              <Input placeholder="Node Name" />
+              <Input placeholder="Node name" />
             </Field>
 
             <Node
