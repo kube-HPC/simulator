@@ -15,12 +15,14 @@ const iconSize = {
 };
 const CronInput = forwardRef(() => {
   const { form, setForm, valuesState } = useWizardContext();
-  const [valueCron, setValueCron] = useState(valuesState.triggers.cron.pattern);
+  const [valueCron, setValueCron] = useState(
+    valuesState?.triggers?.cron?.pattern || '* * * * *'
+  );
   const [loading] = useState(false);
   const [isModalCronOpen, setIsModalCronOpen] = useState(false);
   const [readablePattern, setReadablePattern] = useState(true);
   const [cronIsEnabled, setCronIsEnabled] = useState(
-    valuesState.triggers.cron.enabled
+    valuesState?.triggers?.cron?.enabled || false
   );
 
   const normalize = e => {
