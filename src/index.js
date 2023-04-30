@@ -4,7 +4,7 @@ import './assets/collapseTransition.css';
 import { ErrorBoundary } from 'components';
 import { ConfigProvider, theme } from 'antd';
 import React, { useEffect } from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { HashRouter as Router } from 'react-router-dom';
 import { ReusableProvider } from 'reusable';
@@ -73,8 +73,12 @@ const App = () => {
   );
 };
 
-ReactDOM.render(<App />, document.getElementById('root'));
+// ReactDOM.render(<App />, document.getElementById('root'));
 
+const container = document.getElementById('root');
+const root = createRoot(container); // createRoot(container!) if you use TypeScript
+root.render(<App />);
+// root.unmount();
 // webpack Hot Module Replacement API
 if (module.hot) {
   // keep in mind - here you are configuring HMR to accept CHILDREN MODULE
