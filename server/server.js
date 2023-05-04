@@ -38,15 +38,22 @@ app.get('*/dashboard-config.json', (req, res) => {
   });
 });
 
-app.get('/*', (req, res) => {
-  const fullUrl = `${req.protocol  }://${  req.get('host')  }${req.originalUrl}`;
+app.use((req, res, next) => {
+  const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
   console.log('1.', fullUrl);
 
   console.log(`2. ${baseUrl}/`);
-  if (req.originalUrl.indexOf(`${baseUrl}/`) === -1) {
-    res.redirect(`${fullUrl  }/`);
-  }
+  //  if (req.originalUrl.indexOf(`${baseUrl}/`) === -1) {
+  //   res.redirect(`${fullUrl  }/`);
+  // }
 
+  if (req.url.includes(`${baseUrl}/`)) {
+    next();
+  }
+  res.redirect(`${fullUrl}/`);
+});
+
+app.get('/*', (req, res) => {
   res.send(indexHtmlContent);
 });
 
