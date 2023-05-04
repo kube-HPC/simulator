@@ -1,5 +1,7 @@
 const path = require('path');
 
+console.log('process.env.HKUBE_BASE_URL', process.env.HKUBE_BASE_URL);
+
 const parseBool = value => {
   if (typeof value === 'boolean') {
     return value;

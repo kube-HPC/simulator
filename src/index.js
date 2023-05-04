@@ -15,6 +15,8 @@ import Root from './Routes';
 import store from './store';
 import _ from 'lodash';
 
+console.log('ziv url', window.location);
+
 const ConfigProviderApp = () => {
   // do not use the useActions hook
   // ReusableProvider is not available yet at this point!
