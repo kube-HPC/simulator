@@ -17,6 +17,8 @@ const {
 const app = express();
 const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 9050;
 console.log('ziv test baseUrl', baseUrl);
+console.log('ziv test baseUrl path', path);
+
 const indexHtmlContent = fs
   .readFileSync(indexHtml, 'utf-8')
   .replace(/__BASE_URL_TOKEN__/g, `/${baseUrl}/`);
