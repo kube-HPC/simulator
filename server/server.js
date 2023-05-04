@@ -39,6 +39,14 @@ app.get('*/dashboard-config.json', (req, res) => {
 });
 
 app.get('/*', (req, res) => {
+  const fullUrl = `${req.protocol  }://${  req.get('host')  }${req.originalUrl}`;
+  console.log('1.', fullUrl);
+
+  console.log(`2. ${baseUrl}/`);
+  if (req.originalUrl.indexOf(`${baseUrl}/`) === -1) {
+    res.redirect(`${fullUrl  }/`);
+  }
+
   res.send(indexHtmlContent);
 });
 
