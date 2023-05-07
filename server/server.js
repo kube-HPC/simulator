@@ -18,11 +18,12 @@ const app = express();
 const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 9050;
 console.log('ziv test baseUrl', baseUrl);
 
-const indexHtmlContent = fs
+let indexHtmlContent = fs
   .readFileSync(indexHtml, 'utf-8')
   .replace(/__BASE_URL_TOKEN__/g, `/${baseUrl}/`);
 
-indexHtmlContent.replace('#BASEURL#', baseUrl);
+indexHtmlContent = indexHtmlContent.replace('#BASEURL#', baseUrl);
+
 console.log('indexHtmlContent', indexHtmlContent);
 app.use((req, res, next) => {
   const fullUrl = `${req.protocol}://${req.get('host')}`;
@@ -44,6 +45,9 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static(path.join(__dirname, '../build')));
+app.get(baseUrl, () => {
+  console.log(`6. baseUrl`);
+});
 
 app.get('*/dashboard-config.json', (req, res) => {
   res.json({
