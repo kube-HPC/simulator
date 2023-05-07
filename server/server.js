@@ -45,9 +45,6 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static(path.join(__dirname, '../build')));
-app.get(baseUrl, () => {
-  console.log(`6. baseUrl`);
-});
 
 app.get('*/dashboard-config.json', (req, res) => {
   res.json({
@@ -63,17 +60,33 @@ app.get('*/dashboard-config.json', (req, res) => {
 });
 
 app.get('/*', (req, res) => {
+  // const fullUrl = `${req.protocol}://${req.get('host')}`;
+  // console.log('3.', fullUrl);
+  // console.log(`4. ${baseUrl}`);
+  // console.log(`req.url. ${req.url}`);
+  // console.log(`  req.originalUrl. ${req.originalUrl}`);
+  // if (baseUrl !== '' && req.url.endsWith(`${baseUrl}`)) {
+  //   console.log(`error baseUrl redirect`);
+  //   res.redirect(`${fullUrl}${baseUrl}/`);
+  // } else {
+
+  res.send(indexHtmlContent);
+  // }
+});
+
+app.get('*', (req, res) => {
   const fullUrl = `${req.protocol}://${req.get('host')}`;
   console.log('3.', fullUrl);
   console.log(`4. ${baseUrl}`);
   console.log(`req.url. ${req.url}`);
   console.log(`  req.originalUrl. ${req.originalUrl}`);
-  if (baseUrl !== '' && req.url.endsWith(`${baseUrl}`)) {
-    console.log(`error baseUrl redirect`);
-    res.redirect(`${fullUrl}${baseUrl}/`);
-  } else {
-    res.send(indexHtmlContent);
-  }
+  //  if (baseUrl !== '' && req.url.endsWith(`${baseUrl}`)) {
+  //    console.log(`error baseUrl redirect`);
+  //    res.redirect(`${fullUrl}${baseUrl}/`);
+  //  } else {
+  console.log('indexHtmlContent send ');
+  res.send(indexHtmlContent);
+  // }
 });
 
 const server = http.createServer(app);
