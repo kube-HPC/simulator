@@ -17,7 +17,6 @@ const {
 const app = express();
 const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 9050;
 console.log('ziv test baseUrl', baseUrl);
-console.log('ziv test baseUrl path', path);
 
 const indexHtmlContent = fs
   .readFileSync(indexHtml, 'utf-8')
@@ -28,7 +27,10 @@ app.use((req, res, next) => {
   console.log('1.', fullUrl);
   console.log(`2. ${baseUrl}`);
   console.log(`req.url. ${req.url}`);
-  console.log(`  req.originalUrl. ${req.originalUrl}`);
+  console.log(`req.originalUrl. ${req.originalUrl}`);
+  console.log(`req.baseUrl. ${req.baseUrl}`);
+  console.log(`req.path. ${req.path}`);
+  console.log(`req.route. ${req.route}`);
 
   if (baseUrl !== '' && req.url.endsWith(`${baseUrl}`)) {
     console.log(`error baseUrl redirect`);
