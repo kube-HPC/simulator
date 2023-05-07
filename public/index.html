@@ -45,6 +45,15 @@
 
       console.log('#BASEURL#');
       console.log(PUBLIC_URL);
+
+      setTimeout(() => {
+        const elRoot = document.getElementById('root');
+        console.log(elRoot);
+
+        if (elRoot.innerText === 'load Hkube...') {
+          window.location.href = window.location.href + '/';
+        }
+      }, 5000);
     </script>
   </body>
 </html>
