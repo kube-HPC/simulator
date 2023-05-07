@@ -23,6 +23,22 @@ const indexHtmlContent = fs
   .readFileSync(indexHtml, 'utf-8')
   .replace(/__BASE_URL_TOKEN__/g, `/${baseUrl}/`);
 
+app.use((req, res, next) => {
+  const fullUrl = `${req.protocol}://${req.get('host')}`;
+  console.log('1.', fullUrl);
+  console.log(`2. ${baseUrl}`);
+  console.log(`req.url. ${req.url}`);
+  console.log(`  req.originalUrl. ${req.originalUrl}`);
+
+  if (baseUrl !== '' && req.url.endsWith(`${baseUrl}`)) {
+    console.log(`error baseUrl redirect`);
+    res.redirect(`${fullUrl}${baseUrl}/`);
+  } else {
+    console.log(`5. next`);
+    next();
+  }
+});
+
 app.use(express.static(path.join(__dirname, '../build')));
 
 app.get('*/dashboard-config.json', (req, res) => {
@@ -38,24 +54,12 @@ app.get('*/dashboard-config.json', (req, res) => {
   });
 });
 
-app.use((req, res, next) => {
-  const fullUrl = `${req.protocol}://${req.get('host')}`;
-  console.log('1.', fullUrl);
-  console.log(`2. ${baseUrl}/`);
-
-  if (baseUrl !== '' && req.url.endsWith(`${baseUrl}`)) {
-    console.log(`error baseUrl redirect`);
-    res.redirect(`${fullUrl}${baseUrl}/`);
-  } else {
-    next();
-  }
-});
-
 app.get('/*', (req, res) => {
   const fullUrl = `${req.protocol}://${req.get('host')}`;
   console.log('3.', fullUrl);
   console.log(`4. ${baseUrl}`);
-
+  console.log(`req.url. ${req.url}`);
+  console.log(`  req.originalUrl. ${req.originalUrl}`);
   if (baseUrl !== '' && req.url.endsWith(`${baseUrl}`)) {
     console.log(`error baseUrl redirect`);
     res.redirect(`${fullUrl}${baseUrl}/`);
