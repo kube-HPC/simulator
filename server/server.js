@@ -39,22 +39,29 @@ app.get('*/dashboard-config.json', (req, res) => {
 });
 
 app.use((req, res, next) => {
-  const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+  const fullUrl = `${req.protocol}://${req.get('host')}`;
   console.log('1.', fullUrl);
-
   console.log(`2. ${baseUrl}/`);
-  //  if (req.originalUrl.indexOf(`${baseUrl}/`) === -1) {
-  //   res.redirect(`${fullUrl  }/`);
-  // }
 
-  if (req.url.includes(`${baseUrl}/`)) {
+  if (baseUrl !== '' && req.url.endsWith(`${baseUrl}`)) {
+    console.log(`error baseUrl redirect`);
+    res.redirect(`${fullUrl}${baseUrl}/`);
+  } else {
     next();
   }
-  res.redirect(`${fullUrl}/`);
 });
 
 app.get('/*', (req, res) => {
-  res.send(indexHtmlContent);
+  const fullUrl = `${req.protocol}://${req.get('host')}`;
+  console.log('3.', fullUrl);
+  console.log(`4. ${baseUrl}`);
+
+  if (baseUrl !== '' && req.url.endsWith(`${baseUrl}`)) {
+    console.log(`error baseUrl redirect`);
+    res.redirect(`${fullUrl}${baseUrl}/`);
+  } else {
+    res.send(indexHtmlContent);
+  }
 });
 
 const server = http.createServer(app);
