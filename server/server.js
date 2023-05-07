@@ -22,6 +22,8 @@ const indexHtmlContent = fs
   .readFileSync(indexHtml, 'utf-8')
   .replace(/__BASE_URL_TOKEN__/g, `/${baseUrl}/`);
 
+indexHtmlContent.replace('#BASEURL#', baseUrl);
+console.log('indexHtmlContent', indexHtmlContent);
 app.use((req, res, next) => {
   const fullUrl = `${req.protocol}://${req.get('host')}`;
   console.log('1.', fullUrl);
