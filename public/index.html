@@ -44,17 +44,17 @@
       console.log(document.getElementById('root'));
 
       console.log('#BASEURL#');
-      console.log(PUBLIC_URL);
 
-      // setTimeout(() => {
+      setTimeout(() => {
+        console.log('****', document.getElementById('root'));
 
-      const elRoot = document.getElementById('root');
-      console.log('elRoot', elRoot);
+        const elRoot = document.getElementById('root');
+        console.log('elRoot', elRoot);
 
-      if (!window.location.href.endsWith('/')) {
-        window.location.href = window.location.href + '/';
-      }
-      // }, 5000);
+        if (elRoot.innerText === 'load Hkube...') {
+          window.location.href = window.location.href + '/';
+        }
+      }, 5000);
     </script>
   </body>
 </html>
