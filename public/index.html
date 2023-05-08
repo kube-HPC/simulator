@@ -40,21 +40,11 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
     <script language="javascript" type="text/javascript">
-      console.log(window);
-      console.log(document.getElementById('root'));
-
-      console.log('#BASEURL#');
-
       setTimeout(() => {
-        console.log('****', document.getElementById('root'));
-
-        const elRoot = document.getElementById('root');
-        console.log('elRoot', elRoot);
-
         if (elRoot.innerText === 'load Hkube...') {
           window.location.href = window.location.href + '/';
         }
-      }, 5000);
+      }, 2000);
     </script>
   </body>
 </html>
