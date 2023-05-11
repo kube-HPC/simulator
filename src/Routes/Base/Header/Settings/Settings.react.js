@@ -11,10 +11,12 @@ import { useSelector } from 'react-redux';
 import { useActions, useSiteThemeMode } from 'hooks';
 import { appInfo } from 'config';
 import { ReactComponent as IconSwagger } from 'images/swagger.svg';
+import { ReactComponent as IconGrafana } from 'images/grafana-icon.svg';
 import { selectors } from 'reducers';
 import { Divider, Typography } from 'antd';
 import { ReactComponent as ApiIcon } from 'images/apiIcon.svg';
 import SetDefaultTime from './SetDefaultTime';
+
 // import LogMode from './LogMode.react';
 // import LogSource from './LogSource.react';
 // import GraphDirection from './GraphDirection.react';
@@ -33,6 +35,7 @@ const Settings = () => {
 
   const { triggerUserGuide } = useActions();
   const { hkubeSystemVersion } = useSelector(selectors.connection);
+  const { grafanaUrl } = useSelector(selectors.connection);
 
   const onGuideClick = useCallback(() => {
     triggerUserGuide();
@@ -82,6 +85,15 @@ const Settings = () => {
           onClick={openUrl(appInfo.githubUrl)}
         />
         <TextLink onClick={openUrl(appInfo.githubUrl)}>Github</TextLink>
+      </FlexBox.Auto>
+
+      <FlexBox.Auto>
+        <Icons.Hover
+          type={<IconGrafana title="Grafana" />}
+          onClick={openUrl(grafanaUrl)}
+          styleIcon={{ height: '25px' }}
+        />
+        <TextLink onClick={openUrl(grafanaUrl)}>Grafana</TextLink>
       </FlexBox.Auto>
 
       <FlexBox.Auto>
