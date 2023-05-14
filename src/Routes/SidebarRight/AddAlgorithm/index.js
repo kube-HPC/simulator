@@ -42,10 +42,10 @@ const AddAlgorithm = ({ algorithmValue }) => {
     (algorithmValue && JSON.parse(algorithmValue)) || undefined;
 
   const onOverviewAlgorithm = useCallback(
-    tab => {
-      if (keyValueObject) {
+    (tab, name) => {
+      if (keyValueObject || name) {
         goTo.overview({
-          nextAlgorithmId: keyValueObject?.name,
+          nextAlgorithmId: keyValueObject?.name || name,
           nextTabKey: tab || OVERVIEW_TABS.VERSIONS,
         });
       }
@@ -69,7 +69,7 @@ const AddAlgorithm = ({ algorithmValue }) => {
       }
 
       if (buildId) {
-        onOverviewAlgorithm(OVERVIEW_TABS.BUILDS);
+        onOverviewAlgorithm(OVERVIEW_TABS.BUILDS, dataResponse.algorithm.name);
       }
 
       if (isMsgApplied) {
