@@ -98,7 +98,7 @@ const AlgorithmsTabs = ({ algorithm }) => {
       setActiveKey(TABS.BUILDS);
     }
 
-    return null;
+    // return null;
   }, []);
 
   const TabsItemsJson = useMemo(
