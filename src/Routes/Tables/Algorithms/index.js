@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Route } from 'react-router-dom';
 import { Table } from 'components';
 import { usePolling } from 'hooks';
@@ -49,6 +49,10 @@ const AlgorithmsTable = () => {
     },
     [query.data?.algorithms?.list]
   );
+
+  useEffect(() => {
+    onSubmitFilter();
+  }, [query.data?.pipelines?.list.length]);
 
   if (query.loading && algorithmsList.length === 0) return 'Loading...';
   if (query.error) return `Error! ${query.error.message}`;
