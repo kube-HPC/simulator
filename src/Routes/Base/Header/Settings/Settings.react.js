@@ -11,11 +11,11 @@ import { useSelector } from 'react-redux';
 import { useActions, useSiteThemeMode } from 'hooks';
 import { appInfo } from 'config';
 import { ReactComponent as IconSwagger } from 'images/swagger.svg';
-import { ReactComponent as IconGrafana } from 'images/grafana-icon.svg';
 import { selectors } from 'reducers';
-import { Divider, Typography } from 'antd';
+import { Divider, Typography, Image } from 'antd';
 import { ReactComponent as ApiIcon } from 'images/apiIcon.svg';
 import SetDefaultTime from './SetDefaultTime';
+import { GRAFANA_ICON } from './grafana-icon';
 
 // import LogMode from './LogMode.react';
 // import LogSource from './LogSource.react';
@@ -88,12 +88,21 @@ const Settings = () => {
       </FlexBox.Auto>
 
       <FlexBox.Auto>
-        <Icons.Hover
-          type={<IconGrafana title="Grafana" />}
-          onClick={openUrl(grafanaUrl)}
-          styleIcon={{ height: '25px' }}
+        <Image
+          disabled={grafanaUrl === undefined}
+          preview={false}
+          style={{
+            width: '22px',
+            filter: 'grayscale(100%)',
+            cursor: 'pointer',
+          }}
+          src={GRAFANA_ICON}
         />
-        <TextLink onClick={openUrl(grafanaUrl)}>Grafana</TextLink>
+        <TextLink
+          disabled={grafanaUrl === undefined}
+          onClick={grafanaUrl !== undefined ? openUrl(grafanaUrl) : false}>
+          Grafana
+        </TextLink>
       </FlexBox.Auto>
 
       <FlexBox.Auto>
