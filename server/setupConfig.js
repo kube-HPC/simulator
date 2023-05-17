@@ -12,6 +12,8 @@ const parseBool = value => {
 
 const hkubeSystemVersion = process.env.HKUBE_SYSTEM_VERSION;
 const kibanaUrl = process.env.KIBANA_URL;
+const grafanaUrl = process.env.GRAFANA_URL;
+
 const dataSourceIsEnable = process.env.DATA_SOURCE_IS_ENABLE === 'true';
 
 const baseUrl = process.env.HKUBE_BASE_URL
@@ -44,6 +46,7 @@ const board = {
 module.exports = {
   hkubeSystemVersion,
   kibanaUrl,
+  grafanaUrl,
   dataSourceIsEnable,
   baseUrl,
   board,

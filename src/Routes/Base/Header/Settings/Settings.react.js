@@ -12,9 +12,11 @@ import { useActions, useSiteThemeMode } from 'hooks';
 import { appInfo } from 'config';
 import { ReactComponent as IconSwagger } from 'images/swagger.svg';
 import { selectors } from 'reducers';
-import { Divider, Typography } from 'antd';
+import { Divider, Typography, Image } from 'antd';
 import { ReactComponent as ApiIcon } from 'images/apiIcon.svg';
 import SetDefaultTime from './SetDefaultTime';
+import { GRAFANA_ICON } from './grafana-icon';
+
 // import LogMode from './LogMode.react';
 // import LogSource from './LogSource.react';
 // import GraphDirection from './GraphDirection.react';
@@ -33,6 +35,7 @@ const Settings = () => {
 
   const { triggerUserGuide } = useActions();
   const { hkubeSystemVersion } = useSelector(selectors.connection);
+  const { grafanaUrl } = useSelector(selectors.connection);
 
   const onGuideClick = useCallback(() => {
     triggerUserGuide();
@@ -82,6 +85,24 @@ const Settings = () => {
           onClick={openUrl(appInfo.githubUrl)}
         />
         <TextLink onClick={openUrl(appInfo.githubUrl)}>Github</TextLink>
+      </FlexBox.Auto>
+
+      <FlexBox.Auto>
+        <Image
+          disabled={grafanaUrl === undefined}
+          preview={false}
+          style={{
+            width: '22px',
+            filter: 'grayscale(100%)',
+            cursor: 'pointer',
+          }}
+          src={GRAFANA_ICON}
+        />
+        <TextLink
+          disabled={grafanaUrl === undefined}
+          onClick={grafanaUrl !== undefined ? openUrl(grafanaUrl) : false}>
+          Grafana
+        </TextLink>
       </FlexBox.Auto>
 
       <FlexBox.Auto>
