@@ -154,7 +154,10 @@ const AddAlgorithm = ({ algorithmValue }) => {
         }
       })
       .catch(error => {
-        message.error(error || 'Something is wrong!');
+        setIsSubmitLoading(false);
+        message.error(
+          error.response.data.error.message || 'Something is wrong!'
+        );
       });
   };
 
