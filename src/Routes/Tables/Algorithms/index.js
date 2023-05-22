@@ -4,7 +4,7 @@ import { Table } from 'components';
 import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { Space } from 'antd';
-import { algorithmsListVar, instanceFiltersVar } from 'cache';
+import { instanceFiltersVar } from 'cache'; // algorithmsListVar
 import { ALGORITHMS_QUERY } from 'graphql/queries';
 import styled from 'styled-components';
 import OverviewDrawer from './OverviewDrawer';
@@ -25,7 +25,7 @@ const AlgorithmsTable = () => {
     onDoubleClick: () => goTo.overview({ nextAlgorithmId: name }),
   });
 
-  const algorithmsList = useReactiveVar(algorithmsListVar);
+  // const algorithmsList = useReactiveVar(algorithmsListVar);
   const instanceFilter = useReactiveVar(instanceFiltersVar);
 
   const query = useQuery(ALGORITHMS_QUERY);
@@ -54,7 +54,8 @@ const AlgorithmsTable = () => {
   */
   const onSubmitFilter = () => {};
 
-  if (query.loading && algorithmsList.length === 0) return 'Loading...';
+  if (query.loading && query.data?.algorithms?.list?.length === 0)
+    return 'Loading...';
   if (query.error) return `Error! ${query.error.message}`;
 
   const getList = queryVal => {
@@ -86,7 +87,7 @@ const AlgorithmsTable = () => {
           display: 'flex',
         }}>
         <AlgorithmsQueryTable
-          algorithmsList={algorithmsList}
+          algorithmsList={query.data?.algorithms?.list}
           onSubmit={onSubmitFilter}
         />
 
