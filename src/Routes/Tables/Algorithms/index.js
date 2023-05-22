@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect } from 'react';
+import React from 'react';
 import { Route } from 'react-router-dom';
 import { Table } from 'components';
 import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { Space } from 'antd';
-import { algorithmsListVar } from 'cache';
+import { algorithmsListVar, instanceFiltersVar } from 'cache';
 import { ALGORITHMS_QUERY } from 'graphql/queries';
 import styled from 'styled-components';
 import OverviewDrawer from './OverviewDrawer';
@@ -26,10 +26,12 @@ const AlgorithmsTable = () => {
   });
 
   const algorithmsList = useReactiveVar(algorithmsListVar);
+  const instanceFilter = useReactiveVar(instanceFiltersVar);
+
   const query = useQuery(ALGORITHMS_QUERY);
   usePolling(query, 3000);
 
-  const onSubmitFilter = useCallback(
+  /* const onSubmitFilter = useCallback(
     values => {
       if (!query.loading) {
         if (values?.qAlgorithmName) {
@@ -49,13 +51,31 @@ const AlgorithmsTable = () => {
     },
     [query.data?.algorithms?.list]
   );
-
-  useEffect(() => {
-    onSubmitFilter();
-  }, [query.data?.pipelines?.list.length]);
+  */
+  const onSubmitFilter = () => {};
 
   if (query.loading && algorithmsList.length === 0) return 'Loading...';
   if (query.error) return `Error! ${query.error.message}`;
+
+  const getList = queryVal => {
+    const filterValue = instanceFilter.algorithms.qAlgorithmName;
+
+    if (filterValue != null && queryVal.data?.algorithms?.list) {
+      const filterAlgorithm = queryVal.data?.algorithms?.list.filter(item =>
+        item.name.includes(filterValue)
+      );
+      return [...filterAlgorithm];
+    }
+
+    return (
+      (queryVal.data?.algorithms?.list &&
+        [...queryVal.data?.algorithms?.list].sort((x, y) =>
+          x.modified < y.modified ? 1 : -1
+        )) ||
+      []
+    );
+    //  );
+  };
 
   return (
     <>
@@ -72,7 +92,7 @@ const AlgorithmsTable = () => {
 
         <TableAlgorithms
           rowKey={rowKey}
-          dataSource={algorithmsList}
+          dataSource={getList(query)}
           columns={algorithmColumns}
           onRow={onRow}
           scroll={{

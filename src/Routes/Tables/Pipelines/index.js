@@ -5,7 +5,7 @@ import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { PIPELINE_QUERY } from 'graphql/queries';
 
-import { pipelineListVar } from 'cache';
+import { pipelineListVar, instanceFiltersVar } from 'cache';
 import { Space } from 'antd';
 
 import pipelineColumns from './pipelineColumns';
@@ -27,6 +27,8 @@ const PipelinesTable = () => {
   );
 
   const pipelineList = useReactiveVar(pipelineListVar);
+  const instanceFilter = useReactiveVar(instanceFiltersVar);
+
   const query = useQuery(PIPELINE_QUERY);
   usePolling(query, 3000);
 
@@ -43,12 +45,12 @@ const PipelinesTable = () => {
         }
       }
     },
-    [query.data?.pipelines?.list]
+    [query.data?.pipelines?.pipelinesCount]
   );
 
   useEffect(() => {
-    onSubmitFilter();
-  }, [query.data?.pipelines?.list.length]);
+    onSubmitFilter(instanceFilter.pipelines);
+  }, [query.data?.pipelines?.pipelinesCount]);
 
   if (query.loading && pipelineList.length === 0) return 'Loading...';
   if (query.error) return `Error! ${query.error.message}`;
