@@ -13,6 +13,7 @@ const initialState = {
   hkubeSystemVersion: null,
   kibanaUrl: null,
   grafanaUrl: null,
+  grafanaDashboardUrl: null,
   dataSourceIsEnable: null,
   hasData: false,
   isSocketConnected: false,
@@ -31,6 +32,7 @@ const connection = createSlice({
      *     hkubeSystemVersion?: string;
      *     kibanaUrl?: string;
      *     grafanaUrl?: string;
+     *     grafanaDashboardUrl: string;
      *     dataSourceIsEnable?: boolean;
      *   };
      * }} action

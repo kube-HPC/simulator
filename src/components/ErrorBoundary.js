@@ -2,10 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { RedoOutlined, GithubOutlined } from '@ant-design/icons';
-
+import { GrafanaLink } from 'components';
 import { Result, Button, Typography, Collapse } from 'antd';
 import styled from 'styled-components';
-import { Icons, FlexBox } from 'components/common';
 
 const CenterPage = styled.div`
   display: flex;
@@ -48,17 +47,19 @@ class ErrorBoundary extends React.Component {
           status="error"
           title="Oops... Something went wrong"
           subTitle={
-            <FlexBox>
-              <FlexBox.Item>
-                <Paragraph style={{ marginBottom: 0 }}>
-                  Please <Text strong>refresh</Text> the page, you can report
-                  the error on <Text strong>Github</Text>
-                </Paragraph>
-              </FlexBox.Item>
-              <FlexBox.Item>
-                <Icons.Hover type={<GithubOutlined />} onClick={openGithub} />
-              </FlexBox.Item>
-            </FlexBox>
+            <>
+              <Paragraph style={{ marginBottom: 10 }}>
+                To see more details about the system status you can access click
+                on <GrafanaLink />
+              </Paragraph>
+              <Paragraph style={{ marginBottom: 0 }}>
+                Please <Text strong>refresh</Text> the page, you can report the
+                error on{' '}
+                <Text strong>
+                  Github <GithubOutlined onClick={openGithub} />{' '}
+                </Text>
+              </Paragraph>
+            </>
           }
           extra={[
             <Button
