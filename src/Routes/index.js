@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { ApolloProvider } from '@apollo/client';
+import { ApolloProvider, useReactiveVar } from '@apollo/client';
 import { Layout, message, FloatButton, Button } from 'antd';
+
 import { ArrowUpOutlined } from '@ant-design/icons';
 import styled, { ThemeProvider } from 'styled-components';
 import { Route } from 'react-router-dom';
 import { COLOR, COLOR_LAYOUT, Theme } from 'styles';
 import { useActions, useCacheFilters } from 'hooks'; // useConnectionStatus
 import Header from 'Routes/Base/Header';
-import { instanceFiltersVar } from 'cache';
+import { instanceFiltersVar, numberErrorGraphQLVar } from 'cache';
 import useApolloClient from './../graphql/useApolloClient';
 import { Drawer as SiderBarRightDrawer } from './SidebarRight';
 import SidebarLeft from './Base/SidebarLeft';
@@ -49,13 +50,17 @@ const BackToTop = () => document.getElementById('globalContent');
 
 const Routes = () => {
   const { filtersInitCacheItems } = useCacheFilters();
-
+  const numberErrorGraphQL = useReactiveVar(numberErrorGraphQLVar);
   useEffect(() => {
     instanceFiltersVar(filtersInitCacheItems);
   }, []);
 
   const [isDataAvailable, setIsDataAvailable] = useState(false);
-
+  const {
+    apolloClient,
+    openNotification,
+    contextHolderNotification,
+  } = useApolloClient();
   const { socketInit } = useActions();
 
   useEffect(() => {
@@ -63,7 +68,11 @@ const Routes = () => {
     setTimeout(() => setIsDataAvailable(true), 2000);
   }, [socketInit]);
 
-  const { apolloClient } = useApolloClient();
+  useEffect(() => {
+    if (numberErrorGraphQL.error > 10) {
+      openNotification('top');
+    }
+  }, [numberErrorGraphQL.error, openNotification]);
 
   return isDataAvailable ? (
     <ThemeProvider theme={{ ...Theme }}>
@@ -75,6 +84,8 @@ const Routes = () => {
             <Route path="/:pageName" component={Header} />
             <LayoutFullHeight>
               <ContentMargin id="globalContent">
+                {contextHolderNotification}
+
                 <Tables />
                 <FloatButton.BackTop target={BackToTop}>
                   <Button
