@@ -25,6 +25,7 @@ export const connectionSetup = ({
   hkubeSystemVersion,
   kibanaUrl,
   grafanaUrl,
+  grafanaDashboardUrl,
   dataSourceIsEnable,
 }) => ({
   type: actions.CONNECTION_SETUP,
@@ -34,6 +35,7 @@ export const connectionSetup = ({
     hkubeSystemVersion,
     kibanaUrl,
     grafanaUrl,
+    grafanaDashboardUrl,
     dataSourceIsEnable,
   },
 });

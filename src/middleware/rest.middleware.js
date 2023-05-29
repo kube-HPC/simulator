@@ -85,6 +85,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
       hkubeSystemVersion,
       kibanaUrl,
       grafanaUrl,
+      grafanaDashboardUrl,
       dataSourceIsEnable,
     } = action.payload.config;
     SOCKET_URL = setMonitorPath(monitorBackend);
@@ -96,6 +97,7 @@ const restMiddleware = ({ dispatch }) => next => action => {
         hkubeSystemVersion,
         kibanaUrl,
         grafanaUrl,
+        grafanaDashboardUrl,
         dataSourceIsEnable,
       })
     );

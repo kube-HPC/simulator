@@ -8,6 +8,7 @@ module.exports = app => {
         hkubeSystemVersion: process.env.HKUBE_SYSTEM_VERSION,
         kibanaUrl: process.env.KIBANA_URL,
         grafanaUrl: process.env.GRAFANA_URL,
+        grafanaDashboardUrl: process.env.GRAFANA_URL,
         dataSourceIsEnable: process.env.DATA_SOURCE_IS_ENABLE === 'true',
         baseUrl: packageJSON.homepage,
         monitorBackend: {

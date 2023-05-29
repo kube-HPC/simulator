@@ -14,6 +14,7 @@ export const dateTimeDefaultVar = makeVar({
   time: dayjs().add(-defTimeFromLocalStorage, 'hour'),
 });
 
+export const numberErrorGraphQLVar = makeVar({ error: 0 });
 export const isPinActiveJobVar = makeVar(false);
 export const filterToggeledVar = makeVar(true);
 export const pipelineListVar = makeVar([]);
@@ -105,6 +106,11 @@ const cache = new InMemoryCache({
         isPinActiveJobs: {
           read() {
             return isPinActiveJobVar();
+          },
+        },
+        numberErrorGraphQLVar: {
+          read() {
+            return numberErrorGraphQLVar();
           },
         },
         instanceFilters: {
