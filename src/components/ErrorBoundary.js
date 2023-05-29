@@ -49,8 +49,8 @@ class ErrorBoundary extends React.Component {
           subTitle={
             <>
               <Paragraph style={{ marginBottom: 10 }}>
-                To see more details about the system status you can access click
-                on <GrafanaLink />
+                To see more details about the system status you can access
+                grafana,please click on <GrafanaLink />
               </Paragraph>
               <Paragraph style={{ marginBottom: 0 }}>
                 Please <Text strong>refresh</Text> the page, you can report the

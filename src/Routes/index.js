@@ -69,8 +69,9 @@ const Routes = () => {
   }, [socketInit]);
 
   useEffect(() => {
-    if (numberErrorGraphQL.error > 10) {
+    if (numberErrorGraphQL.error > 0) {
       openNotification('top');
+      numberErrorGraphQLVar(0);
     }
   }, [numberErrorGraphQL.error, openNotification]);
 
