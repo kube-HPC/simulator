@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ApolloProvider, useReactiveVar } from '@apollo/client';
+import { selectors } from 'reducers';
+import { useSelector } from 'react-redux';
 import { Layout, message, FloatButton, Button } from 'antd';
 
 import { ArrowUpOutlined } from '@ant-design/icons';
@@ -49,6 +51,7 @@ message.config({
 const BackToTop = () => document.getElementById('globalContent');
 
 const Routes = () => {
+  const { grafanaUrl } = useSelector(selectors.connection);
   const { filtersInitCacheItems } = useCacheFilters();
   const numberErrorGraphQL = useReactiveVar(numberErrorGraphQLVar);
   useEffect(() => {
@@ -69,11 +72,11 @@ const Routes = () => {
   }, [socketInit]);
 
   useEffect(() => {
-    if (numberErrorGraphQL.error > 0) {
+    if (numberErrorGraphQL.error > 0 && grafanaUrl) {
       openNotification('top');
       numberErrorGraphQLVar(0);
     }
-  }, [numberErrorGraphQL.error, openNotification]);
+  }, [grafanaUrl, numberErrorGraphQL.error, openNotification]);
 
   return isDataAvailable ? (
     <ThemeProvider theme={{ ...Theme }}>
