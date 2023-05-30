@@ -97,6 +97,7 @@ body{
 
   font-size: 20px !important;
 }
+
 `;
 
 export default GlobalStyle;
