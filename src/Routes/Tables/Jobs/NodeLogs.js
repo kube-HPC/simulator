@@ -30,6 +30,7 @@ import { FlexBox } from 'components/common';
 import LogsViewer from 'components/common/LogsViewer';
 import { useLogs } from 'hooks/graphql';
 import { useDebounceCallback } from '@react-hook/debounce';
+import GRAPH_TYPES from './graphUtils/types';
 import OptionBox from './GraphTab/OptionBox';
 
 const Container = styled.div`
@@ -217,7 +218,7 @@ const NodeLogs = ({ node, taskDetails }) => {
         </FlexBox>
       </FiltersPanel>
       <RadioGroupStyle>
-        {node.status !== 'FailedScheduling' ? (
+        {node.status !== GRAPH_TYPES.STATUS.FAILED_SCHEDULING ? (
           <Row justify="start" align="middle">
             <Col span={5}>
               <Radio.Group
@@ -248,7 +249,22 @@ const NodeLogs = ({ node, taskDetails }) => {
             )}
           </Row>
         ) : (
-          <Alert message="Error" description={node.warnings} type="error" />
+          (node.warnings && (
+            <Alert
+              message="Warning"
+              description={node.warnings}
+              type="warning"
+              style={{ whiteSpace: 'pre-line' }}
+            />
+          )) ||
+          (node.error && (
+            <Alert
+              message="Error"
+              description={node.error}
+              type="error"
+              style={{ whiteSpace: 'pre-line' }}
+            />
+          ))
         )}
       </RadioGroupStyle>
 

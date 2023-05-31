@@ -76,7 +76,11 @@ const statusToGroup = status =>
 
 const setNodeGroup = node => {
   const { status } = node;
-  return { ...node, group: statusToGroup(status) };
+  const groupValue =
+    status === STATUS.FAILED_SCHEDULING && !!node.warnings
+      ? NODE_GROUPS.WARNING
+      : statusToGroup(status);
+  return { ...node, group: groupValue };
 };
 
 const OverrideGroup = collection => (currentGroup, resultedGroup) =>
@@ -143,7 +147,7 @@ export const formatNode = (normalizedPipeline, pipelineKind) => node => {
     id: meta.nodeName,
     label: meta?.extra?.batch
       ? `${meta.nodeName} (${meta.extra.batch})`
-      : `${meta.nodeName} ${node.status === 'FailedScheduling' ? ' (!) ' : ''}`,
+      : `${meta.nodeName} `,
   };
   /** @type {NodeOptions} */
   const batchStyling = isBatch
