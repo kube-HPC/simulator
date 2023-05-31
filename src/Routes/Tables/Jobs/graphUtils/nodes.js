@@ -1,6 +1,7 @@
 import { nodeKind } from '@hkube/consts';
 import { get, pick } from 'lodash';
 import GRAPH_TYPES from './../graphUtils/types';
+
 /** @typedef {import('vis').NodeOptions} NodeOptions */
 const { STATUS, NODE_GROUPS } = GRAPH_TYPES;
 
@@ -16,6 +17,7 @@ export const findNode = ({ graph, pipeline }) => nodeName => {
   const nodeData = findNodeByName(graph?.nodes, nodeName);
   const node = findNodeByName(pipeline.nodes, nodeName);
   const { jobId } = pipeline;
+
   const taskId = nodeData?.taskId ?? get(nodeData, 'batch[0].taskId');
   const podName = nodeData?.podName ?? get(nodeData, 'batch[0].podName');
   const origInput = node?.input ?? [];
@@ -141,7 +143,7 @@ export const formatNode = (normalizedPipeline, pipelineKind) => node => {
     id: meta.nodeName,
     label: meta?.extra?.batch
       ? `${meta.nodeName} (${meta.extra.batch})`
-      : meta.nodeName,
+      : `${meta.nodeName} ${node.status === 'FailedScheduling' ? ' (!) ' : ''}`,
   };
   /** @type {NodeOptions} */
   const batchStyling = isBatch

@@ -23,6 +23,7 @@ import {
   Input,
   Col,
   Row,
+  Alert,
 } from 'antd';
 import { FiltersPanel } from 'styles';
 import { FlexBox } from 'components/common';
@@ -216,32 +217,39 @@ const NodeLogs = ({ node, taskDetails }) => {
         </FlexBox>
       </FiltersPanel>
       <RadioGroupStyle>
-        <Row justify="start" align="middle">
-          <Col span={5}>
-            <Radio.Group
-              value={sourceLogs}
-              onChange={e => setSourceLogs(e.target.value)}
-              optionType="button"
-              buttonStyle="solid"
-              options={optionsSourceLogs}
-            />
-          </Col>
-          {sourceLogs === 'es' && (
-            <>
-              <Col>
-                <Input placeholder="Search Logs" onChange={handleSearchWord} />
-              </Col>
-              <Col span={1}>
-                <LinkOutlined style={{ marginLeft: '7px' }} />
-              </Col>
-              <Col span={1}>
-                <Button title="Search in Kibana">
-                  <IconKibana onClick={() => window.open(linkKibana)} />
-                </Button>
-              </Col>
-            </>
-          )}
-        </Row>
+        {node.status !== 'FailedScheduling' ? (
+          <Row justify="start" align="middle">
+            <Col span={5}>
+              <Radio.Group
+                value={sourceLogs}
+                onChange={e => setSourceLogs(e.target.value)}
+                optionType="button"
+                buttonStyle="solid"
+                options={optionsSourceLogs}
+              />
+            </Col>
+            {sourceLogs === 'es' && (
+              <>
+                <Col>
+                  <Input
+                    placeholder="Search Logs"
+                    onChange={handleSearchWord}
+                  />
+                </Col>
+                <Col span={1}>
+                  <LinkOutlined style={{ marginLeft: '7px' }} />
+                </Col>
+                <Col span={1}>
+                  <Button title="Search in Kibana">
+                    <IconKibana onClick={() => window.open(linkKibana)} />
+                  </Button>
+                </Col>
+              </>
+            )}
+          </Row>
+        ) : (
+          <Alert message="Error" description={node.warnings} type="error" />
+        )}
       </RadioGroupStyle>
 
       <Typography.Text type="danger">
@@ -285,6 +293,8 @@ NodeLogs.propTypes = {
     startTime: PropTypes.number,
     endTime: PropTypes.number,
     batch: PropTypes.arrayOf(PropTypes.object),
+    status: PropTypes.string,
+    warnings: PropTypes.string,
   }).isRequired,
 };
 export default React.memo(NodeLogs);
