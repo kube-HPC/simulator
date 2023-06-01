@@ -249,10 +249,10 @@ const NodeLogs = ({ node, taskDetails }) => {
             )}
           </Row>
         ) : (
-          (node.warnings && (
+          (node.warnings.length > 0 && (
             <Alert
               message="Warning"
-              description={node.warnings}
+              description={node.warnings[0]}
               type="warning"
               style={{ whiteSpace: 'pre-line' }}
             />
@@ -278,21 +278,23 @@ const NodeLogs = ({ node, taskDetails }) => {
         {errorMsgImage && <InfoCircleOutlined />} {errorMsgImage}{' '}
       </Typography.Text>
 
-      <Container>
-        {isLoadLog ? (
-          <Spin indicator={LoadingOutlined} />
-        ) : (
-          <LogsViewer
-            dataSource={logs.length > 0 ? logs : logErrorNode}
-            id={node?.nodeName ?? ''}
-            emptyDescription={
-              logMode === logModes.ALGORITHM
-                ? 'No algorithm logs'
-                : 'No system logs'
-            }
-          />
-        )}
-      </Container>
+      {node.status !== GRAPH_TYPES.STATUS.FAILED_SCHEDULING && (
+        <Container>
+          {isLoadLog ? (
+            <Spin indicator={LoadingOutlined} />
+          ) : (
+            <LogsViewer
+              dataSource={logs.length > 0 ? logs : logErrorNode}
+              id={node?.nodeName ?? ''}
+              emptyDescription={
+                logMode === logModes.ALGORITHM
+                  ? 'No algorithm logs'
+                  : 'No system logs'
+              }
+            />
+          )}
+        </Container>
+      )}
     </>
   );
 };
@@ -310,7 +312,7 @@ NodeLogs.propTypes = {
     endTime: PropTypes.number,
     batch: PropTypes.arrayOf(PropTypes.object),
     status: PropTypes.string,
-    warnings: PropTypes.string,
+    warnings: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
 };
 export default React.memo(NodeLogs);
