@@ -68,6 +68,9 @@ const NodeLogs = ({ node, taskDetails }) => {
   const [errorMsgImage, setErrorMsgImage] = useState(undefined);
   const [logErrorNode, setLogErrorNode] = useState([]);
   const [linkKibana, setLinkKibana] = useState();
+  const [isStatusFailedSchedulin] = useState(
+    node.status === GRAPH_TYPES.STATUS.FAILED_SCHEDULING
+  );
 
   const oTask = useMemo(
     () => taskDetails.find(t => t.taskId === currentTask) || taskDetails[0],
@@ -199,7 +202,9 @@ const NodeLogs = ({ node, taskDetails }) => {
             <Typography.Text style={{ marginLeft: '10px' }}>
               Source :{' '}
             </Typography.Text>
+
             <SelectStyle
+              disabled={isStatusFailedSchedulin}
               defaultValue={logModes.ALGORITHM}
               onChange={value => setLogMode(value)}>
               <Select.Option
@@ -218,7 +223,7 @@ const NodeLogs = ({ node, taskDetails }) => {
         </FlexBox>
       </FiltersPanel>
       <RadioGroupStyle>
-        {node.status !== GRAPH_TYPES.STATUS.FAILED_SCHEDULING ? (
+        {!isStatusFailedSchedulin ? (
           <Row justify="start" align="middle">
             <Col span={5}>
               <Radio.Group
