@@ -30,6 +30,7 @@ import { FlexBox } from 'components/common';
 import LogsViewer from 'components/common/LogsViewer';
 import { useLogs } from 'hooks/graphql';
 import { useDebounceCallback } from '@react-hook/debounce';
+import GRAPH_TYPES from './graphUtils/types';
 import OptionBox from './GraphTab/OptionBox';
 
 const Container = styled.div`
@@ -57,6 +58,24 @@ const ErrorMsg = {
   ERROR: 'Algorithm down',
 };
 
+const msgAlertFailedScheduling = (typeText, message) => {
+  const lines = message.split('\n');
+  const [firstLine, ...remainingLines] = lines;
+
+  return (
+    <div>
+      <p>
+        <strong>
+          {typeText} : {firstLine}
+        </strong>
+      </p>
+      {remainingLines.map(line => (
+        <div>{line}</div>
+      ))}
+    </div>
+  );
+};
+
 const NodeLogs = ({ node, taskDetails }) => {
   const { kibanaUrl } = useSelector(selectors.connection);
   const [currentTask, setCurrentTask] = useState(undefined);
@@ -67,11 +86,19 @@ const NodeLogs = ({ node, taskDetails }) => {
   const [errorMsgImage, setErrorMsgImage] = useState(undefined);
   const [logErrorNode, setLogErrorNode] = useState([]);
   const [linkKibana, setLinkKibana] = useState();
+  const [isStatusFailedScheduling] = useState(
+    node?.status === GRAPH_TYPES.STATUS.FAILED_SCHEDULING || false
+  );
+  const [
+    isStatusFailedSchedulingTask,
+    setIsStatusFailedSchedulingTask,
+  ] = useState(false);
 
   const oTask = useMemo(
     () => taskDetails.find(t => t.taskId === currentTask) || taskDetails[0],
     [currentTask, taskDetails]
   );
+
   const { taskId, podName } = oTask;
 
   const { logs, msgPodStatus } = useLogs({
@@ -86,6 +113,9 @@ const NodeLogs = ({ node, taskDetails }) => {
   useEffect(() => {
     setCurrentTask(taskId);
     setIsLoadLog(false);
+    setIsStatusFailedSchedulingTask(
+      oTask?.status === GRAPH_TYPES.STATUS.FAILED_SCHEDULING || false
+    );
   }, [taskId]);
 
   useEffect(() => {
@@ -107,9 +137,7 @@ const NodeLogs = ({ node, taskDetails }) => {
   }, [msgPodStatus]);
 
   const options = taskDetails.map((task, indexTaskItem) => (
-    // TODO: implement a better key
-    // eslint-disable-next-line
-    <Select.Option key={indexTaskItem} value={indexTaskItem}>
+    <Select.Option key={`task-${task.taskId}`} value={indexTaskItem}>
       <OptionBox
         index={indexTaskItem + 1}
         taskId={task.taskId}
@@ -198,7 +226,11 @@ const NodeLogs = ({ node, taskDetails }) => {
             <Typography.Text style={{ marginLeft: '10px' }}>
               Source :{' '}
             </Typography.Text>
+
             <SelectStyle
+              disabled={
+                isStatusFailedSchedulingTask || isStatusFailedScheduling
+              }
               defaultValue={logModes.ALGORITHM}
               onChange={value => setLogMode(value)}>
               <Select.Option
@@ -217,7 +249,7 @@ const NodeLogs = ({ node, taskDetails }) => {
         </FlexBox>
       </FiltersPanel>
       <RadioGroupStyle>
-        {node.status !== 'FailedScheduling' ? (
+        {!(isStatusFailedSchedulingTask || isStatusFailedScheduling) ? (
           <Row justify="start" align="middle">
             <Col span={5}>
               <Radio.Group
@@ -248,7 +280,24 @@ const NodeLogs = ({ node, taskDetails }) => {
             )}
           </Row>
         ) : (
-          <Alert message="Error" description={node.warnings} type="error" />
+          (node?.warnings?.length > 0 && (
+            <Alert
+              description={msgAlertFailedScheduling(
+                'Warning',
+                node.warnings[0]
+              )}
+              type="warning"
+              style={{ whiteSpace: 'pre-line' }}
+            />
+          )) ||
+          (node?.error && (
+            <Alert
+              description={msgAlertFailedScheduling('Error', node.error)}
+              type="error"
+              style={{ whiteSpace: 'pre-line' }}
+            />
+          )) ||
+          null
         )}
       </RadioGroupStyle>
 
@@ -262,21 +311,23 @@ const NodeLogs = ({ node, taskDetails }) => {
         {errorMsgImage && <InfoCircleOutlined />} {errorMsgImage}{' '}
       </Typography.Text>
 
-      <Container>
-        {isLoadLog ? (
-          <Spin indicator={LoadingOutlined} />
-        ) : (
-          <LogsViewer
-            dataSource={logs.length > 0 ? logs : logErrorNode}
-            id={node?.nodeName ?? ''}
-            emptyDescription={
-              logMode === logModes.ALGORITHM
-                ? 'No algorithm logs'
-                : 'No system logs'
-            }
-          />
-        )}
-      </Container>
+      {!(isStatusFailedSchedulingTask || isStatusFailedScheduling) && (
+        <Container>
+          {isLoadLog ? (
+            <Spin indicator={LoadingOutlined} />
+          ) : (
+            <LogsViewer
+              dataSource={logs.length > 0 ? logs : logErrorNode}
+              id={node?.nodeName ?? ''}
+              emptyDescription={
+                logMode === logModes.ALGORITHM
+                  ? 'No algorithm logs'
+                  : 'No system logs'
+              }
+            />
+          )}
+        </Container>
+      )}
     </>
   );
 };
@@ -294,7 +345,7 @@ NodeLogs.propTypes = {
     endTime: PropTypes.number,
     batch: PropTypes.arrayOf(PropTypes.object),
     status: PropTypes.string,
-    warnings: PropTypes.string,
+    warnings: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
 };
 export default React.memo(NodeLogs);

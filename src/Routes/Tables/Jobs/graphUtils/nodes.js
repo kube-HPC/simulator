@@ -76,14 +76,19 @@ const statusToGroup = status =>
 
 const setNodeGroup = node => {
   const { status } = node;
-  return { ...node, group: statusToGroup(status) };
+
+  const groupValue =
+    status === STATUS.FAILED_SCHEDULING && node?.warnings?.length > 0
+      ? NODE_GROUPS.WARNING
+      : statusToGroup(status);
+  return { ...node, group: groupValue };
 };
 
 const OverrideGroup = collection => (currentGroup, resultedGroup) =>
   collection.has(resultedGroup) ? resultedGroup : currentGroup;
 
 const splitBatchToGroups = (
-  { nodeName, algorithmName, batchInfo, level = 0, batch },
+  { nodeName, algorithmName, batchInfo, level = 0, batch, warnings },
   isStreaming
 ) => {
   const itemsGroups = batch.map(item => item.status).map(statusToGroup);
@@ -108,6 +113,10 @@ const splitBatchToGroups = (
   group = overrideGroup(group, NODE_GROUPS.SKIPPED);
   group = overrideGroup(group, NODE_GROUPS.WARNING);
   group = overrideGroup(group, NODE_GROUPS.ERRORS);
+
+  if (warnings?.length > 0) {
+    group = NODE_GROUPS.WARNING;
+  }
 
   return {
     nodeName,
@@ -143,7 +152,7 @@ export const formatNode = (normalizedPipeline, pipelineKind) => node => {
     id: meta.nodeName,
     label: meta?.extra?.batch
       ? `${meta.nodeName} (${meta.extra.batch})`
-      : `${meta.nodeName} ${node.status === 'FailedScheduling' ? ' (!) ' : ''}`,
+      : `${meta.nodeName} `,
   };
   /** @type {NodeOptions} */
   const batchStyling = isBatch
