@@ -113,13 +113,19 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
       {
         label: 'Logs',
         key: 'logs-tab',
-        children: <NodeLogs node={node} taskDetails={taskDetails} />,
+        children: (
+          <NodeLogs
+            node={node}
+            taskDetails={taskDetails}
+            key={`${node.nodeName}-logs-tab-node-logs`}
+          />
+        ),
       },
       {
         label: 'Algorithm Details',
         key: 'algorithms-tab',
         children: (
-          <OverflowContainer>
+          <OverflowContainer key={`${node.nodeName}-algorithms-tab-json"`}>
             <JsonSwitch
               obj={algorithmDetailsDataView}
               jobId={jobId}
@@ -132,7 +138,11 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
         label: 'Input Output Details',
         key: 'io-details-tab',
         children: (
-          <NodeInputOutput payload={node} algorithm={algorithmDetails} />
+          <NodeInputOutput
+            payload={node}
+            algorithm={algorithmDetails}
+            key={`${node.nodeName}-io-details-tab-node-input-output`}
+          />
         ),
       },
     ],

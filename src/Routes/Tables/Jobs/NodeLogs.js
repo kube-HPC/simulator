@@ -137,9 +137,7 @@ const NodeLogs = ({ node, taskDetails }) => {
   }, [msgPodStatus]);
 
   const options = taskDetails.map((task, indexTaskItem) => (
-    // TODO: implement a better key
-    // eslint-disable-next-line
-    <Select.Option key={indexTaskItem} value={indexTaskItem}>
+    <Select.Option key={`task-${task.taskId}`} value={indexTaskItem}>
       <OptionBox
         index={indexTaskItem + 1}
         taskId={task.taskId}
