@@ -77,7 +77,7 @@ const statusToGroup = status =>
 const setNodeGroup = node => {
   const { status } = node;
   const groupValue =
-    status === STATUS.FAILED_SCHEDULING && !!node.warnings
+    status === STATUS.FAILED_SCHEDULING && node.warnings.length > 0
       ? NODE_GROUPS.WARNING
       : statusToGroup(status);
   return { ...node, group: groupValue };

@@ -58,6 +58,24 @@ const ErrorMsg = {
   ERROR: 'Algorithm down',
 };
 
+const msgAlertFailedScheduling = (typeText, message) => {
+  const lines = message.split('\n');
+  const [firstLine, ...remainingLines] = lines;
+
+  return (
+    <div>
+      <p>
+        <strong>
+          {typeText} : {firstLine}
+        </strong>
+      </p>
+      {remainingLines.map(line => (
+        <div>{line}</div>
+      ))}
+    </div>
+  );
+};
+
 const NodeLogs = ({ node, taskDetails }) => {
   const { kibanaUrl } = useSelector(selectors.connection);
   const [currentTask, setCurrentTask] = useState(undefined);
@@ -68,14 +86,19 @@ const NodeLogs = ({ node, taskDetails }) => {
   const [errorMsgImage, setErrorMsgImage] = useState(undefined);
   const [logErrorNode, setLogErrorNode] = useState([]);
   const [linkKibana, setLinkKibana] = useState();
-  const [isStatusFailedSchedulin] = useState(
-    node.status === GRAPH_TYPES.STATUS.FAILED_SCHEDULING
+  const [isStatusFailedScheduling] = useState(
+    node?.status === GRAPH_TYPES.STATUS.FAILED_SCHEDULING || false
   );
+  const [
+    isStatusFailedSchedulingTask,
+    setIsStatusFailedSchedulingTask,
+  ] = useState(false);
 
   const oTask = useMemo(
     () => taskDetails.find(t => t.taskId === currentTask) || taskDetails[0],
     [currentTask, taskDetails]
   );
+
   const { taskId, podName } = oTask;
 
   const { logs, msgPodStatus } = useLogs({
@@ -90,6 +113,9 @@ const NodeLogs = ({ node, taskDetails }) => {
   useEffect(() => {
     setCurrentTask(taskId);
     setIsLoadLog(false);
+    setIsStatusFailedSchedulingTask(
+      oTask?.status === GRAPH_TYPES.STATUS.FAILED_SCHEDULING || false
+    );
   }, [taskId]);
 
   useEffect(() => {
@@ -204,7 +230,9 @@ const NodeLogs = ({ node, taskDetails }) => {
             </Typography.Text>
 
             <SelectStyle
-              disabled={isStatusFailedSchedulin}
+              disabled={
+                isStatusFailedSchedulingTask || isStatusFailedScheduling
+              }
               defaultValue={logModes.ALGORITHM}
               onChange={value => setLogMode(value)}>
               <Select.Option
@@ -223,7 +251,7 @@ const NodeLogs = ({ node, taskDetails }) => {
         </FlexBox>
       </FiltersPanel>
       <RadioGroupStyle>
-        {!isStatusFailedSchedulin ? (
+        {!(isStatusFailedSchedulingTask || isStatusFailedScheduling) ? (
           <Row justify="start" align="middle">
             <Col span={5}>
               <Radio.Group
@@ -254,22 +282,24 @@ const NodeLogs = ({ node, taskDetails }) => {
             )}
           </Row>
         ) : (
-          (node.warnings.length > 0 && (
+          (node?.warnings?.length > 0 && (
             <Alert
-              message="Warning"
-              description={node.warnings[0]}
+              description={msgAlertFailedScheduling(
+                'Warning',
+                node.warnings[0]
+              )}
               type="warning"
               style={{ whiteSpace: 'pre-line' }}
             />
           )) ||
-          (node.error && (
+          (node?.error && (
             <Alert
-              message="Error"
-              description={node.error}
+              description={msgAlertFailedScheduling('Error', node.error)}
               type="error"
               style={{ whiteSpace: 'pre-line' }}
             />
-          ))
+          )) ||
+          null
         )}
       </RadioGroupStyle>
 
@@ -283,7 +313,7 @@ const NodeLogs = ({ node, taskDetails }) => {
         {errorMsgImage && <InfoCircleOutlined />} {errorMsgImage}{' '}
       </Typography.Text>
 
-      {node.status !== GRAPH_TYPES.STATUS.FAILED_SCHEDULING && (
+      {!(isStatusFailedSchedulingTask || isStatusFailedScheduling) && (
         <Container>
           {isLoadLog ? (
             <Spin indicator={LoadingOutlined} />
