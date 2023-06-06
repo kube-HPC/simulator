@@ -146,7 +146,7 @@ TableQueue.propTypes = {
   onSortEnd: PropTypes.func.isRequired,
   handleOnSelectedTable: PropTypes.func.isRequired,
   handleOnHoverTable: PropTypes.func.isRequired,
-  dataSourceQueue: PropTypes.func.isRequired,
+  dataSourceQueue: PropTypes.arrayOf(PropTypes.object).isRequired,
   filterQueueVal: PropTypes.string.isRequired,
   isDrag: PropTypes.bool.isRequired,
   isLoadData: PropTypes.bool.isRequired,
@@ -155,10 +155,12 @@ TableQueue.propTypes = {
   filterQueue: PropTypes.func.isRequired,
   onChangeNumberRowPagingQueue: PropTypes.func.isRequired,
   numberRowToViewPagingQueue: PropTypes.number.isRequired,
-  viewTableColumnOrRow: PropTypes.bool.isRequired,
+  viewTableColumnOrRow: PropTypes.bool,
   isDeleteOverTable: PropTypes.bool.isRequired,
 };
-
+TableQueue.defaultProps = {
+  viewTableColumnOrRow: false,
+};
 // const areEqual = (prev, next) => prev.dataSourceQueue === next.dataSourceQueue;
 
 export default TableQueue;

@@ -179,7 +179,7 @@ TablePreferred.propTypes = {
   onSortEnd: PropTypes.func.isRequired,
   handleOnSelectedTable: PropTypes.func.isRequired,
   handleOnHoverTable: PropTypes.func.isRequired,
-  dataSourcePreferred: PropTypes.func.isRequired,
+  dataSourcePreferred: PropTypes.arrayOf(PropTypes.object).isRequired,
   filterPreferredVal: PropTypes.string.isRequired,
   isDrag: PropTypes.bool.isRequired,
   handleOnRowOverAndPosition: PropTypes.func.isRequired,
