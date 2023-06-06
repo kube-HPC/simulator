@@ -22,6 +22,6 @@ const useVersions = dataSource => {
     }
   }, [query.data?.DataSourceVersions]);
 
-  return { versionsCollection };
+  return { versionsCollection, queryData: query };
 };
 export default useVersions;

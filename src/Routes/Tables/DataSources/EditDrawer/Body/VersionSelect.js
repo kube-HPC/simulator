@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { CopyOutlined } from '@ant-design/icons';
-import { Dropdown, Menu, Button, Tooltip } from 'antd';
+import { Dropdown, Button, Tooltip } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import _ from 'lodash';
@@ -49,13 +49,13 @@ const Selector = ({
   const location = useLocation();
   const isLatest = checkLatest(versions, dataSource);
 
-  const menuItemsJson = useMemo(() => {
-    const items = [];
+  const items = useMemo(() => {
+    const itemsArr = [];
 
     entries.forEach(entry => {
       const isSnapshot = !!entry.query;
 
-      items.push({
+      itemsArr.push({
         label: (
           <Link
             to={{
@@ -79,7 +79,7 @@ const Selector = ({
       });
     });
 
-    return items;
+    return itemsArr;
   }, [entries, location.search, mode, paths, versions]);
 
   if (mode === 'edit' && !isLatest) goTo.query();
@@ -88,10 +88,8 @@ const Selector = ({
     return <Button loading>loading versions</Button>;
   }
 
-  const menu = <Menu items={menuItemsJson} />;
-
   return (
-    <Dropdown overlay={menu} placement="bottomLeft">
+    <Dropdown menu={{ items }} placement="bottomLeft">
       <Button loading={isPending}>
         <VersionRow
           title={
@@ -123,7 +121,7 @@ Selector.propTypes = {
     PropTypes.shape({
       id: PropTypes.string.isRequired,
     })
-  ).isRequired,
+  ),
   activeSnapshot: PropTypes.shape({
     name: PropTypes.string,
   }),
@@ -134,6 +132,7 @@ Selector.defaultProps = {
   entries: [],
   activeSnapshot: null,
   hasMissingSnapshot: false,
+  versions: undefined,
 };
 
 const CopyButton = styled(Button)`
@@ -233,7 +232,6 @@ const Versions = ({
     </>
   );
 };
-
 Versions.propTypes = {
   dataSource: PropTypes.shape({
     name: PropTypes.string.isRequired,

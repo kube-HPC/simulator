@@ -25,8 +25,8 @@ const Header = ({ status, dataSourceName, git, storage }) =>
   );
 
 Header.propTypes = {
-  status: PropTypes.string.isRequired,
-  dataSourceId: PropTypes.string.isRequired,
+  status: PropTypes.string,
+  dataSourceId: PropTypes.string,
   dataSourceName: PropTypes.string,
   git: PropTypes.shape({
     repositoryUrl: PropTypes.string,
@@ -50,6 +50,8 @@ Header.defaultProps = {
     endpoint: null,
   },
   dataSourceName: '',
+  status: undefined,
+  dataSourceId: undefined,
 };
 
 export default Header;
