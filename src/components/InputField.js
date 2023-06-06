@@ -57,7 +57,7 @@ const InputField = ({
 );
 
 InputField.propTypes = {
-  inputRef: PropTypes.func.isRequired,
+  inputRef: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
   hasRemove: PropTypes.bool.isRequired,
   onRemove: PropTypes.func.isRequired,
   isValid: PropTypes.bool,

@@ -65,7 +65,7 @@ AddPipeline.defaultProps = {
 };
 AddPipeline.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
-  jsonPipeline: PropTypes.object,
+  jsonPipeline: PropTypes.string,
   isRunPipeline: PropTypes.bool,
 };
 

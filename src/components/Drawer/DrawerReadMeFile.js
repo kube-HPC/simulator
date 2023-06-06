@@ -10,7 +10,7 @@ const DrawerReadMeFile = ({ name, type, disabled }) => {
   const [isChange, setIsChange] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenConfrim, setIsOpenConfrim] = useState(false);
-  const { readme, setReadme, onApply } = useReadMeFile(name, type);
+  const { readme, setReadme, onApply, getReadMe } = useReadMeFile(name, type);
 
   const onChangeReadMe = value => {
     setIsChange(true);
@@ -29,12 +29,20 @@ const DrawerReadMeFile = ({ name, type, disabled }) => {
     }, 1000);
   };
 
+  const openReadMePipeline = () => {
+    getReadMe();
+
+    setTimeout(() => {
+      setIsOpen(true);
+    }, 100);
+  };
+
   return (
     //
     <>
       <Button
         type="primary"
-        onClick={() => setIsOpen(true)}
+        onClick={openReadMePipeline}
         disabled={disabled}
         title="A readme file can be added after the pipeline had been saved">
         Edit Read Me
