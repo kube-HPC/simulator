@@ -56,11 +56,18 @@ export default ({ direction, isMinified = false }) => ({
   },
   nodes: {
     shape: 'box',
+    chosen: {
+      node: values => {
+        // eslint-disable-next-line no-param-reassign
+        values.borderWidth = 2.5;
+        // values.shadow = true;
+      },
+    },
     color: {
       background: COLOR.white,
       border: COLOR.transparentBlack,
       highlight: {
-        //  background: COLOR.green,
+        // background: "none",
         border: COLOR.transparentBlack,
       },
       hover: {
