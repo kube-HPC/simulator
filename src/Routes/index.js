@@ -63,6 +63,8 @@ const Routes = () => {
     apolloClient,
     openNotification,
     contextHolderNotification,
+    isNotificationErrorShow,
+    setIsNotificationErrorShow,
   } = useApolloClient();
   const { socketInit } = useActions();
 
@@ -72,11 +74,21 @@ const Routes = () => {
   }, [socketInit]);
 
   useEffect(() => {
-    if (numberErrorGraphQL.error > 0 && grafanaUrl) {
+    if (
+      !isNotificationErrorShow &&
+      numberErrorGraphQL.error > 0 &&
+      grafanaUrl
+    ) {
       openNotification('top');
-      numberErrorGraphQLVar(0);
+      setIsNotificationErrorShow(true);
     }
-  }, [grafanaUrl, numberErrorGraphQL.error, openNotification]);
+  }, [
+    grafanaUrl,
+    isNotificationErrorShow,
+    numberErrorGraphQL.error,
+    openNotification,
+    setIsNotificationErrorShow,
+  ]);
 
   return isDataAvailable ? (
     <ThemeProvider theme={{ ...Theme }}>
@@ -89,7 +101,6 @@ const Routes = () => {
             <LayoutFullHeight>
               <ContentMargin id="globalContent">
                 {contextHolderNotification}
-
                 <Tables />
                 <FloatButton.BackTop target={BackToTop}>
                   <Button

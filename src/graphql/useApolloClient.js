@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   createHttpLink,
   ApolloClient,
@@ -18,11 +18,11 @@ const TIME_INTERVAL = 60000; // 60 seconds in milliseconds
 const useApolloClient = () => {
   let errorCount = 0;
   let timer = null;
-
+  const [isNotificationErrorShow, setIsNotificationErrorShow] = useState(false);
   const { backendApiUrl } = useSelector(selectors.config);
   const numberErrorGraphQL = useReactiveVar(numberErrorGraphQLVar);
-  const [api, contextHolder] = notification.useNotification();
 
+  const [api, contextHolder] = notification.useNotification();
   const errorLink = onError(({ graphQLErrors, networkError }) => {
     clearTimeout(timer);
     errorCount += 1;
@@ -32,7 +32,10 @@ const useApolloClient = () => {
       numberErrorGraphQLVar({ error: 0 });
     }, TIME_INTERVAL);
 
-    if (errorCount >= MAX_ERRORS_THRESHOLD) {
+    if (
+      errorCount >= MAX_ERRORS_THRESHOLD &&
+      numberErrorGraphQL.error < MAX_ERRORS_THRESHOLD
+    ) {
       console.log('Too many errors within the time interval');
       numberErrorGraphQLVar({ error: numberErrorGraphQL.error + 1 });
     }
@@ -65,7 +68,11 @@ const useApolloClient = () => {
         </>
       ),
       duration: null,
-      maxCount: 1,
+
+      onClose: () => {
+        numberErrorGraphQLVar({ error: 0 });
+        setIsNotificationErrorShow(false);
+      },
     });
   };
 
@@ -73,6 +80,8 @@ const useApolloClient = () => {
     apolloClient,
     openNotification,
     contextHolderNotification: contextHolder,
+    isNotificationErrorShow,
+    setIsNotificationErrorShow,
   };
 };
 export default useApolloClient;
