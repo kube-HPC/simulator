@@ -37,7 +37,11 @@ const EditDrawer = () => {
 };
 
 EditDrawer.propTypes = {
-  pipeline: PropTypes.shape({ name: PropTypes.string }).isRequired,
+  pipeline: PropTypes.shape({ name: PropTypes.string }),
+};
+
+EditDrawer.defaultProps = {
+  pipeline: undefined,
 };
 
 export default React.memo(EditDrawer);

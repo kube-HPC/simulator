@@ -25,6 +25,7 @@ const useActiveDataSource = (dataSourceName, dataSourceId) => {
 
   return {
     activeDataSource,
+    queryData: query,
   };
 };
 export default useActiveDataSource;

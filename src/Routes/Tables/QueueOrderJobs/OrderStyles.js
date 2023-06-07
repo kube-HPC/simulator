@@ -87,7 +87,7 @@ export const TableAllInOne = styled(Table)`
 `;
 export const HeaderTitlePreferred = styled.div`
   position: absolute;
-  right: 64px;
+  right: 6px;
   padding: 5px;
 `;
 

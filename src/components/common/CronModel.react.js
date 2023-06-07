@@ -116,7 +116,7 @@ const CronModel = ({
 
 CronModel.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
-  onChange: PropTypes.object.isRequired,
+  onChange: PropTypes.func.isRequired,
   isShowModalExternal: PropTypes.bool,
   setIsShowModalExternal: PropTypes.func,
   defaultValueExternal: PropTypes.string,

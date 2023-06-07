@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { useReadme } from 'hooks';
 
 const useReadMeFile = (name, type) => {
@@ -11,19 +11,18 @@ const useReadMeFile = (name, type) => {
     }
   }, [post, name, readme]);
 
-  useEffect(() => {
-    if (name != null) {
-      const fetchReadme = async () => {
-        const nextReadme = await asyncFetch({ name });
-        setReadme(nextReadme);
-      };
-      fetchReadme();
+  const getReadMe = useCallback(async () => {
+    if (name) {
+      const nextReadme = await asyncFetch({ name });
+      setReadme(nextReadme);
     }
-  }, [asyncFetch, name]);
+  }, [name, asyncFetch]);
+
   return {
     readme,
     setReadme,
     onApply,
+    getReadMe,
   };
 };
 

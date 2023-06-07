@@ -35,7 +35,8 @@ import useActiveSnapshot from './useActiveSnapshot';
  */
 
 const Body = ({ goTo, mode, dataSource }) => {
-  const { versionsCollection } = useVersions(dataSource);
+  const { versionsCollection, queryData } = useVersions(dataSource);
+
   const {
     snapshots,
     isReady: hasSnapshots,
@@ -97,6 +98,9 @@ const Body = ({ goTo, mode, dataSource }) => {
     ? dataSource?.id === _.last(versionsCollection.versions)?.id &&
       !dataSource?.isSnapshot
     : false;
+
+  if (queryData.loading) return 'Loading...';
+  if (queryData.error) return `Error! ${queryData.error.message}`;
 
   return (
     <>
@@ -163,7 +167,7 @@ Body.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   dataSource: PropTypes.shape({
     id: PropTypes.string.isRequired,
-    isSnapshot: PropTypes.bool.isRequired,
+    isSnapshot: PropTypes.bool,
     name: PropTypes.string.isRequired,
     files: PropTypes.arrayOf(PropTypes.object).isRequired,
     git: PropTypes.shape({

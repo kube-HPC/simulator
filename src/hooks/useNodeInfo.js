@@ -14,8 +14,8 @@ const useNodeInfo = ({ graph, pipeline }) => {
 
   // Update logs on first entry
   useEffect(() => {
-    if (pipeline?.nodes) {
-      const [firstNode] = pipeline.nodes;
+    if (graph?.nodes) {
+      const [firstNode] = graph.nodes;
       const { nodeName } = firstNode;
       const newNode = findNodeByName(nodeName);
 

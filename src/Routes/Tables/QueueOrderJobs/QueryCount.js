@@ -24,7 +24,7 @@ export const QueryCount = ({ nameCount, selectorsData, status, isShow }) => {
 QueryCount.propTypes = {
   nameCount: PropTypes.string,
   // eslint-disable-next-line react/forbid-prop-types
-  selectorsData: PropTypes.object.isRequired,
+  selectorsData: PropTypes.func.isRequired,
   status: PropTypes.string,
   isShow: PropTypes.bool,
 };

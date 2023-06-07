@@ -40,9 +40,11 @@ VersionsTable.propTypes = {
   currentVersion: PropTypes.string.isRequired,
   onApply: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  dataSource: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+};
 
-  // eslint-disable-next-line react/forbid-prop-types
-  dataSource: PropTypes.object.isRequired,
+VersionsTable.defaultProps = {
+  dataSource: undefined,
 };
 
 export default VersionsTable;

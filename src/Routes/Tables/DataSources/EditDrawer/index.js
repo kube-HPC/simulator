@@ -18,6 +18,7 @@ const EditDrawer = () => {
   // get dataSource by Id
   const {
     activeDataSource,
+    queryData,
     //  isReady,
     //   status,
     //  collectionStatus,
@@ -37,6 +38,9 @@ const EditDrawer = () => {
     collectionStatus,
   ]); */
 
+  if (queryData.loading) return 'Loading...';
+  if (queryData.error) return `Error! ${queryData.error.message}`;
+
   return (
     <Drawer
       isOpened={isOn}
@@ -48,23 +52,22 @@ const EditDrawer = () => {
         <TabDrawerText>{DRAWER_TITLES.EDIT_DATASOURCE}</TabDrawerText>
       </TabDrawer>
 
-      {activeDataSource && (
-        <Header
-          /*  status={status} */
-          /* dataSourceId={dataSourceId} */
-          dataSourceName={activeDataSource?.name}
-          git={activeDataSource?.git}
-          storage={activeDataSource?.storage}
-        />
-      )}
-
-      {activeDataSource && (
-        <Body
-          goTo={goTo}
-          mode={mode}
-          snapshotName={snapshotName}
-          dataSource={activeDataSource}
-        />
+      {Object.keys(activeDataSource).length > 0 && (
+        <>
+          <Header
+            /*  status={status} */
+            /* dataSourceId={dataSourceId} */
+            dataSourceName={activeDataSource?.name}
+            git={activeDataSource?.git}
+            storage={activeDataSource?.storage}
+          />
+          <Body
+            goTo={goTo}
+            mode={mode}
+            snapshotName={snapshotName}
+            dataSource={activeDataSource}
+          />
+        </>
       )}
       {/*  isReady ? (
         <Body goTo={goTo} mode={mode} snapshotName={snapshotName} />

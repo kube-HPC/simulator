@@ -31,13 +31,14 @@ const MdEditor = ({
 };
 
 MdEditor.propTypes = {
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
   // eslint-disable-next-line
   onChange: PropTypes.func,
   viewReadOnly: PropTypes.bool,
 };
 
 MdEditor.defaultProps = {
+  value: '',
   viewReadOnly: false,
 };
 
