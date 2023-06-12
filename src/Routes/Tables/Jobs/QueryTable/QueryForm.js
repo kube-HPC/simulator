@@ -112,14 +112,15 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
           zoomDateChange={zoomDate}
         />
       </Form.Item>
-      <Form.Item label="Pipeline Name" name="pipelineName">
+      <Form.Item label="Pipeline Name / Job ID" name="pipelineName">
         <AutoComplete
-          style={{ width: '8vw', marginLeft: '1vw' }}
+          style={{ width: '8vw' }}
           options={pipelineOptions}
           filterOption={(inputValue, option) =>
             option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
           }
           allowClear
+          onSearch={SubmitForm}
           onSelect={SubmitForm}
           onClear={SubmitForm}
         />
@@ -127,7 +128,7 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
       <Form.Item label="Pipeline Status" name="pipelineStatus">
         <AutoComplete
           allowClear
-          style={{ width: '8vw', marginLeft: '1vw' }}
+          style={{ width: '8vw' }}
           options={pipelineStatusOptions}
           filterOption={(inputValue, option) =>
             option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
@@ -140,7 +141,7 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
       <Form.Item label="Algorithm Name" name="algorithmName">
         <AutoComplete
           allowClear
-          style={{ width: '8vw', marginLeft: '1vw' }}
+          style={{ width: '8vw' }}
           options={algorithmOptions}
           filterOption={(inputValue, option) =>
             option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
