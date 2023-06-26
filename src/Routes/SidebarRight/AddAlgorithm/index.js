@@ -2,25 +2,16 @@ import React, { memo, useState, useCallback, useRef } from 'react';
 import client from 'client';
 import { errorsCode } from '@hkube/consts';
 import PropTypes from 'prop-types';
-import {
-  BottomPanel,
-  RightAlignedButton,
-  PanelButton,
-  RightPanel,
-} from 'components/Drawer';
 import { Checkbox, Modal, message } from 'antd';
 import Text from 'antd/lib/typography/Text';
-import { Card, JsonEditor } from 'components/common';
 import { addAlgorithmTemplate } from 'config';
-
-import { stringify } from 'utils';
-import tryParse from 'utils/handleParsing';
+import { stringify, mergeObjects, tryParseJson } from 'utils';
 import { OVERVIEW_TABS } from 'const';
 import usePath from './../../Tables/Algorithms/usePath';
 import AddAlgorithmForm from './AddAlgorithmForm.react';
+import AlgorithmJsonEditor from './AlgorithmJsonEditor';
 
 const DEFAULT_EDITOR_VALUE = stringify(addAlgorithmTemplate);
-
 const AddAlgorithm = ({ algorithmValue }) => {
   // #region  Editor State
   const refCheckForceStopAlgorithms = useRef(false);
@@ -31,15 +22,69 @@ const AddAlgorithm = ({ algorithmValue }) => {
   const [isCheckForceStopAlgorithms, setIsCheckForceStopAlgorithms] = useState(
     !isEdit
   );
-
-  const toggleEditor = () => setEditorIsVisible(prev => !prev);
+  const [keyValueObject, setKeyValueObject] = useState(
+    (algorithmValue && JSON.parse(algorithmValue)) || undefined
+  );
   const [editorValue, setEditorValue] = useState(
     algorithmValue || DEFAULT_EDITOR_VALUE
   );
+  const toggleEditor = () => setEditorIsVisible(prev => !prev);
+  const [fileList, setFileList] = useState([]);
+
+  const switchToJson = (objForm, type) => {
+    const objDeepCopy = tryParseJson(editorValue);
+    const arrayPropType = ['gitRepository', 'code', 'image'];
+
+    // remove not need props
+    arrayPropType.forEach(element => {
+      if (element !== type) {
+        delete objDeepCopy[element];
+      }
+    });
+
+    const newEditorValue = mergeObjects(
+      { ...objForm.main, [type]: objForm[type] },
+      objDeepCopy
+    );
+
+    setEditorValue(stringify(newEditorValue));
+
+    toggleEditor();
+  };
+
+  const switchToForm = () => {
+    const objJsonData = JSON.parse(editorValue);
+
+    if (objJsonData.gitRepository) {
+      const { gitRepository } = objJsonData;
+      delete objJsonData.gitRepository;
+      // objJsonData.type="git"
+      // form.setFieldsValue({main: obj, gitRepository})
+      setKeyValueObject({ main: objJsonData, gitRepository });
+      toggleEditor(prev => !prev);
+    }
+
+    if (objJsonData.code) {
+      const { code } = objJsonData;
+      delete objJsonData.code;
+      objJsonData.type = 'code';
+      // form.setFieldsValue({main: obj, gitRepository})
+      setKeyValueObject({ main: objJsonData, code });
+      toggleEditor(prev => !prev);
+    }
+
+    if (objJsonData.image) {
+      const { image } = objJsonData;
+      delete objJsonData.image;
+      objJsonData.type = 'image';
+
+      // form.setFieldsValue({main: obj, gitRepository})
+      setKeyValueObject({ main: objJsonData, image });
+      toggleEditor(prev => !prev);
+    }
+  };
 
   const { goTo } = usePath();
-  const keyValueObject =
-    (algorithmValue && JSON.parse(algorithmValue)) || undefined;
 
   const onOverviewAlgorithm = useCallback(
     (tab, name) => {
@@ -161,48 +206,25 @@ const AddAlgorithm = ({ algorithmValue }) => {
       });
   };
 
-  const onBeforeEditorSubmit = ({ src }) => {
-    const formData = new FormData();
-    formData.append(`payload`, src);
-    onWizardSubmit({ formData });
-  };
-  const onEditorSubmit = () => {
-    tryParse({ src: editorValue, onSuccess: onBeforeEditorSubmit });
-  };
-
   // #endregion
 
   return editorIsVisible ? (
-    <>
-      <Card style={{ flex: 1 }} bodyStyle={{ height: '100%' }}>
-        <JsonEditor value={editorValue} onChange={setEditorValue} />
-      </Card>
-      <BottomPanel>
-        <PanelButton key="editor" onClick={toggleEditor}>
-          Back to form
-        </PanelButton>
-
-        <RightPanel>
-          {isEdit && (
-            <Checkbox
-              ref={refCheckForceStopAlgorithms}
-              checked={isCheckForceStopAlgorithms}
-              onClick={e => setIsCheckForceStopAlgorithms(e.target.checked)}>
-              Stop running algorithms
-            </Checkbox>
-          )}
-          <RightAlignedButton
-            key="Submit"
-            type="primary"
-            onClick={onEditorSubmit}>
-            Submit
-          </RightAlignedButton>
-        </RightPanel>
-      </BottomPanel>
-    </>
+    <AlgorithmJsonEditor
+      isEdit={isEdit}
+      editorValue={editorValue}
+      setEditorValue={setEditorValue}
+      onWizardSubmit={onWizardSubmit}
+      toggleEditor={switchToForm}
+      setIsCheckForceStopAlgorithms={setIsCheckForceStopAlgorithms}
+      refCheckForceStopAlgorithms={refCheckForceStopAlgorithms}
+      isCheckForceStopAlgorithms={isCheckForceStopAlgorithms}
+      sourceJson={algorithmValue || DEFAULT_EDITOR_VALUE}
+      fileList={fileList}
+      setFileList={setFileList}
+    />
   ) : (
     <AddAlgorithmForm
-      onToggle={toggleEditor}
+      onToggle={switchToJson}
       onSubmit={onWizardSubmit}
       isEdit={isEdit}
       keyValueObject={keyValueObject}
@@ -214,6 +236,8 @@ const AddAlgorithm = ({ algorithmValue }) => {
       setIsCheckForceStopAlgorithms={setIsCheckForceStopAlgorithms}
       onAfterSaveAlgorithm={onAfterSaveAlgorithm}
       refCheckForceStopAlgorithms={refCheckForceStopAlgorithms}
+      fileList={fileList}
+      setFileList={setFileList}
     />
   );
 };

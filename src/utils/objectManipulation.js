@@ -63,3 +63,19 @@ export const removeNullUndefinedCleanDeep = obj =>
     emptyStrings: false,
     NaNValues: true,
   });
+
+export const mergeObjects = (obj1, obj2) => {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const key in obj1) {
+    // eslint-disable-next-line no-prototype-builtins
+    if (obj1.hasOwnProperty(key)) {
+      if (typeof obj1[key] === 'object' && typeof obj2[key] === 'object') {
+        mergeObjects(obj1[key], obj2[key]);
+      } else {
+        // eslint-disable-next-line no-prototype-builtins, no-param-reassign
+        obj2[key] = obj1[key];
+      }
+    }
+  }
+  return obj2;
+};
