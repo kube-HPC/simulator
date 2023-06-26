@@ -57,10 +57,12 @@ const toReadableBuildType = buildType => {
   return str;
 };
 
-const toSelectedBuildType = buildType =>
-  buildType.toLowerCase() === 'git'
-    ? BUILD_TYPES.GIT.field
-    : buildType.toLowerCase();
+const toSelectedBuildType = objKey =>
+  objKey && objKey.code
+    ? BUILD_TYPES.CODE.field
+    : objKey.image
+    ? BUILD_TYPES.IMAGE.field
+    : BUILD_TYPES.GIT.field || BUILD_TYPES.GIT.field;
 
 const insertRadioButtons = (buildTypes, selectedKey, isEdit) =>
   Object.keys(buildTypes).map(key => (
@@ -102,17 +104,24 @@ const AddAlgorithmForm = ({
   isSubmitLoading,
   setIsCheckForceStopAlgorithms,
   refCheckForceStopAlgorithms,
+  fileList,
+  setFileList,
 }) => {
   const [form] = Form.useForm();
-  const [fileList, setFileList] = useState([]);
+
   const [buildType, setBuildType] = useState(
-    (keyValueObject && toSelectedBuildType(keyValueObject?.type)) ||
+    (keyValueObject && toSelectedBuildType(keyValueObject)) ||
       BUILD_TYPES.GIT.field
   );
 
   useMemo(() => {
     form.setFieldsValue(formTemplate);
   }, [form]);
+
+  const onToggleToEditor = () => {
+    const schemaObjectForm = form.getFieldsValue();
+    onToggle(schemaObjectForm, buildType);
+  };
 
   useEffect(() => {
     // init values in fields
@@ -124,7 +133,7 @@ const AddAlgorithmForm = ({
         schemaObjectForm,
         flattenObjKeyValue(keyValueObject)
       );
-      setBuildType(toSelectedBuildType(keyValueObject.type));
+      setBuildType(toSelectedBuildType(keyValueObject));
 
       form.setFieldsValue(objValuesForm);
     } else {
@@ -303,7 +312,7 @@ const AddAlgorithmForm = ({
       </Collapsible>
 
       <BottomPanel style={{ marginTop: 'auto' }}>
-        <PanelButton onClick={onToggle}>Text editor</PanelButton>
+        <PanelButton onClick={onToggleToEditor}>Text editor</PanelButton>
 
         <RightPanel>
           {isEdit && (
@@ -341,6 +350,8 @@ AddAlgorithmForm.propTypes = {
   isCheckForceStopAlgorithms: PropTypes.bool.isRequired,
   isSubmitLoading: PropTypes.bool.isRequired,
   setIsCheckForceStopAlgorithms: PropTypes.func.isRequired,
+  fileList: PropTypes.oneOfType([PropTypes.object]).isRequired,
+  setFileList: PropTypes.func.isRequired,
 };
 
 AddAlgorithmForm.defaultProps = {

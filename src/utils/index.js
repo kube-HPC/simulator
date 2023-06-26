@@ -26,4 +26,5 @@ export {
   removeNullUndefined,
   removeNullUndefinedCleanDeep,
   isValuesFiltersEmpty,
+  mergeObjects,
 } from './objectManipulation';
