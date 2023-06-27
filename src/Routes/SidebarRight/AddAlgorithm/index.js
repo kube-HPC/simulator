@@ -33,6 +33,7 @@ const AddAlgorithm = ({ algorithmValue }) => {
 
   const switchToJson = (objForm, type) => {
     const objDeepCopy = tryParseJson(editorValue);
+
     const arrayPropType = ['gitRepository', 'code', 'image'];
 
     // remove not need props
@@ -47,6 +48,14 @@ const AddAlgorithm = ({ algorithmValue }) => {
       objDeepCopy
     );
 
+    delete newEditorValue.entryPoint;
+    delete newEditorValue.env;
+    delete newEditorValue.baseImage;
+
+    if (type === 'image') {
+      delete newEditorValue.algorithmImage;
+    }
+
     setEditorValue(stringify(newEditorValue));
 
     toggleEditor();
@@ -54,34 +63,36 @@ const AddAlgorithm = ({ algorithmValue }) => {
 
   const switchToForm = () => {
     const objJsonData = JSON.parse(editorValue);
+    let resObjJson;
 
     if (objJsonData.gitRepository) {
       const { gitRepository } = objJsonData;
       delete objJsonData.gitRepository;
       // objJsonData.type="git"
       // form.setFieldsValue({main: obj, gitRepository})
-      setKeyValueObject({ main: objJsonData, gitRepository });
-      toggleEditor(prev => !prev);
+      resObjJson = { main: objJsonData, gitRepository };
     }
 
     if (objJsonData.code) {
       const { code } = objJsonData;
       delete objJsonData.code;
       objJsonData.type = 'code';
-      // form.setFieldsValue({main: obj, gitRepository})
-      setKeyValueObject({ main: objJsonData, code });
-      toggleEditor(prev => !prev);
+      resObjJson = { main: objJsonData, code };
     }
 
     if (objJsonData.image) {
       const { image } = objJsonData;
       delete objJsonData.image;
       objJsonData.type = 'image';
-
-      // form.setFieldsValue({main: obj, gitRepository})
-      setKeyValueObject({ main: objJsonData, image });
-      toggleEditor(prev => !prev);
+      resObjJson = { main: objJsonData, image };
     }
+
+    if (resObjJson.main.options) {
+      resObjJson.main.options = Object.values(resObjJson.main.options);
+    }
+
+    setKeyValueObject(resObjJson);
+    toggleEditor(prev => !prev);
   };
 
   const { goTo } = usePath();
@@ -201,7 +212,7 @@ const AddAlgorithm = ({ algorithmValue }) => {
       .catch(error => {
         setIsSubmitLoading(false);
         message.error(
-          error.response.data.error.message || 'Something is wrong!'
+          error?.response?.data?.error?.message || 'Something is wrong!'
         );
       });
   };
