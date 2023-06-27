@@ -34,11 +34,8 @@ const AlgorithmJsonEditor = ({
   fileList,
   setFileList,
 }) => {
-  const isCodeInJson = () => {
-    const editorValueJson = JSON.parse(editorValue);
-
-    return editorValueJson[BUILD_TYPES.CODE.field];
-  };
+  const isCodeInJson = () =>
+    editorValue.indexOf(`"${BUILD_TYPES.CODE.field}"`) !== -1;
 
   const [isCodeProp, setIsCodeProp] = useState(isCodeInJson());
 
@@ -116,7 +113,13 @@ const AlgorithmJsonEditor = ({
   };
 
   const resetJson = () => {
-    setEditorValue(sourceJson);
+    const oJson = JSON.parse(sourceJson);
+
+    delete oJson.entryPoint;
+    delete oJson.env;
+    delete oJson.baseImage;
+
+    setEditorValue(stringify(oJson));
   };
 
   useEffect(() => {
@@ -144,7 +147,7 @@ const AlgorithmJsonEditor = ({
           Back to form
         </PanelButton>
         <PanelButton key="editor" onClick={() => resetJson()}>
-          Reset
+          Original Json
         </PanelButton>
         <RightPanel>
           {isEdit && (

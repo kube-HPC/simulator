@@ -58,9 +58,9 @@ const toReadableBuildType = buildType => {
 };
 
 const toSelectedBuildType = objKey =>
-  objKey && objKey.code
+  (objKey && objKey.code) || objKey.type === 'code'
     ? BUILD_TYPES.CODE.field
-    : objKey.image
+    : objKey.image || objKey.algorithmImage || objKey.type === 'image'
     ? BUILD_TYPES.IMAGE.field
     : BUILD_TYPES.GIT.field || BUILD_TYPES.GIT.field;
 
@@ -129,10 +129,19 @@ const AddAlgorithmForm = ({
     if (keyValueObject != null) {
       // Edit algorithm
       const schemaObjectForm = form.getFieldsValue();
+
       const objValuesForm = deepCopyFromKeyValue(
         schemaObjectForm,
         flattenObjKeyValue(keyValueObject)
       );
+
+      const optionsData = isEdit
+        ? Object.keys(keyValueObject.options)
+        : keyValueObject?.main?.options;
+      objValuesForm.main.options = optionsData.filter(item =>
+        MAIN.OPTIONS.types.includes(item)
+      );
+
       setBuildType(toSelectedBuildType(keyValueObject));
 
       form.setFieldsValue(objValuesForm);
