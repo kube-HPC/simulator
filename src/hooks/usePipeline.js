@@ -29,8 +29,9 @@ const usePipeline = () => {
       delete objPipeline.nodes;
 
       execStored(objPipeline);
+      history.push('/pipelines');
     },
-    [execStored]
+    [execStored, history]
   );
 
   const rerunPipeline = useCallback(async jobId => {

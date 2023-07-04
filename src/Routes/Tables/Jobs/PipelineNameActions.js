@@ -47,9 +47,11 @@ const PipelineNameActions = ({ pipeline }) => {
       <Ellipsis copyable text={pipeline.pipeline.name} length={40} />
 
       <Button.Group className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
-        <Tooltip title={`edit pipeline ${pipeline.pipeline.name}`}>
-          <IconAddPipeline style={iconSize} onClick={editByPipelineID} />
-        </Tooltip>
+        {pipeline.pipeline.types.includes('stored') && (
+          <Tooltip title={`edit pipeline ${pipeline.pipeline.name}`}>
+            <IconAddPipeline style={iconSize} onClick={editByPipelineID} />
+          </Tooltip>
+        )}
         <Tooltip title={`filter jobs by pipeline ${pipeline.pipeline.name}`}>
           <FilterOutlined
             style={iconSize}
