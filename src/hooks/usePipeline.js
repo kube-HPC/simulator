@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
-import { message, Button, Text } from 'antd';
+import { message, Button } from 'antd';
 import client from 'client';
 import successMsg from 'config/schema/success-messages.schema';
 import { useHistory } from 'react-router-dom';
@@ -43,12 +43,12 @@ const usePipeline = () => {
       history.push('/pipelines');
 
       message.success(
-        <Text>
+        <>
           Pipeline started,{' '}
           <ButtonLinkStyle type="link" onClick={gotoJobsTable}>
             check Jobs table
           </ButtonLinkStyle>
-        </Text>
+        </>
       );
     } catch (error) {
       message.error(error.message);
