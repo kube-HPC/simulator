@@ -25,5 +25,6 @@ if [ -v PRIVATE_REGISTRY ]
 then
   echo docker push ${TAG_VER}
   docker push ${TAG_VER}
+  echo ${TAG_VER}
 fi
 
