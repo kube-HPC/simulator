@@ -5,7 +5,6 @@ import { stringify } from 'utils';
 import { DRAWER_SIZE, DRAWER_TITLES } from 'const';
 import Drawer from 'components/Drawer';
 import useToggle from 'hooks/useToggle';
-import MissingIdError from 'components/MissingIdError';
 
 import usePath from './usePath';
 import useActivePipeline from './useActivePipeline';
@@ -28,7 +27,11 @@ const EditDrawer = () => {
       width={DRAWER_SIZE.PIPELINE_INFO}
       title={pipeline?.name ?? pipelineId}
       asFlex>
-      {pipeline ? <AddPipeline jsonPipeline={value} /> : <MissingIdError />}
+      {pipeline ? (
+        <AddPipeline jsonPipeline={value} />
+      ) : (
+        <p>{pipeline?.name ?? pipelineId} is been deleted</p>
+      )}
       <TabDrawer>
         <TabDrawerText>{DRAWER_TITLES.EDIT_PIPELINE}</TabDrawerText>
       </TabDrawer>
