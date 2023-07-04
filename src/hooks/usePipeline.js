@@ -1,14 +1,25 @@
-import { useCallback } from 'react';
-import { message } from 'antd';
+import React, { useCallback } from 'react';
+import styled from 'styled-components';
+import { message, Button, Text } from 'antd';
 import client from 'client';
 import successMsg from 'config/schema/success-messages.schema';
 import { useHistory } from 'react-router-dom';
 import useActions from './useActions';
 
-const usePipeline = () => {
-  const { updateStored, execStored } = useActions();
+const ButtonLinkStyle = styled(Button)`
+  padding: 0px;
+`;
 
+const usePipeline = () => {
+  const { updateStored } = useActions();
   const history = useHistory();
+
+  const gotoJobsTable = useCallback(() => {
+    history.push('/jobs');
+  }, [history]);
+
+  // const location = useLocation();
+  // const { pageName } = useParams();
 
   const updateCron = useCallback(
     (pipeline, pattern) => {
@@ -23,16 +34,26 @@ const usePipeline = () => {
     [updateStored]
   );
 
-  const runPipeline = useCallback(
-    objVal => {
+  const runPipeline = useCallback(async objVal => {
+    try {
       const objPipeline = JSON.parse(JSON.stringify(objVal));
       delete objPipeline.nodes;
 
-      execStored(objPipeline);
+      await client.post(`exec/stored`, objPipeline);
       history.push('/pipelines');
-    },
-    [execStored, history]
-  );
+
+      message.success(
+        <Text>
+          Pipeline started,{' '}
+          <ButtonLinkStyle type="link" onClick={gotoJobsTable}>
+            check Jobs table
+          </ButtonLinkStyle>
+        </Text>
+      );
+    } catch (error) {
+      message.error(error.message);
+    }
+  }, []);
 
   const rerunPipeline = useCallback(async jobId => {
     try {
