@@ -79,7 +79,7 @@ const Routes = () => {
       numberErrorGraphQL.error > 0 &&
       grafanaUrl
     ) {
-      openNotification('top');
+      openNotification();
       setIsNotificationErrorShow(true);
     }
   }, [

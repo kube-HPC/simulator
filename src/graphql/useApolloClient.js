@@ -9,7 +9,7 @@ import { onError } from '@apollo/client/link/error';
 import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
 import cache, { numberErrorGraphQLVar } from 'cache';
-import { notification } from 'antd';
+import { Modal } from 'antd';
 import { GrafanaLink } from 'components';
 
 const MAX_ERRORS_THRESHOLD = 5; // Maximum number of errors allowed within the time interval
@@ -22,7 +22,7 @@ const useApolloClient = () => {
   const { backendApiUrl } = useSelector(selectors.config);
   const numberErrorGraphQL = useReactiveVar(numberErrorGraphQLVar);
 
-  const [api, contextHolder] = notification.useNotification();
+  const [modal, contextHolder] = Modal.useModal();
   const errorLink = onError(({ graphQLErrors, networkError }) => {
     clearTimeout(timer);
     errorCount += 1;
@@ -36,7 +36,7 @@ const useApolloClient = () => {
       errorCount >= MAX_ERRORS_THRESHOLD &&
       numberErrorGraphQL.error < MAX_ERRORS_THRESHOLD
     ) {
-      console.log('Too many errors within the time interval');
+      console.log(`Too many errors within the time interval`);
       numberErrorGraphQLVar({ error: numberErrorGraphQL.error + 1 });
     }
 
@@ -59,19 +59,23 @@ const useApolloClient = () => {
   });
 
   const openNotification = () => {
-    api.info({
-      message: `Oops... Something went wrong `,
-      description: (
+    modal.error({
+      title: `Oops... Something went wrong `,
+      content: (
         <>
           To see more details about the system status you can access
           grafana,please click on <GrafanaLink />
         </>
       ),
-      duration: null,
+      width: 500,
+      okText: 'Close',
+      okType: 'default',
 
-      onClose: () => {
+      onOk() {
         numberErrorGraphQLVar({ error: 0 });
-        setIsNotificationErrorShow(false);
+        setTimeout(() => {
+          setIsNotificationErrorShow(false);
+        }, 7000);
       },
     });
   };
