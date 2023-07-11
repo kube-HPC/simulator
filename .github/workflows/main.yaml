@@ -31,6 +31,7 @@ jobs:
           node-version: 14.x
       - run: npm ci
       - run: NODE_ENV=test npm run-script test-travis
+      - run: npm i -g @microsoft/sarif-multitool
       - name: version
         run: |
           git checkout -f -b version-branch
@@ -46,18 +47,35 @@ jobs:
         env:
           DOCKER_HUB_PASS: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Run Trivy vulnerability scanner on the docker image
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: '${{ env.IMAGE_NAME }}'
-          severity: CRITICAL
-          format: 'sarif'
-          output: 'trivy-results.sarif'
+      - name: Install Trivy
+        run: |
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.43.0/trivy_0.43.0_Linux-64bit.deb
+          sudo dpkg -i trivy_0.43.0_Linux-64bit.deb
 
-      - name: Upload Trivy scan results to GitHub Security tab
+      - name: Run Trivy license scan on filesystem
+        run: trivy fs /home/runner/work --scanners license --license-full --severity 'HIGH,CRITICAL' --format sarif  --output trivy_license_filesystem.sarif
+
+      - name: Run Trivy vulnerability scanner on the repo
+        run: trivy fs /home/runner/work --severity 'HIGH,CRITICAL' --format sarif  --output trivy_vuln_filesystem.sarif
+
+      - name: Run Trivy license scan on image
+        run: trivy image /home/runner/work --scanners license --license-full --severity 'HIGH,CRITICAL' --format sarif  --output trivy_license_image.sarif '${{ inputs.image-ref }}'
+
+      - name: Run Trivy vulnerability scanner on the repo
+        run: trivy image --severity 'HIGH,CRITICAL' --format sarif  --output trivy_vuln_image.sarif '${{ inputs.image-ref }}'
+
+      - name: Upload Trivy repo license results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: 'trivy-results.sarif'
+          sarif_file: 'trivy_license_filesystem.sarif'
+
+      - name: Merge sarif files
+        run: sarif-multitool merge --output-file trivy.sarif trivy-license-filesystem.txt trivy-license-image.txt trivy-vuln-filesystem.txt trivy_vuln_image.sarif
+
+      - name: Upload Trivy repo license results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy.sarif'
 
       - name: trigger
         id: trigger
