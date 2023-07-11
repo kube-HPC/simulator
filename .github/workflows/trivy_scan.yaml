@@ -1,0 +1,61 @@
+name: TRIVY-SCAN
+
+# Controls when the action will run.
+on:
+  workflow_dispatch:
+    inputs:
+      image-ref:
+        description: Full docker image path (e.g. docker.io/hkube/simulator:v1.2.3)
+        required: true
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  scan_and_branch:
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - run: |
+          npm ci
+          npm run builder
+
+      - name: Install Trivy
+        run: |
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.43.0/trivy_0.43.0_Linux-64bit.deb
+          sudo dpkg -i trivy_0.43.0_Linux-64bit.deb
+
+      - name: Run Trivy license scan on filesystem
+        run: trivy fs /home/runner/work --scanners license --license-full --severity 'HIGH,CRITICAL' > trivy-license-filesystem.txt
+
+      - name: Run Trivy vulnerability scanner on the repo
+        run: trivy fs /home/runner/work --severity 'HIGH,CRITICAL' > trivy-vuln-filesystem.txt
+
+      - name: Run Trivy license scan on image
+        run: trivy image /home/runner/work --scanners license --license-full --severity 'HIGH,CRITICAL' '${{ inputs.image-ref }}' > trivy-license-image.txt
+
+      - name: Run Trivy vulnerability scanner on the repo
+        run: trivy image --severity 'HIGH,CRITICAL' '${{ inputs.image-ref }}'> trivy-vuln-image.txt
+
+      - name: Create branch for scan results
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          git checkout -b trivy-scan-results
+          mkdir -p TrivyScans
+          cp trivy-license-filesystem.txt TrivyScans/
+          cp trivy-vuln-filesystem.txt TrivyScans/
+          cp trivy-license-image.txt TrivyScans/
+          cp trivy-vuln-image.txt TrivyScans/
+          git add TrivyScans/trivy-license-filesystem.txt
+          git add TrivyScans/trivy-vuln-filesystem.txt
+          git add TrivyScans/trivy-license-image.txt
+          git add TrivyScans/trivy-vuln-image.txt
+          git commit -m "Add files to a specific folder"
+          git push --force origin trivy-scan-results
+
+      - name: Display branch and file path link
+        run: echo "Results uploaded to [trivy-scan-results branch](https://github.com/$GITHUB_REPOSITORY/tree/trivy-scan-results/TrivyScans/)"
