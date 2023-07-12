@@ -1,97 +1,163 @@
-import React, { memo, useState, useCallback, useRef } from 'react';
+import React, { memo, useState, useCallback, useRef, useEffect } from 'react';
 import client from 'client';
 import { errorsCode } from '@hkube/consts';
 import PropTypes from 'prop-types';
 import { Checkbox, Modal, message } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import { addAlgorithmTemplate } from 'config';
-import { stringify, mergeObjects, tryParseJson } from 'utils';
+import { stringify } from 'utils'; // mergeObjects, tryParseJson
 import { OVERVIEW_TABS } from 'const';
 import usePath from './../../Tables/Algorithms/usePath';
 import AddAlgorithmForm from './AddAlgorithmForm.react';
 import AlgorithmJsonEditor from './AlgorithmJsonEditor';
+import schema from './schema';
+
+const { MAIN, BUILD_TYPES } = schema;
 
 const DEFAULT_EDITOR_VALUE = stringify(addAlgorithmTemplate);
 const AddAlgorithm = ({ algorithmValue }) => {
   // #region  Editor State
   const refCheckForceStopAlgorithms = useRef(false);
-  const [editorIsVisible, setEditorIsVisible] = useState(false);
+
   // eslint-disable-next-line no-unused-vars
   const [isEdit, setIsEdit] = useState(algorithmValue !== undefined);
+  const [editorIsVisible, setEditorIsVisible] = useState(
+    algorithmValue !== undefined
+  );
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
   const [isCheckForceStopAlgorithms, setIsCheckForceStopAlgorithms] = useState(
     !isEdit
   );
-  const [keyValueObject, setKeyValueObject] = useState(
+  const [keyValueFormObject, setKeyValueFormObject] = useState(
     (algorithmValue && JSON.parse(algorithmValue)) || undefined
   );
-  const [editorValue, setEditorValue] = useState(
+  const [editorJsonValue, setEditorJsonValue] = useState(
     algorithmValue || DEFAULT_EDITOR_VALUE
   );
   const toggleEditor = () => setEditorIsVisible(prev => !prev);
   const [fileList, setFileList] = useState([]);
 
-  const switchToJson = (objForm, type) => {
-    const objDeepCopy = tryParseJson(editorValue);
+  // switch from Form Object to Json
+  const switchToJson = (formObj, type) => {
+    const objJsonData = JSON.parse(editorJsonValue);
 
-    const arrayPropType = ['gitRepository', 'code', 'image'];
+    objJsonData.name = formObj.main.name;
+    objJsonData.cpu = formObj.main.cpu;
+    objJsonData.gpu = formObj.main.gpu;
+    objJsonData.mem = formObj.main.mem;
+    objJsonData.minHotWorkers = formObj.main.minHotWorkers;
+    objJsonData.reservedMemory = formObj.main.reservedMemory;
 
-    // remove not need props
-    arrayPropType.forEach(element => {
-      if (element !== type) {
-        delete objDeepCopy[element];
-      }
-    });
+    // Reduce selected options to boolean entry
+    objJsonData.options = {
+      ...objJsonData.options,
+      ...formObj.main.options.reduce(
+        (acc, option) => ({ ...acc, [option]: true }),
+        {}
+      ),
+    };
 
-    const newEditorValue = mergeObjects(
-      { ...objForm.main, [type]: objForm[type] },
-      objDeepCopy
-    );
+    // Code
+    if (type === BUILD_TYPES.CODE.field) {
+      delete objJsonData.gitRepository;
+      delete objJsonData.image;
 
-    delete newEditorValue.entryPoint;
-    delete newEditorValue.env;
-    delete newEditorValue.baseImage;
-
-    if (type === 'image') {
-      delete newEditorValue.algorithmImage;
+      objJsonData.type = 'Code';
+      objJsonData.env = formObj.code.env;
+      objJsonData.entryPoint = formObj.code.entryPoint;
+      objJsonData.baseImage = formObj.code.baseImage; // put base image in root
     }
 
-    setEditorValue(stringify(newEditorValue));
+    // Image
+    if (type === BUILD_TYPES.IMAGE.field) {
+      delete objJsonData.gitRepository;
 
-    toggleEditor();
+      objJsonData.type = 'Image';
+
+      objJsonData.algorithmImage = formObj.image.algorithmImage;
+    }
+
+    // Git
+    if (type === BUILD_TYPES.GIT.field) {
+      objJsonData.gitRepository = objJsonData?.gitRepository || {};
+      objJsonData.gitRepository.commit =
+        objJsonData?.gitRepository.commit || {};
+
+      objJsonData.type = 'Git';
+      objJsonData.gitRepository.commit.id = formObj.gitRepository.commit.id;
+      objJsonData.gitRepository.branchName = formObj.gitRepository.branchName;
+      objJsonData.gitRepository.gitKind = formObj.gitRepository.gitKind;
+      objJsonData.gitRepository.tag = formObj.gitRepository.tag;
+      objJsonData.gitRepository.token = formObj.gitRepository.token;
+      objJsonData.gitRepository.url = formObj.gitRepository.url;
+
+      objJsonData.baseImage = formObj.gitRepository.baseImage; // put base image in root
+      objJsonData.entryPoint = formObj.gitRepository.entryPoint;
+      objJsonData.env = formObj.gitRepository.env;
+
+      delete objJsonData.gitRepository.entryPoint;
+    }
+
+    setEditorJsonValue(stringify(objJsonData));
+    toggleEditor(prev => !prev);
   };
 
   const switchToForm = () => {
-    const objJsonData = JSON.parse(editorValue);
-    let resObjJson;
+    // switch from JSON Object To Form
+    const objJsonData = JSON.parse(editorJsonValue);
+    const formObj = {};
+    formObj.main = {};
 
-    if (objJsonData.gitRepository) {
-      const { gitRepository } = objJsonData;
-      delete objJsonData.gitRepository;
-      // objJsonData.type="git"
-      // form.setFieldsValue({main: obj, gitRepository})
-      resObjJson = { main: objJsonData, gitRepository };
+    formObj.main.name = objJsonData.name;
+    formObj.main.description = objJsonData.description;
+
+    formObj.main.cpu = objJsonData.cpu;
+    formObj.main.gpu = objJsonData.gpu;
+    formObj.main.mem = objJsonData.mem;
+    formObj.main.minHotWorkers = objJsonData.minHotWorkers;
+    formObj.main.reservedMemory = objJsonData.reservedMemory;
+
+    formObj.main.options = Object.keys(objJsonData?.options).filter(item =>
+      MAIN.OPTIONS.types.includes(item)
+    );
+
+    // Code
+    if (objJsonData.type === BUILD_TYPES.CODE.label || objJsonData.code) {
+      formObj.code = {};
+
+      formObj.code.env = objJsonData.env;
+      formObj.code.entryPoint = objJsonData.entryPoint;
+      formObj.code.baseImage = objJsonData.baseImage;
     }
 
-    if (objJsonData.code) {
-      const { code } = objJsonData;
-      delete objJsonData.code;
-      objJsonData.type = 'code';
-      resObjJson = { main: objJsonData, code };
+    // Image
+    if (objJsonData.type === BUILD_TYPES.IMAGE.label || objJsonData.image) {
+      formObj.image = {};
+
+      formObj.image.algorithmImage = objJsonData.algorithmImage;
     }
 
-    if (objJsonData.image) {
-      const { image } = objJsonData;
-      delete objJsonData.image;
-      objJsonData.type = 'image';
-      resObjJson = { main: objJsonData, image };
+    // Git
+    if (
+      objJsonData.type === BUILD_TYPES.GIT.label ||
+      objJsonData.gitRepository
+    ) {
+      formObj.gitRepository = {};
+      formObj.gitRepository.commit = {};
+
+      formObj.gitRepository.commit.id = objJsonData.gitRepository.commit.id;
+      formObj.gitRepository.baseImage = objJsonData.baseImage;
+      formObj.gitRepository.branchName = objJsonData.gitRepository.branchName;
+      formObj.gitRepository.gitKind = objJsonData.gitRepository.gitKind;
+      formObj.gitRepository.tag = objJsonData.gitRepository.tag;
+      formObj.gitRepository.token = objJsonData.gitRepository.token;
+      formObj.gitRepository.url = objJsonData.gitRepository.url;
+
+      formObj.gitRepository.entryPoint = objJsonData.entryPoint;
+      formObj.gitRepository.env = objJsonData.env;
     }
 
-    if (resObjJson.main.options) {
-      resObjJson.main.options = Object.values(resObjJson.main.options);
-    }
-
-    setKeyValueObject(resObjJson);
+    setKeyValueFormObject(formObj);
     toggleEditor(prev => !prev);
   };
 
@@ -99,14 +165,14 @@ const AddAlgorithm = ({ algorithmValue }) => {
 
   const onOverviewAlgorithm = useCallback(
     (tab, name) => {
-      if (keyValueObject || name) {
+      if (keyValueFormObject || name) {
         goTo.overview({
-          nextAlgorithmId: keyValueObject?.name || name,
+          nextAlgorithmId: keyValueFormObject?.name || name,
           nextTabKey: tab || OVERVIEW_TABS.VERSIONS,
         });
       }
     },
-    [goTo, keyValueObject]
+    [goTo, keyValueFormObject]
   );
 
   const onAfterSaveAlgorithm = useCallback(
@@ -217,13 +283,18 @@ const AddAlgorithm = ({ algorithmValue }) => {
       });
   };
 
+  useEffect(() => {
+    if (isEdit) {
+      switchToForm();
+    }
+  }, []);
   // #endregion
 
   return editorIsVisible ? (
     <AlgorithmJsonEditor
       isEdit={isEdit}
-      editorValue={editorValue}
-      setEditorValue={setEditorValue}
+      editorJsonValue={editorJsonValue}
+      setEditorJsonValue={setEditorJsonValue}
       onWizardSubmit={onWizardSubmit}
       toggleEditor={switchToForm}
       setIsCheckForceStopAlgorithms={setIsCheckForceStopAlgorithms}
@@ -238,7 +309,7 @@ const AddAlgorithm = ({ algorithmValue }) => {
       onToggle={switchToJson}
       onSubmit={onWizardSubmit}
       isEdit={isEdit}
-      keyValueObject={keyValueObject}
+      keyValueFormObject={keyValueFormObject}
       setIsSubmitLoading={setIsSubmitLoading}
       onOverviewAlgorithm={onOverviewAlgorithm}
       applyAlgorithmVersion={applyAlgorithmVersion}
