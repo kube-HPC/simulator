@@ -17,8 +17,6 @@ import {
   stringify,
   toUpperCaseFirstLetter,
   splitByDot,
-  deepCopyFromKeyValue,
-  flattenObjKeyValue,
 } from 'utils';
 
 import { CodeBuild, GitBuild, ImageBuild } from './BuildTypes';
@@ -99,7 +97,7 @@ const AddAlgorithmForm = ({
   onToggle,
   onSubmit,
   isEdit,
-  keyValueObject,
+  keyValueFormObject,
   isCheckForceStopAlgorithms,
   isSubmitLoading,
   setIsCheckForceStopAlgorithms,
@@ -110,7 +108,7 @@ const AddAlgorithmForm = ({
   const [form] = Form.useForm();
 
   const [buildType, setBuildType] = useState(
-    (keyValueObject && toSelectedBuildType(keyValueObject)) ||
+    (keyValueFormObject && toSelectedBuildType(keyValueFormObject)) ||
       BUILD_TYPES.GIT.field
   );
 
@@ -126,25 +124,26 @@ const AddAlgorithmForm = ({
   useEffect(() => {
     // init values in fields
 
-    if (keyValueObject != null) {
+    if (keyValueFormObject != null) {
+      //   const schemaObjectForm = form.getFieldsValue();
+
       // Edit algorithm
-      const schemaObjectForm = form.getFieldsValue();
+      // const objValuesForm = convertJsonToForm(keyValueFormObject);
 
-      const objValuesForm = deepCopyFromKeyValue(
-        schemaObjectForm,
-        flattenObjKeyValue(keyValueObject)
-      );
+      //  const objValuesForm = deepCopyFromKeyValue(
+      //    schemaObjectForm,
+      //     flattenObjKeyValue(keyValueObject)
+      //   );
 
-      const optionsData = isEdit
-        ? Object.keys(keyValueObject.options)
-        : keyValueObject?.main?.options;
-      objValuesForm.main.options = optionsData.filter(item =>
-        MAIN.OPTIONS.types.includes(item)
-      );
+      //   const optionsData = keyValueObject.options ? Object.keys(keyValueObject?.options) : keyValueObject?.main?.options;
 
-      setBuildType(toSelectedBuildType(keyValueObject));
+      //   objValuesForm.main.options = optionsData.filter(item =>
+      //     MAIN.OPTIONS.types.includes(item)
+      //   );
 
-      form.setFieldsValue(objValuesForm);
+      //   setBuildType(toSelectedBuildType(keyValueObject));
+
+      form.setFieldsValue(keyValueFormObject);
     } else {
       // add new algorithm
       form.setFieldsValue(formTemplate);
@@ -166,6 +165,7 @@ const AddAlgorithmForm = ({
 
   // const { applyAlgorithm } = useActions();
   const onFormSubmit = () => {
+    // Form submit
     validateFields().then(formObject => {
       if (buildType === BUILD_TYPES.CODE.field && !fileList.length && !isEdit) {
         notification({
@@ -253,7 +253,7 @@ const AddAlgorithmForm = ({
         </FlexBox.Item>
         <FlexBox.Item>
           <DrawerReadMeFile
-            name={keyValueObject?.name || null}
+            name={keyValueFormObject?.name || null}
             type="algorithms"
             disabled={!isEdit}
           />
@@ -350,7 +350,7 @@ AddAlgorithmForm.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
 
-  keyValueObject: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  keyValueFormObject: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   onToggle: PropTypes.func.isRequired,
   onSubmit: PropTypes.func,
   isEdit: PropTypes.bool.isRequired,
@@ -366,7 +366,7 @@ AddAlgorithmForm.propTypes = {
 AddAlgorithmForm.defaultProps = {
   onSubmit: () => {},
 
-  keyValueObject: undefined,
+  keyValueFormObject: undefined,
 };
 
 export default memo(AddAlgorithmForm);

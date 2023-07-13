@@ -23,8 +23,8 @@ const isNotEmpty = ({ value }) => !isEmpty(value);
 const { BUILD_TYPES } = schema;
 const AlgorithmJsonEditor = ({
   isEdit,
-  editorValue,
-  setEditorValue,
+  editorJsonValue,
+  setEditorJsonValue,
   onWizardSubmit,
   toggleEditor,
   setIsCheckForceStopAlgorithms,
@@ -34,21 +34,17 @@ const AlgorithmJsonEditor = ({
   fileList,
   setFileList,
 }) => {
-  const isCodeInJson = () =>
-    editorValue.indexOf(`"${BUILD_TYPES.CODE.field}"`) !== -1;
-
-  const [isCodeProp, setIsCodeProp] = useState(isCodeInJson());
+  const isCodeInJson = () => editorJsonValue.indexOf('"Code"') > -1 || false;
+  const [isCodeProp, setIsCodeProp] = useState(false);
 
   const onBeforeEditorSubmit = ({ src }) => {
+    // JSON submit
     const srcJson = JSON.parse(src);
-    const buildTypeSubmit = srcJson.code
-      ? BUILD_TYPES.CODE.field
-      : srcJson.image
-      ? BUILD_TYPES.IMAGE.field
-      : BUILD_TYPES.GIT.field;
+    const buildTypeSubmit = srcJson.type;
+
     const formData = new FormData();
 
-    if (buildTypeSubmit === BUILD_TYPES.CODE.field) {
+    if (buildTypeSubmit.toLowerCase() === BUILD_TYPES.CODE.field) {
       const [file] = fileList;
 
       if (!fileList.length && !isEdit) {
@@ -62,37 +58,10 @@ const AlgorithmJsonEditor = ({
       formData.append(`file`, file);
     }
 
-    // Reduce selected options to boolean entry
-    const options = Object.values(srcJson.options).reduce(
-      (acc, option) => ({ ...acc, [option]: true }),
-      {}
-    );
+    const payload = srcJson;
+    delete payload.type;
 
-    // #region From Form-Object to Schema
-    // On GIT build type:
-    // [ env, entryPoint, baseImage ] are on the top object's keys level
-    const { env, entryPoint, baseImage, ...rest } = srcJson[buildTypeSubmit];
-
-    /* eslint-disable indent */
-
-    const payload =
-      buildTypeSubmit === BUILD_TYPES.GIT.field
-        ? {
-            ...srcJson,
-            options,
-            [BUILD_TYPES.GIT.field]: rest,
-            env,
-            entryPoint,
-            baseImage,
-          }
-        : {
-            ...srcJson,
-            options,
-            ...srcJson[buildTypeSubmit],
-          };
-    // #endregion
-
-    if (buildTypeSubmit === BUILD_TYPES.GIT.field) {
+    if (buildTypeSubmit === BUILD_TYPES.GIT.label) {
       const commitObject = _.get(payload, BUILD_TYPES.GIT.COMMIT.field);
       if (commitObject.id === '') {
         delete payload.gitRepository.commit;
@@ -109,27 +78,21 @@ const AlgorithmJsonEditor = ({
   };
 
   const onEditorSubmit = () => {
-    tryParse({ src: editorValue, onSuccess: onBeforeEditorSubmit });
+    tryParse({ src: editorJsonValue, onSuccess: onBeforeEditorSubmit });
   };
 
   const resetJson = () => {
-    const oJson = JSON.parse(sourceJson);
-
-    delete oJson.entryPoint;
-    delete oJson.env;
-    delete oJson.baseImage;
-
-    setEditorValue(stringify(oJson));
+    setEditorJsonValue(sourceJson);
   };
 
   useEffect(() => {
     setIsCodeProp(isCodeInJson());
-  }, [editorValue]);
+  }, [editorJsonValue]);
 
   return (
     <>
       <Card style={{ flex: 1 }} bodyStyle={{ height: '100%' }}>
-        <JsonEditor value={editorValue} onChange={setEditorValue} />
+        <JsonEditor value={editorJsonValue} onChange={setEditorJsonValue} />
       </Card>
       {isCodeProp && (
         <Card>
@@ -141,14 +104,14 @@ const AlgorithmJsonEditor = ({
         </Card>
       )}
       <BottomPanel>
-        <PanelButton
-          key="editor"
-          onClick={() => toggleEditor(editorValue, 'form')}>
+        <PanelButton key="editor" onClick={toggleEditor}>
           Back to form
         </PanelButton>
-        <PanelButton key="editor" onClick={() => resetJson()}>
-          Original Json
-        </PanelButton>
+        {isEdit && (
+          <PanelButton key="editor" onClick={() => resetJson()}>
+            Original Json
+          </PanelButton>
+        )}
         <RightPanel>
           {isEdit && (
             <Checkbox
@@ -172,12 +135,12 @@ const AlgorithmJsonEditor = ({
 
 AlgorithmJsonEditor.propTypes = {
   isEdit: PropTypes.bool.isRequired,
-  editorValue: PropTypes.instanceOf(PropTypes.object).isRequired,
+  editorJsonValue: PropTypes.instanceOf(PropTypes.object).isRequired,
   onWizardSubmit: PropTypes.func.isRequired,
   toggleEditor: PropTypes.bool.isRequired,
   setIsCheckForceStopAlgorithms: PropTypes.func.isRequired,
   refCheckForceStopAlgorithms: PropTypes.func.isRequired,
-  setEditorValue: PropTypes.func.isRequired,
+  setEditorJsonValue: PropTypes.func.isRequired,
   isCheckForceStopAlgorithms: PropTypes.bool.isRequired,
   sourceJson: PropTypes.instanceOf(PropTypes.object).isRequired,
   fileList: PropTypes.oneOfType([PropTypes.object]).isRequired,
