@@ -2,8 +2,6 @@ name: TRIVY-SCAN
 
 # Controls when the action will run.
 on:
-  push:
-    branches: [trivy*]
   workflow_dispatch:
     inputs:
       image-ref:
@@ -23,8 +21,6 @@ jobs:
           node-version: 14.x
       - run: |
           npm ci
-          npm run builder
-
       - name: Install Trivy
         run: |
           wget https://github.com/aquasecurity/trivy/releases/download/v0.43.0/trivy_0.43.0_Linux-64bit.deb
