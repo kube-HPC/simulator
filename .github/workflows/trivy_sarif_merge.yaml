@@ -23,7 +23,6 @@ jobs:
           node-version: 14.x
       - run: |
           npm ci
-          npm i -g @microsoft/sarif-multitool
       - name: Install Trivy
         run: |
           wget https://github.com/aquasecurity/trivy/releases/download/v0.43.0/trivy_0.43.0_Linux-64bit.deb
@@ -41,10 +40,22 @@ jobs:
       - name: Run Trivy vulnerability scanner on image
         run: trivy image 'docker.io/hkube/simulator:v2.6.9' --severity 'HIGH,CRITICAL' --format sarif  --output trivy_vuln_image.sarif
 
-      - name: Merge sarif files
-        run: sarif-multitool merge --output-file trivy.sarif trivy_license_filesystem.sarif trivy_vuln_filesystem.sarif trivy_license_image.sarif trivy_vuln_image.sarif
-
       - name: Upload Trivy repo license results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: 'trivy.sarif'
+          sarif_file: 'trivy_license_filesystem.sarif'
+
+      - name: Upload Trivy repo vulnerability results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy_vuln_filesystem.sarif'
+
+      - name: Upload Trivy image license results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy_license_image.sarif'
+
+      - name: Upload Trivy image vulnerability results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy_vuln_image.sarif'
