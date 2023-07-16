@@ -23,6 +23,7 @@ jobs:
           node-version: 14.x
       - run: |
           npm ci
+          npm i -g @microsoft/sarif-multitool
       - name: Install Trivy
         run: |
           wget https://github.com/aquasecurity/trivy/releases/download/v0.43.0/trivy_0.43.0_Linux-64bit.deb
