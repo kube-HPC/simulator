@@ -35,7 +35,7 @@ jobs:
         run: trivy fs /home/runner/work --severity 'HIGH,CRITICAL' --format sarif  --output trivy_vuln_filesystem.sarif
 
       - name: Run Trivy license scan on image
-        run: trivy image  --scanners license --license-full --severity 'HIGH,CRITICAL' --format sarif  --output trivy_license_image.sarif docker.io/hkube/simulator:v2.6.9
+        run: trivy image 'docker.io/hkube/simulator:v2.6.9'  --scanners license --license-full --severity 'HIGH,CRITICAL' --format sarif  --output trivy_license_image.sarif
 
       - name: Run Trivy vulnerability scanner on the repo
         run: trivy image --severity 'HIGH,CRITICAL' --format sarif  --output trivy_vuln_image.sarif '${{ inputs.image-ref }}'
