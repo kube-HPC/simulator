@@ -1,0 +1,49 @@
+name: TRIVY-SARIF-MERGE
+
+# Controls when the action will run.
+on:
+  workflow_dispatch:
+    inputs:
+      image-ref:
+        description: Full docker image path (e.g. docker.io/hkube/simulator:v1.2.3)
+        required: true
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  scan_and_branch:
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - run: |
+          npm ci
+          npm run builder
+
+      - name: Install Trivy
+        run: |
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.43.0/trivy_0.43.0_Linux-64bit.deb
+          sudo dpkg -i trivy_0.43.0_Linux-64bit.deb
+
+      - name: Run Trivy license scan on filesystem
+        run: trivy fs /home/runner/work --scanners license --license-full --severity 'HIGH,CRITICAL' --format sarif  --output trivy_license_filesystem.sarif
+
+      - name: Run Trivy vulnerability scanner on the repo
+        run: trivy fs /home/runner/work --severity 'HIGH,CRITICAL' --format sarif  --output trivy_vuln_filesystem.sarif
+
+      - name: Run Trivy license scan on image
+        run: trivy image /home/runner/work --scanners license --license-full --severity 'HIGH,CRITICAL' --format sarif  --output trivy_license_image.sarif docker.io/hkube/simulator:v2.6.9
+
+      - name: Run Trivy vulnerability scanner on the repo
+        run: trivy image --severity 'HIGH,CRITICAL' --format sarif  --output trivy_vuln_image.sarif '${{ inputs.image-ref }}'
+
+      - name: Merge sarif files
+        run: sarif-multitool merge --output-file trivy.sarif trivy_license_filesystem.sarif trivy_vuln_filesystem.sarif trivy_license_image.sarif trivy_vuln_image.sarif
+
+      - name: Upload Trivy repo license results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy.sarif'
