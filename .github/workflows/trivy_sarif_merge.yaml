@@ -2,6 +2,8 @@ name: TRIVY-SARIF-MERGE
 
 # Controls when the action will run.
 on:
+  push:
+    branches: [trivy*]
   workflow_dispatch:
     inputs:
       image-ref:
