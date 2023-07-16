@@ -44,18 +44,22 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 'trivy_license_filesystem.sarif'
+          category: 'Trivy-License-Repo'
 
       - name: Upload Trivy repo vulnerability results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 'trivy_vuln_filesystem.sarif'
+          category: 'Trivy-Vulnerability-Repo'
 
       - name: Upload Trivy image license results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 'trivy_license_image.sarif'
+          category: 'Trivy-License-Image'
 
       - name: Upload Trivy image vulnerability results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 'trivy_vuln_image.sarif'
+          category: 'Trivy-Vulnerability-Image'
