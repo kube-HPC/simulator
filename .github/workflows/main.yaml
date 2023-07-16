@@ -64,13 +64,8 @@ jobs:
       - name: Run Trivy vulnerability scanner on the repo
         run: trivy image --severity 'HIGH,CRITICAL' --format sarif  --output trivy_vuln_image.sarif '${{ inputs.image-ref }}'
 
-      - name: Upload Trivy repo license results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: 'trivy_license_filesystem.sarif'
-
       - name: Merge sarif files
-        run: sarif-multitool merge --output-file trivy.sarif trivy-license-filesystem.txt trivy-license-image.txt trivy-vuln-filesystem.txt trivy_vuln_image.sarif
+        run: sarif-multitool merge --output-file trivy.sarif trivy_license_filesystem.sarif trivy_vuln_filesystem.sarif trivy_license_image.sarif trivy_vuln_image.sarif
 
       - name: Upload Trivy repo license results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
