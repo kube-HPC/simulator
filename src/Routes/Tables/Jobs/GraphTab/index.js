@@ -81,6 +81,7 @@ const FlexContainer = styled.div`
 `;
 
 const GraphTab = ({ graph, pipeline }) => {
+  const [nodePos, setNodePos] = useState(null);
   const graphRef = useRef(null);
   const normalizedPipeline = useMemo(
     () =>
@@ -95,16 +96,16 @@ const GraphTab = ({ graph, pipeline }) => {
       nodes: []
         .concat(graph.nodes)
         .filter(item => item)
-        .map(formatNode(normalizedPipeline, pipeline.kind)),
+        .map(formatNode(normalizedPipeline, pipeline.kind, nodePos)),
       edges: []
         .concat(graph.edges)
         .filter(item => item)
         .map(formatEdge),
     }),
-    [graph, normalizedPipeline, pipeline]
+    [graph, normalizedPipeline, pipeline, nodePos]
   );
   const isValidGraph = adaptedGraph.nodes.length !== 0;
-  const { node, events } = useNodeInfo({ graph, pipeline });
+  const { node, events } = useNodeInfo({ graph, pipeline }); // events
 
   // const { graphDirection: direction } = useSettings();
   const [graphDirection, setGraphDirection] = useState(
@@ -112,14 +113,16 @@ const GraphTab = ({ graph, pipeline }) => {
       LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_GRAPH_DIRECTION
     ) || GRAPH_DIRECTION.LeftToRight
   );
+  const [isHierarchical, setIsHierarchical] = useState(true);
+
   const [showGraph, toggleForceUpdate] = useReducer(p => !p, true);
 
   const graphOptions = useMemo(
     () => ({
-      ...generateStyles({ direction: graphDirection }),
+      ...generateStyles({ direction: graphDirection, isHierarchical }),
       height: '100px',
     }),
-    [graphDirection]
+    [graphDirection, isHierarchical]
   );
 
   const isDisabledBtnRunDebug = useMemo(() => {
@@ -150,12 +153,20 @@ const GraphTab = ({ graph, pipeline }) => {
     );
   }, [graphDirection]);
 
+  const handleIsLockDrag = useCallback(() => {
+    setNodePos(graphRef?.current?.Network?.getPositions());
+
+    if (isHierarchical) {
+      setIsHierarchical(false);
+    }
+  }, []);
+
   useEffect(() => {
     toggleForceUpdate();
     setTimeout(() => {
       toggleForceUpdate();
     }, 500);
-  }, [graphDirection]);
+  }, [graphDirection, isHierarchical]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -192,6 +203,11 @@ const GraphTab = ({ graph, pipeline }) => {
                 options={graphOptions}
                 events={events}
                 ref={graphRef}
+                getNetwork={network => {
+                  network.on('dragEnd', () => {
+                    handleIsLockDrag();
+                  });
+                }}
               />
             </Fallback>
           ) : (

@@ -43,12 +43,38 @@ const groups = {
 };
 
 /** @returns {import('vis').Options} */
-export default ({ direction, isMinified = false }) => ({
+export default ({ direction, isHierarchical, isMinified = false }) => ({
   height: isMinified ? '200px' : `400px`,
-  physics: false,
+
+  physics: {
+    enabled: !isHierarchical,
+    barnesHut: {
+      theta: 0.5,
+      gravitationalConstant: -2000,
+      centralGravity: 0.3,
+      springLength: 95,
+      springConstant: 0.04,
+      damping: 0.09,
+      avoidOverlap: 0,
+    },
+
+    maxVelocity: 50,
+    minVelocity: 0.1,
+    solver: 'barnesHut',
+    stabilization: {
+      enabled: true,
+      iterations: 1000,
+      updateInterval: 100,
+      onlyDynamicEdges: false,
+      fit: true,
+    },
+    timestep: 0.5,
+    adaptiveTimestep: true,
+    wind: { x: 0, y: 0 },
+  },
   layout: {
     hierarchical: {
-      enabled: true,
+      enabled: isHierarchical,
       direction,
       sortMethod: 'directed',
       nodeSpacing: 200,

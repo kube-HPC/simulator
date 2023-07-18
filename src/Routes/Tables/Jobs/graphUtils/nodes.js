@@ -137,7 +137,11 @@ const nodeShapes = {
   [nodeKind.Gateway]: 'square',
   [nodeKind.DataSource]: 'circle',
 };
-export const formatNode = (normalizedPipeline, pipelineKind) => node => {
+export const formatNode = (
+  normalizedPipeline,
+  pipelineKind,
+  postionsNode
+) => node => {
   const isBatch = !!node.batchInfo;
   const isStreaming = pipelineKind === 'stream';
   /** @type {NodeOptions} */
@@ -150,6 +154,8 @@ export const formatNode = (normalizedPipeline, pipelineKind) => node => {
   const kind = isStateLess ? 'stateless' : pipelineNode?.kind || 'algorithm';
   const _node = {
     id: meta.nodeName,
+    x: (postionsNode && postionsNode[node.nodeName]?.x) || null,
+    y: (postionsNode && postionsNode[node.nodeName]?.y) || null,
     label: meta?.extra?.batch
       ? `${meta.nodeName} (${meta.extra.batch})`
       : `${meta.nodeName} `,
@@ -178,6 +184,8 @@ export const formatNode = (normalizedPipeline, pipelineKind) => node => {
     'borderWidth',
     'id',
     'shapeProperties',
-    'group'
+    'group',
+    'x',
+    'y'
   );
 };
