@@ -140,7 +140,7 @@ const nodeShapes = {
 export const formatNode = (
   normalizedPipeline,
   pipelineKind,
-  postionsNode
+  position
 ) => node => {
   const isBatch = !!node.batchInfo;
   const isStreaming = pipelineKind === 'stream';
@@ -154,8 +154,8 @@ export const formatNode = (
   const kind = isStateLess ? 'stateless' : pipelineNode?.kind || 'algorithm';
   const _node = {
     id: meta.nodeName,
-    x: (postionsNode && postionsNode[node.nodeName]?.x) || null,
-    y: (postionsNode && postionsNode[node.nodeName]?.y) || null,
+    x: (position && position?.nodesPostions[node.nodeName]?.x) || null,
+    y: (position && position?.nodesPostions[node.nodeName]?.y) || null,
     label: meta?.extra?.batch
       ? `${meta.nodeName} (${meta.extra.batch})`
       : `${meta.nodeName} `,

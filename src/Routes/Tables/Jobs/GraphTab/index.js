@@ -82,7 +82,9 @@ const FlexContainer = styled.div`
 
 const GraphTab = ({ graph, pipeline }) => {
   const [nodePos, setNodePos] = useState(null);
+
   const graphRef = useRef(null);
+
   const normalizedPipeline = useMemo(
     () =>
       pipeline.nodes.reduce(
@@ -142,6 +144,7 @@ const GraphTab = ({ graph, pipeline }) => {
   }, [node, pipeline?.kind, pipeline.nodes]);
 
   const handleSelectDirection = useCallback(() => {
+    setIsHierarchical(true);
     const directionSelect =
       graphDirection !== GRAPH_DIRECTION.LeftToRight
         ? GRAPH_DIRECTION.LeftToRight
@@ -154,12 +157,15 @@ const GraphTab = ({ graph, pipeline }) => {
   }, [graphDirection]);
 
   const handleIsLockDrag = useCallback(() => {
-    setNodePos(graphRef?.current?.Network?.getPositions());
-
     if (isHierarchical) {
+      const network = graphRef?.current?.Network;
+      // const scale = network.getScale();
+      //  const viewPosition = network.getViewPosition();
+
+      setNodePos({ nodesPostions: network?.getPositions() });
       setIsHierarchical(false);
     }
-  }, []);
+  }, [isHierarchical]);
 
   useEffect(() => {
     toggleForceUpdate();
@@ -204,7 +210,7 @@ const GraphTab = ({ graph, pipeline }) => {
                 events={events}
                 ref={graphRef}
                 getNetwork={network => {
-                  network.on('dragEnd', () => {
+                  network.on('beforeDrawing', () => {
                     handleIsLockDrag();
                   });
                 }}
