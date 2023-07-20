@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'components/common';
 import { Select } from 'antd';
@@ -9,6 +9,7 @@ import useWizardContext from '../../useWizardContext';
 const smallSelectStyle = { width: '150px' };
 
 const StreamingFlows = ({ form, initialState }) => {
+  const firstLoad = useRef(true);
   const {
     form: { setFieldsValue },
     setForm,
@@ -22,15 +23,19 @@ const StreamingFlows = ({ form, initialState }) => {
   );
 
   useEffect(() => {
-    const listFlowKeys = Object.keys(listFlow);
-    setArrayListFlow(['No Default', ...listFlowKeys]);
+    if (firstLoad.current) {
+      firstLoad.current = false;
+    } else {
+      const listFlowKeys = Object.keys(listFlow);
+      setArrayListFlow(['No Default', ...listFlowKeys]);
 
-    const defaultFlowValue = form.getFieldValue(['streaming', 'defaultFlow']);
-    if (!has(listFlow, defaultFlowValue)) {
-      setTimeout(() => {
-        form.setFieldsValue({ streaming: { defaultFlow: '' } });
-        setForm();
-      }, 100);
+      const defaultFlowValue = form.getFieldValue(['streaming', 'defaultFlow']);
+      if (!has(listFlow, defaultFlowValue)) {
+        setTimeout(() => {
+          form.setFieldsValue({ streaming: { defaultFlow: '' } });
+          setForm();
+        }, 100);
+      }
     }
   }, [form, listFlow]);
 
