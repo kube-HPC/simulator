@@ -27,16 +27,16 @@ jobs:
           sudo dpkg -i trivy_0.43.0_Linux-64bit.deb
 
       - name: Run Trivy license scan on filesystem
-        run: trivy fs /home/runner/work --scanners license --license-full --severity 'HIGH,CRITICAL' > trivy-license-filesystem.txt
+        run: trivy fs /home/runner/work --scanners license --license-full --severity 'HIGH,CRITICAL' > trivy_license_filesystem.txt
 
       - name: Run Trivy vulnerability scanner on the repo
-        run: trivy fs /home/runner/work --severity 'HIGH,CRITICAL' > trivy-vuln-filesystem.txt
+        run: trivy fs /home/runner/work --severity 'HIGH,CRITICAL' > trivy_vuln_filesystem.txt
 
       - name: Run Trivy license scan on image
-        run: trivy image --scanners license --license-full --severity 'HIGH,CRITICAL' '${{ inputs.image-ref }}' > trivy-license-image.txt
+        run: trivy image --scanners license --license-full --severity 'HIGH,CRITICAL' '${{ inputs.image-ref }}' > trivy_license_image.txt
 
       - name: Run Trivy vulnerability scanner on the repo
-        run: trivy image --severity 'HIGH,CRITICAL' '${{ inputs.image-ref }}'> trivy-vuln-image.txt
+        run: trivy image --severity 'HIGH,CRITICAL' '${{ inputs.image-ref }}'> trivy_vuln_image.txt
 
       - name: Create branch for scan results
         run: |
@@ -44,14 +44,14 @@ jobs:
           git config --global user.name "GitHub Action"
           git checkout -b trivy-scan-results
           mkdir -p TrivyScans
-          cp trivy-license-filesystem.txt TrivyScans/
-          cp trivy-vuln-filesystem.txt TrivyScans/
-          cp trivy-license-image.txt TrivyScans/
-          cp trivy-vuln-image.txt TrivyScans/
-          git add TrivyScans/trivy-license-filesystem.txt
-          git add TrivyScans/trivy-vuln-filesystem.txt
-          git add TrivyScans/trivy-license-image.txt
-          git add TrivyScans/trivy-vuln-image.txt
+          cp trivy_license_filesystem.txt TrivyScans/
+          cp trivy_vuln_filesystem.txt TrivyScans/
+          cp trivy_license_image.txt TrivyScans/
+          cp trivy_vuln_image.txt TrivyScans/
+          git add TrivyScans/trivy_license_filesystem.txt
+          git add TrivyScans/trivy_vuln_filesystem.txt
+          git add TrivyScans/trivy_license_image.txt
+          git add TrivyScans/trivy_vuln_image.txt
           git commit -m "Add files to a specific folder"
           git push --force origin trivy-scan-results
 
