@@ -43,7 +43,13 @@ const groups = {
 };
 
 /** @returns {import('vis').Options} */
-export default ({ direction, isHierarchical, isMinified = false }) => ({
+export default ({
+  direction,
+  isHierarchical,
+  nodeSpacing = 350,
+  isMinified = false,
+}) => ({
+  // ,nodeSpacingY=350
   height: isMinified ? '200px' : `400px`,
 
   physics: {
@@ -52,6 +58,7 @@ export default ({ direction, isHierarchical, isMinified = false }) => ({
       theta: 0.5,
       gravitationalConstant: -2000,
       centralGravity: 0.3,
+
       springLength: 95,
       springConstant: 0.04,
       damping: 0.09,
@@ -77,7 +84,13 @@ export default ({ direction, isHierarchical, isMinified = false }) => ({
       enabled: isHierarchical,
       direction,
       sortMethod: 'directed',
-      nodeSpacing: 200,
+      nodeSpacing, // nodeSpacingY,// nodeSpacingY,
+      levelSeparation: nodeSpacing,
+      //  treeSpacing:nodeSpacing,
+      //   blockShifting:false,
+      //   edgeMinimization:false,
+      //  levelSeparation:150,
+      shakeTowards: 'leaves',
     },
   },
   nodes: {
