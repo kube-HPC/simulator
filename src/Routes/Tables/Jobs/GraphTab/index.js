@@ -1,5 +1,4 @@
 import React, {
-  lazy,
   useCallback,
   useEffect,
   useMemo,
@@ -8,13 +7,21 @@ import React, {
   useRef,
 } from 'react';
 import PropTypes from 'prop-types';
-import { Empty, Button } from 'antd';
-import styled from 'styled-components';
+import { Empty, Slider } from 'antd';
+import { useDebounceCallback } from '@react-hook/debounce';
 import { Fallback, FallbackComponent } from 'components/common';
 import { useNodeInfo } from 'hooks';
 import { ReactComponent as IconGraphUpToDown } from 'images/dir-graph-up.svg';
 import { ReactComponent as IconGraphLeftToRight } from 'images/dir-graph-left.svg';
 import { LOCAL_STORAGE_KEYS } from 'const';
+import Graph from 'react-graph-vis';
+import {
+  Card,
+  GraphContainer,
+  EmptyHeight,
+  ButtonStyle,
+  FlexContainer,
+} from './styles';
 import { generateStyles, formatEdge, formatNode } from '../graphUtils';
 import Details from './Details';
 
@@ -22,68 +29,28 @@ const GRAPH_DIRECTION = {
   LeftToRight: 'LR',
   UpToDown: 'UD',
 };
-const Card = styled.div`
-  padding-top: 2px;
-  overflow: auto;
-  flex: 1;
-  height: 95vh;
-  -webkit-box-shadow: -7px -8px 2px -4px ${props => props.theme.Styles.line};
-  box-shadow: -7px -8px 2px -4px ${props => props.theme.Styles.line};
-`;
-
-const Graph = lazy(() => import(`react-graph-vis`));
-
-const GraphContainer = styled.div`
-  /*flex: 1;*/
-  /*height:40vh;
-  min-height: 40vh;
-  max-height: 80vh;*/
-
-  .vis-network {
-    height: 100% !important;
-  }
-  .vis-tooltip {
-    position: absolute;
-    visibility: hidden;
-    padding: 5px;
-    white-space: nowrap;
-    font-family: verdana;
-    font-size: 16px;
-    color: #000;
-    background-color: #f5f4ed;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-    border: 1px solid #808074;
-    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-    pointer-events: none;
-    z-index: 5;
-  }
-`;
-
-const EmptyHeight = styled(Empty)`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 136px;
-`;
-
-const ButtonStyle = styled(Button)`
-  position: absolute;
-  z-index: 9999;
-  left: 47%;
-  top: 10px;
-`;
-
-const FlexContainer = styled.div`
-  display: flex;
-`;
 
 const GraphTab = ({ graph, pipeline }) => {
   const [nodePos, setNodePos] = useState(null);
+  const [zoomPos, setZoomPos] = useState(null);
+  const [selectNode, setSelectNode] = useState([
+    graph?.nodes[0]?.nodeName || '',
+  ]);
 
+  const isHierarchical = useRef(true);
+  const isPhysics = useRef(false);
+  const nodeSpacing = useRef(
+    parseInt(
+      window.localStorage.getItem(
+        LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_GRAPH_SLIDER
+      ),
+      10
+    ) || 150
+  );
+  // const nodeSpacingY = useRef(window.localStorage.getItem(LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_GRAPH_SLIDER)||300);
   const graphRef = useRef(null);
+  const [showGraph] = useReducer(p => !p, true);
+  const { node, events } = useNodeInfo({ graph, pipeline }); // events
 
   const normalizedPipeline = useMemo(
     () =>
@@ -93,21 +60,19 @@ const GraphTab = ({ graph, pipeline }) => {
       ),
     [pipeline]
   );
-  const adaptedGraph = useMemo(
-    () => ({
-      nodes: []
-        .concat(graph.nodes)
-        .filter(item => item)
-        .map(formatNode(normalizedPipeline, pipeline.kind, nodePos)),
-      edges: []
-        .concat(graph.edges)
-        .filter(item => item)
-        .map(formatEdge),
-    }),
-    [graph, normalizedPipeline, pipeline, nodePos]
-  );
+
+  const adaptedGraph = {
+    nodes: []
+      .concat(graph.nodes)
+      .filter(item => item)
+      .map(formatNode(normalizedPipeline, pipeline.kind, nodePos)),
+    edges: []
+      .concat(graph.edges)
+      .filter(item => item)
+      .map(formatEdge),
+  };
+
   const isValidGraph = adaptedGraph.nodes.length !== 0;
-  const { node, events } = useNodeInfo({ graph, pipeline }); // events
 
   // const { graphDirection: direction } = useSettings();
   const [graphDirection, setGraphDirection] = useState(
@@ -115,17 +80,15 @@ const GraphTab = ({ graph, pipeline }) => {
       LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_GRAPH_DIRECTION
     ) || GRAPH_DIRECTION.LeftToRight
   );
-  const [isHierarchical, setIsHierarchical] = useState(true);
 
-  const [showGraph, toggleForceUpdate] = useReducer(p => !p, true);
-
-  const graphOptions = useMemo(
-    () => ({
-      ...generateStyles({ direction: graphDirection, isHierarchical }),
-      height: '100px',
-    }),
-    [graphDirection, isHierarchical]
-  );
+  const graphOptions = {
+    ...generateStyles({
+      direction: graphDirection,
+      isHierarchical: isHierarchical.current,
+      nodeSpacing: nodeSpacing.current,
+    }), // ,nodeSpacingY:nodeSpacingY.current
+    height: '100px',
+  };
 
   const isDisabledBtnRunDebug = useMemo(() => {
     let res = false;
@@ -144,44 +107,176 @@ const GraphTab = ({ graph, pipeline }) => {
   }, [node, pipeline?.kind, pipeline.nodes]);
 
   const handleSelectDirection = useCallback(() => {
-    setIsHierarchical(true);
     const directionSelect =
       graphDirection !== GRAPH_DIRECTION.LeftToRight
         ? GRAPH_DIRECTION.LeftToRight
         : GRAPH_DIRECTION.UpToDown;
-    setGraphDirection(directionSelect);
+
     window.localStorage.setItem(
       LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_GRAPH_DIRECTION,
       directionSelect
     );
+
+    setNodePos(null);
+    setZoomPos(null);
+    setSelectNode([graph?.nodes[0]?.nodeName || '']);
+    isHierarchical.current = true;
+    isPhysics.current = false;
+
+    setGraphDirection(directionSelect);
   }, [graphDirection]);
 
-  const handleIsLockDrag = useCallback(() => {
-    if (isHierarchical) {
-      const network = graphRef?.current?.Network;
-      // const scale = network.getScale();
-      //  const viewPosition = network.getViewPosition();
+  const handleIsLockDrag = () => {
+    const network = graphRef?.current?.Network;
+    const scale = network.getScale();
+    const viewPosition = network.getViewPosition();
 
-      setNodePos({ nodesPostions: network?.getPositions() });
-      setIsHierarchical(false);
+    setNodePos({ nodesPostions: network?.getPositions() });
+    setZoomPos({ scale, position: viewPosition });
+  };
+
+  useEffect(() => {
+    const network = graphRef?.current?.Network || null;
+    console.log('network', network);
+    if (network) {
+      console.log('isHierarchical', isHierarchical);
+      if (isHierarchical.current) {
+        console.log('graphOptions', graphOptions);
+        console.log('adaptedGraph', adaptedGraph);
+        network.setOptions(graphOptions);
+        network.setData(adaptedGraph);
+        // setNodePos({ nodesPostions: network?.getPositions() });
+        handleIsLockDrag();
+        isHierarchical.current = false;
+      } else {
+        console.log('isPhysics.current', isPhysics.current);
+        if (!isPhysics.current) {
+          console.log('isPhysics graphOptions', graphOptions);
+          network.setOptions(graphOptions);
+          isPhysics.current = true;
+        }
+        console.log('isPhysics adaptedGraph', adaptedGraph);
+        network.setData(adaptedGraph);
+
+        if (zoomPos != null) {
+          network.moveTo(zoomPos);
+        }
+
+        network.setSelection({
+          nodes: [selectNode || ''],
+        });
+      }
     }
-  }, [isHierarchical]);
+  }, [
+    graph.timestamp,
+    graphDirection,
+    nodeSpacing.current,
+    isHierarchical.current,
+  ]); // ,nodeSpacingY.current
 
-  useEffect(() => {
-    toggleForceUpdate();
-    setTimeout(() => {
-      toggleForceUpdate();
-    }, 500);
-  }, [graphDirection, isHierarchical]);
+  /* const onChangeSliderY = useCallback((sliderSelect) => {
+  if (isNaN(sliderSelect)) {
+    return;
+  }
 
-  useEffect(() => {
-    setTimeout(() => {
-      graphRef?.current?.Network?.setSelection({
-        nodes: [graph?.nodes[0]?.nodeName || ''],
-      });
-    }, 500);
+  window.localStorage.setItem(
+    LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_GRAPH_SLIDER,
+    sliderSelect
+  );
+
+  setNodePos(null)
+  setZoomPos(null)
+  setSelectNode([graph?.nodes[0]?.nodeName || ''])
+  isHierarchical.current=true;
+  isPhysics.current=false;
+
+
+  nodeSpacingY.current = sliderSelect;
+
+*/
+  //-------------------------------------------------------------
+  /*
+const network = graphRef?.current?.Network || null;
+ network.setOptions({
+  physics: {
+    enabled: false,
+  },
+  layout: {
+    hierarchical: {
+      enabled: true,
+    // nodeSpacing: sliderSelect,
+     levelSeparation:sliderSelect,
+    }
+  }
+ });
+  nodeSpacing.current = sliderSelect;
+
+  // const scale = network.getScale();
+  // const viewPosition = network.getViewPosition();
+  isHierarchical.current=true;
+  isPhysics.current=false;
+  // setNodePos({ nodesPostions: network?.getPositions() });
+  // setZoomPos({scale: scale, position: viewPosition})
+
+  // handleIsLockDrag();
+  
+//-----------------------------------------
+}, []); */
+
+  const onChangeSlider = useCallback(sliderSelect => {
+    if (Number.isNaN(sliderSelect)) {
+      return;
+    }
+
+    window.localStorage.setItem(
+      LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_GRAPH_SLIDER,
+      sliderSelect
+    );
+
+    setNodePos(null);
+    setZoomPos(null);
+    setSelectNode([graph?.nodes[0]?.nodeName || '']);
+    isHierarchical.current = true;
+    isPhysics.current = false;
+
+    nodeSpacing.current = sliderSelect;
+
+    //-------------------------------------------------------------
+    /*
+const network = graphRef?.current?.Network || null;
+ network.setOptions({
+  physics: {
+    enabled: false,
+  },
+  layout: {
+    hierarchical: {
+      enabled: true,
+    // nodeSpacing: sliderSelect,
+     levelSeparation:sliderSelect,
+    }
+  }
+ });
+  nodeSpacing.current = sliderSelect;
+
+  // const scale = network.getScale();
+  // const viewPosition = network.getViewPosition();
+  isHierarchical.current=true;
+  isPhysics.current=false;
+  // setNodePos({ nodesPostions: network?.getPositions() });
+  // setZoomPos({scale: scale, position: viewPosition})
+
+  // handleIsLockDrag();
+  */
+    //-----------------------------------------
   }, []);
+  const onChangeSliderDebounce = useDebounceCallback(
+    onChangeSlider,
+    500,
+    false
+  );
 
+  // const onChangeSliderDebounceY = useDebounceCallback(onChangeSliderY,500, false);
+  console.log('adaptedGraph ===== ', adaptedGraph);
   return (
     <FlexContainer>
       <GraphContainer
@@ -190,6 +285,23 @@ const GraphTab = ({ graph, pipeline }) => {
           maxWidth: `100%`,
           flex: '1',
         }}>
+        <Slider
+          onChange={onChangeSliderDebounce}
+          defaultValue={nodeSpacing.current}
+          min={100}
+          max={600}
+          style={{
+            width: '300px',
+            position: 'absolute',
+            zIndex: '9999',
+            left: '25%',
+            top: '8px',
+          }}
+        />
+        {
+          // <Slider onChange={onChangeSliderDebounceY} defaultValue={nodeSpacingY.current} min={100} max={600} style={{width:"300px",position: "absolute",  zIndex: "9999",  left: "25%",  top: "20px"}} />
+        }
+
         <ButtonStyle
           onClick={handleSelectDirection}
           icon={
@@ -205,13 +317,24 @@ const GraphTab = ({ graph, pipeline }) => {
           showGraph ? (
             <Fallback>
               <Graph
-                graph={adaptedGraph}
-                options={graphOptions}
+                graph={{ nodes: [], edges: [] }}
+                options={{}}
                 events={events}
                 ref={graphRef}
                 getNetwork={network => {
-                  network.on('beforeDrawing', () => {
+                  network.on('dragEnd', () => {
                     handleIsLockDrag();
+                  });
+                  network.on('zoom', () => {
+                    const scale = network.getScale();
+                    const viewPosition = network.getViewPosition();
+
+                    setZoomPos({ scale, position: viewPosition });
+                  });
+                  network.on('selectNode', () => {
+                    const nodeSelected = network.getSelectedNodes();
+
+                    setSelectNode(nodeSelected);
                   });
                 }}
               />
@@ -245,6 +368,7 @@ GraphTab.propTypes = {
     nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
     edges: PropTypes.arrayOf(PropTypes.object).isRequired,
     jobId: PropTypes.string.isRequired,
+    timestamp: PropTypes.string.isRequired,
   }).isRequired,
 };
 
