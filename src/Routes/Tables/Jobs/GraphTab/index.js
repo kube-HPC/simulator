@@ -231,12 +231,21 @@ const network = graphRef?.current?.Network || null;
 
     setNodePos(null);
     setZoomPos(null);
+
     setSelectNode([graph?.nodes[0]?.nodeName || '']);
     isHierarchical.current = true;
     isPhysics.current = false;
 
     nodeSpacing.current = sliderSelect;
 
+    setTimeout(() => {
+      if (sliderSelect > 200) {
+        const network = graphRef?.current?.Network || null;
+        const viewPosition = network.getViewPosition();
+        setZoomPos({ scale: sliderSelect / 2000, position: viewPosition });
+        network.moveTo({ scale: sliderSelect / 2000, position: viewPosition });
+      }
+    }, 100);
     //-------------------------------------------------------------
     /*
 const network = graphRef?.current?.Network || null;
