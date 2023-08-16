@@ -137,25 +137,21 @@ const GraphTab = ({ graph, pipeline }) => {
 
   useEffect(() => {
     const network = graphRef?.current?.Network || null;
-    console.log('network', network);
+
     if (network) {
-      console.log('isHierarchical', isHierarchical);
+      console.log(isHierarchical.current);
       if (isHierarchical.current) {
-        console.log('graphOptions', graphOptions);
-        console.log('adaptedGraph', adaptedGraph);
         network.setOptions(graphOptions);
         network.setData(adaptedGraph);
         // setNodePos({ nodesPostions: network?.getPositions() });
         handleIsLockDrag();
         isHierarchical.current = false;
       } else {
-        console.log('isPhysics.current', isPhysics.current);
         if (!isPhysics.current) {
-          console.log('isPhysics graphOptions', graphOptions);
           network.setOptions(graphOptions);
           isPhysics.current = true;
         }
-        console.log('isPhysics adaptedGraph', adaptedGraph);
+
         network.setData(adaptedGraph);
 
         if (zoomPos != null) {
@@ -171,7 +167,7 @@ const GraphTab = ({ graph, pipeline }) => {
     graph.timestamp,
     graphDirection,
     nodeSpacing.current,
-    isHierarchical.current,
+    //   isHierarchical.current,
   ]); // ,nodeSpacingY.current
 
   /* const onChangeSliderY = useCallback((sliderSelect) => {
@@ -276,7 +272,7 @@ const network = graphRef?.current?.Network || null;
   );
 
   // const onChangeSliderDebounceY = useDebounceCallback(onChangeSliderY,500, false);
-  console.log('adaptedGraph ===== ', adaptedGraph);
+
   return (
     <FlexContainer>
       <GraphContainer
@@ -286,6 +282,7 @@ const network = graphRef?.current?.Network || null;
           flex: '1',
         }}>
         <Slider
+          tipFormatter={value => `Space between nodes: ${value}`}
           onChange={onChangeSliderDebounce}
           defaultValue={nodeSpacing.current}
           min={100}
@@ -294,7 +291,7 @@ const network = graphRef?.current?.Network || null;
             width: '300px',
             position: 'absolute',
             zIndex: '9999',
-            left: '25%',
+
             top: '8px',
           }}
         />
