@@ -251,7 +251,7 @@ const NodeLogs = ({ node, taskDetails }) => {
       <RadioGroupStyle>
         {!(isStatusFailedSchedulingTask || isStatusFailedScheduling) ? (
           <Row justify="start" align="middle">
-            <Col span={5}>
+            <Col span={7}>
               <Radio.Group
                 value={sourceLogs}
                 onChange={e => setSourceLogs(e.target.value)}
