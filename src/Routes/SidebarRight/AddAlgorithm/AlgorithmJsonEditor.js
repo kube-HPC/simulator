@@ -47,7 +47,7 @@ const AlgorithmJsonEditor = ({
     if (buildTypeSubmit.toLowerCase() === BUILD_TYPES.CODE.field) {
       const [file] = fileList;
 
-      if (!fileList.length && !isEdit) {
+      if (!isEdit && !srcJson.algorithmImage && !fileList.length) {
         notification({
           message: `Error`,
           description: `Please provide a file!`,
