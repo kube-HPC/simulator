@@ -44,14 +44,14 @@ const usePipeline = () => {
 
       message.success(
         <>
-          Pipeline started,{' '}
+          Pipeline started, see{' '}
           <ButtonLinkStyle type="link" onClick={gotoJobsTable}>
-            check Jobs table
+            jobs
           </ButtonLinkStyle>
         </>
       );
-    } catch (error) {
-      message.error(error.message);
+    } catch (res) {
+      message.error(res.response.data.error.message);
     }
   }, []);
 
