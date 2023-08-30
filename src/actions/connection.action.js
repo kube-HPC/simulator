@@ -21,6 +21,7 @@ export const init = () => ({
 
 export const connectionSetup = ({
   socketUrl,
+  socketDatasourcesUrl,
   boardUrl,
   hkubeSystemVersion,
   kibanaUrl,
@@ -31,6 +32,7 @@ export const connectionSetup = ({
   type: actions.CONNECTION_SETUP,
   payload: {
     socketUrl,
+    socketDatasourcesUrl,
     boardUrl,
     hkubeSystemVersion,
     kibanaUrl,

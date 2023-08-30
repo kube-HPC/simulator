@@ -1,3 +1,5 @@
+import { useSelector } from 'react-redux';
+import { selectors } from 'reducers';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { EditOutlined } from '@ant-design/icons';
@@ -40,6 +42,7 @@ const EditMode = ({
   onDownload,
   onDelete,
 }) => {
+  const { socketDatasourcesUrl } = useSelector(selectors.connection);
   const [form] = Form.useForm();
 
   const {
@@ -82,7 +85,7 @@ const EditMode = ({
     form
       .validateFields()
       .then(values =>
-        onCreateVersion({
+        onCreateVersion(socketDatasourcesUrl, {
           files: addedFiles,
           droppedFileIds: fileBrowserRef.current.getDeleteFiles(),
           mapping: fileBrowserRef.current.ls(),
@@ -90,7 +93,7 @@ const EditMode = ({
         })
       )
       .catch(null);
-  }, [fileBrowserRef, addedFiles, onCreateVersion, form]);
+  }, [fileBrowserRef, addedFiles, onCreateVersion, form, socketDatasourcesUrl]);
 
   useEffect(() => {
     setAddedFiles([]);

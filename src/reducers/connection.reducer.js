@@ -9,6 +9,7 @@ import { actionType } from 'const';
 
 const initialState = {
   socketUrl: null,
+  socketDatasourcesUrl: null,
   boardUrl: null,
   hkubeSystemVersion: null,
   kibanaUrl: null,
@@ -28,6 +29,7 @@ const connection = createSlice({
      * @param {{
      *   payload: {
      *     socketUrl?: string;
+     *     socketDatasourcesUrl?: string;
      *     boardUrl?: string;
      *     hkubeSystemVersion?: string;
      *     kibanaUrl?: string;

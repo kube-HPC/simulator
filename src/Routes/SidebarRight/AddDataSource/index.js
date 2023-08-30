@@ -28,6 +28,7 @@ const formItemLayout = {
 };
 
 const AddDataSource = () => {
+  const { socketDatasourcesUrl } = useSelector(selectors.connection);
   const [form] = Form.useForm();
   const context = useContext(ctx);
   const { validateFields } = form;
@@ -76,12 +77,14 @@ const AddDataSource = () => {
       };
 
       const prunedPayload = pruneObject(payload);
+
       actions.createDataSource(
         { files: addedFiles, ...prunedPayload },
-        { onSuccess: context.closeDrawer }
+        { onSuccess: context.closeDrawer },
+        socketDatasourcesUrl
       );
     });
-  }, [actions, validateFields, addedFiles, context]);
+  }, [actions, validateFields, addedFiles, context, socketDatasourcesUrl]);
 
   return (
     <Form

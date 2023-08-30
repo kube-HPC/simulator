@@ -139,7 +139,6 @@ const GraphTab = ({ graph, pipeline }) => {
     const network = graphRef?.current?.Network || null;
 
     if (network) {
-      console.log(isHierarchical.current);
       if (isHierarchical.current) {
         network.setOptions(graphOptions);
         network.setData(adaptedGraph);

@@ -70,7 +70,11 @@ export const deleteDataSource = (name, { onSuccess }) => ({
  * }} payload
  * @param {{ onSuccess: function }} meta
  */
-export const createDataSource = ({ files, ...fields }, { onSuccess }) => {
+export const createDataSource = (
+  { files, ...fields },
+  { onSuccess },
+  socketDatasourcesUrl
+) => {
   const formData = new FormData();
   Object.entries(fields).forEach(([key, value]) => {
     if (typeof value !== 'object') {
@@ -87,7 +91,7 @@ export const createDataSource = ({ files, ...fields }, { onSuccess }) => {
   return {
     type: actions.REST_REQ_POST_FORM,
     payload: {
-      url: 'datasource/',
+      url: `${socketDatasourcesUrl}/datasource/`,
       formData,
       actionType: actions.DATASOURCE_CREATE,
     },
@@ -113,6 +117,7 @@ export const createDataSource = ({ files, ...fields }, { onSuccess }) => {
  * @param {{ meta: function }} meta
  */
 export const postVersion = (
+  socketDatasourcesUrl,
   { dataSourceName, files, mapping, droppedFileIds = [], versionDescription },
   { onSuccess } = {}
 ) => {
@@ -143,7 +148,7 @@ export const postVersion = (
   return {
     type: actions.REST_REQ_POST_FORM,
     payload: {
-      url: `datasource/${dataSourceName}`,
+      url: `${socketDatasourcesUrl}/datasource/${dataSourceName}`,
       formData,
       actionType: actions.DATASOURCE_POST_VERSION,
     },

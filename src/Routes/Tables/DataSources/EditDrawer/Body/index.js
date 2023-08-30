@@ -58,9 +58,13 @@ const Body = ({ goTo, mode, dataSource }) => {
   );
   const [downloadHref, setDownloadHref] = useState(null);
   const onCreateVersion = useCallback(
-    ({ files, droppedFileIds, mapping, versionDescription }) => {
+    (
+      socketDatasourcesUrl,
+      { files, droppedFileIds, mapping, versionDescription }
+    ) => {
       dispatch(
         postVersion(
+          socketDatasourcesUrl,
           {
             dataSourceName: dataSource.name,
             files,
