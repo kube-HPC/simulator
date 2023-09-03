@@ -11,6 +11,11 @@ const setMonitorPath = monitorBackend =>
     : `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}${monitorBackend.path}${API_URL}`;
 // : `${monitorBackend.schema}${monitorBackend.host}${monitorBackend.path}${API_URL}`;
 
+const setDatasourcesPath = monitorBackend =>
+  monitorBackend.useLocation
+    ? `${window.location.origin}${monitorBackend.datasourcesPath}${API_URL}`
+    : `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}${monitorBackend.datasourcesPath}${API_URL}`;
+
 const setBoardPath = board =>
   board.useLocation
     ? `${window.location.origin}${board.path}`
@@ -75,6 +80,7 @@ const success = (dispatch, payload, action) => {
 };
 
 let SOCKET_URL = null;
+let SOCKET_DATASOURCES_URL = null;
 let BOARD_URL = null;
 
 const restMiddleware = ({ dispatch }) => next => action => {
@@ -89,10 +95,12 @@ const restMiddleware = ({ dispatch }) => next => action => {
       dataSourceIsEnable,
     } = action.payload.config;
     SOCKET_URL = setMonitorPath(monitorBackend);
+    SOCKET_DATASOURCES_URL = setDatasourcesPath(monitorBackend);
     BOARD_URL = setBoardPath(board);
     dispatch(
       actions.connectionSetup({
         socketUrl: SOCKET_URL,
+        socketDatasourcesUrl: SOCKET_DATASOURCES_URL,
         boardUrl: BOARD_URL,
         hkubeSystemVersion,
         kibanaUrl,

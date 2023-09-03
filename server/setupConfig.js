@@ -31,6 +31,8 @@ const monitorBackend = {
   host: process.env.API_SERVER_BACKEND_HOST || 'localhost',
   port: process.env.API_SERVER_BACKEND_PORT || '3000',
   path: process.env.API_SERVER_BACKEND_PATH || '',
+  datasourcesPath:
+    process.env.API_SERVER_BACKEND_DATASOURCES_SERVICE_PATH || '',
   // socketIoPath: process.env.MONITOR_BACKEND_PATH_SOCKETIO || '',
   schema: process.env.isSecure ? 'https://' : 'http://',
   hkubeSiteUrl: process.env.REACT_APP_SITEBASEURL || '',

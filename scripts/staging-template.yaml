@@ -25,6 +25,11 @@ spec:
                 configMapKeyRef:
                   key: API_SERVER_BACKEND_PATH
                   name: simulator-configmap
+            - name: API_SERVER_BACKEND_DATASOURCES_SERVICE_PATH
+              valueFrom:
+                configMapKeyRef:
+                  key: API_SERVER_BACKEND_DATASOURCES_SERVICE_PATH
+                  name: simulator-configmap
             - name: API_SERVER_BACKEND_USE_LOCATION
               valueFrom:
                 configMapKeyRef:
