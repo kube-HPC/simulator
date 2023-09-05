@@ -19,7 +19,7 @@ const Field = props => {
 };
 
 const AlgorithmNode = ({ id }) => {
-  const { isStreamingPipeline } = useWizardContext();
+  const { isStreamingPipeline, valuesState } = useWizardContext();
   const { algorithms: sortedAlgorithms } = useGetLists();
 
   const rootId = ['nodes', id];
@@ -42,6 +42,29 @@ const AlgorithmNode = ({ id }) => {
           </Radio.Group>
         </Field>
       )}
+
+      {isStreamingPipeline &&
+        valuesState?.nodes[id]?.stateType === 'stateless' && (
+          <>
+            <Field
+              inline={false}
+              title="Min Count"
+              name={['minStatelessCount']}
+              initialValue={0}
+              skipValidation>
+              <InputNumber min={0} />
+            </Field>
+            <Field
+              inline={false}
+              title="Max Count"
+              name={['maxStatelessCount']}
+              initialValue={0}
+              skipValidation>
+              <InputNumber min={0} />
+            </Field>
+          </>
+        )}
+
       <Divider>Inputs</Divider>
       <Controller
         placeholder="Input"

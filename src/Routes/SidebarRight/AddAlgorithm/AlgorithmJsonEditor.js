@@ -73,6 +73,10 @@ const AlgorithmJsonEditor = ({
       predicate: isNotEmpty,
     });
 
+    if (payloadFiltered.nodeSelector && payload.nodeSelector) {
+      payloadFiltered.nodeSelector = payload.nodeSelector;
+    }
+
     formData.append(`payload`, stringify(payloadFiltered));
     onWizardSubmit({ formData });
   };
