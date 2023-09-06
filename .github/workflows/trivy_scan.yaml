@@ -26,16 +26,16 @@ jobs:
           wget https://github.com/aquasecurity/trivy/releases/download/v0.43.0/trivy_0.43.0_Linux-64bit.deb
           sudo dpkg -i trivy_0.43.0_Linux-64bit.deb
 
-      - name: Run Trivy license scan on filesystem
+      - name: Run Trivy license scan on repo
         run: trivy fs /home/runner/work --scanners license --license-full --severity 'HIGH,CRITICAL' > trivy_license_filesystem.txt
 
-      - name: Run Trivy vulnerability scanner on the repo
+      - name: Run Trivy vulnerability scanner on repo
         run: trivy fs /home/runner/work --severity 'HIGH,CRITICAL' > trivy_vuln_filesystem.txt
 
       - name: Run Trivy license scan on image
         run: trivy image --scanners license --license-full --severity 'HIGH,CRITICAL' '${{ inputs.image-ref }}' > trivy_license_image.txt
 
-      - name: Run Trivy vulnerability scanner on the repo
+      - name: Run Trivy vulnerability scanner on image
         run: trivy image --severity 'HIGH,CRITICAL' '${{ inputs.image-ref }}'> trivy_vuln_image.txt
 
       - name: Create branch for scan results
