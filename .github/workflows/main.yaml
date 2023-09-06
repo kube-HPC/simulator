@@ -31,7 +31,6 @@ jobs:
           node-version: 14.x
       - run: npm ci
       - run: NODE_ENV=test npm run-script test-travis
-      - run: npm i -g @microsoft/sarif-multitool
       - name: version
         run: |
           git checkout -f -b version-branch
