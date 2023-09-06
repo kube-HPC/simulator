@@ -54,14 +54,14 @@ jobs:
       - name: Run Trivy license scan on repo
         run: trivy fs /home/runner/work --scanners license --license-full --severity 'HIGH,CRITICAL' > trivy_license_filesystem.txt
 
-      - name: Run Trivy vulnerability scanner on the repo
+      - name: Run Trivy vulnerability scanner on repo
         run: trivy fs /home/runner/work --severity 'HIGH,CRITICAL' --format sarif  --output trivy_vuln_filesystem.sarif
 
       - name: Run Trivy license scan on image
-        run: trivy image --scanners license --license-full --severity 'HIGH,CRITICAL' '${{ inputs.image-ref }}' > trivy_license_image.txt
+        run: trivy image --scanners license --license-full --severity 'HIGH,CRITICAL' '${{ env.IMAGE_NAME }}' > trivy_license_image.txt
 
-      - name: Run Trivy vulnerability scanner on the image
-        run: trivy image --severity 'HIGH,CRITICAL' --format sarif  --output trivy_vuln_image.sarif '${{ inputs.image-ref }}'
+      - name: Run Trivy vulnerability scanner on image
+        run: trivy image --severity 'HIGH,CRITICAL' --format sarif  --output trivy_vuln_image.sarif '${{ env.IMAGE_NAME }}'
 
       - name: Upload Trivy image vulnerability results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
