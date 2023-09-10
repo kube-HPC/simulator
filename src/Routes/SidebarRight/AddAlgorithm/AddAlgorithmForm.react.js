@@ -218,13 +218,17 @@ const AddAlgorithmForm = ({
         formData.append(`file`, file);
       }
 
-      const payloadFiltered = mapObjValues({
-        obj: payload,
-        predicate: isNotEmpty,
-      });
+      if (payload.option) {
+        const payloadFilteredOption = mapObjValues({
+          obj: payload.option,
+          predicate: isNotEmpty,
+        });
 
-      formData.append(`payload`, stringify(payloadFiltered));
-      onSubmit({ formData, payload: payloadFiltered });
+        payload.option = payloadFilteredOption;
+      }
+
+      formData.append(`payload`, stringify(payload));
+      onSubmit({ formData, payload });
     });
   };
   // #endregion

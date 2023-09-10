@@ -31,6 +31,12 @@ export const Body = styled.div`
 export const ButtonRun = styled(Button)`
   margin-left: 20px;
 `;
+export const ButtonSticky = styled(Button)`
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
+  margin-right: 5px;
+`;
 
 const stepNames = ['Initial', 'Nodes', 'Options'];
 const RunPipelineStepNames = ['Initial', 'Options', 'Nodes Info'];
@@ -173,7 +179,7 @@ const Wizard = ({
           collapsed={undefined}
           style={{ flex: 1 }}
         />
-        <PanelButton onClick={handleToggle}>Text editor</PanelButton>
+        <ButtonSticky onClick={handleToggle}>Text editor</ButtonSticky>
       </Body>
 
       <BottomPanel>

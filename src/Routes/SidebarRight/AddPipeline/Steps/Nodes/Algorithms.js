@@ -1,9 +1,9 @@
 import React, { createContext, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { InputNumber, Switch, Radio, AutoComplete } from 'antd';
-
 import { Form as CommonForm } from 'components/common';
 import { useGetLists } from 'hooks/graphql';
+import InputNumberSwitch from './inputNumberSwitch';
 import Controller from './InputParseJson';
 import useWizardContext from '../../useWizardContext';
 import { Field as RawField } from './../FormUtils';
@@ -19,7 +19,7 @@ const Field = props => {
 };
 
 const AlgorithmNode = ({ id }) => {
-  const { isStreamingPipeline } = useWizardContext();
+  const { isStreamingPipeline, valuesState } = useWizardContext();
   const { algorithms: sortedAlgorithms } = useGetLists();
 
   const rootId = ['nodes', id];
@@ -42,6 +42,29 @@ const AlgorithmNode = ({ id }) => {
           </Radio.Group>
         </Field>
       )}
+
+      {isStreamingPipeline &&
+        valuesState?.nodes[id]?.stateType === 'stateless' && (
+          <Collapsible title="Stateless Counts">
+            <Field
+              inline={false}
+              title="Min"
+              name={['minStatelessCount']}
+              initialValue={0}
+              skipValidation>
+              <InputNumber min={0} />
+            </Field>
+            <Field
+              inline={false}
+              title="Max"
+              name={['maxStatelessCount']}
+              initialValue={0}
+              skipValidation>
+              <InputNumberSwitch />
+            </Field>
+          </Collapsible>
+        )}
+
       <Divider>Inputs</Divider>
       <Controller
         placeholder="Input"
