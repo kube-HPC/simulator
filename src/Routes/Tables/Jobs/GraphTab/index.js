@@ -31,14 +31,18 @@ const GRAPH_DIRECTION = {
 };
 
 const GraphTab = ({ graph, pipeline }) => {
-  const [nodePos, setNodePos] = useState(null);
-  const [zoomPos, setZoomPos] = useState(null);
+  // const [nodePos, setNodePos] = useState(null);
+  // const [zoomPos, setZoomPos] = useState(null);
   const [selectNode, setSelectNode] = useState([
     graph?.nodes[0]?.nodeName || '',
   ]);
 
   const isHierarchical = useRef(true);
   const isPhysics = useRef(false);
+  const nodePos = useRef(null);
+  const zoomPos = useRef(null);
+
+  const isSlider = useRef(false);
   const nodeSpacing = useRef(
     parseInt(
       window.localStorage.getItem(
@@ -61,18 +65,22 @@ const GraphTab = ({ graph, pipeline }) => {
     [pipeline]
   );
 
-  const adaptedGraph = {
-    nodes: []
-      .concat(graph.nodes)
-      .filter(item => item)
-      .map(formatNode(normalizedPipeline, pipeline.kind, nodePos)),
-    edges: []
-      .concat(graph.edges)
-      .filter(item => item)
-      .map(formatEdge),
-  };
+  const adaptedGraph = useCallback(() => {
+    const res = {
+      nodes: []
+        .concat(graph.nodes)
+        .filter(item => item)
+        .map(formatNode(normalizedPipeline, pipeline.kind, nodePos.current)),
+      edges: []
+        .concat(graph.edges)
+        .filter(item => item)
+        .map(formatEdge),
+    };
 
-  const isValidGraph = adaptedGraph.nodes.length !== 0;
+    return res;
+  }, [graph.edges, graph.nodes, normalizedPipeline, pipeline.kind]);
+
+  const isValidGraph = adaptedGraph().nodes.length !== 0;
 
   // const { graphDirection: direction } = useSettings();
   const [graphDirection, setGraphDirection] = useState(
@@ -81,14 +89,17 @@ const GraphTab = ({ graph, pipeline }) => {
     ) || GRAPH_DIRECTION.LeftToRight
   );
 
-  const graphOptions = {
-    ...generateStyles({
-      direction: graphDirection,
-      isHierarchical: isHierarchical.current,
-      nodeSpacing: nodeSpacing.current,
-    }), // ,nodeSpacingY:nodeSpacingY.current
-    height: '100px',
-  };
+  const graphOptions = useCallback(
+    () => ({
+      ...generateStyles({
+        direction: graphDirection,
+        isHierarchical: isHierarchical.current,
+        nodeSpacing: nodeSpacing.current,
+      }),
+      height: '100px',
+    }),
+    [graphDirection]
+  );
 
   const isDisabledBtnRunDebug = useMemo(() => {
     let res = false;
@@ -97,7 +108,7 @@ const GraphTab = ({ graph, pipeline }) => {
     if (
       pipeline?.kind === 'stream' ||
       (node &&
-        node !== {} &&
+        Object.keys(node).length === 0 &&
         (node?.kind !== 'algorithm' || !nodesNames.includes(node?.nodeName)))
     ) {
       res = true;
@@ -117,44 +128,57 @@ const GraphTab = ({ graph, pipeline }) => {
       directionSelect
     );
 
-    setNodePos(null);
-    setZoomPos(null);
+    nodePos.current = null;
+    zoomPos.current = null;
     setSelectNode([graph?.nodes[0]?.nodeName || '']);
     isHierarchical.current = true;
     isPhysics.current = false;
 
     setGraphDirection(directionSelect);
-  }, [graphDirection]);
+  }, [graph?.nodes, graphDirection]);
 
   const handleIsLockDrag = () => {
     const network = graphRef?.current?.Network;
     const scale = network.getScale();
     const viewPosition = network.getViewPosition();
 
-    setNodePos({ nodesPostions: network?.getPositions() });
-    setZoomPos({ scale, position: viewPosition });
+    nodePos.current = { nodesPostions: network?.getPositions() };
+    zoomPos.current = { scale, position: viewPosition };
   };
 
-  useEffect(() => {
+  const graphCalculations = useCallback(() => {
     const network = graphRef?.current?.Network || null;
 
     if (network) {
       if (isHierarchical.current) {
-        network.setOptions(graphOptions);
-        network.setData(adaptedGraph);
-        // setNodePos({ nodesPostions: network?.getPositions() });
+        network.setOptions(graphOptions());
+
+        network.setData(adaptedGraph());
+
         handleIsLockDrag();
-        isHierarchical.current = false;
+
+        if (
+          adaptedGraph()?.nodes.length > 10 &&
+          adaptedGraph()?.nodes[0]?.x != null
+        ) {
+          isHierarchical.current = false;
+        }
       } else {
         if (!isPhysics.current) {
-          network.setOptions(graphOptions);
+          network.setOptions(graphOptions());
           isPhysics.current = true;
         }
 
-        network.setData(adaptedGraph);
+        network.setData(adaptedGraph());
 
-        if (zoomPos != null) {
-          network.moveTo(zoomPos);
+        if (zoomPos.current != null) {
+          if (isSlider.current) {
+            const scaleSave = zoomPos.current.scale;
+            zoomPos.current.scale = scaleSave * (nodeSpacing.current / 200);
+            isSlider.current = false;
+          }
+
+          network.moveTo(zoomPos.current);
         }
 
         network.setSelection({
@@ -162,124 +186,43 @@ const GraphTab = ({ graph, pipeline }) => {
         });
       }
     }
-  }, [
-    graph.timestamp,
-    graphDirection,
-    nodeSpacing.current,
-    //   isHierarchical.current,
-  ]); // ,nodeSpacingY.current
+  }, [adaptedGraph, graphOptions, selectNode]);
 
-  /* const onChangeSliderY = useCallback((sliderSelect) => {
-  if (isNaN(sliderSelect)) {
-    return;
-  }
-
-  window.localStorage.setItem(
-    LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_GRAPH_SLIDER,
-    sliderSelect
-  );
-
-  setNodePos(null)
-  setZoomPos(null)
-  setSelectNode([graph?.nodes[0]?.nodeName || ''])
-  isHierarchical.current=true;
-  isPhysics.current=false;
-
-
-  nodeSpacingY.current = sliderSelect;
-
-*/
-  //-------------------------------------------------------------
-  /*
-const network = graphRef?.current?.Network || null;
- network.setOptions({
-  physics: {
-    enabled: false,
-  },
-  layout: {
-    hierarchical: {
-      enabled: true,
-    // nodeSpacing: sliderSelect,
-     levelSeparation:sliderSelect,
-    }
-  }
- });
-  nodeSpacing.current = sliderSelect;
-
-  // const scale = network.getScale();
-  // const viewPosition = network.getViewPosition();
-  isHierarchical.current=true;
-  isPhysics.current=false;
-  // setNodePos({ nodesPostions: network?.getPositions() });
-  // setZoomPos({scale: scale, position: viewPosition})
-
-  // handleIsLockDrag();
-  
-//-----------------------------------------
-}, []); */
-
-  const onChangeSlider = useCallback(sliderSelect => {
-    if (Number.isNaN(sliderSelect)) {
-      return;
-    }
-
-    window.localStorage.setItem(
-      LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_GRAPH_SLIDER,
-      sliderSelect
-    );
-
-    setNodePos(null);
-    setZoomPos(null);
-
-    setSelectNode([graph?.nodes[0]?.nodeName || '']);
-    isHierarchical.current = true;
-    isPhysics.current = false;
-
-    nodeSpacing.current = sliderSelect;
-
-    setTimeout(() => {
-      if (sliderSelect > 200) {
-        const network = graphRef?.current?.Network || null;
-        const viewPosition = network.getViewPosition();
-        setZoomPos({ scale: sliderSelect / 2000, position: viewPosition });
-        network.moveTo({ scale: sliderSelect / 2000, position: viewPosition });
+  const onChangeSlider = useCallback(
+    sliderSelect => {
+      if (Number.isNaN(sliderSelect)) {
+        return;
       }
-    }, 100);
-    //-------------------------------------------------------------
-    /*
-const network = graphRef?.current?.Network || null;
- network.setOptions({
-  physics: {
-    enabled: false,
-  },
-  layout: {
-    hierarchical: {
-      enabled: true,
-    // nodeSpacing: sliderSelect,
-     levelSeparation:sliderSelect,
-    }
-  }
- });
-  nodeSpacing.current = sliderSelect;
 
-  // const scale = network.getScale();
-  // const viewPosition = network.getViewPosition();
-  isHierarchical.current=true;
-  isPhysics.current=false;
-  // setNodePos({ nodesPostions: network?.getPositions() });
-  // setZoomPos({scale: scale, position: viewPosition})
+      window.localStorage.setItem(
+        LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_GRAPH_SLIDER,
+        sliderSelect
+      );
+      isSlider.current = true;
+      nodePos.current = null;
+      zoomPos.current = null;
 
-  // handleIsLockDrag();
-  */
-    //-----------------------------------------
-  }, []);
+      isHierarchical.current = true;
+      isPhysics.current = false;
+
+      nodeSpacing.current = sliderSelect;
+
+      graphCalculations();
+      setTimeout(() => {
+        graphCalculations();
+      }, 1);
+    },
+    [graphCalculations]
+  );
   const onChangeSliderDebounce = useDebounceCallback(
     onChangeSlider,
     500,
     false
   );
 
-  // const onChangeSliderDebounceY = useDebounceCallback(onChangeSliderY,500, false);
+  useEffect(() => {
+    graphCalculations();
+  }, [graph.timestamp, graphCalculations]);
 
   return (
     <FlexContainer>
@@ -334,7 +277,8 @@ const network = graphRef?.current?.Network || null;
                     const scale = network.getScale();
                     const viewPosition = network.getViewPosition();
 
-                    setZoomPos({ scale, position: viewPosition });
+                    zoomPos.current = { scale, position: viewPosition };
+                    // setZoomPos({ scale, position: viewPosition });
                   });
                   network.on('selectNode', () => {
                     const nodeSelected = network.getSelectedNodes();
