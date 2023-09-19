@@ -75,18 +75,33 @@ jobs:
           sarif_file: 'trivy_vuln_filesystem.sarif'
           category: 'Trivy-Vulnerability-Repo'
 
-      - name: Create branch for scan results
+      - name: Update a branch with scan results
         run: |
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
-          git checkout -b trivy-scan-results
+
+          existed_in_remote=$(git ls-remote --heads origin trivy-scan-results)
+          if [[ ${existed_in_remote} ]]; then
+            echo "branch exists in remote"
+            git fetch origin trivy-scan-results
+            echo "branch fetched"
+            git checkout trivy-scan-results
+            echo "origin branch swapped"
+          else
+            git checkout -b trivy-scan-results
+            echo "new branch swapped"
+          fi
+
           mkdir -p TrivyScans
+          TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
+          echo "$TIMESTAMP" > ScanTimeStamp.txt
+          cp ScanTimeStamp.txt TrivyScans/
           cp trivy_license_filesystem.txt TrivyScans/
           cp trivy_license_image.txt TrivyScans/
           git add TrivyScans/trivy_license_filesystem.txt
-          git add TrivyScans/trivy_license_image.txt
-          git commit -m "Add files to a specific folder"
-          git push --force origin trivy-scan-results
+          git add TrivyScans/ScanTimeStamp.txt
+          git commit -m "Add trivy scan result files to the folder 'TrivyScans'"
+          git push origin trivy-scan-results
 
       - name: Display branch and file path link
         run: echo "Results uploaded to [trivy-scan-results branch](https://github.com/$GITHUB_REPOSITORY/tree/trivy-scan-results/TrivyScans/)"
