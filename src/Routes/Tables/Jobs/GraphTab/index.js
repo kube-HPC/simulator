@@ -33,6 +33,9 @@ const GRAPH_DIRECTION = {
 const GraphTab = ({ graph, pipeline }) => {
   // const [nodePos, setNodePos] = useState(null);
   // const [zoomPos, setZoomPos] = useState(null);
+
+  const [nodeSpacingInit] = useState(graph?.nodes.length > 10 ? 50 : 150);
+
   const [selectNode, setSelectNode] = useState([
     graph?.nodes[0]?.nodeName || '',
   ]);
@@ -41,15 +44,17 @@ const GraphTab = ({ graph, pipeline }) => {
   const isPhysics = useRef(false);
   const nodePos = useRef(null);
   const zoomPos = useRef(null);
+  const zoomSavePos = useRef(null);
 
   const isSlider = useRef(false);
   const nodeSpacing = useRef(
-    parseInt(
-      window.localStorage.getItem(
-        LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_GRAPH_SLIDER
-      ),
-      10
-    ) || 150
+    nodeSpacingInit
+    //  parseInt(
+    //    window.localStorage.getItem(
+    //      LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_GRAPH_SLIDER
+    //    ),
+    //    10
+    //   ) || 150
   );
   // const nodeSpacingY = useRef(window.localStorage.getItem(LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_GRAPH_SLIDER)||300);
   const graphRef = useRef(null);
@@ -94,7 +99,7 @@ const GraphTab = ({ graph, pipeline }) => {
       ...generateStyles({
         direction: graphDirection,
         isHierarchical: isHierarchical.current,
-        nodeSpacing: nodeSpacing.current,
+        nodeSpacing: (nodeSpacing.current / 3) * 2,
       }),
       height: '100px',
     }),
@@ -141,7 +146,7 @@ const GraphTab = ({ graph, pipeline }) => {
     const network = graphRef?.current?.Network;
     const scale = network.getScale();
     const viewPosition = network.getViewPosition();
-
+    console.log('network.getScale()', network.getScale());
     nodePos.current = { nodesPostions: network?.getPositions() };
     zoomPos.current = { scale, position: viewPosition };
   };
@@ -167,15 +172,24 @@ const GraphTab = ({ graph, pipeline }) => {
         if (!isPhysics.current) {
           network.setOptions(graphOptions());
           isPhysics.current = true;
+          //     console.log('isPhysics.current', isPhysics.current);
         }
 
         network.setData(adaptedGraph());
+        // && nodeSpacing.current > 100
 
         if (zoomPos.current != null) {
           if (isSlider.current) {
-            const scaleSave = zoomPos.current.scale;
-            zoomPos.current.scale = scaleSave * (nodeSpacing.current / 200);
+            const a = nodeSpacing.current / nodeSpacingInit;
+            console.log('a', a);
+            console.log('zoomSavePos.current.scale', zoomSavePos.current.scale);
+            const scaleSave = a * zoomSavePos.current.scale;
+            //  console.log('scaleSave zoomPos', zoomPos);
+            zoomPos.current.scale = scaleSave;
             isSlider.current = false;
+          } else {
+            zoomSavePos.current = zoomPos.current;
+            //    console.log('zoomSavePos.current', zoomSavePos.current);
           }
 
           network.moveTo(zoomPos.current);
@@ -222,6 +236,9 @@ const GraphTab = ({ graph, pipeline }) => {
 
   useEffect(() => {
     graphCalculations();
+    setTimeout(() => {
+      graphCalculations();
+    }, 1);
   }, [graph.timestamp, graphCalculations]);
 
   return (
@@ -236,7 +253,7 @@ const GraphTab = ({ graph, pipeline }) => {
           tipFormatter={value => `Space between nodes: ${value}`}
           onChange={onChangeSliderDebounce}
           defaultValue={nodeSpacing.current}
-          min={100}
+          min={nodeSpacingInit}
           max={600}
           style={{
             width: '300px',
