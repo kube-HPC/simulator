@@ -1,0 +1,75 @@
+name: TRIVY-SCAN
+
+# Controls when the action will run.
+on:
+  workflow_dispatch:
+    inputs:
+      image-ref:
+        description: Full docker image path (e.g. docker.io/hkube/simulator:v1.2.3)
+        required: true
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  scan_and_branch:
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - run: |
+          npm ci
+      - name: Install Trivy
+        run: |
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.43.0/trivy_0.43.0_Linux-64bit.deb
+          sudo dpkg -i trivy_0.43.0_Linux-64bit.deb
+
+      - name: Run Trivy license scan on repo
+        run: trivy fs /home/runner/work --scanners license --license-full --severity 'HIGH,CRITICAL' > trivy_license_filesystem.txt
+
+      - name: Run Trivy vulnerability scanner on repo
+        run: trivy fs /home/runner/work --severity 'HIGH,CRITICAL' > trivy_vuln_filesystem.txt
+
+      - name: Run Trivy license scan on image
+        run: trivy image --scanners license --license-full --severity 'HIGH,CRITICAL' '${{ inputs.image-ref }}' > trivy_license_image.txt
+
+      - name: Run Trivy vulnerability scanner on image
+        run: trivy image --severity 'HIGH,CRITICAL' '${{ inputs.image-ref }}'> trivy_vuln_image.txt
+
+      - name: Update a branch with scan results
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+
+          existed_in_remote=$(git ls-remote --heads origin trivy-scan-results)
+          if [[ ${existed_in_remote} ]]; then
+            echo "branch exists in remote"
+            git fetch origin trivy-scan-results
+            echo "branch fetched"
+            git checkout trivy-scan-results
+            echo "origin branch swapped"
+          else
+            git checkout -b trivy-scan-results
+            echo "new branch swapped"
+          fi
+
+          mkdir -p TrivyScans
+          TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
+          echo "$TIMESTAMP" > ScanTimeStamp.txt
+          cp ScanTimeStamp.txt TrivyScans/
+          cp trivy_license_filesystem.txt TrivyScans/
+          cp trivy_vuln_filesystem.txt TrivyScans/
+          cp trivy_license_image.txt TrivyScans/
+          cp trivy_vuln_image.txt TrivyScans/
+          git add TrivyScans/trivy_license_filesystem.txt
+          git add TrivyScans/trivy_vuln_filesystem.txt
+          git add TrivyScans/trivy_license_image.txt
+          git add TrivyScans/trivy_vuln_image.txt
+          git add TrivyScans/ScanTimeStamp.txt
+          git commit -m "Add trivy scan result files to the folder 'TrivyScans'"
+          git push origin trivy-scan-results
+
+      - name: Display branch and file path link
+        run: echo "Results uploaded to [trivy-scan-results branch](https://github.com/$GITHUB_REPOSITORY/tree/trivy-scan-results/TrivyScans/)"
