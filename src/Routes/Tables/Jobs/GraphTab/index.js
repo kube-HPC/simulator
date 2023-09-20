@@ -146,7 +146,6 @@ const GraphTab = ({ graph, pipeline }) => {
     const network = graphRef?.current?.Network;
     const scale = network.getScale();
     const viewPosition = network.getViewPosition();
-    console.log('network.getScale()', network.getScale());
     nodePos.current = { nodesPostions: network?.getPositions() };
     zoomPos.current = { scale, position: viewPosition };
   };
@@ -172,24 +171,19 @@ const GraphTab = ({ graph, pipeline }) => {
         if (!isPhysics.current) {
           network.setOptions(graphOptions());
           isPhysics.current = true;
-          //     console.log('isPhysics.current', isPhysics.current);
         }
 
         network.setData(adaptedGraph());
-        // && nodeSpacing.current > 100
 
         if (zoomPos.current != null) {
           if (isSlider.current) {
             const a = nodeSpacing.current / nodeSpacingInit;
-            console.log('a', a);
-            console.log('zoomSavePos.current.scale', zoomSavePos.current.scale);
             const scaleSave = a * zoomSavePos.current.scale;
-            //  console.log('scaleSave zoomPos', zoomPos);
+
             zoomPos.current.scale = scaleSave;
             isSlider.current = false;
           } else {
             zoomSavePos.current = zoomPos.current;
-            //    console.log('zoomSavePos.current', zoomSavePos.current);
           }
 
           network.moveTo(zoomPos.current);
@@ -200,7 +194,7 @@ const GraphTab = ({ graph, pipeline }) => {
         });
       }
     }
-  }, [adaptedGraph, graphOptions, selectNode]);
+  }, [adaptedGraph, graphOptions, nodeSpacingInit, selectNode]);
 
   const onChangeSlider = useCallback(
     sliderSelect => {
