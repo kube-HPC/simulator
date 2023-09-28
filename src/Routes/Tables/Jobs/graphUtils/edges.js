@@ -24,7 +24,9 @@ export const formatEdge = edge => {
   const [group] = value?.types ?? [];
   const { metrics } = value || {};
   const _edge = {
-    id: `${edge.from}->${edge.to}`,
+    id: edge.from
+      ? `${edge.from}->${edge.to}`
+      : `${edge.source}->${edge.source}`,
     dashes: group === 'waitAny' || group === 'AlgorithmExecution',
   };
   let styles = {};

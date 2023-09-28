@@ -45,7 +45,7 @@ const groups = {
 /** @returns {import('vis').Options} */
 export default ({
   direction,
-  isHierarchical,
+  isHierarchical = true,
   nodeSpacing = 350,
   isMinified = false,
 }) => ({
