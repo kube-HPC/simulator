@@ -154,31 +154,33 @@ const GraphTab = ({ graph, pipeline }) => {
     const network = graphRef?.current?.Network || null;
 
     if (network) {
+      const adaptedGraphData = adaptedGraph();
+      const graphOptionsData = graphOptions();
       if (isHierarchical.current) {
-        network.setOptions(graphOptions());
+        network.setOptions(graphOptionsData);
 
-        network.setData(adaptedGraph());
+        network.setData(adaptedGraphData);
 
         handleIsLockDrag();
 
         if (
-          adaptedGraph()?.nodes.length > 10 &&
-          adaptedGraph()?.nodes[0]?.x != null
+          adaptedGraphData?.nodes.length > 10 &&
+          adaptedGraphData?.nodes[0]?.x != null
         ) {
           isHierarchical.current = false;
         }
       } else {
         if (!isPhysics.current) {
-          network.setOptions(graphOptions());
+          network.setOptions(graphOptionsData);
           isPhysics.current = true;
         }
 
-        network.setData(adaptedGraph());
+        network.setData(adaptedGraphData);
 
         if (zoomPos.current != null) {
           if (isSlider.current) {
             const a = nodeSpacing.current / nodeSpacingInit;
-            const scaleSave = a * zoomSavePos.current.scale;
+            const scaleSave = a * zoomSavePos.current?.scale;
 
             zoomPos.current.scale = scaleSave;
             isSlider.current = false;

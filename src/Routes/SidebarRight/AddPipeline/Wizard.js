@@ -100,9 +100,9 @@ const Wizard = ({
   }, [persistForm, toggle]);
 
   // check for undefined to avoid removing streaming only fields while initial load
-  const isStreamingPipeline = ['stream', undefined].includes(
-    getFieldValue('kind')
-  );
+
+  const isStreamingPipeline =
+    ['stream'].includes(getFieldValue('kind')) || valuesState.kind === 'stream';
 
   const isLastStep = stepIdx === steps.length - 1;
 
@@ -157,6 +157,7 @@ const Wizard = ({
           <context.Provider
             value={{
               form,
+              stepIdx,
               initialState,
               isStreamingPipeline,
               isEdit,

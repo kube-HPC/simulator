@@ -1,28 +1,37 @@
 import React, { lazy, useState, useEffect, useMemo, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Empty } from 'antd';
+import { Alert } from 'antd';
 import { Fallback, FallbackComponent } from 'components/common';
 // import { useNodeInfo, useSettings } from 'hooks';
+import { useSelector } from 'react-redux';
+import { selectors } from 'reducers';
+import useWizardContext from 'Routes/SidebarRight/AddPipeline/useWizardContext';
 import { generateStyles, formatEdge, formatNode } from '../graphUtils';
+
+const GraphContainer = styled.div`
+  max-width: 40vw;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
+  padding: 10px;
+`;
 
 const Graph = lazy(() => import(`react-graph-vis`));
 
-const GraphContainer = styled.div`
-  pointer-events: none;
-  max-width: 40vw;
-`;
+const GraphPreview = ({ pipeline, keyIndex, isBuildAllFlows }) => {
+  const { valuesState, stepIdx, isStreamingPipeline } = useWizardContext();
 
-const EmptyHeight = styled(Empty)`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 136px; // TODO: get rid of this
-`;
+  const keyFlow =
+    keyIndex && pipeline?.streaming?.flows
+      ? Object.keys(pipeline?.streaming?.flows)[keyIndex]
+      : valuesState?.streaming?.defaultFlow
+      ? valuesState?.streaming?.defaultFlow
+      : null;
 
-const GraphPreview = ({ pipeline }) => {
-  const [graphPreview] = useState({ nodes: [], edges: [] });
+  const { backendApiUrl } = useSelector(selectors.config);
+  const [graphPreview, setGraphPreview] = useState({ nodes: [], edges: [] });
+  const [errorGraph, setErrorGraph] = useState('');
 
   const normalizedPipeline = useMemo(
     () =>
@@ -33,10 +42,8 @@ const GraphPreview = ({ pipeline }) => {
     [pipeline]
   );
 
-  const adaptedGraph = useMemo(() => {
-    console.log('graphPreview 1.', graphPreview);
-
-    return {
+  const adaptedGraph = useMemo(
+    () => ({
       nodes: []
         .concat(graphPreview?.nodes)
         .filter(item => item)
@@ -45,15 +52,14 @@ const GraphPreview = ({ pipeline }) => {
         .concat(graphPreview?.edges)
         .filter(item => item)
         .map(formatEdge),
-    };
-  }, [graphPreview, normalizedPipeline, pipeline?.kind]);
-  console.log('adaptedGraph 2.', adaptedGraph);
-  const isValidGraph = adaptedGraph.nodes.length !== 0;
+    }),
+    [graphPreview, normalizedPipeline, pipeline?.kind]
+  );
 
   // const { events } = useNodeInfo({ graph, pipeline });
   // const { graphDirection: direction } = useSettings();
 
-  const [showGraph] = useReducer(p => !p, true); // toggleForceUpdate
+  const [showGraph, toggleForceUpdate] = useReducer(p => !p, true); // toggleForceUpdate
 
   useEffect(() => {
     //  toggleForceUpdate();
@@ -63,25 +69,156 @@ const GraphPreview = ({ pipeline }) => {
   }, []);
 
   const graphOptions = useMemo(
-    () => generateStyles({ direction: 'LR', isMinified: true }),
+    () =>
+      generateStyles({ direction: 'LR', isMinified: false, isPreview: true }),
     []
   );
 
+  const joinFlowsToGraph = flowStrings => {
+    const joinFlows = {
+      nodes: [],
+      edges: [],
+    };
+
+    flowStrings.forEach(flowString => {
+      const flow = JSON.parse(flowString);
+
+      // Add nodes
+      flow.nodes.forEach(node => {
+        if (!joinFlows.nodes.find(n => n.nodeName === node.nodeName)) {
+          joinFlows.nodes.push(node);
+        }
+      });
+
+      // Add edges
+      flow.edges.forEach(edge => {
+        if (
+          !joinFlows.edges.find(e => e.from === edge.from && e.to === edge.to)
+        ) {
+          joinFlows.edges.push(edge);
+        }
+      });
+    });
+
+    // Filter out nodes not used in edges
+    joinFlows.nodes = joinFlows.nodes.filter(node =>
+      joinFlows.edges.some(
+        edge => edge.from === node.nodeName || edge.to === node.nodeName
+      )
+    );
+
+    return joinFlows;
+  };
+
   useEffect(() => {
-    // res = await client.post(`/exec/getGraphByStreamingFlow`, { ...pipeline });
-    /*  fetch(`/exec/getGraphByStreamingFlow`,
-    {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({...pipeline})
-  }
-    
-    )
-      .then((res) => res.json())
-      .then((data) =>{  console.log("data",data) ; setGraphPreview(data)}); */
-  }, []);
+    if (isStreamingPipeline) {
+      if (pipeline.streaming?.flows) {
+        if (isBuildAllFlows) {
+          const flows = pipeline.streaming?.flows;
+
+          const requestsArrayFlows = Object.entries(flows).map(flow =>
+            fetch(`${backendApiUrl}/api/v1/exec/getGraphByStreamingFlow`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                pipeline,
+                keyFlow: flow[0],
+                isBuildAllFlows: false,
+              }),
+            })
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error(`Failed to fetch: ${flow}`);
+                }
+                return response.text();
+              })
+              .catch(error => {
+                console.error(error);
+                return null;
+              })
+          );
+
+          Promise.all(requestsArrayFlows)
+
+            .then(res => {
+              const data = JSON.parse(res[0]);
+
+              if (data.error && data.error.message) {
+                setErrorGraph(data.error.message);
+              } else {
+                const graphAllFlows = joinFlowsToGraph(res);
+
+                setErrorGraph('');
+                setGraphPreview(graphAllFlows);
+                toggleForceUpdate();
+                setTimeout(() => {
+                  toggleForceUpdate();
+                }, 100);
+              }
+            })
+            .catch(error => {
+              setErrorGraph(error.message);
+              console.error('Error while sending requests:', error);
+            });
+        } else {
+          fetch(`${backendApiUrl}/api/v1/exec/getGraphByStreamingFlow`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ pipeline, keyFlow, isBuildAllFlows }),
+          })
+            .then(res => res.json())
+            .then(data => {
+              if (data.error && data.error.message) {
+                setErrorGraph(data.error.message);
+              } else {
+                setErrorGraph('');
+
+                // Filter out nodes not used in edges
+                const GraphData = data;
+                GraphData.nodes = GraphData.nodes.filter(node =>
+                  GraphData.edges.some(
+                    edge =>
+                      edge.from === node.nodeName || edge.to === node.nodeName
+                  )
+                );
+
+                setGraphPreview(GraphData);
+                toggleForceUpdate();
+                setTimeout(() => {
+                  toggleForceUpdate();
+                }, 100);
+              }
+            });
+        }
+      }
+      // batch
+    } else {
+      fetch(`${backendApiUrl}/api/v1/store/pipelines/graph`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ pipeline }),
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.error && data.error.message) {
+            setErrorGraph(data.error.message);
+          } else {
+            setErrorGraph('');
+            setGraphPreview(data);
+            toggleForceUpdate();
+            setTimeout(() => {
+              toggleForceUpdate();
+            }, 100);
+          }
+        });
+    }
+  }, [stepIdx === 0, isStreamingPipeline]);
 
   if (graphPreview === undefined) {
     return <>Still loading...</>;
@@ -89,10 +226,6 @@ const GraphPreview = ({ pipeline }) => {
 
   return (
     <GraphContainer>
-      {console.log('isValidGraph', isValidGraph)}
-      {console.log('showGraph', showGraph)}
-      {console.log('adaptedGraph', adaptedGraph)}
-      {console.log('graphOptions', graphOptions)}
       {adaptedGraph.nodes.length !== 0 ? (
         showGraph ? (
           <Fallback>
@@ -106,7 +239,7 @@ const GraphPreview = ({ pipeline }) => {
           <FallbackComponent />
         )
       ) : (
-        <EmptyHeight image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        errorGraph && <Alert message={errorGraph} type="error" showIcon />
       )}
     </GraphContainer>
   );
@@ -116,15 +249,22 @@ GraphPreview.propTypes = {
   pipeline: PropTypes.shape({
     kind: PropTypes.string.isRequired,
     nodes: PropTypes.arrayOf(PropTypes.object),
+    streaming: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
+  keyIndex: PropTypes.number,
+  isBuildAllFlows: PropTypes.bool,
   /* graph: PropTypes.shape({
     nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
     edges: PropTypes.arrayOf(PropTypes.object).isRequired,*
  //   jobId: PropTypes.string.isRequired,
   }).isRequired, */
 };
+GraphPreview.defaultProps = {
+  keyIndex: undefined,
+  isBuildAllFlows: false,
+};
 
 /* const isSameGraph = (a, b) =>
   a.graph && b.graph ? a.graph.timestamp === b.graph.timestamp : true; */
 
-export default React.memo(GraphPreview);
+export default GraphPreview;

@@ -21,123 +21,123 @@ const { Option } = Select;
 const Initial = ({ style }) => {
   const { isEdit, isRunPipeline, valuesState } = useWizardContext();
 
-  const [isSelectStreaming, setIsSelectStreaming] = useState(false);
+  const [isSelectStreaming, setIsSelectStreaming] = useState(
+    valuesState.kind === 'stream'
+  );
   const [nodeNames] = useState(
     valuesState?.nodes?.map(item => item?.nodeName) || []
   );
 
   // get list nodes
-
   const { experiments } = useExperiments();
 
   return (
-    <>
-      <div style={style}>
-        <Form.Item
-          label="Name"
-          name={['name']}
-          rules={[{ required: true, message: 'Pipeline name is required' }]}
-          required
-          hidden={isRunPipeline}>
-          <Input disabled={isEdit} placeholder="Unique Identifier" />
-        </Form.Item>
-        {!isRunPipeline && (
-          <FlexBox align="start">
-            <FlexBox.Item span={18}>
-              <Form.Item
-                hidden={isRunPipeline}
-                label="Description"
-                name={['description']}>
-                <Input
-                  placeholder="Pipeline Description"
-                  style={{ marginLeft: '34px' }}
-                />
-              </Form.Item>
-            </FlexBox.Item>
-            <FlexBox.Item>
-              <DrawerReadMeFile
-                name={valuesState.name}
-                type="pipelines"
-                disabled={!isEdit}
-              />
-            </FlexBox.Item>
-          </FlexBox>
-        )}
-
+    <div style={style}>
+      <Form.Item
+        label="Name"
+        name={['name']}
+        rules={[{ required: true, message: 'Pipeline name is required' }]}
+        required
+        hidden={isRunPipeline}>
+        <Input disabled={isEdit} placeholder="Unique Identifier" />
+      </Form.Item>
+      {!isRunPipeline && (
         <FlexBox align="start">
-          <FlexBox.Item span={12}>
+          <FlexBox.Item span={18}>
             <Form.Item
-              label="Pipeline Kind"
-              name={['kind']}
-              rules={[{ required: true }]}
-              initialValue="batch"
-              labelCol={{ span: 10, offset: 0 }}>
-              {isRunPipeline ? (
-                valuesState?.kind
-              ) : (
-                <Radio.Group>
-                  <Radio.Button
-                    value="batch"
-                    onClick={() => setIsSelectStreaming(false)}>
-                    Batch
-                  </Radio.Button>
-                  <Radio.Button
-                    value="stream"
-                    onClick={() => setIsSelectStreaming(true)}>
-                    Streaming
-                  </Radio.Button>
-                </Radio.Group>
-              )}
+              hidden={isRunPipeline}
+              label="Description"
+              name={['description']}>
+              <Input
+                placeholder="Pipeline Description"
+                style={{ marginLeft: '34px' }}
+              />
             </Form.Item>
           </FlexBox.Item>
-          <FlexBox.Item span={12}>
-            {isSelectStreaming && (
-              <HelpSiteLink
-                link="/learn/streaming/"
-                style={{ position: 'absolute', marginLeft: '-33px' }}
-              />
-            )}
+          <FlexBox.Item>
+            <DrawerReadMeFile
+              name={valuesState.name}
+              type="pipelines"
+              disabled={!isEdit}
+            />
           </FlexBox.Item>
         </FlexBox>
-        {isRunPipeline && (
-          <>
-            <Form.Item label="Experiments" name={['experimentName']}>
-              <Select style={{ width: '100%' }}>
-                {experiments.map(experiment => (
-                  <Option key={experiment.name}>{experiment.name}</Option>
+      )}
+
+      <FlexBox align="start">
+        <FlexBox.Item span={12}>
+          <Form.Item
+            label="Pipeline Kind"
+            name={['kind']}
+            rules={[{ required: true }]}
+            initialValue="batch"
+            labelCol={{ span: 10, offset: 0 }}>
+            {isRunPipeline ? (
+              valuesState?.kind
+            ) : (
+              <Radio.Group>
+                <Radio.Button
+                  value="batch"
+                  onClick={() => setIsSelectStreaming(false)}>
+                  Batch
+                </Radio.Button>
+                <Radio.Button
+                  value="stream"
+                  onClick={() => setIsSelectStreaming(true)}>
+                  Streaming
+                </Radio.Button>
+              </Radio.Group>
+            )}
+          </Form.Item>
+        </FlexBox.Item>
+        <FlexBox.Item span={12}>
+          {isSelectStreaming && (
+            <HelpSiteLink
+              link="/learn/streaming/"
+              style={{ position: 'absolute', marginLeft: '-33px' }}
+            />
+          )}
+        </FlexBox.Item>
+      </FlexBox>
+      {isRunPipeline && (
+        <>
+          <Form.Item label="Experiments" name={['experimentName']}>
+            <Select style={{ width: '100%' }}>
+              {experiments.map(experiment => (
+                <Option key={experiment.name}>{experiment.name}</Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item label="Debugged Nodes" name={['options', 'debugOverride']}>
+            <Select
+              mode="multiple"
+              allowClear
+              style={{ width: '100%' }}
+              placeholder="Please select">
+              {nodeNames &&
+                nodeNames.map(nodeName => (
+                  <Option key={nodeName}>{nodeName}</Option>
                 ))}
-              </Select>
-            </Form.Item>
+            </Select>
+          </Form.Item>
 
-            <Form.Item
-              label="Debugged Nodes"
-              name={['options', 'debugOverride']}>
-              <Select
-                mode="multiple"
-                allowClear
-                style={{ width: '100%' }}
-                placeholder="Please select">
-                {nodeNames &&
-                  nodeNames.map(nodeName => (
-                    <Option key={nodeName}>{nodeName}</Option>
-                  ))}
-              </Select>
-            </Form.Item>
+          <Form.Item label="Tags" name={['tags']}>
+            <EditableTagGroup />
+          </Form.Item>
+        </>
+      )}
 
-            <Form.Item label="Tags" name={['tags']}>
-              <EditableTagGroup />
-            </Form.Item>
-          </>
-        )}
-
-        <Form.Item label="Flow Input" name={['flowInput']}>
-          <ControllerKeyValue nameRef={['flowInput']} />
-        </Form.Item>
-      </div>
+      <Form.Item label="Flow Input" name={['flowInput']}>
+        <ControllerKeyValue nameRef={['flowInput']} />
+      </Form.Item>
       <div>
-        <GraphPreview pipeline={valuesState} />
+        <GraphPreview
+          pipeline={valuesState}
+          isBuildAllFlows={isSelectStreaming}
+        />
       </div>
-    </>
+    </div>
   );
 };
 

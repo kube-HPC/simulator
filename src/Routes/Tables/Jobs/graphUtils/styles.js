@@ -4,6 +4,49 @@ import GRAPH_TYPES from './types';
 
 const { NODE_GROUPS } = GRAPH_TYPES;
 /** @type {{ [key: string]: import('vis').NodeOptions }} */
+
+const groupsPreview = {
+  [NODE_GROUPS.SUCCEED]: {
+    color: {
+      background: COLOR_TASK_STATUS[TASK.COMPLETED],
+    },
+  },
+  [NODE_GROUPS.IDLE]: {
+    // padding
+    color: {
+      background: COLOR.white,
+      border: COLOR.transparentBlack,
+    },
+    borderWidth: 1,
+    borderStyle: 'dashed',
+  },
+  [NODE_GROUPS.ERRORS]: {
+    color: {
+      background: COLOR_TASK_STATUS[TASK.FAILED],
+    },
+  },
+  [NODE_GROUPS.ACTIVE]: {
+    color: {
+      background: COLOR_TASK_STATUS[TASK.ACTIVE],
+    },
+  },
+  [NODE_GROUPS.WARNING]: {
+    color: {
+      background: COLOR_TASK_STATUS[TASK.WARNING],
+    },
+  },
+  [NODE_GROUPS.SKIPPED]: {
+    color: {
+      background: COLOR_TASK_STATUS[TASK.SKIPPED],
+      border: COLOR.transparentBlack,
+    },
+    borderWidth: 1,
+  },
+  source: {
+    color: { border: 'white' },
+  },
+};
+
 const groups = {
   [NODE_GROUPS.SUCCEED]: {
     color: {
@@ -45,9 +88,10 @@ const groups = {
 /** @returns {import('vis').Options} */
 export default ({
   direction,
-  isHierarchical = true,
+  isHierarchical = false,
   nodeSpacing = 350,
   isMinified = false,
+  isPreview = false,
 }) => ({
   // ,nodeSpacingY=350
   height: isMinified ? '200px' : `400px`,
@@ -147,5 +191,5 @@ export default ({
     },
   },
 
-  groups,
+  groups: isPreview ? groupsPreview : groups,
 });
