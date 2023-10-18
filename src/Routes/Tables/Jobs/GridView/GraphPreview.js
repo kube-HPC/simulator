@@ -70,7 +70,12 @@ const GraphPreview = ({ pipeline, keyIndex, isBuildAllFlows }) => {
 
   const graphOptions = useMemo(
     () =>
-      generateStyles({ direction: 'LR', isMinified: false, isPreview: true }),
+      generateStyles({
+        direction: 'LR',
+        isMinified: false,
+        isPreview: true,
+        isHierarchical: true,
+      }),
     []
   );
 

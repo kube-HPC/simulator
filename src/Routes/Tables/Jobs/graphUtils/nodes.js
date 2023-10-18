@@ -131,7 +131,7 @@ const splitBatchToGroups = (
 
 const nodeShapes = {
   default: 'box',
-  stateless: 'diamond',
+  stateless: 'box', // diamond',
   [nodeKind.Algorithm]: 'box',
   [nodeKind.Debug]: 'hexagon',
   [nodeKind.Gateway]: 'square',

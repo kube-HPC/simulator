@@ -158,14 +158,13 @@ const GraphTab = ({ graph, pipeline }) => {
       const graphOptionsData = graphOptions();
       if (isHierarchical.current) {
         network.setOptions(graphOptionsData);
-
         network.setData(adaptedGraphData);
 
         handleIsLockDrag();
 
         if (
           adaptedGraphData?.nodes.length > 10 &&
-          adaptedGraphData?.nodes[0]?.x != null
+          adaptedGraphData?.nodes[0]?.x === null
         ) {
           isHierarchical.current = false;
         }
@@ -180,7 +179,7 @@ const GraphTab = ({ graph, pipeline }) => {
         if (zoomPos.current != null) {
           if (isSlider.current) {
             const a = nodeSpacing.current / nodeSpacingInit;
-            const scaleSave = a * zoomSavePos.current?.scale;
+            const scaleSave = a * zoomSavePos?.current?.scale;
 
             zoomPos.current.scale = scaleSave;
             isSlider.current = false;
@@ -190,11 +189,11 @@ const GraphTab = ({ graph, pipeline }) => {
 
           network.moveTo(zoomPos.current);
         }
-
-        network.setSelection({
-          nodes: [selectNode || ''],
-        });
       }
+
+      network.setSelection({
+        nodes: [selectNode || ''],
+      });
     }
   }, [adaptedGraph, graphOptions, nodeSpacingInit, selectNode]);
 
