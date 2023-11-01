@@ -28,11 +28,12 @@ export const Header = styled.h2`
   border-bottom: 1px solid #ddd;
 `;
 
-export const MetricHeader = styled.h4`
+export const MetricHeader = styled.div`
   margin: 0;
+  font-weight: bold;
 `;
 
-export const MetricValue = styled.h5`
+export const MetricValue = styled.div`
   padding: 0;
   margin: 0;
 `;
