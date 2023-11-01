@@ -148,6 +148,7 @@ const BarChartMonitors = ({ metric }) => {
 
             ({ bars, xScale, yScale, fill, getLabel, ...rest }) => {
               dataBars.current = [fill, bars];
+
               return (
                 <>
                   <text
@@ -163,22 +164,21 @@ const BarChartMonitors = ({ metric }) => {
                         <g transform={`translate(${bar.x},${bar.y})`}>
                           <rect
                             key={bar.key}
-                            x={0} // Adjust this as needed for your layout
-                            y={yScale(bar.data.value)}
-                            width={xScale(bar.data.value) - 2}
-                            height={yScale.bandwidth()}
+                            width={bar.width - 2}
+                            height={bar.height}
                             fill={getColorMatchId(fill, bar.data.id, bar.color)}
                             strokeWidth={
                               highlightedBars === bar.data.id ? 3 : null
                             }
+                            rx="2"
                             stroke={
                               highlightedBars === bar.data.id
-                                ? '#b3b3b3'
+                                ? '#8d8d8d'
                                 : bar.color
                             }
                             onMouseOver={e => {
                               setTooltipData({
-                                text: `${bar.key} : ${bar.data.value}`,
+                                text: `${bar.data.id} - ${bar.data.indexValue} : ${bar.data.value}`,
                                 x: e.clientX,
                                 y: e.clientY,
                                 color: bar.color,
@@ -190,14 +190,14 @@ const BarChartMonitors = ({ metric }) => {
                           />
 
                           <text
-                            x={xScale(bar.data.value / 2)}
-                            y={yScale.bandwidth() / 2}
+                            x={bar.width / 2}
+                            y={bar.height / 2}
                             textAnchor="middle"
                             dominantBaseline="central"
                             style={{ fontSize: '13px' }}
                             onMouseOver={e => {
                               setTooltipData({
-                                text: `${bar.key} : ${bar.data.value}`,
+                                text: `${bar.data.id} - ${bar.data.indexValue} : ${bar.data.value}`,
                                 x: e.clientX,
                                 y: e.clientY,
                               }); // Set the tooltip text

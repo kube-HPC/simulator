@@ -29,6 +29,13 @@ const BoxesContainer = styled.div`
   width: 30%;
 `;
 
+const StorageStyle = styled.div`
+  height: 45%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+`;
+
 const adaptedData = ({ free, used }) => {
   const data = [
     {
@@ -61,7 +68,7 @@ const Storage = ({ storage }) => {
   const data = adaptedData({ free, used, freeH, usedH });
 
   return (
-    <div>
+    <StorageStyle>
       <Header>Storage</Header>
       <Metrics>
         <PieContainer>
@@ -103,7 +110,7 @@ const Storage = ({ storage }) => {
           </MetricContainer>
         </BoxesContainer>
       </Metrics>
-    </div>
+    </StorageStyle>
   );
 };
 Storage.propTypes = {

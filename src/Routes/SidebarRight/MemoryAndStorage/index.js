@@ -10,11 +10,11 @@ import BarChartMonitors from './../BarChartMonitors.react';
 const Root = styled.div`
   // font-size: 20px;
   // padding: 0 4ch;
+  height: 95vh;
 `;
 
 const Memory = styled.div`
-  height: 50vh;
-  margin-bottom: 4em;
+  height: 55%;
 `;
 
 const MemoryAndStorage = () => {
