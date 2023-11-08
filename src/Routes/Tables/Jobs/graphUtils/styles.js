@@ -174,7 +174,7 @@ export default ({
   edges: {
     selectionWidth: 1,
     color: {
-      highlight: COLOR.yellowPale,
+      highlight: COLOR.purple,
     },
     arrowStrikethrough: false,
     arrows: {

@@ -1,4 +1,4 @@
-import React, { lazy, useState, useEffect, useMemo, useReducer } from 'react';
+import React, { useState, useEffect, useMemo, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Alert } from 'antd';
@@ -7,20 +7,48 @@ import { Fallback, FallbackComponent } from 'components/common';
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
 import useWizardContext from 'Routes/SidebarRight/AddPipeline/useWizardContext';
+import Graph from 'react-graph-vis';
 import { generateStyles, formatEdge, formatNode } from '../graphUtils';
 
 const GraphContainer = styled.div`
-  max-width: 40vw;
+  //  max-width: 40vw;
+  height: 85%;
   border: 1px solid #d9d9d9;
   border-radius: 6px;
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
   padding: 10px;
+
+  .vis-tooltip {
+    position: absolute;
+    visibility: hidden;
+    padding: 5px;
+    white-space: nowrap;
+    font-family: verdana;
+    font-size: 16px;
+    color: #000;
+    background-color: #f5f4ed;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    border: 1px solid #808074;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+    z-index: 5;
+  }
 `;
 
-const Graph = lazy(() => import(`react-graph-vis`));
+const GraphPreview = ({ pipeline, keyIndex, isBuildAllFlows, isMinified }) => {
+  const wizardContext = useWizardContext();
 
-const GraphPreview = ({ pipeline, keyIndex, isBuildAllFlows }) => {
-  const { valuesState, stepIdx, isStreamingPipeline } = useWizardContext();
+  let valuesState = pipeline;
+  let stepIdx = 0;
+  let isStreamingPipeline = isBuildAllFlows;
+
+  if (wizardContext) {
+    valuesState = wizardContext.valuesState;
+    stepIdx = wizardContext.stepIdx;
+    isStreamingPipeline = wizardContext.isStreamingPipeline;
+  }
 
   const keyFlow =
     keyIndex && pipeline?.streaming?.flows
@@ -69,14 +97,17 @@ const GraphPreview = ({ pipeline, keyIndex, isBuildAllFlows }) => {
   }, []);
 
   const graphOptions = useMemo(
-    () =>
-      generateStyles({
+    () => ({
+      ...generateStyles({
         direction: 'LR',
-        isMinified: false,
+        isMinified,
         isPreview: true,
         isHierarchical: true,
+        nodeSpacing: 100,
       }),
-    []
+      height: isMinified ? '100%' : '500px',
+    }),
+    [isMinified]
   );
 
   const joinFlowsToGraph = flowStrings => {
@@ -117,6 +148,8 @@ const GraphPreview = ({ pipeline, keyIndex, isBuildAllFlows }) => {
 
   useEffect(() => {
     if (isStreamingPipeline) {
+      // streaming
+
       if (pipeline.streaming?.flows) {
         if (isBuildAllFlows) {
           const flows = pipeline.streaming?.flows;
@@ -258,6 +291,7 @@ GraphPreview.propTypes = {
   }).isRequired,
   keyIndex: PropTypes.number,
   isBuildAllFlows: PropTypes.bool,
+  isMinified: PropTypes.bool,
   /* graph: PropTypes.shape({
     nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
     edges: PropTypes.arrayOf(PropTypes.object).isRequired,*
@@ -267,6 +301,7 @@ GraphPreview.propTypes = {
 GraphPreview.defaultProps = {
   keyIndex: undefined,
   isBuildAllFlows: false,
+  isMinified: true,
 };
 
 /* const isSameGraph = (a, b) =>

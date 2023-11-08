@@ -154,6 +154,9 @@ export const formatNode = (
   const kind = isStateLess ? 'stateless' : pipelineNode?.kind || 'algorithm';
   const _node = {
     id: meta.nodeName,
+    title: `${meta.nodeName} is kind ${pipelineNode?.kind} ${
+      isStateLess ? 'stateless' : ''
+    }`,
     x: (position && position?.nodesPostions[node.nodeName]?.x) || null,
     y: (position && position?.nodesPostions[node.nodeName]?.y) || null,
     label: meta?.extra?.batch
@@ -183,6 +186,7 @@ export const formatNode = (
     'extra',
     'borderWidth',
     'id',
+    'title',
     'shapeProperties',
     'group',
     'x',

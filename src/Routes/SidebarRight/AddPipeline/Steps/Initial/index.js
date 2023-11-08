@@ -13,7 +13,6 @@ import { useExperiments } from 'hooks/graphql';
 import ControllerKeyValue from '../Nodes/inputKeyValueJson';
 import useWizardContext from '../../useWizardContext';
 import DrawerReadMeFile from '../../../../../components/Drawer/DrawerReadMeFile';
-import GraphPreview from '../../../../Tables/Jobs/GridView/GraphPreview';
 
 const { Option } = Select;
 
@@ -131,12 +130,6 @@ const Initial = ({ style }) => {
       <Form.Item label="Flow Input" name={['flowInput']}>
         <ControllerKeyValue nameRef={['flowInput']} />
       </Form.Item>
-      <div>
-        <GraphPreview
-          pipeline={valuesState}
-          isBuildAllFlows={isSelectStreaming}
-        />
-      </div>
     </div>
   );
 };

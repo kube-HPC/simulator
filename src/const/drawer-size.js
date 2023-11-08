@@ -1,5 +1,5 @@
 export default {
-  ADD_PIPELINE: '150ch',
+  ADD_PIPELINE: '180ch',
   ADD_ALGORITHM: '160ch',
   ADD_DATASOURCE: '40vw',
   EDIT_DATASOURCE: '50vw',
@@ -11,7 +11,7 @@ export default {
   ERROR_LOGS: '70vw',
   JOB_INFO: '90vw',
   ALGORITHM_INFO: '160ch',
-  PIPELINE_INFO: '70vw',
+  PIPELINE_INFO: '180ch',
   ALGORITHM_EDIT: '40vw',
   TF_RUN: '30vw',
   WORKERS: '90vw',

@@ -16,28 +16,61 @@ import { BottomPanel, PanelButton, RightAlignedBox } from 'components/Drawer';
 import { useWizard } from 'hooks';
 import { context } from './useWizardContext';
 import { Initial, Nodes, Options } from './Steps';
+import GraphPreview from './../../Tables/Jobs/GridView/GraphPreview';
 
 const Form = styled(AntdForm)`
-  width: 90ch;
+  width: 88ch;
+  height: 100%;
+  overflow-y: scroll;
 `;
 
 export const Body = styled.div`
   display: flex;
+  flex-direction: row;
+  // overflow-y: scroll;
+  height: ${props => (props.$isEditState ? '81%' : '81%')};
+`;
+
+export const ContenerWizard = styled.div`
+  // position: relative;
+  // overflow-x: none;
+  //overflow-y: scroll;
+  // height: 100%;
+  // width: 50%;
+`;
+
+export const ContenerJsonGraph = styled.div`
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+export const ContenerJsonButton = styled.div`
   flex: 1;
 
   overflow-y: scroll;
-  max-height: 81vh;
 `;
+
+export const ContenerGraph = styled.div`
+  position: relative;
+  flex: 1;
+
+  // overflow-y: scroll;
+  padding-left: 10px;
+`;
+
+export const ButtonSticky = styled(Button)`
+right: 0;
+    position: absolute;
+    margin-right: 10px;
+    z-index:999;
+}
+`;
+
 export const ButtonRun = styled(Button)`
   margin-left: 20px;
 `;
-export const ButtonSticky = styled(Button)`
-  position: -webkit-sticky; /* Safari */
-  position: sticky;
-  top: 0;
-  margin-right: 5px;
-`;
-
 const stepNames = ['Initial', 'Nodes', 'Options'];
 const RunPipelineStepNames = ['Initial', 'Options', 'Nodes Info'];
 
@@ -131,7 +164,17 @@ const Wizard = ({
   }, [isStreamingPipeline, resetKind]);
 
   return (
-    <>
+    <context.Provider
+      value={{
+        form,
+        stepIdx,
+        initialState,
+        isStreamingPipeline,
+        isEdit,
+        valuesState,
+        isRunPipeline,
+        setForm,
+      }}>
       <Steps
         items={steps}
         type="navigation"
@@ -144,27 +187,16 @@ const Wizard = ({
           paddingTop: '0px',
         }}
       />
-
-      <Body>
-        <Form
-          form={form}
-          onValuesChange={setForm}
-          name="create-pipeline"
-          layout="horizontal"
-          hideRequiredMark
-          onSubmit={handleSubmit}
-          style={{ padding: '0 2ch' }}>
-          <context.Provider
-            value={{
-              form,
-              stepIdx,
-              initialState,
-              isStreamingPipeline,
-              isEdit,
-              valuesState,
-              isRunPipeline,
-              setForm,
-            }}>
+      <Body $isEditState={isEdit}>
+        <ContenerWizard>
+          <Form
+            form={form}
+            onValuesChange={setForm}
+            name="create-pipeline"
+            layout="horizontal"
+            hideRequiredMark
+            onSubmit={handleSubmit}
+            style={{ padding: '0 2ch' }}>
             {initStepComponents.map((StepComponent, ii) => (
               <StepComponent
                 key={`step-component-${stepNames[ii]}`}
@@ -173,14 +205,25 @@ const Wizard = ({
                 }}
               />
             ))}
-          </context.Provider>
-        </Form>
-        <JsonView
-          src={getFormattedFormValues()}
-          collapsed={undefined}
-          style={{ flex: 1 }}
-        />
-        <ButtonSticky onClick={handleToggle}>Text editor</ButtonSticky>
+          </Form>
+        </ContenerWizard>
+
+        <ContenerJsonGraph>
+          <ContenerGraph>
+            {valuesState && (
+              <GraphPreview
+                pipeline={valuesState}
+                isBuildAllFlows={isStreamingPipeline}
+                isMinified
+              />
+            )}
+          </ContenerGraph>
+
+          <ContenerJsonButton>
+            <ButtonSticky onClick={handleToggle}>Text editor</ButtonSticky>
+            <JsonView src={getFormattedFormValues()} collapsed={undefined} />
+          </ContenerJsonButton>
+        </ContenerJsonGraph>
       </Body>
 
       <BottomPanel>
@@ -219,7 +262,7 @@ const Wizard = ({
           )}
         </RightAlignedBox>
       </BottomPanel>
-    </>
+    </context.Provider>
   );
 };
 

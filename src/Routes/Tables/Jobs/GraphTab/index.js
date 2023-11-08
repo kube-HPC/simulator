@@ -30,6 +30,16 @@ const GRAPH_DIRECTION = {
   UpToDown: 'UD',
 };
 
+const calculatePercentage = (value, minValue, maxValue) => {
+  if (value < minValue) {
+    return 0; // Handle values less than the minimum
+  }
+  if (value > maxValue) {
+    return 100; // Handle values greater than the maximum
+  }
+  return Math.round(((value - minValue) / (maxValue - minValue)) * 100);
+};
+
 const GraphTab = ({ graph, pipeline }) => {
   // const [nodePos, setNodePos] = useState(null);
   // const [zoomPos, setZoomPos] = useState(null);
@@ -245,10 +255,12 @@ const GraphTab = ({ graph, pipeline }) => {
           flex: '1',
         }}>
         <Slider
-          tipFormatter={value => `Space between nodes: ${value}`}
+          tipFormatter={value =>
+            `Space between nodes:  ${calculatePercentage(value, 50, 600)}%`
+          }
           onChange={onChangeSliderDebounce}
           defaultValue={nodeSpacing.current}
-          min={nodeSpacingInit}
+          min={50}
           max={600}
           style={{
             width: '300px',
