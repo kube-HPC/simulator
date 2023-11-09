@@ -44,7 +44,7 @@ const GraphTab = ({ graph, pipeline }) => {
   // const [nodePos, setNodePos] = useState(null);
   // const [zoomPos, setZoomPos] = useState(null);
 
-  const [nodeSpacingInit] = useState(graph?.nodes.length > 10 ? 50 : 150);
+  const [nodeSpacingInit] = useState(graph?.nodes.length > 10 ? 70 : 150);
 
   const [selectNode, setSelectNode] = useState([
     graph?.nodes[0]?.nodeName || '',
@@ -188,10 +188,11 @@ const GraphTab = ({ graph, pipeline }) => {
 
         if (zoomPos.current != null) {
           if (isSlider.current) {
-            // const a = nodeSpacing.current / nodeSpacingInit;
-            const scaleSave = 0.5; // * zoomSavePos?.current?.scale;
-
-            zoomPos.current.scale = scaleSave;
+            //  const a = nodeSpacing.current / nodeSpacingInit;
+            // const scaleSave = a * zoomSavePos?.current?.scale;
+            //   console.log('scaleSave', scaleSave);
+            console.log('sSlider.current', nodeSpacing.current);
+            //   zoomPos.current.scale = scaleSave;
             isSlider.current = false;
           } else {
             zoomSavePos.current = zoomPos.current;
@@ -256,12 +257,12 @@ const GraphTab = ({ graph, pipeline }) => {
         }}>
         <Slider
           tipFormatter={value =>
-            `Space between nodes:  ${calculatePercentage(value, 50, 600)}%`
+            `Space between nodes:  ${calculatePercentage(value, 70, 200)}%`
           }
           onChange={onChangeSliderDebounce}
           defaultValue={nodeSpacing.current}
-          min={50}
-          max={600}
+          min={70}
+          max={200}
           style={{
             width: '300px',
             position: 'absolute',

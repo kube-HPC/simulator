@@ -40,7 +40,7 @@ const PipelineInfo = ({ record }) => {
       {
         label: TABS.INFO,
         key: TABS.INFO,
-        children: <JsonSwitch obj={record} isGraph />,
+        children: <JsonSwitch obj={record} isGraph typeDefaultView="Graph" />,
       },
       {
         label: TABS.DESCRIPTION,
