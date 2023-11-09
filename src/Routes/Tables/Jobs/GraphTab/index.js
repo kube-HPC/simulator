@@ -188,8 +188,8 @@ const GraphTab = ({ graph, pipeline }) => {
 
         if (zoomPos.current != null) {
           if (isSlider.current) {
-            const a = nodeSpacing.current / nodeSpacingInit;
-            const scaleSave = a * zoomSavePos?.current?.scale;
+            // const a = nodeSpacing.current / nodeSpacingInit;
+            const scaleSave = 0.5; // * zoomSavePos?.current?.scale;
 
             zoomPos.current.scale = scaleSave;
             isSlider.current = false;

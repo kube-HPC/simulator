@@ -177,11 +177,11 @@ export default ({
       highlight: COLOR.purple,
     },
     arrowStrikethrough: false,
-    arrows: {
+    /* arrows: {
       to: {
         scaleFactor: 0.75,
       },
-    },
+    }, */
     smooth: {
       enabled: true,
       type: 'discrete',
