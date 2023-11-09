@@ -155,7 +155,7 @@ const GraphPreview = ({ pipeline, keyIndex, isBuildAllFlows, isMinified }) => {
           const flows = pipeline.streaming?.flows;
 
           const requestsArrayFlows = Object.entries(flows).map(flow =>
-            fetch(`${backendApiUrl}/api/v1/exec/getGraphByStreamingFlow`, {
+            fetch(`${backendApiUrl}/api/v1/store/pipelines/graph`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -201,7 +201,7 @@ const GraphPreview = ({ pipeline, keyIndex, isBuildAllFlows, isMinified }) => {
               console.error('Error while sending requests:', error);
             });
         } else {
-          fetch(`${backendApiUrl}/api/v1/exec/getGraphByStreamingFlow`, {
+          fetch(`${backendApiUrl}/api/v1/store/pipelines/graph`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

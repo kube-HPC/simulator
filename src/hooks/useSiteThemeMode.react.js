@@ -1,5 +1,5 @@
 import { useCallback, useState, useRef } from 'react';
-import { THEMES_NAMES } from 'const';
+import { THEMES_NAMES, LOCAL_STORAGE_KEYS } from 'const';
 
 import { createStore } from 'reusable';
 import { useHistory } from 'react-router';
@@ -9,7 +9,9 @@ const useSiteThemeMode = () => {
 
   // get state theme from user local storage
   const getTheme = () => {
-    const themeName = localStorage.getItem('theme');
+    const themeName = localStorage.getItem(
+      LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME
+    );
     return themeName != null ? themeName : 'light';
   };
 
@@ -19,7 +21,10 @@ const useSiteThemeMode = () => {
 
   const setTheme = useCallback(
     nameTheme => {
-      localStorage.setItem('theme', nameTheme);
+      localStorage.setItem(
+        LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME,
+        nameTheme
+      );
       setThemeName(themeName);
       // reloads the page after change theme.
       if (refContainer.current > 0) history.go(0);
