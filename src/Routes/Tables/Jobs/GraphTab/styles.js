@@ -17,7 +17,7 @@ export const GraphContainer = styled.div`
   max-height: 80vh;*/
 
   .vis-network {
-    height: 100% !important;
+    height: 90vh !important;
   }
   .vis-tooltip {
     position: absolute;

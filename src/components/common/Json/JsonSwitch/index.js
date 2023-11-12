@@ -5,10 +5,12 @@ import React, { useMemo } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled from 'styled-components';
 import { notification, stringify } from 'utils';
+import GraphPreview from './../../../../Routes/Tables/Jobs/GridView/GraphPreview';
 
 const TABS = {
   JSON: 'JSON',
   TABLE: 'Table',
+  GRAPH: 'Graph',
 };
 
 const Wrapper = styled.div`
@@ -48,13 +50,9 @@ const JsonSwitch = ({
   jsonViewHeaderNode,
   tabPosition,
   typeDefaultView,
+  isGraph,
 }) => {
   const { view = {}, table = {} } = options;
-  const extra = (
-    <CopyToClipboard text={stringify(obj)} onCopy={onCopy}>
-      <Button type="dashed">Copy</Button>
-    </CopyToClipboard>
-  );
 
   const TabsItemsJson = useMemo(
     () => [
@@ -78,6 +76,12 @@ const JsonSwitch = ({
         children: (
           <>
             {jsonViewHeaderNode}
+            <CopyToClipboard
+              text={stringify(obj)}
+              onCopy={onCopy}
+              style={{ float: 'right' }}>
+              <Button type="dashed">Copy</Button>
+            </CopyToClipboard>
             <JsonView.Card
               jsonObject={removeFlowInputNull(obj)}
               // eslint-disable-next-line
@@ -90,12 +94,27 @@ const JsonSwitch = ({
     [jobId, jsonViewHeaderNode, obj, table, view]
   );
 
+  if (isGraph) {
+    TabsItemsJson.unshift({
+      label: TABS.GRAPH,
+      key: TABS.GRAPH,
+      children: (
+        <GraphPreview
+          pipeline={obj}
+          // eslint-disable-next-line react/prop-types
+          isBuildAllFlows={obj?.kind === 'stream'}
+          isMinified={false}
+        />
+      ),
+    });
+  }
+
   return (
     <ContainerTabs>
       <Tabs
         defaultActiveKey={typeDefaultView}
         tabPosition={tabPosition}
-        tabBarExtraContent={extra}
+        // tabBarExtraContent={extra}
         type="card"
         items={TabsItemsJson}
       />
@@ -112,6 +131,7 @@ JsonSwitch.propTypes = {
   jsonViewHeaderNode: PropTypes.node,
   tabPosition: PropTypes.string,
   typeDefaultView: PropTypes.string,
+  isGraph: PropTypes.bool,
 };
 JsonSwitch.defaultProps = {
   obj: {},
@@ -120,6 +140,7 @@ JsonSwitch.defaultProps = {
   jsonViewHeaderNode: undefined,
   tabPosition: 'left',
   typeDefaultView: TABS.JSON,
+  isGraph: false,
 };
 
 export default JsonSwitch;

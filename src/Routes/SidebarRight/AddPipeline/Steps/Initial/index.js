@@ -20,13 +20,14 @@ const { Option } = Select;
 const Initial = ({ style }) => {
   const { isEdit, isRunPipeline, valuesState } = useWizardContext();
 
-  const [isSelectStreaming, setIsSelectStreaming] = useState(false);
+  const [isSelectStreaming, setIsSelectStreaming] = useState(
+    valuesState.kind === 'stream'
+  );
   const [nodeNames] = useState(
     valuesState?.nodes?.map(item => item?.nodeName) || []
   );
 
   // get list nodes
-
   const { experiments } = useExperiments();
 
   return (

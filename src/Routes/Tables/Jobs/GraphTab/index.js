@@ -30,11 +30,21 @@ const GRAPH_DIRECTION = {
   UpToDown: 'UD',
 };
 
+const calculatePercentage = (value, minValue, maxValue) => {
+  if (value < minValue) {
+    return 0; // Handle values less than the minimum
+  }
+  if (value > maxValue) {
+    return 100; // Handle values greater than the maximum
+  }
+  return Math.round(((value - minValue) / (maxValue - minValue)) * 100);
+};
+
 const GraphTab = ({ graph, pipeline }) => {
   // const [nodePos, setNodePos] = useState(null);
   // const [zoomPos, setZoomPos] = useState(null);
 
-  const [nodeSpacingInit] = useState(graph?.nodes.length > 10 ? 50 : 150);
+  const [nodeSpacingInit] = useState(graph?.nodes.length > 10 ? 70 : 150);
 
   const [selectNode, setSelectNode] = useState([
     graph?.nodes[0]?.nodeName || '',
@@ -147,6 +157,7 @@ const GraphTab = ({ graph, pipeline }) => {
     const scale = network.getScale();
     const viewPosition = network.getViewPosition();
     nodePos.current = { nodesPostions: network?.getPositions() };
+
     zoomPos.current = { scale, position: viewPosition };
   };
 
@@ -154,33 +165,34 @@ const GraphTab = ({ graph, pipeline }) => {
     const network = graphRef?.current?.Network || null;
 
     if (network) {
+      const adaptedGraphData = adaptedGraph();
+      const graphOptionsData = graphOptions();
       if (isHierarchical.current) {
-        network.setOptions(graphOptions());
-
-        network.setData(adaptedGraph());
+        network.setOptions(graphOptionsData);
+        network.setData(adaptedGraphData);
 
         handleIsLockDrag();
 
-        if (
-          adaptedGraph()?.nodes.length > 10 &&
-          adaptedGraph()?.nodes[0]?.x != null
-        ) {
-          isHierarchical.current = false;
-        }
+        /*   if (
+          adaptedGraphData?.nodes.length > 10 &&
+          adaptedGraphData?.nodes[0]?.x === null */
+        // ) {
+        isHierarchical.current = false;
+        // }
       } else {
         if (!isPhysics.current) {
-          network.setOptions(graphOptions());
+          network.setOptions(graphOptionsData);
           isPhysics.current = true;
         }
 
-        network.setData(adaptedGraph());
+        network.setData(adaptedGraphData);
 
         if (zoomPos.current != null) {
           if (isSlider.current) {
-            const a = nodeSpacing.current / nodeSpacingInit;
-            const scaleSave = a * zoomSavePos.current.scale;
+            //  const a = nodeSpacing.current / nodeSpacingInit;
+            // const scaleSave = a * zoomSavePos?.current?.scale;
 
-            zoomPos.current.scale = scaleSave;
+            //   zoomPos.current.scale = scaleSave;
             isSlider.current = false;
           } else {
             zoomSavePos.current = zoomPos.current;
@@ -188,11 +200,11 @@ const GraphTab = ({ graph, pipeline }) => {
 
           network.moveTo(zoomPos.current);
         }
-
-        network.setSelection({
-          nodes: [selectNode || ''],
-        });
       }
+
+      network.setSelection({
+        nodes: [selectNode || ''],
+      });
     }
   }, [adaptedGraph, graphOptions, nodeSpacingInit, selectNode]);
 
@@ -244,11 +256,13 @@ const GraphTab = ({ graph, pipeline }) => {
           flex: '1',
         }}>
         <Slider
-          tipFormatter={value => `Space between nodes: ${value}`}
+          tipFormatter={value =>
+            `Space between nodes:  ${calculatePercentage(value, 70, 200)}%`
+          }
           onChange={onChangeSliderDebounce}
           defaultValue={nodeSpacing.current}
-          min={nodeSpacingInit}
-          max={600}
+          min={70}
+          max={200}
           style={{
             width: '300px',
             position: 'absolute',

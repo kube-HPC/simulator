@@ -2,9 +2,14 @@ import React, { useEffect, Suspense } from 'react';
 import { useSiteThemeMode } from 'hooks';
 import { GlobalStyle } from 'styles';
 import { useLocation } from 'react-router-dom';
+import { LOCAL_STORAGE_KEYS } from 'const';
 
 // create in began styles antd by theme name
-switch (localStorage.getItem('theme')?.toUpperCase()) {
+switch (
+  localStorage
+    .getItem(LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME)
+    ?.toUpperCase()
+) {
   case 'LIGHT':
     // import('antd/dist/antd.css');
     break;

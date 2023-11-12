@@ -45,7 +45,12 @@ const AlgorithmNode = ({ id }) => {
 
       {isStreamingPipeline &&
         valuesState?.nodes[id]?.stateType === 'stateless' && (
-          <Collapsible title="Stateless Counts">
+          <Collapsible
+            title="Stateless Counts"
+            defaultExpanded={
+              valuesState?.nodes[id].minStatelessCount > 0 ||
+              valuesState?.nodes[id].maxStatelessCount > 0
+            }>
             <Field
               inline={false}
               title="Min"

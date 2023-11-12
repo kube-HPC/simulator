@@ -11,6 +11,7 @@ import ErrorLogsTable from './ErrorLogs';
 import RunRawPipeline from './RunRawPipeline';
 import MemoryAndStorage from './MemoryAndStorage';
 import NodeStatistics from './NodeStatistics.react';
+import BarChartMonitors from './BarChartMonitors.react';
 import CONTENT_CONFIG from './Content.react';
 import ctx from './ctx';
 import useSubscribe from './useSubscribe';
@@ -28,7 +29,7 @@ const operationSelector = {
   [RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE]: AddDataSource,
   [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: ErrorLogsTable,
   [RIGHT_SIDEBAR_NAMES.MEMORY]: MemoryAndStorage,
-  [RIGHT_SIDEBAR_NAMES.CPU]: () => <NodeStatistics metric="cpu" />,
+  [RIGHT_SIDEBAR_NAMES.CPU]: () => <BarChartMonitors metric="cpu" />,
   [RIGHT_SIDEBAR_NAMES.GPU]: () => <NodeStatistics metric="gpu" />,
 };
 

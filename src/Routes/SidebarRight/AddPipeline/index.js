@@ -11,7 +11,9 @@ const AddPipeline = ({ jsonPipeline, isRunPipeline }) => {
   const [form] = Form.useForm();
   const [status, setStatus] = useState(WIZARD_STATE.IDLE);
   const [isEditorVisible, toggle] = useReducer(visible => !visible, false);
-  const [editorState, setEditorState] = useState(addPipelineTemplate);
+  const [editorState, setEditorState] = useState(
+    jsonPipeline !== undefined ? jsonPipeline : addPipelineTemplate
+  );
   const [wizardStepIdx, setWizardStepIdx] = useState(0);
   const [isEdit] = useState(jsonPipeline !== undefined);
 
