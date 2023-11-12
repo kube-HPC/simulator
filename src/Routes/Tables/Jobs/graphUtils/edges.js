@@ -24,7 +24,9 @@ export const formatEdge = edge => {
   const [group] = value?.types ?? [];
   const { metrics } = value || {};
   const _edge = {
-    id: `${edge.from}->${edge.to}`,
+    id: edge.from
+      ? `${edge.from}->${edge.to}`
+      : `${edge.source}->${edge.source}`,
     dashes: group === 'waitAny' || group === 'AlgorithmExecution',
   };
   let styles = {};
@@ -32,7 +34,7 @@ export const formatEdge = edge => {
     const { throughput } = metrics;
     const title = _formatTitle(metrics);
     const label = `${throughput}%`; // for debugging...
-    const width = scaleThroughput(throughput);
+    const width = scaleThroughput(throughput) / 1.5;
     const edgeColor =
       throughput > 0 && throughput < 50
         ? COLOR.redPale

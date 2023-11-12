@@ -1,15 +1,26 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { EditableTagGroup, SignBoard } from 'components/common';
-import { Form, Button, Space, Input } from 'antd';
-import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { Form, Button, Space, Input, Modal } from 'antd';
+import {
+  PlusOutlined,
+  MinusCircleOutlined,
+  NodeIndexOutlined,
+} from '@ant-design/icons';
 import styled from 'styled-components';
 import useWizardContext from 'Routes/SidebarRight/AddPipeline/useWizardContext';
 import { tryParse, tryParseJson } from 'utils';
 import { useDebouncedCallback } from 'use-debounce';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import GraphPreview from '../../../../..//Tables/Jobs/GridView/GraphPreview';
 
 const IconDelete = styled(MinusCircleOutlined)`
+  color: #999;
+  font-size: 1.5em;
+  margin-left: 1ch;
+`;
+
+const IconNodeIndexOutlined = styled(NodeIndexOutlined)`
   color: #999;
   font-size: 1.5em;
   margin-left: 1ch;
@@ -32,9 +43,10 @@ const ControllerKeyValue = ({
   titleKeyboard,
   isValueArray,
   placeholderKey,
+  isOpenGraphNodes,
 }) => {
   const { initialState, form, valuesState } = useWizardContext();
-
+  const [modal, contextHolder] = Modal.useModal();
   const [value, setValue] = useState(JSON.stringify(_value));
 
   const convertObjectToKeyListKeyValue = () => {
@@ -103,6 +115,17 @@ const ControllerKeyValue = ({
     { keyId: 2, title: 'Nodes', typeButton: 'primary', keys: nodeNames },
   ];
 
+  const openGraphModal = key => {
+    modal.info({
+      title: `Preview graph `,
+      content: <GraphPreview pipeline={valuesState} keyIndex={key} />,
+      width: 1000,
+      okText: 'Close',
+      okType: 'default',
+      closable: true,
+    });
+  };
+
   return (
     <Form.List name={['listKeyValue', ...nameRef]}>
       {(fields, { add, remove }) => (
@@ -128,7 +151,6 @@ const ControllerKeyValue = ({
                 onChange={() => handleChange()}>
                 <Input key={`inputN${key}`} placeholder={placeholderKey} />
               </Form.Item>
-
               {isValueSignBoard ? (
                 <SignBoard
                   restField={restField}
@@ -144,7 +166,7 @@ const ControllerKeyValue = ({
                   keyboardView={keyboardView}
                   indexKey={key}
                   key={`SignBoard${key}`}
-                  width={380}
+                  width={340}
                 />
               ) : isValueArray ? (
                 <Form.Item
@@ -166,9 +188,17 @@ const ControllerKeyValue = ({
                   <Input
                     placeholder={valuePlaceholder}
                     key={`inputValue${key}`}
-                    width={380}
+                    width={340}
                   />
                 </Form.Item>
+              )}
+              {isOpenGraphNodes && (
+                <IconNodeIndexOutlined
+                  key={`modelGraph${key}`}
+                  onClick={() => {
+                    openGraphModal(fieldKey);
+                  }}
+                />
               )}
               <IconDelete
                 key={`remove${key}`}
@@ -179,6 +209,7 @@ const ControllerKeyValue = ({
               />
             </SpaceStyle>
           ))}
+          {contextHolder}
           <Form.Item>
             <Button
               type="dashed"
@@ -206,6 +237,7 @@ ControllerKeyValue.propTypes = {
   titleKeyboard: PropTypes.string,
   placeholderKey: PropTypes.string,
   nameRef: PropTypes.arrayOf(PropTypes.string).isRequired,
+  isOpenGraphNodes: PropTypes.bool,
 };
 ControllerKeyValue.defaultProps = {
   value: {},
@@ -216,5 +248,6 @@ ControllerKeyValue.defaultProps = {
   valuePlaceholder: '',
   titleKeyboard: '',
   placeholderKey: 'Flow key',
+  isOpenGraphNodes: false,
 };
 export default React.memo(ControllerKeyValue);

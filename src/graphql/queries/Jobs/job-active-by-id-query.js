@@ -99,6 +99,7 @@ const JOB_ACTIVE_BY_ID_QUERY = gql`
           startTime
           endTime
           level
+          stateType
           batch {
             podName
             taskId

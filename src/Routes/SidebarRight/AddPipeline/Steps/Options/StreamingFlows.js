@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Form } from 'components/common';
+import { Form, HelpSiteLink } from 'components/common';
 import { Select } from 'antd';
 import has from 'lodash/has';
 import ControllerKeyValue from '../Nodes/inputKeyValueJson';
@@ -60,7 +60,10 @@ const StreamingFlows = ({ form, initialState }) => {
 
   return (
     <>
-      <Form.Divider>Streaming Flows</Form.Divider>
+      <Form.Divider>
+        Streaming Flows
+        <HelpSiteLink link="/learn/streaming/" style={{ marginLeft: '4px' }} />
+      </Form.Divider>
 
       <Form.Item label="Flows" name={['streaming', 'flows']}>
         <ControllerKeyValue
@@ -69,6 +72,7 @@ const StreamingFlows = ({ form, initialState }) => {
           isValueSignBoard
           titleKeyboard="Builder flow :"
           nameRef={['streaming', 'flows']}
+          isOpenGraphNodes
         />
       </Form.Item>
       {arrayListFlow.length > 1 && (
