@@ -4,6 +4,7 @@ import { Theme } from 'styles/colors';
 const settingBars = () => {
   const whiteColor = Theme.Styles.barColor.color;
   const textColor = Theme.Styles.barColor.text;
+
   const themePreferencesBar = {
     axis: {
       ticks: {
@@ -73,9 +74,9 @@ const settingBars = () => {
     tickSize: 5,
     tickPadding: 5,
     tickRotation: 20,
-    legend: 'Nodes',
-    legendPosition: 'middle',
-    legendOffset: -50,
+    // legend: 'Nodes',
+    // legendPosition: 'middle',
+    // legendOffset: -50,
     fontSize: 10,
   };
 

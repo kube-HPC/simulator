@@ -1,9 +1,13 @@
+import { LOCAL_STORAGE_KEYS } from 'const';
 import ThemeCreator from './themes/ThemeCreator';
 
 const themeName =
-  localStorage.getItem('theme') !== null &&
-  localStorage.getItem('theme') !== 'undefined'
-    ? localStorage.getItem('theme').toUpperCase()
+  localStorage.getItem(LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME) !== null &&
+  localStorage.getItem(LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME) !==
+    'undefined'
+    ? localStorage
+        .getItem(LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME)
+        .toUpperCase()
     : 'LIGHT';
 export const Theme = ThemeCreator(themeName);
 

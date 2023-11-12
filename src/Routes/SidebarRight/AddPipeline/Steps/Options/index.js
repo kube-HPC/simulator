@@ -44,7 +44,7 @@ const Options = ({ style }) => {
 
   return (
     <div style={style}>
-      {isStreamingPipeline !== false && (
+      {(isStreamingPipeline || initialState?.kind === 'stream') && (
         <StreamingFlows form={form} initialState={initialState} />
       )}
       <Form.Divider>Webhooks</Form.Divider>

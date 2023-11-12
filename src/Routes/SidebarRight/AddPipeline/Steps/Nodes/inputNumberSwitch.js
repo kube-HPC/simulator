@@ -15,7 +15,7 @@ const InputNumberSwitch = forwardRef(
     },
     ref
   ) => {
-    const [disabled, setDisabled] = useState(!!value);
+    const [disabled, setDisabled] = useState(value > 0);
     const [numberValue, setNumberValue] = useState(value);
 
     // Handle the switch change event

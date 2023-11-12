@@ -160,6 +160,7 @@ const JOB_BY_ID_QUERY = gql`
           algorithmName
           input
           kind
+          stateType
         }
       }
       userPipeline {

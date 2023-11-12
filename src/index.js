@@ -2,6 +2,7 @@
 import 'core-js/features/array';
 import './assets/collapseTransition.css';
 import { ErrorBoundary } from 'components';
+import { LOCAL_STORAGE_KEYS } from 'const';
 import { ConfigProvider, theme } from 'antd';
 import React, { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -28,7 +29,11 @@ const ConfigProviderApp = () => {
 
   // create in began styles antd by theme name
   let themeProvider = null;
-  switch (localStorage.getItem('theme')?.toUpperCase()) {
+  switch (
+    localStorage
+      .getItem(LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME)
+      ?.toUpperCase()
+  ) {
     case 'LIGHT':
       themeProvider = { algorithm: defaultAlgorithm };
       break;

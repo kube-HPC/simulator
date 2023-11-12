@@ -10,4 +10,5 @@ export default {
   LOCAL_STORAGE_KEY_ADD_PIPELINE: 'add-pipeline-form-state',
   LOCAL_STORAGE_KEY_GRAPH_DIRECTION: 'graph-direction',
   LOCAL_STORAGE_KEY_GRAPH_SLIDER: 'graph-slider',
+  LOCAL_STORAGE_KEY_THEME: 'hkubeTheme',
 };

@@ -13,11 +13,12 @@ import {
 } from './styles';
 
 const PieContainer = styled.div`
-  height: 10em;
+  height: 9em;
   flex: 1;
   svg + div {
     color: #000000;
   }
+  width: 70%;
 `;
 
 const BoxesContainer = styled.div`
@@ -25,6 +26,14 @@ const BoxesContainer = styled.div`
   flex-direction: column;
   justify-content: space-around;
   margin: 0 auto;
+  width: 30%;
+`;
+
+const StorageStyle = styled.div`
+  height: 45%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 `;
 
 const adaptedData = ({ free, used }) => {
@@ -59,7 +68,7 @@ const Storage = ({ storage }) => {
   const data = adaptedData({ free, used, freeH, usedH });
 
   return (
-    <div>
+    <StorageStyle>
       <Header>Storage</Header>
       <Metrics>
         <PieContainer>
@@ -96,12 +105,12 @@ const Storage = ({ storage }) => {
           <MetricContainer style={{ borderColor: COLOR_STORAGE.USED }}>
             <MetricHeader>Used</MetricHeader>
             <MetricValue>
-              {usedH} ({usedP * 100}%)
+              {usedH} ({(usedP * 100).toFixed(2)}%)
             </MetricValue>
           </MetricContainer>
         </BoxesContainer>
       </Metrics>
-    </div>
+    </StorageStyle>
   );
 };
 Storage.propTypes = {
