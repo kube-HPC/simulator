@@ -157,6 +157,7 @@ const GraphTab = ({ graph, pipeline }) => {
     const scale = network.getScale();
     const viewPosition = network.getViewPosition();
     nodePos.current = { nodesPostions: network?.getPositions() };
+
     zoomPos.current = { scale, position: viewPosition };
   };
 
@@ -172,12 +173,12 @@ const GraphTab = ({ graph, pipeline }) => {
 
         handleIsLockDrag();
 
-        if (
+        /*   if (
           adaptedGraphData?.nodes.length > 10 &&
-          adaptedGraphData?.nodes[0]?.x === null
-        ) {
-          isHierarchical.current = false;
-        }
+          adaptedGraphData?.nodes[0]?.x === null */
+        // ) {
+        isHierarchical.current = false;
+        // }
       } else {
         if (!isPhysics.current) {
           network.setOptions(graphOptionsData);
@@ -190,8 +191,7 @@ const GraphTab = ({ graph, pipeline }) => {
           if (isSlider.current) {
             //  const a = nodeSpacing.current / nodeSpacingInit;
             // const scaleSave = a * zoomSavePos?.current?.scale;
-            //   console.log('scaleSave', scaleSave);
-            console.log('sSlider.current', nodeSpacing.current);
+
             //   zoomPos.current.scale = scaleSave;
             isSlider.current = false;
           } else {
