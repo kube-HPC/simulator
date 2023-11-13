@@ -45,6 +45,12 @@ jobs:
           echo "IMAGE_NAME: $IMAGE_NAME"
         env:
           DOCKER_HUB_PASS: ${{ secrets.DOCKER_PASSWORD }}
+      - name: set branch
+        run: |
+          echo GITHUB_REF=$GITHUB_REF
+          export BRANCH=${GITHUB_REF##*/}
+          echo BRANCH=$BRANCH
+          echo BRANCH=$BRANCH >> $GITHUB_ENV
       - name: trigger
         if: env.CHANGED
         id: trigger
@@ -54,5 +60,5 @@ jobs:
           event_type: trigger
           client_payload: '{"BRANCH": "${{ env.BRANCH }}" }'
         env:
-          GITHUB_TOKEN: "${{ secrets.GH_TOKEN }}"
+          GITHUB_TOKEN: '${{ secrets.GH_TOKEN }}'
           BRANCH: ${{ env.BRANCH }}
