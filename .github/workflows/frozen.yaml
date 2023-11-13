@@ -40,13 +40,19 @@ jobs:
         run: |
           docker login --username yehiyam --password ${DOCKER_HUB_PASS}
           PRIVATE_REGISTRY=docker.io/hkube npm run build
+          export IMAGE_NAME=$(PRIVATE_REGISTRY=docker.io/hkube npm run build | tail -1 | awk '{print $NF}')
+          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
+          echo "IMAGE_NAME: $IMAGE_NAME"
         env:
           DOCKER_HUB_PASS: ${{ secrets.DOCKER_PASSWORD }}
       - name: trigger
+        if: env.CHANGED
         id: trigger
         uses: octokit/request-action@v2.x
         with:
           route: POST /repos/kube-HPC/release-manager/dispatches
           event_type: trigger
+          client_payload: '{"BRANCH": "${{ env.BRANCH }}" }'
         env:
           GITHUB_TOKEN: '${{ secrets.GH_TOKEN }}'
+          BRANCH: ${{ env.BRANCH }}
