@@ -168,7 +168,9 @@ const GraphPreview = ({ pipeline, keyIndex, isBuildAllFlows, isMinified }) => {
             })
               .then(response => {
                 if (!response.ok) {
-                  throw new Error(`Failed to fetch: ${flow}`);
+                  response.json().then(jtext => {
+                    setErrorGraph(jtext.error.message);
+                  });
                 }
                 return response.text();
               })
