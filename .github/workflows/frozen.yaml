@@ -52,7 +52,6 @@ jobs:
           echo BRANCH=$BRANCH
           echo BRANCH=$BRANCH >> $GITHUB_ENV
       - name: trigger
-        if: env.CHANGED
         id: trigger
         uses: octokit/request-action@v2.x
         with:
