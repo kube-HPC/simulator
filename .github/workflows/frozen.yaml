@@ -54,5 +54,5 @@ jobs:
           event_type: trigger
           client_payload: '{"BRANCH": "${{ env.BRANCH }}" }'
         env:
-          GITHUB_TOKEN: '${{ secrets.GH_TOKEN }}'
+          GITHUB_TOKEN: "${{ secrets.GH_TOKEN }}"
           BRANCH: ${{ env.BRANCH }}
