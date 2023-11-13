@@ -49,4 +49,4 @@ jobs:
           route: POST /repos/kube-HPC/release-manager/dispatches
           event_type: trigger
         env:
-          GITHUB_TOKEN: '${{ secrets.GH_TOKEN }}'
+          GITHUB_TOKEN: "${{ secrets.GH_TOKEN }}"
