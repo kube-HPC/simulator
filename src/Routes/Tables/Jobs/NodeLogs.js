@@ -78,6 +78,7 @@ const msgAlertFailedScheduling = (typeText, message) => {
 
 const NodeLogs = ({ node, taskDetails }) => {
   const { kibanaUrl } = useSelector(selectors.connection);
+  const { structuredPrefix } = useSelector(selectors.connection);
   const [currentTask, setCurrentTask] = useState(undefined);
   const [logMode, setLogMode] = useState(logModes.ALGORITHM);
   const [searchWord, setSearchWord] = useState(null);
@@ -174,13 +175,25 @@ const NodeLogs = ({ node, taskDetails }) => {
       const cTaskId = currentTask || taskId;
       const word = e?.target?.value || '';
       setSearchWord(word);
+      let metaPath = 'meta.internal.taskId';
+      if (structuredPrefix) {
+        metaPath = `${structuredPrefix}.${metaPath}`;
+      }
+
       setLinkKibana(
-        `${kibanaUrl}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',key:meta.internal.taskId,negate:!f,params:(query:'${cTaskId}'),type:phrase),query:(match:(meta.internal.taskId:(query:'${cTaskId}',type:phrase))))),index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',interval:auto,query:(language:lucene${
+        `${kibanaUrl}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',key:${metaPath},negate:!f,params:(query:'${cTaskId}'),type:phrase),query:(match:(${metaPath}:(query:'${cTaskId}',type:phrase))))),index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',interval:auto,query:(language:lucene${
           word ? `,query:${word}` : ''
         }),sort:!(!('@timestamp',desc)))`
       );
     },
-    [currentTask, kibanaUrl, node.batch, node.startTime, taskId]
+    [
+      currentTask,
+      kibanaUrl,
+      structuredPrefix,
+      node.batch,
+      node.startTime,
+      taskId,
+    ]
   );
 
   const handleSearchWord = useDebounceCallback(setWord, 1000, false);

@@ -157,8 +157,8 @@ export const formatNode = (
     title: `${meta.nodeName} ${
       pipelineNode?.stateType ? pipelineNode.stateType : ''
     }`,
-    x: (position && position?.nodesPostions[node.nodeName]?.x) || null,
-    y: (position && position?.nodesPostions[node.nodeName]?.y) || null,
+    x: (position && position?.nodesPostions[node.nodeName]?.x) || 0,
+    y: (position && position?.nodesPostions[node.nodeName]?.y) || 0,
     label: meta?.extra?.batch
       ? `${meta.nodeName} (${meta.extra.batch})`
       : `${meta.nodeName} `,
