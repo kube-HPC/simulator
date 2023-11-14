@@ -7,6 +7,7 @@ module.exports = app => {
         envs: process.env,
         hkubeSystemVersion: process.env.HKUBE_SYSTEM_VERSION,
         kibanaUrl: process.env.KIBANA_URL,
+        structuredPrefix: process.env.ELASTICSEARCH_STRUCTURED_PREFIX,
         grafanaUrl: process.env.GRAFANA_URL,
         grafanaDashboardUrl: process.env.GRAFANA_URL,
         dataSourceIsEnable: process.env.DATA_SOURCE_IS_ENABLE === 'true',
