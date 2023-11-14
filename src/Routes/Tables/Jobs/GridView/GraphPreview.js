@@ -1,8 +1,14 @@
-import React, { useState, useEffect, useMemo, useReducer } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useReducer,
+  useCallback,
+} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Alert } from 'antd';
-import { Fallback, FallbackComponent } from 'components/common';
+// import { Fallback, FallbackComponent } from 'components/common';
 // import { useNodeInfo, useSettings } from 'hooks';
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
@@ -146,7 +152,7 @@ const GraphPreview = ({ pipeline, keyIndex, isBuildAllFlows, isMinified }) => {
     return joinFlows;
   };
 
-  useEffect(() => {
+  const initPreviewGetData = useCallback(() => {
     if (isStreamingPipeline) {
       // streaming
 
@@ -168,7 +174,9 @@ const GraphPreview = ({ pipeline, keyIndex, isBuildAllFlows, isMinified }) => {
             })
               .then(response => {
                 if (!response.ok) {
-                  throw new Error(`Failed to fetch: ${flow}`);
+                  response.json().then(jtext => {
+                    setErrorGraph(jtext.error.message);
+                  });
                 }
                 return response.text();
               })
@@ -193,7 +201,7 @@ const GraphPreview = ({ pipeline, keyIndex, isBuildAllFlows, isMinified }) => {
                 toggleForceUpdate();
                 setTimeout(() => {
                   toggleForceUpdate();
-                }, 100);
+                }, 1);
               }
             })
             .catch(error => {
@@ -228,7 +236,7 @@ const GraphPreview = ({ pipeline, keyIndex, isBuildAllFlows, isMinified }) => {
                 toggleForceUpdate();
                 setTimeout(() => {
                   toggleForceUpdate();
-                }, 100);
+                }, 1);
               }
             });
         }
@@ -252,32 +260,40 @@ const GraphPreview = ({ pipeline, keyIndex, isBuildAllFlows, isMinified }) => {
             toggleForceUpdate();
             setTimeout(() => {
               toggleForceUpdate();
-            }, 100);
+            }, 1);
           }
         });
     }
-  }, [stepIdx === 0, isStreamingPipeline]);
+  }, [backendApiUrl, isBuildAllFlows, isStreamingPipeline, keyFlow, pipeline]);
+
+  useEffect(() => {
+    initPreviewGetData();
+  }, [valuesState, stepIdx, isStreamingPipeline]);
 
   if (graphPreview === undefined) {
     return <>Still loading...</>;
   }
 
+  const isDataNode =
+    adaptedGraph.nodes.length > 0 && adaptedGraph.nodes[0].name !== '';
+
   return (
     <GraphContainer>
-      {adaptedGraph.nodes.length !== 0 ? (
-        showGraph ? (
-          <Fallback>
-            <Graph
-              graph={adaptedGraph}
-              options={graphOptions}
-              //   events={events}
-            />
-          </Fallback>
-        ) : (
-          <FallbackComponent />
-        )
-      ) : (
-        errorGraph && <Alert message={errorGraph} type="error" showIcon />
+      {isDataNode && showGraph && (
+        <Graph
+          graph={adaptedGraph}
+          options={graphOptions}
+          //   events={events}
+        />
+      )}
+
+      {isDataNode && errorGraph && (
+        <Alert
+          style={{ position: 'absolute', top: '10px' }}
+          message={errorGraph}
+          type="error"
+          showIcon
+        />
       )}
     </GraphContainer>
   );

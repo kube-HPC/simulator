@@ -20,7 +20,7 @@ const CapitalizedTag = styled(Tag)`
 `;
 
 const JobTypes = ({ types, fullName }) => (
-  <Overflow justify="start" gutter={0}>
+  <Overflow justify="center" gutter={0}>
     {types &&
       types.map(type =>
         fullName ? (
