@@ -9,6 +9,7 @@ const {
   board,
   hkubeSystemVersion,
   kibanaUrl,
+  structuredPrefix,
   grafanaUrl,
   grafanaDashboardUrl,
   dataSourceIsEnable,
@@ -30,6 +31,7 @@ app.get('*/dashboard-config.json', (req, res) => {
     config: {
       hkubeSystemVersion,
       kibanaUrl,
+      structuredPrefix,
       grafanaUrl,
       grafanaDashboardUrl,
       dataSourceIsEnable,
