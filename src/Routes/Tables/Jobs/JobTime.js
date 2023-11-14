@@ -1,4 +1,5 @@
 import { Tag, Typography } from 'antd';
+import styled from 'styled-components';
 import HumanizeDuration from 'humanize-duration';
 import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -11,6 +12,11 @@ const SEC = 1000;
  * @param {object} props
  * @param {React.CSSProperties} props.style
  */
+
+const TimeText = styled(Text)`
+  font-size: 10px;
+`;
+
 const JobTime = ({ results, startTime, length, style }) => {
   const diffTime = useCallback(
     (from = new Date()) =>
@@ -42,7 +48,7 @@ const JobTime = ({ results, startTime, length, style }) => {
       <Moment format="DD/MM/YY HH:mm:ss" style={{ marginRight: '1ch' }}>
         {+startTime}
       </Moment>
-      <Text strong>{time}</Text>
+      <TimeText strong>{time}</TimeText>
     </Tag>
   );
 };
