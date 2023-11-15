@@ -25,7 +25,10 @@ const PipelinesQueryTable = ({ onSubmit, pipelinesList }) => {
 
   useEffect(() => {
     if (instanceFilters.pipelines.qPipelineName === null) {
-      form.resetFields();
+      const qqPipelineNameValue = form.getFieldValue('qPipelineName');
+      if (qqPipelineNameValue !== '') {
+        form.resetFields();
+      }
       setTimeout(() => {
         SubmitForm(null);
       }, 100);
@@ -72,6 +75,7 @@ const PipelinesQueryTable = ({ onSubmit, pipelinesList }) => {
           filterOption={(inputValue, option) =>
             option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
           }
+          autoFocus
           allowClear
           onSearch={submitDebounced}
           onSelect={SubmitForm}

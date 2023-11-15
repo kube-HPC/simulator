@@ -27,7 +27,11 @@ const AlgorithmsQueryTable = ({ onSubmit, algorithmsList }) => {
 
   useEffect(() => {
     if (instanceFilters.algorithms.qAlgorithmName === null) {
-      form.resetFields();
+      const qAlgorithmNameValue = form.getFieldValue('qAlgorithmName');
+      if (qAlgorithmNameValue !== '') {
+        form.resetFields();
+      }
+
       setTimeout(() => {
         SubmitForm(null);
       }, 100);
@@ -74,6 +78,7 @@ const AlgorithmsQueryTable = ({ onSubmit, algorithmsList }) => {
           filterOption={(inputValue, option) =>
             option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
           }
+          autoFocus
           allowClear
           onSearch={submitDebounced}
           onSelect={SubmitForm}
