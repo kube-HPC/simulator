@@ -120,6 +120,7 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
             option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
           }
           allowClear
+          autoFocus
           onSearch={SubmitForm}
           onSelect={SubmitForm}
           onClear={SubmitForm}
