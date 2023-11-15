@@ -1,9 +1,10 @@
 import React from 'react';
 import { WarningOutlined } from '@ant-design/icons';
-import { Tag } from 'antd';
+import { Tag, Tooltip, Typography } from 'antd';
 import Moment from 'react-moment';
 import { Ellipsis } from 'components/common';
 import { sorter } from 'utils/stringHelper';
+import { copyToClipboard } from 'utils';
 import { errorsCode } from '@hkube/consts';
 import AlgorithmActions from './AlgorithmActions.react';
 import AlgorithmBuildStats from './AlgorithmBuildStats.react';
@@ -18,7 +19,11 @@ const Memory = mem => <Tag>{mem || 'No Memory Specified'}</Tag>;
 const Cpu = cpu => <Tag>{cpu || 'No CPU Assigned'}</Tag>;
 const Image = algorithmImage =>
   algorithmImage ? (
-    <Ellipsis copyable text={algorithmImage} length={50} />
+    <Tooltip title={algorithmImage}>
+      <Typography.Text onClick={() => copyToClipboard(algorithmImage)}>
+        {algorithmImage}
+      </Typography.Text>
+    </Tooltip>
   ) : (
     <Tag>No Image</Tag>
   );
@@ -41,7 +46,6 @@ const filterByImage = (value, record) => record.algorithmImage.includes(value);
 const sortByImage = (a, b) => sorter(a.algorithmImage, b.algorithmImage);
 const sortByMinHotWorkers = (a, b) => sorter(a.workerImage, b.workerImage);
 const sortByLastModified = (a, b) => sorter(a.modified, b.modified);
-
 export default [
   {
     width: '12%',
@@ -52,6 +56,7 @@ export default [
     render: Name,
   },
   {
+    width: '40%',
     title: 'Algorithm Image',
     dataIndex: ['algorithmImage'],
     key: 'algorithmImage',
@@ -60,28 +65,28 @@ export default [
     render: Image,
   },
   {
-    width: '10%',
+    width: '7%',
     title: 'Builds Stats',
     dataIndex: ['buildStats'],
     key: 'builds',
     render: BuildStats,
   },
   {
-    width: '10%',
+    width: '5%',
     title: 'CPU',
     dataIndex: ['cpu'],
     key: 'cpu',
     render: Cpu,
   },
   {
-    width: '10%',
+    width: '5%',
     title: 'Mem',
     dataIndex: ['mem'],
     key: 'mem',
     render: Memory,
   },
   {
-    width: '10%',
+    width: '7%',
     title: 'Min Hot Workers',
     dataIndex: ['minHotWorkers'],
     key: 'minHotWorkers',
@@ -97,7 +102,7 @@ export default [
     render: LastModified,
   },
   {
-    width: '20%',
+    width: '14%',
     title: 'Action',
     dataIndex: ['action'],
     key: 'action',
