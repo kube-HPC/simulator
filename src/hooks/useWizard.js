@@ -96,7 +96,9 @@ const useWizard = (
   );
 
   const setForm = useCallback(() => {
-    setValuesState(getFormattedFormValues());
+    setTimeout(() => {
+      setValuesState(getFormattedFormValues());
+    }, 100);
   }, [getFormattedFormValues, setValuesState]);
 
   return {
