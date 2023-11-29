@@ -44,7 +44,7 @@ const renderAction = (_, record) => <AlgorithmActions record={record} />;
 const sortByName = (a, b) => sorter(a.name, b.name);
 const filterByImage = (value, record) => record.algorithmImage.includes(value);
 const sortByImage = (a, b) => sorter(a.algorithmImage, b.algorithmImage);
-const sortByMinHotWorkers = (a, b) => sorter(a.workerImage, b.workerImage);
+const sortByMinHotWorkers = (a, b) => sorter(a.minHotWorkers, b.minHotWorkers);
 const sortByLastModified = (a, b) => sorter(a.modified, b.modified);
 export default [
   {
