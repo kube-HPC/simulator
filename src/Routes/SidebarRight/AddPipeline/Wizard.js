@@ -98,6 +98,8 @@ const Wizard = ({
     isRunPipeline ? RunPipelineStepComponents : stepComponents
   );
 
+  const [graphNodeSelected, SetGraphnodeSelected] = useState(null);
+
   const steps = useMemo(
     () =>
       initStepNames.map(name => ({
@@ -163,6 +165,10 @@ const Wizard = ({
     }
   }, [isStreamingPipeline, resetKind]);
 
+  const selectNodeFromGraph = nodeName => {
+    SetGraphnodeSelected(nodeName);
+  };
+
   return (
     <context.Provider
       value={{
@@ -174,6 +180,7 @@ const Wizard = ({
         valuesState,
         isRunPipeline,
         setForm,
+        graphNodeSelected,
       }}>
       <Steps
         items={steps}
@@ -215,6 +222,7 @@ const Wizard = ({
                 pipeline={valuesState}
                 isBuildAllFlows={isStreamingPipeline}
                 isMinified
+                clickNode={selectNodeFromGraph}
               />
             )}
           </ContenerGraph>

@@ -8,6 +8,21 @@ import { Card, JsonSwitch } from 'components/common';
 import { RightOutlined, DownOutlined } from '@ant-design/icons';
 import getColumns from './getColumns';
 
+function countByKey(array, nameKey) {
+  const result = {};
+
+  array.forEach(obj => {
+    const key = obj[nameKey];
+    if (!result[key]) {
+      result[key] = 1;
+    } else {
+      result[key]++;
+    }
+  });
+
+  return result;
+}
+
 const NodeInputOutput = ({ algorithm = {}, payload }) => {
   const { socketUrl } = useSelector(selectors.connection);
   const mapTask = (task, downloadFileExt) => ({
@@ -17,7 +32,7 @@ const NodeInputOutput = ({ algorithm = {}, payload }) => {
     output: task.output && task.output.storageInfo,
     error: task.error,
     warnings: task.warnings,
-    status: task.status,
+    status: task.status === 'succeed' ? 'completed' : task.status,
     podName: task.podName,
     taskId: task.taskId,
     retries: task.retries || 0,
@@ -43,7 +58,11 @@ const NodeInputOutput = ({ algorithm = {}, payload }) => {
         hideOnSinglePage: true,
       }}
       rowKey={({ taskId }) => `input-output-table-task-${taskId}`}
-      columns={getColumns(socketUrl, algorithm.name)}
+      columns={getColumns(
+        socketUrl,
+        algorithm.name,
+        countByKey(dataSource, 'status')
+      )}
       dataSource={removeNullUndefinedCleanDeep(dataSource)}
       expandable={{
         expandedRowRender: record => (

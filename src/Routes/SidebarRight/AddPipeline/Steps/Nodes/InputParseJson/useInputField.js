@@ -152,6 +152,7 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
       setValue(srcValue);
 
       let isOneValid = false;
+
       rules.forEach(rule => {
         if (isOneValid === false) {
           if (rule === 'array' && isArray(srcValue)) {
@@ -161,6 +162,14 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
           } else if (rule === 'object' && isJsonString(srcValue)) {
             setIsValid(true);
             antFields.onChange(JSON.parse(srcValue));
+            isOneValid = true;
+          } else if (
+            rule === 'object' &&
+            (typeof srcValue === 'object' || typeof srcValue === 'function') &&
+            srcValue !== null
+          ) {
+            setIsValid(true);
+            antFields.onChange(JSON.stringify(srcValue));
             isOneValid = true;
           } else if (rule === 'node' && isNode(nodeNames, srcValue)) {
             setIsValid(true);
