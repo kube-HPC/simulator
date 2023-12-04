@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Theme } from 'styles/colors';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -143,10 +143,11 @@ const Nodes = ({ style }) => {
     initialState,
     isStreamingPipeline,
     isRunPipeline,
+    graphNodeSelected,
   } = useWizardContext();
 
   const { dataSourceIsEnable } = useSelector(selectors.connection);
-
+  const nodeSelectRadio = useRef();
   const [ids, appendKey, dropKey] = useIds(Object.keys(initialState.nodes));
 
   const [activeNodeId, setActiveNodeId] = useState(ids[0]);
@@ -184,10 +185,23 @@ const Nodes = ({ style }) => {
     setActiveNodeId(ids.length);
   }, [appendKey, ids]);
 
+  useEffect(() => {
+    if (graphNodeSelected) {
+      const formFields = getFieldsValue(true);
+
+      const indexNode = formFields.nodes.findIndex(
+        item => item.nodeName === graphNodeSelected[0]
+      );
+
+      setActiveNodeId(indexNode);
+    }
+  }, [graphNodeSelected]);
+
   return (
     <div style={style}>
       <NodeBrowserContainer>
         <NodeSelectRadioGroup
+          ref={nodeSelectRadio}
           value={activeNodeId}
           buttonStyle="outline"
           onChange={selectActiveNode}>

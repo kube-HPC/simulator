@@ -9,7 +9,7 @@ export default {
   GPU: '80vw',
   MEMORY: '80vw',
   ERROR_LOGS: '70vw',
-  JOB_INFO: '90vw',
+  JOB_INFO: '92vw',
   ALGORITHM_INFO: '160ch',
   PIPELINE_INFO: '180ch',
   ALGORITHM_EDIT: '40vw',

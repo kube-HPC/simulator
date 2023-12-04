@@ -43,7 +43,13 @@ const GraphContainer = styled.div`
   }
 `;
 
-const GraphPreview = ({ pipeline, keyIndex, isBuildAllFlows, isMinified }) => {
+const GraphPreview = ({
+  pipeline,
+  keyIndex,
+  isBuildAllFlows,
+  isMinified,
+  clickNode,
+}) => {
   const wizardContext = useWizardContext();
 
   let valuesState = pipeline;
@@ -284,6 +290,12 @@ const GraphPreview = ({ pipeline, keyIndex, isBuildAllFlows, isMinified }) => {
           graph={adaptedGraph}
           options={graphOptions}
           //   events={events}
+
+          getNetwork={network => {
+            network.on('click', () => {
+              clickNode(network.getSelectedNodes());
+            });
+          }}
         />
       )}
 
@@ -308,6 +320,7 @@ GraphPreview.propTypes = {
   keyIndex: PropTypes.number,
   isBuildAllFlows: PropTypes.bool,
   isMinified: PropTypes.bool,
+  clickNode: PropTypes.func,
   /* graph: PropTypes.shape({
     nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
     edges: PropTypes.arrayOf(PropTypes.object).isRequired,*
@@ -318,6 +331,7 @@ GraphPreview.defaultProps = {
   keyIndex: undefined,
   isBuildAllFlows: false,
   isMinified: true,
+  clickNode: () => {},
 };
 
 /* const isSameGraph = (a, b) =>

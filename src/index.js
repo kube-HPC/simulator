@@ -35,7 +35,12 @@ const ConfigProviderApp = () => {
       ?.toUpperCase()
   ) {
     case 'LIGHT':
-      themeProvider = { algorithm: defaultAlgorithm };
+      themeProvider = {
+        algorithm: defaultAlgorithm,
+        token: {
+          padding: 10,
+        },
+      };
       break;
     case 'DARK':
       themeProvider = {
@@ -49,6 +54,12 @@ const ConfigProviderApp = () => {
           wireframe: false,
           colorBgLayout: '#180d31',
           colorPrimaryBg: '#252f58',
+
+          components: {
+            Table: {
+              padding: 30,
+            },
+          },
         },
       };
       break;

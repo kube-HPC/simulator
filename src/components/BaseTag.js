@@ -17,7 +17,14 @@ const TagTheme = styled(Tag)`
       : undefined}
 `;
 
-const BaseTag = ({ status, children, colorMap, tooltip, style }) => {
+const BaseTag = ({
+  status,
+  children,
+  colorMap,
+  tooltip,
+  isActiveLoader,
+  style,
+}) => {
   const color = colorMap[status];
   const isBright = [COLOR.lightGrey, COLOR.white].includes(color) || !color;
   const textColor = isBright ? COLOR.transparentBlack : COLOR.white;
@@ -32,7 +39,9 @@ const BaseTag = ({ status, children, colorMap, tooltip, style }) => {
         $isBright={isBright}
         color={Theme.Styles?.isTagFill ? color : ''} // color is prop of Tag ANTD
         style={{ ...style }}
-        icon={status === 'active' ? <SyncOutlined spin /> : null}>
+        icon={
+          status === 'active' && isActiveLoader ? <SyncOutlined spin /> : null
+        }>
         {children}
       </TagTheme>
     </Tooltip>
@@ -46,6 +55,7 @@ BaseTag.propTypes = {
   tooltip: PropTypes.string,
   // eslint-disable-next-line
   style: PropTypes.object,
+  isActiveLoader: PropTypes.bool,
 };
 
 BaseTag.defaultProps = {
@@ -53,6 +63,7 @@ BaseTag.defaultProps = {
   status: null,
   colorMap: COLOR_PIPELINE_STATUS,
   tooltip: null,
+  isActiveLoader: true,
 };
 
 export default BaseTag;
