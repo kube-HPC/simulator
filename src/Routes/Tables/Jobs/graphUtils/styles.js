@@ -169,7 +169,6 @@ export default ({
     // borderWidth: 1.5,
     borderWidth: 0,
     borderWidthSelected: 1.5,
-    shadow: false,
   },
   edges: {
     selectionWidth: 1,

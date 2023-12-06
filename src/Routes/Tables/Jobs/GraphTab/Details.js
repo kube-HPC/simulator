@@ -43,6 +43,10 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
   //    selectors.algorithms.collection.byId(state, node.algorithmName)
   //  );
   let algorithmDetails = null;
+  const isNodeNotBatchsAndNotStateless =
+    (node?.batch === null || node?.batch?.length === 0) &&
+    node?.stateType !== 'stateless';
+
   // node && node.algorithmName && useAlgorithmByName(node.algorithmName);
   const query = useAlgorithmByVersion(
     node.algorithmName,
@@ -135,10 +139,11 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
         ),
       },
       {
-        label: 'Input Output Details',
+        label: 'Info & Results',
         key: 'io-details-tab',
         children: (
           <NodeInputOutput
+            isShowOneRow={isNodeNotBatchsAndNotStateless}
             payload={node}
             algorithm={algorithmDetails}
             key={`${node.nodeName}-io-details-tab-node-input-output`}
@@ -146,7 +151,15 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
         ),
       },
     ],
-    [algorithmDetails, jobId, node, taskDetails]
+    [
+      node,
+      taskDetails,
+      algorithmDetailsDataView,
+      jobId,
+      isNodeNotBatchsAndNotStateless,
+
+      algorithmDetails,
+    ]
   );
 
   const handleTabChange = activeKey => {
@@ -186,6 +199,7 @@ Details.propTypes = {
   // eslint-disable-next-line
   node: PropTypes.object,
   isDisabledBtnRunDebug: PropTypes.bool,
+  pipelienKind: PropTypes.string.isRequired,
 };
 
 Details.defaultProps = {
