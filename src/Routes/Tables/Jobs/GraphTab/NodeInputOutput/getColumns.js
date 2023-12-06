@@ -26,10 +26,10 @@ const getStatusFilter = () =>
 
 const Index = index => <Tag>{index}</Tag>;
 
-const TitleStatus = record => (
+const TitleStatus = (record, isShowOneRow) => (
   <>
     <Typography.Text style={{ paddingRight: '7px' }}>status</Typography.Text>
-    {record.active > 0 && (
+    {!isShowOneRow && record.active > 0 && (
       <BaseTag
         style={styleTagStatus}
         isActiveLoader={false}
@@ -39,7 +39,7 @@ const TitleStatus = record => (
         {record.active}
       </BaseTag>
     )}
-    {record.completed > 0 && (
+    {!isShowOneRow && record.completed > 0 && (
       <BaseTag
         style={styleTagStatus}
         status={PIPELINE_STATUS.COMPLETED}
@@ -49,7 +49,7 @@ const TitleStatus = record => (
       </BaseTag>
     )}
 
-    {record.failed > 0 && (
+    {!isShowOneRow && record.failed > 0 && (
       <BaseTag
         style={styleTagStatus}
         status={PIPELINE_STATUS.FAILED}
@@ -124,7 +124,7 @@ Results.defaultProps = {
   url: null,
 };
 
-const getNodeIOColumns = (url, algorithmName, statusCount) => [
+const getNodeIOColumns = (url, algorithmName, statusCount, isShowOneRow) => [
   {
     width: `5%`,
     title: 'index',
@@ -134,13 +134,14 @@ const getNodeIOColumns = (url, algorithmName, statusCount) => [
   },
   {
     width: `55%`,
-    title: TitleStatus(statusCount),
+    title: TitleStatus(statusCount, isShowOneRow),
     dataIndex: ['status'],
     key: 'status',
-    filterMultiple: true,
-    filters: getStatusFilter(),
+    filterMultiple: !isShowOneRow,
+    filters: !isShowOneRow && getStatusFilter(),
     onFilter: (value, record) => record.status === value,
-    defaultFilteredValue: [PIPELINE_STATUS.ACTIVE],
+    defaultFilteredValue:
+      !isShowOneRow && statusCount.active > 0 ? [PIPELINE_STATUS.ACTIVE] : '',
     render: Status,
   },
   {

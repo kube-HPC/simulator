@@ -94,7 +94,7 @@ const splitBatchToGroups = (
   const itemsGroups = batch.map(item => item.status).map(statusToGroup);
   const itemsGroupsSet = new Set(itemsGroups);
   const overrideGroup = OverrideGroup(itemsGroupsSet);
-  const { completed, total, idle, errors } = batchInfo;
+  const { completed, total, idle, errors, running } = batchInfo;
 
   let group = null;
   if (completed === total) {
@@ -122,7 +122,9 @@ const splitBatchToGroups = (
     nodeName,
     algorithmName,
     extra: {
-      batch: isStreaming ? total : `${completed}/${total}`,
+      batch: isStreaming
+        ? `${running}/${total}` // total
+        : `${completed}/${total}`,
     },
     group,
     level,
@@ -152,6 +154,7 @@ export const formatNode = (
   const pipelineNode = normalizedPipeline[node.nodeName];
   const isStateLess = pipelineNode?.stateType === 'stateless';
   const kind = isStateLess ? 'stateless' : pipelineNode?.kind || 'algorithm';
+
   const _node = {
     id: meta.nodeName,
     title: `${meta.nodeName} ${
@@ -166,13 +169,28 @@ export const formatNode = (
   /** @type {NodeOptions} */
   const batchStyling = isBatch
     ? {
-        borderWidth: 2,
+        borderWidth: 1,
         shapeProperties: {
-          borderDashes: [4, 4],
+          borderDashes: [0, 0],
         },
       }
     : {};
+
+  const batchStateLessStyling =
+    isBatch && isStateLess
+      ? {
+          shadow: {
+            enabled: true,
+            color: 'rgba(69,169, 236, 1)',
+            size: 1,
+            x: 7,
+            y: 7,
+          },
+        }
+      : {};
+
   const editedNode = {
+    ...batchStateLessStyling,
     ...batchStyling,
     ...meta,
     ..._node,
@@ -190,6 +208,7 @@ export const formatNode = (
     'shapeProperties',
     'group',
     'x',
-    'y'
+    'y',
+    'shadow'
   );
 };
