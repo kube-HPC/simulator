@@ -1,5 +1,6 @@
-import { nodeKind } from '@hkube/consts';
+import { nodeKind, taskStatuses as TASK } from '@hkube/consts';
 import { get, pick } from 'lodash';
+import { COLOR_TASK_STATUS } from 'styles/colors';
 import GRAPH_TYPES from './../graphUtils/types';
 
 /** @typedef {import('vis').NodeOptions} NodeOptions */
@@ -139,6 +140,17 @@ const nodeShapes = {
   [nodeKind.Gateway]: 'square',
   [nodeKind.DataSource]: 'circle',
 };
+
+const groupsColor = {
+  succeed: COLOR_TASK_STATUS[TASK.COMPLETED],
+  batchSucceed: COLOR_TASK_STATUS[TASK.COMPLETED],
+  batchIdle: COLOR_TASK_STATUS[TASK.PENDING],
+  batchErrors: COLOR_TASK_STATUS[TASK.FAILED],
+  batchActive: COLOR_TASK_STATUS[TASK.ACTIVE],
+  batchWarning: COLOR_TASK_STATUS[TASK.WARNING],
+  batchSkipped: COLOR_TASK_STATUS[TASK.SKIPPED],
+};
+
 export const formatNode = (
   normalizedPipeline,
   pipelineKind,
@@ -173,30 +185,24 @@ export const formatNode = (
         shapeProperties: {
           borderDashes: [0, 0],
         },
+        shadow: {
+          enabled: true,
+          color: groupsColor[meta.group] || COLOR_TASK_STATUS[TASK.SKIPPED],
+          size: 1,
+          x: 7,
+          y: 7,
+        },
       }
     : {};
 
-  const batchStateLessStyling =
-    isBatch && isStateLess
-      ? {
-          shadow: {
-            enabled: true,
-            color: 'rgba(69,169, 236, 1)',
-            size: 1,
-            x: 7,
-            y: 7,
-          },
-        }
-      : {};
-
   const editedNode = {
-    ...batchStateLessStyling,
     ...batchStyling,
     ...meta,
     ..._node,
     kind,
     shape: nodeShapes[kind] || nodeShapes.default,
   };
+
   return pick(
     editedNode,
     'label',
