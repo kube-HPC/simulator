@@ -34,7 +34,7 @@ const listAddOn = [
 ];
 
 const Controller = ({ nodeIdx, isRequired }) => {
-  const { form, isRunPipeline } = useWizardContext();
+  const { form, isRunPipeline, isStreamingPipeline } = useWizardContext();
   const inputValues = form.getFieldValue(['nodes', nodeIdx, 'input']);
 
   const isRequiredMsg = () =>
@@ -54,6 +54,7 @@ const Controller = ({ nodeIdx, isRequired }) => {
         <>
           {fields.map(({ key, name, fieldKey, ...restField }) => (
             <Form.Item
+              className={isStreamingPipeline && 'hidden-addon-before'}
               style={{ marginBottom: 10 }}
               {...restField}
               name={[name]}

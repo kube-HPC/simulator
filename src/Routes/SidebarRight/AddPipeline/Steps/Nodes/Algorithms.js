@@ -34,14 +34,6 @@ const AlgorithmNode = ({ id }) => {
           }
         />
       </Field>
-      {isStreamingPipeline && (
-        <Field name={['stateType']} title="State Type" required>
-          <Radio.Group buttonStyle="solid">
-            <Radio.Button value="stateless">stateless</Radio.Button>
-            <Radio.Button value="stateful">stateful</Radio.Button>
-          </Radio.Group>
-        </Field>
-      )}
 
       {isStreamingPipeline &&
         valuesState?.nodes[id]?.stateType === 'stateless' && (
@@ -116,21 +108,25 @@ const AlgorithmNode = ({ id }) => {
           <InputNumber min={0} />
         </Field>
 
-        <Field
-          overrides={{ ...{ valuePropName: 'checked' } }}
-          title="Include In Pipeline Results"
-          name={['includeInResult']}
-          skipValidation>
-          <Switch />
-        </Field>
+        {!isStreamingPipeline && (
+          <Field
+            overrides={{ ...{ valuePropName: 'checked' } }}
+            title="Include In Pipeline Results"
+            name={['includeInResult']}
+            skipValidation>
+            <Switch />
+          </Field>
+        )}
 
-        <Field
-          overrides={{ ...{ valuePropName: 'checked' } }}
-          title="Create A Tensorboard"
-          name={['metrics', 'tensorboard']}
-          skipValidation>
-          <Switch />
-        </Field>
+        {!isStreamingPipeline && (
+          <Field
+            overrides={{ ...{ valuePropName: 'checked' } }}
+            title="Create A Tensorboard"
+            name={['metrics', 'tensorboard']}
+            skipValidation>
+            <Switch />
+          </Field>
+        )}
       </Collapsible>
     </ctx.Provider>
   );

@@ -98,6 +98,12 @@ body{
   font-size: 20px !important;
 }
 
+.hidden-addon-before{
+  .ant-input-group-addon:first-child{
+    display:none;
+  }
+}
+
 `;
 
 export default GlobalStyle;

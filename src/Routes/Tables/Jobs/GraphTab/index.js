@@ -44,10 +44,10 @@ const GraphTab = ({ graph, pipeline }) => {
   // const [nodePos, setNodePos] = useState(null);
   // const [zoomPos, setZoomPos] = useState(null);
 
-  const [nodeSpacingInit] = useState(graph?.nodes.length > 10 ? 70 : 150);
+  const [nodeSpacingInit] = useState(graph?.nodes?.length > 10 ? 70 : 150);
 
   const [selectNode, setSelectNode] = useState([
-    graph?.nodes[0]?.nodeName || '',
+    graph?.nodes?.length > 0 ? graph?.nodes[0]?.nodeName : '',
   ]);
 
   const isHierarchical = useRef(true);

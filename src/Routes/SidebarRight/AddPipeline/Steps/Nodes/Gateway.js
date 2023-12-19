@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Select, Input, InputNumber, Radio } from 'antd';
+import { Select, Input, InputNumber } from 'antd';
 
 import useWizardContext from '../../useWizardContext';
 import { Field as RawField } from '../FormUtils';
@@ -59,8 +59,8 @@ const GatewayNode = ({ id }) => {
         </Field>
       </ctx.Provider>
 
-      <ctx.Provider value={{ rootId: ['nodes', id] }}>
-        <Field name={['stateType']} title="State Type" skipValidation>
+      {/*  <ctx.Provider value={{ rootId: ['nodes', id] }}>
+        <Field name={['stateType2']} title="State Type" skipValidation>
           <Radio.Group buttonStyle="solid">
             <Radio.Button value="stateless" disabled>
               stateless
@@ -68,7 +68,7 @@ const GatewayNode = ({ id }) => {
             <Radio.Button value="stateful">stateful</Radio.Button>
           </Radio.Group>
         </Field>
-      </ctx.Provider>
+            </ctx.Provider> */}
     </>
   );
 };

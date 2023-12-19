@@ -144,13 +144,32 @@ const Nodes = ({ style }) => {
     isStreamingPipeline,
     isRunPipeline,
     graphNodeSelected,
+    setForm,
   } = useWizardContext();
 
   const { dataSourceIsEnable } = useSelector(selectors.connection);
   const nodeSelectRadio = useRef();
-  const [ids, appendKey, dropKey] = useIds(Object.keys(initialState.nodes));
+  const [ids, appendKey, dropKey, reloadIds] = useIds(
+    Object.keys(initialState.nodes)
+  );
 
   const [activeNodeId, setActiveNodeId] = useState(ids[0]);
+
+  const handleKindChange = (e, id) => {
+    const kindValue = e.target.value;
+    const nodesArr = getFieldValue(['nodes']);
+
+    if (kindValue !== 'gateway') {
+      nodesArr[id].kind = 'algorithm';
+      nodesArr[id].stateType = kindValue;
+    } else {
+      nodesArr[id].kind = 'gateway';
+      nodesArr[id].stateType = 'stateful';
+    }
+
+    setFieldsValue({ nodes: nodesArr });
+    setForm();
+  };
 
   const selectActiveNode = useCallback(
     e => {
@@ -176,8 +195,9 @@ const Nodes = ({ style }) => {
       const formFields = getFieldsValue(true);
       formFields.nodes[id] = undefined;
       setFieldsValue({ nodes: formFields.nodes });
+      setForm();
     },
-    [ids, dropKey, getFieldsValue, setFieldsValue]
+    [ids, dropKey, getFieldsValue, setFieldsValue, setForm]
   );
 
   const handleAddNode = useCallback(() => {
@@ -197,117 +217,153 @@ const Nodes = ({ style }) => {
     }
   }, [graphNodeSelected]);
 
+  const [reloadNodes, setReloadNodes] = useState(true);
+  useEffect(() => {
+    if (isStreamingPipeline) {
+      const formFields = getFieldsValue();
+      reloadIds(formFields.nodes.filter(x => x.nodeName !== undefined));
+      setReloadNodes(false);
+      setTimeout(() => {
+        setReloadNodes(true);
+      }, 100);
+    }
+  }, [isStreamingPipeline]);
+
   return (
-    <div style={style}>
-      <NodeBrowserContainer>
-        <NodeSelectRadioGroup
-          ref={nodeSelectRadio}
-          value={activeNodeId}
-          buttonStyle="outline"
-          onChange={selectActiveNode}>
-          {ids.map(id => {
-            const kindName = getFieldValue(['nodes', id, 'kind']);
+    reloadNodes && (
+      <div style={style}>
+        <NodeBrowserContainer>
+          <NodeSelectRadioGroup
+            ref={nodeSelectRadio}
+            value={activeNodeId}
+            buttonStyle="outline"
+            onChange={selectActiveNode}>
+            {ids.map(id => {
+              const kindName = getFieldValue(['nodes', id, 'kind']);
 
-            return (
-              <NodeSelectRadioButton key={`node-radio-${id}`} value={id}>
-                <TagByName
-                  $tagColor={NODE_KINDS_COLOR[kindName]}
-                  colors={Theme.COLOR}>
-                  {KIND_NODE_SHORT_NAME[kindName]}
-                </TagByName>{' '}
-                {getFieldValue(['nodes', id, 'nodeName']) || `node-${id}`}
-              </NodeSelectRadioButton>
-            );
-          })}
+              return (
+                <NodeSelectRadioButton key={`node-radio-${id}`} value={id}>
+                  <TagByName
+                    $tagColor={NODE_KINDS_COLOR[kindName]}
+                    colors={Theme.COLOR}>
+                    {KIND_NODE_SHORT_NAME[kindName]}
+                  </TagByName>{' '}
+                  {getFieldValue(['nodes', id, 'nodeName']) || `node-${id}`}
+                </NodeSelectRadioButton>
+              );
+            })}
 
-          {!isRunPipeline && (
-            <AddNodeButton
-              icon={<PlusOutlined />}
-              type="dashed"
-              onClick={handleAddNode}
-            />
-          )}
-        </NodeSelectRadioGroup>
-      </NodeBrowserContainer>
+            {!isRunPipeline && (
+              <AddNodeButton
+                icon={<PlusOutlined />}
+                type="dashed"
+                onClick={handleAddNode}
+              />
+            )}
+          </NodeSelectRadioGroup>
+        </NodeBrowserContainer>
 
-      {ids.map(id => (
-        <DataNode key={`dataNode::id-${id}`} $isDisabled={isRunPipeline}>
-          <BoldedFormField
-            key={`node::id-${id}`}
-            style={{
-              display: activeNodeId === id ? '' : 'none',
-              margin: 0,
-            }}
-            required={false}>
-            <FlexBox align="normal">
-              <TitleNode>
-                {getFieldValue(['nodes', id, 'nodeName']) || `node-${id}`}
-              </TitleNode>
-              {!isRunPipeline && ids.length > 1 ? (
-                <Button
-                  icon={<CloseCircleOutlined />}
-                  ghost
-                  onClick={() => handleDelete(id)}
-                  type="danger"
-                  style={{ marginLeft: 'auto' }}>
-                  Delete Node
-                </Button>
-              ) : null}
-            </FlexBox>
+        {ids.map(id => (
+          <DataNode key={`dataNode::id-${id}`} $isDisabled={isRunPipeline}>
+            <BoldedFormField
+              key={`node::id-${id}`}
+              style={{
+                display: activeNodeId === id ? '' : 'none',
+                margin: 0,
+              }}
+              required={false}>
+              <FlexBox align="normal">
+                <TitleNode>
+                  {getFieldValue(['nodes', id, 'nodeName']) || `node-${id}`}
+                </TitleNode>
+                {!isRunPipeline && ids.length > 1 ? (
+                  <Button
+                    icon={<CloseCircleOutlined />}
+                    ghost
+                    onClick={() => handleDelete(id)}
+                    type="danger"
+                    style={{ marginLeft: 'auto' }}>
+                    Delete Node
+                  </Button>
+                ) : null}
+              </FlexBox>
+              <FormItemLabelWrapper
+                style={isStreamingPipeline ? { display: 'none' } : {}}
+                label="Kind"
+                name={['nodes', id, 'kind']}
+                initialValue={
+                  initialState?.nodes[id]?.kind
+                    ? initialState.nodes[id].kind
+                    : 'algorithm'
+                }>
+                <Radio.Group
+                  buttonStyle="solid"
+                  style={{ display: 'flex', alignItems: 'center' }}>
+                  <Radio.Button value="algorithm">Algorithm</Radio.Button>
 
-            <FormItemLabelWrapper
-              label="Kind"
-              name={['nodes', id, 'kind']}
-              initialValue={
-                initialState?.nodes[id]?.kind
-                  ? initialState.nodes[id].kind
-                  : 'algorithm'
-              }>
-              <Radio.Group
-                buttonStyle="solid"
-                style={{ display: 'flex', alignItems: 'center' }}>
-                <Radio.Button value="algorithm">Algorithm</Radio.Button>
+                  {dataSourceIsEnable && (
+                    <Radio.Button value="dataSource">DataSource</Radio.Button>
+                  )}
 
-                {dataSourceIsEnable && (
-                  <Radio.Button value="dataSource">DataSource</Radio.Button>
-                )}
+                  {isStreamingPipeline && (
+                    <Radio.Button value="gateway">Gateway</Radio.Button>
+                  )}
 
-                {isStreamingPipeline && (
-                  <Radio.Button value="gateway">Gateway</Radio.Button>
-                )}
+                  {!isStreamingPipeline && (
+                    <>
+                      <Radio.Button value="output">Output</Radio.Button>
+                      <Radio.Button value="hyperparamsTuner">
+                        Hyper Params
+                      </Radio.Button>
+                    </>
+                  )}
+                </Radio.Group>
+              </FormItemLabelWrapper>
+              {isStreamingPipeline && (
+                <Field title="Kind">
+                  <Radio.Group
+                    buttonStyle="solid"
+                    onChange={e => handleKindChange(e, id)}>
+                    <Radio.Button value="stateless">stateless</Radio.Button>
+                    <Radio.Button value="stateful">stateful</Radio.Button>
+                    <Radio.Button value="gateway">gateway</Radio.Button>
+                  </Radio.Group>
+                </Field>
+              )}
 
-                {!isStreamingPipeline && (
-                  <>
-                    <Radio.Button value="output">Output</Radio.Button>
-                    <Radio.Button value="hyperparamsTuner">
-                      Hyper Params
-                    </Radio.Button>
-                  </>
-                )}
-              </Radio.Group>
-            </FormItemLabelWrapper>
-
-            <Field
-              title="Node name"
-              name={['nodeName']}
-              rootId={['nodes', id]}
-              extraRules={[
-                {
-                  max: 32,
-                  message: 'Node name has to be shorter than 32 characters',
-                },
-              ]}>
-              <Input placeholder="Node name" />
-            </Field>
-
-            <Node
-              id={id}
-              kind={getFieldValue(['nodes', id, 'kind']) || 'algorithm'}
-            />
-          </BoldedFormField>
-        </DataNode>
-      ))}
-    </div>
+              {isStreamingPipeline && (
+                <Field
+                  overrides={{ ...{ style: { display: 'none' } } }}
+                  name={['nodes', id, 'stateType']}
+                  title="state Type"
+                  required>
+                  <Radio.Group buttonStyle="solid">
+                    <Radio.Button value="stateless">stateless</Radio.Button>
+                    <Radio.Button value="stateful">stateful</Radio.Button>
+                  </Radio.Group>
+                </Field>
+              )}
+              <Field
+                title="Node name"
+                name={['nodeName']}
+                rootId={['nodes', id]}
+                extraRules={[
+                  {
+                    max: 32,
+                    message: 'Node name has to be shorter than 32 characters',
+                  },
+                ]}>
+                <Input placeholder="Node name" />
+              </Field>
+              <Node
+                id={id}
+                kind={getFieldValue(['nodes', id, 'kind']) || 'algorithm'}
+              />
+            </BoldedFormField>
+          </DataNode>
+        ))}
+      </div>
+    )
   );
 };
 
