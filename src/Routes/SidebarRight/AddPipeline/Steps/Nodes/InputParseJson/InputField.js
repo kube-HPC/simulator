@@ -4,6 +4,12 @@ import PropTypes from 'prop-types';
 import RawInputField from 'components/InputField';
 import useInputField from './useInputField';
 
+function isObject(element) {
+  return (
+    typeof element === 'object' && element !== null && !Array.isArray(element)
+  );
+}
+
 const InputField = ({ placeholder, tooltip, idx, onRemove, ...antFields }) => {
   const inputRef = useRef();
   useEffect(() => {
@@ -25,7 +31,7 @@ const InputField = ({ placeholder, tooltip, idx, onRemove, ...antFields }) => {
       hasRemove={hasRemove}
       isValid={isValid}
       onRemove={() => onRemove(idx)}
-      value={value}
+      value={isObject(value) ? JSON.stringify(value) : value}
       onChange={onInputChange}
       placeholder={placeholder}
       addonBefore={addonBefore}

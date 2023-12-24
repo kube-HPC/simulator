@@ -169,7 +169,7 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
             srcValue !== null
           ) {
             setIsValid(true);
-            antFields.onChange(JSON.stringify(srcValue));
+            antFields.onChange(srcValue);
             isOneValid = true;
           } else if (rule === 'node' && isNode(nodeNames, srcValue)) {
             setIsValid(true);
