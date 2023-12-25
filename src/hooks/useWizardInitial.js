@@ -1,6 +1,29 @@
 import React, { useCallback, useState } from 'react';
 import { Modal, Typography } from 'antd';
 
+const cleanNodes = nodes => {
+  // Iterate over each node
+  for (let i = 0; i < nodes.length; i++) {
+    const node = nodes[i];
+
+    // Iterate over the input array of the current node
+    for (let j = 0; j < node.input.length; j++) {
+      const inputItem = node.input[j];
+
+      // Remove items starting with '#' or '@'
+      if (
+        typeof inputItem === 'string' &&
+        (inputItem.startsWith('#') || inputItem.startsWith('@'))
+      ) {
+        node.input.splice(j, 1);
+        j--; // Adjust the index as the array length has decreased
+      }
+    }
+  }
+
+  return nodes;
+};
+
 const useWizardInitial = (valuesState, form, setForm) => {
   const [kindOverSelect, setKindOverSelect] = useState('stream');
 
@@ -83,7 +106,7 @@ const useWizardInitial = (valuesState, form, setForm) => {
           <Typography.Text>
             {msgStream1 && (
               <p>
-                1. By converting the pipeline to a Streaming, you will lose some
+                1. By converting the pipeline to Streaming, you will lose some
                 of the input parameters you defined.
               </p>
             )}
@@ -94,7 +117,11 @@ const useWizardInitial = (valuesState, form, setForm) => {
         );
       }
 
-      const msgbatch1 = schemaObjectForm?.streaming?.flow?.length > 0;
+      const msgbatch1 =
+        (schemaObjectForm?.streaming?.flows &&
+          Object.keys(schemaObjectForm?.streaming?.flows).length > 0) ||
+        false;
+
       const msgbatch2 = hasNonNullStateType(schemaObjectForm.nodes);
 
       return (
@@ -107,8 +134,8 @@ const useWizardInitial = (valuesState, form, setForm) => {
           )}
           {msgbatch2 && (
             <p>
-              2. You set some of the nodes to stateless or stateful; there is no
-              meaning for that in the batch pipeline. You will lose any
+              2. You set some of the nodes to stateless or stateful, there is no
+              meaning for that in a batch pipeline. You will lose any
               information related to these kinds.
             </p>
           )}
@@ -135,7 +162,9 @@ const useWizardInitial = (valuesState, form, setForm) => {
                 x => x.kind === 'algorithm'
               );
 
-              form.setFieldValue('nodes', algorithmNodes);
+              const cleanItemInputAlgorithmNodes = cleanNodes(algorithmNodes);
+
+              form.setFieldValue('nodes', cleanItemInputAlgorithmNodes);
             }
 
             setIsSelectStreaming(value === 'stream');
