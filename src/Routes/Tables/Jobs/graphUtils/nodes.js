@@ -6,6 +6,21 @@ import GRAPH_TYPES from './../graphUtils/types';
 /** @typedef {import('vis').NodeOptions} NodeOptions */
 const { STATUS, NODE_GROUPS } = GRAPH_TYPES;
 
+const hasHashOrAtSymbol = input => {
+  if (Array.isArray(input)) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const item of input) {
+      if (
+        typeof item === 'string' &&
+        (item.startsWith('#') || item.startsWith('@'))
+      ) {
+        return true;
+      }
+    }
+  }
+  return false; // Return false if no matching item is found
+};
+
 const findNodeByName = (collection = [], name) =>
   collection.find(node => node.nodeName === name);
 
@@ -156,16 +171,21 @@ export const formatNode = (
   pipelineKind,
   position
 ) => node => {
-  const isBatch = !!node.batchInfo;
   const isStreaming = pipelineKind === 'stream';
-  /** @type {NodeOptions} */
-  const meta = isBatch
-    ? splitBatchToGroups(node, isStreaming)
-    : setNodeGroup(node);
-
   const pipelineNode = normalizedPipeline[node.nodeName];
   const isStateLess = pipelineNode?.stateType === 'stateless';
   const kind = isStateLess ? 'stateless' : pipelineNode?.kind || 'algorithm';
+
+  const isBatch = !!node.batchInfo;
+  const isBatchStyling =
+    (isStreaming && isStateLess) ||
+    (!isStreaming && hasHashOrAtSymbol(pipelineNode));
+
+  /** @type {NodeOptions} */
+
+  const meta = isBatch
+    ? splitBatchToGroups(node, isStreaming)
+    : setNodeGroup(node);
 
   const _node = {
     id: meta.nodeName,
@@ -179,7 +199,7 @@ export const formatNode = (
       : `${meta.nodeName} `,
   };
   /** @type {NodeOptions} */
-  const batchStyling = isBatch
+  const batchStyling = isBatchStyling
     ? {
         borderWidth: 1,
         shapeProperties: {
