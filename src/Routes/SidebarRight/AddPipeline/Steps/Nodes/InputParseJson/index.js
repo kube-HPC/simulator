@@ -21,8 +21,8 @@ const listAddOn = [
   {
     value: '',
     label: 'Value',
-    placeholder: '{"key": "value"} Or [1,"2",true]',
-    rules: ['array', 'object'],
+    placeholder: '{"key": "value"} Or [1,"2",true] Or "string"',
+    rules: ['array', 'object', 'string'],
   },
   {
     value: '#',

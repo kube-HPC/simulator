@@ -145,7 +145,7 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
         srcValue = parseInt(src, 10);
       }
 
-      const { rules } = antFields?.addonBefore.filter(
+      const { rules, label } = antFields?.addonBefore.filter(
         x => x.value === selectBefore
       )[0];
 
@@ -155,7 +155,11 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
 
       rules.forEach(rule => {
         if (isOneValid === false) {
-          if (rule === 'array' && isArray(srcValue)) {
+          if (label === 'Value' && rule === 'array' && isArray(srcValue)) {
+            setIsValid(true);
+            antFields.onChange(JSON.parse(srcValue));
+            isOneValid = true;
+          } else if (rule === 'array' && isArray(srcValue)) {
             setIsValid(true);
             antFields.onChange(`${selectBefore}${srcValue}`);
             isOneValid = true;
@@ -172,6 +176,13 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
             antFields.onChange(srcValue);
             isOneValid = true;
           } else if (rule === 'node' && isNode(nodeNames, srcValue)) {
+            setIsValid(true);
+            antFields.onChange(`${selectBefore}${srcValue}`);
+            isOneValid = true;
+          } else if (
+            rule === 'string' &&
+            (typeof srcValue === 'string' || srcValue instanceof String)
+          ) {
             setIsValid(true);
             antFields.onChange(`${selectBefore}${srcValue}`);
             isOneValid = true;
@@ -223,6 +234,12 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
 
   useEffect(() => {
     onInputChange({ target: { value } });
+    const exampleText = antFields?.addonBefore.filter(
+      x => x.value === selectBefore
+    );
+    // eslint-disable-next-line no-param-reassign
+    inputRef.current.input.placeholder = exampleText[0].placeholder;
+
     /*   if (!addonIsDisabled) {
       if (!checkInputObject(value, SignsOfObjectArray)) {
         if (isArrayValue(value, selectBefore)) {
@@ -240,13 +257,14 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
     } */
   }, [selectBefore]);
 
-  useEffect(() => {
-    const exampleText = antFields?.addonBefore.filter(
+  // useEffect(() => {
+  /* const exampleText = antFields?.addonBefore.filter(
       x => x.value === selectBefore
     );
     // eslint-disable-next-line no-param-reassign
-    inputRef.current.input.placeholder = exampleText[0].placeholder;
-  }, [nodeNames]);
+    console.log('inputRef.current.input', inputRef);
+    inputRef.current.input.placeholder = exampleText[0].placeholder; */
+  // }, [nodeNames]);
 
   return {
     addonBefore,

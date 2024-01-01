@@ -41,7 +41,7 @@ const useWizardInitial = (valuesState, form, setForm) => {
         node =>
           node.input &&
           node.input.some(
-            entry => entry && (entry.startsWith('#') || entry.startsWith('@'))
+            entry => entry && (entry?.startsWith('#') || entry?.startsWith('@'))
           )
       ),
     []
@@ -75,7 +75,7 @@ const useWizardInitial = (valuesState, form, setForm) => {
         const kinds = nonAlgorithmNodes.map(node => node.kind).join(', ');
         const nodeNamesMsg = nodesToStringLastAnd(nonAlgorithmNodes);
 
-        return `2. There is no use of <b>${kinds}</b> in streaming, node${
+        return `- There is no use of <b>${kinds}</b> in streaming, node${
           nonAlgorithmNodes.length > 1 ? 's' : ''
         } ${nodeNamesMsg} will be removed.`;
       }
@@ -102,19 +102,23 @@ const useWizardInitial = (valuesState, form, setForm) => {
       if (kindValue === 'stream') {
         const msgStream1 = hasSpecialInput(schemaObjectForm.nodes);
         const msgStream2 = checkNodesToMsg(schemaObjectForm.nodes);
-        return (
-          <Typography.Text>
-            {msgStream1 && (
-              <p>
-                1. By converting the pipeline to Streaming, you will lose some
-                of the input parameters you defined.
-              </p>
-            )}
-            {msgStream2 && <p>{msgStream2}</p>}
+        if (msgStream1 || msgStream2) {
+          return (
+            <Typography.Text>
+              {msgStream1 && (
+                <p>
+                  - By converting the pipeline to Streaming, you will lose some
+                  of the input parameters you defined.
+                </p>
+              )}
+              {msgStream2 && <p>{msgStream2}</p>}
 
-            <p>Do you wish to proceed?</p>
-          </Typography.Text>
-        );
+              <p>Do you wish to proceed?</p>
+            </Typography.Text>
+          );
+        }
+
+        return null;
       }
 
       const msgbatch1 =
@@ -124,24 +128,27 @@ const useWizardInitial = (valuesState, form, setForm) => {
 
       const msgbatch2 = hasNonNullStateType(schemaObjectForm.nodes);
 
-      return (
-        <Typography.Text>
-          {msgbatch1 && (
-            <p>
-              1. By converting the pipeline to batch, you will lose the
-              streaming flows you defined.
-            </p>
-          )}
-          {msgbatch2 && (
-            <p>
-              2. You set some of the nodes to stateless or stateful, there is no
-              meaning for that in a batch pipeline. You will lose any
-              information related to these kinds.
-            </p>
-          )}
-          <p>Do you wish to proceed?</p>
-        </Typography.Text>
-      );
+      if (msgbatch1 || msgbatch2) {
+        return (
+          <Typography.Text>
+            {msgbatch1 && (
+              <p>
+                - By converting the pipeline to batch, you will lose the
+                streaming flows you defined.
+              </p>
+            )}
+            {msgbatch2 && (
+              <p>
+                - You set some of the nodes to stateless or stateful, there is
+                no meaning for that in a batch pipeline. You will lose any
+                information related to these kinds.
+              </p>
+            )}
+            <p>Do you wish to proceed?</p>
+          </Typography.Text>
+        );
+      }
+      return null;
     },
     [form, hasNonNullStateType, hasSpecialInput, checkNodesToMsg]
   );
@@ -149,29 +156,36 @@ const useWizardInitial = (valuesState, form, setForm) => {
   const handleRadioClick = useCallback(
     (e, value) => {
       if (valuesState.kind !== value) {
-        Modal.confirm({
-          title: 'Warning',
-          content: msgByKind(value, form),
-          onOk: () => {
-            form.setFieldsValue({ kind: value });
+        const msgCountent = msgByKind(value, form);
+        if (msgCountent) {
+          Modal.confirm({
+            title: 'Warning',
+            content: msgCountent,
+            onOk: () => {
+              form.setFieldsValue({ kind: value });
 
-            const formFields = form.getFieldsValue(true);
+              const formFields = form.getFieldsValue(true);
 
-            if (value === 'stream') {
-              const algorithmNodes = formFields.nodes.filter(
-                x => x.kind === 'algorithm'
-              );
+              if (value === 'stream') {
+                const algorithmNodes = formFields.nodes.filter(
+                  x => x.kind === 'algorithm'
+                );
 
-              const cleanItemInputAlgorithmNodes = cleanNodes(algorithmNodes);
+                const cleanItemInputAlgorithmNodes = cleanNodes(algorithmNodes);
 
-              form.setFieldValue('nodes', cleanItemInputAlgorithmNodes);
-            }
+                form.setFieldValue('nodes', cleanItemInputAlgorithmNodes);
+              }
 
-            setIsSelectStreaming(value === 'stream');
-            setForm();
-          },
-          onCancel: () => {},
-        });
+              setIsSelectStreaming(value === 'stream');
+              setForm();
+            },
+            onCancel: () => {},
+          });
+        } else {
+          form.setFieldsValue({ kind: value });
+          setIsSelectStreaming(value === 'stream');
+          setForm();
+        }
       }
     },
     [form, msgByKind, setForm, valuesState.kind]

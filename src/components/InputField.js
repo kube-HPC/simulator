@@ -33,25 +33,29 @@ const InputField = ({
   inputRef,
 }) => (
   <Field style={{ marginTop: '0.5em' }}>
-    <Tooltip title={isValid ? '' : tooltip}>
-      <Input
-        ref={inputRef}
-        id={id}
-        onChange={onChange}
-        defaultValue={value}
-        value={value}
-        placeholder={placeholder}
-        allowClear
-        addonAfter={
-          isValid ? (
-            <CheckOutlined style={{ fontSize: '15px' }} />
-          ) : (
+    <Input
+      ref={inputRef}
+      id={id}
+      onChange={onChange}
+      defaultValue={value}
+      value={value}
+      placeholder={placeholder}
+      allowClear
+      addonAfter={
+        isValid ? (
+          <CheckOutlined style={{ fontSize: '15px' }} />
+        ) : (
+          <Tooltip
+            title={
+              isValid ? '' : tooltip || inputRef.current.input.placeholder
+            }>
             <WarningOutlined style={{ color: 'red', fontSize: '15px' }} />
-          )
-        }
-        addonBefore={addonBefore}
-      />
-    </Tooltip>
+          </Tooltip>
+        )
+      }
+      addonBefore={addonBefore}
+    />
+
     {hasRemove && <IconDelete onClick={onRemove} />}
   </Field>
 );
