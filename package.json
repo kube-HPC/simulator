@@ -47,7 +47,7 @@
     "virtualizedtableforantd4": "^1.1.2"
   },
   "devDependencies": {
-    "@hkube/consts": "^1.0.48",
+    "@hkube/consts": "^1.0.50",
     "@monaco-editor/react": "^2.3.0",
     "@nivo/bar": "^0.59.2",
     "@nivo/pie": "^0.62.0",

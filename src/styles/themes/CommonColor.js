@@ -20,7 +20,7 @@ const COMMON_COLOR = () => {
     [BOARD.CREATING]: COLOR.yellow,
     [BOARD.PENDING]: COLOR.grey,
     [BOARD.RUNNING]: COLOR.greenLight,
-    [BOARD.STOPPED]: COLOR.orange,
+    [BOARD.STOPPED]: COLOR.greenLight2,
   });
 
   // View all services colors @ https://github.com/kube-HPC/hkube/labels
@@ -102,6 +102,8 @@ const COMMON_COLOR = () => {
     [TASK.WARNING]: COLOR.orange,
     // SKIPPED
     [TASK.SKIPPED]: COLOR.grey,
+    // STOPED
+    [TASK.STOPPED]: COLOR.greenLight2,
   });
 
   const COLOR_PIPELINE_STATUS = COLOR => ({
@@ -113,7 +115,7 @@ const COMMON_COLOR = () => {
     [PIPELINE.RESUMED]: COLOR.blueLight,
     [PIPELINE.RUNNING]: COLOR.blue,
     [PIPELINE.STALLED]: COLOR.darkGrey,
-    [PIPELINE.STOPPED]: COLOR.orange,
+    [PIPELINE.STOPPED]: COLOR.greenLight2,
     [PIPELINE.PAUSED]: COLOR.yellow,
   });
 

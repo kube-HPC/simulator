@@ -9,6 +9,7 @@ const DarkTheme = COMMON_COLOR => {
     darkGrey: `#807c7c`,
     green: `#407d26`,
     greenLight: `#448529`,
+    greenLight2: `#A5CC92`,
     greenDark: `#006618`,
     grey: `#999999`,
     lightGrey: `#586a93`,
