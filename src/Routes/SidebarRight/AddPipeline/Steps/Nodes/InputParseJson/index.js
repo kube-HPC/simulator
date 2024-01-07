@@ -62,7 +62,7 @@ const Controller = ({ node, nodeIdx, isRequired }) => {
               fieldKey={[fieldKey]}
               validateTrigger={['onChange', 'onBlur']}>
               <InputField
-                typeValue={node?.input[key] ? typeof node.input[key] : 'string'}
+                valueJson={node?.input ? node?.input[key] : ''}
                 addonBefore={listAddOn}
                 onRemove={
                   (isRequired && name > 0) || isRequired === false
@@ -92,7 +92,12 @@ const Controller = ({ node, nodeIdx, isRequired }) => {
 
 Controller.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
-  node: PropTypes.object.isRequired,
+  node: PropTypes.instanceOf([
+    PropTypes.number,
+    PropTypes.string,
+    PropTypes.array,
+    PropTypes.object,
+  ]).isRequired,
   nodeIdx: PropTypes.node.isRequired,
   isRequired: PropTypes.bool,
 };

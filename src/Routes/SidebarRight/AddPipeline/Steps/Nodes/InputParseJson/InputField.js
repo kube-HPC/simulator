@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import RawInputField from 'components/InputField';
 import useInputField from './useInputField';
@@ -11,7 +11,7 @@ function isObject(element) {
 }
 
 const InputField = ({
-  typeValue,
+  valueJson,
   placeholder,
   tooltip,
   idx,
@@ -30,13 +30,17 @@ const InputField = ({
 
   useEffect(() => {
     if (inputRef?.current) {
-      inputRef?.current?.focus();
-
-      if (value !== '' && typeValue === 'string' && !value.startsWith('"')) {
+      if (
+        value !== '' &&
+        typeof value === 'string' &&
+        typeof valueJson === 'string'
+      ) {
         onInputChange({
           target: { value: `"${inputRef.current.input.value}"` },
         });
       }
+
+      // inputRef?.current?.focus();
     }
   }, []);
   const setValueByType = () => {
@@ -63,7 +67,12 @@ const InputField = ({
 };
 
 InputField.propTypes = {
-  typeValue: PropTypes.string.isRequired,
+  valueJson: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+    PropTypes.array,
+    PropTypes.object,
+  ]).isRequired,
   placeholder: PropTypes.string,
   tooltip: PropTypes.string,
   onRemove: PropTypes.func,
