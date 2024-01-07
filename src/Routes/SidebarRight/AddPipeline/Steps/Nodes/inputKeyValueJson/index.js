@@ -216,7 +216,7 @@ const ControllerKeyValue = ({
               onClick={() => add()}
               block
               icon={<PlusOutlined />}>
-              Add input
+              Add
             </Button>
           </Form.Item>
         </>

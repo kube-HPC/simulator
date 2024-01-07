@@ -18,5 +18,10 @@ export default (initialState = []) => {
     [setCollection]
   );
 
-  return [ids, appendId, dropId];
+  const reloadIds = useCallback(
+    items => setCollection(Object.keys(items).map(x => parseInt(x, 10))),
+    [setCollection]
+  );
+
+  return [ids, appendId, dropId, reloadIds];
 };

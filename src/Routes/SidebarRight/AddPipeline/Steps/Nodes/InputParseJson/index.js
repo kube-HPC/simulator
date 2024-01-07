@@ -21,8 +21,8 @@ const listAddOn = [
   {
     value: '',
     label: 'Value',
-    placeholder: '{"key": "value"} Or [1,"2",true]]',
-    rules: ['array', 'object'],
+    placeholder: '{"key": "value"} Or [1,"2",true] Or "string"',
+    rules: ['array', 'object', 'string'],
   },
   {
     value: '#',
@@ -33,8 +33,8 @@ const listAddOn = [
   },
 ];
 
-const Controller = ({ nodeIdx, isRequired }) => {
-  const { form, isRunPipeline } = useWizardContext();
+const Controller = ({ node, nodeIdx, isRequired }) => {
+  const { form, isRunPipeline, isStreamingPipeline } = useWizardContext();
   const inputValues = form.getFieldValue(['nodes', nodeIdx, 'input']);
 
   const isRequiredMsg = () =>
@@ -54,6 +54,7 @@ const Controller = ({ nodeIdx, isRequired }) => {
         <>
           {fields.map(({ key, name, fieldKey, ...restField }) => (
             <Form.Item
+              className={isStreamingPipeline && 'hidden-addon-before'}
               style={{ marginBottom: 10 }}
               {...restField}
               name={[name]}
@@ -61,6 +62,7 @@ const Controller = ({ nodeIdx, isRequired }) => {
               fieldKey={[fieldKey]}
               validateTrigger={['onChange', 'onBlur']}>
               <InputField
+                typeValue={node?.input[key] ? typeof node.input[key] : 'string'}
                 addonBefore={listAddOn}
                 onRemove={
                   (isRequired && name > 0) || isRequired === false
@@ -89,6 +91,8 @@ const Controller = ({ nodeIdx, isRequired }) => {
 };
 
 Controller.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  node: PropTypes.object.isRequired,
   nodeIdx: PropTypes.node.isRequired,
   isRequired: PropTypes.bool,
 };

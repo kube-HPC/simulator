@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import PropTypes from 'prop-types';
 import { Input, Radio, Select } from 'antd';
@@ -12,20 +12,28 @@ import { useExperiments } from 'hooks/graphql';
 
 import ControllerKeyValue from '../Nodes/inputKeyValueJson';
 import useWizardContext from '../../useWizardContext';
+import useWizardInitial from '../../../../../hooks/useWizardInitial';
 import DrawerReadMeFile from '../../../../../components/Drawer/DrawerReadMeFile';
 
 const { Option } = Select;
 
 /** @param {{ style: import('react').CSSProperties }} props */
 const Initial = ({ style }) => {
-  const { isEdit, isRunPipeline, valuesState } = useWizardContext();
+  const {
+    isEdit,
+    isRunPipeline,
+    valuesState,
+    form,
+    setForm,
+  } = useWizardContext();
 
-  const [isSelectStreaming, setIsSelectStreaming] = useState(
-    valuesState.kind === 'stream'
-  );
-  const [nodeNames] = useState(
-    valuesState?.nodes?.map(item => item?.nodeName) || []
-  );
+  const {
+    isSelectStreaming,
+    handleRadioClick,
+    nodeNames,
+    kindOverSelect,
+    setKindOverSelect,
+  } = useWizardInitial(valuesState, form, setForm);
 
   // get list nodes
   const { experiments } = useExperiments();
@@ -66,6 +74,11 @@ const Initial = ({ style }) => {
       <FlexBox align="start">
         <FlexBox.Item span={12}>
           <Form.Item
+            onClick={e => {
+              handleRadioClick(e, kindOverSelect);
+              e.stopPropagation();
+              e.preventDefault();
+            }}
             label="Pipeline Kind"
             name={['kind']}
             rules={[{ required: true }]}
@@ -77,12 +90,16 @@ const Initial = ({ style }) => {
               <Radio.Group>
                 <Radio.Button
                   value="batch"
-                  onClick={() => setIsSelectStreaming(false)}>
+                  onChange={e => e.preventDefault()}
+                  onClick={e => handleRadioClick(e, 'batch')}
+                  onMouseEnter={() => setKindOverSelect('batch')}>
                   Batch
                 </Radio.Button>
                 <Radio.Button
                   value="stream"
-                  onClick={() => setIsSelectStreaming(true)}>
+                  onChange={e => e.preventDefault()}
+                  onClick={e => handleRadioClick(e, 'stream')}
+                  onMouseEnter={() => setKindOverSelect('stream')}>
                   Streaming
                 </Radio.Button>
               </Radio.Group>

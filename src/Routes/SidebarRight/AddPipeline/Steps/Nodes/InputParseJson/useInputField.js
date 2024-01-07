@@ -104,27 +104,6 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
     getWord(antFields?.value, selectBefore) || ''
   );
 
-  useEffect(() => {
-    /**
-     * IsValid will override the field most of the time, this is useful when you
-     * delete an entry - ant needs to re-write this field you don't want ant to
-     * override a field if it is invalid, it will show an "x" and hide the extra
-     * invalid characters from the user making it unusable
-     */
-    /*  if (isValid || value === undefined) {
-      if (checkInputObject(value, SignsOfObjectArray)) {
-        setValue(JSON.stringify(antFields.value));
-        setSelectBefore('');
-        setAddonIsDisabled(true);
-      } else {
-        setValue(value);
-        setAddonIsDisabled(false);
-      }
-    } else {
-      setAddonIsDisabled(false);
-    } */
-  }, [antFields, value, isValid]);
-
   const addonBefore = useMemo(
     () =>
       SignInputAddOn({
@@ -141,11 +120,11 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
     ({ target: { value: src } }) => {
       let srcValue = src;
 
-      if (parseInt(src, 10)) {
+      if (typeof src === 'number' && parseInt(src, 10)) {
         srcValue = parseInt(src, 10);
       }
 
-      const { rules } = antFields?.addonBefore.filter(
+      const { rules, label } = antFields?.addonBefore.filter(
         x => x.value === selectBefore
       )[0];
 
@@ -155,7 +134,11 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
 
       rules.forEach(rule => {
         if (isOneValid === false) {
-          if (rule === 'array' && isArray(srcValue)) {
+          if (label === 'Value' && rule === 'array' && isArray(srcValue)) {
+            setIsValid(true);
+            antFields.onChange(JSON.parse(srcValue));
+            isOneValid = true;
+          } else if (rule === 'array' && isArray(srcValue)) {
             setIsValid(true);
             antFields.onChange(`${selectBefore}${srcValue}`);
             isOneValid = true;
@@ -169,7 +152,7 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
             srcValue !== null
           ) {
             setIsValid(true);
-            antFields.onChange(JSON.stringify(srcValue));
+            antFields.onChange(srcValue);
             isOneValid = true;
           } else if (rule === 'node' && isNode(nodeNames, srcValue)) {
             setIsValid(true);
@@ -182,71 +165,18 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
       });
 
       setAddonIsDisabled(false);
-
-      /*
-
-      setValue(srcValue);
-      const onFail = () => setIsValid(srcValue === '');
-      const onSuccess = ({ parsed }) => {
-        antFields.onChange(parsed);
-        setIsValid(true);
-      };
-
-      if (srcValue === '') {
-        onSuccess({ parsed: undefined });
-        setIsValid(false);
-      } else if (checkInputObject(srcValue, SignsOfObjectArray)) {
-        tryParse({ srcValue, onSuccess, onFail });
-
-        setAddonIsDisabled(true);
-      } else if (isArrayValue(srcValue, selectBefore)) {
-        tryParse({ srcValue, onSuccess, onFail });
-        setAddonIsDisabled(false);
-      } else if (
-        !Number.isInteger(srcValue) &&
-        (srcValue.startsWith('"') || srcValue.endsWith('"'))
-      ) {
-        onSuccess({ parsed: undefined });
-        setIsValid(false);
-      } else if (Number.isInteger(srcValue) && selectBefore === '') {
-        antFields.onChange(srcValue);
-        setAddonIsDisabled(false);
-        setIsValid(true);
-      } else {
-        antFields.onChange(`${selectBefore}${srcValue}`);
-        setAddonIsDisabled(false);
-        setIsValid(true);
-      } */
     },
     [antFields, selectBefore]
   );
 
   useEffect(() => {
     onInputChange({ target: { value } });
-    /*   if (!addonIsDisabled) {
-      if (!checkInputObject(value, SignsOfObjectArray)) {
-        if (isArrayValue(value, selectBefore)) {
-          antFields.onChange(tryParseJson(value));
-          setIsValid(true);
-        } else {
-          antFields.onChange(`${selectBefore}${value}`);
-          setIsValid(true);
-        }
-      } else {
-        antFields.onChange(value);
-        setAddonIsDisabled(true);
-        setIsValid(true);
-      }
-    } */
-  }, [selectBefore]);
-
-  useEffect(() => {
     const exampleText = antFields?.addonBefore.filter(
       x => x.value === selectBefore
     );
     // eslint-disable-next-line no-param-reassign
     inputRef.current.input.placeholder = exampleText[0].placeholder;
-  }, [nodeNames]);
+  }, [selectBefore]);
 
   return {
     addonBefore,
