@@ -96,9 +96,9 @@ const useWizard = (
   );
 
   const setForm = useCallback(() => {
-    setTimeout(() => {
-      setValuesState(getFormattedFormValues());
-    }, 100);
+    // setTimeout(() => { // please dont do setTimeout  , this is retren nodes empty after render
+    setValuesState(getFormattedFormValues());
+    // }, 100);
   }, [getFormattedFormValues, setValuesState]);
 
   return {

@@ -91,6 +91,7 @@ const Wizard = ({
   isEdit,
   isRunPipeline,
 }) => {
+  const [valuesState, setValuesState] = useState(() => initialState);
   const [initStepNames] = useState(
     isRunPipeline ? RunPipelineStepNames : stepNames
   );
@@ -111,7 +112,6 @@ const Wizard = ({
 
   const firstUpdateWizard = useRef(true);
 
-  const [valuesState, setValuesState] = useState(() => initialState);
   const { getFieldValue } = form;
 
   const {

@@ -62,6 +62,7 @@ const AlgorithmNode = ({ id }) => {
         )}
 
       <Divider>Inputs</Divider>
+
       <Controller
         node={valuesState?.nodes[id]}
         placeholder="Input"
