@@ -33,7 +33,7 @@ const listAddOn = [
   },
 ];
 
-const Controller = ({ nodeIdx, isRequired }) => {
+const Controller = ({ node, nodeIdx, isRequired }) => {
   const { form, isRunPipeline, isStreamingPipeline } = useWizardContext();
   const inputValues = form.getFieldValue(['nodes', nodeIdx, 'input']);
 
@@ -62,6 +62,7 @@ const Controller = ({ nodeIdx, isRequired }) => {
               fieldKey={[fieldKey]}
               validateTrigger={['onChange', 'onBlur']}>
               <InputField
+                typeValue={node?.input[key] ? typeof node.input[key] : 'string'}
                 addonBefore={listAddOn}
                 onRemove={
                   (isRequired && name > 0) || isRequired === false
@@ -90,6 +91,8 @@ const Controller = ({ nodeIdx, isRequired }) => {
 };
 
 Controller.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  node: PropTypes.object.isRequired,
   nodeIdx: PropTypes.node.isRequired,
   isRequired: PropTypes.bool,
 };

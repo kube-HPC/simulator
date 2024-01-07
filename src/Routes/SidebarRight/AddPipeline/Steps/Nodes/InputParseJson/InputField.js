@@ -10,11 +10,15 @@ function isObject(element) {
   );
 }
 
-const InputField = ({ placeholder, tooltip, idx, onRemove, ...antFields }) => {
+const InputField = ({
+  typeValue,
+  placeholder,
+  tooltip,
+  idx,
+  onRemove,
+  ...antFields
+}) => {
   const inputRef = useRef();
-  useEffect(() => {
-    inputRef?.current?.focus();
-  }, []);
 
   const {
     addonBefore,
@@ -24,6 +28,24 @@ const InputField = ({ placeholder, tooltip, idx, onRemove, ...antFields }) => {
     value,
   } = useInputField(antFields, onRemove, inputRef, 200);
 
+  useEffect(() => {
+    if (inputRef?.current) {
+      inputRef?.current?.focus();
+
+      if (value !== '' && typeValue === 'string' && !value.startsWith('"')) {
+        onInputChange({
+          target: { value: `"${inputRef.current.input.value}"` },
+        });
+      }
+    }
+  }, []);
+  const setValueByType = () => {
+    if (isObject(value) || Array.isArray(value)) {
+      return JSON.stringify(value);
+    }
+
+    return value;
+  };
   return (
     <RawInputField
       id={antFields.id}
@@ -31,7 +53,7 @@ const InputField = ({ placeholder, tooltip, idx, onRemove, ...antFields }) => {
       hasRemove={hasRemove}
       isValid={isValid}
       onRemove={() => onRemove(idx)}
-      value={isObject(value) ? JSON.stringify(value) : value}
+      value={setValueByType()}
       onChange={onInputChange}
       placeholder={placeholder}
       addonBefore={addonBefore}
@@ -41,6 +63,7 @@ const InputField = ({ placeholder, tooltip, idx, onRemove, ...antFields }) => {
 };
 
 InputField.propTypes = {
+  typeValue: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
   tooltip: PropTypes.string,
   onRemove: PropTypes.func,

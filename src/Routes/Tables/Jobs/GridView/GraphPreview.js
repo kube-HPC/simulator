@@ -248,7 +248,7 @@ const GraphPreview = ({
         }
       }
       // batch
-    } else {
+    } else if (pipeline) {
       fetch(`${backendApiUrl}/api/v1/store/pipelines/graph`, {
         method: 'POST',
         headers: {
@@ -268,6 +268,9 @@ const GraphPreview = ({
               toggleForceUpdate();
             }, 1);
           }
+        })
+        .catch(error => {
+          console.error('Error during fetch operation:', error);
         });
     }
   }, [backendApiUrl, isBuildAllFlows, isStreamingPipeline, keyFlow, pipeline]);

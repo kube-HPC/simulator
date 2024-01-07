@@ -2,11 +2,9 @@ import React, { useCallback, useState } from 'react';
 import { Modal, Typography } from 'antd';
 
 const cleanNodes = nodes => {
-  // Iterate over each node
   for (let i = 0; i < nodes.length; i++) {
     const node = nodes[i];
 
-    // Iterate over the input array of the current node
     for (let j = 0; j < node.input.length; j++) {
       const inputItem = node.input[j];
 
@@ -16,7 +14,7 @@ const cleanNodes = nodes => {
         (inputItem.startsWith('#') || inputItem.startsWith('@'))
       ) {
         node.input.splice(j, 1);
-        j--; // Adjust the index as the array length has decreased
+        j--;
       }
     }
   }
@@ -39,9 +37,11 @@ const useWizardInitial = (valuesState, form, setForm) => {
     nodes =>
       nodes.some(
         node =>
-          node.input &&
-          node.input.some(
-            entry => entry && (entry?.startsWith('#') || entry?.startsWith('@'))
+          node?.input &&
+          node?.input.some(
+            entry =>
+              entry?.startsWith &&
+              (entry?.startsWith('#') || entry?.startsWith('@'))
           )
       ),
     []

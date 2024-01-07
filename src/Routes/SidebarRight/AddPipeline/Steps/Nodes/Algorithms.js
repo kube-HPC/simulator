@@ -21,7 +21,6 @@ const Field = props => {
 const AlgorithmNode = ({ id }) => {
   const { isStreamingPipeline, valuesState } = useWizardContext();
   const { algorithms: sortedAlgorithms } = useGetLists();
-
   const rootId = ['nodes', id];
   return (
     <ctx.Provider value={{ rootId }}>
@@ -64,6 +63,7 @@ const AlgorithmNode = ({ id }) => {
 
       <Divider>Inputs</Divider>
       <Controller
+        node={valuesState?.nodes[id]}
         placeholder="Input"
         tooltip="Input"
         nodeIdx={id}

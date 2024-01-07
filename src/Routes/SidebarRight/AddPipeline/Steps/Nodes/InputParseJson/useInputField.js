@@ -104,27 +104,6 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
     getWord(antFields?.value, selectBefore) || ''
   );
 
-  useEffect(() => {
-    /**
-     * IsValid will override the field most of the time, this is useful when you
-     * delete an entry - ant needs to re-write this field you don't want ant to
-     * override a field if it is invalid, it will show an "x" and hide the extra
-     * invalid characters from the user making it unusable
-     */
-    /*  if (isValid || value === undefined) {
-      if (checkInputObject(value, SignsOfObjectArray)) {
-        setValue(JSON.stringify(antFields.value));
-        setSelectBefore('');
-        setAddonIsDisabled(true);
-      } else {
-        setValue(value);
-        setAddonIsDisabled(false);
-      }
-    } else {
-      setAddonIsDisabled(false);
-    } */
-  }, [antFields, value, isValid]);
-
   const addonBefore = useMemo(
     () =>
       SignInputAddOn({
@@ -141,7 +120,7 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
     ({ target: { value: src } }) => {
       let srcValue = src;
 
-      if (parseInt(src, 10)) {
+      if (typeof src === 'number' && parseInt(src, 10)) {
         srcValue = parseInt(src, 10);
       }
 
@@ -179,13 +158,6 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
             setIsValid(true);
             antFields.onChange(`${selectBefore}${srcValue}`);
             isOneValid = true;
-          } else if (
-            rule === 'string' &&
-            (typeof srcValue === 'string' || srcValue instanceof String)
-          ) {
-            setIsValid(true);
-            antFields.onChange(`${selectBefore}${srcValue}`);
-            isOneValid = true;
           } else {
             setIsValid(false);
           }
@@ -193,41 +165,6 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
       });
 
       setAddonIsDisabled(false);
-
-      /*
-
-      setValue(srcValue);
-      const onFail = () => setIsValid(srcValue === '');
-      const onSuccess = ({ parsed }) => {
-        antFields.onChange(parsed);
-        setIsValid(true);
-      };
-
-      if (srcValue === '') {
-        onSuccess({ parsed: undefined });
-        setIsValid(false);
-      } else if (checkInputObject(srcValue, SignsOfObjectArray)) {
-        tryParse({ srcValue, onSuccess, onFail });
-
-        setAddonIsDisabled(true);
-      } else if (isArrayValue(srcValue, selectBefore)) {
-        tryParse({ srcValue, onSuccess, onFail });
-        setAddonIsDisabled(false);
-      } else if (
-        !Number.isInteger(srcValue) &&
-        (srcValue.startsWith('"') || srcValue.endsWith('"'))
-      ) {
-        onSuccess({ parsed: undefined });
-        setIsValid(false);
-      } else if (Number.isInteger(srcValue) && selectBefore === '') {
-        antFields.onChange(srcValue);
-        setAddonIsDisabled(false);
-        setIsValid(true);
-      } else {
-        antFields.onChange(`${selectBefore}${srcValue}`);
-        setAddonIsDisabled(false);
-        setIsValid(true);
-      } */
     },
     [antFields, selectBefore]
   );
@@ -239,32 +176,7 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
     );
     // eslint-disable-next-line no-param-reassign
     inputRef.current.input.placeholder = exampleText[0].placeholder;
-
-    /*   if (!addonIsDisabled) {
-      if (!checkInputObject(value, SignsOfObjectArray)) {
-        if (isArrayValue(value, selectBefore)) {
-          antFields.onChange(tryParseJson(value));
-          setIsValid(true);
-        } else {
-          antFields.onChange(`${selectBefore}${value}`);
-          setIsValid(true);
-        }
-      } else {
-        antFields.onChange(value);
-        setAddonIsDisabled(true);
-        setIsValid(true);
-      }
-    } */
   }, [selectBefore]);
-
-  // useEffect(() => {
-  /* const exampleText = antFields?.addonBefore.filter(
-      x => x.value === selectBefore
-    );
-    // eslint-disable-next-line no-param-reassign
-    console.log('inputRef.current.input', inputRef);
-    inputRef.current.input.placeholder = exampleText[0].placeholder; */
-  // }, [nodeNames]);
 
   return {
     addonBefore,
