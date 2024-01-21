@@ -15,9 +15,10 @@ const Ellipsis = ({
   ellipsis,
   children,
   viewDisplayLine,
+  style,
   ...props
 }) => (
-  <Tooltip title={copyable ? 'click to copy' : text}>
+  <Tooltip title={copyable ? 'click to copy' : text || children}>
     <Text
       onClick={() => (copyable ? copyToClipboard(text) : null)}
       style={{
@@ -28,6 +29,7 @@ const Ellipsis = ({
         display: viewDisplayLine,
         textOverflow: ellipsis ? 'ellipsis' : 'visible',
         ...(length ? { width: `${length * 5}px` } : {}),
+        ...style,
       }}
       {...props}>
       {text || children}
@@ -43,6 +45,7 @@ Ellipsis.propTypes = {
   type: PropTypes.string,
   ellipsis: PropTypes.bool,
   viewDisplayLine: PropTypes.string,
+  style: PropTypes.objectOf(PropTypes.string),
 };
 
 Ellipsis.defaultProps = {
@@ -53,6 +56,7 @@ Ellipsis.defaultProps = {
   ellipsis: true,
   type: null,
   viewDisplayLine: 'inline-flex',
+  style: {},
 };
 
 export default Ellipsis;

@@ -1,11 +1,13 @@
 import React, { useMemo } from 'react';
+import Moment from 'react-moment';
+import { Ellipsis } from 'components/common';
 import PropTypes from 'prop-types';
 import { COLOR_TASK_STATUS } from 'styles/colors';
 import { DownloadOutlined } from '@ant-design/icons';
 import { Button, Tag, Tooltip, Typography } from 'antd';
 import humanizeDuration from 'humanize-duration';
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
-import { toUpperCaseFirstLetter } from 'utils/stringHelper';
+import { sorter } from 'utils/stringHelper';
 import BaseTag from 'components/BaseTag';
 
 const styleTagStatus = {
@@ -14,7 +16,7 @@ const styleTagStatus = {
   paddingInline: '2%',
 };
 
-const getStatusFilter = () =>
+/* const getStatusFilter = () =>
   [
     PIPELINE_STATUS.ACTIVE,
     PIPELINE_STATUS.COMPLETED,
@@ -22,7 +24,7 @@ const getStatusFilter = () =>
   ].map(status => ({
     text: toUpperCaseFirstLetter(status),
     value: status,
-  }));
+  })); */
 
 const Index = index => <Tag>{index}</Tag>;
 
@@ -58,6 +60,16 @@ const TitleStatus = (record, isShowOneRow) => (
         {record.failed}
       </BaseTag>
     )}
+
+    {!isShowOneRow && record.stopped > 0 && (
+      <BaseTag
+        style={styleTagStatus}
+        status={PIPELINE_STATUS.STOPPED}
+        colorMap={COLOR_TASK_STATUS}
+        title={PIPELINE_STATUS.STOPPED}>
+        {record.stopped}
+      </BaseTag>
+    )}
   </>
 );
 const Status = status => (
@@ -65,17 +77,21 @@ const Status = status => (
     {status}
   </BaseTag>
 );
+const StartTime = startTime => (
+  <Moment format="DD/MM/YY HH:mm:ss">{+startTime}</Moment>
+);
+const sortByStartTime = (a, b) => sorter(a.startTime, b.startTime);
 
 const Duration = (_, record) =>
   record.startTime ? (
-    <Tag style={{ fontSize: '10px' }}>
+    <Ellipsis ellipsis length={30} style={{ fontSize: '12px' }}>
       {humanizeDuration(
         record.endTime
           ? record.endTime - record.startTime
           : Date.now() - record.startTime,
         { maxDecimalPoints: 2 }
       )}
-    </Tag>
+    </Ellipsis>
   ) : (
     <Tag style={{ width: '4ch', textAlign: 'center' }}>-</Tag>
   );
@@ -124,7 +140,13 @@ Results.defaultProps = {
   url: null,
 };
 
-const getNodeIOColumns = (url, algorithmName, statusCount, isShowOneRow) => [
+const getNodeIOColumns = (
+  url,
+  algorithmName,
+  statusCount,
+  isShowOneRow,
+  modeSelect
+) => [
   {
     width: `5%`,
     title: 'index',
@@ -132,20 +154,37 @@ const getNodeIOColumns = (url, algorithmName, statusCount, isShowOneRow) => [
     key: 'index',
     render: Index,
   },
+  modeSelect
+    ? {
+        width: `5%`,
+        title: 'Task ID',
+        dataIndex: ['taskId'],
+        key: 'taskId',
+      }
+    : {},
   {
-    width: `55%`,
+    width: `30%`,
+    title: 'Start Time',
+    dataIndex: ['startTime'],
+    key: 'startTime',
+    sorter: sortByStartTime,
+    render: StartTime,
+  },
+
+  {
+    width: `45%`,
     title: TitleStatus(statusCount, isShowOneRow),
     dataIndex: ['status'],
     key: 'status',
-    filterMultiple: !isShowOneRow,
-    filters: !isShowOneRow && getStatusFilter(),
     onFilter: (value, record) => record.status === value,
-    defaultFilteredValue:
-      !isShowOneRow && statusCount.active > 0 ? [PIPELINE_STATUS.ACTIVE] : '',
+    //   defaultFilteredValue:
+    //    !isShowOneRow && statusCount.active > 0 ? [PIPELINE_STATUS.ACTIVE] : '',
+    // filters: !isShowOneRow && getStatusFilter(),
+    //  filterMultiple: !isShowOneRow,
     render: Status,
   },
   {
-    width: `30%`,
+    width: `15%`,
     title: 'duration',
     dataIndex: ['duration'],
     key: 'duration',
@@ -158,15 +197,17 @@ const getNodeIOColumns = (url, algorithmName, statusCount, isShowOneRow) => [
     key: 'retries',
     render: Retries,
   },
-  {
-    width: `5%`,
-    title: 'Results',
-    dataIndex: ['results'],
-    key: 'results',
-    render: (_, record) => (
-      <Results url={url} record={record} algorithmName={algorithmName} />
-    ),
-  },
+  modeSelect
+    ? {}
+    : {
+        width: `5%`,
+        title: 'Results',
+        dataIndex: ['results'],
+        key: 'results',
+        render: (_, record) => (
+          <Results url={url} record={record} algorithmName={algorithmName} />
+        ),
+      },
 ];
 
 export default getNodeIOColumns;

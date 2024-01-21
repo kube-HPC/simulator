@@ -11,6 +11,7 @@ import {
   LoadingOutlined,
   InfoCircleOutlined,
   LinkOutlined,
+  DownOutlined,
 } from '@ant-design/icons';
 import { ReactComponent as IconKibana } from 'images/kibana.svg';
 import {
@@ -24,6 +25,7 @@ import {
   Col,
   Row,
   Alert,
+  Popover,
 } from 'antd';
 import { FiltersPanel } from 'styles';
 import { FlexBox } from 'components/common';
@@ -31,7 +33,7 @@ import LogsViewer from 'components/common/LogsViewer';
 import { useLogs } from 'hooks/graphql';
 import { useDebounceCallback } from '@react-hook/debounce';
 import GRAPH_TYPES from './graphUtils/types';
-import OptionBox from './GraphTab/OptionBox';
+// import OptionBox from './GraphTab/OptionBox';
 
 const Container = styled.div`
   margin-top: 1em;
@@ -76,10 +78,16 @@ const msgAlertFailedScheduling = (typeText, message) => {
   );
 };
 
-const NodeLogs = ({ node, taskDetails }) => {
+const NodeLogs = ({
+  node,
+  taskDetails,
+  NodeInputOutputTable,
+  currentTask,
+  setCurrentTask,
+}) => {
+  const [openPopupOverListTasks, setOpenPopupOverListTasks] = useState(false);
   const { kibanaUrl } = useSelector(selectors.connection);
   const { structuredPrefix } = useSelector(selectors.connection);
-  const [currentTask, setCurrentTask] = useState(undefined);
   const [logMode, setLogMode] = useState(logModes.ALGORITHM);
   const [searchWord, setSearchWord] = useState(null);
   const [isLoadLog, setIsLoadLog] = useState(true);
@@ -137,7 +145,7 @@ const NodeLogs = ({ node, taskDetails }) => {
     ];
   }, [msgPodStatus]);
 
-  const options = taskDetails.map((task, indexTaskItem) => (
+  /* const options = taskDetails.map((task, indexTaskItem) => (
     <Select.Option key={`task-${task.taskId}`} value={indexTaskItem}>
       <OptionBox
         index={indexTaskItem + 1}
@@ -145,7 +153,7 @@ const NodeLogs = ({ node, taskDetails }) => {
         status={task.status}
       />
     </Select.Option>
-  ));
+  )); */
 
   useEffect(() => {
     const { error, startTime, endTime } = node;
@@ -200,6 +208,7 @@ const NodeLogs = ({ node, taskDetails }) => {
 
   useEffect(() => {
     setWord();
+    setOpenPopupOverListTasks(false);
   }, [currentTask, setWord]);
 
   return (
@@ -211,6 +220,33 @@ const NodeLogs = ({ node, taskDetails }) => {
           </Typography.Text>
           <FlexBox.Item>
             <Tooltip
+              placement="topLeft"
+              title={<>Pod Status : {msgPodStatus}</>}>
+              <Popover
+                placement="bottomLeft"
+                content={NodeInputOutputTable}
+                trigger="click"
+                open={openPopupOverListTasks}
+                onOpenChange={newOpen => setOpenPopupOverListTasks(newOpen)}>
+                <Button
+                  style={{
+                    display: 'inline-flex',
+                    flexDirection: 'row-reverse',
+                    alignContent: 'center',
+                    flexWrap: 'nowrap',
+                    width: '150px',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    borderColor: openPopupOverListTasks ? '#0070ff' : '',
+                  }}
+                  shape="round"
+                  icon={<DownOutlined />}>
+                  {currentTask || 'Select an item'}
+                </Button>
+              </Popover>
+            </Tooltip>
+            {/* <Tooltip
+            
               placement="topLeft"
               title={
                 <>
@@ -226,7 +262,7 @@ const NodeLogs = ({ node, taskDetails }) => {
                 }}>
                 {options}
               </SelectStyle>
-            </Tooltip>
+              </Tooltip> */}
           </FlexBox.Item>
           <FlexBox.Item>
             <CopyToClipboard text={currentTask} onCopy={onCopy}>
@@ -349,7 +385,7 @@ NodeLogs.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
   taskDetails: PropTypes.array.isRequired,
-
+  NodeInputOutputTable: PropTypes.elementType.isRequired,
   node: PropTypes.shape({
     kind: PropTypes.string,
     nodeName: PropTypes.string,
@@ -360,5 +396,8 @@ NodeLogs.propTypes = {
     status: PropTypes.string,
     warnings: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
+
+  currentTask: PropTypes.func.isRequired,
+  setCurrentTask: PropTypes.func.isRequired,
 };
 export default React.memo(NodeLogs);

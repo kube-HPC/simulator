@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
 import { removeNullUndefinedCleanDeep } from 'utils';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
 import { Table } from 'antd';
 import { Card, JsonSwitch } from 'components/common';
 import { RightOutlined, DownOutlined } from '@ant-design/icons';
 import getColumns from './getColumns';
+import FilterByStatusTable from './FilterByStatusTable';
 
 function countByKey(array, nameKey) {
   const result = {};
@@ -28,6 +29,8 @@ const NodeInputOutput = ({
   payload,
 
   isShowOneRow,
+  modeSelect,
+  setCurrentTask,
 }) => {
   const { socketUrl } = useSelector(selectors.connection);
   const mapTask = (task, downloadFileExt) => ({
@@ -57,12 +60,17 @@ const NodeInputOutput = ({
     [algorithm?.downloadFileExt, payload]
   );
 
+  const statusCount = useMemo(() => countByKey(dataSource, 'status'), [
+    dataSource,
+  ]);
+
   const tableColumns = useMemo(() => {
     const cols = getColumns(
       socketUrl,
       algorithm.name,
-      countByKey(dataSource, 'status'),
-      isShowOneRow
+      statusCount,
+      isShowOneRow,
+      modeSelect
     );
 
     if (
@@ -74,38 +82,80 @@ const NodeInputOutput = ({
       cols.shift();
     }
     return cols;
-  }, [algorithm.name, dataSource, isShowOneRow, payload.batchInfo, socketUrl]);
+  }, [
+    algorithm.name,
+    isShowOneRow,
+    modeSelect,
+    payload.batchInfo,
+    socketUrl,
+    statusCount,
+  ]);
+
+  const [filterDataSource, setFilterDataSource] = useState(dataSource);
+  const onFilterStatus = useCallback(
+    statusArray => {
+      if (statusArray.length > 0) {
+        setFilterDataSource(
+          dataSource.filter(obj => statusArray.includes(obj.status))
+        );
+      } else {
+        setFilterDataSource(dataSource);
+      }
+    },
+    [dataSource]
+  );
 
   return (
-    <Table
-      pagination={{
-        defaultPageSize: 10,
-        showSizeChanger: true,
-        pageSizeOptions: ['10', '20'],
-        hideOnSinglePage: true,
-      }}
-      rowKey={({ taskId }) => `input-output-table-task-${taskId}`}
-      columns={tableColumns}
-      dataSource={removeNullUndefinedCleanDeep(dataSource)}
-      expandable={{
-        defaultExpandAllRows: isShowOneRow,
-        expandedRowRender: record => (
-          <Card>
-            <JsonSwitch obj={removeNullUndefinedCleanDeep(record)} />
-          </Card>
-        ),
-        // eslint-disable-next-line react/prop-types
-        expandIcon: ({ expanded, onExpand, record }) =>
-          expanded ? (
-            <DownOutlined onClick={e => onExpand(record, e)} />
-          ) : (
-            <RightOutlined onClick={e => onExpand(record, e)} />
-          ),
-      }}
-    />
+    <>
+      <FilterByStatusTable
+        OnFilter={onFilterStatus}
+        isShowOneRow={isShowOneRow}
+        statusCount={statusCount}
+      />
+
+      <Table
+        rowClassName={() => (modeSelect ? 'cursor-pointer' : '')}
+        style={{ width: modeSelect ? '35vw' : '', marginTop: '10px' }}
+        pagination={{
+          defaultPageSize: 10,
+          showSizeChanger: true,
+          pageSizeOptions: ['10', '20'],
+          hideOnSinglePage: true,
+        }}
+        rowKey={({ taskId }) => `input-output-table-task-${taskId}`}
+        columns={tableColumns}
+        dataSource={removeNullUndefinedCleanDeep(filterDataSource)}
+        expandable={
+          !modeSelect && {
+            defaultExpandAllRows: isShowOneRow,
+            expandedRowRender: record => (
+              <Card>
+                <JsonSwitch obj={removeNullUndefinedCleanDeep(record)} />
+              </Card>
+            ),
+            // eslint-disable-next-line react/prop-types
+            expandIcon: ({ expanded, onExpand, record }) =>
+              expanded ? (
+                <DownOutlined onClick={e => onExpand(record, e)} />
+              ) : (
+                <RightOutlined onClick={e => onExpand(record, e)} />
+              ),
+          }
+        }
+        onRow={record =>
+          modeSelect && {
+            onClick: () => {
+              // eslint-disable-next-line react/prop-types
+              const { taskId } = record;
+              setCurrentTask(taskId);
+            },
+          }
+        }
+      />
+    </>
   );
 };
-
+NodeInputOutput.defaultProps = { modeSelect: false };
 NodeInputOutput.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
@@ -114,6 +164,8 @@ NodeInputOutput.propTypes = {
   // eslint-disable-next-line
   algorithm: PropTypes.object.isRequired,
   isShowOneRow: PropTypes.bool.isRequired,
+  modeSelect: PropTypes.bool,
+  setCurrentTask: PropTypes.func.isRequired,
 };
 
 export default React.memo(NodeInputOutput);
