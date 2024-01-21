@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Checkbox } from 'antd';
 import { CloseCircleTwoTone, FilterOutlined } from '@ant-design/icons';
 import BaseTag from 'components/BaseTag';
@@ -26,14 +26,18 @@ const optionsWithCustomStyle = [
 ];
 
 const FilterByStatusTable = ({ OnFilter, isShowOneRow, statusCount }) => {
-  const [checkedValues, setCheckedValues] = useState(
-    !isShowOneRow && statusCount.active > 0 ? [PIPELINE_STATUS.ACTIVE] : ''
-  );
+  const [checkedValues, setCheckedValues] = useState('');
 
   const onChange = newCheckedValues => {
     setCheckedValues(newCheckedValues);
     OnFilter(newCheckedValues);
   };
+
+  useEffect(() => {
+    onChange(
+      !isShowOneRow && statusCount.active > 0 ? [PIPELINE_STATUS.ACTIVE] : ''
+    );
+  }, []);
 
   return (
     <>
