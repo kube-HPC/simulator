@@ -232,7 +232,7 @@ const NodeLogs = ({
                   style={{
                     display: 'inline-flex',
                     flexDirection: 'row-reverse',
-                    alignContent: 'center',
+                    alignContent: 'left',
                     flexWrap: 'nowrap',
                     width: '150px',
                     justifyContent: 'space-between',
@@ -240,7 +240,7 @@ const NodeLogs = ({
                     borderColor: openPopupOverListTasks ? '#0070ff' : '',
                   }}
                   shape="round"
-                  icon={<DownOutlined />}
+                  icon={taskDetails.length < 2 ? '' : <DownOutlined />}
                   disabled={taskDetails.length < 2}>
                   {currentTask || 'Select an item'}
                 </Button>
