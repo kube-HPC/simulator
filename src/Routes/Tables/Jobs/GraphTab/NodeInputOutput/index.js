@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
+import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import { removeNullUndefinedCleanDeep } from 'utils';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
 import { Table } from 'antd';
@@ -92,8 +93,15 @@ const NodeInputOutput = ({
   ]);
 
   const [filterDataSource, setFilterDataSource] = useState(dataSource);
+  const [saveStatusArray, setSaveStatusArray] = useState(
+    [
+      !isShowOneRow && statusCount.active > 0 ? PIPELINE_STATUS.ACTIVE : null,
+      !isShowOneRow && statusCount.failed > 0 ? PIPELINE_STATUS.FAILED : null,
+    ].filter(Boolean)
+  );
   const onFilterStatus = useCallback(
     statusArray => {
+      setSaveStatusArray(statusArray);
       if (statusArray.length > 0) {
         setFilterDataSource(
           dataSource.filter(obj => statusArray.includes(obj.status))
@@ -104,22 +112,25 @@ const NodeInputOutput = ({
     },
     [dataSource]
   );
-
+  useEffect(() => {
+    onFilterStatus(saveStatusArray);
+  }, [dataSource]);
   return (
     <>
       <FilterByStatusTable
         OnFilter={onFilterStatus}
-        isShowOneRow={isShowOneRow}
-        statusCount={statusCount}
+        DefaultValue={saveStatusArray}
       />
 
       <Table
         rowClassName={() => (modeSelect ? 'cursor-pointer' : '')}
-        style={{ width: modeSelect ? '35vw' : '', marginTop: '10px' }}
+        style={{ width: modeSelect ? '40vw' : '', marginTop: '10px' }}
         pagination={{
-          defaultPageSize: 10,
+          defaultPageSize: modeSelect ? (window.innerHeight < 900 ? 4 : 7) : 8,
           showSizeChanger: true,
-          pageSizeOptions: ['10', '20'],
+          pageSizeOptions: modeSelect
+            ? [window.innerHeight < 900 ? '4' : '7', '8']
+            : ['5', '8'],
           hideOnSinglePage: true,
         }}
         rowKey={({ taskId }) => `input-output-table-task-${taskId}`}

@@ -78,13 +78,15 @@ const Status = status => (
   </BaseTag>
 );
 const StartTime = startTime => (
-  <Moment format="DD/MM/YY HH:mm:ss">{+startTime}</Moment>
+  <Moment style={{ fontSize: '12px' }} format="DD/MM/YY HH:mm:ss">
+    {+startTime}
+  </Moment>
 );
 const sortByStartTime = (a, b) => sorter(a.startTime, b.startTime);
 
 const Duration = (_, record) =>
   record.startTime ? (
-    <Ellipsis ellipsis length={30} style={{ fontSize: '12px' }}>
+    <Ellipsis ellipsis length={20} style={{ fontSize: '12px' }}>
       {humanizeDuration(
         record.endTime
           ? record.endTime - record.startTime
@@ -148,7 +150,6 @@ const getNodeIOColumns = (
   modeSelect
 ) => [
   {
-    width: `5%`,
     title: 'index',
     dataIndex: ['index'],
     key: 'index',
@@ -156,14 +157,12 @@ const getNodeIOColumns = (
   },
   modeSelect
     ? {
-        width: `5%`,
         title: 'Task ID',
         dataIndex: ['taskId'],
         key: 'taskId',
       }
     : {},
   {
-    width: `30%`,
     title: 'Start Time',
     dataIndex: ['startTime'],
     key: 'startTime',
@@ -172,7 +171,6 @@ const getNodeIOColumns = (
   },
 
   {
-    width: `45%`,
     title: TitleStatus(statusCount, isShowOneRow),
     dataIndex: ['status'],
     key: 'status',
@@ -184,14 +182,12 @@ const getNodeIOColumns = (
     render: Status,
   },
   {
-    width: `15%`,
     title: 'duration',
     dataIndex: ['duration'],
     key: 'duration',
     render: Duration,
   },
   {
-    width: `5%`,
     title: 'retries',
     dataIndex: ['retries'],
     key: 'retries',
@@ -200,7 +196,6 @@ const getNodeIOColumns = (
   modeSelect
     ? {}
     : {
-        width: `5%`,
         title: 'Results',
         dataIndex: ['results'],
         key: 'results',

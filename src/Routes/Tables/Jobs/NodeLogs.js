@@ -240,7 +240,8 @@ const NodeLogs = ({
                     borderColor: openPopupOverListTasks ? '#0070ff' : '',
                   }}
                   shape="round"
-                  icon={<DownOutlined />}>
+                  icon={<DownOutlined />}
+                  disabled={taskDetails.length < 2}>
                   {currentTask || 'Select an item'}
                 </Button>
               </Popover>

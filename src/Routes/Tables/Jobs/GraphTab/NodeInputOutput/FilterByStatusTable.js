@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Checkbox } from 'antd';
-import { CloseCircleTwoTone, FilterOutlined } from '@ant-design/icons';
+import React, { useState } from 'react';
+import { Button, Checkbox } from 'antd';
+import { FilterOutlined } from '@ant-design/icons';
 import BaseTag from 'components/BaseTag';
 import { COLOR_TASK_STATUS } from 'styles/colors';
 import PropTypes from 'prop-types';
@@ -25,19 +25,13 @@ const optionsWithCustomStyle = [
   },
 ];
 
-const FilterByStatusTable = ({ OnFilter, isShowOneRow, statusCount }) => {
-  const [checkedValues, setCheckedValues] = useState('');
+const FilterByStatusTable = ({ OnFilter, DefaultValue }) => {
+  const [checkedValues, setCheckedValues] = useState(DefaultValue);
 
   const onChange = newCheckedValues => {
     setCheckedValues(newCheckedValues);
     OnFilter(newCheckedValues);
   };
-
-  useEffect(() => {
-    onChange(
-      !isShowOneRow && statusCount.active > 0 ? [PIPELINE_STATUS.ACTIVE] : ''
-    );
-  }, []);
 
   return (
     <>
@@ -66,21 +60,18 @@ const FilterByStatusTable = ({ OnFilter, isShowOneRow, statusCount }) => {
           </BaseTag>
         </Checkbox>
       ))}
-
-      <CloseCircleTwoTone
+      <Button
         onClick={() => onChange([])}
-        style={{ fontSize: 18 }}
-      />
+        disabled={checkedValues.length === 0}>
+        Clear All
+      </Button>
     </>
   );
 };
 
 FilterByStatusTable.propTypes = {
   OnFilter: PropTypes.func.isRequired,
-  isShowOneRow: PropTypes.bool.isRequired,
-  statusCount: PropTypes.shape({
-    active: PropTypes.number.isRequired,
-  }).isRequired,
+  DefaultValue: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
 };
 
 export default FilterByStatusTable;
