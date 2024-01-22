@@ -39,6 +39,7 @@ const TitleNode = styled(Typography.Text)`
 `;
 
 const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
+  const [currentTask, setCurrentTask] = useState(undefined);
   //  const algorithmDetails = useSelector(state =>
   //    selectors.algorithms.collection.byId(state, node.algorithmName)
   //  );
@@ -119,9 +120,21 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
         key: 'logs-tab',
         children: (
           <NodeLogs
+            currentTask={currentTask}
+            setCurrentTask={setCurrentTask}
             node={node}
             taskDetails={taskDetails}
             key={`${node.nodeName}-logs-tab-node-logs`}
+            NodeInputOutputTable={
+              <NodeInputOutput
+                isShowOneRow={isNodeNotBatchsAndNotStateless}
+                payload={node}
+                algorithm={algorithmDetails}
+                key={`${node.nodeName}-io-details-tab-node-input-output`}
+                setCurrentTask={setCurrentTask}
+                modeSelect
+              />
+            }
           />
         ),
       },
@@ -152,13 +165,13 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
       },
     ],
     [
+      currentTask,
       node,
       taskDetails,
+      isNodeNotBatchsAndNotStateless,
+      algorithmDetails,
       algorithmDetailsDataView,
       jobId,
-      isNodeNotBatchsAndNotStateless,
-
-      algorithmDetails,
     ]
   );
 

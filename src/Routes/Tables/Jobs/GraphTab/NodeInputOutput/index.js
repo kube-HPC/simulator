@@ -1,12 +1,14 @@
 import PropTypes from 'prop-types';
+import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import { removeNullUndefinedCleanDeep } from 'utils';
-import React, { useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
 import { Table } from 'antd';
 import { Card, JsonSwitch } from 'components/common';
 import { RightOutlined, DownOutlined } from '@ant-design/icons';
 import getColumns from './getColumns';
+import FilterByStatusTable from './FilterByStatusTable';
 
 function countByKey(array, nameKey) {
   const result = {};
@@ -28,6 +30,8 @@ const NodeInputOutput = ({
   payload,
 
   isShowOneRow,
+  modeSelect,
+  setCurrentTask,
 }) => {
   const { socketUrl } = useSelector(selectors.connection);
   const mapTask = (task, downloadFileExt) => ({
@@ -57,12 +61,17 @@ const NodeInputOutput = ({
     [algorithm?.downloadFileExt, payload]
   );
 
+  const statusCount = useMemo(() => countByKey(dataSource, 'status'), [
+    dataSource,
+  ]);
+
   const tableColumns = useMemo(() => {
     const cols = getColumns(
       socketUrl,
       algorithm.name,
-      countByKey(dataSource, 'status'),
-      isShowOneRow
+      statusCount,
+      isShowOneRow,
+      modeSelect
     );
 
     if (
@@ -74,38 +83,90 @@ const NodeInputOutput = ({
       cols.shift();
     }
     return cols;
-  }, [algorithm.name, dataSource, isShowOneRow, payload.batchInfo, socketUrl]);
+  }, [
+    algorithm.name,
+    isShowOneRow,
+    modeSelect,
+    payload.batchInfo,
+    socketUrl,
+    statusCount,
+  ]);
 
+  const [filterDataSource, setFilterDataSource] = useState(dataSource);
+  const [saveStatusArray, setSaveStatusArray] = useState(
+    [
+      !isShowOneRow && statusCount.active > 0 ? PIPELINE_STATUS.ACTIVE : null,
+      !isShowOneRow && statusCount.failed > 0 ? PIPELINE_STATUS.FAILED : null,
+    ].filter(Boolean)
+  );
+  const onFilterStatus = useCallback(
+    statusArray => {
+      setSaveStatusArray(statusArray);
+      if (statusArray.length > 0) {
+        setFilterDataSource(
+          dataSource.filter(obj => statusArray.includes(obj.status))
+        );
+      } else {
+        setFilterDataSource(dataSource);
+      }
+    },
+    [dataSource]
+  );
+  useEffect(() => {
+    onFilterStatus(saveStatusArray);
+  }, [dataSource]);
   return (
-    <Table
-      pagination={{
-        defaultPageSize: 10,
-        showSizeChanger: true,
-        pageSizeOptions: ['10', '20'],
-        hideOnSinglePage: true,
-      }}
-      rowKey={({ taskId }) => `input-output-table-task-${taskId}`}
-      columns={tableColumns}
-      dataSource={removeNullUndefinedCleanDeep(dataSource)}
-      expandable={{
-        defaultExpandAllRows: isShowOneRow,
-        expandedRowRender: record => (
-          <Card>
-            <JsonSwitch obj={removeNullUndefinedCleanDeep(record)} />
-          </Card>
-        ),
-        // eslint-disable-next-line react/prop-types
-        expandIcon: ({ expanded, onExpand, record }) =>
-          expanded ? (
-            <DownOutlined onClick={e => onExpand(record, e)} />
-          ) : (
-            <RightOutlined onClick={e => onExpand(record, e)} />
-          ),
-      }}
-    />
+    <>
+      <FilterByStatusTable
+        OnFilter={onFilterStatus}
+        DefaultValue={saveStatusArray}
+      />
+
+      <Table
+        rowClassName={() => (modeSelect ? 'cursor-pointer' : '')}
+        style={{ width: modeSelect ? '40vw' : '', marginTop: '10px' }}
+        pagination={{
+          defaultPageSize: modeSelect ? (window.innerHeight < 900 ? 4 : 7) : 8,
+          showSizeChanger: true,
+          pageSizeOptions: modeSelect
+            ? [window.innerHeight < 900 ? '4' : '7', '8']
+            : ['5', '8'],
+          hideOnSinglePage: true,
+        }}
+        rowKey={({ taskId }) => `input-output-table-task-${taskId}`}
+        columns={tableColumns}
+        dataSource={removeNullUndefinedCleanDeep(filterDataSource)}
+        expandable={
+          !modeSelect && {
+            defaultExpandAllRows: isShowOneRow,
+            expandedRowRender: record => (
+              <Card>
+                <JsonSwitch obj={removeNullUndefinedCleanDeep(record)} />
+              </Card>
+            ),
+            // eslint-disable-next-line react/prop-types
+            expandIcon: ({ expanded, onExpand, record }) =>
+              expanded ? (
+                <DownOutlined onClick={e => onExpand(record, e)} />
+              ) : (
+                <RightOutlined onClick={e => onExpand(record, e)} />
+              ),
+          }
+        }
+        onRow={record =>
+          modeSelect && {
+            onClick: () => {
+              // eslint-disable-next-line react/prop-types
+              const { taskId } = record;
+              setCurrentTask(taskId);
+            },
+          }
+        }
+      />
+    </>
   );
 };
-
+NodeInputOutput.defaultProps = { modeSelect: false };
 NodeInputOutput.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
@@ -114,6 +175,8 @@ NodeInputOutput.propTypes = {
   // eslint-disable-next-line
   algorithm: PropTypes.object.isRequired,
   isShowOneRow: PropTypes.bool.isRequired,
+  modeSelect: PropTypes.bool,
+  setCurrentTask: PropTypes.func.isRequired,
 };
 
 export default React.memo(NodeInputOutput);

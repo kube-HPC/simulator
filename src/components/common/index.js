@@ -23,3 +23,4 @@ export { default as EditableTagGroup } from 'components/common/EditableTagGroup'
 export { default as RangePickerNow } from 'components/common/RangePickerNow';
 export { default as CronModel } from 'components/common/CronModel.react';
 export { default as HelpSiteLink } from 'components/common/HelpSiteLink.react';
+export { default as TableDropdown } from 'components/common/TableDropdown';
