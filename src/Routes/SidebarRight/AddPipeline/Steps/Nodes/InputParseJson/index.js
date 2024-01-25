@@ -49,7 +49,7 @@ const Controller = ({ node, nodeIdx, isRequired }) => {
     );
 
   return (
-    <Form.List name={['nodes', nodeIdx, 'input']}>
+    <Form.List name={['nodes', nodeIdx, 'input']} initialValue={[]}>
       {(fields, { add, remove }) => (
         <>
           {fields.map(({ key, name, fieldKey, ...restField }) => (

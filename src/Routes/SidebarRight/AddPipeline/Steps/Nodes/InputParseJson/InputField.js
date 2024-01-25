@@ -33,7 +33,8 @@ const InputField = ({
       if (
         value !== '' &&
         typeof value === 'string' &&
-        typeof valueJson === 'string'
+        typeof valueJson === 'string' &&
+        addonBefore.props.value === ''
       ) {
         onInputChange({
           target: { value: `"${inputRef.current.input.value}"` },
