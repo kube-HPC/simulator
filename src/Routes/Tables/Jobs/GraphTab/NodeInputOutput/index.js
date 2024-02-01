@@ -124,7 +124,7 @@ const NodeInputOutput = ({
 
       <Table
         rowClassName={() => (modeSelect ? 'cursor-pointer' : '')}
-        style={{ width: modeSelect ? '40vw' : '', marginTop: '10px' }}
+        style={{ width: modeSelect ? '30vw' : '', marginTop: '10px' }}
         pagination={{
           defaultPageSize: modeSelect ? (window.innerHeight < 900 ? 4 : 7) : 8,
           showSizeChanger: true,

@@ -9,6 +9,7 @@ const GRAPH_TYPES = {
     SKIPPED: 'batchSkipped',
     IDLE: 'batchIdle',
     SUCCEED: 'batchSucceed',
+    STOPPED: 'batchStopped',
   },
 };
 

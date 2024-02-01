@@ -24,6 +24,7 @@ import {
 } from './styles';
 import { generateStyles, formatEdge, formatNode } from '../graphUtils';
 import Details from './Details';
+import DropDownNodes from './NodeInputOutput/DropdownNodes';
 
 const GRAPH_DIRECTION = {
   LeftToRight: 'LR',
@@ -43,7 +44,6 @@ const calculatePercentage = (value, minValue, maxValue) => {
 const GraphTab = ({ graph, pipeline }) => {
   // const [nodePos, setNodePos] = useState(null);
   // const [zoomPos, setZoomPos] = useState(null);
-
   const [nodeSpacingInit] = useState(graph?.nodes?.length > 10 ? 70 : 150);
 
   const [selectNode, setSelectNode] = useState([
@@ -69,7 +69,16 @@ const GraphTab = ({ graph, pipeline }) => {
   // const nodeSpacingY = useRef(window.localStorage.getItem(LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_GRAPH_SLIDER)||300);
   const graphRef = useRef(null);
   const [showGraph] = useReducer(p => !p, true);
-  const { node, events } = useNodeInfo({ graph, pipeline }); // events
+  const { node, events, reloadNodeData, setReloadNodeData } = useNodeInfo({
+    graph,
+    pipeline,
+  }); // events
+
+  useEffect(() => {
+    if (reloadNodeData) {
+      setSelectNode([reloadNodeData]);
+    }
+  }, [reloadNodeData]);
 
   const normalizedPipeline = useMemo(
     () =>
@@ -308,7 +317,7 @@ const GraphTab = ({ graph, pipeline }) => {
                   network.on('selectNode', () => {
                     const nodeSelected = network.getSelectedNodes();
 
-                    setSelectNode(nodeSelected);
+                    setSelectNode([nodeSelected]);
                   });
                 }}
               />
@@ -322,8 +331,12 @@ const GraphTab = ({ graph, pipeline }) => {
       </GraphContainer>
       {isValidGraph && (
         <Card>
+          <DropDownNodes
+            nodes={graph.nodes}
+            selectNode={selectNode}
+            setSelectNode={setReloadNodeData}
+          />
           <Details
-            pipelienKind={pipeline.kind}
             node={node}
             jobId={graph.jobId}
             isDisabledBtnRunDebug={isDisabledBtnRunDebug}
