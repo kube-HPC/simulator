@@ -51,6 +51,10 @@ export const findNode = ({ graph, pipeline }) => nodeName => {
 };
 
 const statusMap = {
+  stopped: {
+    availableFrom: new Set([STATUS.STOPPED]),
+    group: NODE_GROUPS.STOPPED,
+  },
   active: {
     availableFrom: new Set([STATUS.STORING, STATUS.ACTIVE]),
     group: NODE_GROUPS.ACTIVE,
@@ -128,6 +132,7 @@ const splitBatchToGroups = (
   group = overrideGroup(group, NODE_GROUPS.ACTIVE);
   group = overrideGroup(group, NODE_GROUPS.SKIPPED);
   group = overrideGroup(group, NODE_GROUPS.WARNING);
+  group = overrideGroup(group, NODE_GROUPS.STOPPED);
   group = overrideGroup(group, NODE_GROUPS.ERRORS);
 
   if (warnings?.length > 0) {
@@ -164,6 +169,7 @@ const groupsColor = {
   batchActive: COLOR_TASK_STATUS[TASK.ACTIVE],
   batchWarning: COLOR_TASK_STATUS[TASK.WARNING],
   batchSkipped: COLOR_TASK_STATUS[TASK.SKIPPED],
+  batchStopped: COLOR_TASK_STATUS[TASK.STOPPED],
 };
 
 export const formatNode = (

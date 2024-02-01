@@ -35,6 +35,11 @@ const groupsPreview = {
       background: COLOR_TASK_STATUS[TASK.WARNING],
     },
   },
+  [NODE_GROUPS.STOPPED]: {
+    color: {
+      background: COLOR_TASK_STATUS[TASK.STOPPED],
+    },
+  },
   [NODE_GROUPS.SKIPPED]: {
     color: {
       background: COLOR_TASK_STATUS[TASK.SKIPPED],
@@ -71,6 +76,11 @@ const groups = {
   [NODE_GROUPS.WARNING]: {
     color: {
       background: COLOR_TASK_STATUS[TASK.WARNING],
+    },
+  },
+  [NODE_GROUPS.STOPPED]: {
+    color: {
+      background: COLOR_TASK_STATUS[TASK.STOPPED],
     },
   },
   [NODE_GROUPS.SKIPPED]: {

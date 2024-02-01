@@ -8,6 +8,7 @@ const EMPTY_NODE = {};
 
 const useNodeInfo = ({ graph, pipeline }) => {
   const [node, setNode] = useState(EMPTY_NODE);
+  const [reloadNodeData, setReloadNodeData] = useState('');
 
   const { logSource: source, logMode } = useSettings();
   const findNodeByName = findNode({ graph, pipeline });
@@ -36,6 +37,13 @@ const useNodeInfo = ({ graph, pipeline }) => {
     }
   }, [findNodeByName, graph, node, source, logMode]);
 
+  useEffect(() => {
+    if (reloadNodeData) {
+      const payload = findNodeByName(reloadNodeData);
+      setNode(payload);
+    }
+  }, [reloadNodeData]);
+
   const events = useMemo(
     () => ({
       click: ({ nodes }) => {
@@ -43,7 +51,6 @@ const useNodeInfo = ({ graph, pipeline }) => {
         if (!nodeName) {
           return;
         }
-
         const payload = findNodeByName(nodeName);
         setNode(payload);
       },
@@ -51,7 +58,7 @@ const useNodeInfo = ({ graph, pipeline }) => {
     [findNodeByName]
   );
 
-  return { node, events };
+  return { node, setReloadNodeData, reloadNodeData, events };
 };
 
 export default useNodeInfo;

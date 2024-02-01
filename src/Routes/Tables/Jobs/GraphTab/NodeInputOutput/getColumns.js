@@ -28,10 +28,12 @@ const styleTagStatus = {
 
 const Index = index => <Tag>{index}</Tag>;
 
-const TitleStatus = (record, isShowOneRow) => (
+export const TitleStatus = (record, isShowOneRow, isRemoveTitle) => (
   <>
-    <Typography.Text style={{ paddingRight: '7px' }}>status</Typography.Text>
-    {!isShowOneRow && record.active > 0 && (
+    {!isRemoveTitle && (
+      <Typography.Text style={{ paddingRight: '7px' }}>status</Typography.Text>
+    )}
+    {!isShowOneRow && record?.active > 0 && (
       <BaseTag
         style={styleTagStatus}
         isActiveLoader={false}
@@ -41,7 +43,7 @@ const TitleStatus = (record, isShowOneRow) => (
         {record.active}
       </BaseTag>
     )}
-    {!isShowOneRow && record.completed > 0 && (
+    {!isShowOneRow && record?.completed > 0 && (
       <BaseTag
         style={styleTagStatus}
         status={PIPELINE_STATUS.COMPLETED}
@@ -51,7 +53,7 @@ const TitleStatus = (record, isShowOneRow) => (
       </BaseTag>
     )}
 
-    {!isShowOneRow && record.failed > 0 && (
+    {!isShowOneRow && record?.failed > 0 && (
       <BaseTag
         style={styleTagStatus}
         status={PIPELINE_STATUS.FAILED}
@@ -61,7 +63,7 @@ const TitleStatus = (record, isShowOneRow) => (
       </BaseTag>
     )}
 
-    {!isShowOneRow && record.stopped > 0 && (
+    {!isShowOneRow && record?.stopped > 0 && (
       <BaseTag
         style={styleTagStatus}
         status={PIPELINE_STATUS.STOPPED}
