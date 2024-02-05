@@ -269,6 +269,14 @@ const useJobsFunctionsLimit = () => {
     }
   }, []);
 
+  const jobColumnsMemo = useMemo(() => {
+    if (_dataSource.filter(x => x.externalId != null).length === 0) {
+      return jobColumns.filter(x => x.key !== 'externalId');
+    }
+
+    return jobColumns;
+  }, [_dataSource]);
+
   return {
     zoomedChangedDate,
     filterToggeled,
@@ -280,7 +288,7 @@ const useJobsFunctionsLimit = () => {
     isGraphLoad,
     isTableLoad,
     onRow,
-    columns: jobColumns,
+    columns: jobColumnsMemo,
     _dataSource,
     setLimitGetJobs,
   };

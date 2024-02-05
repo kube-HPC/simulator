@@ -1,21 +1,24 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { DownOutlined } from '@ant-design/icons';
-import { Dropdown, Space } from 'antd';
+import { Dropdown, Typography, Button, Space } from 'antd';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { TitleStatus } from './getColumns';
 
-function countByKey(array, nameKey) {
+function countByKey(node, nameKey) {
   const result = {};
-
-  array.forEach(obj => {
-    const key = obj[nameKey];
-    if (!result[key]) {
-      result[key] = 1;
-    } else {
-      result[key]++;
-    }
-  });
+  if (node.batch) {
+    node.batch.forEach(obj => {
+      const key = obj[nameKey];
+      if (!result[key]) {
+        result[key] = 1;
+      } else {
+        result[key]++;
+      }
+    });
+  } else {
+    result[node.status] = 1;
+  }
 
   if (result.succeed > 0) {
     if (result?.completed) {
@@ -27,37 +30,46 @@ function countByKey(array, nameKey) {
   return result;
 }
 
-const DropStyle = styled.div`
-  font-size: 18px;
-  font-weight: bold;
+const BgStyle = styled.div`
+  background: #fbfbfb;
+  height: 50px;
+`;
 
-  border-bottom: 1px solid #e6e7e8;
-  padding: 10px;
-  width: 30%;
-  font-size: 20px;
-  border-bottom: 1px solid #e6e7e8;
-  padding: 10px;
-
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-content: center;
-  justify-content: space-between;
-  align-items: center;
-  margin-left: 15px;
+const DropdownStyle = styled(Dropdown)`
+   {
+    margin-left: 10px;
+    margin-top: 10px;
+    &&.textSelect {
+      border-color: #4096ff;
+    }
+  }
+`;
+const SelectText = styled(Typography.Text)`
+   {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: space-between;
+    align-items: baseline;
+    width: 150px;
+  }
 `;
 
 const DropDownNodes = ({ nodes, selectNode, setSelectNode }) => {
+  const [isOpenDropdown, setIsOpenDropdown] = useState(false);
+
   const LabelStatusCount = node => {
-    const stNode = node?.batch && countByKey(node.batch, 'status');
+    const stNode = node && countByKey(node, 'status');
+
     const name = node.nodeName;
     const onClickSelectNode = nodeName => {
       setSelectNode(nodeName);
     };
     return (
-      <Space onClick={() => onClickSelectNode(name)}>
+      <SelectText onClick={() => onClickSelectNode(name)}>
         {name} {TitleStatus(stNode, false, true)}
-      </Space>
+      </SelectText>
     );
   };
 
@@ -71,11 +83,20 @@ const DropDownNodes = ({ nodes, selectNode, setSelectNode }) => {
   );
 
   return (
-    <Dropdown menu={{ items }} overlayStyle={{ width: '200px' }}>
-      <DropStyle>
-        <span>{selectNode}</span> <DownOutlined style={{ fontSize: '16px' }} />
-      </DropStyle>
-    </Dropdown>
+    <BgStyle>
+      <DropdownStyle
+        menu={{ items }}
+        trigger="click"
+        onOpenChange={() => setIsOpenDropdown(prev => !prev)}
+        className={isOpenDropdown ? 'textSelect' : ''}>
+        <Button>
+          <Space>
+            {selectNode}
+            <DownOutlined />
+          </Space>
+        </Button>
+      </DropdownStyle>
+    </BgStyle>
   );
 };
 

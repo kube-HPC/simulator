@@ -79,11 +79,14 @@ const Status = status => (
     {status}
   </BaseTag>
 );
-const StartTime = startTime => (
-  <Moment style={{ fontSize: '12px' }} format="DD/MM/YY HH:mm:ss">
-    {+startTime}
-  </Moment>
-);
+const StartTime = startTime =>
+  startTime ? (
+    <Moment style={{ fontSize: '12px' }} format="DD/MM/YY HH:mm:ss">
+      {+startTime}
+    </Moment>
+  ) : (
+    '--/--/-- --:--:--'
+  );
 const sortByStartTime = (a, b) => sorter(a.startTime, b.startTime);
 
 const Duration = (_, record) =>

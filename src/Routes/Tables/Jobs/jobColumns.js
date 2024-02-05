@@ -16,7 +16,11 @@ import JobTypes from './JobTypes';
 // import PinActiveJobs from './pinActiveJobs';
 
 const Id = jobID => (
-  <Ellipsis className={USER_GUIDE.TABLE_JOB.ID_SELECT} copyable text={jobID} />
+  <Ellipsis
+    className={USER_GUIDE.TABLE_JOB.ID_SELECT}
+    copyable
+    text={jobID || '---'}
+  />
 );
 
 const Name = (text, record) => <PipelineNameActions pipeline={record} />;
@@ -74,9 +78,17 @@ const jobColumns = [
     align: `center`,
     render: pinActiveJobs,
   }, */
+
+  {
+    title: `External ID`,
+    dataIndex: [`externalId`],
+    key: `externalId`,
+    width: `10%`,
+    render: Id,
+  },
   {
     title: `Job ID`,
-    dataIndex: `key`,
+    dataIndex: [`key`],
     key: `key`,
     width: `10%`,
     render: Id,
