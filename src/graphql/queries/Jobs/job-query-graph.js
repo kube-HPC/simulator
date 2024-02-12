@@ -21,6 +21,7 @@ const JOB_QUERY_GRAPH = gql`
     ) {
       jobs {
         key
+        externalId
         results {
           startTime
         }

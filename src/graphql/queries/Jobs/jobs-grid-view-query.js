@@ -21,6 +21,7 @@ const JOB_GRID_VIEW_QUERY = gql`
     ) {
       jobs {
         key
+        externalId
         results {
           startTime
           pipeline

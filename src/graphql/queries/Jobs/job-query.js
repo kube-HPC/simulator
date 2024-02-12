@@ -21,6 +21,7 @@ const JOB_QUERY = gql`
     ) {
       jobs {
         key
+        externalId
         status {
           pipeline
           level
