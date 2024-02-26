@@ -92,6 +92,10 @@ const Wizard = ({
   isRunPipeline,
 }) => {
   const [valuesState, setValuesState] = useState(() => initialState);
+  const [isStreamingPipeline, setIsStreamingPipeline] = useState(
+    initialState.kind === 'stream'
+  );
+  const [pageLoaded, setPageLoaded] = useState(false);
   const [initStepNames] = useState(
     isRunPipeline ? RunPipelineStepNames : stepNames
   );
@@ -135,9 +139,7 @@ const Wizard = ({
   }, [persistForm, toggle]);
 
   // check for undefined to avoid removing streaming only fields while initial load
-
-  const isStreamingPipeline =
-    ['stream'].includes(getFieldValue('kind')) || valuesState.kind === 'stream';
+  // setIsStreamingPipeline(['stream'].includes(getFieldValue('kind')) || valuesState.kind === 'stream');
 
   const isLastStep = stepIdx === steps.length - 1;
 
@@ -150,8 +152,17 @@ const Wizard = ({
   ]);
 
   useEffect(() => {
+    setIsStreamingPipeline(
+      ['stream'].includes(getFieldValue('kind')) ||
+        valuesState.kind === 'stream'
+    );
+
     // if kind is undefined then is value default algorithm
     resetKind(undefined);
+
+    setTimeout(() => {
+      setPageLoaded(true);
+    }, 500);
   }, []);
 
   useLayoutEffect(() => {
@@ -215,23 +226,25 @@ const Wizard = ({
           </Form>
         </ContenerWizard>
 
-        <ContenerJsonGraph>
-          <ContenerGraph>
-            {valuesState && (
-              <GraphPreview
-                pipeline={valuesState}
-                isBuildAllFlows={isStreamingPipeline}
-                isMinified
-                clickNode={selectNodeFromGraph}
-              />
-            )}
-          </ContenerGraph>
+        {pageLoaded && (
+          <ContenerJsonGraph>
+            <ContenerGraph>
+              {valuesState && (
+                <GraphPreview
+                  pipeline={valuesState}
+                  isBuildAllFlows={isStreamingPipeline}
+                  isMinified
+                  clickNode={selectNodeFromGraph}
+                />
+              )}
+            </ContenerGraph>
 
-          <ContenerJsonButton>
-            <ButtonSticky onClick={handleToggle}>Text editor</ButtonSticky>
-            <JsonView src={getFormattedFormValues()} collapsed={undefined} />
-          </ContenerJsonButton>
-        </ContenerJsonGraph>
+            <ContenerJsonButton>
+              <ButtonSticky onClick={handleToggle}>Text editor</ButtonSticky>
+              <JsonView src={getFormattedFormValues()} collapsed={undefined} />
+            </ContenerJsonButton>
+          </ContenerJsonGraph>
+        )}
       </Body>
 
       <BottomPanel>
