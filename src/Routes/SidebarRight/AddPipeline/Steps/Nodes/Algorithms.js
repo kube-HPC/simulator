@@ -33,7 +33,6 @@ const AlgorithmNode = ({ id }) => {
           }
         />
       </Field>
-
       {isStreamingPipeline &&
         valuesState?.nodes[id]?.stateType === 'stateless' && (
           <Collapsible
@@ -54,7 +53,7 @@ const AlgorithmNode = ({ id }) => {
               inline={false}
               title="Max"
               name={['maxStatelessCount']}
-              initialValue={0}
+              initialValue={null}
               skipValidation>
               <InputNumberSwitch />
             </Field>

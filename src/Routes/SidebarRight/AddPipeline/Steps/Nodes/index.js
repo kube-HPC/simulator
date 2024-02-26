@@ -171,6 +171,11 @@ const Nodes = ({ style }) => {
     setForm();
   };
 
+  const getDefaultValueStateType = id => {
+    const nodesArr = getFieldValue(['nodes']);
+    return nodesArr[id].stateType;
+  };
+
   const selectActiveNode = useCallback(
     e => {
       setActiveNodeId(e.target.value);
@@ -322,6 +327,7 @@ const Nodes = ({ style }) => {
               {isStreamingPipeline && (
                 <Field title="Kind">
                   <Radio.Group
+                    defaultValue={() => getDefaultValueStateType(id)}
                     buttonStyle="solid"
                     onChange={e => handleKindChange(e, id)}>
                     <Radio.Button value="stateless">stateless</Radio.Button>
@@ -333,7 +339,7 @@ const Nodes = ({ style }) => {
 
               {isStreamingPipeline && (
                 <Field
-                  overrides={{ ...{ style: { display: 'none' } } }}
+                  overrides={{ style: { display: 'none' } }}
                   name={['nodes', id, 'stateType']}
                   title="state Type"
                   required>
