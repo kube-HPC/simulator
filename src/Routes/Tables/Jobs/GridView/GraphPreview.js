@@ -4,16 +4,22 @@ import React, {
   useMemo,
   useReducer,
   useCallback,
+  useRef,
 } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Alert } from 'antd';
+import { Alert, Button } from 'antd';
 // import { Fallback, FallbackComponent } from 'components/common';
 // import { useNodeInfo, useSettings } from 'hooks';
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
 import useWizardContext from 'Routes/SidebarRight/AddPipeline/useWizardContext';
 import Graph from 'react-graph-vis';
+import {
+  AimOutlined,
+  ZoomInOutlined,
+  ZoomOutOutlined,
+} from '@ant-design/icons';
 import { generateStyles, formatEdge, formatNode } from '../graphUtils';
 
 const GraphContainer = styled.div`
@@ -42,6 +48,16 @@ const GraphContainer = styled.div`
     z-index: 5;
   }
 `;
+export const ButtonsPanel = styled.div`
+  position: absolute;
+  z-index: 9999;
+  right: 12px;
+  top: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 105px;
+  justify-content: space-between;
+`;
 
 const GraphPreview = ({
   pipeline,
@@ -50,6 +66,7 @@ const GraphPreview = ({
   isMinified,
   clickNode,
 }) => {
+  const graphRef = useRef(null);
   const wizardContext = useWizardContext();
 
   let valuesState = pipeline;
@@ -72,6 +89,30 @@ const GraphPreview = ({
   const { backendApiUrl } = useSelector(selectors.config);
   const [graphPreview, setGraphPreview] = useState({ nodes: [], edges: [] });
   const [errorGraph, setErrorGraph] = useState('');
+
+  const handleZoomIn = useCallback(() => {
+    const network = graphRef?.current?.Network;
+    network.moveTo({
+      scale: network.getScale() + 0.3,
+    });
+  }, []);
+  const handleZoomOut = useCallback(() => {
+    const network = graphRef?.current?.Network;
+    network.moveTo({ scale: network.getScale() - 0.3 });
+  }, []);
+  const handleZoomNodeSelected = useCallback(() => {
+    const network = graphRef?.current?.Network;
+
+    network.focus(network.getSelectedNodes(), {
+      scale: 2,
+
+      locked: true,
+      animation: {
+        duration: 2000,
+        easingFunction: 'easeOutQuint',
+      },
+    });
+  }, []);
 
   const normalizedPipeline = useMemo(
     () =>
@@ -288,12 +329,17 @@ const GraphPreview = ({
 
   return (
     <GraphContainer>
+      <ButtonsPanel>
+        <Button onClick={handleZoomNodeSelected} icon={<AimOutlined />} />
+        <Button onClick={handleZoomIn} icon={<ZoomInOutlined />} />
+        <Button onClick={handleZoomOut} icon={<ZoomOutOutlined />} />
+      </ButtonsPanel>
       {isDataNode && showGraph && (
         <Graph
           graph={adaptedGraph}
           options={graphOptions}
           //   events={events}
-
+          ref={graphRef}
           getNetwork={network => {
             network.on('click', () => {
               clickNode(network.getSelectedNodes());
