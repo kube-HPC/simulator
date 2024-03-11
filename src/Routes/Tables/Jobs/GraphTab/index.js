@@ -60,6 +60,7 @@ const GraphTab = ({ graph, pipeline }) => {
   const nodePos = useRef(null);
   const zoomPos = useRef(null);
   const zoomSavePos = useRef(null);
+  const isLockForAnimation = useRef(false);
 
   const isSlider = useRef(false);
   const nodeSpacing = useRef(
@@ -147,25 +148,33 @@ const GraphTab = ({ graph, pipeline }) => {
   }, [node, pipeline?.kind, pipeline.nodes]);
   const handleZoomIn = useCallback(() => {
     const network = graphRef?.current?.Network;
-    network.moveTo({
-      scale: network.getScale() + 0.3,
-    });
+    const newScale = network.getScale() + 0.3;
+    network.moveTo({ scale: newScale });
+    zoomPos.current.scale = newScale;
   }, []);
   const handleZoomOut = useCallback(() => {
     const network = graphRef?.current?.Network;
-    network.moveTo({ scale: network.getScale() - 0.3 });
+    const newScale = network.getScale() - 0.3;
+    network.moveTo({ scale: newScale });
+    zoomPos.current.scale = newScale;
   }, []);
   const handleZoomNodeSelected = useCallback(() => {
+    isLockForAnimation.current = true;
     const network = graphRef?.current?.Network;
-
     network.focus(selectNode, {
       scale: 2,
-
-      locked: true,
       animation: {
         duration: 2000,
         easingFunction: 'easeOutQuint',
       },
+    });
+
+    network.once('animationFinished', () => {
+      const scale = network.getScale();
+      const viewPosition = network.getViewPosition();
+      zoomPos.current = { scale, position: viewPosition };
+      network.moveTo(zoomPos.current);
+      isLockForAnimation.current = false;
     });
   }, [selectNode]);
 
@@ -201,7 +210,7 @@ const GraphTab = ({ graph, pipeline }) => {
   const graphCalculations = useCallback(() => {
     const network = graphRef?.current?.Network || null;
 
-    if (network) {
+    if (network && !isLockForAnimation.current) {
       const adaptedGraphData = adaptedGraph();
       const graphOptionsData = graphOptions();
       if (isHierarchical.current) {
