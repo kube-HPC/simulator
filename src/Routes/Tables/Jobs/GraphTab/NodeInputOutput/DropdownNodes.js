@@ -49,6 +49,7 @@ const SelectText = styled(Typography.Text)`
 
     justify-content: space-between;
     line-height: inherit;
+    color: inherit;
   }
 `;
 const TextTitleStatus = styled(Typography.Text)`
