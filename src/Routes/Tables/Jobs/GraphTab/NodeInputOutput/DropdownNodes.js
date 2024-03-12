@@ -87,6 +87,7 @@ const DropDownNodes = ({ nodes, selectNode, setSelectNode }) => {
   const filterOption = (input, option) =>
     (option?.value ?? '').toLowerCase().includes(input.toLowerCase());
 
+  useEffect(() => {});
 
   return (
     <BgStyle>
@@ -96,7 +97,6 @@ const DropDownNodes = ({ nodes, selectNode, setSelectNode }) => {
         showSearch
         options={items}
         filterOption={filterOption}
-        onFocus={()=>setSelectNode("")}
       />
     </BgStyle>
   );
