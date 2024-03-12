@@ -98,6 +98,8 @@ const DropDownNodes = ({ nodes, selectNode, setSelectNode }) => {
         showSearch
         options={items}
         filterOption={filterOption}
+        listHeight={700}
+        virtual={false}
       />
     </BgStyle>
   );
