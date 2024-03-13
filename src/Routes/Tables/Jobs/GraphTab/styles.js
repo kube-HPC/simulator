@@ -1,4 +1,4 @@
-import { Empty, Button } from 'antd';
+import { Empty } from 'antd';
 import styled from 'styled-components';
 
 export const Card = styled.div`
@@ -46,11 +46,15 @@ export const EmptyHeight = styled(Empty)`
   height: 136px;
 `;
 
-export const ButtonStyle = styled(Button)`
+export const ButtonsPanel = styled.div`
   position: absolute;
   z-index: 9999;
   left: 47%;
   top: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 150px;
+  justify-content: space-between;
 `;
 
 export const FlexContainer = styled.div`

@@ -7,10 +7,15 @@ import React, {
   useRef,
 } from 'react';
 import PropTypes from 'prop-types';
-import { Empty, Slider } from 'antd';
+import { Empty, Slider, Button } from 'antd';
 import { useDebounceCallback } from '@react-hook/debounce';
 import { Fallback, FallbackComponent } from 'components/common';
 import { useNodeInfo } from 'hooks';
+import {
+  AimOutlined,
+  ZoomInOutlined,
+  ZoomOutOutlined,
+} from '@ant-design/icons';
 import { ReactComponent as IconGraphUpToDown } from 'images/dir-graph-up.svg';
 import { ReactComponent as IconGraphLeftToRight } from 'images/dir-graph-left.svg';
 import { LOCAL_STORAGE_KEYS } from 'const';
@@ -19,8 +24,8 @@ import {
   Card,
   GraphContainer,
   EmptyHeight,
-  ButtonStyle,
   FlexContainer,
+  ButtonsPanel,
 } from './styles';
 import { generateStyles, formatEdge, formatNode } from '../graphUtils';
 import Details from './Details';
@@ -44,7 +49,7 @@ const calculatePercentage = (value, minValue, maxValue) => {
 const GraphTab = ({ graph, pipeline }) => {
   // const [nodePos, setNodePos] = useState(null);
   // const [zoomPos, setZoomPos] = useState(null);
-  const [nodeSpacingInit] = useState(graph?.nodes?.length > 10 ? 70 : 150);
+  const [nodeSpacingInit] = useState(graph?.nodes?.length > 10 ? 130 : 150);
 
   const [selectNode, setSelectNode] = useState([
     graph?.nodes?.length > 0 ? graph?.nodes[0]?.nodeName : '',
@@ -55,6 +60,7 @@ const GraphTab = ({ graph, pipeline }) => {
   const nodePos = useRef(null);
   const zoomPos = useRef(null);
   const zoomSavePos = useRef(null);
+  const isLockForAnimation = useRef(false);
 
   const isSlider = useRef(false);
   const nodeSpacing = useRef(
@@ -140,6 +146,37 @@ const GraphTab = ({ graph, pipeline }) => {
 
     return res;
   }, [node, pipeline?.kind, pipeline.nodes]);
+  const handleZoomIn = useCallback(() => {
+    const network = graphRef?.current?.Network;
+    const newScale = network.getScale() + 0.3;
+    network.moveTo({ scale: newScale });
+    zoomPos.current.scale = newScale;
+  }, []);
+  const handleZoomOut = useCallback(() => {
+    const network = graphRef?.current?.Network;
+    const newScale = network.getScale() - 0.3;
+    network.moveTo({ scale: newScale });
+    zoomPos.current.scale = newScale;
+  }, []);
+  const handleZoomNodeSelected = useCallback(() => {
+    isLockForAnimation.current = true;
+    const network = graphRef?.current?.Network;
+    network.focus(selectNode, {
+      scale: 2,
+      animation: {
+        duration: 2000,
+        easingFunction: 'easeOutQuint',
+      },
+    });
+
+    network.once('animationFinished', () => {
+      const scale = network.getScale();
+      const viewPosition = network.getViewPosition();
+      zoomPos.current = { scale, position: viewPosition };
+      network.moveTo(zoomPos.current);
+      isLockForAnimation.current = false;
+    });
+  }, [selectNode]);
 
   const handleSelectDirection = useCallback(() => {
     const directionSelect =
@@ -173,7 +210,7 @@ const GraphTab = ({ graph, pipeline }) => {
   const graphCalculations = useCallback(() => {
     const network = graphRef?.current?.Network || null;
 
-    if (network) {
+    if (network && !isLockForAnimation.current) {
       const adaptedGraphData = adaptedGraph();
       const graphOptionsData = graphOptions();
       if (isHierarchical.current) {
@@ -283,18 +320,21 @@ const GraphTab = ({ graph, pipeline }) => {
         {
           // <Slider onChange={onChangeSliderDebounceY} defaultValue={nodeSpacingY.current} min={100} max={600} style={{width:"300px",position: "absolute",  zIndex: "9999",  left: "25%",  top: "20px"}} />
         }
-
-        <ButtonStyle
-          onClick={handleSelectDirection}
-          icon={
-            graphDirection !== GRAPH_DIRECTION.LeftToRight ? (
-              <IconGraphUpToDown />
-            ) : (
-              <IconGraphLeftToRight />
-            )
-          }
-        />
-
+        <ButtonsPanel>
+          <Button
+            onClick={handleSelectDirection}
+            icon={
+              graphDirection !== GRAPH_DIRECTION.LeftToRight ? (
+                <IconGraphUpToDown />
+              ) : (
+                <IconGraphLeftToRight />
+              )
+            }
+          />
+          <Button onClick={handleZoomNodeSelected} icon={<AimOutlined />} />
+          <Button onClick={handleZoomIn} icon={<ZoomInOutlined />} />
+          <Button onClick={handleZoomOut} icon={<ZoomOutOutlined />} />
+        </ButtonsPanel>
         {isValidGraph ? (
           showGraph ? (
             <Fallback>
@@ -316,7 +356,6 @@ const GraphTab = ({ graph, pipeline }) => {
                   });
                   network.on('selectNode', () => {
                     const nodeSelected = network.getSelectedNodes();
-
                     setSelectNode([nodeSelected]);
                   });
                 }}
