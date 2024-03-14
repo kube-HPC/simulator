@@ -92,20 +92,19 @@ const GraphPreview = ({
 
   const handleZoomIn = useCallback(() => {
     const network = graphRef?.current?.Network;
-    network.moveTo({
+    network?.moveTo({
       scale: network.getScale() + 0.3,
     });
   }, []);
   const handleZoomOut = useCallback(() => {
     const network = graphRef?.current?.Network;
-    network.moveTo({ scale: network.getScale() - 0.3 });
+    network?.moveTo({ scale: network.getScale() - 0.3 });
   }, []);
   const handleZoomNodeSelected = useCallback(() => {
     const network = graphRef?.current?.Network;
 
-    network.focus(network.getSelectedNodes(), {
+    network?.focus(network.getSelectedNodes(), {
       scale: 2,
-
       locked: true,
       animation: {
         duration: 2000,

@@ -1,6 +1,7 @@
 import { nodeKind, taskStatuses as TASK } from '@hkube/consts';
 import { get, pick } from 'lodash';
 import { COLOR_TASK_STATUS } from 'styles/colors';
+import { lightenColor } from 'utils/stringHelper';
 import GRAPH_TYPES from './../graphUtils/types';
 
 /** @typedef {import('vis').NodeOptions} NodeOptions */
@@ -10,10 +11,7 @@ const hasHashOrAtSymbol = input => {
   if (Array.isArray(input)) {
     // eslint-disable-next-line no-restricted-syntax
     for (const item of input) {
-      if (
-        typeof item === 'string' &&
-        (item.startsWith('#') || item.startsWith('@'))
-      ) {
+      if (typeof item === 'string' && item.startsWith('#')) {
         return true;
       }
     }
@@ -185,7 +183,7 @@ export const formatNode = (
   const isBatch = !!node.batchInfo;
   const isBatchStyling =
     (isStreaming && isStateLess) ||
-    (!isStreaming && hasHashOrAtSymbol(pipelineNode));
+    (!isStreaming && hasHashOrAtSymbol(pipelineNode.input));
 
   /** @type {NodeOptions} */
 
@@ -213,10 +211,13 @@ export const formatNode = (
         },
         shadow: {
           enabled: true,
-          color: groupsColor[meta.group] || COLOR_TASK_STATUS[TASK.SKIPPED],
+          color: lightenColor(
+            groupsColor[meta.group] || COLOR_TASK_STATUS[TASK.SKIPPED],
+            meta.group === 'batchIdle' ? 0 : 40
+          ),
           size: 1,
-          x: 7,
-          y: 7,
+          x: 5,
+          y: 5,
         },
       }
     : {};
@@ -241,6 +242,7 @@ export const formatNode = (
     'group',
     'x',
     'y',
-    'shadow'
+    'shadow',
+    'font'
   );
 };
