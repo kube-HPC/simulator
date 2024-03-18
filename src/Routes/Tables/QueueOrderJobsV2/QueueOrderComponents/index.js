@@ -1,4 +1,5 @@
 export { default as TypeRow } from '../QueueOrderComponents/TypeRow';
+export { default as ActionsQueueOrder } from '../QueueOrderComponents/ActionsQueueOrder';
 export { default as StartTime } from '../QueueOrderComponents/StartTime';
 export { default as TagColoByName } from '../QueueOrderComponents/TagColoByName';
 export { default as Concurrency } from '../QueueOrderComponents/Concurrency';
