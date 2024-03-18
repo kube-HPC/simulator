@@ -5,13 +5,14 @@ import {
   EditOutlined,
   InfoCircleOutlined,
   PlayCircleOutlined,
+  StopOutlined,
 } from '@ant-design/icons';
 import { Button, Empty, Popover, Tooltip } from 'antd';
 
 import { USER_GUIDE } from 'const';
 import { useActions } from 'hooks';
 import isEqual from 'lodash/isEqual';
-import { deleteConfirmAction } from 'utils';
+import { deleteConfirmAction, stopConfirmAction } from 'utils';
 import PipelineCreateBoard from './TensorflowBoards/PipelineCreateBoard.react';
 import usePath from './usePath';
 
@@ -23,7 +24,7 @@ const title = 'Create Tensor Board for selected Node';
 
 const PipelineActions = ({ pipeline, className }) => {
   const { goTo } = usePath();
-  const { deleteStored: remove } = useActions();
+  const { deleteStored: remove, stopAllPipeline } = useActions();
 
   const container = useRef();
 
@@ -37,6 +38,11 @@ const PipelineActions = ({ pipeline, className }) => {
     pipeline,
     remove,
   ]);
+
+  const onStop = useCallback(
+    () => stopConfirmAction(stopAllPipeline, pipeline),
+    [pipeline, stopAllPipeline]
+  );
 
   const setPopupContainer = useCallback(() => container.current, [container]);
 
@@ -89,6 +95,9 @@ const PipelineActions = ({ pipeline, className }) => {
         </Tooltip>
         <Tooltip title="delete pipeline">
           <Button icon={<DeleteOutlined />} onClick={onDelete} />
+        </Tooltip>
+        <Tooltip title="stop all jobs of pipeline">
+          <Button icon={<StopOutlined />} onClick={onStop} />
         </Tooltip>
         <Tooltip title="show overview">
           <Button icon={<InfoCircleOutlined />} onClick={onEdit} />

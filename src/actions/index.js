@@ -30,6 +30,7 @@ import {
   pausePipeline,
   resumePipeline,
   stopPipeline,
+  stopAllPipeline,
   updateStored,
 } from './pipeline.action';
 import { setSettings } from './settings.action';
@@ -78,6 +79,7 @@ const actions = {
   socketInit,
   startBoard,
   stopPipeline,
+  stopAllPipeline,
   toggleViewType,
   setExperimentLoading,
   triggerUserGuide,

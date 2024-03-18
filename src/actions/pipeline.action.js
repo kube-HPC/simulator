@@ -9,6 +9,19 @@ export const addPipeline = pipeline => ({
   },
 });
 
+export const stopAllPipeline = (jobId, { onSuccess }) => ({
+  type: actions.REST_REQ_POST,
+  payload: {
+    url: `exec/stop`,
+    body: {
+      jobId,
+      reason: `Request from simulator, Algorithms-tab Delete action`,
+    },
+    actionType: actions.PIPELINE_STOP,
+  },
+  meta: { jobId, onSuccess },
+});
+
 export const stopPipeline = jobId => ({
   type: actions.REST_REQ_POST,
   payload: {
