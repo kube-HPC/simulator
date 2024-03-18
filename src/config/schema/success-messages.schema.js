@@ -2,6 +2,7 @@ import Text from 'antd/lib/typography/Text';
 import React from 'react';
 
 const successMsg = payload => ({
+  ALL_PIPELINE_JOBS_STOP: `${payload.name}'s Jobs have been stopped`,
   ALGORITHM_APPLY: 'Algorithm Applied, check Algorithms table',
   ALGORITHM_RUN: (
     <>

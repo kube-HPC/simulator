@@ -7,7 +7,7 @@ export {
   setLsItem,
 } from './localStorage';
 export { default as mapObjValues } from './mapObjValues';
-export { deleteConfirmAction } from './modal';
+export { deleteConfirmAction, stopConfirmAction } from './modal';
 export { default as notification, copyToClipboard } from './notification';
 export { default as selector } from './selector';
 export {
