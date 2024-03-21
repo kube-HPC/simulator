@@ -25,15 +25,16 @@ const Initial = ({ style }) => {
     valuesState,
     form,
     setForm,
+    isStreamingPipeline,
+    setIsStreamingPipeline,
   } = useWizardContext();
 
   const {
-    isSelectStreaming,
     handleRadioClick,
     nodeNames,
     kindOverSelect,
     setKindOverSelect,
-  } = useWizardInitial(valuesState, form, setForm);
+  } = useWizardInitial(valuesState, form, setForm, setIsStreamingPipeline);
 
   // get list nodes
   const { experiments } = useExperiments();
@@ -107,7 +108,7 @@ const Initial = ({ style }) => {
           </Form.Item>
         </FlexBox.Item>
         <FlexBox.Item span={12}>
-          {isSelectStreaming && (
+          {isStreamingPipeline && (
             <HelpSiteLink
               link="/learn/streaming/"
               style={{ position: 'absolute', marginLeft: '-33px' }}

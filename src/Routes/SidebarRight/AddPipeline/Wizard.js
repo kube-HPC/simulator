@@ -187,6 +187,7 @@ const Wizard = ({
         stepIdx,
         initialState,
         isStreamingPipeline,
+        setIsStreamingPipeline,
         isEdit,
         valuesState,
         isRunPipeline,

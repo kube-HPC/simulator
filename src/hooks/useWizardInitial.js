@@ -22,15 +22,16 @@ const cleanNodes = nodes => {
   return nodes;
 };
 
-const useWizardInitial = (valuesState, form, setForm) => {
+const useWizardInitial = (
+  valuesState,
+  form,
+  setForm,
+  setIsStreamingPipeline
+) => {
   const [kindOverSelect, setKindOverSelect] = useState('stream');
 
   const [nodeNames] = useState(
     valuesState?.nodes?.map(item => item?.nodeName) || []
-  );
-
-  const [isSelectStreaming, setIsSelectStreaming] = useState(
-    valuesState.kind === 'stream'
   );
 
   const hasSpecialInput = useCallback(
@@ -176,24 +177,23 @@ const useWizardInitial = (valuesState, form, setForm) => {
                 form.setFieldValue('nodes', cleanItemInputAlgorithmNodes);
               }
 
-              setIsSelectStreaming(value === 'stream');
+              setIsStreamingPipeline(value === 'stream');
               setForm();
             },
             onCancel: () => {},
           });
         } else {
           form.setFieldsValue({ kind: value });
-          setIsSelectStreaming(value === 'stream');
+          setIsStreamingPipeline(value === 'stream');
           setForm();
         }
       }
     },
-    [form, msgByKind, setForm, valuesState.kind]
+    [form, msgByKind, setForm, setIsStreamingPipeline, valuesState.kind]
   );
 
   return {
     nodeNames,
-    isSelectStreaming,
     kindOverSelect,
     setKindOverSelect,
     handleRadioClick,
