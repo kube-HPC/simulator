@@ -38,7 +38,7 @@ const DropdownStyle = styled(Select)`
    {
     margin-left: 10px;
     margin-top: 10px;
-    width: 180px;
+    width: 220px;
   }
 `;
 const SelectText = styled(Typography.Text)`
