@@ -37,7 +37,7 @@ class TableQueue extends React.Component {
         onDragSortEnd={({ oldIndex, newIndex }) =>
           onSortEnd({ oldIndex, newIndex })
         }
-        onDragStart={() => {
+        onDragSortStart={() => {
           handleOnSelectedTable(TypeTable.QUEUE);
         }}
         onDragEnter={() => {
