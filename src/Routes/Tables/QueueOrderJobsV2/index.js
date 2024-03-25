@@ -12,14 +12,14 @@ import { LinkToEdit } from './QueueOrderComponents';
 import useQueueOrderJobs from './useQueueOrderJobs';
 
 // need HOC function to pass hook "useQueueOrderJobs" function to class component
-export const queueOrderJobsHOC = QueueOrderJobs => props => {
+export const queueOrderJobsHOC = QueueOrderJobsV2 => props => {
   const { orderApi } = useQueueOrderJobs();
 
-  return <QueueOrderJobs orderApi={orderApi} {...props} />;
+  return <QueueOrderJobsV2 orderApi={orderApi} {...props} />;
 };
 
 const PAGE_SIZE_TABLE = 30;
-class QueueOrderJobs extends React.Component {
+class QueueOrderJobsV2 extends React.Component {
   constructor(props) {
     super(props);
 
@@ -499,7 +499,7 @@ class QueueOrderJobs extends React.Component {
     return (
       <>
         <>
-          Version 1 :
+          Version 2 :
           {JSON.stringify({
             selectTable,
             hoverTable,
@@ -569,7 +569,7 @@ class QueueOrderJobs extends React.Component {
   }
 }
 
-QueueOrderJobs.propTypes = {
+QueueOrderJobsV2.propTypes = {
   orderApi: PropTypes.shape({
     numberJobsPerPage: PropTypes.number,
     addPreferred: PropTypes.func,
@@ -583,5 +583,5 @@ QueueOrderJobs.propTypes = {
   }).isRequired,
 };
 
-export default queueOrderJobsHOC(QueueOrderJobs);
+export default queueOrderJobsHOC(QueueOrderJobsV2);
 // export default React.memo(QueueOrderJobs);
