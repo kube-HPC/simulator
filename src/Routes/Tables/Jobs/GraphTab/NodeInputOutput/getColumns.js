@@ -6,7 +6,7 @@ import { COLOR_TASK_STATUS } from 'styles/colors';
 import { DownloadOutlined } from '@ant-design/icons';
 import { Button, Tag, Tooltip, Typography } from 'antd';
 import humanizeDuration from 'humanize-duration';
-import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
+import { taskStatuses as TASK_STATUS } from '@hkube/consts';
 import { sorter } from 'utils/stringHelper';
 import BaseTag from 'components/BaseTag';
 
@@ -16,67 +16,45 @@ const styleTagStatus = {
   paddingInline: '2%',
 };
 
-/* const getStatusFilter = () =>
-  [
-    PIPELINE_STATUS.ACTIVE,
-    PIPELINE_STATUS.COMPLETED,
-    PIPELINE_STATUS.FAILED,
-  ].map(status => ({
-    text: toUpperCaseFirstLetter(status),
-    value: status,
-  })); */
-
 const Index = index => <Tag>{index}</Tag>;
 
-export const TitleStatus = (record, isShowOneRow, isRemoveTitle) => (
+export const TitleStatus = (
+  record,
+  isShowOneRow,
+  isRemoveTitle,
+  isError = false
+) => (
   <>
     {!isRemoveTitle && (
       <Typography.Text style={{ paddingRight: '7px' }}>status</Typography.Text>
     )}
-    {!isShowOneRow && record?.active > 0 && (
-      <BaseTag
-        style={styleTagStatus}
-        isActiveLoader={false}
-        status={PIPELINE_STATUS.ACTIVE}
-        colorMap={COLOR_TASK_STATUS}
-        title={PIPELINE_STATUS.ACTIVE}>
-        {record.active}
-      </BaseTag>
-    )}
-    {!isShowOneRow && record?.completed > 0 && (
-      <BaseTag
-        style={styleTagStatus}
-        status={PIPELINE_STATUS.COMPLETED}
-        colorMap={COLOR_TASK_STATUS}
-        title={PIPELINE_STATUS.COMPLETED}>
-        {record.completed}
-      </BaseTag>
-    )}
-
-    {!isShowOneRow && record?.failed > 0 && (
-      <BaseTag
-        style={styleTagStatus}
-        status={PIPELINE_STATUS.FAILED}
-        colorMap={COLOR_TASK_STATUS}
-        title={PIPELINE_STATUS.FAILED}>
-        {record.failed}
-      </BaseTag>
-    )}
-
-    {!isShowOneRow && record?.stopped > 0 && (
-      <BaseTag
-        style={styleTagStatus}
-        status={PIPELINE_STATUS.STOPPED}
-        colorMap={COLOR_TASK_STATUS}
-        title={PIPELINE_STATUS.STOPPED}>
-        {record.stopped}
-      </BaseTag>
-    )}
+    {!isShowOneRow &&
+      Object.keys(record).map(
+        keyStatus =>
+          record[keyStatus] > 0 && (
+            <BaseTag
+              style={styleTagStatus}
+              isActiveLoader={false}
+              isError={isError}
+              status={
+                keyStatus !== TASK_STATUS.FAILED_SCHEDULING
+                  ? TASK_STATUS[keyStatus.toUpperCase()]
+                  : TASK_STATUS.FAILED_SCHEDULING
+              }
+              colorMap={COLOR_TASK_STATUS}
+              title={TASK_STATUS[keyStatus.toUpperCase()]}>
+              {record[keyStatus]}
+            </BaseTag>
+          )
+      )}
   </>
 );
-const Status = status => (
-  <BaseTag status={status} colorMap={COLOR_TASK_STATUS}>
-    {status}
+const Status = record => (
+  <BaseTag
+    status={record.status}
+    colorMap={COLOR_TASK_STATUS}
+    isError={record?.error}>
+    {record.status}
   </BaseTag>
 );
 const StartTime = startTime =>
@@ -176,8 +154,8 @@ const getNodeIOColumns = (
   },
 
   {
-    title: TitleStatus(statusCount, isShowOneRow),
-    dataIndex: ['status'],
+    title: 'Status', // TitleStatus(statusCount, isShowOneRow),
+    // dataIndex: ['status'],
     key: 'status',
     onFilter: (value, record) => record.status === value,
     //   defaultFilteredValue:

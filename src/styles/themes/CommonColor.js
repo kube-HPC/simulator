@@ -100,6 +100,8 @@ const COMMON_COLOR = () => {
     // WARNING
     [TASK.STALLED]: COLOR.orangeLight,
     [TASK.WARNING]: COLOR.orange,
+    [TASK.FAILED_SCHEDULING]: COLOR.orange,
+
     // SKIPPED
     [TASK.SKIPPED]: COLOR.grey,
     // STOPED

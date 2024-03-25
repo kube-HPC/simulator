@@ -38,7 +38,7 @@ const DropdownStyle = styled(Select)`
    {
     margin-left: 10px;
     margin-top: 10px;
-    width: 180px;
+    width: 220px;
   }
 `;
 const SelectText = styled(Typography.Text)`
@@ -69,7 +69,9 @@ const DropDownNodes = ({ nodes, selectNode, setSelectNode }) => {
     return (
       <SelectText>
         <span>{name}</span>{' '}
-        <TextTitleStatus>{TitleStatus(stNode, false, true)}</TextTitleStatus>
+        <TextTitleStatus>
+          {TitleStatus(stNode, false, true, node?.error)}
+        </TextTitleStatus>
       </SelectText>
     );
   };

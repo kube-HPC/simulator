@@ -120,6 +120,8 @@ const NodeInputOutput = ({
       <FilterByStatusTable
         OnFilter={onFilterStatus}
         DefaultValue={saveStatusArray}
+        StatusCount={statusCount}
+        DataTask={payload}
       />
 
       <Table
