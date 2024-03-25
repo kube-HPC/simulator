@@ -142,7 +142,7 @@ const getNodeIOColumns = (
   },
 
   {
-    title: TitleStatus(statusCount, isShowOneRow),
+    title: 'Status', // TitleStatus(statusCount, isShowOneRow),
     dataIndex: ['status'],
     key: 'status',
     onFilter: (value, record) => record.status === value,

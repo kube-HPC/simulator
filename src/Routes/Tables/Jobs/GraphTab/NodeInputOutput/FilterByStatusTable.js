@@ -23,11 +23,13 @@ const FilterByStatusTable = ({ OnFilter, DefaultValue, StatusCount }) => {
     OnFilter(newCheckedValues);
   };
 
+  let numberfilterShow = 0;
   return (
     <>
       <FilterOutlined style={{ padding: '10px', fontSize: 18 }} />
-      {optionsWithCustomStyle.map(
-        option =>
+      {optionsWithCustomStyle.map(option => {
+        StatusCount[option.value] && numberfilterShow++;
+        return (
           StatusCount[option.value] && (
             <Checkbox
               key={option.value}
@@ -48,11 +50,13 @@ const FilterByStatusTable = ({ OnFilter, DefaultValue, StatusCount }) => {
                 isActiveLoader={false}
                 status={option.label}
                 colorMap={COLOR_TASK_STATUS}>
-                {option.label}
+                {StatusCount[option.value]}{' '}
+                {numberfilterShow <= 4 ? option.label : ''}
               </BaseTag>
             </Checkbox>
           )
-      )}
+        );
+      })}
       <Button
         onClick={() => onChange([])}
         disabled={checkedValues.length === 0}>
