@@ -18,12 +18,16 @@ const styleTagStatus = {
 
 const Index = index => <Tag>{index}</Tag>;
 
-export const TitleStatus = (record, isShowOneRow, isRemoveTitle) => (
+export const TitleStatus = (
+  record,
+  isShowOneRow,
+  isRemoveTitle,
+  isError = false
+) => (
   <>
     {!isRemoveTitle && (
       <Typography.Text style={{ paddingRight: '7px' }}>status</Typography.Text>
     )}
-
     {!isShowOneRow &&
       Object.keys(record).map(
         keyStatus =>
@@ -31,7 +35,12 @@ export const TitleStatus = (record, isShowOneRow, isRemoveTitle) => (
             <BaseTag
               style={styleTagStatus}
               isActiveLoader={false}
-              status={TASK_STATUS[keyStatus.toUpperCase()]}
+              isError={isError}
+              status={
+                keyStatus !== TASK_STATUS.FAILED_SCHEDULING
+                  ? TASK_STATUS[keyStatus.toUpperCase()]
+                  : TASK_STATUS.FAILED_SCHEDULING
+              }
               colorMap={COLOR_TASK_STATUS}
               title={TASK_STATUS[keyStatus.toUpperCase()]}>
               {record[keyStatus]}
@@ -40,9 +49,12 @@ export const TitleStatus = (record, isShowOneRow, isRemoveTitle) => (
       )}
   </>
 );
-const Status = status => (
-  <BaseTag status={status} colorMap={COLOR_TASK_STATUS}>
-    {status}
+const Status = record => (
+  <BaseTag
+    status={record.status}
+    colorMap={COLOR_TASK_STATUS}
+    isError={record?.error}>
+    {record.status}
   </BaseTag>
 );
 const StartTime = startTime =>
@@ -143,7 +155,7 @@ const getNodeIOColumns = (
 
   {
     title: 'Status', // TitleStatus(statusCount, isShowOneRow),
-    dataIndex: ['status'],
+    // dataIndex: ['status'],
     key: 'status',
     onFilter: (value, record) => record.status === value,
     //   defaultFilteredValue:

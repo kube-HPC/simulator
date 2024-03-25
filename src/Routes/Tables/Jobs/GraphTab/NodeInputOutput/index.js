@@ -115,13 +115,13 @@ const NodeInputOutput = ({
   useEffect(() => {
     onFilterStatus(saveStatusArray);
   }, [dataSource]);
-
   return (
     <>
       <FilterByStatusTable
         OnFilter={onFilterStatus}
         DefaultValue={saveStatusArray}
         StatusCount={statusCount}
+        DataTask={payload}
       />
 
       <Table

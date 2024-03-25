@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { SyncOutlined } from '@ant-design/icons';
 import { Tag, Tooltip } from 'antd';
 import styled from 'styled-components';
+import { taskStatuses as TASK_STATUS } from '@hkube/consts';
 import { COLOR_PIPELINE_STATUS, COLOR, Theme } from 'styles/colors';
 import { toUpperCaseFirstLetter } from 'utils/stringHelper';
 
@@ -23,9 +24,12 @@ const BaseTag = ({
   colorMap,
   tooltip,
   isActiveLoader,
+  isError,
   style,
 }) => {
-  const color = colorMap[status];
+  const isFailedSchedulingError =
+    isError && status === TASK_STATUS.FAILED_SCHEDULING;
+  const color = isFailedSchedulingError ? colorMap.failed : colorMap[status];
   const isBright = [COLOR.lightGrey, COLOR.white].includes(color) || !color;
   const textColor = isBright ? COLOR.transparentBlack : COLOR.white;
 
@@ -56,6 +60,7 @@ BaseTag.propTypes = {
   // eslint-disable-next-line
   style: PropTypes.object,
   isActiveLoader: PropTypes.bool,
+  isError: PropTypes.bool,
 };
 
 BaseTag.defaultProps = {
@@ -64,6 +69,7 @@ BaseTag.defaultProps = {
   colorMap: COLOR_PIPELINE_STATUS,
   tooltip: null,
   isActiveLoader: true,
+  isError: false,
 };
 
 export default BaseTag;
