@@ -257,7 +257,6 @@ class QueueOrderJobsV2 extends React.Component {
   };
 
   onSortEnd = async ({ oldIndex, newIndex }) => {
-    console.log(oldIndex, newIndex);
     const { orderApi } = this.props;
     this.setState({ isDrag: false });
     const {
@@ -266,9 +265,15 @@ class QueueOrderJobsV2 extends React.Component {
       selectTable,
       hoverTable,
       rowOverIndex,
+      positionOverY,
       filterQueueVal,
       filterPreferredVal,
     } = this.state;
+
+    // eslint-disable-next-line no-param-reassign
+    newIndex = rowOverIndex + positionOverY;
+
+    console.log(oldIndex, newIndex);
 
     // PREFERRED to PREFERRED
     if (
@@ -277,7 +282,6 @@ class QueueOrderJobsV2 extends React.Component {
     ) {
       if (oldIndex !== newIndex) {
         this.setState({ isLoadDataPreferred: true, isLoadDataQueue: true });
-        const { positionOverY } = this.state;
 
         // get all jobsId need to move
 
@@ -310,7 +314,7 @@ class QueueOrderJobsV2 extends React.Component {
     ) {
       this.setState({ isLoadDataPreferred: true, isLoadDataQueue: true });
       // QUEUE to PREFERRED
-      const { positionOverY } = this.state;
+
       let jobsInsert = [];
       let jobIdPosition = '';
       let position = 'first';
@@ -492,13 +496,13 @@ class QueueOrderJobsV2 extends React.Component {
       isLoadDataPreferred,
       isLoadDataQueue,
 
-      rowOverIndex,
-      positionOverY,
+      //    rowOverIndex,
+      //    positionOverY,
     } = this.state;
 
     return (
       <>
-        <>
+        {/* <>
           Version 2 :
           {JSON.stringify({
             selectTable,
@@ -507,7 +511,7 @@ class QueueOrderJobsV2 extends React.Component {
             positionOverY,
             isDrag,
           })}
-        </>
+        </> */}
         <LinkToEdit toggleEdit={this.toggleEdit} />
 
         {!isEditOrder && (

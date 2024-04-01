@@ -492,13 +492,13 @@ class QueueOrderJobs extends React.Component {
       isLoadDataPreferred,
       isLoadDataQueue,
 
-      rowOverIndex,
-      positionOverY,
+      //   rowOverIndex ,
+      //   positionOverY ,
     } = this.state;
 
     return (
       <>
-        <>
+        {/*   <>
           Version 1 :
           {JSON.stringify({
             selectTable,
@@ -507,7 +507,7 @@ class QueueOrderJobs extends React.Component {
             positionOverY,
             isDrag,
           })}
-        </>
+        </> */}
         <LinkToEdit toggleEdit={this.toggleEdit} />
 
         {!isEditOrder && (

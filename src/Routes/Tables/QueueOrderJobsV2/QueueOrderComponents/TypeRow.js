@@ -1,8 +1,8 @@
 import React from 'react';
 import { TypeTable } from 'const';
-import { StarTwoTone, StarOutlined } from '@ant-design/icons';
+import { StarTwoTone } from '@ant-design/icons';
 
-export const TypeRow = type =>
-  type === TypeTable.PREFERRED ? <StarTwoTone /> : <StarOutlined />;
+export const TypeRow = obj =>
+  obj.type === TypeTable.PREFERRED ? <StarTwoTone /> : '';
 
 export default TypeRow;

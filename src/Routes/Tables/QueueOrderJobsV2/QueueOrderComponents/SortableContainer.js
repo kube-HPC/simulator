@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 
 const SortableContainer = ({ onDragSortEnd, onDragSortStart, ...props }) => {
   const handleDragEnd = e => {
-    console.log('end event', e);
-    console.log('e.sectionRowIndex', e.target.sectionRowIndex);
-    onDragSortEnd({ oldIndex: 2, newIndex: 2 });
+    // console.log('end event', e);
+    // console.log('e.sectionRowIndex', e.target.sectionRowIndex);
+    onDragSortEnd({ oldIndex: e.target.sectionRowIndex, newIndex: 0 });
   };
-  const handleDragStart = e => {
-    console.log('start event', e);
-    console.log('e.sectionRowIndex', e.target.sectionRowIndex);
+  const handleDragStart = () => {
+    // console.log('start event', e);
+    // console.log('e.sectionRowIndex', e.target.sectionRowIndex);
     onDragSortStart();
   };
 

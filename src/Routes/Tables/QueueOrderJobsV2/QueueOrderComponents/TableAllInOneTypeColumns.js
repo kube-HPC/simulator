@@ -54,13 +54,6 @@ export const TableAllInOneTypeColumns = {
 
   PIPELINE: [
     {
-      title: '',
-      dataIndex: ['typeElement'],
-      width: '2%',
-      render: TypeRow,
-    },
-
-    {
       title: 'Pipeline Name',
       dataIndex: ['name'],
       render: name => <b>{name}</b>,
@@ -69,14 +62,13 @@ export const TableAllInOneTypeColumns = {
       title: 'jobs Count',
       dataIndex: 'count',
     },
+    {
+      title: 'Status',
+      width: '8%',
+      render: Status,
+    },
   ],
   TAG: [
-    {
-      title: '',
-      dataIndex: ['typeElement'],
-      width: '2%',
-      render: TypeRow,
-    },
     {
       title: 'Tags',
       dataIndex: ['name'],
@@ -85,6 +77,11 @@ export const TableAllInOneTypeColumns = {
     {
       title: 'jobs Count',
       dataIndex: ['count'],
+    },
+    {
+      title: 'Status',
+      width: '8%',
+      render: Status,
     },
   ],
 };
