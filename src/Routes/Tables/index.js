@@ -16,12 +16,12 @@ const Body = () => (
     <Route
       exact
       path={['/queue', '/queue/:edit?/*']}
-      component={QueueOrderJobs}
+      component={QueueOrderJobsV2}
     />
     <Route
       exact
-      path={['/queueV2', '/queue/:edit?/*']}
-      component={QueueOrderJobsV2}
+      path={['/queueV1', '/queue/:edit?/*']}
+      component={QueueOrderJobs}
     />
     <Route
       exact
