@@ -6,12 +6,15 @@ import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
 
 const ActionsQueueOrder = ({ job }) => {
-  console.log('job', job);
-  const { key } = job;
+  const { jobId } = job;
+  // console.log('job', job, jobId);
   const { rerunPipeline } = usePipeline();
   const { stopPipeline } = useActions();
-  const onReRun = useCallback(() => rerunPipeline(key), [rerunPipeline, key]);
-  const onStop = useCallback(() => stopPipeline(key), [stopPipeline, key]);
+  const onReRun = useCallback(() => rerunPipeline(jobId), [
+    rerunPipeline,
+    jobId,
+  ]);
+  const onStop = useCallback(() => stopPipeline(jobId), [stopPipeline, jobId]);
   return (
     <Button.Group className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
       <Tooltip title="re-run pipeline">
