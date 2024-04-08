@@ -21,10 +21,16 @@ class TablePreferred extends React.Component {
       dataIndex: 'action',
       width: 30,
       render: (text, record) => {
-        const { dataSourcePreferred, handleDelete } = this.props;
+        const {
+          dataSourcePreferred,
+          handleDelete,
+          filterPreferredVal,
+        } = this.props;
+
+        const manyString = filterPreferredVal !== 'JOBID' ? 'items' : 'item';
         return dataSourcePreferred.length >= 1 ? (
           <Popconfirm
-            title="Do you want to move these item to Queue list?"
+            title={`Do you want to move these ${manyString} to Queue list?`}
             onConfirm={() => handleDelete(record.key)}>
             <DeleteOutlined />
           </Popconfirm>

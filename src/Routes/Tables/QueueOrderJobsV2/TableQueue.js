@@ -76,6 +76,9 @@ class TableQueue extends React.Component {
     return (
       <ContainerArea
         $isDirectionColumn={viewTableColumnOrRow}
+        onDragEnter={() => {
+          handleOnHoverTable(TypeTable.QUEUE);
+        }}
         onMouseEnter={() => {
           handleOnHoverTable(TypeTable.QUEUE);
         }}
@@ -102,6 +105,7 @@ class TableQueue extends React.Component {
           <br />
           Release to move the item to the queue
         </DeleteOverTable>
+
         <TableItem
           locale={{
             emptyText: (

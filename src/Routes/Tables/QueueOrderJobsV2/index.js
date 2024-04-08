@@ -151,8 +151,10 @@ class QueueOrderJobsV2 extends React.Component {
   }
 
   showPromiseConfirmDelete = async keyDelete => {
+    const { filterPreferredVal } = this.state;
+    const manyString = filterPreferredVal !== 'JOBID' ? 'items' : 'item';
     Modal.confirm({
-      title: 'Do you want to move these item to Queue list?',
+      title: `Do you want to move these ${manyString} to Queue list?`,
       icon: <ExclamationCircleOutlined />,
       onOk: async () => {
         const res = await this.handleDelete(keyDelete);
@@ -272,8 +274,6 @@ class QueueOrderJobsV2 extends React.Component {
 
     // eslint-disable-next-line no-param-reassign
     newIndex = rowOverIndex + positionOverY;
-
-    console.log(oldIndex, newIndex);
 
     // PREFERRED to PREFERRED
     if (

@@ -34,8 +34,12 @@ const TableOrderConsolidated = ({
   };
 
   useEffect(() => {
-    setTimeout(() => setIsLoading(false), 1500);
-  }, [isLoading]);
+    if (dataSourceAllJobs.length > 0) {
+      setTimeout(() => setIsLoading(false), 1500);
+    } else {
+      setTimeout(() => setIsLoading(false), 3500);
+    }
+  }, [isLoading, dataSourceAllJobs.length]);
 
   return (
     <>
