@@ -177,6 +177,7 @@ const Wizard = ({
   }, [isStreamingPipeline, resetKind]);
 
   const selectNodeFromGraph = nodeName => {
+    setStepIdx(1);
     SetGraphnodeSelected(nodeName);
   };
 
