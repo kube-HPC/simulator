@@ -2,7 +2,6 @@ import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
 import Jobs from './Jobs';
-import QueueOrderJobs from './QueueOrderJobs';
 import QueueOrderJobsV2 from './QueueOrderJobsV2';
 import AlgorithmsTable from './Algorithms';
 import DriversTable from './Drivers';
@@ -17,11 +16,6 @@ const Body = () => (
       exact
       path={['/queue', '/queue/:edit?/*']}
       component={QueueOrderJobsV2}
-    />
-    <Route
-      exact
-      path={['/queueV1', '/queue/:edit?/*']}
-      component={QueueOrderJobs}
     />
     <Route
       exact
