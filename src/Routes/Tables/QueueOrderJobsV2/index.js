@@ -12,14 +12,14 @@ import { LinkToEdit } from './QueueOrderComponents';
 import useQueueOrderJobs from './useQueueOrderJobs';
 
 // need HOC function to pass hook "useQueueOrderJobs" function to class component
-export const queueOrderJobsHOC = QueueOrderJobs => props => {
+export const queueOrderJobsHOC = QueueOrderJobsV2 => props => {
   const { orderApi } = useQueueOrderJobs();
 
-  return <QueueOrderJobs orderApi={orderApi} {...props} />;
+  return <QueueOrderJobsV2 orderApi={orderApi} {...props} />;
 };
 
 const PAGE_SIZE_TABLE = 30;
-class QueueOrderJobs extends React.Component {
+class QueueOrderJobsV2 extends React.Component {
   constructor(props) {
     super(props);
 
@@ -151,8 +151,10 @@ class QueueOrderJobs extends React.Component {
   }
 
   showPromiseConfirmDelete = async keyDelete => {
+    const { filterPreferredVal } = this.state;
+    const manyString = filterPreferredVal !== 'JOBID' ? 'items' : 'item';
     Modal.confirm({
-      title: 'Do you want to move these item to Queue list?',
+      title: `Do you want to move these ${manyString} to Queue list?`,
       icon: <ExclamationCircleOutlined />,
       onOk: async () => {
         const res = await this.handleDelete(keyDelete);
@@ -265,9 +267,13 @@ class QueueOrderJobs extends React.Component {
       selectTable,
       hoverTable,
       rowOverIndex,
+      positionOverY,
       filterQueueVal,
       filterPreferredVal,
     } = this.state;
+
+    // eslint-disable-next-line no-param-reassign
+    newIndex = rowOverIndex + positionOverY;
 
     // PREFERRED to PREFERRED
     if (
@@ -276,7 +282,6 @@ class QueueOrderJobs extends React.Component {
     ) {
       if (oldIndex !== newIndex) {
         this.setState({ isLoadDataPreferred: true, isLoadDataQueue: true });
-        const { positionOverY } = this.state;
 
         // get all jobsId need to move
 
@@ -309,7 +314,7 @@ class QueueOrderJobs extends React.Component {
     ) {
       this.setState({ isLoadDataPreferred: true, isLoadDataQueue: true });
       // QUEUE to PREFERRED
-      const { positionOverY } = this.state;
+
       let jobsInsert = [];
       let jobIdPosition = '';
       let position = 'first';
@@ -490,10 +495,23 @@ class QueueOrderJobs extends React.Component {
       isEditOrder,
       isLoadDataPreferred,
       isLoadDataQueue,
+
+      //    rowOverIndex,
+      //    positionOverY,
     } = this.state;
 
     return (
       <>
+        {/* <>
+          Version 2 :
+          {JSON.stringify({
+            selectTable,
+            hoverTable,
+            rowOverIndex,
+            positionOverY,
+            isDrag,
+          })}
+        </> */}
         <LinkToEdit toggleEdit={this.toggleEdit} />
 
         {!isEditOrder && (
@@ -555,7 +573,7 @@ class QueueOrderJobs extends React.Component {
   }
 }
 
-QueueOrderJobs.propTypes = {
+QueueOrderJobsV2.propTypes = {
   orderApi: PropTypes.shape({
     numberJobsPerPage: PropTypes.number,
     addPreferred: PropTypes.func,
@@ -569,5 +587,5 @@ QueueOrderJobs.propTypes = {
   }).isRequired,
 };
 
-export default queueOrderJobsHOC(QueueOrderJobs);
+export default queueOrderJobsHOC(QueueOrderJobsV2);
 // export default React.memo(QueueOrderJobs);

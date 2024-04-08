@@ -21,10 +21,16 @@ class TablePreferred extends React.Component {
       dataIndex: 'action',
       width: 30,
       render: (text, record) => {
-        const { dataSourcePreferred, handleDelete } = this.props;
+        const {
+          dataSourcePreferred,
+          handleDelete,
+          filterPreferredVal,
+        } = this.props;
+
+        const manyString = filterPreferredVal !== 'JOBID' ? 'items' : 'item';
         return dataSourcePreferred.length >= 1 ? (
           <Popconfirm
-            title="Do you want to move these item to Queue list?"
+            title={`Do you want to move these ${manyString} to Queue list?`}
             onConfirm={() => handleDelete(record.key)}>
             <DeleteOutlined />
           </Popconfirm>
@@ -54,11 +60,13 @@ class TablePreferred extends React.Component {
         shouldCancelStart={this.shouldCancelStart}
         disableAutoscroll
         helperClass="row-dragging"
-        onSortEnd={onSortEnd}
-        onSortStart={() => {
+        onDragSortEnd={({ oldIndex, newIndex }) =>
+          onSortEnd({ oldIndex, newIndex })
+        }
+        onDragSortStart={() => {
           handleOnSelectedTable(TypeTable.PREFERRED);
         }}
-        onMouseEnter={() => {
+        onDragEnter={() => {
           handleOnHoverTable(TypeTable.PREFERRED);
         }}
         {...props}
@@ -147,6 +155,12 @@ class TablePreferred extends React.Component {
           onRow={record => ({
             onMouseMove: event => this.paintDragLocation(event, record, isDrag),
             onMouseLeave: event => {
+              event.target.parentNode.classList.remove('drop-over-downward');
+              event.target.parentNode.classList.remove('drop-over-upward');
+            },
+
+            onDragOver: event => this.paintDragLocation(event, record, isDrag),
+            onDragLeave: event => {
               event.target.parentNode.classList.remove('drop-over-downward');
               event.target.parentNode.classList.remove('drop-over-upward');
             },

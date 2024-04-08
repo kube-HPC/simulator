@@ -34,11 +34,13 @@ class TableQueue extends React.Component {
         transitionDuration={0}
         disableAutoscroll
         helperClass="row-dragging"
-        onSortEnd={onSortEnd}
-        onSortStart={() => {
+        onDragSortEnd={({ oldIndex, newIndex }) =>
+          onSortEnd({ oldIndex, newIndex })
+        }
+        onDragSortStart={() => {
           handleOnSelectedTable(TypeTable.QUEUE);
         }}
-        onMouseEnter={() => {
+        onDragEnter={() => {
           handleOnHoverTable(TypeTable.QUEUE);
         }}
         {...props}
@@ -74,6 +76,9 @@ class TableQueue extends React.Component {
     return (
       <ContainerArea
         $isDirectionColumn={viewTableColumnOrRow}
+        onDragEnter={() => {
+          handleOnHoverTable(TypeTable.QUEUE);
+        }}
         onMouseEnter={() => {
           handleOnHoverTable(TypeTable.QUEUE);
         }}
@@ -100,6 +105,7 @@ class TableQueue extends React.Component {
           <br />
           Release to move the item to the queue
         </DeleteOverTable>
+
         <TableItem
           locale={{
             emptyText: (
