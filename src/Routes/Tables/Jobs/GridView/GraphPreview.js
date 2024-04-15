@@ -20,6 +20,7 @@ import {
   ZoomInOutlined,
   ZoomOutOutlined,
 } from '@ant-design/icons';
+import { useLocalStorageGraphMode } from 'hooks';
 import { generateStyles, formatEdge, formatNode } from '../graphUtils';
 
 const GraphContainer = styled.div`
@@ -68,6 +69,13 @@ const GraphPreview = ({
 }) => {
   const graphRef = useRef(null);
   const wizardContext = useWizardContext();
+
+  const {
+    //  saveLocationNodes,
+    exportLocationNodes,
+    hasRecord,
+  } = useLocalStorageGraphMode();
+  const hasRecordLocal = !hasRecord(pipeline.name);
 
   let valuesState = pipeline;
   let stepIdx = 0;
@@ -122,8 +130,8 @@ const GraphPreview = ({
     [pipeline]
   );
 
-  const adaptedGraph = useMemo(
-    () => ({
+  const adaptedGraph = useMemo(() => {
+    const graphStructure = {
       nodes: []
         .concat(graphPreview?.nodes)
         .filter(item => item)
@@ -132,34 +140,42 @@ const GraphPreview = ({
         .concat(graphPreview?.edges)
         .filter(item => item)
         .map(formatEdge),
-    }),
-    [graphPreview, normalizedPipeline, pipeline?.kind]
-  );
+    };
+    const localPosNodesGraph = exportLocationNodes(
+      pipeline.name,
+      graphStructure
+    );
+    if (localPosNodesGraph.nodes.length > 0) {
+      return localPosNodesGraph;
+    }
+
+    return graphStructure;
+  }, [
+    exportLocationNodes,
+    graphPreview?.edges,
+    graphPreview?.nodes,
+    normalizedPipeline,
+    pipeline?.kind,
+    pipeline.name,
+  ]);
 
   // const { events } = useNodeInfo({ graph, pipeline });
   // const { graphDirection: direction } = useSettings();
 
   const [showGraph, toggleForceUpdate] = useReducer(p => !p, true); // toggleForceUpdate
 
-  useEffect(() => {
-    //  toggleForceUpdate();
-    //   setTimeout(() => {
-    //    toggleForceUpdate();
-    //  }, 500);
-  }, []);
-
-  const graphOptions = useMemo(
+  const graphOptions = useCallback(
     () => ({
       ...generateStyles({
         direction: 'LR',
         isMinified,
         isPreview: true,
-        isHierarchical: true,
-        nodeSpacing: 100,
+        isHierarchical: hasRecordLocal,
+        nodeSpacing: 350,
       }),
       height: isMinified ? '100%' : '500px',
     }),
-    [isMinified]
+    [hasRecordLocal, isMinified]
   );
 
   const joinFlowsToGraph = flowStrings => {
@@ -244,6 +260,7 @@ const GraphPreview = ({
 
                 setErrorGraph('');
                 setGraphPreview(graphAllFlows);
+
                 toggleForceUpdate();
                 setTimeout(() => {
                   toggleForceUpdate();
@@ -277,8 +294,8 @@ const GraphPreview = ({
                       edge.from === node.nodeName || edge.to === node.nodeName
                   )
                 );
-
                 setGraphPreview(GraphData);
+
                 toggleForceUpdate();
                 setTimeout(() => {
                   toggleForceUpdate();
@@ -302,7 +319,9 @@ const GraphPreview = ({
             setErrorGraph(data.error.message);
           } else {
             setErrorGraph('');
+
             setGraphPreview(data);
+
             toggleForceUpdate();
             setTimeout(() => {
               toggleForceUpdate();
@@ -319,12 +338,21 @@ const GraphPreview = ({
     initPreviewGetData();
   }, [valuesState, stepIdx, isStreamingPipeline]);
 
+  const isDataNode =
+    adaptedGraph.nodes.length > 0 && adaptedGraph.nodes[0].name !== '';
+
+  useEffect(() => {
+    const network = graphRef?.current?.Network || null;
+    const gOption = graphOptions();
+    if (network != null && isDataNode && gOption != null) {
+      network.setOptions(gOption);
+      network.setData(adaptedGraph);
+    }
+  }, [graphPreview]);
+
   if (graphPreview === undefined) {
     return <>Still loading...</>;
   }
-
-  const isDataNode =
-    adaptedGraph.nodes.length > 0 && adaptedGraph.nodes[0].name !== '';
 
   return (
     <GraphContainer>
@@ -333,10 +361,11 @@ const GraphPreview = ({
         <Button onClick={handleZoomIn} icon={<ZoomInOutlined />} />
         <Button onClick={handleZoomOut} icon={<ZoomOutOutlined />} />
       </ButtonsPanel>
-      {isDataNode && showGraph && (
+
+      {showGraph && (
         <Graph
           graph={adaptedGraph}
-          options={graphOptions}
+          options={graphOptions()}
           //   events={events}
           ref={graphRef}
           getNetwork={network => {
@@ -361,6 +390,7 @@ const GraphPreview = ({
 
 GraphPreview.propTypes = {
   pipeline: PropTypes.shape({
+    name: PropTypes.string.isRequired,
     kind: PropTypes.string.isRequired,
     nodes: PropTypes.arrayOf(PropTypes.object),
     streaming: PropTypes.arrayOf(PropTypes.object),

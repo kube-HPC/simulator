@@ -31,7 +31,8 @@ export const TitleStatus = (
     {!isShowOneRow &&
       Object.keys(record).map(
         keyStatus =>
-          record[keyStatus] > 0 && (
+          record[keyStatus] > 0 &&
+          keyStatus !== TASK_STATUS.SUCCEED && (
             <BaseTag
               style={styleTagStatus}
               isActiveLoader={false}

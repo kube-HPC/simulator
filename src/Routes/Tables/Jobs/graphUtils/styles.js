@@ -1,5 +1,5 @@
 import { taskStatuses as TASK } from '@hkube/consts';
-import { COLOR, COLOR_TASK_STATUS } from 'styles/colors';
+import { COLOR, COLOR_TASK_STATUS, Styles } from 'styles/colors';
 import GRAPH_TYPES from './types';
 
 const { NODE_GROUPS } = GRAPH_TYPES;
@@ -107,7 +107,7 @@ export default ({
   height: isMinified ? '200px' : `400px`,
 
   physics: {
-    enabled: !isHierarchical,
+    enabled: false, // !isHierarchical,
     barnesHut: {
       theta: 0.5,
       gravitationalConstant: -2000,
@@ -168,7 +168,7 @@ export default ({
       },
     },
     font: {
-      color: COLOR.transparentBlack,
+      color: Styles.jobsGraph.fontNodeColor, // COLOR.transparentBlack,
     },
     margin: {
       top: 15,

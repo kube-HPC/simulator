@@ -87,6 +87,8 @@ const DarkTheme = COMMON_COLOR => {
       mode: 'dark',
       backgroundBarColor: '#0b426b',
       borderBarColor: '#147cc2',
+      backgroundBarNodesColor: '#152249',
+      fontNodeColor: '#00000073',
     },
   };
 

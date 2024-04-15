@@ -23,4 +23,5 @@ export const {
   COLOR_EXPERIMENTS,
   COLOR_STORAGE,
   NODE_KINDS_COLOR,
+  Styles,
 } = Theme;

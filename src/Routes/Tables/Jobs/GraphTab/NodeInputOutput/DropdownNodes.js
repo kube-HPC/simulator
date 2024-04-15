@@ -30,7 +30,7 @@ function countByKey(node, nameKey) {
 }
 
 const BgStyle = styled.div`
-  background: #fbfbfb;
+  background: ${props => props.theme.Styles.jobsGraph.backgroundBarNodesColor};
   height: 50px;
 `;
 
