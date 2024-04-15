@@ -7,10 +7,10 @@ import React, {
   useRef,
 } from 'react';
 import PropTypes from 'prop-types';
-import { Empty, Slider, Button } from 'antd';
+import { Empty, Slider, Button, Switch, Popconfirm } from 'antd';
 import { useDebounceCallback } from '@react-hook/debounce';
 import { Fallback, FallbackComponent } from 'components/common';
-import { useNodeInfo } from 'hooks';
+import { useNodeInfo, useLocalStorageGraphMode } from 'hooks';
 import {
   AimOutlined,
   ZoomInOutlined,
@@ -49,6 +49,13 @@ const calculatePercentage = (value, minValue, maxValue) => {
 const GraphTab = ({ graph, pipeline }) => {
   // const [nodePos, setNodePos] = useState(null);
   // const [zoomPos, setZoomPos] = useState(null);
+  const {
+    deleteLocationNodes,
+    saveLocationNodes,
+    exportLocationNodes,
+    hasRecord,
+  } = useLocalStorageGraphMode();
+
   const [nodeSpacingInit] = useState(graph?.nodes?.length > 10 ? 130 : 150);
 
   const [selectNode, setSelectNode] = useState([
@@ -61,6 +68,7 @@ const GraphTab = ({ graph, pipeline }) => {
   const zoomPos = useRef(null);
   const zoomSavePos = useRef(null);
   const isLockForAnimation = useRef(false);
+  const [isSwitchSlider, setIsSwitchSlider] = useState(true);
 
   const isSlider = useRef(false);
   const nodeSpacing = useRef(
@@ -231,7 +239,17 @@ const GraphTab = ({ graph, pipeline }) => {
           isPhysics.current = true;
         }
 
-        network.setData(adaptedGraphData);
+        // if have recode in local store the get recode by pipeline name
+        if (hasRecord(pipeline.name)) {
+          const localPosNodesGraph = exportLocationNodes(
+            pipeline.name,
+            adaptedGraphData
+          );
+
+          network.setData(localPosNodesGraph);
+        } else {
+          network.setData(adaptedGraphData);
+        }
 
         if (zoomPos.current != null) {
           if (isSlider.current) {
@@ -252,14 +270,21 @@ const GraphTab = ({ graph, pipeline }) => {
         nodes: [selectNode || ''],
       });
     }
-  }, [adaptedGraph, graphOptions, nodeSpacingInit, selectNode]);
+  }, [
+    adaptedGraph,
+    exportLocationNodes,
+    graphOptions,
+    hasRecord,
+    pipeline.name,
+    selectNode,
+  ]);
 
   const onChangeSlider = useCallback(
     sliderSelect => {
       if (Number.isNaN(sliderSelect)) {
         return;
       }
-
+      deleteLocationNodes(pipeline.name);
       window.localStorage.setItem(
         LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_GRAPH_SLIDER,
         sliderSelect
@@ -278,7 +303,7 @@ const GraphTab = ({ graph, pipeline }) => {
         graphCalculations();
       }, 1);
     },
-    [graphCalculations]
+    [deleteLocationNodes, graphCalculations, pipeline.name]
   );
   const onChangeSliderDebounce = useDebounceCallback(
     onChangeSlider,
@@ -293,15 +318,29 @@ const GraphTab = ({ graph, pipeline }) => {
     }, 1);
   }, [graph.timestamp, graphCalculations]);
 
+  const onChangeSwitchSlider = val => {
+    deleteLocationNodes(pipeline.name);
+    setIsSwitchSlider(val);
+  };
+
+  useEffect(() => {
+    if (hasRecord(pipeline.name)) {
+      setIsSwitchSlider(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <FlexContainer>
-      <GraphContainer
+      <FlexContainer
         style={{
-          pointerEvents: `all`,
-          maxWidth: `100%`,
-          flex: '1',
+          position: 'absolute',
+          zIndex: '9999',
+          alignItems: 'center',
+          top: '8px',
         }}>
         <Slider
+          disabled={!isSwitchSlider}
           tipFormatter={value =>
             `Space between nodes:  ${calculatePercentage(value, 70, 200)}%`
           }
@@ -311,15 +350,29 @@ const GraphTab = ({ graph, pipeline }) => {
           max={200}
           style={{
             width: '300px',
-            position: 'absolute',
-            zIndex: '9999',
-
-            top: '8px',
           }}
         />
-        {
-          // <Slider onChange={onChangeSliderDebounceY} defaultValue={nodeSpacingY.current} min={100} max={600} style={{width:"300px",position: "absolute",  zIndex: "9999",  left: "25%",  top: "20px"}} />
-        }
+        <Popconfirm
+          overlayStyle={{
+            width: '300px',
+          }}
+          title="Warning"
+          description="If you change the distace between nodes, nodes layout will reset. 
+          Do you wish to percede?"
+          onConfirm={() => onChangeSwitchSlider(true)}
+          okText="Yes"
+          cancelText="No"
+          disabled={isSwitchSlider}>
+          <Switch checked={isSwitchSlider} size="small" />
+        </Popconfirm>
+      </FlexContainer>
+
+      <GraphContainer
+        style={{
+          pointerEvents: `all`,
+          maxWidth: `100%`,
+          flex: '1',
+        }}>
         <ButtonsPanel>
           <Button
             onClick={handleSelectDirection}
@@ -344,8 +397,18 @@ const GraphTab = ({ graph, pipeline }) => {
                 events={events}
                 ref={graphRef}
                 getNetwork={network => {
-                  network.on('dragEnd', () => {
+                  network.on('dragEnd', e => {
+                    if (e.nodes.length > 0) {
+                      setIsSwitchSlider(false);
+                    }
+
                     handleIsLockDrag();
+
+                    setTimeout(() => {
+                      // save graph in local store
+                      const adaptedGraphData = adaptedGraph();
+                      saveLocationNodes(pipeline.name, adaptedGraphData);
+                    }, 1000);
                   });
                   network.on('zoom', () => {
                     const scale = network.getScale();
@@ -388,6 +451,7 @@ const GraphTab = ({ graph, pipeline }) => {
 
 GraphTab.propTypes = {
   pipeline: PropTypes.shape({
+    name: PropTypes.string.isRequired,
     kind: PropTypes.string.isRequired,
     nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
   }).isRequired,

@@ -32,7 +32,7 @@ const OverviewDrawer = () => {
   const query = useQuery(JOB_BY_ID_QUERY, {
     variables: { jobId },
   });
-  usePolling(query, 3000);
+  usePolling(query, 6000);
   // const item = useSelector(state => selectors.jobs.byId(state, jobId));
 
   return (

@@ -78,6 +78,8 @@ const LightTheme = COMMON_COLOR => {
       mode: 'light',
       backgroundBarColor: '#008FFB',
       borderBarColor: '#147cc2',
+      backgroundBarNodesColor: '#fbfbfb',
+      fontNodeColor: '#00000073',
     },
   };
 
