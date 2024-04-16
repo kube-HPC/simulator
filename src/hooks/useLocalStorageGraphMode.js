@@ -56,8 +56,12 @@ const useLocalStorageGraphMode = () => {
   };
 
   const hasRecord = graphName => {
-    const storeGraph = JSON.parse(storedGraphMode);
-    return graphName in storeGraph;
+    if (storedGraphMode) {
+      const storeGraph = JSON.parse(storedGraphMode);
+      return graphName in storeGraph;
+    } 
+      return false;
+    
   };
 
   return {
