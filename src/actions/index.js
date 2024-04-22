@@ -2,6 +2,7 @@ import {
   applyAlgorithm,
   deleteAlgorithm,
   runAlgorithm,
+  stopAlgorithm,
 } from './algorithm.action';
 import { filterData } from './autoComplete.action';
 import { cancelBuild, rerunBuild } from './builds.action';
@@ -75,6 +76,7 @@ const actions = {
   rerunBuild,
   resumePipeline,
   runAlgorithm,
+  stopAlgorithm,
   setSettings,
   socketInit,
   startBoard,
