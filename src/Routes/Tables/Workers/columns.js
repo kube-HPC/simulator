@@ -1,14 +1,15 @@
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import { FireFilled, PauseCircleTwoTone } from '@ant-design/icons';
-import { Tag } from 'antd';
+import { Tag, Tooltip } from 'antd';
 import Ellipsis from 'components/common/Ellipsis.react';
 import { StatusTag as CountTag } from 'components/StatusTag';
 import React from 'react';
 import { COLOR_TASK_STATUS } from 'styles/colors';
 import { sorter, toUpperCaseFirstLetter } from 'utils/stringHelper';
+import WorkersActions from './WorkersActions.react';
 
 const undefinedStateFilter = state => state || 'Creating';
-
+const Actions = algorithm => <WorkersActions algorithm={algorithm} />;
 const WorkerState = (_, { workerStatus, jobStatus }) => {
   const title = toUpperCaseFirstLetter(undefinedStateFilter(workerStatus));
   return (
@@ -22,7 +23,11 @@ const WorkerState = (_, { workerStatus, jobStatus }) => {
 const HotWorker = (_, { workerPaused, hotWorker }) => (
   <>
     {workerPaused && <PauseCircleTwoTone twoToneColor="red" />}
-    {hotWorker && <FireFilled style={{ color: 'orange' }} />}
+    {hotWorker && (
+      <Tooltip placement="top" title="Hot Worker">
+        <FireFilled style={{ color: 'orange' }} />
+      </Tooltip>
+    )}
   </>
 );
 
@@ -132,5 +137,10 @@ export const workersColumns = [
     key: 'count',
     dataIndex: ['count'],
     render: Count,
+  },
+  {
+    title: 'Actions',
+    key: 'hotActions',
+    render: Actions,
   },
 ];
