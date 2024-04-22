@@ -23,7 +23,7 @@ const WorkersActions = ({ algorithm }) => {
       onClick={stopPropagation}
       onDoubleClick={stopPropagation}>
       <Button.Group>
-        <Tooltip title="stop all jobs of pipeline">
+        <Tooltip title="stop worker">
           <Button icon={<StopOutlined />} onClick={onStop} />
         </Tooltip>
       </Button.Group>
