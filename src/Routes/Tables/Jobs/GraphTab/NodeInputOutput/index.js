@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
+import { taskStatuses as TASK_STATUS } from '@hkube/consts';
 import { removeNullUndefinedCleanDeep } from 'utils';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -56,6 +56,11 @@ const NodeInputOutput = ({
         ? payload.batch.map(b => ({
             ...mapTask(b, algorithm?.downloadFileExt || ''),
             origInput: payload.origInput,
+            ...(b.status === TASK_STATUS.FAILED_SCHEDULING &&
+              payload.warnings &&
+              payload.warnings.length > 0 && { warnings: payload.warnings }),
+            ...(b.status === TASK_STATUS.FAILED_SCHEDULING &&
+              payload.error && { error: payload.error }),
           }))
         : [mapTask(payload, algorithm?.downloadFileExt || '')],
     [algorithm?.downloadFileExt, payload]
@@ -95,8 +100,11 @@ const NodeInputOutput = ({
   const [filterDataSource, setFilterDataSource] = useState(dataSource);
   const [saveStatusArray, setSaveStatusArray] = useState(
     [
-      !isShowOneRow && statusCount.active > 0 ? PIPELINE_STATUS.ACTIVE : null,
-      !isShowOneRow && statusCount.failed > 0 ? PIPELINE_STATUS.FAILED : null,
+      !isShowOneRow && statusCount.active > 0 ? TASK_STATUS.ACTIVE : null,
+      !isShowOneRow && statusCount.failed > 0 ? TASK_STATUS.FAILED : null,
+      !isShowOneRow && statusCount.FailedScheduling > 0
+        ? TASK_STATUS.FAILED_SCHEDULING
+        : null,
     ].filter(Boolean)
   );
   const onFilterStatus = useCallback(

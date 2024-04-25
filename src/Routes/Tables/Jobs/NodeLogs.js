@@ -6,6 +6,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled from 'styled-components';
 import { notification } from 'utils';
 import { logModes, podStatus } from '@hkube/consts';
+
 import {
   CopyOutlined,
   LoadingOutlined,
@@ -306,7 +307,7 @@ const NodeLogs = ({
         </FlexBox>
       </FiltersPanel>
       <RadioGroupStyle>
-        {!(isStatusFailedSchedulingTask || isStatusFailedScheduling) ? (
+        {!isStatusFailedSchedulingTask ? (
           <Row justify="start" align="middle">
             <Col span={7}>
               <Radio.Group
@@ -359,16 +360,16 @@ const NodeLogs = ({
       </RadioGroupStyle>
 
       <Typography.Text type="danger">
-        {' '}
+        {'  '}
         {ErrorMsg[msgPodStatus] && <InfoCircleOutlined />}{' '}
         {ErrorMsg[msgPodStatus]}
       </Typography.Text>
       <Typography.Text type="danger">
-        {' '}
+        {'  '}
         {errorMsgImage && <InfoCircleOutlined />} {errorMsgImage}{' '}
       </Typography.Text>
 
-      {!(isStatusFailedSchedulingTask || isStatusFailedScheduling) && (
+      {!isStatusFailedSchedulingTask && (
         <Container>
           {isLoadLog ? (
             <Spin indicator={LoadingOutlined} />
