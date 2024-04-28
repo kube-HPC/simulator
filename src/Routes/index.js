@@ -6,7 +6,7 @@ import { Layout, message, FloatButton, Button } from 'antd';
 
 import { ArrowUpOutlined } from '@ant-design/icons';
 import styled, { ThemeProvider } from 'styled-components';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { COLOR, COLOR_LAYOUT, Theme } from 'styles';
 import { useActions, useCacheFilters } from 'hooks'; // useConnectionStatus
 import Header from 'Routes/Base/Header';
@@ -50,7 +50,7 @@ message.config({
 
 const BackToTop = () => document.getElementById('globalContent');
 
-const Routes = () => {
+const RoutesNav = () => {
   const { grafanaUrl } = useSelector(selectors.connection);
   const { filtersInitCacheItems } = useCacheFilters();
   const numberErrorGraphQL = useReactiveVar(numberErrorGraphQLVar);
@@ -95,9 +95,17 @@ const Routes = () => {
       <ApolloProvider client={apolloClient}>
         <UserGuide />
         <LayoutFullHeight>
-          <Route path="/:pageName" component={SidebarLeft} />
+          <Routes>
+            <Route path="/*" element={<SidebarLeft />}>
+              <Route path=":pageName" />
+            </Route>
+          </Routes>
           <Layout>
-            <Route path="/:pageName" component={Header} />
+            <Routes>
+              <Route path="/*" element={<Header />}>
+                <Route path=":pageName" />
+              </Route>
+            </Routes>
             <LayoutFullHeight>
               <ContentMargin id="globalContent">
                 {contextHolderNotification}
@@ -113,14 +121,15 @@ const Routes = () => {
                 </FloatButton.BackTop>
               </ContentMargin>
               <RightContainer>
-                <Route
-                  exact
-                  path="/:root/:panelType"
-                  component={SiderBarRightDrawer}
-                />
+                <Routes>
+                  <Route
+                    path="/:root/:panelType"
+                    element={<SiderBarRightDrawer />}
+                  />
+                </Routes>
               </RightContainer>
             </LayoutFullHeight>
-          </Layout>
+          </Layout>{' '}
         </LayoutFullHeight>
       </ApolloProvider>
     </ThemeProvider>
@@ -130,4 +139,4 @@ const Routes = () => {
     </ThemeProvider>
   );
 };
-export default Routes;
+export default RoutesNav;

@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { FlexBox, Icons } from 'components/common';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   GlobalOutlined,
   GithubOutlined,
@@ -31,7 +31,7 @@ const { Text } = Typography;
 const Settings = () => {
   const { toggleTheme, themeName } = useSiteThemeMode();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { triggerUserGuide } = useActions();
   const { hkubeSystemVersion } = useSelector(selectors.connection);
@@ -39,8 +39,8 @@ const Settings = () => {
 
   const onGuideClick = useCallback(() => {
     triggerUserGuide();
-    history.push('/jobs');
-  }, [history, triggerUserGuide]);
+    navigate('/jobs');
+  }, [navigate, triggerUserGuide]);
 
   const openUrl = url => () => window.open(url);
 

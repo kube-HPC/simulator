@@ -63,18 +63,18 @@ const useSubMenuAdmin = (totalNewWarnings, dataMoreCount) => {
       [
         'Error Log',
         WarningOutlined,
-        `${pageName}/${RIGHT_SIDEBAR_NAMES.ERROR_LOGS}`,
+        `/${pageName}/${RIGHT_SIDEBAR_NAMES.ERROR_LOGS}`,
         totalNewWarnings,
       ],
       [
         RIGHT_SIDEBAR_NAMES.CPU,
         ClusterOutlined,
-        `${pageName}/${RIGHT_SIDEBAR_NAMES.CPU}`,
+        `/${pageName}/${RIGHT_SIDEBAR_NAMES.CPU}`,
       ],
       [
         'Memory & Storage',
         HddOutlined,
-        `${pageName}/${RIGHT_SIDEBAR_NAMES.MEMORY}`,
+        `/${pageName}/${RIGHT_SIDEBAR_NAMES.MEMORY}`,
       ],
     ];
 

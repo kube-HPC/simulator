@@ -2,7 +2,6 @@ import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import _ from 'lodash';
-import { Switch, Route } from 'react-router-dom';
 import { postVersion } from 'actions/dataSources';
 import DownloadLink from 'components/DownloadLink';
 import client from 'client';
@@ -116,47 +115,30 @@ const Body = ({ goTo, mode, dataSource }) => {
         activeSnapshot={activeSnapshot}
         snapshots={hasSnapshots ? snapshots : []}
       />
-      <Switch>
-        <Route
-          exact
-          path="/datasources/:dataSourceId/:dataSourceName/:mode/snapshot/:snapshotName"
-          render={() => (
-            <PreviewSnapshot
-              onDownload={onDownload}
-              activeSnapshot={activeSnapshot}
-              snapshotName={snapshotName}
-            />
-          )}
+      {snapshotName && (
+        <PreviewSnapshot
+          onDownload={onDownload}
+          activeSnapshot={activeSnapshot}
+          snapshotName={snapshotName}
         />
-        <Route
-          exact
-          path="/datasources/:dataSourceId/:dataSourceName/query"
-          render={() =>
-            dataSource && (
-              <QueryMode onDownload={onDownload} dataSource={dataSource} />
-            )
-          }
+      )}
+      {mode === 'query' && dataSource && (
+        <QueryMode onDownload={onDownload} dataSource={dataSource} />
+      )}
+
+      {mode === 'edit' && isEditable && dataSource ? (
+        <EditMode
+          onDownload={onDownload}
+          onCreateVersion={onCreateVersion}
+          dataSource={dataSource}
+          onDelete={handleDelete}
+          submittingStatus={versionsCollection.submittingStatus}
         />
-        <Route
-          exact
-          path="/datasources/:dataSourceId/:dataSourceName/edit"
-          render={() =>
-            isEditable && dataSource ? (
-              <EditMode
-                onDownload={onDownload}
-                onCreateVersion={onCreateVersion}
-                dataSource={dataSource}
-                onDelete={handleDelete}
-                submittingStatus={versionsCollection.submittingStatus}
-              />
-            ) : (
-              dataSource && (
-                <ReadOnly onDownload={onDownload} dataSource={dataSource} />
-              )
-            )
-          }
-        />
-      </Switch>
+      ) : (
+        dataSource && (
+          <ReadOnly onDownload={onDownload} dataSource={dataSource} />
+        )
+      )}
       <DownloadLink href={downloadHref} unset={setDownloadHref} />
     </>
   );

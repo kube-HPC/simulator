@@ -7,7 +7,6 @@ import React, { useCallback } from 'react';
 
 const ActionsQueueOrder = ({ job }) => {
   const { jobId } = job;
-  // console.log('job', job, jobId);
   const { rerunPipeline } = usePipeline();
   const { stopPipeline } = useActions();
   const onReRun = useCallback(() => rerunPipeline(jobId), [

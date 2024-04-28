@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 import { FlexBox } from 'components/common';
 import { USER_GUIDE } from 'const';
@@ -34,16 +34,21 @@ const Header = () => (
   <Container className={USER_GUIDE.WELCOME}>
     <ButtonsContainer>
       <NewButtonSelect />
-      <Route exact path="/jobs" component={ViewType} />
-      <Route exact path="/jobs">
-        <TagsFiltersViews sectionName="jobs" />
-      </Route>
-      <Route exact path="/pipelines">
-        <TagsFiltersViews sectionName="pipelines" />
-      </Route>
-      <Route exact path="/algorithms">
-        <TagsFiltersViews sectionName="algorithms" />
-      </Route>
+
+      <Routes>
+        <Route path="/jobs" element={<ViewType />} />
+        <Route path="/jobs" element={<TagsFiltersViews sectionName="jobs" />} />
+
+        <Route
+          path="/pipelines"
+          element={<TagsFiltersViews sectionName="pipelines" />}
+        />
+
+        <Route
+          path="/algorithms"
+          element={<TagsFiltersViews sectionName="algorithms" />}
+        />
+      </Routes>
     </ButtonsContainer>
 
     <HelpBar />

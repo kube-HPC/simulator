@@ -1,17 +1,17 @@
 import { useMemo, useCallback } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const useFilters = () => {
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { pathname, search } = location;
   const query = useMemo(() => new URLSearchParams(search), [search]);
 
   const filters = useMemo(() => query.getAll('filter'), [query]);
 
   const applyFilters = useCallback(
-    () => history.push(`${pathname}?${query.toString()}`),
-    [query, history, pathname]
+    () => navigate(`${pathname}?${query.toString()}`),
+    [query, navigate, pathname]
   );
 
   const addFilter = useCallback(

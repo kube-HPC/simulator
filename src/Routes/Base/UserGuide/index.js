@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Joyride, { EVENTS, ACTIONS } from 'react-joyride';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { selectors } from 'reducers';
 import {
   triggerUserGuide,
@@ -14,7 +14,7 @@ import UserGuideTooltip from './UserGuideTooltip.react';
 const stepAction = [ACTIONS.NEXT, ACTIONS.PREV, ACTIONS.INIT, ACTIONS.UPDATE];
 
 const UserGuide = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { isOn } = useSelector(selectors.userGuide);
   const dispatch = useDispatch();
@@ -28,14 +28,14 @@ const UserGuide = () => {
     data => {
       const { type, index, action } = data;
       if (type === EVENTS.TOUR_START) {
-        history.push('/jobs');
+        navigate('/jobs');
       } else if (type === EVENTS.TOUR_END) {
         trigger();
       } else if (stepAction.includes(action) && type === EVENTS.STEP_BEFORE) {
         changeStep(index);
       }
     },
-    [changeStep, history, trigger]
+    [changeStep, navigate, trigger]
   );
 
   return (

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Icon from '@ant-design/icons';
 import { Layout, Menu, Badge } from 'antd';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useErrorLogs, useStats, useStorage } from 'hooks/graphql';
 import { RIGHT_SIDEBAR_NAMES } from 'const';
 // import useStorage from 'hooks/useStorage';
@@ -41,7 +41,7 @@ const SidebarRight = ({ isTop, className }) => {
 
   const { dataSourceIsEnable } = useSelector(selectors.connection);
   const { root } = useParams();
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 
   const { totalNewWarnings } = useErrorLogs();
@@ -69,9 +69,9 @@ const SidebarRight = ({ isTop, className }) => {
 
   const menuSelect = useCallback(
     ({ key }) => {
-      history.push(`/${root}/${key}${location.search}`);
+      navigate(`/${root}/${key}${location.search}`);
     },
-    [history, root, location]
+    [navigate, root, location]
   );
 
   const menuItemsJson = useMemo(() => {

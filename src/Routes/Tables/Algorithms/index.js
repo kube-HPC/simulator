@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { Table } from 'components';
 import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
@@ -101,12 +101,13 @@ const AlgorithmsTable = () => {
           }}
         />
       </Space>
-      <Route
-        exact
-        path="/algorithms/:algorithmId/overview/:tabKey"
-        component={OverviewDrawer}
-      />
-      <Route path="/algorithms/:algorithmId/edit" component={EditDrawer} />
+      <Routes>
+        <Route
+          path=":algorithmId/overview/:tabKey"
+          element={<OverviewDrawer />}
+        />
+        <Route path=":algorithmId/edit" element={<EditDrawer />} />
+      </Routes>
     </>
   );
 };

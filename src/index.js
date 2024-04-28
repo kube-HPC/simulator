@@ -7,7 +7,7 @@ import { ConfigProvider, theme } from 'antd';
 import React, { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider, useDispatch, useSelector } from 'react-redux';
-import { HashRouter as Router } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import { ReusableProvider } from 'reusable';
 import { init } from 'actions/connection.action';
 import { selectors } from 'reducers';
@@ -69,14 +69,14 @@ const ConfigProviderApp = () => {
 
   return hasConfig ? (
     <ConfigProvider theme={themeProvider}>
-      <Router>
+      <HashRouter>
         <ReusableProvider>
           <ErrorBoundary>
             <GlobalThemes />
             <Root />
           </ErrorBoundary>
         </ReusableProvider>
-      </Router>
+      </HashRouter>
     </ConfigProvider>
   ) : null;
 };
