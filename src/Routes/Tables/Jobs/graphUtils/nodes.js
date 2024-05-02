@@ -183,7 +183,7 @@ export const formatNode = (
   const isBatch = !!node.batchInfo;
   const isBatchStyling =
     (isStreaming && isStateLess) ||
-    (!isStreaming && hasHashOrAtSymbol(pipelineNode.input));
+    (!isStreaming && hasHashOrAtSymbol(pipelineNode?.input));
 
   /** @type {NodeOptions} */
 
