@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Link, useLocation, useParams, useHistory } from 'react-router-dom';
+import { Link, useLocation, useParams, useNavigate } from 'react-router-dom';
 import { Button, Dropdown } from 'antd';
 import { ReactComponent as IconAddPipeline } from 'images/no-fill/add-pipeline.svg';
 import { ReactComponent as IconAddAlgorithm } from 'images/algorithm-icon.svg';
@@ -43,7 +43,7 @@ export const topActions = [
 const NewButtonSelect = () => {
   const location = useLocation();
   const { pageName } = useParams();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const gotoNewAction = useCallback(() => {
     let page = RIGHT_SIDEBAR_NAMES.ADD_PIPELINE;
@@ -53,8 +53,8 @@ const NewButtonSelect = () => {
       page = RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE;
     }
 
-    history.push(`${pageName}/${page}`);
-  }, [history, pageName]);
+    navigate(`${pageName}/${page}`);
+  }, [navigate, pageName]);
 
   const items = [
     {

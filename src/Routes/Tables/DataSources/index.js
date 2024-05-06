@@ -1,18 +1,21 @@
 import React from 'react';
-import { Route } from 'react-router';
+import { Route, Routes } from 'react-router';
 import EditDrawer from './EditDrawer';
 import DataSourcesGrid from './DataSourcesGrid';
 
 const DataSourcesTables = () => (
   <>
     <DataSourcesGrid />
-    <Route
-      path={[
-        '/datasources/:dataSourceId/:dataSourceName/:mode/snapshot/:snapshotName',
-        '/datasources/:dataSourceId/:dataSourceName/:mode',
-      ]}
-      component={EditDrawer}
-    />
+    <Routes>
+      <Route
+        path=":dataSourceId/:dataSourceName/:mode/snapshot/:snapshotName"
+        element={<EditDrawer />}
+      />
+      <Route
+        path=":dataSourceId/:dataSourceName/:mode"
+        element={<EditDrawer />}
+      />
+    </Routes>
   </>
 );
 

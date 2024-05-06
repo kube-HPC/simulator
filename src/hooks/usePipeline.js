@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { message, Button } from 'antd';
 import client from 'client';
 import successMsg from 'config/schema/success-messages.schema';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useActions from './useActions';
 
 const ButtonLinkStyle = styled(Button)`
@@ -12,11 +12,11 @@ const ButtonLinkStyle = styled(Button)`
 
 const usePipeline = () => {
   const { updateStored } = useActions();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const gotoJobsTable = useCallback(() => {
-    history.push('/jobs');
-  }, [history]);
+    navigate('/jobs');
+  }, [navigate]);
 
   // const location = useLocation();
   // const { pageName } = useParams();
@@ -40,7 +40,7 @@ const usePipeline = () => {
       delete objPipeline.nodes;
 
       await client.post(`exec/stored`, objPipeline);
-      history.push('/pipelines');
+      navigate('/pipelines');
 
       message.success(
         <>
@@ -72,12 +72,12 @@ const usePipeline = () => {
         res = await client.put(`/store/pipelines`, { ...data });
         message.success(successMsg(res.data).PIPELINE_UPDATE);
         window.localStorage.removeItem(LOCAL_STORAGE_KEY);
-        history.push('/pipelines');
+        navigate('/pipelines');
       } catch (res) {
         message.error(res.response.data.error.message);
       }
     },
-    [history]
+    [navigate]
   );
 
   const addPipeline = useCallback(
@@ -89,12 +89,12 @@ const usePipeline = () => {
         message.success(successMsg(res.data).PIPELINE_ADD);
 
         window.localStorage.removeItem(LOCAL_STORAGE_KEY);
-        history.push('/pipelines');
+        navigate('/pipelines');
       } catch (res) {
         message.error(res.response.data.error.message);
       }
     },
-    [history]
+    [navigate]
   );
 
   return {

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useHistory, useLocation, useParams } from 'react-router';
+import { useNavigate, useLocation, useParams } from 'react-router';
 /** @typedef {'query' | 'edit'} SideBarMode */
 
 export default () => {
@@ -11,7 +11,7 @@ export default () => {
     snapshotName,
   } = useParams();
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 
   const paths = useMemo(
@@ -41,17 +41,17 @@ export default () => {
   const goTo = useMemo(
     () => ({
       root: () =>
-        history.push({
+        navigate({
           pathname: paths.root,
           search: location.search,
         }),
       edit: ({ nextDataSourceId, nextDataSourceName } = {}) =>
-        history.push({
+        navigate({
           pathname: paths.edit({ nextDataSourceId, nextDataSourceName }),
           search: location.search,
         }),
       query: ({ nextDataSourceId, nextDataSourceName } = {}) =>
-        history.push({
+        navigate({
           pathname: paths.query({ nextDataSourceId, nextDataSourceName }),
           search: location.search,
         }),
@@ -61,7 +61,7 @@ export default () => {
         nextSnapshotName,
         mode: _mode,
       } = {}) =>
-        history.push({
+        navigate({
           pathname: paths.snapshot({
             nextDataSourceId,
             nextDataSourceName,
@@ -71,7 +71,7 @@ export default () => {
           search: location.search,
         }),
     }),
-    [history, paths, location.search]
+    [navigate, paths, location.search]
   );
 
   return {

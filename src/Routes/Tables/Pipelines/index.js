@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { Table } from 'components';
 import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
@@ -78,13 +78,14 @@ const PipelinesTable = () => {
           }}
         />
       </Space>
-
-      <Route
-        path="/pipelines/:pipelineId/overview/:tabKey?"
-        component={OverviewDrawer}
-      />
-      <Route path="/pipelines/:pipelineId/edit" component={EditDrawer} />
-      <Route path="/pipelines/:pipelineId/execute" component={ExecuteDrawer} />
+      <Routes>
+        <Route
+          path=":pipelineId/overview/:tabKey?"
+          element={<OverviewDrawer />}
+        />
+        <Route path=":pipelineId/edit" element={<EditDrawer />} />
+        <Route path=":pipelineId/execute" element={<ExecuteDrawer />} />
+      </Routes>
     </>
   );
 };

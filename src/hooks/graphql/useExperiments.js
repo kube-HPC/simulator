@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useCallback, useState } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useQuery, useReactiveVar, useLazyQuery } from '@apollo/client';
 import { EXPERIMENTS_QUERY } from 'graphql/queries';
 import { metaVar } from 'cache';
@@ -21,7 +21,7 @@ const useExperiments = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [experiments, setExperiments] = useState([]);
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { pathname, search } = location;
 
   const query = useMemo(() => new URLSearchParams(search), [search]);
@@ -60,9 +60,9 @@ const useExperiments = () => {
   const setExperiment = useCallback(
     id => {
       id === 'main' ? query.delete('experiment') : query.set('experiment', id);
-      history.push(`${pathname}?${query.toString()}`);
+      navigate(`${pathname}?${query.toString()}`);
     },
-    [query, history, pathname]
+    [query, navigate, pathname]
   );
 
   const {

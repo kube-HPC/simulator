@@ -4,8 +4,8 @@ import { useReactiveVar } from '@apollo/client';
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-// import { Route, useHistory, useLocation } from 'react-router-dom';
-import { useHistory, useLocation } from 'react-router-dom';
+// import { Route, useNavigate , useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import qs from 'qs';
 
 const TagsFiltersViews = ({ sectionName }) => {
@@ -13,7 +13,7 @@ const TagsFiltersViews = ({ sectionName }) => {
   const isPinActiveJobs = useReactiveVar(isPinActiveJobVar);
   const metaMode = useReactiveVar(metaVar);
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const urlParams = useLocation();
   const propFilters = instanceFilters[sectionName];
 
@@ -72,7 +72,7 @@ const TagsFiltersViews = ({ sectionName }) => {
 
     const _qMoreParam = experimentName && `&experiment=${experimentName}`;
 
-    history.push({
+    navigate({
       pathname: urlParams.pathname,
       search: `?${_qParams}${_qMoreParam}`,
     });

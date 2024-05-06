@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 import useQueryHook from 'hooks/useQuery';
 import { WTable } from 'components';
@@ -136,11 +136,9 @@ const Jobs = () => {
   return (
     <>
       {showGrid ? <GridViewWrapper /> : <JobsTable />}
-      <Route
-        exact
-        path="/jobs/:jobId/overview/:tabKey"
-        component={OverviewDrawer}
-      />
+      <Routes>
+        <Route path=":jobId/overview/:tabKey" element={<OverviewDrawer />} />
+      </Routes>
     </>
   );
 };

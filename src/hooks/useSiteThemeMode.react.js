@@ -2,10 +2,10 @@ import { useCallback, useState, useRef } from 'react';
 import { THEMES_NAMES, LOCAL_STORAGE_KEYS } from 'const';
 
 import { createStore } from 'reusable';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 
 const useSiteThemeMode = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   // get state theme from user local storage
   const getTheme = () => {
@@ -27,12 +27,12 @@ const useSiteThemeMode = () => {
       );
       setThemeName(themeName);
       // reloads the page after change theme.
-      if (refContainer.current > 0) history.go(0);
+      if (refContainer.current > 0) navigate(0);
       else {
         refContainer.current = 1;
       }
     },
-    [history, themeName]
+    [navigate, themeName]
   );
 
   // toggle switch between dark and light

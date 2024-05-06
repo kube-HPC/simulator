@@ -3,7 +3,7 @@ import Drawer from 'components/Drawer';
 import { TabDrawerText, TabDrawer } from 'styles';
 import { RIGHT_SIDEBAR_NAMES } from 'const';
 import useToggle from 'hooks/useToggle';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import AddAlgorithm from './AddAlgorithm';
 import AddPipeline from './AddPipeline';
 import AddDataSource from './AddDataSource';
@@ -48,23 +48,30 @@ const titleSelector = {
 
 const DashboardDrawer = () => {
   const { panelType, root } = useParams();
+
   // eslint-disable-next-line
   const { isOn, setOff: _setOff } = useToggle(true);
   const { publish } = useSubscribe();
   const setOff = useCallback(() => {
     publish();
     _setOff();
-  }, [publish, _setOff]);
-  const history = useHistory();
+  }, [_setOff, publish]);
+
+  const navigate = useNavigate();
 
   const handleDidClose = useCallback(() => {
-    history.push(`/${root}${window.location.search}`);
-  }, [root, history]);
+    navigate(`/${root}${window.location.search}`);
+  }, [root, navigate]);
 
   const Body = operationSelector[panelType];
   const width = CONTENT_CONFIG[panelType]?.width ?? 0;
   const titleDrawer = titleSelector[panelType];
 
+  if (root === undefined) {
+    navigate('/jobs');
+  }
+
+  // eslint-disable-next-line consistent-return
   return (
     <ctx.Provider value={{ closeDrawer: setOff }}>
       <Drawer

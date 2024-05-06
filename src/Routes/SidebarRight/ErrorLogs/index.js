@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 // import { useErrorLogs } from 'hooks';
 import { useErrorLogs } from 'hooks/graphql';
 import { Table } from 'components';
@@ -24,7 +24,7 @@ const ErrorLogsTable = () => {
   const urlParams = useLocation();
   const { pathname, search } = urlParams;
   const queryFilter = useMemo(() => new URLSearchParams(search), [search]);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const onSubmitFilter = useCallback(values => {
     if (values.qSearch != null && values.qSearch !== '') {
@@ -47,7 +47,7 @@ const ErrorLogsTable = () => {
       queryFilter.delete('qErrorLogTime.to');
     }
 
-    history.push(`${pathname}?${queryFilter.toString()}`);
+    navigate(`${pathname}?${queryFilter.toString()}`);
 
     if (values?.qSearch || values?.qErrorLogTime) {
       let filterErrorLogs = dataSource || [];
