@@ -18,6 +18,7 @@ export const numberErrorGraphQLVar = makeVar({ error: 0 });
 export const isPinActiveJobVar = makeVar(false);
 export const filterToggeledVar = makeVar(true);
 export const pipelineListVar = makeVar([]);
+export const workersStopListVar = makeVar([]);
 export const algorithmsListVar = makeVar([]);
 export const inactiveModeVar = makeVar(false);
 export const instanceCounterVar = makeVar({
@@ -123,7 +124,11 @@ const cache = new InMemoryCache({
             return inactiveModeVar();
           },
         },
-
+        workersStopList: {
+          read() {
+            return workersStopListVar();
+          },
+        },
         metaMode: {
           read() {
             return metaVar();
