@@ -36,8 +36,16 @@ const Header = () => (
       <NewButtonSelect />
 
       <Routes>
-        <Route path="/jobs" element={<ViewType />} />
-        <Route path="/jobs" element={<TagsFiltersViews sectionName="jobs" />} />
+        <Route
+          path="/jobs"
+          element={
+            <FlexBox.Auto>
+              <ViewType />
+
+              <TagsFiltersViews sectionName="jobs" />
+            </FlexBox.Auto>
+          }
+        />
 
         <Route
           path="/pipelines"

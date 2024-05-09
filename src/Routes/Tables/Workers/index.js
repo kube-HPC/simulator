@@ -4,7 +4,8 @@ import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import { Card, JsonSwitch, Tabs } from 'components/common';
 import defaultWorkerData from 'config/template/worker.template';
 import { useWorkers } from 'hooks/graphql';
-
+import { workersStopListVar } from 'cache';
+import { useReactiveVar } from '@apollo/client';
 import { workersColumns, workersTableStats } from './columns';
 
 const generateTab = (key, value) => [
@@ -19,12 +20,17 @@ const generateTab = (key, value) => [
   },
 ];
 
-const ExpandedRow = collection => recordRow => {
+const ExpandedRow = (collection, arrWorkersStopList) => recordRow => {
   const entries = collection[recordRow?.algorithmName] || [];
 
   return (
     <Card isMargin>
       <Table
+        rowClassName={
+          arrWorkersStopList?.includes(recordRow?.algorithmName)
+            ? 'expanded-row-disable'
+            : ''
+        }
         isInner
         rowKey={row => row.podName}
         columns={workersTableStats}
@@ -50,6 +56,7 @@ const ExpandedRow = collection => recordRow => {
 };
 
 const WorkersTable = () => {
+  const workersStopList = useReactiveVar(workersStopListVar);
   const { collection, stats } = useWorkers();
   const statsMergedWithDefault = useMemo(
     () =>
@@ -66,7 +73,7 @@ const WorkersTable = () => {
       columns={workersColumns}
       dataSource={statsMergedWithDefault}
       expandable={{
-        expandedRowRender: ExpandedRow(collection),
+        expandedRowRender: ExpandedRow(collection, workersStopList),
         // eslint-disable-next-line react/prop-types
         expandIcon: ({ expanded, onExpand, record }) =>
           expanded ? (
