@@ -31,10 +31,11 @@ export const runAlgorithm = ({ name, input = [], debug = false }) => ({
   },
 });
 
-export const stopAlgorithm = algorithmName => ({
+export const stopAlgorithm = (algorithmName, onSuccess) => ({
   type: actions.REST_REQ_DELETE,
   payload: {
     url: `kubernetes/algorithms/jobs/${algorithmName}`,
     actionType: actions.ALGORITHM_DELETE,
   },
+  meta: { onSuccess },
 });

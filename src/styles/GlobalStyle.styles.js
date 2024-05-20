@@ -109,7 +109,7 @@ body{
 .expanded-row-disable,
 .expanded-row-disable .ant-table-cell-row-hover,
 .expanded-row-disable .ant-table-column-sort {
-  background:#ccc !important;
+  background:#aaa !important;
 }
 
 `;
