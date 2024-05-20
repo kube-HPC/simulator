@@ -1,47 +1,39 @@
-import React, { memo, useCallback, useRef, useState, useEffect } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { StopOutlined } from '@ant-design/icons';
 import { message, Button, Tooltip } from 'antd';
-import { workersStopListVar } from 'cache';
+
 import { useActions } from 'hooks';
 import isEqual from 'lodash/isEqual';
-import { useReactiveVar } from '@apollo/client';
 
 const WorkersActions = ({ algorithm }) => {
-  const workersStopList = useReactiveVar(workersStopListVar);
   const { stopAlgorithm } = useActions();
   const [stopWorkerIsRun, setStopWorkerIsRun] = useState(false);
   const container = useRef();
 
   const onStopSuccess = () => {
-    const arrWorkersStopList = [...workersStopListVar()];
-    const arrWorkersStopListFilter = arrWorkersStopList.filter(
-      x => x !== algorithm.algorithmName
-    );
-
-    workersStopListVar(arrWorkersStopListFilter);
-  };
-
-  const onStop = useCallback(() => {
+    setStopWorkerIsRun(true);
     message.success(
       <>
         Stop worker is started. It may take a few moments for the algorithms to
         be deleted.
       </>
     );
-    const arrWorkersStopList = [...workersStopList];
-    arrWorkersStopList.push(algorithm.algorithmName);
+  };
 
-    workersStopListVar(arrWorkersStopList);
-    stopAlgorithm(algorithm.algorithmName);
-    setStopWorkerIsRun(true);
-  }, [algorithm.algorithmName, stopAlgorithm, workersStopList]);
+  const onStop = useCallback(() => {
+    stopAlgorithm(algorithm.algorithmName, onStopSuccess);
+  }, [algorithm.algorithmName, stopAlgorithm]);
 
   const stopPropagation = useCallback(e => {
     e.stopPropagation();
   }, []);
 
-  useEffect(() => () => onStopSuccess(), []);
+  useEffect(() => {
+    if (algorithm?.exit === 0) {
+      setStopWorkerIsRun(false);
+    }
+  }, [algorithm, algorithm?.exit]);
 
   return (
     <div

@@ -22,7 +22,11 @@ const WorkerState = (_, { workerStatus, jobStatus }) => {
 
 const HotWorker = (_, { workerPaused, hotWorker }) => (
   <>
-    {workerPaused && <PauseCircleTwoTone twoToneColor="red" />}
+    {workerPaused && (
+      <Tooltip placement="top" title="Stop Worker">
+        <PauseCircleTwoTone twoToneColor="red" />
+      </Tooltip>
+    )}
     {hotWorker && (
       <Tooltip placement="top" title="Hot Worker">
         <FireFilled style={{ color: 'orange' }} />

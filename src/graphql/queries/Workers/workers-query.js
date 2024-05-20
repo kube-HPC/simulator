@@ -11,6 +11,10 @@ const WORKERS_ALL_QUERY = gql`
             count
             results
             status
+            #exit
+            #init
+            #ready
+            #working
           }
         }
       }
