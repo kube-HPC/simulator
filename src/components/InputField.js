@@ -47,7 +47,11 @@ const InputField = ({
         ) : (
           <Tooltip
             title={
-              isValid ? '' : tooltip || inputRef.current.input.placeholder
+              isValid
+                ? ''
+                : tooltip ||
+                  inputRef?.current?.input?.placeholder ||
+                  placeholder
             }>
             <WarningOutlined style={{ color: 'red', fontSize: '15px' }} />
           </Tooltip>
