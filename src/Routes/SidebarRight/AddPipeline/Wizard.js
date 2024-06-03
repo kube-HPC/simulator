@@ -143,13 +143,15 @@ const Wizard = ({
 
   const isLastStep = stepIdx === steps.length - 1;
 
-  const onPrevious = useCallback(() => setStepIdx(state => state - 1), [
-    setStepIdx,
-  ]);
+  const onPrevious = useCallback(
+    () => setStepIdx(state => state - 1),
+    [setStepIdx]
+  );
 
-  const onNext = useCallback(() => setStepIdx(state => state + 1), [
-    setStepIdx,
-  ]);
+  const onNext = useCallback(
+    () => setStepIdx(state => state + 1),
+    [setStepIdx]
+  );
 
   useEffect(() => {
     setIsStreamingPipeline(
@@ -183,6 +185,7 @@ const Wizard = ({
 
   return (
     <context.Provider
+      // eslint-disable-next-line react/jsx-no-constructed-context-values
       value={{
         form,
         stepIdx,

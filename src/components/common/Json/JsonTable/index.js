@@ -13,7 +13,7 @@ const { Text } = Typography;
 const EMPTY = '—';
 
 // drop the first slash if exists
-const firstSlash = new RegExp('^/');
+const firstSlash = /^\//;
 
 const isObject = obj =>
   !Array.isArray(obj) && typeof obj === 'object' && obj !== null;
@@ -115,14 +115,16 @@ ItemByValueType.propTypes = {
   // eslint-disable-next-line
   obj: PropTypes.any,
   vertical: PropTypes.bool.isRequired,
-  name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   hasMargin: PropTypes.bool,
   jobId: PropTypes.string,
+  parentId: PropTypes.string,
 };
 
 ItemByValueType.defaultProps = {
   obj: null,
   jobId: null,
+  parentId: null,
   hasMargin: false,
 };
 

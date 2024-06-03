@@ -66,7 +66,12 @@ const Builds = ({ builds, isOpenFirstLog }) => {
       <Tabs items={TabsItemsJson(record)} />
     </Card>
   );
-
+  const expandIcon = ({ expanded, onExpand, record }) =>
+    expanded ? (
+      <DownOutlined onClick={e => onExpand(record, e)} />
+    ) : (
+      <RightOutlined onClick={e => onExpand(record, e)} />
+    );
   return (
     <Table
       rowKey={record => record.buildId}
@@ -75,13 +80,7 @@ const Builds = ({ builds, isOpenFirstLog }) => {
       expandable={{
         defaultExpandedRowKeys: isOpenFirstLog ? [builds[0].buildId] : [],
         expandedRowRender,
-        // eslint-disable-next-line react/prop-types
-        expandIcon: ({ expanded, onExpand, record }) =>
-          expanded ? (
-            <DownOutlined onClick={e => onExpand(record, e)} />
-          ) : (
-            <RightOutlined onClick={e => onExpand(record, e)} />
-          ),
+        expandIcon,
       }}
     />
   );

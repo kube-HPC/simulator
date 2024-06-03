@@ -15,7 +15,12 @@ const rowKey = ({ version }) => version;
 
 const VersionsTable = ({ currentVersion, onApply, onDelete, dataSource }) => {
   const columns = getVersionsColumns({ currentVersion, onApply, onDelete });
-
+  const expandIcon = ({ expanded, onExpand, record }) =>
+    expanded ? (
+      <DownOutlined onClick={e => onExpand(record, e)} />
+    ) : (
+      <RightOutlined onClick={e => onExpand(record, e)} />
+    );
   return (
     <Table
       rowKey={rowKey}
@@ -24,13 +29,7 @@ const VersionsTable = ({ currentVersion, onApply, onDelete, dataSource }) => {
       columns={columns}
       expandable={{
         expandedRowRender: record => expandedRowRender(record),
-        // eslint-disable-next-line react/prop-types
-        expandIcon: ({ expanded, onExpand, record }) =>
-          expanded ? (
-            <DownOutlined onClick={e => onExpand(record, e)} />
-          ) : (
-            <RightOutlined onClick={e => onExpand(record, e)} />
-          ),
+        expandIcon,
       }}
     />
   );

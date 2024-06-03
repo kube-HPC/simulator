@@ -1,3 +1,5 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { useMemo } from 'react';
 import Moment from 'react-moment';
 import { Ellipsis } from 'components/common';
@@ -31,6 +33,7 @@ export const TitleStatus = (
     {!isShowOneRow &&
       Object.keys(record).map(
         keyStatus =>
+          // eslint-disable-next-line react/destructuring-assignment
           record[keyStatus] > 0 &&
           keyStatus !== TASK_STATUS.SUCCEED && (
             <BaseTag
@@ -50,14 +53,16 @@ export const TitleStatus = (
       )}
   </>
 );
-const Status = record => (
-  <BaseTag
-    status={record.status}
-    colorMap={COLOR_TASK_STATUS}
-    isError={record?.error}>
-    {record.status}
-  </BaseTag>
-);
+const Status = record => {
+  const { status, error } = record;
+
+  return (
+    <BaseTag status={status} colorMap={COLOR_TASK_STATUS} isError={error}>
+      {status}
+    </BaseTag>
+  );
+};
+
 const StartTime = startTime =>
   startTime ? (
     <Moment style={{ fontSize: '12px' }} format="DD/MM/YY HH:mm:ss">
@@ -68,19 +73,19 @@ const StartTime = startTime =>
   );
 const sortByStartTime = (a, b) => sorter(a.startTime, b.startTime);
 
-const Duration = (_, record) =>
-  record.startTime ? (
+const Duration = (_, record) => {
+  const { startTime, endTime } = record;
+  return startTime ? (
     <Ellipsis ellipsis length={20} style={{ fontSize: '12px' }}>
       {humanizeDuration(
-        record.endTime
-          ? record.endTime - record.startTime
-          : Date.now() - record.startTime,
+        endTime ? endTime - startTime : Date.now() - startTime,
         { maxDecimalPoints: 2 }
       )}
     </Ellipsis>
   ) : (
     <Tag style={{ width: '4ch', textAlign: 'center' }}>-</Tag>
   );
+};
 
 const Retries = retries => <Tag>{retries}</Tag>;
 

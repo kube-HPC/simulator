@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-
 import { useLocation, useNavigate } from 'react-router-dom';
-// import { useErrorLogs } from 'hooks';
 import { useErrorLogs } from 'hooks/graphql';
 import { Table } from 'components';
 import { JsonSwitch, Card } from 'components/common';
@@ -17,6 +15,13 @@ const expandedRowRender = record => (
 );
 
 const extractId = ({ id }) => id;
+
+const expandIcon = ({ expanded, onExpand, record }) =>
+  expanded ? (
+    <DownOutlined onClick={e => onExpand(record, e)} />
+  ) : (
+    <RightOutlined onClick={e => onExpand(record, e)} />
+  );
 
 const ErrorLogsTable = () => {
   const { dataSource, clearCounter } = useErrorLogs();
@@ -94,13 +99,7 @@ const ErrorLogsTable = () => {
         dataSource={errorLogsFilterList}
         expandable={{
           expandedRowRender,
-          // eslint-disable-next-line react/prop-types
-          expandIcon: ({ expanded, onExpand, record }) =>
-            expanded ? (
-              <DownOutlined onClick={e => onExpand(record, e)} />
-            ) : (
-              <RightOutlined onClick={e => onExpand(record, e)} />
-            ),
+          expandIcon,
         }}
       />
     </>
