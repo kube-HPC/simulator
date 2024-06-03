@@ -1,5 +1,5 @@
 ARG BASE_PRIVATE_REGISTRY=""
-FROM ${BASE_PRIVATE_REGISTRY}node:14.5.0 as install
+FROM ${BASE_PRIVATE_REGISTRY}node:22.1.0 as install
 ADD ./package-lock.json ./package.json /hkube/simulator/
 WORKDIR /hkube/simulator
 RUN npm ci --production
