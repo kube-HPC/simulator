@@ -11,7 +11,7 @@
     "builder": "REACT_APP_VERSION=$npm_package_version react-app-rewired --max_old_space_size=4096 build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
-    "build": "cross-env ./dockerfile/build.sh simulator",
+    "build": "./dockerfile/build.sh simulator",
     "test-travis": "echo \"No test specified\"",
     "start:server": "node ./server/server.js",
     "storybook": "NODE_PATH=src/ start-storybook --port 9001",
