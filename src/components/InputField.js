@@ -9,9 +9,10 @@ import { Tooltip, Input } from 'antd';
 
 import styled from 'styled-components';
 
-const Field = styled.div`
+const Field = styled.div`{
   display: flex;
   align-items: center;
+}
 `;
 
 const IconDelete = styled(MinusCircleOutlined)`

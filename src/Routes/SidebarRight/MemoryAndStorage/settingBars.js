@@ -77,7 +77,8 @@ const settingBars = () => {
     // legend: 'Nodes',
     // legendPosition: 'middle',
     // legendOffset: -50,
-    fontSize: 10,
+    fontSize: 15,
+    truncateTickAt: 12,
   };
 
   const legendsBar = [

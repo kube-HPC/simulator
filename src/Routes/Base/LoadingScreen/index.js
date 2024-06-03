@@ -1,11 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { animated, useSpring } from 'react-spring';
-import Particles from 'react-particles-js';
+import { ParticleAnimation } from 'components';
 import { ReactComponent as Fish } from 'images/logo-no-shadow.svg';
 import { ReactComponent as Title } from 'images/title.svg';
 
-import { particlesTemplate } from 'config';
 import { useSiteThemeMode } from 'hooks';
 
 const TitleThemeMode = styled.div`
@@ -92,7 +91,7 @@ const LoadingScreen = () => {
   return (
     <Container>
       <AbsoluteDiv>
-        <Particles params={particlesTemplate} height="99vh" />
+        <ParticleAnimation />
       </AbsoluteDiv>
       <Item style={fishMove}>
         <Fish />

@@ -1,4 +1,4 @@
-import { ControlledEditor } from '@monaco-editor/react';
+import { Editor } from '@monaco-editor/react'; // Import Editor instead of ControlledEditor
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { AutoSizer } from 'react-virtualized';
@@ -30,7 +30,7 @@ const JsonEditor = ({
   return (
     <AutoSizer>
       {({ width, height }) => (
-        <ControlledEditor
+        <Editor
           theme={themeName}
           {...props}
           width={width}
@@ -38,7 +38,7 @@ const JsonEditor = ({
           language="json"
           value={value}
           onChange={handleEditorChange}
-          editorDidMount={handleEditorDidMount}
+          onMount={handleEditorDidMount}
         />
       )}
     </AutoSizer>
@@ -46,9 +46,9 @@ const JsonEditor = ({
 };
 
 JsonEditor.propTypes = {
-  // eslint-disable-next-line
-  onChange: PropTypes.func,
-  ...ControlledEditor.propTypes,
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+  innerRef: PropTypes.oneOfType(PropTypes.object).isRequired,
 };
 
 export default JsonEditor;

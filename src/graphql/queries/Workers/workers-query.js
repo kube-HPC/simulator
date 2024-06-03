@@ -9,12 +9,13 @@ const WORKERS_ALL_QUERY = gql`
           stats {
             algorithmName
             count
-            results
+            #results
             status
-            #exit
-            #init
-            #ready
-            #working
+            exit
+            init
+            ready
+            working
+            hot
           }
         }
       }

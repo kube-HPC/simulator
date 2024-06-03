@@ -1,4 +1,4 @@
-import React, { useEffect, Suspense } from 'react';
+import React, { useEffect } from 'react';
 import { useSiteThemeMode } from 'hooks';
 import { GlobalStyle } from 'styles';
 import { useLocation } from 'react-router-dom';
@@ -21,11 +21,11 @@ switch (
 }
 
 // create in last styles to override styles antd
-const DarkThemeStyle = React.lazy(() =>
-  import('../themes/dark/DarkThemeStyle.styles')
+const DarkThemeStyle = React.lazy(
+  () => import('../themes/dark/DarkThemeStyle.styles')
 );
-const LightThemeStyle = React.lazy(() =>
-  import('../themes/light/LightThemeStyle.styles')
+const LightThemeStyle = React.lazy(
+  () => import('../themes/light/LightThemeStyle.styles')
 );
 
 const LazyThemeStyle = {
@@ -41,7 +41,9 @@ const GlobalThemes = () => {
   return (
     <>
       <GlobalStyle location={location} />
-      <Suspense fallback="">{LazyThemeStyle[themeName.toUpperCase()]}</Suspense>
+      {/* <Suspense fallback=""> */}
+      {LazyThemeStyle[themeName.toUpperCase()]}
+      {/* </Suspense> */}
     </>
   );
 };

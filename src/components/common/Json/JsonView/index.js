@@ -1,13 +1,18 @@
 import React from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import ReactJsonView from 'react-json-view';
+import ReactJsonView from 'react18-json-view';
+import 'react18-json-view/src/style.css';
 import { Card } from 'components/common';
 import { Theme } from 'styles/colors';
-/** @typedef {import('react-json-view').ReactJsonViewProps} ReactJsonViewProps */
 
-/** @param {ReactJsonViewProps} props */
+const ReactJsonViewStyle = styled(ReactJsonView)`
+  .jv-size-chevron {
+  }
+`;
+
 const JsonView = props => (
-  <ReactJsonView
+  <ReactJsonViewStyle
     theme={Theme.Styles.reactJsonView.theme}
     iconStyle="triangle"
     name={false}

@@ -28,7 +28,7 @@ jobs:
           git config --local user.name "GitHub Action"
       - uses: actions/setup-node@v1
         with:
-          node-version: 14.x
+          node-version: 22.x
       - run: npm ci
       - run: NODE_ENV=test npm run-script test-travis
       - name: version

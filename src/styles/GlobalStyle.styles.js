@@ -32,7 +32,8 @@ body{
       ? 'none'
       : 'hidden'};
   
-}
+
+
 .ant-layout-sider-light .ant-layout-sider-trigger {
   border-right: 1px solid ${COLOR_LAYOUT.border};
 }
@@ -96,10 +97,7 @@ body{
 .active-row {
   background-color:#f5faff;
 }
-.icon-left span{
 
-  font-size: 20px !important;
-}
 
 .hidden-addon-before{
   .ant-input-group-addon:first-child{
@@ -111,7 +109,10 @@ body{
 .expanded-row-disable .ant-table-column-sort {
   background:#aaa !important;
 }
-
+.icon-left .anticon{
+  font-size: 20px !important;
+  
+}
 `;
 
 export default GlobalStyle;

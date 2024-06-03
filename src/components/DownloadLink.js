@@ -10,25 +10,30 @@ import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
 
 /**
- * Renders a download link and clicks the link automatically when a non null
- * href value is set. accepts a ref with a "download" callback to manually download
+ * Renders a download link and clicks the link automatically when a non-null
+ * href value is set. Accepts a ref with a "download" callback to manually download.
  */
-// eslint-disable-next-line
-const DownloadLink = ({ href, autoDownload }, ref) => {
+const DownloadLink = forwardRef((props, ref) => {
+  const { href, autoDownload } = props;
   const { backendApiUrl } = useSelector(selectors.config);
   const linkRef = useRef();
 
-  const download = useCallback(
-    () => href !== null && linkRef.current && linkRef.current.click(),
-    [href, linkRef]
-  );
+  const download = useCallback(() => {
+    if (href !== null && linkRef.current) {
+      linkRef.current.click();
+    }
+  }, [href]);
 
   useEffect(() => {
-    if (!autoDownload) return;
-    download();
+    if (autoDownload) {
+      download();
+    }
   }, [download, autoDownload]);
 
-  useImperativeHandle(ref, () => ({ download }));
+  useImperativeHandle(ref, () => ({
+    download,
+  }));
+
   return href ? (
     <a
       style={{ display: 'none' }}
@@ -38,15 +43,11 @@ const DownloadLink = ({ href, autoDownload }, ref) => {
       hidden download link
     </a>
   ) : null;
+});
+
+DownloadLink.propTypes = {
+  href: PropTypes.string.isRequired,
+  autoDownload: PropTypes.bool.isRequired,
 };
 
-const WrappedDownloadLink = forwardRef(DownloadLink);
-
-WrappedDownloadLink.propTypes = {
-  href: PropTypes.string,
-  autoDownload: PropTypes.bool,
-};
-
-WrappedDownloadLink.defaultProps = { href: null, autoDownload: true };
-
-export default WrappedDownloadLink;
+export default DownloadLink;
