@@ -15,17 +15,27 @@ import {
 import { TypeTableColumns } from './QueueOrderComponents/TypeTableColumns';
 
 class TablePreferred extends React.Component {
+  static shouldCancelStart = e => {
+    let targetEle = e;
+    if (!targetEle.id) {
+      targetEle = e.target;
+    }
+
+    if (targetEle.outerHTML.indexOf('delete') > -1) {
+      return true;
+    }
+
+    return false;
+  };
+
   actionsCol = [
     {
       title: 'action',
       dataIndex: 'action',
       width: 30,
       render: (text, record) => {
-        const {
-          dataSourcePreferred,
-          handleDelete,
-          filterPreferredVal,
-        } = this.props;
+        const { dataSourcePreferred, handleDelete, filterPreferredVal } =
+          this.props;
 
         const manyString = filterPreferredVal !== 'JOBID' ? 'items' : 'item';
         return dataSourcePreferred.length >= 1 ? (
@@ -39,25 +49,12 @@ class TablePreferred extends React.Component {
     },
   ];
 
-  shouldCancelStart = e => {
-    let targetEle = e;
-    if (!targetEle.id) {
-      targetEle = e.target;
-    }
-
-    if (targetEle.outerHTML.indexOf('delete') > -1) {
-      return true;
-    }
-
-    return false;
-  };
-
   DraggableContainer = props => {
     const { onSortEnd, handleOnSelectedTable, handleOnHoverTable } = this.props;
 
     return (
       <SortableContainer
-        shouldCancelStart={this.shouldCancelStart}
+        shouldCancelStart={TablePreferred.shouldCancelStart}
         disableAutoscroll
         helperClass="row-dragging"
         onDragSortEnd={({ oldIndex, newIndex }) =>

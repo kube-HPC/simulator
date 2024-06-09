@@ -15,7 +15,22 @@ const Container = styled.div`
   }
 `;
 
-// https://nivo.rocks/bar/ customization
+// Define the custom formatter component outside of NodeStatistics
+const CustomAxisLeftTick = ({ value }) =>
+  value.length > 15 ? (
+    <tspan>
+      {`${value.substring(0, 15)}...`}
+      <title>{value}</title>
+    </tspan>
+  ) : (
+    value
+  );
+
+CustomAxisLeftTick.propTypes = {
+  value: PropTypes.string.isRequired,
+};
+
+// NodeStatistics component
 const NodeStatistics = ({ metric }) => {
   const { data, legend } = useMetric(metric);
 
@@ -44,7 +59,6 @@ const NodeStatistics = ({ metric }) => {
             legend: {
               text: {
                 fontSize: 19,
-
                 fill: whiteColor,
               },
             },
@@ -104,15 +118,7 @@ const NodeStatistics = ({ metric }) => {
           legendOffset: 50,
         }}
         axisLeft={{
-          format: v =>
-            v.length > 15 ? (
-              <tspan>
-                {`${v.substring(0, 15)}...`}
-                <title>{v}</title>
-              </tspan>
-            ) : (
-              v
-            ),
+          format: CustomAxisLeftTick, // Use the custom formatter component
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 20,

@@ -19,7 +19,7 @@ const hasHashOrAtSymbol = input => {
   return false; // Return false if no matching item is found
 };
 
-const findNodeByName = (collection = [], name) =>
+const findNodeByName = (name, collection = []) =>
   collection.find(node => node.nodeName === name);
 
 export const getTaskDetails = node =>
@@ -27,26 +27,28 @@ export const getTaskDetails = node =>
     ? node?.batch
     : [{ taskId: node?.taskId, podName: node?.podName }];
 
-export const findNode = ({ graph, pipeline }) => nodeName => {
-  const nodeData = findNodeByName(graph?.nodes, nodeName);
-  const node = findNodeByName(pipeline.nodes, nodeName);
-  const { jobId } = pipeline;
+export const findNode =
+  ({ graph, pipeline }) =>
+  nodeName => {
+    const nodeData = findNodeByName(nodeName, graph?.nodes);
+    const node = findNodeByName(nodeName, pipeline.nodes);
+    const { jobId } = pipeline;
 
-  const taskId = nodeData?.taskId ?? get(nodeData, 'batch[0].taskId');
-  const podName = nodeData?.podName ?? get(nodeData, 'batch[0].podName');
-  const origInput = node?.input ?? [];
-  const payload = {
-    ...node,
-    ...nodeData,
-    jobId,
-    taskId,
-    nodeName,
-    podName,
-    origInput,
-    batch: nodeData?.batch || [],
+    const taskId = nodeData?.taskId ?? get(nodeData, 'batch[0].taskId');
+    const podName = nodeData?.podName ?? get(nodeData, 'batch[0].podName');
+    const origInput = node?.input ?? [];
+    const payload = {
+      ...node,
+      ...nodeData,
+      jobId,
+      taskId,
+      nodeName,
+      podName,
+      origInput,
+      batch: nodeData?.batch || [],
+    };
+    return payload;
   };
-  return payload;
-};
 
 const statusMap = {
   stopped: {
@@ -170,79 +172,76 @@ const groupsColor = {
   batchStopped: COLOR_TASK_STATUS[TASK.STOPPED],
 };
 
-export const formatNode = (
-  normalizedPipeline,
-  pipelineKind,
-  position
-) => node => {
-  const isStreaming = pipelineKind === 'stream';
-  const pipelineNode = normalizedPipeline[node.nodeName];
-  const isStateLess = pipelineNode?.stateType === 'stateless';
-  const kind = isStateLess ? 'stateless' : pipelineNode?.kind || 'algorithm';
+export const formatNode =
+  (normalizedPipeline, pipelineKind, position) => node => {
+    const isStreaming = pipelineKind === 'stream';
+    const pipelineNode = normalizedPipeline[node.nodeName];
+    const isStateLess = pipelineNode?.stateType === 'stateless';
+    const kind = isStateLess ? 'stateless' : pipelineNode?.kind || 'algorithm';
 
-  const isBatch = !!node.batchInfo;
-  const isBatchStyling =
-    (isStreaming && isStateLess) ||
-    (!isStreaming && hasHashOrAtSymbol(pipelineNode?.input));
+    const isBatch = !!node.batchInfo;
+    const isBatchStyling =
+      (isStreaming && isStateLess) ||
+      (!isStreaming && hasHashOrAtSymbol(pipelineNode?.input));
 
-  /** @type {NodeOptions} */
+    /** @type {NodeOptions} */
 
-  const meta = isBatch
-    ? splitBatchToGroups(node, isStreaming)
-    : setNodeGroup(node);
+    const meta = isBatch
+      ? splitBatchToGroups(node, isStreaming)
+      : setNodeGroup(node);
 
-  const _node = {
-    id: meta.nodeName,
-    title: `${meta.nodeName} ${
-      pipelineNode?.stateType ? pipelineNode.stateType : ''
-    }`,
-    x: (position && position?.nodesPostions[node.nodeName]?.x) || 0,
-    y: (position && position?.nodesPostions[node.nodeName]?.y) || 0,
-    label: meta?.extra?.batch
-      ? `${meta.nodeName} (${meta.extra.batch})`
-      : `${meta.nodeName} `,
+    const _node = {
+      id: meta.nodeName,
+      title: `${meta.nodeName} ${
+        pipelineNode?.stateType ? pipelineNode.stateType : ''
+      }`,
+      x: (position && position?.nodesPostions[node.nodeName]?.x) || 0,
+      y: (position && position?.nodesPostions[node.nodeName]?.y) || 0,
+      label: meta?.extra?.batch
+        ? `${meta.nodeName} (${meta.extra.batch})`
+        : `${meta.nodeName} `,
+    };
+    /** @type {NodeOptions} */
+    const batchStyling = isBatchStyling
+      ? {
+          borderWidth: 1,
+          shapeProperties: {
+            borderDashes: [0, 0],
+          },
+          shadow: {
+            enabled: true,
+            color: lightenColor(
+              groupsColor[meta.group] || COLOR_TASK_STATUS[TASK.SKIPPED],
+              meta.group === 'batchIdle' ? 0 : 40
+            ),
+            size: 1,
+            x: 5,
+            y: 5,
+          },
+        }
+      : {};
+
+    const editedNode = {
+      ...batchStyling,
+      ...meta,
+      ..._node,
+      kind,
+      shape: nodeShapes[kind] || nodeShapes.default,
+    };
+
+    return pick(
+      editedNode,
+      'label',
+      'shape',
+      'extra',
+      'borderWidth',
+      'id',
+      'title',
+      'shapeProperties',
+      'group',
+      'x',
+      'y',
+      'shadow',
+      'font'
+    );
   };
-  /** @type {NodeOptions} */
-  const batchStyling = isBatchStyling
-    ? {
-        borderWidth: 1,
-        shapeProperties: {
-          borderDashes: [0, 0],
-        },
-        shadow: {
-          enabled: true,
-          color: lightenColor(
-            groupsColor[meta.group] || COLOR_TASK_STATUS[TASK.SKIPPED],
-            meta.group === 'batchIdle' ? 0 : 40
-          ),
-          size: 1,
-          x: 5,
-          y: 5,
-        },
-      }
-    : {};
-
-  const editedNode = {
-    ...batchStyling,
-    ...meta,
-    ..._node,
-    kind,
-    shape: nodeShapes[kind] || nodeShapes.default,
-  };
-
-  return pick(
-    editedNode,
-    'label',
-    'shape',
-    'extra',
-    'borderWidth',
-    'id',
-    'title',
-    'shapeProperties',
-    'group',
-    'x',
-    'y',
-    'shadow',
-    'font'
-  );
-};

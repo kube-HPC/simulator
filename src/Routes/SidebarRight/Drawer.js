@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import Drawer from 'components/Drawer';
 import { TabDrawerText, TabDrawer } from 'styles';
 import { RIGHT_SIDEBAR_NAMES } from 'const';
@@ -67,13 +67,15 @@ const DashboardDrawer = () => {
   const width = CONTENT_CONFIG[panelType]?.width ?? 0;
   const titleDrawer = titleSelector[panelType];
 
+  const contextValue = useMemo(() => ({ closeDrawer: setOff }), [setOff]);
+
   if (root === undefined) {
     navigate('/jobs');
   }
 
   // eslint-disable-next-line consistent-return
   return (
-    <ctx.Provider value={{ closeDrawer: setOff }}>
+    <ctx.Provider value={contextValue}>
       <Drawer
         width={width}
         isOpened={isOn}

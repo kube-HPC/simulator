@@ -1,12 +1,18 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Ellipsis from 'components/common/Ellipsis.react';
 import { StatusTag as CountTag } from 'components/StatusTag';
 import { sorter } from 'utils/stringHelper';
 
+const Jobs = ({ jobs }) => <CountTag count={jobs?.length | 0} />;
+Jobs.propTypes = {
+  jobs: PropTypes.array.isRequired,
+};
+export default Jobs;
+
 const DriverId = driverId => <Ellipsis text={driverId} />;
 const PodName = podName => <Ellipsis copyable text={podName} />;
 const Status = status => <Ellipsis text={status} />;
-const Jobs = jobs => <CountTag count={jobs.length} />;
 const Max = count => <CountTag count={count} />;
 const Capacity = count => <CountTag count={count} />;
 const Active = active => <Ellipsis text={active ? 'active' : 'inActive'} />;

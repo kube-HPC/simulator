@@ -1,4 +1,5 @@
 import { LOCAL_STORAGE_KEYS } from 'const';
+/* eslint-disable import/no-cycle */
 import { useActions, useLocalStorage } from 'hooks';
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';

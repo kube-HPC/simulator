@@ -36,8 +36,8 @@ const DataSourceNode = ({ id }) => {
     initialState?.nodes[id]?.spec?.snapshot
       ? MODES.SNAPSHOT
       : initialState?.nodes[id]?.spec?.id
-      ? MODES.VERSION
-      : MODES.LATEST
+        ? MODES.VERSION
+        : MODES.LATEST
   );
 
   const activeName = form.getFieldValue(['nodes', id, 'spec', 'name']);
@@ -45,23 +45,31 @@ const DataSourceNode = ({ id }) => {
   const { snapshots } = useSnapshots({ dataSourceName: activeName });
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleChangeMode = useCallback(e => {
-    setTimeout(() => {
-      setForm();
-    }, 500);
+  const handleChangeMode = useCallback(
+    e => {
+      setTimeout(() => {
+        setForm();
+      }, 500);
 
-    return setMode(e.target.value);
-  });
-  const disableSnapshot = useMemo(() => snapshots?.length === 0, [
-    snapshots?.length,
-  ]);
+      return setMode(e.target.value);
+    },
+    [setForm]
+  );
 
-  const disableVersions = useMemo(() => versionsCollection?.length === 0, [
-    versionsCollection?.length,
-  ]);
+  const disableSnapshot = useMemo(
+    () => snapshots?.length === 0,
+    [snapshots?.length]
+  );
+
+  const disableVersions = useMemo(
+    () => versionsCollection?.length === 0,
+    [versionsCollection?.length]
+  );
+
+  const contextValue = useMemo(() => ({ rootId: ['nodes', id, 'spec'] }), [id]);
 
   return (
-    <ctx.Provider value={{ rootId: ['nodes', id, 'spec'] }}>
+    <ctx.Provider value={contextValue}>
       <Field name={['name']} title="DataSource Name">
         <Select disabled={collection && collection.length === 0}>
           {collection.map(({ name }) => (

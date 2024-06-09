@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+/* eslint-disable import/no-cycle */
 import { useStats } from 'hooks/graphql';
 
 const useMetric = metric => {

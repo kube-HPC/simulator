@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Select, Input, InputNumber } from 'antd';
 
@@ -28,9 +28,14 @@ const GatewayNode = ({ id }) => {
     form.setFieldsValue(nodes);
   }, [form, id]);
 
+  const providerValue = useMemo(
+    () => ({ rootId: ['nodes', id, 'spec'] }),
+    [id]
+  );
+
   return (
     <>
-      <ctx.Provider value={{ rootId: ['nodes', id, 'spec'] }}>
+      <ctx.Provider value={providerValue}>
         <Field name={['name']} title="Name">
           <Input placeholder="Name Gateway" />
         </Field>

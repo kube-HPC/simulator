@@ -62,9 +62,8 @@ class QueueOrderJobsV2 extends React.Component {
       TableOrderConsolidatedSize: PAGE_SIZE_TABLE,
     };
 
-    this.getStatusManageAndPreferred = this.getStatusManageAndPreferred.bind(
-      this
-    );
+    this.getStatusManageAndPreferred =
+      this.getStatusManageAndPreferred.bind(this);
 
     this.dataInterval = null;
   }
@@ -108,8 +107,8 @@ class QueueOrderJobsV2 extends React.Component {
       dataStatusPreferred = await orderApi.getStatusPreferred(
         filterTableAllInOneVal,
         null,
-        null,
-        TableOrderConsolidatedSize
+        TableOrderConsolidatedSize,
+        null
       );
 
       if (
@@ -119,22 +118,22 @@ class QueueOrderJobsV2 extends React.Component {
         dataStatusManage = await orderApi.getStatusManage(
           filterTableAllInOneVal,
           null,
-          null,
-          TableOrderConsolidatedSize
+          TableOrderConsolidatedSize,
+          null
         );
       }
     } else {
       dataStatusManage = await orderApi.getStatusManage(
         filterQueueVal,
-        pageQueueViewJobId,
         pageQueueLastActionIntention,
-        numberRowToViewPagingQueue
+        numberRowToViewPagingQueue,
+        pageQueueViewJobId
       );
       dataStatusPreferred = await orderApi.getStatusPreferred(
         filterPreferredVal,
-        pagePreferredViewJobId,
         pagePreferredLastActionIntention,
-        numberRowToViewPagingPreferred
+        numberRowToViewPagingPreferred,
+        pagePreferredViewJobId
       );
     }
     this.setState({

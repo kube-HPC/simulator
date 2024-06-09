@@ -69,8 +69,10 @@ const AlgorithmsTable = () => {
     }
 
     return (
-      (queryVal.data?.algorithms?.list &&
-        [...queryVal.data?.algorithms?.list].sort((x, y) =>
+      (queryVal.data &&
+        queryVal.data.algorithms &&
+        queryVal.data.algorithms.list &&
+        [...queryVal.data.algorithms.list].sort((x, y) =>
           x.modified < y.modified ? 1 : -1
         )) ||
       []

@@ -126,7 +126,7 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
 
       const { rules, label } = antFields?.addonBefore.filter(
         x => x.value === selectBefore
-      )[0];
+      )[0] || { rules: [], label: '' };
 
       setValue(srcValue);
 

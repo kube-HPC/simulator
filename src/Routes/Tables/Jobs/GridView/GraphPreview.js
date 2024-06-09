@@ -20,6 +20,7 @@ import {
   ZoomInOutlined,
   ZoomOutOutlined,
 } from '@ant-design/icons';
+/* eslint-disable import/no-cycle */
 import { useLocalStorageGraphMode } from 'hooks';
 import { generateStyles, formatEdge, formatNode } from '../graphUtils';
 
@@ -91,8 +92,8 @@ const GraphPreview = ({
     keyIndex && pipeline?.streaming?.flows
       ? Object.keys(pipeline?.streaming?.flows)[keyIndex]
       : valuesState?.streaming?.defaultFlow
-      ? valuesState?.streaming?.defaultFlow
-      : null;
+        ? valuesState?.streaming?.defaultFlow
+        : null;
 
   const { backendApiUrl } = useSelector(selectors.config);
   const [graphPreview, setGraphPreview] = useState({ nodes: [], edges: [] });

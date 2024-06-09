@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Form,
@@ -88,8 +88,10 @@ const HyperParamsNode = ({ id }) => {
     }
   };
 
+  const contextValue = useMemo(() => ({ rootId }), [rootId]);
+
   return (
-    <ctx.Provider value={{ rootId }}>
+    <ctx.Provider value={contextValue}>
       <Field name={['objectivePipeline']} title="Objective Pipeline">
         <AutoComplete
           disabled={pipelinesCollection?.length === 0}

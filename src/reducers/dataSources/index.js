@@ -138,26 +138,28 @@ const dataSources = createSlice({
  *   asyncType: AsyncType
  * ) => (state: FetchStatus, action: { type: string }) => FetchStatus}
  */
-const statusReducer = asyncType => (state = 'IDLE', { type }) => {
-  switch (type) {
-    case asyncType.retry:
-      return 'IDLE';
-    case asyncType.pending:
-      return 'PENDING';
-    case asyncType.success:
-      return 'SUCCESS';
-    case asyncType.fail:
-      return 'FAIL';
-    default:
-      return state;
-  }
-};
+const statusReducer =
+  asyncType =>
+  (state, { type }) => {
+    switch (type) {
+      case asyncType.retry:
+        return 'IDLE';
+      case asyncType.pending:
+        return 'PENDING';
+      case asyncType.success:
+        return 'SUCCESS';
+      case asyncType.fail:
+        return 'FAIL';
+      default:
+        return state || 'IDLE';
+    }
+  };
 
 const status = statusReducer(types.fetchAll);
 const createStatus = statusReducer(types.create);
 
-const error = (state = null, { type }) => {
-  if (type !== types.fetchAll.fail) return state;
+const error = (state, { type }) => {
+  if (type !== types.fetchAll.fail) return state || null;
   // return different types of errors by payload
   return 'could not fetch dataSources';
 };

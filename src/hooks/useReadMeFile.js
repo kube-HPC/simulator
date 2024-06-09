@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+/* eslint-disable import/no-cycle */
 import { useReadme } from 'hooks';
 
 const useReadMeFile = (name, type) => {
