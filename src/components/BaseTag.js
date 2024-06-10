@@ -14,9 +14,10 @@ const TagTheme = styled(Tag)`
     !props.theme.Styles.isTagFill
       ? `border: 1px solid ${props.$borderColor};background-color:${props.$borderColor}22`
       : props.$isBright
-      ? `border: 1px solid${COLOR.lightGrey}`
-      : undefined}
+        ? `border: 1px solid${COLOR.lightGrey}`
+        : undefined}
 `;
+const WapperChild = styled.span``;
 
 const BaseTag = ({
   status,
@@ -46,7 +47,7 @@ const BaseTag = ({
         icon={
           status === 'active' && isActiveLoader ? <SyncOutlined spin /> : null
         }>
-        {children}
+        <WapperChild>{children}</WapperChild>
       </TagTheme>
     </Tooltip>
   );

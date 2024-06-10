@@ -26,11 +26,6 @@ body{
       : 'hidden'};
 }
 
-  overflow-x:${({ location: { pathname, search } = {} } = {}) =>
-    ['/algorithms', '/pipelines'].includes(pathname) ||
-    (['/jobs'].includes(pathname) && !search.indexOf('view=grid') > 0)
-      ? 'none'
-      : 'hidden'};
   
 
 
@@ -45,6 +40,26 @@ body{
 
 .ant-table table {
   border-collapse: collapse;
+}
+
+.ant-table-wrapper .ant-table{
+  scrollbar-color:unset;
+
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border: 1px solid ${COLOR.grey};
+    background-color: ${COLOR_LAYOUT.border};
+    border-radius: 10px;
+  }
+  
 }
 
 ::-webkit-scrollbar-track {
@@ -113,6 +128,10 @@ body{
   font-size: 20px !important;
   
 }
+
+
+
+
 `;
 
 export default GlobalStyle;

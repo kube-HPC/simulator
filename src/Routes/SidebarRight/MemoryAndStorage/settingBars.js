@@ -1,4 +1,3 @@
-import React from 'react';
 import { Theme } from 'styles/colors';
 
 const settingBars = () => {
@@ -62,7 +61,7 @@ const settingBars = () => {
   ];
 
   const axisLeftBar = {
-    format: v =>
+    /* format: v =>
       v.length > 15 ? (
         <tspan>
           {`${v.substring(0, 15)}...`}
@@ -70,7 +69,7 @@ const settingBars = () => {
         </tspan>
       ) : (
         v
-      ),
+      ), */
     tickSize: 5,
     tickPadding: 5,
     tickRotation: 20,

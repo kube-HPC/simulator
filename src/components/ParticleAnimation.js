@@ -11,12 +11,12 @@ const ParticleAnimation = () => {
     canvas.height = window.innerHeight;
 
     const particlesArray = [];
-    const numberOfParticles = 50;
-    const cBgColor = '#d9f1fc';
-    const lineColor = '194,236,255';
-    const linesWidth = 1.5;
+    const numberOfParticles = 70;
+    const cBgColor = '#eaebf300';
+    const lineColor = '202,208,243';
+    const linesWidth = 2;
     const dotsSpeed = 1;
-    const dotsSize = 3;
+    const dotsSize = 4;
     const dotsColor = '#45a9ec';
 
     class Particle {
