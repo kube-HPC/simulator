@@ -6,13 +6,13 @@ import { useSiteThemeMode } from 'hooks';
 
 const JsonEditor = ({
   onChange = () => {},
-  value: controlledValue = '',
+  value: controlledValue = {},
   innerRef = { current: undefined },
   ...props
 }) => {
   const { themeName } = useSiteThemeMode();
   const [value, setValue] = useState(controlledValue);
-  const handleEditorChange = (_, _value) => setValue(_value);
+  const handleEditorChange = _value => setValue(_value);
 
   const handleEditorDidMount = (_, editor) => {
     // eslint-disable-next-line

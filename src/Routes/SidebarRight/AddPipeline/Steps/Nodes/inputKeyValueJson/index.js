@@ -64,7 +64,7 @@ const ControllerKeyValue = ({
       }));
 
       _.set(resFields, currentNameField, resKeyValue);
-      form.setFieldsValue(resFields);
+      form.setFieldsValue({ ...resFields });
     }
   };
 
