@@ -16,9 +16,9 @@ import {
   AimOutlined,
   ZoomInOutlined,
   ZoomOutOutlined,
+  DoubleRightOutlined,
 } from '@ant-design/icons';
-import { ReactComponent as IconGraphUpToDown } from 'images/dir-graph-up.svg';
-import { ReactComponent as IconGraphLeftToRight } from 'images/dir-graph-left.svg';
+
 import { LOCAL_STORAGE_KEYS } from 'const';
 import Graph from 'react-graph-vis';
 import {
@@ -392,9 +392,9 @@ const GraphTab = ({ graph, pipeline }) => {
             onClick={handleSelectDirection}
             icon={
               graphDirection !== GRAPH_DIRECTION.LeftToRight ? (
-                <IconGraphUpToDown />
+                <DoubleRightOutlined rotate={90} />
               ) : (
-                <IconGraphLeftToRight />
+                <DoubleRightOutlined />
               )
             }
           />

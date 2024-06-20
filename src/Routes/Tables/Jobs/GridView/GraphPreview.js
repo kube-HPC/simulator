@@ -165,7 +165,7 @@ const GraphPreview = ({
 
   const [showGraph, toggleForceUpdate] = useReducer(p => !p, true); // toggleForceUpdate
 
-  const graphOptions = useCallback(
+  const graphOptions = useMemo(
     () => ({
       ...generateStyles({
         direction: 'LR',
@@ -344,7 +344,7 @@ const GraphPreview = ({
 
   useEffect(() => {
     const network = graphRef?.current?.Network || null;
-    const gOption = graphOptions();
+    const gOption = graphOptions;
     if (network != null && isDataNode && gOption != null) {
       network.setOptions(gOption);
       network.setData(adaptedGraph);
@@ -366,7 +366,7 @@ const GraphPreview = ({
       {showGraph && (
         <Graph
           graph={adaptedGraph}
-          options={graphOptions()}
+          options={graphOptions}
           //   events={events}
           ref={graphRef}
           getNetwork={network => {
