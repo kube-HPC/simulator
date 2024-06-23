@@ -9,10 +9,10 @@ const ActionsQueueOrder = ({ job }) => {
   const { jobId } = job;
   const { rerunPipeline } = usePipeline();
   const { stopPipeline } = useActions();
-  const onReRun = useCallback(() => rerunPipeline(jobId), [
-    rerunPipeline,
-    jobId,
-  ]);
+  const onReRun = useCallback(
+    () => rerunPipeline(jobId),
+    [rerunPipeline, jobId]
+  );
   const onStop = useCallback(() => stopPipeline(jobId), [stopPipeline, jobId]);
   return (
     <Button.Group className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
