@@ -48,7 +48,8 @@ const JsonEditor = ({
 JsonEditor.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
-  innerRef: PropTypes.oneOfType(PropTypes.object).isRequired,
+  innerRef: PropTypes.objectOf(PropTypes.instanceOf(PropTypes.object))
+    .isRequired,
 };
 
 export default JsonEditor;

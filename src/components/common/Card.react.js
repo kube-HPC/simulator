@@ -9,15 +9,15 @@ const CardOverflow = styled(AntCard)`
 
 const Card = ({
   children,
-  isMargin,
-  bordered,
-  actions,
-  style,
-  bodyStyle,
+  isMargin = false,
+  bordered = true,
+  actions = [],
+  style = {},
+  bodyStyle = {},
   ...props
 }) => (
   <CardOverflow
-    bodyStyle={bodyStyle}
+    styles={{ body: { ...bodyStyle } }}
     size="small"
     style={{ marginRight: isMargin ? '50px' : 'none', ...style }}
     actions={actions}
@@ -42,14 +42,6 @@ Card.propTypes = {
   // eslint-disable-next-line
   bodyStyle: PropTypes.object,
   ...AntCard.propTypes,
-};
-
-Card.defaultProps = {
-  isMargin: false,
-  actions: [],
-  bordered: true,
-  style: {},
-  bodyStyle: {},
 };
 
 export default Card;

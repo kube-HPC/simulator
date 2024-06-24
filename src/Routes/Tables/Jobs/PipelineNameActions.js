@@ -69,6 +69,4 @@ PipelineNameActions.propTypes = {
   pipeline: PropTypes.object.isRequired,
 };
 
-PipelineNameActions.defaultProps = {};
-
 export default React.memo(PipelineNameActions);

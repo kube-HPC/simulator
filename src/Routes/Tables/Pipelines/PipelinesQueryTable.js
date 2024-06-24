@@ -8,7 +8,10 @@ import { useReactiveVar } from '@apollo/client';
 import { instanceFiltersVar } from 'cache';
 import { FiltersForms } from 'styles';
 
-const PipelinesQueryTable = ({ onSubmit, pipelinesList }) => {
+const PipelinesQueryTable = ({
+  onSubmit = () => {},
+  pipelinesList = undefined,
+}) => {
   const urlParams = useLocation();
   const instanceFilters = useReactiveVar(instanceFiltersVar);
 
@@ -89,16 +92,10 @@ const PipelinesQueryTable = ({ onSubmit, pipelinesList }) => {
 PipelinesQueryTable.propTypes = {
   onSubmit: PropTypes.func,
 };
-PipelinesQueryTable.defaultProps = {
-  onSubmit: () => {},
-  pipelinesList: undefined,
-};
 
 PipelinesQueryTable.propTypes = {
   onSubmit: PropTypes.func,
   pipelinesList: PropTypes.arrayOf(PropTypes.object),
 };
-PipelinesQueryTable.defaultProps = {
-  onSubmit: () => {},
-};
+
 export default React.memo(PipelinesQueryTable);

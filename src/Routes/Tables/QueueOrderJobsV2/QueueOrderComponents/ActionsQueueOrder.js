@@ -31,6 +31,4 @@ ActionsQueueOrder.propTypes = {
   job: PropTypes.object.isRequired,
 };
 
-ActionsQueueOrder.defaultProps = {};
-
 export default React.memo(ActionsQueueOrder);

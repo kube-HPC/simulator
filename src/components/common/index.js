@@ -21,3 +21,4 @@ export { default as RangePickerNow } from 'components/common/RangePickerNow';
 export { default as CronModel } from 'components/common/CronModel.react';
 export { default as HelpSiteLink } from 'components/common/HelpSiteLink.react';
 export { default as TableDropdown } from 'components/common/TableDropdown';
+export { default as SkeletonLoader } from 'components/common/SkeletonLoader';

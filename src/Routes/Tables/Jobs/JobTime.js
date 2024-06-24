@@ -17,7 +17,7 @@ const TimeText = styled(Text)`
   font-size: 10px;
 `;
 
-const JobTime = ({ results, startTime, length, style }) => {
+const JobTime = ({ results, startTime = 0, length = 15, style }) => {
   const diffTime = useCallback(
     (from = new Date()) =>
       HumanizeDuration(results ? results.timeTook * SEC : startTime - from, {
@@ -61,11 +61,6 @@ JobTime.propTypes = {
   style: PropTypes.object,
   results: PropTypes.object,
   /* eslint-enable */
-};
-
-JobTime.defaultProps = {
-  length: 15,
-  startTime: 0,
 };
 
 export default React.memo(JobTime);

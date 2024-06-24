@@ -30,7 +30,7 @@ const DrawerEditor = ({ value: initial, submitText, onSubmit }) => {
 
   return (
     <>
-      <Card style={{ flex: 1 }} bodyStyle={{ height: '100%' }}>
+      <Card style={{ flex: 1 }} styles={{ body: { height: '100%' } }}>
         <JsonEditor innerRef={editorRef} value={value} />
       </Card>
       <BottomPanel style={{ marginTop: '1em' }}>

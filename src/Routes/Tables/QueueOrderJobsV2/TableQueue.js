@@ -68,7 +68,7 @@ class TableQueue extends React.Component {
       filterQueue,
       onChangeNumberRowPagingQueue,
       numberRowToViewPagingQueue,
-      viewTableColumnOrRow,
+      viewTableColumnOrRow = false,
       isDeleteOverTable,
       isLoadData,
     } = this.props;
@@ -164,9 +164,7 @@ TableQueue.propTypes = {
   viewTableColumnOrRow: PropTypes.bool,
   isDeleteOverTable: PropTypes.bool.isRequired,
 };
-TableQueue.defaultProps = {
-  viewTableColumnOrRow: false,
-};
+
 // const areEqual = (prev, next) => prev.dataSourceQueue === next.dataSourceQueue;
 
 export default TableQueue;

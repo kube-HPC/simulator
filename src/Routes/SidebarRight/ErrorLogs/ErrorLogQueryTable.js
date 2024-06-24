@@ -11,7 +11,10 @@ const { RangePicker } = DatePicker;
 // let localValueTimeChanged = 1;
 const DateFormat = 'YYYY-MM-DD HH:mm';
 
-const ErrorLogQueryTable = ({ onSubmit, ErrorLogList }) => {
+const ErrorLogQueryTable = ({
+  onSubmit = () => {},
+  ErrorLogList = undefined,
+}) => {
   const [form] = Form.useForm();
   const urlParams = useLocation();
   const SubmitForm = () => {
@@ -104,16 +107,10 @@ const ErrorLogQueryTable = ({ onSubmit, ErrorLogList }) => {
 ErrorLogQueryTable.propTypes = {
   onSubmit: PropTypes.func,
 };
-ErrorLogQueryTable.defaultProps = {
-  onSubmit: () => {},
-  ErrorLogList: undefined,
-};
 
 ErrorLogQueryTable.propTypes = {
   onSubmit: PropTypes.func,
   ErrorLogList: PropTypes.arrayOf(PropTypes.object),
 };
-ErrorLogQueryTable.defaultProps = {
-  onSubmit: () => {},
-};
+
 export default React.memo(ErrorLogQueryTable);

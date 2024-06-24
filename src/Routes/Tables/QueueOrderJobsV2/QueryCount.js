@@ -3,7 +3,12 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { TitleTable, BadgeCount } from './OrderStyles';
 
-export const QueryCount = ({ nameCount, selectorsData, status, isShow }) => {
+export const QueryCount = ({
+  nameCount = 'preferred',
+  selectorsData,
+  status = 'success',
+  isShow = true,
+}) => {
   const counter = useSelector(selectorsData);
   return (
     <>
@@ -27,10 +32,4 @@ QueryCount.propTypes = {
   selectorsData: PropTypes.func.isRequired,
   status: PropTypes.string,
   isShow: PropTypes.bool,
-};
-
-QueryCount.defaultProps = {
-  nameCount: 'preferred',
-  status: 'success',
-  isShow: true,
 };

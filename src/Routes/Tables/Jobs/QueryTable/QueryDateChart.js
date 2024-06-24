@@ -5,7 +5,7 @@ import histogram from 'utils/histogram';
 import PropTypes from 'prop-types';
 
 const QueryDateChart = props => {
-  const { dataSource, onZoom } = props;
+  const { dataSource = () => {}, onZoom } = props;
 
   const dataForHistogram = dataSource?.map(d => ({
     id: d.key,
@@ -160,9 +160,6 @@ QueryDateChart.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   dataSource: PropTypes.arrayOf(PropTypes.object),
   onZoom: PropTypes.func.isRequired,
-};
-QueryDateChart.defaultProps = {
-  dataSource: () => {},
 };
 
 export default React.memo(QueryDateChart);

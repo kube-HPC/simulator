@@ -41,7 +41,7 @@ class ErrorBoundary extends React.Component {
 
   render() {
     const { hasError, error, info } = this.state;
-    const { children } = this.props;
+    const { children = null } = this.props;
 
     return hasError ? (
       <CenterPage>
@@ -99,10 +99,6 @@ class ErrorBoundary extends React.Component {
 
 ErrorBoundary.propTypes = {
   children: PropTypes.node,
-};
-
-ErrorBoundary.defaultProps = {
-  children: null,
 };
 
 export default ErrorBoundary;

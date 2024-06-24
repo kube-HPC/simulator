@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { TabDrawerText, TabDrawer } from 'styles';
-import PropTypes from 'prop-types';
 import { stringify } from 'utils';
 import { DRAWER_SIZE, DRAWER_TITLES } from 'const';
 import Drawer from 'components/Drawer';
@@ -23,7 +22,7 @@ const EditDrawer = () => {
       isOpened={isOn}
       onClose={setOff}
       onDidClose={goTo.root}
-      bodyStyle={{ padding: '10px' }}
+      styles={{ body: { padding: '10px' } }}
       width={DRAWER_SIZE.PIPELINE_INFO}
       title={pipeline?.name ?? pipelineId}
       asFlex>
@@ -37,14 +36,6 @@ const EditDrawer = () => {
       </TabDrawer>
     </Drawer>
   );
-};
-
-EditDrawer.propTypes = {
-  pipeline: PropTypes.shape({ name: PropTypes.string }),
-};
-
-EditDrawer.defaultProps = {
-  pipeline: undefined,
 };
 
 export default React.memo(EditDrawer);

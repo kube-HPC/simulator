@@ -58,15 +58,15 @@ const ProgressContainer = styled.div`
   align-items: center;
 `;
 
-const Progress = (_, job) => (
-  <ProgressContainer>
-    <JobProgress
-      // eslint-disable-next-line
-      {...job}
-    />
-    <JobActions job={job} />
-  </ProgressContainer>
-);
+const Progress = (_, job) => {
+  const { status, type, width } = job;
+  return (
+    <ProgressContainer>
+      <JobProgress status={status} type={type} width={width} />
+      <JobActions job={job} />
+    </ProgressContainer>
+  );
+};
 
 const sortPipelineName = (a, b) => sorter(a.pipeline.name, b.pipeline.name);
 const sortStartTime = (a, b) => a.pipeline.startTime - b.pipeline.startTime;

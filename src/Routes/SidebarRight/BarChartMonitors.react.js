@@ -159,17 +159,17 @@ const BarChartMonitors = ({ metric }) => {
             // eslint-disable-next-line react/no-unstable-nested-components
             ({ bars, ...rest }) => {
               const barsView = bars.filter(x => x.data.value !== null);
-
               return (
                 <>
                   <text
+                    key={`textNode${barsView.index}`}
                     transform={`translate(${rest.width - 200},${
                       rest.height / 2
                     }) rotate(-90)`}
                     style={{ fontSize: '17px' }}>
                     Nodes
                   </text>
-                  <g>
+                  <g key={`gNode${barsView.index}`}>
                     {barsView &&
                       barsView.map(
                         bar =>
@@ -228,7 +228,9 @@ const BarChartMonitors = ({ metric }) => {
                           )
                       )}
                   </g>
-                  <g transform={`translate(-70,${rest.innerHeight + 60})`}>
+                  <g
+                    key={`geNode${barsView.index}`}
+                    transform={`translate(-70,${rest.innerHeight + 60})`}>
                     {barsView &&
                       barsView.map(
                         bar =>

@@ -8,7 +8,10 @@ import { useReactiveVar } from '@apollo/client';
 import { instanceFiltersVar } from 'cache';
 import { FiltersForms } from 'styles';
 
-const AlgorithmsQueryTable = ({ onSubmit, algorithmsList }) => {
+const AlgorithmsQueryTable = ({
+  onSubmit = () => {},
+  algorithmsList = undefined,
+}) => {
   const urlParams = useLocation();
   const instanceFilters = useReactiveVar(instanceFiltersVar);
 
@@ -92,16 +95,10 @@ const AlgorithmsQueryTable = ({ onSubmit, algorithmsList }) => {
 AlgorithmsQueryTable.propTypes = {
   onSubmit: PropTypes.func,
 };
-AlgorithmsQueryTable.defaultProps = {
-  onSubmit: () => {},
-  algorithmsList: undefined,
-};
 
 AlgorithmsQueryTable.propTypes = {
   onSubmit: PropTypes.func,
   algorithmsList: PropTypes.arrayOf(PropTypes.object),
 };
-AlgorithmsQueryTable.defaultProps = {
-  onSubmit: () => {},
-};
+
 export default React.memo(AlgorithmsQueryTable);

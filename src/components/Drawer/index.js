@@ -41,18 +41,19 @@ const DrawerPadding = styled(AntDrawer)`
  *   title: string;
  * }} props
  */
+
 const Drawer = ({
   children,
-  bottomContent,
-  width,
-  isOpened,
+  bottomContent = undefined,
+  width = '50vm',
+  isOpened = false,
   onClose,
-  onDidClose,
+  onDidClose = undefined,
   onDidOpen,
-  title,
+  title = '',
   wrapperStyle,
   style,
-  asFlex,
+  asFlex = false,
   ...props
 }) => {
   const [hasEntered, setEntered] = useState(false);
@@ -77,9 +78,11 @@ const Drawer = ({
       closable={false}
       onClose={onClose}
       data-as-flex={asFlex}
-      bodyStyle={{
-        ...style,
-        opacity: hasEntered ? 1 : 0,
+      styles={{
+        body: {
+          ...style,
+          opacity: hasEntered ? 1 : 0,
+        },
       }}
       title={title}
       // eslint-disable-next-line
@@ -112,15 +115,6 @@ Drawer.propTypes = {
   onClose: PropTypes.func.isRequired,
   onDidClose: PropTypes.func,
   asFlex: PropTypes.bool,
-};
-
-Drawer.defaultProps = {
-  bottomContent: undefined,
-  width: '50vw',
-  onDidClose: undefined,
-  title: '',
-  asFlex: false,
-  isOpened: false,
 };
 
 export default Drawer;

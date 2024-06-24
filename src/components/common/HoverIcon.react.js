@@ -14,7 +14,7 @@ const IconHoverStyle = styled.div`
   cursor: pointer;
 `;
 
-const Hover = ({ type, onClick, styleIcon, ...props }) => {
+const Hover = ({ type, onClick, styleIcon = null, ...props }) => {
   const componentIcon = type || <Icon {...props} />;
 
   return (
@@ -34,8 +34,4 @@ Hover.propTypes = {
   onClick: PropTypes.func,
 
   styleIcon: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-};
-
-Hover.defaultProps = {
-  styleIcon: null,
 };

@@ -45,7 +45,7 @@ const JsonEditor = ({ onChange, value: _value, style }) => {
 
   return (
     <Card
-      bodyStyle={{ height: '100%' }}
+      styles={{ body: { height: '100%' } }}
       style={{ borderColor: hasFailed ? COLOR.red : undefined, ...style }}>
       <AutoSizer>
         {({ height, width }) => (

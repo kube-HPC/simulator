@@ -23,12 +23,12 @@ const IconDelete = styled(MinusCircleOutlined)`
 const InputField = ({
   hasRemove,
   onRemove,
-  isValid,
-  tooltip,
+  isValid = true,
+  tooltip = null,
   id,
   onChange,
   value,
-  placeholder,
+  placeholder = null,
   addonBefore,
   inputRef,
 }) => (
@@ -81,12 +81,6 @@ InputField.propTypes = {
   placeholder: PropTypes.string,
   addonBefore: PropTypes.oneOfType([PropTypes.func, PropTypes.object])
     .isRequired,
-};
-
-InputField.defaultProps = {
-  placeholder: null,
-  tooltip: null,
-  isValid: true,
 };
 
 export default InputField;

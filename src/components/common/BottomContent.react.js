@@ -41,8 +41,5 @@ BottomContent.propTypes = {
   extra: PropTypes.array,
   children: PropTypes.node.isRequired,
 };
-BottomContent.defaultProps = {
-  extra: [],
-};
 
 export default BottomContent;

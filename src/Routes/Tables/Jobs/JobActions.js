@@ -43,10 +43,10 @@ const JobActions = ({ job }) => {
 
   const onStop = useCallback(() => stopPipeline(key), [stopPipeline, key]);
 
-  const onMoreInfo = useCallback(() => goTo.overview({ nextJobId: key }), [
-    goTo,
-    key,
-  ]);
+  const onMoreInfo = useCallback(
+    () => goTo.overview({ nextJobId: key }),
+    [goTo, key]
+  );
 
   const downloadNameFile = useMemo(
     () =>
@@ -62,13 +62,15 @@ const JobActions = ({ job }) => {
     canPause ? pausePipeline(key) : resumePipeline(key);
   }, [canPause, pausePipeline, key, resumePipeline]);
   const isStopDisabled = useMemo(() => !canPauseOrStop(status), [status]);
-  const isJobStreaming = useMemo(() => job?.pipeline?.kind === 'stream', [
-    job?.pipeline?.kind,
-  ]);
+  const isJobStreaming = useMemo(
+    () => job?.pipeline?.kind === 'stream',
+    [job?.pipeline?.kind]
+  );
   const isDownloadDisabled = !results?.data?.storageInfo;
-  const handleDownload = useCallback(() => downloadLinkRef.current?.click(), [
-    downloadLinkRef,
-  ]);
+  const handleDownload = useCallback(
+    () => downloadLinkRef.current?.click(),
+    [downloadLinkRef]
+  );
   return (
     <>
       <Button.Group className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
@@ -117,7 +119,5 @@ JobActions.propTypes = {
   // eslint-disable-next-line
   job: PropTypes.object.isRequired,
 };
-
-JobActions.defaultProps = {};
 
 export default React.memo(JobActions);

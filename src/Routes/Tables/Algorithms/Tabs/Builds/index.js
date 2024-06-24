@@ -35,7 +35,7 @@ const Builds = ({ builds, isOpenFirstLog }) => {
         label: IDs.LOGS,
         key: IDs.LOGS,
         children: (
-          <CardOverflow bodyStyle={{ height: '20em' }}>
+          <CardOverflow styles={{ body: { height: '20em' } }}>
             {record.result && record.result.data ? (
               <LogsViewer
                 id={record.buildId}

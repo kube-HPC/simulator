@@ -56,7 +56,13 @@ ExpandIcon.propTypes = {
 const antIcon = <LoadingOutlined style={{ fontSize: 40 }} spin />;
 Spin.setDefaultIndicator(antIcon);
 
-const Table = ({ dataSource, loading, isInfinity, heightScroll, ...props }) => {
+const Table = ({
+  dataSource = [],
+  loading = false,
+  isInfinity = false,
+  heightScroll = '88vh',
+  ...props
+}) => {
   const [vt] = useVT(
     () => ({
       initTop: 1,
@@ -93,12 +99,6 @@ Table.propTypes = {
   isInfinity: PropTypes.bool,
   heightScroll: PropTypes.string,
   ...AntTable.propTypes,
-};
-Table.defaultProps = {
-  dataSource: [],
-  loading: false,
-  isInfinity: false,
-  heightScroll: '88vh',
 };
 
 export default React.memo(Table);

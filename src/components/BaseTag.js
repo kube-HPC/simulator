@@ -20,13 +20,13 @@ const TagTheme = styled(Tag)`
 const WapperChild = styled.span``;
 
 const BaseTag = ({
-  status,
-  children,
-  colorMap,
-  tooltip,
-  isActiveLoader,
-  isError,
   style,
+  status = null,
+  children = null,
+  colorMap = COLOR_PIPELINE_STATUS,
+  tooltip = null,
+  isActiveLoader = true,
+  isError = false,
 }) => {
   const isFailedSchedulingError =
     isError && status === TASK_STATUS.FAILED_SCHEDULING;
@@ -62,15 +62,6 @@ BaseTag.propTypes = {
   style: PropTypes.object,
   isActiveLoader: PropTypes.bool,
   isError: PropTypes.bool,
-};
-
-BaseTag.defaultProps = {
-  children: null,
-  status: null,
-  colorMap: COLOR_PIPELINE_STATUS,
-  tooltip: null,
-  isActiveLoader: true,
-  isError: false,
 };
 
 export default BaseTag;

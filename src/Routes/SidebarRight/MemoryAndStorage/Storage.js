@@ -78,7 +78,7 @@ const Storage = ({ storage }) => {
             innerRadius={0.75}
             padAngle={0.7}
             cornerRadius={0}
-            tooltipFormat={prettyBytes}
+            valueFormat={prettyBytes}
             borderWidth={0}
             enableRadialLabels={false}
             enableSlicesLabels={false}
@@ -87,6 +87,7 @@ const Storage = ({ storage }) => {
             motionDamping={15}
             colors={[COLOR_STORAGE.FREE, COLOR_STORAGE.USED]}
             legends={[]}
+            enableArcLabels={false}
           />
         </PieContainer>
         <BoxesContainer>

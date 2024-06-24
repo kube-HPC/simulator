@@ -5,7 +5,7 @@ import { Tag } from 'antd';
 import { FlexBox } from 'components/common';
 import { StatusTag } from 'components/StatusTag';
 
-const AlgorithmBuildStats = ({ builds }) => (
+const AlgorithmBuildStats = ({ builds = [] }) => (
   <FlexBox justify="center" gutter={0} style={{ flexWrap: 'nowrap' }}>
     {builds.total === 0 ? (
       <FlexBox.Item key="No Builds">
@@ -30,10 +30,6 @@ AlgorithmBuildStats.propTypes = {
     status: PropTypes.string,
     total: PropTypes.number,
   }),
-};
-
-AlgorithmBuildStats.defaultProps = {
-  builds: [],
 };
 
 export default React.memo(AlgorithmBuildStats);
