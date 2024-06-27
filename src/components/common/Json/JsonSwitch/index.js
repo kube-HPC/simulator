@@ -44,13 +44,13 @@ const removeFlowInputNull = obj => {
 };
 
 const JsonSwitch = ({
-  obj,
-  options,
-  jobId,
-  jsonViewHeaderNode,
-  tabPosition,
-  typeDefaultView,
-  isGraph,
+  obj = {},
+  options = {},
+  jobId = null,
+  jsonViewHeaderNode = undefined,
+  tabPosition = 'left',
+  typeDefaultView = TABS.JSON,
+  isGraph = false,
 }) => {
   const { view = {}, table = {} } = options;
 
@@ -132,15 +132,6 @@ JsonSwitch.propTypes = {
   tabPosition: PropTypes.string,
   typeDefaultView: PropTypes.string,
   isGraph: PropTypes.bool,
-};
-JsonSwitch.defaultProps = {
-  obj: {},
-  options: {},
-  jobId: null,
-  jsonViewHeaderNode: undefined,
-  tabPosition: 'left',
-  typeDefaultView: TABS.JSON,
-  isGraph: false,
 };
 
 export default JsonSwitch;

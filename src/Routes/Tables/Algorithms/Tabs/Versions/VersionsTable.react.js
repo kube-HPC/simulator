@@ -13,7 +13,12 @@ const expandedRowRender = record => (
 
 const rowKey = ({ version }) => version;
 
-const VersionsTable = ({ currentVersion, onApply, onDelete, dataSource }) => {
+const VersionsTable = ({
+  currentVersion,
+  onApply,
+  onDelete,
+  dataSource = undefined,
+}) => {
   const columns = getVersionsColumns({ currentVersion, onApply, onDelete });
   const expandIcon = ({ expanded, onExpand, record }) =>
     expanded ? (
@@ -40,10 +45,6 @@ VersionsTable.propTypes = {
   onApply: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   dataSource: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-};
-
-VersionsTable.defaultProps = {
-  dataSource: undefined,
 };
 
 export default VersionsTable;

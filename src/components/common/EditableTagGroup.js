@@ -30,7 +30,12 @@ const ItemBox = styled.div`
   border: 1px solid #d9d9d9;
   border-radius: 2px;
 `;
-const EditableTagGroup = ({ value, onChange, duplicateValue }) => {
+
+const EditableTagGroup = ({
+  value = [],
+  onChange = () => {},
+  duplicateValue = false,
+}) => {
   const saveInputRef = useRef(null);
   const saveEditInputRef = useRef(null);
 
@@ -157,12 +162,6 @@ EditableTagGroup.propTypes = {
   value: PropTypes.arrayOf(PropTypes.string),
   onChange: PropTypes.func,
   duplicateValue: PropTypes.bool,
-};
-
-EditableTagGroup.defaultProps = {
-  value: [],
-  duplicateValue: false,
-  onChange: () => {},
 };
 
 export default EditableTagGroup;

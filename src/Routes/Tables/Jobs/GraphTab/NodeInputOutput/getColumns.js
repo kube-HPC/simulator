@@ -89,7 +89,7 @@ const Duration = (_, record) => {
 
 const Retries = retries => <Tag>{retries}</Tag>;
 
-const Results = ({ record, url, algorithmName }) => {
+const Results = ({ record, url = null, algorithmName = '' }) => {
   const downloadNameFile = useMemo(
     () =>
       `${algorithmName}_${
@@ -124,11 +124,6 @@ Results.propTypes = {
   record: PropTypes.object.isRequired,
   algorithmName: PropTypes.string,
   url: PropTypes.string,
-};
-
-Results.defaultProps = {
-  algorithmName: '',
-  url: null,
 };
 
 const getNodeIOColumns = (

@@ -36,7 +36,7 @@ const SiderLight = styled(Layout.Sider)`
 const topMargin = { marginTop: '20%' };
 const noItemSelect = [];
 
-const SidebarRight = ({ isTop, className }) => {
+const SidebarRight = ({ isTop = false, className = '' }) => {
   // add datasources when this enable
 
   const { dataSourceIsEnable } = useSelector(selectors.connection);
@@ -119,11 +119,6 @@ SidebarRight.propTypes = {
   isTop: PropTypes.bool,
   className: PropTypes.string,
   ...Layout.Sider.propTypes,
-};
-
-SidebarRight.defaultProps = {
-  isTop: false,
-  className: '',
 };
 
 export default SidebarRight;

@@ -38,7 +38,7 @@ const initialState = [];
 const EditMode = ({
   dataSource,
   onCreateVersion,
-  submittingStatus,
+  submittingStatus = null,
   onDownload,
   onDelete,
 }) => {
@@ -198,9 +198,6 @@ EditMode.propTypes = {
   submittingStatus: PropTypes.string,
   onDownload: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
-};
-EditMode.defaultProps = {
-  submittingStatus: null,
 };
 
 export default EditMode;

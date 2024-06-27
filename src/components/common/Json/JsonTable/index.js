@@ -28,12 +28,12 @@ const Margin = styled(Descriptions)`
 `;
 
 const ItemByValueType = ({
-  obj,
+  obj = null,
   vertical,
-  hasMargin,
+  hasMargin = false,
   name,
-  jobId,
-  parentId,
+  jobId = null,
+  parentId = null,
 }) => {
   const [downloadHref, setDownloadHref] = useState(null);
   const handleDownload = useCallback(
@@ -121,14 +121,7 @@ ItemByValueType.propTypes = {
   parentId: PropTypes.string,
 };
 
-ItemByValueType.defaultProps = {
-  obj: null,
-  jobId: null,
-  parentId: null,
-  hasMargin: false,
-};
-
-const JsonTable = ({ obj, vertical, jobId, ...props }) => {
+const JsonTable = ({ obj, vertical = false, jobId = null, ...props }) => {
   const columns = useMemo(() => getColumns({ obj, vertical }), [obj, vertical]);
   return (
     <Descriptions column={columns} vertical={vertical} {...props}>
@@ -162,11 +155,6 @@ JsonTable.propTypes = {
   obj: PropTypes.object,
   vertical: PropTypes.bool,
   jobId: PropTypes.string,
-};
-
-JsonTable.defaultProps = {
-  vertical: false,
-  jobId: null,
 };
 
 export default JsonTable;

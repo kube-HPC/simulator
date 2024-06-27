@@ -8,7 +8,11 @@ import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { notification } from 'utils';
 
-const DrawerEditor = ({ value: initial, submitText, onSubmit }) => {
+const DrawerEditor = ({
+  value: initial = '',
+  submitText = 'Submit',
+  onSubmit,
+}) => {
   const [value, setValue] = useState(initial);
 
   useEffect(() => {
@@ -52,11 +56,6 @@ DrawerEditor.propTypes = {
   value: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
   submitText: PropTypes.string,
-};
-
-DrawerEditor.defaultProps = {
-  submitText: 'Submit',
-  value: '',
 };
 
 export default DrawerEditor;

@@ -12,10 +12,10 @@ function isObject(element) {
 
 const InputField = ({
   valueJson,
-  placeholder,
-  tooltip,
-  idx,
-  onRemove,
+  placeholder = null,
+  tooltip = null,
+  idx = undefined,
+  onRemove = null,
   ...antFields
 }) => {
   const inputRef = useRef();
@@ -24,8 +24,8 @@ const InputField = ({
     addonBefore,
     onInputChange,
     hasRemove,
-    isValid,
-    value,
+    isValid = true,
+    value = undefined,
   } = useInputField(antFields, onRemove, inputRef, 200);
 
   useEffect(() => {
@@ -89,18 +89,6 @@ InputField.propTypes = {
   id: PropTypes.node,
   onChange: PropTypes.func,
   addonBefore: PropTypes.arrayOf(PropTypes.object),
-};
-
-InputField.defaultProps = {
-  placeholder: null,
-  tooltip: null,
-  onRemove: null,
-  value: undefined,
-  id: undefined,
-  onChange: undefined,
-  addonBefore: undefined,
-  idx: undefined,
-  isValid: true,
 };
 
 export default InputField;

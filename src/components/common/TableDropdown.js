@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Table, Button, Menu, Dropdown } from 'antd';
 import PropTypes from 'prop-types';
 
-const TableDropdown = ({ data, columns }) => {
+const TableDropdown = ({ data = {}, columns = {} }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const menu = (
     <Menu>
@@ -26,10 +26,6 @@ const TableDropdown = ({ data, columns }) => {
   );
 };
 
-TableDropdown.defaultProps = {
-  data: {},
-  columns: {},
-};
 TableDropdown.propTypes = {
   columns: PropTypes.objectOf(PropTypes.string),
   data: PropTypes.objectOf(PropTypes.string),

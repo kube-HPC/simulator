@@ -13,7 +13,12 @@ const emptyEditorStates = ['""', null, 'null', ''];
  * @param {object} props
  * @param {React.CSSProperties} props.style
  */
-const JsonEditor = ({ onChange, value: _value, style }) => {
+
+const JsonEditor = ({
+  onChange = () => {},
+  value: _value = {},
+  style = {},
+}) => {
   const [value, setValue] = useState(JSON.stringify(_value, null, 2));
 
   useEffect(() => {
@@ -68,11 +73,6 @@ JsonEditor.propTypes = {
   value: PropTypes.object,
   // eslint-disable-next-line
   style: PropTypes.object,
-};
-JsonEditor.defaultProps = {
-  value: {},
-  style: {},
-  onChange: () => {},
 };
 
 export default JsonEditor;

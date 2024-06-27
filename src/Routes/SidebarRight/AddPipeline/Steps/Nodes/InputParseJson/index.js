@@ -33,7 +33,7 @@ const listAddOn = [
   },
 ];
 
-const Controller = ({ node, nodeIdx, isRequired }) => {
+const Controller = ({ node, nodeIdx, isRequired = false }) => {
   const { form, isRunPipeline, isStreamingPipeline } = useWizardContext();
   const inputValues = form.getFieldValue(['nodes', nodeIdx, 'input']);
 
@@ -100,10 +100,6 @@ Controller.propTypes = {
   ]).isRequired,
   nodeIdx: PropTypes.node.isRequired,
   isRequired: PropTypes.bool,
-};
-
-Controller.defaultProps = {
-  isRequired: false,
 };
 
 export default Controller;

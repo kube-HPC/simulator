@@ -19,7 +19,7 @@ const CardOverflow = styled(Card)`
   padding-bottom: 20px;
 `;
 
-const Builds = ({ builds, isOpenFirstLog }) => {
+const Builds = ({ builds = [], isOpenFirstLog = false }) => {
   const { cancelBuild, rerunBuild } = useActions();
   const [currentTime, setCurrentTime] = useState(Date.now());
   useEffect(() => {
@@ -91,11 +91,6 @@ Builds.propTypes = {
   // eslint-disable-next-line
   builds: PropTypes.array,
   isOpenFirstLog: PropTypes.bool,
-};
-
-Builds.defaultProps = {
-  builds: [],
-  isOpenFirstLog: false,
 };
 
 export default React.memo(Builds);

@@ -21,9 +21,9 @@ const InputAddon = forwardRef(
       before = '',
       after = '',
       onChange = () => {},
-      placeholder,
-      selectWidth,
-      value,
+      placeholder = '',
+      selectWidth = null,
+      value = '',
     },
     ref
   ) => {
@@ -117,15 +117,6 @@ InputAddon.propTypes = {
   placeholder: PropTypes.string,
   onChange: PropTypes.func,
   selectWidth: PropTypes.number,
-};
-
-InputAddon.defaultProps = {
-  before: '',
-  after: '',
-  placeholder: '',
-  onChange: undefined,
-  value: '',
-  selectWidth: null,
 };
 
 export default memo(InputAddon);

@@ -30,7 +30,7 @@ const NodeInputOutput = ({
   payload,
 
   isShowOneRow,
-  modeSelect,
+  modeSelect = false,
   setCurrentTask,
 }) => {
   const { socketUrl } = useSelector(selectors.connection);
@@ -180,7 +180,7 @@ const NodeInputOutput = ({
     </>
   );
 };
-NodeInputOutput.defaultProps = { modeSelect: false };
+
 NodeInputOutput.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line

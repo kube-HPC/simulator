@@ -218,7 +218,7 @@ class LogsViewer extends React.PureComponent {
   }
 
   renderRow = ({ index, parent, style, key }) => {
-    const { isBuild, dataSource } = this.props;
+    const { isBuild = false, dataSource } = this.props;
     return (
       <CellMeasurer
         cache={this.cache}
@@ -277,9 +277,6 @@ LogsViewer.propTypes = {
   isBuild: PropTypes.bool,
   id: PropTypes.string.isRequired,
   emptyDescription: PropTypes.string.isRequired,
-};
-LogsViewer.defaultProps = {
-  isBuild: false,
 };
 
 export default LogsViewer;

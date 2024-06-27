@@ -31,7 +31,7 @@ const ContainerTabs = styled.div`
   height: 800px;
 `;
 
-const Details = ({ node, jobId, isDisabledBtnRunDebug }) => {
+const Details = ({ node, jobId, isDisabledBtnRunDebug = false }) => {
   const [currentTask, setCurrentTask] = useState(undefined);
   //  const algorithmDetails = useSelector(state =>
   //    selectors.algorithms.collection.byId(state, node.algorithmName)
@@ -206,7 +206,4 @@ Details.propTypes = {
   //  pipelienKind: PropTypes.string.isRequired,
 };
 
-Details.defaultProps = {
-  isDisabledBtnRunDebug: false,
-};
 export default React.memo(Details);

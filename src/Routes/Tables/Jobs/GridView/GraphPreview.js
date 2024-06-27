@@ -63,10 +63,10 @@ export const ButtonsPanel = styled.div`
 
 const GraphPreview = ({
   pipeline,
-  keyIndex,
-  isBuildAllFlows,
-  isMinified,
-  clickNode,
+  keyIndex = undefined,
+  isBuildAllFlows = false,
+  isMinified = true,
+  clickNode = () => {},
 }) => {
   const graphRef = useRef(null);
   const wizardContext = useWizardContext();
@@ -405,12 +405,6 @@ GraphPreview.propTypes = {
     edges: PropTypes.arrayOf(PropTypes.object).isRequired,*
  //   jobId: PropTypes.string.isRequired,
   }).isRequired, */
-};
-GraphPreview.defaultProps = {
-  keyIndex: undefined,
-  isBuildAllFlows: false,
-  isMinified: true,
-  clickNode: () => {},
 };
 
 /* const isSameGraph = (a, b) =>

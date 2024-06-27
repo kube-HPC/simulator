@@ -46,7 +46,7 @@ Form.Divider = DividerWrapper;
 Form.Item.propTypes = AntdForm.Item.propTypes;
 Form.Divider.propTypes = AntdDivider.propTypes;
 
-const Collapsible = ({ title, children, defaultExpanded }) => {
+const Collapsible = ({ title, children, defaultExpanded = false }) => {
   const [isExpanded, toggle] = useReducer(state => !state, defaultExpanded);
   return (
     <>
@@ -70,9 +70,6 @@ Collapsible.propTypes = {
   defaultExpanded: PropTypes.bool,
 };
 
-Collapsible.defaultProps = {
-  defaultExpanded: false,
-};
 Form.Collapsible = Collapsible;
 
 export default Form;

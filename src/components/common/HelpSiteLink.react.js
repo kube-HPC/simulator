@@ -10,7 +10,7 @@ const IconHelpStyle = styled(QuestionCircleFilled)`
   font-size: 18px;
 `;
 
-const HelpSiteLink = ({ link, ...prop }) => {
+const HelpSiteLink = ({ link = '', ...prop }) => {
   const { hkubeSiteUrl } = useSelector(selectors.config);
 
   return (
@@ -25,8 +25,4 @@ export default HelpSiteLink;
 
 HelpSiteLink.propTypes = {
   link: PropTypes.string,
-};
-
-HelpSiteLink.defaultProps = {
-  link: '',
 };

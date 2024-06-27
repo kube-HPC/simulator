@@ -15,7 +15,7 @@ const VersionTag = styled.span`
  *   isLatest: boolean;
  * }} props
  */
-export const VersionRow = ({ title, isLatest, isSnapshot }) => (
+export const VersionRow = ({ title, isLatest, isSnapshot = false }) => (
   <>
     <span>{title}</span>
     <VersionTag>
@@ -30,9 +30,6 @@ VersionRow.propTypes = {
   title: PropTypes.string.isRequired,
   isLatest: PropTypes.bool.isRequired,
   isSnapshot: PropTypes.bool,
-};
-VersionRow.defaultProps = {
-  isSnapshot: false,
 };
 
 /**

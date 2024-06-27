@@ -7,7 +7,7 @@ import { Form } from 'antd';
 import Editor from './Editor';
 import Wizard from './Wizard';
 
-const AddPipeline = ({ jsonPipeline, isRunPipeline }) => {
+const AddPipeline = ({ jsonPipeline = undefined, isRunPipeline = false }) => {
   const [form] = Form.useForm();
   const [status, setStatus] = useState(WIZARD_STATE.IDLE);
   const [isEditorVisible, toggle] = useReducer(visible => !visible, false);
@@ -61,10 +61,6 @@ const AddPipeline = ({ jsonPipeline, isRunPipeline }) => {
   );
 };
 
-AddPipeline.defaultProps = {
-  jsonPipeline: undefined,
-  isRunPipeline: false,
-};
 AddPipeline.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   jsonPipeline: PropTypes.string,

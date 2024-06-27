@@ -10,7 +10,14 @@ const selectStyle = { width: '90px' };
 // TODO: remove irrelevant forwardRef
 const MemoryField = React.forwardRef(
   // eslint-disable-next-line
-  ({ onChange, children, value, tooltipTitle, min, iconType }, ref) => {
+  ({
+    onChange,
+    children,
+    value,
+    tooltipTitle = undefined,
+    min = 1,
+    iconType = null,
+  }) => {
     const [numberInitial, unitInitial] = parseUnit(value);
     const [numberMem, setNumberMem] = useState(numberInitial);
     const [unit, setUnit] = useState(unitInitial);
@@ -58,11 +65,6 @@ MemoryField.propTypes = {
   onChange: PropTypes.func,
   value: PropTypes.string,
   /* eslint-enable */
-};
-MemoryField.defaultProps = {
-  tooltipTitle: undefined,
-  min: 1,
-  iconType: null,
 };
 
 export default MemoryField;

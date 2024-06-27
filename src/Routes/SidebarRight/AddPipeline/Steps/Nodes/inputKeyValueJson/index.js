@@ -36,14 +36,14 @@ const emptyEditorStatesKeyValue = ['""', null, 'null', ''];
 
 const ControllerKeyValue = ({
   nameRef,
-  onChange,
-  value: _value,
-  isValueSignBoard,
-  valuePlaceholder,
-  titleKeyboard,
-  isValueArray,
-  placeholderKey,
-  isOpenGraphNodes,
+  onChange = () => {},
+  value: _value = {},
+  isValueSignBoard = false,
+  valuePlaceholder = '',
+  titleKeyboard = '',
+  isValueArray = false,
+  placeholderKey = 'Flow key',
+  isOpenGraphNodes = false,
 }) => {
   const { initialState, form, valuesState } = useWizardContext();
   const [modal, contextHolder] = Modal.useModal();
@@ -239,15 +239,5 @@ ControllerKeyValue.propTypes = {
   nameRef: PropTypes.arrayOf(PropTypes.string).isRequired,
   isOpenGraphNodes: PropTypes.bool,
 };
-ControllerKeyValue.defaultProps = {
-  value: {},
-  style: {},
-  onChange: () => {},
-  isValueSignBoard: false,
-  isValueArray: false,
-  valuePlaceholder: '',
-  titleKeyboard: '',
-  placeholderKey: 'Flow key',
-  isOpenGraphNodes: false,
-};
+
 export default React.memo(ControllerKeyValue);
