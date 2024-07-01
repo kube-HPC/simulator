@@ -59,11 +59,11 @@ import useFileActions from './useFileActions';
 setChonkyDefaults({ iconComponent: ChonkyIconFA });
 
 const FileBrowser = ({
-  files: srcFiles,
+  files: srcFiles = [],
   forwardRef,
-  isReadOnly,
+  isReadOnly = false,
   onDownload,
-  onDelete,
+  onDelete = null,
 }) => {
   const {
     fileMap,
@@ -182,11 +182,6 @@ FileBrowser.propTypes = {
   onDownload: PropTypes.func.isRequired,
   isReadOnly: PropTypes.bool,
   onDelete: PropTypes.func,
-};
-FileBrowser.defaultProps = {
-  files: [],
-  isReadOnly: false,
-  onDelete: null,
 };
 
 export default WrappedFileBrowser;

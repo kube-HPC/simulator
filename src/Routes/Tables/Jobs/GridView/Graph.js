@@ -1,10 +1,24 @@
 import React, { lazy, useEffect, useMemo, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Empty } from 'antd';
-import { Fallback, FallbackComponent } from 'components/common';
+import { Empty, Spin } from 'antd';
+import { Fallback } from 'components/common';
 import { useNodeInfo, useSettings } from 'hooks';
 import { generateStyles, formatEdge, formatNode } from '../graphUtils';
+
+const CenterImage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100px;
+  height: 50%;
+`;
+
+const FallbackComponent = () => (
+  <CenterImage>
+    <Spin size="large" />
+  </CenterImage>
+);
 
 const Graph = lazy(() => import(`react-graph-vis`));
 

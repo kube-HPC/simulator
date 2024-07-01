@@ -7,17 +7,18 @@ import React, {
   useRef,
 } from 'react';
 import PropTypes from 'prop-types';
-import { Empty, Slider, Button, Switch, Popconfirm } from 'antd';
+import styled from 'styled-components';
+import { Empty, Slider, Button, Switch, Popconfirm, Spin } from 'antd';
 import { useDebounceCallback } from '@react-hook/debounce';
-import { Fallback, FallbackComponent } from 'components/common';
+import { Fallback } from 'components/common';
 import { useNodeInfo, useLocalStorageGraphMode } from 'hooks';
 import {
   AimOutlined,
   ZoomInOutlined,
   ZoomOutOutlined,
+  DoubleRightOutlined,
 } from '@ant-design/icons';
-import { ReactComponent as IconGraphUpToDown } from 'images/dir-graph-up.svg';
-import { ReactComponent as IconGraphLeftToRight } from 'images/dir-graph-left.svg';
+
 import { LOCAL_STORAGE_KEYS } from 'const';
 import Graph from 'react-graph-vis';
 import {
@@ -31,10 +32,23 @@ import { generateStyles, formatEdge, formatNode } from '../graphUtils';
 import Details from './Details';
 import DropDownNodes from './NodeInputOutput/DropdownNodes';
 
+const CenterImage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100px;
+  height: 50%;
+`;
 const GRAPH_DIRECTION = {
   LeftToRight: 'LR',
   UpToDown: 'UD',
 };
+
+const FallbackComponent = () => (
+  <CenterImage>
+    <Spin size="large" />
+  </CenterImage>
+);
 
 const calculatePercentage = (value, minValue, maxValue) => {
   if (value < minValue) {
@@ -378,9 +392,9 @@ const GraphTab = ({ graph, pipeline }) => {
             onClick={handleSelectDirection}
             icon={
               graphDirection !== GRAPH_DIRECTION.LeftToRight ? (
-                <IconGraphUpToDown />
+                <DoubleRightOutlined rotate={90} />
               ) : (
-                <IconGraphLeftToRight />
+                <DoubleRightOutlined />
               )
             }
           />

@@ -92,9 +92,8 @@ const SidebarLeft = () => {
   const dataCountSource = instanceCounterAdapter(instanceCounter);
 
   const { isOn } = useSelector(selectors.userGuide);
-  const [isOpenMenuAdministration, setIsOpenMenuAdministration] = useState(
-    false
-  );
+  const [isOpenMenuAdministration, setIsOpenMenuAdministration] =
+    useState(false);
   const dataCount = isOn ? dataCountMock : dataCountSource;
   const { menuAdminItemsJson } = useSubMenuAdmin(totalNewWarnings, dataCount);
   const { themeName } = useSiteThemeMode();
@@ -161,7 +160,10 @@ const SidebarLeft = () => {
 
   return (
     <Border>
-      <Sider className={USER_GUIDE.SIDEBAR_LEFT} theme={themeName}>
+      <Sider
+        style={{ background: 'unset' }}
+        className={USER_GUIDE.SIDEBAR_LEFT}
+        theme={themeName}>
         <LogoContainer>
           <IconLogo component={LogoFish} />
           <AnimatedTitle />

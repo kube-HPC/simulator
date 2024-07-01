@@ -13,7 +13,12 @@ const emptyEditorStates = ['""', null, 'null', ''];
  * @param {object} props
  * @param {React.CSSProperties} props.style
  */
-const JsonEditor = ({ onChange, value: _value, style }) => {
+
+const JsonEditor = ({
+  onChange = () => {},
+  value: _value = {},
+  style = {},
+}) => {
   const [value, setValue] = useState(JSON.stringify(_value, null, 2));
 
   useEffect(() => {
@@ -45,7 +50,7 @@ const JsonEditor = ({ onChange, value: _value, style }) => {
 
   return (
     <Card
-      bodyStyle={{ height: '100%' }}
+      styles={{ body: { height: '100%' } }}
       style={{ borderColor: hasFailed ? COLOR.red : undefined, ...style }}>
       <AutoSizer>
         {({ height, width }) => (
@@ -68,11 +73,6 @@ JsonEditor.propTypes = {
   value: PropTypes.object,
   // eslint-disable-next-line
   style: PropTypes.object,
-};
-JsonEditor.defaultProps = {
-  value: {},
-  style: {},
-  onChange: () => {},
 };
 
 export default JsonEditor;

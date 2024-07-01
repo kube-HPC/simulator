@@ -25,23 +25,32 @@ const Id = jobID => (
 
 const Name = (text, record) => <PipelineNameActions pipeline={record} />;
 
-const StartTime = (text, record) => (
-  <JobTime startTime={record.pipeline.startTime} results={record.results} />
-);
+const StartTime = (text, record) => {
+  const { pipeline, results } = record;
+  const { startTime } = pipeline;
+
+  return <JobTime startTime={startTime} results={results} />;
+};
 
 // const pinActiveJobs = status => <PinActiveJobs status={status} />;
 const Status = status => <JobStatus status={status} />;
 
 const Stats = status => <NodeStats status={status} />;
 // const Priority = priority => <JobPriority priority={priority} />;
-const Priority = (text, record) => (
-  <JobPriority priority={record.pipeline.priority} />
-);
+const Priority = (text, record) => {
+  const { pipeline } = record;
+  const { priority } = pipeline;
+
+  <JobPriority priority={priority} />;
+};
 
 // const Types = types => <JobTypes types={types} fullName={false} />;
-const Types = (text, record) => (
-  <JobTypes types={record.pipeline.types} fullName={false} />
-);
+const Types = (text, record) => {
+  const { pipeline } = record;
+  const { types } = pipeline;
+
+  return <JobTypes types={types} fullName={false} />;
+};
 
 const ProgressContainer = styled.div`
   display: flex;
@@ -49,15 +58,15 @@ const ProgressContainer = styled.div`
   align-items: center;
 `;
 
-const Progress = (_, job) => (
-  <ProgressContainer>
-    <JobProgress
-      // eslint-disable-next-line
-      {...job}
-    />
-    <JobActions job={job} />
-  </ProgressContainer>
-);
+const Progress = (_, job) => {
+  const { status, type, width } = job;
+  return (
+    <ProgressContainer>
+      <JobProgress status={status} type={type} width={width} />
+      <JobActions job={job} />
+    </ProgressContainer>
+  );
+};
 
 const sortPipelineName = (a, b) => sorter(a.pipeline.name, b.pipeline.name);
 const sortStartTime = (a, b) => a.pipeline.startTime - b.pipeline.startTime;

@@ -18,13 +18,13 @@ const DriverLogs = ({ driverId, podName }) => {
 
   useEffect(() => {
     if (!query.loading) {
-      setLogsItems(logs.map((value, key) => ({ key, ...value } || [])));
+      setLogsItems(logs.map((value, key) => ({ key, ...value }) || []));
     }
   }, [logs, query.loading]);
 
   return (
     logsItems?.length > 0 && (
-      <CardOverflow bodyStyle={{ height: '20em' }}>
+      <CardOverflow styles={{ body: { height: '20em' } }}>
         <LogsViewer dataSource={logsItems} id={driverId} />
       </CardOverflow>
     )

@@ -20,18 +20,19 @@ const DEFAULT_SPAN = 8;
  * @param {import('antd/lib/form').ValidationRule[]} props.extraRules
  * @param {import('antd/lib/form').FormItemProps} props.overrides
  */
+
 export const Field = ({
   name,
   children,
-  title,
-  type,
-  required,
-  skipValidation,
-  small,
-  rootId,
-  extraRules,
-  initialValue,
-  overrides,
+  title = '',
+  type = 'string',
+  required = true,
+  skipValidation = false,
+  small = false,
+  rootId = null,
+  extraRules = [],
+  initialValue = null,
+  overrides = {},
 }) => (
   <Form.Item
     label={title}
@@ -81,17 +82,6 @@ Field.propTypes = {
   overrides: PropTypes.object,
   /* eslint-enable */
   initialValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-};
-Field.defaultProps = {
-  type: 'string',
-  required: true,
-  skipValidation: false,
-  small: false,
-  extraRules: [],
-  initialValue: null,
-  overrides: {},
-  title: '',
-  rootId: null,
 };
 
 export const HorizontalRow = styled.div`

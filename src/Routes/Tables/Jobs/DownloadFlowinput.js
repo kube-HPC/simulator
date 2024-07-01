@@ -30,6 +30,4 @@ DownloadFlowinput.propTypes = {
   keyValue: PropTypes.string.isRequired,
 };
 
-DownloadFlowinput.defaultProps = {};
-
 export default React.memo(DownloadFlowinput);

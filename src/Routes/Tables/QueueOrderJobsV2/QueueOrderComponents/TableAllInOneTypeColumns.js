@@ -8,12 +8,12 @@ import {
   ActionsQueueOrder,
 } from '../QueueOrderComponents';
 
-const Actions = (_, job) => <ActionsQueueOrder job={job} />;
-const Status = (_, job) => (
+const Actions = (_, { job }) => <ActionsQueueOrder job={job || []} />;
+const Status = (_, { job }) => (
   <FlexBox justify="flex-start" gutter={0}>
-    <Concurrency isConcurrency={job.maxExceeded} />
+    <Concurrency isConcurrency={job?.maxExceeded} />
     &nbsp;&nbsp;
-    <TypeRow type={job.typeElement} />
+    <TypeRow type={job?.typeElement} />
   </FlexBox>
 );
 

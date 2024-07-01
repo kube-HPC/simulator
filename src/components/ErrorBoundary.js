@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { RedoOutlined, GithubOutlined } from '@ant-design/icons';
+// eslint-disable-next-line import/no-cycle
 import { GrafanaLink } from 'components';
+import { RedoOutlined, GithubOutlined } from '@ant-design/icons';
+
 import { Result, Button, Typography, Collapse } from 'antd';
 import styled from 'styled-components';
 
@@ -33,13 +35,13 @@ class ErrorBoundary extends React.Component {
 
   static getDerivedStateFromError = () => ({ hasError: true });
 
-  componentDidCatch = (error, info) => {
+  componentDidCatch(error, info) {
     this.setState({ error, info });
-  };
+  }
 
   render() {
     const { hasError, error, info } = this.state;
-    const { children } = this.props;
+    const { children = null } = this.props;
 
     return hasError ? (
       <CenterPage>
@@ -97,10 +99,6 @@ class ErrorBoundary extends React.Component {
 
 ErrorBoundary.propTypes = {
   children: PropTypes.node,
-};
-
-ErrorBoundary.defaultProps = {
-  children: null,
 };
 
 export default ErrorBoundary;

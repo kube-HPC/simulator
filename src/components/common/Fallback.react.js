@@ -10,7 +10,7 @@ const CenterImage = styled.div`
   height: 50%;
 `;
 
-export const FallbackComponent = () => (
+const FallbackComponent = () => (
   <CenterImage>
     <Spin size="large" />
   </CenterImage>

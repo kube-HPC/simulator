@@ -12,7 +12,7 @@ const Empty = styled(AntdEmpty)`
   justify-content: center;
 `;
 
-const ErrorPage = ({ children, onRetry }) => (
+const ErrorPage = ({ children, onRetry = null }) => (
   <Empty
     image={<ErrorLogo style={{ stroke: COLOR.red }} />}
     description={children}>
@@ -31,7 +31,5 @@ ErrorPage.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
   ]).isRequired,
 };
-ErrorPage.defaultProps = {
-  onRetry: null,
-};
+
 export default ErrorPage;

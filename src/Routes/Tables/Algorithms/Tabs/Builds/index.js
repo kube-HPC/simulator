@@ -19,7 +19,7 @@ const CardOverflow = styled(Card)`
   padding-bottom: 20px;
 `;
 
-const Builds = ({ builds, isOpenFirstLog }) => {
+const Builds = ({ builds = [], isOpenFirstLog = false }) => {
   const { cancelBuild, rerunBuild } = useActions();
   const [currentTime, setCurrentTime] = useState(Date.now());
   useEffect(() => {
@@ -35,7 +35,7 @@ const Builds = ({ builds, isOpenFirstLog }) => {
         label: IDs.LOGS,
         key: IDs.LOGS,
         children: (
-          <CardOverflow bodyStyle={{ height: '20em' }}>
+          <CardOverflow styles={{ body: { height: '20em' } }}>
             {record.result && record.result.data ? (
               <LogsViewer
                 id={record.buildId}
@@ -66,7 +66,12 @@ const Builds = ({ builds, isOpenFirstLog }) => {
       <Tabs items={TabsItemsJson(record)} />
     </Card>
   );
-
+  const expandIcon = ({ expanded, onExpand, record }) =>
+    expanded ? (
+      <DownOutlined onClick={e => onExpand(record, e)} />
+    ) : (
+      <RightOutlined onClick={e => onExpand(record, e)} />
+    );
   return (
     <Table
       rowKey={record => record.buildId}
@@ -75,13 +80,7 @@ const Builds = ({ builds, isOpenFirstLog }) => {
       expandable={{
         defaultExpandedRowKeys: isOpenFirstLog ? [builds[0].buildId] : [],
         expandedRowRender,
-        // eslint-disable-next-line react/prop-types
-        expandIcon: ({ expanded, onExpand, record }) =>
-          expanded ? (
-            <DownOutlined onClick={e => onExpand(record, e)} />
-          ) : (
-            <RightOutlined onClick={e => onExpand(record, e)} />
-          ),
+        expandIcon,
       }}
     />
   );
@@ -92,11 +91,6 @@ Builds.propTypes = {
   // eslint-disable-next-line
   builds: PropTypes.array,
   isOpenFirstLog: PropTypes.bool,
-};
-
-Builds.defaultProps = {
-  builds: [],
-  isOpenFirstLog: false,
 };
 
 export default React.memo(Builds);

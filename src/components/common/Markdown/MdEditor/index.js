@@ -12,9 +12,9 @@ const renderHtml = text => parser.render(text);
 const noop = () => {};
 
 const MdEditor = ({
-  value: initialValue = readmeTemplate,
+  value: initialValue = readmeTemplate || '',
   onChange = noop,
-  viewReadOnly,
+  viewReadOnly = false,
 }) => {
   const handleValueChange = ({ text }) => {
     onChange(text);
@@ -35,11 +35,6 @@ MdEditor.propTypes = {
   // eslint-disable-next-line
   onChange: PropTypes.func,
   viewReadOnly: PropTypes.bool,
-};
-
-MdEditor.defaultProps = {
-  value: '',
-  viewReadOnly: false,
 };
 
 export default MdEditor;

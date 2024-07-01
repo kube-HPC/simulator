@@ -7,7 +7,11 @@ import React, { memo, useEffect, useState } from 'react';
 
 const DateFormat = 'YYYY-MM-DD HH:mm';
 
-const RangePickerNow = ({ onChange, value, isDisabled }) => {
+const RangePickerNow = ({
+  onChange,
+  value = undefined,
+  isDisabled = false,
+}) => {
   const [stateDate, setStateDate] = useState(value);
   const [isClearTo, setIsClearTo] = useState(false);
 
@@ -96,9 +100,6 @@ const RangePickerNow = ({ onChange, value, isDisabled }) => {
   );
 };
 
-RangePickerNow.defaultProps = {
-  value: undefined,
-};
 RangePickerNow.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.oneOfType([
@@ -110,5 +111,4 @@ RangePickerNow.propTypes = {
   isDisabled: PropTypes.bool,
 };
 
-RangePickerNow.defaultProps = { isDisabled: false };
 export default memo(RangePickerNow);

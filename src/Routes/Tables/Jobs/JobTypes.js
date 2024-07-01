@@ -19,7 +19,7 @@ const CapitalizedTag = styled(Tag)`
       'inherit'};
 `;
 
-const JobTypes = ({ types, fullName }) => (
+const JobTypes = ({ types = [], fullName = true }) => (
   <Overflow justify="center" gutter={0}>
     {types &&
       types.map(type =>
@@ -46,11 +46,6 @@ const JobTypes = ({ types, fullName }) => (
 JobTypes.propTypes = {
   types: PropTypes.arrayOf(PropTypes.string),
   fullName: PropTypes.bool,
-};
-
-JobTypes.defaultProps = {
-  fullName: true,
-  types: [],
 };
 
 export default React.memo(JobTypes);

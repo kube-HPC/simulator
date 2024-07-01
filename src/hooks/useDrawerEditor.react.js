@@ -1,8 +1,8 @@
+/* import React, { useCallback } from 'react';
+import PropTypes from 'prop-types';
 import DrawerEditor from 'components/Drawer/DrawerEditor.react';
 import { DRAWER_SIZE } from 'const';
 import { useDrawer } from 'hooks';
-import PropTypes from 'prop-types';
-import React, { useCallback } from 'react';
 
 const NOOP = () => {};
 
@@ -32,3 +32,4 @@ useDrawerEditor.propTypes = {
 };
 
 export default useDrawerEditor;
+*/

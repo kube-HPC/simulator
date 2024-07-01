@@ -37,13 +37,14 @@ const VersionDescription = styled.p`
  *   activeSnapshot?: Snapshot;
  * }}
  */
+
 const Selector = ({
-  entries,
+  entries = [],
   isPending,
   dataSource,
-  versions,
-  activeSnapshot,
-  hasMissingSnapshot,
+  versions = undefined,
+  activeSnapshot = null,
+  hasMissingSnapshot = false,
 }) => {
   const { paths, mode, goTo } = usePath();
   const location = useLocation();
@@ -96,8 +97,8 @@ const Selector = ({
             hasMissingSnapshot
               ? 'missing snapshot!'
               : activeSnapshot
-              ? activeSnapshot.name
-              : dataSource.id
+                ? activeSnapshot.name
+                : dataSource.id
           }
           isLatest={hasMissingSnapshot ? '' : isLatest}
           isSnapshot={activeSnapshot !== null}
@@ -128,13 +129,6 @@ Selector.propTypes = {
   hasMissingSnapshot: PropTypes.bool,
 };
 
-Selector.defaultProps = {
-  entries: [],
-  activeSnapshot: null,
-  hasMissingSnapshot: false,
-  versions: undefined,
-};
-
 const CopyButton = styled(Button)`
   margin-left: 1ch;
 `;
@@ -154,8 +148,8 @@ const CopyButton = styled(Button)`
 const Versions = ({
   dataSource,
   versionsCollection,
-  snapshots,
-  activeSnapshot,
+  snapshots = [],
+  activeSnapshot = null,
 }) => {
   const isPending = versionsCollection?.status === 'PENDING' ?? true;
   const combinedItems = useMemo(() => {
@@ -226,8 +220,8 @@ const Versions = ({
         {activeSnapshot
           ? ''
           : hasMissingSnapshot
-          ? '<- version selector'
-          : dataSource?.versionDescription}
+            ? '<- version selector'
+            : dataSource?.versionDescription}
       </VersionDescription>
     </>
   );
@@ -248,11 +242,6 @@ Versions.propTypes = {
   snapshots: PropTypes.arrayOf(PropTypes.object),
   // eslint-disable-next-line
   activeSnapshot: PropTypes.any,
-};
-
-Versions.defaultProps = {
-  snapshots: [],
-  activeSnapshot: null,
 };
 
 export default Versions;

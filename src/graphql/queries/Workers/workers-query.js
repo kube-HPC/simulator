@@ -15,6 +15,7 @@ const WORKERS_ALL_QUERY = gql`
             init
             ready
             working
+            hot
           }
         }
       }

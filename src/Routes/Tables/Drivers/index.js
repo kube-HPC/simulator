@@ -47,6 +47,13 @@ const DriversTable = () => {
   const filtered = useFilter(collection, ['podName', 'jobs']);
   const filterValue = useSelector(selectors.autoCompleteFilter);
 
+  const expandIcon = ({ expanded, onExpand, record }) =>
+    expanded ? (
+      <DownOutlined onClick={e => onExpand(record, e)} />
+    ) : (
+      <RightOutlined onClick={e => onExpand(record, e)} />
+    );
+
   return (
     <Table
       rowKey={record => record.driverId}
@@ -54,14 +61,7 @@ const DriversTable = () => {
       dataSource={filtered}
       expandable={{
         expandedRowRender: ExpandedRow(collection, filterValue),
-
-        // eslint-disable-next-line react/prop-types
-        expandIcon: ({ expanded, onExpand, record }) =>
-          expanded ? (
-            <DownOutlined onClick={e => onExpand(record, e)} />
-          ) : (
-            <RightOutlined onClick={e => onExpand(record, e)} />
-          ),
+        expandIcon,
       }}
     />
   );

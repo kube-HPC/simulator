@@ -5,7 +5,7 @@ import { COLOR_TASK_STATUS } from 'styles/colors';
 import { Tag } from 'antd';
 import { FlexBox } from 'components/common';
 
-const OptionBox = ({ index, taskId, status }) => (
+const OptionBox = ({ index, taskId = null, status = null }) => (
   <FlexBox justify="start">
     <FlexBox.Item>
       <Tag>{index}</Tag>
@@ -21,10 +21,6 @@ OptionBox.propTypes = {
   index: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   taskId: PropTypes.string,
   status: PropTypes.string,
-};
-OptionBox.defaultProps = {
-  taskId: null,
-  status: null,
 };
 
 export default OptionBox;

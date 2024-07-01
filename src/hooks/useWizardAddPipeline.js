@@ -2,6 +2,7 @@ import { useEffect, useCallback } from 'react';
 import { WIZARD_STATE, LOCAL_STORAGE_KEYS } from 'const';
 
 import cleanDeep from 'clean-deep';
+/* eslint-disable import/no-cycle */
 import { usePipeline } from 'hooks';
 
 import packageJson from './../../package.json';

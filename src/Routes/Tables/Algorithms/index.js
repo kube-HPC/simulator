@@ -1,4 +1,5 @@
 import React from 'react';
+import { SkeletonLoader } from 'components/common';
 import { Route, Routes } from 'react-router-dom';
 import { Table } from 'components';
 import { usePolling } from 'hooks';
@@ -55,7 +56,7 @@ const AlgorithmsTable = () => {
   const onSubmitFilter = () => {};
 
   if (query.loading && query.data?.algorithms?.list?.length === 0)
-    return 'Loading...';
+    return <SkeletonLoader />;
   if (query.error) return `Error! ${query.error.message}`;
 
   const getList = queryVal => {
@@ -69,8 +70,10 @@ const AlgorithmsTable = () => {
     }
 
     return (
-      (queryVal.data?.algorithms?.list &&
-        [...queryVal.data?.algorithms?.list].sort((x, y) =>
+      (queryVal.data &&
+        queryVal.data.algorithms &&
+        queryVal.data.algorithms.list &&
+        [...queryVal.data.algorithms.list].sort((x, y) =>
           x.modified < y.modified ? 1 : -1
         )) ||
       []
@@ -98,6 +101,9 @@ const AlgorithmsTable = () => {
           onRow={onRow}
           scroll={{
             y: '80vh',
+          }}
+          locale={{
+            emptyText: <SkeletonLoader />,
           }}
         />
       </Space>

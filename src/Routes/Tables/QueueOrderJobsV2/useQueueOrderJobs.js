@@ -227,9 +227,9 @@ const useQueueOrderJobs = () => {
 
   const getStatusManage = async (
     typeFilter,
-    pageFromJobId = '',
     intention,
-    pageSize = numberJobsPerPage
+    pageSize = numberJobsPerPage,
+    pageFromJobId = ''
   ) => {
     const type = typeFilter.toString().toLowerCase();
     let res = [];
@@ -259,9 +259,9 @@ const useQueueOrderJobs = () => {
 
   const getStatusPreferred = async (
     typeFilter,
-    pageFromJobId = '',
     intention,
-    pageSize = numberJobsPerPage
+    pageSize = numberJobsPerPage,
+    pageFromJobId = ''
   ) => {
     const type = typeFilter.toLowerCase();
     let res = [];

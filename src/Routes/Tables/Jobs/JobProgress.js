@@ -16,7 +16,7 @@ const JobProgress = ({ status, type, width }) => {
   return (
     <Progress
       type={type}
-      width={width}
+      size={width}
       percent={percent}
       style={{ flex: 1 }}
       status={percent === 100 ? 'success' : 'normal'}
@@ -24,8 +24,8 @@ const JobProgress = ({ status, type, width }) => {
         failed
           ? COLOR_PIPELINE_STATUS[FAILED]
           : stopped
-          ? COLOR_PIPELINE_STATUS[STOPPED]
-          : undefined
+            ? COLOR_PIPELINE_STATUS[STOPPED]
+            : undefined
       }
     />
   );

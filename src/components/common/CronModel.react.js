@@ -18,14 +18,14 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 const { Text } = Typography;
 
 const CronModel = ({
-  isShowModalExternal,
-  setIsShowModalExternal,
-  defaultValueExternal,
+  isShowModalExternal = undefined,
+  setIsShowModalExternal = undefined,
+  defaultValueExternal = undefined,
   onChange,
 
-  cronIsEnabled,
-  switchLoading,
-  switchOnToggle,
+  cronIsEnabled = undefined,
+  switchLoading = undefined,
+  switchOnToggle = undefined,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -124,16 +124,6 @@ CronModel.propTypes = {
   cronIsEnabled: PropTypes.bool,
   switchLoading: PropTypes.bool,
   switchOnToggle: PropTypes.func,
-};
-
-CronModel.defaultProps = {
-  isShowModalExternal: undefined,
-  setIsShowModalExternal: undefined,
-  defaultValueExternal: undefined,
-
-  cronIsEnabled: undefined,
-  switchLoading: undefined,
-  switchOnToggle: undefined,
 };
 
 export default CronModel;

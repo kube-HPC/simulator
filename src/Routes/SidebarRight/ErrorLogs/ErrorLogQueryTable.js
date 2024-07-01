@@ -8,10 +8,13 @@ import { FiltersForms } from 'styles';
 import qs from 'qs';
 
 const { RangePicker } = DatePicker;
-let localValueTimeChanged = 1;
+// let localValueTimeChanged = 1;
 const DateFormat = 'YYYY-MM-DD HH:mm';
 
-const ErrorLogQueryTable = ({ onSubmit, ErrorLogList }) => {
+const ErrorLogQueryTable = ({
+  onSubmit = () => {},
+  ErrorLogList = undefined,
+}) => {
   const [form] = Form.useForm();
   const urlParams = useLocation();
   const SubmitForm = () => {
@@ -92,7 +95,7 @@ const ErrorLogQueryTable = ({ onSubmit, ErrorLogList }) => {
           format={DateFormat}
           onOpenChange={() => {
             // eslint-disable-next-line no-unused-vars
-            localValueTimeChanged = Date.now();
+            // localValueTimeChanged = Date.now();
           }}
           onChange={SubmitForm}
         />
@@ -104,16 +107,10 @@ const ErrorLogQueryTable = ({ onSubmit, ErrorLogList }) => {
 ErrorLogQueryTable.propTypes = {
   onSubmit: PropTypes.func,
 };
-ErrorLogQueryTable.defaultProps = {
-  onSubmit: () => {},
-  ErrorLogList: undefined,
-};
 
 ErrorLogQueryTable.propTypes = {
   onSubmit: PropTypes.func,
   ErrorLogList: PropTypes.arrayOf(PropTypes.object),
 };
-ErrorLogQueryTable.defaultProps = {
-  onSubmit: () => {},
-};
+
 export default React.memo(ErrorLogQueryTable);

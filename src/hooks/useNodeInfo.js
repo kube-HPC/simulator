@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import isEqual from 'lodash/isEqual';
 import { findNode } from 'Routes/Tables/Jobs/graphUtils';
 // import { useLazyLogs } from 'hooks/graphql';
+/* eslint-disable import/no-cycle */
 import useSettings from './useSettings';
 
 const EMPTY_NODE = {};

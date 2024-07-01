@@ -36,13 +36,14 @@ const ReadOnly = styled(Button)`
  *   activeSnapshot: Snapshot;
  * }} props
  */
+
 const TopBar = ({
   dataSource,
   versionsCollection,
   goTo,
   mode,
-  snapshots,
-  activeSnapshot,
+  snapshots = undefined,
+  activeSnapshot = null,
 }) => {
   const handleChange = e =>
     typeof goTo[e.target.value] === 'function'
@@ -86,7 +87,5 @@ TopBar.propTypes = {
   // eslint-disable-next-line
   activeSnapshot: PropTypes.any,
 };
-
-TopBar.defaultProps = { snapshots: undefined, activeSnapshot: null };
 
 export default TopBar;

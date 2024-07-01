@@ -8,7 +8,7 @@ const TagTheme = styled(Tag)`
   border: 1px solid ${props => props.$priorityColor};
 `;
 
-const JobPriority = ({ priority }) => (
+const JobPriority = ({ priority = 1 }) => (
   <Tooltip placement="top" title={priority && COLOR_PRIORITY[priority].name}>
     <TagTheme
       color={Theme.Styles.isTagFill ? COLOR_PRIORITY[priority]?.color : ''}
@@ -20,10 +20,6 @@ const JobPriority = ({ priority }) => (
 
 JobPriority.propTypes = {
   priority: PropTypes.number,
-};
-
-JobPriority.defaultProps = {
-  priority: 1,
 };
 
 export default React.memo(JobPriority);

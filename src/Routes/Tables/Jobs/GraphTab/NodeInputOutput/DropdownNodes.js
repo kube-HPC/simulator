@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo } from 'react';
-import { Typography, Select } from 'antd';
+import { Select } from 'antd';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { TitleStatus } from './getColumns';
 
-function countByKey(node, nameKey) {
+const countByKey = (node, nameKey) => {
   const result = {};
   if (node.batch) {
     node.batch.forEach(obj => {
@@ -27,7 +27,7 @@ function countByKey(node, nameKey) {
     }
   }
   return result;
-}
+};
 
 const BgStyle = styled.div`
   background: ${props => props.theme.Styles.jobsGraph.backgroundBarNodesColor};
@@ -35,24 +35,21 @@ const BgStyle = styled.div`
 `;
 
 const DropdownStyle = styled(Select)`
-   {
-    margin-left: 10px;
-    margin-top: 10px;
-    width: 220px;
-  }
+  margin-left: 10px;
+  margin-top: 10px;
+  width: 220px;
 `;
-const SelectText = styled(Typography.Text)`
-   {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
 
-    justify-content: space-between;
-    line-height: inherit;
-    color: inherit;
-  }
+const SelectText = styled.span`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  line-height: inherit;
+  color: inherit;
 `;
-const TextTitleStatus = styled(Typography.Text)`
+
+const TextTitleStatus = styled.span`
   width: 50px;
   display: flex;
   flex-direction: row;
@@ -61,32 +58,34 @@ const TextTitleStatus = styled(Typography.Text)`
   align-items: center;
 `;
 
+const LabelStatusCount = ({ node }) => {
+  const stNode = node && countByKey(node, 'status');
+  const name = node.nodeName;
+
+  return (
+    <SelectText>
+      <span>{name}</span>{' '}
+      <TextTitleStatus>
+        {TitleStatus(stNode, false, true, node?.error)}
+      </TextTitleStatus>
+    </SelectText>
+  );
+};
+
 const DropDownNodes = ({ nodes, selectNode, setSelectNode }) => {
-  const LabelStatusCount = node => {
-    const stNode = node && countByKey(node, 'status');
-    const name = node.nodeName;
-
-    return (
-      <SelectText>
-        <span>{name}</span>{' '}
-        <TextTitleStatus>
-          {TitleStatus(stNode, false, true, node?.error)}
-        </TextTitleStatus>
-      </SelectText>
-    );
-  };
-
   const items = useMemo(
     () =>
       nodes.map(node => ({
         value: node.nodeName,
-        label: LabelStatusCount(node),
+        label: <LabelStatusCount key={node.nodeName} node={node} />,
       })),
     [nodes]
   );
+
   const onClickSelectNode = nodeName => {
     setSelectNode(nodeName);
   };
+
   const filterOption = (input, option) =>
     (option?.value ?? '').toLowerCase().includes(input.toLowerCase());
 
@@ -105,6 +104,10 @@ const DropDownNodes = ({ nodes, selectNode, setSelectNode }) => {
       />
     </BgStyle>
   );
+};
+
+LabelStatusCount.propTypes = {
+  node: PropTypes.objectOf(PropTypes.string.isRequired).isRequired,
 };
 
 DropDownNodes.propTypes = {

@@ -45,7 +45,7 @@ Field.propTypes = {
   value: PropTypes.string.isRequired,
 };
 
-const RemoteDetails = ({ storage, git }) => (
+const RemoteDetails = ({ storage = null, git = null }) => (
   <Popover
     placement="bottomLeft"
     content={
@@ -86,11 +86,6 @@ RemoteDetails.propTypes = {
     endpoint: PropTypes.string,
     bucketName: PropTypes.string,
   }),
-};
-
-RemoteDetails.defaultProps = {
-  git: null,
-  storage: null,
 };
 
 export default RemoteDetails;

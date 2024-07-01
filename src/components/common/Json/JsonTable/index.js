@@ -13,7 +13,7 @@ const { Text } = Typography;
 const EMPTY = '—';
 
 // drop the first slash if exists
-const firstSlash = new RegExp('^/');
+const firstSlash = /^\//;
 
 const isObject = obj =>
   !Array.isArray(obj) && typeof obj === 'object' && obj !== null;
@@ -28,12 +28,12 @@ const Margin = styled(Descriptions)`
 `;
 
 const ItemByValueType = ({
-  obj,
+  obj = null,
   vertical,
-  hasMargin,
+  hasMargin = false,
   name,
-  jobId,
-  parentId,
+  jobId = null,
+  parentId = null,
 }) => {
   const [downloadHref, setDownloadHref] = useState(null);
   const handleDownload = useCallback(
@@ -115,18 +115,13 @@ ItemByValueType.propTypes = {
   // eslint-disable-next-line
   obj: PropTypes.any,
   vertical: PropTypes.bool.isRequired,
-  name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   hasMargin: PropTypes.bool,
   jobId: PropTypes.string,
+  parentId: PropTypes.string,
 };
 
-ItemByValueType.defaultProps = {
-  obj: null,
-  jobId: null,
-  hasMargin: false,
-};
-
-const JsonTable = ({ obj, vertical, jobId, ...props }) => {
+const JsonTable = ({ obj, vertical = false, jobId = null, ...props }) => {
   const columns = useMemo(() => getColumns({ obj, vertical }), [obj, vertical]);
   return (
     <Descriptions column={columns} vertical={vertical} {...props}>
@@ -160,11 +155,6 @@ JsonTable.propTypes = {
   obj: PropTypes.object,
   vertical: PropTypes.bool,
   jobId: PropTypes.string,
-};
-
-JsonTable.defaultProps = {
-  vertical: false,
-  jobId: null,
 };
 
 export default JsonTable;

@@ -54,7 +54,7 @@ ExpandIcon.propTypes = {
 const antIcon = <LoadingOutlined style={{ fontSize: 40 }} spin />;
 Spin.setDefaultIndicator(antIcon);
 
-const WTable = ({ dataSource, loading, ...props }) => (
+const WTable = ({ dataSource = [], loading = false, ...props }) => (
   <TableWhite
     loading={loading || !dataSource}
     className={USER_GUIDE.TABLE}
@@ -70,10 +70,6 @@ WTable.propTypes = {
   dataSource: PropTypes.arrayOf(PropTypes.object),
   loading: PropTypes.bool,
   ...AntTable.propTypes,
-};
-WTable.defaultProps = {
-  dataSource: [],
-  loading: false,
 };
 
 export default React.memo(WTable);

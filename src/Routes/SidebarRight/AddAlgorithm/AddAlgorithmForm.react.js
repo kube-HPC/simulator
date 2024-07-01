@@ -59,8 +59,8 @@ const toSelectedBuildType = objKey =>
   (objKey && objKey.code) || objKey.type === 'code'
     ? BUILD_TYPES.CODE.field
     : objKey.image || objKey.algorithmImage || objKey.type === 'image'
-    ? BUILD_TYPES.IMAGE.field
-    : BUILD_TYPES.GIT.field || BUILD_TYPES.GIT.field;
+      ? BUILD_TYPES.IMAGE.field
+      : BUILD_TYPES.GIT.field || BUILD_TYPES.GIT.field;
 
 const insertRadioButtons = (buildTypes, selectedKey, isEdit) =>
   Object.keys(buildTypes).map(key => (
@@ -95,9 +95,9 @@ const getBuildTypes = ({ buildType, ...props }) => {
 
 const AddAlgorithmForm = ({
   onToggle,
-  onSubmit,
+  onSubmit = () => {},
   isEdit,
-  keyValueFormObject,
+  keyValueFormObject = undefined,
   isCheckForceStopAlgorithms,
   isSubmitLoading,
   setIsCheckForceStopAlgorithms,
@@ -365,12 +365,6 @@ AddAlgorithmForm.propTypes = {
   setIsCheckForceStopAlgorithms: PropTypes.func.isRequired,
   fileList: PropTypes.oneOfType([PropTypes.object]).isRequired,
   setFileList: PropTypes.func.isRequired,
-};
-
-AddAlgorithmForm.defaultProps = {
-  onSubmit: () => {},
-
-  keyValueFormObject: undefined,
 };
 
 export default memo(AddAlgorithmForm);

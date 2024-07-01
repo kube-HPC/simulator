@@ -15,7 +15,7 @@ import schema from './schema';
 const { MAIN, BUILD_TYPES } = schema;
 
 const DEFAULT_EDITOR_VALUE = stringify(addAlgorithmTemplate);
-const AddAlgorithm = ({ algorithmValue }) => {
+const AddAlgorithm = ({ algorithmValue = undefined }) => {
   // #region  Editor State
   const refCheckForceStopAlgorithms = useRef(false);
 
@@ -25,9 +25,8 @@ const AddAlgorithm = ({ algorithmValue }) => {
     algorithmValue !== undefined
   );
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
-  const [isCheckForceStopAlgorithms, setIsCheckForceStopAlgorithms] = useState(
-    !isEdit
-  );
+  const [isCheckForceStopAlgorithms, setIsCheckForceStopAlgorithms] =
+    useState(!isEdit);
   const [keyValueFormObject, setKeyValueFormObject] = useState(
     (algorithmValue && JSON.parse(algorithmValue)) || undefined
   );
@@ -330,7 +329,5 @@ AddAlgorithm.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   algorithmValue: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 };
-AddAlgorithm.defaultProps = {
-  algorithmValue: undefined,
-};
+
 export default memo(AddAlgorithm);

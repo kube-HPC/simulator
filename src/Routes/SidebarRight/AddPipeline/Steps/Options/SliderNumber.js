@@ -12,7 +12,7 @@ const Container = styled.div`
 `;
 
 const SliderNumber = forwardRef(
-  ({ onChange, value: initial, min, name }, ref) => {
+  ({ onChange = () => {}, value: initial = 0, min = 0, name }, ref) => {
     const [value, setValue] = useState(initial);
 
     useEffect(() => {
@@ -43,12 +43,6 @@ SliderNumber.propTypes = {
   onChange: PropTypes.func,
   value: PropTypes.number,
   min: PropTypes.number,
-};
-
-SliderNumber.defaultProps = {
-  onChange: () => {},
-  value: 0,
-  min: 0,
 };
 
 export default SliderNumber;

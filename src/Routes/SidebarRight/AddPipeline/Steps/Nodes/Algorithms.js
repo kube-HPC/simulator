@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { InputNumber, Switch, Radio, AutoComplete } from 'antd';
 import { Form as CommonForm } from 'components/common';
@@ -21,9 +21,12 @@ const Field = props => {
 const AlgorithmNode = ({ id }) => {
   const { isStreamingPipeline, valuesState } = useWizardContext();
   const { algorithms: sortedAlgorithms } = useGetLists();
-  const rootId = ['nodes', id];
+  const rootId = useMemo(() => ['nodes', id], [id]);
+
+  const contextValue = useMemo(() => ({ rootId }), [rootId]);
+
   return (
-    <ctx.Provider value={{ rootId }}>
+    <ctx.Provider value={contextValue}>
       <Field name={['algorithmName']} title="Algorithm">
         <AutoComplete
           disabled={sortedAlgorithms?.length === 0}
@@ -110,7 +113,7 @@ const AlgorithmNode = ({ id }) => {
 
         {!isStreamingPipeline && (
           <Field
-            overrides={{ ...{ valuePropName: 'checked' } }}
+            overrides={{ valuePropName: 'checked' }}
             title="Include In Pipeline Results"
             name={['includeInResult']}
             skipValidation>
@@ -120,7 +123,7 @@ const AlgorithmNode = ({ id }) => {
 
         {!isStreamingPipeline && (
           <Field
-            overrides={{ ...{ valuePropName: 'checked' } }}
+            overrides={{ valuePropName: 'checked' }}
             title="Create A Tensorboard"
             name={['metrics', 'tensorboard']}
             skipValidation>
@@ -135,4 +138,5 @@ const AlgorithmNode = ({ id }) => {
 AlgorithmNode.propTypes = {
   id: PropTypes.node.isRequired,
 };
+
 export default AlgorithmNode;

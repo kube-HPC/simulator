@@ -18,6 +18,19 @@ const generateTab = (key, value) => [
   },
 ];
 
+const expandedRowRender = row => (
+  <Card isMargin>
+    <Tabs items={generateTab('Information', row)} />
+  </Card>
+);
+
+const expandIcon = ({ expanded, onExpand, record }) =>
+  expanded ? (
+    <DownOutlined onClick={e => onExpand(record, e)} />
+  ) : (
+    <RightOutlined onClick={e => onExpand(record, e)} />
+  );
+
 const ExpandedRow = collection => recordRow => {
   const entries = collection[recordRow?.algorithmName] || [];
   return (
@@ -29,19 +42,8 @@ const ExpandedRow = collection => recordRow => {
         columns={workersTableStats}
         dataSource={entries}
         expandable={{
-          expandedRowRender: row => (
-            <Card isMargin>
-              <Tabs items={generateTab('Information', row)} />
-            </Card>
-          ),
-
-          // eslint-disable-next-line react/prop-types
-          expandIcon: ({ expanded, onExpand, record }) =>
-            expanded ? (
-              <DownOutlined onClick={e => onExpand(record, e)} />
-            ) : (
-              <RightOutlined onClick={e => onExpand(record, e)} />
-            ),
+          expandedRowRender,
+          expandIcon,
         }}
       />
     </Card>
@@ -66,13 +68,7 @@ const WorkersTable = () => {
       dataSource={statsMergedWithDefault}
       expandable={{
         expandedRowRender: ExpandedRow(collection),
-        // eslint-disable-next-line react/prop-types
-        expandIcon: ({ expanded, onExpand, record }) =>
-          expanded ? (
-            <DownOutlined onClick={e => onExpand(record, e)} />
-          ) : (
-            <RightOutlined onClick={e => onExpand(record, e)} />
-          ),
+        expandIcon,
       }}
     />
   );

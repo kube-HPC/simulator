@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Select, Input, Divider } from 'antd';
 import Controller from './InputParseJson';
@@ -18,8 +18,11 @@ const Field = props => {
 const OutputNode = ({ id }) => {
   const { initialState } = useWizardContext();
   const rootId = ['nodes', id, 'spec'];
+
+  const contextValue = useMemo(() => ({ rootId }), [rootId]);
+
   return (
-    <ctx.Provider value={{ rootId }}>
+    <ctx.Provider value={contextValue}>
       <Field name={['description']} title="Description" skipValidation>
         <Input placeholder="Description" />
       </Field>
@@ -44,7 +47,9 @@ const OutputNode = ({ id }) => {
     </ctx.Provider>
   );
 };
+
 OutputNode.propTypes = {
   id: PropTypes.node.isRequired,
 };
+
 export default OutputNode;

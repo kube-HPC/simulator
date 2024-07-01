@@ -30,7 +30,7 @@ const NodeInputOutput = ({
   payload,
 
   isShowOneRow,
-  modeSelect,
+  modeSelect = false,
   setCurrentTask,
 }) => {
   const { socketUrl } = useSelector(selectors.connection);
@@ -66,9 +66,10 @@ const NodeInputOutput = ({
     [algorithm?.downloadFileExt, payload]
   );
 
-  const statusCount = useMemo(() => countByKey(dataSource, 'status'), [
-    dataSource,
-  ]);
+  const statusCount = useMemo(
+    () => countByKey(dataSource, 'status'),
+    [dataSource]
+  );
 
   const tableColumns = useMemo(() => {
     const cols = getColumns(
@@ -123,6 +124,20 @@ const NodeInputOutput = ({
   useEffect(() => {
     onFilterStatus(saveStatusArray);
   }, [dataSource]);
+
+  const expandedRowRender = record => (
+    <Card>
+      <JsonSwitch obj={removeNullUndefinedCleanDeep(record)} />
+    </Card>
+  );
+
+  const expandIcon = ({ expanded, onExpand, record }) =>
+    expanded ? (
+      <DownOutlined onClick={e => onExpand(record, e)} />
+    ) : (
+      <RightOutlined onClick={e => onExpand(record, e)} />
+    );
+
   return (
     <>
       <FilterByStatusTable
@@ -149,24 +164,13 @@ const NodeInputOutput = ({
         expandable={
           !modeSelect && {
             defaultExpandAllRows: isShowOneRow,
-            expandedRowRender: record => (
-              <Card>
-                <JsonSwitch obj={removeNullUndefinedCleanDeep(record)} />
-              </Card>
-            ),
-            // eslint-disable-next-line react/prop-types
-            expandIcon: ({ expanded, onExpand, record }) =>
-              expanded ? (
-                <DownOutlined onClick={e => onExpand(record, e)} />
-              ) : (
-                <RightOutlined onClick={e => onExpand(record, e)} />
-              ),
+            expandedRowRender,
+            expandIcon,
           }
         }
         onRow={record =>
           modeSelect && {
             onClick: () => {
-              // eslint-disable-next-line react/prop-types
               const { taskId } = record;
               setCurrentTask(taskId);
             },
@@ -176,7 +180,7 @@ const NodeInputOutput = ({
     </>
   );
 };
-NodeInputOutput.defaultProps = { modeSelect: false };
+
 NodeInputOutput.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line

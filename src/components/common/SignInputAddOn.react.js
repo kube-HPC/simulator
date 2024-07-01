@@ -6,8 +6,8 @@ const SignInputAddOn = ({
   state,
   options,
   callback,
-  isDisabled,
-  selectWidth,
+  isDisabled = false,
+  selectWidth = null,
 }) =>
   Array.isArray(options) ? (
     <Select
@@ -42,10 +42,7 @@ const arrayOrStringType = PropTypes.oneOfType([
   PropTypes.array,
   PropTypes.string,
 ]);
-SignInputAddOn.defaultProps = {
-  isDisabled: false,
-  selectWidth: null,
-};
+
 SignInputAddOn.propTypes = {
   state: PropTypes.string.isRequired,
   options: arrayOrStringType.isRequired,

@@ -28,7 +28,12 @@ const Header = styled.h3`
 `;
 
 /** @param {{ activeSnapshot: Snapshot }} props */
-const PreviewSnapshot = ({ activeSnapshot, onDownload, snapshotName }) => {
+
+const PreviewSnapshot = ({
+  activeSnapshot = null,
+  onDownload,
+  snapshotName,
+}) => {
   /** @type {RefContent} */
   const fileBrowserRef = useRef();
   const [isErrorTimer, setIsErrorTimer] = useState(false);
@@ -103,10 +108,6 @@ PreviewSnapshot.propTypes = {
   }),
   onDownload: PropTypes.func.isRequired,
   snapshotName: PropTypes.string.isRequired,
-};
-
-PreviewSnapshot.defaultProps = {
-  activeSnapshot: null,
 };
 
 export default PreviewSnapshot;

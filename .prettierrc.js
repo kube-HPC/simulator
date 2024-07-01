@@ -7,7 +7,7 @@ module.exports = {
     {
       files: '*.js',
       options: {
-        parser: 'jsdoc-parser',
+        parser: 'babel',
       },
     },
   ],

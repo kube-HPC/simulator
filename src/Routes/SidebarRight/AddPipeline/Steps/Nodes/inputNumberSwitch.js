@@ -11,7 +11,7 @@ const InputNumberSwitch = forwardRef(
   (
     {
       onChange = () => {}, // To affect the change you need to write a function onChange
-      value,
+      value = '',
     },
     ref
   ) => {
@@ -61,11 +61,6 @@ const InputNumberSwitch = forwardRef(
 InputNumberSwitch.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
-};
-
-InputNumberSwitch.defaultProps = {
-  onChange: undefined,
-  value: '',
 };
 
 export default InputNumberSwitch;

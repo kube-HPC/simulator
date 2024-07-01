@@ -57,7 +57,8 @@ const cache = new InMemoryCache({
         jobsAggregated: {
           keyArgs: ['limit', 'type'],
           // eslint-skip-next-line
-          merge(existing = { jobs: [], cursor: '' }, incoming, { args }) {
+          merge(existingData, incoming, { args }) {
+            let existing = existingData || { jobs: [], cursor: '' }; // default value for existing
             if (args.limit === 100000) {
               // total jobs
               instanceCounterVar({
@@ -68,7 +69,6 @@ const cache = new InMemoryCache({
 
             if (args.limit === 200000) {
               // active jobs
-
               instanceCounterVar({
                 ...instanceCounterVar(),
                 jobsActive: incoming?.jobs?.length || 0,
@@ -77,11 +77,11 @@ const cache = new InMemoryCache({
 
             if (args.limit < 100000) {
               // scroll jobs
-              // the  cursor remove was done to avoid uncorrect equality since the cursor is a unneeded field for the query
+              // the cursor remove was done to avoid uncorrect equality since the cursor is an unneeded field for the query
               const { cursor, ...rest } = args;
 
               if (!_.isEqual(rest, existing?.query)) {
-                // if is not equal then it means that the existing value is not relevant anymore
+                // if it's not equal then it means that the existing value is not relevant anymore
                 // eslint-disable-next-line
                 existing = { jobs: [], cursor: '' };
               }
@@ -175,8 +175,8 @@ const cache = new InMemoryCache({
         //    },
         // },
         queueCount: {
-          // eslint-disable-next-line no-unused-vars
-          merge(_existing = { queueCount: [] }, incoming) {
+          merge(_existing, incoming) {
+            // const existing = _existing || { queueCount: [] };
             instanceCounterVar({
               ...instanceCounterVar(),
               queue: incoming.managed + incoming.preferred,

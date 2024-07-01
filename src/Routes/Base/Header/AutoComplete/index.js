@@ -23,7 +23,8 @@ const selectorsMap = {
   datasources: selectors.dataSources.names,
 };
 const disableFilter = ['queue'];
-const AutoComplete = ({ className }) => {
+
+const AutoComplete = ({ className = '' }) => {
   const { pageName } = useParams();
   const isDisabled = disableFilter.includes(pageName);
   const tableData = useSelector(selectorsMap[pageName]).map(x => ({
@@ -49,9 +50,6 @@ const AutoComplete = ({ className }) => {
 
 AutoComplete.propTypes = {
   className: PropTypes.string,
-};
-AutoComplete.defaultProps = {
-  className: '',
 };
 
 const areEqualByTableName = (prevProps, nextProps) =>

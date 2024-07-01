@@ -8,7 +8,11 @@ import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { notification } from 'utils';
 
-const DrawerEditor = ({ value: initial, submitText, onSubmit }) => {
+const DrawerEditor = ({
+  value: initial = '',
+  submitText = 'Submit',
+  onSubmit,
+}) => {
   const [value, setValue] = useState(initial);
 
   useEffect(() => {
@@ -30,7 +34,7 @@ const DrawerEditor = ({ value: initial, submitText, onSubmit }) => {
 
   return (
     <>
-      <Card style={{ flex: 1 }} bodyStyle={{ height: '100%' }}>
+      <Card style={{ flex: 1 }} styles={{ body: { height: '100%' } }}>
         <JsonEditor innerRef={editorRef} value={value} />
       </Card>
       <BottomPanel style={{ marginTop: '1em' }}>
@@ -52,11 +56,6 @@ DrawerEditor.propTypes = {
   value: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
   submitText: PropTypes.string,
-};
-
-DrawerEditor.defaultProps = {
-  submitText: 'Submit',
-  value: '',
 };
 
 export default DrawerEditor;

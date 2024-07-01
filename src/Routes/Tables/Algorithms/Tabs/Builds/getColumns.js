@@ -19,12 +19,13 @@ const StartTime = startTime => (
 const Status = status => <BaseTag status={status}>{status}</BaseTag>;
 
 const RenderProgress = (_, record) => {
-  const failed = record.status === PIPELINE_STATUS.FAILED;
-  const progress = (record.progress && parseInt(record.progress, 10)) || 0;
+  const { status, progress } = record;
+  const failed = status === PIPELINE_STATUS.FAILED;
+  const progressBar = (progress && parseInt(progress, 10)) || 0;
   return (
     <Progress
-      percent={progress}
-      status={failed ? 'exception' : progress === 100 ? 'success' : 'active'}
+      percent={progressBar}
+      status={failed ? 'exception' : progressBar === 100 ? 'success' : 'active'}
       strokeColor={failed ? COLOR_TASK_STATUS.failed : undefined}
     />
   );

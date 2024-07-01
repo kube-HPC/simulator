@@ -3,7 +3,7 @@ import React from 'react';
 import { COLOR } from 'styles/colors';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
-import Ansi from 'ansi-to-react';
+import AnsiToHtml from 'ansi-to-html';
 import { CopyOutlined } from '@ant-design/icons';
 import { Empty, Tooltip } from 'antd';
 import Moment from 'react-moment';
@@ -108,6 +108,9 @@ const timeFormat = 'DD/MM/YY HH:mm:ss';
  *
  * @typedef {object} EntryState
  */
+
+const ansiConvert = new AnsiToHtml();
+
 class Entry extends React.PureComponent {
   onCopy = () => {
     const {
@@ -158,6 +161,7 @@ Entry.propTypes = {
 
 const emptyRow = '-'.repeat(80);
 class BuildEntry extends React.PureComponent {
+  // eslint-disable-next-line react/no-unused-class-component-methods
   onCopy = () => {
     const { log } = this.props;
     window.navigator.clipboard.writeText(log);
@@ -172,9 +176,7 @@ class BuildEntry extends React.PureComponent {
     return (
       <LogLine style={style}>
         <LineNumber>{index + 1}</LineNumber>
-        <Message>
-          <Ansi>{log === '' ? emptyRow : log}</Ansi>
-        </Message>
+        <Message>{log === '' ? emptyRow : ansiConvert.toHtml(log)}</Message>
       </LogLine>
     );
   }
@@ -216,7 +218,7 @@ class LogsViewer extends React.PureComponent {
   }
 
   renderRow = ({ index, parent, style, key }) => {
-    const { isBuild, dataSource } = this.props;
+    const { isBuild = false, dataSource } = this.props;
     return (
       <CellMeasurer
         cache={this.cache}
@@ -244,6 +246,7 @@ class LogsViewer extends React.PureComponent {
           {({ width, height }) => (
             <List
               ref={element => {
+                // eslint-disable-next-line react/no-unused-class-component-methods
                 this._list = element;
               }}
               deferredMeasurementCache={this.cache}
@@ -269,13 +272,11 @@ class LogsViewer extends React.PureComponent {
 }
 
 LogsViewer.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
   dataSource: PropTypes.arrayOf(PropTypes.object).isRequired,
   isBuild: PropTypes.bool,
   id: PropTypes.string.isRequired,
   emptyDescription: PropTypes.string.isRequired,
-};
-LogsViewer.defaultProps = {
-  isBuild: false,
 };
 
 export default LogsViewer;

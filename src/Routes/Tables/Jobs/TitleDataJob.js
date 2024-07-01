@@ -41,7 +41,7 @@ const ItemRightFlex = styled.div`
   margin-right: auto;
 `;
 
-const TitleDataJob = ({ job }) => (
+const TitleDataJob = ({ job = {} }) => (
   <TitleFlex>
     <Item>
       <b> {Name(job?.pipeline?.name)} </b>
@@ -66,10 +66,6 @@ const TitleDataJob = ({ job }) => (
 TitleDataJob.propTypes = {
   // eslint-disable-next-line
   job: PropTypes.object,
-};
-
-TitleDataJob.defaultProps = {
-  job: {},
 };
 
 export default TitleDataJob;

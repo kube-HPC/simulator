@@ -8,14 +8,13 @@ const { Text } = Typography;
 const DEFAULT_LENGTH = 30;
 
 const Ellipsis = ({
-  text,
-  length,
-  copyable,
-  type,
-  ellipsis,
-  children,
-  viewDisplayLine,
-  style,
+  text = '',
+  length = DEFAULT_LENGTH,
+  copyable = false,
+  ellipsis = true,
+  children = '',
+  viewDisplayLine = 'inline-flex',
+  style = {},
   ...props
 }) => (
   <Tooltip title={copyable ? 'click to copy' : text || children}>
@@ -42,21 +41,9 @@ Ellipsis.propTypes = {
   children: PropTypes.node,
   length: PropTypes.number,
   copyable: PropTypes.bool,
-  type: PropTypes.string,
   ellipsis: PropTypes.bool,
   viewDisplayLine: PropTypes.string,
   style: PropTypes.objectOf(PropTypes.string),
-};
-
-Ellipsis.defaultProps = {
-  text: '',
-  children: '',
-  length: DEFAULT_LENGTH,
-  copyable: false,
-  ellipsis: true,
-  type: null,
-  viewDisplayLine: 'inline-flex',
-  style: {},
 };
 
 export default Ellipsis;

@@ -22,7 +22,7 @@ const {
 
 const title = 'Create Tensor Board for selected Node';
 
-const PipelineActions = ({ pipeline, className }) => {
+const PipelineActions = ({ pipeline, className = '' }) => {
   const { goTo } = usePath();
   const { deleteStored: remove, stopAllPipeline } = useActions();
 
@@ -34,10 +34,10 @@ const PipelineActions = ({ pipeline, className }) => {
 
   const hasNodes = nodes.length !== 0;
 
-  const onDelete = useCallback(() => deleteConfirmAction(remove, pipeline), [
-    pipeline,
-    remove,
-  ]);
+  const onDelete = useCallback(
+    () => deleteConfirmAction(remove, pipeline),
+    [pipeline, remove]
+  );
 
   const onStop = useCallback(
     () => stopConfirmAction(stopAllPipeline, pipeline),
@@ -112,9 +112,6 @@ PipelineActions.propTypes = {
   // eslint-disable-next-line
   pipeline: PropTypes.object.isRequired,
   className: PropTypes.string,
-};
-PipelineActions.defaultProps = {
-  className: '',
 };
 
 const areEqual = ({ pipeline: a }, { pipeline: b }) => isEqual(a, b);

@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { Link, useLocation, useParams, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import { Button, Dropdown } from 'antd';
 import { ReactComponent as IconAddPipeline } from 'images/no-fill/add-pipeline.svg';
 import { ReactComponent as IconAddAlgorithm } from 'images/algorithm-icon.svg';
@@ -12,6 +13,10 @@ import {
 } from 'const';
 import { PlusOutlined, DownOutlined } from '@ant-design/icons';
 
+const WapperDropDown = styled.div`
+  display: flex;
+`;
+
 const iconSize = { width: '10px', fontSize: '10px' };
 const removeLeftRaduse = {
   borderTopLeftRadius: '0px',
@@ -23,7 +28,7 @@ const removeRightRaduse = {
   borderTopRightRadius: '0px',
   borderBottomRightRadius: '0px',
 };
-const centerDownOutlined = { marginLeft: '-7px' };
+const centerDownOutlined = { marginLeft: '-5px' };
 
 export const topActions = [
   {
@@ -103,7 +108,7 @@ const NewButtonSelect = () => {
     pageName !== LEFT_SIDEBAR_NAMES.JOBS &&
     pageName !== LEFT_SIDEBAR_NAMES.QUEUE;
   return (
-    <>
+    <WapperDropDown>
       {isButtonNew && (
         <Button
           type="primary"
@@ -124,7 +129,7 @@ const NewButtonSelect = () => {
           {!isButtonNew && 'New'}
         </Button>
       </Dropdown>
-    </>
+    </WapperDropDown>
   );
 };
 

@@ -1,11 +1,14 @@
 module.exports = {
-  parser: 'babel-eslint',
+  parser: '@babel/eslint-parser',
   env: {
     browser: true,
     es6: true,
     'jest/globals': true,
   },
   settings: {
+    react: {
+      version: 'detect',
+    },
     'import/resolver': {
       node: {
         paths: ['src'],
@@ -23,12 +26,17 @@ module.exports = {
     SharedArrayBuffer: 'readonly',
   },
   parserOptions: {
+    requireConfigFile: false,
+    babelOptions: {
+      presets: ['@babel/preset-react'],
+    },
     ecmaFeatures: { jsx: true },
     ecmaVersion: 2020,
     sourceType: 'module',
   },
   plugins: ['react', 'prettier', 'react-hooks', 'jsdoc', 'jest'],
   rules: {
+    'react/require-default-props': 'off',
     'no-underscore-dangle': [0],
     'no-plusplus': [0],
     'no-unused-expressions': [0],
@@ -63,5 +71,12 @@ module.exports = {
     'import/no-named-as-default': [0],
     'import/prefer-default-export': [0],
     'react/jsx-closing-tag-location': [0],
+    'react/function-component-definition': [
+      2,
+      {
+        namedComponents: 'arrow-function',
+        unnamedComponents: 'arrow-function',
+      },
+    ],
   },
 };

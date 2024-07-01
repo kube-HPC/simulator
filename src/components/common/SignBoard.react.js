@@ -5,16 +5,20 @@ import _ from 'lodash';
 
 const SignBoard = ({
   onChange,
-  type,
+  type = 'text',
   form,
   name,
   fieldKey,
-  placeholder,
-  msgRules,
-  titleKeyboard,
-  keyboardView,
+  placeholder = '',
+  msgRules = [],
+  titleKeyboard = '',
+  keyboardView = [
+    // Template
+    { title: '', typeButton: 'circle', keys: ['>>', '|', '&'] },
+    { title: 'Nodes', typeButton: 'primary', keys: ['test', 'test2', 'test3'] },
+  ],
   indexKey,
-  width,
+  width = 300,
   nameRef,
   restField,
 }) => {
@@ -124,19 +128,6 @@ const SignBoard = ({
       </Form.Item>
     </Popover>
   );
-};
-
-SignBoard.defaultProps = {
-  width: 380,
-  type: 'text',
-  placeholder: '',
-  msgRules: [],
-  titleKeyboard: '',
-  keyboardView: [
-    // Template
-    { title: '', typeButton: 'circle', keys: ['>>', '|', '&'] },
-    { title: 'Nodes', typeButton: 'primary', keys: ['test', 'test2', 'test3'] },
-  ],
 };
 
 SignBoard.propTypes = {

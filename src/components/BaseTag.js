@@ -14,18 +14,19 @@ const TagTheme = styled(Tag)`
     !props.theme.Styles.isTagFill
       ? `border: 1px solid ${props.$borderColor};background-color:${props.$borderColor}22`
       : props.$isBright
-      ? `border: 1px solid${COLOR.lightGrey}`
-      : undefined}
+        ? `border: 1px solid${COLOR.lightGrey}`
+        : undefined}
 `;
+const WapperChild = styled.span``;
 
 const BaseTag = ({
-  status,
-  children,
-  colorMap,
-  tooltip,
-  isActiveLoader,
-  isError,
   style,
+  status = null,
+  children = null,
+  colorMap = COLOR_PIPELINE_STATUS,
+  tooltip = null,
+  isActiveLoader = true,
+  isError = false,
 }) => {
   const isFailedSchedulingError =
     isError && status === TASK_STATUS.FAILED_SCHEDULING;
@@ -46,7 +47,7 @@ const BaseTag = ({
         icon={
           status === 'active' && isActiveLoader ? <SyncOutlined spin /> : null
         }>
-        {children}
+        <WapperChild>{children}</WapperChild>
       </TagTheme>
     </Tooltip>
   );
@@ -61,15 +62,6 @@ BaseTag.propTypes = {
   style: PropTypes.object,
   isActiveLoader: PropTypes.bool,
   isError: PropTypes.bool,
-};
-
-BaseTag.defaultProps = {
-  children: null,
-  status: null,
-  colorMap: COLOR_PIPELINE_STATUS,
-  tooltip: null,
-  isActiveLoader: true,
-  isError: false,
 };
 
 export default BaseTag;

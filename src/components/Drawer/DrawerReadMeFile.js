@@ -6,7 +6,7 @@ import Drawer from 'components/Drawer';
 import { Button, Space, Modal } from 'antd';
 import { MdEditor } from 'components/common';
 
-const DrawerReadMeFile = ({ name, type, disabled }) => {
+const DrawerReadMeFile = ({ name = null, type = null, disabled }) => {
   const [isChange, setIsChange] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenConfrim, setIsOpenConfrim] = useState(false);
@@ -78,8 +78,5 @@ DrawerReadMeFile.propTypes = {
   type: PropTypes.string,
   disabled: PropTypes.bool.isRequired,
 };
-DrawerReadMeFile.defaultProps = {
-  type: null,
-  name: null,
-};
+
 export default DrawerReadMeFile;

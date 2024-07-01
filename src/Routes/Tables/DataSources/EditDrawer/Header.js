@@ -13,7 +13,19 @@ const HeaderContainer = styled.header`
   align-items: center;
 `;
 
-const Header = ({ status, dataSourceName, git, storage }) =>
+const Header = ({
+  status = undefined,
+  dataSourceName = '',
+  git = {
+    repositoryUrl: null,
+    kind: 'internal',
+  },
+  storage = {
+    kind: 'internal',
+    bucketName: null,
+    endpoint: null,
+  },
+}) =>
   ['FAIL', 'NOT_FOUND'].includes(status) ? null : (
     <HeaderContainer>
       <h2>
@@ -26,6 +38,7 @@ const Header = ({ status, dataSourceName, git, storage }) =>
 
 Header.propTypes = {
   status: PropTypes.string,
+  // eslint-disable-next-line react/no-unused-prop-types
   dataSourceId: PropTypes.string,
   dataSourceName: PropTypes.string,
   git: PropTypes.shape({
@@ -37,21 +50,6 @@ Header.propTypes = {
     bucketName: PropTypes.string,
     endpoint: PropTypes.string,
   }),
-};
-
-Header.defaultProps = {
-  git: {
-    repositoryUrl: null,
-    kind: 'internal',
-  },
-  storage: {
-    kind: 'internal',
-    bucketName: null,
-    endpoint: null,
-  },
-  dataSourceName: '',
-  status: undefined,
-  dataSourceId: undefined,
 };
 
 export default Header;

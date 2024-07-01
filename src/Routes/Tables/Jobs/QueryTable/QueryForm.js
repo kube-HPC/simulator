@@ -9,7 +9,7 @@ import { FiltersForms } from 'styles';
 import { RangePickerNow } from 'components/common';
 import { isPinActiveJobVar } from 'cache';
 
-const QueryForm = ({ onSubmit, params, zoomDate }) => {
+const QueryForm = ({ params, zoomDate = Date.now(), onSubmit = () => {} }) => {
   const [form] = Form.useForm();
   const isPinActiveJobs = useReactiveVar(isPinActiveJobVar);
 
@@ -166,13 +166,6 @@ const QueryForm = ({ onSubmit, params, zoomDate }) => {
 
 QueryForm.propTypes = {
   onSubmit: PropTypes.func,
-};
-QueryForm.defaultProps = {
-  onSubmit: () => {},
-};
-
-QueryForm.propTypes = {
-  onSubmit: PropTypes.func,
   params: PropTypes.shape({
     algorithmName: PropTypes.string,
     pipelineName: PropTypes.string,
@@ -187,8 +180,5 @@ QueryForm.propTypes = {
 
   zoomDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
 };
-QueryForm.defaultProps = {
-  onSubmit: () => {},
-  zoomDate: Date.now(),
-};
+
 export default React.memo(QueryForm);

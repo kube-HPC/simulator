@@ -20,6 +20,7 @@ import {
   ZoomInOutlined,
   ZoomOutOutlined,
 } from '@ant-design/icons';
+/* eslint-disable import/no-cycle */
 import { useLocalStorageGraphMode } from 'hooks';
 import { generateStyles, formatEdge, formatNode } from '../graphUtils';
 
@@ -62,10 +63,10 @@ export const ButtonsPanel = styled.div`
 
 const GraphPreview = ({
   pipeline,
-  keyIndex,
-  isBuildAllFlows,
-  isMinified,
-  clickNode,
+  keyIndex = undefined,
+  isBuildAllFlows = false,
+  isMinified = true,
+  clickNode = () => {},
 }) => {
   const graphRef = useRef(null);
   const wizardContext = useWizardContext();
@@ -91,8 +92,8 @@ const GraphPreview = ({
     keyIndex && pipeline?.streaming?.flows
       ? Object.keys(pipeline?.streaming?.flows)[keyIndex]
       : valuesState?.streaming?.defaultFlow
-      ? valuesState?.streaming?.defaultFlow
-      : null;
+        ? valuesState?.streaming?.defaultFlow
+        : null;
 
   const { backendApiUrl } = useSelector(selectors.config);
   const [graphPreview, setGraphPreview] = useState({ nodes: [], edges: [] });
@@ -164,7 +165,7 @@ const GraphPreview = ({
 
   const [showGraph, toggleForceUpdate] = useReducer(p => !p, true); // toggleForceUpdate
 
-  const graphOptions = useCallback(
+  const graphOptions = useMemo(
     () => ({
       ...generateStyles({
         direction: 'LR',
@@ -343,7 +344,7 @@ const GraphPreview = ({
 
   useEffect(() => {
     const network = graphRef?.current?.Network || null;
-    const gOption = graphOptions();
+    const gOption = graphOptions;
     if (network != null && isDataNode && gOption != null) {
       network.setOptions(gOption);
       network.setData(adaptedGraph);
@@ -365,7 +366,7 @@ const GraphPreview = ({
       {showGraph && (
         <Graph
           graph={adaptedGraph}
-          options={graphOptions()}
+          options={graphOptions}
           //   events={events}
           ref={graphRef}
           getNetwork={network => {
@@ -404,12 +405,6 @@ GraphPreview.propTypes = {
     edges: PropTypes.arrayOf(PropTypes.object).isRequired,*
  //   jobId: PropTypes.string.isRequired,
   }).isRequired, */
-};
-GraphPreview.defaultProps = {
-  keyIndex: undefined,
-  isBuildAllFlows: false,
-  isMinified: true,
-  clickNode: () => {},
 };
 
 /* const isSameGraph = (a, b) =>
