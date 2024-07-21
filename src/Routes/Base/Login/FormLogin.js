@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Button, Form, Input, Typography, Checkbox } from 'antd';
 import { FlexBox } from 'components/common';
-import keycloak from '../../../keycloak';
+import KeycloakServices from '../../../keycloak';
 
 const { Title } = Typography;
 
 const FormLogin = () => {
+  const { initKeycloak } = KeycloakServices;
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -16,7 +17,7 @@ const FormLogin = () => {
 
   const onFinish = () => {
     // event.preventDefault();
-    keycloak
+    /* keycloak
       .init({ onLoad: 'login-required' })
       .then(authenticated => {
         // console.log(authenticated);
@@ -37,7 +38,9 @@ const FormLogin = () => {
       })
       .catch(error => {
         console.error('Failed to initialize Keycloak:', error);
-      });
+      }); */
+
+    initKeycloak(<>login</>, <>error</>, username, password);
   };
 
   return (
