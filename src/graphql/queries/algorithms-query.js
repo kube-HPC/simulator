@@ -12,6 +12,7 @@ const ALGORITHMS_QUERY = gql`
         gpu
         mem
         minHotWorkers
+        isSatisfied
         modified
         reservedMemory
         type
@@ -52,6 +53,7 @@ const ALGORITHMS_QUERY = gql`
           stopped
         }
       }
+
       algorithmsCount
     }
   }

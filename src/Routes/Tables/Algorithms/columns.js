@@ -5,16 +5,25 @@ import Moment from 'react-moment';
 import { Ellipsis } from 'components/common';
 import { sorter } from 'utils/stringHelper';
 import { copyToClipboard } from 'utils';
-import { errorsCode } from '@hkube/consts';
+import { COLOR_PIPELINE_STATUS } from 'styles/colors';
+import { pipelineStatuses as PIPELINE_STATUS, errorsCode } from '@hkube/consts';
 import AlgorithmActions from './AlgorithmActions.react';
 import AlgorithmBuildStats from './AlgorithmBuildStats.react';
 
+const { FAILED } = PIPELINE_STATUS;
 const LastModified = timestamp => (
   <Tag>
     <Moment format="DD/MM/YY HH:mm:ss">{+timestamp}</Moment>
   </Tag>
 );
-const HotWorkers = minHotWorkers => <Tag>{minHotWorkers}</Tag>;
+// eslint-disable-next-line react/prop-types, no-unused-vars
+const HotWorkers = ({ minHotWorkers, isSatisfied }) => (
+  <Tag
+    title={!isSatisfied ? 'isSatisfied' : null}
+    color={!isSatisfied ? COLOR_PIPELINE_STATUS[FAILED] : ''}>
+    {minHotWorkers}
+  </Tag>
+);
 const Memory = mem => <Tag>{mem || 'No Memory Specified'}</Tag>;
 const Cpu = cpu => <Tag>{cpu || 'No CPU Assigned'}</Tag>;
 const Image = algorithmImage =>
@@ -88,7 +97,6 @@ export default [
   {
     width: '7%',
     title: 'Min Hot Workers',
-    dataIndex: ['minHotWorkers'],
     key: 'minHotWorkers',
     sorter: sortByMinHotWorkers,
     render: HotWorkers,
