@@ -19,7 +19,11 @@ const LastModified = timestamp => (
 // eslint-disable-next-line react/prop-types, no-unused-vars
 const HotWorkers = ({ minHotWorkers, isSatisfied }) => (
   <Tag
-    title={!isSatisfied ? 'isSatisfied' : null}
+    title={
+      !isSatisfied
+        ? 'There are not enough workers for the algorithm requirements'
+        : null
+    }
     color={!isSatisfied ? COLOR_PIPELINE_STATUS[FAILED] : ''}>
     {minHotWorkers}
   </Tag>
