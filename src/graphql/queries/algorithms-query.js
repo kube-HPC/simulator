@@ -11,7 +11,7 @@ const ALGORITHMS_QUERY = gql`
         env
         gpu
         mem
-        #unscheduledReason
+        unscheduledReason
         minHotWorkers
         modified
         reservedMemory
