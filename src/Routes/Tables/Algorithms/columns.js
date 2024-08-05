@@ -5,29 +5,17 @@ import Moment from 'react-moment';
 import { Ellipsis } from 'components/common';
 import { sorter } from 'utils/stringHelper';
 import { copyToClipboard } from 'utils';
-import { COLOR_PIPELINE_STATUS } from 'styles/colors';
-import { pipelineStatuses as PIPELINE_STATUS, errorsCode } from '@hkube/consts';
+import { errorsCode } from '@hkube/consts';
 import AlgorithmActions from './AlgorithmActions.react';
 import AlgorithmBuildStats from './AlgorithmBuildStats.react';
 
-const { FAILED } = PIPELINE_STATUS;
 const LastModified = timestamp => (
   <Tag>
     <Moment format="DD/MM/YY HH:mm:ss">{+timestamp}</Moment>
   </Tag>
 );
 // eslint-disable-next-line react/prop-types, no-unused-vars
-const HotWorkers = ({ minHotWorkers, isSatisfied }) => (
-  <Tag
-    title={
-      !isSatisfied
-        ? 'There are not enough workers for the algorithm requirements'
-        : null
-    }
-    color={!isSatisfied ? COLOR_PIPELINE_STATUS[FAILED] : ''}>
-    {minHotWorkers}
-  </Tag>
-);
+const HotWorkers = ({ minHotWorkers }) => <Tag>{minHotWorkers}</Tag>;
 const Memory = mem => <Tag>{mem || 'No Memory Specified'}</Tag>;
 const Cpu = cpu => <Tag>{cpu || 'No CPU Assigned'}</Tag>;
 const Image = algorithmImage =>
@@ -40,17 +28,22 @@ const Image = algorithmImage =>
   ) : (
     <Tag>No Image</Tag>
   );
-const Name = (name, record) => (
-  <Ellipsis>
-    {name}{' '}
-    {record?.errors?.includes(errorsCode.NOT_LAST_VERSION_ALGORITHM) && (
-      <WarningOutlined
-        title="Warning : Set algorithm's current version to the newly built"
-        style={{ color: 'red', fontSize: '15px' }}
-      />
-    )}
-  </Ellipsis>
-);
+const Name = (name, record) =>
+  record?.unscheduledReason ? (
+    <Tooltip title={record?.unscheduledReason}>
+      <Typography style={{ color: 'red' }}>{name}</Typography>
+    </Tooltip>
+  ) : (
+    <Ellipsis>
+      {name}{' '}
+      {record?.errors?.includes(errorsCode.NOT_LAST_VERSION_ALGORITHM) && (
+        <WarningOutlined
+          title="Warning : Set algorithm's current version to the newly built"
+          style={{ color: 'red', fontSize: '15px' }}
+        />
+      )}
+    </Ellipsis>
+  );
 const BuildStats = builds => <AlgorithmBuildStats builds={builds} />;
 const renderAction = (_, record) => <AlgorithmActions record={record} />;
 

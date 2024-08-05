@@ -11,8 +11,8 @@ const ALGORITHMS_QUERY = gql`
         env
         gpu
         mem
+        #unscheduledReason
         minHotWorkers
-        isSatisfied
         modified
         reservedMemory
         type
