@@ -41,6 +41,7 @@
     "express": "^4.17.1",
     "graphql": "^15.5.2",
     "isnumber": "^1.0.0",
+    "keycloak-js": "^25.0.1",
     "qs": "^6.10.1",
     "react-apexcharts": "^1.4.0",
     "react-collapse": "^5.1.0",

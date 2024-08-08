@@ -53,8 +53,8 @@ const PipelinesTable = () => {
     onSubmitFilter(instanceFilter.pipelines);
   }, [query.data?.pipelines?.pipelinesCount]);
 
-  if (query.loading && pipelineList.length === 0) return <SkeletonLoader />;
-  if (query.error) return `Error! ${query.error.message}`;
+  if ((query.loading && pipelineList.length === 0) || query.error)
+    return <SkeletonLoader />;
 
   return (
     <>
@@ -76,6 +76,9 @@ const PipelinesTable = () => {
           onRow={onRow}
           scroll={{
             y: '80vh',
+          }}
+          locale={{
+            emptyText: <SkeletonLoader />,
           }}
         />
       </Space>

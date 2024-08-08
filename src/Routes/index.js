@@ -16,6 +16,9 @@ import { Drawer as SiderBarRightDrawer } from './SidebarRight';
 import SidebarLeft from './Base/SidebarLeft';
 import UserGuide from './Base/UserGuide';
 import LoadingScreen from './Base/LoadingScreen';
+
+import LoginPage from './Base/Login/LoginPage';
+
 import Tables from './Tables';
 
 const LayoutFullHeight = styled(Layout)`
@@ -59,6 +62,8 @@ const RoutesNav = () => {
   }, []);
 
   const [isDataAvailable, setIsDataAvailable] = useState(false);
+  const [isLogin] = useState(false);
+
   const {
     apolloClient,
     openNotification,
@@ -90,7 +95,9 @@ const RoutesNav = () => {
     setIsNotificationErrorShow,
   ]);
 
-  return isDataAvailable ? (
+  return !isLogin ? (
+    <LoginPage />
+  ) : isDataAvailable ? (
     <ThemeProvider theme={{ ...Theme }}>
       <ApolloProvider client={apolloClient}>
         <UserGuide />

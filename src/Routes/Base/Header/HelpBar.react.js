@@ -6,6 +6,7 @@ import { FlexBox, Icons } from 'components/common';
 import styled from 'styled-components';
 import Settings from './Settings/Settings.react';
 import InactiveModeTag from './InactiveMode';
+import IconUser from './IconUser';
 import ExperimentPicker from './ExperimentPicker.react';
 
 const Container = styled(FlexBox.Auto)`
@@ -17,7 +18,7 @@ const HelpBar = () => (
     <InactiveModeTag />
 
     <ExperimentPicker />
-
+    <IconUser name="zivglik" />
     <Popover content={<Settings />} placement="bottomRight" trigger="click">
       <Icons.Hover type={<MenuOutlined title="Settings" />} />
     </Popover>
