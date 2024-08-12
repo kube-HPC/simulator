@@ -213,7 +213,7 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
         .post(`/versions/algorithms/apply`, {
           name: dataResponse.algorithm.name,
           version: dataResponse.algorithm.version,
-          force: refCheckForceStopAlgorithms.current.state.checked,
+          force: refCheckForceStopAlgorithms?.current?.input?.checked || false,
         })
         .then(() => {
           setIsSubmitLoading(false);
