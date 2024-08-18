@@ -73,9 +73,12 @@ const AlgorithmsTable = () => {
       (queryVal.data &&
         queryVal.data.algorithms &&
         queryVal.data.algorithms.list &&
-        [...queryVal.data.algorithms.list].sort((x, y) =>
-          x.modified < y.modified ? 1 : -1
-        )) ||
+        [...queryVal.data.algorithms.list].sort((x, y) => {
+          if (x.unscheduledReason && !y.unscheduledReason) return -1;
+          if (!x.unscheduledReason && y.unscheduledReason) return 1;
+
+          return x.modified < y.modified ? 1 : -1;
+        })) ||
       []
     );
     //  );
