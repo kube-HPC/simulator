@@ -55,9 +55,11 @@ const AlgorithmsTable = () => {
   */
   const onSubmitFilter = () => {};
 
-  if (query.loading && query.data?.algorithms?.list?.length === 0)
+  if (
+    (query.loading && query.data?.algorithms?.list?.length === 0) ||
+    query.error
+  )
     return <SkeletonLoader />;
-  if (query.error) return `Error! ${query.error.message}`;
 
   const getList = queryVal => {
     const filterValue = instanceFilter.algorithms.qAlgorithmName;
