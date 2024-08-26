@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { animated, useSpring } from 'react-spring';
 
 import { useSiteThemeMode } from 'hooks';
-import Icon from '@ant-design/icons';
+import Icon, { FilterTwoTone } from '@ant-design/icons';
 import { Badge, Tag } from 'antd';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { useErrorLogs, useCounters } from 'hooks/graphql';
@@ -119,8 +119,23 @@ const SidebarLeft = () => {
         label: (
           <Link to={{ pathname: path, search: location.search }}>
             <Name>{name}</Name>{' '}
-            <BadgeStyle dot={isFilters} offset={[-7, 0]}>
-              <Tag style={tagStyle}>{dataCount[name]}</Tag>
+            <BadgeStyle
+              count={
+                (isFilters && (
+                  <FilterTwoTone size="small" style={{ fontSize: '10px' }} />
+                )) ||
+                null
+              }
+              offset={[-7, 0]}>
+              <Tag
+                style={tagStyle}
+                color={
+                  name === 'algorithms' &&
+                  instanceCounter.algorithmsUnscheduledReason > 0 &&
+                  'error'
+                }>
+                {dataCount[name]}
+              </Tag>
             </BadgeStyle>
           </Link>
         ),

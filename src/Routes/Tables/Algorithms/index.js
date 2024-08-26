@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { SkeletonLoader } from 'components/common';
 import { Route, Routes } from 'react-router-dom';
 import { Table } from 'components';
@@ -55,25 +55,21 @@ const AlgorithmsTable = () => {
   */
   const onSubmitFilter = () => {};
 
-  if (query.loading && query.data?.algorithms?.list?.length === 0)
-    return <SkeletonLoader />;
-  if (query.error) return `Error! ${query.error.message}`;
-
-  const getList = queryVal => {
+  const getList = useMemo(() => {
     const filterValue = instanceFilter.algorithms.qAlgorithmName;
 
-    if (filterValue != null && queryVal.data?.algorithms?.list) {
-      const filterAlgorithm = queryVal.data?.algorithms?.list.filter(item =>
+    if (filterValue != null && query.data?.algorithms?.list) {
+      const filterAlgorithm = query.data?.algorithms?.list.filter(item =>
         item.name.includes(filterValue)
       );
       return [...filterAlgorithm];
     }
 
     return (
-      (queryVal.data &&
-        queryVal.data.algorithms &&
-        queryVal.data.algorithms.list &&
-        [...queryVal.data.algorithms.list].sort((x, y) => {
+      (query.data &&
+        query.data.algorithms &&
+        query.data.algorithms.list &&
+        [...query.data.algorithms.list].sort((x, y) => {
           if (x.unscheduledReason && !y.unscheduledReason) return -1;
           if (!x.unscheduledReason && y.unscheduledReason) return 1;
 
@@ -81,8 +77,10 @@ const AlgorithmsTable = () => {
         })) ||
       []
     );
-    //  );
-  };
+  }, [instanceFilter.algorithms.qAlgorithmName, query.data]);
+
+  if (query.loading && query.data === undefined) return <SkeletonLoader />;
+  if (query.error) return `Error! ${query.error.message}`;
 
   return (
     <>
@@ -99,14 +97,11 @@ const AlgorithmsTable = () => {
 
         <TableAlgorithms
           rowKey={rowKey}
-          dataSource={getList(query)}
+          dataSource={getList}
           columns={algorithmColumns}
           onRow={onRow}
           scroll={{
             y: '80vh',
-          }}
-          locale={{
-            emptyText: <SkeletonLoader />,
           }}
         />
       </Space>
