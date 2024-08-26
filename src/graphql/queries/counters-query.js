@@ -13,6 +13,9 @@ const COUNTERS_QUERY = gql`
     }
     algorithms {
       algorithmsCount
+      list {
+        unscheduledReason
+      }
     }
     jobsAggregated(
       experimentName: $experimentName

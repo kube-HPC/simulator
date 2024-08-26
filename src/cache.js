@@ -25,6 +25,7 @@ export const instanceCounterVar = makeVar({
   jobsActive: 0,
   pipelines: 0,
   algorithms: 0,
+  algorithmsUnscheduledReason: 0,
   drivers: 0,
   workers: 0,
   dataSources: 0,

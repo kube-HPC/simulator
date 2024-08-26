@@ -24,6 +24,9 @@ const useCounters = () => {
         jobs: data?.jobsAggregated?.jobsCount || 0,
         pipelines: data?.pipelines?.pipelinesCount || 0,
         algorithms: data?.algorithms?.algorithmsCount || 0,
+        algorithmsUnscheduledReason:
+          data?.algorithms?.list.filter(x => x.unscheduledReason != null)
+            .length || 0,
         queue:
           (data?.queueCount?.managed || 0) + (data?.queueCount?.preferred || 0),
         dataSources: data?.dataSources?.dataSourcesCount,
