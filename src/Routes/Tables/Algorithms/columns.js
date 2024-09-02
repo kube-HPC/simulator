@@ -1,5 +1,5 @@
 import React from 'react';
-import { WarningOutlined } from '@ant-design/icons';
+import { WarningOutlined, SettingOutlined } from '@ant-design/icons';
 import { Tag, Tooltip, Typography } from 'antd';
 import Moment from 'react-moment';
 import { Ellipsis } from 'components/common';
@@ -40,6 +40,12 @@ const Name = (name, record) =>
         <WarningOutlined
           title="Warning : Set algorithm's current version to the newly built"
           style={{ color: 'red', fontSize: '15px' }}
+        />
+      )}
+      {record?.devMode && (
+        <SettingOutlined
+          title={record?.devFolder}
+          style={{ color: 'orange', fontSize: '15px' }}
         />
       )}
     </Ellipsis>

@@ -7,7 +7,7 @@ import { useQuery, useReactiveVar } from '@apollo/client';
 import { PIPELINE_QUERY } from 'graphql/queries';
 
 import { pipelineListVar, instanceFiltersVar } from 'cache';
-import { Space } from 'antd';
+import { Space, Empty } from 'antd';
 
 import pipelineColumns from './pipelineColumns';
 import OverviewDrawer from './OverviewDrawer';
@@ -76,6 +76,13 @@ const PipelinesTable = () => {
           onRow={onRow}
           scroll={{
             y: '80vh',
+          }}
+          locale={{
+            emptyText: (
+              <Empty
+                description={<span>No results match your search criteria</span>}
+              />
+            ),
           }}
         />
       </Space>
