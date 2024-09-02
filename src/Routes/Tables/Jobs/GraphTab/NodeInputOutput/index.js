@@ -103,7 +103,7 @@ const NodeInputOutput = ({
     [
       !isShowOneRow && statusCount.active > 0 ? TASK_STATUS.ACTIVE : null,
       !isShowOneRow && statusCount.failed > 0 ? TASK_STATUS.FAILED : null,
-      !isShowOneRow && statusCount.FailedScheduling > 0
+      !isShowOneRow && statusCount.failedScheduling > 0
         ? TASK_STATUS.FAILED_SCHEDULING
         : null,
     ].filter(Boolean)

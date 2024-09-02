@@ -19,13 +19,14 @@ import usePath from './../usePath';
 const AlgorithmsTabs = ({ algorithm }) => {
   const isFirstRender = useRef(true);
   const { tabKey: activeKey, goTo } = usePath();
-  const setActiveKey = useCallback(tab => goTo.overview({ nextTabKey: tab }), [
-    goTo,
-  ]);
+  const setActiveKey = useCallback(
+    tab => goTo.overview({ nextTabKey: tab }),
+    [goTo]
+  );
 
   const [readme, setReadme] = useState();
   const [isBuildFirstFail] = useState(
-    algorithm?.builds.lenght > 0 && algorithm?.builds[0]?.status === 'failed'
+    algorithm?.builds.length > 0 && algorithm?.builds[0]?.status === 'failed'
   );
 
   const { asyncFetch, post } = useReadme(useReadme.TYPES.ALGORITHM);
