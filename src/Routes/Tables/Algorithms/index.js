@@ -4,7 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 import { Table } from 'components';
 import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
-import { Space } from 'antd';
+import { Space, Empty } from 'antd';
 import { instanceFiltersVar } from 'cache'; // algorithmsListVar
 import { ALGORITHMS_QUERY } from 'graphql/queries';
 import styled from 'styled-components';
@@ -102,6 +102,13 @@ const AlgorithmsTable = () => {
           onRow={onRow}
           scroll={{
             y: '80vh',
+          }}
+          locale={{
+            emptyText: (
+              <Empty
+                description={<span>No results match your search criteria</span>}
+              />
+            ),
           }}
         />
       </Space>
