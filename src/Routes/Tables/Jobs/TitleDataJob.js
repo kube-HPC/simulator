@@ -29,14 +29,24 @@ const Id = (jobID, pipelineName) => {
         disabled={grafanaUrl === undefined}
         onClick={grafanaUrl !== undefined ? openUrl(grafanaUrl) : null}>
         <Image
-          title={`open link to Grafana for jobID ${jobID}, pipeline name ${pipelineName}`}
+          title={
+            grafanaUrl !== undefined
+              ? 'Grafana Steaming Edges dashboard'
+              : 'No url Grafana'
+          }
           disabled={grafanaUrl === undefined}
           preview={false}
-          style={{
-            width: '15px',
-            filter: 'grayscale(100%)',
-            cursor: 'pointer',
-          }}
+          style={
+            grafanaUrl !== undefined
+              ? {
+                  width: '15px',
+                  cursor: 'pointer',
+                }
+              : {
+                  width: '15px',
+                  filter: 'grayscale(100%)',
+                }
+          }
           src={GRAFANA_ICON}
         />
       </TextLink>

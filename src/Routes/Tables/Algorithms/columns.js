@@ -18,6 +18,7 @@ const LastModified = timestamp => (
 const HotWorkers = ({ minHotWorkers }) => <Tag>{minHotWorkers}</Tag>;
 const Memory = mem => <Tag>{mem || 'No Memory Specified'}</Tag>;
 const Cpu = cpu => <Tag>{cpu || 'No CPU Assigned'}</Tag>;
+
 const Image = algorithmImage =>
   algorithmImage ? (
     <Tooltip title={algorithmImage}>
@@ -28,28 +29,32 @@ const Image = algorithmImage =>
   ) : (
     <Tag>No Image</Tag>
   );
-const Name = (name, record) =>
-  record?.unscheduledReason ? (
-    <Tooltip title={record?.unscheduledReason}>
-      <Typography style={{ color: 'red' }}>{name}</Typography>
-    </Tooltip>
-  ) : (
-    <Ellipsis>
-      {name}{' '}
-      {record?.errors?.includes(errorsCode.NOT_LAST_VERSION_ALGORITHM) && (
-        <WarningOutlined
-          title="Warning : Set algorithm's current version to the newly built"
-          style={{ color: 'red', fontSize: '15px' }}
-        />
-      )}
-      {record?.devMode && (
-        <SettingOutlined
-          title={record?.devFolder}
-          style={{ color: 'orange', fontSize: '15px' }}
-        />
-      )}
-    </Ellipsis>
-  );
+const Name = (name, record) => (
+  <Ellipsis style={{ width: '170px' }}>
+    {record?.unscheduledReason ? (
+      <Tooltip title={record?.unscheduledReason}>
+        <Typography style={{ color: 'red' }}>{name}</Typography>
+      </Tooltip>
+    ) : (
+      <>
+        {name}
+        {record?.errors?.includes(errorsCode.NOT_LAST_VERSION_ALGORITHM) && (
+          <WarningOutlined
+            title="Warning: Set algorithm's current version to the newly built"
+            style={{ color: 'red', fontSize: '12px', marginLeft: '2px' }}
+          />
+        )}
+      </>
+    )}
+    {record?.devMode && (
+      <SettingOutlined
+        title={record?.devFolder}
+        style={{ color: 'orange', fontSize: '12px', marginLeft: '2px' }}
+      />
+    )}
+  </Ellipsis>
+);
+
 const BuildStats = builds => <AlgorithmBuildStats builds={builds} />;
 const renderAction = (_, record) => <AlgorithmActions record={record} />;
 
@@ -60,7 +65,7 @@ const sortByMinHotWorkers = (a, b) => sorter(a.minHotWorkers, b.minHotWorkers);
 const sortByLastModified = (a, b) => sorter(a.modified, b.modified);
 export default [
   {
-    width: '12%',
+    width: '13%',
     title: 'Algorithm Name',
     dataIndex: ['name'],
     key: 'name',
@@ -68,7 +73,7 @@ export default [
     render: Name,
   },
   {
-    width: '40%',
+    width: '39%',
     title: 'Algorithm Image',
     dataIndex: ['algorithmImage'],
     key: 'algorithmImage',

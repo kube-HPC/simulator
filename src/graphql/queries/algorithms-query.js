@@ -26,6 +26,8 @@ const ALGORITHMS_QUERY = gql`
           batchTolerance
           progressVerbosityLevel
           ttl
+          devMode
+          devFolder
           concurrentPipelines {
             amount
             rejectOnFailure
