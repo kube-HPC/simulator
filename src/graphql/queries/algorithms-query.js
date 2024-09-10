@@ -24,6 +24,8 @@ const ALGORITHMS_QUERY = gql`
           debug
           pending
           batchTolerance
+          devMode
+          devFolder
           progressVerbosityLevel
           ttl
           concurrentPipelines {

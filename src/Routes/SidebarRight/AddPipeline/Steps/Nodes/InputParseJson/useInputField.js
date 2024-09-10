@@ -134,7 +134,19 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
 
       rules.forEach(rule => {
         if (isOneValid === false) {
-          if (label === 'Value' && rule === 'array' && isArray(srcValue)) {
+          if (
+            label === '(@)Output of' &&
+            rule === 'flowinput' &&
+            srcValue.includes('flowinput')
+          ) {
+            setIsValid(true);
+
+            isOneValid = true;
+          } else if (
+            label === 'Value' &&
+            rule === 'array' &&
+            isArray(srcValue)
+          ) {
             setIsValid(true);
             antFields.onChange(JSON.parse(srcValue));
             isOneValid = true;
