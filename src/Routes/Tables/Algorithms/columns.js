@@ -2,7 +2,6 @@ import React from 'react';
 import { WarningOutlined, SettingOutlined } from '@ant-design/icons';
 import { Tag, Tooltip, Typography } from 'antd';
 import Moment from 'react-moment';
-import { Ellipsis } from 'components/common';
 import { sorter } from 'utils/stringHelper';
 import { copyToClipboard } from 'utils';
 import { errorsCode } from '@hkube/consts';
@@ -34,21 +33,29 @@ const Name = (name, record) =>
       <Typography style={{ color: 'red' }}>{name}</Typography>
     </Tooltip>
   ) : (
-    <Ellipsis>
-      {name}{' '}
-      {record?.errors?.includes(errorsCode.NOT_LAST_VERSION_ALGORITHM) && (
-        <WarningOutlined
-          title="Warning : Set algorithm's current version to the newly built"
-          style={{ color: 'red', fontSize: '15px' }}
-        />
-      )}
-      {record?.devMode && (
-        <SettingOutlined
-          title={record?.devFolder}
-          style={{ color: 'orange', fontSize: '15px' }}
-        />
-      )}
-    </Ellipsis>
+    <div>
+      <Tooltip title="Click to Copy">
+        <Typography.Text onClick={() => copyToClipboard(name)}>
+          {name}
+        </Typography.Text>
+      </Tooltip>
+      <span>
+        {record?.errors?.includes(errorsCode.NOT_LAST_VERSION_ALGORITHM) && (
+          <Tooltip title="Warning : Set algorithm's current version to the newly built">
+            <WarningOutlined
+              style={{ color: 'red', fontSize: '12px', marginLeft: '5px' }}
+            />
+          </Tooltip>
+        )}
+        {record?.options?.devMode && (
+          <Tooltip title={record?.options?.devFolder}>
+            <SettingOutlined
+              style={{ color: 'orange', fontSize: '12px', marginLeft: '5px' }}
+            />{' '}
+          </Tooltip>
+        )}
+      </span>
+    </div>
   );
 const BuildStats = builds => <AlgorithmBuildStats builds={builds} />;
 const renderAction = (_, record) => <AlgorithmActions record={record} />;
