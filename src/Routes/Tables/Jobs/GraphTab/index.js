@@ -126,7 +126,7 @@ const GraphTab = ({ graph, pipeline }) => {
       edges: []
         .concat(graph.edges)
         .filter(item => item)
-        .map(formatEdge),
+        .map(edge => formatEdge(edge, pipeline)),
     };
 
     return res;
