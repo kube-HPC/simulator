@@ -14,11 +14,36 @@ const fromScale = [0, 100];
 const toScale = [1, 6];
 const scaleThroughput = CappedScale(fromScale, toScale);
 
-const _formatTitle = metrics =>
+/* const _formatTitle = metrics =>
   Object.entries(metrics)
-    .map(([k, v]) => `${k}: ${v}`)
-    .join('\n');
+    .map(([k, v]) => `${k}:${v}`)
+    .join('\n'); */
 
+const _formatToolTip = (metrics, fromNode, toNode) => `
+ <pre style="padding:20px">
+    <b>${fromNode}</b>
+    Messages produce rate: ${metrics.reqRate} per sec.
+    Messages in queue: ${metrics.queueSize}.
+    Time messages spent in queue: ${metrics.queueTimeMs} ms.
+    Avg number of messages in queue: ${metrics.avgQueueSize}.
+    Handle acknowledge revieved after:${metrics.roundTripTimeMs} ms.
+    Total sent: ${metrics.totalRequests}.
+    Total handle acknowledged: ${metrics.totalResponses}.
+    Dropped messages: ${metrics.totalDropped}.
+    <hr>
+    <b>${toNode}</b>
+    Message process rate: ${metrics.resRate}.
+    Number of instances: ${metrics.currentSize}.
+    Needed instances: ${metrics.requiered}.
+    Process rate: ${metrics.resRate} Messages per second.
+    Message process time: ${metrics.processingTimeMs} ms.
+  </pre>
+`;
+const htmlTitle = html => {
+  const container = document.createElement('div');
+  container.innerHTML = html;
+  return container;
+};
 export const formatEdge = edge => {
   const { value, ...rest } = edge;
   const [group] = value?.types ?? [];
@@ -32,15 +57,15 @@ export const formatEdge = edge => {
   let styles = {};
   if (metrics) {
     const { throughput } = metrics;
-    const title = _formatTitle(metrics);
+    const title = htmlTitle(_formatToolTip(metrics, edge.from, edge.to));
     const label = `${throughput}%`; // for debugging...
     const width = scaleThroughput(throughput) / 1.5;
     const edgeColor =
       throughput > 0 && throughput < 50
         ? COLOR.redPale
         : throughput > 50 && throughput < 80
-        ? COLOR.blueLight
-        : COLOR.greenLight;
+          ? COLOR.blueLight
+          : COLOR.greenLight;
     const color = { color: edgeColor };
     styles = { title, label, width, color };
   }
