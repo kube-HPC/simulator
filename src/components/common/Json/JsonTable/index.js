@@ -42,7 +42,7 @@ const ItemByValueType = ({
   );
 
   const columns = useMemo(() => getColumns({ obj, vertical }), [obj, vertical]);
-  if (name === 'flowInput') {
+  if (name.toLowerCase() === 'flowinput') {
     return (
       <>
         <Button onClick={handleDownload}>Download</Button>

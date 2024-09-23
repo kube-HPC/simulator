@@ -19,8 +19,8 @@ const TextLink = styled(Typography.Text)`
 `;
 const openUrl = url => () => window.open(url);
 const Id = (jobID, pipelineName) => {
-  const { grafanaUrl } =
-    `${useSelector(selectors.connection)}/d/pWF8HslVk/hkube-streaming-edges?orgId=1&refresh=5s&from=now-3h&to=now&var-Pipeline_Name=${pipelineName}&var-Job_ID=${jobID}`;
+  const grafanaUrl = `${useSelector(selectors.connection)}/d/pWF8HslVk/hkube-streaming-edges?orgId=1&refresh=5s&from=now-3h&to=now&var-Pipeline_Name=${pipelineName}&var-Job_ID=${jobID}`;
+
   return (
     <Flex>
       <Typography.Text>{jobID}</Typography.Text>
