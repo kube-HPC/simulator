@@ -197,9 +197,11 @@ export const formatNode =
       }`,
       x: (position && position?.nodesPostions[node.nodeName]?.x) || 0,
       y: (position && position?.nodesPostions[node.nodeName]?.y) || 0,
-      label: meta?.extra?.batch
-        ? `${meta.nodeName} (${meta.extra.batch})`
-        : `${meta.nodeName} `,
+      label: `${
+        meta?.extra?.batch
+          ? `${meta.nodeName} (${meta.extra.batch})`
+          : `${meta.nodeName}`
+      } ${node.devMode ? 'devMode' : ''}`,
     };
     /** @type {NodeOptions} */
     const batchStyling = isBatchStyling

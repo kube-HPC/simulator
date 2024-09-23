@@ -6,6 +6,8 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled from 'styled-components';
 import { notification } from 'utils';
 import { logModes, podStatus } from '@hkube/consts';
+import BaseTag from 'components/BaseTag';
+import { COLOR_TASK_STATUS } from 'styles/colors';
 
 import {
   CopyOutlined,
@@ -99,10 +101,8 @@ const NodeLogs = ({
   const [isStatusFailedScheduling] = useState(
     node?.status === GRAPH_TYPES.STATUS.FAILED_SCHEDULING || false
   );
-  const [
-    isStatusFailedSchedulingTask,
-    setIsStatusFailedSchedulingTask,
-  ] = useState(false);
+  const [isStatusFailedSchedulingTask, setIsStatusFailedSchedulingTask] =
+    useState(false);
 
   const oTask = useMemo(
     () => taskDetails.find(t => t.taskId === currentTask) || taskDetails[0],
@@ -245,11 +245,26 @@ const NodeLogs = ({
                     width: '150px',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    borderColor: openPopupOverListTasks ? '#0070ff' : '',
+                    borderColor: openPopupOverListTasks
+                      ? '#0070ff'
+                      : COLOR_TASK_STATUS[oTask.status || node.status],
                   }}
                   shape="round"
                   icon={taskDetails.length < 2 ? '' : <DownOutlined />}
                   disabled={taskDetails.length < 2}>
+                  {oTask?.status && (
+                    <BaseTag
+                      style={{ padding: '2px', lineHeight: '9px' }}
+                      isActiveLoader={false}
+                      status={oTask.status}
+                      colorMap={COLOR_TASK_STATUS}>
+                      {oTask?.status
+                        ? oTask?.status === 'succeed'
+                          ? 'c'
+                          : oTask?.status[0]
+                        : ''}
+                    </BaseTag>
+                  )}
                   {currentTask || 'Select an item'}
                 </Button>
               </Popover>

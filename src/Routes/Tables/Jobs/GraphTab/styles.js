@@ -46,9 +46,10 @@ export const EmptyHeight = styled(Empty)`
   height: 136px;
 `;
 
+// graph panel right
 export const ButtonsPanel = styled.div`
   position: absolute;
-  z-index: 9999;
+  z-index: 1;
   left: 47%;
   top: 10px;
   display: flex;

@@ -18,8 +18,14 @@ const TextLink = styled(Typography.Text)`
   margin-left: 10px;
 `;
 const openUrl = url => () => window.open(url);
-const Id = (jobID, pipelineName) => {
-  const grafanaUrl = `${useSelector(selectors.connection)}/d/pWF8HslVk/hkube-streaming-edges?orgId=1&refresh=5s&from=now-3h&to=now&var-Pipeline_Name=${pipelineName}&var-Job_ID=${jobID}`;
+const Id = _job => {
+  const jobID = _job?.key;
+  const pipelineName = _job?.pipeline?.name;
+  const startTime = _job?.pipeline?.startTime;
+  const endTime = _job?.pipeline?.endTime;
+
+  const { grafanaUrl } = useSelector(selectors.connection);
+  const grafanaUrlFull = `${grafanaUrl}/d/pWF8HslVk/hkube-streaming-edges?orgId=1&refresh=5s&from=${startTime}&to=${endTime || 'now'}&var-Pipeline_Name=${pipelineName}&var-Job_ID=${jobID}`;
 
   return (
     <Flex>
@@ -27,7 +33,7 @@ const Id = (jobID, pipelineName) => {
 
       <TextLink
         disabled={grafanaUrl === undefined}
-        onClick={grafanaUrl !== undefined ? openUrl(grafanaUrl) : null}>
+        onClick={grafanaUrl !== undefined ? openUrl(grafanaUrlFull) : null}>
         <Image
           title={
             grafanaUrl !== undefined
@@ -87,7 +93,7 @@ const TitleDataJob = ({ job = {} }) => (
     <Item>
       <b> {Name(job?.pipeline?.name)} </b>
     </Item>
-    <ItemRightFlex>{Id(job?.key, job?.pipeline?.name)}</ItemRightFlex>
+    <ItemRightFlex>{Id(job)}</ItemRightFlex>
 
     <Item>
       {' '}

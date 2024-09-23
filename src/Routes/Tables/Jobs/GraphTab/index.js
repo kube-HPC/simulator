@@ -349,7 +349,7 @@ const GraphTab = ({ graph, pipeline }) => {
       <FlexContainer
         style={{
           position: 'absolute',
-          zIndex: '9999',
+          zIndex: '1',
           alignItems: 'center',
           top: '8px',
         }}>
