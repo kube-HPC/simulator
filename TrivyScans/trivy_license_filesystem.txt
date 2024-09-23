@@ -6,7 +6,7 @@ Loose File License(s) (license)
 [0m┌────────────────┬──────────┬─────────────────────────────────┬──────────────────────────────────────────────────────────────┐
 │ Classification │ Severity │             License             │                        File Location                         │
 ├────────────────┼──────────┼─────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│ restricted     │ HIGH     │ GPL-2.0-with-autoconf-exception │ _temp/b7476a8a-cba5-47dc-b202-f6a6b73504bf/node-v22.8.0-lin- │
+│ restricted     │ HIGH     │ GPL-2.0-with-autoconf-exception │ _temp/c53b7996-3124-4a56-9216-1a3a7393873b/node-v22.9.0-lin- │
 │                │          │                                 │ ux-x64/LICENSE                                               │
 │                │          ├─────────────────────────────────┤                                                              │
 │                │          │ GPL-3.0-with-autoconf-exception │                                                              │
