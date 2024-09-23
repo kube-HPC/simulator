@@ -137,7 +137,7 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
           if (
             label === '(@)Output of' &&
             rule === 'flowinput' &&
-            srcValue.includes('flowinput')
+            srcValue.toLowerCase().includes('flowinput')
           ) {
             setIsValid(true);
 
