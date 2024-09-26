@@ -6,7 +6,6 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled from 'styled-components';
 import { notification } from 'utils';
 import { logModes, podStatus } from '@hkube/consts';
-import BaseTag from 'components/BaseTag';
 import { COLOR_TASK_STATUS } from 'styles/colors';
 
 import {
@@ -243,8 +242,10 @@ const NodeLogs = ({
                     alignContent: 'left',
                     flexWrap: 'nowrap',
                     width: '150px',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
+                    justifyContent:
+                      taskDetails.length < 2 ? 'start' : 'space-between',
+                    alignItems: 'left',
+                    color: COLOR_TASK_STATUS[oTask.status || node.status],
                     borderColor: openPopupOverListTasks
                       ? '#0070ff'
                       : COLOR_TASK_STATUS[oTask.status || node.status],
@@ -252,19 +253,6 @@ const NodeLogs = ({
                   shape="round"
                   icon={taskDetails.length < 2 ? '' : <DownOutlined />}
                   disabled={taskDetails.length < 2}>
-                  {oTask?.status && (
-                    <BaseTag
-                      style={{ padding: '2px', lineHeight: '9px' }}
-                      isActiveLoader={false}
-                      status={oTask.status}
-                      colorMap={COLOR_TASK_STATUS}>
-                      {oTask?.status
-                        ? oTask?.status === 'succeed'
-                          ? 'c'
-                          : oTask?.status[0]
-                        : ''}
-                    </BaseTag>
-                  )}
                   {currentTask || 'Select an item'}
                 </Button>
               </Popover>
