@@ -256,12 +256,12 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
 
   const onWizardSubmit = ({ formData }) => {
     setIsSubmitLoading(true);
-    const method = isEdit ? 'put' : 'post';
-    client[method]('store/algorithms', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
+    client
+      .post('store/algorithms/apply', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
       .then(res => {
         setIsSubmitLoading(false);
         if (isEdit) {
