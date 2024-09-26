@@ -201,7 +201,7 @@ export const formatNode =
         meta?.extra?.batch
           ? `${meta.nodeName} (${meta.extra.batch})`
           : `${meta.nodeName}`
-      } ${node.devMode ? 'devMode' : ''}`,
+      } ${node.devMode ? '(dev)' : ''}`,
     };
     /** @type {NodeOptions} */
     const batchStyling = isBatchStyling
