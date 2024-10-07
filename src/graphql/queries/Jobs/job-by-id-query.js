@@ -54,6 +54,7 @@ const JOB_BY_ID_QUERY = gql`
           warnings
           retries
           downloadFileExt
+          devMode
           batch {
             podName
             taskId
