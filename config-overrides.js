@@ -9,5 +9,13 @@ module.exports = function override(config) {
   }
 
   config.plugins.push(new MonacoWebpackPlugin({}));
+
+  // eslint-disable-next-line no-param-reassign
+  config.ignoreWarnings = [
+    {
+      module: /mutationobserver-shim/,
+    },
+  ];
+
   return config;
 };
