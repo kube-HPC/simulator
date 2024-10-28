@@ -64,7 +64,7 @@
     "@storybook/react": "^8.0.9",
     "@types/react-router-dom": "^5.3.3",
     "@types/vis": "^4.21.27",
-    "antd": "^5.18.3",
+    "antd": "^5.21.4",
     "axios": "^1.6.8",
     "chonky": "^2.3.2",
     "chonky-icon-fontawesome": "^2.3.2",
