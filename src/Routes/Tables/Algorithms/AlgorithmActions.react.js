@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import {
@@ -36,6 +36,8 @@ const deleteConfirmAction = action => {
 const overlayStyle = { width: `50ch` };
 
 const AlgorithmActions = ({ record }) => {
+  const [openPopupRun, setOpenPopupRun] = useState(false);
+  const [openPopupRunDebug, setOpenPopupRunDebug] = useState(false);
   const { goTo } = usePath();
   const { builds, ...algorithm } = record;
   const { name } = algorithm;
@@ -56,20 +58,20 @@ const AlgorithmActions = ({ record }) => {
   //   [applyAlgorithm]
   // );
 
-  const onEdit = useCallback(() => goTo.edit({ nextAlgorithmId: name }), [
-    goTo,
-    name,
-  ]);
+  const onEdit = useCallback(
+    () => goTo.edit({ nextAlgorithmId: name }),
+    [goTo, name]
+  );
 
   const onClickDelete = useCallback(
     () => deleteConfirmAction(() => deleteAlgorithm(name)),
     [deleteAlgorithm, name]
   );
 
-  const onRun = useCallback(input => runAlgorithm({ name, input }), [
-    runAlgorithm,
-    name,
-  ]);
+  const onRun = useCallback(
+    input => runAlgorithm({ name, input }),
+    [runAlgorithm, name]
+  );
 
   const onDebug = useCallback(
     input => runAlgorithm({ name, input, debug: true }),
@@ -88,6 +90,24 @@ const AlgorithmActions = ({ record }) => {
     e.stopPropagation();
   }, []);
 
+  const clickOnRunAlg = useCallback(() => {
+    onRun();
+    setOpenPopupRun(false);
+  }, [onRun]);
+
+  const handleOpenChange = useCallback(newOpen => {
+    setOpenPopupRun(newOpen);
+  }, []);
+
+  const clickOnRunDebug = useCallback(() => {
+    onDebug();
+    setOpenPopupRunDebug(false);
+  }, [onDebug]);
+
+  const handleOpenChangeDebug = useCallback(newOpen => {
+    setOpenPopupRunDebug(newOpen);
+  }, []);
+
   return (
     <div
       ref={container}
@@ -102,8 +122,13 @@ const AlgorithmActions = ({ record }) => {
           content={popOverContentRun}
           getPopupContainer={setPopupContainer}
           mouseLeaveDelay={0.3}
-          mouseEnterDelay={1}>
-          <Button icon={<PlayCircleOutlined />} onClick={() => onRun()} />
+          mouseEnterDelay={2}
+          open={openPopupRun}
+          onOpenChange={handleOpenChange}>
+          <Button
+            icon={<PlayCircleOutlined />}
+            onClick={() => clickOnRunAlg()}
+          />
         </Popover>
         <Popover
           overlayStyle={overlayStyle}
@@ -112,8 +137,10 @@ const AlgorithmActions = ({ record }) => {
           content={popOverContentDebug}
           getPopupContainer={setPopupContainer}
           mouseLeaveDelay={0.3}
-          mouseEnterDelay={1}>
-          <Button icon={<BugOutlined />} onClick={() => onDebug()} />
+          mouseEnterDelay={2}
+          open={openPopupRunDebug}
+          onOpenChange={handleOpenChangeDebug}>
+          <Button icon={<BugOutlined />} onClick={() => clickOnRunDebug()} />
         </Popover>
         <Tooltip title="edit algorithm">
           <Button icon={<EditOutlined />} onClick={onEdit} />
