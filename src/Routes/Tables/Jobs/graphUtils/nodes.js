@@ -129,10 +129,11 @@ const splitBatchToGroups = (
   }
 
   // the order prioritize the group, lower setting is highest priority
-  group = overrideGroup(group, NODE_GROUPS.ACTIVE);
+
   group = overrideGroup(group, NODE_GROUPS.SKIPPED);
   group = overrideGroup(group, NODE_GROUPS.WARNING);
   group = overrideGroup(group, NODE_GROUPS.STOPPED);
+  group = overrideGroup(group, NODE_GROUPS.ACTIVE);
   group = overrideGroup(group, NODE_GROUPS.ERRORS);
 
   if (warnings?.length > 0) {
