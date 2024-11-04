@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Button, Space, Popover, Divider, Row, Col, Input } from 'antd';
 import _ from 'lodash';
@@ -23,9 +23,15 @@ const SignBoard = ({
   restField,
 }) => {
   const { TextArea } = Input;
+  const inputRef = useRef(null);
+  const [cursorPosition, setCursorPosition] = useState(null);
 
   const styleButtons = {
     flexWrap: 'wrap',
+  };
+
+  const setPosition = () => {
+    setCursorPosition(inputRef.current.input.selectionStart);
   };
 
   const getValuesInput = nameKey => {
@@ -38,20 +44,49 @@ const SignBoard = ({
 
   const writeCharsToInput = (nameKey, value) => {
     const { fields, currentNameField, lastValue } = getValuesInput(nameKey);
-    _.set(fields, currentNameField, `${lastValue} ${value}`);
+    const updatedValue =
+      lastValue.slice(0, cursorPosition) +
+      value +
+      lastValue.slice(cursorPosition);
+
+    _.set(fields, currentNameField, updatedValue);
+
+    // new postion cursor
+    const newProstionCursor = cursorPosition + value.length;
+    setCursorPosition(newProstionCursor);
+
+    inputRef.current.focus();
+    setTimeout(() => {
+      inputRef.current.setSelectionRange(newProstionCursor, newProstionCursor);
+    }, 2);
+
     form.setFieldsValue(fields);
     onChange();
   };
 
   const DeleteCharsInInput = nameKey => {
-    const { fields, currentNameField, lastValue } = getValuesInput(nameKey);
-    _.set(
-      fields,
-      currentNameField,
-      lastValue.substring(0, lastValue.lastIndexOf(' '))
-    );
-    form.setFieldsValue(fields);
-    onChange();
+    if (cursorPosition > 0) {
+      const { fields, currentNameField, lastValue } = getValuesInput(nameKey);
+
+      const newProstionCursor = cursorPosition - 1;
+      setCursorPosition(newProstionCursor);
+
+      const updatedValue =
+        lastValue.slice(0, newProstionCursor) + lastValue.slice(cursorPosition);
+
+      inputRef.current.focus();
+      setTimeout(() => {
+        inputRef.current.setSelectionRange(
+          newProstionCursor,
+          newProstionCursor
+        );
+      }, 2);
+
+      _.set(fields, currentNameField, updatedValue);
+
+      form.setFieldsValue(fields);
+      onChange();
+    }
   };
 
   const title = nameKey => {
@@ -110,19 +145,23 @@ const SignBoard = ({
         rules={msgRules}
         initialValue=""
         onChange={onChange}
+        onClick={setPosition}
         key={`inputTextItem${indexKey}`}>
         {type === 'text' ? (
           <Input
+            ref={inputRef}
             key={`inputText${indexKey}`}
             style={{ width }}
             placeholder={placeholder}
             autoComplete="off"
+            onKeyUp={setPosition}
           />
         ) : (
           <TextArea
             key={`TextArea${indexKey}`}
             style={{ width }}
             placeholder={placeholder}
+            onKeyUp={setPosition}
           />
         )}
       </Form.Item>
