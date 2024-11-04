@@ -14,6 +14,7 @@ import {
   InfoCircleOutlined,
   LinkOutlined,
   DownOutlined,
+  DownloadOutlined,
 } from '@ant-design/icons';
 import { ReactComponent as IconKibana } from 'images/kibana.svg';
 import {
@@ -110,7 +111,7 @@ const NodeLogs = ({
 
   const { taskId, podName } = oTask;
 
-  const { logs, msgPodStatus } = useLogs({
+  const { logs, msgPodStatus, downloadLogsAsText } = useLogs({
     taskId: taskId || '',
     podName: podName || '',
     source: sourceLogs,
@@ -309,6 +310,7 @@ const NodeLogs = ({
           </FlexBox.Item>
         </FlexBox>
       </FiltersPanel>
+
       <RadioGroupStyle>
         {!isStatusFailedSchedulingTask ? (
           <Row justify="start" align="middle">
@@ -332,13 +334,25 @@ const NodeLogs = ({
                 <Col span={1}>
                   <LinkOutlined style={{ marginLeft: '7px' }} />
                 </Col>
-                <Col span={1}>
+                <Col span={2}>
                   <Button title="Search in Kibana">
                     <IconKibana onClick={() => window.open(linkKibana)} />
                   </Button>
                 </Col>
               </>
             )}
+
+            <Col
+              span={1}
+              style={{
+                flexBasis: 'max-content',
+                marginLeft: 'auto',
+                marginRight: '20px',
+              }}>
+              <Button title="download Logs">
+                <DownloadOutlined onClick={downloadLogsAsText} />
+              </Button>
+            </Col>
           </Row>
         ) : (
           (node?.warnings?.length > 0 && (
