@@ -2,6 +2,9 @@ import { LOGS_QUERY } from 'graphql/queries';
 import { usePolling } from 'hooks';
 import { useQuery, useLazyQuery } from '@apollo/client';
 
+const MIN_NUMBER_LOGS = 500;
+const MAX_NUMBER_LOGS = 10000;
+
 const useLogs = ({
   podName,
   taskId = '',
@@ -18,7 +21,7 @@ const useLogs = ({
       nodeKind,
       logMode,
       searchWord,
-      limit: 500,
+      limit: MIN_NUMBER_LOGS,
     },
   });
 
@@ -37,7 +40,7 @@ const useLogs = ({
       nodeKind,
       logMode,
       searchWord: '',
-      limit: Number.MAX_VALUE,
+      limit: MAX_NUMBER_LOGS, // cannot read logs from es, err: search_phase_execution_exception
     },
   });
 
