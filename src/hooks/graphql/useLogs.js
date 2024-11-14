@@ -44,7 +44,7 @@ const useLogs = ({
     },
   });
 
-  const downloadLogsAsText = async () => {
+  const downloadLogsAsText = async strFile => {
     const { data } = await getLogsLazyQuery();
     const logsData = data?.logsByQuery?.logs || [];
 
@@ -56,7 +56,8 @@ const useLogs = ({
     const blob = new Blob([textContent], { type: 'text/plain' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = 'logs.txt';
+    const currentDate = new Date().toISOString();
+    link.download = `logs_${strFile}_Date_${currentDate}.txt`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

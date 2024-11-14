@@ -1,11 +1,15 @@
-import { Empty } from 'antd';
+import { Empty, Button } from 'antd';
 import { Table } from 'components';
 import { Card, JsonView, LogsViewer, Tabs } from 'components/common';
 import { useActions } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
-import { DownOutlined, RightOutlined } from '@ant-design/icons';
+import {
+  DownOutlined,
+  RightOutlined,
+  DownloadOutlined,
+} from '@ant-design/icons';
 import getColumns from './getColumns';
 
 const IDs = {
@@ -19,9 +23,21 @@ const CardOverflow = styled(Card)`
   padding-bottom: 20px;
 `;
 
+const downloadLogsAsText = async (buildIdStr, textContent) => {
+  const blob = new Blob(textContent, { type: 'text/plain' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  const currentDate = new Date().toISOString();
+  link.download = `logs_BuildId_${buildIdStr}_Date_${currentDate}.txt`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 const Builds = ({ builds = [], isOpenFirstLog = false }) => {
   const { cancelBuild, rerunBuild } = useActions();
   const [currentTime, setCurrentTime] = useState(Date.now());
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentTime(Date.now());
@@ -63,7 +79,22 @@ const Builds = ({ builds = [], isOpenFirstLog = false }) => {
 
   const expandedRowRender = record => (
     <Card isMargin>
-      <Tabs items={TabsItemsJson(record)} />
+      <Tabs
+        items={TabsItemsJson(record)}
+        extra={
+          <Button
+            disabled={record.result.data === ''}
+            title={`download Logs buildId - ${record.buildId}`}
+            onClick={() =>
+              downloadLogsAsText(
+                record.buildId,
+                record.result.data.split('\r\n\n')
+              )
+            }>
+            <DownloadOutlined />
+          </Button>
+        }
+      />
     </Card>
   );
   const expandIcon = ({ expanded, onExpand, record }) =>

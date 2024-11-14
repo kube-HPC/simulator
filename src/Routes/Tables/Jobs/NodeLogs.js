@@ -349,8 +349,11 @@ const NodeLogs = ({
                 marginLeft: 'auto',
                 marginRight: '20px',
               }}>
-              <Button title="download Logs">
-                <DownloadOutlined onClick={downloadLogsAsText} />
+              <Button
+                disabled={logs.length === 0}
+                title={`download Logs Task ${taskId}`}
+                onClick={() => downloadLogsAsText(`TaskID_${taskId}`)}>
+                <DownloadOutlined />
               </Button>
             </Col>
           </Row>
