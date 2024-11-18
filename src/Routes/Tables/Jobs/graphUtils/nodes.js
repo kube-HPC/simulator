@@ -3,6 +3,7 @@ import { get, pick } from 'lodash';
 import { COLOR_TASK_STATUS } from 'styles/colors';
 import { lightenColor } from 'utils/stringHelper';
 import GRAPH_TYPES from './../graphUtils/types';
+import { groups } from './../graphUtils/styles';
 
 /** @typedef {import('vis').NodeOptions} NodeOptions */
 const { STATUS, NODE_GROUPS } = GRAPH_TYPES;
@@ -101,6 +102,7 @@ const setNodeGroup = node => {
     status === STATUS.FAILED_SCHEDULING && node?.warnings?.length > 0
       ? NODE_GROUPS.WARNING
       : statusToGroup(status);
+
   return { ...node, group: groupValue };
 };
 
@@ -108,7 +110,7 @@ const OverrideGroup = collection => (currentGroup, resultedGroup) =>
   collection.has(resultedGroup) ? resultedGroup : currentGroup;
 
 const splitBatchToGroups = (
-  { nodeName, algorithmName, batchInfo, level = 0, batch, warnings },
+  { nodeName, status, algorithmName, batchInfo, level = 0, batch, warnings },
   isStreaming
 ) => {
   const itemsGroups = batch.map(item => item.status).map(statusToGroup);
@@ -129,7 +131,6 @@ const splitBatchToGroups = (
   }
 
   // the order prioritize the group, lower setting is highest priority
-
   group = overrideGroup(group, NODE_GROUPS.SKIPPED);
   group = overrideGroup(group, NODE_GROUPS.WARNING);
   group = overrideGroup(group, NODE_GROUPS.STOPPED);
@@ -138,6 +139,20 @@ const splitBatchToGroups = (
 
   if (warnings?.length > 0) {
     group = NODE_GROUPS.WARNING;
+  }
+
+  // secondary Status (view on border node)
+
+  let secondaryStatus = NODE_GROUPS.ACTIVE;
+  if (group === NODE_GROUPS.ACTIVE) {
+    secondaryStatus = overrideGroup(secondaryStatus, NODE_GROUPS.SUCCEED);
+    secondaryStatus =
+      status === STATUS.FAILED_SCHEDULING
+        ? STATUS.FAILED_SCHEDULING
+        : secondaryStatus;
+    secondaryStatus = overrideGroup(secondaryStatus, NODE_GROUPS.STOPPED);
+    secondaryStatus = overrideGroup(secondaryStatus, NODE_GROUPS.WARNING);
+    secondaryStatus = overrideGroup(secondaryStatus, NODE_GROUPS.ERRORS);
   }
 
   return {
@@ -150,6 +165,7 @@ const splitBatchToGroups = (
     },
     group,
     level,
+    secondaryStatus,
   };
 };
 
@@ -224,12 +240,24 @@ export const formatNode =
         }
       : {};
 
+    const groupSettings =
+      isStateLess && meta.secondaryStatus !== NODE_GROUPS.ACTIVE
+        ? {
+            ...groups[meta.group].color,
+            border: groupsColor[meta.secondaryStatus],
+            borderWidth: 2,
+          } || {}
+        : { ...groups[meta.group].color };
+
     const editedNode = {
       ...batchStyling,
       ...meta,
       ..._node,
       kind,
       shape: nodeShapes[kind] || nodeShapes.default,
+      color: {
+        ...groupSettings,
+      },
     };
 
     return pick(
@@ -245,6 +273,7 @@ export const formatNode =
       'x',
       'y',
       'shadow',
-      'font'
+      'font',
+      'color'
     );
   };

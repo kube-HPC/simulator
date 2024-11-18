@@ -335,8 +335,10 @@ const NodeLogs = ({
                   <LinkOutlined style={{ marginLeft: '7px' }} />
                 </Col>
                 <Col span={2}>
-                  <Button title="Search in Kibana">
-                    <IconKibana onClick={() => window.open(linkKibana)} />
+                  <Button
+                    title="Search in Kibana"
+                    onClick={() => window.open(linkKibana)}>
+                    <IconKibana />
                   </Button>
                 </Col>
               </>
