@@ -5,7 +5,7 @@ import GRAPH_TYPES from './types';
 const { NODE_GROUPS } = GRAPH_TYPES;
 /** @type {{ [key: string]: import('vis').NodeOptions }} */
 
-const groupsPreview = {
+export const groupsPreview = {
   [NODE_GROUPS.SUCCEED]: {
     color: {
       background: COLOR_TASK_STATUS[TASK.COMPLETED],
@@ -52,7 +52,7 @@ const groupsPreview = {
   },
 };
 
-const groups = {
+export const groups = {
   [NODE_GROUPS.SUCCEED]: {
     color: {
       background: COLOR_TASK_STATUS[TASK.COMPLETED],

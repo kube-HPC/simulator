@@ -122,7 +122,7 @@ const AlgorithmActions = ({ record }) => {
           content={popOverContentRun}
           getPopupContainer={setPopupContainer}
           mouseLeaveDelay={0.3}
-          mouseEnterDelay={2}
+          mouseEnterDelay={1.3}
           open={openPopupRun}
           onOpenChange={handleOpenChange}>
           <Button
@@ -137,7 +137,7 @@ const AlgorithmActions = ({ record }) => {
           content={popOverContentDebug}
           getPopupContainer={setPopupContainer}
           mouseLeaveDelay={0.3}
-          mouseEnterDelay={2}
+          mouseEnterDelay={1.3}
           open={openPopupRunDebug}
           onOpenChange={handleOpenChangeDebug}>
           <Button icon={<BugOutlined />} onClick={() => clickOnRunDebug()} />
