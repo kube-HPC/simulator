@@ -254,7 +254,8 @@ export const formatNode =
       ...meta,
       ..._node,
       kind,
-      shape: nodeShapes[kind] || nodeShapes.default,
+      shape:
+        nodeShapes[pipelineNode?.kind || 'algorithm'] || nodeShapes.default,
       color: {
         ...groupSettings,
       },
