@@ -1,7 +1,17 @@
 import React, { memo, useEffect, useMemo, useState } from 'react';
+import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Input, InputNumber, Radio, Select, Checkbox } from 'antd';
+import {
+  Input,
+  InputNumber,
+  Radio,
+  Select,
+  Checkbox,
+  Button,
+  Space,
+  Divider,
+} from 'antd';
 import { Form, FlexBox } from 'components/common';
 import {
   BottomPanel,
@@ -10,7 +20,6 @@ import {
   RightPanel,
 } from 'components/Drawer';
 import formTemplate from 'config/template/addAlgorithmForm.template';
-
 import {
   mapObjValues,
   notification,
@@ -92,6 +101,13 @@ const getBuildTypes = ({ buildType, ...props }) => {
   };
 };
 // #endregion
+
+const lastElementStyle = {
+  position: 'absolute',
+  right: 260,
+  top: '50%',
+  transform: 'translateY(-50%)',
+};
 
 const AddAlgorithmForm = ({
   onToggle,
@@ -322,6 +338,55 @@ const AddAlgorithmForm = ({
             {insertAlgorithmOptions(MAIN.OPTIONS.types)}
           </Select>
         </Form.Item>
+      </Collapsible>
+      <Collapsible title="Side Car">
+        <Form.List name={splitByDot(MAIN.SIDECAR.field)}>
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map(({ key, name, ...restField }) => (
+                <>
+                  <Space
+                    key={key}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      position: 'relative',
+                    }}
+                    align="baseline">
+                    <Form.Item
+                      label="Name"
+                      {...restField}
+                      name={[name, 'name']}
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Missing name',
+                        },
+                      ]}>
+                      <Input />
+                    </Form.Item>
+
+                    <MinusCircleOutlined
+                      style={lastElementStyle}
+                      onClick={() => remove(name)}
+                    />
+                  </Space>
+                  <Divider />
+                </>
+              ))}
+
+              <Form.Item>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  block
+                  icon={<PlusOutlined />}>
+                  Add field
+                </Button>
+              </Form.Item>
+            </>
+          )}
+        </Form.List>
       </Collapsible>
 
       <BottomPanel style={{ marginTop: 'auto' }}>
