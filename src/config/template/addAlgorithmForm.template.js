@@ -34,6 +34,7 @@ const addAlgorithmTemplateForm = {
     token: '',
     gitKind: 'github',
   },
+  sideCar: [],
 };
 
 export default addAlgorithmTemplateForm;
