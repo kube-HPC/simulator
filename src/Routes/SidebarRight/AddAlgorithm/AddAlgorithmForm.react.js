@@ -366,6 +366,111 @@ const AddAlgorithmForm = ({
                       <Input />
                     </Form.Item>
 
+                    <>Container</>
+                    <Form.Item
+                      label="Container Name"
+                      {...restField}
+                      name={[name, 'containerName']}
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Missing container name',
+                        },
+                      ]}>
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      label="Container Image"
+                      {...restField}
+                      name={[name, 'container Image']}
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Missing image',
+                        },
+                      ]}>
+                      <Input />
+                    </Form.Item>
+
+                    <>Volumes</>
+                    <Form.Item
+                      label="volumes Name"
+                      {...restField}
+                      name={[name, 'volumes Name']}
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Missing volumes name',
+                        },
+                      ]}>
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      label="volumes volumeType"
+                      {...restField}
+                      name={[name, 'volumes volumeType']}
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Missing volumes volumeType',
+                        },
+                      ]}>
+                      <Input />
+                    </Form.Item>
+
+                    <>volume Mounts</>
+                    <Form.Item
+                      label="Volumes Name"
+                      {...restField}
+                      name={[name, 'volumeMounts Name']}
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Missing volumeMounts name',
+                        },
+                      ]}>
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      label="volumeMounts mountPath"
+                      {...restField}
+                      name={[name, 'volumeMounts mountPath']}
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Missing volumeMounts mountPath',
+                        },
+                      ]}>
+                      <Input />
+                    </Form.Item>
+
+                    <>environments</>
+                    <Form.Item
+                      label="environments name"
+                      {...restField}
+                      name={[name, 'environments name']}
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Missing environments name',
+                        },
+                      ]}>
+                      <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="environments value"
+                      {...restField}
+                      name={[name, 'environments value']}
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Missing environments value',
+                        },
+                      ]}>
+                      <Input />
+                    </Form.Item>
+
                     <MinusCircleOutlined
                       style={lastElementStyle}
                       onClick={() => remove(name)}
