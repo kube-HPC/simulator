@@ -49,7 +49,7 @@ const rightSidebarContent = {
       <>
         Start pipeline execution with <Text strong>raw</Text> input, visit{' '}
         <a
-          href="http://hkube.io/spec/#tag/Execution/paths/~1exec~1raw/post"
+          href="http://hkube.org/spec/#tag/Execution/paths/~1exec~1raw/post"
           target="_blank"
           rel="noopener noreferrer">
           HKube Spec

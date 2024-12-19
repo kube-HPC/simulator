@@ -129,7 +129,7 @@ const NodeLogs = ({
   }, [taskId]);
 
   useEffect(() => {
-    if (msgPodStatus === podStatus.NO_IMAGE)
+    if (msgPodStatus === podStatus.ALGORUNNER_NO_IMAGE)
       setErrorMsgImage('Docker image missing');
   }, [msgPodStatus]);
 

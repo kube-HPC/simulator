@@ -1,4 +1,4 @@
-# [![BannerGithubSimulator](https://user-images.githubusercontent.com/27515937/59030338-62150880-8869-11e9-86f9-b6c1c72eaf19.png)](http://hkube.io)
+# [![BannerGithubSimulator](https://user-images.githubusercontent.com/27515937/59030338-62150880-8869-11e9-86f9-b6c1c72eaf19.png)](http://hkube.org)
 
 > !! [Version 2 work in progress](https://github.com/kube-HPC/dashboard)
 
@@ -6,11 +6,11 @@
 
 Dashboard is a web-based [HKube](https://github.com/kube-HPC/hkube) user interface, which supports every functionality HKube has to offer.
 
-> Dashboard implements HKube Restful API, check its [Specifications](http://hkube.io/spec) and [Swagger-UI](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/kube-HPC/api-server/master/api/rest-api/swagger.json).
+> Dashboard implements HKube Restful API, check its [Specifications](http://hkube.org/spec) and [Swagger-UI](http://petstore.swagger.io/?url=https://raw.githubusercontent.com/kube-HPC/api-server/master/api/rest-api/swagger.json).
 
 ### Playground
 
-Visit [playground.hkube.io](http://playground.hkube.io/)
+Visit [playground.hkube.io](http://playground.hkube.org/)
 
 ### Accessing the Dashboard UI
 
