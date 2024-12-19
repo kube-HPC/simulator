@@ -28,7 +28,7 @@ const PipelineActions = ({ pipeline, className = '' }) => {
 
   const container = useRef();
 
-  // http://hkube.io/spec/#tag/Execution/paths/~1exec~1stored/post
+  // http://hkube.org/spec/#tag/Execution/paths/~1exec~1stored/post
   // Don't use nodes & description
   const { nodes } = pipeline;
 
