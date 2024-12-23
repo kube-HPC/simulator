@@ -10,7 +10,7 @@ import { GlobalStyle } from '../src/styles';
 const theme = create({
   base: 'light',
   brandTitle: 'HKube - Storybook',
-  brandUrl: 'http://hkube.io/',
+  brandUrl: 'http://hkube.org/',
 });
 
 addDecorator(S => (
