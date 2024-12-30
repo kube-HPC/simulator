@@ -118,6 +118,7 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug = false }) => {
             node={node}
             taskDetails={taskDetails}
             key={`${node.nodeName}-logs-tab-node-logs`}
+            sideCarsDetails={algorithmDetails?.algorithm?.sideCars || null}
             NodeInputOutputTable={
               <NodeInputOutput
                 isShowOneRow={isNodeNotBatchsAndNotStateless}

@@ -12,6 +12,7 @@ const useLogs = ({
   nodeKind,
   logMode,
   searchWord,
+  containerNames,
 }) => {
   const query = useQuery(LOGS_QUERY, {
     variables: {
@@ -22,6 +23,7 @@ const useLogs = ({
       logMode,
       searchWord,
       limit: MIN_NUMBER_LOGS,
+      containerNames,
     },
   });
 
@@ -41,6 +43,7 @@ const useLogs = ({
       logMode,
       searchWord: '',
       limit: MAX_NUMBER_LOGS, // cannot read logs from es, err: search_phase_execution_exception
+      containerNames: [],
     },
   });
 

@@ -46,7 +46,7 @@ const Container = styled.div`
 `;
 
 const SelectStyle = styled(Select)`
-  width: 150px;
+  width: 250px;
 `;
 
 const RadioGroupStyle = styled.div`
@@ -74,7 +74,7 @@ const msgAlertFailedScheduling = (typeText, message) => {
           {typeText} : {firstLine}
         </strong>
       </p>
-      {remainingLines.map(line => (
+      {remainingLines?.map(line => (
         <div>{line}</div>
       ))}
     </div>
@@ -87,11 +87,14 @@ const NodeLogs = ({
   NodeInputOutputTable,
   currentTask,
   setCurrentTask,
+  sideCarsDetails,
 }) => {
   const [openPopupOverListTasks, setOpenPopupOverListTasks] = useState(false);
   const { kibanaUrl } = useSelector(selectors.connection);
   const { structuredPrefix } = useSelector(selectors.connection);
   const [logMode, setLogMode] = useState(logModes.ALGORITHM);
+  const [containerNames, setContainerNames] = useState([]);
+
   const [searchWord, setSearchWord] = useState(null);
   const [isLoadLog, setIsLoadLog] = useState(true);
   const [sourceLogs, setSourceLogs] = useState('k8s');
@@ -105,7 +108,7 @@ const NodeLogs = ({
     useState(false);
 
   const oTask = useMemo(
-    () => taskDetails.find(t => t.taskId === currentTask) || taskDetails[0],
+    () => taskDetails?.find(t => t.taskId === currentTask) || taskDetails[0],
     [currentTask, taskDetails]
   );
 
@@ -118,6 +121,7 @@ const NodeLogs = ({
     nodeKind: node.kind,
     logMode,
     searchWord,
+    containerNames,
   });
 
   useEffect(() => {
@@ -212,6 +216,25 @@ const NodeLogs = ({
     setOpenPopupOverListTasks(false);
   }, [currentTask, setWord]);
 
+  const handleChangeSelect = (value, option) => {
+    if (option.key === logModes.ALL) {
+      // in all option put all names contener sidecar
+      setContainerNames(sideCarsDetails?.map(obj => obj.container.name));
+      setLogMode(option.key);
+    } else {
+      const sideCarOption = sideCarsDetails?.find(
+        sideCar => option.key === sideCar.name
+      );
+      if (sideCarOption) {
+        setContainerNames(sideCarOption.container.name);
+        setLogMode(logModes.SIDECAR);
+      } else {
+        setContainerNames([]);
+        setLogMode(option.key);
+      }
+    }
+  };
+
   return (
     <>
       <FiltersPanel>
@@ -294,7 +317,7 @@ const NodeLogs = ({
                 isStatusFailedSchedulingTask || isStatusFailedScheduling
               }
               defaultValue={logModes.ALGORITHM}
-              onChange={value => setLogMode(value)}>
+              onChange={handleChangeSelect}>
               <Select.Option
                 key={logModes.ALGORITHM}
                 value={logModes.ALGORITHM}>
@@ -306,6 +329,14 @@ const NodeLogs = ({
               <Select.Option key={logModes.ALL} value={logModes.ALL}>
                 All
               </Select.Option>
+              {sideCarsDetails &&
+                sideCarsDetails?.map(sideCar => (
+                  <Select.Option
+                    key={sideCar.name}
+                    value={`SideCar ${sideCar.name}`}>
+                    SideCar {sideCar.name}
+                  </Select.Option>
+                ))}
             </SelectStyle>
           </FlexBox.Item>
         </FlexBox>
@@ -430,5 +461,6 @@ NodeLogs.propTypes = {
 
   currentTask: PropTypes.func.isRequired,
   setCurrentTask: PropTypes.func.isRequired,
+  sideCarsDetails: PropTypes.arrayOf(PropTypes.object),
 };
 export default React.memo(NodeLogs);

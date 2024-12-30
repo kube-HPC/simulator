@@ -9,6 +9,7 @@ const LOGS_QUERY = gql`
     $logMode: String
     $searchWord: String
     $limit: Int
+    $containerNames: [String]
   ) {
     logsByQuery(
       podName: $podName
@@ -18,6 +19,7 @@ const LOGS_QUERY = gql`
       logMode: $logMode
       searchWord: $searchWord
       limit: $limit
+      containerNames: $containerNames
     ) {
       logs {
         level
