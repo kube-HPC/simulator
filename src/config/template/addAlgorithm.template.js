@@ -22,6 +22,7 @@ const addAlgorithmTemplate = {
     token: '',
     gitKind: 'github',
   },
+  sideCar: [],
 };
 
 export default addAlgorithmTemplate;
