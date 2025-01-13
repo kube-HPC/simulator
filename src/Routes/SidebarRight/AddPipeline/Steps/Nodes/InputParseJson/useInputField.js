@@ -135,7 +135,7 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
       rules.forEach(rule => {
         if (isOneValid === false) {
           if (
-            label === '(@)Output of' &&
+            (label === '(@)Output of' || label === '(#@)Multi output of') &&
             rule === 'flowinput' &&
             srcValue.toLowerCase().includes('flowinput')
           ) {

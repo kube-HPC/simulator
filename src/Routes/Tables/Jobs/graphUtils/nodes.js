@@ -209,16 +209,15 @@ export const formatNode =
 
     const _node = {
       id: meta.nodeName,
-      title: `${meta.nodeName} ${
-        pipelineNode?.stateType ? pipelineNode.stateType : ''
-      }`,
+      title: `${meta.nodeName} ${pipelineNode?.stateType ? pipelineNode.stateType : ''} ${node?.devMode ? '(dev)' : ''}`,
       x: (position && position?.nodesPostions[node.nodeName]?.x) || 0,
       y: (position && position?.nodesPostions[node.nodeName]?.y) || 0,
+      font: { multi: true },
       label: `${
         meta?.extra?.batch
           ? `${meta.nodeName} (${meta.extra.batch})`
           : `${meta.nodeName}`
-      } ${node?.devMode ? '(dev)' : ''}`,
+      } ${node?.devMode ? '<b>(dev)</b>' : ''}`,
     };
     /** @type {NodeOptions} */
     const batchStyling = isBatchStyling
