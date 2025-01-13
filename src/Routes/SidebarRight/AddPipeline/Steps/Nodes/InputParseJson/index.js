@@ -15,8 +15,8 @@ const listAddOn = [
   {
     value: '#@',
     label: '(#@)Multi output of',
-    placeholder: '<Node name>.<attribute>',
-    rules: ['node'],
+    placeholder: '<Node name>.<attribute> Or flowinput.<prop>',
+    rules: ['node', 'flowinput'],
   },
   {
     value: '',

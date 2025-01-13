@@ -334,7 +334,7 @@ const NodeLogs = ({
                   <Select.Option
                     key={sideCar.name}
                     value={`SideCar ${sideCar.name}`}>
-                    SideCar {sideCar.name}
+                    {sideCar.name}
                   </Select.Option>
                 ))}
             </SelectStyle>
