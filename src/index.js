@@ -14,6 +14,7 @@ import { selectors } from 'reducers';
 import GlobalThemes from './styles/themes/GlobalThemes';
 import Root from './Routes';
 import store from './store';
+import KeycloakServices from './keycloak/keycloakServices';
 import _ from 'lodash';
 
 const ConfigProviderApp = () => {
@@ -81,17 +82,22 @@ const ConfigProviderApp = () => {
   ) : null;
 };
 
-const App = () => {
-  return (
+const container = document.getElementById('root');
+const root = createRoot(container);
+
+const renderApp = () => {
+  root.render(
     <Provider store={store}>
       <ConfigProviderApp />
     </Provider>
   );
 };
 
-const container = document.getElementById('root');
-const root = createRoot(container);
-root.render(<App />);
+const renderErrorPreRenderApp = () => {
+  root.render(<>error</>);
+};
+
+KeycloakServices.initKeycloak(renderApp, renderErrorPreRenderApp);
 // root.unmount();
 
 // webpack Hot Module Replacement API
