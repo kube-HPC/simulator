@@ -46,7 +46,7 @@ const Container = styled.div`
 `;
 
 const SelectStyle = styled(Select)`
-  width: 250px;
+  width: 180px;
 `;
 
 const RadioGroupStyle = styled.div`
@@ -326,17 +326,18 @@ const NodeLogs = ({
               <Select.Option key={logModes.INTERNAL} value={logModes.INTERNAL}>
                 System
               </Select.Option>
-              <Select.Option key={logModes.ALL} value={logModes.ALL}>
-                All
-              </Select.Option>
+
               {sideCarsDetails &&
                 sideCarsDetails?.map(sideCar => (
                   <Select.Option
-                    key={sideCar.name}
-                    value={`SideCar ${sideCar.name}`}>
-                    {sideCar.name}
+                    key={sideCar.container.name}
+                    value={`${sideCar.container.name}`}>
+                    {sideCar.container.name}
                   </Select.Option>
                 ))}
+              <Select.Option key={logModes.ALL} value={logModes.ALL}>
+                All
+              </Select.Option>
             </SelectStyle>
           </FlexBox.Item>
         </FlexBox>
