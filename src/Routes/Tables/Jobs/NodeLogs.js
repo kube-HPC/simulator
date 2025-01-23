@@ -223,8 +223,9 @@ const NodeLogs = ({
       setLogMode(option.key);
     } else {
       const sideCarOption = sideCarsDetails?.find(
-        sideCar => option.key === sideCar.name
+        sideCar => option.key === sideCar.container.name
       );
+
       if (sideCarOption) {
         setContainerNames(sideCarOption.container.name);
         setLogMode(logModes.SIDECAR);
