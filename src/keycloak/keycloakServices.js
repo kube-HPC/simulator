@@ -4,14 +4,26 @@ import Keycloak from 'keycloak-js';
 const KeycloakConfig = {
   clientId: 'simulator-ui-app',
   realm: 'Hkube',
-  url: 'https://cicd.hkube.org/hkube/keycloak/auth',
-  // resource: 'simulator-ui-app',
+  'ssl-required': 'external',
+  url: 'https://cicd.hkube.org/hkube/keycloak',
+  resource: 'simulator-ui-app',
   enableCors: true,
   allowedOrigins: '*',
-  clientUId: '23c95f69-17a2-4b9d-9001-39a5cb8f05fb',
+  'public-client': true,
+  'confidential-port': 0,
+  clientUId: '7a177d05-5441-4ced-a236-ed51b8525da6',
   checkLoginIframe: true,
   checkLoginIframeInterval: 30,
 };
+
+/*
+  "realm": "Hkube",
+  "auth-server-url": "https://cicd.hkube.org/hkube/keycloak",
+  "ssl-required": "external",
+  "resource": "simulator-ui-app",
+  "public-client": true,
+  "confidential-port": 0
+  */
 
 const _kc = new Keycloak(KeycloakConfig);
 

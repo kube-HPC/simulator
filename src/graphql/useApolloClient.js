@@ -5,12 +5,14 @@ import {
   ApolloLink,
   useReactiveVar,
 } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
 import cache, { numberErrorGraphQLVar } from 'cache';
 import { Modal } from 'antd';
 import { GrafanaLink } from 'components';
+import KeycloakServices from 'keycloak/keycloakServices';
 
 const MAX_ERRORS_THRESHOLD = 5; // Maximum number of errors allowed within the time interval
 const TIME_INTERVAL = 60000; // 60 seconds in milliseconds
@@ -53,8 +55,18 @@ const useApolloClient = () => {
     uri: `${backendApiUrl.replace('/api/v1', '')}/graphql`,
   });
 
+  const authLink = setContext((_, { headers }) => {
+    const token = KeycloakServices.getToken();
+    return {
+      headers: {
+        ...headers,
+        Authorization: token ? `Bearer ${token}` : '',
+      },
+    };
+  });
+
   const apolloClient = new ApolloClient({
-    link: ApolloLink.from([errorLink, httpLink]),
+    link: ApolloLink.from([authLink, errorLink, httpLink]),
     cache,
   });
 
