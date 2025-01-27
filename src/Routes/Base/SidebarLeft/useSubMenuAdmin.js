@@ -9,13 +9,13 @@ import Icon, {
 import { USER_GUIDE, RIGHT_SIDEBAR_NAMES } from 'const';
 import { ReactComponent as DriversIcon } from 'images/drivers-icon.svg';
 import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
-import { useStats, useStorage } from 'hooks/graphql';
+import { useStats } from 'hooks/graphql';
 import { Tag } from 'antd';
-import {
+/* import {
   getColorStatus,
   getStorageColorStatus,
   combineStatus,
-} from 'utils/warningColorStatus';
+} from 'utils/warningColorStatus'; */
 import {
   Name,
   IconStyle,
@@ -23,15 +23,15 @@ import {
   BadgeStyle,
   tagStyle,
 } from './MenuStyles';
-import { getBottomActions } from './../../SidebarRight/schema';
+// import { getBottomActions } from './../../SidebarRight/schema';
 
 const useSubMenuAdmin = (totalNewWarnings, dataMoreCount) => {
   const { pageName } = useParams();
   const location = useLocation();
-
-  const { cpu, memory, gpu } = useStats();
-  const { storage } = useStorage();
-  const dataCounters = useMemo(
+  const { gpu } = useStats();
+  // const { cpu, memory, gpu } = useStats();
+  // const { storage } = useStorage();
+  /* const dataCounters = useMemo(
     () =>
       getBottomActions({
         warnings: totalNewWarnings,
@@ -44,7 +44,7 @@ const useSubMenuAdmin = (totalNewWarnings, dataMoreCount) => {
       }),
 
     [cpu, gpu, memory, storage, totalNewWarnings]
-  );
+  ); */
 
   const menuAdminItems = useMemo(() => {
     const itemsMenu = [
@@ -78,7 +78,7 @@ const useSubMenuAdmin = (totalNewWarnings, dataMoreCount) => {
       ],
     ];
 
-    if (dataCounters?.gpuStatus?.total) {
+    if (gpu?.legend?.length > 0) {
       itemsMenu.push([
         RIGHT_SIDEBAR_NAMES.GPU,
         FundOutlined,
@@ -88,11 +88,11 @@ const useSubMenuAdmin = (totalNewWarnings, dataMoreCount) => {
 
     return itemsMenu;
   }, [
-    dataCounters?.gpuStatus?.total,
-    dataMoreCount.drivers,
     dataMoreCount.workers,
+    dataMoreCount.drivers,
     pageName,
     totalNewWarnings,
+    gpu?.legend,
   ]);
 
   const menuAdminItemsJson = useMemo(() => {
