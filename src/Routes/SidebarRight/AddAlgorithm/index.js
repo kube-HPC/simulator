@@ -41,6 +41,7 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
     const objJsonData = JSON.parse(editorJsonValue);
 
     objJsonData.name = formObj.main.name;
+    objJsonData.sideCar = formObj.main.sideCar;
     objJsonData.cpu = formObj.main.cpu;
     objJsonData.gpu = formObj.main.gpu;
     objJsonData.mem = formObj.main.mem;
@@ -109,6 +110,7 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
 
     formObj.main.name = objJsonData.name;
     formObj.main.description = objJsonData.description;
+    formObj.main.sideCar = objJsonData.sideCar;
 
     formObj.main.cpu = objJsonData.cpu;
     formObj.main.gpu = objJsonData.gpu;
