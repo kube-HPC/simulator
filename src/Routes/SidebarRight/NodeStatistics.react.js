@@ -17,7 +17,7 @@ const Container = styled.div`
 
 // Define the custom formatter component outside of NodeStatistics
 const CustomAxisLeftTick = ({ value }) =>
-  value.length > 15 ? (
+  value?.length > 15 ? (
     <tspan>
       {`${value.substring(0, 15)}...`}
       <title>{value}</title>
