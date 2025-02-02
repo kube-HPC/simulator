@@ -37,7 +37,7 @@ const Settings = () => {
   const { triggerUserGuide } = useActions();
   const { hkubeSystemVersion } = useSelector(selectors.connection);
   const { grafanaUrl } = useSelector(selectors.connection);
-  const { keycloakEnable } = useSelector(selectors.connection);
+  // const { keycloakEnable } = useSelector(selectors.connection);
 
   const onGuideClick = useCallback(() => {
     triggerUserGuide();
@@ -147,9 +147,7 @@ const Settings = () => {
           type={<QuestionCircleOutlined title="Help" />}
           onClick={onGuideClick}
         />
-        <TextLink onClick={onGuideClick}>
-          Help {keycloakEnable.toString()}
-        </TextLink>
+        <TextLink onClick={onGuideClick}>Help</TextLink>
         <TextLink onClick={logout}>logout</TextLink>
       </FlexBox.Auto>
 

@@ -17,7 +17,7 @@ const grafanaUrl = process.env.GRAFANA_URL;
 const grafanaDashboardUrl = process.env.GRAFANA_URL;
 
 const dataSourceIsEnable = process.env.DATA_SOURCE_IS_ENABLE === 'true';
-const keycloakEnable = process.env.KEYCLOAK_ENABLE; // === 'true';
+const keycloakEnable = process.env.KEYCLOAK_ENABLE === 'true';
 
 const baseUrl = process.env.HKUBE_BASE_URL
   ? process.env.HKUBE_BASE_URL.replace(/^\//, '')
