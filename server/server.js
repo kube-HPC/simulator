@@ -13,6 +13,7 @@ const {
   grafanaUrl,
   grafanaDashboardUrl,
   dataSourceIsEnable,
+  keycloakEnable,
   indexHtml,
   baseUrl,
 } = require('./setupConfig');
@@ -35,6 +36,7 @@ app.get('*/dashboard-config.json', (req, res) => {
       grafanaUrl,
       grafanaDashboardUrl,
       dataSourceIsEnable,
+      keycloakEnable,
       baseUrl,
       monitorBackend,
       board,

@@ -23,6 +23,16 @@ const ConfigProviderApp = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(init());
+
+    // Start a periodic token refresh
+    const tokenRefreshInterval = setInterval(() => {
+      KeycloakServices.updateToken(30, () => {
+        console.log('Token refreshed successfully!');
+      });
+    }, 60000);
+
+    // Cleanup on unmount
+    return () => clearInterval(tokenRefreshInterval);
   }, [dispatch]);
 
   const { hasConfig } = useSelector(selectors.config);
