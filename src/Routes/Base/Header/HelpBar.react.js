@@ -2,7 +2,7 @@ import React from 'react';
 import { COLOR } from 'styles';
 import KeycloakServices from 'keycloak/keycloakServices';
 import { MenuOutlined } from '@ant-design/icons';
-import { Popover, Avatar } from 'antd';
+import { Popover, Avatar, Tooltip } from 'antd';
 import { USER_GUIDE } from 'const';
 import { FlexBox, Icons } from 'components/common';
 import styled from 'styled-components';
@@ -19,15 +19,18 @@ const HelpBar = () => (
     <InactiveModeTag />
 
     <ExperimentPicker />
-    <Avatar
-      alt={`You are logged in as the user ${KeycloakServices.getUsername()}.`}
-      style={{
-        backgroundColor: COLOR.greenLight,
-        verticalAlign: 'middle',
-        textTransform: 'uppercase',
-      }}>
-      {KeycloakServices.getUsername().toString()[0]}
-    </Avatar>
+    <Tooltip
+      title={`You are logged in as the user ${KeycloakServices.getUsername()}.`}
+      placement="top">
+      <Avatar
+        style={{
+          backgroundColor: COLOR.greenLight,
+          verticalAlign: 'middle',
+          textTransform: 'uppercase',
+        }}>
+        {KeycloakServices.getUsername().toString()[0]}
+      </Avatar>
+    </Tooltip>
     <Popover content={<Settings />} placement="bottomRight" trigger="click">
       <Icons.Hover type={<MenuOutlined title="Settings" />} />
     </Popover>
