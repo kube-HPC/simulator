@@ -150,7 +150,7 @@ const Settings = () => {
         <TextLink onClick={onGuideClick}>
           Help {keycloakEnable.toString()}
         </TextLink>
-        {keycloakEnable && <TextLink onClick={logout}>logout</TextLink>}*
+        <TextLink onClick={logout}>logout</TextLink>
       </FlexBox.Auto>
 
       <DarkText as="span">{hkubeSystemVersion}</DarkText>
