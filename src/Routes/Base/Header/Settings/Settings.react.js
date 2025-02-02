@@ -6,6 +6,7 @@ import {
   GlobalOutlined,
   GithubOutlined,
   QuestionCircleOutlined,
+  LogoutOutlined,
 } from '@ant-design/icons';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
@@ -148,6 +149,13 @@ const Settings = () => {
           onClick={onGuideClick}
         />
         <TextLink onClick={onGuideClick}>Help</TextLink>
+      </FlexBox.Auto>
+
+      <FlexBox.Auto>
+        <Icons.Hover
+          type={<LogoutOutlined title="logout" />}
+          onClick={logout}
+        />
         <TextLink onClick={logout}>logout</TextLink>
       </FlexBox.Auto>
 
