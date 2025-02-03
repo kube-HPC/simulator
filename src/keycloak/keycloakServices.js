@@ -58,6 +58,8 @@ const initKeycloak = (appToRender, renderError) => {
         onLoad: 'login-required',
       })
       .then(authenticated => {
+        // eslint-disable-next-line no-debugger
+        debugger;
         if (!authenticated) {
           console.log('user is not authenticated..!');
         }
