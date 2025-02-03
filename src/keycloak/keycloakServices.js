@@ -27,22 +27,49 @@ const KeycloakConfig = {
 
 const _kc = new Keycloak(KeycloakConfig);
 
-const initKeycloak = (appToRender, renderError) => {
-  _kc
-    .init({
-      onLoad: 'login-required',
-    })
-    .then(authenticated => {
-      if (!authenticated) {
-        console.log('user is not authenticated..!');
-      }
+const storedToken = localStorage.getItem('kcToken');
+const storedRefreshToken = localStorage.getItem('kcRefreshToken');
 
-      appToRender();
-    })
-    .catch(authenticatedError => {
-      console.error(authenticatedError);
-      return renderError(authenticatedError);
-    });
+const initKeycloak = (appToRender, renderError) => {
+  if (storedToken && storedRefreshToken) {
+    _kc
+      .init({
+        onLoad: 'login-required',
+      })
+      .then(authenticated => {
+        if (!authenticated) {
+          console.log('user is not authenticated..!');
+        } else {
+          _kc.token = storedToken;
+          _kc.refreshToken = storedRefreshToken;
+        }
+
+        appToRender();
+      })
+      .catch(authenticatedError => {
+        console.error(authenticatedError);
+        return renderError(authenticatedError);
+      });
+  } else {
+    _kc
+      .init({
+        onLoad: 'login-required',
+      })
+      .then(authenticated => {
+        if (!authenticated) {
+          console.log('user is not authenticated..!');
+        }
+
+        localStorage.setItem('kcToken', _kc.token);
+        localStorage.setItem('kcRefreshToken', _kc.refreshToken);
+
+        appToRender();
+      })
+      .catch(authenticatedError => {
+        console.error(authenticatedError);
+        return renderError(authenticatedError);
+      });
+  }
 };
 
 const doLogin = _kc.login.bind(_kc);
