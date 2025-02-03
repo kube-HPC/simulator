@@ -28,7 +28,8 @@ const HelpBar = () => (
           verticalAlign: 'middle',
           textTransform: 'uppercase',
         }}>
-        {KeycloakServices.getUsername().toString()[0]}
+        {KeycloakServices.getUsername() &&
+          KeycloakServices.getUsername().toString()[0]}
       </Avatar>
     </Tooltip>
     <Popover content={<Settings />} placement="bottomRight" trigger="click">

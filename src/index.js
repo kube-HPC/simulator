@@ -108,7 +108,7 @@ const renderErrorPreRenderApp = () => {
 };
 
 KeycloakServices.initKeycloak(renderApp, renderErrorPreRenderApp);
-// renderApp();
+
 // root.unmount();
 
 // webpack Hot Module Replacement API

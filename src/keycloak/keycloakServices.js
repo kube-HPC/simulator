@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unresolved */
 import Keycloak from 'keycloak-js';
 
+// eslint-disable-next-line no-unused-vars
 const KeycloakConfig = {
   clientId: 'simulator-ui-app',
   realm: 'Hkube',
@@ -39,23 +40,34 @@ const KeycloakConfig2 = {
   */
 
 const _kc = new Keycloak(KeycloakConfig);
+const storedToken = localStorage.getItem('kcToken');
+const storedRefreshToken = localStorage.getItem('kcRefreshToken');
 
 const initKeycloak = (appToRender, renderError) => {
-  _kc
-    .init({
-      onLoad: 'login-required',
-    })
-    .then(authenticated => {
-      if (!authenticated) {
-        console.log('user is not authenticated..!');
-      }
+  if (storedToken && storedRefreshToken) {
+    _kc.token = storedToken;
+    _kc.refreshToken = storedRefreshToken;
+    appToRender();
+  } else {
+    _kc
+      .init({
+        onLoad: 'login-required',
+      })
+      .then(authenticated => {
+        if (!authenticated) {
+          console.log('user is not authenticated..!');
+        } else {
+          localStorage.setItem('kcToken', _kc.token);
+          localStorage.setItem('kcRefreshToken', _kc.refreshToken);
+        }
 
-      appToRender();
-    })
-    .catch(authenticatedError => {
-      console.error(authenticatedError);
-      return renderError(authenticatedError);
-    });
+        appToRender();
+      })
+      .catch(authenticatedError => {
+        console.error(authenticatedError);
+        return renderError(authenticatedError);
+      });
+  }
 };
 
 const doLogin = _kc.login.bind(_kc);
