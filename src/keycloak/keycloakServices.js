@@ -45,8 +45,13 @@ const storedRefreshToken = localStorage.getItem('kcRefreshToken');
 
 const initKeycloak = (appToRender, renderError) => {
   if (storedToken && storedRefreshToken) {
-    _kc.token = storedToken;
-    _kc.refreshToken = storedRefreshToken;
+    _kc.init({
+      onLoad: 'check-sso',
+      silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
+      pkceMethod: 'S256',
+    });
+    // _kc.token = storedToken;
+    // _kc.refreshToken = storedRefreshToken;
     appToRender();
   } else {
     _kc
