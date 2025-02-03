@@ -83,82 +83,87 @@ let SOCKET_URL = null;
 let SOCKET_DATASOURCES_URL = null;
 let BOARD_URL = null;
 
-const restMiddleware = ({ dispatch }) => next => action => {
-  if (action.type === `${AT.SOCKET_GET_CONFIG}_SUCCESS`) {
-    const {
-      monitorBackend,
-      board,
-      hkubeSystemVersion,
-      kibanaUrl,
-      structuredPrefix,
-      grafanaUrl,
-      grafanaDashboardUrl,
-      dataSourceIsEnable,
-    } = action.payload.config;
-    SOCKET_URL = setMonitorPath(monitorBackend);
-    SOCKET_DATASOURCES_URL = setDatasourcesPath(monitorBackend);
-    BOARD_URL = setBoardPath(board);
-    dispatch(
-      actions.connectionSetup({
-        socketUrl: SOCKET_URL,
-        socketDatasourcesUrl: SOCKET_DATASOURCES_URL,
-        boardUrl: BOARD_URL,
+const restMiddleware =
+  ({ dispatch }) =>
+  next =>
+  action => {
+    if (action.type === `${AT.SOCKET_GET_CONFIG}_SUCCESS`) {
+      const {
+        monitorBackend,
+        board,
         hkubeSystemVersion,
         kibanaUrl,
         structuredPrefix,
         grafanaUrl,
         grafanaDashboardUrl,
         dataSourceIsEnable,
-      })
-    );
-    client.defaults.baseURL = SOCKET_URL;
-    return next(action);
-  }
-  if (
-    ![
-      AT.REST_REQ_GET,
-      AT.REST_REQ_POST,
-      AT.REST_REQ_POST_FORM,
-      AT.REST_REQ_PUT,
-      AT.REST_REQ_DELETE,
-    ].includes(action.type)
-  ) {
-    return next(action);
-  }
+        keycloakEnable,
+      } = action.payload.config;
+      SOCKET_URL = setMonitorPath(monitorBackend);
+      SOCKET_DATASOURCES_URL = setDatasourcesPath(monitorBackend);
+      BOARD_URL = setBoardPath(board);
+      dispatch(
+        actions.connectionSetup({
+          socketUrl: SOCKET_URL,
+          socketDatasourcesUrl: SOCKET_DATASOURCES_URL,
+          boardUrl: BOARD_URL,
+          hkubeSystemVersion,
+          kibanaUrl,
+          structuredPrefix,
+          grafanaUrl,
+          grafanaDashboardUrl,
+          dataSourceIsEnable,
+          keycloakEnable,
+        })
+      );
+      client.defaults.baseURL = SOCKET_URL;
+      return next(action);
+    }
+    if (
+      ![
+        AT.REST_REQ_GET,
+        AT.REST_REQ_POST,
+        AT.REST_REQ_POST_FORM,
+        AT.REST_REQ_PUT,
+        AT.REST_REQ_DELETE,
+      ].includes(action.type)
+    ) {
+      return next(action);
+    }
 
-  if (!SOCKET_URL) return next(action);
-  pending(dispatch, 'pending', action);
-  if (action.type === AT.REST_REQ_GET) {
-    client
-      .get(action.payload.url)
-      .then(res => success(dispatch, res.data, action))
-      .catch(err => {
-        const response =
-          err.response && err.response.data && err.response.data.error;
-        reject(dispatch, response, action);
-      });
-  } else if (action.type === AT.REST_REQ_POST) {
-    client
-      .post(action.payload.url, action.payload.body)
-      .then(res => success(dispatch, res.data, action))
-      .catch(err => reject(dispatch, err.response.data.error, action));
-  } else if (action.type === AT.REST_REQ_POST_FORM) {
-    client
-      .post(action.payload.url, action.payload.formData)
-      .then(res => success(dispatch, res.data, action))
-      .catch(err => reject(dispatch, err.response.data.error, action));
-  } else if (action.type === AT.REST_REQ_PUT) {
-    client
-      .put(action.payload.url, action.payload.body)
-      .then(res => success(dispatch, res.data, action))
-      .catch(err => reject(dispatch, err.response.data.error, action));
-  } else if (action.type === AT.REST_REQ_DELETE) {
-    client
-      .delete(action.payload.url, { data: action.payload.body })
-      .then(res => success(dispatch, res.data, action))
-      .catch(err => reject(dispatch, err?.response?.data?.error, action));
-  }
-  return next(action);
-};
+    if (!SOCKET_URL) return next(action);
+    pending(dispatch, 'pending', action);
+    if (action.type === AT.REST_REQ_GET) {
+      client
+        .get(action.payload.url)
+        .then(res => success(dispatch, res.data, action))
+        .catch(err => {
+          const response =
+            err.response && err.response.data && err.response.data.error;
+          reject(dispatch, response, action);
+        });
+    } else if (action.type === AT.REST_REQ_POST) {
+      client
+        .post(action.payload.url, action.payload.body)
+        .then(res => success(dispatch, res.data, action))
+        .catch(err => reject(dispatch, err.response.data.error, action));
+    } else if (action.type === AT.REST_REQ_POST_FORM) {
+      client
+        .post(action.payload.url, action.payload.formData)
+        .then(res => success(dispatch, res.data, action))
+        .catch(err => reject(dispatch, err.response.data.error, action));
+    } else if (action.type === AT.REST_REQ_PUT) {
+      client
+        .put(action.payload.url, action.payload.body)
+        .then(res => success(dispatch, res.data, action))
+        .catch(err => reject(dispatch, err.response.data.error, action));
+    } else if (action.type === AT.REST_REQ_DELETE) {
+      client
+        .delete(action.payload.url, { data: action.payload.body })
+        .then(res => success(dispatch, res.data, action))
+        .catch(err => reject(dispatch, err?.response?.data?.error, action));
+    }
+    return next(action);
+  };
 
 export default restMiddleware;

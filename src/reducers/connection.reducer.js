@@ -17,6 +17,7 @@ const initialState = {
   grafanaUrl: null,
   grafanaDashboardUrl: null,
   dataSourceIsEnable: null,
+  keycloakEnable: null,
   hasData: false,
   isSocketConnected: false,
 };
@@ -38,6 +39,7 @@ const connection = createSlice({
      *     grafanaUrl?: string;
      *     grafanaDashboardUrl: string;
      *     dataSourceIsEnable?: boolean;
+     *     keycloakEnable?: boolean;
      *   };
      * }} action
      */
