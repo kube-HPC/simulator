@@ -30,9 +30,7 @@ const _kc = new Keycloak(KeycloakConfig);
 const initKeycloak = (appToRender, renderError) => {
   _kc
     .init({
-      onLoad: 'check-sso',
-      silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
-      pkceMethod: 'S256',
+      onLoad: 'login-required',
     })
     .then(authenticated => {
       if (!authenticated) {
