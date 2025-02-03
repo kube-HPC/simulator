@@ -1,21 +1,22 @@
 /* eslint-disable import/no-unresolved */
 import Keycloak from 'keycloak-js';
-/*
+
 const KeycloakConfig = {
   clientId: 'simulator-ui-app',
   realm: 'Hkube',
-  'ssl-required': 'external',
+  // 'ssl-required': 'external',
   url: 'https://cicd.hkube.org/hkube/keycloak',
-  resource: 'simulator-ui-app',
-  enableCors: true,
-  allowedOrigins: '*',
-  'public-client': true,
-  'confidential-port': 0,
-  clientUId: '7a177d05-5441-4ced-a236-ed51b8525da6',
-  checkLoginIframe: true,
-  checkLoginIframeInterval: 30,
+  //  resource: 'simulator-ui-app',
+  // enableCors: true,
+  //  allowedOrigins: '*',
+  // 'public-client': true,
+  //  'confidential-port': 0,
+  // clientUId: '7a177d05-5441-4ced-a236-ed51b8525da6',
+  // checkLoginIframe: true,
+  // checkLoginIframeInterval: 30,
 };
-*/
+
+// eslint-disable-next-line no-unused-vars
 const KeycloakConfig2 = {
   clientId: 'simulator-ui-app-local',
   realm: 'Hkube',
@@ -37,7 +38,7 @@ const KeycloakConfig2 = {
   "confidential-port": 0
   */
 
-const _kc = new Keycloak(KeycloakConfig2);
+const _kc = new Keycloak(KeycloakConfig);
 
 const initKeycloak = (appToRender, renderError) => {
   _kc
