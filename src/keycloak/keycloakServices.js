@@ -55,7 +55,6 @@ const KeycloakConfig3 = {
 const _kc = new Keycloak(KeycloakConfig);
 
 const initKeycloak = (appToRender, renderError) => {
-  console.log(_kc);
   _kc
     .init({
       onLoad: 'login-required',
