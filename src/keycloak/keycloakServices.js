@@ -5,7 +5,9 @@ const KeycloakConfig = {
   clientId: 'simulator-ui-app',
   realm: 'Hkube',
 
-  url: 'https://cicd.hkube.org/hkube/keycloak/',
+  url:
+    process.env.REACT_APP_KEYCLOAK_URL ||
+    `${window.location.origin}/hkube/keycloak/`,
   resource: 'simulator-ui-app',
   enableCors: true,
   clientUId: '7a177d05-5441-4ced-a236-ed51b8525da6',
