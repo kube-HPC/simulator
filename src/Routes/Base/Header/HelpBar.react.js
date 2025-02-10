@@ -1,4 +1,6 @@
 import React from 'react';
+import { selectors } from 'reducers';
+import { useSelector } from 'react-redux';
 import { COLOR } from 'styles';
 import KeycloakServices from 'keycloak/keycloakServices';
 import { MenuOutlined } from '@ant-design/icons';
@@ -14,28 +16,33 @@ const Container = styled(FlexBox.Auto)`
   position: relative;
 `;
 
-const HelpBar = () => (
-  <Container className={USER_GUIDE.HEADER.SOCIALS}>
-    <InactiveModeTag />
+const HelpBar = () => {
+  const { keycloakEnable } = useSelector(selectors.connection);
+  return (
+    <Container className={USER_GUIDE.HEADER.SOCIALS}>
+      <InactiveModeTag />
 
-    <ExperimentPicker />
-    <Tooltip
-      title={`You are logged in as the user ${KeycloakServices.getUsername()}.`}
-      placement="top">
-      <Avatar
-        style={{
-          backgroundColor: COLOR.greenLight,
-          verticalAlign: 'middle',
-          textTransform: 'uppercase',
-        }}>
-        {KeycloakServices.getUsername() &&
-          KeycloakServices.getUsername().toString()[0]}
-      </Avatar>
-    </Tooltip>
-    <Popover content={<Settings />} placement="bottomRight" trigger="click">
-      <Icons.Hover type={<MenuOutlined title="Settings" />} />
-    </Popover>
-  </Container>
-);
+      <ExperimentPicker />
+      {keycloakEnable && (
+        <Tooltip
+          title={`You are logged in as the user ${KeycloakServices.getUsername()}.`}
+          placement="top">
+          <Avatar
+            style={{
+              backgroundColor: COLOR.greenLight,
+              verticalAlign: 'middle',
+              textTransform: 'uppercase',
+            }}>
+            {KeycloakServices.getUsername() &&
+              KeycloakServices.getUsername().toString()[0]}
+          </Avatar>
+        </Tooltip>
+      )}
+      <Popover content={<Settings />} placement="bottomRight" trigger="click">
+        <Icons.Hover type={<MenuOutlined title="Settings" />} />
+      </Popover>
+    </Container>
+  );
+};
 
 export default HelpBar;

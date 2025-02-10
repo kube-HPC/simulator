@@ -14,19 +14,20 @@ import { Modal } from 'antd';
 import { GrafanaLink } from 'components';
 import KeycloakServices from 'keycloak/keycloakServices';
 
-const MAX_ERRORS_THRESHOLD = 5; // Maximum number of errors allowed within the time interval
-const TIME_INTERVAL = 60000; // 60 seconds in milliseconds
+const MAX_ERRORS_THRESHOLD = 5;
+const TIME_INTERVAL = 60000;
 
 const useApolloClient = () => {
   let errorCount = 0;
   let timer = null;
   const [isNotificationErrorShow, setIsNotificationErrorShow] = useState(false);
   const { backendApiUrl } = useSelector(selectors.config);
+  const { keycloakEnable } = useSelector(selectors.connection);
+
   const numberErrorGraphQL = useReactiveVar(numberErrorGraphQLVar);
 
   const [modal, contextHolder] = Modal.useModal();
 
-  // Function to open the error notification modal
   const openNotification = () => {
     modal.error({
       title: `Oops... Something went wrong`,
@@ -48,7 +49,6 @@ const useApolloClient = () => {
     });
   };
 
-  // Link to handle errors
   const errorLink = onError(
     ({ graphQLErrors, networkError, response, operation }) => {
       clearTimeout(timer);
@@ -68,22 +68,17 @@ const useApolloClient = () => {
       }
 
       if (graphQLErrors) {
-        // Handle GraphQL errors
         console.error('GraphQL Errors:', graphQLErrors);
       }
 
       if (networkError) {
-        // Handle network errors
         console.error('Network Error:', networkError);
       }
 
-      // Handle 401 Unauthorized (Token Expired)
       if (
-        response &&
-        response.errors &&
-        response.errors.some(error => error.message === 'Unauthorized')
+        keycloakEnable &&
+        response?.errors?.some(error => error.message === 'Unauthorized')
       ) {
-        // Try to refresh token
         KeycloakServices.updateToken(30, () => {
           const newToken = KeycloakServices.getToken();
           operation.setContext({
@@ -93,26 +88,24 @@ const useApolloClient = () => {
             },
           });
         })
-          .then(() =>
-            // Retry the operation after token refresh
-            operation.retry()
-          )
+          .then(() => operation.retry())
           .catch(error => {
             console.error('Failed to refresh token', error);
-            KeycloakServices.doLogout(); // Log the user out if refreshing the token fails
+            KeycloakServices.doLogout();
             openNotification();
           });
       }
     }
   );
 
-  // HTTP link for GraphQL queries
   const httpLink = createHttpLink({
     uri: `${backendApiUrl.replace('/api/v1', '')}/graphql`,
   });
 
-  // Authentication link to add the token to the headers
   const authLink = setContext((_, { headers }) => {
+    if (!keycloakEnable) {
+      return { headers };
+    }
     const token = KeycloakServices.getToken();
     return {
       headers: {
@@ -122,9 +115,12 @@ const useApolloClient = () => {
     };
   });
 
-  // Apollo Client setup
+  const link = keycloakEnable
+    ? ApolloLink.from([authLink, errorLink, httpLink])
+    : ApolloLink.from([errorLink, httpLink]);
+
   const apolloClient = new ApolloClient({
-    link: ApolloLink.from([authLink, errorLink, httpLink]),
+    link,
     cache,
   });
 

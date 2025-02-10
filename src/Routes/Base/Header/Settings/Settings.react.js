@@ -38,7 +38,7 @@ const Settings = () => {
   const { triggerUserGuide } = useActions();
   const { hkubeSystemVersion } = useSelector(selectors.connection);
   const { grafanaUrl } = useSelector(selectors.connection);
-  // const { keycloakEnable } = useSelector(selectors.connection);
+  const { keycloakEnable } = useSelector(selectors.connection);
 
   const onGuideClick = useCallback(() => {
     triggerUserGuide();
@@ -151,13 +151,15 @@ const Settings = () => {
         <TextLink onClick={onGuideClick}>Help</TextLink>
       </FlexBox.Auto>
 
-      <FlexBox.Auto>
-        <Icons.Hover
-          type={<LogoutOutlined title="logout" />}
-          onClick={logout}
-        />
-        <TextLink onClick={logout}>logout</TextLink>
-      </FlexBox.Auto>
+      {keycloakEnable && (
+        <FlexBox.Auto>
+          <Icons.Hover
+            type={<LogoutOutlined title="logout" />}
+            onClick={logout}
+          />
+          <TextLink onClick={logout}>logout</TextLink>
+        </FlexBox.Auto>
+      )}
 
       <DarkText as="span">{hkubeSystemVersion}</DarkText>
 
