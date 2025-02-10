@@ -19,6 +19,7 @@ import {
   splitByDot,
 } from 'utils';
 
+import KeyValueForm from 'components/common/KeyValueForm';
 import { CodeBuild, GitBuild, ImageBuild } from './BuildTypes';
 import MemoryField from './MemoryField.react';
 import schema from './schema';
@@ -323,7 +324,22 @@ const AddAlgorithmForm = ({
           </Select>
         </Form.Item>
       </Collapsible>
-
+      <Collapsible title="Environment variable">
+        <Form.Item label={MAIN.WORKER_ENV.label}>
+          <KeyValueForm
+            label={MAIN.WORKER_ENV.label}
+            fieldName={splitByDot(MAIN.WORKER_ENV.field)}
+            titleButtoAdd="Add Environment Worker"
+          />
+        </Form.Item>
+        <Form.Item label={MAIN.ALGORITEM_ENV.label}>
+          <KeyValueForm
+            label={MAIN.ALGORITEM_ENV.label}
+            fieldName={splitByDot(MAIN.ALGORITEM_ENV.field)}
+            titleButtoAdd="Add Environment Algoritem"
+          />
+        </Form.Item>
+      </Collapsible>
       <BottomPanel style={{ marginTop: 'auto' }}>
         <PanelButton onClick={onToggleToEditor}>Text editor</PanelButton>
 
