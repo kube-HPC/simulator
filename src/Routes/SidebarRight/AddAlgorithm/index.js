@@ -63,8 +63,8 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
     objJsonData.mem = formObj.main.mem;
     objJsonData.minHotWorkers = formObj.main.minHotWorkers;
     objJsonData.workerEnv = transformFieldsToObject(formObj.main.workerEnv);
-    objJsonData.algoritemEnv = transformFieldsToObject(
-      formObj.main.algoritemEnv
+    objJsonData.algorithmEnv = transformFieldsToObject(
+      formObj.main.algorithmEnv
     );
     objJsonData.reservedMemory = formObj.main.reservedMemory;
 
@@ -135,10 +135,11 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
     formObj.main.gpu = objJsonData.gpu;
     formObj.main.mem = objJsonData.mem;
     formObj.main.minHotWorkers = objJsonData.minHotWorkers;
-    formObj.main.workerEnv = transformObjectToArray(objJsonData.workerEnv);
-    formObj.main.algoritemEnv = transformObjectToArray(
-      objJsonData.algoritemEnv
-    );
+    formObj.main.workerEnv =
+      objJsonData.workerEnv && transformObjectToArray(objJsonData.workerEnv);
+    formObj.main.algorithmEnv =
+      objJsonData.algorithmEnv &&
+      transformObjectToArray(objJsonData.algorithmEnv);
     formObj.main.reservedMemory = objJsonData.reservedMemory;
 
     formObj.main.options = Object.keys(objJsonData?.options).filter(item =>

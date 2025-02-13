@@ -3,7 +3,7 @@ import { Form, Input, Button, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
-const KeyValueForm = ({ fieldName, titleButtoAdd }) => (
+const KeyValueForm = ({ fieldName, titleButtoAdd, buttonWidth }) => (
   <Form.List name={fieldName}>
     {(fields, { add, remove }) => (
       <>
@@ -31,9 +31,9 @@ const KeyValueForm = ({ fieldName, titleButtoAdd }) => (
         ))}
         <Form.Item>
           <Button
+            style={{ width: buttonWidth ?? '100%' }}
             type="dashed"
             onClick={() => add()}
-            block
             icon={<PlusOutlined />}>
             {titleButtoAdd ?? 'Add Key-Value Pair'}
           </Button>
@@ -47,6 +47,7 @@ KeyValueForm.propTypes = {
   fieldName: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   titleButtoAdd: PropTypes.string.isRequired,
+  buttonWidth: PropTypes.string,
 };
 
 export default KeyValueForm;

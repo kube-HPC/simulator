@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Input, InputNumber, Radio, Select, Checkbox } from 'antd';
+import { Input, InputNumber, Radio, Select, Checkbox, Divider } from 'antd';
 import { Form, FlexBox } from 'components/common';
 import {
   BottomPanel,
@@ -324,22 +324,26 @@ const AddAlgorithmForm = ({
           </Select>
         </Form.Item>
       </Collapsible>
-      <Collapsible title="Environment variable">
-        <Form.Item label={MAIN.WORKER_ENV.label}>
-          <KeyValueForm
-            label={MAIN.WORKER_ENV.label}
-            fieldName={splitByDot(MAIN.WORKER_ENV.field)}
-            titleButtoAdd="Add Environment Worker"
-          />
-        </Form.Item>
-        <Form.Item label={MAIN.ALGORITEM_ENV.label}>
-          <KeyValueForm
-            label={MAIN.ALGORITEM_ENV.label}
-            fieldName={splitByDot(MAIN.ALGORITEM_ENV.field)}
-            titleButtoAdd="Add Environment Algoritem"
-          />
-        </Form.Item>
-      </Collapsible>
+
+      <Divider orientation="left">Worker environment variable</Divider>
+      <Form.Item style={{ marginLeft: '240px' }}>
+        <KeyValueForm
+          buttonWidth="395px"
+          label={MAIN.WORKER_ENV.label}
+          fieldName={splitByDot(MAIN.WORKER_ENV.field)}
+          titleButtoAdd="Add"
+        />
+      </Form.Item>
+      <Divider orientation="left">Algorithm environment variable</Divider>
+      <Form.Item style={{ marginLeft: '240px' }}>
+        <KeyValueForm
+          buttonWidth="395px"
+          label={MAIN.ALGORITEM_ENV.label}
+          fieldName={splitByDot(MAIN.ALGORITEM_ENV.field)}
+          titleButtoAdd="Add"
+        />
+      </Form.Item>
+
       <BottomPanel style={{ marginTop: 'auto' }}>
         <PanelButton onClick={onToggleToEditor}>Text editor</PanelButton>
 
