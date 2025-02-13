@@ -17,8 +17,8 @@ import store from './store';
 import KeycloakServices from './keycloak/keycloakServices';
 import _ from 'lodash';
 
-const isKc = process.env.KEYCLOAK_ENABLE === 'true';
-console.log('index isKc', process.env.KEYCLOAK_ENABLE);
+const isKc = process.env.REACT_APP_KEYCLOAK_ENABLE === 'true';
+console.log('index isKc', process.env.REACT_APP_KEYCLOAK_ENABLE);
 const ConfigProviderApp = () => {
   // do not use the useActions hook
   // ReusableProvider is not available yet at this point!
