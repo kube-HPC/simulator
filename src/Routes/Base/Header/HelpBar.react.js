@@ -4,10 +4,11 @@ import { useSelector } from 'react-redux';
 import { COLOR } from 'styles';
 import KeycloakServices from 'keycloak/keycloakServices';
 import { MenuOutlined } from '@ant-design/icons';
-import { Popover, Avatar, Tooltip } from 'antd';
+import { Popover, Avatar } from 'antd';
 import { USER_GUIDE } from 'const';
 import { FlexBox, Icons } from 'components/common';
 import styled from 'styled-components';
+import SettingsUser from './Settings/SettingsUser';
 import Settings from './Settings/Settings.react';
 import InactiveModeTag from './InactiveMode';
 import ExperimentPicker from './ExperimentPicker.react';
@@ -24,9 +25,10 @@ const HelpBar = () => {
 
       <ExperimentPicker />
       {keycloakEnable && (
-        <Tooltip
-          title={`You are logged in as the user ${KeycloakServices.getUsername()}.`}
-          placement="top">
+        <Popover
+          content={<SettingsUser />}
+          placement="bottomRight"
+          trigger="click">
           <Avatar
             style={{
               backgroundColor: COLOR.greenLight,
@@ -36,7 +38,7 @@ const HelpBar = () => {
             {KeycloakServices.getUsername() &&
               KeycloakServices.getUsername().toString()[0]}
           </Avatar>
-        </Tooltip>
+        </Popover>
       )}
       <Popover content={<Settings />} placement="bottomRight" trigger="click">
         <Icons.Hover type={<MenuOutlined title="Settings" />} />
