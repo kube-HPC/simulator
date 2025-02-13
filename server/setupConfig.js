@@ -17,6 +17,7 @@ const grafanaUrl = process.env.GRAFANA_URL;
 const grafanaDashboardUrl = process.env.GRAFANA_URL;
 
 const dataSourceIsEnable = process.env.DATA_SOURCE_IS_ENABLE === 'true';
+const keycloakEnable = process.env.REACT_APP_KEYCLOAK_ENABLE === 'true';
 
 const baseUrl = process.env.HKUBE_BASE_URL
   ? process.env.HKUBE_BASE_URL.replace(/^\//, '')
@@ -54,6 +55,7 @@ module.exports = {
   grafanaUrl,
   grafanaDashboardUrl,
   dataSourceIsEnable,
+  keycloakEnable,
   baseUrl,
   board,
   BOARD_HOST,

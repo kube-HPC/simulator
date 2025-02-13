@@ -29,6 +29,7 @@ export const connectionSetup = ({
   grafanaUrl,
   grafanaDashboardUrl,
   dataSourceIsEnable,
+  keycloakEnable,
 }) => ({
   type: actions.CONNECTION_SETUP,
   payload: {
@@ -41,6 +42,7 @@ export const connectionSetup = ({
     grafanaUrl,
     grafanaDashboardUrl,
     dataSourceIsEnable,
+    keycloakEnable,
   },
 });
 

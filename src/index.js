@@ -14,14 +14,31 @@ import { selectors } from 'reducers';
 import GlobalThemes from './styles/themes/GlobalThemes';
 import Root from './Routes';
 import store from './store';
+import KeycloakServices from './keycloak/keycloakServices';
 import _ from 'lodash';
 
+const isKc = process.env.REACT_APP_KEYCLOAK_ENABLE === 'true';
+console.log('index isKc', process.env.REACT_APP_KEYCLOAK_ENABLE);
 const ConfigProviderApp = () => {
   // do not use the useActions hook
   // ReusableProvider is not available yet at this point!
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(init());
+
+    // Start a periodic token refresh
+    const tokenRefreshInterval = setInterval(() => {
+      if (isKc) {
+        KeycloakServices.updateToken(30, () => {
+          console.log('Token refreshed successfully!');
+        });
+      } else {
+        console.log('no keycloak in action');
+      }
+    }, 60000);
+
+    // Cleanup on unmount
+    return () => clearInterval(tokenRefreshInterval);
   }, [dispatch]);
 
   const { hasConfig } = useSelector(selectors.config);
@@ -81,17 +98,26 @@ const ConfigProviderApp = () => {
   ) : null;
 };
 
-const App = () => {
-  return (
+const container = document.getElementById('root');
+const root = createRoot(container);
+
+const renderApp = () => {
+  root.render(
     <Provider store={store}>
       <ConfigProviderApp />
     </Provider>
   );
 };
 
-const container = document.getElementById('root');
-const root = createRoot(container);
-root.render(<App />);
+const renderErrorPreRenderApp = () => {
+  root.render(<>error</>);
+};
+if (isKc) {
+  KeycloakServices.initKeycloak(renderApp, renderErrorPreRenderApp);
+} else {
+  renderApp();
+}
+
 // root.unmount();
 
 // webpack Hot Module Replacement API

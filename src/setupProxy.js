@@ -11,6 +11,7 @@ module.exports = app => {
         grafanaUrl: process.env.GRAFANA_URL,
         grafanaDashboardUrl: process.env.GRAFANA_URL,
         dataSourceIsEnable: process.env.DATA_SOURCE_IS_ENABLE === 'true',
+        keycloakEnable: process.env.REACT_APP_KEYCLOAK_ENABLE === 'true',
         baseUrl: packageJSON.homepage,
         monitorBackend: {
           host: process.env.API_SERVER_BACKEND_HOST || 'localhost',
