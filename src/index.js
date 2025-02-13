@@ -17,8 +17,9 @@ import store from './store';
 import KeycloakServices from './keycloak/keycloakServices';
 import _ from 'lodash';
 
-const isKc = process.env.REACT_APP_KEYCLOAK_ENABLE === 'true';
-
+const state = store.getState();
+const isKc = true; // process.env.REACT_APP_KEYCLOAK_ENABLE === 'true';
+console.log('state index', state);
 console.log('process.env', process.env);
 console.log('index isKc', process.env.REACT_APP_KEYCLOAK_ENABLE);
 

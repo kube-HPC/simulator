@@ -1,12 +1,11 @@
 import React, { useCallback } from 'react';
-import KeycloakServices from 'keycloak/keycloakServices';
+
 import { FlexBox, Icons } from 'components/common';
 import { useNavigate } from 'react-router-dom';
 import {
   GlobalOutlined,
   GithubOutlined,
   QuestionCircleOutlined,
-  LogoutOutlined,
 } from '@ant-design/icons';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
@@ -38,7 +37,6 @@ const Settings = () => {
   const { triggerUserGuide } = useActions();
   const { hkubeSystemVersion } = useSelector(selectors.connection);
   const { grafanaUrl } = useSelector(selectors.connection);
-  const { keycloakEnable } = useSelector(selectors.connection);
 
   const onGuideClick = useCallback(() => {
     triggerUserGuide();
@@ -46,8 +44,6 @@ const Settings = () => {
   }, [navigate, triggerUserGuide]);
 
   const openUrl = url => () => window.open(url);
-
-  const logout = () => KeycloakServices.doLogout();
 
   const DarkText = styled.div`
     cursor: pointer;
@@ -150,16 +146,6 @@ const Settings = () => {
         />
         <TextLink onClick={onGuideClick}>Help</TextLink>
       </FlexBox.Auto>
-
-      {keycloakEnable && (
-        <FlexBox.Auto>
-          <Icons.Hover
-            type={<LogoutOutlined title="logout" />}
-            onClick={logout}
-          />
-          <TextLink onClick={logout}>logout</TextLink>
-        </FlexBox.Auto>
-      )}
 
       <DarkText as="span">{hkubeSystemVersion}</DarkText>
 

@@ -1,8 +1,13 @@
 import axios from 'axios';
 import KeycloakServices from 'keycloak/keycloakServices';
 
-const isKc = process.env.REACT_APP_KEYCLOAK_ENABLE === 'true';
+const store = require('./store').default;
+
+const state = store.getState();
+
+const isKc = true; // process.env.REACT_APP_KEYCLOAK_ENABLE === 'true';
 console.log('axios isKc', process.env.REACT_APP_KEYCLOAK_ENABLE);
+console.log('state', state);
 const client = axios.create();
 
 if (isKc) {
