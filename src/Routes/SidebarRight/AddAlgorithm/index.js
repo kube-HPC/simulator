@@ -15,6 +15,24 @@ import schema from './schema';
 const { MAIN, BUILD_TYPES } = schema;
 
 const DEFAULT_EDITOR_VALUE = stringify(addAlgorithmTemplate);
+
+const transformFieldsToObject = values => {
+  const fieldData = values || [];
+
+  return fieldData.reduce((acc, pair) => {
+    if (pair?.key && pair?.value) {
+      acc[pair.key] = pair.value;
+    }
+    return acc;
+  }, {});
+};
+
+const transformObjectToArray = obj =>
+  Object.entries(obj).map(([key, value]) => ({
+    key,
+    value,
+  }));
+
 const AddAlgorithm = ({ algorithmValue = undefined }) => {
   // #region  Editor State
   const refCheckForceStopAlgorithms = useRef(false);
@@ -39,12 +57,15 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
   // switch from Form Object to Json
   const switchToJson = (formObj, type) => {
     const objJsonData = JSON.parse(editorJsonValue);
-
     objJsonData.name = formObj.main.name;
     objJsonData.cpu = formObj.main.cpu;
     objJsonData.gpu = formObj.main.gpu;
     objJsonData.mem = formObj.main.mem;
     objJsonData.minHotWorkers = formObj.main.minHotWorkers;
+    objJsonData.workerEnv = transformFieldsToObject(formObj.main.workerEnv);
+    objJsonData.algoritemEnv = transformFieldsToObject(
+      formObj.main.algoritemEnv
+    );
     objJsonData.reservedMemory = formObj.main.reservedMemory;
 
     // Reduce selected options to boolean entry
@@ -114,6 +135,10 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
     formObj.main.gpu = objJsonData.gpu;
     formObj.main.mem = objJsonData.mem;
     formObj.main.minHotWorkers = objJsonData.minHotWorkers;
+    formObj.main.workerEnv = transformObjectToArray(objJsonData.workerEnv);
+    formObj.main.algoritemEnv = transformObjectToArray(
+      objJsonData.algoritemEnv
+    );
     formObj.main.reservedMemory = objJsonData.reservedMemory;
 
     formObj.main.options = Object.keys(objJsonData?.options).filter(item =>

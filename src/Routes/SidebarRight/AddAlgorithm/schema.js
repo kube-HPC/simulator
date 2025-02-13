@@ -184,6 +184,14 @@ const addAlgorithmSchema = {
       tooltip:
         "Reserved memory for HKube's operations, such as in-memory cache. Higher values speed up data retrieval but leave less memory for the algorithms. Lower values slow down data retrieval but leave more memory for the algorithms.",
     },
+    WORKER_ENV: {
+      field: 'main.workerEnv',
+      label: 'Worker Env',
+    },
+    ALGORITEM_ENV: {
+      field: 'main.algoritemEnv',
+      label: 'Algoritem Env',
+    },
   },
 };
 export default addAlgorithmSchema;
