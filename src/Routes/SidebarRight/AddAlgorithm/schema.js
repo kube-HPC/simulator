@@ -189,8 +189,8 @@ const addAlgorithmSchema = {
       label: 'Worker Env',
     },
     ALGORITEM_ENV: {
-      field: 'main.algoritemEnv',
-      label: 'Algoritem Env',
+      field: 'main.algorithmEnv',
+      label: 'Algorithm Env',
     },
   },
 };
