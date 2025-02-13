@@ -46,6 +46,16 @@ const useSubMenuAdmin = (totalNewWarnings, dataMoreCount) => {
     [cpu, gpu, memory, storage, totalNewWarnings]
   ); */
 
+  const hasGPU = useMemo(
+    () =>
+      gpu?.results
+        ? gpu.results.some(server =>
+            server.algorithmsData.some(algo => algo.size > 0)
+          )
+        : false,
+    [gpu?.results]
+  );
+
   const menuAdminItems = useMemo(() => {
     const itemsMenu = [
       [
@@ -78,7 +88,7 @@ const useSubMenuAdmin = (totalNewWarnings, dataMoreCount) => {
       ],
     ];
 
-    if (gpu?.legend?.length > 0) {
+    if (hasGPU) {
       itemsMenu.push([
         RIGHT_SIDEBAR_NAMES.GPU,
         FundOutlined,
@@ -92,7 +102,7 @@ const useSubMenuAdmin = (totalNewWarnings, dataMoreCount) => {
     dataMoreCount.drivers,
     pageName,
     totalNewWarnings,
-    gpu?.legend,
+    hasGPU,
   ]);
 
   const menuAdminItemsJson = useMemo(() => {
