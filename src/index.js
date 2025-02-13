@@ -2,9 +2,10 @@
 import 'core-js/features/array';
 import './assets/collapseTransition.css';
 import { ErrorBoundary } from 'components';
+
 import { LOCAL_STORAGE_KEYS } from 'const';
 import { ConfigProvider, theme } from 'antd';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
@@ -17,24 +18,25 @@ import store from './store';
 import KeycloakServices from './keycloak/keycloakServices';
 import _ from 'lodash';
 
-const state = store.getState();
-const isKc = true; // process.env.REACT_APP_KEYCLOAK_ENABLE === 'true';
-console.log('state index', state);
-console.log('process.env', process.env);
-console.log('index isKc', process.env.REACT_APP_KEYCLOAK_ENABLE);
-
 const ConfigProviderApp = () => {
   // do not use the useActions hook
   // ReusableProvider is not available yet at this point!
+  const { hasConfig } = useSelector(selectors.config);
   const { keycloakEnable } = useSelector(selectors.connection);
-  console.log('keycloakEnable1=', keycloakEnable);
+  const firstKc = useRef(true);
+
+  if (keycloakEnable && !KeycloakServices.isLoggedIn() && firstKc?.current) {
+    firstKc.current = false;
+    KeycloakServices.initKeycloak(renderApp, renderErrorPreRenderApp);
+  }
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(init());
 
     // Start a periodic token refresh
     const tokenRefreshInterval = setInterval(() => {
-      if (isKc) {
+      if (keycloakEnable && KeycloakServices.isLoggedIn) {
         KeycloakServices.updateToken(30, () => {
           console.log('Token refreshed successfully!');
         });
@@ -47,7 +49,6 @@ const ConfigProviderApp = () => {
     return () => clearInterval(tokenRefreshInterval);
   }, [dispatch]);
 
-  const { hasConfig } = useSelector(selectors.config);
   const { defaultAlgorithm, darkAlgorithm } = theme;
 
   // create in began styles antd by theme name
@@ -89,7 +90,7 @@ const ConfigProviderApp = () => {
     default:
       themeProvider = { algorithm: defaultAlgorithm };
   }
-  console.log('keycloakEnable=', keycloakEnable);
+
   return hasConfig ? (
     <ConfigProvider theme={themeProvider}>
       <HashRouter>
@@ -118,11 +119,8 @@ const renderApp = () => {
 const renderErrorPreRenderApp = () => {
   root.render(<>error</>);
 };
-if (isKc) {
-  KeycloakServices.initKeycloak(renderApp, renderErrorPreRenderApp);
-} else {
-  renderApp();
-}
+
+renderApp();
 
 // root.unmount();
 
