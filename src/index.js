@@ -26,6 +26,8 @@ console.log('index isKc', process.env.REACT_APP_KEYCLOAK_ENABLE);
 const ConfigProviderApp = () => {
   // do not use the useActions hook
   // ReusableProvider is not available yet at this point!
+  const { keycloakEnable } = useSelector(selectors.connection);
+  console.log('keycloakEnable1=', keycloakEnable);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(init());
@@ -87,7 +89,7 @@ const ConfigProviderApp = () => {
     default:
       themeProvider = { algorithm: defaultAlgorithm };
   }
-
+  console.log('keycloakEnable=', keycloakEnable);
   return hasConfig ? (
     <ConfigProvider theme={themeProvider}>
       <HashRouter>
