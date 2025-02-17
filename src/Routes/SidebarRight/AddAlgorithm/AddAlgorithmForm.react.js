@@ -1,7 +1,8 @@
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Input, InputNumber, Radio, Select, Checkbox, Divider } from 'antd';
+import { Input, InputNumber, Radio, Select, Checkbox } from 'antd';
+
 import { Form, FlexBox } from 'components/common';
 import {
   BottomPanel,
@@ -20,10 +21,13 @@ import {
 } from 'utils';
 
 import KeyValueForm from 'components/common/KeyValueForm';
+
 import { CodeBuild, GitBuild, ImageBuild } from './BuildTypes';
 import MemoryField from './MemoryField.react';
 import schema from './schema';
 import DrawerReadMeFile from '../../../components/Drawer/DrawerReadMeFile';
+
+import SideCarForm from './SideCarForm';
 
 // #region  Helpers
 
@@ -93,6 +97,15 @@ const getBuildTypes = ({ buildType, ...props }) => {
   };
 };
 // #endregion
+
+/*
+const lastElementStyle = {
+  position: 'absolute',
+  right: 260,
+  top: '50%',
+  transform: 'translateY(-50%)',
+};
+*/
 
 const AddAlgorithmForm = ({
   onToggle,
@@ -276,6 +289,24 @@ const AddAlgorithmForm = ({
 
       {buildTypes[buildType]}
 
+      <Form.Item label="Worker environment variable">
+        <KeyValueForm
+          buttonWidth="395px"
+          label={MAIN.WORKER_ENV.label}
+          fieldName={splitByDot(MAIN.WORKER_ENV.field)}
+          titleButtoAdd="Add"
+        />
+      </Form.Item>
+
+      <Form.Item label="Algorithm environment variable">
+        <KeyValueForm
+          buttonWidth="395px"
+          label={MAIN.ALGORITEM_ENV.label}
+          fieldName={splitByDot(MAIN.ALGORITEM_ENV.field)}
+          titleButtoAdd="Add"
+        />
+      </Form.Item>
+
       <Collapsible title={MAIN.DIVIDER.RESOURCES}>
         <Form.Item name={splitByDot(MAIN.CPU.field)} label={MAIN.CPU.label}>
           <InputNumber min={0.1} />
@@ -325,24 +356,9 @@ const AddAlgorithmForm = ({
         </Form.Item>
       </Collapsible>
 
-      <Divider orientation="left">Worker environment variable</Divider>
-      <Form.Item style={{ marginLeft: '240px' }}>
-        <KeyValueForm
-          buttonWidth="395px"
-          label={MAIN.WORKER_ENV.label}
-          fieldName={splitByDot(MAIN.WORKER_ENV.field)}
-          titleButtoAdd="Add"
-        />
-      </Form.Item>
-      <Divider orientation="left">Algorithm environment variable</Divider>
-      <Form.Item style={{ marginLeft: '240px' }}>
-        <KeyValueForm
-          buttonWidth="395px"
-          label={MAIN.ALGORITEM_ENV.label}
-          fieldName={splitByDot(MAIN.ALGORITEM_ENV.field)}
-          titleButtoAdd="Add"
-        />
-      </Form.Item>
+      <Collapsible title="Side Car">
+        <SideCarForm nameList={splitByDot(MAIN.SIDECAR.field)} />
+      </Collapsible>
 
       <BottomPanel style={{ marginTop: 'auto' }}>
         <PanelButton onClick={onToggleToEditor}>Text editor</PanelButton>

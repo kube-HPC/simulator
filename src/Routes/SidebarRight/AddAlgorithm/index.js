@@ -55,9 +55,34 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
   const [fileList, setFileList] = useState([]);
 
   // switch from Form Object to Json
+  const deleteTypeVolume = objVolumes =>
+    objVolumes?.map(obj => {
+      const newObj = {};
+      newObj.name = obj.name;
+      newObj[obj.typeVolume] = obj[obj.typeVolume];
+
+      return newObj;
+    });
+
   const switchToJson = (formObj, type) => {
     const objJsonData = JSON.parse(editorJsonValue);
     objJsonData.name = formObj.main.name;
+
+    // sidecar to json
+    console.log('formObj.main.sideCar', formObj.main);
+    objJsonData.sideCar = formObj?.main?.sideCar?.map(sideCar => ({
+      name: sideCar.name,
+      container: {
+        name: sideCar.containerName,
+        image: sideCar.containerImage,
+      },
+      volumes: deleteTypeVolume(sideCar.volumes),
+      volumesMounts: sideCar.volumesMounts,
+      environments: transformFieldsToObject(sideCar.environments),
+    }));
+
+    // ------------------------------------------------------------------------------ end sidecar
+
     objJsonData.cpu = formObj.main.cpu;
     objJsonData.gpu = formObj.main.gpu;
     objJsonData.mem = formObj.main.mem;
@@ -122,6 +147,24 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
     toggleEditor(prev => !prev);
   };
 
+  const addTypeVolume = objVolumes =>
+    objVolumes?.map(obj => {
+      const newObj = obj;
+
+      let type = 'emptyDir';
+      if (newObj.persistentVolumeClaim) {
+        type = 'persistentVolumeClaim';
+      } else if (newObj.configMap) {
+        type = 'configMap';
+      } else if (newObj.secret) {
+        type = 'secret';
+      }
+
+      newObj.typeVolume = type;
+
+      return newObj;
+    });
+
   const switchToForm = () => {
     // switch from JSON Object To Form
     const objJsonData = JSON.parse(editorJsonValue);
@@ -129,6 +172,18 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
     formObj.main = {};
 
     formObj.main.name = objJsonData.name;
+
+    // sidecar to object ui
+    formObj.main.sideCar = objJsonData?.sideCar?.map(sideCar => ({
+      name: sideCar.name,
+      containerName: sideCar.container.name,
+      containerImage: sideCar.container.image,
+      volumes: addTypeVolume(sideCar.volumes),
+      volumesMounts: sideCar.volumesMounts,
+      environments: transformObjectToArray(sideCar.environments),
+    }));
+    // -------------------------------------------------------------- end sidecar
+
     formObj.main.description = objJsonData.description;
 
     formObj.main.cpu = objJsonData.cpu;
