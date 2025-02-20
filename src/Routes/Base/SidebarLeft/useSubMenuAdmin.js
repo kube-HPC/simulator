@@ -1,49 +1,37 @@
 import React, { useMemo } from 'react';
-import { Link, useParams, useLocation } from 'react-router-dom';
 import Icon, {
-  WarningOutlined,
   ClusterOutlined,
   FundOutlined,
   HddOutlined,
+  WarningOutlined,
 } from '@ant-design/icons';
-import { USER_GUIDE, RIGHT_SIDEBAR_NAMES } from 'const';
+import { Tag } from 'antd';
+import { RIGHT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
+import { useStats } from 'hooks/graphql';
 import { ReactComponent as DriversIcon } from 'images/drivers-icon.svg';
 import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
-import { useStats, useStorage } from 'hooks/graphql';
-import { Tag } from 'antd';
+import { Link, useLocation, useParams } from 'react-router-dom';
+
 import {
-  getColorStatus,
-  getStorageColorStatus,
-  combineStatus,
-} from 'utils/warningColorStatus';
-import {
-  Name,
+  BadgeStyle,
   IconStyle,
   itemSubMenuStyle,
-  BadgeStyle,
+  Name,
   tagStyle,
 } from './MenuStyles';
-import { getBottomActions } from './../../SidebarRight/schema';
 
 const useSubMenuAdmin = (totalNewWarnings, dataMoreCount) => {
   const { pageName } = useParams();
   const location = useLocation();
 
-  const { cpu, memory, gpu } = useStats();
-  const { storage } = useStorage();
-  const dataCounters = useMemo(
-    () =>
-      getBottomActions({
-        warnings: totalNewWarnings,
-        cpuStatus: getColorStatus(cpu),
-        memoryStatus: combineStatus(
-          getColorStatus(memory),
-          getStorageColorStatus(storage)
-        ),
-        gpuStatus: getColorStatus(gpu),
-      }),
+  const { gpu } = useStats();
 
-    [cpu, gpu, memory, storage, totalNewWarnings]
+  const hasGPU = useMemo(
+    () =>
+      gpu?.results?.some(server =>
+        server.algorithmsData.some(algo => algo.size > 0)
+      ) ?? false,
+    [gpu]
   );
 
   const menuAdminItems = useMemo(() => {
@@ -78,7 +66,7 @@ const useSubMenuAdmin = (totalNewWarnings, dataMoreCount) => {
       ],
     ];
 
-    if (dataCounters?.gpuStatus?.total) {
+    if (hasGPU) {
       itemsMenu.push([
         RIGHT_SIDEBAR_NAMES.GPU,
         FundOutlined,
@@ -88,9 +76,9 @@ const useSubMenuAdmin = (totalNewWarnings, dataMoreCount) => {
 
     return itemsMenu;
   }, [
-    dataCounters?.gpuStatus?.total,
     dataMoreCount.drivers,
     dataMoreCount.workers,
+    hasGPU,
     pageName,
     totalNewWarnings,
   ]);
