@@ -289,24 +289,6 @@ const AddAlgorithmForm = ({
 
       {buildTypes[buildType]}
 
-      <Form.Item label="Worker environment variable">
-        <KeyValueForm
-          buttonWidth="395px"
-          label={MAIN.WORKER_ENV.label}
-          fieldName={splitByDot(MAIN.WORKER_ENV.field)}
-          titleButtoAdd="Add"
-        />
-      </Form.Item>
-
-      <Form.Item label="Algorithm environment variable">
-        <KeyValueForm
-          buttonWidth="395px"
-          label={MAIN.ALGORITEM_ENV.label}
-          fieldName={splitByDot(MAIN.ALGORITEM_ENV.field)}
-          titleButtoAdd="Add"
-        />
-      </Form.Item>
-
       <Collapsible title={MAIN.DIVIDER.RESOURCES}>
         <Form.Item name={splitByDot(MAIN.CPU.field)} label={MAIN.CPU.label}>
           <InputNumber min={0.1} />
@@ -327,6 +309,36 @@ const AddAlgorithmForm = ({
             ))}
           </MemoryField>
         </Form.Item>
+      </Collapsible>
+      <Collapsible
+        title="Environment Variable"
+        defaultExpanded={
+          keyValueFormObject?.main?.workerEnv?.length > 0 ||
+          keyValueFormObject?.main?.algorithmEnv?.length > 0
+        }>
+        <Form.Item label="Worker">
+          <KeyValueForm
+            buttonWidth="395px"
+            label={MAIN.WORKER_ENV.label}
+            fieldName={splitByDot(MAIN.WORKER_ENV.field)}
+            titleButtoAdd="Add"
+          />
+        </Form.Item>
+
+        <Form.Item label="Algorithm">
+          <KeyValueForm
+            buttonWidth="395px"
+            label={MAIN.ALGORITEM_ENV.label}
+            fieldName={splitByDot(MAIN.ALGORITEM_ENV.field)}
+            titleButtoAdd="Add"
+          />
+        </Form.Item>
+      </Collapsible>
+
+      <Collapsible
+        title="Side Car"
+        defaultExpanded={keyValueFormObject?.main?.sideCar?.length > 0}>
+        <SideCarForm nameList={splitByDot(MAIN.SIDECAR.field)} />
       </Collapsible>
       <Collapsible title={MAIN.DIVIDER.ADVANCED}>
         <Form.Item
@@ -355,11 +367,6 @@ const AddAlgorithmForm = ({
           </Select>
         </Form.Item>
       </Collapsible>
-
-      <Collapsible title="Side Car">
-        <SideCarForm nameList={splitByDot(MAIN.SIDECAR.field)} />
-      </Collapsible>
-
       <BottomPanel style={{ marginTop: 'auto' }}>
         <PanelButton onClick={onToggleToEditor}>Text editor</PanelButton>
 
