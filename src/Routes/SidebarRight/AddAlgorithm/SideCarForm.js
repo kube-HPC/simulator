@@ -1,8 +1,8 @@
-import React from 'react';
-import { Form, Input, Button, Divider, Radio } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Divider, Form, Input, Radio, Row } from 'antd';
 import KeyValueForm from 'components/common/KeyValueForm';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 const SideCarForm = ({ nameList }) => (
   <Form.List name={nameList}>
@@ -10,46 +10,79 @@ const SideCarForm = ({ nameList }) => (
       <>
         {fields.map(({ key, name, ...restField }) => (
           <React.Fragment key={key}>
-            <Form.Item
-              label="Name"
-              {...restField}
-              name={[name, 'name']}
-              rules={[{ required: true, message: 'Missing name' }]}>
-              <Input />
-            </Form.Item>
+            <div style={{ padding: '24px' }}>
+              <Row gutter={[0, 16]}>
+                <Col span={23}>
+                  <Form.Item
+                    label="Name"
+                    {...restField}
+                    name={[name, 'name']}
+                    rules={[{ required: true, message: 'Missing name' }]}>
+                    <Input />{' '}
+                  </Form.Item>
+                </Col>
+                <Col span={1}>
+                  {' '}
+                  <MinusCircleOutlined onClick={() => remove(name)} />
+                </Col>
+              </Row>
 
-            <Form.Item
-              label="Container Name"
-              {...restField}
-              name={[name, 'containerName']}
-              rules={[{ required: true, message: 'Missing container name' }]}>
-              <Input />
-            </Form.Item>
+              <Row gutter={[0, 16]}>
+                <Col span={24}>
+                  <Card title="Container" bordered="true">
+                    <Form.Item
+                      label="Name"
+                      {...restField}
+                      name={[name, 'containerName']}
+                      rules={[
+                        { required: true, message: 'Missing container name' },
+                      ]}>
+                      <Input />
+                    </Form.Item>
 
-            <Form.Item
-              label="Container Image"
-              {...restField}
-              name={[name, 'containerImage']}>
-              <Input />
-            </Form.Item>
+                    <Form.Item
+                      label="Image"
+                      {...restField}
+                      name={[name, 'containerImage']}>
+                      <Input />
+                    </Form.Item>
+                  </Card>
+                </Col>
+              </Row>
 
-            <Form.Item label="volumes">
-              <VolumeList nameList={[name, 'volumes']} />
-            </Form.Item>
+              <Row gutter={16} style={{ marginTop: '16px' }}>
+                <Col span={12}>
+                  <Card title="Volumes" bordered="true">
+                    <Form.Item>
+                      <VolumeList nameList={[name, 'volumes']} />
+                    </Form.Item>
 
-            <Form.Item label="volumes Mounts">
-              <VolumeMountsList nameList={[name, 'volumesMounts']} />
-            </Form.Item>
+                    <MinusCircleOutlined onClick={() => remove(name)} />
+                  </Card>
+                </Col>
+                <Col span={12}>
+                  <Card title="Volumes Mounts" bordered="true">
+                    <Form.Item>
+                      <VolumeMountsList nameList={[name, 'volumesMounts']} />
+                    </Form.Item>
+                  </Card>
+                </Col>
+              </Row>
 
-            <Form.Item label="Environments">
-              <KeyValueForm
-                buttonWidth="395px"
-                fieldName={[name, 'environments']}
-                titleButtoAdd="Add"
-              />
-            </Form.Item>
-
-            <MinusCircleOutlined onClick={() => remove(name)} />
+              <Row style={{ marginTop: '16px' }}>
+                <Col span={24}>
+                  <Card title="Environments" bordered="true">
+                    <Form.Item>
+                      <KeyValueForm
+                        buttonWidth="395px"
+                        fieldName={[name, 'environments']}
+                        titleButtoAdd="Add"
+                      />
+                    </Form.Item>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
 
             <Divider />
           </React.Fragment>
