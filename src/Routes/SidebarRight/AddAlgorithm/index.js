@@ -202,9 +202,11 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
       transformObjectToArray(objJsonData.algorithmEnv);
     formObj.main.reservedMemory = objJsonData.reservedMemory;
 
-    formObj.main.options = Object.keys(objJsonData?.options).filter(item =>
-      MAIN.OPTIONS.types.includes(item)
-    );
+    formObj.main.options = objJsonData?.options
+      ? Object.keys(objJsonData?.options).filter(item =>
+          MAIN.OPTIONS.types.includes(item)
+        )
+      : {};
 
     // Code
     if (objJsonData.type === BUILD_TYPES.CODE.label || objJsonData.code) {
