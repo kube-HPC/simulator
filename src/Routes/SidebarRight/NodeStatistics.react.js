@@ -4,12 +4,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { Theme } from 'styles/colors';
 import { useMetric } from 'hooks/graphql';
+import { Header } from './MemoryAndStorage/styles';
 
 const Container = styled.div`
-  margin-top: 150px;
-  font-size: 20px;
+  margin-top: 10px;
   height: 50vh;
-
   svg + div {
     color: #000000;
   }
@@ -39,6 +38,7 @@ const NodeStatistics = ({ metric }) => {
 
   return (
     <Container>
+      <Header>GPU</Header>
       <ResponsiveBar
         animate
         data={data}
