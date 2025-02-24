@@ -226,7 +226,7 @@ const GraphPreview = ({
 
           const requestsArrayFlows = Object.entries(flows).map(flow =>
             client
-              .post(`${backendApiUrl}/api/v1/store/pipelines/graph`, {
+              .post(`/store/pipelines/graph`, {
                 pipeline,
                 keyFlow: flow[0],
                 isBuildAllFlows: false,
@@ -267,7 +267,7 @@ const GraphPreview = ({
             });
         } else {
           client
-            .post(`${backendApiUrl}/api/v1/store/pipelines/graph`, {
+            .post(`/store/pipelines/graph`, {
               pipeline,
               keyFlow,
               isBuildAllFlows,
@@ -304,7 +304,7 @@ const GraphPreview = ({
       }
     } else if (pipeline) {
       client
-        .post(`${backendApiUrl}/api/v1/store/pipelines/graph`, { pipeline })
+        .post(`/store/pipelines/graph`, { pipeline })
         .then(response => {
           const { data } = response;
 
