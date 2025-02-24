@@ -337,7 +337,7 @@ const AddAlgorithmForm = ({
 
       <Collapsible
         title="Side Car"
-        defaultExpanded={keyValueFormObject?.main?.sideCar?.length > 0}>
+        defaultExpanded={keyValueFormObject?.main?.sideCars?.length > 0}>
         <SideCarForm nameList={splitByDot(MAIN.SIDECAR.field)} />
       </Collapsible>
       <Collapsible title={MAIN.DIVIDER.ADVANCED}>

@@ -144,7 +144,7 @@ const VolumeList = ({ nameList }) => (
                 const selectVolume =
                   getFieldValue([
                     'main',
-                    'sideCar',
+                    'sideCars',
                     ...nameList,
                     name,
                     'typeVolume',

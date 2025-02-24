@@ -69,8 +69,8 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
     objJsonData.name = formObj.main.name;
 
     // sidecar to json
-    console.log('formObj.main.sideCar', formObj.main);
-    objJsonData.sideCar = formObj?.main?.sideCar?.map(sideCar => ({
+
+    objJsonData.sideCars = formObj?.main?.sideCars?.map(sideCar => ({
       // name: sideCar.name,
       container: {
         name: sideCar.containerName,
@@ -174,7 +174,7 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
     formObj.main.name = objJsonData.name;
 
     // sidecar to object ui
-    formObj.main.sideCar = objJsonData?.sideCar?.map(sideCar => ({
+    formObj.main.sideCars = objJsonData?.sideCars?.map(sideCar => ({
       //  name: sideCar.name,
       containerName: sideCar.container.name,
       containerImage: sideCar.container.image,
