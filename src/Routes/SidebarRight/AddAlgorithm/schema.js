@@ -167,7 +167,7 @@ const addAlgorithmSchema = {
       placeholder: 'Algorithm Description',
     },
     SIDECAR: {
-      field: 'main.sideCar',
+      field: 'main.sideCars',
       label: 'Side Car',
     },
     OPTIONS: {

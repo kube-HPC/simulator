@@ -22,6 +22,7 @@ import {
 } from '@ant-design/icons';
 /* eslint-disable import/no-cycle */
 import { useLocalStorageGraphMode } from 'hooks';
+import client from 'client';
 import { generateStyles, formatEdge, formatNode } from '../graphUtils';
 
 const GraphContainer = styled.div`
@@ -218,30 +219,22 @@ const GraphPreview = ({
   const initPreviewGetData = useCallback(() => {
     if (isStreamingPipeline) {
       // streaming
-
       if (pipeline.streaming?.flows) {
         if (isBuildAllFlows) {
           const flows = pipeline.streaming?.flows;
 
           const requestsArrayFlows = Object.entries(flows).map(flow =>
-            fetch(`${backendApiUrl}/api/v1/store/pipelines/graph`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
+            client
+              .post(`${backendApiUrl}/api/v1/store/pipelines/graph`, {
                 pipeline,
                 keyFlow: flow[0],
                 isBuildAllFlows: false,
-              }),
-            })
+              })
               .then(response => {
-                if (!response.ok) {
-                  response.json().then(jtext => {
-                    setErrorGraph(jtext.error.message);
-                  });
+                if (response.data.error && response.data.error.message) {
+                  setErrorGraph(response.data.error.message);
                 }
-                return response.text();
+                return response.data;
               })
               .catch(error => {
                 console.error(error);
@@ -250,9 +243,8 @@ const GraphPreview = ({
           );
 
           Promise.all(requestsArrayFlows)
-
             .then(res => {
-              const data = JSON.parse(res[0]);
+              const data = res[0];
 
               if (data.error && data.error.message) {
                 setErrorGraph(data.error.message);
@@ -273,15 +265,15 @@ const GraphPreview = ({
               console.error('Error while sending requests:', error);
             });
         } else {
-          fetch(`${backendApiUrl}/api/v1/store/pipelines/graph`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ pipeline, keyFlow, isBuildAllFlows }),
-          })
-            .then(res => res.json())
-            .then(data => {
+          client
+            .post(`${backendApiUrl}/api/v1/store/pipelines/graph`, {
+              pipeline,
+              keyFlow,
+              isBuildAllFlows,
+            })
+            .then(response => {
+              const { data } = response;
+
               if (data.error && data.error.message) {
                 setErrorGraph(data.error.message);
               } else {
@@ -289,6 +281,7 @@ const GraphPreview = ({
 
                 // Filter out nodes not used in edges
                 const GraphData = data;
+
                 GraphData.nodes = GraphData.nodes.filter(node =>
                   GraphData.edges.some(
                     edge =>
@@ -302,25 +295,22 @@ const GraphPreview = ({
                   toggleForceUpdate();
                 }, 1);
               }
+            })
+            .catch(error => {
+              console.error('Error during axios operation:', error);
             });
         }
       }
-      // batch
     } else if (pipeline) {
-      fetch(`${backendApiUrl}/api/v1/store/pipelines/graph`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ pipeline }),
-      })
-        .then(res => res.json())
-        .then(data => {
+      client
+        .post(`${backendApiUrl}/api/v1/store/pipelines/graph`, { pipeline })
+        .then(response => {
+          const { data } = response;
+
           if (data.error && data.error.message) {
             setErrorGraph(data.error.message);
           } else {
             setErrorGraph('');
-
             setGraphPreview(data);
 
             toggleForceUpdate();
@@ -330,7 +320,7 @@ const GraphPreview = ({
           }
         })
         .catch(error => {
-          console.error('Error during fetch operation:', error);
+          console.error('Error during axios operation:', error);
         });
     }
   }, [backendApiUrl, isBuildAllFlows, isStreamingPipeline, keyFlow, pipeline]);
