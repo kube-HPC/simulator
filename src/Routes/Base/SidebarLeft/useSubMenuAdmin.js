@@ -11,11 +11,7 @@ import { ReactComponent as DriversIcon } from 'images/drivers-icon.svg';
 import { ReactComponent as WorkerIcon } from 'images/worker-icon.svg';
 import { useStats } from 'hooks/graphql';
 import { Tag } from 'antd';
-/* import {
-  getColorStatus,
-  getStorageColorStatus,
-  combineStatus,
-} from 'utils/warningColorStatus'; */
+
 import {
   Name,
   IconStyle,
@@ -23,28 +19,11 @@ import {
   BadgeStyle,
   tagStyle,
 } from './MenuStyles';
-// import { getBottomActions } from './../../SidebarRight/schema';
 
 const useSubMenuAdmin = (totalNewWarnings, dataMoreCount) => {
   const { pageName } = useParams();
   const location = useLocation();
   const { gpu } = useStats();
-  // const { cpu, memory, gpu } = useStats();
-  // const { storage } = useStorage();
-  /* const dataCounters = useMemo(
-    () =>
-      getBottomActions({
-        warnings: totalNewWarnings,
-        cpuStatus: getColorStatus(cpu),
-        memoryStatus: combineStatus(
-          getColorStatus(memory),
-          getStorageColorStatus(storage)
-        ),
-        gpuStatus: getColorStatus(gpu),
-      }),
-
-    [cpu, gpu, memory, storage, totalNewWarnings]
-  ); */
 
   const hasGPU = useMemo(
     () =>
