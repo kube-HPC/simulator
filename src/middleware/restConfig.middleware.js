@@ -1,3 +1,4 @@
+import client from 'client';
 import AT from 'const/application-actions';
 
 const baseRef = document.getElementById('base_ref').innerHTML;
@@ -28,24 +29,24 @@ const success = (dispatch, payload, action) => {
   }, 100);
 };
 
-const restConfigMiddleware = ({ dispatch }) => next => action => {
-  if (action.type === AT.REST_REQ_CONFIG) {
-    pending(dispatch, 'pending', action);
-    fetch(`${baseRef}${action.payload.url}`)
-      .then(res => {
-        res
-          .json()
-          .then(data => {
-            success(dispatch, data, action);
-          })
-          .catch(err => console.error(err));
-      })
-      .catch(err => {
-        reject(dispatch, err, action);
-        console.error('get config error');
-      });
-  }
-  return next(action);
-};
+const restConfigMiddleware =
+  ({ dispatch }) =>
+  next =>
+  action => {
+    if (action.type === AT.REST_REQ_CONFIG) {
+      pending(dispatch, 'pending', action);
+
+      client
+        .get(`${baseRef}${action.payload.url}`)
+        .then(res => {
+          success(dispatch, res.data, action);
+        })
+        .catch(err => {
+          reject(dispatch, err, action);
+          console.error('get config error');
+        });
+    }
+    return next(action);
+  };
 
 export default restConfigMiddleware;
