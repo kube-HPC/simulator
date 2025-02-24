@@ -289,6 +289,7 @@ const GraphPreview = ({
 
                 // Filter out nodes not used in edges
                 const GraphData = data;
+                console.log('GraphData', GraphData);
                 GraphData.nodes = GraphData.nodes.filter(node =>
                   GraphData.edges.some(
                     edge =>
