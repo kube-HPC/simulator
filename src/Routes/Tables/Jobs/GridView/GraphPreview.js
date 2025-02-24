@@ -97,6 +97,7 @@ const GraphPreview = ({
         : null;
 
   const { backendApiUrl } = useSelector(selectors.config);
+  console.log('backendApiUrl', backendApiUrl);
   const [graphPreview, setGraphPreview] = useState({ nodes: [], edges: [] });
   const [errorGraph, setErrorGraph] = useState('');
 
@@ -225,7 +226,7 @@ const GraphPreview = ({
 
           const requestsArrayFlows = Object.entries(flows).map(flow =>
             client
-              .post(`${backendApiUrl}/api/v1/store/pipelines/graph`, {
+              .post(`/store/pipelines/graph`, {
                 pipeline,
                 keyFlow: flow[0],
                 isBuildAllFlows: false,
@@ -266,7 +267,7 @@ const GraphPreview = ({
             });
         } else {
           client
-            .post(`${backendApiUrl}/api/v1/store/pipelines/graph`, {
+            .post(`/store/pipelines/graph`, {
               pipeline,
               keyFlow,
               isBuildAllFlows,
@@ -303,7 +304,7 @@ const GraphPreview = ({
       }
     } else if (pipeline) {
       client
-        .post(`${backendApiUrl}/api/v1/store/pipelines/graph`, { pipeline })
+        .post(`/store/pipelines/graph`, { pipeline })
         .then(response => {
           const { data } = response;
 
