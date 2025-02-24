@@ -27,11 +27,14 @@ const transformFieldsToObject = values => {
   }, {});
 };
 
-const transformObjectToArray = obj =>
-  Object.entries(obj).map(([key, value]) => ({
-    key,
-    value,
-  }));
+const transformObjectToArray = obj => {
+  if (Object.keys(obj).length > 0)
+    return Object.entries(obj).map(([key, value]) => ({
+      key,
+      value,
+    }));
+  return obj;
+};
 
 const AddAlgorithm = ({ algorithmValue = undefined }) => {
   // #region  Editor State
@@ -160,7 +163,9 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
         type = 'secret';
       }
 
-      newObj.typeVolume = type;
+      if (type === 'emptyDir' && Object.keys(newObj.emptyDir).length === 0) {
+        newObj.emptyDir = '';
+      }
 
       return newObj;
     });
