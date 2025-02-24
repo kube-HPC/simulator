@@ -97,6 +97,7 @@ const GraphPreview = ({
         : null;
 
   const { backendApiUrl } = useSelector(selectors.config);
+  console.log('backendApiUrl', backendApiUrl);
   const [graphPreview, setGraphPreview] = useState({ nodes: [], edges: [] });
   const [errorGraph, setErrorGraph] = useState('');
 
