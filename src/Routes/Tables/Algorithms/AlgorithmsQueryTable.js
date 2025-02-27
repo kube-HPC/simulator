@@ -76,7 +76,7 @@ const AlgorithmsQueryTable = ({
     <FiltersForms layout="inline" form={form} size="medium" onFinish={onFinish}>
       <Form.Item label="Algorithm Name" name="qAlgorithmName">
         <AutoComplete
-          style={{ width: '8vw', marginLeft: '1vw' }}
+          style={{ width: '24vw', marginLeft: '1vw' }}
           options={algorithmOptions}
           filterOption={(inputValue, option) =>
             option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1

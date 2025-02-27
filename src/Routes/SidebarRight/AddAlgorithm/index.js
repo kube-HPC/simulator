@@ -17,11 +17,14 @@ const { MAIN, BUILD_TYPES } = schema;
 const DEFAULT_EDITOR_VALUE = stringify(addAlgorithmTemplate);
 
 const transformFieldsToObject = values => {
-  const fieldData = values || [];
+  if (!Array.isArray(values)) return {};
 
-  return fieldData.reduce((acc, pair) => {
-    if (pair?.key && pair?.value) {
-      acc[pair.key] = pair.value;
+  return values.reduce((acc, item) => {
+    if (item && typeof item === 'object') {
+      const { key, value } = item;
+      if (key && value !== undefined) {
+        acc[key] = value;
+      }
     }
     return acc;
   }, {});
@@ -33,7 +36,7 @@ const transformObjectToArray = obj => {
       key,
       value,
     }));
-  return obj;
+  return [];
 };
 
 const AddAlgorithm = ({ algorithmValue = undefined }) => {
@@ -58,31 +61,49 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
   const [fileList, setFileList] = useState([]);
 
   // switch from Form Object to Json
-  const deleteTypeVolume = objVolumes =>
-    objVolumes?.map(obj => {
-      const newObj = {};
-      newObj.name = obj.name;
-      newObj[obj.typeVolume] = obj[obj.typeVolume];
-
-      return newObj;
-    });
+  const setTypeVolume = objVolumes =>
+    Array.isArray(objVolumes)
+      ? objVolumes
+          .filter(
+            obj => obj && typeof obj === 'object' && obj.name && obj.typeVolume
+          )
+          .map(obj => ({
+            name: obj.name,
+            [obj.typeVolume]: obj[obj.typeVolume],
+          }))
+      : [];
 
   const switchToJson = (formObj, type) => {
     const objJsonData = JSON.parse(editorJsonValue);
     objJsonData.name = formObj.main.name;
 
-    // sidecar to json
+    // sidecar to json ---------------------------------------------------------------
 
-    objJsonData.sideCars = formObj?.main?.sideCars?.map(sideCar => ({
-      // name: sideCar.name,
-      container: {
-        name: sideCar.containerName,
-        image: sideCar.containerImage,
-      },
-      volumes: deleteTypeVolume(sideCar.volumes),
-      volumesMounts: sideCar.volumesMounts,
-      environments: transformFieldsToObject(sideCar.environments),
-    }));
+    objJsonData.sideCars = formObj?.main?.sideCars?.map(sideCar => {
+      const sideCarObj = {};
+
+      if (sideCar?.containerName || sideCar?.containerImage) {
+        sideCarObj.container = {};
+        if (sideCar.containerName)
+          sideCarObj.container.name = sideCar.containerName;
+        if (sideCar.containerImage)
+          sideCarObj.container.image = sideCar.containerImage;
+      }
+
+      if (sideCar?.volumes) {
+        sideCarObj.volumes = setTypeVolume(sideCar.volumes);
+      }
+
+      if (sideCar?.volumesMounts) {
+        sideCarObj.volumesMounts = sideCar.volumesMounts;
+      }
+
+      if (sideCar?.environments) {
+        sideCarObj.environments = transformFieldsToObject(sideCar.environments);
+      }
+
+      return sideCarObj;
+    });
 
     // ------------------------------------------------------------------------------ end sidecar
 
@@ -90,10 +111,23 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
     objJsonData.gpu = formObj.main.gpu;
     objJsonData.mem = formObj.main.mem;
     objJsonData.minHotWorkers = formObj.main.minHotWorkers;
-    objJsonData.workerEnv = transformFieldsToObject(formObj.main.workerEnv);
-    objJsonData.algorithmEnv = transformFieldsToObject(
-      formObj.main.algorithmEnv
-    );
+
+    if (
+      formObj?.main?.workerEnv &&
+      Object.keys(formObj.main.workerEnv).length > 0
+    ) {
+      objJsonData.workerEnv = transformFieldsToObject(formObj.main.workerEnv);
+    }
+
+    if (
+      formObj?.main?.algorithmEnv &&
+      Object.keys(formObj.main.algorithmEnv).length > 0
+    ) {
+      objJsonData.algorithmEnv = transformFieldsToObject(
+        formObj.main.algorithmEnv
+      );
+    }
+
     objJsonData.reservedMemory = formObj.main.reservedMemory;
 
     // Reduce selected options to boolean entry
@@ -163,7 +197,11 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
         type = 'secret';
       }
 
-      if (type === 'emptyDir' && Object.keys(newObj.emptyDir).length === 0) {
+      if (
+        type === 'emptyDir' &&
+        (newObj?.emptyDir ||
+          (newObj?.emptyDir && Object.keys(newObj.emptyDir).length === 0))
+      ) {
         newObj.emptyDir = '';
       }
 
@@ -180,9 +218,8 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
 
     // sidecar to object ui
     formObj.main.sideCars = objJsonData?.sideCars?.map(sideCar => ({
-      //  name: sideCar.name,
-      containerName: sideCar.container.name,
-      containerImage: sideCar.container.image,
+      containerName: sideCar?.container?.name || '',
+      containerImage: sideCar?.container?.image || '',
       volumes: addTypeVolume(sideCar.volumes),
       volumesMounts: sideCar.volumesMounts,
       environments: transformObjectToArray(sideCar.environments),
