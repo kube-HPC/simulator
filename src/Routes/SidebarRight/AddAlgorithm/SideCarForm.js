@@ -45,18 +45,19 @@ const SideCarForm = ({ nameList }) => (
                 label="Name"
                 {...restField}
                 name={[name, 'containerName']}
-                rules={[{ required: true, message: 'Missing container name' }]}>
+                rules={[{ required: true, message: 'Missing container Name' }]}>
                 <Input />
               </ContainerFormItemTop>
               <MinusCircleOutlined
-                style={{ marginLeft: '5px', marginTop: '-6px' }}
+                style={{ marginLeft: 'px', marginTop: '-6px' }}
                 onClick={() => remove(name)}
               />
             </FlexItem>
             <ContainerFormItemTop
               label="Image"
               {...restField}
-              name={[name, 'containerImage']}>
+              name={[name, 'containerImage']}
+              rules={[{ required: true, message: 'Missing container Image' }]}>
               <Input />
             </ContainerFormItemTop>
             <Row style={{ marginTop: '16px' }}>

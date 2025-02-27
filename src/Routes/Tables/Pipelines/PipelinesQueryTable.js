@@ -73,7 +73,7 @@ const PipelinesQueryTable = ({
     <FiltersForms layout="inline" form={form} size="medium" onFinish={onFinish}>
       <Form.Item label="Pipeline Name" name="qPipelineName">
         <AutoComplete
-          style={{ width: '8vw', marginLeft: '1vw' }}
+          style={{ width: '24vw', marginLeft: '1vw' }}
           options={pipelineOptions}
           filterOption={(inputValue, option) =>
             option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
