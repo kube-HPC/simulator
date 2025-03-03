@@ -5,7 +5,12 @@ import PropTypes from 'prop-types';
 import { Checkbox, Modal, message } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import { addAlgorithmTemplate } from 'config';
-import { stringify } from 'utils'; // mergeObjects, tryParseJson
+import {
+  stringify,
+  transformFieldsToObject,
+  transformObjectToArray,
+  setTypeVolume,
+} from 'utils'; // mergeObjects, tryParseJson
 import { OVERVIEW_TABS } from 'const';
 import usePath from './../../Tables/Algorithms/usePath';
 import AddAlgorithmForm from './AddAlgorithmForm.react';
@@ -15,29 +20,6 @@ import schema from './schema';
 const { MAIN, BUILD_TYPES } = schema;
 
 const DEFAULT_EDITOR_VALUE = stringify(addAlgorithmTemplate);
-
-const transformFieldsToObject = values => {
-  if (!Array.isArray(values)) return {};
-
-  return values.reduce((acc, item) => {
-    if (item && typeof item === 'object') {
-      const { key, value } = item;
-      if (key && value !== undefined) {
-        acc[key] = value;
-      }
-    }
-    return acc;
-  }, {});
-};
-
-const transformObjectToArray = obj => {
-  if (Object.keys(obj).length > 0)
-    return Object.entries(obj).map(([key, value]) => ({
-      key,
-      value,
-    }));
-  return [];
-};
 
 const AddAlgorithm = ({ algorithmValue = undefined }) => {
   // #region  Editor State
@@ -61,17 +43,6 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
   const [fileList, setFileList] = useState([]);
 
   // switch from Form Object to Json
-  const setTypeVolume = objVolumes =>
-    Array.isArray(objVolumes)
-      ? objVolumes
-          .filter(
-            obj => obj && typeof obj === 'object' && obj.name && obj.typeVolume
-          )
-          .map(obj => ({
-            name: obj.name,
-            [obj.typeVolume]: obj[obj.typeVolume],
-          }))
-      : [];
 
   const switchToJson = (formObj, type) => {
     const objJsonData = JSON.parse(editorJsonValue);
@@ -91,6 +62,7 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
       }
 
       if (sideCar?.volumes) {
+        console.log('sideCar?.volumes', sideCar?.volumes);
         sideCarObj.volumes = setTypeVolume(sideCar.volumes);
       }
 
@@ -112,13 +84,17 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
     objJsonData.mem = formObj.main.mem;
     objJsonData.minHotWorkers = formObj.main.minHotWorkers;
 
+    // workerEnv
     if (
       formObj?.main?.workerEnv &&
       Object.keys(formObj.main.workerEnv).length > 0
     ) {
       objJsonData.workerEnv = transformFieldsToObject(formObj.main.workerEnv);
+    } else {
+      delete objJsonData.workerEnv;
     }
 
+    // algorithmEnv
     if (
       formObj?.main?.algorithmEnv &&
       Object.keys(formObj.main.algorithmEnv).length > 0
@@ -126,6 +102,8 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
       objJsonData.algorithmEnv = transformFieldsToObject(
         formObj.main.algorithmEnv
       );
+    } else {
+      delete objJsonData.algorithmEnv;
     }
 
     objJsonData.reservedMemory = formObj.main.reservedMemory;
@@ -184,28 +162,19 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
     toggleEditor(prev => !prev);
   };
 
-  const addTypeVolume = objVolumes =>
-    objVolumes?.map(obj => {
-      const newObj = obj;
+  const addTypeVolume = (objVolumes = []) =>
+    objVolumes.map(obj => {
+      if (!obj || typeof obj !== 'object') return obj;
 
-      let type = 'emptyDir';
-      if (newObj.persistentVolumeClaim) {
-        type = 'persistentVolumeClaim';
-      } else if (newObj.configMap) {
-        type = 'configMap';
-      } else if (newObj.secret) {
-        type = 'secret';
-      }
+      const typeVolume = obj.persistentVolumeClaim
+        ? 'persistentVolumeClaim'
+        : obj.configMap
+          ? 'configMap'
+          : obj.secret
+            ? 'secret'
+            : 'emptyDir';
 
-      if (
-        type === 'emptyDir' &&
-        (newObj?.emptyDir ||
-          (newObj?.emptyDir && Object.keys(newObj.emptyDir).length === 0))
-      ) {
-        newObj.emptyDir = '';
-      }
-
-      return newObj;
+      return { ...obj, typeVolume };
     });
 
   const switchToForm = () => {

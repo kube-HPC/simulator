@@ -18,6 +18,8 @@ import {
   stringify,
   toUpperCaseFirstLetter,
   splitByDot,
+  transformFieldsToObject,
+  setTypeVolume,
 } from 'utils';
 
 import KeyValueForm from 'components/common/KeyValueForm';
@@ -132,6 +134,7 @@ const AddAlgorithmForm = ({
 
   const onToggleToEditor = () => {
     const schemaObjectForm = form.getFieldsValue();
+    console.log('schemaObjectForm', schemaObjectForm);
     onToggle(schemaObjectForm, buildType);
   };
 
@@ -239,6 +242,60 @@ const AddAlgorithmForm = ({
         });
 
         payload.option = payloadFilteredOption;
+      }
+
+      // sidecar to json ---------------------------------------------------------------
+
+      payload.sideCars = formObject?.main?.sideCars?.map(sideCar => {
+        const sideCarObj = {};
+
+        if (sideCar?.containerName || sideCar?.containerImage) {
+          sideCarObj.container = {};
+          if (sideCar.containerName)
+            sideCarObj.container.name = sideCar.containerName;
+          if (sideCar.containerImage)
+            sideCarObj.container.image = sideCar.containerImage;
+        }
+
+        if (sideCar?.volumes) {
+          sideCarObj.volumes = setTypeVolume(sideCar.volumes);
+        }
+
+        if (sideCar?.volumesMounts) {
+          sideCarObj.volumesMounts = sideCar.volumesMounts;
+        }
+
+        if (sideCar?.environments) {
+          sideCarObj.environments = transformFieldsToObject(
+            sideCar.environments
+          );
+        }
+
+        return sideCarObj;
+      });
+
+      // ------------------------------------------------------------------------------ end sidecar
+
+      // workerEnv
+      if (
+        formObject?.main?.workerEnv &&
+        Object.keys(formObject.main.workerEnv).length > 0
+      ) {
+        payload.workerEnv = transformFieldsToObject(formObject.main.workerEnv);
+      } else {
+        delete payload.workerEnv;
+      }
+
+      // algorithmEnv
+      if (
+        formObject?.main?.algorithmEnv &&
+        Object.keys(formObject.main.algorithmEnv).length > 0
+      ) {
+        payload.algorithmEnv = transformFieldsToObject(
+          formObject.main.algorithmEnv
+        );
+      } else {
+        delete payload.workerEnv;
       }
 
       formData.append(`payload`, stringify(payload));
