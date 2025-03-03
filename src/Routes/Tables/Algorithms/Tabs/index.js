@@ -66,9 +66,10 @@ const AlgorithmsTabs = ({ algorithm }) => {
   };
 
   const { dataSource, onApply, onDelete, fetch } = useVersions({
-    algorithmName: algorithm.name,
+    nameId: algorithm.name,
     confirmPopupForceVersion,
     isFetch: true,
+    urlRestData: 'algorithms',
   });
 
   const onApplyApplyMarkdown = useCallback(() => {
@@ -109,12 +110,12 @@ const AlgorithmsTabs = ({ algorithm }) => {
         key: TABS.VERSIONS,
         children: (
           <VersionsTable
-            algorithmName={algorithm.name}
             currentVersion={algorithm.version}
             isFetch={activeKey === TABS.VERSIONS}
             dataSource={dataSource}
             onApply={onApply}
             onDelete={onDelete}
+            source="algorithms"
           />
         ),
       },

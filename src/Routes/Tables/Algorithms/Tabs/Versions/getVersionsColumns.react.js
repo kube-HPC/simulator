@@ -51,7 +51,7 @@ const Created = created => (
   <Moment format="DD/MM/YY HH:mm:ss">{+created}</Moment>
 );
 
-const getVersionsColumns = ({ onDelete, onApply, currentVersion }) => {
+const getVersionsColumns = ({ onDelete, onApply, currentVersion, source }) => {
   const AlgorithmVersion = version => {
     const isCurrentVersion = currentVersion === version;
     return version ? (
@@ -98,6 +98,71 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion }) => {
     );
   };
 
+  if (source === 'algorithms') {
+    return [
+      {
+        title: 'Version',
+        dataIndex: ['version'],
+        key: 'version',
+        onFilter: (value, record) => record.version.includes(value),
+        sorter: (a, b) => sorter(a.version, b.version),
+        render: AlgorithmVersion,
+      },
+      {
+        title: 'Image',
+        dataIndex: ['algorithm', 'algorithmImage'],
+        key: 'algorithm.algorithmImage',
+        onFilter: (value, record) =>
+          record.algorithm.algorithmImage.includes(value),
+        sorter: (a, b) =>
+          sorter(a.algorithm.algorithmImage, b.algorithm.algorithmImage),
+      },
+      {
+        title: 'Created',
+        dataIndex: ['created'],
+        key: 'created',
+        sorter: (a, b) => sorter(a.created, b.created),
+        render: Created,
+      },
+      {
+        title: 'CPU',
+        dataIndex: ['algorithm', 'cpu'],
+        key: 'algorithm.cpu',
+        sorter: (a, b) => sorter(a.algorithm.cpu, b.algorithm.cpu),
+        render: Cpu,
+      },
+      {
+        title: 'Mem',
+        dataIndex: ['algorithm', 'mem'],
+        key: 'algorithm.mem',
+        sorter: (a, b) => sorter(a.algorithm.mem, b.algorithm.mem),
+        render: Mem,
+      },
+      {
+        title: 'Min Hot',
+        dataIndex: ['algorithm', 'minHotWorkers'],
+        key: 'algorithm.minHotWorkers',
+        sorter: (a, b) =>
+          sorter(a.algorithm.minHotWorkers, b.algorithm.minHotWorkers),
+        render: MinHotWorkers,
+      },
+      {
+        title: 'Type',
+        dataIndex: ['algorithm', 'type'],
+        key: 'algorithm.type',
+        sorter: (a, b) => sorter(a.algorithm.type, b.algorithm.type),
+        render: Type,
+      },
+      {
+        title: 'Action',
+        dataIndex: ['action'],
+        key: 'action',
+        render: Action,
+      },
+    ];
+  }
+
+  // if this not algorithms return piplines coloms
   return [
     {
       title: 'Version',
@@ -107,15 +172,7 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion }) => {
       sorter: (a, b) => sorter(a.version, b.version),
       render: AlgorithmVersion,
     },
-    {
-      title: 'Image',
-      dataIndex: ['algorithm', 'algorithmImage'],
-      key: 'algorithm.algorithmImage',
-      onFilter: (value, record) =>
-        record.algorithm.algorithmImage.includes(value),
-      sorter: (a, b) =>
-        sorter(a.algorithm.algorithmImage, b.algorithm.algorithmImage),
-    },
+
     {
       title: 'Created',
       dataIndex: ['created'],
@@ -123,35 +180,7 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion }) => {
       sorter: (a, b) => sorter(a.created, b.created),
       render: Created,
     },
-    {
-      title: 'CPU',
-      dataIndex: ['algorithm', 'cpu'],
-      key: 'algorithm.cpu',
-      sorter: (a, b) => sorter(a.algorithm.cpu, b.algorithm.cpu),
-      render: Cpu,
-    },
-    {
-      title: 'Mem',
-      dataIndex: ['algorithm', 'mem'],
-      key: 'algorithm.mem',
-      sorter: (a, b) => sorter(a.algorithm.mem, b.algorithm.mem),
-      render: Mem,
-    },
-    {
-      title: 'Min Hot',
-      dataIndex: ['algorithm', 'minHotWorkers'],
-      key: 'algorithm.minHotWorkers',
-      sorter: (a, b) =>
-        sorter(a.algorithm.minHotWorkers, b.algorithm.minHotWorkers),
-      render: MinHotWorkers,
-    },
-    {
-      title: 'Type',
-      dataIndex: ['algorithm', 'type'],
-      key: 'algorithm.type',
-      sorter: (a, b) => sorter(a.algorithm.type, b.algorithm.type),
-      render: Type,
-    },
+
     {
       title: 'Action',
       dataIndex: ['action'],
