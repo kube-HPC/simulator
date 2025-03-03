@@ -18,8 +18,14 @@ const VersionsTable = ({
   onApply,
   onDelete,
   dataSource = undefined,
+  source,
 }) => {
-  const columns = getVersionsColumns({ currentVersion, onApply, onDelete });
+  const columns = getVersionsColumns({
+    currentVersion,
+    onApply,
+    onDelete,
+    source,
+  });
   const expandIcon = ({ expanded, onExpand, record }) =>
     expanded ? (
       <DownOutlined onClick={e => onExpand(record, e)} />
@@ -45,6 +51,7 @@ VersionsTable.propTypes = {
   onApply: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   dataSource: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  source: PropTypes.string.isRequired,
 };
 
 export default VersionsTable;

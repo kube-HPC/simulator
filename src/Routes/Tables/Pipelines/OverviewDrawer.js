@@ -31,7 +31,7 @@ const OverviewDrawer = () => {
         <TabDrawer>
           <TabDrawerText>{DRAWER_TITLES.PIPELINE_INFO}</TabDrawerText>
         </TabDrawer>
-        {record ? <PipelineInfo record={record} /> : <MissingIdError />}
+        {record ? <PipelineInfo pipeline={record} /> : <MissingIdError />}
       </>
     </Drawer>
   );

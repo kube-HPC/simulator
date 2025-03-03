@@ -2,19 +2,47 @@ import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'antd';
 import { Card, JsonSwitch, MdEditor, Tabs } from 'components/common';
-import { useReadme } from 'hooks';
+import { CheckOutlined, RedoOutlined } from '@ant-design/icons';
+import { useReadme, useVersions } from 'hooks';
+import { VersionsTable } from './../Algorithms/Tabs/Versions';
 import usePath, { OVERVIEW_TABS as TABS } from './usePath';
 
-const PipelineInfo = ({ record }) => {
+const PipelineInfo = ({ pipeline }) => {
+  const { name, version } = pipeline;
+
+  const {
+    dataSource,
+    onApply: onApplyVersion,
+    onDelete,
+    fetch,
+  } = useVersions({
+    nameId: name,
+    confirmPopupForceVersion: null,
+    isFetch: true,
+    urlRestData: 'pipelines',
+  });
+
   const { tabKey, goTo } = usePath();
   const [readme, setReadme] = useState();
 
   const { asyncFetch, post } = useReadme(useReadme.TYPES.PIPELINE);
-  const { name } = record;
 
-  const onApply = useCallback(() => {
+  const onApplyApplyMarkdown = useCallback(() => {
     post({ name, readme });
   }, [post, name, readme]);
+
+  const extra =
+    tabKey === TABS.DESCRIPTION ? (
+      false && (
+        <Button onClick={onApplyApplyMarkdown} icon={<CheckOutlined />}>
+          Apply Markdown
+        </Button>
+      )
+    ) : tabKey === TABS.VERSIONS ? (
+      <Button onClick={fetch} icon={<RedoOutlined />}>
+        Refresh
+      </Button>
+    ) : null;
 
   const handleChange = useCallback(
     nextTabKey => goTo.overview({ nextTabKey }),
@@ -40,7 +68,22 @@ const PipelineInfo = ({ record }) => {
       {
         label: TABS.INFO,
         key: TABS.INFO,
-        children: <JsonSwitch obj={record} isGraph typeDefaultView="Graph" />,
+        children: <JsonSwitch obj={pipeline} isGraph typeDefaultView="Graph" />,
+      },
+
+      {
+        label: TABS.VERSIONS,
+        key: TABS.VERSIONS,
+        children: (
+          <VersionsTable
+            currentVersion={version}
+            isFetch={tabKey === TABS.VERSIONS}
+            dataSource={dataSource}
+            onApply={onApplyVersion}
+            onDelete={onDelete}
+            source="pipelines"
+          />
+        ),
       },
       {
         label: TABS.DESCRIPTION,
@@ -48,7 +91,7 @@ const PipelineInfo = ({ record }) => {
         children: <MdEditor value={readme} onChange={setReadme} viewReadOnly />,
       },
     ],
-    [readme, record]
+    [pipeline, readme, version, tabKey, dataSource, onApplyVersion, onDelete]
   );
 
   return (
@@ -57,10 +100,7 @@ const PipelineInfo = ({ record }) => {
         items={TabsItemsJson}
         activeKey={tabKey}
         onChange={handleChange}
-        extra={
-          tabKey === TABS.DESCRIPTION &&
-          false && <Button onClick={onApply}>Apply Markdown</Button>
-        }
+        extra={extra}
       />
     </Card>
   );
@@ -69,7 +109,7 @@ const PipelineInfo = ({ record }) => {
 PipelineInfo.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
-  record: PropTypes.object.isRequired,
+  pipeline: PropTypes.object.isRequired,
 };
 
 export default React.memo(PipelineInfo);
