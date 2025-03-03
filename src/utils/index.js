@@ -27,4 +27,7 @@ export {
   removeNullUndefinedCleanDeep,
   isValuesFiltersEmpty,
   mergeObjects,
+  transformFieldsToObject,
+  transformObjectToArray,
+  setTypeVolume,
 } from './objectManipulation';

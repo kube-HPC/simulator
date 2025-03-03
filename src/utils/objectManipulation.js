@@ -79,3 +79,35 @@ export const mergeObjects = (obj1, obj2) => {
   }
   return obj2;
 };
+
+export const transformFieldsToObject = values => {
+  if (!Array.isArray(values)) return {};
+
+  return values.reduce((acc, item) => {
+    if (item && typeof item === 'object') {
+      const { key, value } = item;
+      if (key && value !== undefined) {
+        acc[key] = value;
+      }
+    }
+    return acc;
+  }, {});
+};
+
+export const transformObjectToArray = (obj = {}) =>
+  obj && typeof obj === 'object'
+    ? Object.entries(obj).map(([key, value]) => ({ key, value }))
+    : [];
+
+export const setTypeVolume = objVolumes =>
+  Array.isArray(objVolumes)
+    ? objVolumes
+        .filter(obj => obj && typeof obj === 'object' && obj.name)
+        .map(obj => {
+          const typeVolume = obj.typeVolume || 'emptyDir';
+          return {
+            name: obj.name,
+            [typeVolume]: obj[typeVolume],
+          };
+        })
+    : [];
