@@ -1,8 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Table } from 'components';
-import { JsonSwitch, Card } from 'components/common';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
+import PropTypes from 'prop-types';
+// eslint-disable-next-line import/no-cycle
+import { JsonSwitch, Card } from 'components/common';
+import { Table } from 'components';
+
 import getVersionsColumns from './getVersionsColumns.react';
 
 const expandedRowRender = record => (

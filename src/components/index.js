@@ -3,3 +3,4 @@ export { default as Table } from './Table';
 export { default as WTable } from './WTable';
 export { default as GrafanaLink } from './GrafanaLink';
 export { default as ParticleAnimation } from './ParticleAnimation';
+export { default as VersionsTable } from './TableVersions/VersionsTable.react';

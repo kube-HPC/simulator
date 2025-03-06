@@ -3,14 +3,15 @@ import { CheckOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Button, Modal, Tooltip, Typography, Tag } from 'antd';
 import Moment from 'react-moment';
 import { sorter } from 'utils/stringHelper';
-import { Ellipsis, FlexBox } from 'components/common';
 import { COLOR_PIPELINE_STATUS } from 'styles';
+import FlexBox from '../common/FlexBox.react';
+import Ellipsis from '../common/Ellipsis.react';
 
 const { Text } = Typography;
 
-const deleteConfirmAction = (action, { name, version }) => {
+const deleteConfirmAction = (action, { name, version }, source) => {
   Modal.confirm({
-    title: 'Deleting Algorithm Version',
+    title: `Deleting ${source} version`,
     content: (
       <>
         Deleting <Text code>{name}</Text> version.
@@ -26,9 +27,9 @@ const deleteConfirmAction = (action, { name, version }) => {
   });
 };
 
-const currentConfirmAction = (action, { name, version }) => {
+const currentConfirmAction = (action, { name, version }, source) => {
   Modal.confirm({
-    title: 'Change Algorithm Version',
+    title: `Change ${source} version`,
     content: (
       <>
         Changing <Text code>{name}</Text> version.
@@ -80,7 +81,7 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion, source }) => {
               type="dashed"
               shape="circle"
               icon={<CheckOutlined />}
-              onClick={() => currentConfirmAction(onApply, record)}
+              onClick={() => currentConfirmAction(onApply, record, source)}
             />
           </Tooltip>
         </FlexBox.Item>
@@ -90,7 +91,7 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion, source }) => {
               type="dashed"
               shape="circle"
               icon={<DeleteOutlined />}
-              onClick={() => deleteConfirmAction(onDelete, record)}
+              onClick={() => deleteConfirmAction(onDelete, record, source)}
             />
           </Tooltip>
         </FlexBox.Item>
@@ -162,7 +163,7 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion, source }) => {
     ];
   }
 
-  // if this not algorithms return piplines coloms
+  // if this not algorithms return piplines cols
   return [
     {
       title: 'Version',

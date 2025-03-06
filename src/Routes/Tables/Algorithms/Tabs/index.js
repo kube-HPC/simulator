@@ -12,8 +12,8 @@ import { Card, JsonSwitch, MdEditor, Tabs } from 'components/common';
 import { useReadme, useVersions } from 'hooks';
 import PropTypes from 'prop-types';
 import { OVERVIEW_TABS as TABS } from 'const';
+import { VersionsTable } from 'components';
 import AlgorithmBuildsTable from './Builds';
-import { VersionsTable } from './Versions';
 import usePath from './../usePath';
 
 const AlgorithmsTabs = ({ algorithm }) => {

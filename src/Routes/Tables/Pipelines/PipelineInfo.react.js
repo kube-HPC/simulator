@@ -4,7 +4,7 @@ import { Button } from 'antd';
 import { Card, JsonSwitch, MdEditor, Tabs } from 'components/common';
 import { CheckOutlined, RedoOutlined } from '@ant-design/icons';
 import { useReadme, useVersions } from 'hooks';
-import { VersionsTable } from './../Algorithms/Tabs/Versions';
+import { VersionsTable } from 'components';
 import usePath, { OVERVIEW_TABS as TABS } from './usePath';
 
 const PipelineInfo = ({ pipeline }) => {
