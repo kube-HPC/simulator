@@ -41,6 +41,7 @@ const JOB_QUERY = gql`
               skipped
               stalled
               warning
+              failedScheduling
             }
           }
         }
