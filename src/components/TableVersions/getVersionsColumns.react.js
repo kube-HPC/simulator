@@ -3,14 +3,15 @@ import { CheckOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Button, Modal, Tooltip, Typography, Tag } from 'antd';
 import Moment from 'react-moment';
 import { sorter } from 'utils/stringHelper';
-import { Ellipsis, FlexBox } from 'components/common';
 import { COLOR_PIPELINE_STATUS } from 'styles';
+import FlexBox from '../common/FlexBox.react';
+import Ellipsis from '../common/Ellipsis.react';
 
 const { Text } = Typography;
 
-const deleteConfirmAction = (action, { name, version }) => {
+const deleteConfirmAction = (action, { name, version }, source) => {
   Modal.confirm({
-    title: 'Deleting Algorithm Version',
+    title: `Deleting ${source} version`,
     content: (
       <>
         Deleting <Text code>{name}</Text> version.
@@ -26,9 +27,9 @@ const deleteConfirmAction = (action, { name, version }) => {
   });
 };
 
-const currentConfirmAction = (action, { name, version }) => {
+const currentConfirmAction = (action, { name, version }, source) => {
   Modal.confirm({
-    title: 'Change Algorithm Version',
+    title: `Change ${source} version`,
     content: (
       <>
         Changing <Text code>{name}</Text> version.
@@ -51,7 +52,7 @@ const Created = created => (
   <Moment format="DD/MM/YY HH:mm:ss">{+created}</Moment>
 );
 
-const getVersionsColumns = ({ onDelete, onApply, currentVersion }) => {
+const getVersionsColumns = ({ onDelete, onApply, currentVersion, source }) => {
   const AlgorithmVersion = version => {
     const isCurrentVersion = currentVersion === version;
     return version ? (
@@ -80,7 +81,7 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion }) => {
               type="dashed"
               shape="circle"
               icon={<CheckOutlined />}
-              onClick={() => currentConfirmAction(onApply, record)}
+              onClick={() => currentConfirmAction(onApply, record, source)}
             />
           </Tooltip>
         </FlexBox.Item>
@@ -90,7 +91,7 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion }) => {
               type="dashed"
               shape="circle"
               icon={<DeleteOutlined />}
-              onClick={() => deleteConfirmAction(onDelete, record)}
+              onClick={() => deleteConfirmAction(onDelete, record, source)}
             />
           </Tooltip>
         </FlexBox.Item>
@@ -98,6 +99,71 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion }) => {
     );
   };
 
+  if (source === 'algorithms') {
+    return [
+      {
+        title: 'Version',
+        dataIndex: ['version'],
+        key: 'version',
+        onFilter: (value, record) => record.version.includes(value),
+        sorter: (a, b) => sorter(a.version, b.version),
+        render: AlgorithmVersion,
+      },
+      {
+        title: 'Image',
+        dataIndex: ['algorithm', 'algorithmImage'],
+        key: 'algorithm.algorithmImage',
+        onFilter: (value, record) =>
+          record.algorithm.algorithmImage.includes(value),
+        sorter: (a, b) =>
+          sorter(a.algorithm.algorithmImage, b.algorithm.algorithmImage),
+      },
+      {
+        title: 'Created',
+        dataIndex: ['created'],
+        key: 'created',
+        sorter: (a, b) => sorter(a.created, b.created),
+        render: Created,
+      },
+      {
+        title: 'CPU',
+        dataIndex: ['algorithm', 'cpu'],
+        key: 'algorithm.cpu',
+        sorter: (a, b) => sorter(a.algorithm.cpu, b.algorithm.cpu),
+        render: Cpu,
+      },
+      {
+        title: 'Mem',
+        dataIndex: ['algorithm', 'mem'],
+        key: 'algorithm.mem',
+        sorter: (a, b) => sorter(a.algorithm.mem, b.algorithm.mem),
+        render: Mem,
+      },
+      {
+        title: 'Min Hot',
+        dataIndex: ['algorithm', 'minHotWorkers'],
+        key: 'algorithm.minHotWorkers',
+        sorter: (a, b) =>
+          sorter(a.algorithm.minHotWorkers, b.algorithm.minHotWorkers),
+        render: MinHotWorkers,
+      },
+      {
+        title: 'Type',
+        dataIndex: ['algorithm', 'type'],
+        key: 'algorithm.type',
+        sorter: (a, b) => sorter(a.algorithm.type, b.algorithm.type),
+        render: Type,
+      },
+      {
+        title: 'Action',
+        dataIndex: ['action'],
+        key: 'action',
+        render: Action,
+      },
+    ];
+  }
+
+  // if this not algorithms return piplines cols
   return [
     {
       title: 'Version',
@@ -107,15 +173,7 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion }) => {
       sorter: (a, b) => sorter(a.version, b.version),
       render: AlgorithmVersion,
     },
-    {
-      title: 'Image',
-      dataIndex: ['algorithm', 'algorithmImage'],
-      key: 'algorithm.algorithmImage',
-      onFilter: (value, record) =>
-        record.algorithm.algorithmImage.includes(value),
-      sorter: (a, b) =>
-        sorter(a.algorithm.algorithmImage, b.algorithm.algorithmImage),
-    },
+
     {
       title: 'Created',
       dataIndex: ['created'],
@@ -123,35 +181,7 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion }) => {
       sorter: (a, b) => sorter(a.created, b.created),
       render: Created,
     },
-    {
-      title: 'CPU',
-      dataIndex: ['algorithm', 'cpu'],
-      key: 'algorithm.cpu',
-      sorter: (a, b) => sorter(a.algorithm.cpu, b.algorithm.cpu),
-      render: Cpu,
-    },
-    {
-      title: 'Mem',
-      dataIndex: ['algorithm', 'mem'],
-      key: 'algorithm.mem',
-      sorter: (a, b) => sorter(a.algorithm.mem, b.algorithm.mem),
-      render: Mem,
-    },
-    {
-      title: 'Min Hot',
-      dataIndex: ['algorithm', 'minHotWorkers'],
-      key: 'algorithm.minHotWorkers',
-      sorter: (a, b) =>
-        sorter(a.algorithm.minHotWorkers, b.algorithm.minHotWorkers),
-      render: MinHotWorkers,
-    },
-    {
-      title: 'Type',
-      dataIndex: ['algorithm', 'type'],
-      key: 'algorithm.type',
-      sorter: (a, b) => sorter(a.algorithm.type, b.algorithm.type),
-      render: Type,
-    },
+
     {
       title: 'Action',
       dataIndex: ['action'],

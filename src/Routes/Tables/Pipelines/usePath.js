@@ -2,8 +2,9 @@ import { useMemo } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router';
 
 export const OVERVIEW_TABS = {
-  INFO: 'information',
-  DESCRIPTION: 'description',
+  INFO: 'Information',
+  DESCRIPTION: 'Description',
+  VERSIONS: 'Versions',
 };
 
 export default () => {

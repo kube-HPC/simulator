@@ -5,25 +5,30 @@ import client from './../client';
 
 const errorNotification = ({ message }) => notification({ message });
 
-const useVersions = ({ algorithmName, confirmPopupForceVersion, isFetch }) => {
+const useVersions = ({
+  nameId,
+  confirmPopupForceVersion,
+  isFetch,
+  urlRestData,
+}) => {
   const [dataSource, setDataSource] = useState(undefined);
 
   const fetchVersion = useCallback(
     () =>
       client
-        .get(`/versions/algorithms/${algorithmName}`)
+        .get(`/versions/${urlRestData}/${nameId}`)
         .then(({ data }) => {
           setDataSource(data);
         })
         .catch(errorNotification),
-    [algorithmName]
+    [nameId]
   );
 
   const fetch = useCallback(() => fetchVersion(), [fetchVersion]);
 
   const deleteVersion = ({ name, version }) =>
     client
-      .delete(`/versions/algorithms/${name}/${version}`)
+      .delete(`/versions/${urlRestData}/${name}/${version}`)
       .then(() => {
         fetchVersion();
       })
@@ -31,14 +36,16 @@ const useVersions = ({ algorithmName, confirmPopupForceVersion, isFetch }) => {
 
   const applyVersion = ({ name, version, force }) => {
     client
-      .post(`/versions/algorithms/apply`, { name, version, force })
+      .post(`/versions/${urlRestData}/apply`, { name, version, force })
       .catch(error => {
-        confirmPopupForceVersion(
-          error.response.data,
-          name,
-          version,
-          applyVersion
-        );
+        if (confirmPopupForceVersion) {
+          confirmPopupForceVersion(
+            error.response.data,
+            name,
+            version,
+            applyVersion
+          );
+        }
       });
   };
 
@@ -46,7 +53,7 @@ const useVersions = ({ algorithmName, confirmPopupForceVersion, isFetch }) => {
     if (isFetch) {
       fetch();
     }
-  }, [algorithmName, fetch, isFetch]);
+  }, [nameId, fetch, isFetch]);
 
   return {
     dataSource,
