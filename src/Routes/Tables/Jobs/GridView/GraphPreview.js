@@ -9,10 +9,7 @@ import React, {
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Alert, Button } from 'antd';
-// import { Fallback, FallbackComponent } from 'components/common';
-// import { useNodeInfo, useSettings } from 'hooks';
-import { useSelector } from 'react-redux';
-import { selectors } from 'reducers';
+
 import useWizardContext from 'Routes/SidebarRight/AddPipeline/useWizardContext';
 import Graph from 'react-graph-vis';
 import {
@@ -62,6 +59,24 @@ export const ButtonsPanel = styled.div`
   justify-content: space-between;
 `;
 
+const ensureAllNodesInEdges = data => {
+  const { nodes, edges } = data;
+
+  const connectedNodes = new Set();
+  edges.forEach(edge => {
+    connectedNodes.add(edge.from);
+    connectedNodes.add(edge.to);
+  });
+
+  nodes.forEach(node => {
+    if (!connectedNodes.has(node.nodeName)) {
+      edges.push({ from: node.nodeName });
+    }
+  });
+
+  return data;
+};
+
 const GraphPreview = ({
   pipeline,
   keyIndex = undefined,
@@ -96,8 +111,6 @@ const GraphPreview = ({
         ? valuesState?.streaming?.defaultFlow
         : null;
 
-  const { backendApiUrl } = useSelector(selectors.config);
-  console.log('backendApiUrl', backendApiUrl);
   const [graphPreview, setGraphPreview] = useState({ nodes: [], edges: [] });
   const [errorGraph, setErrorGraph] = useState('');
 
@@ -188,7 +201,7 @@ const GraphPreview = ({
     };
 
     flowStrings.forEach(flowString => {
-      const flow = JSON.parse(flowString);
+      const flow = { ...flowString };
 
       // Add nodes
       flow.nodes.forEach(node => {
@@ -220,6 +233,7 @@ const GraphPreview = ({
   const initPreviewGetData = useCallback(() => {
     if (isStreamingPipeline) {
       // streaming
+
       if (pipeline.streaming?.flows) {
         if (isBuildAllFlows) {
           const flows = pipeline.streaming?.flows;
@@ -235,7 +249,10 @@ const GraphPreview = ({
                 if (response.data.error && response.data.error.message) {
                   setErrorGraph(response.data.error.message);
                 }
-                return response.data;
+
+                const dataAllNode = ensureAllNodesInEdges(response.data);
+
+                return dataAllNode;
               })
               .catch(error => {
                 console.error(error);
@@ -324,11 +341,11 @@ const GraphPreview = ({
           console.error('Error during axios operation:', error);
         });
     }
-  }, [backendApiUrl, isBuildAllFlows, isStreamingPipeline, keyFlow, pipeline]);
+  }, [isBuildAllFlows, isStreamingPipeline, keyFlow, pipeline]);
 
   useEffect(() => {
     initPreviewGetData();
-  }, [valuesState, stepIdx, isStreamingPipeline]);
+  }, [valuesState, stepIdx, isStreamingPipeline, initPreviewGetData]);
 
   const isDataNode =
     adaptedGraph.nodes.length > 0 && adaptedGraph.nodes[0].name !== '';
