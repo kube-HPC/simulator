@@ -134,7 +134,6 @@ const AddAlgorithmForm = ({
 
   const onToggleToEditor = () => {
     const schemaObjectForm = form.getFieldsValue();
-    console.log('schemaObjectForm', schemaObjectForm);
     onToggle(schemaObjectForm, buildType);
   };
 

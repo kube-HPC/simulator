@@ -173,7 +173,12 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
             ? 'secret'
             : 'emptyDir';
 
-      return { ...obj, typeVolume };
+      const newObj = { ...obj, typeVolume };
+      if (newObj[typeVolume] && Object.keys(newObj[typeVolume]).length === 0) {
+        newObj[typeVolume] = '';
+      }
+
+      return newObj;
     });
 
   const switchToForm = () => {
@@ -185,6 +190,7 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
     formObj.main.name = objJsonData.name;
 
     // sidecar to object ui
+
     formObj.main.sideCars = objJsonData?.sideCars?.map(sideCar => ({
       containerName: sideCar?.container?.name || '',
       containerImage: sideCar?.container?.image || '',
@@ -192,6 +198,7 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
       volumesMounts: sideCar.volumesMounts,
       environments: transformObjectToArray(sideCar.environments),
     }));
+
     // -------------------------------------------------------------- end sidecar
 
     formObj.main.description = objJsonData.description;
