@@ -7,7 +7,7 @@ import {
 import { filterData } from './autoComplete.action';
 import { cancelBuild, rerunBuild } from './builds.action';
 import {
-  init,
+  initDashboardConfig,
   socketInit,
   setConnectionStatus,
   connectionSetup,
@@ -71,7 +71,7 @@ const actions = {
   firstLoad,
   getCaching,
   getKubernetesLogsData,
-  init,
+  initDashboardConfig,
   pausePipeline,
   rerunBuild,
   resumePipeline,

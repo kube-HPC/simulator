@@ -10,42 +10,30 @@ import WorkersTable from './Workers';
 import DataSources from './DataSources';
 
 const Body = () => (
-  <>
-    <Routes>
-      <Route path="jobs" element={<Jobs />}>
-        <Route path=":jobId/*" />
-      </Route>
+  <Routes>
+    <Route path="/" element={<Navigate to="/jobs" replace />} />
 
-      <Route path="/" element={<Navigate to="/jobs" replace />} />
-    </Routes>
-    <Routes>
-      <Route path="/queue" element={<QueueOrderJobsV2 />}>
-        <Route path=":edit/*" />
-      </Route>
-    </Routes>
+    <Route path="/jobs" element={<Jobs />} />
+    <Route path="/jobs/:jobId/*" element={<Jobs />} />
 
-    <Routes>
-      <Route path="/pipelines" element={<PipelinesTable />}>
-        <Route path=":pipelineId/*" />
-      </Route>
-    </Routes>
-    <Routes>
-      <Route path="/algorithms" element={<AlgorithmsTable />}>
-        <Route path=":algorithmId/*" />
-      </Route>
-    </Routes>
-    <Routes>
-      <Route path="/workers/*" element={<WorkersTable />} />
-      <Route path="/drivers/*" element={<DriversTable />} />
-    </Routes>
-    <Routes>
-      <Route path="/datasources" element={<DataSources />}>
-        <Route path=":dataSourceId">
-          <Route path=":dataSourceName/*" />
-        </Route>
-      </Route>
-    </Routes>
-  </>
+    <Route path="/queue" element={<QueueOrderJobsV2 />} />
+    <Route path="/queue/:edit/*" element={<QueueOrderJobsV2 />} />
+
+    <Route path="/pipelines" element={<PipelinesTable />} />
+    <Route path="/pipelines/:pipelineId/*" element={<PipelinesTable />} />
+
+    <Route path="/algorithms" element={<AlgorithmsTable />} />
+    <Route path="/algorithms/:algorithmId/*" element={<AlgorithmsTable />} />
+
+    <Route path="/workers/*" element={<WorkersTable />} />
+    <Route path="/drivers/*" element={<DriversTable />} />
+
+    <Route path="/datasources" element={<DataSources />} />
+    <Route
+      path="/datasources/:dataSourceId/:dataSourceName/*"
+      element={<DataSources />}
+    />
+  </Routes>
 );
 
 export default Body;

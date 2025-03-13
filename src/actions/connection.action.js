@@ -11,7 +11,7 @@ export const socketInit = () => ({
   },
 });
 
-export const init = () => ({
+export const initDashboardConfig = () => ({
   type: actions.REST_REQ_CONFIG,
   payload: {
     url: DEFAULT_URL,
