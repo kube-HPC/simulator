@@ -62,7 +62,6 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
       }
 
       if (sideCar?.volumes) {
-        console.log('sideCar?.volumes', sideCar?.volumes);
         sideCarObj.volumes = setTypeVolume(sideCar.volumes);
       }
 
