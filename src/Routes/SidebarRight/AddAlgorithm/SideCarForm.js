@@ -39,6 +39,12 @@ const SideCarForm = ({ nameList }) => (
       <>
         {fields.map(({ key, name, ...restField }) => (
           <React.Fragment key={key}>
+            <div>
+              <MinusCircleOutlined
+                style={{ fontSize: '20px', height: '32px', textAlign: 'end' }}
+                onClick={() => remove(name)}
+              />
+            </div>
             <FlexItem>
               <ContainerFormItemTop
                 style={{ width: '100%' }}
@@ -48,10 +54,6 @@ const SideCarForm = ({ nameList }) => (
                 rules={[{ required: true, message: 'Missing container Name' }]}>
                 <Input />
               </ContainerFormItemTop>
-              <MinusCircleOutlined
-                style={{ marginLeft: 'px', marginTop: '-6px' }}
-                onClick={() => remove(name)}
-              />
             </FlexItem>
             <ContainerFormItemTop
               label="Image"
@@ -120,78 +122,89 @@ const VolumeList = ({ nameList }) => (
       <>
         {fieldsVolumeList.map(({ key, name, ...rest }) => (
           <React.Fragment key={key}>
-            <FlexItem>
-              <Form.Item {...rest} name={[name, 'typeVolume']}>
-                <Radio.Group defaultValue="emptyDir">
-                  <Radio.Button value="emptyDir">EmptyDir</Radio.Button>
-                  <Radio.Button value="persistentVolumeClaim">
-                    persistentVolumeClaim (PVC)
-                  </Radio.Button>
-                  <Radio.Button value="configMap">ConfigMap</Radio.Button>
-                  <Radio.Button value="secret">Secret</Radio.Button>
-                </Radio.Group>
-              </Form.Item>
-              <MinusCircleOutlined
-                style={{ marginLeft: '20px', marginTop: '-6px' }}
-                onClick={() => removeVolume(name)}
-              />
-            </FlexItem>
-            <ContainerFormItem label="Name" {...rest} name={[name, 'name']}>
-              <Input />
-            </ContainerFormItem>
-
-            <Form.Item shouldUpdate>
-              {({ getFieldValue }) => {
-                const selectVolume =
-                  getFieldValue([
-                    'main',
-                    'sideCars',
-                    ...nameList,
-                    name,
-                    'typeVolume',
-                  ]) ?? 'emptyDir';
-
-                return (
-                  <>
-                    {selectVolume === 'emptyDir' && (
-                      <ContainerFormItem
-                        label="Empty Dir"
-                        {...rest}
-                        name={[name, 'emptyDir']}>
-                        <Input />
-                      </ContainerFormItem>
-                    )}
-
-                    {selectVolume === 'persistentVolumeClaim' && (
-                      <ContainerFormItem
-                        label="Persistent Volume Claim"
-                        {...rest}
-                        name={[name, 'persistentVolumeClaim', 'claimName']}>
-                        <Input />
-                      </ContainerFormItem>
-                    )}
-
-                    {selectVolume === 'configMap' && (
-                      <ContainerFormItem
-                        label="Config Map"
-                        {...rest}
-                        name={[name, 'configMap', 'name']}>
-                        <Input />
-                      </ContainerFormItem>
-                    )}
-
-                    {selectVolume === 'secret' && (
-                      <ContainerFormItem
-                        label="Secret"
-                        {...rest}
-                        name={[name, 'secret', 'secretName']}>
-                        <Input />
-                      </ContainerFormItem>
-                    )}
-                  </>
-                );
+            <MinusCircleOutlined
+              title="delete volumes"
+              onClick={() => removeVolume(name)}
+              style={{
+                position: 'absolute',
+                right: '-20px',
+                marginTop: '-20px',
               }}
-            </Form.Item>
+            />
+
+            <FlexItem>
+              <div style={{ width: '100%' }}>
+                <ContainerFormItem label="Name" {...rest} name={[name, 'name']}>
+                  <Input />
+                </ContainerFormItem>
+
+                <FlexItem>
+                  <Form.Item {...rest} name={[name, 'typeVolume']}>
+                    <Radio.Group defaultValue="emptyDir" buttonStyle="solid">
+                      <Radio.Button value="emptyDir">EmptyDir</Radio.Button>
+                      <Radio.Button value="persistentVolumeClaim">
+                        persistentVolumeClaim (PVC)
+                      </Radio.Button>
+                      <Radio.Button value="configMap">ConfigMap</Radio.Button>
+                      <Radio.Button value="secret">Secret</Radio.Button>
+                    </Radio.Group>
+                  </Form.Item>
+                </FlexItem>
+
+                <Form.Item shouldUpdate>
+                  {({ getFieldValue }) => {
+                    const selectVolume =
+                      getFieldValue([
+                        'main',
+                        'sideCars',
+                        ...nameList,
+                        name,
+                        'typeVolume',
+                      ]) ?? 'emptyDir';
+
+                    return (
+                      <>
+                        {selectVolume === 'emptyDir' && (
+                          <ContainerFormItem
+                            label="Value"
+                            {...rest}
+                            name={[name, 'emptyDir']}>
+                            <Input />
+                          </ContainerFormItem>
+                        )}
+
+                        {selectVolume === 'persistentVolumeClaim' && (
+                          <ContainerFormItem
+                            label="Value"
+                            {...rest}
+                            name={[name, 'persistentVolumeClaim', 'claimName']}>
+                            <Input />
+                          </ContainerFormItem>
+                        )}
+
+                        {selectVolume === 'configMap' && (
+                          <ContainerFormItem
+                            label="Value"
+                            {...rest}
+                            name={[name, 'configMap', 'name']}>
+                            <Input />
+                          </ContainerFormItem>
+                        )}
+
+                        {selectVolume === 'secret' && (
+                          <ContainerFormItem
+                            label="Value"
+                            {...rest}
+                            name={[name, 'secret', 'secretName']}>
+                            <Input />
+                          </ContainerFormItem>
+                        )}
+                      </>
+                    );
+                  }}
+                </Form.Item>
+              </div>{' '}
+            </FlexItem>
             <Divider />
           </React.Fragment>
         ))}
@@ -218,6 +231,16 @@ const VolumeMountsList = ({ nameList }) => (
       <>
         {fieldsVolumeMounts.map(({ key, name, ...rest }) => (
           <React.Fragment key={key}>
+            <MinusCircleOutlined
+              title="delete volumes"
+              onClick={() => removeVolumeMounts(name)}
+              style={{
+                position: 'absolute',
+                right: '-20px',
+                marginTop: '-20px',
+              }}
+            />
+
             <FlexItem>
               <div style={{ width: '100%' }}>
                 <ContainerFormItem
@@ -235,10 +258,6 @@ const VolumeMountsList = ({ nameList }) => (
                   <Input />
                 </ContainerFormItem>
               </div>
-              <MinusCircleOutlined
-                style={{ marginLeft: '5px' }}
-                onClick={() => removeVolumeMounts(name)}
-              />
             </FlexItem>
             <Divider />
           </React.Fragment>
