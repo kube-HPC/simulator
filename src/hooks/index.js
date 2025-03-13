@@ -24,6 +24,7 @@ export { default as useCacheFilters } from '../graphql/useCacheFilters';
 export { default as useReadMeFile } from './useReadMeFile';
 export { default as useWizardInitial } from './useWizardInitial';
 export { default as useLocalStorageGraphMode } from './useLocalStorageGraphMode';
+export { default as useInitTheme } from './useInitTheme';
 
 export const dataSources = {
   useSnapshots: useDataSourceSnapshots,

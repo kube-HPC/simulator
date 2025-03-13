@@ -165,6 +165,7 @@ const SidebarLeft = () => {
     return items;
   }, [
     dataCount,
+    instanceCounter.algorithmsUnscheduledReason,
     instanceFilters,
     isOpenMenuAdministration,
     location.search,
@@ -187,7 +188,7 @@ const SidebarLeft = () => {
           onOpenChange={onOpenChangeMenu}
           mode="inline"
           items={menuMainItemsJson}
-          selectedKeys={[`left-sidebar-${pageName}`]}
+          selectedKeys={[`left-sidebar-${pageName ?? 'jobs'}`]}
         />
       </Sider>
     </Border>

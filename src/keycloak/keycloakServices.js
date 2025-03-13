@@ -48,6 +48,21 @@ const hasRole = roles => roles.some(role => _kc.hasRealmRole(role));
 
 const isTokenExpired = minSecValidity => _kc.isTokenExpired(minSecValidity);
 
+const startTokenRefreshInterval = keycloakEnable => {
+  const tokenRefreshInterval = setInterval(() => {
+    if (keycloakEnable && isLoggedIn) {
+      updateToken(30, () => {
+        console.log('Token refreshed successfully!');
+      });
+    } else {
+      console.log('no keycloak in action');
+    }
+  }, 60000);
+
+  // Cleanup on unmount
+  return tokenRefreshInterval;
+};
+
 const KeycloakServices = {
   initKeycloak,
   doLogin,
@@ -58,6 +73,7 @@ const KeycloakServices = {
   isTokenExpired,
   getUsername,
   hasRole,
+  startTokenRefreshInterval,
 };
 
 export default KeycloakServices;

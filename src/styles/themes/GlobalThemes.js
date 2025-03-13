@@ -41,9 +41,7 @@ const GlobalThemes = () => {
   return (
     <>
       <GlobalStyle location={location} />
-      {/* <Suspense fallback=""> */}
       {LazyThemeStyle[themeName.toUpperCase()]}
-      {/* </Suspense> */}
     </>
   );
 };

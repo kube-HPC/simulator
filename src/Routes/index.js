@@ -54,11 +54,10 @@ const RoutesNav = () => {
   const { grafanaUrl } = useSelector(selectors.connection);
   const { filtersInitCacheItems } = useCacheFilters();
   const numberErrorGraphQL = useReactiveVar(numberErrorGraphQLVar);
-  useEffect(() => {
-    instanceFiltersVar(filtersInitCacheItems);
-  }, []);
-
   const [isDataAvailable, setIsDataAvailable] = useState(false);
+
+  const { socketInit } = useActions();
+
   const {
     apolloClient,
     openNotification,
@@ -66,7 +65,6 @@ const RoutesNav = () => {
     isNotificationErrorShow,
     setIsNotificationErrorShow,
   } = useApolloClient();
-  const { socketInit } = useActions();
 
   useEffect(() => {
     socketInit();
@@ -89,6 +87,10 @@ const RoutesNav = () => {
     openNotification,
     setIsNotificationErrorShow,
   ]);
+
+  useEffect(() => {
+    instanceFiltersVar(filtersInitCacheItems);
+  }, []);
 
   return isDataAvailable ? (
     <ThemeProvider theme={{ ...Theme }}>
