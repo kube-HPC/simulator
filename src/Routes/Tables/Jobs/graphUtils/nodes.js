@@ -26,7 +26,7 @@ const findNodeByName = (name, collection = []) =>
 export const getTaskDetails = node =>
   node?.batch?.length > 0
     ? node?.batch
-    : [{ taskId: node?.taskId, podName: node?.podName }];
+    : [{ taskId: node?.taskId, podName: node?.podName, status: node.status }];
 
 export const findNode =
   ({ graph, pipeline }) =>
