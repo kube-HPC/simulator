@@ -24,18 +24,18 @@ const TableWhite = styled(AntTable)`
     background: none;
   }
   .ant-table-row {
-    transition: all 0.5s ease;
+    transition: all 2s ease;
     .${TABLE_JOB.ACTIONS_SELECT} {
-      transition: all 0.5s ease;
+      transition: all 2s ease;
       height: 32px;
       overflow: hidden;
       opacity: 0;
       width: 0;
     }
     &:hover {
-      transition: all 0.5s ease;
+      transition: all 0.1s ease;
       .${TABLE_JOB.ACTIONS_SELECT} {
-        transition: all 0.5s ease;
+        transition: all 0.1s ease;
         opacity: 1;
         width: fit-content;
       }

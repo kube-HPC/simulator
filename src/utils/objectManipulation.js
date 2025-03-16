@@ -99,15 +99,20 @@ export const transformObjectToArray = (obj = {}) =>
     ? Object.entries(obj).map(([key, value]) => ({ key, value }))
     : [];
 
-export const setTypeVolume = objVolumes =>
-  Array.isArray(objVolumes)
-    ? objVolumes
-        .filter(obj => obj && typeof obj === 'object' && obj.name)
-        .map(obj => {
-          const typeVolume = obj.typeVolume || 'emptyDir';
-          return {
-            name: obj.name,
-            [typeVolume]: obj[typeVolume],
-          };
-        })
-    : [];
+export const setTypeVolume = objVolumes => {
+  if (!Array.isArray(objVolumes)) return [];
+
+  return objVolumes.reduce((acc, obj) => {
+    if (!obj || typeof obj !== 'object' || !obj.name) return acc;
+
+    const typeVolume = obj.typeVolume || 'emptyDir';
+    const valueOfType =
+      typeVolume === 'emptyDir' &&
+      (obj[typeVolume] === '' || obj[typeVolume] === undefined)
+        ? {}
+        : obj[typeVolume];
+
+    acc.push({ name: obj.name, [typeVolume]: valueOfType });
+    return acc;
+  }, []);
+};
