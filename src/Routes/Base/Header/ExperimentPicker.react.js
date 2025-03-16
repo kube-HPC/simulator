@@ -57,17 +57,19 @@ const ExperimentPicker = () => {
     [add, descriptionExperiment, getLazyExperiments, nameExperiment]
   );
 
-  const onNameChange = useCallback(e => setNameExperiment(e.target.value), [
-    setNameExperiment,
-  ]);
+  const onNameChange = useCallback(
+    e => setNameExperiment(e.target.value),
+    [setNameExperiment]
+  );
   const onDescriptionChange = useCallback(
     e => setDescriptionExperiment(e.target.value),
     [setDescriptionExperiment]
   );
 
-  const onShowAll = useCallback(() => setExperiment(schema.SHOW_ALL), [
-    setExperiment,
-  ]);
+  const onShowAll = useCallback(
+    () => setExperiment(schema.SHOW_ALL),
+    [setExperiment]
+  );
 
   const menuJson = useMemo(() => {
     const items = [];
@@ -154,7 +156,7 @@ const ExperimentPicker = () => {
     ] || COLOR.blueLight;
 
   return (
-    <Popover content={menu} overlayStyle={overflow}>
+    <Popover content={menu} overlayStyle={overflow} placement="bottomRight">
       <BigTag color={tagColor}>{experimentId}</BigTag>
     </Popover>
   );

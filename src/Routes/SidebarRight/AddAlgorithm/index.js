@@ -170,8 +170,8 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
             : 'emptyDir';
 
       const newObj = { ...obj, typeVolume };
-      if (newObj[typeVolume] && Object.keys(newObj[typeVolume]).length === 0) {
-        newObj[typeVolume] = '';
+      if (newObj[typeVolume] && typeof newObj[typeVolume] === 'object') {
+        newObj[typeVolume] = JSON.stringify(newObj[typeVolume]);
       }
 
       return newObj;
