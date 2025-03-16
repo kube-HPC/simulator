@@ -50,7 +50,7 @@ const SideCarForm = ({ nameList }) => (
                 style={{ width: '100%' }}
                 label="Name"
                 {...restField}
-                name={[name, 'containerName']}
+                name={[name, 'container', 'name']}
                 rules={[{ required: true, message: 'Missing container Name' }]}>
                 <Input />
               </ContainerFormItemTop>
@@ -58,7 +58,7 @@ const SideCarForm = ({ nameList }) => (
             <ContainerFormItemTop
               label="Image"
               {...restField}
-              name={[name, 'containerImage']}
+              name={[name, 'container', 'image']}
               rules={[{ required: true, message: 'Missing container Image' }]}>
               <Input />
             </ContainerFormItemTop>

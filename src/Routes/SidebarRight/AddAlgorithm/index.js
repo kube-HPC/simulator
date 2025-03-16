@@ -53,12 +53,8 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
     objJsonData.sideCars = formObj?.main?.sideCars?.map(sideCar => {
       const sideCarObj = {};
 
-      if (sideCar?.containerName || sideCar?.containerImage) {
-        sideCarObj.container = {};
-        if (sideCar.containerName)
-          sideCarObj.container.name = sideCar.containerName;
-        if (sideCar.containerImage)
-          sideCarObj.container.image = sideCar.containerImage;
+      if (sideCar?.container) {
+        sideCarObj.container = sideCar.container;
       }
 
       if (sideCar?.volumes) {
@@ -192,8 +188,7 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
     // sidecar to object ui
 
     formObj.main.sideCars = objJsonData?.sideCars?.map(sideCar => ({
-      containerName: sideCar?.container?.name || '',
-      containerImage: sideCar?.container?.image || '',
+      container: sideCar?.container,
       volumes: addTypeVolume(sideCar.volumes),
       volumesMounts: sideCar.volumesMounts,
       environments: transformObjectToArray(sideCar.environments),

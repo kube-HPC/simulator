@@ -243,17 +243,13 @@ const AddAlgorithmForm = ({
         payload.option = payloadFilteredOption;
       }
 
-      // sidecar to json ---------------------------------------------------------------
+      // Submit sidecar to json ---------------------------------------------------------------
 
       payload.sideCars = formObject?.main?.sideCars?.map(sideCar => {
         const sideCarObj = {};
 
-        if (sideCar?.containerName || sideCar?.containerImage) {
-          sideCarObj.container = {};
-          if (sideCar.containerName)
-            sideCarObj.container.name = sideCar.containerName;
-          if (sideCar.containerImage)
-            sideCarObj.container.image = sideCar.containerImage;
+        if (sideCar?.container) {
+          sideCarObj.container = sideCar.container;
         }
 
         if (sideCar?.volumes) {
