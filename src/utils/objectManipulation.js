@@ -106,11 +106,24 @@ export const setTypeVolume = objVolumes => {
     if (!obj || typeof obj !== 'object' || !obj.name) return acc;
 
     const typeVolume = obj.typeVolume || 'emptyDir';
-    const valueOfType =
-      typeVolume === 'emptyDir' &&
-      (obj[typeVolume] === '' || obj[typeVolume] === undefined)
-        ? {}
-        : obj[typeVolume];
+    let valueOfType = obj[typeVolume];
+
+    if (typeVolume === 'emptyDir') {
+      if (valueOfType === '' || valueOfType === undefined) {
+        valueOfType = {};
+      }
+
+      if (typeof valueOfType === 'string') {
+        try {
+          const parsed = JSON.parse(valueOfType);
+          if (typeof parsed === 'object' && parsed !== null) {
+            valueOfType = parsed;
+          }
+        } catch (error) {
+          //
+        }
+      }
+    }
 
     acc.push({ name: obj.name, [typeVolume]: valueOfType });
     return acc;
