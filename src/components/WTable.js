@@ -24,18 +24,18 @@ const TableWhite = styled(AntTable)`
     background: none;
   }
   .ant-table-row {
-    transition: all 1s ease;
+    transition: all 0.5s ease;
     .${TABLE_JOB.ACTIONS_SELECT} {
-      transition: all 1s ease;
+      transition: all 0.5s ease;
       height: 32px;
       overflow: hidden;
       opacity: 0;
       width: 0;
     }
     &:hover {
-      transition: all 1s ease;
+      transition: all 0.5s ease;
       .${TABLE_JOB.ACTIONS_SELECT} {
-        transition: all 1s ease;
+        transition: all 0.5s ease;
         opacity: 1;
         width: fit-content;
       }
@@ -67,7 +67,7 @@ const WTable = ({ dataSource = [], loading = false, ...props }) => (
 );
 
 WTable.propTypes = {
-  dataSource: PropTypes.arrayOf(PropTypes.object),
+  dataSource: PropTypes.arrayOf(PropTypes.object.isRequired),
   loading: PropTypes.bool,
   ...AntTable.propTypes,
 };

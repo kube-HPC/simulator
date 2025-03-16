@@ -26,7 +26,7 @@ const AlgorithmsTabs = ({ algorithm }) => {
 
   const [readme, setReadme] = useState();
   const [isBuildFirstFail] = useState(
-    algorithm?.builds.length > 0 && algorithm?.builds[0]?.status === 'failed'
+    algorithm?.builds?.length > 0 && algorithm?.builds[0]?.status === 'failed'
   );
 
   const { asyncFetch, post } = useReadme(useReadme.TYPES.ALGORITHM);
