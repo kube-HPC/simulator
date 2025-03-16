@@ -74,10 +74,13 @@ const JobActions = ({ job }) => {
   return (
     <>
       <Button.Group className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
-        <Tooltip title="re-run pipeline">
+        <Tooltip
+          title="re-run pipeline"
+          mouseEnterDelay="0.5"
+          mouseLeaveDelay="0">
           <Button icon={<RedoOutlined />} onClick={onReRun} />
         </Tooltip>
-        <Tooltip title="stop">
+        <Tooltip title="stop" mouseEnterDelay="0.5" mouseLeaveDelay="0">
           <Button
             type="danger"
             disabled={isStopDisabled}
@@ -85,21 +88,30 @@ const JobActions = ({ job }) => {
             onClick={onStop}
           />
         </Tooltip>
-        <Tooltip title={canPause ? 'pause' : 'resume'}>
+        <Tooltip
+          title={canPause ? 'pause' : 'resume'}
+          mouseEnterDelay="0.5"
+          mouseLeaveDelay="0">
           <Button
             disabled={isStopDisabled || isJobStreaming}
             icon={canPause ? <PauseOutlined /> : <CaretRightOutlined />}
             onClick={onPause}
           />
         </Tooltip>
-        <Tooltip title="download results">
+        <Tooltip
+          title="download results"
+          mouseEnterDelay="0.5"
+          mouseLeaveDelay="0">
           <Button
             disabled={isDownloadDisabled}
             icon={<DownloadOutlined />}
             onClick={handleDownload}
           />
         </Tooltip>
-        <Tooltip title="show overview">
+        <Tooltip
+          title="show overview"
+          mouseEnterDelay="0.5"
+          mouseLeaveDelay="0">
           <Button onClick={onMoreInfo} icon={<InfoCircleOutlined />} />
         </Tooltip>
       </Button.Group>
