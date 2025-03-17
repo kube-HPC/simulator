@@ -77,6 +77,10 @@ const AlgorithmJsonEditor = ({
       payload.option = payloadFilteredOption;
     }
 
+    // workerEnv and algorithmEnv
+    payload.workerEnv = payload.workerEnv ?? {};
+    payload.algorithmEnv = payload.algorithmEnv ?? {};
+
     formData.append(`payload`, stringify(payload));
     onWizardSubmit({ formData });
   };
