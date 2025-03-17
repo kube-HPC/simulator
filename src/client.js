@@ -1,5 +1,6 @@
 import axios from 'axios';
 import KeycloakServices from 'keycloak/keycloakServices';
+import { events } from 'utils';
 
 const client = axios.create();
 
@@ -24,6 +25,15 @@ client.interceptors.response.use(
   response => response,
   async error => {
     const originalRequest = error.config;
+
+    // 403 Forbidden
+    if (error.response?.status === 403) {
+      console.log('403 Forbidden');
+      events.emit(
+        'global_alert_msg',
+        'You are not authorized to perform this action.'
+      );
+    }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;

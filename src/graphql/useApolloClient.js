@@ -69,6 +69,12 @@ const useApolloClient = () => {
 
       if (graphQLErrors) {
         console.error('GraphQL Errors:', graphQLErrors);
+
+        /*   graphQLErrors.forEach(error => {
+          if (error.extensions?.code === 'FORBIDDEN') {
+            console.error('403 Forbidden');
+          }
+        }); */
       }
 
       if (networkError) {

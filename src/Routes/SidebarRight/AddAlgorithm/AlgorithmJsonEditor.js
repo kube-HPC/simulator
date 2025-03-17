@@ -143,14 +143,14 @@ const AlgorithmJsonEditor = ({
 
 AlgorithmJsonEditor.propTypes = {
   isEdit: PropTypes.bool.isRequired,
-  editorJsonValue: PropTypes.instanceOf(PropTypes.object).isRequired,
+  editorJsonValue: PropTypes.instanceOf(PropTypes.object.isRequired).isRequired,
   onWizardSubmit: PropTypes.func.isRequired,
   toggleEditor: PropTypes.bool.isRequired,
   setIsCheckForceStopAlgorithms: PropTypes.func.isRequired,
   refCheckForceStopAlgorithms: PropTypes.func.isRequired,
   setEditorJsonValue: PropTypes.func.isRequired,
   isCheckForceStopAlgorithms: PropTypes.bool.isRequired,
-  sourceJson: PropTypes.instanceOf(PropTypes.object).isRequired,
+  sourceJson: PropTypes.instanceOf(PropTypes.object.isRequired).isRequired,
   fileList: PropTypes.oneOfType([PropTypes.object]).isRequired,
   setFileList: PropTypes.func.isRequired,
 };
