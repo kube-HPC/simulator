@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { events } from 'utils';
 import { ApolloProvider, useReactiveVar } from '@apollo/client';
 import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
@@ -92,9 +93,18 @@ const RoutesNav = () => {
     instanceFiltersVar(filtersInitCacheItems);
   }, []);
 
+  const [messageApi, contextHolder] = message.useMessage();
+  const handleMessage = msg => messageApi.info(msg);
+
+  useEffect(() => {
+    events.on('global_alert_msg', handleMessage);
+    return () => events.off('global_alert_msg', handleMessage);
+  }, []);
+
   return isDataAvailable ? (
     <ThemeProvider theme={{ ...Theme }}>
       <ApolloProvider client={apolloClient}>
+        {contextHolder}
         <UserGuide />
         <LayoutFullHeight>
           <Routes>
