@@ -278,7 +278,7 @@ const AddAlgorithmForm = ({
       ) {
         payload.workerEnv = transformFieldsToObject(formObject.main.workerEnv);
       } else {
-        delete payload.workerEnv;
+        payload.workerEnv = {};
       }
 
       // algorithmEnv
@@ -290,7 +290,7 @@ const AddAlgorithmForm = ({
           formObject.main.algorithmEnv
         );
       } else {
-        delete payload.algorithmEnv;
+        payload.algorithmEnv = {};
       }
 
       formData.append(`payload`, stringify(payload));

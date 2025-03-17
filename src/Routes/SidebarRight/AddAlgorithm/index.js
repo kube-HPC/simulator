@@ -86,7 +86,7 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
     ) {
       objJsonData.workerEnv = transformFieldsToObject(formObj.main.workerEnv);
     } else {
-      delete objJsonData.workerEnv;
+      objJsonData.workerEnv = {};
     }
 
     // algorithmEnv
@@ -98,7 +98,7 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
         formObj.main.algorithmEnv
       );
     } else {
-      delete objJsonData.algorithmEnv;
+      objJsonData.algorithmEnv = {};
     }
 
     objJsonData.reservedMemory = formObj.main.reservedMemory;
