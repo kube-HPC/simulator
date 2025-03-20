@@ -40,6 +40,7 @@ const ConfigProviderApp = () => {
     // Start a periodic token refresh
     let tokenRefreshInterval;
     if (keycloakEnable) {
+      console.log('keycloakEnable use:', keycloakEnable);
       tokenRefreshInterval = KeycloakServices.startTokenRefreshInterval();
     }
     // Cleanup on unmount
