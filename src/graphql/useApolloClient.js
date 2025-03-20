@@ -5,6 +5,7 @@ import {
   ApolloLink,
   useReactiveVar,
 } from '@apollo/client';
+import { events } from 'utils';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { selectors } from 'reducers';
@@ -70,11 +71,17 @@ const useApolloClient = () => {
       if (graphQLErrors) {
         console.error('GraphQL Errors:', graphQLErrors);
 
-        /*   graphQLErrors.forEach(error => {
-          if (error.extensions?.code === 'FORBIDDEN') {
-            console.error('403 Forbidden');
+        graphQLErrors.forEach(error => {
+          if (keycloakEnable && error.extensions?.code === 'FORBIDDEN') {
+            console.error('GraphQL Errors:', graphQLErrors);
+
+            console.log('403 Forbidden');
+            events.emit(
+              'global_alert_msg',
+              'You are not authorized to perform this action.'
+            );
           }
-        }); */
+        });
       }
 
       if (networkError) {

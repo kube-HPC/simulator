@@ -50,6 +50,7 @@ const isTokenExpired = minSecValidity => _kc.isTokenExpired(minSecValidity);
 
 const startTokenRefreshInterval = keycloakEnable => {
   const tokenRefreshInterval = setInterval(() => {
+    console.log('keycloakEnable:', keycloakEnable);
     if (keycloakEnable && isLoggedIn) {
       updateToken(30, () => {
         console.log('Token refreshed successfully!');
