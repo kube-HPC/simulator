@@ -35,19 +35,30 @@ const ConfigProviderApp = () => {
     }
   }, [keycloakEnable]);
 
+  let tokenRefreshInterval;
+
   useEffect(() => {
     // get config (dashboard-config.json)
     dispatch(initDashboardConfig());
+    console.log('keycloakEnable use 0:', keycloakEnable);
 
-    // Start a periodic token refresh
-    let tokenRefreshInterval;
-    // if (keycloakEnable) {
+    if (tokenRefreshInterval) {
+      clearInterval(tokenRefreshInterval);
+      tokenRefreshInterval = null;
+    }
 
-    tokenRefreshInterval = KeycloakServices.startTokenRefreshInterval();
-    // }
-    // Cleanup on unmount
-    return () => clearInterval(tokenRefreshInterval);
-  }, [dispatch]);
+    if (keycloakEnable) {
+      console.log('keycloakEnable use:', keycloakEnable);
+      tokenRefreshInterval = KeycloakServices.startTokenRefreshInterval();
+    }
+
+    return () => {
+      if (tokenRefreshInterval) {
+        clearInterval(tokenRefreshInterval);
+        tokenRefreshInterval = null;
+      }
+    };
+  }, [keycloakEnable]);
 
   return hasConfig ? (
     <ConfigProvider theme={themeProvider}>
