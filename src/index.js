@@ -27,16 +27,18 @@ const ConfigProviderApp = () => {
   const { keycloakEnable } = useSelector(selectors.connection);
   const firstKc = useRef(true);
   console.log('keycloakEnable:', keycloakEnable);
-  if (keycloakEnable && !KeycloakServices.isLoggedIn() && firstKc?.current) {
-    console.log('keycloakEnable initKeycloak :', keycloakEnable);
-    firstKc.current = false;
-    KeycloakServices.initKeycloak(renderApp, renderErrorPreRenderApp);
-  }
+  useEffect(() => {
+    if (keycloakEnable && !KeycloakServices.isLoggedIn() && firstKc.current) {
+      console.log('keycloakEnable initKeycloak:', keycloakEnable);
+      firstKc.current = false;
+      KeycloakServices.initKeycloak(renderApp, renderErrorPreRenderApp);
+    }
+  }, [keycloakEnable]);
 
   useEffect(() => {
     // get config (dashboard-config.json)
     dispatch(initDashboardConfig());
-
+    console.log('keycloakEnable use 0:', keycloakEnable);
     // Start a periodic token refresh
     let tokenRefreshInterval;
     if (keycloakEnable) {
