@@ -26,8 +26,9 @@ const ConfigProviderApp = () => {
   const { hasConfig } = useSelector(selectors.config);
   const { keycloakEnable } = useSelector(selectors.connection);
   const firstKc = useRef(true);
-
+  console.log('keycloakEnable:', keycloakEnable);
   if (keycloakEnable && !KeycloakServices.isLoggedIn() && firstKc?.current) {
+    console.log('keycloakEnable initKeycloak :', keycloakEnable);
     firstKc.current = false;
     KeycloakServices.initKeycloak(renderApp, renderErrorPreRenderApp);
   }
@@ -37,10 +38,12 @@ const ConfigProviderApp = () => {
     dispatch(initDashboardConfig());
 
     // Start a periodic token refresh
-    const tokenRefreshInterval =
-      KeycloakServices.startTokenRefreshInterval(keycloakEnable);
+    let tokenRefreshInterval;
+    if (keycloakEnable) {
+      tokenRefreshInterval = KeycloakServices.startTokenRefreshInterval();
+    }
     // Cleanup on unmount
-    return () => clearInterval(tokenRefreshInterval);
+    return () => keycloakEnable && clearInterval(tokenRefreshInterval);
   }, [dispatch]);
 
   return hasConfig ? (

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-
+import { metaVar } from 'cache';
+import { useReactiveVar } from '@apollo/client';
 import Jobs from './Jobs';
 import QueueOrderJobsV2 from './QueueOrderJobsV2';
 import AlgorithmsTable from './Algorithms';
@@ -10,10 +11,13 @@ import WorkersTable from './Workers';
 import DataSources from './DataSources';
 
 const Body = () => {
+  const metaMode = useReactiveVar(metaVar);
+  const { hash, search } = window.location;
+  const { experimentName } = metaMode;
   useEffect(() => {
-    if (!window.location.hash) {
+    if (!hash || (hash && !search)) {
       window.location.replace(
-        `${window.location.origin}${window.location.pathname}#/jobs?&experiment=main`
+        `${window.location.origin}${window.location.pathname}#/jobs?&experiment=${experimentName ?? 'main'}`
       );
     }
   }, []);
