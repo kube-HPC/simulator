@@ -38,15 +38,15 @@ const ConfigProviderApp = () => {
   useEffect(() => {
     // get config (dashboard-config.json)
     dispatch(initDashboardConfig());
-    console.log('keycloakEnable use 0:', keycloakEnable);
+
     // Start a periodic token refresh
     let tokenRefreshInterval;
-    if (keycloakEnable) {
-      console.log('keycloakEnable use:', keycloakEnable);
-      tokenRefreshInterval = KeycloakServices.startTokenRefreshInterval();
-    }
+    // if (keycloakEnable) {
+
+    tokenRefreshInterval = KeycloakServices.startTokenRefreshInterval();
+    // }
     // Cleanup on unmount
-    return () => keycloakEnable && clearInterval(tokenRefreshInterval);
+    return () => clearInterval(tokenRefreshInterval);
   }, [dispatch]);
 
   return hasConfig ? (
