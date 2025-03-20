@@ -94,7 +94,16 @@ const RoutesNav = () => {
   }, []);
 
   const [messageApi, contextHolder] = message.useMessage();
-  const handleMessage = msg => messageApi.info(msg);
+  const handleMessage = msg => {
+    messageApi.open({
+      type: 'info',
+      content: msg,
+      className: 'custom-class',
+      style: {
+        marginTop: '20vh',
+      },
+    });
+  };
 
   useEffect(() => {
     events.on('global_alert_msg', handleMessage);
