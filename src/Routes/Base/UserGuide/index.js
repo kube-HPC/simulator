@@ -20,13 +20,15 @@ const UserGuide = () => {
   const dispatch = useDispatch();
 
   const trigger = useCallback(() => dispatch(triggerUserGuide()), [dispatch]);
-  const changeStep = useCallback(step => dispatch(_changeStep(step)), [
-    dispatch,
-  ]);
+  const changeStep = useCallback(
+    step => dispatch(_changeStep(step)),
+    [dispatch]
+  );
 
   const callback = useCallback(
     data => {
       const { type, index, action } = data;
+
       if (type === EVENTS.TOUR_START) {
         navigate('/jobs');
       } else if (type === EVENTS.TOUR_END) {

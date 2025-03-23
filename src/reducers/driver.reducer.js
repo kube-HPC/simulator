@@ -17,12 +17,19 @@ const driversReducer = createSlice({
   name: 'drivers',
   initialState: { sum: null, collection: [] },
   reducers: {},
-  extraReducers: {
-    [actions.SOCKET_GET_DATA](state, { payload }) {
+  extraReducers: builder => {
+    builder.addCase(actions.SOCKET_GET_DATA, (state, { payload }) => {
       const collection = payload?.discovery[`pipeline-driver`] || [];
       const nextSum = sum(collection);
-      return nextSum === state.sum ? state : { sum: nextSum, collection };
-    },
+      if (nextSum !== state.sum) {
+        return {
+          ...state,
+          sum: nextSum,
+          collection,
+        };
+      }
+      return state;
+    });
   },
 });
 

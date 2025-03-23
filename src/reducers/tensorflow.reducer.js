@@ -1,5 +1,6 @@
 import { actionType } from 'const';
 import { createSlice } from '@reduxjs/toolkit';
+
 /**
  * @typedef {typeof initialState} BoardsState
  * @typedef {{ boards: BoardsState }} State
@@ -14,11 +15,14 @@ const boards = createSlice({
   name: 'tensor-boards',
   initialState,
   reducers: {},
-  extraReducers: {
-    [actionType.SOCKET_GET_DATA]: (
-      state,
-      { payload: { boards: nextBoards } }
-    ) => ({ ...state, ...nextBoards }),
+  extraReducers: builder => {
+    builder.addCase(
+      actionType.SOCKET_GET_DATA,
+      (state, { payload: { boards: nextBoards } }) => ({
+        ...state,
+        ...nextBoards,
+      })
+    );
   },
 });
 

@@ -71,7 +71,6 @@ import {
 
 const store = {
   algorithms,
-
   queue,
   boards,
   connection,

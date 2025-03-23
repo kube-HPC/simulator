@@ -35,8 +35,8 @@ const pipelinesReducer = createSlice({
     sum: null,
   },
   reducers: {},
-  extraReducers: {
-    [actions.SOCKET_GET_DATA]: (state, { payload }) => {
+  extraReducers: builder => {
+    builder.addCase(actions.SOCKET_GET_DATA, (state, { payload }) => {
       const { discovery, pipelines, pipelinesStats } = payload;
       const nextSum = sum([].concat(pipelines, pipelinesStats));
       if (nextSum === state.sum) return state;
@@ -45,13 +45,13 @@ const pipelinesReducer = createSlice({
       return {
         sum: nextSum,
         collection: isValidSource
-          ? pipelinesEntityAdapter.setAll({}, pipelines)
+          ? pipelinesEntityAdapter.setAll(state.collection, pipelines)
           : state.collection,
         stats: isValidStats
-          ? statsEntityAdapter.setAll({}, pipelinesStats)
+          ? statsEntityAdapter.setAll(state.stats, pipelinesStats)
           : state.stats,
       };
-    },
+    });
   },
 });
 

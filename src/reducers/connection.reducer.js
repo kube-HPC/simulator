@@ -26,37 +26,21 @@ const connection = createSlice({
   name: 'connection',
   initialState,
   reducers: {},
-  extraReducers: {
-    /**
-     * @param {{
-     *   payload: {
-     *     socketUrl?: string;
-     *     socketDatasourcesUrl?: string;
-     *     boardUrl?: string;
-     *     hkubeSystemVersion?: string;
-     *     kibanaUrl?: string;
-     *     structuredPrefix?: string;
-     *     grafanaUrl?: string;
-     *     grafanaDashboardUrl: string;
-     *     dataSourceIsEnable?: boolean;
-     *     keycloakEnable?: boolean;
-     *   };
-     * }} action
-     */
-    [actionType.CONNECTION_SETUP]: (state, action) => ({
-      ...state,
-      ...action.payload,
-    }),
-    /** @param {{ payload: { isSocketConnected: boolean } }} action */
-    [actionType.CONNECTION_STATUS_CHANGE]: (state, action) => ({
-      ...state,
-      isSocketConnected: action.payload.isSocketConnected,
-    }),
-    [actionType.SOCKET_GET_DATA]: state => ({
-      ...state,
-      isSocketConnected: true,
-      hasData: true,
-    }),
+  extraReducers: builder => {
+    builder
+      .addCase(actionType.CONNECTION_SETUP, (state, action) => ({
+        ...state,
+        ...action.payload,
+      }))
+      .addCase(actionType.CONNECTION_STATUS_CHANGE, (state, action) => ({
+        ...state,
+        isSocketConnected: action.payload.isSocketConnected,
+      }))
+      .addCase(actionType.SOCKET_GET_DATA, state => ({
+        ...state,
+        isSocketConnected: true,
+        hasData: true,
+      }));
   },
 });
 

@@ -19,21 +19,27 @@ const initialState = {
 };
 
 const userGuide = createSlice({
-  initialState,
   name: 'user-guide',
+  initialState,
   reducers: {},
-  extraReducers: {
-    [actions.USER_GUIDE_CHANGE_STEP]: (state, { stepIndex }) => ({
-      ...state,
-      stepIndex,
-    }),
-    [actions.USER_GUIDE_TRIGGER]: state => ({
-      ...initialState,
-      isOn: !state.isOn,
-    }),
+  extraReducers: builder => {
+    builder
+      .addCase(actions.USER_GUIDE_CHANGE_STEP, (state, { stepIndex }) => ({
+        ...state,
+        stepIndex,
+      }))
+      .addCase(actions.USER_GUIDE_TRIGGER, state => {
+        // eslint-disable-next-line no-param-reassign
+        state.isOn = !state.isOn;
+        if (!state.isOn) {
+          // eslint-disable-next-line no-param-reassign
+          state.stepIndex = 0; // Reset stepIndex when tutorial is turned off
+        }
+      });
   },
 });
 
 export const { reducer } = userGuide;
+
 /** @param {State} state */
 export const selectors = state => state.userGuide;

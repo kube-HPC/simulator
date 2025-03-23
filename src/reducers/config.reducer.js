@@ -16,22 +16,24 @@ const config = createSlice({
   name: 'config',
   initialState,
   reducers: {},
-  extraReducers: {
-    [`${actionType.SOCKET_GET_CONFIG}_SUCCESS`]: (state, { payload }) => ({
-      ...state,
-      backendApiUrl: payload.config.monitorBackend.useLocation
-        ? payload.config.monitorBackend.path
-        : `${
-            payload.config.monitorBackend.schema +
-            payload.config.monitorBackend.host
-          }:${payload.config.monitorBackend.port}${
-            payload.config.monitorBackend.path
-          }`,
+  extraReducers: builder => {
+    builder.addCase(
+      `${actionType.SOCKET_GET_CONFIG}_SUCCESS`,
+      (state, { payload }) => {
+        const { monitorBackend, baseUrl } = payload.config;
+        const backendApiUrl = monitorBackend.useLocation
+          ? monitorBackend.path
+          : `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}${monitorBackend.path}`;
 
-      baseUrl: payload.config.baseUrl,
-      hkubeSiteUrl: payload.config.monitorBackend.hkubeSiteUrl,
-      hasConfig: true,
-    }),
+        return {
+          ...state,
+          backendApiUrl,
+          baseUrl,
+          hkubeSiteUrl: monitorBackend.hkubeSiteUrl,
+          hasConfig: true,
+        };
+      }
+    );
   },
 });
 

@@ -5,6 +5,11 @@ export const setExperimentLoading = ({ to }) => ({
   payload: to,
 });
 
+export const toggleExperimentLoading = ({ to }) => ({
+  type: actions.TOGGLE_EXPERIMENT_LOADING,
+  payload: to,
+});
+
 export const addExperiment = (name, description, onSuccess) => ({
   type: actions.REST_REQ_POST,
   payload: {

@@ -25,22 +25,23 @@ const slice = createSlice({
     logs: [],
   },
   reducers: {},
-  extraReducers: {
-    [actions.SOCKET_GET_DATA]: (state, { payload }) => {
-      /** @type {{ jobs: Job[] }} */
-      const { jobs } = payload;
-      const nextSum = sum(jobs);
-      if (state.sum === nextSum) return state;
-      return {
+  extraReducers: builder => {
+    builder
+      .addCase(actions.SOCKET_GET_DATA, (state, { payload }) => {
+        /** @type {{ jobs: Job[] }} */
+        const { jobs } = payload;
+        const nextSum = sum(jobs);
+        if (state.sum === nextSum) return state;
+        return {
+          ...state,
+          sum: nextSum,
+          collection: entityAdapter.setAll(state.collection, jobs),
+        };
+      })
+      .addCase(actions.JOBS_KUBERNETES_LOGS_SUCCESS, (state, { payload }) => ({
         ...state,
-        sum: nextSum,
-        collection: entityAdapter.setAll({}, jobs),
-      };
-    },
-    [actions.JOBS_KUBERNETES_LOGS_SUCCESS]: (state, { payload }) => ({
-      ...state,
-      logs: payload,
-    }),
+        logs: payload,
+      }));
   },
 });
 

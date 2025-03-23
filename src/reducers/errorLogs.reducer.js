@@ -15,13 +15,20 @@ const errorLogs = createSlice({
   /** @type {ErrorLogsState} */
   initialState: { collection: [], sum: null },
   reducers: {},
-  extraReducers: {
-    [actions.SOCKET_GET_DATA]: (state, { payload }) => {
+  extraReducers: builder => {
+    builder.addCase(actions.SOCKET_GET_DATA, (state, { payload }) => {
       if (!payload.logs) return state;
       const nextSum = sum(payload.logs);
+
+      // Instead of mutating state directly, we return a new object if there's a change
       if (state.sum === nextSum) return state;
-      return { collection: payload.logs, sum: nextSum };
-    },
+
+      return {
+        ...state,
+        collection: payload.logs,
+        sum: nextSum,
+      };
+    });
   },
 });
 
