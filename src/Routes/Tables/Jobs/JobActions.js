@@ -53,7 +53,7 @@ const JobActions = ({ job }) => {
     () =>
       `${job.pipeline.name}_${job.key}_${new Date(
         +job.pipeline.startTime
-      ).toISOString()}`,
+      ).toISOString()}.zip`,
     [job.key, job.pipeline.name, job.pipeline.startTime]
   );
 
