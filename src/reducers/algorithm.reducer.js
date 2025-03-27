@@ -31,8 +31,8 @@ const algorithmsReducer = createSlice({
     buildsSum: null,
   },
   reducers: {},
-  extraReducers: {
-    [actions.SOCKET_GET_DATA]: (state, { payload }) => {
+  extraReducers: builder => {
+    builder.addCase(actions.SOCKET_GET_DATA, (state, { payload }) => {
       const { algorithms, algorithmBuilds } = payload;
       const isValidPayload = Array.isArray(algorithms);
       if (!isValidPayload) {
@@ -45,10 +45,13 @@ const algorithmsReducer = createSlice({
         : {
             sum: nextSum,
             buildsSum: nextBuildsSum,
-            collection: algorithmsEntityAdapter.setAll({}, algorithms),
+            collection: algorithmsEntityAdapter.setAll(
+              state.collection,
+              algorithms
+            ),
             builds: groupBy('algorithmName', algorithmBuilds),
           };
-    },
+    });
   },
 });
 
@@ -84,3 +87,5 @@ export const selectors = {
     entities: state => state.algorithms.builds,
   },
 };
+
+// export default reducer;

@@ -1,10 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import actionTypes from './actionTypes';
+
 /**
  * @typedef {import('./datasource').Snapshot} Snapshot
- *
  * @typedef {import('./datasource').FetchStatus} FetchStatus
- *
  * @typedef {import('./datasource').DataSource} DataSource
  *
  * @typedef {{
@@ -38,59 +37,57 @@ const snapshots = createSlice({
       };
     },
   },
-  extraReducers: {
-    /** @param {{ payload: DataSource[] }} action */
-    [actionTypes.fetchAll.success]: (state, action) => {
-      const nextState = action.payload.reduce(
-        /** @returns {SnapshotsState} */
-        (acc, dataSource) =>
-          state[dataSource.name]
-            ? acc
-            : {
-                ...acc,
-                [dataSource.name]: { status: 'IDLE', collection: [] },
-              },
-        {}
-      );
-      return {
+  extraReducers: builder => {
+    builder
+      .addCase(actionTypes.fetchAll.success, (state, action) => {
+        const nextState = action.payload.reduce(
+          /** @returns {SnapshotsState} */
+          (acc, dataSource) =>
+            state[dataSource.name]
+              ? acc
+              : {
+                  ...acc,
+                  [dataSource.name]: { status: 'IDLE', collection: [] },
+                },
+          {}
+        );
+        return {
+          ...state,
+          ...nextState,
+        };
+      })
+      .addCase(actionTypes.fetchSnapshots.success, (state, action) => ({
         ...state,
-        ...nextState,
-      };
-    },
-
-    [actionTypes.fetchSnapshots.success]: (state, action) => ({
-      ...state,
-      [action.meta.name]: { status: 'SUCCESS', collection: action.payload },
-    }),
-    [actionTypes.fetchSnapshots.pending]: (state, action) => ({
-      ...state,
-      [action.meta.name]: {
-        status: 'PENDING',
-        collection: state[action.meta.name]?.collection ?? [],
-      },
-    }),
-    [actionTypes.fetchSnapshots.fail]: (state, action) => ({
-      ...state,
-      [action.meta.name]: {
-        status: 'FAIL',
-        collection: state[action.meta.name]?.collection ?? [],
-      },
-    }),
-    /** @param {{ payload: Snapshot; meta: { dataSourceId: string } }} action */
-    [actionTypes.createSnapshot.success]: (state, { payload }) => {
-      const { name } = payload.dataSource;
-      let dataSource = state[name];
-      if (!dataSource) {
-        dataSource = { status: 'SUCCESS', collection: [] };
-      }
-      return {
+        [action.meta.name]: { status: 'SUCCESS', collection: action.payload },
+      }))
+      .addCase(actionTypes.fetchSnapshots.pending, (state, action) => ({
         ...state,
-        [name]: {
-          ...dataSource,
-          collection: dataSource.collection.concat(payload),
+        [action.meta.name]: {
+          status: 'PENDING',
+          collection: state[action.meta.name]?.collection ?? [],
         },
-      };
-    },
+      }))
+      .addCase(actionTypes.fetchSnapshots.fail, (state, action) => ({
+        ...state,
+        [action.meta.name]: {
+          status: 'FAIL',
+          collection: state[action.meta.name]?.collection ?? [],
+        },
+      }))
+      .addCase(actionTypes.createSnapshot.success, (state, { payload }) => {
+        const { name } = payload.dataSource;
+        let dataSource = state[name];
+        if (!dataSource) {
+          dataSource = { status: 'SUCCESS', collection: [] };
+        }
+        return {
+          ...state,
+          [name]: {
+            ...dataSource,
+            collection: dataSource.collection.concat(payload),
+          },
+        };
+      });
   },
 });
 

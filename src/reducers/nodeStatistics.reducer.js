@@ -7,12 +7,12 @@ const slice = createSlice({
   name: 'node-statistics',
   initialState: [],
   reducers: {},
-  extraReducers: {
-    [actions.SOCKET_GET_DATA](state, { payload }) {
+  extraReducers: builder => {
+    builder.addCase(actions.SOCKET_GET_DATA, (state, { payload }) => {
       const { nodeStatistics: nextNodeStatistics } = payload;
       const validPayload = Array.isArray(nextNodeStatistics);
       return validPayload ? nextNodeStatistics : state;
-    },
+    });
   },
 });
 

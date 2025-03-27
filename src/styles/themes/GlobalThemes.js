@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, startTransition } from 'react';
 import { useSiteThemeMode } from 'hooks';
 import { GlobalStyle } from 'styles';
 import { useLocation } from 'react-router-dom';
@@ -11,16 +11,12 @@ switch (
     ?.toUpperCase()
 ) {
   case 'LIGHT':
-    // import('antd/dist/antd.css');
     break;
   case 'DARK':
-    //  import('antd/dist/antd.dark.css');
     break;
   default:
-  //  import('antd/dist/antd.css');
 }
 
-// create in last styles to override styles antd
 const DarkThemeStyle = React.lazy(
   () => import('../themes/dark/DarkThemeStyle.styles')
 );
@@ -36,12 +32,19 @@ const LazyThemeStyle = {
 const GlobalThemes = () => {
   const { setTheme, themeName } = useSiteThemeMode();
   const location = useLocation();
-  useEffect(() => setTheme(themeName), []);
+  const [isThemeReady, setIsThemeReady] = useState(false);
+
+  useEffect(() => {
+    startTransition(() => {
+      setTheme(themeName);
+      setIsThemeReady(true); // Indicate that theme is loaded
+    });
+  }, []);
 
   return (
     <>
       <GlobalStyle location={location} />
-      {LazyThemeStyle[themeName.toUpperCase()]}
+      {isThemeReady && LazyThemeStyle[themeName.toUpperCase()]}
     </>
   );
 };

@@ -7,8 +7,11 @@ import { useCallback } from 'react';
 
 const useActions = () => {
   const dispatch = useDispatch();
+
   const createDispatch = useCallback(
-    action => (...params) => dispatch(action(...params)),
+    action =>
+      (...params) =>
+        dispatch(action(...params)),
     [dispatch]
   );
   const objectMapped = Object.entries(actions).map(([key, value]) => [

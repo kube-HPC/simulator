@@ -39,6 +39,7 @@ const ConfigProviderApp = () => {
 
   useEffect(() => {
     // get config (dashboard-config.json)
+
     dispatch(initDashboardConfig());
     console.log('keycloakEnable use 0:', keycloakEnable);
 

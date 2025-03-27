@@ -1,5 +1,7 @@
+/* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 import actions from 'const/application-actions';
+
 /**
  * @typedef {{ name: string; description: string }} Experiment
  * @typedef {{ experiments: typeof initialState }} State
@@ -10,24 +12,25 @@ const initialState = {
   collection: [],
   isLoading: true,
 };
+
 const experiments = createSlice({
   name: 'experiments',
   initialState,
   reducers: {},
-  extraReducers: {
-    [actions.SOCKET_GET_DATA]: (
-      _,
-      { payload: { experiments: nextExperiments } }
-    ) => ({ collection: nextExperiments, isLoading: false }),
-    [actions.TOGGLE_EXPERIMENT_LOADING]: state => ({
-      ...state,
-      isLoading: !state.isLoading,
-    }),
-    /** @param {{ payload: boolean }} action */
-    [actions.SET_EXPERIMENT_LOADING]: (state, action) => ({
-      ...state,
-      isLoading: action.payload,
-    }),
+  extraReducers: builder => {
+    builder.addCase(
+      actions.SOCKET_GET_DATA,
+      (state, { payload: { experiments: nextExperiments } }) => {
+        state.collection = nextExperiments;
+        state.isLoading = false;
+      }
+    );
+    builder.addCase(actions.TOGGLE_EXPERIMENT_LOADING, state => {
+      state.isLoading = !state.isLoading;
+    });
+    builder.addCase(actions.SET_EXPERIMENT_LOADING, (state, { payload }) => {
+      state.isLoading = payload;
+    });
   },
 });
 

@@ -11,9 +11,13 @@ const storage = createSlice({
   name: 'storage',
   initialState,
   reducers: {},
-  extraReducers: {
-    [actions.SOCKET_GET_DATA]: (state, { payload }) =>
-      payload?.diskSpace ?? state,
+  extraReducers: builder => {
+    builder.addCase(actions.SOCKET_GET_DATA, (state, { payload }) => {
+      if (payload?.diskSpace) {
+        return { ...state, diskSpace: payload.diskSpace };
+      }
+      return state;
+    });
   },
 });
 

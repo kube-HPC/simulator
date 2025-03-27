@@ -20,11 +20,15 @@ const settings = createSlice({
   name: 'settings',
   initialState,
   reducers: {},
-  extraReducers: {
-    [actionType.UPDATE_SETTINGS]: (state, { payload }) => ({
-      ...state,
-      ...payload,
-    }),
+  extraReducers: builder => {
+    builder.addCase(actionType.UPDATE_SETTINGS, (state, { payload }) => {
+      // eslint-disable-next-line no-param-reassign
+      state.graphDirection = payload.graphDirection ?? state.graphDirection;
+      // eslint-disable-next-line no-param-reassign
+      state.logSource = payload.logSource ?? state.logSource;
+      // eslint-disable-next-line no-param-reassign
+      state.logMode = payload.logMode ?? state.logMode;
+    });
   },
 });
 

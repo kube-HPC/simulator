@@ -11,10 +11,11 @@ const autoCompleteFilter = createSlice({
   name: 'autoCompleteFilter',
   initialState,
   reducers: {},
-  extraReducers: {
-    /** @type {(_: any, action: { payload: { filter: string } }) => string} action */
-    [actions.AUTO_COMPLETE_UPDATE_FILTER]: (_, { payload: { filter } }) =>
-      filter || '',
+  extraReducers: builder => {
+    builder.addCase(
+      actions.AUTO_COMPLETE_UPDATE_FILTER,
+      (_, { payload: { filter } }) => filter || ''
+    );
   },
 });
 
