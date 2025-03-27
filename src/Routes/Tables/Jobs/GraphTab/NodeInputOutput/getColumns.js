@@ -108,7 +108,7 @@ const Results = ({ record, url = null, algorithmName = '' }) => {
         icon={<DownloadOutlined />}
         onClick={() =>
           fetchDownload(
-            `${url ?? ''}storage/download/custom/${
+            `${url ?? ''}/storage/download/custom/${
               record.output && record.output.path
             }?ext=${record.downloadFileExt || ''}&namefile=${
               downloadNameFile || ''
