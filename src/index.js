@@ -39,9 +39,7 @@ const ConfigProviderApp = () => {
 
   useEffect(() => {
     // get config (dashboard-config.json)
-
     dispatch(initDashboardConfig());
-    console.log('keycloakEnable use 0:', keycloakEnable);
 
     if (tokenRefreshInterval) {
       clearInterval(tokenRefreshInterval);
@@ -49,7 +47,6 @@ const ConfigProviderApp = () => {
     }
 
     if (keycloakEnable) {
-      console.log('keycloakEnable use:', keycloakEnable);
       tokenRefreshInterval = KeycloakServices.startTokenRefreshInterval();
     }
 

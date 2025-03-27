@@ -14,7 +14,7 @@ const Body = () => {
   const metaMode = useReactiveVar(metaVar);
   const { hash, search } = window.location;
   const { experimentName } = metaMode;
-  console.log('!hash || (hash && !search)', !hash || (hash && !search));
+
   useEffect(() => {
     if (!hash || (hash && !search)) {
       window.location.replace(

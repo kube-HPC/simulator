@@ -11,6 +11,7 @@ import humanizeDuration from 'humanize-duration';
 import { taskStatuses as TASK_STATUS } from '@hkube/consts';
 import { sorter } from 'utils/stringHelper';
 import BaseTag from 'components/BaseTag';
+import { fetchDownload } from '../../../../../keycloak/fetchDownload';
 
 const styleTagStatus = {
   fontSize: '11px',
@@ -100,20 +101,21 @@ const Results = ({ record, url = null, algorithmName = '' }) => {
 
   return (
     <Tooltip placement="top" title="Download Results">
-      <a
-        href={`${url ? `${url}/` : ''}storage/download/custom/${
-          record.output && record.output.path
-        }?ext=${record.downloadFileExt || ''}&namefile=${
-          downloadNameFile || ''
-        }`}
-        download>
-        <Button
-          type="default"
-          disabled={!record.output}
-          shape="circle"
-          icon={<DownloadOutlined />}
-        />
-      </a>
+      <Button
+        type="default"
+        disabled={!record.output}
+        shape="circle"
+        icon={<DownloadOutlined />}
+        onClick={() =>
+          fetchDownload(
+            `${url ?? ''}storage/download/custom/${
+              record.output && record.output.path
+            }?ext=${record.downloadFileExt || ''}&namefile=${
+              downloadNameFile || ''
+            }`
+          )
+        }
+      />
     </Tooltip>
   );
 };
