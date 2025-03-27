@@ -14,8 +14,9 @@ import { USER_GUIDE } from 'const';
 import { useActions, usePipeline } from 'hooks';
 
 import PropTypes from 'prop-types';
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import usePath from './usePath';
+import { fetchDownload } from '../../../keycloak/fetchDownload';
 
 const activeStates = [
   PIPELINE_STATUS.PENDING,
@@ -38,7 +39,7 @@ const JobActions = ({ job }) => {
 
   const { rerunPipeline } = usePipeline();
   const { stopPipeline, pausePipeline, resumePipeline } = useActions();
-  const downloadLinkRef = useRef();
+
   const onReRun = useCallback(() => rerunPipeline(key), [rerunPipeline, key]);
 
   const onStop = useCallback(() => stopPipeline(key), [stopPipeline, key]);
@@ -67,62 +68,56 @@ const JobActions = ({ job }) => {
     [job?.pipeline?.kind]
   );
   const isDownloadDisabled = !results?.data?.storageInfo;
-  const handleDownload = useCallback(
+
+  /* const handleDownload = useCallback(
     () => downloadLinkRef.current?.click(),
     [downloadLinkRef]
-  );
+  ); */
+
   return (
-    <>
-      <Button.Group className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
-        <Tooltip
-          title="re-run pipeline"
-          mouseEnterDelay="0.5"
-          mouseLeaveDelay="0">
-          <Button icon={<RedoOutlined />} onClick={onReRun} />
-        </Tooltip>
-        <Tooltip title="stop" mouseEnterDelay="0.5" mouseLeaveDelay="0">
-          <Button
-            type="danger"
-            disabled={isStopDisabled}
-            icon={<StopOutlined />}
-            onClick={onStop}
-          />
-        </Tooltip>
-        <Tooltip
-          title={canPause ? 'pause' : 'resume'}
-          mouseEnterDelay="0.5"
-          mouseLeaveDelay="0">
-          <Button
-            disabled={isStopDisabled || isJobStreaming}
-            icon={canPause ? <PauseOutlined /> : <CaretRightOutlined />}
-            onClick={onPause}
-          />
-        </Tooltip>
-        <Tooltip
-          title="download results"
-          mouseEnterDelay="0.5"
-          mouseLeaveDelay="0">
-          <Button
-            disabled={isDownloadDisabled}
-            icon={<DownloadOutlined />}
-            onClick={handleDownload}
-          />
-        </Tooltip>
-        <Tooltip
-          title="show overview"
-          mouseEnterDelay="0.5"
-          mouseLeaveDelay="0">
-          <Button onClick={onMoreInfo} icon={<InfoCircleOutlined />} />
-        </Tooltip>
-      </Button.Group>
-      <a
-        style={{ display: 'none' }}
-        ref={downloadLinkRef}
-        href={`${socketUrl}/storage/download/pipeline/result/${key}/${downloadNameFile}`}
-        download>
-        hidden download link
-      </a>
-    </>
+    <Button.Group className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
+      <Tooltip
+        title="re-run pipeline"
+        mouseEnterDelay="0.5"
+        mouseLeaveDelay="0">
+        <Button icon={<RedoOutlined />} onClick={onReRun} />
+      </Tooltip>
+      <Tooltip title="stop" mouseEnterDelay="0.5" mouseLeaveDelay="0">
+        <Button
+          type="danger"
+          disabled={isStopDisabled}
+          icon={<StopOutlined />}
+          onClick={onStop}
+        />
+      </Tooltip>
+      <Tooltip
+        title={canPause ? 'pause' : 'resume'}
+        mouseEnterDelay="0.5"
+        mouseLeaveDelay="0">
+        <Button
+          disabled={isStopDisabled || isJobStreaming}
+          icon={canPause ? <PauseOutlined /> : <CaretRightOutlined />}
+          onClick={onPause}
+        />
+      </Tooltip>
+      <Tooltip
+        title="download results"
+        mouseEnterDelay="0.5"
+        mouseLeaveDelay="0">
+        <Button
+          disabled={isDownloadDisabled}
+          icon={<DownloadOutlined />}
+          onClick={() =>
+            fetchDownload(
+              `${socketUrl}/storage/download/pipeline/result/${key}/${downloadNameFile}`
+            )
+          }
+        />
+      </Tooltip>
+      <Tooltip title="show overview" mouseEnterDelay="0.5" mouseLeaveDelay="0">
+        <Button onClick={onMoreInfo} icon={<InfoCircleOutlined />} />
+      </Tooltip>
+    </Button.Group>
   );
 };
 

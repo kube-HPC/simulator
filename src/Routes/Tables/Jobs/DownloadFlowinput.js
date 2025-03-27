@@ -1,26 +1,30 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Alert } from 'antd';
-import DownloadLink from 'components/DownloadLink';
+import { useSelector } from 'react-redux';
+import { selectors } from 'reducers';
+
 import { LinkDownload } from './styles';
+import { fetchDownload } from '../../../keycloak/fetchDownload';
 
 const DownloadFlowinput = ({ keyValue }) => {
-  const [downloadHref, setDownloadHref] = useState(null);
-  const handleDownload = useCallback(
-    () => setDownloadHref(`api/v1/exec/flowInput/${keyValue}?download=true`),
-    [keyValue, setDownloadHref]
-  );
-
+  const { backendApiUrl } = useSelector(selectors.config);
   return (
     <LinkDownload>
-      <Button onClick={handleDownload} type="link" size="small">
+      <Button
+        onClick={() =>
+          fetchDownload(
+            `${backendApiUrl}/api/v1/exec/flowInput/${keyValue}?download=true`
+          )
+        }
+        type="link"
+        size="small">
         <Alert
           message="Click here to download flowInput"
           type="info"
           showIcon
         />{' '}
       </Button>
-      <DownloadLink href={downloadHref} />
     </LinkDownload>
   );
 };
