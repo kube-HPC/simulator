@@ -350,11 +350,11 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
   );
 
   const onWizardSubmit = ({ formData }) => {
-    // const method = isEdit ? 'put' : 'post';
-    // const url = 'store/algorithms';
+    const method = isEdit ? 'put' : 'post';
+    const url = 'store/algorithms';
 
-    const method = 'post';
-    const url = 'store/algorithms/apply';
+    // const method = 'post';
+    // const url = 'store/algorithms/apply';
 
     setIsSubmitLoading(true);
     client[method](url, formData, {
