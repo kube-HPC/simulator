@@ -95,7 +95,7 @@ const Results = ({ record, url = null, algorithmName = '' }) => {
     () =>
       `${algorithmName}_${
         record.startTime ? new Date(+record.startTime).toISOString() : ''
-      }.zip`,
+      }`,
     [algorithmName, record.startTime]
   );
 
