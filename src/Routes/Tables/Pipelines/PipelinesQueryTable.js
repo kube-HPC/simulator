@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo } from 'react';
-import { useDebouncedCallback } from 'use-debounce';
-import { Form, AutoComplete } from 'antd';
+import { Form } from 'antd';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import qs from 'qs';
 import { useReactiveVar } from '@apollo/client';
 import { instanceFiltersVar } from 'cache';
 import { FiltersForms } from 'styles';
+import AutoCompleteFloatingLabelInput from 'components/common/FiltersInput/AutoCompleteFloatingLabelInput';
 
 const PipelinesQueryTable = ({
   onSubmit = () => {},
@@ -24,7 +24,6 @@ const PipelinesQueryTable = ({
     instanceFiltersVar({ ...instanceFiltersVar(), pipelines });
     form.submit();
   };
-  const submitDebounced = useDebouncedCallback(SubmitForm, 500);
 
   useEffect(() => {
     if (instanceFilters.pipelines.qPipelineName === null) {
@@ -71,18 +70,14 @@ const PipelinesQueryTable = ({
 
   return (
     <FiltersForms layout="inline" form={form} size="medium" onFinish={onFinish}>
-      <Form.Item label="Pipeline Name" name="qPipelineName">
-        <AutoComplete
-          style={{ width: '24vw', marginLeft: '1vw' }}
+      <Form.Item name="qPipelineName">
+        <AutoCompleteFloatingLabelInput
+          label="Pipeline Name"
+          style={{ width: '24vw' }}
           options={pipelineOptions}
-          filterOption={(inputValue, option) =>
-            option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-          }
           autoFocus
           allowClear
-          onSearch={submitDebounced}
-          onSelect={SubmitForm}
-          onClear={SubmitForm}
+          Submit={SubmitForm}
         />
       </Form.Item>
     </FiltersForms>

@@ -9,7 +9,7 @@ export const FiltersForms = styled(Form)`
     padding: 8px;
     background: ${props => props.theme.Styles.filters.backgroundColor}; 
     box-shadow: box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 2px;
-
+    gap: ${props => (props.spacearound ? 'initial' : '30px')};
     .ant-select-selector,
     .ant-picker{
         border-radius: 20px!important;

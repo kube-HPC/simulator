@@ -130,7 +130,7 @@ const QueryForm = ({ params, zoomDate = Date.now(), onSubmit = () => {} }) => {
       form={form}
       size="medium"
       onFinish={onFinish}
-      spacearound={1}>
+      spacearound={0}>
       <Form.Item label="Time" name="time">
         <RangePickerNow
           isDisabled={isPinActiveJobs}
