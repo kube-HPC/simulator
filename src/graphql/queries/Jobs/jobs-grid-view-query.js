@@ -6,6 +6,7 @@ const JOB_GRID_VIEW_QUERY = gql`
     $pipelineName: String
     $algorithmName: String
     $pipelineStatus: String
+    $user: String
     $datesRange: Range
     $cursor: String
     $limit: Int
@@ -22,6 +23,11 @@ const JOB_GRID_VIEW_QUERY = gql`
     ) {
       jobs {
         key
+        auditTrail {
+          action
+          user
+          timestamp
+        }
         externalId
         results {
           startTime

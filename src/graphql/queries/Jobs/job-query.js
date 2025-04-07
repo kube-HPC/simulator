@@ -23,6 +23,11 @@ const JOB_QUERY = gql`
     ) {
       jobs {
         key
+        auditTrail {
+          action
+          user
+          timestamp
+        }
         externalId
         status {
           pipeline

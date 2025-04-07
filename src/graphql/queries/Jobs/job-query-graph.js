@@ -23,6 +23,11 @@ const JOB_QUERY_GRAPH = gql`
     ) {
       jobs {
         key
+        auditTrail {
+          action
+          user
+          timestamp
+        }
         externalId
         results {
           startTime
