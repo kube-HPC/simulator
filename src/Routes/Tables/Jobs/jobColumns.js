@@ -13,7 +13,6 @@ import JobProgress from './JobProgress';
 import JobStatus from './JobStatus';
 import JobTime from './JobTime';
 import JobTypes from './JobTypes';
-// import PinActiveJobs from './pinActiveJobs';
 
 const Id = jobID => (
   <Ellipsis
@@ -32,7 +31,6 @@ const StartTime = (text, record) => {
   return <JobTime startTime={startTime} results={results} />;
 };
 
-// const pinActiveJobs = status => <PinActiveJobs status={status} />;
 const Status = status => <JobStatus status={status} />;
 
 const Stats = status => <NodeStats status={status} />;
@@ -80,14 +78,6 @@ const sortStatus = (a, b) => sorter(a.status.status, b.status.status);
 // }));
 
 const jobColumns = [
-  /* {
-    dataIndex: ['status'],
-    key: `job-status-pin`,
-    width: `2%`,
-    align: `center`,
-    render: pinActiveJobs,
-  }, */
-
   {
     title: `External ID`,
     dataIndex: [`externalId`],

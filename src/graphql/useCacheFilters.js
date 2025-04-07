@@ -21,6 +21,7 @@ const useCacheFilters = () => {
       pipelineName: locationParsed?.pipelineName || null,
       algorithmName: locationParsed?.algorithmName || null,
       pipelineStatus: locationParsed?.pipelineStatus || null,
+      user: locationParsed?.user || null,
       datesRange: {
         from:
           (locationParsed?.datesRange?.from &&

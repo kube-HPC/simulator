@@ -15,6 +15,7 @@ const JOB_GRID_VIEW_QUERY = gql`
       pipelineName: $pipelineName
       algorithmName: $algorithmName
       pipelineStatus: $pipelineStatus
+      user: $user
       datesRange: $datesRange
       cursor: $cursor
       limit: $limit
