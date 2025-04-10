@@ -70,10 +70,9 @@ const Progress = (_, job) => {
   );
 };
 
+// eslint-disable-next-line react/destructuring-assignment
 const Avarar = auditTrail => {
-  const username =
-    Array.isArray(auditTrail) &&
-    auditTrail?.find(x => x.action === EXECUT_ACTIONS.RUN).user;
+  const username = auditTrail?.find(x => x.action === EXECUT_ACTIONS.RUN).user;
 
   return (
     auditTrail && (

@@ -3,7 +3,7 @@ import {
   pipelineStatuses as PIPELINE_STATUS,
   executeActions as EXECUT_ACTIONS,
 } from '@hkube/consts';
-
+import { getColorByName } from 'utils';
 import { Badge } from 'antd';
 import PropTypes from 'prop-types';
 import BaseTag from 'components/BaseTag';
@@ -12,45 +12,35 @@ import BaseTag from 'components/BaseTag';
 const JobStatus = ({ status, auditTrail, style }) => {
   let statusAction = '';
 
-  switch (status.status) {
-    case PIPELINE_STATUS.STOPPED:
-      statusAction = EXECUT_ACTIONS.STOP;
-      break;
-    case PIPELINE_STATUS.PAUSED:
-      statusAction = EXECUT_ACTIONS.PAUSE;
-      break;
-    case PIPELINE_STATUS.RESUMED:
-      statusAction = EXECUT_ACTIONS.RESUME;
-      break;
-    default:
-      statusAction = '';
-      break;
+  if (status.status === PIPELINE_STATUS.STOPPED) {
+    statusAction = EXECUT_ACTIONS.STOP;
+  } else if (status.status === PIPELINE_STATUS.PAUSED) {
+    statusAction = EXECUT_ACTIONS.PAUSE;
+  } else if (status.status === PIPELINE_STATUS.RESUMED) {
+    statusAction = EXECUT_ACTIONS.RESUME;
   }
 
   const userName =
     statusAction !== '' && Array.isArray(auditTrail)
-      ? auditTrail?.find(x => x.action === statusAction)
+      ? auditTrail.find(x => x.action === statusAction).user
       : undefined;
 
-  return (
-    (userName && (
-      <Badge
-        style={{ fontSize: '8px' }}
-        count={userName}
-        size="small"
-        status="success"
-        color="blue"
-        title={`${userName} is ${status.status}`}
-        offset={[-7, 0]}>
-        <BaseTag status={status.status} tooltip={status.error} style={style}>
-          {status.status}
-        </BaseTag>
-      </Badge>
-    )) || (
+  return userName ? (
+    <Badge
+      style={{ fontSize: '8px' }}
+      count={userName[0].toUpperCase()}
+      size="small"
+      color={getColorByName(userName)}
+      title={`${userName} is ${status.status}`}
+      offset={[-7, 0]}>
       <BaseTag status={status.status} tooltip={status.error} style={style}>
         {status.status}
       </BaseTag>
-    )
+    </Badge>
+  ) : (
+    <BaseTag status={status.status} tooltip={status.error} style={style}>
+      {status.status}
+    </BaseTag>
   );
 };
 
