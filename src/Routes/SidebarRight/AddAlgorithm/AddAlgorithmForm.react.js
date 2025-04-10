@@ -1,8 +1,7 @@
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Input, InputNumber, Radio, Select, Checkbox } from 'antd';
-
+import { Input, InputNumber, Radio, Select, Checkbox, Card } from 'antd';
 import { Form, FlexBox } from 'components/common';
 import {
   BottomPanel,
@@ -30,6 +29,8 @@ import schema from './schema';
 import DrawerReadMeFile from '../../../components/Drawer/DrawerReadMeFile';
 
 import SideCarForm from './SideCarForm';
+import VolumeList from './VolumeList';
+import VolumeMountsList from './VolumeMountsList';
 
 // #region  Helpers
 
@@ -252,9 +253,9 @@ const AddAlgorithmForm = ({
           sideCarObj.container = sideCar.container;
         }
 
-        if (sideCar?.volumes) {
-          sideCarObj.volumes = setTypeVolume(sideCar.volumes);
-        }
+        //    if (sideCar?.volumes) {
+        //      sideCarObj.volumes = setTypeVolume(sideCar.volumes);
+        //    }
 
         if (sideCar?.volumesMounts) {
           sideCarObj.volumesMounts = sideCar.volumesMounts;
@@ -270,6 +271,16 @@ const AddAlgorithmForm = ({
       });
 
       // ------------------------------------------------------------------------------ end sidecar
+
+      // External Volumes
+      if (formObject?.main.volumes) {
+        payload.volumes = setTypeVolume(formObject.main.volumes);
+      }
+
+      if (formObject?.main.volumesMounts) {
+        payload.volumesMounts = formObject.main.volumesMounts;
+      }
+      // End External Volumes
 
       // workerEnv
       if (
@@ -340,6 +351,21 @@ const AddAlgorithmForm = ({
       </Form.Item>
 
       {buildTypes[buildType]}
+
+      <Card title="Volumes" bordered="true">
+        <Form.Item>
+          <VolumeList nameList={['main', 'volumes']} />
+        </Form.Item>
+      </Card>
+
+      <Card
+        title="Volumes Mounts"
+        bordered="true"
+        style={{ marginTop: '20px' }}>
+        <Form.Item>
+          <VolumeMountsList nameList={['main', 'volumesMounts']} />
+        </Form.Item>
+      </Card>
 
       <Collapsible title={MAIN.DIVIDER.RESOURCES}>
         <Form.Item name={splitByDot(MAIN.CPU.field)} label={MAIN.CPU.label}>
