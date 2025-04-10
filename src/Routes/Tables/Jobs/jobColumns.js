@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-
-// import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
+import { executeActions as EXECUT_ACTIONS } from '@hkube/consts';
 import { Ellipsis } from 'components/common';
 import { USER_GUIDE } from 'const';
 import { sorter } from 'utils/stringHelper';
+import UserAvatar from '../../../components/UserAvatar';
 import JobActions from './JobActions';
 import PipelineNameActions from './PipelineNameActions';
 import NodeStats from './NodeStats';
@@ -31,7 +31,11 @@ const StartTime = (text, record) => {
   return <JobTime startTime={startTime} results={results} />;
 };
 
-const Status = status => <JobStatus status={status} />;
+const Status = (_, job) => {
+  const { status, auditTrail } = job;
+
+  return <JobStatus status={status} auditTrail={auditTrail} />;
+};
 
 const Stats = status => <NodeStats status={status} />;
 // const Priority = priority => <JobPriority priority={priority} />;
@@ -66,6 +70,18 @@ const Progress = (_, job) => {
   );
 };
 
+// eslint-disable-next-line react/destructuring-assignment
+const Avarar = auditTrail => {
+  const username = auditTrail?.filter(x => x.action === EXECUT_ACTIONS.RUN)[0]
+    .user;
+
+  return (
+    auditTrail && (
+      <UserAvatar username={username} titleToolTip={`${username} is run job`} />
+    )
+  );
+};
+
 const sortPipelineName = (a, b) => sorter(a.pipeline.name, b.pipeline.name);
 const sortStartTime = (a, b) => a.pipeline.startTime - b.pipeline.startTime;
 const sortPriority = (a, b) => sorter(a.pipeline.priority, b.pipeline.priority);
@@ -78,6 +94,13 @@ const sortStatus = (a, b) => sorter(a.status.status, b.status.status);
 // }));
 
 const jobColumns = [
+  {
+    title: ``,
+    dataIndex: [`auditTrail`],
+    key: `auditTrail`,
+    width: `4%`,
+    render: Avarar,
+  },
   {
     title: `External ID`,
     dataIndex: [`externalId`],
@@ -134,7 +157,7 @@ const jobColumns = [
   },
   {
     title: `Status`,
-    dataIndex: ['status'],
+    //  dataIndex: ['status'],
     key: `job-status`,
     //  filterMultiple: true,
     //  filters: statusFilter,
