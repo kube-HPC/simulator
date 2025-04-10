@@ -1,20 +1,35 @@
 import React, { useEffect, useMemo } from 'react';
 import dayjs from 'dayjs';
-import { Form, AutoComplete, Button } from 'antd';
+import { Form, Tooltip } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import KeycloakServices from 'keycloak/keycloakServices';
 import PropTypes from 'prop-types';
 import { pipelineStatuses } from '@hkube/consts';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { ALGORITHM_AND_PIPELINE_NAMES } from 'graphql/queries';
-import { FiltersForms } from 'styles';
+import { FiltersForms, COLOR_PIPELINE_STATUS } from 'styles';
 import { RangePickerNow } from 'components/common';
 import { isPinActiveJobVar } from 'cache';
+
+import { selectors } from 'reducers';
+import { useSelector } from 'react-redux';
+
+import AutoCompleteFloatingLabelInput from 'components/common/FiltersInput/AutoCompleteFloatingLabelInput';
+import ButtonDropdown from 'components/common/FiltersInput/ButtonDropdown';
+import FloatingLabelInput from 'components/common/FiltersInput/FloatingLabelInput';
 
 const QueryForm = ({ params, zoomDate = Date.now(), onSubmit = () => {} }) => {
   const [form] = Form.useForm();
   const isPinActiveJobs = useReactiveVar(isPinActiveJobVar);
+  const { keycloakEnable } = useSelector(selectors.connection);
 
   const SubmitForm = () => {
     //  setLoadingJobs(true);
+    form.submit();
+  };
+
+  const FilterByMyUserName = () => {
+    form.setFieldsValue({ user: KeycloakServices.getUsername() });
     form.submit();
   };
 
@@ -49,20 +64,28 @@ const QueryForm = ({ params, zoomDate = Date.now(), onSubmit = () => {} }) => {
     } else {
       form.resetFields(['pipelineStatus']);
     }
+
+    if (keycloakEnable) {
+      if (params && params.user) {
+        form.setFieldsValue({ user: params.user });
+      } else {
+        form.resetFields(['user']);
+      }
+    }
   }, [params]);
 
   const onFinish = values => {
     onSubmit(values);
   };
 
-  const onPinActive = () => {
-    if (!isPinActiveJobs) {
-      form.setFieldsValue({ pipelineStatus: 'active' });
+  const onPinPipelineStatus = statusName => {
+    if (statusName !== '') {
+      form.setFieldsValue({ pipelineStatus: statusName });
+      isPinActiveJobVar(statusName === 'active');
     } else {
       form.setFieldsValue({ pipelineStatus: null });
+      isPinActiveJobVar(false);
     }
-
-    isPinActiveJobVar(!isPinActiveJobs);
 
     SubmitForm();
   };
@@ -88,23 +111,32 @@ const QueryForm = ({ params, zoomDate = Date.now(), onSubmit = () => {} }) => {
 
   const pipelineStatusOptions = useMemo(() => {
     delete pipelineStatuses.PENDING;
+    delete pipelineStatuses.CRASHED;
+    delete pipelineStatuses.DEQUEUED;
+    delete pipelineStatuses.QUEUED;
+    delete pipelineStatuses.RESUMED;
+    delete pipelineStatuses.RUNNING;
+    delete pipelineStatuses.STALLED;
 
     return Object.values(pipelineStatuses).map(status => ({
+      key: status,
       value: status,
       label: status,
+      color: COLOR_PIPELINE_STATUS[status],
     }));
   }, []);
 
   // useEffect(() => {
   //  setTimeout(setLoadingJobs(false), 3000);
   // }, [loadingJobs]);
+
   return (
     <FiltersForms
       layout="inline"
       form={form}
       size="medium"
       onFinish={onFinish}
-      spacearound={1}>
+      spacearound={0}>
       <Form.Item label="Time" name="time">
         <RangePickerNow
           isDisabled={isPinActiveJobs}
@@ -112,53 +144,52 @@ const QueryForm = ({ params, zoomDate = Date.now(), onSubmit = () => {} }) => {
           zoomDateChange={zoomDate}
         />
       </Form.Item>
-      <Form.Item label="Pipeline Name / Job ID" name="pipelineName">
-        <AutoComplete
-          style={{ width: '7vw' }}
+
+      <Form.Item name="pipelineName">
+        <AutoCompleteFloatingLabelInput
+          label="Pipeline Name / Job ID"
+          style={{ width: '9vw' }}
           options={pipelineOptions}
-          filterOption={(inputValue, option) =>
-            option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-          }
           allowClear
-          autoFocus
-          onSearch={SubmitForm}
-          onSelect={SubmitForm}
-          onClear={SubmitForm}
+          Submit={SubmitForm}
         />
       </Form.Item>
-      <Form.Item label="Pipeline Status" name="pipelineStatus">
-        <AutoComplete
-          allowClear
-          style={{ width: '7vw' }}
-          options={pipelineStatusOptions}
-          filterOption={(inputValue, option) =>
-            option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-          }
-          onSelect={SubmitForm}
-          onClear={SubmitForm}
-          disabled={isPinActiveJobs}
-        />
-      </Form.Item>
-      <Form.Item label="Algorithm Name" name="algorithmName">
-        <AutoComplete
-          allowClear
+
+      <Form.Item name="algorithmName">
+        <AutoCompleteFloatingLabelInput
+          label="Algorithm Name"
           style={{ width: '7vw' }}
           options={algorithmOptions}
-          filterOption={(inputValue, option) =>
-            option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-          }
-          onSelect={SubmitForm}
-          onClear={SubmitForm}
+          allowClear
+          Submit={SubmitForm}
         />
       </Form.Item>
-      <Form.Item>
-        <Button
-          type={isPinActiveJobs ? 'primary' : 'dashed'}
-          htmlType="button"
-          onClick={onPinActive}
-          title="Show Active">
-          Show Active
-        </Button>
+
+      {keycloakEnable && (
+        <Form.Item name="user">
+          <FloatingLabelInput
+            label="User"
+            style={{ width: '7vw' }}
+            allowClear
+            onChange={SubmitForm}
+            suffix={
+              <Tooltip title="Click To Filter Yor User">
+                <UserOutlined
+                  style={{ color: 'rgba(0,0,0,.45)' }}
+                  onClick={FilterByMyUserName}
+                />
+              </Tooltip>
+            }
+          />
+        </Form.Item>
+      )}
+
+      <Form.Item name="pipelineStatus">
+        <ButtonDropdown
+          defaultLabel="active"
+          options={pipelineStatusOptions}
+          onButtonClick={onPinPipelineStatus}
+        />
       </Form.Item>
     </FiltersForms>
   );
@@ -170,6 +201,7 @@ QueryForm.propTypes = {
     algorithmName: PropTypes.string,
     pipelineName: PropTypes.string,
     pipelineStatus: PropTypes.string,
+    user: PropTypes.string,
     datesRange: PropTypes.shape({
       // eslint-disable-next-line react/forbid-prop-types
       from: PropTypes.object,

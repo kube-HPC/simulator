@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo } from 'react';
-import { useDebouncedCallback } from 'use-debounce';
-import { Form, AutoComplete } from 'antd';
+
+import { Form } from 'antd';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import qs from 'qs';
 import { useReactiveVar } from '@apollo/client';
 import { instanceFiltersVar } from 'cache';
 import { FiltersForms } from 'styles';
+import AutoCompleteFloatingLabelInput from 'components/common/FiltersInput/AutoCompleteFloatingLabelInput';
 
 const AlgorithmsQueryTable = ({
   onSubmit = () => {},
@@ -26,7 +27,6 @@ const AlgorithmsQueryTable = ({
 
     form.submit();
   };
-  const submitDebounced = useDebouncedCallback(SubmitForm, 500);
 
   useEffect(() => {
     if (instanceFilters.algorithms.qAlgorithmName === null) {
@@ -74,18 +74,14 @@ const AlgorithmsQueryTable = ({
 
   return (
     <FiltersForms layout="inline" form={form} size="medium" onFinish={onFinish}>
-      <Form.Item label="Algorithm Name" name="qAlgorithmName">
-        <AutoComplete
-          style={{ width: '24vw', marginLeft: '1vw' }}
+      <Form.Item name="qAlgorithmName">
+        <AutoCompleteFloatingLabelInput
+          label="Algorithm Name"
+          style={{ width: '24vw' }}
           options={algorithmOptions}
-          filterOption={(inputValue, option) =>
-            option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-          }
           autoFocus
           allowClear
-          onSearch={submitDebounced}
-          onSelect={SubmitForm}
-          onClear={SubmitForm}
+          Submit={SubmitForm}
         />
       </Form.Item>
     </FiltersForms>

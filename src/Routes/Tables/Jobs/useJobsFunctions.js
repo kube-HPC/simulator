@@ -2,6 +2,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar, useLazyQuery } from '@apollo/client';
+
+import { selectors } from 'reducers';
+import { useSelector } from 'react-redux';
+
 import {
   filterToggeledVar,
   instanceFiltersVar,
@@ -24,6 +28,8 @@ const topTableScroll = () => {
 };
 
 const useJobsFunctions = () => {
+  const { keycloakEnable } = useSelector(selectors.connection);
+
   let zoomedChangedDate = Date.now();
 
   const instanceFilters = useReactiveVar(instanceFiltersVar);
@@ -47,6 +53,7 @@ const useJobsFunctions = () => {
       algorithmName: iJobs?.algorithmName || undefined,
       pipelineName: iJobs?.pipelineName || undefined,
       pipelineStatus: iJobs?.pipelineStatus || undefined,
+      user: iJobs?.user || undefined,
       datesRange: {
         from: iJobs?.datesRange?.from || null,
         to: iJobs?.datesRange?.to || null,
@@ -66,6 +73,7 @@ const useJobsFunctions = () => {
     instanceFilters.jobs.algorithmName,
     instanceFilters.jobs.pipelineName,
     instanceFilters.jobs.pipelineStatus,
+    instanceFilters.jobs.user,
     instanceFilters.jobs?.datesRange?.from,
     instanceFilters.jobs?.datesRange?.to,
     metaMode?.experimentName,
@@ -90,6 +98,12 @@ const useJobsFunctions = () => {
     if (mergedParams.pipelineStatus) {
       filterJobs = filterJobs.filter(
         x => x.status.status === mergedParams.pipelineStatus
+      );
+    }
+
+    if (keycloakEnable && mergedParams.user) {
+      filterJobs = filterJobs.filter(
+        x => x.auditTrail.user === mergedParams.user
       );
     }
 

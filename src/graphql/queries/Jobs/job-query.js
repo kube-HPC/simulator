@@ -6,6 +6,7 @@ const JOB_QUERY = gql`
     $pipelineName: String
     $algorithmName: String
     $pipelineStatus: String
+    $user: String
     $datesRange: Range
     $cursor: String
     $limit: Int
@@ -15,12 +16,18 @@ const JOB_QUERY = gql`
       pipelineName: $pipelineName
       algorithmName: $algorithmName
       pipelineStatus: $pipelineStatus
+      user: $user
       datesRange: $datesRange
       cursor: $cursor
       limit: $limit
     ) {
       jobs {
         key
+        auditTrail {
+          action
+          user
+          timestamp
+        }
         externalId
         status {
           pipeline
