@@ -11,10 +11,11 @@ import BaseTag from 'components/BaseTag';
 /** @param {{ status: string; style: React.CSSProperties }} */
 const JobStatus = ({ status, auditTrail, style }) => {
   let statusAction =
-    status === PIPELINE_STATUS.STOPPED ? EXECUT_ACTIONS.STOP : '';
-  statusAction = status === PIPELINE_STATUS.PAUSED ? EXECUT_ACTIONS.PAUSE : '';
+    status.status === PIPELINE_STATUS.STOPPED ? EXECUT_ACTIONS.STOP : '';
   statusAction =
-    status === PIPELINE_STATUS.RESUMED ? EXECUT_ACTIONS.RESUME : '';
+    status.status === PIPELINE_STATUS.PAUSED ? EXECUT_ACTIONS.PAUSE : '';
+  statusAction =
+    status.status === PIPELINE_STATUS.RESUMED ? EXECUT_ACTIONS.RESUME : '';
 
   const userName =
     statusAction !== ''
@@ -29,7 +30,7 @@ const JobStatus = ({ status, auditTrail, style }) => {
         size="small"
         status="success"
         color="blue"
-        title={`${userName} is ${status}`}
+        title={`${userName} is ${status.status}`}
         offset={[-7, 0]}>
         <BaseTag status={status.status} tooltip={status.error} style={style}>
           {status.status}
