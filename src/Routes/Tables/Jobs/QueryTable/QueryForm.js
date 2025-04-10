@@ -111,6 +111,12 @@ const QueryForm = ({ params, zoomDate = Date.now(), onSubmit = () => {} }) => {
 
   const pipelineStatusOptions = useMemo(() => {
     delete pipelineStatuses.PENDING;
+    delete pipelineStatuses.CRASHED;
+    delete pipelineStatuses.DEQUEUED;
+    delete pipelineStatuses.QUEUED;
+    delete pipelineStatuses.RESUMED;
+    delete pipelineStatuses.RUNNING;
+    delete pipelineStatuses.STALLED;
 
     return Object.values(pipelineStatuses).map(status => ({
       key: status,
