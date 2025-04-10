@@ -28,8 +28,8 @@ const JobStatus = ({ status, auditTrail, style }) => {
   }
 
   const userName =
-    statusAction !== ''
-      ? auditTrail.filter(x => x.action === statusAction)[0]
+    statusAction !== '' && Array.isArray(auditTrail)
+      ? auditTrail?.find(x => x.action === statusAction)
       : undefined;
 
   return (
@@ -58,7 +58,7 @@ JobStatus.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
   status: PropTypes.object.isRequired,
-  auditTrail: PropTypes.object,
+  auditTrail: PropTypes.array,
   // eslint-disable-next-line
   style: PropTypes.object,
 };
