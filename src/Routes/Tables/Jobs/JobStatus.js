@@ -10,12 +10,22 @@ import BaseTag from 'components/BaseTag';
 
 /** @param {{ status: string; style: React.CSSProperties }} */
 const JobStatus = ({ status, auditTrail, style }) => {
-  let statusAction =
-    status.status === PIPELINE_STATUS.STOPPED ? EXECUT_ACTIONS.STOP : '';
-  statusAction =
-    status.status === PIPELINE_STATUS.PAUSED ? EXECUT_ACTIONS.PAUSE : '';
-  statusAction =
-    status.status === PIPELINE_STATUS.RESUMED ? EXECUT_ACTIONS.RESUME : '';
+  let statusAction = '';
+
+  switch (status.status) {
+    case PIPELINE_STATUS.STOPPED:
+      statusAction = EXECUT_ACTIONS.STOP;
+      break;
+    case PIPELINE_STATUS.PAUSED:
+      statusAction = EXECUT_ACTIONS.PAUSE;
+      break;
+    case PIPELINE_STATUS.RESUMED:
+      statusAction = EXECUT_ACTIONS.RESUME;
+      break;
+    default:
+      statusAction = '';
+      break;
+  }
 
   const userName =
     statusAction !== ''
