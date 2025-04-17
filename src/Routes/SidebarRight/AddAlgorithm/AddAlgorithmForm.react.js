@@ -1,8 +1,7 @@
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Input, InputNumber, Radio, Select, Checkbox } from 'antd';
-
+import { Input, InputNumber, Radio, Select, Checkbox, Card } from 'antd';
 import { Form, FlexBox } from 'components/common';
 import {
   BottomPanel,
@@ -23,13 +22,23 @@ import {
 } from 'utils';
 
 import KeyValueForm from 'components/common/KeyValueForm';
-
+import styled from 'styled-components';
 import { CodeBuild, GitBuild, ImageBuild } from './BuildTypes';
 import MemoryField from './MemoryField.react';
 import schema from './schema';
 import DrawerReadMeFile from '../../../components/Drawer/DrawerReadMeFile';
 
 import SideCarForm from './SideCarForm';
+import VolumeList from './VolumeList';
+import VolumeMountsList from './VolumeMountsList';
+
+const FlexItemVolumes = styled.div`
+  display: flex;
+  align-content: flex-start;
+  align-items: baseline;
+  justify-content: space-around;
+  gap: 10px;
+`;
 
 // #region  Helpers
 
@@ -252,9 +261,9 @@ const AddAlgorithmForm = ({
           sideCarObj.container = sideCar.container;
         }
 
-        if (sideCar?.volumes) {
-          sideCarObj.volumes = setTypeVolume(sideCar.volumes);
-        }
+        //    if (sideCar?.volumes) {
+        //      sideCarObj.volumes = setTypeVolume(sideCar.volumes);
+        //    }
 
         if (sideCar?.volumesMounts) {
           sideCarObj.volumesMounts = sideCar.volumesMounts;
@@ -270,6 +279,16 @@ const AddAlgorithmForm = ({
       });
 
       // ------------------------------------------------------------------------------ end sidecar
+
+      // External Volumes
+      if (formObject?.main.volumes) {
+        payload.volumes = setTypeVolume(formObject.main.volumes);
+      }
+
+      if (formObject?.main.volumesMounts) {
+        payload.volumesMounts = formObject.main.volumesMounts;
+      }
+      // End External Volumes
 
       // workerEnv
       if (
@@ -340,7 +359,25 @@ const AddAlgorithmForm = ({
       </Form.Item>
 
       {buildTypes[buildType]}
-
+      <FlexItemVolumes>
+        <FlexBox.Item span={12}>
+          <Card title="Volumes" bordered="true">
+            <Form.Item style={{ width: '650px' }}>
+              <VolumeList nameList={['main', 'volumes']} />
+            </Form.Item>
+          </Card>
+        </FlexBox.Item>
+        <FlexBox.Item span={12}>
+          <Card
+            title="Volumes Mounts"
+            bordered="true"
+            style={{ marginTop: '20px' }}>
+            <Form.Item>
+              <VolumeMountsList nameList={['main', 'volumesMounts']} />
+            </Form.Item>
+          </Card>
+        </FlexBox.Item>
+      </FlexItemVolumes>
       <Collapsible title={MAIN.DIVIDER.RESOURCES}>
         <Form.Item name={splitByDot(MAIN.CPU.field)} label={MAIN.CPU.label}>
           <InputNumber min={0.1} />
