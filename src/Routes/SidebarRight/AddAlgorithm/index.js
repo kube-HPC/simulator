@@ -57,9 +57,9 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
         sideCarObj.container = sideCar.container;
       }
 
-      if (sideCar?.volumes) {
-        sideCarObj.volumes = setTypeVolume(sideCar.volumes);
-      }
+      // if (sideCar?.volumes) {
+      //   sideCarObj.volumes = setTypeVolume(sideCar.volumes);
+      // }
 
       if (sideCar?.volumesMounts) {
         sideCarObj.volumesMounts = sideCar.volumesMounts;
@@ -73,6 +73,17 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
     });
 
     // ------------------------------------------------------------------------------ end sidecar
+
+    // External Volumes
+
+    if (formObj.main?.volumes) {
+      objJsonData.volumes = setTypeVolume(formObj.main.volumes);
+    }
+
+    if (formObj.main?.volumesMounts) {
+      objJsonData.volumesMounts = formObj.main.volumesMounts;
+    }
+    // End External Volumes
 
     objJsonData.cpu = formObj.main.cpu;
     objJsonData.gpu = formObj.main.gpu;
@@ -170,9 +181,9 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
             : 'emptyDir';
 
       const newObj = { ...obj, typeVolume };
-      if (newObj[typeVolume] && typeof newObj[typeVolume] === 'object') {
-        newObj[typeVolume] = JSON.stringify(newObj[typeVolume]);
-      }
+      //  if (newObj[typeVolume] && typeof newObj[typeVolume] === 'object') {
+      //      newObj[typeVolume] = JSON.stringify(newObj[typeVolume]);
+      //   }
 
       return newObj;
     });
@@ -189,12 +200,22 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
 
     formObj.main.sideCars = objJsonData?.sideCars?.map(sideCar => ({
       container: sideCar?.container,
-      volumes: addTypeVolume(sideCar.volumes),
+      //  volumes: addTypeVolume(sideCar.volumes),
       volumesMounts: sideCar.volumesMounts,
       environments: transformObjectToArray(sideCar.environments),
     }));
 
     // -------------------------------------------------------------- end sidecar
+
+    // External Volumes
+    if (objJsonData?.volumes) {
+      formObj.main.volumes = addTypeVolume(objJsonData.volumes);
+    }
+
+    if (objJsonData?.volumesMounts) {
+      formObj.main.volumesMounts = objJsonData.volumesMounts;
+    }
+    // End External Volumes
 
     formObj.main.description = objJsonData.description;
 
