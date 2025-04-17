@@ -75,7 +75,6 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
     // ------------------------------------------------------------------------------ end sidecar
 
     // External Volumes
-
     if (formObj.main?.volumes) {
       objJsonData.volumes = setTypeVolume(formObj.main.volumes);
     }

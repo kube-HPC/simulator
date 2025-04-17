@@ -58,13 +58,6 @@ const VolumeList = ({ nameList }) => (
 
                 <Form.Item shouldUpdate>
                   {({ getFieldValue }) => {
-                    console.log('nameList', nameList);
-                    console.log('name', name);
-                    console.log(
-                      'res',
-                      getFieldValue([...nameList, name, 'typeVolume'])
-                    );
-
                     const selectVolume =
                       getFieldValue([...nameList, name, 'typeVolume']) ??
                       'emptyDir';
