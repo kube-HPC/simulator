@@ -148,7 +148,7 @@ const QueryForm = ({ params, zoomDate = Date.now(), onSubmit = () => {} }) => {
       <Form.Item name="pipelineName">
         <AutoCompleteFloatingLabelInput
           label="Pipeline Name / Job ID"
-          style={{ width: '9vw' }}
+          style={{ width: '12vw' }}
           options={pipelineOptions}
           allowClear
           Submit={SubmitForm}
@@ -158,7 +158,7 @@ const QueryForm = ({ params, zoomDate = Date.now(), onSubmit = () => {} }) => {
       <Form.Item name="algorithmName">
         <AutoCompleteFloatingLabelInput
           label="Algorithm Name"
-          style={{ width: '7vw' }}
+          style={{ width: '9vw' }}
           options={algorithmOptions}
           allowClear
           Submit={SubmitForm}
@@ -169,7 +169,7 @@ const QueryForm = ({ params, zoomDate = Date.now(), onSubmit = () => {} }) => {
         <Form.Item name="user">
           <FloatingLabelInput
             label="User"
-            style={{ width: '7vw' }}
+            style={{ width: '9vw' }}
             allowClear
             onChange={SubmitForm}
             suffix={

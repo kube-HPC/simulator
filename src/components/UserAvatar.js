@@ -8,7 +8,7 @@ const UserAvatar = ({ username, titleToolTip, size = 40 }) => {
   const bgColor = username ? getColorByName(username) : '';
 
   return (
-    <Tooltip title={titleToolTip}>
+    <Tooltip title={titleToolTip || username}>
       <Avatar
         style={{
           backgroundColor: bgColor,
