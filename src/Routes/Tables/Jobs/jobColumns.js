@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { executeActions as EXECUT_ACTIONS } from '@hkube/consts';
 import { Ellipsis } from 'components/common';
+
 import { USER_GUIDE } from 'const';
 import { sorter } from 'utils/stringHelper';
 import UserAvatar from '../../../components/UserAvatar';
@@ -76,7 +77,11 @@ const Avarar = auditTrail => {
 
   return (
     auditTrail && (
-      <UserAvatar username={username} titleToolTip={`${username} is run job`} />
+      <UserAvatar
+        username={username}
+        size={25}
+        titleToolTip={`started by ${username}`}
+      />
     )
   );
 };

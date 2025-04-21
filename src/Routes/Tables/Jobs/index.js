@@ -7,12 +7,16 @@ import { WTable } from 'components';
 import { Card } from 'components/common';
 import { Collapse } from 'react-collapse';
 import { Divider, Empty, FloatButton } from 'antd';
+import { selectors } from 'reducers';
+import { useSelector } from 'react-redux';
+
 import {
   ArrowUpOutlined,
   CaretUpOutlined,
   CaretDownOutlined,
 } from '@ant-design/icons';
 import useJobsFunctionsLimit from './useJobsFunctionsLimit';
+
 import GridView from './GridView';
 import OverviewDrawer from './OverviewDrawer';
 import QueryForm from './QueryTable/QueryForm';
@@ -51,6 +55,7 @@ const CaretUpOutlinedCenter = styled(CaretUpOutlined)`
 const BackToTop = () => document.querySelector('#jobsTable .ant-table-body');
 
 const JobsTable = () => {
+  const { keycloakEnable } = useSelector(selectors.connection);
   const {
     zoomedChangedDate,
     filterToggeled,
@@ -69,6 +74,14 @@ const JobsTable = () => {
   const toggleCollapseGraph = val => {
     filterToggeledVar(val);
   };
+
+  // if have keycloak remove avatar from columns job
+  const trimmedColumns = useMemo(() => {
+    if (!keycloakEnable) {
+      return columns.slice(1);
+    }
+    return columns;
+  }, [columns, keycloakEnable]);
 
   return (
     <>
@@ -105,7 +118,7 @@ const JobsTable = () => {
         onRow={onRow}
         rowKey={rowKey}
         expandIcon={false}
-        columns={columns}
+        columns={trimmedColumns}
         dataSource={_dataSource}
         pagination={false}
         scroll={{ y: filterToggeled ? '50vh' : '80vh' }}

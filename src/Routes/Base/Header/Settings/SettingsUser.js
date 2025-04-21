@@ -3,8 +3,9 @@ import KeycloakServices from 'keycloak/keycloakServices';
 import { FlexBox, Icons } from 'components/common';
 import { LogoutOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import { Typography, Avatar } from 'antd';
-import { COLOR } from 'styles';
+import { Typography } from 'antd';
+
+import UserAvatar from '../../../../components/UserAvatar';
 
 const { Text } = Typography;
 const SettingsUser = () => {
@@ -17,15 +18,7 @@ const SettingsUser = () => {
   return (
     <FlexBox.Auto align="left" direction="column" gutter={[10, 10]}>
       <FlexBox.Auto>
-        <Avatar
-          style={{
-            backgroundColor: COLOR.greenLight,
-            verticalAlign: 'middle',
-            textTransform: 'uppercase',
-          }}>
-          {KeycloakServices.getUsername() &&
-            KeycloakServices.getUsername().toString()[0]}
-        </Avatar>
+        <UserAvatar username={KeycloakServices.getUsername()} size={30} />
         <TextLink>{KeycloakServices.getUsername()}</TextLink>
       </FlexBox.Auto>
 

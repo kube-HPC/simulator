@@ -3,6 +3,8 @@ import {
   pipelineStatuses as PIPELINE_STATUS,
   executeActions as EXECUT_ACTIONS,
 } from '@hkube/consts';
+import { selectors } from 'reducers';
+import { useSelector } from 'react-redux';
 import { getColorByName } from 'utils';
 import { Badge } from 'antd';
 import PropTypes from 'prop-types';
@@ -10,6 +12,7 @@ import BaseTag from 'components/BaseTag';
 
 /** @param {{ status: string; style: React.CSSProperties }} */
 const JobStatus = ({ status, auditTrail, style }) => {
+  const { keycloakEnable } = useSelector(selectors.connection);
   let statusAction = '';
 
   if (status.status === PIPELINE_STATUS.STOPPED) {
@@ -25,13 +28,13 @@ const JobStatus = ({ status, auditTrail, style }) => {
       ? auditTrail.find(x => x.action === statusAction).user
       : undefined;
 
-  return userName ? (
+  return userName && keycloakEnable ? (
     <Badge
       style={{ fontSize: '8px' }}
       count={userName[0].toUpperCase()}
       size="small"
       color={getColorByName(userName)}
-      title={`${userName} is ${status.status}`}
+      title={`${userName}`}
       offset={[-7, 0]}>
       <BaseTag status={status.status} tooltip={status.error} style={style}>
         {status.status}
