@@ -102,7 +102,7 @@ const jobColumns = [
     title: ``,
     dataIndex: [`auditTrail`],
     key: `auditTrail`,
-    width: `4%`,
+    width: `2%`,
     render: Avarar,
   },
   {
