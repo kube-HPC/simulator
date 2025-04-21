@@ -29,7 +29,9 @@ const HelpBar = () => {
           content={<SettingsUser />}
           placement="bottomRight"
           trigger="click">
-          <UserAvatar username={KeycloakServices.getUsername()} size={30} />
+          <span>
+            <UserAvatar username={KeycloakServices.getUsername()} size={30} />
+          </span>
         </Popover>
       )}
       <Popover content={<Settings />} placement="bottomRight" trigger="click">

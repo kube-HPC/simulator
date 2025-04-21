@@ -79,8 +79,8 @@ const Avarar = auditTrail => {
     auditTrail && (
       <UserAvatar
         username={username}
-        size={25}
-        titleToolTip={`started by ${username}`}
+        size={20}
+        titleToolTip={`Started by ${username}`}
       />
     )
   );
