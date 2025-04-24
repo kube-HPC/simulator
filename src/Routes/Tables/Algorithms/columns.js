@@ -1,22 +1,19 @@
 import React from 'react';
 import { WarningOutlined, SettingOutlined } from '@ant-design/icons';
 import { Tag, Tooltip, Typography } from 'antd';
-import Moment from 'react-moment';
 import { sorter } from 'utils/stringHelper';
 import { copyToClipboard } from 'utils';
 import { errorsCode } from '@hkube/consts';
+import UserAvatar from '../../../components/UserAvatar';
 import AlgorithmActions from './AlgorithmActions.react';
 import AlgorithmBuildStats from './AlgorithmBuildStats.react';
+import LastModified from './LastModified';
 
-const LastModified = timestamp => (
-  <Tag>
-    <Moment format="DD/MM/YY HH:mm:ss">{+timestamp}</Moment>
-  </Tag>
-);
 // eslint-disable-next-line react/prop-types, no-unused-vars
 const HotWorkers = ({ minHotWorkers }) => <Tag>{minHotWorkers}</Tag>;
 const Memory = mem => <Tag>{mem || 'No Memory Specified'}</Tag>;
 const Cpu = cpu => <Tag>{cpu || 'No CPU Assigned'}</Tag>;
+
 const Image = algorithmImage =>
   algorithmImage ? (
     <Tooltip title={algorithmImage}>
@@ -27,6 +24,7 @@ const Image = algorithmImage =>
   ) : (
     <Tag>No Image</Tag>
   );
+
 const Name = (name, record) =>
   record?.unscheduledReason ? (
     <Tooltip title={record?.unscheduledReason}>
@@ -57,6 +55,7 @@ const Name = (name, record) =>
       </span>
     </div>
   );
+
 const BuildStats = builds => <AlgorithmBuildStats builds={builds} />;
 const renderAction = (_, record) => <AlgorithmActions record={record} />;
 
@@ -65,7 +64,32 @@ const filterByImage = (value, record) => record.algorithmImage.includes(value);
 const sortByImage = (a, b) => sorter(a.algorithmImage, b.algorithmImage);
 const sortByMinHotWorkers = (a, b) => sorter(a.minHotWorkers, b.minHotWorkers);
 const sortByLastModified = (a, b) => sorter(a.modified, b.modified);
+
+const Avarar = auditTrail => {
+  const len = Array.isArray(auditTrail) ? auditTrail?.length : 0;
+  const username = Array.isArray(auditTrail)
+    ? auditTrail?.[len > 0 ? len - 1 : 0].user
+    : 'D';
+
+  return (
+    auditTrail && (
+      <UserAvatar
+        username={username}
+        size={20}
+        titleToolTip={`Started by ${username}`}
+      />
+    )
+  );
+};
+
 export default [
+  {
+    title: ``,
+    dataIndex: [`auditTrail`],
+    key: `auditTrail`,
+    width: `2%`,
+    render: Avarar,
+  },
   {
     width: '12%',
     title: 'Algorithm Name',
@@ -114,7 +138,7 @@ export default [
   {
     width: '10%',
     title: 'Last modified',
-    dataIndex: ['modified'],
+    //  dataIndex: ['modified'],
     key: 'modified',
     sorter: sortByLastModified,
     render: LastModified,

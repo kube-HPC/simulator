@@ -1,4 +1,6 @@
 import React, { useMemo } from 'react';
+import { selectors } from 'reducers';
+import { useSelector } from 'react-redux';
 import { SkeletonLoader } from 'components/common';
 import { Route, Routes } from 'react-router-dom';
 import { Table } from 'components';
@@ -28,6 +30,7 @@ const AlgorithmsTable = () => {
 
   // const algorithmsList = useReactiveVar(algorithmsListVar);
   const instanceFilter = useReactiveVar(instanceFiltersVar);
+  const { keycloakEnable } = useSelector(selectors.connection);
 
   const query = useQuery(ALGORITHMS_QUERY);
   usePolling(query, 3000);
@@ -79,6 +82,14 @@ const AlgorithmsTable = () => {
     );
   }, [instanceFilter.algorithms.qAlgorithmName, query.data]);
 
+  // if have keycloak remove avatar from columns job
+  const algorithmColumnsView = useMemo(() => {
+    if (!keycloakEnable) {
+      return algorithmColumns.slice(1);
+    }
+    return algorithmColumns;
+  }, [keycloakEnable]);
+
   if (query.loading && query.data === undefined) return <SkeletonLoader />;
   if (query.error) return `Error! ${query.error.message}`;
 
@@ -98,7 +109,7 @@ const AlgorithmsTable = () => {
         <TableAlgorithms
           rowKey={rowKey}
           dataSource={getList}
-          columns={algorithmColumns}
+          columns={algorithmColumnsView}
           onRow={onRow}
           scroll={{
             y: '80vh',

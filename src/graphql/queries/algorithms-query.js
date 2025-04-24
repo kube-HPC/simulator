@@ -20,6 +20,12 @@ const ALGORITHMS_QUERY = gql`
         version
         debugUrl
         errors
+        auditTrail {
+          action
+          timestamp
+          user
+          version
+        }
         options {
           debug
           pending
