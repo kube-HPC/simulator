@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { FlexBox } from 'components/common';
 import { USER_GUIDE } from 'const';
 import { COLOR_LAYOUT } from 'styles';
+import { loader } from '@monaco-editor/react';
 import NewButtonSelect from './NewButtonSelect';
 
 import HelpBar from './HelpBar.react';
@@ -14,6 +15,7 @@ import ViewType from './ViewType.react';
 // DO NOT REMOVE! This is important to preload the monaco instance into the global window!!!
 // eslint-disable-next-line
 import * as monaco from 'monaco-editor';
+loader.config({ monaco });
 
 const Container = styled(FlexBox)`
   padding: 1em 2ch;
