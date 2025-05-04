@@ -74,7 +74,7 @@ const SideCarForm = ({ nameList }) => (
 
             <Card title="Volumes Mounts" bordered="true">
               <Form.Item>
-                <VolumeMountsList nameList={[name, 'volumesMounts']} />
+                <VolumeMountsList nameList={[name, 'volumeMounts']} />
               </Form.Item>
             </Card>
 

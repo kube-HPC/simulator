@@ -61,8 +61,8 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
       //   sideCarObj.volumes = setTypeVolume(sideCar.volumes);
       // }
 
-      if (sideCar?.volumesMounts) {
-        sideCarObj.volumesMounts = sideCar.volumesMounts;
+      if (sideCar?.volumeMounts) {
+        sideCarObj.volumeMounts = sideCar.volumeMounts;
       }
 
       if (sideCar?.environments) {
@@ -79,8 +79,8 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
       objJsonData.volumes = setTypeVolume(formObj.main.volumes);
     }
 
-    if (formObj.main?.volumesMounts) {
-      objJsonData.volumesMounts = formObj.main.volumesMounts;
+    if (formObj.main?.volumeMounts) {
+      objJsonData.volumeMounts = formObj.main.volumeMounts;
     }
     // End External Volumes
 
@@ -200,7 +200,7 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
     formObj.main.sideCars = objJsonData?.sideCars?.map(sideCar => ({
       container: sideCar?.container,
       //  volumes: addTypeVolume(sideCar.volumes),
-      volumesMounts: sideCar.volumesMounts,
+      volumeMounts: sideCar.volumeMounts,
       environments: transformObjectToArray(sideCar.environments),
     }));
 
@@ -211,8 +211,8 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
       formObj.main.volumes = addTypeVolume(objJsonData.volumes);
     }
 
-    if (objJsonData?.volumesMounts) {
-      formObj.main.volumesMounts = objJsonData.volumesMounts;
+    if (objJsonData?.volumeMounts) {
+      formObj.main.volumeMounts = objJsonData.volumeMounts;
     }
     // End External Volumes
 

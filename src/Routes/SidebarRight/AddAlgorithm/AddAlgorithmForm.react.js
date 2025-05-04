@@ -265,8 +265,8 @@ const AddAlgorithmForm = ({
         //      sideCarObj.volumes = setTypeVolume(sideCar.volumes);
         //    }
 
-        if (sideCar?.volumesMounts) {
-          sideCarObj.volumesMounts = sideCar.volumesMounts;
+        if (sideCar?.volumeMounts) {
+          sideCarObj.volumeMounts = sideCar.volumeMounts;
         }
 
         if (sideCar?.environments) {
@@ -285,8 +285,8 @@ const AddAlgorithmForm = ({
         payload.volumes = setTypeVolume(formObject.main.volumes);
       }
 
-      if (formObject?.main.volumesMounts) {
-        payload.volumesMounts = formObject.main.volumesMounts;
+      if (formObject?.main.volumeMounts) {
+        payload.volumeMounts = formObject.main.volumeMounts;
       }
       // End External Volumes
 
@@ -373,7 +373,7 @@ const AddAlgorithmForm = ({
             bordered="true"
             style={{ marginTop: '20px' }}>
             <Form.Item>
-              <VolumeMountsList nameList={['main', 'volumesMounts']} />
+              <VolumeMountsList nameList={['main', 'volumeMounts']} />
             </Form.Item>
           </Card>
         </FlexBox.Item>
