@@ -26,7 +26,7 @@ const LastModified = ({ modified, auditTrail }) => {
       {dateNode}
     </Badge>
   ) : (
-    { dateNode }
+    dateNode
   );
 };
 
