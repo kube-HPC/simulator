@@ -31,7 +31,7 @@ const JobStatus = ({ status, auditTrail, style }) => {
   return userName && keycloakEnable ? (
     <Badge
       style={{ fontSize: '8px' }}
-      count={userName?.[0]?.toUpperCase()}
+      count={userName?.[0]?.toUpperCase() ?? 'D'}
       size="small"
       color={getColorByName(userName)}
       title={`${userName}`}
