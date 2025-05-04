@@ -40,6 +40,7 @@ const Status = (_, job) => {
 
 const Stats = status => <NodeStats status={status} />;
 // const Priority = priority => <JobPriority priority={priority} />;
+
 const Priority = (text, record) => {
   const { pipeline } = record;
   const { priority } = pipeline;
