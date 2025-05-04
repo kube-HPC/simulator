@@ -18,7 +18,7 @@ const LastModified = ({ modified, auditTrail }) => {
   return keycloakEnable ? (
     <Badge
       style={{ fontSize: '8px' }}
-      count={userName?.[0].toUpperCase() ?? 'D'}
+      count={userName?.[0]?.toUpperCase() ?? 'D'}
       size="small"
       color={getColorByName(userName)}
       title={userName}
