@@ -50,12 +50,9 @@ const trottleCheck = () => {
 
 const usePolling = (query, interval) => {
   useEffect(() => {
-    const useMock = process.env.REACT_APP_USEMOCK ?? false;
+    queryArry.push(query);
+    query.startPolling(interval);
 
-    if (!useMock) {
-      queryArry.push(query);
-      query.startPolling(interval);
-    }
     // prettier-ignore
     // 'polling');
     return () => {
