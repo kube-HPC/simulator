@@ -22,7 +22,7 @@ export default [
     dataIndex: [`auditTrail`],
     key: `auditTrail`,
     width: `2%`,
-    render: AuditTrailAvatar,
+    render: auditTrail => <AuditTrailAvatar auditTrail={auditTrail} />,
   },
   {
     title: 'Pipeline Name',
