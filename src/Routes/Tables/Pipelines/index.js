@@ -10,6 +10,7 @@ import { PIPELINE_QUERY } from 'graphql/queries';
 
 import { pipelineListVar, instanceFiltersVar } from 'cache';
 import { Space, Empty } from 'antd';
+import { pipelineMock } from './../../../mock/pipelineMock';
 
 import pipelineColumns from './pipelineColumns';
 import OverviewDrawer from './OverviewDrawer';
@@ -19,6 +20,7 @@ import ExecuteDrawer from './ExecuteDrawer';
 import PipelinesQueryTable from './PipelinesQueryTable';
 
 const rowKey = ({ name }) => `pipeline-${name}`;
+const useMock = process.env.REACT_APP_USEMOCK ?? false;
 
 const PipelinesTable = () => {
   const { keycloakEnable } = useSelector(selectors.connection);
@@ -35,18 +37,23 @@ const PipelinesTable = () => {
   const instanceFilter = useReactiveVar(instanceFiltersVar);
 
   const query = useQuery(PIPELINE_QUERY);
+
+  const pipelinesData = !useMock
+    ? query.data.pipelines.list
+    : pipelineMock.data.pipelines.list;
+
   usePolling(query, 3000);
 
   const onSubmitFilter = useCallback(
     values => {
-      if (!query.loading) {
+      if (!query.loading || useMock) {
         if (values?.qPipelineName) {
-          const filterPipeline = query.data?.pipelines?.list.filter(item =>
+          const filterPipeline = pipelinesData.filter(item =>
             item.name.includes(values.qPipelineName)
           );
           pipelineListVar(filterPipeline);
         } else {
-          pipelineListVar(query.data?.pipelines?.list);
+          pipelineListVar(pipelinesData);
         }
       }
     },

@@ -78,8 +78,11 @@ const RoutesNav = () => {
       numberErrorGraphQL.error > 0 &&
       grafanaUrl
     ) {
-      openNotification();
-      setIsNotificationErrorShow(true);
+      const useMock = process.env.REACT_APP_USEMOCK ?? false;
+      if (!useMock) {
+        openNotification();
+        setIsNotificationErrorShow(true);
+      }
     }
   }, [
     grafanaUrl,
