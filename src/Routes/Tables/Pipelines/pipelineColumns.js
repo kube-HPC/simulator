@@ -49,7 +49,9 @@ export default [
     // dataIndex: ['modified'],
     key: 'modified',
     sorter: sortByLastModified,
-    render: LastModified,
+    render: record => (
+      <LastModified auditTrail={record.auditTrail} modified={record.modified} />
+    ),
   },
   {
     title: 'Actions',
