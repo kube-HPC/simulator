@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Avatar, Tooltip } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 import { getColorByName } from 'utils';
 
 const UserAvatar = ({ username, titleToolTip, size = 40 }) => {
+  const isDefaultUser = username === 'DefaultUser';
   const firstLetter = username?.charAt(0) || 'D';
   const bgColor = username ? getColorByName(username) : '';
 
@@ -16,8 +18,9 @@ const UserAvatar = ({ username, titleToolTip, size = 40 }) => {
           textTransform: 'uppercase',
           fontSize: size / 2,
         }}
-        size={size}>
-        {firstLetter}
+        size={size}
+        icon={isDefaultUser ? <UserOutlined /> : null}>
+        {!isDefaultUser && firstLetter}
       </Avatar>
     </Tooltip>
   );
@@ -26,7 +29,6 @@ const UserAvatar = ({ username, titleToolTip, size = 40 }) => {
 UserAvatar.propTypes = {
   username: PropTypes.string.isRequired,
   titleToolTip: PropTypes.string,
-
   size: PropTypes.number,
 };
 
