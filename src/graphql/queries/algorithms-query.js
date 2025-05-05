@@ -21,7 +21,6 @@ const ALGORITHMS_QUERY = gql`
         debugUrl
         errors
         auditTrail {
-          action
           timestamp
           user
           version

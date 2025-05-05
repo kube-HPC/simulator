@@ -4,7 +4,7 @@ import { Tag, Tooltip, Typography } from 'antd';
 import { sorter } from 'utils/stringHelper';
 import { copyToClipboard } from 'utils';
 import { errorsCode } from '@hkube/consts';
-import UserAvatar from '../../../components/UserAvatar';
+import AuditTrailAvatar from '../../../components/AuditTrailAvatar';
 import AlgorithmActions from './AlgorithmActions.react';
 import AlgorithmBuildStats from './AlgorithmBuildStats.react';
 import LastModified from './LastModified';
@@ -65,30 +65,13 @@ const sortByImage = (a, b) => sorter(a.algorithmImage, b.algorithmImage);
 const sortByMinHotWorkers = (a, b) => sorter(a.minHotWorkers, b.minHotWorkers);
 const sortByLastModified = (a, b) => sorter(a.modified, b.modified);
 
-const Avarar = auditTrail => {
-  const len = Array.isArray(auditTrail) ? auditTrail?.length : 0;
-  const username = Array.isArray(auditTrail)
-    ? auditTrail?.[len > 0 ? len - 1 : 0].user
-    : 'D';
-
-  return (
-    auditTrail && (
-      <UserAvatar
-        username={username}
-        size={20}
-        titleToolTip={`Started by ${username}`}
-      />
-    )
-  );
-};
-
 export default [
   {
     title: ``,
     dataIndex: [`auditTrail`],
     key: `auditTrail`,
     width: `2%`,
-    render: Avarar,
+    render: AuditTrailAvatar,
   },
   {
     width: '12%',

@@ -4,7 +4,7 @@ import { Avatar, Tooltip } from 'antd';
 import { getColorByName } from 'utils';
 
 const UserAvatar = ({ username, titleToolTip, size = 40 }) => {
-  const firstLetter = username?.charAt(0) || '?';
+  const firstLetter = username?.charAt(0) || 'D';
   const bgColor = username ? getColorByName(username) : '';
 
   return (

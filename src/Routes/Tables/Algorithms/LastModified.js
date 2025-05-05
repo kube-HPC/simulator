@@ -9,7 +9,9 @@ import { getColorByName } from 'utils';
 const LastModified = ({ modified, auditTrail }) => {
   const { keycloakEnable } = useSelector(selectors.connection);
 
-  const userName = Array.isArray(auditTrail) ? auditTrail[0]?.user : '';
+  const userName = Array.isArray(auditTrail)
+    ? auditTrail[0]?.user
+    : 'DefaultUser';
   const dateNode = (
     <Tag>
       <Moment format="DD/MM/YY HH:mm:ss">{+modified}</Moment>

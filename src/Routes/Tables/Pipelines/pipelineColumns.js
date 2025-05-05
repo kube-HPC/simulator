@@ -1,7 +1,7 @@
 import React from 'react';
 import { sorter } from 'utils';
 import { Ellipsis } from 'components/common';
-import UserAvatar from '../../../components/UserAvatar';
+import AuditTrailAvatar from '../../../components/AuditTrailAvatar';
 import PipelineActions from './PipelineActions.react';
 import PipelineCron from './PipelineCron.react';
 import PipelineStats from './PipelineStats.react';
@@ -16,30 +16,13 @@ const Actions = (_, pipeline) => <PipelineActions pipeline={pipeline} />;
 const sortByName = (a, b) => sorter(a.name, b.name);
 const sortByLastModified = (a, b) => sorter(a.modified, b.modified);
 
-const Avarar = auditTrail => {
-  const len = Array.isArray(auditTrail) ? auditTrail?.length : 0;
-  const username = Array.isArray(auditTrail)
-    ? auditTrail?.[len > 0 ? len - 1 : 0].user
-    : 'D';
-
-  return (
-    auditTrail && (
-      <UserAvatar
-        username={username}
-        size={20}
-        titleToolTip={`Started by ${username}`}
-      />
-    )
-  );
-};
-
 export default [
   {
     title: ``,
     dataIndex: [`auditTrail`],
     key: `auditTrail`,
     width: `2%`,
-    render: Avarar,
+    render: AuditTrailAvatar,
   },
   {
     title: 'Pipeline Name',
