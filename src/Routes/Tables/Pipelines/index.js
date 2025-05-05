@@ -35,19 +35,18 @@ const PipelinesTable = () => {
   const instanceFilter = useReactiveVar(instanceFiltersVar);
 
   const query = useQuery(PIPELINE_QUERY);
-  const pipelinesData = query.data.pipelines.list;
   usePolling(query, 3000);
 
   const onSubmitFilter = useCallback(
     values => {
       if (!query.loading) {
         if (values?.qPipelineName) {
-          const filterPipeline = pipelinesData.filter(item =>
+          const filterPipeline = query.data.pipelines.list.filter(item =>
             item.name.includes(values.qPipelineName)
           );
           pipelineListVar(filterPipeline);
         } else {
-          pipelineListVar(pipelinesData);
+          pipelineListVar(query.data.pipelines.list);
         }
       }
     },
