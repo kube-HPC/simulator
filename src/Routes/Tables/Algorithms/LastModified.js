@@ -21,12 +21,21 @@ const LastModified = ({ modified, auditTrail }) => {
       style={{ fontSize: '8px' }}
       count={
         userName?.[0]?.toUpperCase() ?? (
-          <UserOutlined style={{ color: 'hsl(0, 0.00%, 51.80%)' }} />
+          <UserOutlined
+            style={{
+              color: 'white',
+              background: 'hsl(0, 0.00%, 51.80%)',
+              fontSize: '9px',
+              borderRadius: '50px',
+              display: 'block',
+              padding: '2px',
+            }}
+          />
         )
       }
       size="small"
-      color={getColorByName(userName)}
-      title={userName}
+      color={userName && getColorByName(userName)}
+      title={userName && userName}
       offset={[-7, 0]}>
       {dateNode}
     </Badge>
