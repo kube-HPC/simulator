@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { selectors } from 'reducers';
+import { useSelector } from 'react-redux';
 import { SkeletonLoader } from 'components/common';
 import { Route, Routes } from 'react-router-dom';
 import { Table } from 'components';
@@ -19,6 +21,8 @@ import PipelinesQueryTable from './PipelinesQueryTable';
 const rowKey = ({ name }) => `pipeline-${name}`;
 
 const PipelinesTable = () => {
+  const { keycloakEnable } = useSelector(selectors.connection);
+
   const { goTo } = usePath();
   const onRow = useCallback(
     record => ({
@@ -37,12 +41,12 @@ const PipelinesTable = () => {
     values => {
       if (!query.loading) {
         if (values?.qPipelineName) {
-          const filterPipeline = query.data?.pipelines?.list.filter(item =>
+          const filterPipeline = query.data.pipelines.list.filter(item =>
             item.name.includes(values.qPipelineName)
           );
           pipelineListVar(filterPipeline);
         } else {
-          pipelineListVar(query.data?.pipelines?.list);
+          pipelineListVar(query.data.pipelines.list);
         }
       }
     },
@@ -52,6 +56,14 @@ const PipelinesTable = () => {
   useEffect(() => {
     onSubmitFilter(instanceFilter.pipelines);
   }, [query.data?.pipelines?.pipelinesCount]);
+
+  // if have keycloak remove avatar from columns job
+  const pipelinesColumnsView = useMemo(() => {
+    if (!keycloakEnable) {
+      return pipelineColumns.slice(1);
+    }
+    return pipelineColumns;
+  }, [keycloakEnable]);
 
   if (query.loading && pipelineList.length === 0) return <SkeletonLoader />;
   if (query.error) return `Error! ${query.error.message}`;
@@ -72,7 +84,7 @@ const PipelinesTable = () => {
         <Table
           rowKey={rowKey}
           dataSource={pipelineList}
-          columns={pipelineColumns}
+          columns={pipelinesColumnsView}
           onRow={onRow}
           scroll={{
             y: '80vh',

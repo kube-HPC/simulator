@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { selectors } from 'reducers';
+import { useSelector } from 'react-redux';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 // eslint-disable-next-line import/no-cycle
@@ -22,24 +24,35 @@ const VersionsTable = ({
   dataSource = undefined,
   source,
 }) => {
+  const { keycloakEnable } = useSelector(selectors.connection);
+
   const columns = getVersionsColumns({
     currentVersion,
     onApply,
     onDelete,
     source,
   });
+
+  const columnsView = useMemo(() => {
+    if (!keycloakEnable) {
+      return columns.slice(1);
+    }
+    return columns;
+  }, [columns, keycloakEnable]);
+
   const expandIcon = ({ expanded, onExpand, record }) =>
     expanded ? (
       <DownOutlined onClick={e => onExpand(record, e)} />
     ) : (
       <RightOutlined onClick={e => onExpand(record, e)} />
     );
+
   return (
     <Table
       rowKey={rowKey}
       loading={!dataSource}
       dataSource={dataSource}
-      columns={columns}
+      columns={columnsView}
       expandable={{
         expandedRowRender: record => expandedRowRender(record),
         expandIcon,

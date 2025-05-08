@@ -4,6 +4,7 @@ import { Button, Modal, Tooltip, Typography, Tag } from 'antd';
 import Moment from 'react-moment';
 import { sorter } from 'utils/stringHelper';
 import { COLOR_PIPELINE_STATUS } from 'styles';
+import UserAvatar from 'components/UserAvatar';
 import FlexBox from '../common/FlexBox.react';
 import Ellipsis from '../common/Ellipsis.react';
 
@@ -102,6 +103,17 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion, source }) => {
   if (source === 'algorithms') {
     return [
       {
+        title: '',
+        key: 'createdBy',
+        render: record => (
+          <UserAvatar
+            username={record.createdBy}
+            titleToolTip={`created by ${record.createdBy}`}
+            size={20}
+          />
+        ),
+      },
+      {
         title: 'Version',
         dataIndex: ['version'],
         key: 'version',
@@ -165,6 +177,17 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion, source }) => {
 
   // if this not algorithms return piplines cols
   return [
+    {
+      title: '',
+      key: 'createdBy',
+      render: record => (
+        <UserAvatar
+          username={record.createdBy}
+          titleToolTip={`created by ${record.createdBy}`}
+          size={20}
+        />
+      ),
+    },
     {
       title: 'Version',
       dataIndex: ['version'],
