@@ -5,12 +5,16 @@ import { UserOutlined } from '@ant-design/icons';
 import { getColorByName } from 'utils';
 
 const UserAvatar = ({ username, titleToolTip, size = 40 }) => {
-  const isDefaultUser = username === 'DefaultUser';
+  const isNullUser = username === null || username === undefined;
   const firstLetter = username?.charAt(0) || 'D';
-  const bgColor = username ? getColorByName(username) : '';
+  const bgColor = isNullUser
+    ? 'hsl(0, 0.00%, 51.80%)'
+    : username
+      ? getColorByName(username)
+      : '';
 
   return (
-    <Tooltip title={titleToolTip}>
+    <Tooltip title={!isNullUser && titleToolTip}>
       <Avatar
         style={{
           backgroundColor: bgColor,
@@ -19,8 +23,8 @@ const UserAvatar = ({ username, titleToolTip, size = 40 }) => {
           fontSize: size / 2,
         }}
         size={size}
-        icon={isDefaultUser ? <UserOutlined /> : null}>
-        {!isDefaultUser && firstLetter}
+        icon={isNullUser ? <UserOutlined /> : null}>
+        {!isNullUser && firstLetter}
       </Avatar>
     </Tooltip>
   );

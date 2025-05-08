@@ -1,4 +1,5 @@
 import React from 'react';
+import { UserOutlined } from '@ant-design/icons';
 import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -9,9 +10,7 @@ import { getColorByName } from 'utils';
 const LastModified = ({ modified, auditTrail }) => {
   const { keycloakEnable } = useSelector(selectors.connection);
 
-  const userName = Array.isArray(auditTrail)
-    ? auditTrail[0]?.user
-    : 'DefaultUser';
+  const userName = Array.isArray(auditTrail) ? auditTrail[0]?.user : undefined;
   const dateNode = (
     <Tag>
       <Moment format="DD/MM/YY HH:mm:ss">{+modified}</Moment>
@@ -20,7 +19,11 @@ const LastModified = ({ modified, auditTrail }) => {
   return keycloakEnable ? (
     <Badge
       style={{ fontSize: '8px' }}
-      count={userName?.[0]?.toUpperCase() ?? 'D'}
+      count={
+        userName?.[0]?.toUpperCase() ?? (
+          <UserOutlined style={{ color: 'hsl(0, 0.00%, 51.80%)' }} />
+        )
+      }
       size="small"
       color={getColorByName(userName)}
       title={userName}
