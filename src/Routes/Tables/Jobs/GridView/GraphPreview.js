@@ -246,6 +246,7 @@ const GraphPreview = ({
                 isBuildAllFlows: false,
               })
               .then(response => {
+                console.log('error3', response);
                 if (response.data.error && response.data.error.message) {
                   setErrorGraph(response.data.error.message);
                 }
@@ -263,7 +264,7 @@ const GraphPreview = ({
           Promise.all(requestsArrayFlows)
             .then(res => {
               const data = res[0];
-
+              console.log('error5', res);
               if (data.error && data.error.message) {
                 setErrorGraph(data.error.message);
               } else {
@@ -279,6 +280,7 @@ const GraphPreview = ({
               }
             })
             .catch(error => {
+              console.log('error1', error);
               setErrorGraph(error.message);
               console.error('Error while sending requests:', error);
             });
@@ -293,6 +295,7 @@ const GraphPreview = ({
               const { data } = response;
 
               if (data.error && data.error.message) {
+                console.log('error6', response);
                 setErrorGraph(data.error.message);
               } else {
                 setErrorGraph('');
@@ -324,6 +327,7 @@ const GraphPreview = ({
         .post(`/store/pipelines/graph`, { pipeline })
         .then(response => {
           const { data } = response;
+          console.log('error0', response);
 
           if (data.error && data.error.message) {
             setErrorGraph(data.error.message);
