@@ -247,7 +247,7 @@ const GraphPreview = ({
               })
               .then(response => {
                 console.log('error3', response);
-                if (response.data.error && response.data.error.message) {
+                if (response?.data?.error && response?.data?.error?.message) {
                   setErrorGraph(response.data.error.message);
                 }
 
@@ -256,6 +256,10 @@ const GraphPreview = ({
                 return dataAllNode;
               })
               .catch(error => {
+                if (error.response?.data?.error?.message) {
+                  setErrorGraph(error.response.data.error.message);
+                }
+
                 console.error(error);
                 return null;
               })
