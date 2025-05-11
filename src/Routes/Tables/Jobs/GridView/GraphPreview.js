@@ -265,7 +265,7 @@ const GraphPreview = ({
             .then(res => {
               const data = res[0];
               console.log('error5', res);
-              if (data.error && data.error.message) {
+              if (data?.error && data?.error?.message) {
                 setErrorGraph(data.error.message);
               } else {
                 const graphAllFlows = joinFlowsToGraph(res);
