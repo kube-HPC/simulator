@@ -281,7 +281,13 @@ const GraphPreview = ({
             })
             .catch(error => {
               console.log('error1', error);
-              setErrorGraph(error.message);
+
+              if (error?.response?.data?.error?.message) {
+                setErrorGraph(error?.response.data.error.message);
+              } else {
+                setErrorGraph(error.message);
+              }
+
               console.error('Error while sending requests:', error);
             });
         } else {
