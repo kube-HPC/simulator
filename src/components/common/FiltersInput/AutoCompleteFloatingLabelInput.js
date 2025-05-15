@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { AutoComplete } from 'antd';
+import { AutoComplete, Input } from 'antd';
 import styled from 'styled-components';
 import debounce from 'lodash.debounce';
 
@@ -12,7 +12,7 @@ const Container = styled.div`
 
 const Label = styled.label`
   position: absolute;
-  left: 12px;
+  left: 15px;
   top: 50%;
   transform: translateY(-50%);
   transition: all 0.2s ease-in-out;
@@ -30,7 +30,9 @@ const Label = styled.label`
   `}
 `;
 
-const StyledAutoComplete = styled(AutoComplete)`
+const StyledInput = styled(Input)`
+  padding-left: 17px;
+
   position: relative;
   background: white;
   border-radius: 50px;
@@ -49,6 +51,8 @@ const AutoCompleteFloatingLabelInput = ({
   value,
   onChange,
   debounceDelay = 1000,
+  suffix,
+  width,
   ...props
 }) => {
   const [focused, setFocused] = useState(false);
@@ -58,25 +62,15 @@ const AutoCompleteFloatingLabelInput = ({
     [Submit, debounceDelay]
   );
 
-  /* useEffect(
-    () => () => {
-      debouncedSubmit.cancel();
-    },
-    [debouncedSubmit]
-  ); */
-
   return (
     <Container>
       <Label focused={focused} hasValue={!!value}>
         {label}
       </Label>
-      <StyledAutoComplete
-        {...props}
-        placeholder={focused ? '' : label}
+      <AutoComplete
+        style={{ width }}
         value={value}
-        onSearch={val => {
-          debouncedSubmit(val);
-        }}
+        onSearch={val => debouncedSubmit(val)}
         onSelect={val => {
           Submit(val);
           onChange?.(val);
@@ -90,8 +84,13 @@ const AutoCompleteFloatingLabelInput = ({
         onChange={val => onChange?.(val)}
         filterOption={(inputValue, option) =>
           option.value.toUpperCase().includes(inputValue.toUpperCase())
-        }
-      />
+        }>
+        <StyledInput
+          {...props}
+          suffix={suffix}
+          style={{ borderRadius: '50px' }}
+        />
+      </AutoComplete>
     </Container>
   );
 };
@@ -102,6 +101,8 @@ AutoCompleteFloatingLabelInput.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
   debounceDelay: PropTypes.number,
+  suffix: PropTypes.node,
+  width: PropTypes.string,
 };
 
 export default AutoCompleteFloatingLabelInput;

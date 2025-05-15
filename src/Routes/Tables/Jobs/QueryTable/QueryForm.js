@@ -16,7 +16,6 @@ import { useSelector } from 'react-redux';
 
 import AutoCompleteFloatingLabelInput from 'components/common/FiltersInput/AutoCompleteFloatingLabelInput';
 import ButtonDropdown from 'components/common/FiltersInput/ButtonDropdown';
-import FloatingLabelInput from 'components/common/FiltersInput/FloatingLabelInput';
 
 const QueryForm = ({ params, zoomDate = Date.now(), onSubmit = () => {} }) => {
   const [form] = Form.useForm();
@@ -91,6 +90,13 @@ const QueryForm = ({ params, zoomDate = Date.now(), onSubmit = () => {} }) => {
   };
 
   const query = useQuery(ALGORITHM_AND_PIPELINE_NAMES);
+
+  const usersOptions = useMemo(
+    () =>
+      query.data?.auditTrail?.find(entry => entry.user != null)?.user || null,
+    [query.data?.auditTrail]
+  );
+
   const algorithmOptions = useMemo(
     () =>
       query?.data?.algorithms.list?.map(algorithm => ({
@@ -148,7 +154,7 @@ const QueryForm = ({ params, zoomDate = Date.now(), onSubmit = () => {} }) => {
       <Form.Item name="pipelineName">
         <AutoCompleteFloatingLabelInput
           label="Pipeline Name / Job ID"
-          style={{ width: '12vw' }}
+          width="12vw"
           options={pipelineOptions}
           allowClear
           Submit={SubmitForm}
@@ -158,7 +164,7 @@ const QueryForm = ({ params, zoomDate = Date.now(), onSubmit = () => {} }) => {
       <Form.Item name="algorithmName">
         <AutoCompleteFloatingLabelInput
           label="Algorithm Name"
-          style={{ width: '9vw' }}
+          width="9vw"
           options={algorithmOptions}
           allowClear
           Submit={SubmitForm}
@@ -167,11 +173,12 @@ const QueryForm = ({ params, zoomDate = Date.now(), onSubmit = () => {} }) => {
 
       {keycloakEnable && (
         <Form.Item name="user">
-          <FloatingLabelInput
+          <AutoCompleteFloatingLabelInput
             label="User"
-            style={{ width: '9vw' }}
+            width="9vw"
+            options={usersOptions}
             allowClear
-            onChange={SubmitForm}
+            Submit={SubmitForm}
             suffix={
               <Tooltip title="Click To Filter Yor User">
                 <UserOutlined
