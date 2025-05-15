@@ -77,7 +77,7 @@ const AlgorithmsQueryTable = ({
       <Form.Item name="qAlgorithmName">
         <AutoCompleteFloatingLabelInput
           label="Algorithm Name"
-          style={{ width: '24vw' }}
+          width="24vw"
           options={algorithmOptions}
           autoFocus
           allowClear
