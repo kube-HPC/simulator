@@ -53,6 +53,7 @@ const AutoCompleteFloatingLabelInput = ({
   debounceDelay = 1000,
   suffix,
   width,
+  options,
   ...props
 }) => {
   const [focused, setFocused] = useState(false);
@@ -68,6 +69,7 @@ const AutoCompleteFloatingLabelInput = ({
         {label}
       </Label>
       <AutoComplete
+        options={options}
         style={{ width }}
         value={value}
         onSearch={val => debouncedSubmit(val)}
@@ -102,6 +104,7 @@ AutoCompleteFloatingLabelInput.propTypes = {
   onChange: PropTypes.func,
   debounceDelay: PropTypes.number,
   suffix: PropTypes.node,
+  options: PropTypes.node,
   width: PropTypes.string,
 };
 
