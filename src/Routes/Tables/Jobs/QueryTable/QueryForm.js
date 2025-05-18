@@ -184,7 +184,7 @@ const QueryForm = ({
         />
       </Form.Item>
 
-      {!keycloakEnable && (
+      {keycloakEnable && (
         <Form.Item name="user">
           <AutoCompleteFloatingLabelInput
             label="User"
