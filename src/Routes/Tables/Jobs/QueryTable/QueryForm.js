@@ -17,7 +17,12 @@ import { useSelector } from 'react-redux';
 import AutoCompleteFloatingLabelInput from 'components/common/FiltersInput/AutoCompleteFloatingLabelInput';
 import ButtonDropdown from 'components/common/FiltersInput/ButtonDropdown';
 
-const QueryForm = ({ params, zoomDate = Date.now(), onSubmit = () => {} }) => {
+const QueryForm = ({
+  jobs,
+  params,
+  zoomDate = Date.now(),
+  onSubmit = () => {},
+}) => {
   const [form] = Form.useForm();
   const isPinActiveJobs = useReactiveVar(isPinActiveJobVar);
   const { keycloakEnable } = useSelector(selectors.connection);
@@ -91,11 +96,19 @@ const QueryForm = ({ params, zoomDate = Date.now(), onSubmit = () => {} }) => {
 
   const query = useQuery(ALGORITHM_AND_PIPELINE_NAMES);
 
-  const usersOptions = useMemo(
-    () =>
-      query.data?.auditTrail?.find(entry => entry.user != null)?.user || null,
-    [query.data?.auditTrail]
-  );
+  const usersOptions = useMemo(() => {
+    const users =
+      jobs
+        ?.map(item => (item.auditTrail || []).map(entry => entry.user))
+        .flat() || [];
+
+    const uniqueUsers = [...new Set(users)];
+
+    return uniqueUsers.map(user => ({
+      value: user,
+      label: user,
+    }));
+  }, [jobs]);
 
   const algorithmOptions = useMemo(
     () =>
@@ -204,6 +217,17 @@ const QueryForm = ({ params, zoomDate = Date.now(), onSubmit = () => {} }) => {
 
 QueryForm.propTypes = {
   onSubmit: PropTypes.func,
+  jobs: PropTypes.arrayOf(
+    PropTypes.shape({
+      auditTrail: PropTypes.arrayOf(
+        PropTypes.shape({
+          action: PropTypes.string,
+          user: PropTypes.string,
+          timestamp: PropTypes.number,
+        })
+      ),
+    })
+  ).isRequired,
   params: PropTypes.shape({
     algorithmName: PropTypes.string,
     pipelineName: PropTypes.string,
