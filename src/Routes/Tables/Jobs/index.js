@@ -89,6 +89,7 @@ const JobsTable = () => {
         zoomDate={zoomedChangedDate}
         onSubmit={onQuerySubmit}
         params={mergedParams}
+        jobs={_dataSource}
       />
       {!filterToggeled && (
         <CaretDownOutlinedCenter
