@@ -13,7 +13,6 @@ import { isPinActiveJobVar } from 'cache';
 
 import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
-
 import AutoCompleteFloatingLabelInput from 'components/common/FiltersInput/AutoCompleteFloatingLabelInput';
 import ButtonDropdown from 'components/common/FiltersInput/ButtonDropdown';
 
@@ -100,7 +99,8 @@ const QueryForm = ({
     const users =
       jobs
         ?.map(item => (item.auditTrail || []).map(entry => entry.user))
-        .flat() || [];
+        .flat()
+        .filter(user => user != null && user !== '') || [];
 
     const uniqueUsers = [...new Set(users)];
 
@@ -184,7 +184,7 @@ const QueryForm = ({
         />
       </Form.Item>
 
-      {keycloakEnable && (
+      {!keycloakEnable && (
         <Form.Item name="user">
           <AutoCompleteFloatingLabelInput
             label="User"
