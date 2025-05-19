@@ -6,7 +6,7 @@ import { message, Button, Tooltip } from 'antd';
 import { useActions } from 'hooks';
 import isEqual from 'lodash/isEqual';
 
-const WorkersActions = ({ algorithm, stopAllWorkers }) => {
+const WorkersActions = ({ algorithm, stopAllWorkers = [] }) => {
   const { stopAlgorithm } = useActions();
   const [stopWorkerIsRun, setStopWorkerIsRun] = useState(false);
   const container = useRef();
@@ -81,6 +81,8 @@ WorkersActions.propTypes = {
   stopAllWorkers: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
-const areEqual = ({ algorithm: a }, { algorithm: b }) => isEqual(a, b);
+const equalStopAllWorkers = ({ stopAllWorkers: a }, { stopAllWorkers: b }) =>
+  isEqual(a, b);
+const equalAlgorithm = ({ algorithm: a }, { algorithm: b }) => isEqual(a, b);
 
-export default memo(WorkersActions, areEqual);
+export default memo(WorkersActions, equalAlgorithm && equalStopAllWorkers);
