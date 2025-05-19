@@ -76,7 +76,7 @@ const AutoCompleteFloatingLabelInput = ({
         onSearch={val => {
           const exactMatch =
             isExactMatch && options.find(opt => opt.value === val);
-          if (exactMatch) {
+          if (exactMatch || val === '') {
             debouncedSubmit(val);
           }
         }}

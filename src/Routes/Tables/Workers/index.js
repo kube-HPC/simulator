@@ -50,9 +50,8 @@ const renderSummary = pageData => {
       totalExitCount += exit;
       totalHotCount += hot;
       totalCount += count;
-      console.log(algorithmName);
+
       algorithmNames.push(algorithmName);
-      console.log(algorithmNames);
     }
   );
 
