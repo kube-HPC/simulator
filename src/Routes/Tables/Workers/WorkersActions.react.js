@@ -6,7 +6,7 @@ import { message, Button, Tooltip } from 'antd';
 import { useActions } from 'hooks';
 import isEqual from 'lodash/isEqual';
 
-const WorkersActions = ({ algorithm }) => {
+const WorkersActions = ({ algorithm, stopAllWorkers }) => {
   const { stopAlgorithm } = useActions();
   const [stopWorkerIsRun, setStopWorkerIsRun] = useState(false);
   const container = useRef();
@@ -21,9 +21,24 @@ const WorkersActions = ({ algorithm }) => {
     );
   };
 
+  const onStopAllSuccess = () => {
+    setStopWorkerIsRun(true);
+    message.success(<>All workers have been stopped successfully.</>);
+  };
+
   const onStop = useCallback(() => {
-    stopAlgorithm(algorithm.algorithmName, onStopSuccess);
-  }, [algorithm.algorithmName, stopAlgorithm]);
+    if (stopAllWorkers?.length > 0) {
+      const stopPromises = stopAllWorkers.map(
+        algorithmName =>
+          new Promise(resolve => {
+            stopAlgorithm(algorithmName, resolve);
+          })
+      );
+      Promise.all(stopPromises).then(onStopAllSuccess);
+    } else if (algorithm) {
+      stopAlgorithm(algorithm.algorithmName, onStopSuccess);
+    }
+  }, [algorithm, stopAlgorithm, stopAllWorkers]);
 
   const stopPropagation = useCallback(e => {
     e.stopPropagation();
@@ -42,12 +57,17 @@ const WorkersActions = ({ algorithm }) => {
       onClick={stopPropagation}
       onDoubleClick={stopPropagation}>
       <Button.Group>
-        <Tooltip title="stop worker">
+        <Tooltip
+          title={
+            stopAllWorkers?.length > 0 ? 'stop all workers' : 'stop worker'
+          }>
           <Button
-            icon={<StopOutlined />}
+            icon={stopAllWorkers?.length > 0 ? '' : <StopOutlined />}
             onClick={onStop}
             loading={stopWorkerIsRun}
-          />
+            styles={{ paddingLeft: '10' }}>
+            {stopAllWorkers?.length > 0 ? 'Stop all workers' : ''}
+          </Button>
         </Tooltip>
       </Button.Group>
     </div>
@@ -58,6 +78,7 @@ WorkersActions.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
   algorithm: PropTypes.object.isRequired,
+  stopAllWorkers: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 const areEqual = ({ algorithm: a }, { algorithm: b }) => isEqual(a, b);

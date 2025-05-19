@@ -1,10 +1,12 @@
 import React, { useMemo } from 'react';
 import { Table } from 'components';
+import { Table as TableSum } from 'antd';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import { Card, JsonSwitch, Tabs } from 'components/common';
 import defaultWorkerData from 'config/template/worker.template';
 import { useWorkers } from 'hooks/graphql';
 import { workersColumns, workersTableStats } from './columns';
+import WorkersActions from './WorkersActions.react';
 
 const generateTab = (key, value) => [
   {
@@ -30,6 +32,46 @@ const expandIcon = ({ expanded, onExpand, record }) =>
   ) : (
     <RightOutlined onClick={e => onExpand(record, e)} />
   );
+
+const renderSummary = pageData => {
+  let totalReadyCount = 0;
+  let totalWorkingCount = 0;
+  let totalInitCount = 0;
+  let totalExitCount = 0;
+  let totalHotCount = 0;
+  let totalCount = 0;
+  const algorithmNames = [];
+
+  pageData.forEach(
+    ({ ready, working, init, exit, hot, count, algorithmName }) => {
+      totalReadyCount += ready;
+      totalWorkingCount += working;
+      totalInitCount += init;
+      totalExitCount += exit;
+      totalHotCount += hot;
+      totalCount += count;
+      algorithmNames.push(algorithmName);
+    }
+  );
+
+  return (
+    <TableSum.Summary fixed>
+      <TableSum.Summary.Row>
+        <TableSum.Summary.Cell>{` `}</TableSum.Summary.Cell>
+        <TableSum.Summary.Cell>{` `}</TableSum.Summary.Cell>
+        <TableSum.Summary.Cell>{totalReadyCount}</TableSum.Summary.Cell>
+        <TableSum.Summary.Cell>{totalWorkingCount}</TableSum.Summary.Cell>
+        <TableSum.Summary.Cell>{totalInitCount}</TableSum.Summary.Cell>
+        <TableSum.Summary.Cell>{totalExitCount}</TableSum.Summary.Cell>
+        <TableSum.Summary.Cell>{totalHotCount}</TableSum.Summary.Cell>
+        <TableSum.Summary.Cell>{totalCount}</TableSum.Summary.Cell>
+        <TableSum.Summary.Cell>
+          <WorkersActions stopAllWorkers={algorithmNames} />
+        </TableSum.Summary.Cell>
+      </TableSum.Summary.Row>
+    </TableSum.Summary>
+  );
+};
 
 const ExpandedRow = collection => recordRow => {
   const entries = collection[recordRow?.algorithmName] || [];
@@ -70,6 +112,7 @@ const WorkersTable = () => {
         expandedRowRender: ExpandedRow(collection),
         expandIcon,
       }}
+      summary={renderSummary}
     />
   );
 };

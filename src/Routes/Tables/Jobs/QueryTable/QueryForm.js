@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import dayjs from 'dayjs';
 import { Form, Tooltip } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
@@ -23,6 +23,7 @@ const QueryForm = ({
   onSubmit = () => {},
 }) => {
   const [form] = Form.useForm();
+  const prevUsersRef = useRef([]);
   const isPinActiveJobs = useReactiveVar(isPinActiveJobVar);
   const { keycloakEnable } = useSelector(selectors.connection);
 
@@ -96,18 +97,30 @@ const QueryForm = ({
   const query = useQuery(ALGORITHM_AND_PIPELINE_NAMES);
 
   const usersOptions = useMemo(() => {
-    const users =
+    const newUsers =
       jobs
         ?.map(item => (item.auditTrail || []).map(entry => entry.user))
         .flat()
         .filter(user => user != null && user !== '') || [];
 
-    const uniqueUsers = [...new Set(users)];
+    const uniqueUsers = [...new Set(newUsers)];
 
-    return uniqueUsers.map(user => ({
+    const newUserOptions = uniqueUsers.map(user => ({
       value: user,
       label: user,
     }));
+
+    const existingValues = new Set(
+      prevUsersRef.current.map(option => option.value)
+    );
+    const combinedOptions = [
+      ...prevUsersRef.current,
+      ...newUserOptions.filter(option => !existingValues.has(option.value)),
+    ];
+
+    prevUsersRef.current = combinedOptions;
+
+    return combinedOptions;
   }, [jobs]);
 
   const algorithmOptions = useMemo(
@@ -166,6 +179,7 @@ const QueryForm = ({
 
       <Form.Item name="pipelineName">
         <AutoCompleteFloatingLabelInput
+          isExactMatch
           label="Pipeline Name / Job ID"
           width="12vw"
           options={pipelineOptions}
@@ -176,6 +190,7 @@ const QueryForm = ({
 
       <Form.Item name="algorithmName">
         <AutoCompleteFloatingLabelInput
+          isExactMatch
           label="Algorithm Name"
           width="9vw"
           options={algorithmOptions}
@@ -184,9 +199,10 @@ const QueryForm = ({
         />
       </Form.Item>
 
-      {keycloakEnable && (
+      {!keycloakEnable && (
         <Form.Item name="user">
           <AutoCompleteFloatingLabelInput
+            isExactMatch
             label="User"
             width="9vw"
             options={usersOptions}
