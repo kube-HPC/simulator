@@ -56,21 +56,23 @@ const renderSummary = pageData => {
   );
 
   return (
-    <TableSum.Summary fixed>
-      <TableSum.Summary.Row>
-        <TableSum.Summary.Cell>{` `}</TableSum.Summary.Cell>
-        <TableSum.Summary.Cell>{` `}</TableSum.Summary.Cell>
-        <TableSum.Summary.Cell>{totalReadyCount}</TableSum.Summary.Cell>
-        <TableSum.Summary.Cell>{totalWorkingCount}</TableSum.Summary.Cell>
-        <TableSum.Summary.Cell>{totalInitCount}</TableSum.Summary.Cell>
-        <TableSum.Summary.Cell>{totalExitCount}</TableSum.Summary.Cell>
-        <TableSum.Summary.Cell>{totalHotCount}</TableSum.Summary.Cell>
-        <TableSum.Summary.Cell>{totalCount}</TableSum.Summary.Cell>
-        <TableSum.Summary.Cell>
-          <WorkersActions stopAllWorkers={algorithmNames} />
-        </TableSum.Summary.Cell>
-      </TableSum.Summary.Row>
-    </TableSum.Summary>
+    algorithmNames.length > 0 && (
+      <TableSum.Summary fixed>
+        <TableSum.Summary.Row>
+          <TableSum.Summary.Cell>{` `}</TableSum.Summary.Cell>
+          <TableSum.Summary.Cell>{` `}</TableSum.Summary.Cell>
+          <TableSum.Summary.Cell>{totalReadyCount}</TableSum.Summary.Cell>
+          <TableSum.Summary.Cell>{totalWorkingCount}</TableSum.Summary.Cell>
+          <TableSum.Summary.Cell>{totalInitCount}</TableSum.Summary.Cell>
+          <TableSum.Summary.Cell>{totalExitCount}</TableSum.Summary.Cell>
+          <TableSum.Summary.Cell>{totalHotCount}</TableSum.Summary.Cell>
+          <TableSum.Summary.Cell>{totalCount}</TableSum.Summary.Cell>
+          <TableSum.Summary.Cell>
+            <WorkersActions stopAllWorkers={algorithmNames} />
+          </TableSum.Summary.Cell>
+        </TableSum.Summary.Row>
+      </TableSum.Summary>
+    )
   );
 };
 
