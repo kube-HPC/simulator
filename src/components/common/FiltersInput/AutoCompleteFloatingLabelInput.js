@@ -55,6 +55,7 @@ const AutoCompleteFloatingLabelInput = ({
   width,
   options,
   isExactMatch = false,
+  listIgnoreExactMatch = [],
   ...props
 }) => {
   const [focused, setFocused] = useState(false);
@@ -75,7 +76,10 @@ const AutoCompleteFloatingLabelInput = ({
         value={value}
         onSearch={val => {
           const exactMatch =
-            isExactMatch && options.find(opt => opt.value === val);
+            isExactMatch &&
+            (options.find(opt => opt.value === val) ||
+              val.includes(listIgnoreExactMatch));
+
           if (exactMatch || val === '') {
             debouncedSubmit(val);
           }
@@ -114,6 +118,7 @@ AutoCompleteFloatingLabelInput.propTypes = {
   options: PropTypes.node,
   width: PropTypes.string,
   isExactMatch: PropTypes.bool,
+  listIgnoreExactMatch: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default AutoCompleteFloatingLabelInput;

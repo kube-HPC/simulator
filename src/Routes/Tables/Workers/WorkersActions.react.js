@@ -23,7 +23,12 @@ const WorkersActions = ({ algorithm, stopAllWorkers = [] }) => {
 
   const onStopAllSuccess = () => {
     setStopWorkerIsRun(true);
-    message.success(<>All workers have been stopped successfully.</>);
+    message.success(
+      <>
+        All Stop workers is started. It may take a few moments for the
+        algorithms to be deleted.
+      </>
+    );
   };
 
   const onStop = useCallback(() => {
@@ -62,7 +67,15 @@ const WorkersActions = ({ algorithm, stopAllWorkers = [] }) => {
             stopAllWorkers?.length > 0 ? 'stop all workers' : 'stop worker'
           }>
           <Button
-            icon={stopAllWorkers?.length > 0 ? '' : <StopOutlined />}
+            icon={
+              stopAllWorkers?.length > 0 ? (
+                ''
+              ) : algorithm ? (
+                <StopOutlined />
+              ) : (
+                ''
+              )
+            }
             onClick={onStop}
             loading={stopWorkerIsRun}
             styles={{ paddingLeft: '10' }}>
