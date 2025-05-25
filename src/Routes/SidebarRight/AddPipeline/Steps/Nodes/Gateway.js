@@ -25,7 +25,8 @@ const GatewayNode = ({ id }) => {
   useEffect(() => {
     const nodes = form.getFieldValue(['nodes']);
     nodes[id].stateType = 'stateful';
-    form.setFieldsValue(nodes);
+
+    form.setFieldsValue({ nodes: [...nodes] });
   }, [form, id]);
 
   const providerValue = useMemo(
@@ -53,7 +54,9 @@ const GatewayNode = ({ id }) => {
           }>
           <MemoryField>
             {memoryTypes.map(value => (
-              <Select.Option key={value} value={value}>
+              <Select.Option
+                value={value}
+                key={`nodes.${id}.memoryTypes.${value}`}>
                 {value}
               </Select.Option>
             ))}
