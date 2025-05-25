@@ -119,6 +119,7 @@ const JOB_BY_ID_QUERY = gql`
       }
       pipeline {
         name
+        version
         experimentName
         kind
         priority

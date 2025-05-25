@@ -421,7 +421,11 @@ const GraphTab = ({ graph, pipeline }) => {
                     setTimeout(() => {
                       // save graph in local store
                       const adaptedGraphData = adaptedGraph();
-                      saveLocationNodes(pipeline.name, adaptedGraphData);
+
+                      saveLocationNodes(
+                        `${pipeline.experimentName}_${pipeline.name}_${pipeline.version}`,
+                        adaptedGraphData
+                      );
                     }, 1000);
                   });
                   network.on('zoom', () => {
@@ -466,6 +470,8 @@ const GraphTab = ({ graph, pipeline }) => {
 GraphTab.propTypes = {
   pipeline: PropTypes.shape({
     name: PropTypes.string.isRequired,
+    version: PropTypes.string.isRequired,
+    experimentName: PropTypes.string.isRequired,
     kind: PropTypes.string.isRequired,
     nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
   }).isRequired,
