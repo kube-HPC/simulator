@@ -36,6 +36,7 @@ const dateNow = new Date();
 dateNow.setHours(-24);
 
 const useJobsFunctionsLimit = () => {
+  const [_dataSource, setDataSource] = useState([]);
   const instanceFilters = useReactiveVar(instanceFiltersVar);
   const filterToggeled = useReactiveVar(filterToggeledVar);
   const isPinActiveJob = useReactiveVar(isPinActiveJobVar);
@@ -115,7 +116,6 @@ const useJobsFunctionsLimit = () => {
     },
 
     onCompleted: () => {
-      setIsTableLoad(false);
       setChangeDs(!changeDs);
       setIsGetMore(true);
     },
@@ -210,7 +210,7 @@ const useJobsFunctionsLimit = () => {
     instanceFiltersVar(stateInstanceFilter);
 
     topTableScroll();
-    // setIsTableLoad(true);
+    setIsTableLoad(true);
     setIsGraphLoad(true);
     setLimitGetJobs(numberLimitJobs);
     // queryAllJobs.refetch();
@@ -230,14 +230,18 @@ const useJobsFunctionsLimit = () => {
     [goTo]
   );
 
-  const _dataSource = useMemo(() => {
-    if (queryAllJobs && queryAllJobs.data) {
+  useEffect(() => {
+    if (queryAllJobs?.data) {
       const dsAllJobs = queryAllJobs.data.jobsAggregated.jobs;
-      return dsAllJobs;
+      setDataSource(dsAllJobs);
+    } else {
+      setDataSource([]);
     }
 
-    return [];
-  }, [changeDs]);
+    setTimeout(() => {
+      setIsTableLoad(false);
+    }, 10000);
+  }, [queryAllJobs.data, changeDs]);
 
   const handleMaxScroll = useCallback(event => {
     const maxScroll = event.target.scrollHeight - event.target.clientHeight;
