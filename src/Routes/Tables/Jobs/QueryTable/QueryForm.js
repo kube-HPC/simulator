@@ -202,8 +202,8 @@ const QueryForm = ({
       {keycloakEnable && (
         <Form.Item name="user">
           <AutoCompleteFloatingLabelInput
-            isExactMatch
-            listIgnoreExactMatch={[KeycloakServices.getUsername()]}
+            // isExactMatch
+            // listIgnoreExactMatch={[KeycloakServices.getUsername()]}
             label="User"
             width="9vw"
             options={usersOptions}

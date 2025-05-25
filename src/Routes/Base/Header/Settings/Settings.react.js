@@ -30,6 +30,7 @@ import {
 
 const { Text } = Typography;
 const Settings = () => {
+  const { hkubeSiteUrl } = useSelector(selectors.config);
   const { toggleTheme, themeName } = useSiteThemeMode();
 
   const navigate = useNavigate();
@@ -111,7 +112,12 @@ const Settings = () => {
           type={<GlobalOutlined title="hkube Site" />}
           onClick={openUrl(appInfo.websiteUrl)}
         />
-        <TextLink onClick={openUrl(appInfo.websiteUrl)}>Hkube Site</TextLink>
+        <TextLink
+          onClick={
+            hkubeSiteUrl ? openUrl(hkubeSiteUrl) : openUrl(appInfo.websiteUrl)
+          }>
+          Hkube Site
+        </TextLink>
       </FlexBox.Auto>
 
       <FlexBox.Auto>

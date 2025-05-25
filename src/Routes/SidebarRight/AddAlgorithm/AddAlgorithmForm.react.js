@@ -2,7 +2,7 @@ import React, { memo, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Input, InputNumber, Radio, Select, Checkbox, Card } from 'antd';
-import { Form, FlexBox } from 'components/common';
+import { Form, FlexBox, HelpSiteLink } from 'components/common';
 import {
   BottomPanel,
   RightAlignedButton,
@@ -425,7 +425,12 @@ const AddAlgorithmForm = ({
       </Collapsible>
 
       <Collapsible
-        title="Side Car"
+        title={
+          <>
+            {' '}
+            Side Car <HelpSiteLink link="/learn/sidecars/#what-is-a-sidecar" />{' '}
+          </>
+        }
         defaultExpanded={keyValueFormObject?.main?.sideCars?.length > 0}>
         <SideCarForm nameList={splitByDot(MAIN.SIDECAR.field)} />
       </Collapsible>
