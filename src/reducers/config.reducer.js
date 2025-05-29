@@ -21,9 +21,11 @@ const config = createSlice({
       `${actionType.SOCKET_GET_CONFIG}_SUCCESS`,
       (state, { payload }) => {
         const { monitorBackend, baseUrl } = payload.config;
+        const port =
+          monitorBackend.port === '80' ? '' : `:${monitorBackend.port}`;
         const backendApiUrl = monitorBackend.useLocation
           ? monitorBackend.path
-          : `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}${monitorBackend.path}`;
+          : `${monitorBackend.schema}${monitorBackend.host}${port}${monitorBackend.path}`;
 
         return {
           ...state,
