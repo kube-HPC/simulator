@@ -5,16 +5,21 @@ import actions from '../actions';
 
 const API_URL = '/api/v1';
 
-const setMonitorPath = monitorBackend =>
-  monitorBackend.useLocation
+const setMonitorPath = monitorBackend => {
+  const port = monitorBackend.port === '80' ? '' : `:${monitorBackend.port}`;
+  return monitorBackend.useLocation
     ? `${window.location.origin}${monitorBackend.path}${API_URL}`
-    : `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}${monitorBackend.path}${API_URL}`;
-// : `${monitorBackend.schema}${monitorBackend.host}${monitorBackend.path}${API_URL}`;
+    : `${monitorBackend.schema}${monitorBackend.host}${port}${monitorBackend.path}${API_URL}`;
+  // : `${monitorBackend.schema}${monitorBackend.host}${monitorBackend.path}${API_URL}`;
+};
 
-const setDatasourcesPath = monitorBackend =>
+const setDatasourcesPath = monitorBackend => {
+  const port = monitorBackend.port === '80' ? '' : `:${monitorBackend.port}`;
+
   monitorBackend.useLocation
     ? `${window.location.origin}${monitorBackend.datasourcesPath}${API_URL}`
-    : `${monitorBackend.schema}${monitorBackend.host}:${monitorBackend.port}${monitorBackend.datasourcesPath}${API_URL}`;
+    : `${monitorBackend.schema}${monitorBackend.host}${port}${monitorBackend.datasourcesPath}${API_URL}`;
+};
 
 const setBoardPath = board =>
   board.useLocation
