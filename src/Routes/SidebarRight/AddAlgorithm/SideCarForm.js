@@ -59,7 +59,7 @@ const SideCarForm = ({ nameList }) => (
               <Input />
             </ContainerFormItemTop>
             <Row style={{ marginTop: '16px' }}>
-              <Col span={24}>
+              <Col span={12}>
                 <Card title="Environment Variable" bordered="true">
                   <Form.Item>
                     <KeyValueForm
@@ -70,13 +70,14 @@ const SideCarForm = ({ nameList }) => (
                   </Form.Item>
                 </Card>
               </Col>
+              <Col span={12}>
+                <Card title="Volumes Mounts" variant="borderless">
+                  <Form.Item>
+                    <VolumeMountsList nameList={[name, 'volumeMounts']} />
+                  </Form.Item>
+                </Card>
+              </Col>
             </Row>
-
-            <Card title="Volumes Mounts" bordered="true">
-              <Form.Item>
-                <VolumeMountsList nameList={[name, 'volumeMounts']} />
-              </Form.Item>
-            </Card>
 
             <Divider style={{ borderWidth: '7px' }} />
           </React.Fragment>

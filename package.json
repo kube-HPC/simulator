@@ -33,7 +33,7 @@
     ]
   },
   "dependencies": {
-    "@ant-design/icons": "^5.3.7",
+    "@ant-design/icons": "^6.0.0",
     "@apollo/client": "^3.10.1",
     "ansi-to-html": "^0.7.2",
     "apexcharts": "^3.37.0",
@@ -65,7 +65,7 @@
     "@storybook/react": "^8.0.9",
     "@types/react-router-dom": "^5.3.3",
     "@types/vis": "^4.21.27",
-    "antd": "^5.21.4",
+    "antd": "^5.25.4",
     "axios": "^1.6.8",
     "chonky": "^2.3.2",
     "chonky-icon-fontawesome": "^2.3.2",
