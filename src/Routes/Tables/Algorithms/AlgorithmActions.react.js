@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-
+import KeycloakServices from 'keycloak/keycloakServices';
 import {
   BugOutlined,
   DeleteOutlined,
@@ -8,7 +8,7 @@ import {
   InfoCircleOutlined,
   PlayCircleOutlined,
 } from '@ant-design/icons';
-
+import keycloakRoles from '@hkube/consts';
 import { Button, Modal, Popover, Typography, Tooltip } from 'antd';
 import { useActions } from 'hooks';
 import RunForm from './RunForm';
@@ -36,6 +36,9 @@ const deleteConfirmAction = action => {
 const overlayStyle = { width: `50ch` };
 
 const AlgorithmActions = ({ record }) => {
+  const isRoleEdit = KeycloakServices.getUserRoles(keycloakRoles.API_EDIT);
+  const isRoleDelete = KeycloakServices.getUserRoles(keycloakRoles.API_DELETE);
+
   const [openPopupRun, setOpenPopupRun] = useState(false);
   const [openPopupRunDebug, setOpenPopupRunDebug] = useState(false);
   const { goTo } = usePath();
@@ -142,11 +145,23 @@ const AlgorithmActions = ({ record }) => {
           onOpenChange={handleOpenChangeDebug}>
           <Button icon={<BugOutlined />} onClick={() => clickOnRunDebug()} />
         </Popover>
-        <Tooltip title="edit algorithm">
-          <Button icon={<EditOutlined />} onClick={onEdit} />
+        <Tooltip
+          title={isRoleEdit ? 'edit algorithm' : 'not have permission to edit'}>
+          <Button
+            icon={<EditOutlined />}
+            onClick={onEdit}
+            disabled={!isRoleEdit}
+          />
         </Tooltip>
-        <Tooltip title="delete algorithm">
-          <Button icon={<DeleteOutlined />} onClick={onClickDelete} />
+        <Tooltip
+          title={
+            isRoleDelete ? 'delete algorithm' : 'not have permission to delete'
+          }>
+          <Button
+            icon={<DeleteOutlined />}
+            onClick={onClickDelete}
+            disabled={!isRoleDelete}
+          />
         </Tooltip>
         <Tooltip title="show overview">
           <Button icon={<InfoCircleOutlined />} onClick={onMoreInfo} />

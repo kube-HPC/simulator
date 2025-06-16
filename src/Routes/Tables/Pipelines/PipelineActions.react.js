@@ -8,6 +8,8 @@ import {
   StopOutlined,
 } from '@ant-design/icons';
 import { Button, Empty, Popover, Tooltip } from 'antd';
+import KeycloakServices from 'keycloak/keycloakServices';
+import keycloakRoles from '@hkube/consts';
 
 import { USER_GUIDE } from 'const';
 import { useActions } from 'hooks';
@@ -26,6 +28,8 @@ const PipelineActions = ({ pipeline, className = '' }) => {
   const { goTo } = usePath();
   const { deleteStored: remove, stopAllPipeline } = useActions();
 
+  const isRoleEdit = KeycloakServices.getUserRoles(keycloakRoles.API_EDIT);
+  const isRoleDelete = KeycloakServices.getUserRoles(keycloakRoles.API_DELETE);
   const container = useRef();
 
   // http://hkube.org/spec/#tag/Execution/paths/~1exec~1stored/post
@@ -90,11 +94,23 @@ const PipelineActions = ({ pipeline, className = '' }) => {
         <Tooltip title="run pipeline">
           <Button icon={<PlayCircleOutlined />} onClick={onExecute} />
         </Tooltip>
-        <Tooltip title="edit pipeline">
-          <Button icon={<EditOutlined />} onClick={onUpdate} />
+        <Tooltip
+          title={isRoleEdit ? 'edit pipeline' : 'not have permission to edit'}>
+          <Button
+            icon={<EditOutlined />}
+            onClick={onUpdate}
+            disabled={!isRoleEdit}
+          />
         </Tooltip>
-        <Tooltip title="delete pipeline">
-          <Button icon={<DeleteOutlined />} onClick={onDelete} />
+        <Tooltip
+          title={
+            isRoleDelete ? 'delete pipeline' : 'not have permission to delete'
+          }>
+          <Button
+            icon={<DeleteOutlined />}
+            onClick={onDelete}
+            disabled={!isRoleDelete}
+          />
         </Tooltip>
         <Tooltip title="stop all jobs of pipeline">
           <Button icon={<StopOutlined />} onClick={onStop} />
