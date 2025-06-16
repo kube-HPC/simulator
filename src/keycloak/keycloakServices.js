@@ -68,6 +68,17 @@ const startTokenRefreshInterval = () => {
   return tokenRefreshInterval;
 };
 
+const getUserRoles = roleToCheck => {
+  // action can be string "edit","view","delete","execute"
+
+  const parsedToken = _kc.tokenParsed;
+  if (!parsedToken) return false;
+
+  const roles = parsedToken.resource_access?.['api-server']?.roles || [];
+
+  return roles.includes(roleToCheck);
+};
+
 const KeycloakServices = {
   initKeycloak,
   doLogin,
@@ -79,6 +90,7 @@ const KeycloakServices = {
   getUsername,
   hasRole,
   startTokenRefreshInterval,
+  getUserRoles,
 };
 
 export default KeycloakServices;
