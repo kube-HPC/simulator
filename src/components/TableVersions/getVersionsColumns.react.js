@@ -5,6 +5,7 @@ import Moment from 'react-moment';
 import { sorter } from 'utils/stringHelper';
 import { COLOR_PIPELINE_STATUS } from 'styles';
 import UserAvatar from 'components/UserAvatar';
+import VersionNameEdit from './VersionNameEdit';
 import FlexBox from '../common/FlexBox.react';
 import Ellipsis from '../common/Ellipsis.react';
 
@@ -114,6 +115,14 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion, source }) => {
         ),
       },
       {
+        title: 'Version Name',
+        //  dataIndex: ['versionName'],
+        key: 'versionName',
+        onFilter: (value, record) => record.version.includes(value),
+        sorter: (a, b) => sorter(a.version, b.version),
+        render: VersionNameEdit,
+      },
+      {
         title: 'Version',
         dataIndex: ['version'],
         key: 'version',
@@ -187,6 +196,15 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion, source }) => {
           size={20}
         />
       ),
+    },
+
+    {
+      title: 'Version Name',
+      //  dataIndex: ['versionName'],
+      key: 'versionName',
+      onFilter: (value, record) => record.version.includes(value),
+      sorter: (a, b) => sorter(a.version, b.version),
+      render: VersionNameEdit,
     },
     {
       title: 'Version',
