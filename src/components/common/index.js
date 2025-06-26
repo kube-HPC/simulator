@@ -11,6 +11,7 @@ export { default as JsonEditor } from 'components/common/Json/JsonEditor';
 export { default as JsonSwitch } from 'components/common/Json/JsonSwitch';
 export { default as JsonTable } from 'components/common/Json/JsonTable';
 export { default as JsonView } from 'components/common/Json/JsonView';
+export { default as JsonDiffTable } from 'components/common/Json/JsonTools/JsonDiffTable';
 export { default as LogsViewer } from 'components/common/LogsViewer';
 export { default as MdEditor } from 'components/common/Markdown/MdEditor';
 export { default as Tabs } from 'components/common/Tabs/Tabs.react';

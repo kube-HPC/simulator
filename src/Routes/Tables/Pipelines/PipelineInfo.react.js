@@ -1,7 +1,14 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'antd';
-import { Card, JsonSwitch, MdEditor, Tabs } from 'components/common';
+import { Button, Modal } from 'antd';
+import {
+  Card,
+  JsonSwitch,
+  MdEditor,
+  Tabs,
+  JsonDiffTable,
+} from 'components/common';
+import { ReactComponent as IconCompare } from 'images/compare.svg';
 import { CheckOutlined, RedoOutlined } from '@ant-design/icons';
 import { useReadme, useVersions } from 'hooks';
 import { VersionsTable } from 'components';
@@ -23,13 +30,42 @@ const PipelineInfo = ({ pipeline }) => {
   });
 
   const { tabKey, goTo } = usePath();
+  const [versionsCompare, setVersionsCompare] = useState([]);
   const [readme, setReadme] = useState();
+  const [isCompareVisible, setCompareVisible] = useState(false);
+  const [compareJsonPair, setCompareJsonPair] = useState({
+    json1: null,
+    json2: null,
+  });
 
   const { asyncFetch, post } = useReadme(useReadme.TYPES.PIPELINE);
 
   const onApplyApplyMarkdown = useCallback(() => {
     post({ name, readme });
   }, [post, name, readme]);
+
+  const CompareJson = () => {
+    if (versionsCompare.length !== 2) {
+      Modal.warning({
+        title: 'Please select exactly 2 versions to compare',
+      });
+      return;
+    }
+
+    const json1 = dataSource.find(item => item.version === versionsCompare[0]);
+    const json2 = dataSource.find(item => item.version === versionsCompare[1]);
+
+    if (!json1 || !json2) {
+      Modal.error({
+        title: 'Error finding selected versions',
+        content: 'Could not locate both selected versions in dataSource.',
+      });
+      return;
+    }
+
+    setCompareJsonPair({ json1, json2 });
+    setCompareVisible(true);
+  };
 
   const extra =
     tabKey === TABS.DESCRIPTION ? (
@@ -39,9 +75,17 @@ const PipelineInfo = ({ pipeline }) => {
         </Button>
       )
     ) : tabKey === TABS.VERSIONS ? (
-      <Button onClick={fetch} icon={<RedoOutlined />}>
-        Refresh
-      </Button>
+      <>
+        <Button onClick={fetch} icon={<RedoOutlined />}>
+          Refresh
+        </Button>{' '}
+        <Button
+          disabled={versionsCompare.length !== 2}
+          onClick={CompareJson}
+          icon={<IconCompare style={{ width: '14px' }} />}>
+          Compare
+        </Button>
+      </>
     ) : null;
 
   const handleChange = useCallback(
@@ -82,6 +126,7 @@ const PipelineInfo = ({ pipeline }) => {
             onApply={onApplyVersion}
             onDelete={onDelete}
             source="pipelines"
+            setVersionsCompare={setVersionsCompare}
           />
         ),
       },
@@ -95,14 +140,37 @@ const PipelineInfo = ({ pipeline }) => {
   );
 
   return (
-    <Card isMargin>
-      <Tabs
-        items={TabsItemsJson}
-        activeKey={tabKey}
-        onChange={handleChange}
-        extra={extra}
-      />
-    </Card>
+    <>
+      <Card isMargin>
+        <Tabs
+          items={TabsItemsJson}
+          activeKey={tabKey}
+          onChange={handleChange}
+          extra={extra}
+        />
+      </Card>
+
+      <Modal
+        title="Compare Versions"
+        open={isCompareVisible}
+        onCancel={() => setCompareVisible(false)}
+        footer={[
+          <Button key="close" onClick={() => setCompareVisible(false)}>
+            Close
+          </Button>,
+        ]}
+        width={800}>
+        <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+          {compareJsonPair.json1 && compareJsonPair.json2 && (
+            <JsonDiffTable
+              json1={compareJsonPair.json1}
+              json2={compareJsonPair.json2}
+              idKey="version"
+            />
+          )}
+        </div>
+      </Modal>
+    </>
   );
 };
 

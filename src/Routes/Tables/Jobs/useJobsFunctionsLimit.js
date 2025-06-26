@@ -240,7 +240,7 @@ const useJobsFunctionsLimit = () => {
 
     setTimeout(() => {
       setIsTableLoad(false);
-    }, 10000);
+    }, 1000);
   }, [queryAllJobs.data, changeDs]);
 
   const handleMaxScroll = useCallback(event => {
