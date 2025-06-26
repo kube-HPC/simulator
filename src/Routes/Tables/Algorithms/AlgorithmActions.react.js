@@ -8,7 +8,7 @@ import {
   InfoCircleOutlined,
   PlayCircleOutlined,
 } from '@ant-design/icons';
-import keycloakRoles from '@hkube/consts';
+import { keycloakRoles } from '@hkube/consts';
 import { Button, Modal, Popover, Typography, Tooltip } from 'antd';
 import { useActions } from 'hooks';
 import RunForm from './RunForm';

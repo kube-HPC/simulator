@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import { Button, Empty, Popover, Tooltip } from 'antd';
 import KeycloakServices from 'keycloak/keycloakServices';
-import keycloakRoles from '@hkube/consts';
+import { keycloakRoles } from '@hkube/consts';
 
 import { USER_GUIDE } from 'const';
 import { useActions } from 'hooks';
