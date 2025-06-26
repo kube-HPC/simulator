@@ -83,9 +83,13 @@ const JsonDiffTable = ({ json1, json2, idKey }) => {
     const flat2 = flattenObject(json2);
     const allKeys = new Set([...Object.keys(flat1), ...Object.keys(flat2)]);
 
-    const differences = [...allKeys].filter(
-      key => flat1[key] !== flat2[key] && !key.startsWith('pipeline.nodes')
-    );
+    const differences = [...allKeys].filter(key => {
+      if (key.startsWith('pipeline.nodes')) {
+        return false;
+      }
+
+      return JSON.stringify(flat1[key]) !== JSON.stringify(flat2[key]);
+    });
 
     const diffRows = differences.map((key, index) => ({
       key: `diff-${index}`,
