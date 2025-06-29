@@ -52,8 +52,8 @@ const PipelineInfo = ({ pipeline }) => {
       return;
     }
 
-    const json1 = dataSource.find(item => item.version === versionsCompare[0]);
-    const json2 = dataSource.find(item => item.version === versionsCompare[1]);
+    let json1 = dataSource.find(item => item.version === versionsCompare[0]);
+    let json2 = dataSource.find(item => item.version === versionsCompare[1]);
 
     if (!json1 || !json2) {
       Modal.error({
@@ -61,6 +61,10 @@ const PipelineInfo = ({ pipeline }) => {
         content: 'Could not locate both selected versions in dataSource.',
       });
       return;
+    }
+
+    if (json1.pipeline.modified > json2.pipeline.modified) {
+      [json1, json2] = [json2, json1];
     }
 
     setCompareJsonPair({ json1, json2 });
@@ -159,13 +163,13 @@ const PipelineInfo = ({ pipeline }) => {
             Close
           </Button>,
         ]}
-        width={800}>
+        width={900}>
         <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
           {compareJsonPair.json1 && compareJsonPair.json2 && (
             <JsonDiffTable
               json1={compareJsonPair.json1}
               json2={compareJsonPair.json2}
-              idKey="version"
+              idKey="pipeline"
             />
           )}
         </div>
