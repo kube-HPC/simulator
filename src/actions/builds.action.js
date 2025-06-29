@@ -17,3 +17,12 @@ export const rerunBuild = buildId => ({
     actionType: actions.BUILD_RERUN,
   },
 });
+
+export const updateVersionName = (version, versionName) => ({
+  type: actions.REST_REQ_PUT,
+  payload: {
+    url: `versions/versionName/`,
+    body: { version, versionName },
+    actionType: actions.PIPELINE_UPDATE,
+  },
+});

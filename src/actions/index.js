@@ -5,7 +5,7 @@ import {
   stopAlgorithm,
 } from './algorithm.action';
 import { filterData } from './autoComplete.action';
-import { cancelBuild, rerunBuild } from './builds.action';
+import { cancelBuild, rerunBuild, updateVersionName } from './builds.action';
 import {
   initDashboardConfig,
   socketInit,
@@ -97,6 +97,7 @@ const actions = {
   fetchSnapshots,
   createDataSource,
   postDataSourceVersion,
+  updateVersionName,
 };
 
 export default actions;
