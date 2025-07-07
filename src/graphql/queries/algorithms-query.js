@@ -17,7 +17,6 @@ const ALGORITHMS_QUERY = gql`
         reservedMemory
         type
         algorithmImage
-        versionName
         version
         debugUrl
         errors

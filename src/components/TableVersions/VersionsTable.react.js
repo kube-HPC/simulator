@@ -50,9 +50,8 @@ const VersionsTable = ({
   return (
     <Table
       rowKey={rowKey}
-      loading={!dataSource}
-      dataSource={dataSource}
-      columns={columnsView}
+      dataSource={dataSource || []}
+      columns={columnsView || []}
       expandable={{
         expandedRowRender: record => expandedRowRender(record),
         expandIcon,

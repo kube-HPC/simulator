@@ -1,19 +1,47 @@
 import React, { useState } from 'react';
-import { Input } from 'antd';
+import { Input, Tooltip, message } from 'antd';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import useActions from '../../hooks/useActions';
 
-const VersionNameEdit = record => {
-  const { updateVersionName } = useActions();
-  const { version, versionName } = record;
+const HoverableText = styled(Tooltip)`
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+
+  &:hover {
+    border: 1px solid #d9d9d9;
+  }
+`;
+
+const VersionNameEdit = ({ record, source }) => {
+  const { updateAlgorithmVersionName, updatePipelineVersionName } =
+    useActions();
+  const { version, versionAlias } = record;
   const [editing, setEditing] = useState(false);
-  const [inputValue, setInputValue] = useState(versionName);
+  const [inputValue, setInputValue] = useState(versionAlias);
+
+  if (!record) return null;
+
+  const updateVersionNameOnSuccess = () => {
+    message.success(<>version name is update</>);
+  };
 
   const handleSave = () => {
     setEditing(false);
-    if (inputValue !== versionName) {
-      // onChange?.(key, inputValue);
-      console.log(version, inputValue);
-      updateVersionName(version, inputValue);
+    if (inputValue !== versionAlias) {
+      if (source === 'algorithms')
+        updateAlgorithmVersionName(
+          version,
+          inputValue,
+          updateVersionNameOnSuccess
+        );
+      else
+        updatePipelineVersionName(
+          version,
+          inputValue,
+          updateVersionNameOnSuccess
+        );
     }
   };
 
@@ -27,11 +55,17 @@ const VersionNameEdit = record => {
       autoFocus
     />
   ) : (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-    <div onClick={() => setEditing(true)} style={{ cursor: 'pointer' }}>
-      {versionName}
-    </div>
+    <HoverableText
+      title="Click to edit version name"
+      onClick={() => setEditing(true)}>
+      {inputValue || '(empty)'}
+    </HoverableText>
   );
+};
+
+VersionNameEdit.propTypes = {
+  record: PropTypes.object.isRequired,
+  source: PropTypes.string.isRequired,
 };
 
 export default VersionNameEdit;

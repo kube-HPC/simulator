@@ -18,11 +18,30 @@ export const rerunBuild = buildId => ({
   },
 });
 
-export const updateVersionName = (version, versionName) => ({
+export const updatePipelineVersionName = (
+  version,
+  versionAlias,
+  onSuccess
+) => ({
   type: actions.REST_REQ_PUT,
   payload: {
-    url: `versions/versionName/`,
-    body: { version, versionName },
-    actionType: actions.PIPELINE_UPDATE,
+    url: `versions/pipelines/alias/`,
+    body: { version, alias: versionAlias },
+    actionType: actions.ALGORITHM_VERSIONNAME_UPDATE,
   },
+  meta: { onSuccess },
+});
+
+export const updateAlgorithmVersionName = (
+  version,
+  versionAlias,
+  onSuccess
+) => ({
+  type: actions.REST_REQ_PUT,
+  payload: {
+    url: `versions/algorithms/alias/`,
+    body: { version, alias: versionAlias },
+    actionType: actions.PIPELINE_VERSIONNAME_UPDATE,
+  },
+  meta: { onSuccess },
 });

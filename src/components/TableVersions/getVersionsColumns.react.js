@@ -116,11 +116,14 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion, source }) => {
       },
       {
         title: 'Version Name',
-        //  dataIndex: ['versionName'],
-        key: 'versionName',
+        dataIndex: ['versionAlias'],
+        key: 'versionAlias',
         onFilter: (value, record) => record.version.includes(value),
-        sorter: (a, b) => sorter(a.version, b.version),
-        render: VersionNameEdit,
+        sorter: (a, b) => sorter(a.versionAlias, b.versionAlias),
+        render: (_, record) => {
+          if (!record) return <span />;
+          return <VersionNameEdit record={record} source={source} />;
+        },
       },
       {
         title: 'Version',
@@ -200,11 +203,14 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion, source }) => {
 
     {
       title: 'Version Name',
-      //  dataIndex: ['versionName'],
-      key: 'versionName',
+      dataIndex: ['versionAlias'],
+      key: 'versionAlias',
       onFilter: (value, record) => record.version.includes(value),
-      sorter: (a, b) => sorter(a.version, b.version),
-      render: VersionNameEdit,
+      sorter: (a, b) => sorter(a.versionAlias, b.versionAlias),
+      render: (_, record) => {
+        if (!record) return <span />;
+        return <VersionNameEdit record={record} source={source} />;
+      },
     },
     {
       title: 'Version',
