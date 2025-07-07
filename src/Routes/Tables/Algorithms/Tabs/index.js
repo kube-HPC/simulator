@@ -6,9 +6,16 @@ import React, {
   useRef,
 } from 'react';
 import { CheckOutlined, RedoOutlined } from '@ant-design/icons';
+import { ReactComponent as IconCompare } from 'images/compare.svg';
 import { Button, Checkbox, Modal } from 'antd';
 import Text from 'antd/lib/typography/Text';
-import { Card, JsonSwitch, MdEditor, Tabs } from 'components/common';
+import {
+  Card,
+  JsonSwitch,
+  MdEditor,
+  Tabs,
+  JsonDiffTable,
+} from 'components/common';
 import { useReadme, useVersions } from 'hooks';
 import PropTypes from 'prop-types';
 import { OVERVIEW_TABS as TABS } from 'const';
@@ -24,7 +31,14 @@ const AlgorithmsTabs = ({ algorithm }) => {
     [goTo]
   );
 
+  const [versionsCompare, setVersionsCompare] = useState([]);
   const [readme, setReadme] = useState();
+  const [isCompareVisible, setCompareVisible] = useState(false);
+  const [compareJsonPair, setCompareJsonPair] = useState({
+    json1: null,
+    json2: null,
+  });
+
   const [isBuildFirstFail] = useState(
     algorithm?.builds?.length > 0 && algorithm?.builds[0]?.status === 'failed'
   );
@@ -81,6 +95,33 @@ const AlgorithmsTabs = ({ algorithm }) => {
     asyncFetch({ name: algorithm.name }).then(setReadme);
   }, [asyncFetch, algorithm, activeKey]);
 
+  const CompareJson = () => {
+    if (versionsCompare.length !== 2) {
+      Modal.warning({
+        title: 'Please select exactly 2 versions to compare',
+      });
+      return;
+    }
+
+    let json1 = dataSource.find(item => item.version === versionsCompare[0]);
+    let json2 = dataSource.find(item => item.version === versionsCompare[1]);
+
+    if (!json1 || !json2) {
+      Modal.error({
+        title: 'Error finding selected versions',
+        content: 'Could not locate both selected versions in dataSource.',
+      });
+      return;
+    }
+
+    if (json1?.algorithm?.modified > json2?.algorithm?.modified) {
+      [json1, json2] = [json2, json1];
+    }
+
+    setCompareJsonPair({ json1, json2 });
+    setCompareVisible(true);
+  };
+
   const extra =
     activeKey === TABS.DESCRIPTION ? (
       false && (
@@ -89,9 +130,17 @@ const AlgorithmsTabs = ({ algorithm }) => {
         </Button>
       )
     ) : activeKey === TABS.VERSIONS ? (
-      <Button onClick={fetch} icon={<RedoOutlined />}>
-        Refresh
-      </Button>
+      <>
+        <Button onClick={fetch} icon={<RedoOutlined />}>
+          Refresh
+        </Button>{' '}
+        <Button
+          disabled={versionsCompare.length !== 2}
+          onClick={CompareJson}
+          icon={<IconCompare style={{ width: '14px' }} />}>
+          Compare
+        </Button>
+      </>
     ) : null;
 
   useEffect(() => {
@@ -99,8 +148,6 @@ const AlgorithmsTabs = ({ algorithm }) => {
       isFirstRender.current = false;
       setActiveKey(TABS.BUILDS);
     }
-
-    // return null;
   }, []);
 
   const TabsItemsJson = useMemo(
@@ -116,6 +163,7 @@ const AlgorithmsTabs = ({ algorithm }) => {
             onApply={onApply}
             onDelete={onDelete}
             source="algorithms"
+            setVersionsCompare={setVersionsCompare}
           />
         ),
       },
@@ -154,14 +202,37 @@ const AlgorithmsTabs = ({ algorithm }) => {
   );
 
   return (
-    <Card isMargin>
-      <Tabs
-        items={TabsItemsJson}
-        activeKey={activeKey}
-        onChange={setActiveKey}
-        extra={extra}
-      />
-    </Card>
+    <>
+      <Card isMargin>
+        <Tabs
+          items={TabsItemsJson}
+          activeKey={activeKey}
+          onChange={setActiveKey}
+          extra={extra}
+        />
+      </Card>
+
+      <Modal
+        title="Compare Versions"
+        open={isCompareVisible}
+        onCancel={() => setCompareVisible(false)}
+        footer={[
+          <Button key="close" onClick={() => setCompareVisible(false)}>
+            Close
+          </Button>,
+        ]}
+        width={900}>
+        <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+          {compareJsonPair.json1 && compareJsonPair.json2 && (
+            <JsonDiffTable
+              json1={compareJsonPair.json1}
+              json2={compareJsonPair.json2}
+              currentCompareProp="algorithm"
+            />
+          )}
+        </div>
+      </Modal>
+    </>
   );
 };
 

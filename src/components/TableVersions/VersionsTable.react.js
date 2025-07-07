@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
@@ -23,8 +23,10 @@ const VersionsTable = ({
   onDelete,
   dataSource = undefined,
   source,
+  setVersionsCompare,
 }) => {
   const { keycloakEnable } = useSelector(selectors.connection);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const columns = getVersionsColumns({
     currentVersion,
@@ -47,11 +49,31 @@ const VersionsTable = ({
       <RightOutlined onClick={e => onExpand(record, e)} />
     );
 
+  const onSelectChange = (newSelectedRowKeys, selectedRows) => {
+    if (newSelectedRowKeys.length > 2) return;
+
+    setSelectedRowKeys(newSelectedRowKeys);
+    const versions = selectedRows.map(row => row.version);
+    setVersionsCompare(versions);
+  };
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+    getCheckboxProps: record => ({
+      disabled:
+        selectedRowKeys.length >= 2 &&
+        !selectedRowKeys.includes(record.version),
+    }),
+  };
+
   return (
     <Table
       rowKey={rowKey}
       dataSource={dataSource || []}
       columns={columnsView || []}
+      loading={!dataSource}
+      rowSelection={rowSelection}
       expandable={{
         expandedRowRender: record => expandedRowRender(record),
         expandIcon,
@@ -66,6 +88,7 @@ VersionsTable.propTypes = {
   onDelete: PropTypes.func.isRequired,
   dataSource: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   source: PropTypes.string.isRequired,
+  setVersionsCompare: PropTypes.func.isRequired,
 };
 
 export default VersionsTable;
