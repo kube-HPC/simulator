@@ -70,9 +70,9 @@ const VersionsTable = ({
   return (
     <Table
       rowKey={rowKey}
+      dataSource={dataSource || []}
+      columns={columnsView || []}
       loading={!dataSource}
-      dataSource={dataSource}
-      columns={columnsView}
       rowSelection={rowSelection}
       expandable={{
         expandedRowRender: record => expandedRowRender(record),

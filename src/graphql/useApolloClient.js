@@ -15,7 +15,7 @@ import { Modal } from 'antd';
 import { GrafanaLink } from 'components';
 import KeycloakServices from 'keycloak/keycloakServices';
 
-const MAX_ERRORS_THRESHOLD = 5;
+const MAX_ERRORS_THRESHOLD = 20;
 const TIME_INTERVAL = 60000;
 
 const useApolloClient = () => {
@@ -105,7 +105,7 @@ const useApolloClient = () => {
           .catch(error => {
             console.error('Failed to refresh token', error);
             KeycloakServices.doLogout();
-            openNotification();
+            // openNotification();
           });
       }
     }
