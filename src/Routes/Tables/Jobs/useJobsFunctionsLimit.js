@@ -180,7 +180,11 @@ const useJobsFunctionsLimit = () => {
       topTableScroll();
 
       setLimitGetJobs(numberLimitJobs);
-      queryAllJobs.refetch();
+      queryAllJobs.refetch().then(() => {
+        setTimeout(() => {
+          setIsTableLoad(false);
+        }, 2000);
+      });
       queryGraph.refetch();
     },
     [mergedParams, queryAllJobs, queryGraph]
@@ -219,7 +223,11 @@ const useJobsFunctionsLimit = () => {
 
   useEffect(() => {
     setLimitGetJobs(numberLimitJobs);
-    queryAllJobs.refetch();
+    queryAllJobs.refetch().then(() => {
+      setTimeout(() => {
+        setIsTableLoad(false);
+      }, 2000);
+    });
     queryGraph.refetch();
   }, [mergedParams]);
 
@@ -238,9 +246,9 @@ const useJobsFunctionsLimit = () => {
       setDataSource([]);
     }
 
-    setTimeout(() => {
-      setIsTableLoad(false);
-    }, 1000);
+    //  setTimeout(() => {
+    //    setIsTableLoad(false);
+    //  }, 3000);
   }, [queryAllJobs.data, changeDs]);
 
   const handleMaxScroll = useCallback(event => {

@@ -47,7 +47,7 @@ const ConfigProviderApp = () => {
     }
 
     if (keycloakEnable) {
-      tokenRefreshInterval = KeycloakServices.startTokenRefreshInterval();
+      tokenRefreshInterval = KeycloakServices.startPreciseTokenRefresh();
     }
 
     return () => {
