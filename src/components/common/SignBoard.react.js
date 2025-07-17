@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 const SignBoard = ({
   onChange,
-  type = 'text',
+  type = 'TextArea',
   form,
   name,
   fieldKey,
@@ -19,6 +19,7 @@ const SignBoard = ({
   ],
   indexKey,
   width = 300,
+  row,
   nameRef,
   restField,
 }) => {
@@ -31,14 +32,24 @@ const SignBoard = ({
   };
 
   const setPosition = () => {
-    setCursorPosition(inputRef.current.input.selectionStart);
+    if (type !== 'text') {
+      const textarea = inputRef.current?.resizableTextArea?.textArea;
+      setCursorPosition(textarea.selectionStart);
+    } else {
+      setCursorPosition(inputRef.current.input.selectionStart);
+    }
   };
 
   const getValuesInput = nameKey => {
     const fields = form.getFieldsValue();
     const currentNameField = ['listKeyValue', ...nameRef, ...nameKey];
     const field = form.getFieldInstance(currentNameField);
-    const lastValue = field?.input?.value || '';
+
+    const lastValue =
+      field?.input?.value || // for Input
+      field?.resizableTextArea?.textArea?.value || // for TextArea
+      '';
+
     return { fields, currentNameField, lastValue };
   };
 
@@ -57,7 +68,15 @@ const SignBoard = ({
 
     inputRef.current.focus();
     setTimeout(() => {
-      inputRef.current.setSelectionRange(newProstionCursor, newProstionCursor);
+      if (type !== 'text') {
+        const textarea = inputRef.current?.resizableTextArea?.textArea;
+        textarea.setSelectionRange(newProstionCursor, newProstionCursor);
+      } else {
+        inputRef.current.setSelectionRange(
+          newProstionCursor,
+          newProstionCursor
+        );
+      }
     }, 2);
 
     form.setFieldsValue(fields);
@@ -76,10 +95,16 @@ const SignBoard = ({
 
       inputRef.current.focus();
       setTimeout(() => {
-        inputRef.current.setSelectionRange(
-          newProstionCursor,
-          newProstionCursor
-        );
+        if (type !== 'text') {
+          const textarea = inputRef.current?.resizableTextArea?.textArea;
+          textarea.focus();
+          textarea.setSelectionRange(newProstionCursor, newProstionCursor);
+        } else {
+          inputRef.current.setSelectionRange(
+            newProstionCursor,
+            newProstionCursor
+          );
+        }
       }, 2);
 
       _.set(fields, currentNameField, updatedValue);
@@ -89,6 +114,7 @@ const SignBoard = ({
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const title = nameKey => {
     const { lastValue } = getValuesInput(nameKey);
     return (
@@ -135,7 +161,7 @@ const SignBoard = ({
     <Popover
       key={`popoverVKey${indexKey}`}
       content={content(fieldKey, name)}
-      title={title(name)}
+      //  title={title(name)}
       trigger="click"
       overlayStyle={{ width: '400px' }}>
       <Form.Item
@@ -158,10 +184,13 @@ const SignBoard = ({
           />
         ) : (
           <TextArea
-            key={`TextArea${indexKey}`}
+            ref={inputRef}
+            key={`inputText${indexKey}`}
             style={{ width }}
             placeholder={placeholder}
             onKeyUp={setPosition}
+            rows={row}
+            autoComplete="off"
           />
         )}
       </Form.Item>
@@ -171,6 +200,7 @@ const SignBoard = ({
 
 SignBoard.propTypes = {
   width: PropTypes.number,
+  row: PropTypes.number,
   indexKey: PropTypes.number.isRequired,
   // eslint-disable-next-line
   keyboardView: PropTypes.array,
