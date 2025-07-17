@@ -86,16 +86,15 @@ const Editor = ({
 
   const onDefault = () => setInnerState(intervalEditorValue);
 
-  useEffect(() => setValuesItemsState(false), [
-    innerState,
-    setEditorState,
-    setValuesItemsState,
-  ]);
+  useEffect(
+    () => setValuesItemsState(false),
+    [innerState, setEditorState, setValuesItemsState]
+  );
 
   return (
     <>
       <Row justify="center" align="top">
-        <Col span={21}>
+        <Col span={22}>
           <JsonViewWrapper>
             <JsonEditor
               value={innerState}
@@ -105,7 +104,7 @@ const Editor = ({
             />
           </JsonViewWrapper>
         </Col>
-        <Col span={3}>
+        <Col span={2}>
           <PanelButtonWizard
             key="Editor"
             onClick={() => setValuesItemsState(true)}>

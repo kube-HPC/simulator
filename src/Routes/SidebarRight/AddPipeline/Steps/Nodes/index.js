@@ -21,28 +21,29 @@ import { Field, FormItemLabelWrapper } from './../FormUtils';
 
 const TitleNode = styled.h1`
   font-size: 28px;
+  margin: 0px;
+  line-height: 1;
 `;
 
 const NodeBrowserContainer = styled.section`
   display: flex;
-  flex-wrap: wrap;
-  border-bottom: 1px dashed #ccc;
-  margin-bottom: 1em;
-  padding-bottom: 1em;
+  flex-wrap: nowrap;
+  margin-right: 15px;
+  padding-right: 10px;
+  // border-right: 1px solid rgba(223, 223, 223, 0.91);
 `;
 
 const NodeSelectRadioButton = styled(Radio.Button)`
   &:nth-child(1) {
     border-radius: 0.5em;
   }
-  width: calc(33% - 1ch);
+
   border-width: 1px;
   border-radius: 0.5em;
-  margin: 0.5em 0.5ch;
-  overflow: hidden;
+  margin: 0.4em 0.4ch;
+  overflow: clip;
   text-overflow: ellipsis;
   white-space: nowrap;
-  text-transform: none;
 
   &.ant-radio-button-wrapper-checked {
     background-color: ${props =>
@@ -50,10 +51,9 @@ const NodeSelectRadioButton = styled(Radio.Button)`
   }
 `;
 const AddNodeButton = styled(Button)`
-  width: calc(33% - 1ch);
   border-radius: 0.5em;
   margin: 0.5em 0.5ch;
-
+  width: 181px;
   background: #1890ff;
   color: #ffffff;
 
@@ -66,18 +66,20 @@ const AddNodeButton = styled(Button)`
 
 const NodeSelectRadioGroup = styled(Radio.Group)`
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   margin: 0;
   margin-bottom: auto;
-  width: 100%;
+  width: 23vh;
+  flex-direction: column;
+  align-items: stretch;
 `;
 
 const DataNode = styled.div`
+  width: 475px;
+
   ${props =>
     props.$isDisabled &&
     `
-
         pointer-events:none;
 
         .ant-divider{
@@ -106,6 +108,15 @@ const TagByName = styled(Tag)`
   font-weight: 500;
   background-color: ${props => props.$tagColor};
   border-radius: 50px;
+`;
+
+const PanelNodesList = styled.div`
+  display: flex;
+  height: 65vh;
+  flex-direction: column;
+  overflow-y: auto;
+  margin-top: 10px;
+  padding-right: 10px;
 `;
 
 const nodesMap = {
@@ -138,6 +149,8 @@ Node.propTypes = {
  * }} props
  */
 const Nodes = ({ style }) => {
+  const scrollRef = useRef(null);
+  const [wordSearch, setWordSearch] = useState('');
   const {
     form: { getFieldValue, getFieldsValue, setFieldsValue },
     initialState,
@@ -146,6 +159,17 @@ const Nodes = ({ style }) => {
     graphNodeSelected,
     setForm,
   } = useWizardContext();
+
+  const scrollNodesListToBottom = () => {
+    const div = scrollRef.current;
+    if (div) {
+      div.scrollTo({ top: div.scrollHeight });
+    }
+  };
+
+  const SearchNode = e => {
+    setWordSearch(e.target.value);
+  };
 
   const { dataSourceIsEnable } = useSelector(selectors.connection);
   const nodeSelectRadio = useRef();
@@ -208,6 +232,9 @@ const Nodes = ({ style }) => {
   const handleAddNode = useCallback(() => {
     appendKey();
     setActiveNodeId(ids.length);
+    setTimeout(() => {
+      scrollNodesListToBottom();
+    }, 1000);
   }, [appendKey, ids]);
 
   useEffect(() => {
@@ -236,138 +263,162 @@ const Nodes = ({ style }) => {
 
   return (
     reloadNodes && (
-      <div style={style}>
-        <NodeBrowserContainer>
-          <NodeSelectRadioGroup
-            ref={nodeSelectRadio}
-            value={activeNodeId}
-            buttonStyle="outline"
-            onChange={selectActiveNode}>
-            {ids.map(id => {
-              const kindName = getFieldValue(['nodes', id, 'kind']);
+      <div style={{ style }}>
+        <div
+          style={{
+            display: style.display === 'none' ? 'none' : 'flex',
+            height: '75hv',
+          }}>
+          <NodeBrowserContainer>
+            <NodeSelectRadioGroup
+              ref={nodeSelectRadio}
+              value={activeNodeId}
+              buttonStyle="outline"
+              onChange={selectActiveNode}>
+              <Input placeholder="Search Node" onKeyUp={SearchNode} />
+              <PanelNodesList ref={scrollRef}>
+                {ids.map(id => {
+                  const kindName = getFieldValue(['nodes', id, 'kind']);
+                  const nodeName = getFieldValue(['nodes', id, 'nodeName']);
+                  if (
+                    nodeName
+                      ?.toLowerCase()
+                      .includes(wordSearch.toLowerCase()) ||
+                    wordSearch === ''
+                  ) {
+                    return (
+                      <NodeSelectRadioButton
+                        key={`node-radio-${id}`}
+                        value={id}
+                        data-ara="zzzz">
+                        <TagByName
+                          $tagColor={NODE_KINDS_COLOR[kindName]}
+                          colors={Theme.COLOR}>
+                          {KIND_NODE_SHORT_NAME[kindName]}
+                        </TagByName>{' '}
+                        {nodeName || `node-${id}`}
+                      </NodeSelectRadioButton>
+                    );
+                  }
+                  return null;
+                })}
+              </PanelNodesList>
+              {!isRunPipeline && (
+                <AddNodeButton
+                  icon={<PlusOutlined />}
+                  type="dashed"
+                  onClick={handleAddNode}>
+                  Add Node
+                </AddNodeButton>
+              )}
+            </NodeSelectRadioGroup>
+          </NodeBrowserContainer>
+          <div>
+            {ids.map(id => (
+              <DataNode key={`dataNode::id-${id}`} $isDisabled={isRunPipeline}>
+                <BoldedFormField
+                  key={`node::id-${id}`}
+                  style={{
+                    display: activeNodeId === id ? '' : 'none',
+                    margin: 0,
+                  }}
+                  required={false}>
+                  <FlexBox align="normal">
+                    <TitleNode>
+                      {getFieldValue(['nodes', id, 'nodeName']) || `node-${id}`}
+                    </TitleNode>
+                    {!isRunPipeline && ids.length > 1 ? (
+                      <Button
+                        icon={<CloseCircleOutlined />}
+                        ghost
+                        onClick={() => handleDelete(id)}
+                        type="danger"
+                        style={{ height: 'auto' }}>
+                        Delete Node
+                      </Button>
+                    ) : null}
+                  </FlexBox>
+                  <FormItemLabelWrapper
+                    style={isStreamingPipeline ? { display: 'none' } : {}}
+                    label="Kind"
+                    name={['nodes', id, 'kind']}
+                    initialValue={
+                      initialState?.nodes[id]?.kind
+                        ? initialState.nodes[id].kind
+                        : 'algorithm'
+                    }>
+                    <Radio.Group
+                      buttonStyle="solid"
+                      style={{ display: 'flex', alignItems: 'center' }}>
+                      <Radio.Button value="algorithm">Algorithm</Radio.Button>
 
-              return (
-                <NodeSelectRadioButton key={`node-radio-${id}`} value={id}>
-                  <TagByName
-                    $tagColor={NODE_KINDS_COLOR[kindName]}
-                    colors={Theme.COLOR}>
-                    {KIND_NODE_SHORT_NAME[kindName]}
-                  </TagByName>{' '}
-                  {getFieldValue(['nodes', id, 'nodeName']) || `node-${id}`}
-                </NodeSelectRadioButton>
-              );
-            })}
+                      {dataSourceIsEnable && (
+                        <Radio.Button value="dataSource">
+                          DataSource
+                        </Radio.Button>
+                      )}
 
-            {!isRunPipeline && (
-              <AddNodeButton
-                icon={<PlusOutlined />}
-                type="dashed"
-                onClick={handleAddNode}
-              />
-            )}
-          </NodeSelectRadioGroup>
-        </NodeBrowserContainer>
+                      {isStreamingPipeline && (
+                        <Radio.Button value="gateway">Gateway</Radio.Button>
+                      )}
 
-        {ids.map(id => (
-          <DataNode key={`dataNode::id-${id}`} $isDisabled={isRunPipeline}>
-            <BoldedFormField
-              key={`node::id-${id}`}
-              style={{
-                display: activeNodeId === id ? '' : 'none',
-                margin: 0,
-              }}
-              required={false}>
-              <FlexBox align="normal">
-                <TitleNode>
-                  {getFieldValue(['nodes', id, 'nodeName']) || `node-${id}`}
-                </TitleNode>
-                {!isRunPipeline && ids.length > 1 ? (
-                  <Button
-                    icon={<CloseCircleOutlined />}
-                    ghost
-                    onClick={() => handleDelete(id)}
-                    type="danger"
-                    style={{ marginLeft: 'auto' }}>
-                    Delete Node
-                  </Button>
-                ) : null}
-              </FlexBox>
-              <FormItemLabelWrapper
-                style={isStreamingPipeline ? { display: 'none' } : {}}
-                label="Kind"
-                name={['nodes', id, 'kind']}
-                initialValue={
-                  initialState?.nodes[id]?.kind
-                    ? initialState.nodes[id].kind
-                    : 'algorithm'
-                }>
-                <Radio.Group
-                  buttonStyle="solid"
-                  style={{ display: 'flex', alignItems: 'center' }}>
-                  <Radio.Button value="algorithm">Algorithm</Radio.Button>
-
-                  {dataSourceIsEnable && (
-                    <Radio.Button value="dataSource">DataSource</Radio.Button>
+                      {!isStreamingPipeline && (
+                        <>
+                          <Radio.Button value="output">Output</Radio.Button>
+                          <Radio.Button value="hyperparamsTuner">
+                            Hyper Params
+                          </Radio.Button>
+                        </>
+                      )}
+                    </Radio.Group>
+                  </FormItemLabelWrapper>
+                  {isStreamingPipeline && (
+                    <Field title="Kind">
+                      <Radio.Group
+                        defaultValue={() => getDefaultValueStateType(id)}
+                        buttonStyle="solid"
+                        onChange={e => handleKindChange(e, id)}>
+                        <Radio.Button value="stateless">stateless</Radio.Button>
+                        <Radio.Button value="stateful">stateful</Radio.Button>
+                        <Radio.Button value="gateway">gateway</Radio.Button>
+                      </Radio.Group>
+                    </Field>
                   )}
 
                   {isStreamingPipeline && (
-                    <Radio.Button value="gateway">Gateway</Radio.Button>
+                    <Field
+                      overrides={{ style: { display: 'none' } }}
+                      name={['nodes', id, 'stateType']}
+                      title="state Type"
+                      required>
+                      <Radio.Group buttonStyle="solid">
+                        <Radio.Button value="stateless">stateless</Radio.Button>
+                        <Radio.Button value="stateful">stateful</Radio.Button>
+                      </Radio.Group>
+                    </Field>
                   )}
-
-                  {!isStreamingPipeline && (
-                    <>
-                      <Radio.Button value="output">Output</Radio.Button>
-                      <Radio.Button value="hyperparamsTuner">
-                        Hyper Params
-                      </Radio.Button>
-                    </>
-                  )}
-                </Radio.Group>
-              </FormItemLabelWrapper>
-              {isStreamingPipeline && (
-                <Field title="Kind">
-                  <Radio.Group
-                    defaultValue={() => getDefaultValueStateType(id)}
-                    buttonStyle="solid"
-                    onChange={e => handleKindChange(e, id)}>
-                    <Radio.Button value="stateless">stateless</Radio.Button>
-                    <Radio.Button value="stateful">stateful</Radio.Button>
-                    <Radio.Button value="gateway">gateway</Radio.Button>
-                  </Radio.Group>
-                </Field>
-              )}
-
-              {isStreamingPipeline && (
-                <Field
-                  overrides={{ style: { display: 'none' } }}
-                  name={['nodes', id, 'stateType']}
-                  title="state Type"
-                  required>
-                  <Radio.Group buttonStyle="solid">
-                    <Radio.Button value="stateless">stateless</Radio.Button>
-                    <Radio.Button value="stateful">stateful</Radio.Button>
-                  </Radio.Group>
-                </Field>
-              )}
-              <Field
-                title="Node name"
-                name={['nodeName']}
-                rootId={['nodes', id]}
-                extraRules={[
-                  {
-                    max: 32,
-                    message: 'Node name has to be shorter than 32 characters',
-                  },
-                ]}>
-                <Input placeholder="Node name" />
-              </Field>
-              <Node
-                id={id}
-                kind={getFieldValue(['nodes', id, 'kind']) || 'algorithm'}
-              />
-            </BoldedFormField>
-          </DataNode>
-        ))}
+                  <Field
+                    title="Node name"
+                    name={['nodeName']}
+                    rootId={['nodes', id]}
+                    extraRules={[
+                      {
+                        max: 32,
+                        message:
+                          'Node name has to be shorter than 32 characters',
+                      },
+                    ]}>
+                    <Input placeholder="Node name" />
+                  </Field>
+                  <Node
+                    id={id}
+                    kind={getFieldValue(['nodes', id, 'kind']) || 'algorithm'}
+                  />
+                </BoldedFormField>
+              </DataNode>
+            ))}
+          </div>
+        </div>
       </div>
     )
   );

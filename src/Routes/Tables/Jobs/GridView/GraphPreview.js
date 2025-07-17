@@ -24,7 +24,7 @@ import { generateStyles, formatEdge, formatNode } from '../graphUtils';
 
 const GraphContainer = styled.div`
   //  max-width: 40vw;
-  height: 85%;
+  height: 90%;
   border: 1px solid #d9d9d9;
   border-radius: 6px;
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
