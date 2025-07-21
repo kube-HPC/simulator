@@ -105,7 +105,8 @@ const Wizard = ({
     isRunPipeline ? RunPipelineStepComponents : stepComponents
   );
 
-  const [graphNodeSelected, SetGraphnodeSelected] = useState(null);
+  const [graphNodeSelected, setGraphNodeSelected] = useState(null);
+  const [reloadGraphPreview, setReloadGraphPreview] = useState(null);
 
   const steps = useMemo(
     () =>
@@ -182,7 +183,7 @@ const Wizard = ({
 
   const selectNodeFromGraph = nodeName => {
     setStepIdx(1);
-    SetGraphnodeSelected(nodeName);
+    setGraphNodeSelected(nodeName);
   };
 
   return (
@@ -237,6 +238,7 @@ const Wizard = ({
           <ContenerJsonGraph>
             <Splitter
               lazy
+              onResizeEnd={() => setReloadGraphPreview(!reloadGraphPreview)}
               layout="vertical"
               style={{ boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
               <Splitter.Panel>
@@ -247,6 +249,7 @@ const Wizard = ({
                       isBuildAllFlows={isStreamingPipeline}
                       isMinified
                       clickNode={selectNodeFromGraph}
+                      reload={reloadGraphPreview}
                     />
                   )}
                 </ContenerGraph>

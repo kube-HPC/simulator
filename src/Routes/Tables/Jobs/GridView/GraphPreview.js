@@ -83,6 +83,7 @@ const GraphPreview = ({
   isBuildAllFlows = false,
   isMinified = true,
   clickNode = () => {},
+  reload = false,
 }) => {
   const graphRef = useRef(null);
   const wizardContext = useWizardContext();
@@ -184,6 +185,13 @@ const GraphPreview = ({
     [hasRecordLocal, isMinified]
   );
 
+  const updateGraphPreview = () => {
+    toggleForceUpdate();
+    setTimeout(() => {
+      toggleForceUpdate();
+    }, 1);
+  };
+
   const joinFlowsToGraph = flowStrings => {
     const joinFlows = { nodes: [], edges: [] };
 
@@ -279,10 +287,7 @@ const GraphPreview = ({
               setErrorGraphs(errors);
               setGraphPreview(graphAllFlows);
 
-              toggleForceUpdate();
-              setTimeout(() => {
-                toggleForceUpdate();
-              }, 1);
+              updateGraphPreview();
             })
             .catch(error => {
               let msg = error.message || 'Unknown error';
@@ -317,10 +322,7 @@ const GraphPreview = ({
                 );
                 setGraphPreview(GraphData);
 
-                toggleForceUpdate();
-                setTimeout(() => {
-                  toggleForceUpdate();
-                }, 1);
+                updateGraphPreview();
               }
             })
             .catch(error => {
@@ -344,10 +346,7 @@ const GraphPreview = ({
             setErrorGraphs([]);
             setGraphPreview(data);
 
-            toggleForceUpdate();
-            setTimeout(() => {
-              toggleForceUpdate();
-            }, 1);
+            updateGraphPreview();
           }
         })
         .catch(error => {
@@ -376,6 +375,10 @@ const GraphPreview = ({
       network.setData(adaptedGraph);
     }
   }, [graphPreview]);
+
+  useEffect(() => {
+    updateGraphPreview();
+  }, [reload]);
 
   if (graphPreview === undefined) {
     return <>Still loading...</>;
@@ -444,6 +447,7 @@ GraphPreview.propTypes = {
   isBuildAllFlows: PropTypes.bool,
   isMinified: PropTypes.bool,
   clickNode: PropTypes.func,
+  reload: PropTypes.bool,
 };
 
 export default GraphPreview;
