@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { SignBoard } from 'components/common';
-import { Form, Button, Space, Input, Modal } from 'antd';
+import { Form, Button, Space, Input, Modal, Collapse, Tooltip } from 'antd';
 import {
   PlusOutlined,
   MinusCircleOutlined,
@@ -35,6 +35,16 @@ const SpaceStyle = styled(Space)`
 const StreamkeyValue = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const StyleCollapse = styled(Collapse)`
+  .ant-collapse-item {
+    border-bottom: 1px solid #eeeeee;
+  }
+
+  .ant-collapse-item-active {
+    background: rgb(236 244 255);
+  }
 `;
 
 const emptyEditorStatesKeyValue = ['""', null, 'null', ''];
@@ -117,7 +127,8 @@ const StreamingFlowKeyValue = ({
     { keyId: 2, title: 'Nodes', typeButton: 'primary', keys: nodeNames },
   ];
 
-  const openGraphModal = key => {
+  const openGraphModal = (e, key) => {
+    e.stopPropagation();
     modal.info({
       title: `Preview graph `,
       content: <GraphPreview pipeline={valuesState} keyIndex={key} />,
@@ -128,78 +139,105 @@ const StreamingFlowKeyValue = ({
     });
   };
 
+  const genExtraCollapse = (name, fieldKey, remove) => (
+    <>
+      <Tooltip title="Preview graph flow">
+        <IconNodeIndexOutlined onClick={e => openGraphModal(e, fieldKey)} />
+      </Tooltip>
+      <Tooltip title="Delete flow">
+        <IconDelete
+          onClick={e => {
+            e.stopPropagation();
+            remove(name);
+            handleChange();
+          }}
+        />
+      </Tooltip>
+    </>
+  );
+
   return (
     <Form.List name={['listKeyValue', ...nameRef]}>
-      {(fields, { add, remove }) => (
-        <>
-          {fields.map(({ key, name, fieldKey, index, ...restField }) => (
-            <SpaceStyle
-              style={{
-                display: 'flex',
-                marginBottom: 8,
-                alignItems: 'baseline',
-              }}
-              align="baseline"
-              key={`Space${key}`}>
-              <StreamkeyValue>
-                <Form.Item
-                  {...restField}
-                  name={[name, 'key']}
-                  fieldKey={[fieldKey, 'key']}
-                  rules={[
-                    { required: true, message: `Missing ${placeholderKey}` },
-                  ]}
-                  key={`inputName${key}`}
-                  onChange={() => handleChange()}>
-                  <Input key={`inputN${key}`} placeholder={placeholderKey} />
-                </Form.Item>
+      {(fields, { add, remove }) => {
+        const items = fields.map(
+          ({ key, name, fieldKey, index, ...restField }) => {
+            const currentKey =
+              form.getFieldValue(['listKeyValue', ...nameRef, name, 'key']) ||
+              `Item ${key}`;
 
-                <SignBoard
-                  restField={restField}
-                  nameRef={nameRef}
-                  onChange={() => handleChange()}
-                  type="textArea"
-                  form={form}
-                  name={[name, 'value']}
-                  fieldKey={[fieldKey, 'value']}
-                  placeholder={valuePlaceholder}
-                  msgRules={[{ required: true, message: 'Missing value' }]}
-                  titleKeyboard={titleKeyboard}
-                  keyboardView={keyboardView}
-                  indexKey={key}
-                  key={`SignBoard${key}`}
-                  width={450}
-                  row={4}
-                />
-              </StreamkeyValue>
-              <IconNodeIndexOutlined
-                key={`modelGraph${key}`}
-                onClick={() => {
-                  openGraphModal(fieldKey);
-                }}
-              />
+            return {
+              key: String(key),
+              label: currentKey,
+              extra: genExtraCollapse(name, fieldKey, remove),
+              children: (
+                <SpaceStyle
+                  style={{
+                    display: 'flex',
+                    marginBottom: 8,
+                    alignItems: 'baseline',
+                  }}
+                  align="baseline">
+                  <StreamkeyValue>
+                    <Form.Item
+                      {...restField}
+                      name={[name, 'key']}
+                      fieldKey={[fieldKey, 'key']}
+                      rules={[
+                        {
+                          required: true,
+                          message: `Missing ${placeholderKey}`,
+                        },
+                      ]}
+                      onChange={() => handleChange()}>
+                      <Input placeholder={placeholderKey} />
+                    </Form.Item>
 
-              <IconDelete
-                key={`remove${key}`}
-                onClick={() => {
-                  remove(name);
-                  handleChange();
-                }}
-              />
-            </SpaceStyle>
-          ))}
-          {contextHolder}
-          <Form.Item>
-            <Button
-              type="dashed"
-              onClick={() => add()}
-              block
-              icon={<PlusOutlined />}>
-              Add
-            </Button>
-          </Form.Item>
-        </>
-      )}
+                    <SignBoard
+                      restField={restField}
+                      nameRef={nameRef}
+                      onChange={() => handleChange()}
+                      type="textArea"
+                      form={form}
+                      name={[name, 'value']}
+                      fieldKey={[fieldKey, 'value']}
+                      placeholder={valuePlaceholder}
+                      msgRules={[{ required: true, message: 'Missing value' }]}
+                      titleKeyboard={titleKeyboard}
+                      keyboardView={keyboardView}
+                      indexKey={key}
+                      width="27vw"
+                      row={4}
+                    />
+                  </StreamkeyValue>
+                </SpaceStyle>
+              ),
+            };
+          }
+        );
+
+        return (
+          <>
+            <StyleCollapse
+              items={items}
+              defaultActiveKey={[items[0]?.key]}
+              accordion
+              ghost
+            />
+
+            {contextHolder}
+
+            <Form.Item>
+              <Button
+                type="dashed"
+                onClick={() => add()}
+                block
+                icon={<PlusOutlined />}>
+                Add
+              </Button>
+            </Form.Item>
+          </>
+        );
+      }}
     </Form.List>
   );
 };

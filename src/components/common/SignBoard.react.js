@@ -163,7 +163,7 @@ const SignBoard = ({
       content={content(fieldKey, name)}
       //  title={title(name)}
       trigger="click"
-      overlayStyle={{ width: '400px' }}>
+      styles={{ root: { width: '30vw' } }}>
       <Form.Item
         {...restField}
         name={name}
@@ -199,7 +199,7 @@ const SignBoard = ({
 };
 
 SignBoard.propTypes = {
-  width: PropTypes.number,
+  width: PropTypes.oneOfType(PropTypes.number, PropTypes.string),
   row: PropTypes.number,
   indexKey: PropTypes.number.isRequired,
   // eslint-disable-next-line
