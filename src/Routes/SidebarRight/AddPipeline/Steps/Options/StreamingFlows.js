@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Form, HelpSiteLink } from 'components/common';
 import { Select } from 'antd';
 import has from 'lodash/has';
-import ControllerKeyValue from '../Nodes/inputKeyValueJson';
+import StreamingFlowKeyValue from '../Nodes/StreamingFlowKeyValue';
 import useWizardContext from '../../useWizardContext';
 
 const smallSelectStyle = { width: '150px' };
@@ -66,7 +66,7 @@ const StreamingFlows = ({ form, initialState }) => {
       </Form.Divider>
 
       <Form.Item label="Flows" name={['streaming', 'flows']}>
-        <ControllerKeyValue
+        <StreamingFlowKeyValue
           onChange={setListFlow}
           ValuePlaceholder="ex : a >> b >> c"
           isValueSignBoard

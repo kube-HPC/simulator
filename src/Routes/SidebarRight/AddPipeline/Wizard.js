@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import { CheckOutlined, RightOutlined, LeftOutlined } from '@ant-design/icons';
-import { Button, Steps, Form as AntdForm } from 'antd';
+import { Button, Steps, Form as AntdForm, Splitter } from 'antd';
 import { JsonView } from 'components/common';
 import styled from 'styled-components';
 import { COLOR_LAYOUT } from 'styles';
@@ -19,7 +19,7 @@ import { Initial, Nodes, Options } from './Steps';
 import GraphPreview from './../../Tables/Jobs/GridView/GraphPreview';
 
 const Form = styled(AntdForm)`
-  width: 88ch;
+  width: 98ch;
   height: 100%;
   overflow-y: scroll;
 `;
@@ -55,6 +55,7 @@ export const ContenerJsonButton = styled.div`
 export const ContenerGraph = styled.div`
   position: relative;
   flex: 1;
+  height: -webkit-fill-available;
 
   // overflow-y: scroll;
   padding-left: 10px;
@@ -63,7 +64,8 @@ export const ContenerGraph = styled.div`
 export const ButtonSticky = styled(Button)`
 right: 0;
     position: absolute;
-    margin-right: 10px;
+    margin-right: 20px;
+       margin-top: 10px;
     z-index:999;
 }
 `;
@@ -103,7 +105,8 @@ const Wizard = ({
     isRunPipeline ? RunPipelineStepComponents : stepComponents
   );
 
-  const [graphNodeSelected, SetGraphnodeSelected] = useState(null);
+  const [graphNodeSelected, setGraphNodeSelected] = useState(null);
+  const [reloadGraphPreview, setReloadGraphPreview] = useState(null);
 
   const steps = useMemo(
     () =>
@@ -180,7 +183,7 @@ const Wizard = ({
 
   const selectNodeFromGraph = nodeName => {
     setStepIdx(1);
-    SetGraphnodeSelected(nodeName);
+    setGraphNodeSelected(nodeName);
   };
 
   return (
@@ -233,21 +236,36 @@ const Wizard = ({
 
         {pageLoaded && (
           <ContenerJsonGraph>
-            <ContenerGraph>
-              {valuesState && (
-                <GraphPreview
-                  pipeline={valuesState}
-                  isBuildAllFlows={isStreamingPipeline}
-                  isMinified
-                  clickNode={selectNodeFromGraph}
-                />
-              )}
-            </ContenerGraph>
-
-            <ContenerJsonButton>
-              <ButtonSticky onClick={handleToggle}>Text editor</ButtonSticky>
-              <JsonView src={getFormattedFormValues()} collapsed={undefined} />
-            </ContenerJsonButton>
+            <Splitter
+              lazy
+              onResizeEnd={() => setReloadGraphPreview(!reloadGraphPreview)}
+              layout="vertical"
+              style={{ boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
+              <Splitter.Panel>
+                <ContenerGraph>
+                  {valuesState && (
+                    <GraphPreview
+                      pipeline={valuesState}
+                      isBuildAllFlows={isStreamingPipeline}
+                      isMinified
+                      clickNode={selectNodeFromGraph}
+                      reload={reloadGraphPreview}
+                    />
+                  )}
+                </ContenerGraph>
+              </Splitter.Panel>
+              <Splitter.Panel>
+                <ContenerJsonButton>
+                  <ButtonSticky onClick={handleToggle}>
+                    Text editor
+                  </ButtonSticky>
+                  <JsonView
+                    src={getFormattedFormValues()}
+                    collapsed={undefined}
+                  />
+                </ContenerJsonButton>
+              </Splitter.Panel>
+            </Splitter>
           </ContenerJsonGraph>
         )}
       </Body>
