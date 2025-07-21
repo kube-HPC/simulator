@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useState, useMemo } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useMemo,
+  useRef,
+} from 'react';
 import { SignBoard } from 'components/common';
 import { Form, Button, Space, Input, Modal, Collapse, Tooltip } from 'antd';
 import {
@@ -60,6 +66,8 @@ const StreamingFlowKeyValue = ({
   const { initialState, form, valuesState } = useWizardContext();
   const [modal, contextHolder] = Modal.useModal();
   const [value, setValue] = useState(JSON.stringify(_value));
+  const [activeKey, setActiveKey] = useState();
+  const countNewItemFlow = useRef(1);
 
   const convertObjectToKeyListKeyValue = () => {
     const valueInitialState = _.get(initialState, [...nameRef]);
@@ -159,67 +167,65 @@ const StreamingFlowKeyValue = ({
   return (
     <Form.List name={['listKeyValue', ...nameRef]}>
       {(fields, { add, remove }) => {
-        const items = fields.map(
-          ({ key, name, fieldKey, index, ...restField }) => {
-            const currentKey =
-              form.getFieldValue(['listKeyValue', ...nameRef, name, 'key']) ||
-              `Item ${key}`;
+        const items = fields.map(({ key, name, index, ...restField }) => {
+          const currentKey =
+            form.getFieldValue(['listKeyValue', ...nameRef, name, 'key']) ||
+            `Item ${key}`;
 
-            return {
-              key: String(key),
-              label: currentKey,
-              extra: genExtraCollapse(name, fieldKey, remove),
-              children: (
-                <SpaceStyle
-                  style={{
-                    display: 'flex',
-                    marginBottom: 8,
-                    alignItems: 'baseline',
-                  }}
-                  align="baseline">
-                  <StreamkeyValue>
-                    <Form.Item
-                      {...restField}
-                      name={[name, 'key']}
-                      fieldKey={[fieldKey, 'key']}
-                      rules={[
-                        {
-                          required: true,
-                          message: `Missing ${placeholderKey}`,
-                        },
-                      ]}
-                      onChange={() => handleChange()}>
-                      <Input placeholder={placeholderKey} />
-                    </Form.Item>
+          return {
+            key: String(currentKey),
+            label: currentKey,
+            extra: genExtraCollapse(name, name, remove),
+            children: (
+              <SpaceStyle
+                style={{
+                  display: 'flex',
+                  marginBottom: 8,
+                  alignItems: 'baseline',
+                }}
+                align="baseline">
+                <StreamkeyValue>
+                  <Form.Item
+                    {...restField}
+                    name={[name, 'key']}
+                    rules={[
+                      {
+                        required: true,
+                        message: `Missing ${placeholderKey}`,
+                      },
+                    ]}
+                    onChange={() => handleChange()}>
+                    <Input placeholder={placeholderKey} />
+                  </Form.Item>
 
-                    <SignBoard
-                      restField={restField}
-                      nameRef={nameRef}
-                      onChange={() => handleChange()}
-                      type="textArea"
-                      form={form}
-                      name={[name, 'value']}
-                      fieldKey={[fieldKey, 'value']}
-                      placeholder={valuePlaceholder}
-                      msgRules={[{ required: true, message: 'Missing value' }]}
-                      titleKeyboard={titleKeyboard}
-                      keyboardView={keyboardView}
-                      indexKey={key}
-                      width="27vw"
-                      row={4}
-                    />
-                  </StreamkeyValue>
-                </SpaceStyle>
-              ),
-            };
-          }
-        );
+                  <SignBoard
+                    restField={restField}
+                    nameRef={nameRef}
+                    onChange={() => handleChange()}
+                    type="textArea"
+                    form={form}
+                    name={[name, 'value']}
+                    fieldKey={[name, 'value']}
+                    placeholder={valuePlaceholder}
+                    msgRules={[{ required: true, message: 'Missing value' }]}
+                    titleKeyboard={titleKeyboard}
+                    keyboardView={keyboardView}
+                    indexKey={key}
+                    width="27vw"
+                    row={4}
+                  />
+                </StreamkeyValue>
+              </SpaceStyle>
+            ),
+          };
+        });
 
         return (
           <>
             <StyleCollapse
               items={items}
-              defaultActiveKey={[items[0]?.key]}
+              activeKey={activeKey}
+              onChange={key => setActiveKey(key)}
               accordion
               ghost
             />
@@ -229,7 +235,13 @@ const StreamingFlowKeyValue = ({
             <Form.Item>
               <Button
                 type="dashed"
-                onClick={() => add()}
+                onClick={() => {
+                  const newKey = `new flow item ${countNewItemFlow.current++}`;
+                  add({ key: newKey, value: '' });
+                  setTimeout(() => {
+                    setActiveKey(newKey);
+                  }, 100);
+                }}
                 block
                 icon={<PlusOutlined />}>
                 Add
