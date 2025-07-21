@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Alert, Button } from 'antd';
+import { Alert, Button, Spin } from 'antd';
 
 import useWizardContext from 'Routes/SidebarRight/AddPipeline/useWizardContext';
 import Graph from 'react-graph-vis';
@@ -16,14 +16,13 @@ import {
   AimOutlined,
   ZoomInOutlined,
   ZoomOutOutlined,
+  LoadingOutlined,
 } from '@ant-design/icons';
-/* eslint-disable import/no-cycle */
 import { useLocalStorageGraphMode } from 'hooks';
 import client from 'client';
 import { generateStyles, formatEdge, formatNode } from '../graphUtils';
 
 const GraphContainer = styled.div`
-  //  max-width: 40vw;
   height: 90%;
   border: 1px solid #d9d9d9;
   border-radius: 6px;
@@ -39,8 +38,6 @@ const GraphContainer = styled.div`
     font-size: 16px;
     color: #000;
     background-color: #f5f4ed;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
     border-radius: 3px;
     border: 1px solid #808074;
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
@@ -77,6 +74,9 @@ const ensureAllNodesInEdges = data => {
   return data;
 };
 
+// eslint-disable-next-line no-promise-executor-return
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 const GraphPreview = ({
   pipeline,
   keyIndex = undefined,
@@ -87,11 +87,7 @@ const GraphPreview = ({
   const graphRef = useRef(null);
   const wizardContext = useWizardContext();
 
-  const {
-    //  saveLocationNodes,
-    exportLocationNodes,
-    hasRecord,
-  } = useLocalStorageGraphMode();
+  const { exportLocationNodes, hasRecord } = useLocalStorageGraphMode();
   const hasRecordLocal = !hasRecord(pipeline.name);
 
   let valuesState = pipeline;
@@ -112,13 +108,14 @@ const GraphPreview = ({
         : null;
 
   const [graphPreview, setGraphPreview] = useState({ nodes: [], edges: [] });
-  const [errorGraph, setErrorGraph] = useState('');
+
+  const [errorGraphs, setErrorGraphs] = useState([]);
+
+  const [isLoadGraphs, setIsLoadGraphs] = useState(false);
 
   const handleZoomIn = useCallback(() => {
     const network = graphRef?.current?.Network;
-    network?.moveTo({
-      scale: network.getScale() + 0.3,
-    });
+    network?.moveTo({ scale: network.getScale() + 0.3 });
   }, []);
   const handleZoomOut = useCallback(() => {
     const network = graphRef?.current?.Network;
@@ -148,14 +145,10 @@ const GraphPreview = ({
 
   const adaptedGraph = useMemo(() => {
     const graphStructure = {
-      nodes: []
-        .concat(graphPreview?.nodes)
-        .filter(item => item)
+      nodes: graphPreview?.nodes
+        .filter(Boolean)
         .map(formatNode(normalizedPipeline, pipeline?.kind)),
-      edges: []
-        .concat(graphPreview?.edges)
-        .filter(item => item)
-        .map(formatEdge),
+      edges: graphPreview?.edges.filter(Boolean).map(formatEdge),
     };
     const localPosNodesGraph = exportLocationNodes(
       pipeline.name,
@@ -175,10 +168,7 @@ const GraphPreview = ({
     pipeline.name,
   ]);
 
-  // const { events } = useNodeInfo({ graph, pipeline });
-  // const { graphDirection: direction } = useSettings();
-
-  const [showGraph, toggleForceUpdate] = useReducer(p => !p, true); // toggleForceUpdate
+  const [showGraph, toggleForceUpdate] = useReducer(p => !p, true);
 
   const graphOptions = useMemo(
     () => ({
@@ -195,22 +185,17 @@ const GraphPreview = ({
   );
 
   const joinFlowsToGraph = flowStrings => {
-    const joinFlows = {
-      nodes: [],
-      edges: [],
-    };
+    const joinFlows = { nodes: [], edges: [] };
 
-    flowStrings.forEach(flowString => {
-      const flow = { ...flowString };
+    flowStrings.forEach(flow => {
+      if (!flow) return;
 
-      // Add nodes
       flow.nodes.forEach(node => {
         if (!joinFlows.nodes.find(n => n.nodeName === node.nodeName)) {
           joinFlows.nodes.push(node);
         }
       });
 
-      // Add edges
       flow.edges.forEach(edge => {
         if (
           !joinFlows.edges.find(e => e.from === edge.from && e.to === edge.to)
@@ -220,7 +205,6 @@ const GraphPreview = ({
       });
     });
 
-    // Filter out nodes not used in edges
     joinFlows.nodes = joinFlows.nodes.filter(node =>
       joinFlows.edges.some(
         edge => edge.from === node.nodeName || edge.to === node.nodeName
@@ -232,63 +216,80 @@ const GraphPreview = ({
 
   const initPreviewGetData = useCallback(() => {
     if (isStreamingPipeline) {
-      // streaming
-
       if (pipeline.streaming?.flows) {
         if (isBuildAllFlows) {
           const flows = pipeline.streaming?.flows;
 
-          const requestsArrayFlows = Object.entries(flows).map(flow =>
-            client
-              .post(`/store/pipelines/graph`, {
-                pipeline,
-                keyFlow: flow[0],
-                isBuildAllFlows: false,
-              })
-              .then(response => {
-                if (response?.data?.error && response?.data?.error?.message) {
-                  setErrorGraph(response.data.error.message);
-                }
+          const requestsArrayFlows = Object.entries(flows);
 
-                const dataAllNode = ensureAllNodesInEdges(response.data);
+          const fetchWithDelay = () => {
+            const results = [];
+            const errors = [];
+            setIsLoadGraphs(true);
+            return requestsArrayFlows
+              .reduce(
+                (promise, [key, flow]) =>
+                  promise.then(() =>
+                    client
+                      .post(`/store/pipelines/graph`, {
+                        pipeline,
+                        keyFlow: key,
+                        isBuildAllFlows: false,
+                      })
+                      .then(response => {
+                        if (response?.data?.error?.message) {
+                          errors.push({
+                            key,
+                            message: response.data.error.message,
+                          });
+                          setErrorGraphs(errors);
+                        }
+                        const res = ensureAllNodesInEdges(response.data);
+                        results.push({ key, flow, res });
+                        return sleep(300);
+                      })
+                      .catch(error => {
+                        let msg = error.message || 'Unknown error';
+                        if (error.response?.data?.error?.message) {
+                          msg = error.response.data.error.message;
+                        }
+                        errors.push({ key, message: msg });
+                        setErrorGraphs(errors);
+                        console.error(error);
+                        results.push({ key, flow, res: null });
+                        return sleep(300);
+                      })
+                  ),
+                Promise.resolve()
+              )
+              .then(() => ({ results, errors }));
+          };
 
-                return dataAllNode;
-              })
-              .catch(error => {
-                if (error.response?.data?.error?.message) {
-                  setErrorGraph(error.response.data.error.message);
-                }
-
-                console.error(error);
-                return null;
-              })
-          );
-
-          Promise.all(requestsArrayFlows)
-            .then(res => {
-              const data = res[0];
-
-              if (data?.error && data?.error?.message) {
-                setErrorGraph(data.error.message);
-              } else {
-                const graphAllFlows = joinFlowsToGraph(res);
-
-                setErrorGraph('');
-                setGraphPreview(graphAllFlows);
-
-                toggleForceUpdate();
-                setTimeout(() => {
-                  toggleForceUpdate();
-                }, 1);
+          fetchWithDelay()
+            .then(({ results, errors }) => {
+              setIsLoadGraphs(false);
+              if (results.length === 0) {
+                setErrorGraphs(errors);
+                setGraphPreview({ nodes: [], edges: [] });
+                return;
               }
+
+              const graphAllFlows = joinFlowsToGraph(results.map(r => r.res));
+
+              setErrorGraphs(errors);
+              setGraphPreview(graphAllFlows);
+
+              toggleForceUpdate();
+              setTimeout(() => {
+                toggleForceUpdate();
+              }, 1);
             })
             .catch(error => {
-              if (error?.response?.data?.error?.message) {
-                setErrorGraph(error?.response.data.error.message);
-              } else {
-                //  setErrorGraph(error.message);
+              let msg = error.message || 'Unknown error';
+              if (error.response?.data?.error?.message) {
+                msg = error.response.data.error.message;
               }
-
+              setErrorGraphs([{ key: 'general', message: msg }]);
               console.error('Error while sending requests:', error);
             });
         } else {
@@ -302,11 +303,10 @@ const GraphPreview = ({
               const { data } = response;
 
               if (data.error && data.error.message) {
-                setErrorGraph(data.error.message);
+                setErrorGraphs([{ key: keyFlow, message: data.error.message }]);
               } else {
-                setErrorGraph('');
+                setErrorGraphs([]);
 
-                // Filter out nodes not used in edges
                 const GraphData = data;
 
                 GraphData.nodes = GraphData.nodes.filter(node =>
@@ -324,6 +324,11 @@ const GraphPreview = ({
               }
             })
             .catch(error => {
+              let msg = error.message || 'Unknown error';
+              if (error.response?.data?.error?.message) {
+                msg = error.response.data.error.message;
+              }
+              setErrorGraphs([{ key: keyFlow || 'unknown', message: msg }]);
               console.error('Error during axios operation:', error);
             });
         }
@@ -334,9 +339,9 @@ const GraphPreview = ({
         .then(response => {
           const { data } = response;
           if (data.error && data.error.message) {
-            setErrorGraph(data.error.message);
+            setErrorGraphs([{ key: 'general', message: data.error.message }]);
           } else {
-            setErrorGraph('');
+            setErrorGraphs([]);
             setGraphPreview(data);
 
             toggleForceUpdate();
@@ -346,6 +351,11 @@ const GraphPreview = ({
           }
         })
         .catch(error => {
+          let msg = error.message || 'Unknown error';
+          if (error.response?.data?.error?.message) {
+            msg = error.response.data.error.message;
+          }
+          setErrorGraphs([{ key: 'general', message: msg }]);
           console.error('Error during axios operation:', error);
         });
     }
@@ -372,36 +382,54 @@ const GraphPreview = ({
   }
 
   return (
-    <GraphContainer>
-      <ButtonsPanel>
-        <Button onClick={handleZoomNodeSelected} icon={<AimOutlined />} />
-        <Button onClick={handleZoomIn} icon={<ZoomInOutlined />} />
-        <Button onClick={handleZoomOut} icon={<ZoomOutOutlined />} />
-      </ButtonsPanel>
-
-      {showGraph && (
-        <Graph
-          graph={adaptedGraph}
-          options={graphOptions}
-          //   events={events}
-          ref={graphRef}
-          getNetwork={network => {
-            network.on('click', () => {
-              clickNode(network.getSelectedNodes());
-            });
-          }}
+    <>
+      {isLoadGraphs && (
+        <Spin
+          indicator={<LoadingOutlined spin />}
+          size="large"
+          style={{ position: 'absolute', top: '25px', left: '40px' }}
         />
       )}
+      <GraphContainer>
+        <ButtonsPanel>
+          <Button onClick={handleZoomNodeSelected} icon={<AimOutlined />} />
+          <Button onClick={handleZoomIn} icon={<ZoomInOutlined />} />
+          <Button onClick={handleZoomOut} icon={<ZoomOutOutlined />} />
+        </ButtonsPanel>
 
-      {isDataNode && errorGraph && (
-        <Alert
-          style={{ position: 'absolute', top: '10px' }}
-          message={errorGraph}
-          type="error"
-          showIcon
-        />
-      )}
-    </GraphContainer>
+        {showGraph && (
+          <Graph
+            graph={adaptedGraph}
+            options={graphOptions}
+            ref={graphRef}
+            getNetwork={network => {
+              network.on('click', () => {
+                clickNode(network.getSelectedNodes());
+              });
+            }}
+          />
+        )}
+
+        {isDataNode &&
+          errorGraphs.map(({ key, message }, idx) => (
+            <Alert
+              // eslint-disable-next-line react/no-array-index-key
+              key={`${key}-${idx}`}
+              message={`error in flow : "${key}": ${message}`}
+              type="error"
+              showIcon
+              style={{
+                marginBottom: '4px',
+                position: 'absolute',
+                top: 10 + idx * 50,
+                // right: 10,
+                // width: '300px',
+                zIndex: 10000,
+              }}
+            />
+          ))}
+      </GraphContainer>
+    </>
   );
 };
 
@@ -410,20 +438,12 @@ GraphPreview.propTypes = {
     name: PropTypes.string.isRequired,
     kind: PropTypes.string.isRequired,
     nodes: PropTypes.arrayOf(PropTypes.object),
-    streaming: PropTypes.arrayOf(PropTypes.object),
+    streaming: PropTypes.object,
   }).isRequired,
   keyIndex: PropTypes.number,
   isBuildAllFlows: PropTypes.bool,
   isMinified: PropTypes.bool,
   clickNode: PropTypes.func,
-  /* graph: PropTypes.shape({
-    nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
-    edges: PropTypes.arrayOf(PropTypes.object).isRequired,*
- //   jobId: PropTypes.string.isRequired,
-  }).isRequired, */
 };
-
-/* const isSameGraph = (a, b) =>
-  a.graph && b.graph ? a.graph.timestamp === b.graph.timestamp : true; */
 
 export default GraphPreview;
