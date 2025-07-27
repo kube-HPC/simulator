@@ -22,7 +22,9 @@ input:-internal-autofill-selected {
 
 .ant-table-thead
   > tr
-  > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+  > th:not(:last-child):not(.ant-table-selection-column):not(
+    .ant-table-row-expand-icon-cell
+  ):not([colspan])::before {
   background-color: #1e4976 !important;
 }
 
@@ -93,8 +95,12 @@ input:-internal-autofill-selected {
 }
 
 .ant-card-grid {
-  box-shadow: 1px 0 0 0 #586a93, 0 1px 0 0 #586a93, 1px 1px 0 0 #586a93,
-    1px 0 0 0 #586a93 inset, 0 1px 0 0 #586a93 inset;
+  box-shadow:
+    1px 0 0 0 #586a93,
+    0 1px 0 0 #586a93,
+    1px 1px 0 0 #586a93,
+    1px 0 0 0 #586a93 inset,
+    0 1px 0 0 #586a93 inset;
 }
 
 .ant-drawer .ant-card {
@@ -146,12 +152,12 @@ input:-internal-autofill-selected {
   background-color: #202f5e;
 }
 
-/*
+/* 
 .ant-btn.css-dev-only-do-not-override-1c5r9gg.ant-btn-default.ant-btn-icon-only,
 .ant-select-selector {
-  background: transparent !important;
+  background: #eb0c78 !important;
   background-color: transparent !important;
-}*/
+} */
 
 .rc-md-editor h1,
 .rc-md-editor h2,
@@ -306,3 +312,22 @@ input:-internal-autofill-selected {
 /*--------------------------------------------------------- */
 /* end trace Dark */
 /*--------------------------------------------------------- */
+
+/*--------------------------------------------------------- */
+/* adiitional style to fix the dark mode  */
+/*--------------------------------------------------------- */
+.ant-input,
+.ant-input-affix-wrapper {
+  background-color: #2c3c60 !important;
+  color: #ffffff !important;
+  border-color: #385e8d !important;
+}
+label[class*='sc-'] {
+  color: #d7d7d7 !important;
+  background-color: transparent !important;
+}
+/* Target the dashed button text */
+.ant-btn-dashed span,
+.ant-btn-dashed {
+  color: #d7d7d7 !important;
+}

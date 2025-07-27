@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { StopOutlined } from '@ant-design/icons';
-import { message, Button, Tooltip, Popconfirm } from 'antd';
+import { message, Button, Tooltip, Popconfirm, Space } from 'antd';
 
 import { useActions } from 'hooks';
 import isEqual from 'lodash/isEqual';
@@ -61,7 +61,7 @@ const WorkersActions = ({ algorithm, stopAllWorkers = [] }) => {
       ref={container}
       onClick={stopPropagation}
       onDoubleClick={stopPropagation}>
-      <Button.Group>
+      <Space.Compact>
         <Tooltip
           title={
             stopAllWorkers?.length > 0 ? 'stop all workers' : 'stop worker'
@@ -91,7 +91,7 @@ const WorkersActions = ({ algorithm, stopAllWorkers = [] }) => {
             </Button>
           </Popconfirm>
         </Tooltip>
-      </Button.Group>
+      </Space.Compact>
     </div>
   );
 };
