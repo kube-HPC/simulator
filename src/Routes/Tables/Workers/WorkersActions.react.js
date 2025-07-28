@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { StopOutlined } from '@ant-design/icons';
-import { message, Button, Tooltip } from 'antd';
+import { message, Button, Tooltip, Popconfirm } from 'antd';
 
 import { useActions } from 'hooks';
 import isEqual from 'lodash/isEqual';
@@ -31,7 +31,7 @@ const WorkersActions = ({ algorithm, stopAllWorkers = [] }) => {
     );
   };
 
-  const onStop = useCallback(() => {
+  const handelStop = useCallback(() => {
     if (stopAllWorkers?.length > 0) {
       const stopPromises = stopAllWorkers.map(
         algorithmName =>
@@ -66,21 +66,30 @@ const WorkersActions = ({ algorithm, stopAllWorkers = [] }) => {
           title={
             stopAllWorkers?.length > 0 ? 'stop all workers' : 'stop worker'
           }>
-          <Button
-            icon={
-              stopAllWorkers?.length > 0 ? (
-                ''
-              ) : algorithm ? (
-                <StopOutlined />
-              ) : (
-                ''
-              )
+          <Popconfirm
+            title={
+              stopAllWorkers?.length > 0
+                ? 'Are you sure you want to stop all workers?'
+                : `Are you sure you want to stop "${algorithm?.algorithmName}" worker ?`
             }
-            onClick={onStop}
-            loading={stopWorkerIsRun}
-            styles={{ paddingLeft: '10' }}>
-            {stopAllWorkers?.length > 0 ? 'Stop all workers' : ''}
-          </Button>
+            onConfirm={handelStop}
+            okText="Yes"
+            cancelText="No">
+            <Button
+              icon={
+                stopAllWorkers?.length > 0 ? (
+                  ''
+                ) : algorithm ? (
+                  <StopOutlined />
+                ) : (
+                  ''
+                )
+              }
+              loading={stopWorkerIsRun}
+              styles={{ paddingLeft: '10' }}>
+              {stopAllWorkers?.length > 0 ? 'Stop all workers' : ''}
+            </Button>
+          </Popconfirm>
         </Tooltip>
       </Button.Group>
     </div>
