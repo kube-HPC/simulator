@@ -9,7 +9,7 @@ import NewButtonSelect from './NewButtonSelect';
 import HelpBar from './HelpBar.react';
 import TagsFiltersViews from './TagsFiltersViews';
 
-import ViewType from './ViewType.react';
+// import ViewType from './ViewType.react';
 
 // DO NOT REMOVE! This is important to preload the monaco instance into the global window!!!
 // eslint-disable-next-line
@@ -41,7 +41,7 @@ const Header = () => (
           path="/jobs"
           element={
             <FlexBox.Auto>
-              <ViewType />
+              {/* <ViewType /> */}
 
               <TagsFiltersViews sectionName="jobs" />
             </FlexBox.Auto>
