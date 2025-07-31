@@ -243,7 +243,7 @@ const useJobsFunctionsLimit = () => {
       const dsAllJobs = queryAllJobs.data.jobsAggregated.jobs;
       setDataSource(dsAllJobs);
     } else {
-      setDataSource([]);
+      //  setDataSource([]);
     }
 
     //  setTimeout(() => {
@@ -258,6 +258,9 @@ const useJobsFunctionsLimit = () => {
 
     if (isGetMore && currentScroll > maxScroll - 10) {
       setIsTableLoad(true);
+      setTimeout(() => {
+        setIsTableLoad(false);
+      }, 3000);
       setIsGetMore(false);
       onFetchMore();
     }
