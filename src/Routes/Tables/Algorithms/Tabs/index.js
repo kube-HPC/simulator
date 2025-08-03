@@ -19,7 +19,7 @@ import {
 import { useReadme, useVersions } from 'hooks';
 import PropTypes from 'prop-types';
 import { OVERVIEW_TABS as TABS } from 'const';
-import { VersionsTable } from 'components';
+import { VersionsTable, AuditTrailTable } from 'components';
 import AlgorithmBuildsTable from './Builds';
 import usePath from './../usePath';
 
@@ -177,11 +177,17 @@ const AlgorithmsTabs = ({ algorithm }) => {
           />
         ),
       },
+
       {
         label: TABS.INFO,
         key: TABS.INFO,
         forceRender: true,
         children: <JsonSwitch obj={algorithm} />,
+      },
+      {
+        label: TABS.VERSIONSTIMETABLE,
+        key: TABS.VERSIONSTIMETABLE,
+        children: <AuditTrailTable auditTrail={algorithm.auditTrail} />,
       },
       {
         label: TABS.DESCRIPTION,
@@ -241,6 +247,7 @@ AlgorithmsTabs.propTypes = {
     name: PropTypes.string.isRequired,
     builds: PropTypes.arrayOf(PropTypes.object),
     version: PropTypes.string.isRequired,
+    auditTrail: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
 };
 

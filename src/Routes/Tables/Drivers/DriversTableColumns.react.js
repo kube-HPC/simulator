@@ -11,7 +11,7 @@ Jobs.propTypes = {
 export default Jobs;
 
 const DriverId = driverId => <Ellipsis text={driverId} />;
-const PodName = podName => <Ellipsis copyable text={podName} />;
+const PodName = podName => <Ellipsis copyable text={podName} length={40} />;
 const Status = status => <Ellipsis text={status} />;
 const Max = count => <CountTag count={count} />;
 const Capacity = count => <CountTag count={count} />;

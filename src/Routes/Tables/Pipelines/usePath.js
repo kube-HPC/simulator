@@ -5,6 +5,7 @@ export const OVERVIEW_TABS = {
   INFO: 'Information',
   DESCRIPTION: 'Description',
   VERSIONS: 'Versions',
+  VERSIONSTIMETABLE: 'Audit Log',
 };
 
 export default () => {
