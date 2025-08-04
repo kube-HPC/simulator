@@ -21,7 +21,7 @@ const useVersions = ({
           setDataSource(data);
         })
         .catch(errorNotification),
-    [nameId]
+    [nameId, urlRestData]
   );
 
   const fetch = useCallback(() => fetchVersion(), [fetchVersion]);
