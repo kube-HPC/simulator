@@ -3,5 +3,5 @@ export const OVERVIEW_TABS = {
   BUILDS: 'Builds',
   INFO: 'Information',
   DESCRIPTION: 'Description',
-  VERSIONSTIMETABLE: 'Audit Log',
+  VERSIONSTIMETABLE: 'Version Time Table',
 };
