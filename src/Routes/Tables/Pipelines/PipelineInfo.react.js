@@ -21,6 +21,7 @@ const PipelineInfo = ({ pipeline }) => {
     dataSource,
     onApply: onApplyVersion,
     onDelete,
+    onAdd,
     fetch,
   } = useVersions({
     nameId: name,
@@ -129,6 +130,7 @@ const PipelineInfo = ({ pipeline }) => {
             dataSource={dataSource}
             onApply={onApplyVersion}
             onDelete={onDelete}
+            onAdd={onAdd}
             source="pipelines"
             setVersionsCompare={setVersionsCompare}
           />
@@ -140,7 +142,16 @@ const PipelineInfo = ({ pipeline }) => {
         children: <MdEditor value={readme} onChange={setReadme} viewReadOnly />,
       },
     ],
-    [pipeline, readme, version, tabKey, dataSource, onApplyVersion, onDelete]
+    [
+      pipeline,
+      readme,
+      version,
+      tabKey,
+      dataSource,
+      onApplyVersion,
+      onDelete,
+      onAdd,
+    ]
   );
 
   return (

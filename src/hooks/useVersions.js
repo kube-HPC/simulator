@@ -21,7 +21,7 @@ const useVersions = ({
           setDataSource(data);
         })
         .catch(errorNotification),
-    [nameId]
+    [nameId, urlRestData]
   );
 
   const fetch = useCallback(() => fetchVersion(), [fetchVersion]);
@@ -49,6 +49,48 @@ const useVersions = ({
       });
   };
 
+  const addVersion = useCallback(
+    ({ name, version, newPipelineName, newAlgorithmName }) => {
+      const selectedRecord = dataSource?.find(
+        record => record.name === name && record.version === version
+      );
+
+      if (!selectedRecord) {
+        errorNotification({
+          message: 'Selected version not found in dataSource.',
+        });
+        return;
+      }
+
+      const newName = newAlgorithmName || newPipelineName;
+
+      console.log('selectedRecord:', selectedRecord); /// ///tooo temove afterrrr
+      console.log('Available keys:', Object.keys(selectedRecord));
+
+      const dataKey = urlRestData.slice(0, -1); // Remove 's' from 'algorithms'/'pipelines' -> 'algorithm'/'pipeline'
+      const itemType = dataKey.charAt(0).toUpperCase() + dataKey.slice(1); // Capitalize first letter
+
+      const newData = {
+        ...selectedRecord[dataKey],
+        name: newName,
+        version: undefined,
+        created: undefined,
+        modified: undefined,
+      };
+
+      client
+        .post(`/store/${urlRestData}`, newData)
+        .then(() => {
+          notification({
+            message: `${itemType} "${newName}" created successfully!`,
+            type: 'success',
+          });
+        })
+        .catch(errorNotification);
+    },
+    [dataSource, urlRestData]
+  );
+
   useEffect(() => {
     if (isFetch) {
       fetch();
@@ -59,6 +101,7 @@ const useVersions = ({
     dataSource,
     onApply: applyVersion,
     onDelete: deleteVersion,
+    onAdd: addVersion,
     fetch,
   };
 };
