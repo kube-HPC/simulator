@@ -97,6 +97,22 @@ const AlgorithmJsonEditor = ({
     setIsCodeProp(isCodeInJson());
   }, [editorJsonValue]);
 
+  useEffect(() => {
+    const handleKeyDown = event => {
+      if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+        event.preventDefault();
+        event.stopPropagation();
+        onEditorSubmit();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onEditorSubmit]);
+
   return (
     <>
       <Card style={{ flex: 1 }} styles={{ body: { height: '100%' } }}>
