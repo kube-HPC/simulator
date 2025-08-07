@@ -337,33 +337,37 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
         .catch(error => {
           const { data } = error.response;
 
-          Modal.confirm({
-            title: 'WARNING : Version not upgrade',
-            content: (
-              <>
-                <div>
-                  <Text>{data.error.message}</Text>
-                </div>
-                <Checkbox
-                  onClick={e => {
-                    setIsCheckForceStopAlgorithms(e.target.checked);
-                  }}>
-                  Stop running algorithms.
-                </Checkbox>
-              </>
-            ),
-            okText: 'Try again',
-            okType: 'danger',
-            cancelText: 'Cancel',
-            onCancel() {
-              setIsSubmitLoading(false);
-              onOverviewAlgorithm();
-            },
-            onOk() {
-              setIsSubmitLoading(false);
-              applyAlgorithmVersion(dataResponse);
-            },
-          });
+          if (data.error.details) {
+            Modal.confirm({
+              title: 'WARNING : Version not upgrade',
+              content: (
+                <>
+                  <div>
+                    <Text>{data.error.message}</Text>
+                  </div>
+                  <Checkbox
+                    onClick={e => {
+                      setIsCheckForceStopAlgorithms(e.target.checked);
+                    }}>
+                    Stop running algorithms.
+                  </Checkbox>
+                </>
+              ),
+              okText: 'Try again',
+              okType: 'danger',
+              cancelText: 'Cancel',
+              onCancel() {
+                setIsSubmitLoading(false);
+                onOverviewAlgorithm();
+              },
+              onOk() {
+                setIsSubmitLoading(false);
+                applyAlgorithmVersion(dataResponse);
+              },
+            });
+          } else {
+            message.error(data?.error?.message || 'Something is wrong!');
+          }
         });
     },
     [onAfterSaveAlgorithm, onOverviewAlgorithm]
