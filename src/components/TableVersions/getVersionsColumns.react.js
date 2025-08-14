@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { CheckOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Modal, Tooltip, Typography, Tag, Input } from 'antd';
 import Moment from 'react-moment';
 import { sorter } from 'utils/stringHelper';
@@ -156,7 +156,7 @@ const getVersionsColumns = ({
             <Button
               type="dashed"
               shape="circle"
-              icon={<PlusOutlined />}
+              icon={<SaveOutlined />}
               onClick={() => addConfirmAction(onSaveAs, record, source)}
             />
           </Tooltip>
