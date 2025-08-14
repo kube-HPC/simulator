@@ -49,7 +49,7 @@ const useVersions = ({
       });
   };
 
-  const addVersion = useCallback(
+  const saveAsVersion = useCallback(
     ({ name, version, newPipelineName, newAlgorithmName }) => {
       const selectedRecord = dataSource?.find(
         record => record.name === name && record.version === version
@@ -101,7 +101,7 @@ const useVersions = ({
     dataSource,
     onApply: applyVersion,
     onDelete: deleteVersion,
-    onAdd: addVersion,
+    onSaveAs: saveAsVersion,
     fetch,
   };
 };

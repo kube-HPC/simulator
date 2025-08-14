@@ -45,9 +45,9 @@ const currentConfirmAction = (action, { name, version }, source) => {
     },
   });
 };
-const addConfirmAction = (action, { name, version }, source) => {
-  let newName = '';
 
+const addConfirmAction = (action, { name, version }, source) => {
+  let newName = `${name}-copy`;
   const isAlgorithm = source === 'algorithms';
   const itemType = isAlgorithm ? 'algorithm' : 'pipeline';
   const itemTypeCapitalized = isAlgorithm ? 'Algorithm' : 'Pipeline';
@@ -59,6 +59,7 @@ const addConfirmAction = (action, { name, version }, source) => {
         <Text>Enter new {itemType} name:</Text>
         <Input
           placeholder={`Enter ${itemType} name`}
+          defaultValue={`${name}-copy`}
           onChange={e => {
             newName = e.target.value;
           }}
@@ -79,13 +80,12 @@ const addConfirmAction = (action, { name, version }, source) => {
         }
         action(params);
         return Promise.resolve();
-      } 
-        Modal.error({
-          title: 'Error',
-          content: `Please enter a ${itemType} name.`,
-        });
-        return Promise.reject(new Error('Name is required'));
-      
+      }
+      Modal.error({
+        title: 'Error',
+        content: `Please enter a ${itemType} name.`,
+      });
+      return Promise.reject(new Error('Name is required'));
     },
   });
 };
@@ -100,7 +100,7 @@ const Created = created => (
 const getVersionsColumns = ({
   onDelete,
   onApply,
-  onAdd,
+  onSaveAs,
   currentVersion,
   source,
 }) => {
@@ -157,7 +157,7 @@ const getVersionsColumns = ({
               type="dashed"
               shape="circle"
               icon={<PlusOutlined />}
-              onClick={() => addConfirmAction(onAdd, record, source)}
+              onClick={() => addConfirmAction(onSaveAs, record, source)}
             />
           </Tooltip>
         </FlexBox.Item>

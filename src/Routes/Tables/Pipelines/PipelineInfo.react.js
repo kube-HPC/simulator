@@ -21,7 +21,7 @@ const PipelineInfo = ({ pipeline }) => {
     dataSource,
     onApply: onApplyVersion,
     onDelete,
-    onAdd,
+    onSaveAs,
     fetch,
   } = useVersions({
     nameId: name,
@@ -130,7 +130,7 @@ const PipelineInfo = ({ pipeline }) => {
             dataSource={dataSource}
             onApply={onApplyVersion}
             onDelete={onDelete}
-            onAdd={onAdd}
+            onSaveAs={onSaveAs}
             source="pipelines"
             setVersionsCompare={setVersionsCompare}
           />
@@ -150,7 +150,7 @@ const PipelineInfo = ({ pipeline }) => {
       dataSource,
       onApplyVersion,
       onDelete,
-      onAdd,
+      onSaveAs,
     ]
   );
 
