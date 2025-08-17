@@ -40,6 +40,13 @@ const FlexItemVolumes = styled.div`
   gap: 10px;
 `;
 
+const ContenerForm = styled.div`
+  height: -webkit-fill-available;
+  overflow-y: scroll;
+  padding-right: 5px;
+  overflow-x: hidden;
+  padding-right: 20px;
+`;
 // #region  Helpers
 
 const { MAIN, BUILD_TYPES } = schema;
@@ -320,148 +327,151 @@ const AddAlgorithmForm = ({
 
   return (
     <Form form={form} onFinish={onFormSubmit} style={{ display: 'contents' }}>
-      <Form.Item
-        name={splitByDot(MAIN.NAME.field)}
-        label={MAIN.NAME.label}
-        rules={[
-          { required: true, message: MAIN.NAME.message, pattern: ALGO_REGEX },
-        ]}>
-        <Input disabled={isEdit} placeholder={MAIN.NAME.placeholder} />
-      </Form.Item>
+      <ContenerForm>
+        <Form.Item
+          name={splitByDot(MAIN.NAME.field)}
+          label={MAIN.NAME.label}
+          rules={[
+            { required: true, message: MAIN.NAME.message, pattern: ALGO_REGEX },
+          ]}>
+          <Input disabled={isEdit} placeholder={MAIN.NAME.placeholder} />
+        </Form.Item>
 
-      <FlexBox align="start">
-        <FlexBox.Item span={18}>
+        <FlexBox align="start">
+          <FlexBox.Item span={18}>
+            <Form.Item
+              name={splitByDot(MAIN.DESCRIPTION.field)}
+              label={MAIN.DESCRIPTION.label}>
+              <Input
+                placeholder={MAIN.DESCRIPTION.placeholder}
+                style={{ marginLeft: '64px' }}
+              />
+            </Form.Item>
+          </FlexBox.Item>
+          <FlexBox.Item>
+            <DrawerReadMeFile
+              name={keyValueFormObject?.name || null}
+              type="algorithms"
+              disabled={!isEdit}
+            />
+          </FlexBox.Item>
+        </FlexBox>
+
+        <Form.Item label="Source">
+          <Radio.Group
+            defaultValue={buildType}
+            buttonStyle="solid"
+            onChange={onBuildTypeChange}>
+            {insertRadioButtons(buildTypes, buildType, isEdit)}
+          </Radio.Group>
+        </Form.Item>
+
+        {buildTypes[buildType]}
+        <FlexItemVolumes>
+          <FlexBox.Item span={12}>
+            <Card title="Volumes" bordered="true">
+              <Form.Item style={{ width: '650px' }}>
+                <VolumeList nameList={['main', 'volumes']} />
+              </Form.Item>
+            </Card>
+          </FlexBox.Item>
+          <FlexBox.Item span={12}>
+            <Card
+              title="Volumes Mounts"
+              bordered="true"
+              style={{ marginTop: '20px' }}>
+              <Form.Item>
+                <VolumeMountsList nameList={['main', 'volumeMounts']} />
+              </Form.Item>
+            </Card>
+          </FlexBox.Item>
+        </FlexItemVolumes>
+        <Collapsible title={MAIN.DIVIDER.RESOURCES}>
+          <Form.Item name={splitByDot(MAIN.CPU.field)} label={MAIN.CPU.label}>
+            <InputNumber min={0.1} />
+          </Form.Item>
+          <Form.Item name={splitByDot(MAIN.GPU.field)} label={MAIN.GPU.label}>
+            <InputNumber min={0} />
+          </Form.Item>
+
           <Form.Item
-            name={splitByDot(MAIN.DESCRIPTION.field)}
-            label={MAIN.DESCRIPTION.label}>
-            <Input
-              placeholder={MAIN.DESCRIPTION.placeholder}
-              style={{ marginLeft: '64px' }}
+            name={splitByDot(MAIN.MEMORY.field)}
+            label={MAIN.MEMORY.label}
+            labelAlign="left">
+            <MemoryField>
+              {MAIN.MEMORY.types.map(valueItem => (
+                <Select.Option key={valueItem} value={valueItem}>
+                  {valueItem}
+                </Select.Option>
+              ))}
+            </MemoryField>
+          </Form.Item>
+        </Collapsible>
+        <Collapsible
+          title="Environment Variable"
+          defaultExpanded={
+            keyValueFormObject?.main?.workerEnv?.length > 0 ||
+            keyValueFormObject?.main?.algorithmEnv?.length > 0
+          }>
+          <Form.Item label="Worker">
+            <KeyValueForm
+              buttonWidth="395px"
+              label={MAIN.WORKER_ENV.label}
+              fieldName={splitByDot(MAIN.WORKER_ENV.field)}
+              titleButtoAdd="Add"
             />
           </Form.Item>
-        </FlexBox.Item>
-        <FlexBox.Item>
-          <DrawerReadMeFile
-            name={keyValueFormObject?.name || null}
-            type="algorithms"
-            disabled={!isEdit}
-          />
-        </FlexBox.Item>
-      </FlexBox>
 
-      <Form.Item label="Source">
-        <Radio.Group
-          defaultValue={buildType}
-          buttonStyle="solid"
-          onChange={onBuildTypeChange}>
-          {insertRadioButtons(buildTypes, buildType, isEdit)}
-        </Radio.Group>
-      </Form.Item>
+          <Form.Item label="Algorithm">
+            <KeyValueForm
+              buttonWidth="395px"
+              label={MAIN.ALGORITEM_ENV.label}
+              fieldName={splitByDot(MAIN.ALGORITEM_ENV.field)}
+              titleButtoAdd="Add"
+            />
+          </Form.Item>
+        </Collapsible>
 
-      {buildTypes[buildType]}
-      <FlexItemVolumes>
-        <FlexBox.Item span={12}>
-          <Card title="Volumes" bordered="true">
-            <Form.Item style={{ width: '650px' }}>
-              <VolumeList nameList={['main', 'volumes']} />
-            </Form.Item>
-          </Card>
-        </FlexBox.Item>
-        <FlexBox.Item span={12}>
-          <Card
-            title="Volumes Mounts"
-            bordered="true"
-            style={{ marginTop: '20px' }}>
-            <Form.Item>
-              <VolumeMountsList nameList={['main', 'volumeMounts']} />
-            </Form.Item>
-          </Card>
-        </FlexBox.Item>
-      </FlexItemVolumes>
-      <Collapsible title={MAIN.DIVIDER.RESOURCES}>
-        <Form.Item name={splitByDot(MAIN.CPU.field)} label={MAIN.CPU.label}>
-          <InputNumber min={0.1} />
-        </Form.Item>
-        <Form.Item name={splitByDot(MAIN.GPU.field)} label={MAIN.GPU.label}>
-          <InputNumber min={0} />
-        </Form.Item>
-
-        <Form.Item
-          name={splitByDot(MAIN.MEMORY.field)}
-          label={MAIN.MEMORY.label}
-          labelAlign="left">
-          <MemoryField>
-            {MAIN.MEMORY.types.map(valueItem => (
-              <Select.Option key={valueItem} value={valueItem}>
-                {valueItem}
-              </Select.Option>
-            ))}
-          </MemoryField>
-        </Form.Item>
-      </Collapsible>
-      <Collapsible
-        title="Environment Variable"
-        defaultExpanded={
-          keyValueFormObject?.main?.workerEnv?.length > 0 ||
-          keyValueFormObject?.main?.algorithmEnv?.length > 0
-        }>
-        <Form.Item label="Worker">
-          <KeyValueForm
-            buttonWidth="395px"
-            label={MAIN.WORKER_ENV.label}
-            fieldName={splitByDot(MAIN.WORKER_ENV.field)}
-            titleButtoAdd="Add"
-          />
-        </Form.Item>
-
-        <Form.Item label="Algorithm">
-          <KeyValueForm
-            buttonWidth="395px"
-            label={MAIN.ALGORITEM_ENV.label}
-            fieldName={splitByDot(MAIN.ALGORITEM_ENV.field)}
-            titleButtoAdd="Add"
-          />
-        </Form.Item>
-      </Collapsible>
-
-      <Collapsible
-        title={
-          <>
-            {' '}
-            Side Car <HelpSiteLink link="/learn/sidecars/#what-is-a-sidecar" />{' '}
-          </>
-        }
-        defaultExpanded={keyValueFormObject?.main?.sideCars?.length > 0}>
-        <SideCarForm nameList={splitByDot(MAIN.SIDECAR.field)} />
-      </Collapsible>
-      <Collapsible title={MAIN.DIVIDER.ADVANCED}>
-        <Form.Item
-          name={splitByDot(MAIN.RESERVE_MEMORY.field)}
-          label={MAIN.RESERVE_MEMORY.label}
-          labelAlign="left">
-          <MemoryField min={0} tooltipTitle={MAIN.RESERVE_MEMORY.tooltip}>
-            {MAIN.RESERVE_MEMORY.types.map(valueItem => (
-              <Select.Option key={valueItem} value={valueItem}>
-                {valueItem}
-              </Select.Option>
-            ))}
-          </MemoryField>
-        </Form.Item>
-        <Form.Item
-          name={splitByDot(MAIN.WORKERS.field)}
-          label={MAIN.WORKERS.label}>
-          <InputNumber min={0} />
-        </Form.Item>
-        <Form.Item
-          name={splitByDot(MAIN.OPTIONS.field)}
-          label={MAIN.OPTIONS.label}
-          initialValue={mainAdvancedOptions}>
-          <Select mode="tags" placeholder={MAIN.OPTIONS.placeholder}>
-            {insertAlgorithmOptions(MAIN.OPTIONS.types)}
-          </Select>
-        </Form.Item>
-      </Collapsible>
-      <BottomPanel style={{ marginTop: 'auto' }}>
+        <Collapsible
+          title={
+            <>
+              {' '}
+              Side Car{' '}
+              <HelpSiteLink link="/learn/sidecars/#what-is-a-sidecar" />{' '}
+            </>
+          }
+          defaultExpanded={keyValueFormObject?.main?.sideCars?.length > 0}>
+          <SideCarForm nameList={splitByDot(MAIN.SIDECAR.field)} />
+        </Collapsible>
+        <Collapsible title={MAIN.DIVIDER.ADVANCED}>
+          <Form.Item
+            name={splitByDot(MAIN.RESERVE_MEMORY.field)}
+            label={MAIN.RESERVE_MEMORY.label}
+            labelAlign="left">
+            <MemoryField min={0} tooltipTitle={MAIN.RESERVE_MEMORY.tooltip}>
+              {MAIN.RESERVE_MEMORY.types.map(valueItem => (
+                <Select.Option key={valueItem} value={valueItem}>
+                  {valueItem}
+                </Select.Option>
+              ))}
+            </MemoryField>
+          </Form.Item>
+          <Form.Item
+            name={splitByDot(MAIN.WORKERS.field)}
+            label={MAIN.WORKERS.label}>
+            <InputNumber min={0} />
+          </Form.Item>
+          <Form.Item
+            name={splitByDot(MAIN.OPTIONS.field)}
+            label={MAIN.OPTIONS.label}
+            initialValue={mainAdvancedOptions}>
+            <Select mode="tags" placeholder={MAIN.OPTIONS.placeholder}>
+              {insertAlgorithmOptions(MAIN.OPTIONS.types)}
+            </Select>
+          </Form.Item>
+        </Collapsible>
+      </ContenerForm>
+      <BottomPanel>
         <PanelButton onClick={onToggleToEditor}>Text editor</PanelButton>
 
         <RightPanel>
