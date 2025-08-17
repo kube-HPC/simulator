@@ -1,9 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import styled from 'styled-components';
+import { StopOutlined } from '@ant-design/icons';
+import { Button, Tooltip, Popconfirm } from 'antd';
 import PropTypes from 'prop-types';
+import { useActions } from 'hooks';
 import { useVT } from 'virtualizedtableforantd4';
 import { SelectFilterOptions } from './QueueOrderComponents';
 import { TableAllInOneTypeColumns } from './QueueOrderComponents/TableAllInOneTypeColumns';
 import { TableAllInOne, FilterTable } from './OrderStyles';
+
+const BottomPanel = styled.div`
+  margin-top: 10px;
+  display: none; // flex;
+  justify-content: flex-end;
+`;
 
 const TableOrderConsolidated = ({
   dataSourceAllJobs,
@@ -11,8 +21,9 @@ const TableOrderConsolidated = ({
   filterTableAllInOne,
   filterTableAllInOneVal,
 }) => {
+  const { stopPipeline } = useActions();
   const [isLoading, setIsLoading] = useState(true);
-
+  const [stopAllInQueueIsRun, setStopAllInQueueIsRun] = useState(false);
   const [vt] = useVT(
     () => ({
       initTop: 1,
@@ -32,6 +43,11 @@ const TableOrderConsolidated = ({
     filterTableAllInOne(selectValue);
     setIsLoading(true);
   };
+
+  const handelStopAllQueue = useCallback(() => {
+    stopPipeline();
+    setStopAllInQueueIsRun(true);
+  }, [stopPipeline]);
 
   useEffect(() => {
     if (dataSourceAllJobs.length > 0) {
@@ -61,6 +77,24 @@ const TableOrderConsolidated = ({
         loading={isLoading}
         components={vt}
       />
+      <BottomPanel>
+        {dataSourceAllJobs.length > 0 && (
+          <Tooltip title="stop all queue jobs">
+            <Popconfirm
+              title="Are you sure you want to stop all jobs in queue?"
+              onConfirm={handelStopAllQueue}
+              okText="Yes"
+              cancelText="No">
+              <Button
+                icon={<StopOutlined />}
+                loading={stopAllInQueueIsRun}
+                styles={{ paddingLeft: '10' }}>
+                stop all queue jobs
+              </Button>
+            </Popconfirm>
+          </Tooltip>
+        )}
+      </BottomPanel>
     </>
   );
 };
