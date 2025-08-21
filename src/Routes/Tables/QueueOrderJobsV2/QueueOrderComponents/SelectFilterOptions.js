@@ -10,7 +10,9 @@ const SelectFilterOptions = forwardRef((props, ref) => (
   <SelectGroupBy
     ref={ref}
     onChange={e => props.onSelect(e)}
-    defaultValue={props.filterVal !== '' ? props.filterVal : TypeFilter.JOBID}>
+    defaultValue={
+      props.filterVal !== '' ? props.filterVal : TypeFilter.PIPELINE
+    }>
     {Object.entries(TypeFilter).map(([key, value]) => (
       <Select.Option key={key} value={key}>
         {toUpperCaseFirstLetter(value)}
