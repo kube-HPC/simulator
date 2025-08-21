@@ -15,6 +15,7 @@ export const stopAllPipeline = (pipelineName, { onSuccess }) => ({
     url: `exec/stop`,
     body: {
       pipelineName,
+      statusToStop: 'pending',
       reason: `Request from simulator, Algorithms-tab Delete action`,
     },
     actionType: actions.PIPELINE_STOP,
