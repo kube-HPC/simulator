@@ -1,9 +1,10 @@
 import React, { useMemo, useCallback } from 'react';
-import { Button, Space } from 'antd';
+import { Button, Space, Modal } from 'antd';
 import {
   EditOutlined,
   ArrowLeftOutlined,
   ClearOutlined,
+  ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import useQuery from 'hooks/useQuery';
 import { Link, useLocation } from 'react-router-dom';
@@ -28,6 +29,20 @@ const LinkToEdit = ({ toggleEdit }) => {
 
   const onStop = useCallback(() => ClearQueue(() => {}), [ClearQueue]);
 
+  const showClearConfirmation = useCallback(() => {
+    Modal.confirm({
+      title: 'Clear Queue',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Are you sure you want to clear the entire queue?',
+      okText: 'Yes, Clear Queue',
+      okType: 'danger',
+      cancelText: 'Cancel',
+      onOk() {
+        onStop();
+      },
+    });
+  }, [onStop]);
+
   return (
     <HeaderTitlePreferred>
       <Space>
@@ -41,7 +56,7 @@ const LinkToEdit = ({ toggleEdit }) => {
           </Button>
         </Link>
         <Button
-          onClick={onStop}
+          onClick={showClearConfirmation}
           type="default"
           icon={<ClearOutlined />}
           size="large"
