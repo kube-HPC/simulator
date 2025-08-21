@@ -8,6 +8,18 @@ export const addPipeline = pipeline => ({
     actionType: actions.PIPELINE_ADD,
   },
 });
+export const ClearQueue = ({ onSuccess }) => ({
+  type: actions.REST_REQ_POST,
+  payload: {
+    url: `exec/stop`,
+    body: {
+      statusToStop: 'pending',
+      reason: `Request from simulator, Algorithms-tab Delete action`,
+    },
+    actionType: actions.PIPELINE_STOP,
+  },
+  meta: { onSuccess },
+});
 
 export const stopAllPipeline = (pipelineName, { onSuccess }) => ({
   type: actions.REST_REQ_POST,
