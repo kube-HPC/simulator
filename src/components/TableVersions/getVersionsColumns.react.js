@@ -45,7 +45,7 @@ const currentConfirmAction = (action, { name, version }, source) => {
     },
   });
 };
-
+//
 const addConfirmAction = (action, { name, version }, source) => {
   let newName = `${name}-copy`;
   const isAlgorithm = source === 'algorithms';
@@ -70,22 +70,24 @@ const addConfirmAction = (action, { name, version }, source) => {
     okText: `Save ${itemTypeCapitalized}`,
     okType: 'primary',
     cancelText: 'Cancel',
-    onOk() {
-      if (newName.trim()) {
-        const params = { name, version };
-        if (isAlgorithm) {
-          params.newAlgorithmName = newName.trim();
-        } else {
-          params.newPipelineName = newName.trim();
-        }
-        action(params);
-        return Promise.resolve();
+    onOk: () => {
+      if (!newName.trim()) {
+        Modal.error({
+          title: 'Error',
+          content: `Please enter a ${itemType} name.`,
+        });
+        return false; // stops modal from closing, no rejection error
       }
-      Modal.error({
-        title: 'Error',
-        content: `Please enter a ${itemType} name.`,
-      });
-      return Promise.reject(new Error('Name is required'));
+
+      const params = { name, version };
+      if (isAlgorithm) {
+        params.newAlgorithmName = newName.trim();
+      } else {
+        params.newPipelineName = newName.trim();
+      }
+
+      action(params);
+      return true; // close modal normally
     },
   });
 };
