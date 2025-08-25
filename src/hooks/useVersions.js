@@ -3,7 +3,23 @@ import { notification } from 'utils';
 
 import client from './../client';
 
-const errorNotification = ({ message }) => notification({ message });
+const errorNotification = err => {
+  let msg = 'An unexpected error occurred';
+
+  if (typeof err === 'string') {
+    msg = err;
+  } else if (err?.response?.data?.error?.message) {
+    //  handles { error: { message: "..." } }
+    msg = err.response.data.error.message;
+  } else if (err?.response?.data?.message) {
+    // fallback if backend sometimes sends { message: "..." } directly
+    msg = err.response.data.message;
+  } else if (err?.message) {
+    msg = err.message;
+  }
+
+  notification({ message: msg });
+};
 
 const useVersions = ({
   nameId,
