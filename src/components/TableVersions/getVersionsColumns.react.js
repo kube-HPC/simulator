@@ -248,6 +248,7 @@ const getVersionsColumns = ({
         title: 'Action',
         dataIndex: ['action'],
         key: 'action',
+        width: 'fit-content',
         render: Action,
       },
     ];
@@ -299,6 +300,7 @@ const getVersionsColumns = ({
       title: 'Action',
       dataIndex: ['action'],
       key: 'action',
+      width: 'fit-content',
       render: Action,
     },
   ];
