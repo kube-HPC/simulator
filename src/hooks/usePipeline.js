@@ -51,7 +51,10 @@ const usePipeline = () => {
         </>
       );
     } catch (res) {
-      message.error(res.response.data.error.message);
+      const errorMessage =
+        res.response?.data?.error?.message || res.message || 'Unknown error';
+
+      message.error(errorMessage);
     }
   }, []);
 
@@ -59,8 +62,10 @@ const usePipeline = () => {
     try {
       const res = await client.post(`/exec/rerun`, { jobId });
       message.success(successMsg(res.data).PIPELINE_START);
-    } catch (error) {
-      message.error(error.message);
+    } catch (res) {
+      const errorMessage =
+        res.response?.data?.error?.message || res.message || 'Unknown error';
+      message.error(errorMessage);
     }
   }, []);
 
