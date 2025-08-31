@@ -14,6 +14,8 @@ export const dateTimeDefaultVar = makeVar({
   time: dayjs().add(-defTimeFromLocalStorage, 'hour'),
 });
 
+export const pipelineJustStartedVar = makeVar(false);
+
 export const numberErrorGraphQLVar = makeVar({ error: 0 });
 export const isPinActiveJobVar = makeVar(false);
 export const filterToggeledVar = makeVar(true);
