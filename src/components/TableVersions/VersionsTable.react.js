@@ -21,6 +21,7 @@ const VersionsTable = ({
   currentVersion,
   onApply,
   onDelete,
+  onAdd,
   dataSource = undefined,
   source,
   setVersionsCompare,
@@ -32,6 +33,7 @@ const VersionsTable = ({
     currentVersion,
     onApply,
     onDelete,
+    onAdd,
     source,
   });
 
@@ -86,6 +88,7 @@ VersionsTable.propTypes = {
   currentVersion: PropTypes.string.isRequired,
   onApply: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  onAdd: PropTypes.func.isRequired,
   dataSource: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   source: PropTypes.string.isRequired,
   setVersionsCompare: PropTypes.func.isRequired,

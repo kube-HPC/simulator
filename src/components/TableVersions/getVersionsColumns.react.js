@@ -1,6 +1,6 @@
 import React from 'react';
-import { CheckOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Button, Modal, Tooltip, Typography, Tag } from 'antd';
+import { CheckOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Modal, Tooltip, Typography, Tag, Input } from 'antd';
 import Moment from 'react-moment';
 import { sorter } from 'utils/stringHelper';
 import { COLOR_PIPELINE_STATUS } from 'styles';
@@ -45,7 +45,50 @@ const currentConfirmAction = (action, { name, version }, source) => {
     },
   });
 };
+const addConfirmAction = (action, { name, version }, source) => {
+  let newName = '';
 
+  const isAlgorithm = source === 'algorithms';
+  const itemType = isAlgorithm ? 'algorithm' : 'pipeline';
+  const itemTypeCapitalized = isAlgorithm ? 'Algorithm' : 'Pipeline';
+
+  Modal.confirm({
+    title: `Save as new ${itemType}`,
+    content: (
+      <div style={{ marginTop: 16 }}>
+        <Text>Enter new {itemType} name:</Text>
+        <Input
+          placeholder={`Enter ${itemType} name`}
+          onChange={e => {
+            newName = e.target.value;
+          }}
+          style={{ marginTop: 8 }}
+        />
+      </div>
+    ),
+    okText: `Save ${itemTypeCapitalized}`,
+    okType: 'primary',
+    cancelText: 'Cancel',
+    onOk() {
+      if (newName.trim()) {
+        const params = { name, version };
+        if (isAlgorithm) {
+          params.newAlgorithmName = newName.trim();
+        } else {
+          params.newPipelineName = newName.trim();
+        }
+        action(params);
+        return Promise.resolve();
+      } 
+        Modal.error({
+          title: 'Error',
+          content: `Please enter a ${itemType} name.`,
+        });
+        return Promise.reject(new Error('Name is required'));
+      
+    },
+  });
+};
 const Cpu = cpu => <Tag>{cpu || 'No CPU Assigned'}</Tag>;
 const Mem = mem => <Tag>{mem || 'No Memory Specified'}</Tag>;
 const MinHotWorkers = minHotWorkers => <Tag>{minHotWorkers}</Tag>;
@@ -54,7 +97,13 @@ const Created = created => (
   <Moment format="DD/MM/YY HH:mm:ss">{+created}</Moment>
 );
 
-const getVersionsColumns = ({ onDelete, onApply, currentVersion, source }) => {
+const getVersionsColumns = ({
+  onDelete,
+  onApply,
+  onAdd,
+  currentVersion,
+  source,
+}) => {
   const AlgorithmVersion = version => {
     const isCurrentVersion = currentVersion === version;
     return version ? (
@@ -72,6 +121,11 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion, source }) => {
   const Action = (_, record) => {
     const { version } = record;
     const isCurrentVersion = currentVersion === version;
+
+    const isAlgorithm = source === 'algorithms';
+    const saveTooltip = isAlgorithm
+      ? 'save as new algorithm'
+      : 'save as new pipeline';
 
     return isCurrentVersion ? (
       <Tag color={COLOR_PIPELINE_STATUS.ready}>Current Version</Tag>
@@ -94,6 +148,16 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion, source }) => {
               shape="circle"
               icon={<DeleteOutlined />}
               onClick={() => deleteConfirmAction(onDelete, record, source)}
+            />
+          </Tooltip>
+        </FlexBox.Item>
+        <FlexBox.Item>
+          <Tooltip title={saveTooltip}>
+            <Button
+              type="dashed"
+              shape="circle"
+              icon={<PlusOutlined />}
+              onClick={() => addConfirmAction(onAdd, record, source)}
             />
           </Tooltip>
         </FlexBox.Item>
@@ -187,7 +251,7 @@ const getVersionsColumns = ({ onDelete, onApply, currentVersion, source }) => {
     ];
   }
 
-  // if this not algorithms return piplines cols
+  // if this not algorithms return pipelines cols
   return [
     {
       title: '',

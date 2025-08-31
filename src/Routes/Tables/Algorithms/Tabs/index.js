@@ -79,7 +79,7 @@ const AlgorithmsTabs = ({ algorithm }) => {
     });
   };
 
-  const { dataSource, onApply, onDelete, fetch } = useVersions({
+  const { dataSource, onApply, onDelete, onAdd, fetch } = useVersions({
     nameId: algorithm.name,
     confirmPopupForceVersion,
     isFetch: true,
@@ -148,7 +148,7 @@ const AlgorithmsTabs = ({ algorithm }) => {
       isFirstRender.current = false;
       setActiveKey(TABS.BUILDS);
     }
-  }, []);
+  }, [isBuildFirstFail, setActiveKey]);
 
   const TabsItemsJson = useMemo(
     () => [
@@ -162,6 +162,7 @@ const AlgorithmsTabs = ({ algorithm }) => {
             dataSource={dataSource}
             onApply={onApply}
             onDelete={onDelete}
+            onAdd={onAdd}
             source="algorithms"
             setVersionsCompare={setVersionsCompare}
           />
@@ -203,6 +204,7 @@ const AlgorithmsTabs = ({ algorithm }) => {
       isFirstRender,
       onApply,
       onDelete,
+      onAdd,
       readme,
     ]
   );
