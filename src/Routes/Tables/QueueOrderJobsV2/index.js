@@ -38,10 +38,10 @@ class QueueOrderJobsV2 extends React.Component {
       positionOverY: null, // Position the mouse arrow on a row, in the top half or in the bottom half
       isDrag: false, // if action id drag jobs
 
-      // filter jobs to group by pipeline or tag default is list jobs
-      filterPreferredVal: TypeFilter.JOBID.toUpperCase(), // select filter preferred, group by pipeline or tag
-      filterQueueVal: TypeFilter.JOBID.toUpperCase(), // select filter queue , group by pipeline or tag
-      filterTableAllInOneVal: TypeFilter.JOBID.toUpperCase(),
+      // filter jobs to group by pipeline or tag default is list pipeline
+      filterPreferredVal: TypeFilter.PIPELINE.toUpperCase(), // select filter preferred, group by pipeline or tag
+      filterQueueVal: TypeFilter.PIPELINE.toUpperCase(), // select filter queue , group by pipeline or tag
+      filterTableAllInOneVal: TypeFilter.PIPELINE.toUpperCase(),
 
       // state paging queue
       pageQueueViewJobId: '', // set jobId is view table queue

@@ -1,15 +1,23 @@
-import React, { useMemo } from 'react';
-import { Button } from 'antd';
-import { EditOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import React, { useMemo, useCallback } from 'react';
+import { Button, Space, Modal } from 'antd';
+import {
+  EditOutlined,
+  ArrowLeftOutlined,
+  ClearOutlined,
+  ExclamationCircleOutlined,
+} from '@ant-design/icons';
 import useQuery from 'hooks/useQuery';
 import { Link, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { useActions } from 'hooks';
 import { HeaderTitlePreferred } from '../OrderStyles';
 
 const LinkToEdit = ({ toggleEdit }) => {
   const query = useQuery();
   const isEditOrder = useMemo(() => query.get('queueEdit'), [query]);
   const location = useLocation();
+  const { ClearQueue } = useActions();
+
   const nextPath = useMemo(() => {
     if (isEditOrder) {
       query.delete('queueEdit');
@@ -19,23 +27,50 @@ const LinkToEdit = ({ toggleEdit }) => {
     return `${location.pathname}?${query.toString()}`;
   }, [location, isEditOrder, query]);
 
+  const onStop = useCallback(() => ClearQueue(() => {}), [ClearQueue]);
+
+  const showClearConfirmation = useCallback(() => {
+    Modal.confirm({
+      title: 'Clear Queue',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Are you sure you want to clear the entire queue?',
+      okText: 'Yes, Clear Queue',
+      okType: 'danger',
+      cancelText: 'Cancel',
+      onOk() {
+        onStop();
+      },
+    });
+  }, [onStop]);
+
   return (
     <HeaderTitlePreferred>
-      <Link to={nextPath}>
+      <Space>
+        <Link to={nextPath}>
+          <Button
+            onClick={() => toggleEdit()}
+            type="primary"
+            icon={!isEditOrder ? <EditOutlined /> : <ArrowLeftOutlined />}
+            size="large">
+            {!isEditOrder ? 'Edit List' : 'Back'}
+          </Button>
+        </Link>
         <Button
-          onClick={() => toggleEdit()}
-          type="primary"
-          icon={!isEditOrder ? <EditOutlined /> : <ArrowLeftOutlined />}
-          size="large">
-          {!isEditOrder ? 'Edit List' : 'Back'}
+          onClick={showClearConfirmation}
+          type="default"
+          icon={<ClearOutlined />}
+          size="large"
+          danger>
+          Clear Queue
         </Button>
-      </Link>
+      </Space>
     </HeaderTitlePreferred>
   );
 };
 
 LinkToEdit.propTypes = {
   toggleEdit: PropTypes.func.isRequired,
+  ClearQueue: PropTypes.func.isRequired,
 };
 
 export default LinkToEdit;
