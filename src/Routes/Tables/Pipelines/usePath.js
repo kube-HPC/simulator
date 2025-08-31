@@ -5,6 +5,7 @@ export const OVERVIEW_TABS = {
   INFO: 'Information',
   DESCRIPTION: 'Description',
   VERSIONS: 'Versions',
+  VERSIONSTIMETABLE: 'Version Time Table',
 };
 
 export default () => {

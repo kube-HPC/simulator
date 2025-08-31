@@ -35,7 +35,7 @@ const HotWorker = (_, { workerPaused, hotWorker }) => (
   </>
 );
 
-const PodName = podName => <Ellipsis copyable text={podName} />;
+const PodName = podName => <Ellipsis copyable text={podName} length={65} />;
 
 const JobId = jobId => {
   const isValidJobId = jobId !== undefined;
