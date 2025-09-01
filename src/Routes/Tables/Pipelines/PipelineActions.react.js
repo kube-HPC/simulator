@@ -1,4 +1,6 @@
 import React, { memo, useCallback, useRef } from 'react';
+import { selectors } from 'reducers';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   DeleteOutlined,
@@ -27,9 +29,18 @@ const title = 'Create Tensor Board for selected Node';
 const PipelineActions = ({ pipeline, className = '' }) => {
   const { goTo } = usePath();
   const { deleteStored: remove, stopAllPipeline } = useActions();
+  const { keycloakEnable } = useSelector(selectors.connection);
 
-  const isRoleEdit = KeycloakServices.getUserRoles(keycloakRoles.API_EDIT);
-  const isRoleDelete = KeycloakServices.getUserRoles(keycloakRoles.API_DELETE);
+  const isRoleEdit = keycloakEnable
+    ? KeycloakServices.getUserRoles(keycloakRoles.API_EDIT)
+    : true;
+  const isRoleDelete = keycloakEnable
+    ? KeycloakServices.getUserRoles(keycloakRoles.API_DELETE)
+    : true;
+
+  const isRoleRunOrStop = keycloakEnable
+    ? KeycloakServices.getUserRoles(keycloakRoles.API_EXECUTE)
+    : true;
   const container = useRef();
 
   // http://hkube.org/spec/#tag/Execution/paths/~1exec~1stored/post
@@ -91,11 +102,16 @@ const PipelineActions = ({ pipeline, className = '' }) => {
               <Icon component={IconTensorFlow} />
              </Button> */}
         </Popover>
-        <Tooltip title="run pipeline">
-          <Button icon={<PlayCircleOutlined />} onClick={onExecute} />
+
+        <Tooltip title={isRoleDelete ? 'run pipeline' : 'No run permission'}>
+          <Button
+            icon={<PlayCircleOutlined />}
+            onClick={onExecute}
+            disabled={!isRoleRunOrStop}
+          />
         </Tooltip>
-        <Tooltip
-          title={isRoleEdit ? 'edit pipeline' : 'not have permission to edit'}>
+
+        <Tooltip title={isRoleEdit ? 'edit pipeline' : 'No edit permission'}>
           <Button
             icon={<EditOutlined />}
             onClick={onUpdate}
@@ -103,17 +119,23 @@ const PipelineActions = ({ pipeline, className = '' }) => {
           />
         </Tooltip>
         <Tooltip
-          title={
-            isRoleDelete ? 'delete pipeline' : 'not have permission to delete'
-          }>
+          title={isRoleDelete ? 'delete pipeline' : 'No delete permission'}>
           <Button
             icon={<DeleteOutlined />}
             onClick={onDelete}
             disabled={!isRoleDelete}
           />
         </Tooltip>
-        <Tooltip title="stop all jobs of pipeline">
-          <Button icon={<StopOutlined />} onClick={onStop} />
+
+        <Tooltip
+          title={
+            isRoleDelete ? 'stop all jobs of pipeline"' : 'No stop permission'
+          }>
+          <Button
+            icon={<StopOutlined />}
+            onClick={onStop}
+            disabled={!isRoleRunOrStop}
+          />
         </Tooltip>
         <Tooltip title="show overview">
           <Button icon={<InfoCircleOutlined />} onClick={onEdit} />

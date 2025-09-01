@@ -1,6 +1,8 @@
 import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import KeycloakServices from 'keycloak/keycloakServices';
+import { selectors } from 'reducers';
+import { useSelector } from 'react-redux';
 import {
   BugOutlined,
   DeleteOutlined,
@@ -36,8 +38,18 @@ const deleteConfirmAction = action => {
 const overlayStyle = { width: `50ch` };
 
 const AlgorithmActions = ({ record }) => {
-  const isRoleEdit = KeycloakServices.getUserRoles(keycloakRoles.API_EDIT);
-  const isRoleDelete = KeycloakServices.getUserRoles(keycloakRoles.API_DELETE);
+  const { keycloakEnable } = useSelector(selectors.connection);
+
+  const isRoleEdit = keycloakEnable
+    ? KeycloakServices.getUserRoles(keycloakRoles.API_EDIT)
+    : true;
+  const isRoleDelete = keycloakEnable
+    ? KeycloakServices.getUserRoles(keycloakRoles.API_DELETE)
+    : true;
+
+  const isRoleRunOrStop = keycloakEnable
+    ? KeycloakServices.getUserRoles(keycloakRoles.API_EXECUTE)
+    : true;
 
   const [openPopupRun, setOpenPopupRun] = useState(false);
   const [openPopupRunDebug, setOpenPopupRunDebug] = useState(false);
@@ -118,35 +130,46 @@ const AlgorithmActions = ({ record }) => {
       onClick={stopPropagation}
       onDoubleClick={stopPropagation}>
       <Button.Group>
-        <Popover
-          overlayStyle={overlayStyle}
-          title="Run Algorithm"
-          placement="leftBottom"
-          content={popOverContentRun}
-          getPopupContainer={setPopupContainer}
-          mouseLeaveDelay={0.3}
-          mouseEnterDelay={1.3}
-          open={openPopupRun}
-          onOpenChange={handleOpenChange}>
-          <Button
-            icon={<PlayCircleOutlined />}
-            onClick={() => clickOnRunAlg()}
-          />
-        </Popover>
-        <Popover
-          overlayStyle={overlayStyle}
-          title="Debug Algorithm"
-          placement="leftBottom"
-          content={popOverContentDebug}
-          getPopupContainer={setPopupContainer}
-          mouseLeaveDelay={0.3}
-          mouseEnterDelay={1.3}
-          open={openPopupRunDebug}
-          onOpenChange={handleOpenChangeDebug}>
-          <Button icon={<BugOutlined />} onClick={() => clickOnRunDebug()} />
-        </Popover>
-        <Tooltip
-          title={isRoleEdit ? 'edit algorithm' : 'not have permission to edit'}>
+        {isRoleRunOrStop ? (
+          <Popover
+            overlayStyle={overlayStyle}
+            title="Run Algorithm"
+            placement="leftBottom"
+            content={popOverContentRun}
+            getPopupContainer={setPopupContainer}
+            mouseLeaveDelay={0.3}
+            mouseEnterDelay={1.3}
+            open={openPopupRun}
+            onOpenChange={handleOpenChange}>
+            <Button
+              icon={<PlayCircleOutlined />}
+              onClick={() => clickOnRunAlg()}
+            />
+          </Popover>
+        ) : (
+          <Tooltip title="No run permission">
+            <Button icon={<PlayCircleOutlined />} disabled={!isRoleRunOrStop} />
+          </Tooltip>
+        )}
+        {isRoleRunOrStop ? (
+          <Popover
+            overlayStyle={overlayStyle}
+            title="Debug Algorithm"
+            placement="leftBottom"
+            content={popOverContentDebug}
+            getPopupContainer={setPopupContainer}
+            mouseLeaveDelay={0.3}
+            mouseEnterDelay={1.3}
+            open={openPopupRunDebug}
+            onOpenChange={handleOpenChangeDebug}>
+            <Button icon={<BugOutlined />} onClick={() => clickOnRunDebug()} />
+          </Popover>
+        ) : (
+          <Tooltip title="No debug permission">
+            <Button icon={<BugOutlined />} disabled={!isRoleRunOrStop} />
+          </Tooltip>
+        )}
+        <Tooltip title={isRoleEdit ? 'edit algorithm' : 'No edit permission'}>
           <Button
             icon={<EditOutlined />}
             onClick={onEdit}
@@ -154,9 +177,7 @@ const AlgorithmActions = ({ record }) => {
           />
         </Tooltip>
         <Tooltip
-          title={
-            isRoleDelete ? 'delete algorithm' : 'not have permission to delete'
-          }>
+          title={isRoleDelete ? 'delete algorithm' : 'No delete permission'}>
           <Button
             icon={<DeleteOutlined />}
             onClick={onClickDelete}
