@@ -17,7 +17,8 @@ const Body = () => {
 
   useEffect(() => {
     // if (!hash || (hash && !search)) {
-    if (hash === '#/') {
+
+    if (hash === '#/' || hash === '') {
       window.location.replace(
         `${window.location.origin}${window.location.pathname}#/jobs?&experiment=${experimentName ?? 'main'}`
       );

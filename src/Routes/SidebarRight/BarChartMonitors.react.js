@@ -12,7 +12,7 @@ const Container = styled.div`
   display: flex;
   margin-top: 50px;
 
-  height: 50vh;
+  height: 80vh;
 
   svg + div {
     color: #000000;
@@ -112,7 +112,7 @@ const BarChartMonitors = ({ metric }) => {
   };
 
   const legendsItemsSave = [];
-
+  let legendIndex = 0;
   return (
     <>
       <Header>{typeName[metric]}</Header>
@@ -124,7 +124,7 @@ const BarChartMonitors = ({ metric }) => {
           theme={themePreferencesBar}
           margin={{
             right: 100,
-            bottom: 120,
+            bottom: 400,
             left: 150,
           }}
           padding={0.1}
@@ -238,9 +238,8 @@ const BarChartMonitors = ({ metric }) => {
                           !legendsItemsSave.includes(bar.data.id) &&
                           legendsItemsSave.push(bar.data.id) && (
                             <g
-                              transform={`translate(${
-                                legendsItemsSave.length * 102
-                              },0)`}
+                              transform={`translate(${(legendIndex % 5) * 270}, ${Math.floor(legendIndex / 5) * 50})`}
+                              key={legendIndex++}
                               onMouseEnter={e => {
                                 handleLegendMouseEnter(bar.data.id);
 
