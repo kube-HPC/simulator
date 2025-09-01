@@ -159,6 +159,7 @@ const BarChartMonitors = ({ metric }) => {
             // eslint-disable-next-line react/no-unstable-nested-components
             ({ bars, ...rest }) => {
               const barsView = bars.filter(x => x.data.value !== null);
+
               return (
                 <>
                   <text
@@ -239,7 +240,7 @@ const BarChartMonitors = ({ metric }) => {
                           legendsItemsSave.push(bar.data.id) && (
                             <g
                               transform={`translate(${
-                                legendsItemsSave.length * 102
+                                legendsItemsSave.length * 152
                               },0)`}
                               onMouseEnter={e => {
                                 handleLegendMouseEnter(bar.data.id);
