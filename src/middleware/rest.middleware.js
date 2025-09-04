@@ -1,5 +1,6 @@
 import successMsg from 'config/schema/success-messages.schema';
 import AT from 'const/application-actions';
+import { forceRefetchAll } from 'graphql/usePolling';
 import client from './../client';
 import actions from '../actions';
 
@@ -150,24 +151,37 @@ const restMiddleware =
     } else if (action.type === AT.REST_REQ_POST) {
       client
         .post(action.payload.url, action.payload.body)
-        .then(res => success(dispatch, res.data, action))
+        .then(res => {
+          success(dispatch, res.data, action);
+          forceRefetchAll();
+        })
         .catch(err => reject(dispatch, err.response.data.error, action));
     } else if (action.type === AT.REST_REQ_POST_FORM) {
       client
         .post(action.payload.url, action.payload.formData)
-        .then(res => success(dispatch, res.data, action))
+        .then(res => {
+          success(dispatch, res.data, action);
+          forceRefetchAll();
+        })
         .catch(err => reject(dispatch, err.response.data.error, action));
     } else if (action.type === AT.REST_REQ_PUT) {
       client
         .put(action.payload.url, action.payload.body)
-        .then(res => success(dispatch, res.data, action))
+        .then(res => {
+          success(dispatch, res.data, action);
+          forceRefetchAll();
+        })
         .catch(err => reject(dispatch, err.response.data.error, action));
     } else if (action.type === AT.REST_REQ_DELETE) {
       client
         .delete(action.payload.url, { data: action.payload.body })
-        .then(res => success(dispatch, res.data, action))
+        .then(res => {
+          success(dispatch, res.data, action);
+          forceRefetchAll();
+        })
         .catch(err => reject(dispatch, err?.response?.data?.error, action));
     }
+
     return next(action);
   };
 
