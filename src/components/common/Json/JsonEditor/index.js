@@ -8,15 +8,21 @@ const JsonEditor = ({
   onChange = () => {},
   value: controlledValue = {},
   innerRef = { current: undefined },
+  onSave = () => {},
   ...props
 }) => {
   const { themeName } = useSiteThemeMode();
   const [value, setValue] = useState(controlledValue);
   const handleEditorChange = _value => setValue(_value);
 
-  const handleEditorDidMount = (_, editor) => {
-    // eslint-disable-next-line
-    innerRef.current = editor;
+  const handleEditorDidMount = (editor, monaco) => {
+    const ref = innerRef;
+    ref.current = editor;
+
+    // Bind Ctrl+S inside editor
+    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
+      onSave(editor.getValue());
+    });
   };
 
   useEffect(() => {
@@ -48,6 +54,7 @@ const JsonEditor = ({
 JsonEditor.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
+  onSave: PropTypes.func,
   innerRef: PropTypes.objectOf(PropTypes.instanceOf(PropTypes.object))
     .isRequired,
 };
