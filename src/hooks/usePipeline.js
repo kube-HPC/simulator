@@ -1,22 +1,14 @@
-import React, { useCallback } from 'react';
-import styled from 'styled-components';
-import { message, Button } from 'antd';
+import { useCallback } from 'react';
+import { message } from 'antd';
 import client from 'client';
 import successMsg from 'config/schema/success-messages.schema';
 import { useNavigate } from 'react-router-dom';
+import { pipelineJustStartedVar } from 'cache';
 import useActions from './useActions';
-
-const ButtonLinkStyle = styled(Button)`
-  padding: 0px;
-`;
 
 const usePipeline = () => {
   const { updateStored } = useActions();
   const navigate = useNavigate();
-
-  const gotoJobsTable = useCallback(() => {
-    navigate('/jobs');
-  }, [navigate]);
 
   // const location = useLocation();
   // const { pageName } = useParams();
@@ -40,16 +32,8 @@ const usePipeline = () => {
       delete objPipeline.nodes;
 
       await client.post(`exec/stored`, objPipeline);
+      pipelineJustStartedVar(true);
       navigate('/pipelines');
-
-      message.success(
-        <>
-          Pipeline started, see{' '}
-          <ButtonLinkStyle type="link" onClick={gotoJobsTable}>
-            jobs
-          </ButtonLinkStyle>
-        </>
-      );
     } catch (res) {
       const errorMessage =
         res.response?.data?.error?.message || res.message || 'Unknown error';

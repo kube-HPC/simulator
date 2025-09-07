@@ -1,6 +1,6 @@
 {
   "name": "simulator",
-  "version": "2.9.45",
+  "version": "2.9.56",
   "description": "The Hkube Dashboard",
   "private": true,
   "homepage": ".",
@@ -46,7 +46,8 @@
     "react-apexcharts": "^1.4.0",
     "react-collapse": "^5.1.0",
     "react-js-cron": "^3.2.0",
-    "virtualizedtableforantd4": "^1.1.2"
+    "virtualizedtableforantd4": "^1.1.2",
+    "vis-network": "^10.0.1"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.24.5",

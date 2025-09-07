@@ -7,8 +7,13 @@ import {
   Concurrency,
   ActionsQueueOrder,
 } from '../QueueOrderComponents';
+import ActionsQueueOrderPipeline from './ActionsQueueOrderPipeline';
 
-const Actions = (_, { job }) => <ActionsQueueOrder job={job || []} />;
+const Actions = (_, job) => <ActionsQueueOrder job={job || []} />;
+const ActionsPipeline = (_, job) => (
+  <ActionsQueueOrderPipeline job={job || []} />
+);
+
 const Status = (_, { job }) => (
   <FlexBox justify="flex-start" gutter={0}>
     <Concurrency isConcurrency={job?.maxExceeded} />
@@ -61,6 +66,11 @@ export const TableAllInOneTypeColumns = {
     {
       title: 'jobs Count',
       dataIndex: 'count',
+    },
+    {
+      title: 'Actions',
+      width: '8%',
+      render: ActionsPipeline,
     },
     {
       title: 'Status',

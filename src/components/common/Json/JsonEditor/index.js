@@ -12,6 +12,13 @@ const JsonEditor = ({
   ...props
 }) => {
   const { themeName } = useSiteThemeMode();
+
+  const getMonacoTheme = () => {
+    if (themeName === 'dark' || themeName.includes('dark')) {
+      return 'vs-dark'; // Monaco's built-in dark theme
+    }
+    return 'vs'; // Monaco's built-in light theme (default)
+  };
   const [value, setValue] = useState(controlledValue);
   const handleEditorChange = _value => setValue(_value);
 
@@ -37,7 +44,7 @@ const JsonEditor = ({
     <AutoSizer>
       {({ width, height }) => (
         <Editor
-          theme={themeName}
+          theme={getMonacoTheme()} // Use Monaco's built-in themes
           {...props}
           width={width}
           height={height}

@@ -37,6 +37,7 @@ import {
   resumePipeline,
   stopPipeline,
   stopAllPipeline,
+  ClearQueue,
   updateStored,
 } from './pipeline.action';
 import { setSettings } from './settings.action';
@@ -87,6 +88,7 @@ const actions = {
   startBoard,
   stopPipeline,
   stopAllPipeline,
+  ClearQueue,
   toggleViewType,
   setExperimentLoading,
   triggerUserGuide,

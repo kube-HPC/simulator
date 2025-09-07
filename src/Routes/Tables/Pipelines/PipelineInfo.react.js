@@ -11,7 +11,7 @@ import {
 import { ReactComponent as IconCompare } from 'images/compare.svg';
 import { CheckOutlined, RedoOutlined } from '@ant-design/icons';
 import { useReadme, useVersions } from 'hooks';
-import { VersionsTable } from 'components';
+import { VersionsTable, AuditTrailTable } from 'components';
 import usePath, { OVERVIEW_TABS as TABS } from './usePath';
 
 const PipelineInfo = ({ pipeline }) => {
@@ -135,6 +135,11 @@ const PipelineInfo = ({ pipeline }) => {
             setVersionsCompare={setVersionsCompare}
           />
         ),
+      },
+      {
+        label: TABS.VERSIONSTIMETABLE,
+        key: TABS.VERSIONSTIMETABLE,
+        children: <AuditTrailTable auditTrail={pipeline.auditTrail} />,
       },
       {
         label: TABS.DESCRIPTION,
