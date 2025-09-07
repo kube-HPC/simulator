@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  useRef,
+} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { CheckOutlined } from '@ant-design/icons';
@@ -42,6 +48,8 @@ const Editor = ({
   isRunPipeline,
   isEdit,
 }) => {
+  const submitButtonRef = useRef(null);
+
   const intervalEditorValue = useMemo(
     () => (isEdit ? stringify(initialState) : stringify(addPipelineTemplate)),
     []
@@ -76,13 +84,22 @@ const Editor = ({
     [innerState, isRunPipeline, nodes, setEditorState, toggle]
   );
 
-  const onEditorSubmit = () =>
-    tryParse({
-      src: innerState,
-      onSuccess: ({ parsed }) => {
-        onSubmit(parsed);
-      },
-    });
+  const onEditorSubmit = useCallback(
+    () =>
+      tryParse({
+        src: innerState,
+        onSuccess: ({ parsed }) => {
+          onSubmit(parsed);
+        },
+      }),
+    [innerState, onSubmit]
+  );
+
+  const handleSave = useCallback(() => {
+    if (submitButtonRef.current) {
+      submitButtonRef.current.click();
+    }
+  }, []);
 
   const onDefault = () => setInnerState(intervalEditorValue);
 
@@ -99,7 +116,7 @@ const Editor = ({
             <JsonEditor
               value={innerState}
               onChange={setInnerState}
-              onSave={() => onEditorSubmit()} /// ///////////////////
+              onSave={handleSave} /// ///////////////////
               height="100%"
               width="100%"
             />
@@ -126,6 +143,7 @@ const Editor = ({
           </PanelButton>
         )}
         <RightAlignedButton
+          ref={submitButtonRef}
           type="primary"
           onClick={onEditorSubmit}
           form="add-pipeline"
