@@ -36,7 +36,7 @@
     "@ant-design/icons": "^6.0.0",
     "@apollo/client": "^3.10.1",
     "ansi-to-html": "^0.7.2",
-    "apexcharts": "^3.37.0",
+    "apexcharts": "^5.3.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "graphql": "^15.5.2",
