@@ -79,7 +79,7 @@ const AlgorithmsTabs = ({ algorithm }) => {
     });
   };
 
-  const { dataSource, onApply, onDelete, onAdd, fetch } = useVersions({
+  const { dataSource, onApply, onDelete, onSaveAs, fetch } = useVersions({
     nameId: algorithm.name,
     confirmPopupForceVersion,
     isFetch: true,
@@ -162,7 +162,7 @@ const AlgorithmsTabs = ({ algorithm }) => {
             dataSource={dataSource}
             onApply={onApply}
             onDelete={onDelete}
-            onAdd={onAdd}
+            onSaveAs={onSaveAs}
             source="algorithms"
             setVersionsCompare={setVersionsCompare}
           />
@@ -204,7 +204,7 @@ const AlgorithmsTabs = ({ algorithm }) => {
       isFirstRender,
       onApply,
       onDelete,
-      onAdd,
+      onSaveAs,
       readme,
     ]
   );

@@ -89,6 +89,10 @@ const AlgorithmJsonEditor = ({
     tryParse({ src: editorJsonValue, onSuccess: onBeforeEditorSubmit });
   };
 
+  const handleSave = () => {
+    onEditorSubmit();
+  };
+
   const resetJson = () => {
     setEditorJsonValue(sourceJson);
   };
@@ -100,7 +104,11 @@ const AlgorithmJsonEditor = ({
   return (
     <>
       <Card style={{ flex: 1 }} styles={{ body: { height: '100%' } }}>
-        <JsonEditor value={editorJsonValue} onChange={setEditorJsonValue} />
+        <JsonEditor
+          value={editorJsonValue}
+          onChange={setEditorJsonValue}
+          onSave={handleSave}
+        />
       </Card>
       {isCodeProp && (
         <Card>

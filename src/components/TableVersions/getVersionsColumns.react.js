@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { CheckOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Modal, Tooltip, Typography, Tag, Input } from 'antd';
 import Moment from 'react-moment';
 import { sorter } from 'utils/stringHelper';
@@ -45,9 +45,9 @@ const currentConfirmAction = (action, { name, version }, source) => {
     },
   });
 };
+//
 const addConfirmAction = (action, { name, version }, source) => {
-  let newName = '';
-
+  let newName = `${name}-copy`;
   const isAlgorithm = source === 'algorithms';
   const itemType = isAlgorithm ? 'algorithm' : 'pipeline';
   const itemTypeCapitalized = isAlgorithm ? 'Algorithm' : 'Pipeline';
@@ -59,6 +59,7 @@ const addConfirmAction = (action, { name, version }, source) => {
         <Text>Enter new {itemType} name:</Text>
         <Input
           placeholder={`Enter ${itemType} name`}
+          defaultValue={`${name}-copy`}
           onChange={e => {
             newName = e.target.value;
           }}
@@ -69,23 +70,24 @@ const addConfirmAction = (action, { name, version }, source) => {
     okText: `Save ${itemTypeCapitalized}`,
     okType: 'primary',
     cancelText: 'Cancel',
-    onOk() {
-      if (newName.trim()) {
-        const params = { name, version };
-        if (isAlgorithm) {
-          params.newAlgorithmName = newName.trim();
-        } else {
-          params.newPipelineName = newName.trim();
-        }
-        action(params);
-        return Promise.resolve();
-      } 
+    onOk: () => {
+      if (!newName.trim()) {
         Modal.error({
           title: 'Error',
           content: `Please enter a ${itemType} name.`,
         });
-        return Promise.reject(new Error('Name is required'));
-      
+        return false; // stops modal from closing, no rejection error
+      }
+
+      const params = { name, version };
+      if (isAlgorithm) {
+        params.newAlgorithmName = newName.trim();
+      } else {
+        params.newPipelineName = newName.trim();
+      }
+
+      action(params);
+      return true; // close modal normally
     },
   });
 };
@@ -100,7 +102,7 @@ const Created = created => (
 const getVersionsColumns = ({
   onDelete,
   onApply,
-  onAdd,
+  onSaveAs,
   currentVersion,
   source,
 }) => {
@@ -156,8 +158,8 @@ const getVersionsColumns = ({
             <Button
               type="dashed"
               shape="circle"
-              icon={<PlusOutlined />}
-              onClick={() => addConfirmAction(onAdd, record, source)}
+              icon={<SaveOutlined />}
+              onClick={() => addConfirmAction(onSaveAs, record, source)}
             />
           </Tooltip>
         </FlexBox.Item>
@@ -246,6 +248,7 @@ const getVersionsColumns = ({
         title: 'Action',
         dataIndex: ['action'],
         key: 'action',
+        width: 'fit-content',
         render: Action,
       },
     ];
@@ -297,6 +300,7 @@ const getVersionsColumns = ({
       title: 'Action',
       dataIndex: ['action'],
       key: 'action',
+      width: 'fit-content',
       render: Action,
     },
   ];
