@@ -157,7 +157,7 @@ const QueryForm = ({
       color: COLOR_PIPELINE_STATUS[status],
     }));
   }, []);
-
+  const isMarketplace = window.location.href.includes('marketplace');
   // useEffect(() => {
   //  setTimeout(setLoadingJobs(false), 3000);
   // }, [loadingJobs]);
@@ -191,7 +191,7 @@ const QueryForm = ({
       <Form.Item name="algorithmName">
         <AutoCompleteFloatingLabelInput
           isExactMatch
-          label="Algorithm Name"
+          label={isMarketplace ? 'Marketplace Name' : 'Algorithm Name'}
           width="9vw"
           options={algorithmOptions}
           allowClear

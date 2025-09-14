@@ -26,7 +26,15 @@ const rightSidebarContent = {
       </>
     ),
   },
-
+  [RIGHT_SIDEBAR_NAMES.ADD_MARKETPLACE]: {
+    width: DRAWER_SIZE.ADD_MARKETPLACE,
+    title: RIGHT_SIDEBAR_NAMES.ADD_MARKETPLACE,
+    description: (
+      <>
+        Marketplace <Text strong>descriptor</Text> to be added to the store.
+      </>
+    ),
+  },
   [RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE]: {
     width: DRAWER_SIZE.ADD_DATASOURCE,
     title: RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE,

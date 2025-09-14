@@ -45,6 +45,10 @@ const Body = () => {
         <Route path=":algorithmId/*" />
       </Route>
 
+      <Route path="marketplace" element={<AlgorithmsTable />}>
+        <Route path=":algorithmId/*" />
+      </Route>
+
       <Route path="workers/*" element={<WorkersTable />} />
       <Route path="drivers/*" element={<DriversTable />} />
 

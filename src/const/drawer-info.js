@@ -3,6 +3,7 @@ export const DRAWER_TITLES = {
   DRIVERS: 'Drivers',
   ADD_PIPELINE: 'Pipeline Wizard',
   ADD_ALGORITHM: 'Algorithm Wizard',
+  ADD_MARKETPLACE: 'Marketplace Wizard',
   ADD_DATASOURCE: ' Datasource wizard',
   EDIT_DATASOURCE: ' Datasource editor',
   RUN_RAW_PIPELINE: 'Run  Pipeline',

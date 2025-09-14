@@ -9,6 +9,7 @@ import { instanceFiltersVar } from 'cache';
 import { FiltersForms } from 'styles';
 import AutoCompleteFloatingLabelInput from 'components/common/FiltersInput/AutoCompleteFloatingLabelInput';
 
+const isMarketplace = window.location.href.includes('marketplace');
 const AlgorithmsQueryTable = ({
   onSubmit = () => {},
   algorithmsList = undefined,
@@ -76,7 +77,7 @@ const AlgorithmsQueryTable = ({
     <FiltersForms layout="inline" form={form} size="medium" onFinish={onFinish}>
       <Form.Item name="qAlgorithmName">
         <AutoCompleteFloatingLabelInput
-          label="Algorithm Name"
+          label={isMarketplace ? 'Marketplace Name' : 'Algorithm Name'}
           width="24vw"
           options={algorithmOptions}
           autoFocus

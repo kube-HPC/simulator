@@ -22,6 +22,10 @@ export const topActions = [
     component: IconAddAlgorithm,
   },
   {
+    name: RIGHT_SIDEBAR_NAMES.ADD_MARKETPLACE,
+    component: IconAddAlgorithm,
+  },
+  {
     name: RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE,
     component: IconDataSource,
   },

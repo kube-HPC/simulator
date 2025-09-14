@@ -60,26 +60,26 @@ const AlgorithmsTable = () => {
 
   const getList = useMemo(() => {
     const filterValue = instanceFilter.algorithms.qAlgorithmName;
+    const isMarketplace = window.location.href.includes('marketplace');
 
-    if (filterValue != null && query.data?.algorithms?.list) {
-      const filterAlgorithm = query.data?.algorithms?.list.filter(item =>
-        item.name.includes(filterValue)
-      );
-      return [...filterAlgorithm];
+    let list = query.data?.algorithms?.list || [];
+
+    if (filterValue) {
+      list = list.filter(item => item.name.includes(filterValue));
     }
 
-    return (
-      (query.data &&
-        query.data.algorithms &&
-        query.data.algorithms.list &&
-        [...query.data.algorithms.list].sort((x, y) => {
-          if (x.unscheduledReason && !y.unscheduledReason) return -1;
-          if (!x.unscheduledReason && y.unscheduledReason) return 1;
+    if (isMarketplace) {
+      list = list.filter(item => item.name.toLowerCase().startsWith('mark'));
+    } else {
+      list = list.filter(item => !item.name.toLowerCase().startsWith('mark'));
+    }
 
-          return x.modified < y.modified ? 1 : -1;
-        })) ||
-      []
-    );
+    // מיון
+    return [...list].sort((x, y) => {
+      if (x.unscheduledReason && !y.unscheduledReason) return -1;
+      if (!x.unscheduledReason && y.unscheduledReason) return 1;
+      return x.modified < y.modified ? 1 : -1;
+    });
   }, [instanceFilter.algorithms.qAlgorithmName, query.data]);
 
   // if have keycloak remove avatar from columns job

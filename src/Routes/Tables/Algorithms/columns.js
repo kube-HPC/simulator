@@ -64,7 +64,7 @@ const filterByImage = (value, record) => record.algorithmImage.includes(value);
 const sortByImage = (a, b) => sorter(a.algorithmImage, b.algorithmImage);
 const sortByMinHotWorkers = (a, b) => sorter(a.minHotWorkers, b.minHotWorkers);
 const sortByLastModified = (a, b) => sorter(a.modified, b.modified);
-
+const isMarketplace = window.location.href.includes('marketplace');
 export default [
   {
     title: ``,
@@ -75,7 +75,7 @@ export default [
   },
   {
     width: '12%',
-    title: 'Algorithm Name',
+    title: isMarketplace ? 'Marketplace Name' : 'Algorithm Name',
     dataIndex: ['name'],
     key: 'name',
     sorter: sortByName,
@@ -83,7 +83,7 @@ export default [
   },
   {
     width: '40%',
-    title: 'Algorithm Image',
+    title: isMarketplace ? 'Marketplace Image' : 'Algorithm Image',
     dataIndex: ['algorithmImage'],
     key: 'algorithmImage',
     onFilter: filterByImage,
