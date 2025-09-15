@@ -65,10 +65,12 @@ const AlgorithmsQueryTable = ({
 
   const algorithmOptions = useMemo(
     () =>
-      algorithmsList?.map(algorithm => ({
-        value: algorithm.name,
-        label: algorithm.name,
-      })),
+      algorithmsList
+        .filter(item => item.name.toLowerCase().startsWith('mark'))
+        ?.map(algorithm => ({
+          value: algorithm.name,
+          label: algorithm.name,
+        })),
     [algorithmsList]
   );
 
@@ -76,7 +78,7 @@ const AlgorithmsQueryTable = ({
     <FiltersForms layout="inline" form={form} size="medium" onFinish={onFinish}>
       <Form.Item name="qAlgorithmName">
         <AutoCompleteFloatingLabelInput
-          label="Algorithm Name"
+          label="Marketplace Name"
           width="24vw"
           options={algorithmOptions}
           autoFocus

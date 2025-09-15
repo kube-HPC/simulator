@@ -75,7 +75,7 @@ export default [
   },
   {
     width: '12%',
-    title: 'Algorithm Name',
+    title: 'Marketplace Name',
     dataIndex: ['name'],
     key: 'name',
     sorter: sortByName,
@@ -83,7 +83,7 @@ export default [
   },
   {
     width: '40%',
-    title: 'Algorithm Image',
+    title: 'Marketplace Image',
     dataIndex: ['algorithmImage'],
     key: 'algorithmImage',
     onFilter: filterByImage,

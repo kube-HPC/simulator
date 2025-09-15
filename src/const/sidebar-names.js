@@ -7,7 +7,7 @@ export const NEW_ITEM_PAGE = {
 export const NEW_ITEM = {
   pipelines: 'Pipeline',
   algorithms: 'Algorithm',
-  marketplace: 'Marketplace',
+  marketplace: '',
   datasources: 'Datasource',
 };
 

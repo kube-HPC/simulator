@@ -22,7 +22,7 @@ const TableAlgorithms = styled(Table)`
     min-height: 75vh;
   }
 `;
-const AlgorithmsTable = () => {
+const MarketplacesTable = () => {
   const { goTo } = usePath();
   const onRow = ({ name }) => ({
     onDoubleClick: () => goTo.overview({ nextAlgorithmId: name }),
@@ -60,13 +60,14 @@ const AlgorithmsTable = () => {
 
   const getList = useMemo(() => {
     const filterValue = instanceFilter.algorithms.qAlgorithmName;
+
     let list = query.data?.algorithms?.list || [];
 
     if (filterValue) {
       list = list.filter(item => item.name.includes(filterValue));
     }
-    // no marketplace
-    list = list.filter(item => !item.name.toLowerCase().startsWith('mark'));
+
+    list = list.filter(item => item.name.toLowerCase().startsWith('mark'));
 
     return [...list].sort((x, y) => {
       if (x.unscheduledReason && !y.unscheduledReason) return -1;
@@ -127,4 +128,4 @@ const AlgorithmsTable = () => {
   );
 };
 
-export default React.memo(AlgorithmsTable);
+export default React.memo(MarketplacesTable);

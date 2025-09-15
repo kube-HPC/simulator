@@ -57,7 +57,7 @@ const instanceCounterAdapter = obj => ({
   [LEFT_SIDEBAR_NAMES.QUEUE]: obj.queue || 0,
   [LEFT_SIDEBAR_NAMES.PIPELINES]: obj.pipelines,
   [LEFT_SIDEBAR_NAMES.ALGORITHMS]: obj.algorithms,
-  [LEFT_SIDEBAR_NAMES.MARKETPLACE]: obj.algorithms,
+  [LEFT_SIDEBAR_NAMES.MARKETPLACE]: 3,
   [LEFT_SIDEBAR_NAMES.DATASOURCES]: obj.dataSources,
   [LEFT_SIDEBAR_NAMES.WORKERS]: obj.workers,
   [LEFT_SIDEBAR_NAMES.DRIVERS]: obj.drivers,

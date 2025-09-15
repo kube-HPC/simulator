@@ -4,17 +4,18 @@ import { OVERVIEW_TABS } from 'const';
 
 export default () => {
   const { algorithmId, tabKey } = useParams();
+
   const navigate = useNavigate();
   const location = useLocation();
   const paths = useMemo(
     () => ({
-      root: '/algorithms',
+      root: '/marketplace',
       overview: ({
         nextAlgorithmId = algorithmId,
         nextTabKey = OVERVIEW_TABS.VERSIONS,
-      } = {}) => `/algorithms/${nextAlgorithmId}/overview/${nextTabKey}`,
+      } = {}) => `/marketplace/${nextAlgorithmId}/overview/${nextTabKey}`,
       edit: ({ nextAlgorithmId = algorithmId } = {}) =>
-        `/algorithms/${nextAlgorithmId}/edit`,
+        `/marketplace/${nextAlgorithmId}/edit`,
     }),
     [algorithmId]
   );

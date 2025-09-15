@@ -82,19 +82,7 @@ const NewButtonSelect = () => {
       ),
       icon: <IconAddPipeline style={iconSize} />,
     },
-    {
-      key: RIGHT_SIDEBAR_NAMES.ADD_MARKETPLACE,
-      label: (
-        <Link
-          to={{
-            pathname: `${pageName}/${RIGHT_SIDEBAR_NAMES.ADD_MARKETPLACE}`,
-            search: location.search,
-          }}>
-          Marketplace
-        </Link>
-      ),
-      icon: <IconAddAlgorithm style={iconSize} />,
-    },
+
     {
       key: RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM,
       label: (

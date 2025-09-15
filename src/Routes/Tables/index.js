@@ -5,6 +5,7 @@ import { useReactiveVar } from '@apollo/client';
 import Jobs from './Jobs';
 import QueueOrderJobsV2 from './QueueOrderJobsV2';
 import AlgorithmsTable from './Algorithms';
+import MarketplacesTable from './Marketplaces';
 import DriversTable from './Drivers';
 import PipelinesTable from './Pipelines';
 import WorkersTable from './Workers';
@@ -45,7 +46,7 @@ const Body = () => {
         <Route path=":algorithmId/*" />
       </Route>
 
-      <Route path="marketplace" element={<AlgorithmsTable />}>
+      <Route path="marketplace" element={<MarketplacesTable />}>
         <Route path=":algorithmId/*" />
       </Route>
 

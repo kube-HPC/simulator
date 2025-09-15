@@ -16,6 +16,7 @@ export const DRAWER_TITLES = {
   ALGORITHM_INFO: 'Algorithm Overview',
   PIPELINE_INFO: 'Pipeline Overview',
   ALGORITHM_EDIT: ' Algorithm editor',
+  MARKETPLACE_EDIT: ' Marketplace editor',
   EDIT_PIPELINE: ' Pipeline editor',
   PIPELINE_EXECUTE: 'Run Pipeline',
   TF_RUN: 'TF Run',
