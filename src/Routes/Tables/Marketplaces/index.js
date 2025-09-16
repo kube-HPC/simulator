@@ -104,7 +104,7 @@ const MarketplacesTable = () => {
           rowKey={rowKey}
           dataSource={getList}
           columns={algorithmColumnsView}
-          onRow={onRow}
+          // onRow={onRow}
           scroll={{
             y: '80vh',
           }}

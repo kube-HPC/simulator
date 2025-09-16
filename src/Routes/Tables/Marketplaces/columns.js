@@ -5,9 +5,12 @@ import { sorter } from 'utils/stringHelper';
 import { copyToClipboard } from 'utils';
 import { errorsCode } from '@hkube/consts';
 import AuditTrailAvatar from '../../../components/AuditTrailAvatar';
+
+/* 
 import AlgorithmActions from './AlgorithmActions.react';
 import AlgorithmBuildStats from './AlgorithmBuildStats.react';
 import LastModified from './LastModified';
+*/
 
 // eslint-disable-next-line react/prop-types, no-unused-vars
 const HotWorkers = ({ minHotWorkers }) => <Tag>{minHotWorkers}</Tag>;
@@ -56,14 +59,14 @@ const Name = (name, record) =>
     </div>
   );
 
-const BuildStats = builds => <AlgorithmBuildStats builds={builds} />;
-const renderAction = (_, record) => <AlgorithmActions record={record} />;
+// const BuildStats = builds => <AlgorithmBuildStats builds={builds} />;
+// const renderAction = (_, record) => <AlgorithmActions record={record} />;
 
 const sortByName = (a, b) => sorter(a.name, b.name);
 const filterByImage = (value, record) => record.algorithmImage.includes(value);
 const sortByImage = (a, b) => sorter(a.algorithmImage, b.algorithmImage);
 const sortByMinHotWorkers = (a, b) => sorter(a.minHotWorkers, b.minHotWorkers);
-const sortByLastModified = (a, b) => sorter(a.modified, b.modified);
+// const sortByLastModified = (a, b) => sorter(a.modified, b.modified);
 
 export default [
   {
@@ -75,7 +78,7 @@ export default [
   },
   {
     width: '12%',
-    title: 'Marketplace Name',
+    title: 'App Name',
     dataIndex: ['name'],
     key: 'name',
     sorter: sortByName,
@@ -83,20 +86,20 @@ export default [
   },
   {
     width: '40%',
-    title: 'Marketplace Image',
+    title: 'App Image',
     dataIndex: ['algorithmImage'],
     key: 'algorithmImage',
     onFilter: filterByImage,
     sorter: sortByImage,
     render: Image,
   },
-  {
+  /* {
     width: '7%',
     title: 'Builds Stats',
     dataIndex: ['buildStats'],
     key: 'builds',
     render: BuildStats,
-  },
+  }, */
   {
     width: '5%',
     title: 'CPU',
@@ -118,7 +121,7 @@ export default [
     sorter: sortByMinHotWorkers,
     render: HotWorkers,
   },
-  {
+  /* {
     width: '10%',
     title: 'Last modified',
     //  dataIndex: ['modified'],
@@ -127,12 +130,12 @@ export default [
     render: record => (
       <LastModified auditTrail={record.auditTrail} modified={record.modified} />
     ),
-  },
-  {
+  }, */
+  /* {
     width: '14%',
     title: 'Action',
     dataIndex: ['action'],
     key: 'action',
     render: renderAction,
-  },
+  }, */
 ];
