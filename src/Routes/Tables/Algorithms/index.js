@@ -32,7 +32,9 @@ const AlgorithmsTable = () => {
   const instanceFilter = useReactiveVar(instanceFiltersVar);
   const { keycloakEnable } = useSelector(selectors.connection);
 
-  const query = useQuery(ALGORITHMS_QUERY);
+  const query = useQuery(ALGORITHMS_QUERY, {
+    fetchPolicy: 'cache-and-network',
+  });
   usePolling(query, 3000);
 
   /* const onSubmitFilter = useCallback(
@@ -89,7 +91,8 @@ const AlgorithmsTable = () => {
     }
     return algorithmColumns;
   }, [keycloakEnable]);
-
+  console.log('query.data', query.data);
+  console.log('query.loading', query.loading);
   if (query.loading && query.data === undefined) return <SkeletonLoader />;
   if (query.error) return `Error! ${query.error.message}`;
 
