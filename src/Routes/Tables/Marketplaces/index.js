@@ -11,7 +11,7 @@ import { instanceFiltersVar } from 'cache'; // algorithmsListVar
 import { ALGORITHMS_QUERY } from 'graphql/queries';
 import styled from 'styled-components';
 import OverviewDrawer from './OverviewDrawer';
-import usePath from './usePath';
+// import usePath from './usePath';
 import EditDrawer from './EditDrawer';
 import algorithmColumns from './columns';
 import AlgorithmsQueryTable from './AlgorithmsQueryTable';
@@ -23,10 +23,10 @@ const TableAlgorithms = styled(Table)`
   }
 `;
 const MarketplacesTable = () => {
-  const { goTo } = usePath();
-  const onRow = ({ name }) => ({
+  // const { goTo } = usePath();
+  /* const onRow = ({ name }) => ({
     onDoubleClick: () => goTo.overview({ nextAlgorithmId: name }),
-  });
+  }); */
 
   // const algorithmsList = useReactiveVar(algorithmsListVar);
   const instanceFilter = useReactiveVar(instanceFiltersVar);
