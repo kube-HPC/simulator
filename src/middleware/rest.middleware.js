@@ -153,6 +153,7 @@ const restMiddleware =
         .post(action.payload.url, action.payload.body)
         .then(res => {
           success(dispatch, res.data, action);
+          console.log('post forceRefetchAll');
           forceRefetchAll();
         })
         .catch(err => reject(dispatch, err.response.data.error, action));
@@ -169,6 +170,7 @@ const restMiddleware =
         .put(action.payload.url, action.payload.body)
         .then(res => {
           success(dispatch, res.data, action);
+          console.log('put forceRefetchAll');
           forceRefetchAll();
         })
         .catch(err => reject(dispatch, err.response.data.error, action));
@@ -177,6 +179,7 @@ const restMiddleware =
         .delete(action.payload.url, { data: action.payload.body })
         .then(res => {
           success(dispatch, res.data, action);
+          console.log('delete forceRefetchAll');
           forceRefetchAll();
         })
         .catch(err => reject(dispatch, err?.response?.data?.error, action));

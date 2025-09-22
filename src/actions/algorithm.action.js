@@ -1,5 +1,15 @@
 import actions from 'const/application-actions';
 
+export const addNewAlgorithm = (formData, onSuccess) => ({
+  type: actions.REST_REQ_POST_FORM,
+  payload: {
+    url: 'store/algorithms',
+    formData,
+    actionType: actions.ALGORITHM_ADD_NEW,
+  },
+  meta: { onSuccess },
+});
+
 export const applyAlgorithm = (formData, onSuccess) => ({
   type: actions.REST_REQ_POST_FORM,
   payload: {
