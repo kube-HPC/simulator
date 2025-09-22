@@ -12,13 +12,15 @@ import DataSources from './DataSources';
 
 const Body = () => {
   const metaMode = useReactiveVar(metaVar);
-  const { hash } = window.location; // search
+  const { href } = window.location; // search
   const { experimentName } = metaMode;
 
   useEffect(() => {
     // if (!hash || (hash && !search)) {
 
-    if (hash === '#/' || hash === '') {
+    console.log('window.location', window.location);
+
+    if (href.indexOf('experiment=') === -1) {
       window.location.replace(
         `${window.location.origin}${window.location.pathname}#/jobs?&experiment=${experimentName ?? 'main'}`
       );
