@@ -19,7 +19,8 @@ const _throttled = throttle(
 document.addEventListener('mousemove', _throttled);
 
 // reload all data in site
-export const forceRefetchAll = () => {
+// eslint-disable-next-line no-unused-vars
+export const forceRefetchAll = (act = 'def') => {
   queryArry.forEach(query => {
     if (query.refetch) {
       query.refetch();

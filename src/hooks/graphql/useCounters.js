@@ -1,5 +1,5 @@
 import { COUNTERS_QUERY } from 'graphql/queries';
-// import { usePolling } from 'hooks';
+import { usePolling } from 'hooks';
 import { message, Button } from 'antd';
 import React, { useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -47,7 +47,7 @@ const useCounters = () => {
         to: instanceFilters?.jobs?.datesRange?.to || null,
       },
     },
-    pollInterval: 3000,
+    // pollInterval: 3000,
     notifyOnNetworkStatusChange: true,
     onCompleted: data => {
       const newCounters = {
@@ -96,6 +96,6 @@ const useCounters = () => {
     },
   });
 
-  // usePolling(query, 3000);
+  usePolling(query, 3000);
 };
 export default useCounters;
