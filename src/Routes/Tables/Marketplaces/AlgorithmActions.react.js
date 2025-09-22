@@ -16,6 +16,7 @@ import { useActions } from 'hooks';
 import RunForm from './RunForm';
 import usePath from './usePath';
 
+const NOTVIEW = false;
 const deleteConfirmAction = action => {
   Modal.confirm({
     title: 'Deleting Algorithm',
@@ -130,7 +131,7 @@ const AlgorithmActions = ({ record }) => {
       onClick={stopPropagation}
       onDoubleClick={stopPropagation}>
       <Button.Group>
-        {isRoleRunOrStop ? (
+        {NOTVIEW && isRoleRunOrStop ? (
           <Popover
             overlayStyle={overlayStyle}
             title="Run Algorithm"
@@ -147,11 +148,16 @@ const AlgorithmActions = ({ record }) => {
             />
           </Popover>
         ) : (
-          <Tooltip title="No run permission">
-            <Button icon={<PlayCircleOutlined />} disabled={!isRoleRunOrStop} />
-          </Tooltip>
+          NOTVIEW && (
+            <Tooltip title="No run permission">
+              <Button
+                icon={<PlayCircleOutlined />}
+                disabled={!isRoleRunOrStop}
+              />
+            </Tooltip>
+          )
         )}
-        {isRoleRunOrStop ? (
+        {NOTVIEW && isRoleRunOrStop ? (
           <Popover
             overlayStyle={overlayStyle}
             title="Debug Algorithm"
@@ -165,9 +171,11 @@ const AlgorithmActions = ({ record }) => {
             <Button icon={<BugOutlined />} onClick={() => clickOnRunDebug()} />
           </Popover>
         ) : (
-          <Tooltip title="No debug permission">
-            <Button icon={<BugOutlined />} disabled={!isRoleRunOrStop} />
-          </Tooltip>
+          NOTVIEW && (
+            <Tooltip title="No debug permission">
+              <Button icon={<BugOutlined />} disabled={!isRoleRunOrStop} />
+            </Tooltip>
+          )
         )}
         <Tooltip title={isRoleEdit ? 'edit algorithm' : 'No edit permission'}>
           <Button
@@ -176,14 +184,16 @@ const AlgorithmActions = ({ record }) => {
             disabled={!isRoleEdit}
           />
         </Tooltip>
-        <Tooltip
-          title={isRoleDelete ? 'delete algorithm' : 'No delete permission'}>
-          <Button
-            icon={<DeleteOutlined />}
-            onClick={onClickDelete}
-            disabled={!isRoleDelete}
-          />
-        </Tooltip>
+        {NOTVIEW && (
+          <Tooltip
+            title={isRoleDelete ? 'delete algorithm' : 'No delete permission'}>
+            <Button
+              icon={<DeleteOutlined />}
+              onClick={onClickDelete}
+              disabled={!isRoleDelete}
+            />
+          </Tooltip>
+        )}
         <Tooltip title="show overview">
           <Button icon={<InfoCircleOutlined />} onClick={onMoreInfo} />
         </Tooltip>

@@ -5,9 +5,9 @@ import { sorter } from 'utils/stringHelper';
 import { copyToClipboard } from 'utils';
 import { errorsCode } from '@hkube/consts';
 import AuditTrailAvatar from '../../../components/AuditTrailAvatar';
-
-/* 
 import AlgorithmActions from './AlgorithmActions.react';
+/* 
+
 import AlgorithmBuildStats from './AlgorithmBuildStats.react';
 import LastModified from './LastModified';
 */
@@ -60,7 +60,7 @@ const Name = (name, record) =>
   );
 
 // const BuildStats = builds => <AlgorithmBuildStats builds={builds} />;
-// const renderAction = (_, record) => <AlgorithmActions record={record} />;
+const renderAction = (_, record) => <AlgorithmActions record={record} />;
 
 const sortByName = (a, b) => sorter(a.name, b.name);
 const filterByImage = (value, record) => record.algorithmImage.includes(value);
@@ -131,11 +131,11 @@ export default [
       <LastModified auditTrail={record.auditTrail} modified={record.modified} />
     ),
   }, */
-  /* {
+  {
     width: '14%',
     title: 'Action',
     dataIndex: ['action'],
     key: 'action',
     render: renderAction,
-  }, */
+  },
 ];

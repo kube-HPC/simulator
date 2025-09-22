@@ -78,7 +78,7 @@ const AlgorithmsQueryTable = ({
     <FiltersForms layout="inline" form={form} size="medium" onFinish={onFinish}>
       <Form.Item name="qAlgorithmName">
         <AutoCompleteFloatingLabelInput
-          label="Marketplace Name"
+          label="App Name"
           width="24vw"
           options={algorithmOptions}
           autoFocus
