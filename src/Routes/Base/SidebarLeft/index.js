@@ -5,7 +5,7 @@ import { animated, useSpring } from 'react-spring';
 import { useSiteThemeMode } from 'hooks';
 import Icon, { FilterTwoTone } from '@ant-design/icons';
 import { Badge, Tag } from 'antd';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useErrorLogs, useCounters } from 'hooks/graphql';
 import { dataCountMock } from 'config';
 import { LEFT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
@@ -62,7 +62,10 @@ const instanceCounterAdapter = obj => ({
 });
 
 const SidebarLeft = () => {
-  const { pageName } = useParams();
+  // const { pageName } = useParams();
+  const { pathname } = useLocation();
+  const pageName = pathname.split('/')[1] || '';
+
   const location = useLocation();
   const { totalNewWarnings } = useErrorLogs();
 
@@ -173,7 +176,7 @@ const SidebarLeft = () => {
     menuMainItems,
     totalNewWarnings,
   ]);
-  console.log('pageName', pageName);
+
   return (
     <Border>
       <Sider

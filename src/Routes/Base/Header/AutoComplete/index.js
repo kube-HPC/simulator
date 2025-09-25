@@ -2,7 +2,7 @@ import { AutoComplete as AntAutoComplete, Input } from 'antd';
 import { useActions } from 'hooks';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { selectors } from 'reducers';
@@ -25,7 +25,10 @@ const selectorsMap = {
 const disableFilter = ['queue'];
 
 const AutoComplete = ({ className = '' }) => {
-  const { pageName } = useParams();
+  // const { pageName } = useParams();
+  const { pathname } = useLocation();
+  const pageName = pathname.split('/')[1] || '';
+
   const isDisabled = disableFilter.includes(pageName);
   const tableData = useSelector(selectorsMap[pageName]).map(x => ({
     value: x,
