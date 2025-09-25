@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Link, useLocation, useParams, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Button, Dropdown } from 'antd';
 import { ReactComponent as IconAddPipeline } from 'images/no-fill/add-pipeline.svg';
@@ -47,7 +47,10 @@ export const topActions = [
 
 const NewButtonSelect = () => {
   const location = useLocation();
-  const { pageName } = useParams();
+  // const { pageName } = useParams();
+  const { pathname } = useLocation();
+  const pageName = pathname.split('/')[1] || '';
+  console.log('pageName1', pageName);
   const navigate = useNavigate();
 
   const gotoNewAction = useCallback(() => {

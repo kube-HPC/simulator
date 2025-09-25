@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Link, useParams, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Icon, {
   WarningOutlined,
   ClusterOutlined,
@@ -21,7 +21,10 @@ import {
 } from './MenuStyles';
 
 const useSubMenuAdmin = (totalNewWarnings, dataMoreCount) => {
-  const { pageName } = useParams();
+  // const { pageName } = useParams();
+  const { pathname } = useLocation();
+  const pageName = pathname.split('/')[1] || '';
+  console.log('pageName4', pageName);
   const location = useLocation();
   const { gpu } = useStats();
 
