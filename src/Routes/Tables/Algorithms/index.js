@@ -6,7 +6,7 @@ import { Route, Routes } from 'react-router-dom';
 import { Table } from 'components';
 import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar, makeVar } from '@apollo/client';
-import { Space, Empty } from 'antd';
+import { Empty } from 'antd';
 import { instanceFiltersVar } from 'cache';
 import { ALGORITHMS_QUERY } from 'graphql/queries';
 import styled from 'styled-components';
@@ -22,6 +22,9 @@ const rowKey = ({ name }) => `algorithm-${name}`;
 const TableAlgorithms = styled(Table)`
   .ant-table-body {
     min-height: 75vh;
+  }
+  .ant-table-cell {
+    margin: auto;
   }
 `;
 
@@ -74,27 +77,26 @@ const AlgorithmsTable = () => {
 
   return (
     <>
-      <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-        <AlgorithmsQueryTable
-          algorithmsList={algorithmsList}
-          onSubmit={() => {}}
-        />
+      <AlgorithmsQueryTable
+        algorithmsList={algorithmsList}
+        onSubmit={() => {}}
+      />
 
-        <TableAlgorithms
-          rowKey={rowKey}
-          dataSource={getList}
-          columns={algorithmColumnsView}
-          onRow={onRow}
-          scroll={{ y: '80vh' }}
-          locale={{
-            emptyText: (
-              <Empty
-                description={<span>No results match your search criteria</span>}
-              />
-            ),
-          }}
-        />
-      </Space>
+      <TableAlgorithms
+        virtual
+        rowKey={rowKey}
+        dataSource={getList}
+        columns={algorithmColumnsView}
+        onRow={onRow}
+        scroll={{ y: 650 }}
+        locale={{
+          emptyText: (
+            <Empty
+              description={<span>No results match your search criteria</span>}
+            />
+          ),
+        }}
+      />
 
       <Routes>
         <Route
