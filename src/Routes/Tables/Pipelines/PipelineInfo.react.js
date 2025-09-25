@@ -186,6 +186,7 @@ const PipelineInfo = ({ pipeline }) => {
               json1={compareJsonPair.json1}
               json2={compareJsonPair.json2}
               idKey="pipeline"
+              currentCompareProp="pipeline"
             />
           )}
         </div>
