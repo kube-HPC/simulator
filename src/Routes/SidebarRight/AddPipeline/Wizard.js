@@ -245,7 +245,7 @@ const Wizard = ({
                 <ContenerGraph>
                   {valuesState && (
                     <GraphPreview
-                      pipeline={valuesState}
+                      pipeline={getFormattedFormValues()}
                       isBuildAllFlows={isStreamingPipeline}
                       isMinified
                       clickNode={selectNodeFromGraph}

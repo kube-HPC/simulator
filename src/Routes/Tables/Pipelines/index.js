@@ -9,14 +9,23 @@ import { useQuery, useReactiveVar } from '@apollo/client';
 import { PIPELINE_QUERY } from 'graphql/queries';
 
 import { pipelineListVar, instanceFiltersVar } from 'cache';
-import { Space, Empty } from 'antd';
-
+import { Empty } from 'antd';
+import styled from 'styled-components';
 import pipelineColumns from './pipelineColumns';
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
 import EditDrawer from './EditDrawer';
 import ExecuteDrawer from './ExecuteDrawer';
 import PipelinesQueryTable from './PipelinesQueryTable';
+
+const TablePipelines = styled(Table)`
+  .ant-table-body {
+    min-height: 75vh;
+  }
+  .ant-table-cell {
+    margin: auto;
+  }
+`;
 
 const rowKey = ({ name }) => `pipeline-${name}`;
 
@@ -70,34 +79,29 @@ const PipelinesTable = () => {
 
   return (
     <>
-      <Space
-        direction="vertical"
-        size="middle"
-        style={{
-          display: 'flex',
-        }}>
-        <PipelinesQueryTable
-          pipelinesList={pipelineList}
-          onSubmit={onSubmitFilter}
-        />
+      <PipelinesQueryTable
+        pipelinesList={pipelineList}
+        onSubmit={onSubmitFilter}
+      />
 
-        <Table
-          rowKey={rowKey}
-          dataSource={pipelineList}
-          columns={pipelinesColumnsView}
-          onRow={onRow}
-          scroll={{
-            y: '80vh',
-          }}
-          locale={{
-            emptyText: (
-              <Empty
-                description={<span>No results match your search criteria</span>}
-              />
-            ),
-          }}
-        />
-      </Space>
+      <TablePipelines
+        virtual
+        rowKey={rowKey}
+        dataSource={pipelineList}
+        columns={pipelinesColumnsView}
+        onRow={onRow}
+        scroll={{
+          y: 650,
+        }}
+        locale={{
+          emptyText: (
+            <Empty
+              description={<span>No results match your search criteria</span>}
+            />
+          ),
+        }}
+      />
+
       <Routes>
         <Route
           path=":pipelineId/overview/:tabKey?"
