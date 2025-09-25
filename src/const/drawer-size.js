@@ -1,6 +1,7 @@
 export default {
   ADD_PIPELINE: '85vw',
   ADD_ALGORITHM: '160ch',
+  ADD_MARKETPLACE: '160ch',
   ADD_DATASOURCE: '40vw',
   EDIT_DATASOURCE: '50vw',
   RUN_RAW_PIPELINE: '40vw',

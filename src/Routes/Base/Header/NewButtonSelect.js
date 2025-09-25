@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Button, Dropdown } from 'antd';
 import { ReactComponent as IconAddPipeline } from 'images/no-fill/add-pipeline.svg';
 import { ReactComponent as IconAddAlgorithm } from 'images/algorithm-icon.svg';
+import { ReactComponent as IconAddMarketplace } from 'images/marketplace.svg';
 import { ReactComponent as IconDataSource } from 'images/datasource.svg';
 import {
   LEFT_SIDEBAR_NAMES,
@@ -40,6 +41,10 @@ export const topActions = [
     component: IconAddAlgorithm,
   },
   {
+    name: RIGHT_SIDEBAR_NAMES.ADD_MARKETPLACE,
+    component: IconAddMarketplace,
+  },
+  {
     name: RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE,
     component: IconDataSource,
   },
@@ -54,6 +59,8 @@ const NewButtonSelect = () => {
     let page = RIGHT_SIDEBAR_NAMES.ADD_PIPELINE;
     if (pageName === NEW_ITEM_PAGE.ALGORITHM) {
       page = RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM;
+    } else if (pageName === NEW_ITEM_PAGE.MARKETPLACE) {
+      page = RIGHT_SIDEBAR_NAMES.ADD_MARKETPLACE;
     } else if (pageName === NEW_ITEM_PAGE.DATASOURCE) {
       page = RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE;
     }
@@ -75,6 +82,7 @@ const NewButtonSelect = () => {
       ),
       icon: <IconAddPipeline style={iconSize} />,
     },
+
     {
       key: RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM,
       label: (

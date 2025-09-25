@@ -1,11 +1,13 @@
 export const NEW_ITEM_PAGE = {
   PIPELINE: 'pipelines',
   ALGORITHM: 'algorithms',
+  MARKETPLACE: 'marketplace',
   DATASOURCE: 'datasources',
 };
 export const NEW_ITEM = {
   pipelines: 'Pipeline',
   algorithms: 'Algorithm',
+  marketplace: '',
   datasources: 'Datasource',
 };
 
@@ -14,6 +16,7 @@ export const LEFT_SIDEBAR_NAMES = {
   QUEUE: 'queue',
   PIPELINES: 'pipelines',
   ALGORITHMS: 'algorithms',
+  MARKETPLACE: 'marketplace',
   WORKERS: 'workers',
   DRIVERS: 'drivers',
   DATASOURCES: 'datasources',
@@ -22,6 +25,7 @@ export const LEFT_SIDEBAR_NAMES = {
 export const RIGHT_SIDEBAR_NAMES = {
   ADD_PIPELINE: 'add-pipeline',
   ADD_ALGORITHM: 'add-algorithm',
+  ADD_MARKETPLACE: 'add-marketplace',
   ADD_DATASOURCE: 'add-datasource',
   RUN_RAW_PIPELINE: 'run-raw-pipeline',
 

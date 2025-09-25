@@ -11,7 +11,7 @@ import { instanceFiltersVar } from 'cache'; // algorithmsListVar
 import { ALGORITHMS_QUERY } from 'graphql/queries';
 import styled from 'styled-components';
 import OverviewDrawer from './OverviewDrawer';
-import usePath from './usePath';
+// import usePath from './usePath';
 import EditDrawer from './EditDrawer';
 import algorithmColumns from './columns';
 import AlgorithmsQueryTable from './AlgorithmsQueryTable';
@@ -22,19 +22,17 @@ const TableAlgorithms = styled(Table)`
     min-height: 75vh;
   }
 `;
-const AlgorithmsTable = () => {
-  const { goTo } = usePath();
-  const onRow = ({ name }) => ({
+const MarketplacesTable = () => {
+  // const { goTo } = usePath();
+  /* const onRow = ({ name }) => ({
     onDoubleClick: () => goTo.overview({ nextAlgorithmId: name }),
-  });
+  }); */
 
   // const algorithmsList = useReactiveVar(algorithmsListVar);
   const instanceFilter = useReactiveVar(instanceFiltersVar);
   const { keycloakEnable } = useSelector(selectors.connection);
 
-  const query = useQuery(ALGORITHMS_QUERY, {
-    fetchPolicy: 'cache-and-network',
-  });
+  const query = useQuery(ALGORITHMS_QUERY);
   usePolling(query, 3000);
 
   /* const onSubmitFilter = useCallback(
@@ -62,13 +60,14 @@ const AlgorithmsTable = () => {
 
   const getList = useMemo(() => {
     const filterValue = instanceFilter.algorithms.qAlgorithmName;
+
     let list = query.data?.algorithms?.list || [];
 
     if (filterValue) {
       list = list.filter(item => item.name.includes(filterValue));
     }
-    // no marketplace
-    list = list.filter(item => !item.name.toLowerCase().startsWith('mark'));
+
+    list = list.filter(item => item.name.toLowerCase().startsWith('mark'));
 
     return [...list].sort((x, y) => {
       if (x.unscheduledReason && !y.unscheduledReason) return -1;
@@ -84,8 +83,7 @@ const AlgorithmsTable = () => {
     }
     return algorithmColumns;
   }, [keycloakEnable]);
-  console.log('query.data', query.data);
-  console.log('query.loading', query.loading);
+
   if (query.loading && query.data === undefined) return <SkeletonLoader />;
   if (query.error) return `Error! ${query.error.message}`;
 
@@ -106,7 +104,7 @@ const AlgorithmsTable = () => {
           rowKey={rowKey}
           dataSource={getList}
           columns={algorithmColumnsView}
-          onRow={onRow}
+          // onRow={onRow}
           scroll={{
             y: '80vh',
           }}
@@ -130,4 +128,4 @@ const AlgorithmsTable = () => {
   );
 };
 
-export default React.memo(AlgorithmsTable);
+export default React.memo(MarketplacesTable);
