@@ -28,7 +28,7 @@ const AutoComplete = ({ className = '' }) => {
   // const { pageName } = useParams();
   const { pathname } = useLocation();
   const pageName = pathname.split('/')[1] || '';
-  console.log('pageName2', pageName);
+
   const isDisabled = disableFilter.includes(pageName);
   const tableData = useSelector(selectorsMap[pageName]).map(x => ({
     value: x,

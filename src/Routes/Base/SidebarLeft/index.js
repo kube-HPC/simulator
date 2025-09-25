@@ -176,7 +176,7 @@ const SidebarLeft = () => {
     menuMainItems,
     totalNewWarnings,
   ]);
-  console.log('pageName', pageName);
+
   return (
     <Border>
       <Sider

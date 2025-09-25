@@ -50,7 +50,7 @@ const NewButtonSelect = () => {
   // const { pageName } = useParams();
   const { pathname } = useLocation();
   const pageName = pathname.split('/')[1] || '';
-  console.log('pageName1', pageName);
+
   const navigate = useNavigate();
 
   const gotoNewAction = useCallback(() => {

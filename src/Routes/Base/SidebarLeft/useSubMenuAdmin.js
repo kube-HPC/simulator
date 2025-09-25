@@ -24,7 +24,7 @@ const useSubMenuAdmin = (totalNewWarnings, dataMoreCount) => {
   // const { pageName } = useParams();
   const { pathname } = useLocation();
   const pageName = pathname.split('/')[1] || '';
-  console.log('pageName4', pageName);
+
   const location = useLocation();
   const { gpu } = useStats();
 
