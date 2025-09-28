@@ -16,27 +16,34 @@ import { BottomPanel, PanelButton, RightAlignedBox } from 'components/Drawer';
 import { useWizard } from 'hooks';
 import { context } from './useWizardContext';
 import { Initial, Nodes, Options } from './Steps';
+import useIds from './Steps/Nodes/useIds.js';
 import GraphPreview from './../../Tables/Jobs/GridView/GraphPreview';
 
 const Form = styled(AntdForm)`
-  width: 98ch;
+  width: 100%;
   height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
 `;
 
 export const Body = styled.div`
   display: flex;
   flex-direction: row;
-  // overflow-y: scroll;
   height: ${props => (props.$isEditState ? '81%' : '81%')};
+
+  .ant-splitter {
+    height: 100%;
+
+    .ant-splitter-panel {
+      overflow: hidden;
+    }
+  }
 `;
 
 export const ContenerWizard = styled.div`
-  // position: relative;
-  // overflow-x: none;
-  //overflow-y: scroll;
-  // height: 100%;
-  // width: 50%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const ContenerJsonGraph = styled.div`
@@ -46,33 +53,52 @@ export const ContenerJsonGraph = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
 export const ContenerJsonButton = styled.div`
   flex: 1;
-
   overflow-y: scroll;
 `;
 
 export const ContenerGraph = styled.div`
   position: relative;
   flex: 1;
-  height: -webkit-fill-available;
-
-  // overflow-y: scroll;
+  height: 100%;
   padding-left: 10px;
 `;
 
 export const ButtonSticky = styled(Button)`
-right: 0;
-    position: absolute;
-    margin-right: 20px;
-       margin-top: 10px;
-    z-index:999;
-}
+  right: 0;
+  position: absolute;
+  margin-right: 20px;
+  margin-top: 10px;
+  z-index: 999;
 `;
 
 export const ButtonRun = styled(Button)`
   margin-left: 20px;
 `;
+
+const MainContentContainer = styled.div`
+  display: flex;
+  height: 100%;
+  width: 100%;
+`;
+
+const FixedNodeList = styled.div`
+  width: 280px;
+  min-width: 280px;
+  max-width: 280px;
+  height: 100%;
+  overflow: hidden;
+  border-right: 1px solid ${COLOR_LAYOUT.border};
+`;
+
+const ResizableContentArea = styled.div`
+  flex: 1;
+  height: 100%;
+  display: flex;
+`;
+
 const stepNames = ['Initial', 'Nodes', 'Options'];
 const RunPipelineStepNames = ['Initial', 'Options', 'Nodes Info'];
 
@@ -108,6 +134,12 @@ const Wizard = ({
   const [graphNodeSelected, setGraphNodeSelected] = useState(null);
   const [reloadGraphPreview, setReloadGraphPreview] = useState(null);
 
+  // Add shared activeNodeId state for Nodes step
+  const [activeNodeId, setActiveNodeId] = useState(0);
+  const [ids, appendKey, dropKey, reloadIds] = useIds(
+    Object.keys(initialState.nodes)
+  );
+
   const steps = useMemo(
     () =>
       initStepNames.map(name => ({
@@ -141,9 +173,6 @@ const Wizard = ({
     toggle();
   }, [persistForm, toggle]);
 
-  // check for undefined to avoid removing streaming only fields while initial load
-  // setIsStreamingPipeline(['stream'].includes(getFieldValue('kind')) || valuesState.kind === 'stream');
-
   const isLastStep = stepIdx === steps.length - 1;
 
   const onPrevious = useCallback(
@@ -162,7 +191,6 @@ const Wizard = ({
         valuesState.kind === 'stream'
     );
 
-    // if kind is undefined then is value default algorithm
     resetKind(undefined);
 
     setTimeout(() => {
@@ -174,7 +202,6 @@ const Wizard = ({
     if (firstUpdateWizard.current) {
       firstUpdateWizard.current = false;
     } else {
-      // remove gateway or output option from nodes and reset them to algorithm option
       resetKind(
         isStreamingPipeline ? ['output', 'hyperparamsTuner'] : ['gateway']
       );
@@ -185,6 +212,9 @@ const Wizard = ({
     setStepIdx(1);
     setGraphNodeSelected(nodeName);
   };
+
+  // Check if current step is Nodes to apply special layout
+  const isNodesStep = stepIdx === 1;
 
   return (
     <context.Provider
@@ -200,6 +230,12 @@ const Wizard = ({
         isRunPipeline,
         setForm,
         graphNodeSelected,
+        activeNodeId,
+        setActiveNodeId,
+        ids,
+        appendKey,
+        dropKey,
+        reloadIds,
       }}>
       <Steps
         items={steps}
@@ -213,60 +249,122 @@ const Wizard = ({
           paddingTop: '0px',
         }}
       />
-      <Body $isEditState={isEdit}>
-        <ContenerWizard>
-          <Form
-            form={form}
-            onValuesChange={setForm}
-            name="create-pipeline"
-            layout="horizontal"
-            hideRequiredMark
-            onSubmit={handleSubmit}
-            style={{ padding: '0 2ch' }}>
-            {initStepComponents.map((StepComponent, ii) => (
-              <StepComponent
-                key={`step-component-${stepNames[ii]}`}
-                style={{
-                  display: ii === stepIdx ? 'block' : 'none',
-                }}
-              />
-            ))}
-          </Form>
-        </ContenerWizard>
 
-        {pageLoaded && (
-          <ContenerJsonGraph>
-            <Splitter
-              lazy
-              onResizeEnd={() => setReloadGraphPreview(!reloadGraphPreview)}
-              layout="vertical"
-              style={{ boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
-              <Splitter.Panel>
-                <ContenerGraph>
-                  {valuesState && (
-                    <GraphPreview
-                      pipeline={valuesState}
-                      isBuildAllFlows={isStreamingPipeline}
-                      isMinified
-                      clickNode={selectNodeFromGraph}
-                      reload={reloadGraphPreview}
-                    />
+      <Body $isEditState={isEdit}>
+        {isNodesStep ? (
+          // Special layout for Nodes step with three columns
+          <MainContentContainer>
+            {/* Fixed Node List - Always 280px */}
+            <FixedNodeList>
+              <Form
+                form={form}
+                onValuesChange={setForm}
+                name="create-pipeline"
+                layout="horizontal"
+                hideRequiredMark
+                onSubmit={handleSubmit}
+                style={{ padding: '0 1ch', height: '100%' }}>
+                <Nodes
+                  style={{ display: 'block', height: '100%' }}
+                  isFixedLayout
+                />
+              </Form>
+            </FixedNodeList>
+
+            {/* Resizable area between Node Editing and Graph/JSON */}
+            <ResizableContentArea>
+              <Splitter
+                layout="horizontal"
+                onResizeEnd={() => setReloadGraphPreview(!reloadGraphPreview)}
+                style={{ height: '100%', flex: 1 }}>
+                {/* Node Editing Area - Resizable */}
+                <Splitter.Panel
+                  defaultSize="45%"
+                  minSize="30%"
+                  maxSize="70%"
+                  style={{ overflow: 'hidden' }}>
+                  <ContenerWizard>
+                    <Form
+                      form={form}
+                      onValuesChange={setForm}
+                      name="create-pipeline-editing"
+                      layout="horizontal"
+                      hideRequiredMark
+                      onSubmit={handleSubmit}
+                      style={{ padding: '0 2ch', height: '100%' }}>
+                      <Nodes
+                        style={{ display: 'block', height: '100%' }}
+                        isEditingArea
+                      />
+                    </Form>
+                  </ContenerWizard>
+                </Splitter.Panel>
+
+                {/* Graph/JSON Area - Resizable */}
+                <Splitter.Panel style={{ overflow: 'hidden' }}>
+                  {pageLoaded && (
+                    <ContenerJsonGraph>
+                      <Splitter
+                        lazy
+                        onResizeEnd={() =>
+                          setReloadGraphPreview(!reloadGraphPreview)
+                        }
+                        layout="vertical"
+                        style={{ boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
+                        <Splitter.Panel defaultSize="60%" minSize="40%">
+                          <ContenerGraph>
+                            {valuesState && (
+                              <GraphPreview
+                                pipeline={valuesState}
+                                isBuildAllFlows={isStreamingPipeline}
+                                isMinified
+                                clickNode={selectNodeFromGraph}
+                                reload={reloadGraphPreview}
+                              />
+                            )}
+                          </ContenerGraph>
+                        </Splitter.Panel>
+
+                        <Splitter.Panel>
+                          <ContenerJsonButton>
+                            <ButtonSticky onClick={handleToggle}>
+                              Text editor
+                            </ButtonSticky>
+                            <JsonView
+                              src={getFormattedFormValues()}
+                              collapsed={undefined}
+                            />
+                          </ContenerJsonButton>
+                        </Splitter.Panel>
+                      </Splitter>
+                    </ContenerJsonGraph>
                   )}
-                </ContenerGraph>
-              </Splitter.Panel>
-              <Splitter.Panel>
-                <ContenerJsonButton>
-                  <ButtonSticky onClick={handleToggle}>
-                    Text editor
-                  </ButtonSticky>
-                  <JsonView
-                    src={getFormattedFormValues()}
-                    collapsed={undefined}
-                  />
-                </ContenerJsonButton>
-              </Splitter.Panel>
-            </Splitter>
-          </ContenerJsonGraph>
+                </Splitter.Panel>
+              </Splitter>
+            </ResizableContentArea>
+          </MainContentContainer>
+        ) : (
+          // Normal layout for other steps (Initial, Options)
+          <ContenerWizard>
+            <Form
+              form={form}
+              onValuesChange={setForm}
+              name="create-pipeline"
+              layout="horizontal"
+              hideRequiredMark
+              onSubmit={handleSubmit}
+              style={{ padding: '0 2ch' }}>
+              {initStepComponents.map((StepComponent, ii) => (
+                <StepComponent
+                  key={`step-component-${stepNames[ii]}`}
+                  style={{
+                    display: ii === stepIdx ? 'block' : 'none',
+                    height: '100%',
+                  }}
+                />
+              ))}
+            </Form>
+          </ContenerWizard>
         )}
       </Body>
 
