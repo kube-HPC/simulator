@@ -44,7 +44,10 @@ const AlgorithmJsonEditor = ({
 
     const formData = new FormData();
 
-    if (buildTypeSubmit.toLowerCase() === BUILD_TYPES.CODE.field) {
+    if (
+      buildTypeSubmit &&
+      buildTypeSubmit.toLowerCase() === BUILD_TYPES.CODE.field
+    ) {
       const [file] = fileList;
 
       if (!isEdit && !srcJson.algorithmImage && !fileList.length) {
