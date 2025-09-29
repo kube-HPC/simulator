@@ -18,20 +18,30 @@ import AlgorithmsQueryTable from './AlgorithmsQueryTable';
 
 export const algorithmsListVar = makeVar([]);
 
+const NUMBER_ROW_VIRTUAL = 150;
+
 const rowKey = ({ name }) => `algorithm-${name}`;
 const TableAlgorithms = styled(Table)`
   .ant-table-body {
     min-height: 75vh;
   }
-  .ant-table-cell {
-    margin: auto;
+  .fixed-row-height .ant-table-cell {
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    padding: 0 16px;
+    box-sizing: border-box;
+    // white-space: nowrap;
   }
 `;
 
 const AlgorithmsTable = () => {
   const { goTo } = usePath();
-  const onRow = ({ name }) => ({
+  const onRow = ({ name, isVirtual }) => ({
     onDoubleClick: () => goTo.overview({ nextAlgorithmId: name }),
+    className: isVirtual ? 'fixed-row-height' : '',
   });
 
   const instanceFilter = useReactiveVar(instanceFiltersVar);
@@ -74,7 +84,6 @@ const AlgorithmsTable = () => {
 
   if (!algorithmsList.length) return <SkeletonLoader />;
   if (query.error) return `Error! ${query.error.message}`;
-
   return (
     <>
       <AlgorithmsQueryTable
@@ -83,11 +92,13 @@ const AlgorithmsTable = () => {
       />
 
       <TableAlgorithms
-        virtual
+        virtual={getList.length > NUMBER_ROW_VIRTUAL}
         rowKey={rowKey}
         dataSource={getList}
         columns={algorithmColumnsView}
-        onRow={onRow}
+        onRow={record =>
+          onRow({ ...record, isVirtual: getList.length > NUMBER_ROW_VIRTUAL })
+        }
         scroll={{ y: 650 }}
         locale={{
           emptyText: (

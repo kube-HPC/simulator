@@ -18,12 +18,20 @@ import EditDrawer from './EditDrawer';
 import ExecuteDrawer from './ExecuteDrawer';
 import PipelinesQueryTable from './PipelinesQueryTable';
 
+const NUMBER_ROW_VIRTUAL = 150;
 const TablePipelines = styled(Table)`
   .ant-table-body {
     min-height: 75vh;
   }
-  .ant-table-cell {
-    margin: auto;
+  .fixed-row-height .ant-table-cell {
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    padding: 0 16px;
+    box-sizing: border-box;
+    white-space: nowrap;
   }
 `;
 
@@ -34,8 +42,9 @@ const PipelinesTable = () => {
 
   const { goTo } = usePath();
   const onRow = useCallback(
-    record => ({
+    (record, isVirtual) => ({
       onDoubleClick: () => goTo.overview({ nextPipelineId: record.name }),
+      className: isVirtual ? 'fixed-row-height' : '',
     }),
     [goTo]
   );
@@ -85,11 +94,16 @@ const PipelinesTable = () => {
       />
 
       <TablePipelines
-        virtual
+        virtual={pipelineList.length > NUMBER_ROW_VIRTUAL}
         rowKey={rowKey}
         dataSource={pipelineList}
         columns={pipelinesColumnsView}
-        onRow={onRow}
+        onRow={record =>
+          onRow({
+            ...record,
+            isVirtual: pipelineList.length > NUMBER_ROW_VIRTUAL,
+          })
+        }
         scroll={{
           y: 650,
         }}

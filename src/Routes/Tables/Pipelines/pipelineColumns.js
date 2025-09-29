@@ -25,7 +25,7 @@ export default [
     render: auditTrail => <AuditTrailAvatar auditTrail={auditTrail} />,
   },
   {
-    width: `58%`,
+    width: `40%`,
     title: 'Pipeline Name',
     dataIndex: ['name'],
     key: 'name',
