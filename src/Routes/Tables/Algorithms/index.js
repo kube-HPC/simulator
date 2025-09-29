@@ -6,7 +6,7 @@ import { Route, Routes } from 'react-router-dom';
 import { Table } from 'components';
 import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar, makeVar } from '@apollo/client';
-import { Space, Empty } from 'antd';
+import { Empty } from 'antd';
 import { instanceFiltersVar } from 'cache';
 import { ALGORITHMS_QUERY } from 'graphql/queries';
 import styled from 'styled-components';
@@ -18,17 +18,30 @@ import AlgorithmsQueryTable from './AlgorithmsQueryTable';
 
 export const algorithmsListVar = makeVar([]);
 
+const NUMBER_ROW_VIRTUAL = 150;
+
 const rowKey = ({ name }) => `algorithm-${name}`;
 const TableAlgorithms = styled(Table)`
   .ant-table-body {
     min-height: 75vh;
   }
+  .fixed-row-height .ant-table-cell {
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    padding: 0 16px;
+    box-sizing: border-box;
+    // white-space: nowrap;
+  }
 `;
 
 const AlgorithmsTable = () => {
   const { goTo } = usePath();
-  const onRow = ({ name }) => ({
+  const onRow = ({ name, isVirtual }) => ({
     onDoubleClick: () => goTo.overview({ nextAlgorithmId: name }),
+    className: isVirtual ? 'fixed-row-height' : '',
   });
 
   const instanceFilter = useReactiveVar(instanceFiltersVar);
@@ -71,30 +84,30 @@ const AlgorithmsTable = () => {
 
   if (!algorithmsList.length) return <SkeletonLoader />;
   if (query.error) return `Error! ${query.error.message}`;
-
   return (
     <>
-      <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-        <AlgorithmsQueryTable
-          algorithmsList={algorithmsList}
-          onSubmit={() => {}}
-        />
+      <AlgorithmsQueryTable
+        algorithmsList={algorithmsList}
+        onSubmit={() => {}}
+      />
 
-        <TableAlgorithms
-          rowKey={rowKey}
-          dataSource={getList}
-          columns={algorithmColumnsView}
-          onRow={onRow}
-          scroll={{ y: '80vh' }}
-          locale={{
-            emptyText: (
-              <Empty
-                description={<span>No results match your search criteria</span>}
-              />
-            ),
-          }}
-        />
-      </Space>
+      <TableAlgorithms
+        virtual={getList.length > NUMBER_ROW_VIRTUAL}
+        rowKey={rowKey}
+        dataSource={getList}
+        columns={algorithmColumnsView}
+        onRow={record =>
+          onRow({ ...record, isVirtual: getList.length > NUMBER_ROW_VIRTUAL })
+        }
+        scroll={{ y: 650 }}
+        locale={{
+          emptyText: (
+            <Empty
+              description={<span>No results match your search criteria</span>}
+            />
+          ),
+        }}
+      />
 
       <Routes>
         <Route

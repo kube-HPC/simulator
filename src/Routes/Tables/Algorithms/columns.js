@@ -91,7 +91,7 @@ export default [
     render: Image,
   },
   {
-    width: '7%',
+    width: '9%',
     title: 'Builds Stats',
     dataIndex: ['buildStats'],
     key: 'builds',
@@ -129,7 +129,7 @@ export default [
     ),
   },
   {
-    width: '14%',
+    width: '12%',
     title: 'Action',
     dataIndex: ['action'],
     key: 'action',
