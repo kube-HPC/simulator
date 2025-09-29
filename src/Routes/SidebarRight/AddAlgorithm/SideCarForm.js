@@ -28,14 +28,19 @@ const SideCarForm = ({ nameList }) => (
       <>
         {fields.map(({ key, name, ...restField }) => (
           <React.Fragment key={key}>
-            <div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                width: '100%',
+              }}>
               <MinusCircleOutlined
                 style={{
                   fontSize: '20px',
-                  height: '32px',
-                  textAlign: 'end',
+                  height: '25px',
+                  width: '25px',
                   display: 'flex',
-                  alignItems: 'baseline',
                   justifyContent: 'flex-end',
                 }}
                 onClick={() => remove(name)}
@@ -47,7 +52,13 @@ const SideCarForm = ({ nameList }) => (
                 label="Name"
                 {...restField}
                 name={[name, 'container', 'name']}
-                rules={[{ required: true, message: 'Missing container Name' }]}>
+                rules={[
+                  {
+                    pattern: /^[A-Za-z0-9-]+$/,
+                    message:
+                      'Allowed letters and numbers only (no spaces, _, $%&^...)',
+                  },
+                ]}>
                 <Input />
               </ContainerFormItemTop>
             </FlexItem>
