@@ -11,7 +11,6 @@ import {
   PlusOutlined,
   MinusCircleOutlined,
   NodeIndexOutlined,
-  SaveOutlined,
 } from '@ant-design/icons';
 import styled from 'styled-components';
 import useWizardContext from 'Routes/SidebarRight/AddPipeline/useWizardContext';
@@ -31,17 +30,6 @@ const IconNodeIndexOutlined = styled(NodeIndexOutlined)`
   color: #999;
   font-size: 1.5em;
   margin-left: 1ch;
-`;
-
-const IconSave = styled(SaveOutlined)`
-  color: #1890ff;
-  font-size: 1.5em;
-  margin-left: 1ch;
-  cursor: pointer;
-
-  &:hover {
-    color: #40a9ff;
-  }
 `;
 
 const SpaceStyle = styled(Space)`
@@ -65,14 +53,6 @@ const StyleCollapse = styled(Collapse)`
   }
 `;
 
-const SaveButtonContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px solid #f0f0f0;
-`;
-
 const emptyEditorStatesKeyValue = ['""', null, 'null', ''];
 
 const StreamingFlowKeyValue = ({
@@ -88,9 +68,6 @@ const StreamingFlowKeyValue = ({
   const [value, setValue] = useState(JSON.stringify(_value));
   const [activeKey, setActiveKey] = useState();
   const countNewItemFlow = useRef(1);
-
-  // Track which items have unsaved changes
-  const [unsavedChanges, setUnsavedChanges] = useState(new Set());
 
   const convertObjectToKeyListKeyValue = () => {
     const valueInitialState = _.get(initialState, [...nameRef]);
@@ -134,44 +111,17 @@ const StreamingFlowKeyValue = ({
 
   const submitChange = useDebouncedCallback(onApply, 1000);
 
-  // Main function to save all form data
-  const saveAllChanges = useCallback(() => {
+  const handleChange = useCallback(() => {
     const res = form
       .getFieldValue(['listKeyValue', ...nameRef])
-      .reduce((acc, item) => {
-        if (item?.key) {
-          return { ...acc, [item.key]: tryParseJson(item?.value) };
-        }
-        return acc;
-      }, {});
+      .reduce(
+        (acc, item) => ({ ...acc, [item?.key]: tryParseJson(item?.value) }),
+        {}
+      );
 
     setValue(JSON.stringify(res));
     submitChange();
-
-    // Clear all unsaved changes
-    setUnsavedChanges(new Set());
   }, [form, nameRef, submitChange]);
-
-  // Handle individual item save
-  const handleSaveItem = useCallback(
-    fieldIndex => {
-      saveAllChanges();
-
-      // Remove this item from unsaved changes
-      setUnsavedChanges(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(fieldIndex);
-        return newSet;
-      });
-    },
-    [saveAllChanges]
-  );
-
-  // Handle field changes (mark as unsaved, but don't save automatically)
-  const handleFieldChange = useCallback(fieldIndex => {
-    // Mark this item as having unsaved changes
-    setUnsavedChanges(prev => new Set(prev).add(fieldIndex));
-  }, []);
 
   // get list nodes
   const nodeNames = useMemo(
@@ -179,6 +129,7 @@ const StreamingFlowKeyValue = ({
     [valuesState]
   );
 
+  // build popup button of  virtual keyboard
   const keyboardView = [
     { keyId: 1, title: '', typeButton: 'circle', keys: ['>>', '|', '&'] },
     { keyId: 2, title: 'Nodes', typeButton: 'primary', keys: nodeNames },
@@ -196,39 +147,17 @@ const StreamingFlowKeyValue = ({
     });
   };
 
-  const genExtraCollapse = (name, fieldKey, remove, fieldIndex) => (
+  const genExtraCollapse = (name, fieldKey, remove) => (
     <>
       <Tooltip title="Preview graph flow">
         <IconNodeIndexOutlined onClick={e => openGraphModal(e, fieldKey)} />
       </Tooltip>
-
-      {/* Save button - show only if there are unsaved changes */}
-      {unsavedChanges.has(fieldIndex) && (
-        <Tooltip title="Save changes">
-          <IconSave
-            onClick={e => {
-              e.stopPropagation();
-              handleSaveItem(fieldIndex);
-            }}
-          />
-        </Tooltip>
-      )}
-
       <Tooltip title="Delete flow">
         <IconDelete
           onClick={e => {
             e.stopPropagation();
             remove(name);
-            // Remove from unsaved changes if it was there
-            setUnsavedChanges(prev => {
-              const newSet = new Set(prev);
-              newSet.delete(fieldIndex);
-              return newSet;
-            });
-            // Save changes after removal
-            setTimeout(() => {
-              saveAllChanges();
-            }, 10);
+            handleChange();
           }}
         />
       </Tooltip>
@@ -239,23 +168,14 @@ const StreamingFlowKeyValue = ({
     <Form.List name={['listKeyValue', ...nameRef]}>
       {(fields, { add, remove }) => {
         const items = fields.map(({ key, name, index, ...restField }) => {
-          // Get current field values for display
           const currentKey =
             form.getFieldValue(['listKeyValue', ...nameRef, name, 'key']) ||
             `Item ${key}`;
 
-          const fieldIndex = name;
-          const hasUnsavedChanges = unsavedChanges.has(fieldIndex);
-
-          // Add indicator to label if there are unsaved changes
-          const displayLabel = hasUnsavedChanges
-            ? `${currentKey} *`
-            : currentKey;
-
           return {
-            key: String(key), // Use stable field key to prevent re-mounting
-            label: displayLabel,
-            extra: genExtraCollapse(name, name, remove, fieldIndex),
+            key: String(key),
+            label: currentKey,
+            extra: genExtraCollapse(name, key, remove),
             children: (
               <SpaceStyle
                 style={{
@@ -273,17 +193,15 @@ const StreamingFlowKeyValue = ({
                         required: true,
                         message: `Missing ${placeholderKey}`,
                       },
-                    ]}>
-                    <Input
-                      placeholder={placeholderKey}
-                      onChange={() => handleFieldChange(fieldIndex)}
-                    />
+                    ]}
+                    onChange={() => handleChange()}>
+                    <Input placeholder={placeholderKey} />
                   </Form.Item>
 
                   <SignBoard
                     restField={restField}
                     nameRef={nameRef}
-                    onChange={() => handleFieldChange(fieldIndex)}
+                    onChange={() => handleChange()}
                     type="textArea"
                     form={form}
                     name={[name, 'value']}
@@ -296,18 +214,6 @@ const StreamingFlowKeyValue = ({
                     width="27vw"
                     row={4}
                   />
-
-                  {/* Save button inside each item */}
-                  <SaveButtonContainer>
-                    <Button
-                      type="primary"
-                      size="small"
-                      icon={<SaveOutlined />}
-                      onClick={() => handleSaveItem(fieldIndex)}
-                      disabled={!hasUnsavedChanges}>
-                      {hasUnsavedChanges ? 'Save Changes' : 'Saved'}
-                    </Button>
-                  </SaveButtonContainer>
                 </StreamkeyValue>
               </SpaceStyle>
             ),
@@ -325,19 +231,6 @@ const StreamingFlowKeyValue = ({
             />
 
             {contextHolder}
-
-            {/* Global save all button */}
-            {unsavedChanges.size > 0 && (
-              <Form.Item>
-                <Button
-                  type="primary"
-                  onClick={saveAllChanges}
-                  block
-                  icon={<SaveOutlined />}>
-                  Save All Changes ({unsavedChanges.size} unsaved)
-                </Button>
-              </Form.Item>
-            )}
 
             <Form.Item>
               <Button
