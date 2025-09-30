@@ -30,6 +30,7 @@ const NodeBrowserContainer = styled.section`
   flex-wrap: nowrap;
   margin-right: 15px;
   padding-right: 10px;
+  flex-shrink: 0;
   // border-right: 1px solid rgba(223, 223, 223, 0.91);
 `;
 
@@ -75,8 +76,10 @@ const NodeSelectRadioGroup = styled(Radio.Group)`
 `;
 
 const DataNode = styled.div`
-  width: 475px;
-
+  width: 100%;
+  max-width: 100%;
+  flex: 1;
+  margin: 10px;
   ${props =>
     props.$isDisabled &&
     `
@@ -313,7 +316,7 @@ const Nodes = ({ style }) => {
               )}
             </NodeSelectRadioGroup>
           </NodeBrowserContainer>
-          <div>
+          <div style={{ flex: 1, minWidth: 550, overflow: 'auto' }}>
             {ids.map(id => (
               <DataNode key={`dataNode::id-${id}`} $isDisabled={isRunPipeline}>
                 <BoldedFormField
