@@ -4,12 +4,11 @@ import { ApolloProvider, useReactiveVar } from '@apollo/client';
 import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
 import { Layout, message, FloatButton, Button } from 'antd';
-
 import { ArrowUpOutlined } from '@ant-design/icons';
 import styled, { ThemeProvider } from 'styled-components';
 import { Route, Routes } from 'react-router-dom';
 import { COLOR, COLOR_LAYOUT, Theme } from 'styles';
-import { useActions, useCacheFilters } from 'hooks'; // useConnectionStatus
+import { useActions, useCacheFilters } from 'hooks';
 import Header from 'Routes/Base/Header';
 import { instanceFiltersVar, numberErrorGraphQLVar } from 'cache';
 import useApolloClient from './../graphql/useApolloClient';
@@ -21,7 +20,6 @@ import Tables from './Tables';
 
 const LayoutFullHeight = styled(Layout)`
   height: 100vh;
-
   transition: all 0.5s;
   overflow: hidden;
 `;
@@ -34,7 +32,6 @@ const ContentMargin = styled(Layout.Content)`
   ::-webkit-scrollbar-thumb {
     border: 1px solid ${COLOR.darkGrey};
   }
-  /* overflow: hidden; */
 `;
 
 const RightContainer = styled.aside`
@@ -118,15 +115,17 @@ const RoutesNav = () => {
         <LayoutFullHeight>
           <Routes>
             <Route path="/*" element={<SidebarLeft />}>
-              <Route path=":pageName" />
+              <Route path=":pageName" element={<> </>} />
             </Route>
           </Routes>
+
           <Layout>
             <Routes>
               <Route path="/*" element={<Header />}>
-                <Route path=":pageName" />
+                <Route path=":pageName" element={<> </>} />
               </Route>
             </Routes>
+
             <LayoutFullHeight>
               <ContentMargin id="globalContent">
                 {contextHolderNotification}
@@ -141,16 +140,18 @@ const RoutesNav = () => {
                   />
                 </FloatButton.BackTop>
               </ContentMargin>
+
               <RightContainer>
                 <Routes>
                   <Route
                     path="/:root/:panelType"
                     element={<SiderBarRightDrawer />}
                   />
+                  <Route path="*" element={<> </>} />
                 </Routes>
               </RightContainer>
             </LayoutFullHeight>
-          </Layout>{' '}
+          </Layout>
         </LayoutFullHeight>
       </ApolloProvider>
     </ThemeProvider>
@@ -160,4 +161,5 @@ const RoutesNav = () => {
     </ThemeProvider>
   );
 };
+
 export default RoutesNav;
