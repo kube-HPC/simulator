@@ -27,7 +27,7 @@ const JsonView = props => (
 
 /** @param {ReactJsonViewProps & { jsonObject: Object }} props */
 const Wrapped = ({ jsonObject, ...props }) => (
-  <Card bordered={false}>
+  <Card variant="borderless">
     <JsonView {...props} src={jsonObject} />
   </Card>
 );

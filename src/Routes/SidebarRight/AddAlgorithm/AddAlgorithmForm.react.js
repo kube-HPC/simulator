@@ -410,7 +410,7 @@ const AddAlgorithmForm = ({
         {buildTypes[buildType]}
         <FlexItemVolumes>
           <FlexBox.Item span={12}>
-            <Card title="Volumes" bordered="true">
+            <Card title="Volumes" variant="default">
               <Form.Item style={{ width: '650px' }}>
                 <VolumeList nameList={['main', 'volumes']} />
               </Form.Item>
@@ -419,7 +419,7 @@ const AddAlgorithmForm = ({
           <FlexBox.Item span={12}>
             <Card
               title="Volumes Mounts"
-              bordered="true"
+              variant="default"
               style={{ marginTop: '20px' }}>
               <Form.Item>
                 <VolumeMountsList nameList={['main', 'volumeMounts']} />
