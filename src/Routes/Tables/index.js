@@ -39,11 +39,11 @@ const Body = () => {
         <Route path=":edit/*" />
       </Route>
 
-      <Route path="pipelines" element={<PipelinesTable />}>
+      <Route path="pipelines/*" element={<PipelinesTable />}>
         <Route path=":pipelineId/*" />
       </Route>
 
-      <Route path="algorithms" element={<AlgorithmsTable />}>
+      <Route path="algorithms/*" element={<AlgorithmsTable />}>
         <Route path=":algorithmId/*" />
       </Route>
 

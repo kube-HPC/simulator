@@ -65,7 +65,7 @@ const CronModel = ({
         </Button>
       )}
       <Modal
-        destroyOnClose
+        destroyOnHidden
         title={
           <>
             <Text>Schedule Wizard </Text>
