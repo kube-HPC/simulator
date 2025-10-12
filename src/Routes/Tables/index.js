@@ -16,10 +16,6 @@ const Body = () => {
   const { experimentName } = metaMode;
 
   useEffect(() => {
-    // if (!hash || (hash && !search)) {
-
-    console.log('window.location', window.location);
-
     if (href.indexOf('experiment=') === -1) {
       window.location.replace(
         `${window.location.origin}${window.location.pathname}#/jobs?&experiment=${experimentName ?? 'main'}`

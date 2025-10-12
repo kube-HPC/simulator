@@ -332,7 +332,6 @@ const AddAlgorithmForm = ({
   // #endregion
 
   const openCollapsibleContainingField = namePath => {
-    console.log(namePath);
     if (
       namePath.includes('main_workerEnv') ||
       namePath.includes('main_algorithmEnv')

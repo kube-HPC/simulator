@@ -51,7 +51,7 @@ const startPreciseTokenRefresh = () => {
   const scheduleRefresh = () => {
     const now = Math.floor(Date.now() / 1000); // seconds
     const exp = _kc.tokenParsed?.exp;
-    console.log('exp', exp);
+
     if (!exp) {
       console.warn('Cannot schedule token refresh: no token expiration found.');
       return;
