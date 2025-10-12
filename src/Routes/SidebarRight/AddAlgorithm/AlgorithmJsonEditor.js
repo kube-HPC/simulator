@@ -34,7 +34,6 @@ const AlgorithmJsonEditor = ({
   fileList,
   setFileList,
 }) => {
-  const isCodeInJson = () => editorJsonValue.indexOf('"Code"') > -1 || false;
   const [isCodeProp, setIsCodeProp] = useState(false);
 
   const onBeforeEditorSubmit = ({ src }) => {
@@ -101,7 +100,7 @@ const AlgorithmJsonEditor = ({
   };
 
   useEffect(() => {
-    setIsCodeProp(isCodeInJson());
+    setIsCodeProp(editorJsonValue.indexOf('"Code"') > -1 || false);
   }, [editorJsonValue]);
 
   return (
@@ -154,15 +153,15 @@ const AlgorithmJsonEditor = ({
 
 AlgorithmJsonEditor.propTypes = {
   isEdit: PropTypes.bool.isRequired,
-  editorJsonValue: PropTypes.instanceOf(PropTypes.object.isRequired).isRequired,
+  editorJsonValue: PropTypes.string.isRequired,
   onWizardSubmit: PropTypes.func.isRequired,
   toggleEditor: PropTypes.bool.isRequired,
   setIsCheckForceStopAlgorithms: PropTypes.func.isRequired,
   refCheckForceStopAlgorithms: PropTypes.func.isRequired,
   setEditorJsonValue: PropTypes.func.isRequired,
   isCheckForceStopAlgorithms: PropTypes.bool.isRequired,
-  sourceJson: PropTypes.instanceOf(PropTypes.object.isRequired).isRequired,
-  fileList: PropTypes.oneOfType([PropTypes.object]).isRequired,
+  sourceJson: PropTypes.object.isRequired,
+  fileList: PropTypes.arrayOf(PropTypes.object).isRequired,
   setFileList: PropTypes.func.isRequired,
 };
 
