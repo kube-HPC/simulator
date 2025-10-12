@@ -14,17 +14,17 @@ const IconHoverStyle = styled.div`
   cursor: pointer;
 `;
 
-const Hover = ({ type, onClick, styleIcon = null, ...props }) => {
+const Hover = React.forwardRef(({ type, onClick, styleIcon = null, ...props }, ref) => {
   const componentIcon = type || <Icon {...props} />;
 
   return (
-    <IconHoverStyle onClick={onClick} style={styleIcon}>
+    <IconHoverStyle ref={ref} onClick={onClick} style={styleIcon}>
       {componentIcon}
     </IconHoverStyle>
   );
-};
+});
 
-const HoverMemo = Hover;
+const HoverMemo = React.memo(Hover);
 export default { Hover: HoverMemo, IconHoverStyle };
 
 Hover.propTypes = {
