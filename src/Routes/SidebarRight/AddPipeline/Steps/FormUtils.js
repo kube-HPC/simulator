@@ -67,7 +67,7 @@ export const Field = ({
 
 Field.propTypes = {
   /* eslint-disable */
-  name: PropTypes.array.isRequired,
+  name: PropTypes.array,
   children: PropTypes.node.isRequired,
   title: PropTypes.string,
   type: PropTypes.string,
