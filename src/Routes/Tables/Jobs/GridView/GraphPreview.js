@@ -438,8 +438,8 @@ const GraphPreview = ({
 
 GraphPreview.propTypes = {
   pipeline: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    kind: PropTypes.string.isRequired,
+    name: PropTypes.string,
+    kind: PropTypes.string,
     nodes: PropTypes.arrayOf(PropTypes.object),
     streaming: PropTypes.object,
   }).isRequired,
