@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as FilterOutlined } from 'images/filter-filtering-icon.svg';
 import { ReactComponent as IconAddPipeline } from 'images/forward-arrow-icon.svg';
-import { Button, Tooltip } from 'antd';
+import { Tooltip, Space } from 'antd';
 import { USER_GUIDE } from 'const';
 import { Ellipsis } from 'components/common';
 import { instanceFiltersVar } from 'cache';
@@ -46,7 +46,7 @@ const PipelineNameActions = ({ pipeline }) => {
     <PipelineNameContainer>
       <Ellipsis copyable text={pipeline.pipeline.name} length={40} />
 
-      <Button.Group className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
+      <Space.Compact className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
         {pipeline.pipeline.types.includes('stored') && (
           <Tooltip title={`edit pipeline ${pipeline.pipeline.name}`}>
             <IconAddPipeline style={iconSize} onClick={editByPipelineID} />
@@ -58,7 +58,7 @@ const PipelineNameActions = ({ pipeline }) => {
             onClick={() => filterByPipeline(pipeline.pipeline.name)}
           />
         </Tooltip>
-      </Button.Group>
+      </Space.Compact>
     </PipelineNameContainer>
   );
 };

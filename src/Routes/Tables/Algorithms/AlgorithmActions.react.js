@@ -11,7 +11,7 @@ import {
   PlayCircleOutlined,
 } from '@ant-design/icons';
 import { keycloakRoles } from '@hkube/consts';
-import { Button, Modal, Popover, Typography, Tooltip } from 'antd';
+import { Button, Modal, Popover, Typography, Tooltip, Space } from 'antd';
 import { useActions } from 'hooks';
 import RunForm from './RunForm';
 import usePath from './usePath';
@@ -129,7 +129,7 @@ const AlgorithmActions = ({ record }) => {
       role="none"
       onClick={stopPropagation}
       onDoubleClick={stopPropagation}>
-      <Button.Group>
+      <Space.Compact>
         {isRoleRunOrStop ? (
           <Popover
             overlayStyle={overlayStyle}
@@ -187,7 +187,7 @@ const AlgorithmActions = ({ record }) => {
         <Tooltip title="show overview">
           <Button icon={<InfoCircleOutlined />} onClick={onMoreInfo} />
         </Tooltip>
-      </Button.Group>
+      </Space.Compact>
     </div>
   );
 };

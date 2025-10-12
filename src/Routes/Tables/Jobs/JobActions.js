@@ -7,7 +7,7 @@ import {
   RedoOutlined,
   StopOutlined,
 } from '@ant-design/icons';
-import { Button, Tooltip } from 'antd';
+import { Button, Tooltip, Space } from 'antd';
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
 import { USER_GUIDE } from 'const';
@@ -75,7 +75,7 @@ const JobActions = ({ job }) => {
   ); */
 
   return (
-    <Button.Group className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
+    <Space.Compact className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
       <Tooltip
         title="re-run pipeline"
         mouseEnterDelay="0.5"
@@ -117,7 +117,7 @@ const JobActions = ({ job }) => {
       <Tooltip title="show overview" mouseEnterDelay="0.5" mouseLeaveDelay="0">
         <Button onClick={onMoreInfo} icon={<InfoCircleOutlined />} />
       </Tooltip>
-    </Button.Group>
+    </Space.Compact>
   );
 };
 
