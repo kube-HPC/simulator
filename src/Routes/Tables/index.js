@@ -21,6 +21,7 @@ const Body = () => {
         `${window.location.origin}${window.location.pathname}#/jobs?&experiment=${experimentName ?? 'main'}`
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

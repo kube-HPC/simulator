@@ -186,6 +186,7 @@ const AddAlgorithmForm = ({
       // add new algorithm
       form.setFieldsValue(formTemplate);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onBuildTypeChange = e => setBuildType(e.target.value);

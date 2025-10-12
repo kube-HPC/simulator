@@ -374,6 +374,7 @@ const GraphPreview = ({
       network.setOptions(gOption);
       network.setData(adaptedGraph);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [graphPreview]);
 
   useEffect(() => {
