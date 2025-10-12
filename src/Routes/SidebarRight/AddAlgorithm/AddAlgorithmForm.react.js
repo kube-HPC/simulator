@@ -548,7 +548,7 @@ AddAlgorithmForm.propTypes = {
   isCheckForceStopAlgorithms: PropTypes.bool.isRequired,
   isSubmitLoading: PropTypes.bool.isRequired,
   setIsCheckForceStopAlgorithms: PropTypes.func.isRequired,
-  fileList: PropTypes.oneOfType([PropTypes.object]).isRequired,
+  fileList: PropTypes.arrayOf(PropTypes.object).isRequired,
   setFileList: PropTypes.func.isRequired,
 };
 
