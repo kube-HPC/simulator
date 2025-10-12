@@ -100,5 +100,10 @@ const SideCarForm = ({ nameList }) => (
 export default SideCarForm;
 
 SideCarForm.propTypes = {
-  nameList: PropTypes.string.isRequired,
+  nameList: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    ),
+  ]).isRequired,
 };

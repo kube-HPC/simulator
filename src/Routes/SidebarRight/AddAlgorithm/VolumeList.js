@@ -125,5 +125,10 @@ const VolumeList = ({ nameList }) => (
 export default VolumeList;
 
 VolumeList.propTypes = {
-  nameList: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
+  nameList: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    ),
+  ]),
 };

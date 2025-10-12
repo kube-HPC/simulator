@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Icon from '@ant-design/icons';
-import { Input, InputNumber, Select, Tooltip } from 'antd';
+import { InputNumber, Select, Tooltip, Space } from 'antd';
 import parseUnit from 'parse-unit';
 
 const selectStyle = { width: '90px' };
@@ -40,13 +40,13 @@ const MemoryField = ({
     : {};
   return (
     <Wrapper {...wrapperProps}>
-      <Input.Group compact>
+      <Space.Compact>
         {iconType && <Icon type={iconType} />}
         <InputNumber min={min} value={numberMem} onChange={onNumber} />
         <Select style={selectStyle} value={unit} onChange={onSelect}>
           {children}
         </Select>
-      </Input.Group>
+      </Space.Compact>
     </Wrapper>
   );
 };
