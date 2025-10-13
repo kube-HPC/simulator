@@ -38,6 +38,7 @@ export const TitleStatus = (
           record[keyStatus] > 0 &&
           keyStatus !== TASK_STATUS.SUCCEED && (
             <BaseTag
+              key={keyStatus}
               style={styleTagStatus}
               isActiveLoader={false}
               isError={!!isError}
