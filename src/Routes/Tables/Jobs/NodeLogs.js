@@ -449,7 +449,7 @@ NodeLogs.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
   taskDetails: PropTypes.array.isRequired,
-  NodeInputOutputTable: PropTypes.elementType.isRequired,
+  NodeInputOutputTable: PropTypes.node.isRequired,
   node: PropTypes.shape({
     kind: PropTypes.string,
     nodeName: PropTypes.string,
@@ -461,7 +461,7 @@ NodeLogs.propTypes = {
     warnings: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
 
-  currentTask: PropTypes.func.isRequired,
+  currentTask: PropTypes.string,
   setCurrentTask: PropTypes.func.isRequired,
   sideCarsDetails: PropTypes.arrayOf(PropTypes.object),
 };
