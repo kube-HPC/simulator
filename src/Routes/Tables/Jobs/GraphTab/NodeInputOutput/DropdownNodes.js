@@ -107,12 +107,12 @@ const DropDownNodes = ({ nodes, selectNode, setSelectNode }) => {
 };
 
 LabelStatusCount.propTypes = {
-  node: PropTypes.objectOf(PropTypes.string.isRequired).isRequired,
+  node: PropTypes.object.isRequired,
 };
 
 DropDownNodes.propTypes = {
   nodes: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
-  selectNode: PropTypes.string.isRequired,
+  selectNode: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
   setSelectNode: PropTypes.func.isRequired,
 };
 
