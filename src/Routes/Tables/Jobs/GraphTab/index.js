@@ -355,9 +355,10 @@ const GraphTab = ({ graph, pipeline }) => {
         }}>
         <Slider
           disabled={!isSwitchSlider}
-          tipFormatter={value =>
-            `Space between nodes:  ${calculatePercentage(value, 70, 200)}%`
-          }
+          tooltip={{
+            formatter: value =>
+              `Space between nodes:  ${calculatePercentage(value, 70, 200)}%`,
+          }}
           onChange={onChangeSliderDebounce}
           defaultValue={nodeSpacing.current}
           min={70}
