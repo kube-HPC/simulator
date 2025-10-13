@@ -66,7 +66,7 @@ const LabelStatusCount = ({ node }) => {
     <SelectText>
       <span>{name}</span>{' '}
       <TextTitleStatus>
-        {TitleStatus(stNode, false, true, node?.error)}
+        {TitleStatus(stNode, false, true, !!node?.error)}
       </TextTitleStatus>
     </SelectText>
   );

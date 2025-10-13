@@ -40,7 +40,7 @@ export const TitleStatus = (
             <BaseTag
               style={styleTagStatus}
               isActiveLoader={false}
-              isError={isError}
+              isError={!!isError}
               status={
                 keyStatus !== TASK_STATUS.FAILED_SCHEDULING
                   ? TASK_STATUS[keyStatus.toUpperCase()]
@@ -58,7 +58,7 @@ const Status = record => {
   const { status, error } = record;
 
   return (
-    <BaseTag status={status} colorMap={COLOR_TASK_STATUS} isError={error}>
+    <BaseTag status={status} colorMap={COLOR_TASK_STATUS} isError={!!error}>
       {status}
     </BaseTag>
   );
