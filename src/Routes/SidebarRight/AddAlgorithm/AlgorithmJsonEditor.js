@@ -122,11 +122,11 @@ const AlgorithmJsonEditor = ({
         </Card>
       )}
       <BottomPanel>
-        <PanelButton key="editor" onClick={toggleEditor}>
+        <PanelButton key="back-to-form" onClick={toggleEditor}>
           Back to form
         </PanelButton>
         {isEdit && (
-          <PanelButton key="editor" onClick={() => resetJson()}>
+          <PanelButton key="original-json" onClick={() => resetJson()}>
             Original Json
           </PanelButton>
         )}

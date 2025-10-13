@@ -44,8 +44,8 @@ const VolumeList = ({ nameList }) => (
                 </ContainerFormItem>
 
                 <FlexItem>
-                  <Form.Item {...rest} name={[name, 'typeVolume']}>
-                    <Radio.Group defaultValue="emptyDir" buttonStyle="solid">
+                  <Form.Item {...rest} name={[name, 'typeVolume']} initialValue="emptyDir">
+                    <Radio.Group buttonStyle="solid">
                       <Radio.Button value="emptyDir">EmptyDir</Radio.Button>
                       <Radio.Button value="persistentVolumeClaim">
                         persistentVolumeClaim (PVC)
