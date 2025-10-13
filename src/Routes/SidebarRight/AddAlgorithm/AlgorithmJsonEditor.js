@@ -154,13 +154,19 @@ const AlgorithmJsonEditor = ({
 AlgorithmJsonEditor.propTypes = {
   isEdit: PropTypes.bool.isRequired,
   editorJsonValue: PropTypes.string.isRequired,
-  onWizardSubmit: PropTypes.func.isRequired,
-  toggleEditor: PropTypes.bool.isRequired,
-  setIsCheckForceStopAlgorithms: PropTypes.func.isRequired,
-  refCheckForceStopAlgorithms: PropTypes.func.isRequired,
   setEditorJsonValue: PropTypes.func.isRequired,
+  onWizardSubmit: PropTypes.func.isRequired,
+  // toggleEditor is a function to switch back to the form view
+  toggleEditor: PropTypes.func.isRequired,
+  setIsCheckForceStopAlgorithms: PropTypes.func.isRequired,
+  // refCheckForceStopAlgorithms is a ref (object) or callback ref (function)
+  refCheckForceStopAlgorithms: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.object,
+  ]).isRequired,
   isCheckForceStopAlgorithms: PropTypes.bool.isRequired,
-  sourceJson: PropTypes.object.isRequired,
+  sourceJson: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
+    .isRequired,
   fileList: PropTypes.arrayOf(PropTypes.object).isRequired,
   setFileList: PropTypes.func.isRequired,
 };
