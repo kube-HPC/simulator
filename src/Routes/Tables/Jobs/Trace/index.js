@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import JaegerTrace from 'jaeger-react-trace-component';
 import { Result, Spin } from 'antd';
 import styled from 'styled-components';
+import ModernTraceViewer from './ModernTraceViewer';
 
 const CenterDiv = styled.div`
   height: 200px;
@@ -16,7 +16,7 @@ const Trace = ({ data }) =>
     <Result status="warning" title="No trace has been found." />
   ) : data ? (
     <div className="JaegerTrace">
-      <JaegerTrace trace={{ data }} />
+      <ModernTraceViewer data={data} />
     </div>
   ) : (
     <CenterDiv>
