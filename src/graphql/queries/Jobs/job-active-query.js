@@ -7,6 +7,7 @@ const JOB_QUERY_ACTIVE = gql`
     $algorithmName: String
     $pipelineStatus: String
     $user: String
+    $tag: String
     $datesRange: Range
     $cursor: String
     $limit: Int
@@ -17,6 +18,7 @@ const JOB_QUERY_ACTIVE = gql`
       algorithmName: $algorithmName
       pipelineStatus: $pipelineStatus
       user: $user
+      tag: $tag
       datesRange: $datesRange
       cursor: $cursor
       limit: $limit
@@ -87,7 +89,9 @@ const JOB_QUERY_ACTIVE = gql`
           kind
           priority
           startTime
+          tags
           types
+          tags
           nodes {
             algorithmName
           }

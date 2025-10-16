@@ -14,6 +14,7 @@ import JobProgress from './JobProgress';
 import JobStatus from './JobStatus';
 import JobTime from './JobTime';
 import JobTypes from './JobTypes';
+import JobTags from './JobTags';
 
 const Id = jobID => (
   <Ellipsis
@@ -51,9 +52,14 @@ const Priority = (text, record) => {
 // const Types = types => <JobTypes types={types} fullName={false} />;
 const Types = (text, record) => {
   const { pipeline } = record;
-  const { types } = pipeline;
+  const { types, tags } = pipeline;
 
-  return <JobTypes types={types} fullName={false} />;
+  return (
+    <>
+      <JobTypes types={types} fullName={false} />
+      <JobTags tags={tags} />
+    </>
+  );
 };
 
 const ProgressContainer = styled.div`
@@ -137,8 +143,8 @@ const jobColumns = [
     render: StartTime,
   },
   {
-    title: `Pipeline Type & Tags`,
-    dataIndex: ['pipeline', 'types'],
+    title: `Pipeline Type/Tags`,
+    dataIndex: ['pipeline'],
     key: `types`,
     width: `10%`,
     render: Types,

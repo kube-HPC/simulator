@@ -69,6 +69,12 @@ const QueryForm = ({
       form.resetFields(['pipelineStatus']);
     }
 
+    if (params && params.tags) {
+      form.setFieldsValue({ tags: params.tags });
+    } else {
+      form.resetFields(['tags']);
+    }
+
     if (keycloakEnable) {
       if (params && params.user) {
         form.setFieldsValue({ user: params.user });
@@ -260,6 +266,10 @@ QueryForm.propTypes = {
     pipelineName: PropTypes.string,
     pipelineStatus: PropTypes.string,
     user: PropTypes.string,
+    tags: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.arrayOf(PropTypes.string),
+    ]),
     datesRange: PropTypes.shape({
       // eslint-disable-next-line react/forbid-prop-types
       from: PropTypes.object,

@@ -57,6 +57,7 @@ const JOB_ACTIVE_BY_ID_QUERY = gql`
         kind
         priority
         startTime
+        tags
         types
         lastRunResult {
           timestamp
