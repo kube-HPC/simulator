@@ -7,6 +7,7 @@ const COUNTERS_QUERY = gql`
     $algorithmName: String
     $pipelineStatus: String
     $user: String
+    $tag: String
     $datesRange: Range
   ) {
     pipelines {
@@ -24,6 +25,7 @@ const COUNTERS_QUERY = gql`
       algorithmName: $algorithmName
       pipelineStatus: $pipelineStatus
       user: $user
+      tag: $tag
       datesRange: $datesRange
     ) {
       jobsCount

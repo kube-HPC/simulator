@@ -62,6 +62,7 @@ const useJobsFunctionsLimit = () => {
       pipelineName: iJobs?.pipelineName || undefined,
       pipelineStatus: iJobs?.pipelineStatus || undefined,
       user: iJobs?.user || undefined,
+      tag: iJobs?.tag || undefined,
       datesRange: {
         from: iJobs?.datesRange?.from || null,
         to: iJobs?.datesRange?.to || null,
@@ -84,6 +85,7 @@ const useJobsFunctionsLimit = () => {
     instanceFilters.jobs.pipelineName,
     instanceFilters.jobs.pipelineStatus,
     instanceFilters.jobs.user,
+    instanceFilters.jobs.tag,
     instanceFilters.jobs?.datesRange?.from,
     instanceFilters.jobs?.datesRange?.to,
     metaMode?.experimentName,
