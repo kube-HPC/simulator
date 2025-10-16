@@ -21,7 +21,7 @@ import { Field, FormItemLabelWrapper } from './../FormUtils';
 
 const TitleNode = styled.h1`
   font-size: 28px;
-  margin: 0px;
+  margin: 5px;
   line-height: 1;
 `;
 
@@ -30,6 +30,7 @@ const NodeBrowserContainer = styled.section`
   flex-wrap: nowrap;
   margin-right: 15px;
   padding-right: 10px;
+  flex-shrink: 0;
   // border-right: 1px solid rgba(223, 223, 223, 0.91);
 `;
 
@@ -75,8 +76,10 @@ const NodeSelectRadioGroup = styled(Radio.Group)`
 `;
 
 const DataNode = styled.div`
-  width: 475px;
-
+  width: 100%;
+  max-width: 100%;
+  flex: 1;
+  marginleft: 5px;
   ${props =>
     props.$isDisabled &&
     `
@@ -313,7 +316,7 @@ const Nodes = ({ style }) => {
               )}
             </NodeSelectRadioGroup>
           </NodeBrowserContainer>
-          <div>
+          <div style={{ flex: 1, minWidth: 550, overflow: 'hidden' }}>
             {ids.map(id => (
               <DataNode key={`dataNode::id-${id}`} $isDisabled={isRunPipeline}>
                 <BoldedFormField

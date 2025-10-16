@@ -19,7 +19,7 @@ import { Initial, Nodes, Options } from './Steps';
 import GraphPreview from './../../Tables/Jobs/GridView/GraphPreview';
 
 const Form = styled(AntdForm)`
-  width: 98ch;
+  width: 100%;
   height: 100%;
   overflow-y: scroll;
 `;
@@ -34,9 +34,8 @@ export const Body = styled.div`
 export const ContenerWizard = styled.div`
   // position: relative;
   // overflow-x: none;
-  //overflow-y: scroll;
-  // height: 100%;
-  // width: 50%;
+  overflow-y: scroll;
+  height: 100%;
 `;
 
 export const ContenerJsonGraph = styled.div`
@@ -214,60 +213,66 @@ const Wizard = ({
         }}
       />
       <Body $isEditState={isEdit}>
-        <ContenerWizard>
-          <Form
-            form={form}
-            onValuesChange={setForm}
-            name="create-pipeline"
-            layout="horizontal"
-            hideRequiredMark
-            onSubmit={handleSubmit}
-            style={{ padding: '0 2ch' }}>
-            {initStepComponents.map((StepComponent, ii) => (
-              <StepComponent
-                key={`step-component-${stepNames[ii]}`}
-                style={{
-                  display: ii === stepIdx ? 'block' : 'none',
-                }}
-              />
-            ))}
-          </Form>
-        </ContenerWizard>
-
-        {pageLoaded && (
-          <ContenerJsonGraph>
-            <Splitter
-              lazy
-              onResizeEnd={() => setReloadGraphPreview(!reloadGraphPreview)}
-              layout="vertical"
-              style={{ boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
-              <Splitter.Panel>
-                <ContenerGraph>
-                  {valuesState && (
-                    <GraphPreview
-                      pipeline={getFormattedFormValues()}
-                      isBuildAllFlows={isStreamingPipeline}
-                      isMinified
-                      clickNode={selectNodeFromGraph}
-                      reload={reloadGraphPreview}
-                    />
-                  )}
-                </ContenerGraph>
-              </Splitter.Panel>
-              <Splitter.Panel>
-                <ContenerJsonButton>
-                  <ButtonSticky onClick={handleToggle}>
-                    Text editor
-                  </ButtonSticky>
-                  <JsonView
-                    src={getFormattedFormValues()}
-                    collapsed={undefined}
+        <Splitter>
+          <Splitter.Panel>
+            <ContenerWizard>
+              <Form
+                form={form}
+                onValuesChange={setForm}
+                name="create-pipeline"
+                layout="horizontal"
+                hideRequiredMark
+                onSubmit={handleSubmit}
+                style={{ padding: '0 2ch' }}>
+                {initStepComponents.map((StepComponent, ii) => (
+                  <StepComponent
+                    key={`step-component-${stepNames[ii]}`}
+                    style={{
+                      display: ii === stepIdx ? 'block' : 'none',
+                    }}
                   />
-                </ContenerJsonButton>
-              </Splitter.Panel>
-            </Splitter>
-          </ContenerJsonGraph>
-        )}
+                ))}
+              </Form>
+            </ContenerWizard>
+          </Splitter.Panel>
+
+          <Splitter.Panel>
+            {pageLoaded && (
+              <ContenerJsonGraph>
+                <Splitter
+                  lazy
+                  onResizeEnd={() => setReloadGraphPreview(!reloadGraphPreview)}
+                  layout="vertical"
+                  style={{ boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
+                  <Splitter.Panel>
+                    <ContenerGraph>
+                      {valuesState && (
+                        <GraphPreview
+                          pipeline={valuesState}
+                          isBuildAllFlows={isStreamingPipeline}
+                          isMinified
+                          clickNode={selectNodeFromGraph}
+                          reload={reloadGraphPreview}
+                        />
+                      )}
+                    </ContenerGraph>
+                  </Splitter.Panel>
+                  <Splitter.Panel>
+                    <ContenerJsonButton>
+                      <ButtonSticky onClick={handleToggle}>
+                        Text editor
+                      </ButtonSticky>
+                      <JsonView
+                        src={getFormattedFormValues()}
+                        collapsed={undefined}
+                      />
+                    </ContenerJsonButton>
+                  </Splitter.Panel>
+                </Splitter>
+              </ContenerJsonGraph>
+            )}
+          </Splitter.Panel>
+        </Splitter>
       </Body>
 
       <BottomPanel>
