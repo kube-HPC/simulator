@@ -199,6 +199,16 @@ const QueryForm = ({
         />
       </Form.Item>
 
+      <Form.Item name="tags">
+        <AutoCompleteFloatingLabelInput
+          isExactMatch
+          label="Tag Name"
+          width="9vw"
+          allowClear
+          Submit={SubmitForm}
+        />
+      </Form.Item>
+
       {keycloakEnable && (
         <Form.Item name="user">
           <AutoCompleteFloatingLabelInput

@@ -137,7 +137,7 @@ const jobColumns = [
     render: StartTime,
   },
   {
-    title: `Pipeline Type`,
+    title: `Pipeline Type & Tags`,
     dataIndex: ['pipeline', 'types'],
     key: `types`,
     width: `10%`,
