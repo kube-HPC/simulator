@@ -10,15 +10,23 @@ let isPolling = true;
 
 const _throttled = throttle(
   () => {
-    // console.log('throttle Inactive Mode');
     isTrottle = true;
   },
   1800,
-
   { trailing: false }
 );
 
 document.addEventListener('mousemove', _throttled);
+
+// reload all data in site
+// eslint-disable-next-line no-unused-vars
+export const forceRefetchAll = (act = 'def') => {
+  queryArry.forEach(query => {
+    if (query.refetch) {
+      query.refetch();
+    }
+  });
+};
 
 const trottleCheck = () => {
   setTimeout(() => {
@@ -27,9 +35,7 @@ const trottleCheck = () => {
         query.stopPolling();
       });
       if (isPolling) {
-        // prettier-ignore
         inactiveModeVar(true);
-        //  console.log('polling stopped count:', queryArry?.length);
         isPolling = false;
       }
     } else {
@@ -40,8 +46,6 @@ const trottleCheck = () => {
         });
         isPolling = true;
         inactiveModeVar(false);
-        // prettier-ignore
-        //  console.log('polling started count:', queryArry?.length);
       }
     }
     trottleCheck();
@@ -53,13 +57,9 @@ const usePolling = (query, interval) => {
     queryArry.push(query);
     query.startPolling(interval);
 
-    // prettier-ignore
-    // 'polling');
     return () => {
       queryArry.splice(queryArry.indexOf(query), 1);
       query.stopPolling();
-      // prettier-ignore
-     // console.log('stop polling');
     };
   }, [query, interval]);
 };

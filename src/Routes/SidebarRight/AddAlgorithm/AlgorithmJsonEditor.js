@@ -34,7 +34,6 @@ const AlgorithmJsonEditor = ({
   fileList,
   setFileList,
 }) => {
-  const isCodeInJson = () => editorJsonValue.indexOf('"Code"') > -1 || false;
   const [isCodeProp, setIsCodeProp] = useState(false);
 
   const onBeforeEditorSubmit = ({ src }) => {
@@ -44,7 +43,10 @@ const AlgorithmJsonEditor = ({
 
     const formData = new FormData();
 
-    if (buildTypeSubmit.toLowerCase() === BUILD_TYPES.CODE.field) {
+    if (
+      buildTypeSubmit &&
+      buildTypeSubmit.toLowerCase() === BUILD_TYPES.CODE.field
+    ) {
       const [file] = fileList;
 
       if (!isEdit && !srcJson.algorithmImage && !fileList.length) {
@@ -98,7 +100,7 @@ const AlgorithmJsonEditor = ({
   };
 
   useEffect(() => {
-    setIsCodeProp(isCodeInJson());
+    setIsCodeProp(editorJsonValue.indexOf('"Code"') > -1 || false);
   }, [editorJsonValue]);
 
   return (
@@ -120,11 +122,11 @@ const AlgorithmJsonEditor = ({
         </Card>
       )}
       <BottomPanel>
-        <PanelButton key="editor" onClick={toggleEditor}>
+        <PanelButton key="back-to-form" onClick={toggleEditor}>
           Back to form
         </PanelButton>
         {isEdit && (
-          <PanelButton key="editor" onClick={() => resetJson()}>
+          <PanelButton key="original-json" onClick={() => resetJson()}>
             Original Json
           </PanelButton>
         )}
@@ -151,15 +153,21 @@ const AlgorithmJsonEditor = ({
 
 AlgorithmJsonEditor.propTypes = {
   isEdit: PropTypes.bool.isRequired,
-  editorJsonValue: PropTypes.instanceOf(PropTypes.object.isRequired).isRequired,
-  onWizardSubmit: PropTypes.func.isRequired,
-  toggleEditor: PropTypes.bool.isRequired,
-  setIsCheckForceStopAlgorithms: PropTypes.func.isRequired,
-  refCheckForceStopAlgorithms: PropTypes.func.isRequired,
+  editorJsonValue: PropTypes.string.isRequired,
   setEditorJsonValue: PropTypes.func.isRequired,
+  onWizardSubmit: PropTypes.func.isRequired,
+  // toggleEditor is a function to switch back to the form view
+  toggleEditor: PropTypes.func.isRequired,
+  setIsCheckForceStopAlgorithms: PropTypes.func.isRequired,
+  // refCheckForceStopAlgorithms is a ref (object) or callback ref (function)
+  refCheckForceStopAlgorithms: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.object,
+  ]).isRequired,
   isCheckForceStopAlgorithms: PropTypes.bool.isRequired,
-  sourceJson: PropTypes.instanceOf(PropTypes.object.isRequired).isRequired,
-  fileList: PropTypes.oneOfType([PropTypes.object]).isRequired,
+  sourceJson: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
+    .isRequired,
+  fileList: PropTypes.arrayOf(PropTypes.object).isRequired,
   setFileList: PropTypes.func.isRequired,
 };
 

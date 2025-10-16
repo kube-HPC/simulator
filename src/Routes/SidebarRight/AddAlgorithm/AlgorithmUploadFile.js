@@ -96,6 +96,6 @@ export default AlgorithmUploadFile;
 AlgorithmUploadFile.propTypes = {
   isEdit: PropTypes.bool.isRequired,
 
-  fileList: PropTypes.instanceOf(PropTypes.object).isRequired,
+  fileList: PropTypes.arrayOf(PropTypes.object).isRequired,
   setFileList: PropTypes.func.isRequired,
 };

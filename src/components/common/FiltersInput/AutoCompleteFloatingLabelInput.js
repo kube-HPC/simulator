@@ -22,7 +22,7 @@ const Label = styled.label`
   padding: 0 4px;
   z-index: 100;
   ${props =>
-    (props.focused || props.hasValue) &&
+    (props.$focused || props.$hasValue) &&
     `
     top: 1px;
     font-size: 12px;
@@ -53,7 +53,7 @@ const AutoCompleteFloatingLabelInput = ({
   debounceDelay = 1000,
   suffix,
   width,
-  options,
+  options = [],
   isExactMatch = false,
   listIgnoreExactMatch = [],
   ...props
@@ -67,7 +67,7 @@ const AutoCompleteFloatingLabelInput = ({
 
   return (
     <Container>
-      <Label focused={focused} hasValue={!!value}>
+      <Label $focused={focused} $hasValue={!!value}>
         {label}
       </Label>
       <AutoComplete
@@ -111,12 +111,17 @@ const AutoCompleteFloatingLabelInput = ({
 AutoCompleteFloatingLabelInput.propTypes = {
   label: PropTypes.string.isRequired,
   Submit: PropTypes.func.isRequired,
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onChange: PropTypes.func,
   debounceDelay: PropTypes.number,
   suffix: PropTypes.node,
-  options: PropTypes.node,
-  width: PropTypes.string,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      label: PropTypes.node,
+    })
+  ),
+  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   isExactMatch: PropTypes.bool,
   listIgnoreExactMatch: PropTypes.arrayOf(PropTypes.string),
 };

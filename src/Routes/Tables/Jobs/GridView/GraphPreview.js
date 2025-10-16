@@ -374,6 +374,7 @@ const GraphPreview = ({
       network.setOptions(gOption);
       network.setData(adaptedGraph);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [graphPreview]);
 
   useEffect(() => {
@@ -438,8 +439,8 @@ const GraphPreview = ({
 
 GraphPreview.propTypes = {
   pipeline: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    kind: PropTypes.string.isRequired,
+    name: PropTypes.string,
+    kind: PropTypes.string,
     nodes: PropTypes.arrayOf(PropTypes.object),
     streaming: PropTypes.object,
   }).isRequired,

@@ -18,7 +18,11 @@ const isArray = input => {
 };
 
 const isNode = (nodeNames, srcValue) => {
-  if (nodeNames.length > 0 && nodeNames?.includes(srcValue.split('.')[0])) {
+  if (!srcValue || typeof srcValue !== 'string') {
+    return false;
+  }
+
+  if (nodeNames.length > 0 && nodeNames.includes(srcValue.split('.')[0])) {
     return true;
   }
 
@@ -131,12 +135,13 @@ const useInputField = (antFields, onRemove, inputRef, selectWidth) => {
       setValue(srcValue);
 
       let isOneValid = false;
-
+      // mrkt
       rules.forEach(rule => {
         if (isOneValid === false) {
           if (
             (label === '(@)Output of' || label === '(#@)Multi output of') &&
             rule === 'flowinput' &&
+            typeof srcValue === 'string' &&
             srcValue.toLowerCase().includes('flowinput')
           ) {
             setIsValid(true);

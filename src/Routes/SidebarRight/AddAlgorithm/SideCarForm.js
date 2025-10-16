@@ -28,14 +28,19 @@ const SideCarForm = ({ nameList }) => (
       <>
         {fields.map(({ key, name, ...restField }) => (
           <React.Fragment key={key}>
-            <div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                width: '100%',
+              }}>
               <MinusCircleOutlined
                 style={{
                   fontSize: '20px',
-                  height: '32px',
-                  textAlign: 'end',
+                  height: '25px',
+                  width: '25px',
                   display: 'flex',
-                  alignItems: 'baseline',
                   justifyContent: 'flex-end',
                 }}
                 onClick={() => remove(name)}
@@ -47,7 +52,13 @@ const SideCarForm = ({ nameList }) => (
                 label="Name"
                 {...restField}
                 name={[name, 'container', 'name']}
-                rules={[{ required: true, message: 'Missing container Name' }]}>
+                rules={[
+                  {
+                    pattern: /^[A-Za-z0-9-]+$/,
+                    message:
+                      'Allowed letters and numbers only (no spaces, _, $%&^...)',
+                  },
+                ]}>
                 <Input />
               </ContainerFormItemTop>
             </FlexItem>
@@ -60,7 +71,7 @@ const SideCarForm = ({ nameList }) => (
             </ContainerFormItemTop>
             <Row style={{ marginTop: '16px' }}>
               <Col span={12}>
-                <Card title="Environment Variable" bordered="true">
+                <Card title="Environment Variable" variant="default">
                   <Form.Item>
                     <KeyValueForm
                       buttonWidth="395px"
@@ -100,5 +111,10 @@ const SideCarForm = ({ nameList }) => (
 export default SideCarForm;
 
 SideCarForm.propTypes = {
-  nameList: PropTypes.string.isRequired,
+  nameList: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    ),
+  ]).isRequired,
 };

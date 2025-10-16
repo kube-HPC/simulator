@@ -46,16 +46,38 @@ Form.Divider = DividerWrapper;
 Form.Item.propTypes = AntdForm.Item.propTypes;
 Form.Divider.propTypes = AntdDivider.propTypes;
 
-const Collapsible = ({ title, children, defaultExpanded = false }) => {
-  const [isExpanded, toggle] = useReducer(state => !state, defaultExpanded);
+const Collapsible = ({
+  title,
+  children,
+  defaultExpanded = false,
+  expanded,
+  onChange,
+}) => {
+  const [internalExpanded, toggleInternal] = useReducer(
+    state => !state,
+    defaultExpanded
+  );
+
+  const isControlled = expanded !== undefined;
+  const isExpanded = isControlled ? expanded : internalExpanded;
+
+  const handleToggle = () => {
+    if (isControlled) {
+      onChange?.(!expanded);
+    } else {
+      toggleInternal();
+      onChange?.(!isExpanded);
+    }
+  };
+
   return (
     <>
       <DividerWrapper>
         {title}{' '}
         {isExpanded ? (
-          <CaretDownOutlined onClick={toggle} />
+          <CaretDownOutlined onClick={handleToggle} />
         ) : (
-          <CaretRightOutlined onClick={toggle} />
+          <CaretRightOutlined onClick={handleToggle} />
         )}
       </DividerWrapper>
       <div style={{ display: isExpanded ? 'unset' : 'none' }}>{children}</div>
@@ -64,10 +86,12 @@ const Collapsible = ({ title, children, defaultExpanded = false }) => {
 };
 
 Collapsible.propTypes = {
-  title: PropTypes.string.isRequired,
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
   children: oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)])
     .isRequired,
   defaultExpanded: PropTypes.bool,
+  expanded: PropTypes.bool,
+  onChange: PropTypes.func,
 };
 
 Form.Collapsible = Collapsible;

@@ -21,14 +21,25 @@ const useCounters = () => {
   const instanceFilters = useReactiveVar(instanceFiltersVar);
   const dateTimeDefault = useReactiveVar(dateTimeDefaultVar);
   const pipelineJustStarted = useReactiveVar(pipelineJustStartedVar);
-  let counters = null;
   const prevQueueCountRef = useRef(null);
   const prevJobsCountRef = useRef(null);
+
+  const [counters, setCounters] = React.useState({
+    jobs: 0,
+    pipelines: 0,
+    algorithms: 0,
+    algorithmsUnscheduledReason: 0,
+    queue: 0,
+    dataSources: 0,
+    drivers: 0,
+    workers: 0,
+  });
 
   const gotoJobsTable = useCallback(() => {
     navigate('/jobs');
   }, [navigate]);
 
+  // eslint-disable-next-line no-unused-vars
   const query = useQuery(COUNTERS_QUERY, {
     variables: {
       datesRange: {
@@ -36,8 +47,10 @@ const useCounters = () => {
         to: instanceFilters?.jobs?.datesRange?.to || null,
       },
     },
+    // pollInterval: 3000,
+    notifyOnNetworkStatusChange: true,
     onCompleted: data => {
-      counters = {
+      const newCounters = {
         jobs: data?.jobsAggregated?.jobsCount || 0,
         pipelines: data?.pipelines?.pipelinesCount || 0,
         algorithms: data?.algorithms?.algorithmsCount || 0,
@@ -50,7 +63,7 @@ const useCounters = () => {
         drivers: data.discovery.pipelineDriver.length,
         workers: data.discovery.worker.length,
       };
-
+      setCounters(newCounters);
       if (
         prevQueueCountRef.current !== null &&
         counters.queue > prevQueueCountRef.current
@@ -78,7 +91,7 @@ const useCounters = () => {
 
       instanceCounterVar({
         ...instanceCounterVar(),
-        ...counters,
+        ...newCounters,
       });
     },
   });

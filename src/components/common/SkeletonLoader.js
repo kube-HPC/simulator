@@ -4,8 +4,8 @@ import { Skeleton } from 'antd';
 
 const SkeletonLoader = ({ SkeletonItem = 10 }) => (
   <>
-    {[...Array(SkeletonItem)].map(() => (
-      <Skeleton active />
+    {[...Array(SkeletonItem)].map((_, idx) => (
+      <Skeleton active key={`skeleton-loader-item-${idx.toString()}`} />
     ))}
   </>
 );

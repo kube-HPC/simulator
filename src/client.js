@@ -1,6 +1,7 @@
 import axios from 'axios';
 import KeycloakServices from 'keycloak/keycloakServices';
 import { events } from 'utils';
+import { forceRefetchAll } from 'graphql/usePolling';
 
 const client = axios.create();
 
@@ -22,11 +23,18 @@ client.interceptors.request.use(
 );
 
 client.interceptors.response.use(
-  response => response,
+  response => {
+    // run forceRefetchAll after a successful POST/PUT/DELETE request
+    const method = response.config.method?.toUpperCase();
+    if (['POST', 'PUT', 'DELETE'].includes(method || '')) {
+      setTimeout(() => forceRefetchAll(method), 0);
+    }
+
+    return response;
+  },
   async error => {
     const originalRequest = error.config;
 
-    // 403 Forbidden
     if (error.response?.status === 403) {
       console.log('403 Forbidden');
       events.emit(

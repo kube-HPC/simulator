@@ -1,6 +1,4 @@
-/* eslint-disable max-classes-per-file */
-import React from 'react';
-import { COLOR } from 'styles/colors';
+import React, { useRef, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import AnsiToHtml from 'ansi-to-html';
@@ -15,9 +13,8 @@ import {
   CellMeasurer,
   CellMeasurerCache,
 } from 'react-virtualized';
+import { COLOR } from 'styles/colors';
 import './logColors.css';
-
-/** @typedef {import('react-virtualized').ListRowProps} ListRowProps */
 
 const List = styled(VirtualizedList)`
   &:focus {
@@ -29,13 +26,13 @@ const List = styled(VirtualizedList)`
 const ContainerBase = styled.div`
   padding: 0.5em 1ch;
   white-space: pre-line;
+  height: 100%;
 `;
 
 const ValidContainer = styled(ContainerBase)`
   background-color: ${props => props.theme.Styles.validContainer.background};
   border: 1px solid #858899;
   color: white;
-  height: inherit;
 `;
 
 const InvalidContainer = styled(ContainerBase)`
@@ -88,34 +85,15 @@ const CopyButton = styled.button`
   margin-right: 1ch;
   color: white;
   cursor: pointer;
-  border: none;
 `;
 
 const timeFormat = 'DD/MM/YY HH:mm:ss';
-
-/**
- * @extends React.PureComponent<EntryProps, EntryState>
- *
- * @typedef {{
- *   log: {
- *     timestamp: number;
- *     message: string;
- *     level: string;
- *   };
- *   style: React.CSSProperties;
- *   index: number;
- * }} EntryProps
- *
- * @typedef {object} EntryState
- */
-
 const ansiConvert = new AnsiToHtml();
+const emptyRow = '-'.repeat(80);
 
-class Entry extends React.PureComponent {
-  onCopy = () => {
-    const {
-      log: { timestamp, message, level },
-    } = this.props;
+const Entry = ({ log, index, style }) => {
+  const onCopy = () => {
+    const { timestamp, message, level } = log;
     window.navigator.clipboard.writeText(
       `${dayjs(+timestamp).format(timeFormat)} ${message} Level:${level}`
     );
@@ -125,45 +103,34 @@ class Entry extends React.PureComponent {
     });
   };
 
-  render() {
-    const {
-      log: { timestamp, message, level },
-      index,
-      style,
-    } = this.props;
-
-    return (
-      <LogLine style={style}>
-        <LineNumber>{index + 1}</LineNumber>
-        <Timestamp format={timeFormat}>{+timestamp}</Timestamp>
-        <Message>{message}</Message>
-        <Tooltip title="Copy log to clipboard" placement="left">
-          <CopyButton onClick={this.onCopy} type="button">
-            <CopyOutlined />
-          </CopyButton>
-        </Tooltip>
-        <Tag data-log-level={level}>{level}</Tag>
-      </LogLine>
-    );
-  }
-}
+  return (
+    <LogLine style={style}>
+      <LineNumber>{index + 1}</LineNumber>
+      <Timestamp format={timeFormat}>{+log.timestamp}</Timestamp>
+      <Message>{log.message}</Message>
+      <Tooltip title="Copy log to clipboard" placement="left">
+        <CopyButton onClick={onCopy} type="button">
+          <CopyOutlined />
+        </CopyButton>
+      </Tooltip>
+      <Tag data-log-level={log.level}>{log.level}</Tag>
+    </LogLine>
+  );
+};
 
 Entry.propTypes = {
   log: PropTypes.shape({
-    timestamp: PropTypes.string.isRequired,
+    timestamp: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+      .isRequired,
     message: PropTypes.string.isRequired,
     level: PropTypes.string.isRequired,
   }).isRequired,
   index: PropTypes.number.isRequired,
-  // eslint-disable-next-line
   style: PropTypes.object.isRequired,
 };
 
-const emptyRow = '-'.repeat(80);
-class BuildEntry extends React.PureComponent {
-  // eslint-disable-next-line react/no-unused-class-component-methods
-  onCopy = () => {
-    const { log } = this.props;
+const BuildEntry = ({ log, index, style }) => {
+  const onCopy = () => {
     window.navigator.clipboard.writeText(log);
     notification({
       message: 'Log Line Copied to clipboard',
@@ -171,112 +138,103 @@ class BuildEntry extends React.PureComponent {
     });
   };
 
-  render() {
-    const { index, log, style } = this.props;
-    return (
-      <LogLine style={style}>
-        <LineNumber>{index + 1}</LineNumber>
-        <Message>{log === '' ? emptyRow : ansiConvert.toHtml(log)}</Message>
-      </LogLine>
-    );
-  }
-}
+  return (
+    <LogLine style={style}>
+      <LineNumber>{index + 1}</LineNumber>
+      <Message
+        dangerouslySetInnerHTML={{
+          __html: log === '' ? emptyRow : ansiConvert.toHtml(log),
+        }}
+      />
+      <Tooltip title="Copy log to clipboard" placement="left">
+        <CopyButton onClick={onCopy} type="button">
+          <CopyOutlined />
+        </CopyButton>
+      </Tooltip>
+    </LogLine>
+  );
+};
+
 BuildEntry.propTypes = {
   index: PropTypes.number.isRequired,
   log: PropTypes.string.isRequired,
-  // eslint-disable-next-line
   style: PropTypes.object.isRequired,
 };
 
-/**
- * @extends React.PureComponent<LogViewerProps, LogViewerState>
- *
- * @typedef {{
- *   dataSource: object[];
- *   isBuild: boolean;
- *   id: string;
- *   emptyDescription: string;
- * }} LogViewerProps
- *
- * @typedef {any} LogViewerState
- */
-class LogsViewer extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.renderRow = this.renderRow.bind(this);
-    this.cache = new CellMeasurerCache({
-      fixedWidth: true,
-      defaultHeight: 30,
+const LogsViewer = ({ dataSource, isBuild = false, id, emptyDescription }) => {
+  const cache = useRef(
+    new CellMeasurerCache({ fixedWidth: true, defaultHeight: 30 })
+  );
+  const listRef = useRef(null);
+
+  useEffect(() => {
+    cache.current.clearAll();
+    const raf = requestAnimationFrame(() => {
+      listRef.current?.recomputeRowHeights();
+      listRef.current?.forceUpdateGrid?.();
     });
-  }
+    return () => cancelAnimationFrame(raf);
+  }, [dataSource, id]);
 
-  componentDidUpdate(prevProps) {
-    const { id } = this.props;
-    if (prevProps.id !== id) {
-      this.cache.clearAll();
-    }
-  }
-
-  renderRow = ({ index, parent, style, key }) => {
-    const { isBuild = false, dataSource } = this.props;
-    return (
+  const renderRow = useCallback(
+    ({ index, key, parent, style }) => (
       <CellMeasurer
-        cache={this.cache}
+        key={key}
+        cache={cache.current}
         columnIndex={0}
         rowIndex={index}
-        parent={parent}
-        key={key}>
-        {isBuild ? (
-          <BuildEntry style={style} index={index} log={dataSource[index]} />
-        ) : (
-          <Entry style={style} index={index} log={dataSource[index]} />
+        parent={parent}>
+        {({ registerChild }) => (
+          <div ref={registerChild} style={style}>
+            {isBuild ? (
+              <BuildEntry index={index} log={dataSource[index]} style={{}} />
+            ) : (
+              <Entry index={index} log={dataSource[index]} style={{}} />
+            )}
+          </div>
         )}
       </CellMeasurer>
-    );
-  };
+    ),
+    [dataSource, isBuild]
+  );
 
-  render() {
-    const { isBuild, dataSource, emptyDescription } = this.props;
-    const [first] = dataSource;
-    const isValid = isBuild || (first && first.level);
+  const [first] = dataSource;
+  const isValid = isBuild || (first && first.level);
 
-    return isValid ? (
-      <ValidContainer>
-        <AutoSizer>
-          {({ width, height }) => (
-            <List
-              ref={element => {
-                // eslint-disable-next-line react/no-unused-class-component-methods
-                this._list = element;
-              }}
-              deferredMeasurementCache={this.cache}
-              overscanRowCount={0}
-              rowHeight={this.cache.rowHeight}
-              width={width}
-              height={height}
-              rowCount={dataSource.length}
-              rowRenderer={this.renderRow}
-            />
-          )}
-        </AutoSizer>
-      </ValidContainer>
-    ) : (
-      <InvalidContainer>
-        <Empty
-          description={emptyDescription || 'No valid logs for current pod'}
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-        />
-      </InvalidContainer>
-    );
-  }
-}
+  return isValid ? (
+    <ValidContainer>
+      <AutoSizer>
+        {({ width, height }) => (
+          <List
+            ref={listRef}
+            deferredMeasurementCache={cache.current}
+            overscanRowCount={0}
+            rowHeight={cache.current.rowHeight}
+            width={width}
+            height={height}
+            rowCount={dataSource.length}
+            rowRenderer={renderRow}
+          />
+        )}
+      </AutoSizer>
+    </ValidContainer>
+  ) : (
+    <InvalidContainer>
+      <Empty
+        description={emptyDescription || 'No valid logs for current pod'}
+        image={Empty.PRESENTED_IMAGE_SIMPLE}
+      />
+    </InvalidContainer>
+  );
+};
 
 LogsViewer.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  dataSource: PropTypes.arrayOf(PropTypes.object).isRequired,
+  dataSource: PropTypes.arrayOf(
+    PropTypes.oneOfType([PropTypes.object, PropTypes.string])
+  ).isRequired,
   isBuild: PropTypes.bool,
   id: PropTypes.string.isRequired,
-  emptyDescription: PropTypes.string.isRequired,
+  emptyDescription: PropTypes.string,
 };
 
 export default LogsViewer;

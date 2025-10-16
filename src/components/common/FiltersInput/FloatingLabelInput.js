@@ -23,7 +23,7 @@ const Label = styled.label`
   padding: 0 4px;
   z-index: 100;
   ${props =>
-    (props.focused || props.hasValue) &&
+    (props.$focused || props.$hasValue) &&
     `
     top: 1px;
     font-size: 12px;
@@ -54,7 +54,7 @@ const FloatingLabelInput = ({
 
   return (
     <Container>
-      <Label focused={focused} hasValue={!!value}>
+      <Label $focused={focused} $hasValue={!!value}>
         {label}
       </Label>
       <StyledInput

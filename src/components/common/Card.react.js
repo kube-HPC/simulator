@@ -10,23 +10,37 @@ const CardOverflow = styled(AntCard)`
 const Card = ({
   children,
   isMargin = false,
-  bordered = true,
+  bordered = undefined,
+  variant = undefined,
   actions = [],
   style = {},
   bodyStyle = {},
   ...props
-}) => (
-  <CardOverflow
-    styles={{ body: { ...bodyStyle } }}
-    size="small"
-    style={{ marginRight: isMargin ? '50px' : 'none', ...style }}
-    actions={actions}
-    bordered={bordered}
-    // eslint-disable-next-line
-    {...props}>
-    {children}
-  </CardOverflow>
-);
+}) => {
+  let finalVariant = variant;
+  if (finalVariant === undefined) {
+    if (bordered === undefined) {
+      finalVariant = 'default';
+    } else {
+      const borderedBool =
+        typeof bordered === 'string' ? bordered === 'true' : Boolean(bordered);
+      finalVariant = borderedBool ? 'default' : 'borderless';
+    }
+  }
+
+  return (
+    <CardOverflow
+      styles={{ body: { ...bodyStyle } }}
+      size="small"
+      style={{ marginRight: isMargin ? '50px' : 'none', ...style }}
+      actions={actions}
+      variant={finalVariant}
+      // eslint-disable-next-line
+      {...props}>
+      {children}
+    </CardOverflow>
+  );
+};
 
 Card.Meta = AntCard.Meta;
 Card.Grid = AntCard.Grid;
@@ -36,7 +50,8 @@ Card.propTypes = {
   isMargin: PropTypes.bool,
   // eslint-disable-next-line
   actions: PropTypes.array,
-  bordered: PropTypes.bool,
+  bordered: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
+  variant: PropTypes.oneOf(['default', 'borderless']),
   // eslint-disable-next-line
   style: PropTypes.object,
   // eslint-disable-next-line

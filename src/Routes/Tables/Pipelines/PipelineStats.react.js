@@ -15,7 +15,7 @@ const PipelineStats = ({ name, nodes }) => {
   // TODO: replace with selector
   // const { dataStats } = usePipeline();
   const query = useQuery(PIPELINE_STATS_QUERY);
-  usePolling(query, 10000);
+  usePolling(query, 3000);
 
   const { hasMetrics, boards, boardUrl } = useBoards({ pipelineName: name });
 

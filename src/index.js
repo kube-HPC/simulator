@@ -26,10 +26,10 @@ const ConfigProviderApp = () => {
   const { hasConfig } = useSelector(selectors.config);
   const { keycloakEnable } = useSelector(selectors.connection);
   const firstKc = useRef(true);
-  console.log('keycloakEnable:', keycloakEnable);
+  // console.log('keycloakEnable:', keycloakEnable);
   useEffect(() => {
     if (keycloakEnable && !KeycloakServices.isLoggedIn() && firstKc.current) {
-      console.log('keycloakEnable initKeycloak:', keycloakEnable);
+      // console.log('keycloakEnable initKeycloak:', keycloakEnable);
       firstKc.current = false;
       KeycloakServices.initKeycloak(renderApp, renderErrorPreRenderApp);
     }

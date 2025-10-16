@@ -6,7 +6,7 @@ import { message, Button, Tooltip, Popconfirm, Space } from 'antd';
 import { useActions } from 'hooks';
 import isEqual from 'lodash/isEqual';
 
-const WorkersActions = ({ algorithm, stopAllWorkers = [] }) => {
+const WorkersActions = ({ algorithm = null, stopAllWorkers = [] }) => {
   const { stopAlgorithm } = useActions();
   const [stopWorkerIsRun, setStopWorkerIsRun] = useState(false);
   const container = useRef();
@@ -99,9 +99,11 @@ const WorkersActions = ({ algorithm, stopAllWorkers = [] }) => {
 WorkersActions.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
-  algorithm: PropTypes.object.isRequired,
-  stopAllWorkers: PropTypes.arrayOf(PropTypes.string).isRequired,
+  algorithm: PropTypes.object,
+  stopAllWorkers: PropTypes.arrayOf(PropTypes.string),
 };
+
+// defaultProps removed for function component — use default parameters instead
 
 const equalStopAllWorkers = ({ stopAllWorkers: a }, { stopAllWorkers: b }) =>
   isEqual(a, b);

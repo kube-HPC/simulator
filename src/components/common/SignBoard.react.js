@@ -163,7 +163,7 @@ const SignBoard = ({
 };
 
 SignBoard.propTypes = {
-  width: PropTypes.oneOfType(PropTypes.number, PropTypes.string),
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   row: PropTypes.number,
   indexKey: PropTypes.number.isRequired,
   // eslint-disable-next-line

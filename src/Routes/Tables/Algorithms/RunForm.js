@@ -7,7 +7,7 @@ import RawInputField from 'components/InputField';
 import { tryParse } from 'utils';
 import useIds from '../../SidebarRight/AddPipeline/Steps/Nodes/useIds';
 
-const ButtonGroupCenter = styled(Button.Group)`
+const ButtonGroupCenter = styled(Space.Compact)`
   display: flex;
   justify-content: center;
   margin-top: 5px;
