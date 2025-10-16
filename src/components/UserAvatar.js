@@ -31,7 +31,7 @@ const UserAvatar = ({ username, titleToolTip, size = 40 }) => {
 };
 
 UserAvatar.propTypes = {
-  username: PropTypes.string.isRequired,
+  username: PropTypes.string,
   titleToolTip: PropTypes.string,
   size: PropTypes.number,
 };

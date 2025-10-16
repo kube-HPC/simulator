@@ -92,7 +92,7 @@ const Controller = ({ node, nodeIdx, isRequired = false }) => {
 
 Controller.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
-  node: PropTypes.instanceOf([
+  node: PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.string,
     PropTypes.array,

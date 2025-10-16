@@ -139,7 +139,7 @@ const JobsTable = () => {
 };
 
 const GridViewWrapper = React.memo(() => (
-  <Container bordered={false}>
+  <Container variant="borderless">
     <GridView />
   </Container>
 ));

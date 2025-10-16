@@ -44,9 +44,14 @@ const KeyValueForm = ({ fieldName, titleButtoAdd, buttonWidth }) => (
 );
 
 KeyValueForm.propTypes = {
-  fieldName: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  titleButtoAdd: PropTypes.string.isRequired,
+  fieldName: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    ),
+  ]).isRequired,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  titleButtoAdd: PropTypes.string,
   buttonWidth: PropTypes.string,
 };
 

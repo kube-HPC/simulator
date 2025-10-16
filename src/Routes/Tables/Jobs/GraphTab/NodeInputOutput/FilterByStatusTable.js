@@ -68,7 +68,7 @@ const FilterByStatusTable = ({
               checked={checkedValues.includes(option.value)}>
               <BaseTag
                 isActiveLoader={false}
-                isError={DataTask?.error}
+                isError={!!DataTask?.error}
                 status={option.label}
                 colorMap={COLOR_TASK_STATUS}>
                 {StatusCount[option.value]}{' '}

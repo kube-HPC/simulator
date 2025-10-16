@@ -9,7 +9,7 @@ import {
   PlayCircleOutlined,
   StopOutlined,
 } from '@ant-design/icons';
-import { Button, Empty, Popover, Tooltip } from 'antd';
+import { Button, Empty, Popover, Tooltip, Space } from 'antd';
 import KeycloakServices from 'keycloak/keycloakServices';
 import { keycloakRoles } from '@hkube/consts';
 
@@ -90,7 +90,7 @@ const PipelineActions = ({ pipeline, className = '' }) => {
       ref={container}
       onClick={stopPropagation}
       onDoubleClick={stopPropagation}>
-      <Button.Group className={className}>
+      <Space.Compact className={className}>
         <Popover
           title={title}
           content={popOverContent}
@@ -140,7 +140,7 @@ const PipelineActions = ({ pipeline, className = '' }) => {
         <Tooltip title="show overview">
           <Button icon={<InfoCircleOutlined />} onClick={onEdit} />
         </Tooltip>
-      </Button.Group>
+      </Space.Compact>
     </div>
   );
 };

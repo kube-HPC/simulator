@@ -138,7 +138,13 @@ const AddAlgorithmForm = ({
   setFileList,
 }) => {
   const [form] = Form.useForm();
-
+  const [isErrorEnvironmentVariable, setIsErrorEnvironmentVariable] = useState(
+    keyValueFormObject?.main?.workerEnv?.length > 0 ||
+      keyValueFormObject?.main?.algorithmEnv?.length > 0
+  );
+  const [isErrorSideCar, setIsErrorSideCar] = useState(
+    keyValueFormObject?.main?.sideCars?.length > 0
+  );
   const [buildType, setBuildType] = useState(
     (keyValueFormObject && toSelectedBuildType(keyValueFormObject)) ||
       BUILD_TYPES.GIT.field
@@ -180,6 +186,7 @@ const AddAlgorithmForm = ({
       // add new algorithm
       form.setFieldsValue(formTemplate);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onBuildTypeChange = e => setBuildType(e.target.value);
@@ -325,8 +332,45 @@ const AddAlgorithmForm = ({
   };
   // #endregion
 
+  const openCollapsibleContainingField = namePath => {
+    if (
+      namePath.includes('main_workerEnv') ||
+      namePath.includes('main_algorithmEnv')
+    ) {
+      setIsErrorEnvironmentVariable(true);
+    }
+
+    if (namePath.includes('main_sideCars')) {
+      setIsErrorSideCar(true);
+    }
+  };
+
+  const handleFinishFailed = ({ errorFields }) => {
+    if (!errorFields.length) return;
+
+    const fieldName = errorFields[0].name;
+    const namePath = fieldName.join('_');
+
+    openCollapsibleContainingField(namePath);
+
+    form.scrollToField(fieldName);
+
+    setTimeout(() => {
+      const input =
+        document.querySelector(`[id$='${namePath}']`) ||
+        document.querySelector(`[name='${namePath}']`);
+      if (input) {
+        input.focus();
+      }
+    }, 400);
+  };
+
   return (
-    <Form form={form} onFinish={onFormSubmit} style={{ display: 'contents' }}>
+    <Form
+      form={form}
+      onFinish={onFormSubmit}
+      style={{ display: 'contents' }}
+      onFinishFailed={handleFinishFailed}>
       <ContenerForm>
         <Form.Item
           name={splitByDot(MAIN.NAME.field)}
@@ -336,7 +380,6 @@ const AddAlgorithmForm = ({
           ]}>
           <Input disabled={isEdit} placeholder={MAIN.NAME.placeholder} />
         </Form.Item>
-
         <FlexBox align="start">
           <FlexBox.Item span={18}>
             <Form.Item
@@ -356,7 +399,6 @@ const AddAlgorithmForm = ({
             />
           </FlexBox.Item>
         </FlexBox>
-
         <Form.Item label="Source">
           <Radio.Group
             defaultValue={buildType}
@@ -365,11 +407,10 @@ const AddAlgorithmForm = ({
             {insertRadioButtons(buildTypes, buildType, isEdit)}
           </Radio.Group>
         </Form.Item>
-
         {buildTypes[buildType]}
         <FlexItemVolumes>
           <FlexBox.Item span={12}>
-            <Card title="Volumes" bordered="true">
+            <Card title="Volumes" variant="default">
               <Form.Item style={{ width: '650px' }}>
                 <VolumeList nameList={['main', 'volumes']} />
               </Form.Item>
@@ -378,7 +419,7 @@ const AddAlgorithmForm = ({
           <FlexBox.Item span={12}>
             <Card
               title="Volumes Mounts"
-              bordered="true"
+              variant="default"
               style={{ marginTop: '20px' }}>
               <Form.Item>
                 <VolumeMountsList nameList={['main', 'volumeMounts']} />
@@ -407,12 +448,11 @@ const AddAlgorithmForm = ({
             </MemoryField>
           </Form.Item>
         </Collapsible>
+
         <Collapsible
           title="Environment Variable"
-          defaultExpanded={
-            keyValueFormObject?.main?.workerEnv?.length > 0 ||
-            keyValueFormObject?.main?.algorithmEnv?.length > 0
-          }>
+          expanded={isErrorEnvironmentVariable}
+          onChange={val => setIsErrorEnvironmentVariable(val)}>
           <Form.Item label="Worker">
             <KeyValueForm
               buttonWidth="395px"
@@ -431,16 +471,15 @@ const AddAlgorithmForm = ({
             />
           </Form.Item>
         </Collapsible>
-
         <Collapsible
           title={
             <>
-              {' '}
-              Side Car{' '}
+              Side Car
               <HelpSiteLink link="/learn/sidecars/#what-is-a-sidecar" />{' '}
             </>
           }
-          defaultExpanded={keyValueFormObject?.main?.sideCars?.length > 0}>
+          onChange={val => setIsErrorSideCar(val)}
+          expanded={isErrorSideCar}>
           <SideCarForm nameList={splitByDot(MAIN.SIDECAR.field)} />
         </Collapsible>
         <Collapsible title={MAIN.DIVIDER.ADVANCED}>
@@ -510,7 +549,7 @@ AddAlgorithmForm.propTypes = {
   isCheckForceStopAlgorithms: PropTypes.bool.isRequired,
   isSubmitLoading: PropTypes.bool.isRequired,
   setIsCheckForceStopAlgorithms: PropTypes.func.isRequired,
-  fileList: PropTypes.oneOfType([PropTypes.object]).isRequired,
+  fileList: PropTypes.arrayOf(PropTypes.object).isRequired,
   setFileList: PropTypes.func.isRequired,
 };
 

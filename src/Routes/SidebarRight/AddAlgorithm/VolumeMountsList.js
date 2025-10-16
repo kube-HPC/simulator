@@ -76,5 +76,10 @@ const VolumeMountsList = ({ nameList }) => (
 export default VolumeMountsList;
 
 VolumeMountsList.propTypes = {
-  nameList: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
+  nameList: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    ),
+  ]),
 };

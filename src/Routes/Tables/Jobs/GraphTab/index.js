@@ -130,7 +130,7 @@ const GraphTab = ({ graph, pipeline }) => {
     };
 
     return res;
-  }, [graph.edges, graph.nodes, normalizedPipeline, pipeline.kind]);
+  }, [graph.edges, graph.nodes, normalizedPipeline, pipeline]);
 
   const isValidGraph = adaptedGraph().nodes.length !== 0;
 
@@ -355,9 +355,10 @@ const GraphTab = ({ graph, pipeline }) => {
         }}>
         <Slider
           disabled={!isSwitchSlider}
-          tipFormatter={value =>
-            `Space between nodes:  ${calculatePercentage(value, 70, 200)}%`
-          }
+          tooltip={{
+            formatter: value =>
+              `Space between nodes:  ${calculatePercentage(value, 70, 200)}%`,
+          }}
           onChange={onChangeSliderDebounce}
           defaultValue={nodeSpacing.current}
           min={70}
@@ -479,11 +480,18 @@ GraphTab.propTypes = {
     nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
     edges: PropTypes.arrayOf(PropTypes.object).isRequired,
     jobId: PropTypes.string.isRequired,
-    timestamp: PropTypes.string.isRequired,
+    timestamp: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+      .isRequired,
   }).isRequired,
 };
 
+const normalizeTimestamp = ts =>
+  ts === undefined || ts === null ? ts : String(ts);
+
 const isSameGraph = (a, b) =>
-  a.graph && b.graph ? a.graph.timestamp === b.graph.timestamp : true;
+  a.graph && b.graph
+    ? normalizeTimestamp(a.graph.timestamp) ===
+      normalizeTimestamp(b.graph.timestamp)
+    : true;
 
 export default React.memo(GraphTab, isSameGraph);

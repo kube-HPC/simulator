@@ -108,10 +108,17 @@ JobGraph.propTypes = {
     nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
     edges: PropTypes.arrayOf(PropTypes.object).isRequired,
     jobId: PropTypes.string.isRequired,
+    timestamp: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }).isRequired,
 };
 
+const normalizeTimestamp = ts =>
+  ts === undefined || ts === null ? ts : String(ts);
+
 const isSameGraph = (a, b) =>
-  a.graph && b.graph ? a.graph.timestamp === b.graph.timestamp : true;
+  a.graph && b.graph
+    ? normalizeTimestamp(a.graph.timestamp) ===
+      normalizeTimestamp(b.graph.timestamp)
+    : true;
 
 export default React.memo(JobGraph, isSameGraph);

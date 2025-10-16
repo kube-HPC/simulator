@@ -16,15 +16,12 @@ const Body = () => {
   const { experimentName } = metaMode;
 
   useEffect(() => {
-    // if (!hash || (hash && !search)) {
-
-    console.log('window.location', window.location);
-
     if (href.indexOf('experiment=') === -1) {
       window.location.replace(
         `${window.location.origin}${window.location.pathname}#/jobs?&experiment=${experimentName ?? 'main'}`
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -39,11 +36,11 @@ const Body = () => {
         <Route path=":edit/*" />
       </Route>
 
-      <Route path="pipelines" element={<PipelinesTable />}>
+      <Route path="pipelines/*" element={<PipelinesTable />}>
         <Route path=":pipelineId/*" />
       </Route>
 
-      <Route path="algorithms" element={<AlgorithmsTable />}>
+      <Route path="algorithms/*" element={<AlgorithmsTable />}>
         <Route path=":algorithmId/*" />
       </Route>
 

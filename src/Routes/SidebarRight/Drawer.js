@@ -88,7 +88,7 @@ const DashboardDrawer = () => {
           overFlow: 'hidden',
         }}
         asFlex
-        destroyOnClose>
+        destroyOnHidden>
         <TabDrawer>
           <TabDrawerText>{titleDrawer}</TabDrawerText>
         </TabDrawer>

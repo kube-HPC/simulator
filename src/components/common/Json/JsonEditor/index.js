@@ -62,8 +62,7 @@ JsonEditor.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
   onSave: PropTypes.func,
-  innerRef: PropTypes.objectOf(PropTypes.instanceOf(PropTypes.object))
-    .isRequired,
+  innerRef: PropTypes.shape({ current: PropTypes.object }),
 };
 
 export default JsonEditor;

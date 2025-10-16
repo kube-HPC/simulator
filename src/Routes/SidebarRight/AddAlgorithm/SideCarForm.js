@@ -71,7 +71,7 @@ const SideCarForm = ({ nameList }) => (
             </ContainerFormItemTop>
             <Row style={{ marginTop: '16px' }}>
               <Col span={12}>
-                <Card title="Environment Variable" bordered="true">
+                <Card title="Environment Variable" variant="default">
                   <Form.Item>
                     <KeyValueForm
                       buttonWidth="395px"
@@ -111,5 +111,10 @@ const SideCarForm = ({ nameList }) => (
 export default SideCarForm;
 
 SideCarForm.propTypes = {
-  nameList: PropTypes.string.isRequired,
+  nameList: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    ),
+  ]).isRequired,
 };

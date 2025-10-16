@@ -44,8 +44,11 @@ const VolumeList = ({ nameList }) => (
                 </ContainerFormItem>
 
                 <FlexItem>
-                  <Form.Item {...rest} name={[name, 'typeVolume']}>
-                    <Radio.Group defaultValue="emptyDir" buttonStyle="solid">
+                  <Form.Item
+                    {...rest}
+                    name={[name, 'typeVolume']}
+                    initialValue="emptyDir">
+                    <Radio.Group buttonStyle="solid">
                       <Radio.Button value="emptyDir">EmptyDir</Radio.Button>
                       <Radio.Button value="persistentVolumeClaim">
                         persistentVolumeClaim (PVC)
@@ -125,5 +128,10 @@ const VolumeList = ({ nameList }) => (
 export default VolumeList;
 
 VolumeList.propTypes = {
-  nameList: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
+  nameList: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    ),
+  ]),
 };

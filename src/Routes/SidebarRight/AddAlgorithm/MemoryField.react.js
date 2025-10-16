@@ -2,58 +2,54 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Icon from '@ant-design/icons';
-import { Input, InputNumber, Select, Tooltip } from 'antd';
+import { InputNumber, Select, Tooltip, Space } from 'antd';
 import parseUnit from 'parse-unit';
 
 const selectStyle = { width: '90px' };
 
-// TODO: remove irrelevant forwardRef
-const MemoryField = React.forwardRef(
-  // eslint-disable-next-line
-  ({
-    onChange,
-    children,
-    value,
-    tooltipTitle = undefined,
-    min = 1,
-    iconType = null,
-  }) => {
-    const [numberInitial, unitInitial] = parseUnit(value);
-    const [numberMem, setNumberMem] = useState(numberInitial);
-    const [unit, setUnit] = useState(unitInitial);
+const MemoryField = ({
+  onChange,
+  children,
+  value,
+  tooltipTitle = undefined,
+  min = 1,
+  iconType = null,
+}) => {
+  const [numberInitial, unitInitial] = parseUnit(value);
+  const [numberMem, setNumberMem] = useState(numberInitial);
+  const [unit, setUnit] = useState(unitInitial);
 
-    useEffect(() => {
-      setNumberMem(numberInitial);
-      setUnit(unitInitial);
-    }, [numberInitial, unitInitial]);
+  useEffect(() => {
+    setNumberMem(numberInitial);
+    setUnit(unitInitial);
+  }, [numberInitial, unitInitial]);
 
-    const onNumber = target => {
-      setNumberMem(target);
-      onChange(target === null || target === '' ? null : `${target}${unit}`);
-    };
+  const onNumber = target => {
+    setNumberMem(target);
+    onChange(target === null || target === '' ? null : `${target}${unit}`);
+  };
 
-    const onSelect = target => {
-      setUnit(target);
-      onChange(numberMem === null ? null : `${numberMem}${target}`);
-    };
+  const onSelect = target => {
+    setUnit(target);
+    onChange(numberMem === null ? null : `${numberMem}${target}`);
+  };
 
-    const Wrapper = tooltipTitle ? Tooltip : React.Fragment;
-    const wrapperProps = tooltipTitle
-      ? { title: tooltipTitle, placement: 'topLeft' }
-      : {};
-    return (
-      <Wrapper {...wrapperProps}>
-        <Input.Group compact>
-          {iconType && <Icon type={iconType} />}
-          <InputNumber min={min} value={numberMem} onChange={onNumber} />
-          <Select style={selectStyle} value={unit} onChange={onSelect}>
-            {children}
-          </Select>
-        </Input.Group>
-      </Wrapper>
-    );
-  }
-);
+  const Wrapper = tooltipTitle ? Tooltip : React.Fragment;
+  const wrapperProps = tooltipTitle
+    ? { title: tooltipTitle, placement: 'topLeft' }
+    : {};
+  return (
+    <Wrapper {...wrapperProps}>
+      <Space.Compact>
+        {iconType && <Icon type={iconType} />}
+        <InputNumber min={min} value={numberMem} onChange={onNumber} />
+        <Select style={selectStyle} value={unit} onChange={onSelect}>
+          {children}
+        </Select>
+      </Space.Compact>
+    </Wrapper>
+  );
+};
 
 MemoryField.propTypes = {
   tooltipTitle: PropTypes.string,

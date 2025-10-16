@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { USER_GUIDE } from 'const';
 import { EditFilled } from '@ant-design/icons';
-import { Button, Popover, Switch, Typography, Tooltip } from 'antd';
+import { Popover, Switch, Typography, Tooltip, Space } from 'antd';
 import Moment from 'react-moment';
 import { useActions, usePipeline } from 'hooks';
 import { FlexBox, CronModel } from 'components/common';
@@ -158,11 +158,11 @@ const PipelineCron = ({ pipeline }) => {
       </Popover>
 
       <CronButtonsContainer>
-        <Button.Group className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
+        <Space.Compact className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
           <Tooltip title="Edit Cron">
             <EditFilled style={iconSize} onClick={openPopupWizard} />
           </Tooltip>
-        </Button.Group>
+        </Space.Compact>
       </CronButtonsContainer>
 
       <CronModel
