@@ -1,53 +1,69 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { Card, Tag, Space, Typography } from 'antd';
 import { formatDuration, formatDateTime } from './traceUtils';
 
 const { Title } = Typography;
+
+const StyledCard = styled(Card)`
+  margin: 0;
+  border-radius: 8px 8px 0 0;
+  background: #a3d4f5;
+  border: none;
+
+  .ant-card-body {
+    padding: 20px 16px;
+  }
+`;
+
+const HeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const HeaderContent = styled.div``;
+
+const StyledTitle = styled(Title)`
+  &.ant-typography {
+    margin: 0;
+    color: #1d76db;
+  }
+`;
+
+const StyledSpace = styled(Space)`
+  margin-top: 8px;
+`;
+
+const StyledTag = styled(Tag)`
+  margin: 0;
+  font-size: 12px;
+`;
 
 const TraceHeader = ({ traceData }) => {
   const serviceCount = Object.keys(traceData.processes).length;
   const spanCount = traceData.spans.length;
 
   return (
-    <Card
-      style={{
-        margin: 0,
-        borderRadius: '8px 8px 0 0',
-        background: '#a3d4f5',
-        border: 'none',
-      }}
-      bodyStyle={{ padding: '20px 16px' }}>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}>
-        <div>
-          <Title level={4} style={{ margin: 0, color: '#1d76db' }}>
-            Trace Details
-          </Title>
-          <Space size={20} style={{ marginTop: '8px' }}>
-            <Tag color="default" style={{ margin: 0, fontSize: '12px' }}>
+    <StyledCard>
+      <HeaderContainer>
+        <HeaderContent>
+          <StyledTitle level={4}>Trace Details</StyledTitle>
+          <StyledSpace size={20}>
+            <StyledTag color="default">
               Start: {formatDateTime(traceData.startTime)}
-            </Tag>
-            <Tag color="success" style={{ margin: 0, fontSize: '12px' }}>
+            </StyledTag>
+            <StyledTag color="success">
               Duration: {formatDuration(traceData.duration)}
-            </Tag>
-            <Tag color="processing" style={{ margin: 0, fontSize: '12px' }}>
-              Services: {serviceCount}
-            </Tag>
-            <Tag color="warning" style={{ margin: 0, fontSize: '12px' }}>
-              Depth: 1
-            </Tag>
-            <Tag color="error" style={{ margin: 0, fontSize: '12px' }}>
-              Total Spans: {spanCount}
-            </Tag>
-          </Space>
-        </div>
-      </div>
-    </Card>
+            </StyledTag>
+            <StyledTag color="processing">Services: {serviceCount}</StyledTag>
+            <StyledTag color="warning">Depth: 1</StyledTag>
+            <StyledTag color="error">Total Spans: {spanCount}</StyledTag>
+          </StyledSpace>
+        </HeaderContent>
+      </HeaderContainer>
+    </StyledCard>
   );
 };
 

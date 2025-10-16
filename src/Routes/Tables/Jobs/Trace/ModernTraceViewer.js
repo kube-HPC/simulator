@@ -1,11 +1,27 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import TraceHeader from './TraceHeader';
 import SearchBox from './SearchBox';
 import TraceTimeline from './TraceTimeline';
 import TraceTimelineMinimap from './TraceTimelineMinimap';
 import SpanRow from './SpanRow';
 import { systemColors } from './traceConstants';
+
+const ViewerContainer = styled.div`
+  position: relative;
+  background: ${systemColors.background};
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid ${systemColors.border};
+`;
+
+const SpanListContainer = styled.div`
+  background: ${systemColors.background};
+  max-height: 600px;
+  overflow-y: auto;
+  border-bottom: 1px solid ${systemColors.border};
+`;
 
 const ModernTraceViewer = ({ data }) => {
   const [expandedSpans, setExpandedSpans] = useState(new Set());
@@ -38,7 +54,7 @@ const ModernTraceViewer = ({ data }) => {
       return [];
     }
 
-    const {spans} = data;
+    const { spans } = data;
 
     let filteredSpans = spans;
     if (selectedTimeRange) {
@@ -99,16 +115,7 @@ const ModernTraceViewer = ({ data }) => {
   };
 
   return (
-    <div
-      style={{
-        fontFamily:
-          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-        position: 'relative',
-        background: systemColors.background,
-        borderRadius: '8px',
-        overflow: 'hidden',
-        border: `1px solid ${systemColors.border}`,
-      }}>
+    <ViewerContainer>
       <TraceHeader traceData={data} />
       <SearchBox searchTerm={searchTerm} onSearchChange={setSearchTerm} />
       <TraceTimelineMinimap
@@ -117,13 +124,7 @@ const ModernTraceViewer = ({ data }) => {
         onSelectionChange={handleTimeRangeSelection}
       />
       <TraceTimeline traceData={data} />
-      <div
-        style={{
-          background: systemColors.background,
-          maxHeight: '600px',
-          overflowY: 'auto',
-          borderBottom: `1px solid ${systemColors.border}`,
-        }}>
+      <SpanListContainer>
         {spanHierarchy.map(span => (
           <SpanRow
             key={span.spanID}
@@ -140,8 +141,8 @@ const ModernTraceViewer = ({ data }) => {
             onToggleChildren={toggleChildrenVisibility}
           />
         ))}
-      </div>
-    </div>
+      </SpanListContainer>
+    </ViewerContainer>
   );
 };
 

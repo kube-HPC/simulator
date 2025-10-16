@@ -15,7 +15,7 @@ const Trace = ({ data }) =>
   data === null ? (
     <Result status="warning" title="No trace has been found." />
   ) : data ? (
-    <div className="JaegerTrace">
+    <div>
       <ModernTraceViewer data={data} />
     </div>
   ) : (

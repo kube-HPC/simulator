@@ -1,8 +1,35 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { Input, Button, Tooltip } from 'antd';
 import { SearchOutlined, CloseOutlined } from '@ant-design/icons';
 import { systemColors } from './traceConstants';
+
+const SearchContainer = styled.div`
+  position: absolute;
+  top: 20px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 100;
+`;
+
+const StyledInput = styled(Input)`
+  width: 250px;
+  border-radius: 6px;
+  border: 2px solid ${systemColors.blue};
+  background-color: ${systemColors.background};
+  color: ${systemColors.text};
+`;
+
+const StyledSearchIcon = styled(SearchOutlined)`
+  color: ${systemColors.blue};
+`;
+
+const StyledButton = styled(Button)`
+  border-radius: 4px;
+`;
 
 const SearchBox = ({ searchTerm, onSearchChange }) => {
   const clearSearch = () => {
@@ -10,43 +37,26 @@ const SearchBox = ({ searchTerm, onSearchChange }) => {
   };
 
   return (
-    <div
-      style={{
-        position: 'absolute',
-        top: '20px',
-        right: '16px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        zIndex: 100,
-      }}>
-      <Input
+    <SearchContainer>
+      <StyledInput
         placeholder="Search spans..."
         value={searchTerm}
         onChange={e => onSearchChange(e.target.value)}
-        prefix={<SearchOutlined style={{ color: systemColors.blue }} />}
-        style={{
-          width: '250px',
-          borderRadius: '6px',
-          border: `2px solid ${systemColors.blue}`,
-          backgroundColor: systemColors.background,
-          color: systemColors.text,
-        }}
+        prefix={<StyledSearchIcon />}
         size="middle"
       />
       {searchTerm && (
         <Tooltip title="Clear search">
-          <Button
+          <StyledButton
             type="primary"
             danger
             size="small"
             icon={<CloseOutlined />}
             onClick={clearSearch}
-            style={{ borderRadius: '4px' }}
           />
         </Tooltip>
       )}
-    </div>
+    </SearchContainer>
   );
 };
 
