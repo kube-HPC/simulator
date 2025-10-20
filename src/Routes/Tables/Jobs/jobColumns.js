@@ -46,8 +46,7 @@ const Stats = status => <NodeStats status={status} />;
 const Priority = (text, record) => {
   const { pipeline } = record;
   const { priority } = pipeline;
-
-  <JobPriority priority={priority} />;
+  return <JobPriority priority={priority} />;
 };
 
 // const Types = types => <JobTypes types={types} fullName={false} />;
