@@ -69,10 +69,10 @@ const QueryForm = ({
       form.resetFields(['pipelineStatus']);
     }
 
-    if (params && params.tags) {
-      form.setFieldsValue({ tags: params.tags });
+    if (params && params.tag) {
+      form.setFieldsValue({ tags: params.tag });
     } else {
-      form.resetFields(['tags']);
+      form.resetFields(['tag']);
     }
 
     if (keycloakEnable) {
@@ -147,6 +147,15 @@ const QueryForm = ({
     [query?.data?.pipelines.list]
   );
 
+  const tagsOptions = useMemo(() => {
+    const allTags = jobs?.flatMap(job => job.pipeline.tags || []) || [];
+
+    return allTags.map(tag => ({
+      value: tag,
+      label: tag,
+    }));
+  }, [jobs]);
+
   const pipelineStatusOptions = useMemo(() => {
     delete pipelineStatuses.PENDING;
     delete pipelineStatuses.CRASHED;
@@ -205,12 +214,13 @@ const QueryForm = ({
         />
       </Form.Item>
 
-      <Form.Item name="tags">
+      <Form.Item name="tag">
         <AutoCompleteFloatingLabelInput
           isExactMatch
           label="Tag Name"
           width="9vw"
           allowClear
+          options={tagsOptions}
           Submit={SubmitForm}
         />
       </Form.Item>
@@ -266,7 +276,7 @@ QueryForm.propTypes = {
     pipelineName: PropTypes.string,
     pipelineStatus: PropTypes.string,
     user: PropTypes.string,
-    tags: PropTypes.oneOfType([
+    tag: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.arrayOf(PropTypes.string),
     ]),

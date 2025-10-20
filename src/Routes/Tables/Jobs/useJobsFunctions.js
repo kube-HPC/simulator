@@ -109,10 +109,8 @@ const useJobsFunctions = () => {
       );
     }
     // tags
-    if (mergedParams.pipelineName)
-      filterJobs = filterJobs.filter(
-        x => x.pipeline.tags === mergedParams.tags
-      );
+    if (mergedParams.tag)
+      filterJobs = filterJobs.filter(x => x.pipeline.tags === mergedParams.tag);
 
     if (mergedParams.algorithmName)
       filterJobs = filterJobs.filter(x =>

@@ -5,6 +5,7 @@ import { Ellipsis } from 'components/common';
 
 import { USER_GUIDE } from 'const';
 import { sorter } from 'utils/stringHelper';
+import { Divider } from 'antd';
 import UserAvatar from '../../../components/UserAvatar';
 import JobActions from './JobActions';
 import PipelineNameActions from './PipelineNameActions';
@@ -55,10 +56,15 @@ const Types = (text, record) => {
   const { types, tags } = pipeline;
 
   return (
-    <>
+    <div style={{ display: 'flex' }}>
       <JobTypes types={types} fullName={false} />
-      <JobTags tags={tags} />
-    </>
+      {tags && tags.length > 0 && (
+        <>
+          <Divider style={{ height: '24px' }} type="vertical" />
+          <JobTags tags={tags} />
+        </>
+      )}
+    </div>
   );
 };
 
