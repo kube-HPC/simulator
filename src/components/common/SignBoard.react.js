@@ -83,37 +83,6 @@ const SignBoard = ({
     onChange();
   };
 
-  const DeleteCharsInInput = nameKey => {
-    if (cursorPosition > 0) {
-      const { fields, currentNameField, lastValue } = getValuesInput(nameKey);
-
-      const newProstionCursor = cursorPosition - 1;
-      setCursorPosition(newProstionCursor);
-
-      const updatedValue =
-        lastValue.slice(0, newProstionCursor) + lastValue.slice(cursorPosition);
-
-      inputRef.current.focus();
-      setTimeout(() => {
-        if (type !== 'text') {
-          const textarea = inputRef.current?.resizableTextArea?.textArea;
-          textarea.focus();
-          textarea.setSelectionRange(newProstionCursor, newProstionCursor);
-        } else {
-          inputRef.current.setSelectionRange(
-            newProstionCursor,
-            newProstionCursor
-          );
-        }
-      }, 2);
-
-      _.set(fields, currentNameField, updatedValue);
-
-      form.setFieldsValue(fields);
-      onChange();
-    }
-  };
-
   // eslint-disable-next-line no-unused-vars
   const title = nameKey => {
     const { lastValue } = getValuesInput(nameKey);
@@ -145,11 +114,6 @@ const SignBoard = ({
                     {itemKeys}{' '}
                   </Button>
                 ))}
-                <Button
-                  key={`delInput${iFieldKey}`}
-                  onClick={() => DeleteCharsInInput(nameKey)}>
-                  Del
-                </Button>
               </Space>
             </Col>
           </Row>

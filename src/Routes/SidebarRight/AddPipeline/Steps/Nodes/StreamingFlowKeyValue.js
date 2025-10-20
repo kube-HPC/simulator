@@ -173,9 +173,9 @@ const StreamingFlowKeyValue = ({
             `Item ${key}`;
 
           return {
-            key: String(currentKey),
+            key: String(key),
             label: currentKey,
-            extra: genExtraCollapse(name, name, remove),
+            extra: genExtraCollapse(name, key, remove),
             children: (
               <SpaceStyle
                 style={{
