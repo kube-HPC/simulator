@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import TraceHeader from './TraceHeader';
@@ -6,21 +6,53 @@ import SearchBox from './SearchBox';
 import TraceTimeline from './TraceTimeline';
 import TraceTimelineMinimap from './TraceTimelineMinimap';
 import SpanRow from './SpanRow';
-import { systemColors } from './traceConstants';
+import { getCurrentTheme, getSystemColors } from './traceConstants';
 
 const ViewerContainer = styled.div`
   position: relative;
-  background: ${systemColors.background};
+  background: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return colors.background;
+  }};
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid ${systemColors.border};
+  border: 1px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return colors.border;
+    }};
 `;
 
 const SpanListContainer = styled.div`
-  background: ${systemColors.background};
+  background: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark ? '#1f2937' : colors.background;
+  }};
   max-height: 600px;
   overflow-y: auto;
-  border-bottom: 1px solid ${systemColors.border};
+  border-bottom: 1px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return colors.border;
+    }};
+
+  /* Custom scrollbar */
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: ${props => (props.$isDark ? '#1f2937' : '#f1f1f1')};
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${props => (props.$isDark ? '#3d5a7e' : '#888')};
+    border-radius: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: ${props => (props.$isDark ? '#4a6a92' : '#555')};
+  }
 `;
 
 const ModernTraceViewer = ({ data }) => {
@@ -28,6 +60,22 @@ const ModernTraceViewer = ({ data }) => {
   const [collapsedChildren, setCollapsedChildren] = useState(new Set());
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTimeRange, setSelectedTimeRange] = useState(null);
+  const [isDark, setIsDark] = useState(getCurrentTheme() === 'DARK');
+
+  // Listen for theme changes
+  useEffect(() => {
+    const checkTheme = () => {
+      setIsDark(getCurrentTheme() === 'DARK');
+    };
+
+    const interval = setInterval(checkTheme, 500);
+    window.addEventListener('storage', checkTheme);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('storage', checkTheme);
+    };
+  }, []);
 
   const toggleSpanDetails = spanId => {
     const newExpanded = new Set(expandedSpans);
@@ -115,7 +163,7 @@ const ModernTraceViewer = ({ data }) => {
   };
 
   return (
-    <ViewerContainer>
+    <ViewerContainer $isDark={isDark}>
       <TraceHeader traceData={data} />
       <SearchBox searchTerm={searchTerm} onSearchChange={setSearchTerm} />
       <TraceTimelineMinimap
@@ -124,7 +172,7 @@ const ModernTraceViewer = ({ data }) => {
         onSelectionChange={handleTimeRangeSelection}
       />
       <TraceTimeline traceData={data} />
-      <SpanListContainer>
+      <SpanListContainer $isDark={isDark}>
         {spanHierarchy.map(span => (
           <SpanRow
             key={span.spanID}

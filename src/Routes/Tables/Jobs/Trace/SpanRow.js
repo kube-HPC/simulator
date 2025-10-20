@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Tag, Typography, Card, Space } from 'antd';
@@ -8,17 +8,35 @@ import {
   ClockCircleOutlined,
   ApiOutlined,
 } from '@ant-design/icons';
-import { formatDuration, formatTime, getServiceColor } from './traceUtils';
-import { systemColors } from './traceConstants';
+import {
+  formatDuration,
+  formatTime,
+  getServiceColor,
+  getContrastTextColor,
+} from './traceUtils';
+import { getCurrentTheme, getSystemColors } from './traceConstants';
 
 const { Title, Text } = Typography;
 
 const RowContainer = styled.div`
-  border-bottom: 1px solid ${systemColors.borderLight};
+  border-bottom: 1px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return colors.border;
+    }};
   transition: all 0.2s ease;
-  background-color: ${props =>
-    props.$isHovered ? systemColors.hover : systemColors.background};
+  background-color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    if (props.$isHovered) {
+      return props.$isDark ? '#233447' : colors.hover;
+    }
+    return props.$isDark ? '#1a2332' : colors.background;
+  }};
   cursor: pointer;
+  ${props =>
+    props.$isHovered && props.$isDark
+      ? 'box-shadow: 0 2px 8px rgba(255, 0, 0, 0.2);'
+      : ''}
 `;
 
 const RowContent = styled.div`
@@ -27,14 +45,23 @@ const RowContent = styled.div`
 `;
 
 const SpanNameWrapper = styled.div`
-  background: ${props =>
-    props.$isHovered ? systemColors.hover : systemColors.cardBackground};
+  background: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    if (props.$isHovered) {
+      return props.$isDark ? '#293548' : colors.hover;
+    }
+    return props.$isDark ? '#1f2937' : colors.cardBackground;
+  }};
   padding: 8px 12px;
   display: flex;
   align-items: center;
   min-height: 36px;
   font-size: 14px;
-  border-right: 1px solid ${systemColors.borderLight};
+  border-right: 1px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return props.$isDark ? '#3d5a7e' : colors.borderLight;
+    }};
   margin-left: ${props => props.$depth * 20}px;
   flex: 0 0 250px;
 `;
@@ -51,7 +78,21 @@ const ExpandButton = styled(Button)`
   min-width: 22px;
   height: 22px;
   padding: 0;
-  color: ${systemColors.blue};
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return colors.blue;
+  }};
+
+  &:hover {
+    background-color: ${props =>
+      props.$isDark
+        ? 'rgba(64, 169, 255, 0.15)'
+        : 'rgba(48, 127, 230, 0.1)'} !important;
+    color: ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return colors.blueLight;
+    }} !important;
+  }
 `;
 
 const Spacer = styled.span`
@@ -69,14 +110,37 @@ const SpanInfo = styled.div`
 const ServiceTag = styled(Tag)`
   margin: 0;
   font-weight: 600;
-  background-color: ${props => props.$color};
-  color: white;
-  border: none;
+
+  /* Background Color */
+  background-color: ${
+    props => (props.$isDark ? 'transparent' : props.$color) // Dark: transparent, Light: colored
+  };
+
+  color: ${props => {
+    if (props.$isDark) {
+      return props.$color; // Dark mode: colored text
+    } 
+      // Light mode: calculate contrast color based on background
+      return getContrastTextColor(props.$color);
+    
+  }};
+
+  /* Border */
+  border: ${
+    props => (props.$isDark ? `2px solid ${props.$color}` : 'none') // Dark: colored border, Light: no border
+  };
+
+  /* Shadow */
+  box-shadow: ${props =>
+    props.$isDark ? '0 1px 3px rgba(0, 0, 0, 0.3)' : 'none'};
 `;
 
 const OperationText = styled(Text)`
   font-size: 13px;
-  color: ${systemColors.textSecondary};
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark ? '#d1d5db' : colors.textSecondary;
+  }};
 `;
 
 const SpanBarContainer = styled.div`
@@ -86,17 +150,29 @@ const SpanBarContainer = styled.div`
   display: flex;
   align-items: center;
   position: relative;
-  background: ${systemColors.background};
+  background: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark ? '#1a2332' : colors.background;
+  }};
   overflow: visible;
 `;
 
 const SpanBarTrack = styled.div`
   width: 100%;
   height: 24px;
-  background: ${systemColors.lightGrey};
+  background: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark ? '#1a2332' : colors.lightGrey;
+  }};
   position: relative;
-  border: 1px solid ${systemColors.border};
+  border: 1px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return props.$isDark ? '#3d5a7e' : colors.border;
+    }};
   border-radius: 2px;
+  box-shadow: ${props =>
+    props.$isDark ? 'inset 0 1px 3px rgba(250, 0, 187, 0.2)' : 'none'};
 `;
 
 const SpanBar = styled.div`
@@ -124,24 +200,28 @@ const DurationLabel = styled.span`
   white-space: nowrap;
   pointer-events: none;
   z-index: 10;
+  color: ${props => (props.$isDark ? '#ffffff' : 'inherit')};
+  text-shadow: ${props =>
+    props.$isDark ? '0 1px 3px rgba(0, 0, 0, 0.8)' : 'none'};
   ${props => {
+    const colors = getSystemColors(props.$isDark);
     if (props.$width >= 95) {
       return `
         left: calc(${props.$left}% + 6px);
         color: white;
         text-shadow: 0 1px 2px rgba(0,0,0,0.3);
       `;
-    } if (props.$left + props.$width > 85) {
+    }
+    if (props.$left + props.$width > 85) {
       return `
         right: calc(${100 - (props.$left + props.$width)}% + 6px);
-        color: ${systemColors.text};
+        color: ${colors.text};
       `;
-    } 
-      return `
+    }
+    return `
         left: calc(${props.$left + props.$width}% + 6px);
-        color: ${systemColors.text};
+        color: ${colors.text};
       `;
-    
   }}
 `;
 
@@ -150,44 +230,67 @@ const HoverTooltip = styled.div`
   top: 50%;
   transform: translateY(-50%);
   font-size: 11px;
-  white-space: nowrap;
+  whitespace: nowrap;
   z-index: 1000;
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: ${props =>
+    props.$isDark ? 'rgba(31, 41, 55, 0.98)' : 'rgba(255, 255, 255, 0.95)'};
   padding: 4px 10px;
   border-radius: 4px;
-  border: 1px solid ${systemColors.borderLight};
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return props.$isDark ? colors.blue : colors.borderLight;
+    }};
+  box-shadow: ${props =>
+    props.$isDark
+      ? '0 4px 12px rgba(0, 0, 0, 0.4)'
+      : '0 1px 3px rgba(0, 0, 0, 0.08)'};
   ${props => {
     if (props.$width >= 95) {
       return `left: calc(${props.$left}% + 40px);`;
-    } if (props.$left + props.$width > 85) {
+    }
+    if (props.$left + props.$width > 85) {
       return `right: calc(${100 - (props.$left + props.$width)}% + 40px);`;
-    } 
-      return `left: calc(${props.$left + props.$width}% + 40px);`;
-    
+    }
+    return `left: calc(${props.$left + props.$width}% + 40px);`;
   }}
 `;
 
 const TooltipServiceName = styled.span`
   font-weight: 600;
-  color: ${systemColors.text};
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return colors.text;
+  }};
 `;
 
 const TooltipDivider = styled.span`
-  color: ${systemColors.textSecondary};
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return colors.textSecondary;
+  }};
   font-size: 10px;
 `;
 
 const TooltipOperation = styled.span`
-  color: ${systemColors.textSecondary};
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return colors.textSecondary;
+  }};
 `;
 
 const SpanTiming = styled.div`
-  background: ${systemColors.cardBackground};
-  color: ${systemColors.text};
+  background: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark ? '#1f2937' : colors.cardBackground;
+  }};
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return colors.text;
+  }};
   padding: 8px 12px;
   display: flex;
   align-items: center;
@@ -195,32 +298,60 @@ const SpanTiming = styled.div`
   min-width: 140px;
   font-family: monospace;
   font-size: 12px;
-  border-left: 1px solid ${systemColors.border};
+  border-left: 1px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return props.$isDark ? '#3d5a7e' : colors.border;
+    }};
 `;
 
 const StyledIcon = styled(ClockCircleOutlined)`
-  color: ${systemColors.blue};
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return colors.blue;
+  }};
 `;
 
 const TimingText = styled(Text)`
-  color: ${systemColors.text};
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark ? '#9ca3af' : colors.text;
+  }};
   font-size: 13px;
 `;
 
 const DurationText = styled(Text)`
-  color: ${systemColors.greenDark};
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return colors.green;
+  }};
   font-size: 13px;
+  font-weight: 700;
 `;
 
 const DetailsCard = styled(Card)`
-  margin: 0 24px 12px 24px;
-  background-color: ${systemColors.cardBackground};
+  margin: 8px 24px 12px 24px;
+  background: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark
+      ? 'linear-gradient(135deg, #1f2d3d 0%, #2a3f54 100%)' // Dark: gradient
+      : colors.cardBackground; // Light: use system color
+  }};
   border-left: 4px solid ${props => props.$color};
-  border: 1px solid ${systemColors.border};
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  border: ${props => (props.$isDark ? '2px solid #3d5a7e' : '1px solid')};
+  border-color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark ? '#3d5a7e' : colors.border;
+  }};
+  box-shadow: ${props =>
+    props.$isDark
+      ? '0 4px 12px rgba(0, 0, 0, 0.4)'
+      : '0 1px 4px rgba(0, 0, 0, 0.1)'};
+  border-radius: 8px;
 
   .ant-card-body {
     padding: 16px;
+    background: transparent;
   }
 `;
 
@@ -230,14 +361,22 @@ const CardHeader = styled.div`
   align-items: center;
   margin-bottom: 16px;
   padding-bottom: 12px;
-  border-bottom: 1px solid ${systemColors.borderLight};
+  border-bottom: 1px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return props.$isDark ? '#3d5a7e' : colors.borderLight;
+    }};
 `;
 
 const CardTitle = styled(Title)`
   &.ant-typography {
     margin: 0;
-    color: ${systemColors.primary};
+    color: ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return props.$isDark ? '#69c0ff' : colors.primary;
+    }};
     font-size: 17px;
+    font-weight: 600;
   }
 `;
 
@@ -245,11 +384,24 @@ const CardMetadata = styled.div`
   display: flex;
   gap: 20px;
   font-size: 14px;
-  color: ${systemColors.textSecondary};
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return colors.textSecondary;
+  }};
 `;
 
 const MetadataLabel = styled.strong`
-  color: ${systemColors.text};
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return colors.text;
+  }};
+`;
+
+const MetadataTag = styled(Tag)`
+  background-color: ${props => (props.$isDark ? '#1e3a52' : 'auto')} !important;
+  border: ${props => (props.$isDark ? '1px solid #3d5a7e' : 'auto')} !important;
+  color: ${props => (props.$isDark ? '#ffffff' : 'auto')} !important;
+  font-weight: 500;
 `;
 
 const CardContent = styled.div`
@@ -266,8 +418,15 @@ const SectionTitle = styled.div`
   font-size: 15px;
   font-weight: 600;
   margin-bottom: 10px;
-  color: ${systemColors.primary};
-  border-bottom: 2px solid ${systemColors.blueLight};
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark ? '#69c0ff' : colors.primary;
+  }};
+  border-bottom: 2px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return props.$isDark ? '#1890ff' : colors.blueLight;
+    }};
   padding-bottom: 4px;
   display: flex;
   align-items: center;
@@ -284,7 +443,10 @@ const TagGrid = styled.div`
 
 const TagKey = styled.div`
   font-weight: 500;
-  color: ${systemColors.primary};
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark ? '#91caff' : colors.primary;
+  }};
   text-align: right;
 `;
 
@@ -292,18 +454,28 @@ const TagValue = styled(Tag)`
   margin: 0;
   font-size: 12px;
   font-family: monospace;
+  background-color: ${props => (props.$isDark ? '#1e3a52' : 'auto')} !important;
+  border: ${props => (props.$isDark ? '1px solid #3d5a7e' : 'auto')} !important;
+  color: ${props => (props.$isDark ? '#b8bfc7' : 'auto')} !important;
 `;
 
 const CardFooter = styled.div`
   text-align: right;
   margin-top: 16px;
   padding-top: 12px;
-  border-top: 1px solid ${systemColors.borderLight};
+  border-top: 1px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return props.$isDark ? '#3d5a7e' : colors.borderLight;
+    }};
 `;
 
 const SpanIdLabel = styled.span`
   font-size: 13px;
-  color: ${systemColors.primary};
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark ? '#69c0ff' : colors.primary;
+  }};
   font-weight: 600;
   margin-right: 8px;
 `;
@@ -311,10 +483,17 @@ const SpanIdLabel = styled.span`
 const SpanIdValue = styled(Text)`
   font-size: 10px;
   font-family: monospace;
-  color: ${systemColors.textSecondary};
-  background-color: ${systemColors.lightGrey};
-  padding: 2px 6px;
-  border-radius: 3px;
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark ? '#8c8c8c' : colors.textSecondary;
+  }};
+  background-color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark ? '#0f1923' : colors.lightGrey;
+  }};
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: ${props => (props.$isDark ? '1px solid #2d4663' : 'none')};
 `;
 
 const SpanRow = ({
@@ -332,10 +511,25 @@ const SpanRow = ({
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isTimelineHovered, setIsTimelineHovered] = useState(false);
+  const [isDark, setIsDark] = useState(getCurrentTheme() === 'DARK');
+
+  useEffect(() => {
+    const checkTheme = () => {
+      setIsDark(getCurrentTheme() === 'DARK');
+    };
+
+    const interval = setInterval(checkTheme, 500);
+    window.addEventListener('storage', checkTheme);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('storage', checkTheme);
+    };
+  }, []);
+
   const process = processes[span.processID];
   const serviceName = process?.serviceName || 'unknown';
-  const color = getServiceColor(serviceName);
-
+  const color = getServiceColor(serviceName, isDark);
   const relativeStart = (span.relativeStartTime / totalDuration) * 100;
   const width = Math.max((span.duration / totalDuration) * 100, 0.5);
 
@@ -355,10 +549,14 @@ const SpanRow = ({
     <>
       <RowContainer
         $isHovered={isHovered}
+        $isDark={isDark}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}>
         <RowContent>
-          <SpanNameWrapper $isHovered={isHovered} $depth={depth}>
+          <SpanNameWrapper
+            $isHovered={isHovered}
+            $depth={depth}
+            $isDark={isDark}>
             <SpanNameContent
               onClick={() => onToggle(span.spanID)}
               onKeyDown={e => {
@@ -383,13 +581,16 @@ const SpanRow = ({
                     e.stopPropagation();
                     onToggleChildren(span.spanID);
                   }}
+                  $isDark={isDark}
                 />
               )}
               {!hasChildren && <Spacer />}
 
               <SpanInfo>
-                <ServiceTag $color={color}>{serviceName}</ServiceTag>
-                <OperationText type="secondary">
+                <ServiceTag $color={color} $isDark={isDark}>
+                  {serviceName}
+                </ServiceTag>
+                <OperationText type="secondary" $isDark={isDark}>
                   {span.operationName}
                 </OperationText>
               </SpanInfo>
@@ -398,57 +599,72 @@ const SpanRow = ({
 
           <SpanBarContainer
             onMouseEnter={() => setIsTimelineHovered(true)}
-            onMouseLeave={() => setIsTimelineHovered(false)}>
-            <SpanBarTrack>
+            onMouseLeave={() => setIsTimelineHovered(false)}
+            $isDark={isDark}>
+            <SpanBarTrack $isDark={isDark}>
               <SpanBar $left={relativeStart} $width={width} $color={color} />
-              <DurationLabel $left={relativeStart} $width={width}>
+              <DurationLabel
+                $left={relativeStart}
+                $width={width}
+                $isDark={isDark}>
                 {formatDuration(span.duration)}
               </DurationLabel>
 
               {isTimelineHovered && (
-                <HoverTooltip $left={relativeStart} $width={width}>
-                  <TooltipServiceName>{serviceName}</TooltipServiceName>
-                  <TooltipDivider>•</TooltipDivider>
-                  <TooltipOperation>{span.operationName}</TooltipOperation>
+                <HoverTooltip
+                  $left={relativeStart}
+                  $width={width}
+                  $isDark={isDark}>
+                  <TooltipServiceName $isDark={isDark}>
+                    {serviceName}
+                  </TooltipServiceName>
+                  <TooltipDivider $isDark={isDark}>•</TooltipDivider>
+                  <TooltipOperation $isDark={isDark}>
+                    {span.operationName}
+                  </TooltipOperation>
                 </HoverTooltip>
               )}
             </SpanBarTrack>
           </SpanBarContainer>
 
-          <SpanTiming>
+          <SpanTiming $isDark={isDark}>
             <Space size={8}>
-              <StyledIcon />
-              <TimingText code>
+              <StyledIcon $isDark={isDark} />
+              <TimingText code $isDark={isDark}>
                 {formatTime(span.startTime, traceStartTime)}
               </TimingText>
             </Space>
-            <DurationText strong>{formatDuration(span.duration)}</DurationText>
+            <DurationText strong $isDark={isDark}>
+              {formatDuration(span.duration)}
+            </DurationText>
           </SpanTiming>
         </RowContent>
       </RowContainer>
 
       {isExpanded && (
-        <DetailsCard size="small" $color={color}>
-          <CardHeader>
-            <CardTitle level={5}>{span.operationName}</CardTitle>
-            <CardMetadata>
+        <DetailsCard size="small" $color={color} $isDark={isDark}>
+          <CardHeader $isDark={isDark}>
+            <CardTitle level={5} $isDark={isDark}>
+              {span.operationName}
+            </CardTitle>
+            <CardMetadata $isDark={isDark}>
               <span>
-                <MetadataLabel>Service:</MetadataLabel>{' '}
-                <Tag color="blue" style={{ fontSize: '12px' }}>
+                <MetadataLabel $isDark={isDark}>Service:</MetadataLabel>{' '}
+                <MetadataTag color="blue" $isDark={isDark}>
                   {serviceName}
-                </Tag>
+                </MetadataTag>
               </span>
               <span>
-                <MetadataLabel>Duration:</MetadataLabel>{' '}
-                <Tag color="orange" style={{ fontSize: '12px' }}>
+                <MetadataLabel $isDark={isDark}>Duration:</MetadataLabel>{' '}
+                <MetadataTag color="orange" $isDark={isDark}>
                   {formatDuration(span.duration)}
-                </Tag>
+                </MetadataTag>
               </span>
               <span>
-                <MetadataLabel>Start:</MetadataLabel>{' '}
-                <Tag color="cyan" style={{ fontSize: '12px' }}>
+                <MetadataLabel $isDark={isDark}>Start:</MetadataLabel>{' '}
+                <MetadataTag color="cyan" $isDark={isDark}>
                   {formatTime(span.startTime, traceStartTime)}
-                </Tag>
+                </MetadataTag>
               </span>
             </CardMetadata>
           </CardHeader>
@@ -456,15 +672,17 @@ const SpanRow = ({
           <CardContent>
             {span.tags && span.tags.length > 0 && (
               <Section>
-                <SectionTitle>
+                <SectionTitle $isDark={isDark}>
                   <ApiOutlined />
                   Tags
                 </SectionTitle>
                 <TagGrid>
                   {span.tags.map(tag => (
                     <React.Fragment key={tag.key}>
-                      <TagKey>{tag.key}:</TagKey>
-                      <TagValue color="geekblue">{String(tag.value)}</TagValue>
+                      <TagKey $isDark={isDark}>{tag.key}:</TagKey>
+                      <TagValue color="geekblue" $isDark={isDark}>
+                        {String(tag.value)}
+                      </TagValue>
                     </React.Fragment>
                   ))}
                 </TagGrid>
@@ -473,15 +691,17 @@ const SpanRow = ({
 
             {process && (
               <Section>
-                <SectionTitle>
+                <SectionTitle $isDark={isDark}>
                   <ApiOutlined />
                   Process
                 </SectionTitle>
                 <TagGrid>
                   {process.tags?.map(tag => (
                     <React.Fragment key={tag.key}>
-                      <TagKey>{tag.key}:</TagKey>
-                      <TagValue color="geekblue">{String(tag.value)}</TagValue>
+                      <TagKey $isDark={isDark}>{tag.key}:</TagKey>
+                      <TagValue color="geekblue" $isDark={isDark}>
+                        {String(tag.value)}
+                      </TagValue>
                     </React.Fragment>
                   ))}
                 </TagGrid>
@@ -489,9 +709,9 @@ const SpanRow = ({
             )}
           </CardContent>
 
-          <CardFooter>
-            <SpanIdLabel>Span ID:</SpanIdLabel>
-            <SpanIdValue>{span.spanID}</SpanIdValue>
+          <CardFooter $isDark={isDark}>
+            <SpanIdLabel $isDark={isDark}>Span ID:</SpanIdLabel>
+            <SpanIdValue $isDark={isDark}>{span.spanID}</SpanIdValue>
           </CardFooter>
         </DetailsCard>
       )}

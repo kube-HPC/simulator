@@ -11,18 +11,27 @@ const CenterDiv = styled.div`
   align-items: center;
 `;
 
-const Trace = ({ data }) =>
-  data === null ? (
-    <Result status="warning" title="No trace has been found." />
-  ) : data ? (
-    <div>
-      <ModernTraceViewer data={data} />
+const Trace = ({ data }) => {
+  // Check if dark mode is active
+  const isDarkMode =
+    localStorage.getItem('hkubeTheme')?.toUpperCase() === 'DARK';
+
+  return (
+    <div className={isDarkMode ? 'trace-dark-mode' : 'trace-light-mode'}>
+      {data === null ? (
+        <Result status="warning" title="No trace has been found." />
+      ) : data ? (
+        <div>
+          <ModernTraceViewer data={data} />
+        </div>
+      ) : (
+        <CenterDiv>
+          <Spin size="large" tip="Fetching Trace Data 🔎..." />
+        </CenterDiv>
+      )}
     </div>
-  ) : (
-    <CenterDiv>
-      <Spin size="large" tip="Fetching Trace Data 🔎..." />
-    </CenterDiv>
   );
+};
 
 Trace.propTypes = {
   // TODO: detail the props

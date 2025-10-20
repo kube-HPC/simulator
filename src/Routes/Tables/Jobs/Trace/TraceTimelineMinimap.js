@@ -1,22 +1,40 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Space, Tooltip } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
-import { systemColors, MINIMAP_HEIGHT } from './traceConstants';
+import {
+  MINIMAP_HEIGHT,
+  getCurrentTheme,
+  getSystemColors,
+} from './traceConstants';
 import { formatDuration, getServiceColor, hasError } from './traceUtils';
 
 const MinimapContainer = styled.div`
-  background-color: ${systemColors.background};
-  border-bottom: 2px solid ${systemColors.border};
+  background-color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return colors.background;
+  }};
+  border-bottom: 2px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return colors.border;
+    }};
   padding: 0;
   position: relative;
 `;
 
 const HeaderSection = styled.div`
-  background-color: ${systemColors.background};
+  background-color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark ? '#1a2332' : colors.background;
+  }};
   padding: 8px 16px;
-  border-bottom: 1px solid ${systemColors.borderLight};
+  border-bottom: 1px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return props.$isDark ? '#304a6d' : colors.borderLight;
+    }};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -25,7 +43,10 @@ const HeaderSection = styled.div`
 const HeaderTitle = styled.div`
   font-size: 13px;
   font-weight: 600;
-  color: ${systemColors.text};
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark ? '#ffffff' : colors.text;
+  }};
 `;
 
 const TimeMarkersContainer = styled.div`
@@ -33,23 +54,44 @@ const TimeMarkersContainer = styled.div`
   justify-content: space-between;
   padding: 6px 16px;
   font-size: 11px;
-  color: #4a4a4a;
+  color: ${props => (props.$isDark ? '#b8bfc7' : '#4a4a4a')};
   font-weight: 600;
-  background-color: ${systemColors.background};
+  background-color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark ? '#15202e' : colors.background;
+  }};
+  border-bottom: 1px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return props.$isDark ? '#2d4663' : colors.borderLight;
+    }};
 `;
 
 const MinimapWrapper = styled.div`
-  padding: 0 16px 12px 16px;
-  background-color: ${systemColors.background};
+  padding: 12px 16px;
+  background-color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark ? '#192737' : colors.background;
+  }};
 `;
 
 const MinimapCanvas = styled.div`
   position: relative;
   height: ${MINIMAP_HEIGHT}px;
-  background-color: ${systemColors.minimapBg};
+  background-color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark ? '#0f1923' : colors.minimapBg;
+  }};
   cursor: crosshair;
-  border: 1px solid ${systemColors.border};
+  border: ${props => (props.$isDark ? '2px solid #2d4663' : '1px solid')};
+  border-color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark ? '#2d4663' : colors.border;
+  }};
+  border-radius: 4px;
   overflow: visible;
+  box-shadow: ${props =>
+    props.$isDark ? 'inset 0 2px 6px rgba(0, 0, 0, 0.3)' : 'none'};
 `;
 
 const ServiceLane = styled.div`
@@ -58,7 +100,9 @@ const ServiceLane = styled.div`
   height: ${props => props.$height}px;
   width: 100%;
   border-bottom: ${props =>
-    props.$showBorder ? `1px solid ${systemColors.borderLight}` : 'none'};
+    props.$showBorder
+      ? `1px solid ${props.$isDark ? '#2d4663' : props.$borderColor}`
+      : 'none'};
 `;
 
 const ServiceLabel = styled.div`
@@ -67,13 +111,17 @@ const ServiceLabel = styled.div`
   top: 50%;
   transform: translateY(-50%);
   font-size: 9px;
-  font-weight: 600;
-  color: ${systemColors.textSecondary};
+  font-weight: 500;
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark ? '#d7d7d7' : colors.textSecondary;
+  }};
   pointer-events: none;
   z-index: 5;
-  text-shadow:
-    0 0 3px white,
-    0 0 3px white;
+  text-shadow: ${props =>
+    props.$isDark
+      ? '0 0 3px #182039, 0 0 3px #182039'
+      : '0 0 3px white, 0 0 3px white'};
 `;
 
 const SpanBar = styled.div`
@@ -92,8 +140,13 @@ const SelectionOverlay = styled.div`
   left: ${props => props.$left}%;
   width: ${props => props.$width}%;
   height: 100%;
-  background-color: rgba(48, 127, 230, 0.25);
-  border: 2px solid ${systemColors.blue};
+  background-color: ${props =>
+    props.$isDark ? 'rgba(64, 169, 255, 0.2)' : 'rgba(48, 127, 230, 0.25)'};
+  border: 2px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return colors.blue;
+    }};
   pointer-events: none;
   z-index: 10;
   box-sizing: border-box;
@@ -104,7 +157,10 @@ const HoverLine = styled.div`
   left: ${props => props.$left}%;
   height: 100%;
   width: 2px;
-  background-color: ${systemColors.blue};
+  background-color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return colors.blue;
+  }};
   pointer-events: none;
   z-index: 11;
 `;
@@ -115,22 +171,35 @@ const HoverTooltip = styled.div`
   top: -45px;
   transform: ${props =>
     props.$alignRight ? 'translateX(-100%)' : 'translateX(-50%)'};
-  background-color: #e8f4fd;
-  color: ${systemColors.text};
+  background-color: ${props => (props.$isDark ? '#1f2937' : '#e8f4fd')};
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return colors.text;
+  }};
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 11px;
   white-space: nowrap;
   pointer-events: none;
   z-index: 100;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  border: 1px solid ${systemColors.blue};
+  box-shadow: ${props =>
+    props.$isDark
+      ? '0 4px 12px rgba(0, 0, 0, 0.4)'
+      : '0 2px 6px rgba(0, 0, 0, 0.15)'};
+  border: 1px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return colors.blue;
+    }};
 `;
 
 const TooltipServiceName = styled.div`
   font-weight: 600;
   margin-bottom: 2px;
-  color: ${systemColors.blue};
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark ? '#69c0ff' : colors.blue;
+  }};
 `;
 
 const TooltipOperation = styled.div`
@@ -140,15 +209,21 @@ const TooltipOperation = styled.div`
 
 const TooltipDuration = styled.div`
   font-size: 10px;
-  color: ${systemColors.textSecondary};
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return colors.textSecondary;
+  }};
 `;
 
 const SelectionBanner = styled.div`
   padding: 8px 16px;
   font-size: 12px;
-  color: ${systemColors.text};
-  background-color: #fff3cd;
-  border-top: 1px solid #ffeaa7;
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return colors.text;
+  }};
+  background-color: ${props => (props.$isDark ? '#373e60' : '#fff3cd')};
+  border-top: 1px solid ${props => (props.$isDark ? '#586a93' : '#ffeaa7')};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -157,7 +232,7 @@ const SelectionBanner = styled.div`
 const FilterBadge = styled.span`
   margin-left: 12px;
   padding: 2px 8px;
-  background-color: ${systemColors.blue};
+  background-color: ${props => (props.$isDark ? '#447fa8ff' : '#ffeaa7')};
   color: white;
   border-radius: 3px;
   font-size: 11px;
@@ -165,11 +240,56 @@ const FilterBadge = styled.span`
 `;
 
 const SecondaryText = styled.span`
-  color: ${systemColors.textSecondary};
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return colors.textSecondary;
+  }};
 `;
 
 const StyledButton = styled(Button)`
   margin-left: 12px;
+  background-color: ${props => (props.$isDark ? '#ff4d4f' : 'auto')} !important;
+  border-color: ${props => (props.$isDark ? '#ff4d4f' : 'auto')} !important;
+  color: ${props => (props.$isDark ? '#ffffff' : 'auto')} !important;
+
+  &:hover {
+    background-color: ${props =>
+      props.$isDark ? '#a83e40ff' : 'auto'} !important;
+    border-color: ${props => {
+      props.$isDark ? '#e90307ff' : 'auto';
+    }} !important;
+    color: ${props => (props.$isDark ? '#b8bfc7' : 'auto')} !important;
+  }
+`;
+
+const MinimapButton = styled(Button)`
+  background-color: ${props => (props.$isDark ? '#1e3a52' : 'auto')} !important;
+  border-color: ${props => (props.$isDark ? '#3d5a7e' : 'auto')} !important;
+  color: ${props => (props.$isDark ? '#b8bfc7' : 'auto')} !important;
+
+  &:hover {
+    background-color: ${props =>
+      props.$isDark ? '#2d4a6b' : 'auto'} !important;
+    border-color: ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return colors.blue;
+    }} !important;
+    color: ${props => (props.$isDark ? '#ffffff' : 'auto')} !important;
+  }
+
+  &.ant-btn-primary {
+    background-color: ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return colors.blue;
+    }} !important;
+    border-color: ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return colors.blue;
+    }} !important;
+    color: #ffffff !important;
+    box-shadow: ${props =>
+      props.$isDark ? '0 2px 6px rgba(24, 144, 255, 0.3)' : 'none'};
+  }
 `;
 
 const TraceTimelineMinimap = ({ traceData, processes, onSelectionChange }) => {
@@ -179,9 +299,25 @@ const TraceTimelineMinimap = ({ traceData, processes, onSelectionChange }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState(null);
   const [viewMode, setViewMode] = useState('depth-lanes');
+  const [isDark, setIsDark] = useState(getCurrentTheme() === 'DARK');
   const containerRef = useRef(null);
 
+  useEffect(() => {
+    const checkTheme = () => {
+      setIsDark(getCurrentTheme() === 'DARK');
+    };
+
+    const interval = setInterval(checkTheme, 500);
+    window.addEventListener('storage', checkTheme);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('storage', checkTheme);
+    };
+  }, []);
+
   const { duration, spans } = traceData;
+  const colors = getSystemColors(isDark);
 
   const getSpanDepth = () => {
     const depthMap = new Map();
@@ -343,8 +479,12 @@ const TraceTimelineMinimap = ({ traceData, processes, onSelectionChange }) => {
           key={serviceName}
           $top={serviceIndex * laneHeight}
           $height={laneHeight}
-          $showBorder={serviceIndex < serviceNames.length - 1}>
-          {laneHeight > 15 && <ServiceLabel>{serviceName}</ServiceLabel>}
+          $showBorder={serviceIndex < serviceNames.length - 1}
+          $isDark={isDark}
+          $borderColor={colors.borderLight}>
+          {laneHeight > 15 && (
+            <ServiceLabel $isDark={isDark}>{serviceName}</ServiceLabel>
+          )}
           {serviceSpans.map(span => {
             const relativeStart = (span.relativeStartTime / duration) * 100;
             const width = Math.max((span.duration / duration) * 100, 0.15);
@@ -357,7 +497,7 @@ const TraceTimelineMinimap = ({ traceData, processes, onSelectionChange }) => {
                 $width={width}
                 $height={barHeight}
                 $top={(laneHeight - barHeight) / 2}
-                $color={isError ? '#e74c3c' : color}
+                $color={isError ? (isDark ? '#b31b00' : '#e74c3c') : color}
                 title={`${serviceName} - ${span.operationName}${isError ? ' [ERROR]' : ''}`}
               />
             );
@@ -374,7 +514,7 @@ const TraceTimelineMinimap = ({ traceData, processes, onSelectionChange }) => {
     return spans.map(span => {
       const process = processes[span.processID];
       const serviceName = process?.serviceName || 'unknown';
-      const color = getServiceColor(serviceName);
+      const color = getServiceColor(serviceName, isDark);
       const depth = depthMap.get(span.spanID) || 0;
       const isError = hasError(span);
 
@@ -388,7 +528,7 @@ const TraceTimelineMinimap = ({ traceData, processes, onSelectionChange }) => {
           $width={width}
           $top={depth * laneHeight + (laneHeight - barHeight) / 2}
           $height={barHeight}
-          $color={isError ? '#e74c3c' : color}
+          $color={isError ? (isDark ? '#b31b00' : '#e74c3c') : color}
           title={`${serviceName} - ${span.operationName} (depth: ${depth})${isError ? ' [ERROR]' : ''}`}
         />
       );
@@ -396,36 +536,38 @@ const TraceTimelineMinimap = ({ traceData, processes, onSelectionChange }) => {
   };
 
   return (
-    <MinimapContainer>
-      <HeaderSection>
-        <HeaderTitle>Timeline Overview</HeaderTitle>
+    <MinimapContainer $isDark={isDark}>
+      <HeaderSection $isDark={isDark}>
+        <HeaderTitle $isDark={isDark}>Timeline Overview</HeaderTitle>
         <Space size="small">
           <Tooltip title="Service Lanes">
-            <Button
+            <MinimapButton
               size="small"
               type={viewMode === 'service-lanes' ? 'primary' : 'default'}
-              onClick={() => setViewMode('service-lanes')}>
+              onClick={() => setViewMode('service-lanes')}
+              $isDark={isDark}>
               Services
-            </Button>
+            </MinimapButton>
           </Tooltip>
           <Tooltip title="Depth Lanes">
-            <Button
+            <MinimapButton
               size="small"
               type={viewMode === 'depth-lanes' ? 'primary' : 'default'}
-              onClick={() => setViewMode('depth-lanes')}>
+              onClick={() => setViewMode('depth-lanes')}
+              $isDark={isDark}>
               Depth
-            </Button>
+            </MinimapButton>
           </Tooltip>
         </Space>
       </HeaderSection>
 
-      <TimeMarkersContainer>
+      <TimeMarkersContainer $isDark={isDark}>
         {timeMarkers.map(marker => (
           <div key={marker.label}>{marker.label}</div>
         ))}
       </TimeMarkersContainer>
 
-      <MinimapWrapper>
+      <MinimapWrapper $isDark={isDark}>
         <MinimapCanvas
           ref={containerRef}
           onMouseMove={handleMouseMove}
@@ -439,7 +581,8 @@ const TraceTimelineMinimap = ({ traceData, processes, onSelectionChange }) => {
             if (e.key === 'Escape' && selection) {
               clearSelection();
             }
-          }}>
+          }}
+          $isDark={isDark}>
           {viewMode === 'service-lanes' && renderServiceLanesView()}
           {viewMode === 'depth-lanes' && renderDepthLanesView()}
 
@@ -447,23 +590,25 @@ const TraceTimelineMinimap = ({ traceData, processes, onSelectionChange }) => {
             <SelectionOverlay
               $left={selection.start}
               $width={selection.end - selection.start}
+              $isDark={isDark}
             />
           )}
 
           {hoveredPosition !== null && !isDragging && (
             <>
-              <HoverLine $left={hoveredPosition} />
+              <HoverLine $left={hoveredPosition} $isDark={isDark} />
               {hoveredSpan && (
                 <HoverTooltip
                   $left={Math.min(hoveredPosition, 85)}
-                  $alignRight={hoveredPosition > 85}>
-                  <TooltipServiceName>
+                  $alignRight={hoveredPosition > 85}
+                  $isDark={isDark}>
+                  <TooltipServiceName $isDark={isDark}>
                     {hoveredSpan.serviceName}
                   </TooltipServiceName>
                   <TooltipOperation>
                     {hoveredSpan.operationName}
                   </TooltipOperation>
-                  <TooltipDuration>
+                  <TooltipDuration $isDark={isDark}>
                     {formatDuration(hoveredSpan.duration)}
                   </TooltipDuration>
                 </HoverTooltip>
@@ -474,25 +619,26 @@ const TraceTimelineMinimap = ({ traceData, processes, onSelectionChange }) => {
       </MinimapWrapper>
 
       {selection && (
-        <SelectionBanner>
+        <SelectionBanner $isDark={isDark}>
           <span>
             <strong>Selected:</strong>{' '}
             {formatDuration((selection.start / 100) * duration)} →{' '}
             {formatDuration((selection.end / 100) * duration)}{' '}
-            <SecondaryText>
+            <SecondaryText $isDark={isDark}>
               (
               {formatDuration(
                 ((selection.end - selection.start) / 100) * duration
               )}{' '}
               duration)
             </SecondaryText>{' '}
-            <FilterBadge>Filtering timeline view</FilterBadge>
+            <FilterBadge $isDark={isDark}>Filtering timeline view</FilterBadge>
           </span>
           <StyledButton
             size="small"
             danger
             icon={<ReloadOutlined />}
-            onClick={clearSelection}>
+            onClick={clearSelection}
+            $isDark={isDark}>
             Clear Filter
           </StyledButton>
         </SelectionBanner>
