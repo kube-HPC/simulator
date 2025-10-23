@@ -7,9 +7,7 @@ const TagColoByName = name => {
     const arrayTags = name.toString().split(',');
 
     return arrayTags.length > 0
-      ? arrayTags.map(tagName => (
-          <Tag color={getColorByName(tagName)}>{tagName}</Tag>
-        ))
+      ? arrayTags.map(tag => <Tag color={getColorByName(tag)}>{tag}</Tag>)
       : 'No tag';
   }
 

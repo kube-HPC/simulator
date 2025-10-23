@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
 import { SkeletonLoader } from 'components/common';
@@ -61,6 +61,23 @@ const AlgorithmsTable = () => {
 
   const algorithmsList = useReactiveVar(algorithmsListVar);
 
+  const [tableHeight, setTableHeight] = useState(() =>
+    typeof window !== 'undefined'
+      ? Math.max(window.innerHeight - 200, 400)
+      : 400
+  );
+
+  useEffect(() => {
+    const calculate = () => {
+      const offset = 200;
+      const height = Math.max(window.innerHeight - offset, 400);
+      setTableHeight(height);
+    };
+    calculate();
+    window.addEventListener('resize', calculate);
+    return () => window.removeEventListener('resize', calculate);
+  }, []);
+
   const getList = useMemo(() => {
     const filterValue = instanceFilter.algorithms.qAlgorithmName;
 
@@ -99,7 +116,7 @@ const AlgorithmsTable = () => {
         onRow={record =>
           onRow({ ...record, isVirtual: getList.length > NUMBER_ROW_VIRTUAL })
         }
-        scroll={{ y: 650 }}
+        scroll={{ y: tableHeight }}
         locale={{
           emptyText: (
             <Empty

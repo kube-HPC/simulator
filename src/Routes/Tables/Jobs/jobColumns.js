@@ -5,6 +5,7 @@ import { Ellipsis } from 'components/common';
 
 import { USER_GUIDE } from 'const';
 import { sorter } from 'utils/stringHelper';
+import { Divider } from 'antd';
 import UserAvatar from '../../../components/UserAvatar';
 import JobActions from './JobActions';
 import PipelineNameActions from './PipelineNameActions';
@@ -14,6 +15,7 @@ import JobProgress from './JobProgress';
 import JobStatus from './JobStatus';
 import JobTime from './JobTime';
 import JobTypes from './JobTypes';
+import JobTags from './JobTags';
 
 const Id = jobID => (
   <Ellipsis
@@ -44,16 +46,25 @@ const Stats = status => <NodeStats status={status} />;
 const Priority = (text, record) => {
   const { pipeline } = record;
   const { priority } = pipeline;
-
-  <JobPriority priority={priority} />;
+  return <JobPriority priority={priority} />;
 };
 
 // const Types = types => <JobTypes types={types} fullName={false} />;
 const Types = (text, record) => {
   const { pipeline } = record;
-  const { types } = pipeline;
+  const { types, tags } = pipeline;
 
-  return <JobTypes types={types} fullName={false} />;
+  return (
+    <div style={{ display: 'flex' }}>
+      <JobTypes types={types} fullName={false} />
+      {tags && tags.length > 0 && (
+        <>
+          <Divider style={{ height: '24px' }} type="vertical" />
+          <JobTags tags={tags} />
+        </>
+      )}
+    </div>
+  );
 };
 
 const ProgressContainer = styled.div`
@@ -137,8 +148,8 @@ const jobColumns = [
     render: StartTime,
   },
   {
-    title: `Pipeline Type`,
-    dataIndex: ['pipeline', 'types'],
+    title: `Pipeline Type/Tags`,
+    dataIndex: ['pipeline'],
     key: `types`,
     width: `10%`,
     render: Types,

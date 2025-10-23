@@ -54,6 +54,7 @@ const useJobsFunctions = () => {
       pipelineName: iJobs?.pipelineName || undefined,
       pipelineStatus: iJobs?.pipelineStatus || undefined,
       user: iJobs?.user || undefined,
+      tag: iJobs?.tag || undefined,
       datesRange: {
         from: iJobs?.datesRange?.from || null,
         to: iJobs?.datesRange?.to || null,
@@ -74,6 +75,7 @@ const useJobsFunctions = () => {
     instanceFilters.jobs.pipelineName,
     instanceFilters.jobs.pipelineStatus,
     instanceFilters.jobs.user,
+    instanceFilters.jobs.tag,
     instanceFilters.jobs?.datesRange?.from,
     instanceFilters.jobs?.datesRange?.to,
     metaMode?.experimentName,
@@ -106,6 +108,9 @@ const useJobsFunctions = () => {
         x => x.auditTrail.user === mergedParams.user
       );
     }
+    // tags
+    if (mergedParams.tag)
+      filterJobs = filterJobs.filter(x => x.pipeline.tags === mergedParams.tag);
 
     if (mergedParams.algorithmName)
       filterJobs = filterJobs.filter(x =>

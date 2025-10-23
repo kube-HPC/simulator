@@ -7,6 +7,7 @@ const JOB_GRID_VIEW_QUERY = gql`
     $algorithmName: String
     $pipelineStatus: String
     $user: String
+    $tag: String
     $datesRange: Range
     $cursor: String
     $limit: Int
@@ -17,6 +18,7 @@ const JOB_GRID_VIEW_QUERY = gql`
       algorithmName: $algorithmName
       pipelineStatus: $pipelineStatus
       user: $user
+      tag: $tag
       datesRange: $datesRange
       cursor: $cursor
       limit: $limit
@@ -110,6 +112,7 @@ const JOB_GRID_VIEW_QUERY = gql`
           kind
           priority
           startTime
+          tags
           types
           lastRunResult {
             timestamp
