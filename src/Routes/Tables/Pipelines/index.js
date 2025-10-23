@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
 import { SkeletonLoader } from 'components/common';
@@ -75,6 +75,23 @@ const PipelinesTable = () => {
     onSubmitFilter(instanceFilter.pipelines);
   }, [query.data?.pipelines?.pipelinesCount]);
 
+  const [tableHeight, setTableHeight] = useState(() =>
+    typeof window !== 'undefined'
+      ? Math.max(window.innerHeight - 200, 400)
+      : 400
+  );
+
+  useEffect(() => {
+    const calculate = () => {
+      const offset = 200;
+      const height = Math.max(window.innerHeight - offset, 400);
+      setTableHeight(height);
+    };
+    calculate();
+    window.addEventListener('resize', calculate);
+    return () => window.removeEventListener('resize', calculate);
+  }, []);
+
   // if have keycloak remove avatar from columns job
   const pipelinesColumnsView = useMemo(() => {
     if (!keycloakEnable) {
@@ -105,7 +122,7 @@ const PipelinesTable = () => {
           })
         }
         scroll={{
-          y: 650,
+          y: tableHeight,
         }}
         locale={{
           emptyText: (
