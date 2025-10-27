@@ -21,7 +21,7 @@ const { MAIN, BUILD_TYPES } = schema;
 
 const DEFAULT_EDITOR_VALUE = stringify(addAlgorithmTemplate);
 
-const AddAlgorithm = ({ algorithmValue = undefined }) => {
+const AddAlgorithm = ({ algorithmValue = undefined, closeDrawer }) => {
   // #region  Editor State
   const refCheckForceStopAlgorithms = useRef(false);
 
@@ -313,10 +313,13 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
           message.error(dataResponse?.error?.message || 'Something is wrong!');
         } else {
           message.success('Algorithm Applied, check Algorithms table');
+          if (closeDrawer) {
+            closeDrawer();
+          }
         }
       }
     },
-    [onOverviewAlgorithm]
+    [onOverviewAlgorithm, closeDrawer]
   );
 
   const applyAlgorithmVersion = useCallback(
@@ -452,6 +455,7 @@ AddAlgorithm.propTypes = {
   onSubmit: PropTypes.func,
   // eslint-disable-next-line react/forbid-prop-types
   algorithmValue: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  closeDrawer: PropTypes.func,
 };
 
 export default memo(AddAlgorithm);
