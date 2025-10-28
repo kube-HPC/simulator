@@ -12,8 +12,11 @@ import {
 import { JOB_QUERY, JOB_QUERY_GRAPH } from 'graphql/queries';
 
 import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
 import usePath from './usePath';
 import jobColumns from './jobColumns';
+
+dayjs.extend(isBetween);
 
 const topTableScroll = () => {
   const el = document.querySelector('.ant-table-body');
@@ -198,11 +201,10 @@ const useJobsFunctionsLimit = () => {
 
     if (time) {
       datesRange = {
-        from: time?.datesRange?.from || undefined,
-        to: time?.datesRange?.to || undefined,
+        from: getDateTimeZoneString(time?.datesRange?.from) || undefined,
+        to: getDateTimeZoneString(time?.datesRange?.to) || undefined,
       };
     }
-
     Object.values(other).forEach((element, index) => {
       element === '' ? (other[Object.keys(other)[index]] = undefined) : null;
     });
