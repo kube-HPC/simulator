@@ -73,6 +73,7 @@ const PipelinesQueryTable = ({
       <Form.Item name="qPipelineName">
         <AutoCompleteFloatingLabelInput
           label="Pipeline Name"
+          title="Pipeline Name"
           width="24vw"
           options={pipelineOptions}
           autoFocus

@@ -181,6 +181,7 @@ const QueryForm = ({
         <AutoCompleteFloatingLabelInput
           isExactMatch
           label="Pipeline Name / Job ID"
+          title="Pipeline Name"
           width="12vw"
           options={pipelineOptions}
           allowClear
@@ -192,6 +193,7 @@ const QueryForm = ({
         <AutoCompleteFloatingLabelInput
           isExactMatch
           label="Algorithm Name"
+          title="Algorithm Name"
           width="9vw"
           options={algorithmOptions}
           allowClear
@@ -205,6 +207,7 @@ const QueryForm = ({
             // isExactMatch
             // listIgnoreExactMatch={[KeycloakServices.getUsername()]}
             label="User"
+            title="User"
             width="9vw"
             options={usersOptions}
             allowClear
@@ -251,11 +254,9 @@ QueryForm.propTypes = {
     pipelineStatus: PropTypes.string,
     user: PropTypes.string,
     datesRange: PropTypes.shape({
-      // eslint-disable-next-line react/forbid-prop-types
-      from: PropTypes.object,
-      // eslint-disable-next-line react/forbid-prop-types
-      to: PropTypes.object,
-    }).isRequired,
+      from: PropTypes.string,
+      to: PropTypes.string,
+    }),
   }).isRequired,
 
   zoomDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),

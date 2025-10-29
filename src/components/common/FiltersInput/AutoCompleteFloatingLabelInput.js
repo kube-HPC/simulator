@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { AutoComplete, Input } from 'antd';
+import { AutoComplete, Input, Tag } from 'antd';
 import styled from 'styled-components';
 import debounce from 'lodash.debounce';
 
@@ -56,6 +56,7 @@ const AutoCompleteFloatingLabelInput = ({
   options = [],
   isExactMatch = false,
   listIgnoreExactMatch = [],
+  title,
   ...props
 }) => {
   const [focused, setFocused] = useState(false);
@@ -65,8 +66,22 @@ const AutoCompleteFloatingLabelInput = ({
     [Submit, debounceDelay]
   );
 
+  // Custom tag renderer to override the title attribute
+  const tagRender = tagProps => {
+    const { label: tagLabel, closable, onClose } = tagProps;
+    return (
+      <Tag
+        title={title || label}
+        closable={closable}
+        onClose={onClose}
+        style={{ marginRight: 3 }}>
+        {tagLabel}
+      </Tag>
+    );
+  };
+
   return (
-    <Container>
+    <Container title={title}>
       <Label $focused={focused} $hasValue={!!value}>
         {label}
       </Label>
@@ -74,6 +89,7 @@ const AutoCompleteFloatingLabelInput = ({
         options={options}
         style={{ width }}
         value={value}
+        tagRender={tagRender}
         onSearch={val => {
           const exactMatch =
             isExactMatch &&
@@ -102,6 +118,7 @@ const AutoCompleteFloatingLabelInput = ({
           {...props}
           suffix={suffix}
           style={{ borderRadius: '50px' }}
+          title={title}
         />
       </AutoComplete>
     </Container>
@@ -124,6 +141,7 @@ AutoCompleteFloatingLabelInput.propTypes = {
   width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   isExactMatch: PropTypes.bool,
   listIgnoreExactMatch: PropTypes.arrayOf(PropTypes.string),
+  title: PropTypes.string,
 };
 
 export default AutoCompleteFloatingLabelInput;
