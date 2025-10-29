@@ -17,7 +17,6 @@ import usePath from './usePath';
 import jobColumns from './jobColumns';
 
 dayjs.extend(isBetween);
-
 const topTableScroll = () => {
   const el = document.querySelector('.ant-table-body');
   if (el) el.scrollTop = 0;
@@ -65,6 +64,7 @@ const useJobsFunctionsLimit = () => {
       pipelineName: iJobs?.pipelineName || undefined,
       pipelineStatus: iJobs?.pipelineStatus || undefined,
       user: iJobs?.user || undefined,
+      tag: iJobs?.tag || undefined,
       datesRange: {
         from: iJobs?.datesRange?.from || null,
         to: iJobs?.datesRange?.to || null,
@@ -87,6 +87,7 @@ const useJobsFunctionsLimit = () => {
     instanceFilters.jobs.pipelineName,
     instanceFilters.jobs.pipelineStatus,
     instanceFilters.jobs.user,
+    instanceFilters.jobs.tag,
     instanceFilters.jobs?.datesRange?.from,
     instanceFilters.jobs?.datesRange?.to,
     metaMode?.experimentName,
@@ -201,10 +202,11 @@ const useJobsFunctionsLimit = () => {
 
     if (time) {
       datesRange = {
-        from: getDateTimeZoneString(time?.datesRange?.from) || undefined,
-        to: getDateTimeZoneString(time?.datesRange?.to) || undefined,
+        from: time?.datesRange?.from || undefined,
+        to: time?.datesRange?.to || undefined,
       };
     }
+
     Object.values(other).forEach((element, index) => {
       element === '' ? (other[Object.keys(other)[index]] = undefined) : null;
     });
