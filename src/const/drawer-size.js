@@ -10,7 +10,7 @@ export default {
   MEMORY: '80vw',
   ERROR_LOGS: '70vw',
   JOB_INFO: '92vw',
-  ALGORITHM_INFO: '180ch',
+  ALGORITHM_INFO: '85vw',
   PIPELINE_INFO: '85vw',
   ALGORITHM_EDIT: '40vw',
   TF_RUN: '30vw',

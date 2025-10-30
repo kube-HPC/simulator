@@ -16,36 +16,57 @@ const TYPES = {
 
 const URL = ({ type, name }) => `/readme/${type}/${name}`;
 
-const fetch = ({ type }) => ({ name, callback }) =>
-  client
-    .get(URL({ type, name }))
-    .then(({ data: { readme } }) => {
-      callback(readme);
-    })
-    // Catch but don't use
-    .catch(() => {});
+const fetch =
+  ({ type }) =>
+  ({ name, callback }) =>
+    client
+      .get(URL({ type, name }))
+      .then(({ data: { readme } }) => {
+        callback(readme);
+      })
+      .catch(err => {
+        console.warn('readme fetch error:', err);
 
-const asyncFetch = ({ type }) => async ({ name }) => {
-  const {
-    data: { readme },
-  } = await client.get(URL({ type, name }));
-  return readme;
-};
+        try {
+          callback(null);
+        } catch (e) {
+          // If caller didn't provide a callback or it throws, just ignore.
+        }
+      });
 
-const apply = ({ type }) => ({ name, formData }) => () =>
-  client
-    .put(URL({ type, name }), formData)
-    .then(successNotification)
-    .catch(errorNotification);
+const asyncFetch =
+  ({ type }) =>
+  async ({ name }) => {
+    try {
+      const {
+        data: { readme },
+      } = await client.get(URL({ type, name }));
+      return readme;
+    } catch (err) {
+      console.warn('async readme fetch error:', err);
+      return null;
+    }
+  };
 
-const post = ({ type }) => ({ name, readme }) => {
-  const formData = new FormData();
-  formData.append('README.md', new File([new Blob([readme])], 'README.md'));
-  client
-    .post(URL({ type, name }), formData)
-    .then(successNotification)
-    .catch(errorNotification);
-};
+const apply =
+  ({ type }) =>
+  ({ name, formData }) =>
+  () =>
+    client
+      .put(URL({ type, name }), formData)
+      .then(successNotification)
+      .catch(errorNotification);
+
+const post =
+  ({ type }) =>
+  ({ name, readme }) => {
+    const formData = new FormData();
+    formData.append('README.md', new File([new Blob([readme])], 'README.md'));
+    client
+      .post(URL({ type, name }), formData)
+      .then(successNotification)
+      .catch(errorNotification);
+  };
 
 const useReadme = type => {
   const asyncFetch_ = useCallback(props => asyncFetch({ type })(props), [type]);

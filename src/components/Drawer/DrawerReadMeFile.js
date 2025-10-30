@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useReadMeFile } from 'hooks';
 import PropTypes from 'prop-types';
 import Drawer from 'components/Drawer';
-import { Button, Space, Modal } from 'antd';
+import { Button, Space, Modal, Flex } from 'antd';
 import { MdEditor } from 'components/common';
 
 const DrawerReadMeFile = ({ name = null, type = null, disabled }) => {
@@ -62,10 +62,14 @@ const DrawerReadMeFile = ({ name = null, type = null, disabled }) => {
             You are about to exit the "Edit Readme" window Would you like to
             save the changes?
           </Modal>
-
-          <Button onClick={saveAndClose} type="primary">
-            Apply Markdown
-          </Button>
+          <Flex justify="start" gap="10px" style={{ marginBottom: '10px' }}>
+            <Button onClick={saveAndClose} type="primary">
+              Apply Markdown
+            </Button>
+            <Button onClick={closeAll} type="primary">
+              Cancel
+            </Button>
+          </Flex>
           <MdEditor value={readme} onChange={onChangeReadMe} />
         </Space>
       </Drawer>

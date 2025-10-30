@@ -387,13 +387,13 @@ const AddAlgorithmForm = ({
               label={MAIN.DESCRIPTION.label}>
               <Input
                 placeholder={MAIN.DESCRIPTION.placeholder}
-                style={{ marginLeft: '64px' }}
+                style={{ marginLeft: '60px' }}
               />
             </Form.Item>
           </FlexBox.Item>
           <FlexBox.Item>
             <DrawerReadMeFile
-              name={keyValueFormObject?.name || null}
+              name={keyValueFormObject?.main?.name || null}
               type="algorithms"
               disabled={!isEdit}
             />
