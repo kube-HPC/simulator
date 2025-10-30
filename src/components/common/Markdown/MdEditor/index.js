@@ -22,7 +22,7 @@ const MdEditor = ({
 
   return (
     <MdEditorReact
-      value={initialValue}
+      value={initialValue ?? readmeTemplate}
       onChange={handleValueChange}
       renderHTML={renderHtml}
       config={viewReadOnly && configReadOnly}

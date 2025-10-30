@@ -26,7 +26,7 @@ const EditDrawer = () => {
       isOpened={isOn}
       onClose={setOff}
       onDidClose={goTo.root}
-      width={DRAWER_SIZE.ALGORITHM_INFO}
+      width={DRAWER_SIZE.ADD_ALGORITHM}
       title={activeAlgorithm?.name ?? algorithmId}
       asFlex>
       <>

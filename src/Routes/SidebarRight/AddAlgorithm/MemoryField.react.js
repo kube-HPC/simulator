@@ -26,12 +26,18 @@ const MemoryField = ({
 
   const onNumber = target => {
     setNumberMem(target);
-    onChange(target === null || target === '' ? null : `${target}${unit}`);
+    if (target !== null && target !== '' && !Number.isNaN(target)) {
+      onChange(`${target}${unit}`);
+    } else {
+      console.log('children[0]', children[0]);
+      console.log('value', value);
+      onChange(`${min}${children[0].props.value}`); // default to min K if invalid input
+    }
   };
 
   const onSelect = target => {
     setUnit(target);
-    onChange(numberMem === null ? null : `${numberMem}${target}`);
+    onChange(numberMem === null ? min : `${numberMem}${target}`);
   };
 
   const Wrapper = tooltipTitle ? Tooltip : React.Fragment;
