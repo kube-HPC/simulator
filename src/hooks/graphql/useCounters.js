@@ -70,6 +70,23 @@ const useCounters = () => {
       ) {
         message.info('A new job has been added to the queue');
       }
+
+      if (
+        prevQueueCountRef.current !== null &&
+        counters.queue < prevQueueCountRef.current
+      ) {
+        const jobsStarted = prevQueueCountRef.current - counters.queue;
+        message.success(
+          <>
+            {jobsStarted} {jobsStarted === 1 ? 'job' : 'jobs'} started from
+            queue, see{' '}
+            <ButtonLinkStyle type="link" onClick={gotoJobsTable}>
+              jobs
+            </ButtonLinkStyle>
+          </>
+        );
+      }
+
       prevQueueCountRef.current = counters.queue;
 
       if (
