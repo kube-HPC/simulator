@@ -63,6 +63,9 @@ const calculatePercentage = (value, minValue, maxValue) => {
 const GraphTab = ({ graph, pipeline }) => {
   // const [nodePos, setNodePos] = useState(null);
   // const [zoomPos, setZoomPos] = useState(null);
+
+  const namePipelineToSave = `${pipeline.experimentName}_${pipeline.name}_${pipeline.version}`;
+
   const {
     deleteLocationNodes,
     saveLocationNodes,
@@ -254,9 +257,9 @@ const GraphTab = ({ graph, pipeline }) => {
         }
 
         // if have recode in local store the get recode by pipeline name
-        if (hasRecord(pipeline.name)) {
+        if (hasRecord(namePipelineToSave)) {
           const localPosNodesGraph = exportLocationNodes(
-            pipeline.name,
+            namePipelineToSave,
             adaptedGraphData
           );
 
@@ -289,7 +292,7 @@ const GraphTab = ({ graph, pipeline }) => {
     exportLocationNodes,
     graphOptions,
     hasRecord,
-    pipeline.name,
+    namePipelineToSave,
     selectNode,
   ]);
 
@@ -298,7 +301,7 @@ const GraphTab = ({ graph, pipeline }) => {
       if (Number.isNaN(sliderSelect)) {
         return;
       }
-      deleteLocationNodes(pipeline.name);
+      deleteLocationNodes(namePipelineToSave);
       window.localStorage.setItem(
         LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_GRAPH_SLIDER,
         sliderSelect
@@ -317,7 +320,7 @@ const GraphTab = ({ graph, pipeline }) => {
         graphCalculations();
       }, 1);
     },
-    [deleteLocationNodes, graphCalculations, pipeline.name]
+    [deleteLocationNodes, graphCalculations, namePipelineToSave]
   );
   const onChangeSliderDebounce = useDebounceCallback(
     onChangeSlider,
@@ -333,12 +336,12 @@ const GraphTab = ({ graph, pipeline }) => {
   }, [graph.timestamp, graphCalculations]);
 
   const onChangeSwitchSlider = val => {
-    deleteLocationNodes(pipeline.name);
+    deleteLocationNodes(namePipelineToSave);
     setIsSwitchSlider(val);
   };
 
   useEffect(() => {
-    if (hasRecord(pipeline.name)) {
+    if (hasRecord(namePipelineToSave)) {
       setIsSwitchSlider(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -422,7 +425,6 @@ const GraphTab = ({ graph, pipeline }) => {
                     setTimeout(() => {
                       // save graph in local store
                       const adaptedGraphData = adaptedGraph();
-
                       saveLocationNodes(
                         `${pipeline.experimentName}_${pipeline.name}_${pipeline.version}`,
                         adaptedGraphData
