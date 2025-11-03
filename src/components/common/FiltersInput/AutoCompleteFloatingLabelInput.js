@@ -55,7 +55,7 @@ const AutoCompleteFloatingLabelInput = ({
   width,
   options = [],
   isExactMatch = false,
-  listIgnoreExactMatch = [],
+  listIgnoreExactMatch = [], // eslint-disable-line no-unused-vars
   title,
   ...props
 }) => {
@@ -90,13 +90,13 @@ const AutoCompleteFloatingLabelInput = ({
         style={{ width }}
         value={value}
         tagRender={tagRender}
+        defaultActiveFirstOption={false}
         onSearch={val => {
           const exactMatch =
-            isExactMatch &&
-            (options.find(opt => opt.value === val) ||
-              val.includes(listIgnoreExactMatch));
+            isExactMatch && options.find(opt => opt.value === val);
 
-          if (exactMatch || val === '') {
+          // Submit if exact match OR not requiring exact match OR empty
+          if (exactMatch || !isExactMatch || val === '') {
             debouncedSubmit(val);
           }
         }}

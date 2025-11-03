@@ -59,8 +59,9 @@ const PipelinesTable = () => {
     values => {
       if (!query.loading) {
         if (values?.qPipelineName) {
+          const searchTerm = values.qPipelineName.toLowerCase().trim();
           const filterPipeline = query.data.pipelines.list.filter(item =>
-            item.name.includes(values.qPipelineName)
+            item.name.toLowerCase().includes(searchTerm)
           );
           pipelineListVar(filterPipeline);
         } else {
