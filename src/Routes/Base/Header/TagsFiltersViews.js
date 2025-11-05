@@ -8,6 +8,14 @@ import PropTypes from 'prop-types';
 import { useNavigate, useLocation } from 'react-router-dom';
 import qs from 'qs';
 
+const TOOLTIP_MAPPINGS = {
+  qAlgorithmName: 'Algorithm Name',
+  qPipelineName: 'Pipeline Name',
+  algorithmName: 'Algorithm Name',
+  pipelineName: 'Pipeline Name',
+  user: 'User',
+};
+
 const TagsFiltersViews = ({ sectionName }) => {
   const instanceFilters = useReactiveVar(instanceFiltersVar);
   const isPinActiveJobs = useReactiveVar(isPinActiveJobVar);
@@ -119,9 +127,10 @@ const TagsFiltersViews = ({ sectionName }) => {
                         }
                         else */
         if (value) {
+          const displayTitle = TOOLTIP_MAPPINGS[key] || key;
           allTags.push(
             <Tag
-              title={key}
+              title={displayTitle}
               key={key}
               closable
               onClose={() => {

@@ -11,7 +11,6 @@ import { HashRouter } from 'react-router-dom';
 import { ReusableProvider } from 'reusable';
 import { initDashboardConfig } from 'actions/connection.action';
 import { selectors } from 'reducers';
-import { startTooltipFixer } from 'utils';
 import GlobalThemes from './styles/themes/GlobalThemes';
 import Root from './Routes';
 import store from './store';
@@ -28,11 +27,6 @@ const ConfigProviderApp = () => {
   const { keycloakEnable } = useSelector(selectors.connection);
   const firstKc = useRef(true);
 
-  // ADD THIS useEffect - Start the tooltip fixer
-  useEffect(() => {
-    const cleanup = startTooltipFixer();
-    return cleanup;
-  }, []);
   // console.log('keycloakEnable:', keycloakEnable);
   useEffect(() => {
     if (keycloakEnable && !KeycloakServices.isLoggedIn() && firstKc.current) {

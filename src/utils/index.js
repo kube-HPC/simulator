@@ -33,4 +33,3 @@ export {
   transformObjectToArray,
   setTypeVolume,
 } from './objectManipulation';
-export { startTooltipFixer, stopTooltipFixer } from './fixTagTooltips';
