@@ -22,14 +22,14 @@ const EditDrawer = () => {
       isOpened={isOn}
       onClose={setOff}
       onDidClose={goTo.root}
-      styles={{ body: { padding: '25px' } }}
+      styles={{ body: { padding: '10px' } }}
       width={DRAWER_SIZE.PIPELINE_INFO}
       title={pipeline?.name ?? pipelineId}
       asFlex>
       {pipeline ? (
         <AddPipeline jsonPipeline={value} />
       ) : (
-        <p>{pipeline?.name ?? pipelineId} is been deleted</p>
+        <p>{pipeline?.name ?? pipelineId} has been deleted</p>
       )}
       <TabDrawer style={{ marginLeft: '-10px' }}>
         <TabDrawerText>{DRAWER_TITLES.EDIT_PIPELINE}</TabDrawerText>
