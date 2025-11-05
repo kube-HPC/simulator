@@ -70,7 +70,7 @@ const QueryForm = ({
     }
 
     if (params && params.tag) {
-      form.setFieldsValue({ tags: params.tag });
+      form.setFieldsValue({ tag: params.tag });
     } else {
       form.resetFields(['tag']);
     }

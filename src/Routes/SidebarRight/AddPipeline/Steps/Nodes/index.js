@@ -23,6 +23,7 @@ const TitleNode = styled.h1`
   font-size: 28px;
   margin: 5px;
   line-height: 1;
+  padding: 10px;
 `;
 
 const NodeBrowserContainer = styled.section`
@@ -316,7 +317,7 @@ const Nodes = ({ style }) => {
               )}
             </NodeSelectRadioGroup>
           </NodeBrowserContainer>
-          <div style={{ flex: 1, minWidth: 550, overflow: 'hidden' }}>
+          <div style={{ flex: 1, minWidth: 450, overflow: 'hidden' }}>
             {ids.map(id => (
               <DataNode key={`dataNode::id-${id}`} $isDisabled={isRunPipeline}>
                 <BoldedFormField

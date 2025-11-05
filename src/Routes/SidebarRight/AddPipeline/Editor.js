@@ -6,27 +6,16 @@ import React, {
   useRef,
 } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { CheckOutlined } from '@ant-design/icons';
-import { COLOR_LAYOUT } from 'styles';
-import { DRAWER_SIZE } from 'const';
-import { JsonEditor } from 'components/common';
+import { Card, JsonEditor } from 'components/common';
 import { tryParse, stringify } from 'utils';
 import { addPipelineTemplate } from 'config';
 import {
   BottomPanel,
   RightAlignedButton,
   PanelButton,
-  PanelButtonWizard,
+  RightPanel,
 } from 'components/Drawer';
-import { Row, Col } from 'antd';
-
-const JsonViewWrapper = styled.div`
-  border: 1px solid ${COLOR_LAYOUT.border};
-  border-bottom: none;
-  flex: 1;
-  height: 80vh;
-`;
 
 const removeNodesPipeline = InitialState => {
   const obj = { ...InitialState };
@@ -110,47 +99,36 @@ const Editor = ({
 
   return (
     <>
-      <Row justify="center" align="top">
-        <Col span={22}>
-          <JsonViewWrapper>
-            <JsonEditor
-              value={innerState}
-              onChange={setInnerState}
-              onSave={handleSave} /// ///////////////////
-              height="100%"
-              width="100%"
-            />
-          </JsonViewWrapper>
-        </Col>
-        <Col span={2}>
-          <PanelButtonWizard
-            key="Editor"
-            onClick={() => setValuesItemsState(true)}>
-            Back to wizard
-          </PanelButtonWizard>
-        </Col>
-      </Row>
-
-      <BottomPanel width={DRAWER_SIZE.ADD_PIPELINE}>
-        {/* <PanelButton key="Editor" onClick={handleToggle}> */}
-
+      <Card style={{ flex: 1 }} styles={{ body: { height: '100%' } }}>
+        <JsonEditor
+          value={innerState}
+          onChange={setInnerState}
+          onSave={handleSave}
+        />
+      </Card>
+      <BottomPanel>
+        <PanelButton
+          key="back-to-wizard"
+          onClick={() => setValuesItemsState(true)}>
+          Back to wizard
+        </PanelButton>
         {!isRunPipeline && (
-          <PanelButton
-            type="dashed"
-            onClick={onDefault}
-            style={{ margin: '0 1ch' }}>
+          <PanelButton key="reset" onClick={onDefault}>
             Reset
           </PanelButton>
         )}
-        <RightAlignedButton
-          ref={submitButtonRef}
-          type="primary"
-          onClick={onEditorSubmit}
-          form="add-pipeline"
-          htmlType="submit">
-          {isRunPipeline ? 'Run' : 'Submit'}
-          <CheckOutlined />
-        </RightAlignedButton>
+        <RightPanel>
+          <RightAlignedButton
+            ref={submitButtonRef}
+            key="Submit"
+            type="primary"
+            onClick={onEditorSubmit}
+            form="add-pipeline"
+            htmlType="submit">
+            {isRunPipeline ? 'Run' : 'Submit'}
+            <CheckOutlined />
+          </RightAlignedButton>
+        </RightPanel>
       </BottomPanel>
     </>
   );
