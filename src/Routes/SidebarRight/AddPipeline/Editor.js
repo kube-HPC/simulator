@@ -106,7 +106,7 @@ const Editor = ({
           onSave={handleSave}
         />
       </Card>
-      <BottomPanel>
+      <BottomPanel style={{ marginBottom: 0 }}>
         <PanelButton
           key="back-to-wizard"
           onClick={() => setValuesItemsState(true)}>

@@ -22,7 +22,7 @@ const EditDrawer = () => {
       isOpened={isOn}
       onClose={setOff}
       onDidClose={goTo.root}
-      styles={{ body: { padding: '25px' } }}
+      styles={{ body: { padding: '10px' } }}
       width={DRAWER_SIZE.PIPELINE_INFO}
       title={pipeline?.name ?? pipelineId}
       asFlex>
