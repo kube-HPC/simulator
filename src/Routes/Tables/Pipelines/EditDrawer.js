@@ -29,7 +29,7 @@ const EditDrawer = () => {
       {pipeline ? (
         <AddPipeline jsonPipeline={value} />
       ) : (
-        <p>{pipeline?.name ?? pipelineId} is been deleted</p>
+        <p>{pipeline?.name ?? pipelineId} has been deleted</p>
       )}
       <TabDrawer style={{ marginLeft: '-10px' }}>
         <TabDrawerText>{DRAWER_TITLES.EDIT_PIPELINE}</TabDrawerText>
