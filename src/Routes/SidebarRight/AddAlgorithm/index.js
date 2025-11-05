@@ -12,6 +12,7 @@ import {
   setTypeVolume,
 } from 'utils'; // mergeObjects, tryParseJson
 import { OVERVIEW_TABS } from 'const';
+import { useNavigate } from 'react-router-dom';
 import usePath from './../../Tables/Algorithms/usePath';
 import AddAlgorithmForm from './AddAlgorithmForm.react';
 import AlgorithmJsonEditor from './AlgorithmJsonEditor';
@@ -21,8 +22,9 @@ const { MAIN, BUILD_TYPES } = schema;
 
 const DEFAULT_EDITOR_VALUE = stringify(addAlgorithmTemplate);
 
-const AddAlgorithm = ({ algorithmValue = undefined, closeDrawer }) => {
+const AddAlgorithm = ({ algorithmValue = undefined }) => {
   // #region  Editor State
+  const navigate = useNavigate();
   const refCheckForceStopAlgorithms = useRef(false);
 
   // eslint-disable-next-line no-unused-vars
@@ -304,22 +306,23 @@ const AddAlgorithm = ({ algorithmValue = undefined, closeDrawer }) => {
         isMsgApplied = false;
       }
 
-      if (buildId) {
-        onOverviewAlgorithm(OVERVIEW_TABS.BUILDS, dataResponse.algorithm.name);
-      }
-
       if (isMsgApplied) {
         if (dataResponse?.error?.code === 400) {
           message.error(dataResponse?.error?.message || 'Something is wrong!');
         } else {
           message.success('Algorithm Applied, check Algorithms table');
-          if (closeDrawer) {
-            closeDrawer();
-          }
         }
       }
+
+      // Navigate based on whether there's a build or not
+      if (buildId) {
+        onOverviewAlgorithm(OVERVIEW_TABS.BUILDS, dataResponse.algorithm.name);
+      } else {
+        // Navigate back to algorithms list to close the drawer
+        navigate('/algorithms');
+      }
     },
-    [onOverviewAlgorithm, closeDrawer]
+    [onOverviewAlgorithm, navigate]
   );
 
   const applyAlgorithmVersion = useCallback(
@@ -361,7 +364,8 @@ const AddAlgorithm = ({ algorithmValue = undefined, closeDrawer }) => {
               cancelText: 'Cancel',
               onCancel() {
                 setIsSubmitLoading(false);
-                onOverviewAlgorithm();
+                // Navigate back to algorithms list to close the drawer
+                navigate('/algorithms');
               },
               onOk() {
                 setIsSubmitLoading(false);
@@ -370,10 +374,11 @@ const AddAlgorithm = ({ algorithmValue = undefined, closeDrawer }) => {
             });
           } else {
             message.error(data?.error?.message || 'Something is wrong!');
+            setIsSubmitLoading(false);
           }
         });
     },
-    [onAfterSaveAlgorithm, onOverviewAlgorithm]
+    [onAfterSaveAlgorithm, navigate]
   );
 
   const onWizardSubmit = ({ formData }) => {
@@ -455,7 +460,6 @@ AddAlgorithm.propTypes = {
   onSubmit: PropTypes.func,
   // eslint-disable-next-line react/forbid-prop-types
   algorithmValue: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-  closeDrawer: PropTypes.func,
 };
 
 export default memo(AddAlgorithm);

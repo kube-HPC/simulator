@@ -92,7 +92,7 @@ const DashboardDrawer = () => {
         <TabDrawer>
           <TabDrawerText>{titleDrawer}</TabDrawerText>
         </TabDrawer>
-        <Body closeDrawer={setOff} />
+        <Body />
       </Drawer>
     </ctx.Provider>
   );
