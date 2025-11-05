@@ -26,6 +26,7 @@ const ConfigProviderApp = () => {
   const { hasConfig } = useSelector(selectors.config);
   const { keycloakEnable } = useSelector(selectors.connection);
   const firstKc = useRef(true);
+
   // console.log('keycloakEnable:', keycloakEnable);
   useEffect(() => {
     if (keycloakEnable && !KeycloakServices.isLoggedIn() && firstKc.current) {

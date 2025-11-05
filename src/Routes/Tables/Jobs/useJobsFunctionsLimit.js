@@ -12,9 +12,11 @@ import {
 import { JOB_QUERY, JOB_QUERY_GRAPH } from 'graphql/queries';
 
 import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
 import usePath from './usePath';
 import jobColumns from './jobColumns';
 
+dayjs.extend(isBetween);
 const topTableScroll = () => {
   const el = document.querySelector('.ant-table-body');
   if (el) el.scrollTop = 0;

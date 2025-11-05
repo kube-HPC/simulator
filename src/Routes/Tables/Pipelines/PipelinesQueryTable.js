@@ -61,10 +61,12 @@ const PipelinesQueryTable = ({
 
   const pipelineOptions = useMemo(
     () =>
-      pipelinesList?.map(pipeline => ({
-        value: pipeline.name,
-        label: pipeline.name,
-      })),
+      pipelinesList
+        ?.map(pipeline => ({
+          value: pipeline.name,
+          label: pipeline.name,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label)), // ← Add this line
     [pipelinesList]
   );
 

@@ -281,11 +281,9 @@ QueryForm.propTypes = {
       PropTypes.arrayOf(PropTypes.string),
     ]),
     datesRange: PropTypes.shape({
-      // eslint-disable-next-line react/forbid-prop-types
-      from: PropTypes.object,
-      // eslint-disable-next-line react/forbid-prop-types
-      to: PropTypes.object,
-    }).isRequired,
+      from: PropTypes.string,
+      to: PropTypes.string,
+    }),
   }).isRequired,
 
   zoomDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
