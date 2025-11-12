@@ -1,7 +1,7 @@
 import React from 'react';
 import { TypeTable, TypeFilter } from 'const';
 import PropTypes from 'prop-types';
-import { Popconfirm } from 'antd';
+import { Popconfirm, Tooltip } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { selectors } from 'reducers';
 import { QueryCount } from './QueryCount';
@@ -42,7 +42,9 @@ class TablePreferred extends React.Component {
           <Popconfirm
             title={`Do you want to move these ${manyString} to Queue list?`}
             onConfirm={() => handleDelete(record.key)}>
-            <DeleteOutlined />
+            <Tooltip title="Move To Queue List" placement="top">
+              <DeleteOutlined />
+            </Tooltip>
           </Popconfirm>
         ) : null;
       },
