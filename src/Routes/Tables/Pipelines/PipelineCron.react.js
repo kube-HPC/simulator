@@ -131,7 +131,7 @@ const PipelineCron = ({ pipeline }) => {
 
   return (
     <FlexBox.Auto justify="start">
-      <Tooltip title={`toggle cron ${cronIsEnabled ? 'off' : 'on'}`}>
+      <Tooltip title={`Toggle cron ${cronIsEnabled ? 'Off' : 'On'}`}>
         <Switch
           size="small"
           checked={cronIsEnabled}
@@ -159,7 +159,7 @@ const PipelineCron = ({ pipeline }) => {
 
       <CronButtonsContainer>
         <Space.Compact className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
-          <Tooltip title="Edit Cron">
+          <Tooltip title="Edit cron">
             <EditFilled style={iconSize} onClick={openPopupWizard} />
           </Tooltip>
         </Space.Compact>

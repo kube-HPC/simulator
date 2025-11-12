@@ -126,8 +126,8 @@ const getVersionsColumns = ({
 
     const isAlgorithm = source === 'algorithms';
     const saveTooltip = isAlgorithm
-      ? 'save as new algorithm'
-      : 'save as new pipeline';
+      ? 'Save as new algorithm'
+      : 'Save as new pipeline';
 
     return isCurrentVersion ? (
       <Tag color={COLOR_PIPELINE_STATUS.ready}>Current Version</Tag>

@@ -53,7 +53,7 @@ const AlgorithmsTabs = ({ algorithm }) => {
   ) => {
     let isForce = false;
     Modal.confirm({
-      title: 'WARNING : Version not upgrade',
+      title: 'WARNING : Version not upgraded',
       content: (
         <>
           <div>

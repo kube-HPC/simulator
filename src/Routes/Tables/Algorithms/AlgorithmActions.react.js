@@ -22,8 +22,8 @@ const deleteConfirmAction = action => {
     content: (
       <>
         Deleting algorithm will{' '}
-        <Typography.Text strong>delete all</Typography.Text> related pipelines
-        and <Typography.Text strong>stop all</Typography.Text> executions.
+        <Typography.Text strong>Delete all</Typography.Text> related pipelines
+        and <Typography.Text strong>Stop all</Typography.Text> executions.
       </>
     ),
     okText: 'Confirm',
@@ -169,7 +169,7 @@ const AlgorithmActions = ({ record }) => {
             <Button icon={<BugOutlined />} disabled={!isRoleRunOrStop} />
           </Tooltip>
         )}
-        <Tooltip title={isRoleEdit ? 'edit algorithm' : 'No edit permission'}>
+        <Tooltip title={isRoleEdit ? 'Edit algorithm' : 'No edit permission'}>
           <Button
             icon={<EditOutlined />}
             onClick={onEdit}
@@ -177,14 +177,14 @@ const AlgorithmActions = ({ record }) => {
           />
         </Tooltip>
         <Tooltip
-          title={isRoleDelete ? 'delete algorithm' : 'No delete permission'}>
+          title={isRoleDelete ? 'Delete algorithm' : 'No delete permission'}>
           <Button
             icon={<DeleteOutlined />}
             onClick={onClickDelete}
             disabled={!isRoleDelete}
           />
         </Tooltip>
-        <Tooltip title="show overview">
+        <Tooltip title="Show overview">
           <Button icon={<InfoCircleOutlined />} onClick={onMoreInfo} />
         </Tooltip>
       </Space.Compact>

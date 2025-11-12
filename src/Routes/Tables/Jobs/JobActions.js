@@ -77,12 +77,12 @@ const JobActions = ({ job }) => {
   return (
     <Space.Compact className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
       <Tooltip
-        title="re-run pipeline"
+        title="Re-run pipeline"
         mouseEnterDelay="0.5"
         mouseLeaveDelay="0">
         <Button icon={<RedoOutlined />} onClick={onReRun} />
       </Tooltip>
-      <Tooltip title="stop" mouseEnterDelay="0.5" mouseLeaveDelay="0">
+      <Tooltip title="Stop" mouseEnterDelay="0.5" mouseLeaveDelay="0">
         <Button
           type="danger"
           disabled={isStopDisabled}
@@ -91,7 +91,7 @@ const JobActions = ({ job }) => {
         />
       </Tooltip>
       <Tooltip
-        title={canPause ? 'pause' : 'resume'}
+        title={canPause ? 'Pause' : 'Resume'}
         mouseEnterDelay="0.5"
         mouseLeaveDelay="0">
         <Button
@@ -101,7 +101,7 @@ const JobActions = ({ job }) => {
         />
       </Tooltip>
       <Tooltip
-        title="download results"
+        title="Download results"
         mouseEnterDelay="0.5"
         mouseLeaveDelay="0">
         <Button
@@ -114,7 +114,7 @@ const JobActions = ({ job }) => {
           }
         />
       </Tooltip>
-      <Tooltip title="show overview" mouseEnterDelay="0.5" mouseLeaveDelay="0">
+      <Tooltip title="Show overview" mouseEnterDelay="0.5" mouseLeaveDelay="0">
         <Button onClick={onMoreInfo} icon={<InfoCircleOutlined />} />
       </Tooltip>
     </Space.Compact>

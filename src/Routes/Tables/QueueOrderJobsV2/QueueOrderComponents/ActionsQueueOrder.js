@@ -17,7 +17,7 @@ const ActionsQueueOrder = ({ job }) => {
   const onStop = useCallback(() => stopPipeline(jobId), [stopPipeline, jobId]);
   return (
     <Space.Compact className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
-      <Tooltip title="re-run pipeline">
+      <Tooltip title="Re-run pipeline">
         <Button icon={<RedoOutlined />} onClick={onReRun} />
       </Tooltip>
       <Popconfirm

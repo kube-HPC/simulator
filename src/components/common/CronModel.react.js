@@ -70,7 +70,7 @@ const CronModel = ({
           <>
             <Text>Schedule Wizard </Text>
             {cronIsEnabled !== undefined && (
-              <Tooltip title={`toggle cron ${cronIsEnabled ? 'off' : 'on'}`}>
+              <Tooltip title={`Toggle cron ${cronIsEnabled ? 'off' : 'on'}`}>
                 <Switch
                   size="small"
                   checked={cronIsEnabled}

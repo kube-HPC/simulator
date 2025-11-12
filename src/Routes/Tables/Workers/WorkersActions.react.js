@@ -64,7 +64,7 @@ const WorkersActions = ({ algorithm = null, stopAllWorkers = [] }) => {
       <Space.Compact>
         <Tooltip
           title={
-            stopAllWorkers?.length > 0 ? 'stop all workers' : 'stop worker'
+            stopAllWorkers?.length > 0 ? 'Stop all workers' : 'Stop worker'
           }>
           <Popconfirm
             title={
