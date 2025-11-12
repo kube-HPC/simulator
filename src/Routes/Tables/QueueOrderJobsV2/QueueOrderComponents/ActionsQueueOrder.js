@@ -1,5 +1,5 @@
 import { RedoOutlined, StopOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Space } from 'antd';
+import { Button, Tooltip, Space, Popconfirm } from 'antd';
 import { USER_GUIDE } from 'const';
 import { useActions, usePipeline } from 'hooks';
 import PropTypes from 'prop-types';
@@ -20,9 +20,16 @@ const ActionsQueueOrder = ({ job }) => {
       <Tooltip title="re-run pipeline">
         <Button icon={<RedoOutlined />} onClick={onReRun} />
       </Tooltip>
-      <Tooltip title="stop">
-        <Button icon={<StopOutlined />} onClick={onStop} />
-      </Tooltip>
+      <Popconfirm
+        title="Are you sure you want to stop?"
+        onConfirm={onStop}
+        okText="Yes"
+        cancelText="No"
+        placement="top">
+        <Tooltip title="stop">
+          <Button icon={<StopOutlined />} />
+        </Tooltip>
+      </Popconfirm>
     </Space.Compact>
   );
 };
