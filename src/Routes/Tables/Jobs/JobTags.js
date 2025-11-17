@@ -3,7 +3,7 @@ import { getColorByName } from 'utils';
 import PropTypes from 'prop-types';
 import { Tag, Tooltip } from 'antd';
 
-const numberViewTags = 2;
+const numberViewTags = 1;
 
 const JobTags = ({ tags }) => {
   if (!tags || !Array.isArray(tags) || tags.length === 0) return null;

@@ -17,35 +17,60 @@ const CapitalizedTag = styled(Tag)`
     ${props =>
       props.theme.Styles.CapitalizedTag?.borderType[props.$borderType] ||
       'inherit'};
+
+  margin-right: ${props => (props.$isMinimized ? '0px !important;' : '8px')};
 `;
 
-const JobTypes = ({ types = [], fullName = true }) => (
-  <Overflow justify="center" gutter={0}>
-    {types &&
-      types.map(type =>
-        fullName ? (
-          <CapitalizedTag
-            key={type}
-            color={Theme.Styles.isTagFill ? COLOR_PIPELINE_TYPES[type] : ''}
-            $borderType={type}>
-            {type}
-          </CapitalizedTag>
-        ) : (
-          <Tooltip key={type} placement="top" title={toUpper(type)}>
+const DotTag = styled(Tag)`
+  margin-right: 0px !important;
+  border: 1px solid
+    ${props =>
+      props.theme.Styles.CapitalizedTag?.borderType[props.$borderType] ||
+      'inherit'};
+  margin-left: 8px;
+`;
+
+const numberViewTypes = 1;
+const JobTypes = ({ types = [], fullName = true, isMinimized = false }) => {
+  const visibleTypes = isMinimized ? types.slice(0, 1) : types;
+
+  return (
+    <Overflow justify="center" gutter={0}>
+      {visibleTypes &&
+        visibleTypes.map(type =>
+          fullName ? (
             <CapitalizedTag
+              key={type}
               color={Theme.Styles.isTagFill ? COLOR_PIPELINE_TYPES[type] : ''}
-              $borderType={type}>
-              {type.slice(0, 2)}
+              $borderType={type}
+              $isMinimized={false}>
+              {type}
             </CapitalizedTag>
-          </Tooltip>
-        )
+          ) : (
+            <Tooltip key={type} placement="top" title={toUpper(type)}>
+              <CapitalizedTag
+                color={Theme.Styles.isTagFill ? COLOR_PIPELINE_TYPES[type] : ''}
+                $borderType={type}
+                $isMinimized={isMinimized}>
+                {type.slice(0, 2)}
+              </CapitalizedTag>
+            </Tooltip>
+          )
+        )}
+
+      {isMinimized && types.length > numberViewTypes && (
+        <Tooltip title={types.join(', ')}>
+          <DotTag>...</DotTag>
+        </Tooltip>
       )}
-  </Overflow>
-);
+    </Overflow>
+  );
+};
 
 JobTypes.propTypes = {
   types: PropTypes.arrayOf(PropTypes.string),
   fullName: PropTypes.bool,
+  isMinimized: PropTypes.bool,
 };
 
 export default React.memo(JobTypes);

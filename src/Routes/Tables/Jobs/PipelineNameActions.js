@@ -13,6 +13,7 @@ import usePathPipeline from './../Pipelines/usePath';
 
 const iconSize = {
   width: '32px',
+  height: '32px',
   marginLeft: '5px',
   opacity: 0.6,
   cursor: 'pointer',
