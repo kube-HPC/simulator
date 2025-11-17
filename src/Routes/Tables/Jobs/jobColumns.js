@@ -56,7 +56,14 @@ const Types = (text, record) => {
 
   return (
     <div style={{ display: 'flex' }}>
-      <JobTypes types={types} fullName={false} />
+      {types && types.length > 0 && (
+        <JobTypes
+          types={types}
+          isMinimized={tags && tags.length > 0}
+          fullName={false}
+        />
+      )}
+
       {tags && tags.length > 0 && (
         <>
           <Divider style={{ height: '24px' }} type="vertical" />
@@ -135,7 +142,7 @@ const jobColumns = [
     title: `Pipeline Name`,
     dataIndex: ['pipeline', 'name'],
     key: `pipeline`,
-    width: `10%`,
+    width: `12%`,
     sorter: sortPipelineName,
     render: Name,
   },
@@ -143,7 +150,7 @@ const jobColumns = [
     title: `Start Time`,
     dataIndex: ['pipeline', 'startTime'],
     key: `Start timestamp`,
-    width: `15%`,
+    width: `14%`,
     sorter: sortStartTime,
     render: StartTime,
   },
@@ -151,7 +158,7 @@ const jobColumns = [
     title: `Pipeline Type/Tags`,
     dataIndex: ['pipeline'],
     key: `types`,
-    width: `10%`,
+    width: `12%`,
     render: Types,
   },
   {
