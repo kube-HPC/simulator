@@ -16,6 +16,6 @@ const Header = styled.h4`
 export default () => (
   <Message>
     <Header>empty dataSource</Header>
-    double click to upload new files
+    Double click to upload new files
   </Message>
 );

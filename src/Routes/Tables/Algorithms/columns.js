@@ -32,7 +32,7 @@ const Name = (name, record) =>
     </Tooltip>
   ) : (
     <div>
-      <Tooltip title="Click to Copy">
+      <Tooltip title="Click to copy">
         <Typography.Text onClick={() => copyToClipboard(name)}>
           {name}
         </Typography.Text>
@@ -120,7 +120,7 @@ export default [
   },
   {
     width: '10%',
-    title: 'Last modified',
+    title: 'Last Modified',
     //  dataIndex: ['modified'],
     key: 'modified',
     sorter: sortByLastModified,

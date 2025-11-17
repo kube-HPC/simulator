@@ -17,7 +17,7 @@ const Ellipsis = ({
   style = {},
   ...props
 }) => (
-  <Tooltip title={copyable ? 'click to copy' : text || children}>
+  <Tooltip title={copyable ? 'Click to copy' : text || children}>
     <Text
       onClick={() => (copyable ? copyToClipboard(text) : null)}
       style={{

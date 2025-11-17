@@ -345,7 +345,7 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
 
           if (data.error.details) {
             Modal.confirm({
-              title: 'WARNING : Version not upgrade',
+              title: 'WARNING : Version not upgraded',
               content: (
                 <>
                   <div>

@@ -103,7 +103,7 @@ const PipelineActions = ({ pipeline, className = '' }) => {
              </Button> */}
         </Popover>
 
-        <Tooltip title={isRoleDelete ? 'run pipeline' : 'No run permission'}>
+        <Tooltip title={isRoleDelete ? 'Run pipeline' : 'No Run Permission'}>
           <Button
             icon={<PlayCircleOutlined />}
             onClick={onExecute}
@@ -111,7 +111,7 @@ const PipelineActions = ({ pipeline, className = '' }) => {
           />
         </Tooltip>
 
-        <Tooltip title={isRoleEdit ? 'edit pipeline' : 'No edit permission'}>
+        <Tooltip title={isRoleEdit ? 'Edit pipeline' : 'No Edit Permission'}>
           <Button
             icon={<EditOutlined />}
             onClick={onUpdate}
@@ -119,7 +119,7 @@ const PipelineActions = ({ pipeline, className = '' }) => {
           />
         </Tooltip>
         <Tooltip
-          title={isRoleDelete ? 'delete pipeline' : 'No delete permission'}>
+          title={isRoleDelete ? 'Delete pipeline' : 'No Delete Permission'}>
           <Button
             icon={<DeleteOutlined />}
             onClick={onDelete}
@@ -129,7 +129,7 @@ const PipelineActions = ({ pipeline, className = '' }) => {
 
         <Tooltip
           title={
-            isRoleDelete ? 'stop all jobs of pipeline"' : 'No stop permission'
+            isRoleDelete ? 'Stop all jobs of pipeline' : 'No stop permission'
           }>
           <Button
             icon={<StopOutlined />}
@@ -137,7 +137,7 @@ const PipelineActions = ({ pipeline, className = '' }) => {
             disabled={!isRoleRunOrStop}
           />
         </Tooltip>
-        <Tooltip title="show overview">
+        <Tooltip title="Show overview">
           <Button icon={<InfoCircleOutlined />} onClick={onEdit} />
         </Tooltip>
       </Space.Compact>

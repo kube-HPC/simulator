@@ -32,7 +32,7 @@ export const driverJobsTableColumns = [
     width: '40%',
   },
   {
-    title: 'active',
+    title: 'Active',
     key: 'active',
     dataIndex: ['active'],
     width: '20%',

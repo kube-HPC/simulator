@@ -48,11 +48,11 @@ const PipelineNameActions = ({ pipeline }) => {
 
       <Space.Compact className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
         {pipeline.pipeline.types.includes('stored') && (
-          <Tooltip title={`edit pipeline ${pipeline.pipeline.name}`}>
+          <Tooltip title={`Edit pipeline ${pipeline.pipeline.name}`}>
             <IconAddPipeline style={iconSize} onClick={editByPipelineID} />
           </Tooltip>
         )}
-        <Tooltip title={`filter jobs by pipeline ${pipeline.pipeline.name}`}>
+        <Tooltip title={`Filter jobs by pipeline ${pipeline.pipeline.name}`}>
           <FilterOutlined
             style={iconSize}
             onClick={() => filterByPipeline(pipeline.pipeline.name)}
