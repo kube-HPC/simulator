@@ -35,6 +35,8 @@
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
     "@apollo/client": "^3.10.1",
+    "ajv": "^6.12.6",
+    "ajv-keywords": "^3.5.2",
     "ansi-to-html": "^0.7.2",
     "apexcharts": "^5.3.5",
     "dotenv": "^8.2.0",
@@ -46,7 +48,6 @@
     "react-apexcharts": "^1.4.0",
     "react-collapse": "^5.1.0",
     "react-js-cron": "^3.2.0",
-    "uuid": "^13.0.0",
     "virtualizedtableforantd4": "^1.1.2",
     "vis-network": "^10.0.1"
   },
