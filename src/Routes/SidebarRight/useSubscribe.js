@@ -1,9 +1,14 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useRef } from 'react';
 import { createStore } from 'reusable';
-import { v4 } from 'uuid';
 
 const useSubscribe = () => {
   const [subscribers, setSubscribers] = useState({});
+  const idCounter = useRef(0);
+
+  const generateId = () => {
+    idCounter.current += 1;
+    return idCounter.current.toString();
+  };
 
   const unsubscribe = useCallback(
     id =>
@@ -11,16 +16,16 @@ const useSubscribe = () => {
         const { [id]: removed, ...rest } = state;
         return rest;
       }),
-    [setSubscribers]
+    []
   );
 
   const subscribe = useCallback(
     f => {
-      const id = v4();
+      const id = generateId();
       setSubscribers(s => ({ ...s, [id]: f }));
       return () => unsubscribe(id);
     },
-    [unsubscribe, setSubscribers]
+    [unsubscribe]
   );
 
   const publish = useCallback(() => {
