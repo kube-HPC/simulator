@@ -25,7 +25,7 @@ export default [
     render: auditTrail => <AuditTrailAvatar auditTrail={auditTrail} />,
   },
   {
-    width: `37%`,
+    width: `38%`,
     title: 'Pipeline Name',
     dataIndex: ['name'],
     key: 'name',
@@ -33,7 +33,7 @@ export default [
     render: PipelineName,
   },
   {
-    width: `13%`,
+    width: `12%`,
     title: 'Cron Job',
     dataIndex: ['cron'],
     key: 'cron',
