@@ -68,7 +68,17 @@ const VersionsTable = ({
         !selectedRowKeys.includes(record.version),
     }),
   };
+  const onRow = record => {
+    const isCurrentVersion = record.version === currentVersion;
+    const isSelected = selectedRowKeys.includes(record.version);
 
+    return {
+      style: {
+        backgroundColor: isCurrentVersion ? '#f0f5ff' : undefined,
+        border: isSelected ? '2px solid #ffffffff' : undefined,
+      },
+    };
+  };
   return (
     <Table
       rowKey={rowKey}
@@ -76,6 +86,7 @@ const VersionsTable = ({
       columns={columnsView || []}
       loading={!dataSource}
       rowSelection={rowSelection}
+      onRow={onRow}
       expandable={{
         expandedRowRender: record => expandedRowRender(record),
         expandIcon,

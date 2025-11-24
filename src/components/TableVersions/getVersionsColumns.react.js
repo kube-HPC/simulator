@@ -1,9 +1,13 @@
 import React from 'react';
-import { CheckOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
+import {
+  CheckOutlined,
+  DeleteOutlined,
+  SaveOutlined,
+  CheckCircleOutlined,
+} from '@ant-design/icons';
 import { Button, Modal, Tooltip, Typography, Tag, Input } from 'antd';
 import Moment from 'react-moment';
 import { sorter } from 'utils/stringHelper';
-import { COLOR_PIPELINE_STATUS } from 'styles';
 import UserAvatar from 'components/UserAvatar';
 import VersionNameEdit from './VersionNameEdit';
 import FlexBox from '../common/FlexBox.react';
@@ -109,12 +113,22 @@ const getVersionsColumns = ({
   const AlgorithmVersion = version => {
     const isCurrentVersion = currentVersion === version;
     return version ? (
-      <Ellipsis
-        copyable
-        ellipsis={false}
-        text={version}
-        strong={isCurrentVersion}
-      />
+      <span>
+        <Ellipsis
+          copyable
+          ellipsis={false}
+          text={version}
+          strong={isCurrentVersion}
+        />
+        {isCurrentVersion && (
+          <CheckCircleOutlined
+            style={{
+              color: '#333', // Dark grey for the outline and check
+              fontSize: 12, // Optional: adjust size if needed
+            }}
+          />
+        )}
+      </span>
     ) : (
       <Tag>No Image</Tag>
     );
@@ -129,26 +143,36 @@ const getVersionsColumns = ({
       ? 'Save as new algorithm'
       : 'Save as new pipeline';
 
-    return isCurrentVersion ? (
-      <Tag color={COLOR_PIPELINE_STATUS.ready}>Current Version</Tag>
-    ) : (
+    return (
       <FlexBox justify="start">
         <FlexBox.Item>
-          <Tooltip title="Update to current version">
+          <Tooltip
+            title={
+              isCurrentVersion
+                ? 'Cannot update current version'
+                : 'Update to current version'
+            }>
             <Button
               type="dashed"
               shape="circle"
               icon={<CheckOutlined />}
+              disabled={isCurrentVersion}
               onClick={() => currentConfirmAction(onApply, record, source)}
             />
           </Tooltip>
         </FlexBox.Item>
         <FlexBox.Item>
-          <Tooltip title="Remove version">
+          <Tooltip
+            title={
+              isCurrentVersion
+                ? 'Cannot delete current version'
+                : 'Remove version'
+            }>
             <Button
               type="dashed"
               shape="circle"
               icon={<DeleteOutlined />}
+              disabled={isCurrentVersion}
               onClick={() => deleteConfirmAction(onDelete, record, source)}
             />
           </Tooltip>
@@ -156,15 +180,26 @@ const getVersionsColumns = ({
         <FlexBox.Item>
           <Tooltip title={saveTooltip}>
             <Button
-              type="dashed"
+              type={isCurrentVersion ? 'default' : 'dashed'}
               shape="circle"
               icon={<SaveOutlined />}
+              style={isCurrentVersion ? { borderColor: '#ada4a4ff' } : {}}
               onClick={() => addConfirmAction(onSaveAs, record, source)}
             />
           </Tooltip>
         </FlexBox.Item>
       </FlexBox>
     );
+  };
+
+  // Helper function to create onCell with tooltip for current version
+  const createOnCell = record => {
+    const isCurrentVersion = record.version === currentVersion;
+    return {
+      ...(isCurrentVersion && {
+        title: 'Current version',
+      }),
+    };
   };
 
   if (source === 'algorithms') {
@@ -179,6 +214,7 @@ const getVersionsColumns = ({
             size={20}
           />
         ),
+        onCell: createOnCell,
       },
       {
         title: 'Version Name',
@@ -190,6 +226,7 @@ const getVersionsColumns = ({
           if (!record) return <span />;
           return <VersionNameEdit record={record} source={source} />;
         },
+        onCell: createOnCell,
       },
       {
         title: 'Version',
@@ -198,6 +235,7 @@ const getVersionsColumns = ({
         onFilter: (value, record) => record.version.includes(value),
         sorter: (a, b) => sorter(a.version, b.version),
         render: AlgorithmVersion,
+        onCell: createOnCell,
       },
       {
         title: 'Image',
@@ -207,6 +245,7 @@ const getVersionsColumns = ({
           record.algorithm.algorithmImage.includes(value),
         sorter: (a, b) =>
           sorter(a.algorithm.algorithmImage, b.algorithm.algorithmImage),
+        onCell: createOnCell,
       },
       {
         title: 'Created',
@@ -214,6 +253,7 @@ const getVersionsColumns = ({
         key: 'created',
         sorter: (a, b) => sorter(a.created, b.created),
         render: Created,
+        onCell: createOnCell,
       },
       {
         title: 'CPU',
@@ -221,6 +261,7 @@ const getVersionsColumns = ({
         key: 'algorithm.cpu',
         sorter: (a, b) => sorter(a.algorithm.cpu, b.algorithm.cpu),
         render: Cpu,
+        onCell: createOnCell,
       },
       {
         title: 'Mem',
@@ -228,6 +269,7 @@ const getVersionsColumns = ({
         key: 'algorithm.mem',
         sorter: (a, b) => sorter(a.algorithm.mem, b.algorithm.mem),
         render: Mem,
+        onCell: createOnCell,
       },
       {
         title: 'Min Hot',
@@ -236,6 +278,7 @@ const getVersionsColumns = ({
         sorter: (a, b) =>
           sorter(a.algorithm.minHotWorkers, b.algorithm.minHotWorkers),
         render: MinHotWorkers,
+        onCell: createOnCell,
       },
       {
         title: 'Type',
@@ -243,6 +286,7 @@ const getVersionsColumns = ({
         key: 'algorithm.type',
         sorter: (a, b) => sorter(a.algorithm.type, b.algorithm.type),
         render: Type,
+        onCell: createOnCell,
       },
       {
         title: 'Action',
@@ -250,6 +294,7 @@ const getVersionsColumns = ({
         key: 'action',
         width: 'fit-content',
         render: Action,
+        onCell: createOnCell,
       },
     ];
   }
@@ -266,6 +311,7 @@ const getVersionsColumns = ({
           size={20}
         />
       ),
+      onCell: createOnCell,
     },
 
     {
@@ -278,6 +324,7 @@ const getVersionsColumns = ({
         if (!record) return <span />;
         return <VersionNameEdit record={record} source={source} />;
       },
+      onCell: createOnCell,
     },
     {
       title: 'Version',
@@ -286,6 +333,7 @@ const getVersionsColumns = ({
       onFilter: (value, record) => record.version.includes(value),
       sorter: (a, b) => sorter(a.version, b.version),
       render: AlgorithmVersion,
+      onCell: createOnCell,
     },
 
     {
@@ -294,6 +342,7 @@ const getVersionsColumns = ({
       key: 'created',
       sorter: (a, b) => sorter(a.created, b.created),
       render: Created,
+      onCell: createOnCell,
     },
 
     {
@@ -302,6 +351,7 @@ const getVersionsColumns = ({
       key: 'action',
       width: 'fit-content',
       render: Action,
+      onCell: createOnCell,
     },
   ];
 };
