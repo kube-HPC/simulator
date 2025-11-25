@@ -75,7 +75,7 @@ const VersionsTable = ({
     return {
       style: {
         backgroundColor: isCurrentVersion ? '#f0f5ff' : undefined,
-        border: isSelected ? '2px solid #ffffffff' : undefined,
+        border: isSelected ? '2px solid #4b99ceff' : undefined,
       },
     };
   };
