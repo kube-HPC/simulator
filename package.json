@@ -47,7 +47,6 @@
     "react-apexcharts": "^1.4.0",
     "react-collapse": "^5.1.0",
     "react-js-cron": "^3.2.0",
-    "virtualizedtableforantd4": "^1.1.2",
     "vis-network": "^10.0.1"
   },
   "devDependencies": {
