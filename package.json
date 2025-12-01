@@ -81,7 +81,7 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-prettier": "^5.5.4",
-    "eslint-plugin-promise": "^7.2.1",
+    "eslint-plugin-promise": "^6.6.0",
     "eslint-plugin-react": "^7.35.5",
     "eslint-plugin-react-hooks": "^4.6.1",
     "fuzzy": "^0.1.3",
