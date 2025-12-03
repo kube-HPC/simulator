@@ -30,10 +30,10 @@ export default () => {
           pathname: paths.overview({ nextAlgorithmId, nextTabKey }),
           search: location.search,
         }),
-      edit: ({ nextAlgorithmId = algorithmId } = {}) =>
+      edit: ({ nextAlgorithmId = algorithmId, openAdvanced = false } = {}) =>
         navigate({
           pathname: paths.edit({ nextAlgorithmId }),
-          search: location.search,
+          search: openAdvanced ? '?section=advanced' : location.search,
         }),
     }),
     [navigate, paths, algorithmId, location]

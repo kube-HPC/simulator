@@ -23,6 +23,7 @@ import {
 
 import KeyValueForm from 'components/common/KeyValueForm';
 import styled from 'styled-components';
+import { useSearchParams } from 'react-router-dom';
 import { CodeBuild, GitBuild, ImageBuild } from './BuildTypes';
 import MemoryField from './MemoryField.react';
 import schema from './schema';
@@ -138,6 +139,10 @@ const AddAlgorithmForm = ({
   setFileList,
 }) => {
   const [form] = Form.useForm();
+
+  const [searchParams] = useSearchParams();
+  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
+
   const [isErrorEnvironmentVariable, setIsErrorEnvironmentVariable] = useState(
     keyValueFormObject?.main?.workerEnv?.length > 0 ||
       keyValueFormObject?.main?.algorithmEnv?.length > 0
@@ -158,6 +163,13 @@ const AddAlgorithmForm = ({
     const schemaObjectForm = form.getFieldsValue();
     onToggle(schemaObjectForm, buildType);
   };
+
+  useEffect(() => {
+    const section = searchParams.get('section');
+    if (section === 'advanced') {
+      setIsAdvancedOpen(true);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     // init values in fields
@@ -482,7 +494,10 @@ const AddAlgorithmForm = ({
           expanded={isErrorSideCar}>
           <SideCarForm nameList={splitByDot(MAIN.SIDECAR.field)} />
         </Collapsible>
-        <Collapsible title={MAIN.DIVIDER.ADVANCED}>
+        <Collapsible
+          title={MAIN.DIVIDER.ADVANCED}
+          expanded={isAdvancedOpen}
+          onChange={val => setIsAdvancedOpen(val)}>
           <Form.Item
             name={splitByDot(MAIN.RESERVE_MEMORY.field)}
             label={MAIN.RESERVE_MEMORY.label}
