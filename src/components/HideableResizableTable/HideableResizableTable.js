@@ -40,15 +40,14 @@ const TableWhite = styled(AntTable)`
 `;
 
 const ActionChip = styled.div`
-  height: 7px;
-  padding: 7px;
-  font-size: 10px;
-  line-height: 0.6;
+  padding: 4px;
+  font-size: 11px;
+  // line-height: 0.6;
   background: #e7e7e7;
   border-radius: 6px;
   cursor: pointer;
-  user-select: none;
-  font-weight: bold;
+  // user-select: none;
+  // font-weight: bold;
 `;
 
 const HideableResizableTable = ({
@@ -150,7 +149,7 @@ const HideableResizableTable = ({
       };
     });
 
-  const titleWithSettings = (
+  const titleWithSettings = () => (
     <div style={{ position: 'absolute', zIndex: 1000, right: 10 }}>
       <div style={{ display: 'flex', gap: '12px', padding: '5px' }}>
         {isChange && <ActionChip onClick={resetTable}>Reset</ActionChip>}
@@ -177,9 +176,8 @@ const HideableResizableTable = ({
 
   return (
     <TableWhite
-      {...props}
       components={mergedComponents}
-      title={titleWithSettings}
+      title={() => titleWithSettings}
       columns={enhancedColumns}
       dataSource={dataSource}
       expandIcon={ExpandIcon}
@@ -189,6 +187,7 @@ const HideableResizableTable = ({
       className={USER_GUIDE.TABLE}
       pagination={false}
       size="middle"
+      {...props}
     />
   );
 };
