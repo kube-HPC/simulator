@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 /* eslint-disable import/no-cycle */
 import { useReadme } from 'hooks';
+import { readmeTemplate } from 'config';
 
 const useReadMeFile = (name, type) => {
   const { asyncFetch, post } = useReadme(type);
@@ -8,7 +9,14 @@ const useReadMeFile = (name, type) => {
 
   const onApply = useCallback(() => {
     if (name != null) {
-      post({ name, readme });
+      // If content is empty or equals template, save null to database
+      // This will clear the README and show template on next open
+      if (!readme || readme.trim() === '' || readme === readmeTemplate) {
+        post({ name, readme: null });
+      } else {
+        // Content exists and is different from template - save it
+        post({ name, readme });
+      }
     }
   }, [post, name, readme]);
 
