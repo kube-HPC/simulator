@@ -13,6 +13,7 @@ import LastModified from './LastModified';
 const HotWorkers = ({ minHotWorkers }) => <Tag>{minHotWorkers}</Tag>;
 const Memory = mem => <Tag>{mem || 'No Memory Specified'}</Tag>;
 const Cpu = cpu => <Tag>{cpu || 'No CPU Assigned'}</Tag>;
+const Gpu = gpu => <Tag>{gpu || 'No GPU Assigned'}</Tag>;
 
 const Image = algorithmImage =>
   algorithmImage ? (
@@ -64,6 +65,7 @@ const filterByImage = (value, record) => record.algorithmImage.includes(value);
 const sortByImage = (a, b) => sorter(a.algorithmImage, b.algorithmImage);
 const sortByMinHotWorkers = (a, b) => sorter(a.minHotWorkers, b.minHotWorkers);
 const sortByLastModified = (a, b) => sorter(a.modified, b.modified);
+const sortByGpu = (a, b) => sorter(a.gpu, b.gpu);
 
 export default [
   {
@@ -82,7 +84,7 @@ export default [
     render: Name,
   },
   {
-    width: '40%',
+    width: '36%',
     title: 'Algorithm Image',
     dataIndex: ['algorithmImage'],
     key: 'algorithmImage',
@@ -103,6 +105,14 @@ export default [
     dataIndex: ['cpu'],
     key: 'cpu',
     render: Cpu,
+  },
+  {
+    width: '8%',
+    title: 'GPU',
+    dataIndex: ['gpu'],
+    key: 'gpu',
+    sorter: sortByGpu,
+    render: Gpu,
   },
   {
     width: '4%',
