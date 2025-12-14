@@ -14,7 +14,7 @@ export const useTableState = (tableId, columns) => {
   const [colWidths, setColWidths] = useState(savedState.colWidths || {});
   const [isChange, setIsChange] = useState(savedState.isChange || false);
 
-  const saveState = (newVisible, newWidths, change = true) => {
+  const saveState = (newVisible, newWidths, change = false) => {
     const allTables = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
     allTables[tableId] = {
       colWidths: newWidths ?? colWidths,
@@ -75,7 +75,7 @@ export const useTableState = (tableId, columns) => {
   };
 
   useEffect(() => {
-    measureWidths();
+    // measureWidths();
     window.addEventListener('resize', measureWidths);
     return () => window.removeEventListener('resize', measureWidths);
   }, [visibleColumns, tableId]);

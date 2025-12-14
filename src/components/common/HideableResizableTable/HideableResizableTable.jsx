@@ -28,7 +28,9 @@ const HideableResizableTable = ({ tableId, columns, dataSource, ...rest }) => {
         <Checkbox
           checked={visibleColumns.includes(key)}
           disabled={col.must}
-          onChange={() => toggleColumn(key)}>
+          onChange={() => {
+            toggleColumn(key);
+          }}>
           {col.title}
         </Checkbox>
       ),
@@ -78,6 +80,7 @@ const HideableResizableTable = ({ tableId, columns, dataSource, ...rest }) => {
                   fontSize: 12,
                 }}
                 onClick={e => {
+                  console.log('click');
                   e.stopPropagation();
                   toggleColumn(key);
                 }}
@@ -104,7 +107,8 @@ const HideableResizableTable = ({ tableId, columns, dataSource, ...rest }) => {
 
       <Dropdown menu={{ items: menuItems }} trigger={['click']}>
         <TitleButton>
-          <SettingOutlined /> Columns
+          <SettingOutlined />
+          &nbsp;Columns
         </TitleButton>
       </Dropdown>
     </TitleContainer>

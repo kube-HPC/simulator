@@ -1,9 +1,9 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
-import { SkeletonLoader } from 'components/common';
+import { HideableResizableTable, SkeletonLoader } from 'components/common';
 import { Route, Routes } from 'react-router-dom';
-import { Table } from 'components';
+
 import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar, makeVar } from '@apollo/client';
 import { Empty } from 'antd';
@@ -21,7 +21,7 @@ export const algorithmsListVar = makeVar([]);
 const NUMBER_ROW_VIRTUAL = 150;
 
 const rowKey = ({ name }) => `algorithm-${name}`;
-const TableAlgorithms = styled(Table)`
+const TableAlgorithms = styled(HideableResizableTable)`
   .ant-table-body {
     min-height: 75vh;
   }
@@ -109,7 +109,8 @@ const AlgorithmsTable = () => {
       />
 
       <TableAlgorithms
-        virtual={getList.length > NUMBER_ROW_VIRTUAL}
+        tableId="algorithms-table"
+        virtual
         rowKey={rowKey}
         dataSource={getList}
         columns={algorithmColumnsView}
