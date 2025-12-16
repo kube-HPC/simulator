@@ -36,7 +36,7 @@ import {
   IconStyle,
   IconLogo,
 } from './MenuStyles';
-import useSubMenuAdmin from './useSubMenuAdmin';
+import useSubMenus from './useSubMenuAdmin';
 
 const AnimatedTitle = () => {
   const styledProps = useSpring({
@@ -113,11 +113,16 @@ const SidebarLeft = () => {
   const [isOpenMenuAdministration, setIsOpenMenuAdministration] =
     useState(false);
   const dataCount = isOn ? dataCountMock : dataCountSource;
-  const { menuAdminItemsJson } = useSubMenuAdmin(totalNewWarnings, dataCount);
+  const { menuAdminItemsJson, menuObservabilityItemsJson } = useSubMenus(
+    totalNewWarnings,
+    dataCount
+  );
   const { themeName } = useSiteThemeMode();
+  const [isOpenMenuObservability, setIsOpenMenuObservability] = useState(false);
 
   const onOpenChangeMenu = openKeys => {
     setIsOpenMenuAdministration(openKeys.includes('admin-link'));
+    setIsOpenMenuObservability(openKeys.includes('observability-link'));
   };
 
   const menuMainItemsJson = useMemo(() => {
@@ -163,23 +168,42 @@ const SidebarLeft = () => {
       });
     });
 
+    // Observability menu (for all users)
     items.push({
-      label: isOpenMenuAdministration ? (
-        'Administration'
+      label: isOpenMenuObservability ? (
+        'Observability'
       ) : (
         <Badge
           size="small"
           count={totalNewWarnings}
           color="red"
           offset={[25, 6]}>
-          Administration
+          Observability
         </Badge>
       ),
+      key: `observability-link`,
+      children: menuObservabilityItemsJson,
+    });
+    // Administration menu (will be admin-only later)
+    items.push({
+      label: isOpenMenuAdministration ? (
+        'Administration'
+      ) : (
+        <span>
+          Administration
+          <BadgeStyle
+            count={
+              dataCount.drivers > 0 ? (
+                <Tag style={tagStyle}>{dataCount.drivers}</Tag>
+              ) : null
+            }
+            offset={[-7, 0]}
+          />
+        </span>
+      ),
       key: `admin-link`,
-
       children: menuAdminItemsJson,
     });
-
     return items;
   }, [
     dataCount,
