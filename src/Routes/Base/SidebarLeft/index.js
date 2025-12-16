@@ -22,6 +22,7 @@ import { instanceCounterVar, instanceFiltersVar } from 'cache';
 import { selectors } from 'reducers';
 
 import { useReactiveVar } from '@apollo/client';
+import KeycloakServices from 'keycloak/keycloakServices';
 
 import { isValuesFiltersEmpty } from 'utils';
 import {
@@ -83,8 +84,13 @@ const SidebarLeft = () => {
 
   const location = useLocation();
   const { totalNewWarnings } = useErrorLogs();
+  const { dataSourceIsEnable, keycloakEnable } = useSelector(
+    selectors.connection
+  );
 
-  const { dataSourceIsEnable } = useSelector(selectors.connection);
+  const isAdmin = keycloakEnable
+    ? KeycloakServices.getUserRoles('ADMIN')
+    : true;
 
   const menuMainItems = useMemo(() => {
     const itemsMenu = [
@@ -184,26 +190,23 @@ const SidebarLeft = () => {
       key: `observability-link`,
       children: menuObservabilityItemsJson,
     });
-    // Administration menu (will be admin-only later)
-    items.push({
-      label: isOpenMenuAdministration ? (
-        'Administration'
-      ) : (
-        <span>
-          Administration
-          <BadgeStyle
-            count={
-              dataCount.drivers > 0 ? (
+    // Administration menu admin-only
+    if (isAdmin) {
+      items.push({
+        label: (
+          <span>
+            Administration
+            {dataCount.drivers > 0 && (
+              <BadgeStyle offset={[-7, 0]}>
                 <Tag style={tagStyle}>{dataCount.drivers}</Tag>
-              ) : null
-            }
-            offset={[-7, 0]}
-          />
-        </span>
-      ),
-      key: `admin-link`,
-      children: menuAdminItemsJson,
-    });
+              </BadgeStyle>
+            )}
+          </span>
+        ),
+        key: `admin-link`,
+        children: menuAdminItemsJson,
+      });
+    }
     return items;
   }, [
     dataCount,
