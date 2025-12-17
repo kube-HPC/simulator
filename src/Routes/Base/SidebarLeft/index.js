@@ -23,6 +23,7 @@ import { selectors } from 'reducers';
 
 import { useReactiveVar } from '@apollo/client';
 import KeycloakServices from 'keycloak/keycloakServices';
+import { keycloakRoles } from '@hkube/consts';
 
 import { isValuesFiltersEmpty } from 'utils';
 import {
@@ -89,7 +90,7 @@ const SidebarLeft = () => {
   );
 
   const isAdmin = keycloakEnable
-    ? KeycloakServices.getUserRoles('ADMIN')
+    ? KeycloakServices.getUserRoles(keycloakRoles.API_ADMIN)
     : true;
 
   const menuMainItems = useMemo(() => {
@@ -107,7 +108,7 @@ const SidebarLeft = () => {
       ]);
     }
     return itemsMenu;
-  }, []);
+  }, [dataSourceIsEnable]);
 
   useCounters();
   const instanceCounter = useReactiveVar(instanceCounterVar);
@@ -217,6 +218,9 @@ const SidebarLeft = () => {
     menuAdminItemsJson,
     menuMainItems,
     totalNewWarnings,
+    isAdmin,
+    isOpenMenuObservability,
+    menuObservabilityItemsJson,
   ]);
 
   return (
