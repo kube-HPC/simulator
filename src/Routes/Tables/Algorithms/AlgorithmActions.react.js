@@ -35,7 +35,7 @@ const deleteConfirmAction = action => {
   });
 };
 
-const overlayStyle = { width: `50ch` };
+const overlayStyle = { width: `90ch`, zIndex: 9999 };
 
 const AlgorithmActions = ({ record }) => {
   const { keycloakEnable } = useSelector(selectors.connection);
@@ -62,7 +62,7 @@ const AlgorithmActions = ({ record }) => {
 
   // const [inputs, setInputs] = useState(EMPTY_INITIAL);
 
-  const setPopupContainer = useCallback(() => container.current, []);
+  const setPopupContainer = useCallback(() => document.body, []);
 
   // const onSubmit = useCallback(
   //   value => {
