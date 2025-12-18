@@ -90,7 +90,7 @@ const PipelineActions = ({ pipeline, className = '' }) => {
       ref={container}
       onClick={stopPropagation}
       onDoubleClick={stopPropagation}>
-      <Space.Compact className={className}>
+      <Space.Compact className={className} style={{ marginTop: '10px' }}>
         <Popover
           title={title}
           content={popOverContent}

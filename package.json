@@ -35,6 +35,8 @@
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
     "@apollo/client": "^3.10.1",
+    "ag-grid-community": "^35.0.0",
+    "ag-grid-react": "^35.0.0",
     "ansi-to-html": "^0.7.2",
     "apexcharts": "^5.3.5",
     "dotenv": "^8.2.0",

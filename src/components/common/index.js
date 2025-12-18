@@ -24,3 +24,4 @@ export { default as HelpSiteLink } from 'components/common/HelpSiteLink.react';
 export { default as TableDropdown } from 'components/common/TableDropdown';
 export { default as SkeletonLoader } from 'components/common/SkeletonLoader';
 export { default as HideableResizableTable } from 'components/common/HideableResizableTable/Table';
+export { default as HKGrid } from 'components/common/HKGrid/HKGrid';
