@@ -27,13 +27,10 @@ const Form = styled(AntdForm)`
 export const Body = styled.div`
   display: flex;
   flex-direction: row;
-  // overflow-y: scroll;
   height: ${props => (props.$isEditState ? '81%' : '81%')};
 `;
 
 export const ContenerWizard = styled.div`
-  // position: relative;
-  // overflow-x: none;
   overflow-y: scroll;
   height: 100%;
 `;
@@ -45,9 +42,9 @@ export const ContenerJsonGraph = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
 export const ContenerJsonButton = styled.div`
   flex: 1;
-
   overflow-y: scroll;
 `;
 
@@ -55,23 +52,21 @@ export const ContenerGraph = styled.div`
   position: relative;
   flex: 1;
   height: -webkit-fill-available;
-
-  // overflow-y: scroll;
   padding-left: 10px;
 `;
 
 export const ButtonSticky = styled(Button)`
-right: 0;
-    position: absolute;
-    margin-right: 20px;
-       margin-top: 10px;
-    z-index:999;
-}
+  right: 0;
+  position: absolute;
+  margin-right: 20px;
+  margin-top: 10px;
+  z-index: 999;
 `;
 
 export const ButtonRun = styled(Button)`
   margin-left: 20px;
 `;
+
 const stepNames = ['Initial', 'Nodes', 'Options'];
 const RunPipelineStepNames = ['Initial', 'Options', 'Nodes Info'];
 
@@ -140,9 +135,6 @@ const Wizard = ({
     toggle();
   }, [persistForm, toggle]);
 
-  // check for undefined to avoid removing streaming only fields while initial load
-  // setIsStreamingPipeline(['stream'].includes(getFieldValue('kind')) || valuesState.kind === 'stream');
-
   const isLastStep = stepIdx === steps.length - 1;
 
   const onPrevious = useCallback(
@@ -156,24 +148,30 @@ const Wizard = ({
   );
 
   useEffect(() => {
-    setIsStreamingPipeline(
-      ['stream'].includes(getFieldValue('kind')) ||
-        valuesState.kind === 'stream'
-    );
+    const currentKind = getFieldValue('kind') || initialState.kind;
+    const isStreaming = ['stream'].includes(currentKind);
 
-    // if kind is undefined then is value default algorithm
-    resetKind(undefined);
+    setIsStreamingPipeline(isStreaming);
 
-    setTimeout(() => {
-      setPageLoaded(true);
-    }, 500);
+    // Only reset kind if it's actually undefined
+    // Don't reset on initial load with valid data to preserve pipeline structure
+    if (!currentKind) {
+      resetKind(undefined);
+    }
+
+    // Ensure valuesState is synchronized with initial form state
+    const currentFormValues = form.getFieldsValue();
+    if (currentFormValues && Object.keys(currentFormValues).length > 0) {
+      setValuesState(currentFormValues);
+    }
+
+    setPageLoaded(true);
   }, []);
 
   useLayoutEffect(() => {
     if (firstUpdateWizard.current) {
       firstUpdateWizard.current = false;
     } else {
-      // remove gateway or output option from nodes and reset them to algorithm option
       resetKind(
         isStreamingPipeline ? ['output', 'hyperparamsTuner'] : ['gateway']
       );
@@ -246,7 +244,9 @@ const Wizard = ({
                   style={{ boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
                   <Splitter.Panel>
                     <ContenerGraph>
-                      {valuesState && (
+                      {valuesState &&
+                      valuesState.nodes &&
+                      valuesState.nodes.length > 0 ? (
                         <GraphPreview
                           pipeline={valuesState}
                           isBuildAllFlows={isStreamingPipeline}
@@ -254,6 +254,14 @@ const Wizard = ({
                           clickNode={selectNodeFromGraph}
                           reload={reloadGraphPreview}
                         />
+                      ) : (
+                        <div style={{ padding: '20px', color: '#999' }}>
+                          {!valuesState
+                            ? 'Loading pipeline data...'
+                            : !valuesState.nodes
+                              ? 'No nodes defined...'
+                              : 'Waiting for pipeline data...'}
+                        </div>
                       )}
                     </ContenerGraph>
                   </Splitter.Panel>
