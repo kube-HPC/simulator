@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 import React from 'react';
 // import { sorter } from 'utils';
 import { Ellipsis } from 'components/common';
@@ -10,30 +11,25 @@ import LastModified from './../Algorithms/LastModified';
 /* ---------- Cell Renderers ---------- */
 
 // params = { value, data, node, ... }
-// eslint-disable-next-line react/destructuring-assignment
+
 const AuditTrailCell = params => <AuditTrailAvatar auditTrail={params.value} />;
 const LastModifiedCell = params => (
-  // eslint-disable-next-line react/destructuring-assignment
   <LastModified
-    // eslint-disable-next-line react/destructuring-assignment
     auditTrail={params.data.auditTrail}
-    // eslint-disable-next-line react/destructuring-assignment
     modified={params.data.modified}
   />
 );
-// eslint-disable-next-line react/destructuring-assignment
+
 const PipelineNameCell = params => (
-  // eslint-disable-next-line react/destructuring-assignment
   <Ellipsis copyable text={params.value} length={50} />
 );
-// eslint-disable-next-line react/destructuring-assignment
+
 const StatsCell = params => (
-  // eslint-disable-next-line react/destructuring-assignment
   <PipelineStats name={params.data.name} nodes={params.data.nodes} />
 );
-// eslint-disable-next-line react/destructuring-assignment
+
 const CronCell = params => <PipelineCron pipeline={params.data} />;
-// eslint-disable-next-line react/destructuring-assignment
+
 const ActionsCell = params => <PipelineActions pipeline={params.data} />;
 
 /* ---------- Sorters ---------- */
