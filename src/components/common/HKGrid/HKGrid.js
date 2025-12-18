@@ -69,18 +69,21 @@ export const HKGrid = ({ rowData, columnDefs, ...props }) => {
 
   const menu = (
     <Menu>
-      {columnsState.map(col => (
-        <Menu.Item key={col.field}>
-          <Checkbox
-            onClick={e => e.stopPropagation()}
-            checked={col.visible}
-            onChange={() => toggleColumn(col.field)}
-            disabled={col.isPinning}
-            style={col.isPinning ? { color: '#aaa' } : {}}>
-            {col.headerName}
-          </Checkbox>
-        </Menu.Item>
-      ))}
+      {columnsState.map(
+        col =>
+          col.headerName && (
+            <Menu.Item key={col.field}>
+              <Checkbox
+                onClick={e => e.stopPropagation()}
+                checked={col.visible}
+                onChange={() => toggleColumn(col.field)}
+                disabled={col.isPinning}
+                style={col.isPinning ? { color: '#aaa' } : {}}>
+                {col.headerName}
+              </Checkbox>
+            </Menu.Item>
+          )
+      )}
       <Menu.Item key="reset">
         <Button type="link" onClick={resetColumns} block>
           Reset Columns
@@ -116,6 +119,7 @@ export const HKGrid = ({ rowData, columnDefs, ...props }) => {
           columnDefs={columnDefs}
           suppressCellFocus
           animateRows={false}
+          showUnsortIcon
           defaultColDef={{
             sortable: true,
             resizable: true,
