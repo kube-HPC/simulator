@@ -84,12 +84,13 @@ const pipelineColumnDefs = [
   },
   {
     headerName: 'Actions',
-    field: 'name',
+    field: 'Actions',
     flex: 1,
     sortable: false,
     cellRenderer: ActionsCell,
     cellStyle: { textAlign: 'center' },
     suppressMenu: true,
+    isPinning: true,
   },
 ];
 
