@@ -23,5 +23,9 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 22.x
+      - name: Check versions
+        run: |
+          node -v
+          npm -v
       - run: npm ci
       - run: NODE_ENV=test npm run-script test-travis
