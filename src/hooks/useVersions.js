@@ -80,9 +80,6 @@ const useVersions = ({
 
       const newName = newAlgorithmName || newPipelineName;
 
-      console.log('selectedRecord:', selectedRecord); /// ///tooo temove afterrrr
-      console.log('Available keys:', Object.keys(selectedRecord));
-
       const dataKey = urlRestData.slice(0, -1); // Remove 's' from 'algorithms'/'pipelines' -> 'algorithm'/'pipeline'
       const itemType = dataKey.charAt(0).toUpperCase() + dataKey.slice(1); // Capitalize first letter
 

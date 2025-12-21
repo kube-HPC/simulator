@@ -29,8 +29,6 @@ const MemoryField = ({
     if (target !== null && target !== '' && !Number.isNaN(target)) {
       onChange(`${target}${unit}`);
     } else {
-      console.log('children[0]', children[0]);
-      console.log('value', value);
       onChange(`${min}${children[0].props.value}`); // default to min K if invalid input
     }
   };

@@ -64,6 +64,7 @@ const useApolloClient = () => {
         errorCount >= MAX_ERRORS_THRESHOLD &&
         numberErrorGraphQL.error < MAX_ERRORS_THRESHOLD
       ) {
+        // eslint-disable-next-line no-console
         console.log(`Too many errors within the time interval`);
         numberErrorGraphQLVar({ error: numberErrorGraphQL.error + 1 });
       }
@@ -75,6 +76,7 @@ const useApolloClient = () => {
           if (keycloakEnable && error.extensions?.code === 'FORBIDDEN') {
             console.error('GraphQL Errors:', graphQLErrors);
 
+            // eslint-disable-next-line no-console
             console.log('403 Forbidden');
             events.emit(
               'global_alert_msg',

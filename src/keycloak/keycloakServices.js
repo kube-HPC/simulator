@@ -21,6 +21,7 @@ const initKeycloak = (appToRender, renderError) => {
     })
     .then(authenticated => {
       if (!authenticated) {
+        // eslint-disable-next-line no-console
         console.log('user is not authenticated..!');
       }
       appToRender();
@@ -60,15 +61,18 @@ const startPreciseTokenRefresh = () => {
     const expiresIn = exp - now;
     const refreshIn = Math.max(expiresIn - 20, 5); // refresh 20s before, minimum wait 5s
 
+    // eslint-disable-next-line no-console
     console.log(
       `Token expires in ${expiresIn}s. Scheduling refresh in ${refreshIn}s.`
     );
 
     setTimeout(() => {
       updateToken(20, () => {
+        // eslint-disable-next-line no-console
         console.log('Token refreshed successfully!');
         scheduleRefresh(); // reschedule after refresh
       }).catch(() => {
+        // eslint-disable-next-line no-console
         console.log(
           'Failed to refresh the token, user may need to log in again'
         );
