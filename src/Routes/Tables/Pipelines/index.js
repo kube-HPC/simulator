@@ -1,53 +1,31 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
-import { SkeletonLoader } from 'components/common';
+import { SkeletonLoader, HKGrid } from 'components/common';
 import { Route, Routes } from 'react-router-dom';
-import { Table } from 'components';
 import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { PIPELINE_QUERY } from 'graphql/queries';
-
 import { pipelineListVar, instanceFiltersVar } from 'cache';
 import { Empty } from 'antd';
 import styled from 'styled-components';
+
 import pipelineColumns from './pipelineColumns';
+
 import OverviewDrawer from './OverviewDrawer';
-import usePath from './usePath';
 import EditDrawer from './EditDrawer';
 import ExecuteDrawer from './ExecuteDrawer';
 import PipelinesQueryTable from './PipelinesQueryTable';
+import usePath from './usePath';
 
-const NUMBER_ROW_VIRTUAL = 150;
-const TablePipelines = styled(Table)`
-  .ant-table-body {
-    min-height: 75vh;
-  }
-  .fixed-row-height .ant-table-cell {
-    height: 58px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-
-    padding: 0 16px;
-    box-sizing: border-box;
-    white-space: nowrap;
-  }
+const GridWrapper = styled.div`
+  height: calc(100vh - 155px);
+  min-height: 500px;
 `;
-
-const rowKey = ({ name }) => `pipeline-${name}`;
 
 const PipelinesTable = () => {
   const { keycloakEnable } = useSelector(selectors.connection);
-
   const { goTo } = usePath();
-  const onRow = useCallback(
-    (record, isVirtual) => ({
-      onDoubleClick: () => goTo.overview({ nextPipelineId: record.name }),
-      className: isVirtual ? 'fixed-row-height' : '',
-    }),
-    [goTo]
-  );
 
   const pipelineList = useReactiveVar(pipelineListVar);
   const instanceFilter = useReactiveVar(instanceFiltersVar);
@@ -57,52 +35,47 @@ const PipelinesTable = () => {
 
   const onSubmitFilter = useCallback(
     values => {
-      if (!query.loading) {
+      if (!query.loading && query.data?.pipelines?.list) {
         if (values?.qPipelineName) {
           const searchTerm = values.qPipelineName.toLowerCase().trim();
-          const filterPipeline = query.data.pipelines.list.filter(item =>
-            item.name.toLowerCase().includes(searchTerm)
+          pipelineListVar(
+            query.data.pipelines.list.filter(item =>
+              item.name.toLowerCase().includes(searchTerm)
+            )
           );
-          pipelineListVar(filterPipeline);
         } else {
           pipelineListVar(query.data.pipelines.list);
         }
       }
     },
-    [query.data?.pipelines?.pipelinesCount]
+    [query.loading, query.data]
   );
 
   useEffect(() => {
     onSubmitFilter(instanceFilter.pipelines);
   }, [query.data?.pipelines?.pipelinesCount]);
 
-  const [tableHeight, setTableHeight] = useState(() =>
-    typeof window !== 'undefined'
-      ? Math.max(window.innerHeight - 200, 400)
-      : 400
-  );
-
-  useEffect(() => {
-    const calculate = () => {
-      const offset = 200;
-      const height = Math.max(window.innerHeight - offset, 400);
-      setTableHeight(height);
-    };
-    calculate();
-    window.addEventListener('resize', calculate);
-    return () => window.removeEventListener('resize', calculate);
-  }, []);
-
-  // if have keycloak remove avatar from columns job
-  const pipelinesColumnsView = useMemo(() => {
+  const columnDefs = useMemo(() => {
     if (!keycloakEnable) {
       return pipelineColumns.slice(1);
     }
     return pipelineColumns;
   }, [keycloakEnable]);
 
-  if (query.loading && pipelineList.length === 0) return <SkeletonLoader />;
-  if (query.error) return `Error! ${query.error.message}`;
+  const onRowDoubleClicked = useCallback(
+    params => {
+      goTo.overview({ nextPipelineId: params.data.name });
+    },
+    [goTo]
+  );
+
+  if (query.loading && pipelineList.length === 0) {
+    return <SkeletonLoader />;
+  }
+
+  if (query.error) {
+    return `Error! ${query.error.message}`;
+  }
 
   return (
     <>
@@ -111,28 +84,18 @@ const PipelinesTable = () => {
         onSubmit={onSubmitFilter}
       />
 
-      <TablePipelines
-        virtual={pipelineList.length > NUMBER_ROW_VIRTUAL}
-        rowKey={rowKey}
-        dataSource={pipelineList}
-        columns={pipelinesColumnsView}
-        onRow={record =>
-          onRow({
-            ...record,
-            isVirtual: pipelineList.length > NUMBER_ROW_VIRTUAL,
-          })
-        }
-        scroll={{
-          y: tableHeight,
-        }}
-        locale={{
-          emptyText: (
-            <Empty
-              description={<span>No results match your search criteria</span>}
-            />
-          ),
-        }}
-      />
+      <GridWrapper>
+        {pipelineList.length === 0 ? (
+          <Empty description="No results match your search criteria" />
+        ) : (
+          <HKGrid
+            rowData={pipelineList}
+            columnDefs={columnDefs}
+            getRowId={params => `pipeline-${params.data.name}`}
+            onRowDoubleClicked={onRowDoubleClicked}
+          />
+        )}
+      </GridWrapper>
 
       <Routes>
         <Route

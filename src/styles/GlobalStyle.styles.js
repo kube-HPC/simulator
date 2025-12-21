@@ -130,6 +130,50 @@ body{
 }
 
 
+/* ag-grid-theme-hk.css */
+.ag-theme-alpine {
+  /* borders */
+ .ag-root-wrapper {
+    border: none;
+  }
+
+  --ag-border-color: #e0e0e0;
+  --ag-borders: solid 1px;
+  --ag-border-radius: 6px;
+
+  /* Header */
+  --ag-header-background-color: #ffffff;
+  --ag-header-foreground-color: #ffffff;
+  --ag-header-height: 55px;
+  --ag-header-column-separator-display: block;
+
+  /* lines */
+  --ag-row-height: 56px;
+  --ag-row-hover-color: #f5f7fa;
+  --ag-selected-row-background-color: #e6f4ff;
+
+  /* cells */
+  --ag-cell-horizontal-padding: 12px;
+  --ag-font-size: 13px;
+  --ag-font-family: 'Inter', 'Roboto', sans-serif;
+
+  /* Grid background */
+  --ag-background-color: #ffffff;
+  --ag-odd-row-background-color: #ffffff;
+}
+
+.ag-theme-alpine {
+  --ag-input-focus-border-color: #1677ff;
+  --ag-range-selection-border-color: #1677ff;
+  --ag-checkbox-checked-color: #1677ff;
+}
+
+.break-header .ag-header-cell-text {
+  white-space: normal;  
+  word-break: break-word; 
+  text-align: center;    
+  line-height: 1.2;      
+}
 
 
 `;

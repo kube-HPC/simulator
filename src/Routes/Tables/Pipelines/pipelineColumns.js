@@ -1,5 +1,6 @@
+/* eslint-disable react/destructuring-assignment */
 import React from 'react';
-import { sorter } from 'utils';
+// import { sorter } from 'utils';
 import { Ellipsis } from 'components/common';
 import AuditTrailAvatar from '../../../components/AuditTrailAvatar';
 import PipelineActions from './PipelineActions.react';
@@ -7,61 +8,88 @@ import PipelineCron from './PipelineCron.react';
 import PipelineStats from './PipelineStats.react';
 import LastModified from './../Algorithms/LastModified';
 
-const PipelineName = name => <Ellipsis copyable text={name} length={50} />;
-const Stats = (name, { nodes }) => <PipelineStats name={name} nodes={nodes} />;
-const Cron = (_, pipeline) => <PipelineCron pipeline={pipeline} />;
+/* ---------- Cell Renderers ---------- */
 
-const Actions = (_, pipeline) => <PipelineActions pipeline={pipeline} />;
+// params = { value, data, node, ... }
 
-const sortByName = (a, b) => sorter(a.name, b.name);
-const sortByLastModified = (a, b) => sorter(a.modified, b.modified);
+const AuditTrailCell = params => <AuditTrailAvatar auditTrail={params.value} />;
+const LastModifiedCell = params => (
+  <LastModified
+    auditTrail={params.data.auditTrail}
+    modified={params.data.modified}
+  />
+);
 
-export default [
+const PipelineNameCell = params => (
+  <Ellipsis copyable text={params.value} length={50} />
+);
+
+const StatsCell = params => (
+  <PipelineStats name={params.data.name} nodes={params.data.nodes} />
+);
+
+const CronCell = params => <PipelineCron pipeline={params.data} />;
+
+const ActionsCell = params => <PipelineActions pipeline={params.data} />;
+
+/* ---------- Sorters ---------- */
+
+// const sortByName = (a, b) => sorter(a.name, b.name);
+// const sortByLastModified = (a, b) => sorter(a.modified, b.modified);
+
+const pipelineColumnDefs = [
   {
-    title: ``,
-    dataIndex: [`auditTrail`],
-    key: `auditTrail`,
-    width: `2%`,
-    render: auditTrail => <AuditTrailAvatar auditTrail={auditTrail} />,
+    headerName: '',
+    field: 'auditTrail',
+    width: 60,
+    sortable: false,
+    filter: false,
+    cellRenderer: AuditTrailCell,
+    suppressMenu: true,
   },
   {
-    width: `35%`,
-    title: 'Pipeline Name',
-    dataIndex: ['name'],
-    key: 'name',
-    sorter: sortByName,
-    render: PipelineName,
+    headerName: 'Pipeline Name',
+    field: 'name',
+    flex: 3,
+    sortable: true,
+    unSortIcon: true,
+    // comparator: sortByName,
+    cellRenderer: PipelineNameCell,
   },
   {
-    width: `15%`,
-    title: 'Cron Job',
-    dataIndex: ['cron'],
-    key: 'cron',
-    render: Cron,
+    headerName: 'Cron Job',
+    field: 'triggers',
+    flex: 1.5,
+    sortable: false,
+    cellRenderer: CronCell,
   },
   {
-    width: `10%`,
-    title: 'Pipeline Stats',
-    dataIndex: ['name'],
-    key: 'status',
-    render: Stats,
+    headerName: 'Pipeline Stats',
+    field: 'nodes',
+    flex: 1,
+    sortable: false,
+    cellRenderer: StatsCell,
   },
   {
-    align: 'center',
-    width: `10%`,
-    title: 'Last modified',
-    // dataIndex: ['modified'],
-    key: 'modified',
-    sorter: sortByLastModified,
-    render: record => (
-      <LastModified auditTrail={record.auditTrail} modified={record.modified} />
-    ),
+    headerName: 'Last Modified',
+    field: 'modified',
+    flex: 1,
+    sortable: true,
+    unSortIcon: true,
+    // comparator: sortByLastModified,
+    cellRenderer: LastModifiedCell,
+    cellStyle: { textAlign: 'center' },
   },
   {
-    width: `10%`,
-    title: 'Actions',
-    key: 'actions',
-    align: 'center',
-    render: Actions,
+    headerName: 'Actions',
+    field: 'Actions',
+    flex: 1,
+    sortable: false,
+    cellRenderer: ActionsCell,
+    cellStyle: { textAlign: 'center' },
+    suppressMenu: true,
+    isPinning: true,
   },
 ];
+
+export default pipelineColumnDefs;

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { WarningOutlined, SettingOutlined } from '@ant-design/icons';
 import { Tag, Tooltip, Typography } from 'antd';
@@ -9,133 +10,132 @@ import AlgorithmActions from './AlgorithmActions.react';
 import AlgorithmBuildStats from './AlgorithmBuildStats.react';
 import LastModified from './LastModified';
 
-// eslint-disable-next-line react/prop-types, no-unused-vars
-const HotWorkers = ({ minHotWorkers }) => <Tag>{minHotWorkers}</Tag>;
-const Memory = mem => <Tag>{mem || 'No Memory Specified'}</Tag>;
-const Cpu = cpu => <Tag>{cpu || 'No CPU Assigned'}</Tag>;
+const HotWorkers = ({ value }) => <Tag>{value}</Tag>;
+const Memory = ({ value }) => <Tag>{value || 'No Memory Specified'}</Tag>;
+const Cpu = ({ value }) => <Tag>{value || 'No CPU Assigned'}</Tag>;
+const Gpu = ({ value }) => <Tag>{value || 'No GPU Assigned'}</Tag>;
 
-const Image = algorithmImage =>
-  algorithmImage ? (
-    <Tooltip title={algorithmImage}>
-      <Typography.Text onClick={() => copyToClipboard(algorithmImage)}>
-        {algorithmImage}
+const Image = ({ value }) =>
+  value ? (
+    <Tooltip title={value}>
+      <Typography.Text onClick={() => copyToClipboard(value)}>
+        {value}
       </Typography.Text>
     </Tooltip>
   ) : (
     <Tag>No Image</Tag>
   );
 
-const Name = (name, record) =>
-  record?.unscheduledReason ? (
-    <Tooltip title={record?.unscheduledReason}>
-      <Typography style={{ color: 'red' }}>{name}</Typography>
+const Name = ({ value, data }) =>
+  data?.unscheduledReason ? (
+    <Tooltip title={data.unscheduledReason}>
+      <Typography style={{ color: 'red' }}>{value}</Typography>
     </Tooltip>
   ) : (
     <div>
       <Tooltip title="Click to copy">
-        <Typography.Text onClick={() => copyToClipboard(name)}>
-          {name}
+        <Typography.Text onClick={() => copyToClipboard(value)}>
+          {value}
         </Typography.Text>
       </Tooltip>
-      <span>
-        {record?.errors?.includes(errorsCode.NOT_LAST_VERSION_ALGORITHM) && (
-          <Tooltip title="Warning : Set algorithm's current version to the newly built">
-            <WarningOutlined
-              style={{ color: 'red', fontSize: '12px', marginLeft: '5px' }}
-            />
-          </Tooltip>
-        )}
-        {record?.options?.devMode && (
-          <Tooltip title={record?.options?.devFolder}>
-            <SettingOutlined
-              style={{ color: 'orange', fontSize: '12px', marginLeft: '5px' }}
-            />{' '}
-          </Tooltip>
-        )}
-      </span>
+      {data?.errors?.includes(errorsCode.NOT_LAST_VERSION_ALGORITHM) && (
+        <Tooltip title="Warning: Set algorithm's current version to the newly built">
+          <WarningOutlined
+            style={{ color: 'red', fontSize: 12, marginLeft: 5 }}
+          />
+        </Tooltip>
+      )}
+      {data?.options?.devMode && (
+        <Tooltip title={data?.options?.devFolder}>
+          <SettingOutlined
+            style={{ color: 'orange', fontSize: 12, marginLeft: 5 }}
+          />
+        </Tooltip>
+      )}
     </div>
   );
 
-const BuildStats = builds => <AlgorithmBuildStats builds={builds} />;
-const renderAction = (_, record) => <AlgorithmActions record={record} />;
-
-const sortByName = (a, b) => sorter(a.name, b.name);
-const filterByImage = (value, record) => record.algorithmImage.includes(value);
-const sortByImage = (a, b) => sorter(a.algorithmImage, b.algorithmImage);
-const sortByMinHotWorkers = (a, b) => sorter(a.minHotWorkers, b.minHotWorkers);
-const sortByLastModified = (a, b) => sorter(a.modified, b.modified);
-
 export default [
   {
-    title: ``,
-    dataIndex: [`auditTrail`],
-    key: `auditTrail`,
-    width: `3%`,
-    render: auditTrail => <AuditTrailAvatar auditTrail={auditTrail} />,
-    must: true,
+    headerName: '',
+    field: 'auditTrail',
+    flex: 0.5,
+    width: 60,
+    sortable: false,
+    filter: false,
+    cellRenderer: ({ value }) => <AuditTrailAvatar auditTrail={value} />,
+    suppressMenu: true,
   },
   {
-    width: '16%',
-    title: 'Algorithm Name',
-    dataIndex: ['name'],
-    key: 'name',
-    sorter: sortByName,
-    render: Name,
-    must: true,
+    headerName: 'Algorithm Name',
+    field: 'name',
+    flex: 2,
+    sortable: true,
+    unSortIcon: true,
+    comparator: (a, b) => sorter(a, b),
+    cellRenderer: Name,
+    isPinning: true,
   },
   {
-    width: '30%',
-    title: 'Algorithm Image',
-    dataIndex: ['algorithmImage'],
-    key: 'algorithmImage',
-    onFilter: filterByImage,
-    sorter: sortByImage,
-    render: Image,
+    headerName: 'Algorithm Image',
+    field: 'algorithmImage',
+    flex: 3,
+    sortable: true,
+    comparator: (a, b) => sorter(a, b),
+    cellRenderer: Image,
   },
   {
-    width: '7%',
-    title: 'Builds Stats',
-    dataIndex: ['buildStats'],
-    key: 'builds',
-    render: BuildStats,
+    headerName: 'Builds Stats',
+    flex: 0.7,
+    field: 'buildStats',
+    cellRenderer: ({ value }) => <AlgorithmBuildStats builds={value} />,
   },
   {
-    width: '5%',
-    title: 'CPU',
-    dataIndex: ['cpu'],
-    key: 'cpu',
-    render: Cpu,
+    headerName: 'CPU',
+    flex: 0.5,
+    field: 'cpu',
+    cellRenderer: Cpu,
   },
   {
-    width: '5%',
-    title: 'Mem',
-    dataIndex: ['mem'],
-    key: 'mem',
-    render: Memory,
+    headerName: 'GPU',
+    flex: 0.5,
+    field: 'gpu',
+    cellRenderer: Gpu,
   },
   {
-    width: '7%',
-    title: 'Min Hot Workers',
-    key: 'minHotWorkers',
-    sorter: sortByMinHotWorkers,
-    render: HotWorkers,
+    headerName: 'Mem',
+    flex: 0.7,
+    field: 'mem',
+    cellRenderer: Memory,
   },
   {
-    width: '15%',
-    title: 'Last Modified',
-    //  dataIndex: ['modified'],
-    key: 'modified',
-    sorter: sortByLastModified,
-    render: record => (
-      <LastModified auditTrail={record.auditTrail} modified={record.modified} />
+    headerName: 'Min Hot Workers',
+    flex: 0.7,
+    field: 'minHotWorkers',
+    sortable: true,
+    unSortIcon: true,
+    comparator: (a, b) => sorter(a, b),
+    cellRenderer: HotWorkers,
+  },
+  {
+    headerName: 'Last Modified',
+    flex: 1,
+    field: 'modified',
+    sortable: true,
+    unSortIcon: true,
+    comparator: (a, b) => sorter(a, b),
+    cellRenderer: ({ data }) => (
+      <LastModified auditTrail={data.auditTrail} modified={data.modified} />
     ),
   },
   {
-    width: '12%',
-    title: 'Action',
-    dataIndex: ['action'],
-    key: 'action',
-    render: renderAction,
-    must: true,
+    headerName: 'Actions',
+    field: 'Actions',
+    flex: 2,
+    sortable: false,
+    cellRenderer: ({ data }) => <AlgorithmActions record={data} />,
+    cellStyle: { textAlign: 'center' },
+    suppressMenu: true,
+    isPinning: true,
   },
 ];

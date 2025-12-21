@@ -1,15 +1,14 @@
-import React, { useMemo, useEffect, useState } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
-import { HideableResizableTable, SkeletonLoader } from 'components/common';
+import { SkeletonLoader, HKGrid } from 'components/common';
 import { Route, Routes } from 'react-router-dom';
 
 import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar, makeVar } from '@apollo/client';
-import { Empty } from 'antd';
 import { instanceFiltersVar } from 'cache';
 import { ALGORITHMS_QUERY } from 'graphql/queries';
-import styled from 'styled-components';
+
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
 import EditDrawer from './EditDrawer';
@@ -18,32 +17,8 @@ import AlgorithmsQueryTable from './AlgorithmsQueryTable';
 
 export const algorithmsListVar = makeVar([]);
 
-const NUMBER_ROW_VIRTUAL = 150;
-
-const rowKey = ({ name }) => `algorithm-${name}`;
-const TableAlgorithms = styled(HideableResizableTable)`
-  .ant-table-body {
-    min-height: 75vh;
-  }
-  .fixed-row-height .ant-table-cell {
-    height: 58px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-
-    padding: 0 16px;
-    box-sizing: border-box;
-    // white-space: nowrap;
-  }
-`;
-
 const AlgorithmsTable = () => {
   const { goTo } = usePath();
-  const onRow = ({ name, isVirtual }) => ({
-    onDoubleClick: () => goTo.overview({ nextAlgorithmId: name }),
-    className: isVirtual ? 'fixed-row-height' : '',
-  });
-
   const instanceFilter = useReactiveVar(instanceFiltersVar);
   const { keycloakEnable } = useSelector(selectors.connection);
 
@@ -61,38 +36,23 @@ const AlgorithmsTable = () => {
 
   const algorithmsList = useReactiveVar(algorithmsListVar);
 
-  const [tableHeight, setTableHeight] = useState(() =>
-    typeof window !== 'undefined'
-      ? Math.max(window.innerHeight - 200, 400)
-      : 400
-  );
-
-  useEffect(() => {
-    const calculate = () => {
-      const offset = 200;
-      const height = Math.max(window.innerHeight - offset, 400);
-      setTableHeight(height);
-    };
-    calculate();
-    window.addEventListener('resize', calculate);
-    return () => window.removeEventListener('resize', calculate);
-  }, []);
-
-  const getList = useMemo(() => {
+  const rowData = useMemo(() => {
     const filterValue = instanceFilter.algorithms.qAlgorithmName;
 
-    if (filterValue != null && algorithmsList) {
-      return algorithmsList.filter(item => item.name.includes(filterValue));
+    let list = [...algorithmsList];
+
+    if (filterValue) {
+      list = list.filter(item => item.name.includes(filterValue));
     }
 
-    return [...algorithmsList].sort((x, y) => {
+    return list.sort((x, y) => {
       if (x.unscheduledReason && !y.unscheduledReason) return -1;
       if (!x.unscheduledReason && y.unscheduledReason) return 1;
       return x.modified < y.modified ? 1 : -1;
     });
   }, [instanceFilter.algorithms.qAlgorithmName, algorithmsList]);
 
-  const algorithmColumnsView = useMemo(() => {
+  const columnDefs = useMemo(() => {
     if (!keycloakEnable) {
       return algorithmColumns.slice(1);
     }
@@ -101,6 +61,7 @@ const AlgorithmsTable = () => {
 
   if (!algorithmsList.length) return <SkeletonLoader />;
   if (query.error) return `Error! ${query.error.message}`;
+
   return (
     <>
       <AlgorithmsQueryTable
@@ -108,23 +69,12 @@ const AlgorithmsTable = () => {
         onSubmit={() => {}}
       />
 
-      <TableAlgorithms
-        tableId="algorithms-table"
-        virtual
-        rowKey={rowKey}
-        dataSource={getList}
-        columns={algorithmColumnsView}
-        onRow={record =>
-          onRow({ ...record, isVirtual: getList.length > NUMBER_ROW_VIRTUAL })
+      <HKGrid
+        rowData={rowData}
+        columnDefs={columnDefs}
+        onRowDoubleClicked={({ data }) =>
+          goTo.overview({ nextAlgorithmId: data.name })
         }
-        scroll={{ y: tableHeight }}
-        locale={{
-          emptyText: (
-            <Empty
-              description={<span>No results match your search criteria</span>}
-            />
-          ),
-        }}
       />
 
       <Routes>
