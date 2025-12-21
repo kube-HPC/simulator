@@ -68,6 +68,8 @@
     "@storybook/react": "^8.0.9",
     "@types/react-router-dom": "^5.3.3",
     "@types/vis": "^4.21.27",
+    "ajv": "^6.12.6",
+    "ajv-keywords": "^3.5.2",
     "antd": "^5.25.4",
     "axios": "^1.6.8",
     "chonky": "^2.3.2",
