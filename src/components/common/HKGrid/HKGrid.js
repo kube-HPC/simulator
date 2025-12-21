@@ -124,6 +124,7 @@ export const HKGrid = ({ rowData, columnDefs, ...props }) => {
             sortable: true,
             resizable: true,
             suppressMovable: true,
+            headerClass: 'break-header',
           }}
           {...props}
         />

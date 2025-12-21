@@ -168,6 +168,14 @@ body{
   --ag-checkbox-checked-color: #1677ff;
 }
 
+.break-header .ag-header-cell-text {
+  white-space: normal;  
+  word-break: break-word; 
+  text-align: center;    
+  line-height: 1.2;      
+}
+
+
 `;
 
 export default GlobalStyle;

@@ -13,6 +13,7 @@ import LastModified from './LastModified';
 const HotWorkers = ({ value }) => <Tag>{value}</Tag>;
 const Memory = ({ value }) => <Tag>{value || 'No Memory Specified'}</Tag>;
 const Cpu = ({ value }) => <Tag>{value || 'No CPU Assigned'}</Tag>;
+const Gpu = ({ value }) => <Tag>{value || 'No GPU Assigned'}</Tag>;
 
 const Image = ({ value }) =>
   value ? (
@@ -85,7 +86,7 @@ export default [
   },
   {
     headerName: 'Builds Stats',
-    flex: 1,
+    flex: 0.7,
     field: 'buildStats',
     cellRenderer: ({ value }) => <AlgorithmBuildStats builds={value} />,
   },
@@ -96,6 +97,12 @@ export default [
     cellRenderer: Cpu,
   },
   {
+    headerName: 'GPU',
+    flex: 0.5,
+    field: 'gpu',
+    cellRenderer: Gpu,
+  },
+  {
     headerName: 'Mem',
     flex: 0.7,
     field: 'mem',
@@ -103,7 +110,7 @@ export default [
   },
   {
     headerName: 'Min Hot Workers',
-    flex: 1,
+    flex: 0.7,
     field: 'minHotWorkers',
     sortable: true,
     unSortIcon: true,
