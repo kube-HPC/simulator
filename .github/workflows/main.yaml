@@ -64,13 +64,13 @@ jobs:
         run: trivy image --severity 'HIGH,CRITICAL' --format sarif  --output trivy_vuln_image.sarif '${{ env.IMAGE_NAME }}'
 
       - name: Upload Trivy image vulnerability results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: 'trivy_vuln_image.sarif'
           category: 'Trivy-Vulnerability-Image'
 
       - name: Upload Trivy repo vulnerability results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: 'trivy_vuln_filesystem.sarif'
           category: 'Trivy-Vulnerability-Repo'

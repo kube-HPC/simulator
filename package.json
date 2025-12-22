@@ -14,7 +14,6 @@
     "build": "./dockerfile/build.sh simulator",
     "test-travis": "echo \"No test specified\"",
     "start:server": "node ./server/server.js",
-    "storybook": "NODE_PATH=src/ start-storybook --port 9001",
     "prettify": "prettier --write src/**/*.js",
     "lint:fix": "eslint src/**/*.js --fix",
     "lint": "eslint src/**/*.js"
@@ -62,10 +61,6 @@
     "@nivo/pie": "^0.87.0",
     "@react-hook/debounce": "^4.0.0",
     "@reduxjs/toolkit": "^2.6.1",
-    "@storybook/addon-actions": "^8.0.9",
-    "@storybook/addon-links": "^8.0.9",
-    "@storybook/addons": "^7.6.17",
-    "@storybook/react": "^8.0.9",
     "@types/react-router-dom": "^5.3.3",
     "@types/vis": "^4.21.27",
     "ajv": "^6.12.6",
