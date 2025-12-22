@@ -25,7 +25,6 @@ export const inactiveModeVar = makeVar(false);
 export const instanceCounterVar = makeVar({
   jobs: 0,
   jobsActive: 0,
-  jobsFiltered: 0,
   pipelines: 0,
   algorithms: 0,
   algorithmsUnscheduledReason: 0,

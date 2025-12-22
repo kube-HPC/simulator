@@ -5,7 +5,6 @@ import { useQuery, useReactiveVar } from '@apollo/client';
 import {
   filterToggeledVar,
   instanceFiltersVar,
-  instanceCounterVar,
   metaVar,
   isPinActiveJobVar,
   dateTimeDefaultVar,
@@ -247,10 +246,6 @@ const useJobsFunctionsLimit = () => {
     if (queryAllJobs?.data) {
       const dsAllJobs = queryAllJobs.data.jobsAggregated.jobs;
       setDataSource(dsAllJobs);
-      instanceCounterVar({
-        ...instanceCounterVar(),
-        jobsFiltered: dsAllJobs.length,
-      });
     } else {
       //  setDataSource([]);
     }
