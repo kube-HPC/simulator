@@ -90,7 +90,7 @@ const SidebarLeft = () => {
   );
 
   const isAdmin = keycloakEnable
-    ? KeycloakServices.getUserRoles(keycloakRoles.API_ADMIN)
+    ? KeycloakServices.getUserRoles(keycloakRoles.API_EXECUTE)
     : true;
 
   const menuMainItems = useMemo(() => {
