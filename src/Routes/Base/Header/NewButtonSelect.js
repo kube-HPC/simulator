@@ -12,6 +12,7 @@ import {
   NEW_ITEM_PAGE,
 } from 'const';
 import { PlusOutlined, DownOutlined } from '@ant-design/icons';
+import IDProvider from 'IDProvider';
 
 const WapperDropDown = styled.div`
   display: flex;
@@ -68,26 +69,30 @@ const NewButtonSelect = () => {
     {
       key: RIGHT_SIDEBAR_NAMES.ADD_PIPELINE,
       label: (
-        <Link
-          to={{
-            pathname: `${pageName}/${RIGHT_SIDEBAR_NAMES.ADD_PIPELINE}`,
-            search: location.search,
-          }}>
-          Pipeline
-        </Link>
+        <IDProvider dataTestId="NewButtonSelect-add-pipeline">
+          <Link
+            to={{
+              pathname: `${pageName}/${RIGHT_SIDEBAR_NAMES.ADD_PIPELINE}`,
+              search: location.search,
+            }}>
+            Pipeline
+          </Link>
+        </IDProvider>
       ),
       icon: <IconAddPipeline style={iconSize} />,
     },
     {
       key: RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM,
       label: (
-        <Link
-          to={{
-            pathname: `${pageName}/${RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM}`,
-            search: location.search,
-          }}>
-          Algorithm
-        </Link>
+        <IDProvider dataTestId="NewButtonSelect-add-algorithm">
+          <Link
+            to={{
+              pathname: `${pageName}/${RIGHT_SIDEBAR_NAMES.ADD_ALGORITHM}`,
+              search: location.search,
+            }}>
+            Algorithm
+          </Link>
+        </IDProvider>
       ),
       icon: <IconAddAlgorithm style={iconSize} />,
     },
@@ -95,13 +100,15 @@ const NewButtonSelect = () => {
     {
       key: RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE,
       label: (
-        <Link
-          to={{
-            pathname: `${pageName}/${RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE}`,
-            search: location.search,
-          }}>
-          Data Source
-        </Link>
+        <IDProvider dataTestId="NewButtonSelect-add-datasource">
+          <Link
+            to={{
+              pathname: `${pageName}/${RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE}`,
+              search: location.search,
+            }}>
+            Data Source
+          </Link>
+        </IDProvider>
       ),
       icon: <IconDataSource style={iconSize} />,
     },
