@@ -22,6 +22,8 @@ import { instanceCounterVar, instanceFiltersVar } from 'cache';
 import { selectors } from 'reducers';
 
 import { useReactiveVar } from '@apollo/client';
+import KeycloakServices from 'keycloak/keycloakServices';
+import { keycloakRoles } from '@hkube/consts';
 
 import { isValuesFiltersEmpty } from 'utils';
 import {
@@ -36,7 +38,7 @@ import {
   IconStyle,
   IconLogo,
 } from './MenuStyles';
-import useSubMenuAdmin from './useSubMenuAdmin';
+import useSubMenus from './useSubMenuAdmin';
 
 const AnimatedTitle = () => {
   const styledProps = useSpring({
@@ -68,8 +70,13 @@ const SidebarLeft = () => {
 
   const location = useLocation();
   const { totalNewWarnings } = useErrorLogs();
+  const { dataSourceIsEnable, keycloakEnable } = useSelector(
+    selectors.connection
+  );
 
-  const { dataSourceIsEnable } = useSelector(selectors.connection);
+  const isAdmin = keycloakEnable
+    ? KeycloakServices.getUserRoles(keycloakRoles.API_EXECUTE)
+    : true;
 
   const menuMainItems = useMemo(() => {
     const itemsMenu = [
@@ -86,7 +93,7 @@ const SidebarLeft = () => {
       ]);
     }
     return itemsMenu;
-  }, []);
+  }, [dataSourceIsEnable]);
 
   useCounters();
   const instanceCounter = useReactiveVar(instanceCounterVar);
@@ -98,11 +105,16 @@ const SidebarLeft = () => {
   const [isOpenMenuAdministration, setIsOpenMenuAdministration] =
     useState(false);
   const dataCount = isOn ? dataCountMock : dataCountSource;
-  const { menuAdminItemsJson } = useSubMenuAdmin(totalNewWarnings, dataCount);
+  const { menuAdminItemsJson, menuObservabilityItemsJson } = useSubMenus(
+    totalNewWarnings,
+    dataCount
+  );
   const { themeName } = useSiteThemeMode();
+  const [isOpenMenuObservability, setIsOpenMenuObservability] = useState(false);
 
   const onOpenChangeMenu = openKeys => {
     setIsOpenMenuAdministration(openKeys.includes('admin-link'));
+    setIsOpenMenuObservability(openKeys.includes('observability-link'));
   };
 
   const menuMainItemsJson = useMemo(() => {
@@ -148,23 +160,39 @@ const SidebarLeft = () => {
       });
     });
 
+    // Observability menu (for all users)
     items.push({
-      label: isOpenMenuAdministration ? (
-        'Administration'
+      label: isOpenMenuObservability ? (
+        'Observability'
       ) : (
         <Badge
           size="small"
           count={totalNewWarnings}
           color="red"
           offset={[25, 6]}>
-          Administration
+          Observability
         </Badge>
       ),
-      key: `admin-link`,
-
-      children: menuAdminItemsJson,
+      key: `observability-link`,
+      children: menuObservabilityItemsJson,
     });
-
+    // Administration menu admin-only
+    if (isAdmin) {
+      items.push({
+        label: (
+          <span>
+            Administration
+            {dataCount.drivers > 0 && (
+              <BadgeStyle offset={[-7, 0]}>
+                <Tag style={tagStyle}>{dataCount.drivers}</Tag>
+              </BadgeStyle>
+            )}
+          </span>
+        ),
+        key: `admin-link`,
+        children: menuAdminItemsJson,
+      });
+    }
     return items;
   }, [
     dataCount,
@@ -175,6 +203,9 @@ const SidebarLeft = () => {
     menuAdminItemsJson,
     menuMainItems,
     totalNewWarnings,
+    isAdmin,
+    isOpenMenuObservability,
+    menuObservabilityItemsJson,
   ]);
 
   return (
