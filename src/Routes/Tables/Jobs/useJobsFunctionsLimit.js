@@ -18,19 +18,18 @@ import usePath from './usePath';
 import jobColumns from './jobColumns';
 
 dayjs.extend(isBetween);
+
 const topTableScroll = () => {
-  const el = document.querySelector('.ant-table-body');
+  const el = document.querySelector('#jobsTable .ag-body-viewport');
   if (el) el.scrollTop = 0;
 };
 
 const getDateTimeZoneString = date => {
   if (date?.isValid()) {
-    const tzoffset = new Date().getTimezoneOffset() * 60000; // offset in milliseconds
+    const tzoffset = new Date().getTimezoneOffset() * 60000;
     const localISOTime = new Date(date - tzoffset).toISOString();
-
     return localISOTime;
   }
-
   return undefined;
 };
 
@@ -57,6 +56,10 @@ const useJobsFunctionsLimit = () => {
   const { goTo } = usePath();
   const firstUpdate = useRef(true);
 
+  // Boolean state to track external ID column visibility
+  // Uses boolean instead of array dependency to prevent unnecessary re-renders
+  const [hasExternalId, setHasExternalId] = useState(true);
+
   const mergedParams = useMemo(() => {
     const iJobs = instanceFilters.jobs;
 
@@ -82,36 +85,20 @@ const useJobsFunctionsLimit = () => {
     }
 
     return items;
-  }, [
-    instanceFilters.jobs,
-    instanceFilters.jobs.algorithmName,
-    instanceFilters.jobs.pipelineName,
-    instanceFilters.jobs.pipelineStatus,
-    instanceFilters.jobs.user,
-    instanceFilters.jobs.tag,
-    instanceFilters.jobs?.datesRange?.from,
-    instanceFilters.jobs?.datesRange?.to,
-    metaMode?.experimentName,
-    dateTimeDefault.hour,
-  ]);
-
-  // all limit Jobs
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [instanceFilters.jobs, metaMode?.experimentName, dateTimeDefault.hour]);
 
   const queryAllJobs = useQuery(JOB_QUERY, {
     notifyOnNetworkStatusChange: true,
-    // fetchPolicy: 'no-cache',
     variables: {
       limit: limitGetJobs,
-
       ...mergedParams,
-
       ...(mergedParams?.datesRange?.from === null && {
         datesRange: {
           from: defDate,
           to: mergedParams?.datesRange?.to || null,
         },
       }),
-
       ...(isPinActiveJob && {
         datesRange: {
           from: null,
@@ -119,28 +106,24 @@ const useJobsFunctionsLimit = () => {
         },
       }),
     },
-
     onCompleted: () => {
       setChangeDs(!changeDs);
       setIsGetMore(true);
     },
   });
-  usePolling(queryAllJobs, 2000);
-  // all Jobs to Graph
-  const queryGraph = useQuery(JOB_QUERY_GRAPH, {
-    // notifyOnNetworkStatusChange: true,
 
+  usePolling(queryAllJobs, 2000);
+
+  const queryGraph = useQuery(JOB_QUERY_GRAPH, {
     displayName: 'JOB_QUERY_GRAPH',
     variables: {
       limit: 100000,
       ...mergedParams,
-
       ...(mergedParams?.datesRange?.from === null && {
         datesRange: {
           from: isPinActiveJob ? null : defDate,
           to: isPinActiveJob ? null : mergedParams?.datesRange?.to || null,
         },
-
         ...(isPinActiveJob && {
           datesRange: {
             from: null,
@@ -155,7 +138,6 @@ const useJobsFunctionsLimit = () => {
       } else {
         setDataSourceGraph([]);
       }
-
       setIsGraphLoad(false);
     },
   });
@@ -194,11 +176,11 @@ const useJobsFunctionsLimit = () => {
     },
     [mergedParams, queryAllJobs, queryGraph]
   );
+
   const debouncedZoomChanged = useDebouncedCallback(onZoomChanged, 1000);
 
   const onQuerySubmit = useCallback(values => {
     let datesRange = null;
-
     const { time, ...other } = values;
 
     if (time) {
@@ -213,17 +195,13 @@ const useJobsFunctionsLimit = () => {
     });
 
     const stateInstanceFilter = { ...instanceFiltersVar() };
-
     stateInstanceFilter.jobs = { ...other, datesRange };
-
     instanceFiltersVar(stateInstanceFilter);
 
     topTableScroll();
     setIsTableLoad(true);
     setIsGraphLoad(true);
     setLimitGetJobs(numberLimitJobs);
-    // queryAllJobs.refetch();
-    // queryGraph.refetch();
   }, []);
 
   useEffect(() => {
@@ -234,6 +212,7 @@ const useJobsFunctionsLimit = () => {
       }, 2000);
     });
     queryGraph.refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mergedParams]);
 
   const onRow = useCallback(
@@ -247,40 +226,45 @@ const useJobsFunctionsLimit = () => {
     if (queryAllJobs?.data) {
       const dsAllJobs = queryAllJobs.data.jobsAggregated.jobs;
       setDataSource(dsAllJobs);
+
+      // Update external ID visibility state
+      const hasExtId = dsAllJobs.some(x => x.externalId != null);
+      setHasExternalId(hasExtId);
+
       instanceCounterVar({
         ...instanceCounterVar(),
         jobsFiltered: dsAllJobs.length,
       });
-    } else {
-      //  setDataSource([]);
     }
-
-    //  setTimeout(() => {
-    //    setIsTableLoad(false);
-    //  }, 3000);
   }, [queryAllJobs.data, changeDs]);
 
-  const handleMaxScroll = useCallback(event => {
-    const maxScroll = event.target.scrollHeight - event.target.clientHeight;
+  const handleMaxScroll = useCallback(
+    event => {
+      const maxScroll = event.target.scrollHeight - event.target.clientHeight;
+      const currentScroll = event.target.scrollTop;
 
-    const currentScroll = event.target.scrollTop;
-
-    if (isGetMore && currentScroll > maxScroll - 10) {
-      setIsTableLoad(true);
-      setTimeout(() => {
-        setIsTableLoad(false);
-      }, 3000);
-      setIsGetMore(false);
-      onFetchMore();
-    }
-  }, []);
+      if (isGetMore && currentScroll > maxScroll - 10) {
+        setIsTableLoad(true);
+        setTimeout(() => {
+          setIsTableLoad(false);
+        }, 3000);
+        setIsGetMore(false);
+        onFetchMore();
+      }
+    },
+    [isGetMore]
+  );
 
   useEffect(() => {
-    const tableContent = document.querySelector('#jobsTable .ant-table-body');
-    tableContent.addEventListener('scroll', handleMaxScroll);
+    const tableContent = document.querySelector('#jobsTable .ag-body-viewport');
+    if (tableContent) {
+      tableContent.addEventListener('scroll', handleMaxScroll);
+    }
 
     return () => {
-      window.removeEventListener('scroll', handleMaxScroll);
+      if (tableContent) {
+        tableContent.removeEventListener('scroll', handleMaxScroll);
+      }
     };
   }, [handleMaxScroll]);
 
@@ -293,15 +277,31 @@ const useJobsFunctionsLimit = () => {
       instanceFiltersVar({ ...filter });
       firstUpdate.current = false;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const jobColumnsMemo = useMemo(() => {
-    if (_dataSource.filter(x => x.externalId != null).length === 0) {
-      return jobColumns.filter(x => x.key !== 'externalId');
-    }
+  /**
+   * Memoized column definitions with stable references
+   * Caches both filtered and unfiltered column arrays to prevent
+   * AG-Grid from resetting column state (widths, positions, etc.)
+   */
+  const columnsRef = useRef({
+    withExternal: jobColumns,
+    withoutExternal: null,
+  });
 
-    return jobColumns;
-  }, [_dataSource]);
+  const jobColumnsMemo = useMemo(() => {
+    if (!hasExternalId) {
+      // Lazily create and cache filtered columns (without external ID)
+      if (!columnsRef.current.withoutExternal) {
+        columnsRef.current.withoutExternal = jobColumns.filter(
+          x => x.field !== 'externalId'
+        );
+      }
+      return columnsRef.current.withoutExternal;
+    }
+    return columnsRef.current.withExternal;
+  }, [hasExternalId]);
 
   return {
     zoomedChangedDate,

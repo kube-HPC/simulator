@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as FilterOutlined } from 'images/filter-filtering-icon.svg';
 import { ReactComponent as IconAddPipeline } from 'images/forward-arrow-icon.svg';
-import { Tooltip, Space } from 'antd';
+import { Tooltip } from 'antd';
 import { USER_GUIDE } from 'const';
 import { Ellipsis } from 'components/common';
 import { instanceFiltersVar } from 'cache';
@@ -12,8 +12,8 @@ import { useReactiveVar } from '@apollo/client';
 import usePathPipeline from './../Pipelines/usePath';
 
 const iconSize = {
-  width: '32px',
-  height: '32px',
+  width: '20px',
+  height: '20px',
   marginLeft: '5px',
   opacity: 0.6,
   cursor: 'pointer',
@@ -23,6 +23,14 @@ const PipelineNameContainer = styled.div`
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
+`;
+
+const IconsContainer = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 55px; /* 20px + 20px + 5px gap */
+  justify-content: flex-end;
 `;
 
 const PipelineNameActions = ({ pipeline }) => {
@@ -47,7 +55,7 @@ const PipelineNameActions = ({ pipeline }) => {
     <PipelineNameContainer>
       <Ellipsis copyable text={pipeline.pipeline.name} length={40} />
 
-      <Space.Compact className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
+      <IconsContainer className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
         {pipeline.pipeline.types.includes('stored') && (
           <Tooltip title={`edit pipeline ${pipeline.pipeline.name}`}>
             <IconAddPipeline style={iconSize} onClick={editByPipelineID} />
@@ -59,7 +67,7 @@ const PipelineNameActions = ({ pipeline }) => {
             onClick={() => filterByPipeline(pipeline.pipeline.name)}
           />
         </Tooltip>
-      </Space.Compact>
+      </IconsContainer>
     </PipelineNameContainer>
   );
 };
