@@ -252,6 +252,7 @@ export default [
     unSortIcon: true,
     comparator: (a, b) => sorter(a, b),
     cellRenderer: Status,
+    isPinning: true,
     cellStyle: { textAlign: 'center' },
     cellClass: 'vertical-center-cell',
     headerClass: 'ag-header-cell-center',
@@ -263,6 +264,7 @@ export default [
     flex: 2.5,
     sortable: false,
     cellRenderer: Progress,
+    isPinning: true,
     cellStyle: {
       textAlign: 'center',
       paddingTop: '11px',
