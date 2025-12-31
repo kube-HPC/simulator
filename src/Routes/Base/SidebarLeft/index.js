@@ -52,16 +52,31 @@ const AnimatedTitle = () => {
   );
 };
 
-const instanceCounterAdapter = obj => ({
-  [LEFT_SIDEBAR_NAMES.JOBS]:
-    obj.jobsActive > 0 ? `${obj.jobs} / ${obj.jobsActive}` : obj.jobs,
-  [LEFT_SIDEBAR_NAMES.QUEUE]: obj.queue || 0,
-  [LEFT_SIDEBAR_NAMES.PIPELINES]: obj.pipelines,
-  [LEFT_SIDEBAR_NAMES.ALGORITHMS]: obj.algorithms,
-  [LEFT_SIDEBAR_NAMES.DATASOURCES]: obj.dataSources,
-  [LEFT_SIDEBAR_NAMES.WORKERS]: obj.workers,
-  [LEFT_SIDEBAR_NAMES.DRIVERS]: obj.drivers,
-});
+const instanceCounterAdapter = obj => {
+  const instanceFilters = instanceFiltersVar();
+
+  // Check if any job filters are active (excluding experimentName and datesRange)
+  const hasActiveFilters =
+    instanceFilters.jobs.pipelineName ||
+    instanceFilters.jobs.algorithmName ||
+    instanceFilters.jobs.pipelineStatus ||
+    instanceFilters.jobs.user ||
+    instanceFilters.jobs.tag;
+
+  return {
+    [LEFT_SIDEBAR_NAMES.JOBS]: hasActiveFilters
+      ? obj.jobsFiltered // Show filtered count when filters are active
+      : obj.jobsActive > 0
+        ? `${obj.jobs} / ${obj.jobsActive}`
+        : obj.jobs, // Show total when no filters
+    [LEFT_SIDEBAR_NAMES.QUEUE]: obj.queue || 0,
+    [LEFT_SIDEBAR_NAMES.PIPELINES]: obj.pipelines,
+    [LEFT_SIDEBAR_NAMES.ALGORITHMS]: obj.algorithms,
+    [LEFT_SIDEBAR_NAMES.DATASOURCES]: obj.dataSources,
+    [LEFT_SIDEBAR_NAMES.WORKERS]: obj.workers,
+    [LEFT_SIDEBAR_NAMES.DRIVERS]: obj.drivers,
+  };
+};
 
 const SidebarLeft = () => {
   // const { pageName } = useParams();
