@@ -16,6 +16,9 @@ export const Sider = styled(Layout.Sider)`
 `;
 export const MenuMargin = styled(Menu)`
   margin-top: 10px;
+  .ant-menu-submenu-arrow {
+    right: 6px;
+  }
 `;
 export const tagStyle = { color: Theme.Styles.SidebarLeft.colorTagNumber };
 export const IconStyle = {

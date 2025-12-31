@@ -37,14 +37,17 @@ const useSubMenus = (totalNewWarnings, dataMoreCount) => {
   );
 
   // ADMINISTRATION MENU (Admin only - Drivers ONLY)
-  const menuAdminItems = useMemo(() => [
+  const menuAdminItems = useMemo(
+    () => [
       [
         RIGHT_SIDEBAR_NAMES.DRIVERS,
         DriversIcon,
         `/${RIGHT_SIDEBAR_NAMES.DRIVERS}`,
         dataMoreCount.drivers,
       ],
-    ], [dataMoreCount.drivers]);
+    ],
+    [dataMoreCount.drivers]
+  );
 
   // OBSERVABILITY MENU (All users - Workers + monitoring)
   const menuObservabilityItems = useMemo(() => {
@@ -127,7 +130,7 @@ const useSubMenus = (totalNewWarnings, dataMoreCount) => {
           <Link to={{ pathname: path, search: location.search }}>
             <Name>{name}</Name>{' '}
             {count > 0 && (
-              <BadgeStyle offset={[-7, 0]}>
+              <BadgeStyle offset={[-10, 0]}>
                 <Tag color={name === 'Error Log' ? 'red' : ''} style={tagStyle}>
                   {count}
                 </Tag>

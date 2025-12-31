@@ -75,7 +75,7 @@ const SidebarLeft = () => {
   );
 
   const isAdmin = keycloakEnable
-    ? KeycloakServices.getUserRoles(keycloakRoles.API_EXECUTE)
+    ? KeycloakServices.getUserRoles(keycloakRoles.API_ADMIN)
     : true;
 
   const menuMainItems = useMemo(() => {
@@ -169,7 +169,7 @@ const SidebarLeft = () => {
           size="small"
           count={totalNewWarnings}
           color="red"
-          offset={[25, 6]}>
+          offset={[43, 6]}>
           Observability
         </Badge>
       ),
