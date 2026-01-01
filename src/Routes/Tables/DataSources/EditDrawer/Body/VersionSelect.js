@@ -151,7 +151,10 @@ const Versions = ({
   snapshots = [],
   activeSnapshot = null,
 }) => {
-  const isPending = versionsCollection?.status === 'PENDING' ?? true;
+  const isPending =
+    versionsCollection?.status !== undefined
+      ? versionsCollection.status === 'PENDING'
+      : true;
   const combinedItems = useMemo(() => {
     const { versions } = versionsCollection;
     if (snapshots && snapshots.length === 0) return versions;
