@@ -38,9 +38,10 @@ const DeleteModal = ({
   isInternalGit,
 }) => {
   const [inputValue, setInputValue] = useState('');
-  const handleChange = useCallback(e => setInputValue(e.target.value), [
-    setInputValue,
-  ]);
+  const handleChange = useCallback(
+    e => setInputValue(e.target.value),
+    [setInputValue]
+  );
   const onClick = useCallback(() => {
     if (inputValue === dataSource.name) onAccept(dataSource.name);
   }, [inputValue, onAccept, dataSource]);

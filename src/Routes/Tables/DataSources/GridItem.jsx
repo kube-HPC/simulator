@@ -53,9 +53,10 @@ const GridItem = ({ goTo, dataSource }) => {
     });
   }, [goTo, dataSource.id, dataSource.name]);
 
-  const handleCopy = useCallback(() => copyToClipboard(dataSource.id), [
-    dataSource,
-  ]);
+  const handleCopy = useCallback(
+    () => copyToClipboard(dataSource.id),
+    [dataSource]
+  );
 
   return (
     <GridItemCard

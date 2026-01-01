@@ -59,9 +59,10 @@ const QueryMode = ({ dataSource, onDownload }) => {
   const [isPending, setPending] = useState(false);
   const { goTo } = usePath();
 
-  const handleToggleQuery = useCallback(() => setShowQuery(state => !state), [
-    setShowQuery,
-  ]);
+  const handleToggleQuery = useCallback(
+    () => setShowQuery(state => !state),
+    [setShowQuery]
+  );
 
   const { dataPreviewQuery } = usePreviewQuery(
     dataSource.id,

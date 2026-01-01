@@ -119,10 +119,9 @@ const ServiceTag = styled(Tag)`
   color: ${props => {
     if (props.$isDark) {
       return props.$color; // Dark mode: colored text
-    } 
-      // Light mode: calculate contrast color based on background
-      return getContrastTextColor(props.$color);
-    
+    }
+    // Light mode: calculate contrast color based on background
+    return getContrastTextColor(props.$color);
   }};
 
   /* Border */
