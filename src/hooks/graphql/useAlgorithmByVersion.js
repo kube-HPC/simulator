@@ -1,5 +1,5 @@
-const { useQuery } = require('@apollo/client');
-const { ALGORITHM_BY_VERSION_QUERY } = require('../../graphql/queries');
+import { useQuery } from '@apollo/client';
+import { ALGORITHM_BY_VERSION_QUERY } from '../../graphql/queries';
 
 const useAlgorithmByVersion = (algorithmName, algorithmVersion) =>
   useQuery(ALGORITHM_BY_VERSION_QUERY, {

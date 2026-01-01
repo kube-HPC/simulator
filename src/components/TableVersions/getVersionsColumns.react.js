@@ -6,7 +6,7 @@ import {
   CheckCircleOutlined,
 } from '@ant-design/icons';
 import { Button, Modal, Tooltip, Typography, Tag, Input } from 'antd';
-import Moment from 'react-moment';
+import dayjs from 'dayjs';
 import { sorter } from 'utils/stringHelper';
 import UserAvatar from 'components/UserAvatar';
 import VersionNameEdit from './VersionNameEdit';
@@ -99,9 +99,8 @@ const Cpu = cpu => <Tag>{cpu || 'No CPU Assigned'}</Tag>;
 const Mem = mem => <Tag>{mem || 'No Memory Specified'}</Tag>;
 const MinHotWorkers = minHotWorkers => <Tag>{minHotWorkers}</Tag>;
 const Type = type => <Tag>{type}</Tag>;
-const Created = created => (
-  <Moment format="DD/MM/YY HH:mm:ss">{+created}</Moment>
-);
+const Created = created =>
+  created ? dayjs(+created).format('DD/MM/YY HH:mm:ss') : '--/--/-- --:--:--';
 
 const getVersionsColumns = ({
   onDelete,

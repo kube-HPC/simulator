@@ -14,7 +14,7 @@ const middleware = [
   restMiddleware,
 ];
 
-if (process.env.NODE_ENV === 'development') {
+if (import.meta.env.NODE_ENV === 'development') {
   middleware.unshift(createLogger({ collapsed: true }));
 }
 

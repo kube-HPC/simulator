@@ -1,5 +1,5 @@
-const { useQuery } = require('@apollo/client');
-const { DISCOVERY_QUERY } = require('../../graphql/queries');
+import { useQuery } from '@apollo/client';
+import { DISCOVERY_QUERY } from '../../graphql/queries';
 
 const useDiscovery = () => useQuery(DISCOVERY_QUERY);
 export default useDiscovery;

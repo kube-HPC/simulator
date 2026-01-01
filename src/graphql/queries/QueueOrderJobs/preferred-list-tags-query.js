@@ -1,4 +1,4 @@
-const { default: gql } = require('graphql-tag');
+import gql from 'graphql-tag';
 
 const PREFERRED_LIST_TAGS = gql`
   query AggregatedTagsPrefered {

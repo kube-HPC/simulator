@@ -1,7 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { useMemo } from 'react';
-import Moment from 'react-moment';
+import dayjs from 'dayjs';
 import { Ellipsis } from 'components/common';
 import PropTypes from 'prop-types';
 import { COLOR_TASK_STATUS } from 'styles/colors';
@@ -67,9 +67,9 @@ const Status = record => {
 
 const StartTime = startTime =>
   startTime ? (
-    <Moment style={{ fontSize: '12px' }} format="DD/MM/YY HH:mm:ss">
-      {+startTime}
-    </Moment>
+    <span style={{ fontSize: '12px' }}>
+      {dayjs(+startTime).format('DD/MM/YY HH:mm:ss')}
+    </span>
   ) : (
     '--/--/-- --:--:--'
   );

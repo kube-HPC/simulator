@@ -1,4 +1,4 @@
-const { default: gql } = require('graphql-tag');
+import gql from 'graphql-tag';
 
 const ALGORITHM_AND_PIPELINE_NAMES = gql`
   query List {

@@ -1,6 +1,5 @@
-const { useQuery } = require('@apollo/client');
-const { ALGORITHM_BY_NAME_QUERY } = require('../../graphql/queries');
-// const {usePolling} =require('./usePolling')
+import { useQuery } from '@apollo/client';
+import { ALGORITHM_BY_NAME_QUERY } from '../../graphql/queries';
 
 const useAlgorithmByName = algorithmName =>
   useQuery(ALGORITHM_BY_NAME_QUERY, {

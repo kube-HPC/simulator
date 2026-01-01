@@ -1,4 +1,4 @@
-const version = `v${process.env.REACT_APP_VERSION}`;
+const version = `v${import.meta.env.VITE_VERSION}`;
 
 const appInfo = {
   websiteUrl: `http://hkube.org/`,

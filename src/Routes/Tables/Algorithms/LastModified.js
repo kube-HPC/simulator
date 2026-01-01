@@ -4,18 +4,14 @@ import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Badge, Tag } from 'antd';
-import Moment from 'react-moment';
+import dayjs from 'dayjs';
 import { getColorByName } from 'utils';
 
 const LastModified = ({ modified, auditTrail }) => {
   const { keycloakEnable } = useSelector(selectors.connection);
 
   const userName = Array.isArray(auditTrail) ? auditTrail[0]?.user : undefined;
-  const dateNode = (
-    <Tag>
-      <Moment format="DD/MM/YY HH:mm:ss">{+modified}</Moment>
-    </Tag>
-  );
+  const dateNode = <Tag>{dayjs(+modified).format('DD/MM/YY HH:mm:ss')}</Tag>;
   return keycloakEnable ? (
     <Badge
       style={{ fontSize: '8px' }}

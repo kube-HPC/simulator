@@ -1,4 +1,4 @@
-const { default: gql } = require('graphql-tag');
+import gql from 'graphql-tag';
 
 const DATASOURCE_SNAPANSHOTS_QUERY = gql`
   query DataSourceSnapanshots($name: String!) {

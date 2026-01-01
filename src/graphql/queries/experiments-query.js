@@ -1,4 +1,4 @@
-const { default: gql } = require('graphql-tag');
+import gql from 'graphql-tag';
 
 const EXPERIMENT_QUERY = gql`
   query Experiments {

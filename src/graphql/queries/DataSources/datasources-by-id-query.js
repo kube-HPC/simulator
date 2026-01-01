@@ -1,4 +1,4 @@
-const { default: gql } = require('graphql-tag');
+import gql from 'graphql-tag';
 
 const DATASOURCE_BY_ID_QUERY = gql`
   query DataSource($dataSourceId: String!, $name: String!) {

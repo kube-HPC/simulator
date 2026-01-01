@@ -4,19 +4,8 @@ require('dotenv').config({ path: path.resolve(__dirname, '..', '.env.local') });
 const express = require('express');
 const http = require('http');
 const fs = require('fs');
-const {
-  monitorBackend,
-  board,
-  hkubeSystemVersion,
-  kibanaUrl,
-  structuredPrefix,
-  grafanaUrl,
-  grafanaDashboardUrl,
-  dataSourceIsEnable,
-  keycloakEnable,
-  indexHtml,
-  baseUrl,
-} = require('./setupConfig');
+const { indexHtml, baseUrl } = require('./setupConfig');
+const buildDashboardConfig = require('./dashboardConfig');
 
 const app = express();
 const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 9050;
@@ -29,18 +18,7 @@ app.use(express.static(path.join(__dirname, '../build')));
 
 app.get('*/dashboard-config.json', (req, res) => {
   res.json({
-    config: {
-      hkubeSystemVersion,
-      kibanaUrl,
-      structuredPrefix,
-      grafanaUrl,
-      grafanaDashboardUrl,
-      dataSourceIsEnable,
-      keycloakEnable,
-      baseUrl,
-      monitorBackend,
-      board,
-    },
+    config: buildDashboardConfig(),
   });
 });
 

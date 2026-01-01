@@ -1,4 +1,4 @@
-const { default: gql } = require('graphql-tag');
+import gql from 'graphql-tag';
 
 const JOB_GRID_VIEW_QUERY = gql`
   query jobsAggregatedGrid(

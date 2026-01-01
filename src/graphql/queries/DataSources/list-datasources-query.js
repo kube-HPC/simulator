@@ -1,4 +1,4 @@
-const { default: gql } = require('graphql-tag');
+import gql from 'graphql-tag';
 
 const DATASOURCES_LIST_QUERY = gql`
   query DataSources {
