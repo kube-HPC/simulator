@@ -1,4 +1,4 @@
-const { default: gql } = require('graphql-tag');
+import gql from 'graphql-tag';
 
 export const ALGORITHM_BUILDS_FRAGMENTS = gql`
   query AlgorithmBuilds($algorithmName: String!) {
