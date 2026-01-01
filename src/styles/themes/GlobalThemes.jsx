@@ -19,7 +19,7 @@ switch (
 
 const DarkThemeStyle = React.lazy(() => import('./dark/DarkThemeStyle.styles'));
 const LightThemeStyle = React.lazy(
-  () => import('./light/LightThemeStyle.styles')
+  () => import('./light/LightThemeStyle.styles.jsx')
 );
 
 const LazyThemeStyle = {
