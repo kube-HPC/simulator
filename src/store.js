@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
-
 import { createLogger } from 'redux-logger';
 import rootReducer from 'reducers';
+
 // import socketMiddleware from 'middleware/socket.middleware';
 import restConfigMiddleware from 'middleware/restConfig.middleware';
 import restMiddleware from 'middleware/rest.middleware';

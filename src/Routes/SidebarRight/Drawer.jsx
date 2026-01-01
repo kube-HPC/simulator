@@ -16,8 +16,8 @@ import CONTENT_CONFIG from './Content.react';
 import ctx from './ctx';
 import useSubscribe from './useSubscribe';
 import { DRAWER_TITLES } from '../../const';
-import WorkersTable from './../Tables/Workers';
-import DriversTable from './../Tables/Drivers';
+import WorkersTable from '../Tables/Workers';
+import DriversTable from '../Tables/Drivers';
 
 const operationSelector = {
   // eslint-disable-next-line

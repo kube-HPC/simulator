@@ -6,6 +6,9 @@ const path = require('path');
 const svgr = require('@svgr/rollup');
 const buildDashboardConfig = require('./server/dashboardConfig');
 
+/**
+ * Utils
+ */
 const resolvePlugin = plugin => (plugin?.default ? plugin.default : plugin);
 
 const toBoolean = value => {
@@ -15,18 +18,26 @@ const toBoolean = value => {
   return Boolean(value);
 };
 
-const respondWithDashboardConfig = (req, res, next) => {
-  if (!req.url || !req.url.includes('dashboard-config.json')) {
-    next();
-    return;
-  }
-  res.setHeader('Content-Type', 'application/json');
-  res.end(JSON.stringify({ config: buildDashboardConfig() }));
+/**
+ * 🔑 DEV-ONLY runtime endpoint
+ * http://localhost:9050/dashboard-config.json
+ */
+const dashboardConfigPlugin = {
+  name: 'dashboard-config-endpoint',
+  configureServer(server) {
+    server.middlewares.use('/dashboard-config.json', (req, res) => {
+      const config = buildDashboardConfig();
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ config }));
+    });
+  },
 };
 
 module.exports = defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const isSecure = toBoolean(env.isSecure || process.env.isSecure);
+
   const backendHost =
     env.API_SERVER_BACKEND_HOST || process.env.API_SERVER_BACKEND_HOST;
   const backendPort =
@@ -44,6 +55,7 @@ module.exports = defineConfig(({ mode }) => {
     env.API_SERVER_BACKEND_PATH ||
     process.env.API_SERVER_BACKEND_PATH ||
     '/hkube/api-server';
+
   const socketPath =
     env.API_SERVER_BACKEND_PATH_SOCKETIO ||
     process.env.API_SERVER_BACKEND_PATH_SOCKETIO ||
@@ -57,15 +69,18 @@ module.exports = defineConfig(({ mode }) => {
       global: 'globalThis',
     },
 
+    /**
+     * ⚠️ ORDER MATTERS
+     * dashboardConfigPlugin MUST be first
+     */
     plugins: [
+      dashboardConfigPlugin,
+
       react({
         include: ['**/*.jsx', '**/*.tsx', '**/*.js', '**/*.ts'],
       }),
-      svgrPlugin
-        ? svgrPlugin({
-            include: '**/*.svg',
-          })
-        : null,
+
+      svgrPlugin ? svgrPlugin({ include: '**/*.svg' }) : null,
       tsconfigPaths(),
       monacoPlugin ? monacoPlugin({}) : null,
     ].filter(Boolean),
@@ -83,7 +98,6 @@ module.exports = defineConfig(({ mode }) => {
     esbuild: {
       loader: 'jsx',
       include: /src\/.*\.jsx?$/,
-      exclude: [],
     },
 
     build: {
@@ -111,10 +125,6 @@ module.exports = defineConfig(({ mode }) => {
             },
           }
         : undefined,
-    },
-
-    configureServer(server) {
-      server.middlewares.use(respondWithDashboardConfig);
     },
 
     transformIndexHtml: {

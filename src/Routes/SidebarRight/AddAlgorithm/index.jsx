@@ -13,7 +13,7 @@ import {
 } from 'utils'; // mergeObjects, tryParseJson
 import { OVERVIEW_TABS } from 'const';
 import { useNavigate } from 'react-router-dom';
-import usePath from './../../Tables/Algorithms/usePath';
+import usePath from '../../Tables/Algorithms/usePath';
 import AddAlgorithmForm from './AddAlgorithmForm.react';
 import AlgorithmJsonEditor from './AlgorithmJsonEditor';
 import schema from './schema';

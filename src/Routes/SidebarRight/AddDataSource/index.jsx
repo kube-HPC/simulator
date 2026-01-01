@@ -14,7 +14,7 @@ import pruneObject from 'utils/pruneObject';
 import { DRAWER_SIZE } from 'const';
 import { selectors } from 'reducers';
 import { useActions } from 'hooks';
-import ctx from './../ctx';
+import ctx from '../ctx';
 import { FormItem } from './styles';
 import GitConfig from './GitConfig';
 import StorageConfig from './StorageConfig';

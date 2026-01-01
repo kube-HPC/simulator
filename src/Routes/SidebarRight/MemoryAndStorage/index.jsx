@@ -5,7 +5,7 @@ import { useStorage, useMetric } from 'hooks/graphql';
 import Bars from './Bars.react';
 import Storage from './Storage';
 import { Header } from './styles';
-import BarChartMonitors from './../BarChartMonitors.react';
+import BarChartMonitors from '../BarChartMonitors.react';
 
 const Root = styled.div`
   // font-size: 20px;
