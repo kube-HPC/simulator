@@ -115,7 +115,7 @@ const LoadingScreen = () => {
       </ItemMargin>
       <ItemMargin style={opacity} margin={20}>
         <ImageStyle>
-          <Title style={{ width: 500, height: 100 }} />
+          <Title style={{ width: '500px', height: '100px' }} />
         </ImageStyle>
       </ItemMargin>
       <ItemMargin margin={5}>

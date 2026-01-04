@@ -3,7 +3,7 @@ import React from 'react';
 const Fish = () => (
   <svg
     width="100"
-    viewBox="0 0 908 963"
+    viewBox="0 0 64 64"
     fill="none"
     xmlns="http://www.w3.org/2000/svg">
     <path

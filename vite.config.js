@@ -104,6 +104,7 @@ module.exports = defineConfig(({ mode }) => {
       outDir: 'build',
       sourcemap: true,
       emptyOutDir: true,
+      assetInlineLimit: 0,
     },
 
     server: {
