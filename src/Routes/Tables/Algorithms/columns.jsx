@@ -28,7 +28,7 @@ const Memory = ({ value }) =>
     <Tag>{value}</Tag>
   ) : (
     <Tooltip title="No Memory Specified">
-      <IconNoMem width={34} />
+      <IconNoMem />
     </Tooltip>
   );
 
