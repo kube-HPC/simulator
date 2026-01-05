@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import { executeActions as EXECUT_ACTIONS } from '@hkube/consts';
 import { Ellipsis } from 'components/common';
-
 import { USER_GUIDE } from 'const';
 import { sorter } from 'utils/stringHelper';
 import { Divider } from 'antd';
@@ -17,41 +17,75 @@ import JobTime from './JobTime';
 import JobTypes from './JobTypes';
 import JobTags from './JobTags';
 
-const Id = jobID => (
+const Id = ({ value }) => (
   <Ellipsis
     className={USER_GUIDE.TABLE_JOB.ID_SELECT}
     copyable
-    text={jobID || '---'}
+    text={value || '---'}
   />
 );
 
-const Name = (text, record) => <PipelineNameActions pipeline={record} />;
+Id.propTypes = {
+  value: PropTypes.string,
+};
 
-const StartTime = (text, record) => {
-  const { pipeline, results } = record;
+const Name = ({ data }) => <PipelineNameActions pipeline={data} />;
+
+Name.propTypes = {
+  data: PropTypes.object.isRequired,
+};
+
+const StartTime = ({ data }) => {
+  const { pipeline, results } = data;
   const { startTime } = pipeline;
 
   return <JobTime startTime={startTime} results={results} />;
 };
 
-const Status = (_, job) => {
-  const { status, auditTrail } = job;
+StartTime.propTypes = {
+  data: PropTypes.shape({
+    pipeline: PropTypes.shape({
+      startTime: PropTypes.any,
+    }).isRequired,
+    results: PropTypes.any,
+  }).isRequired,
+};
+
+const Status = ({ data }) => {
+  const { status, auditTrail } = data;
 
   return <JobStatus status={status} auditTrail={auditTrail} />;
 };
 
-const Stats = status => <NodeStats status={status} />;
-// const Priority = priority => <JobPriority priority={priority} />;
+Status.propTypes = {
+  data: PropTypes.shape({
+    status: PropTypes.any,
+    auditTrail: PropTypes.any,
+  }).isRequired,
+};
 
-const Priority = (text, record) => {
-  const { pipeline } = record;
+const Stats = ({ value }) => <NodeStats status={value} />;
+
+Stats.propTypes = {
+  value: PropTypes.any,
+};
+
+const Priority = ({ data }) => {
+  const { pipeline } = data;
   const { priority } = pipeline;
   return <JobPriority priority={priority} />;
 };
 
-// const Types = types => <JobTypes types={types} fullName={false} />;
-const Types = (text, record) => {
-  const { pipeline } = record;
+Priority.propTypes = {
+  data: PropTypes.shape({
+    pipeline: PropTypes.shape({
+      priority: PropTypes.any,
+    }).isRequired,
+  }).isRequired,
+};
+
+const Types = ({ data }) => {
+  const { pipeline } = data;
   const { types, tags } = pipeline;
 
   return (
@@ -74,28 +108,44 @@ const Types = (text, record) => {
   );
 };
 
+Types.propTypes = {
+  data: PropTypes.shape({
+    pipeline: PropTypes.shape({
+      types: PropTypes.array,
+      tags: PropTypes.array,
+    }).isRequired,
+  }).isRequired,
+};
+
 const ProgressContainer = styled.div`
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
 `;
 
-const Progress = (_, job) => {
-  const { status, type, width } = job;
+const Progress = ({ data }) => {
+  const { status, type, width } = data;
   return (
     <ProgressContainer>
       <JobProgress status={status} type={type} width={width} />
-      <JobActions job={job} />
+      <JobActions job={data} />
     </ProgressContainer>
   );
 };
 
-// eslint-disable-next-line react/destructuring-assignment
-const Avarar = auditTrail => {
-  const username = auditTrail?.find(x => x.action === EXECUT_ACTIONS.RUN).user;
+Progress.propTypes = {
+  data: PropTypes.shape({
+    status: PropTypes.any,
+    type: PropTypes.any,
+    width: PropTypes.any,
+  }).isRequired,
+};
+
+const Avatar = ({ value }) => {
+  const username = value?.find(x => x.action === EXECUT_ACTIONS.RUN)?.user;
 
   return (
-    auditTrail && (
+    value && (
       <UserAvatar
         username={username}
         size={20}
@@ -105,97 +155,122 @@ const Avarar = auditTrail => {
   );
 };
 
-const sortPipelineName = (a, b) => sorter(a.pipeline.name, b.pipeline.name);
-const sortStartTime = (a, b) => a.pipeline.startTime - b.pipeline.startTime;
-const sortPriority = (a, b) => sorter(a.pipeline.priority, b.pipeline.priority);
-// const onStatusFilter = (value, record) => record.status.status === value;
-const sortStatus = (a, b) => sorter(a.status.status, b.status.status);
+Avatar.propTypes = {
+  value: PropTypes.array,
+};
 
-// const statusFilter = Object.values(PIPELINE_STATUS).map(status => ({
-//  text: toUpperCaseFirstLetter(status),
-//  value: status,
-// }));
-
-const jobColumns = [
+export default [
   {
-    title: ``,
-    dataIndex: [`auditTrail`],
-    key: `auditTrail`,
-    width: `2%`,
-    render: Avarar,
+    headerName: '',
+    field: 'auditTrail',
+    minWidth: 60,
+    flex: 0.5,
+    filter: false,
+    cellRenderer: Avatar,
+    suppressMenu: true,
+    cellClass: 'vertical-center-cell',
   },
   {
-    title: `External ID`,
-    dataIndex: [`externalId`],
-    key: `externalId`,
-    width: `10%`,
-    render: Id,
+    headerName: 'External ID',
+    field: 'externalId',
+    flex: 1,
+    sortable: true,
+    unSortIcon: true,
+    cellRenderer: Id,
+    cellClass: 'vertical-center-cell',
   },
   {
-    title: `Job ID`,
-    dataIndex: [`key`],
-    key: `key`,
-    width: `10%`,
-    render: Id,
+    headerName: 'Job ID',
+    field: 'key',
+    flex: 1,
+    sortable: true,
+    unSortIcon: true,
+    cellRenderer: Id,
+    cellClass: 'vertical-center-cell',
   },
   {
-    title: `Pipeline Name`,
-    dataIndex: ['pipeline', 'name'],
-    key: `pipeline`,
-    width: `12%`,
-    sorter: sortPipelineName,
-    render: Name,
+    headerName: 'Pipeline Name',
+    field: 'pipeline.name',
+    minWidth: 120,
+    flex: 1.3,
+    sortable: true,
+    unSortIcon: true,
+    comparator: (a, b) => sorter(a, b),
+    cellRenderer: Name,
+    isPinning: true,
+    cellStyle: {
+      paddingTop: '11px',
+      paddingBottom: '11px',
+    },
   },
   {
-    title: `Start Time`,
-    dataIndex: ['pipeline', 'startTime'],
-    key: `Start timestamp`,
-    width: `14%`,
-    sorter: sortStartTime,
-    render: StartTime,
+    headerName: 'Start Time',
+    field: 'pipeline.startTime',
+    flex: 1.3,
+    sortable: true,
+    unSortIcon: true,
+    comparator: (a, b) => a - b,
+    cellRenderer: StartTime,
+    cellClass: 'vertical-center-cell',
   },
   {
-    title: `Pipeline Type/Tags`,
-    dataIndex: ['pipeline'],
-    key: `types`,
-    width: `12%`,
-    render: Types,
+    headerName: 'Pipeline Type/Tags',
+    field: 'pipeline',
+    flex: 1,
+    sortable: false,
+    cellRenderer: Types,
+    cellClass: 'vertical-center-cell',
+    headerClass: 'ag-header-cell-center',
   },
   {
-    title: `Priority`,
-    dataIndex: ['pipeline', 'priority'],
-    key: `priority`,
-    align: `center`,
-    width: `6%`,
-    sorter: sortPriority,
-    render: Priority,
+    headerName: 'Priority',
+    field: 'pipeline.priority',
+    flex: 0.7,
+    sortable: true,
+    unSortIcon: true,
+    comparator: (a, b) => sorter(a, b),
+    cellRenderer: Priority,
+    cellStyle: { textAlign: 'center' },
+    cellClass: 'vertical-center-cell',
+    headerClass: 'ag-header-cell-center',
   },
   {
-    title: `Nodes Stats`,
-    dataIndex: ['status'],
-    key: `node-status`,
-    align: `center`,
-    width: `10%`,
-    render: Stats,
+    headerName: 'Nodes Stats',
+    field: 'status',
+    flex: 0.7,
+    sortable: false,
+    cellRenderer: Stats,
+    cellStyle: { textAlign: 'center' },
+    cellClass: 'vertical-center-cell',
+    headerClass: 'ag-header-cell-center',
   },
   {
-    title: `Status`,
-    //  dataIndex: ['status'],
-    key: `job-status`,
-    //  filterMultiple: true,
-    //  filters: statusFilter,
-    width: `8%`,
-    align: `center`,
-    sorter: sortStatus,
-    //  onFilter: onStatusFilter,
-    render: Status,
+    headerName: 'Status',
+    field: 'status.status',
+    flex: 0.7,
+    sortable: true,
+    unSortIcon: true,
+    comparator: (a, b) => sorter(a, b),
+    cellRenderer: Status,
+    isPinning: true,
+    cellStyle: { textAlign: 'center' },
+    cellClass: 'vertical-center-cell',
+    headerClass: 'ag-header-cell-center',
   },
   {
-    title: `Progress`,
-    key: `progress`,
-    render: Progress,
-    align: `center`,
+    headerName: 'Progress',
+    field: 'progress',
+    minWidth: 150,
+    flex: 2.5,
+    sortable: false,
+    cellRenderer: Progress,
+    isPinning: true,
+    cellStyle: {
+      textAlign: 'center',
+      paddingTop: '11px',
+      paddingBottom: '11px',
+    },
+    suppressMenu: true,
+    headerClass: 'ag-header-cell-center',
   },
 ];
-
-export default jobColumns;

@@ -1,15 +1,14 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback, useRef } from 'react';
 
 import { Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 import useQueryHook from 'hooks/useQuery';
-import { WTable } from 'components';
-import { Card } from 'components/common';
+import { HKGrid , Card } from 'components/common';
 import { Collapse } from 'react-collapse';
-import { Divider, Empty, FloatButton } from 'antd';
+import { Divider, FloatButton } from 'antd';
 import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
-
+import { USER_GUIDE } from 'const';
 import {
   ArrowUpOutlined,
   CaretUpOutlined,
@@ -26,16 +25,17 @@ export { default as jobColumns } from './jobColumns';
 
 const rowKey = job => `job-${job.key}`;
 
-const localeEmpty = {
-  emptyText: (
-    <Empty description={<span>No results match your search criteria</span>} />
-  ),
-};
-
 const Container = styled(Card)`
   & .ant-card-body {
     padding: 5px;
   }
+`;
+
+const JobsWrapper = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 `;
 
 const CaretDownOutlinedCenter = styled(CaretDownOutlined)`
@@ -45,6 +45,7 @@ const CaretDownOutlinedCenter = styled(CaretDownOutlined)`
   transform: translate(-50%, -50%);
   font-size: 20px;
 `;
+
 const CaretUpOutlinedCenter = styled(CaretUpOutlined)`
   position: absolute;
   left: 50%;
@@ -52,7 +53,8 @@ const CaretUpOutlinedCenter = styled(CaretUpOutlined)`
   font-size: 20px;
   margin-top: 18px;
 `;
-const BackToTop = () => document.querySelector('#jobsTable .ant-table-body');
+
+const BackToTop = () => document.querySelector('#jobsTable .ag-body-viewport');
 
 const JobsTable = () => {
   const { keycloakEnable } = useSelector(selectors.connection);
@@ -75,28 +77,70 @@ const JobsTable = () => {
     filterToggeledVar(val);
   };
 
-  // if have keycloak remove avatar from columns job
-  const trimmedColumns = useMemo(() => {
+  // Cache sliced columns
+  const slicedColumnsRef = useRef({ source: null, result: null });
+
+  const columnDefs = useMemo(() => {
     if (!keycloakEnable) {
-      return columns.slice(1);
+      // Return cached sliced columns if source hasn't changed
+      if (slicedColumnsRef.current.source === columns) {
+        return slicedColumnsRef.current.result;
+      }
+      const sliced = columns.slice(1);
+      slicedColumnsRef.current = { source: columns, result: sliced };
+      return sliced;
     }
     return columns;
   }, [columns, keycloakEnable]);
 
+  const rowData = useMemo(() => _dataSource || [], [_dataSource]);
+
+  const handleRowClicked = useCallback(
+    params => {
+      if (onRow) {
+        const rowClickHandler = onRow(params.data);
+        if (rowClickHandler && rowClickHandler.onClick) {
+          rowClickHandler.onClick();
+        }
+      }
+    },
+    [onRow]
+  );
+
+  const getRowId = useCallback(params => rowKey(params.data), []);
+
+  const defaultColDef = useMemo(
+    () => ({
+      resizable: true,
+      sortable: true,
+    }),
+    []
+  );
+
+  const gridStyle = useMemo(
+    () => ({
+      height: '100%',
+      width: '100%',
+    }),
+    []
+  );
+
   return (
-    <>
+    <JobsWrapper>
       <QueryForm
         zoomDate={zoomedChangedDate}
         onSubmit={onQuerySubmit}
         params={mergedParams}
         jobs={_dataSource}
       />
+
       {!filterToggeled && (
         <CaretDownOutlinedCenter
           title="Open Graph"
           onClick={() => toggleCollapseGraph(true)}
         />
       )}
+
       <Collapse isOpened={filterToggeled || false}>
         {dataSourceGraph && filterToggeled && (
           <>
@@ -113,18 +157,23 @@ const JobsTable = () => {
         )}
       </Collapse>
 
-      <WTable
-        id="jobsTable"
-        loading={isTableLoad}
-        onRow={onRow}
-        rowKey={rowKey}
-        expandIcon={false}
-        columns={trimmedColumns}
-        dataSource={_dataSource}
-        pagination={false}
-        scroll={{ y: filterToggeled ? '50vh' : '80vh' }}
-        locale={localeEmpty}
-      />
+      <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
+        <HKGrid
+          id="jobsTable"
+          className={USER_GUIDE.TABLE}
+          rowData={rowData}
+          columnDefs={columnDefs}
+          getRowId={getRowId}
+          onRowClicked={handleRowClicked}
+          loading={isTableLoad}
+          enableRowHoverActions
+          actionClassName={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}
+          defaultColDef={defaultColDef}
+          style={gridStyle}
+          overlayLoadingTemplate='<span class="ag-overlay-loading-center">Loading...</span>'
+          overlayNoRowsTemplate='<span class="ag-overlay-no-rows-center">No results match your search criteria</span>'
+        />
+      </div>
 
       <FloatButton.BackTop
         target={BackToTop}
@@ -134,7 +183,7 @@ const JobsTable = () => {
         size="large"
         icon={<ArrowUpOutlined />}
       />
-    </>
+    </JobsWrapper>
   );
 };
 
