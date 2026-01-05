@@ -1,7 +1,7 @@
 import { COUNTERS_QUERY } from 'graphql/queries';
 import { usePolling } from 'hooks';
 import { message, Button } from 'antd';
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useQuery, useReactiveVar } from '@apollo/client';
@@ -10,6 +10,7 @@ import {
   instanceCounterVar,
   dateTimeDefaultVar,
   pipelineJustStartedVar,
+  metaVar,
 } from 'cache';
 
 const ButtonLinkStyle = styled(Button)`
@@ -21,8 +22,47 @@ const useCounters = () => {
   const instanceFilters = useReactiveVar(instanceFiltersVar);
   const dateTimeDefault = useReactiveVar(dateTimeDefaultVar);
   const pipelineJustStarted = useReactiveVar(pipelineJustStartedVar);
+  const metaMode = useReactiveVar(metaVar);
   const prevQueueCountRef = useRef(null);
   const prevJobsCountRef = useRef(null);
+
+  const mergedParams = useMemo(() => {
+    const iJobs = instanceFilters.jobs;
+
+    const items = {
+      algorithmName: iJobs?.algorithmName || undefined,
+      pipelineName: iJobs?.pipelineName || undefined,
+      pipelineStatus: iJobs?.pipelineStatus || undefined,
+      user: iJobs?.user || undefined,
+      tag: iJobs?.tag || undefined,
+      datesRange: {
+        from: iJobs?.datesRange?.from || dateTimeDefault.time,
+        to: iJobs?.datesRange?.to || null,
+      },
+    };
+
+    // Handle experimentName same as useJobsFunctionsLimit
+    if (
+      metaMode?.experimentName != null &&
+      metaMode?.experimentName !== 'show-all'
+    ) {
+      items.experimentName = metaMode.experimentName;
+    } else {
+      items.experimentName = undefined;
+    }
+
+    return items;
+  }, [
+    instanceFilters.jobs?.algorithmName,
+    instanceFilters.jobs?.pipelineName,
+    instanceFilters.jobs?.pipelineStatus,
+    instanceFilters.jobs?.user,
+    instanceFilters.jobs?.tag,
+    instanceFilters.jobs?.datesRange?.from,
+    instanceFilters.jobs?.datesRange?.to,
+    metaMode?.experimentName,
+    dateTimeDefault.time,
+  ]);
 
   const [counters, setCounters] = React.useState({
     jobs: 0,
@@ -39,14 +79,9 @@ const useCounters = () => {
     navigate('/jobs');
   }, [navigate]);
 
-  // eslint-disable-next-line no-unused-vars
+  //  Pass all filters instead of just datesRange
   const query = useQuery(COUNTERS_QUERY, {
-    variables: {
-      datesRange: {
-        from: instanceFilters?.jobs?.datesRange?.from || dateTimeDefault.time,
-        to: instanceFilters?.jobs?.datesRange?.to || null,
-      },
-    },
+    variables: mergedParams,
     // pollInterval: 3000,
     notifyOnNetworkStatusChange: true,
     onCompleted: data => {

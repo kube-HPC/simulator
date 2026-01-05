@@ -1,6 +1,9 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { WarningOutlined, SettingOutlined } from '@ant-design/icons';
+import { ReactComponent as IconNoGpu } from 'images/nogpu.svg';
+import { ReactComponent as IconNoCpu } from 'images/nocpu.svg';
+import { ReactComponent as IconNoMem } from 'images/nomem.svg';
 import { Tag, Tooltip, Typography } from 'antd';
 import { sorter } from 'utils/stringHelper';
 import { copyToClipboard } from 'utils';
@@ -11,9 +14,32 @@ import AlgorithmBuildStats from './AlgorithmBuildStats.react';
 import LastModified from './LastModified';
 
 const HotWorkers = ({ value }) => <Tag>{value}</Tag>;
-const Memory = ({ value }) => <Tag>{value || 'No Memory Specified'}</Tag>;
-const Cpu = ({ value }) => <Tag>{value || 'No CPU Assigned'}</Tag>;
-const Gpu = ({ value }) => <Tag>{value || 'No GPU Assigned'}</Tag>;
+const Cpu = ({ value }) =>
+  value ? (
+    <Tag>{value}</Tag>
+  ) : (
+    <Tooltip title="No CPU Assigned">
+      <IconNoCpu width={34} />
+    </Tooltip>
+  );
+
+const Memory = ({ value }) =>
+  value ? (
+    <Tag>{value}</Tag>
+  ) : (
+    <Tooltip title="No Memory Specified">
+      <IconNoMem width={34} />
+    </Tooltip>
+  );
+
+const Gpu = ({ value }) =>
+  value ? (
+    <Tag>{value}</Tag>
+  ) : (
+    <Tooltip title="No GPU Assigned">
+      <IconNoGpu width={34} />
+    </Tooltip>
+  );
 
 const Image = ({ value }) =>
   value ? (
@@ -59,7 +85,7 @@ export default [
   {
     headerName: '',
     field: 'auditTrail',
-    flex: 0.5,
+    flex: 0.4,
     width: 60,
     sortable: false,
     filter: false,
@@ -110,7 +136,7 @@ export default [
   },
   {
     headerName: 'Min Hot Workers',
-    flex: 0.7,
+    flex: 0.8,
     field: 'minHotWorkers',
     sortable: true,
     unSortIcon: true,
@@ -119,7 +145,7 @@ export default [
   },
   {
     headerName: 'Last Modified',
-    flex: 1,
+    flex: 1.2,
     field: 'modified',
     sortable: true,
     unSortIcon: true,
@@ -131,7 +157,7 @@ export default [
   {
     headerName: 'Actions',
     field: 'Actions',
-    flex: 2,
+    flex: 1.5,
     sortable: false,
     cellRenderer: ({ data }) => <AlgorithmActions record={data} />,
     cellStyle: { textAlign: 'center' },

@@ -16,11 +16,13 @@ const DrawerReadMeFile = ({ name = null, type = null, disabled }) => {
     setIsChange(true);
     setReadme(value);
   };
+
   const closeAll = () => {
     setIsChange(false);
     setIsOpenConfrim(false);
     setIsOpen(false);
   };
+
   const saveAndClose = () => {
     onApply();
 
@@ -38,7 +40,6 @@ const DrawerReadMeFile = ({ name = null, type = null, disabled }) => {
   };
 
   return (
-    //
     <>
       <Button
         type="primary"

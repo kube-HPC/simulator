@@ -83,12 +83,12 @@ const Builds = ({ builds = [], isOpenFirstLog = false }) => {
         items={TabsItemsJson(record)}
         extra={
           <Button
-            disabled={record.result.data === ''}
-            title={`download Logs buildId - ${record.buildId}`}
+            disabled={!record?.result?.data}
+            title={`download Logs buildId - ${record?.buildId}`}
             onClick={() =>
               downloadLogsAsText(
-                record.buildId,
-                record.result.data.split('\r\n\n')
+                record?.buildId,
+                record?.result.data.split('\r\n\n')
               )
             }>
             <DownloadOutlined />

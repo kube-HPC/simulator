@@ -36,6 +36,7 @@ client.interceptors.response.use(
     const originalRequest = error.config;
 
     if (error.response?.status === 403) {
+      // eslint-disable-next-line no-console
       console.log('403 Forbidden');
       events.emit(
         'global_alert_msg',

@@ -1,15 +1,27 @@
+/* eslint-disable react/prop-types */
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import { FireFilled, PauseCircleTwoTone } from '@ant-design/icons';
-import { Tag, Tooltip } from 'antd';
+import { Tag, Tooltip, Space } from 'antd';
 import Ellipsis from 'components/common/Ellipsis.react';
 import { StatusTag as CountTag } from 'components/StatusTag';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { COLOR_TASK_STATUS } from 'styles/colors';
 import { sorter, toUpperCaseFirstLetter } from 'utils/stringHelper';
+import { ReactComponent as IconAddPipeline } from 'images/forward-arrow-icon.svg';
 import WorkersActions from './WorkersActions.react';
+import usePathAlgorithm from '../Algorithms/usePath';
+
+const iconSize = {
+  width: '20px',
+  height: '20px',
+  marginLeft: '5px',
+  opacity: 0.6,
+  cursor: 'pointer',
+};
 
 const undefinedStateFilter = state => state || 'Creating';
 const Actions = algorithm => <WorkersActions algorithm={algorithm} />;
+
 const WorkerState = (_, { workerStatus, jobStatus }) => {
   const title = toUpperCaseFirstLetter(undefinedStateFilter(workerStatus));
   return (
@@ -90,8 +102,34 @@ const InitCount = text => (
 const ExitCount = text => (
   <CountTag status={PIPELINE_STATUS.STOPPED} count={toNum(text)} />
 );
-const HotCount = text => (
-  <CountTag status={PIPELINE_STATUS.COMPLETED} count={toNum(text)} />
+// Create a proper React component for HotCount
+const HotCountComponent = ({ text, record }) => {
+  const { goTo: goToAlgorithm } = usePathAlgorithm();
+
+  const editByAlgorithmName = useCallback(
+    () =>
+      goToAlgorithm.edit({
+        nextAlgorithmId: record.algorithmName,
+        openAdvanced: true,
+      }),
+    [goToAlgorithm, record.algorithmName]
+  );
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <CountTag status={PIPELINE_STATUS.COMPLETED} count={toNum(text)} />
+      <Space.Compact>
+        <Tooltip title={`Edit algorithm ${record.algorithmName}`}>
+          <IconAddPipeline style={iconSize} onClick={editByAlgorithmName} />
+        </Tooltip>
+      </Space.Compact>
+    </div>
+  );
+};
+
+// Render function that returns the component
+const HotCount = (text, record) => (
+  <HotCountComponent text={text} record={record} />
 );
 const Count = text => (
   <CountTag status={PIPELINE_STATUS.COMPLETED} count={toNum(text)} />

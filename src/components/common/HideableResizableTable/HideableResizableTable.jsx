@@ -80,7 +80,6 @@ const HideableResizableTable = ({ tableId, columns, dataSource, ...rest }) => {
                   fontSize: 12,
                 }}
                 onClick={e => {
-                  console.log('click');
                   e.stopPropagation();
                   toggleColumn(key);
                 }}

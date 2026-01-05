@@ -5,7 +5,6 @@ import { useQuery, useReactiveVar } from '@apollo/client';
 import {
   filterToggeledVar,
   instanceFiltersVar,
-  instanceCounterVar,
   metaVar,
   isPinActiveJobVar,
   dateTimeDefaultVar,
