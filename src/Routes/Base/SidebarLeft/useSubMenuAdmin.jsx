@@ -130,7 +130,7 @@ const useSubMenus = (totalNewWarnings, dataMoreCount) => {
           <Link to={{ pathname: path, search: location.search }}>
             <Name>{name}</Name>{' '}
             {count > 0 && (
-              <BadgeStyle offset={[-7, 0]}>
+              <BadgeStyle offset={[-10, 0]}>
                 <Tag color={name === 'Error Log' ? 'red' : ''} style={tagStyle}>
                   {count}
                 </Tag>
