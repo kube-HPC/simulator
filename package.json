@@ -8,7 +8,7 @@
     "analyze": "npm run builder && source-map-explorer 'build/static/*.js'",
     "start": "cross-env VITE_VERSION=$npm_package_version vite",
     "start:proxy": "./dev-proxy/run.sh",
-    "builder": "cross-env VITE_VERSIONge_version vite build",
+    "builder": "cross-env VITE_VERSION=$npm_package_version vite build",
     "preview": "vite preview",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
