@@ -142,7 +142,9 @@ Progress.propTypes = {
 };
 
 const Avatar = ({ value }) => {
-  const username = value?.find(x => x.action === EXECUT_ACTIONS.RUN)?.user;
+  const username = value?.find(
+    entry => entry?.action === EXECUT_ACTIONS.RUN
+  )?.user;
 
   return (
     value && (
