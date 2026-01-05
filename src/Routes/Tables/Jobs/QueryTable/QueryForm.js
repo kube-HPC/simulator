@@ -105,7 +105,7 @@ const QueryForm = ({
   const usersOptions = useMemo(() => {
     const newUsers =
       jobs
-        ?.map(item => (item.auditTrail || []).map(entry => entry.user))
+        ?.map(item => (item.auditTrail || []).map(entry => entry?.user))
         .flat()
         .filter(user => user != null && user !== '') || [];
 
