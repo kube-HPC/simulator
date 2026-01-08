@@ -5,7 +5,7 @@ import Drawer from 'components/Drawer';
 import useToggle from 'hooks/useToggle';
 
 import { useActiveDataSource } from 'hooks/graphql';
-import usePath from './../usePath';
+import usePath from '../usePath';
 
 import Header from './Header';
 import Body from './Body';

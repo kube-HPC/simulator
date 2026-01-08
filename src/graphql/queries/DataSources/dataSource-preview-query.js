@@ -1,4 +1,4 @@
-const { default: gql } = require('graphql-tag');
+import gql from 'graphql-tag';
 
 const DATASOURCE_PREVIEW_QUERY = gql`
   query DataSourcePreviewQuery(

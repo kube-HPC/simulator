@@ -1,4 +1,4 @@
-const { default: gql } = require('graphql-tag');
+import gql from 'graphql-tag';
 
 const MANAGED_LIST_PIPELINE = gql`
   query AggregatedPipelineManaged {

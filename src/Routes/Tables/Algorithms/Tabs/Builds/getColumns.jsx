@@ -1,5 +1,5 @@
 import React from 'react';
-import Moment from 'react-moment';
+import dayjs from 'dayjs';
 import { CloseOutlined, RedoOutlined } from '@ant-design/icons';
 import { Button, Progress } from 'antd';
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
@@ -13,7 +13,7 @@ const BuildId = buildId => (
   <Ellipsis copyable type="secondary" text={buildId} />
 );
 const StartTime = startTime => (
-  <Moment format="DD/MM/YY HH:mm:ss">{+startTime}</Moment>
+  <span>{dayjs(+startTime).format('DD/MM/YY HH:mm:ss')}</span>
 );
 
 const Status = status => <BaseTag status={status}>{status}</BaseTag>;

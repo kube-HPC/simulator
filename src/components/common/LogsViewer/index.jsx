@@ -4,7 +4,6 @@ import dayjs from 'dayjs';
 import AnsiToHtml from 'ansi-to-html';
 import { CopyOutlined } from '@ant-design/icons';
 import { Empty, Tooltip } from 'antd';
-import Moment from 'react-moment';
 import styled from 'styled-components';
 import { notification } from 'utils';
 import {
@@ -56,7 +55,7 @@ const LineNumber = styled.span`
   align-self: flex-start;
 `;
 
-const Timestamp = styled(Moment)`
+const Timestamp = styled.span`
   margin: 0 1ch;
   margin-left: 2ch;
   color: ${COLOR.grey};
@@ -106,7 +105,7 @@ const Entry = ({ log, index, style }) => {
   return (
     <LogLine style={style}>
       <LineNumber>{index + 1}</LineNumber>
-      <Timestamp format={timeFormat}>{+log.timestamp}</Timestamp>
+      <Timestamp>{dayjs(+log.timestamp).format(timeFormat)}</Timestamp>
       <Message>{log.message}</Message>
       <Tooltip title="Copy log to clipboard" placement="left">
         <CopyButton onClick={onCopy} type="button">

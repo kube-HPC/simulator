@@ -1,4 +1,4 @@
-const { default: gql } = require('graphql-tag');
+import gql from 'graphql-tag';
 
 const ALGORITHM_BY_VERSION_QUERY = gql`
   query AlgorithmsByVersion($name: String!, $version: String!) {

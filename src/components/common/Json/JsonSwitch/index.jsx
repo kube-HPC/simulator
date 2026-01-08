@@ -5,7 +5,7 @@ import React, { useMemo } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled from 'styled-components';
 import { notification, stringify } from 'utils';
-import GraphPreview from './../../../../Routes/Tables/Jobs/GridView/GraphPreview';
+import GraphPreview from '../../../../Routes/Tables/Jobs/GridView/GraphPreview';
 
 const TABS = {
   JSON: 'JSON',

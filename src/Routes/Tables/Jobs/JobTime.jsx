@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import HumanizeDuration from 'humanize-duration';
 import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import Moment from 'react-moment';
+import dayjs from 'dayjs';
 
 const { Text } = Typography;
 
@@ -45,9 +45,9 @@ const JobTime = ({ results, startTime = 0, length = 15, style }) => {
 
   return (
     <Tag style={style}>
-      <Moment format="DD/MM/YY HH:mm:ss" style={{ marginRight: '1ch' }}>
-        {+startTime}
-      </Moment>
+      <span style={{ marginRight: '1ch' }}>
+        {dayjs(+startTime).format('DD/MM/YY HH:mm:ss')}
+      </span>
       <TimeText strong>{time}</TimeText>
     </Tag>
   );

@@ -11,7 +11,7 @@ import { COLOR, COLOR_LAYOUT, Theme } from 'styles';
 import { useActions, useCacheFilters } from 'hooks';
 import Header from 'Routes/Base/Header';
 import { instanceFiltersVar, numberErrorGraphQLVar } from 'cache';
-import useApolloClient from './../graphql/useApolloClient';
+import useApolloClient from '../graphql/useApolloClient';
 import { Drawer as SiderBarRightDrawer } from './SidebarRight';
 import SidebarLeft from './Base/SidebarLeft';
 import UserGuide from './Base/UserGuide';

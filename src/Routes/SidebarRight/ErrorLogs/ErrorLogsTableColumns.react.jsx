@@ -2,7 +2,7 @@ import { Tag, Typography } from 'antd';
 import Ellipsis from 'components/common/Ellipsis.react';
 import { SERVICES } from 'const/services';
 import React from 'react';
-import Moment from 'react-moment';
+import dayjs from 'dayjs';
 import { COLOR_SERVICE } from 'styles/colors';
 import { sorter, stringify } from 'utils/stringHelper';
 
@@ -53,7 +53,9 @@ const errorLogsTableColumns = [
     sorter: (a, b) => sorter(a.timestamp, b.timestamp),
     render: timestamp => (
       <Tag>
-        <Moment format="DD/MM/YY HH:mm:ss">{+timestamp}</Moment>
+        {timestamp
+          ? dayjs(+timestamp).format('DD/MM/YY HH:mm:ss')
+          : '--/--/-- --:--:--'}
       </Tag>
     ),
   },

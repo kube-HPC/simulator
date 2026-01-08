@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { USER_GUIDE } from 'const';
 import { EditFilled } from '@ant-design/icons';
 import { Popover, Switch, Typography, Tooltip, Space } from 'antd';
-import Moment from 'react-moment';
+import dayjs from 'dayjs';
 import { useActions, usePipeline } from 'hooks';
 import { FlexBox, CronModel } from 'components/common';
 import cronParser from 'cron-parser';
@@ -62,22 +62,21 @@ const PipelineCron = ({ pipeline }) => {
 
   try {
     const interval = cronParser.parseExpression(value);
+    const nextInterval = interval.next();
+    const nextIntervalDate = nextInterval.toDate();
+    const formattedNextInterval =
+      dayjs(nextIntervalDate).format('DD/MM/YY HH:mm:ss');
     // cronstrue.toString throws error on invalid cronExpr
     renderTooltip = (
       <Text>
         {cronstrue.toString(value, {
           use24HourTimeFormat: true,
         })}
-        , Next Interval:<Text code>{interval.next().toString()}</Text>
+        , Next Interval:<Text code>{nextIntervalDate.toString()}</Text>
       </Text>
     );
 
-    renderTime = (
-      <Text>
-        Next:{' '}
-        <Moment format="DD/MM/YY HH:mm:ss">{interval.next().toString()}</Moment>
-      </Text>
-    );
+    renderTime = <Text>Next: {formattedNextInterval}</Text>;
   } catch (errorMessage) {
     // No need,
     // On error `renderToolTip` got default value.

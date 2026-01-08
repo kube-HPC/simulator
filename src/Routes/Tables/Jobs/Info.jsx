@@ -34,15 +34,16 @@ const JobInfo = ({ job }) => {
     () => removeNullUndefinedCleanDeep(userPipeline),
     [userPipeline]
   );
-  const pipelineView = useMemo(() => removeNullUndefinedCleanDeep(pipeline), [
-    pipeline,
-  ]);
+  const pipelineView = useMemo(
+    () => removeNullUndefinedCleanDeep(pipeline),
+    [pipeline]
+  );
 
   const algorithms = pipeline.nodes.map(n => n.algorithmName);
-  const fetchJobTrace = useCallback(() => fetch({ jobId: key, algorithms }), [
-    fetch,
-    key,
-  ]);
+  const fetchJobTrace = useCallback(
+    () => fetch({ jobId: key, algorithms }),
+    [fetch, key]
+  );
 
   const refreshButton = currentTab === OVERVIEW_JOB_TABS.TRACE && (
     <Button onClick={fetchJobTrace} icon={<RedoOutlined />}>
