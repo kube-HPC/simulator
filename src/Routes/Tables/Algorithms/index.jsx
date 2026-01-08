@@ -3,7 +3,7 @@ import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
 import { SkeletonLoader, HKGrid } from 'components/common';
 import { Route, Routes } from 'react-router-dom';
-
+import _ from 'lodash';
 import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar, makeVar } from '@apollo/client';
 import { instanceFiltersVar } from 'cache';
@@ -29,10 +29,15 @@ const AlgorithmsTable = () => {
   usePolling(query, 3000);
 
   useEffect(() => {
-    if (query.data?.algorithms?.list) {
-      algorithmsListVar(query.data.algorithms.list);
+    const newList = query.data?.algorithms?.list;
+    if (!newList) return;
+
+    const current = algorithmsListVar();
+
+    if (!_.isEqual(current, newList)) {
+      algorithmsListVar(newList);
     }
-  }, [query.data]);
+  }, [query.data?.algorithms?.list]);
 
   const algorithmsList = useReactiveVar(algorithmsListVar);
 
