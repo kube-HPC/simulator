@@ -68,7 +68,7 @@ module.exports = defineConfig(({ mode }) => {
     define: {
       global: 'globalThis',
     },
-
+    base: './',
     /**
      * ⚠️ ORDER MATTERS
      * dashboardConfigPlugin MUST be first
