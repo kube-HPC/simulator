@@ -47,7 +47,6 @@
     "react-apexcharts": "^1.4.0",
     "react-collapse": "^5.1.0",
     "react-js-cron": "^3.2.0",
-    "virtualizedtableforantd4": "^1.3.2",
     "vis-network": "^10.0.1"
   },
   "devDependencies": {
@@ -94,7 +93,6 @@
     "http-proxy-middleware": "^3.0.0",
     "humanize-duration": "^3.32.0",
     "husky": "^4.3.8",
-    "jaeger-react-trace-component": "^2.0.1",
     "jsdoc-parser": "^0.1.0",
     "lint-staged": "^15.2.2",
     "lodash": "^4.17.21",
@@ -116,8 +114,8 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^6.23.0",
     "react-spring": "^10.0.3",
-    "react-virtualized": "^9.22.5",
-    "react18-json-view": "^0.2.8",
+    "react-virtualized": "^9.22.6",
+    "react18-json-view": "^0.2.9",
     "redux": "^5.0.1",
     "redux-actions": "^3.0.3",
     "redux-logger": "^3.0.6",
@@ -129,7 +127,6 @@
     "styled-components": "^6.1.11",
     "styled-tools": "^1.7.2",
     "use-debounce": "^10.0.0",
-    "virtualizedtableforantd4": "^1.3.1",
     "vite": "^5.2.8",
     "vite-plugin-monaco-editor": "^1.1.0",
     "vite-tsconfig-paths": "^4.3.2"
