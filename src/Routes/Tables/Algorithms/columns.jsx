@@ -13,7 +13,12 @@ import AlgorithmActions from './AlgorithmActions.react';
 import AlgorithmBuildStats from './AlgorithmBuildStats.react';
 import LastModified from './LastModified';
 
+// ============================================================================
+// CELL RENDERERS
+// ============================================================================
+
 const HotWorkers = ({ value }) => <Tag>{value}</Tag>;
+
 const Cpu = ({ value }) =>
   value ? (
     <Tag>{value}</Tag>
@@ -81,6 +86,43 @@ const Name = ({ value, data }) =>
     </div>
   );
 
+const numericComparator = (a, b) => {
+  if (!a && !b) return 0;
+  if (!a) return 1;
+  if (!b) return -1;
+  return Number(a) - Number(b);
+};
+
+/**
+ * Comparator for memory values with unit parsing (Mi, Gi, Ki, Ti)
+ * Converts all values to bytes for accurate comparison
+ * Null/undefined values are sorted to the end
+ */
+const memoryComparator = (a, b) => {
+  if (!a && !b) return 0;
+  if (!a) return 1;
+  if (!b) return -1;
+
+  const parseMemory = mem => {
+    if (!mem) return 0;
+    const str = String(mem).trim();
+    const num = parseFloat(str);
+
+    if (str.includes('Gi') || str.includes('G')) {
+      return num * 1024 * 1024 * 1024;
+    } else if (str.includes('Mi') || str.includes('M')) {
+      return num * 1024 * 1024;
+    } else if (str.includes('Ki') || str.includes('K')) {
+      return num * 1024;
+    } else if (str.includes('Ti') || str.includes('T')) {
+      return num * 1024 * 1024 * 1024 * 1024;
+    }
+    return num;
+  };
+
+  return parseMemory(a) - parseMemory(b);
+};
+
 export default [
   {
     headerName: '',
@@ -98,7 +140,7 @@ export default [
     flex: 2,
     sortable: true,
     unSortIcon: true,
-    comparator: (a, b) => sorter(a, b),
+    comparator: sorter,
     cellRenderer: Name,
     isPinning: true,
   },
@@ -107,7 +149,7 @@ export default [
     field: 'algorithmImage',
     flex: 3,
     sortable: true,
-    comparator: (a, b) => sorter(a, b),
+    comparator: sorter,
     cellRenderer: Image,
   },
   {
@@ -118,20 +160,29 @@ export default [
   },
   {
     headerName: 'CPU',
-    flex: 0.5,
+    flex: 0.6,
     field: 'cpu',
+    sortable: true,
+    unSortIcon: true,
+    comparator: numericComparator,
     cellRenderer: Cpu,
   },
   {
     headerName: 'GPU',
-    flex: 0.5,
+    flex: 0.6,
     field: 'gpu',
+    sortable: true,
+    unSortIcon: true,
+    comparator: numericComparator,
     cellRenderer: Gpu,
   },
   {
     headerName: 'Mem',
     flex: 0.7,
     field: 'mem',
+    sortable: true,
+    unSortIcon: true,
+    comparator: memoryComparator,
     cellRenderer: Memory,
   },
   {
@@ -140,7 +191,7 @@ export default [
     field: 'minHotWorkers',
     sortable: true,
     unSortIcon: true,
-    comparator: (a, b) => sorter(a, b),
+    comparator: sorter,
     cellRenderer: HotWorkers,
   },
   {
@@ -149,7 +200,7 @@ export default [
     field: 'modified',
     sortable: true,
     unSortIcon: true,
-    comparator: (a, b) => sorter(a, b),
+    comparator: sorter,
     cellRenderer: ({ data }) => (
       <LastModified auditTrail={data.auditTrail} modified={data.modified} />
     ),
