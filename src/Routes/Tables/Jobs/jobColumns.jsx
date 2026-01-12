@@ -166,7 +166,7 @@ export default [
     headerName: '',
     field: 'auditTrail',
     minWidth: 60,
-    flex: 0.5,
+    flex: 0.2,
     filter: false,
     sortable: false,
     cellRenderer: Avatar,
@@ -185,7 +185,7 @@ export default [
   {
     headerName: 'Job ID',
     field: 'key',
-    flex: 1,
+    flex: 1.1,
     sortable: false,
     unSortIcon: true,
     cellRenderer: Id,
@@ -209,7 +209,7 @@ export default [
   {
     headerName: 'Start Time',
     field: 'pipeline.startTime',
-    flex: 1.3,
+    flex: 1.4,
     sortable: true,
     unSortIcon: true,
     comparator: (a, b) => a - b,
