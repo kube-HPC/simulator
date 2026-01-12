@@ -95,12 +95,12 @@ const JobsTable = () => {
 
   const rowData = useMemo(() => _dataSource || [], [_dataSource]);
 
-  const handleRowClicked = useCallback(
+  const handleRowDoubleClicked = useCallback(
     params => {
       if (onRow) {
         const rowClickHandler = onRow(params.data);
-        if (rowClickHandler && rowClickHandler.onClick) {
-          rowClickHandler.onClick();
+        if (rowClickHandler && rowClickHandler.onDoubleClick) {
+          rowClickHandler.onDoubleClick();
         }
       }
     },
@@ -164,7 +164,7 @@ const JobsTable = () => {
           rowData={rowData}
           columnDefs={columnDefs}
           getRowId={getRowId}
-          onRowClicked={handleRowClicked}
+          onRowDoubleClicked={handleRowDoubleClicked}
           loading={isTableLoad}
           enableRowHoverActions
           actionClassName={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}

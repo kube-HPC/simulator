@@ -38,9 +38,13 @@ const PipelineNameActions = ({ pipeline }) => {
   const instanceFilters = useReactiveVar(instanceFiltersVar);
 
   const filterByPipeline = pipelineName => {
-    const filters = instanceFilters;
-    filters.jobs.pipelineName = pipelineName;
-    instanceFiltersVar({ ...instanceFiltersVar(), filters });
+    instanceFiltersVar({
+      ...instanceFilters,
+      jobs: {
+        ...instanceFilters.jobs,
+        pipelineName: pipelineName,
+      },
+    });
   };
 
   const editByPipelineID = useCallback(
