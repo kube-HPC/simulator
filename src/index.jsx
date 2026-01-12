@@ -1,65 +1,79 @@
 /* eslint-disable */
 import 'core-js/features/array';
 import './assets/collapseTransition.css';
-import { ErrorBoundary } from 'components';
-import { useInitTheme } from 'hooks';
-import { ConfigProvider } from 'antd';
+
 import React, { useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
+import { ConfigProvider } from 'antd';
 import { ReusableProvider } from 'reusable';
+
+import ErrorBoundary from 'components/ErrorBoundary';
+import { useInitTheme } from 'hooks';
 import { initDashboardConfig } from 'actions/connection.action';
 import { selectors } from 'reducers';
+
 import GlobalThemes from './styles/themes/GlobalThemes';
 import Root from './Routes';
 import store from './store';
 import KeycloakServices from './keycloak/keycloakServices';
-import _ from 'lodash';
+
+/* ----------------------------------------------------------
+   MAIN CONFIG-PROVIDER APP
+----------------------------------------------------------- */
 
 const ConfigProviderApp = () => {
-  // do not use the useActions hook
-  // ReusableProvider is not available yet at this point!
-
   const dispatch = useDispatch();
+
   const { themeProvider } = useInitTheme();
   const { hasConfig } = useSelector(selectors.config);
   const { keycloakEnable } = useSelector(selectors.connection);
+
   const firstKc = useRef(true);
 
-  // console.log('keycloakEnable:', keycloakEnable);
+  const tokenRefreshIntervalRef = useRef(null);
+
+  /* -------------------------------
+     keycloak initialization
+  -------------------------------- */
   useEffect(() => {
-    if (keycloakEnable && !KeycloakServices.isLoggedIn() && firstKc.current) {
-      // console.log('keycloakEnable initKeycloak:', keycloakEnable);
+    if (keycloakEnable && firstKc.current && !KeycloakServices.isLoggedIn()) {
       firstKc.current = false;
+
       KeycloakServices.initKeycloak(renderApp, renderErrorPreRenderApp);
     }
   }, [keycloakEnable]);
 
-  let tokenRefreshInterval;
-
+  /* -------------------------------
+     2) Loading config and Token Refresh
+  -------------------------------- */
   useEffect(() => {
-    // get config (dashboard-config.json)
     dispatch(initDashboardConfig());
 
-    if (tokenRefreshInterval) {
-      clearInterval(tokenRefreshInterval);
-      tokenRefreshInterval = null;
+    // Cancel previous interval
+    if (tokenRefreshIntervalRef.current) {
+      clearInterval(tokenRefreshIntervalRef.current);
+      tokenRefreshIntervalRef.current = null;
     }
 
     if (keycloakEnable) {
-      tokenRefreshInterval = KeycloakServices.startPreciseTokenRefresh();
+      tokenRefreshIntervalRef.current =
+        KeycloakServices.startPreciseTokenRefresh();
     }
 
+    // cleanup
     return () => {
-      if (tokenRefreshInterval) {
-        clearInterval(tokenRefreshInterval);
-        tokenRefreshInterval = null;
+      if (tokenRefreshIntervalRef.current) {
+        clearInterval(tokenRefreshIntervalRef.current);
+        tokenRefreshIntervalRef.current = null;
       }
     };
-  }, [keycloakEnable]);
+  }, [keycloakEnable, dispatch]);
 
-  return hasConfig ? (
+  if (!hasConfig) return null;
+
+  return (
     <ConfigProvider theme={themeProvider}>
       <HashRouter>
         <ReusableProvider>
@@ -70,8 +84,12 @@ const ConfigProviderApp = () => {
         </ReusableProvider>
       </HashRouter>
     </ConfigProvider>
-  ) : null;
+  );
 };
+
+/* ----------------------------------------------------------
+   ROOT RENDER FUNCTIONS
+----------------------------------------------------------- */
 
 const container = document.getElementById('root');
 const root = createRoot(container);
@@ -85,7 +103,11 @@ const renderApp = () => {
 };
 
 const renderErrorPreRenderApp = () => {
-  root.render(<>error</>);
+  root.render(
+    <div style={{ padding: 30, color: 'red' }}>
+      Error initializing authentication
+    </div>
+  );
 };
 
 renderApp();
