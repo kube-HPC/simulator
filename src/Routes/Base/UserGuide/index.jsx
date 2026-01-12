@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Joyride, { EVENTS, ACTIONS } from 'react-joyride';
+// import Joyride, { EVENTS, ACTIONS } from 'react-joyride';
 import { useNavigate } from 'react-router-dom';
 import { selectors } from 'reducers';
 import {
@@ -8,8 +8,8 @@ import {
   changeStep as _changeStep,
 } from 'actions/userGuide.action';
 
-import userGuideSteps from './UserGuideSteps.react';
-import UserGuideTooltip from './UserGuideTooltip.react';
+// import userGuideSteps from './UserGuideSteps.react';
+// import UserGuideTooltip from './UserGuideTooltip.react';
 
 const stepAction = [ACTIONS.NEXT, ACTIONS.PREV, ACTIONS.INIT, ACTIONS.UPDATE];
 
@@ -41,6 +41,8 @@ const UserGuide = () => {
   );
 
   return (
+    <></>
+    /*
     isOn && (
       <Joyride
         callback={callback}
@@ -52,8 +54,8 @@ const UserGuide = () => {
         disableScrollParentFix
         disableScrolling
         disableOverlayClose
-      />
-    )
+      /> 
+    )*/
   );
 };
 
