@@ -13,10 +13,6 @@ import AlgorithmActions from './AlgorithmActions.react';
 import AlgorithmBuildStats from './AlgorithmBuildStats.react';
 import LastModified from './LastModified';
 
-// ============================================================================
-// CELL RENDERERS
-// ============================================================================
-
 const HotWorkers = ({ value }) => <Tag>{value}</Tag>;
 
 const Cpu = ({ value }) =>
@@ -122,6 +118,30 @@ const memoryComparator = (a, b) => {
 
   return parseMemory(a) - parseMemory(b);
 };
+/**
+ * Comparator for build stats sorting
+ * DESC: Prioritizes failed builds (highest count first)
+ * ASC: Prioritizes completed builds (highest count first)
+ */
+const buildStatsComparator = (a, b, isDescending) => {
+  // Handle null/undefined cases
+  if (!a && !b) return 0;
+  if (!a) return 1;
+  if (!b) return -1;
+
+  const aTotal = a.total || 0;
+  const bTotal = b.total || 0;
+
+  // Handle no builds cases
+  if (aTotal === 0 && bTotal === 0) return 0;
+  if (aTotal === 0) return 1;
+  if (bTotal === 0) return -1;
+
+  const aCount = isDescending ? a.failed || 0 : a.completed || 0;
+  const bCount = isDescending ? b.failed || 0 : b.completed || 0;
+
+  return bCount - aCount;
+};
 
 export default [
   {
@@ -155,7 +175,10 @@ export default [
   {
     headerName: 'Builds Stats',
     flex: 0.7,
+    sortable: true,
+    unSortIcon: true,
     field: 'buildStats',
+    comparator: buildStatsComparator,
     cellRenderer: ({ value }) => <AlgorithmBuildStats builds={value} />,
   },
   {
