@@ -14,7 +14,7 @@ import { instanceFiltersVar, numberErrorGraphQLVar } from 'cache';
 import useApolloClient from '../graphql/useApolloClient';
 import { Drawer as SiderBarRightDrawer } from './SidebarRight';
 import SidebarLeft from './Base/SidebarLeft';
-import UserGuide from './Base/UserGuide';
+// import UserGuide from './Base/UserGuide';
 import LoadingScreen from './Base/LoadingScreen';
 import Tables from './Tables';
 
@@ -111,7 +111,7 @@ const RoutesNav = () => {
     <ThemeProvider theme={{ ...Theme }}>
       <ApolloProvider client={apolloClient}>
         {contextHolder}
-        <UserGuide />
+        {/* <UserGuide /> */}
         <LayoutFullHeight>
           <Routes>
             <Route path="/*" element={<SidebarLeft />}>
