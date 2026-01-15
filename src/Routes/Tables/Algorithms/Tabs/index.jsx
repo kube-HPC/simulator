@@ -12,7 +12,7 @@ import Text from 'antd/lib/typography/Text';
 import {
   Card,
   JsonSwitch,
-  MdEditor,
+  MdEditorView,
   Tabs,
   JsonDiffTable,
 } from 'components/common';
@@ -193,7 +193,9 @@ const AlgorithmsTabs = ({ algorithm }) => {
       {
         label: TABS.DESCRIPTION,
         key: TABS.DESCRIPTION,
-        children: <MdEditor value={readme} onChange={setReadme} viewReadOnly />,
+        children: (
+          <MdEditorView value={readme} onChange={setReadme} viewReadOnly />
+        ),
       },
     ],
     [

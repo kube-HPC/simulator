@@ -4,7 +4,7 @@ import { useReadMeFile } from 'hooks';
 import PropTypes from 'prop-types';
 import Drawer from 'components/Drawer';
 import { Button, Space, Modal, Flex } from 'antd';
-import { MdEditor } from 'components/common';
+import { MdEditorView } from 'components/common';
 
 const DrawerReadMeFile = ({ name = null, type = null, disabled }) => {
   const [isChange, setIsChange] = useState(false);
@@ -49,10 +49,11 @@ const DrawerReadMeFile = ({ name = null, type = null, disabled }) => {
         Edit Read Me
       </Button>
       <Drawer
+        width="90vw"
         open={isOpen}
         operation="Read Me File"
         onClose={isChange ? () => setIsOpenConfrim(true) : closeAll}>
-        <Space direction="vertical" size="middle">
+        <Space direction="vertical" size="middle" style={{ width: '100%' }}>
           <Modal
             title="Save Before Leave"
             open={isOpenConfrim}
@@ -71,7 +72,7 @@ const DrawerReadMeFile = ({ name = null, type = null, disabled }) => {
               Cancel
             </Button>
           </Flex>
-          <MdEditor value={readme} onChange={onChangeReadMe} />
+          <MdEditorView value={readme} onChange={onChangeReadMe} />
         </Space>
       </Drawer>
     </>
