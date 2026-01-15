@@ -1,6 +1,7 @@
 import { COUNTERS_QUERY } from 'graphql/queries';
 import { usePolling } from 'hooks';
-import { message, Button } from 'antd';
+import { events } from 'utils';
+import { Button } from 'antd';
 import React, { useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -103,7 +104,11 @@ const useCounters = () => {
         prevQueueCountRef.current !== null &&
         counters.queue > prevQueueCountRef.current
       ) {
-        message.info('A new job has been added to the queue');
+        events.emit(
+          'global_alert_msg',
+          'A new job has been added to the queue',
+          'info'
+        );
       }
 
       if (
@@ -111,14 +116,17 @@ const useCounters = () => {
         counters.queue < prevQueueCountRef.current
       ) {
         const jobsStarted = prevQueueCountRef.current - counters.queue;
-        message.success(
+
+        events.emit(
+          'global_alert_msg',
           <>
             {jobsStarted} {jobsStarted === 1 ? 'job' : 'jobs'} started from
             queue, see{' '}
             <ButtonLinkStyle type="link" onClick={gotoJobsTable}>
               jobs
             </ButtonLinkStyle>
-          </>
+          </>,
+          'success'
         );
       }
 
@@ -129,14 +137,17 @@ const useCounters = () => {
         counters.jobs > prevJobsCountRef.current &&
         pipelineJustStarted
       ) {
-        message.success(
+        events.emit(
+          'global_alert_msg',
           <>
             Pipeline started, see{' '}
             <ButtonLinkStyle type="link" onClick={gotoJobsTable}>
               jobs
             </ButtonLinkStyle>
-          </>
+          </>,
+          'success'
         );
+
         pipelineJustStartedVar(false); // reset flag
       }
       prevJobsCountRef.current = counters.jobs;

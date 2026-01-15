@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { message } from 'antd';
+import { events } from 'utils';
 import client from 'client';
 import successMsg from 'config/schema/success-messages.schema';
 import { useNavigate } from 'react-router-dom';
@@ -38,18 +38,24 @@ const usePipeline = () => {
       const errorMessage =
         res.response?.data?.error?.message || res.message || 'Unknown error';
 
-      message.error(errorMessage);
+      events.emit('global_alert_msg', errorMessage, 'error');
     }
   }, []);
 
   const rerunPipeline = useCallback(async jobId => {
     try {
       const res = await client.post(`/exec/rerun`, { jobId });
-      message.success(successMsg(res.data).PIPELINE_START);
+
+      events.emit(
+        'global_alert_msg',
+        successMsg(res.data).PIPELINE_START,
+        'success'
+      );
     } catch (res) {
       const errorMessage =
         res.response?.data?.error?.message || res.message || 'Unknown error';
-      message.error(errorMessage);
+
+      events.emit('global_alert_msg', errorMessage, 'error');
     }
   }, []);
 
@@ -59,11 +65,20 @@ const usePipeline = () => {
         let res = null;
 
         res = await client.put(`/store/pipelines`, { ...data });
-        message.success(successMsg(res.data).PIPELINE_UPDATE);
+
+        events.emit(
+          'global_alert_msg',
+          successMsg(res.data).PIPELINE_UPDATE,
+          'success'
+        );
         window.localStorage.removeItem(LOCAL_STORAGE_KEY);
         navigate('/pipelines');
       } catch (res) {
-        message.error(res.response.data.error.message);
+        events.emit(
+          'global_alert_msg',
+          res.response.data.error.message,
+          'error'
+        );
       }
     },
     [navigate]
@@ -75,12 +90,20 @@ const usePipeline = () => {
         let res = null;
         res = await client.post(`/store/pipelines`, { ...data });
 
-        message.success(successMsg(res.data).PIPELINE_ADD);
+        events.emit(
+          'global_alert_msg',
+          successMsg(res.data).PIPELINE_ADD,
+          'success'
+        );
 
         window.localStorage.removeItem(LOCAL_STORAGE_KEY);
         navigate('/pipelines');
       } catch (res) {
-        message.error(res.response.data.error.message);
+        events.emit(
+          'global_alert_msg',
+          res.response.data.error.message,
+          'error'
+        );
       }
     },
     [navigate]

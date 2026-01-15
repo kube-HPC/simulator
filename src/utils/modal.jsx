@@ -1,4 +1,6 @@
-import { Modal, message } from 'antd';
+import { Modal } from 'antd';
+import { events } from 'utils';
+
 import successMsg from 'config/schema/success-messages.schema';
 import Text from 'antd/lib/typography/Text';
 import React from 'react';
@@ -36,7 +38,11 @@ export const stopConfirmAction = (action, { name }) => {
     onOk() {
       action(name, {
         onSuccess: () => {
-          message.success(successMsg({ name }).ALL_PIPELINE_JOBS_STOP);
+          events.emit(
+            'global_alert_msg',
+            successMsg({ name }).ALL_PIPELINE_JOBS_STOP,
+            'success'
+          );
         },
       });
     },
