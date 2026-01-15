@@ -8,10 +8,10 @@ import restMiddleware from 'middleware/rest.middleware';
 import messagesMiddleware from 'middleware/messages.middleware';
 
 const middleware = [
-  messagesMiddleware,
   // socketMiddleware,
   restConfigMiddleware,
   restMiddleware,
+  messagesMiddleware,
 ];
 
 if (import.meta.env.NODE_ENV === 'development') {

@@ -91,14 +91,11 @@ const RoutesNav = () => {
   }, []);
 
   const [messageApi, contextHolder] = message.useMessage();
-  const handleMessage = msg => {
+  const handleMessage = (msg, type) => {
     messageApi.open({
-      type: 'info',
+      type: type || 'info',
       content: msg,
       className: 'custom-class',
-      style: {
-        marginTop: '20vh',
-      },
     });
   };
 
