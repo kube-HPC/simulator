@@ -1,5 +1,5 @@
 import { Button } from 'antd';
-import { JsonTable, JsonView, Tabs,CopyToClipboard } from 'components/common';
+import { JsonTable, JsonView, Tabs, CopyToClipboard } from 'components/common';
 import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';

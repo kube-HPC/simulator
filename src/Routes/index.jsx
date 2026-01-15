@@ -3,7 +3,7 @@ import { events } from 'utils';
 import { ApolloProvider, useReactiveVar } from '@apollo/client';
 import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
-import { Layout, message, FloatButton, Button } from 'antd';
+import { Layout, message, FloatButton, Button, notification } from 'antd';
 import { ArrowUpOutlined } from '@ant-design/icons';
 import styled, { ThemeProvider } from 'styled-components';
 import { Route, Routes } from 'react-router-dom';
@@ -59,7 +59,7 @@ const RoutesNav = () => {
   const {
     apolloClient,
     openNotification,
-    contextHolderNotification,
+    contextHolderModalApollo,
     isNotificationErrorShow,
     setIsNotificationErrorShow,
   } = useApolloClient();
@@ -91,6 +91,9 @@ const RoutesNav = () => {
   }, []);
 
   const [messageApi, contextHolder] = message.useMessage();
+  const [notificationApi, contextHolderNotification] =
+    notification.useNotification();
+
   const handleMessage = (msg, type) => {
     messageApi.open({
       type: type || 'info',
@@ -98,16 +101,28 @@ const RoutesNav = () => {
       className: 'custom-class',
     });
   };
+  // eslint-disable-next-line no-shadow
+  const handleMessageNotification = ({ type, message, description }) => {
+    notificationApi[type ?? 'error']({
+      title: message,
+      description: description ? `${message}. ${description}` : message,
+    });
+  };
 
   useEffect(() => {
     events.on('global_alert_msg', handleMessage);
-    return () => events.off('global_alert_msg', handleMessage);
+    events.on('global_notification_msg', handleMessageNotification);
+    return () => {
+      events.off('global_alert_msg', handleMessage);
+      events.off('global_notification_msg', handleMessageNotification);
+    };
   }, []);
 
   return isDataAvailable ? (
     <ThemeProvider theme={{ ...Theme }}>
       <ApolloProvider client={apolloClient}>
         {contextHolder}
+        {contextHolderNotification}
         {/* <UserGuide /> */}
         <LayoutFullHeight>
           <Routes>
@@ -125,7 +140,7 @@ const RoutesNav = () => {
 
             <LayoutFullHeight>
               <ContentMargin id="globalContent">
-                {contextHolderNotification}
+                {contextHolderModalApollo}
                 <Tables />
                 <FloatButton.BackTop target={BackToTop}>
                   <Button
