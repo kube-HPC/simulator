@@ -100,6 +100,16 @@ export default defineConfig(({ mode }) => {
       sourcemap: true,
       emptyOutDir: true,
       assetInlineLimit: 0,
+
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            react: ['react', 'react-dom'],
+            monaco: ['monaco-editor'],
+            graph: ['react-graph-vis'],
+          },
+        },
+      },
     },
 
     server: {

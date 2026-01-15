@@ -8,7 +8,7 @@
     "analyze": "npm run builder && source-map-explorer 'build/static/*.js'",
     "start": "cross-env VITE_VERSION=$npm_package_version vite",
     "start:proxy": "./dev-proxy/run.sh",
-    "builder": "cross-env VITE_VERSION=$npm_package_version vite build",
+    "builder": "cross-env VITE_VERSION=$npm_package_version NODE_OPTIONS='--max-old-space-size=8192' vite build",
     "preview": "vite preview",
     "build": "./dockerfile/build.sh simulator",
     "test-travis": "echo \"No test specified, in future we may be use vitest run\" && exit 0",
