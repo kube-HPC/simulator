@@ -2,7 +2,7 @@ import { createRequire } from 'module';
 
 const require = createRequire(import.meta.url);
 
-const setupConfig = require('./setupConfig.cjs');
+const setupConfig = require('./setupConfig.mjs');
 
 const {
   monitorBackend,
