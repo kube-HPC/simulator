@@ -4,8 +4,8 @@ require('dotenv').config({ path: path.resolve(__dirname, '..', '.env.local') });
 const express = require('express');
 const http = require('http');
 const fs = require('fs');
-const { indexHtml, baseUrl } = require('./setupConfig');
-const buildDashboardConfig = require('./dashboardConfig');
+const { indexHtml, baseUrl } = require('./setupConfig.cjs');
+const buildDashboardConfig = require('./dashboardConfig.mjs');
 
 const app = express();
 const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 9050;
