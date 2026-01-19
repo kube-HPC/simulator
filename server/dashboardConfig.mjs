@@ -1,8 +1,4 @@
-import { createRequire } from 'module';
-
-const require = createRequire(import.meta.url);
-
-const setupConfig = require('./setupConfig.mjs');
+import * as setupConfig from './setupConfig.mjs';
 
 const {
   monitorBackend,
