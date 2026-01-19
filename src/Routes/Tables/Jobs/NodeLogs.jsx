@@ -2,12 +2,10 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled from 'styled-components';
 import { notification } from 'utils';
 import { logModes, podStatus } from '@hkube/consts';
 import { COLOR_TASK_STATUS } from 'styles/colors';
-
 import {
   CopyOutlined,
   LoadingOutlined,
@@ -31,7 +29,7 @@ import {
   Popover,
 } from 'antd';
 import { FiltersPanel } from 'styles';
-import { FlexBox } from 'components/common';
+import { FlexBox, CopyToClipboard } from 'components/common';
 import LogsViewer from 'components/common/LogsViewer';
 import { useLogs } from 'hooks/graphql';
 import { useDebounceCallback } from '@react-hook/debounce';

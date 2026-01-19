@@ -4,7 +4,7 @@ import { StopOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Popconfirm } from 'antd';
 import PropTypes from 'prop-types';
 import { useActions } from 'hooks';
-import { useVT } from 'virtualizedtableforantd4';
+// import { useVT } from 'virtualizedtableforantd4';
 import { SelectFilterOptions } from './QueueOrderComponents';
 import { TableAllInOneTypeColumns } from './QueueOrderComponents/TableAllInOneTypeColumns';
 import { TableAllInOne, FilterTable } from './OrderStyles';
@@ -24,7 +24,11 @@ const TableOrderConsolidated = ({
   const { stopPipeline } = useActions();
   const [isLoading, setIsLoading] = useState(true);
   const [stopAllInQueueIsRun, setStopAllInQueueIsRun] = useState(false);
-  const [vt] = useVT(
+
+  // eslint-disable-next-line no-console
+  console.log(handlePageSize);
+
+  /* const [vt] = useVT(
     () => ({
       initTop: 1,
       onScroll: ({ isEnd }) => {
@@ -37,7 +41,7 @@ const TableOrderConsolidated = ({
       debug: false,
     }),
     [dataSourceAllJobs]
-  );
+  ); */
 
   const onSelectFilter = selectValue => {
     filterTableAllInOne(selectValue);
@@ -75,7 +79,7 @@ const TableOrderConsolidated = ({
         rowKey={record => `${record.key}_${record.typeElement}`}
         scroll={{ y: '80vh' }}
         loading={isLoading}
-        components={vt}
+        //  components={vt}
       />
       <BottomPanel>
         {dataSourceAllJobs.length > 0 && (

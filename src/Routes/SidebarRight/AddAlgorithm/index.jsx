@@ -1,8 +1,9 @@
 import React, { memo, useState, useCallback, useRef, useEffect } from 'react';
 import client from 'client';
+
 import { errorsCode } from '@hkube/consts';
 import PropTypes from 'prop-types';
-import { Checkbox, Modal, message } from 'antd';
+import { Checkbox, Modal } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import { addAlgorithmTemplate } from 'config';
 import {
@@ -10,6 +11,7 @@ import {
   transformFieldsToObject,
   transformObjectToArray,
   setTypeVolume,
+  events,
 } from 'utils'; // mergeObjects, tryParseJson
 import { OVERVIEW_TABS } from 'const';
 import { useNavigate } from 'react-router-dom';
@@ -300,17 +302,28 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
       if (
         dataResponse?.messagesCode?.includes(errorsCode.NO_TRIGGER_FOR_BUILD)
       ) {
-        message.warning(
-          'No trigger for build since there was not change in uploaded file.'
+        events.emit(
+          'global_alert_msg',
+          'No trigger for build since there was not change in uploaded file.',
+          'warning'
         );
+
         isMsgApplied = false;
       }
 
       if (isMsgApplied) {
         if (dataResponse?.error?.code === 400) {
-          message.error(dataResponse?.error?.message || 'Something is wrong!');
+          events.emit(
+            'global_alert_msg',
+            dataResponse?.error?.message || 'Something is wrong!',
+            'error'
+          );
         } else {
-          message.success('Algorithm Applied, check Algorithms table');
+          events.emit(
+            'global_alert_msg',
+            'Algorithm Applied, check Algorithms table',
+            'success'
+          );
         }
       }
 
@@ -373,7 +386,8 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
               },
             });
           } else {
-            message.error(data?.error?.message || 'Something is wrong!');
+            events.emit(data?.error?.message || 'Something is wrong!', 'error');
+
             setIsSubmitLoading(false);
           }
         });
@@ -408,8 +422,10 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
       })
       .catch(error => {
         setIsSubmitLoading(false);
-        message.error(
-          error?.response?.data?.error?.message || 'Something is wrong!'
+
+        events.emit(
+          error?.response?.data?.error?.message || 'Something is wrong!',
+          'error'
         );
       });
   };

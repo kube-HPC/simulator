@@ -7,7 +7,7 @@ import Icon, { FilterTwoTone } from '@ant-design/icons';
 import { Badge, Tag } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
 import { useErrorLogs, useCounters } from 'hooks/graphql';
-import { dataCountMock } from 'config';
+// import { dataCountMock } from 'config';
 import { LEFT_SIDEBAR_NAMES, USER_GUIDE } from 'const';
 import { ReactComponent as AlgorithmIcon } from 'images/algorithm-icon.svg';
 import { ReactComponent as DataSourceIcon } from 'images/datasource.svg';
@@ -101,10 +101,10 @@ const SidebarLeft = () => {
 
   const dataCountSource = instanceCounterAdapter(instanceCounter);
 
-  const { isOn } = useSelector(selectors.userGuide);
+  // const { isOn } = useSelector(selectors.userGuide);
   const [isOpenMenuAdministration, setIsOpenMenuAdministration] =
     useState(false);
-  const dataCount = isOn ? dataCountMock : dataCountSource;
+  const dataCount = dataCountSource; // isOn ? dataCountMock : dataCountSource;
   const { menuAdminItemsJson, menuObservabilityItemsJson } = useSubMenus(
     totalNewWarnings,
     dataCount

@@ -1,3 +1,5 @@
+import * as setupConfig from './setupConfig.mjs';
+
 const {
   monitorBackend,
   board,
@@ -9,7 +11,7 @@ const {
   dataSourceIsEnable,
   keycloakEnable,
   baseUrl,
-} = require('./setupConfig');
+} = setupConfig;
 
 const buildDashboardConfig = () => ({
   hkubeSystemVersion,
@@ -24,4 +26,4 @@ const buildDashboardConfig = () => ({
   board,
 });
 
-module.exports = buildDashboardConfig;
+export default buildDashboardConfig;

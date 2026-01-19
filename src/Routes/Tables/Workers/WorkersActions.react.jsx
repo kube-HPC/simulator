@@ -1,7 +1,8 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { StopOutlined } from '@ant-design/icons';
-import { message, Button, Tooltip, Popconfirm, Space } from 'antd';
+import { events } from 'utils';
+import { Button, Tooltip, Popconfirm, Space } from 'antd';
 
 import { useActions } from 'hooks';
 import isEqual from 'lodash/isEqual';
@@ -13,21 +14,26 @@ const WorkersActions = ({ algorithm = null, stopAllWorkers = [] }) => {
 
   const onStopSuccess = () => {
     setStopWorkerIsRun(true);
-    message.success(
+    events.emit(
+      'global_alert_msg',
       <>
         Stop worker is started. It may take a few moments for the algorithms to
         be deleted.
-      </>
+      </>,
+      'success'
     );
   };
 
   const onStopAllSuccess = () => {
     setStopWorkerIsRun(true);
-    message.success(
+
+    events.emit(
+      'global_alert_msg',
       <>
         All Stop workers is started. It may take a few moments for the
         algorithms to be deleted.
-      </>
+      </>,
+      'success'
     );
   };
 
