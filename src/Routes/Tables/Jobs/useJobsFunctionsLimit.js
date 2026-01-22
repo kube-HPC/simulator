@@ -47,7 +47,13 @@ const useJobsFunctionsLimit = () => {
   const metaMode = useReactiveVar(metaVar);
   const [dataSourceGraph, setDataSourceGraph] = useState([]);
   const [zoomedChangedDate, setZoomedChangedDate] = useState(Date.now());
-  const [defDate] = useState(getDateTimeZoneString(dayjs(dateNow)));
+  const defDate = useMemo(
+    () =>
+      getDateTimeZoneString(
+        dateTimeDefault?.time ? dateTimeDefault.time : dayjs(dateNow)
+      ),
+    [dateTimeDefault?.time]
+  );
   const [isTableLoad, setIsTableLoad] = useState(true);
   const [isGraphLoad, setIsGraphLoad] = useState(true);
   const [limitGetJobs, setLimitGetJobs] = useState(numberLimitJobs);
@@ -107,7 +113,7 @@ const useJobsFunctionsLimit = () => {
       }),
     },
     onCompleted: () => {
-      setChangeDs(!changeDs);
+      setChangeDs(previousState => !previousState);
       setIsGetMore(true);
     },
   });
@@ -270,11 +276,17 @@ const useJobsFunctionsLimit = () => {
 
   useEffect(() => {
     if (firstUpdate.current) {
-      const filter = { ...instanceFilters };
+      const filter = {
+        ...instanceFilters,
+        jobs: {
+          ...instanceFilters.jobs,
+          datesRange: { ...instanceFilters.jobs.datesRange },
+        },
+      };
       if (filter.jobs.datesRange.from === null) {
         filter.jobs.datesRange.from = dateTimeDefault.time;
       }
-      instanceFiltersVar({ ...filter });
+      instanceFiltersVar(filter);
       firstUpdate.current = false;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
