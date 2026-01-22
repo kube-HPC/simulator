@@ -26,7 +26,14 @@ const TagsFiltersViews = ({ sectionName }) => {
   const propFilters = instanceFilters[sectionName];
 
   const closeFilter = key => {
-    const resetKey = { ...instanceFiltersVar() };
+    const current = instanceFiltersVar();
+    const resetKey = {
+      ...current,
+      [sectionName]: {
+        ...current[sectionName],
+        datesRange: { ...current[sectionName].datesRange },
+      },
+    };
 
     if (key === 'datesRange.from') resetKey[sectionName].datesRange.from = null;
     else if (key === 'datesRange.to')
