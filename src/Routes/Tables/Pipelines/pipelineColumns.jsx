@@ -8,10 +8,6 @@ import PipelineCron from './PipelineCron.react';
 import PipelineStats from './PipelineStats.react';
 import LastModified from './../Algorithms/LastModified';
 
-/* ---------- Cell Renderers ---------- */
-
-// params = { value, data, node, ... }
-
 const AuditTrailCell = params => <AuditTrailAvatar auditTrail={params.value} />;
 const LastModifiedCell = params => (
   <LastModified
@@ -32,11 +28,28 @@ const CronCell = params => <PipelineCron pipeline={params.data} />;
 
 const ActionsCell = params => <PipelineActions pipeline={params.data} />;
 
-/* ---------- Sorters ---------- */
+const cronComparator = (a, b) => {
+  const getEnabledStatus = trigger => {
+    if (!trigger) return null;
+    if (!trigger.cron) return null;
 
-// const sortByName = (a, b) => sorter(a.name, b.name);
-// const sortByLastModified = (a, b) => sorter(a.modified, b.modified);
+    return trigger.cron.enabled ?? false;
+  };
 
+  const enabledA = getEnabledStatus(a);
+  const enabledB = getEnabledStatus(b);
+
+  // Handle null cases (no cron job)
+  if (enabledA === null && enabledB === null) return 0;
+  if (enabledA === null) return 1;
+  if (enabledB === null) return -1;
+
+  // Sort by enabled status: true (ON) comes before false (OFF)
+  if (enabledA !== enabledB) {
+    return enabledB - enabledA;
+  }
+  return 0;
+};
 const pipelineColumnDefs = [
   {
     headerName: '',
@@ -53,14 +66,15 @@ const pipelineColumnDefs = [
     flex: 3,
     sortable: true,
     unSortIcon: true,
-    // comparator: sortByName,
     cellRenderer: PipelineNameCell,
   },
   {
     headerName: 'Cron Job',
     field: 'triggers',
     flex: 1.5,
-    sortable: false,
+    sortable: true,
+    unSortIcon: true,
+    comparator: cronComparator,
     cellRenderer: CronCell,
   },
   {
@@ -76,7 +90,6 @@ const pipelineColumnDefs = [
     flex: 1,
     sortable: true,
     unSortIcon: true,
-    // comparator: sortByLastModified,
     cellRenderer: LastModifiedCell,
     cellStyle: { textAlign: 'center' },
   },
