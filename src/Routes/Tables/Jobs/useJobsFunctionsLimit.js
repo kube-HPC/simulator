@@ -244,35 +244,17 @@ const useJobsFunctionsLimit = () => {
     }
   }, [queryAllJobs.data, changeDs]);
 
-  const handleMaxScroll = useCallback(
-    event => {
-      const maxScroll = event.target.scrollHeight - event.target.clientHeight;
-      const currentScroll = event.target.scrollTop;
 
-      if (isGetMore && currentScroll > maxScroll - 10) {
-        setIsTableLoad(true);
-        setTimeout(() => {
-          setIsTableLoad(false);
-        }, 3000);
-        setIsGetMore(false);
-        onFetchMore();
-      }
-    },
-    [isGetMore]
-  );
 
-  useEffect(() => {
-    const tableContent = document.querySelector('#jobsTable .ag-body-viewport');
-    if (tableContent) {
-      tableContent.addEventListener('scroll', handleMaxScroll);
-    }
+const handleBodyScroll = useCallback((params) => {
+  const lastRow = params.api.getLastDisplayedRowIndex();
+  const totalRows = params.api.getDisplayedRowCount();
 
-    return () => {
-      if (tableContent) {
-        tableContent.removeEventListener('scroll', handleMaxScroll);
-      }
-    };
-  }, [handleMaxScroll]);
+  if (isGetMore && lastRow >= totalRows - 1 && !queryAllJobs.loading) {
+    setIsGetMore(false);
+    onFetchMore();
+  }
+}, [isGetMore, queryAllJobs.loading]);
 
   useEffect(() => {
     if (firstUpdate.current) {
@@ -291,6 +273,12 @@ const useJobsFunctionsLimit = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+  if (!firstUpdate.current) {
+   queryAllJobs.refetch().then(() => setIsGetMore(true));
+  }
+}, [limitGetJobs]);
 
   /**
    * Memoized column definitions with stable references
@@ -329,6 +317,7 @@ const useJobsFunctionsLimit = () => {
     columns: jobColumnsMemo,
     _dataSource,
     setLimitGetJobs,
+    handleBodyScroll
   };
 };
 
