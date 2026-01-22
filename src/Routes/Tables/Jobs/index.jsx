@@ -66,7 +66,7 @@ const JobsTable = () => {
     mergedParams,
     dataSourceGraph,
     debouncedZoomChanged,
-
+    handleBodyScroll,
     isTableLoad,
     onRow,
     columns,
@@ -172,6 +172,7 @@ const JobsTable = () => {
           style={gridStyle}
           overlayLoadingTemplate='<span class="ag-overlay-loading-center">Loading...</span>'
           overlayNoRowsTemplate='<span class="ag-overlay-no-rows-center">No results match your search criteria</span>'
+          onBodyScroll={handleBodyScroll}
         />
       </div>
 
