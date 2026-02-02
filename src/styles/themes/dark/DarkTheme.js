@@ -85,8 +85,8 @@ const DarkTheme = COMMON_COLOR => {
     filters: { backgroundColor: '#2f306c30', borderColor: '#053054' },
     jobsGraph: {
       mode: 'dark',
-      backgroundBarColor: '#0b426b',
-      borderBarColor: '#147cc2',
+      backgroundBarColor: '#405d74',
+      borderBarColor: '#26465c',
       backgroundBarNodesColor: '#1c325c',
       fontNodeColor: '#00000073',
     },
