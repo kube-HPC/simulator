@@ -29,6 +29,7 @@ const useWizardInitial = (
   setIsStreamingPipeline
 ) => {
   const [kindOverSelect, setKindOverSelect] = useState('stream');
+  const [modal, contextHolderModal] = Modal.useModal();
 
   const [nodeNames] = useState(
     valuesState?.nodes?.map(item => item?.nodeName) || []
@@ -159,7 +160,7 @@ const useWizardInitial = (
       if (valuesState.kind !== value) {
         const msgCountent = msgByKind(value, form);
         if (msgCountent) {
-          Modal.confirm({
+          modal.confirm({
             title: 'Warning',
             content: msgCountent,
             onOk: () => {
@@ -189,7 +190,7 @@ const useWizardInitial = (
         }
       }
     },
-    [form, msgByKind, setForm, setIsStreamingPipeline, valuesState.kind]
+    [form, msgByKind, modal, setForm, setIsStreamingPipeline, valuesState.kind]
   );
 
   return {
@@ -197,6 +198,7 @@ const useWizardInitial = (
     kindOverSelect,
     setKindOverSelect,
     handleRadioClick,
+    contextHolderModal,
   };
 };
 
