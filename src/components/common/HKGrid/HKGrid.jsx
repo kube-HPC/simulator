@@ -12,9 +12,10 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 const ActionChip = styled.div`
   padding: 4px;
   font-size: 10px;
-  background: #e7e7e7;
+  background: ${props => props.theme.Styles.HKGrid.ActionChip || '#e7e7e7'};
   border-radius: 6px;
   cursor: pointer;
+ 
 `;
 
 const LoadingOverlay = styled.div`
@@ -26,7 +27,7 @@ const LoadingOverlay = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  background: rgba(255, 255, 255, 0.8);
+  background: ${props => props.theme.Styles.HKGrid.LoadingOverlay || 'rgba(255, 255, 255, 0.8)'};
   z-index: 10;
 `;
 
