@@ -5,7 +5,7 @@ import {
   SaveOutlined,
   CheckCircleOutlined,
 } from '@ant-design/icons';
-import { Button, Modal, Tooltip, Typography, Tag, Input } from 'antd';
+import { Button, Tooltip, Typography, Tag, Input } from 'antd';
 import dayjs from 'dayjs';
 import { sorter } from 'utils/stringHelper';
 import UserAvatar from 'components/UserAvatar';
@@ -15,8 +15,8 @@ import Ellipsis from '../common/Ellipsis.react';
 
 const { Text } = Typography;
 
-const deleteConfirmAction = (action, { name, version }, source) => {
-  Modal.confirm({
+const deleteConfirmAction = (modal, action, { name, version }, source) => {
+  modal.confirm({
     title: `Deleting ${source} version`,
     content: (
       <>
@@ -33,8 +33,8 @@ const deleteConfirmAction = (action, { name, version }, source) => {
   });
 };
 
-const currentConfirmAction = (action, { name, version }, source) => {
-  Modal.confirm({
+const currentConfirmAction = (modal, action, { name, version }, source) => {
+  modal.confirm({
     title: `Change ${source} version`,
     content: (
       <>
@@ -50,13 +50,13 @@ const currentConfirmAction = (action, { name, version }, source) => {
   });
 };
 //
-const addConfirmAction = (action, { name, version }, source) => {
+const addConfirmAction = (modal, action, { name, version }, source) => {
   let newName = `${name}-copy`;
   const isAlgorithm = source === 'algorithms';
   const itemType = isAlgorithm ? 'algorithm' : 'pipeline';
   const itemTypeCapitalized = isAlgorithm ? 'Algorithm' : 'Pipeline';
 
-  Modal.confirm({
+  modal.confirm({
     title: `Save as new ${itemType}`,
     content: (
       <div style={{ marginTop: 16 }}>
@@ -76,7 +76,7 @@ const addConfirmAction = (action, { name, version }, source) => {
     cancelText: 'Cancel',
     onOk: () => {
       if (!newName.trim()) {
-        Modal.error({
+        modal.error({
           title: 'Error',
           content: `Please enter a ${itemType} name.`,
         });
@@ -103,6 +103,7 @@ const Created = created =>
   created ? dayjs(+created).format('DD/MM/YY HH:mm:ss') : '--/--/-- --:--:--';
 
 const getVersionsColumns = ({
+  modal,
   onDelete,
   onApply,
   onSaveAs,
@@ -156,7 +157,9 @@ const getVersionsColumns = ({
               shape="circle"
               icon={<CheckOutlined />}
               disabled={isCurrentVersion}
-              onClick={() => currentConfirmAction(onApply, record, source)}
+              onClick={() =>
+                currentConfirmAction(modal, onApply, record, source)
+              }
             />
           </Tooltip>
         </FlexBox.Item>
@@ -172,7 +175,7 @@ const getVersionsColumns = ({
               shape="circle"
               icon={<DeleteOutlined />}
               disabled={isCurrentVersion}
-              onClick={() => deleteConfirmAction(onDelete, record, source)}
+              onClick={() => deleteConfirmAction(modal, onDelete, record, source)}
             />
           </Tooltip>
         </FlexBox.Item>
@@ -183,7 +186,7 @@ const getVersionsColumns = ({
               shape="circle"
               icon={<SaveOutlined />}
               style={isCurrentVersion ? { borderColor: '#ada4a4ff' } : {}}
-              onClick={() => addConfirmAction(onSaveAs, record, source)}
+              onClick={() => addConfirmAction(modal, onSaveAs, record, source)}
             />
           </Tooltip>
         </FlexBox.Item>

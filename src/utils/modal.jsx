@@ -1,12 +1,11 @@
-import { Modal } from 'antd';
 import { events } from 'utils';
 
 import successMsg from 'config/schema/success-messages.schema';
 import Text from 'antd/lib/typography/Text';
 import React from 'react';
 
-export const deleteConfirmAction = (action, { name }) => {
-  Modal.confirm({
+export const deleteConfirmAction = (modal, action, { name }) => {
+  modal.confirm({
     title: 'WARNING Deleting Pipeline',
     content: (
       <>
@@ -23,8 +22,8 @@ export const deleteConfirmAction = (action, { name }) => {
   });
 };
 
-export const stopConfirmAction = (action, { name }) => {
-  Modal.confirm({
+export const stopConfirmAction = (modal, action, { name }) => {
+  modal.confirm({
     title: 'WARNING stop all jobs',
     content: (
       <>

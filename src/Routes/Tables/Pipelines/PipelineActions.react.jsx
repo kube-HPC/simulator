@@ -9,7 +9,7 @@ import {
   PlayCircleOutlined,
   StopOutlined,
 } from '@ant-design/icons';
-import { Button, Empty, Popover, Tooltip, Space } from 'antd';
+import { Button, Empty, Popover, Tooltip, Space, Modal } from 'antd';
 import KeycloakServices from 'keycloak/keycloakServices';
 import { keycloakRoles } from '@hkube/consts';
 
@@ -30,6 +30,7 @@ const PipelineActions = ({ pipeline, className = '' }) => {
   const { goTo } = usePath();
   const { deleteStored: remove, stopAllPipeline } = useActions();
   const { keycloakEnable } = useSelector(selectors.connection);
+  const [modal, contextHolderModal] = Modal.useModal();
 
   const isRoleEdit = keycloakEnable
     ? KeycloakServices.getUserRoles(keycloakRoles.API_EDIT)
@@ -50,13 +51,13 @@ const PipelineActions = ({ pipeline, className = '' }) => {
   const hasNodes = nodes.length !== 0;
 
   const onDelete = useCallback(
-    () => deleteConfirmAction(remove, pipeline),
-    [pipeline, remove]
+    () => deleteConfirmAction(modal, remove, pipeline),
+    [modal, pipeline, remove]
   );
 
   const onStop = useCallback(
-    () => stopConfirmAction(stopAllPipeline, pipeline),
-    [pipeline, stopAllPipeline]
+    () => stopConfirmAction(modal, stopAllPipeline, pipeline),
+    [modal, pipeline, stopAllPipeline]
   );
 
   const setPopupContainer = useCallback(() => container.current, [container]);
@@ -90,6 +91,7 @@ const PipelineActions = ({ pipeline, className = '' }) => {
       ref={container}
       onClick={stopPropagation}
       onDoubleClick={stopPropagation}>
+      {contextHolderModal}
       <Space.Compact className={className} style={{ marginTop: '10px' }}>
         <Popover
           title={title}
