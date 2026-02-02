@@ -16,8 +16,8 @@ import { useActions } from 'hooks';
 import RunForm from './RunForm';
 import usePath from './usePath';
 
-const deleteConfirmAction = action => {
-  Modal.confirm({
+const deleteConfirmAction = (modal, action) => {
+  modal.confirm({
     title: 'Deleting Algorithm',
     content: (
       <>
@@ -58,6 +58,7 @@ const AlgorithmActions = ({ record }) => {
   const { name } = algorithm;
 
   const { /* applyAlgorithm , */ deleteAlgorithm, runAlgorithm } = useActions();
+  const [modal, contextHolderModal] = Modal.useModal();
   const container = useRef();
 
   // const [inputs, setInputs] = useState(EMPTY_INITIAL);
@@ -79,8 +80,8 @@ const AlgorithmActions = ({ record }) => {
   );
 
   const onClickDelete = useCallback(
-    () => deleteConfirmAction(() => deleteAlgorithm(name)),
-    [deleteAlgorithm, name]
+    () => deleteConfirmAction(modal, () => deleteAlgorithm(name)),
+    [deleteAlgorithm, modal, name]
   );
 
   const onRun = useCallback(
@@ -129,6 +130,7 @@ const AlgorithmActions = ({ record }) => {
       role="none"
       onClick={stopPropagation}
       onDoubleClick={stopPropagation}>
+      {contextHolderModal}
       <Space.Compact>
         {isRoleRunOrStop ? (
           <Popover
