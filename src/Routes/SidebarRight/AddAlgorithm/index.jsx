@@ -45,6 +45,7 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
   );
   const toggleEditor = () => setEditorIsVisible(prev => !prev);
   const [fileList, setFileList] = useState([]);
+  const [modal, contextHolderModal] = Modal.useModal();
 
   // switch from Form Object to Json
 
@@ -357,7 +358,7 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
           const { data } = error.response;
 
           if (data.error.details) {
-            Modal.confirm({
+            modal.confirm({
               title: 'WARNING : Version not upgraded',
               content: (
                 <>
@@ -392,7 +393,7 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
           }
         });
     },
-    [onAfterSaveAlgorithm, navigate]
+    [modal, onAfterSaveAlgorithm, navigate]
   );
 
   const onWizardSubmit = ({ formData }) => {
@@ -437,37 +438,42 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
   }, []);
   // #endregion
 
-  return editorIsVisible ? (
-    <AlgorithmJsonEditor
-      isEdit={isEdit}
-      editorJsonValue={editorJsonValue}
-      setEditorJsonValue={setEditorJsonValue}
-      onWizardSubmit={onWizardSubmit}
-      toggleEditor={switchToForm}
-      setIsCheckForceStopAlgorithms={setIsCheckForceStopAlgorithms}
-      refCheckForceStopAlgorithms={refCheckForceStopAlgorithms}
-      isCheckForceStopAlgorithms={isCheckForceStopAlgorithms}
-      sourceJson={algorithmValue || DEFAULT_EDITOR_VALUE}
-      fileList={fileList}
-      setFileList={setFileList}
-    />
-  ) : (
-    <AddAlgorithmForm
-      onToggle={switchToJson}
-      onSubmit={onWizardSubmit}
-      isEdit={isEdit}
-      keyValueFormObject={keyValueFormObject}
-      setIsSubmitLoading={setIsSubmitLoading}
-      onOverviewAlgorithm={onOverviewAlgorithm}
-      applyAlgorithmVersion={applyAlgorithmVersion}
-      isCheckForceStopAlgorithms={isCheckForceStopAlgorithms}
-      isSubmitLoading={isSubmitLoading}
-      setIsCheckForceStopAlgorithms={setIsCheckForceStopAlgorithms}
-      onAfterSaveAlgorithm={onAfterSaveAlgorithm}
-      refCheckForceStopAlgorithms={refCheckForceStopAlgorithms}
-      fileList={fileList}
-      setFileList={setFileList}
-    />
+  return (
+    <>
+      {contextHolderModal}
+      {editorIsVisible ? (
+        <AlgorithmJsonEditor
+          isEdit={isEdit}
+          editorJsonValue={editorJsonValue}
+          setEditorJsonValue={setEditorJsonValue}
+          onWizardSubmit={onWizardSubmit}
+          toggleEditor={switchToForm}
+          setIsCheckForceStopAlgorithms={setIsCheckForceStopAlgorithms}
+          refCheckForceStopAlgorithms={refCheckForceStopAlgorithms}
+          isCheckForceStopAlgorithms={isCheckForceStopAlgorithms}
+          sourceJson={algorithmValue || DEFAULT_EDITOR_VALUE}
+          fileList={fileList}
+          setFileList={setFileList}
+        />
+      ) : (
+        <AddAlgorithmForm
+          onToggle={switchToJson}
+          onSubmit={onWizardSubmit}
+          isEdit={isEdit}
+          keyValueFormObject={keyValueFormObject}
+          setIsSubmitLoading={setIsSubmitLoading}
+          onOverviewAlgorithm={onOverviewAlgorithm}
+          applyAlgorithmVersion={applyAlgorithmVersion}
+          isCheckForceStopAlgorithms={isCheckForceStopAlgorithms}
+          isSubmitLoading={isSubmitLoading}
+          setIsCheckForceStopAlgorithms={setIsCheckForceStopAlgorithms}
+          onAfterSaveAlgorithm={onAfterSaveAlgorithm}
+          refCheckForceStopAlgorithms={refCheckForceStopAlgorithms}
+          fileList={fileList}
+          setFileList={setFileList}
+        />
+      )}
+    </>
   );
 };
 
