@@ -38,9 +38,16 @@ Name.propTypes = {
 
 const StartTime = ({ data }) => {
   const { pipeline, results } = data;
-  const { startTime } = pipeline;
+  const { startTime, activeTime, queueTime } = pipeline;
 
-  return <JobTime startTime={startTime} results={results} />;
+  return (
+    <JobTime
+      startTime={startTime}
+      activeTime={activeTime}
+      queueTime={queueTime}
+      results={results}
+    />
+  );
 };
 
 StartTime.propTypes = {

@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import { Tooltip } from 'antd';
 import moment from 'moment';
 
+const QUEUE_THRESHOLD = 750; // 0.75 sec in ms
+
 const Container = styled.div`
   display: flex;
   align-items: center;
@@ -73,7 +75,7 @@ const StatusBadge = styled.div`
 
 const JobTimingSmartDots = ({ data }) => {
   const { pipeline, results } = data;
-  const { startTime, activeTime } = pipeline;
+  const { startTime, activeTime, queueTime: backendQueueTime } = pipeline;
 
   // State for real-time updates
   const [currentTime, setCurrentTime] = useState(Date.now());
@@ -94,9 +96,9 @@ const JobTimingSmartDots = ({ data }) => {
 
   const finishTime = results?.timestamp || null;
 
-  const queueTime = activeTime && startTime ? activeTime - startTime : 0;
-  // Treat as no queue if identical OR if queue wait is less than 750ms
-  const hasNoQueue = activeTime && startTime && queueTime < 750;
+  const queueTime = backendQueueTime || 0;
+  // Treat as no queue if backend queueTime is less than 750ms
+  const hasNoQueue = queueTime < QUEUE_THRESHOLD;
 
   const endTime = finishTime || currentTime; // Use currentTime for real-time updates
   const runningTime = activeTime ? endTime - activeTime : 0;
@@ -165,7 +167,7 @@ const JobTimingSmartDots = ({ data }) => {
           <Tooltip
             title={
               <div>
-                <div>{isRunning ? '⏳ Currently Running' : '✅ Completed'}</div>
+                <div>{isRunning ? 'Currently Running' : 'Completed'}</div>
                 <div>Active Duration: {formatDuration(runningTime)}</div>
                 {finishTime && (
                   <>
@@ -251,9 +253,7 @@ const JobTimingSmartDots = ({ data }) => {
               <Tooltip
                 title={
                   <div>
-                    <div>
-                      {isRunning ? '⏳ Currently Running' : '✅ Completed'}
-                    </div>
+                    <div>{isRunning ? 'Currently Running' : 'Completed'}</div>
                     <div>Active Duration: {formatDuration(runningTime)}</div>
                     {finishTime && (
                       <>
