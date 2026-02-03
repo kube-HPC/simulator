@@ -16,6 +16,7 @@ import JobStatus from './JobStatus';
 import JobTime from './JobTime';
 import JobTypes from './JobTypes';
 import JobTags from './JobTags';
+import JobTimingSmartDots from './JobTimingSmartDots';
 
 const Id = ({ value }) => (
   <Ellipsis
@@ -49,6 +50,13 @@ StartTime.propTypes = {
     }).isRequired,
     results: PropTypes.any,
   }).isRequired,
+};
+
+// New Timeline using JobTimingSmartDots
+const Timeline = ({ data }) => <JobTimingSmartDots data={data} />;
+
+Timeline.propTypes = {
+  data: PropTypes.object.isRequired,
 };
 
 const Status = ({ data }) => {
@@ -212,9 +220,25 @@ export default [
     flex: 1.4,
     sortable: true,
     unSortIcon: true,
+    hide: true,
     comparator: (a, b) => a - b,
     cellRenderer: StartTime,
     cellClass: 'vertical-center-cell',
+  },
+  {
+    headerName: 'Timeline',
+    field: 'pipeline.activeTime',
+    flex: 1.6,
+    minWidth: 160,
+    sortable: true,
+    unSortIcon: true,
+    comparator: (a, b) => a - b,
+    cellRenderer: Timeline,
+    cellClass: 'vertical-center-cell',
+    cellStyle: {
+      paddingTop: '10px',
+      paddingBottom: '10px',
+    },
   },
   {
     headerName: 'Pipeline Type/Tags',
