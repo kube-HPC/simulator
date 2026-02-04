@@ -37,24 +37,39 @@ const TimeText = styled.span`
 
 const Connector = styled.div`
   min-width: ${props => (props.hasQueue ? '30px' : '20px')};
-  max-width: ${props => (props.hasQueue ? '40px' : '25px')};
-  height: 2px;
-  background: ${props => props.gradient};
+  width: auto;
+  padding: 12px 0;
+  display: flex;
+  align-items: center;
   position: relative;
+  cursor: pointer;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 2px;
+    background: ${props => props.gradient};
+  }
 `;
 
 const ConnectorLabel = styled.span`
-  position: absolute;
-  top: -11px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
+  z-index: 1;
   font-size: 9px;
   font-weight: 700;
   color: ${props => props.color};
   background: white;
-  padding: 0 4px;
+  padding: 1px 4px;
   border-radius: 4px;
   white-space: nowrap;
+  margin: 0 auto;
+  display: block;
+  text-align: center;
+  margin-top: -4px;
 `;
 
 const StatusBadge = styled.div`
