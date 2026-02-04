@@ -162,11 +162,8 @@ const JobTimingSmartDots = ({ data }) => {
           <Tooltip
             title={
               <div>
-                <div>▶ Active Time</div>
+                <div>▶ Active Time (Started Running)</div>
                 <div>{formatFullTime(activeTime)}</div>
-                <div style={{ marginTop: 4 }}>
-                  No queue wait — started immediately
-                </div>
               </div>
             }>
             <DotItem>
