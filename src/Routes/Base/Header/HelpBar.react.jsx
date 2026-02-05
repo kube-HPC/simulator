@@ -12,6 +12,7 @@ import SettingsUser from './Settings/SettingsUser';
 import Settings from './Settings/Settings.react';
 import InactiveModeTag from './InactiveMode';
 import ExperimentPicker from './ExperimentPicker.react';
+import ServicesStatus from '../../../components/ServicesStatus/ServicesStatus';
 
 const Container = styled(FlexBox.Auto)`
   position: relative;
@@ -21,6 +22,8 @@ const HelpBar = () => {
   const { keycloakEnable } = useSelector(selectors.connection);
   return (
     <Container className={USER_GUIDE.HEADER.SOCIALS}>
+      <ServicesStatus />
+
       <InactiveModeTag />
 
       <ExperimentPicker />

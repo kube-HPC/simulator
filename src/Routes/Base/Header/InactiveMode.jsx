@@ -6,10 +6,10 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Tag = styled(AntTag)`
-  position: absolute;
-  right: 1em;
-  top: 50%;
-  transform: translateY(-50%);
+
+
+
+
 `;
 
 const Content = styled.span`
