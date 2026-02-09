@@ -1,7 +1,7 @@
 const servicesStatusMock = [
   {
     serviceName: 'auth-service',
-    status: 'OK', // OK | DEGRADED | DOWN
+    status: false, // OK | DEGRADED | DOWN
     uptime: 99.98,
     latencyMsP95: 120,
     errorRate: 0.2,
@@ -9,7 +9,7 @@ const servicesStatusMock = [
     services: [
       {
         subServiceName: 'login-api',
-        status: 'OK',
+        status: false,
         latencyMsP95: 95,
         errorRate: 0.1,
         rps: 40,
