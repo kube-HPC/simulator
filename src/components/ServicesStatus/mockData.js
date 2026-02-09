@@ -14,6 +14,7 @@ const servicesStatusMock = [
         errorRate: 0.1,
         rps: 40,
         lastCheck: '2026-02-05T08:42:10Z',
+        number: 1
       },
       {
         subServiceName: 'token-refresh',
@@ -22,7 +23,8 @@ const servicesStatusMock = [
         errorRate: 2.8,
         rps: 12,
         lastCheck: '2026-02-05T08:42:10Z',
-      },
+        number: 2
+      }
     ],
   },
   {
@@ -40,6 +42,7 @@ const servicesStatusMock = [
         errorRate: 0.6,
         rps: 18,
         lastCheck: '2026-02-05T08:42:10Z',
+              number: 1
       },
       {
         subServiceName: 'invoice-generator',
@@ -48,6 +51,7 @@ const servicesStatusMock = [
         errorRate: 100,
         rps: 0,
         lastCheck: '2026-02-05T08:41:02Z',
+              number: 1
       },
     ],
   },
@@ -66,6 +70,7 @@ const servicesStatusMock = [
         errorRate: 0.4,
         rps: 55,
         lastCheck: '2026-02-05T08:42:10Z',
+              number: 1,
       },
       {
         subServiceName: 'sms-gateway',
@@ -74,6 +79,7 @@ const servicesStatusMock = [
         errorRate: 100,
         rps: 0,
         lastCheck: '2026-02-05T08:40:31Z',
+              number: 2,
       },
     ],
   },
