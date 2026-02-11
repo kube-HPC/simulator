@@ -104,6 +104,7 @@ const restMiddleware =
         grafanaDashboardUrl,
         dataSourceIsEnable,
         keycloakEnable,
+        checkIframe,
       } = action.payload.config;
       SOCKET_URL = setMonitorPath(monitorBackend);
       SOCKET_DATASOURCES_URL = setDatasourcesPath(monitorBackend);
@@ -120,6 +121,7 @@ const restMiddleware =
           grafanaDashboardUrl,
           dataSourceIsEnable,
           keycloakEnable,
+          checkIframe,
         })
       );
       client.defaults.baseURL = SOCKET_URL;
