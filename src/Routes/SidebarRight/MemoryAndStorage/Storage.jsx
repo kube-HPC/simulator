@@ -13,7 +13,7 @@ import {
 } from './styles';
 
 const PieContainer = styled.div`
-  height: 9em;
+  height: 12em;
   flex: 1;
   svg + div {
     color: #000000;
@@ -30,7 +30,7 @@ const BoxesContainer = styled.div`
 `;
 
 const StorageStyle = styled.div`
-  height: 45%;
+  height: 30%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
