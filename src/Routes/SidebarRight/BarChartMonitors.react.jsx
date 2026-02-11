@@ -7,6 +7,7 @@ import { Theme } from 'styles/colors';
 import { useMetric } from 'hooks/graphql';
 import { Header } from './MemoryAndStorage/styles';
 import settingBars from './MemoryAndStorage/settingBars';
+import BarChartTotalsPie from './BarChartTotalsPie.react';
 
 const Container = styled.div`
   display: flex;
@@ -17,6 +18,15 @@ const Container = styled.div`
   svg + div {
     color: #000000;
   }
+`;
+const ContainerResponsivePie = styled.div`
+  position: absolute;
+  top: 55%;
+  right: 7%;
+
+  width: 15%;
+  height: 15%;
+  z-index: 10;
 `;
 
 const ResponsiveBarStyle = styled(ResponsiveBar)`
@@ -82,7 +92,23 @@ const getColorMatchId = (dataFill, matchId, color) => {
   return foundItem ? `url(#${foundItem.id}.bg.${color})` : color;
 };
 
-const BarChartMonitors = ({ metric }) => {
+const buildBarsViewFromRows = (rows, keys) =>
+  rows
+    .flatMap(row => keys.map(id => ({ data: { id, data: row } })))
+    .filter(item => item.data.data?.[item.data.id] !== null);
+
+const buildPieDataFromTotals = (rows, keys, palette) => {
+  const barsView = buildBarsViewFromRows(rows, keys);
+  return keys
+    .map((id, index) => ({
+      id,
+      label: id,
+      value: sumTotalByProperty(barsView, id),
+    }))
+    .filter(item => item.value > 0);
+};
+
+const BarChartMonitors = ({ metric, ContainerResponsivePieComponent }) => {
   const { data, legend } = useMetric(metric);
 
   const {
@@ -101,6 +127,8 @@ const BarChartMonitors = ({ metric }) => {
   const [tooltipData, setTooltipData] = useState(null);
   // const dataBars = useRef([]);
 
+  const pieData = buildPieDataFromTotals(data, legend, Theme.GRAPH_PALETTE);
+
   const handleLegendMouseEnter = legendItem => {
     // const idToHighlight = legendItem;
     // const barsToHighlight = data.filter(bar => bar.id === idToHighlight);
@@ -113,6 +141,8 @@ const BarChartMonitors = ({ metric }) => {
 
   const legendsItemsSave = [];
   let legendIndex = 0;
+  const PieContainer = ContainerResponsivePieComponent || ContainerResponsivePie;
+
   return (
     <>
       <Header>{typeName[metric]}</Header>
@@ -277,9 +307,15 @@ const BarChartMonitors = ({ metric }) => {
                                 textAnchor="start"
                                 x="35"
                                 y="22"
-                                style={{ fontSize: '11px' }}>
-                                {bar.data.id}
+                                style={{ fontSize: '12px' }}>
+                                {bar.data.id} :{' '}
+                                <tspan fill="blue" fontWeight="bold">
+                                  {parseFloat(
+                                    sumTotalByProperty(barsView, bar.data.id)
+                                  ).toFixed(2)}
+                                </tspan>
                               </text>
+                                
                             </g>
                           )
                       )}
@@ -291,13 +327,21 @@ const BarChartMonitors = ({ metric }) => {
         />
 
         {tooltipData && <Tooltip dataTip={tooltipData} />}
+
+        
       </Container>
+      <PieContainer>
+        <BarChartTotalsPie pieData={pieData} defs={designBar} fill={fillBar} />
+      </PieContainer>
+     
     </>
   );
 };
 
 BarChartMonitors.propTypes = {
   metric: PropTypes.string.isRequired,
+  ContainerResponsivePieComponent: PropTypes.elementType,
 };
+
 
 export default BarChartMonitors;

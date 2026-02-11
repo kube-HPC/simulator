@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import Drawer from 'components/Drawer';
+import styled from 'styled-components';
 import { TabDrawerText, TabDrawer } from 'styles';
 import { RIGHT_SIDEBAR_NAMES } from 'const';
 import useToggle from 'hooks/useToggle';
@@ -19,6 +20,16 @@ import { DRAWER_TITLES } from '../../const';
 import WorkersTable from '../Tables/Workers';
 import DriversTable from '../Tables/Drivers';
 
+const ContainerResponsivePie = styled.div`
+  position: absolute;
+  top: 69%;
+  right: 15%;
+
+  width: 20%;
+  height: 20%;
+  z-index: 10;
+`;
+
 const operationSelector = {
   // eslint-disable-next-line
   [RIGHT_SIDEBAR_NAMES.WORKERS]: WorkersTable,
@@ -29,7 +40,7 @@ const operationSelector = {
   [RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE]: AddDataSource,
   [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: ErrorLogsTable,
   [RIGHT_SIDEBAR_NAMES.MEMORY]: MemoryAndStorage,
-  [RIGHT_SIDEBAR_NAMES.CPU]: () => <BarChartMonitors metric="cpu" />,
+  [RIGHT_SIDEBAR_NAMES.CPU]: () => <BarChartMonitors metric="cpu" ContainerResponsivePieComponent={ContainerResponsivePie} />,
   [RIGHT_SIDEBAR_NAMES.GPU]: () => <NodeStatistics metric="gpu" />,
 };
 
