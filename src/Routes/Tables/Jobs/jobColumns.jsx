@@ -262,11 +262,12 @@ export default [
   },
   {
     headerName: 'Progress',
-    field: 'progress',
+    field: 'status.data.progress',
     minWidth: 150,
     flex: 2.5,
     sortable: false,
     cellRenderer: Progress,
+    valueGetter: params => params?.data?.status?.data?.progress || 0,
     isPinning: true,
     cellStyle: {
       textAlign: 'center',
