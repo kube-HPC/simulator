@@ -30,6 +30,7 @@ export const connectionSetup = ({
   grafanaDashboardUrl,
   dataSourceIsEnable,
   keycloakEnable,
+  checkIframe,
 }) => ({
   type: actions.CONNECTION_SETUP,
   payload: {
@@ -43,6 +44,7 @@ export const connectionSetup = ({
     grafanaDashboardUrl,
     dataSourceIsEnable,
     keycloakEnable,
+    checkIframe,
   },
 });
 

@@ -13,11 +13,12 @@ const KeycloakConfig = {
 };
 
 const _kc = new Keycloak(KeycloakConfig);
-
-const initKeycloak = (appToRender, renderError) => {
+const initKeycloak = (appToRender, renderError, checkIframe) => {
+  console.log('checkIframe', checkIframe);  
   _kc
     .init({
       onLoad: 'login-required',
+      checkLoginIframe: checkIframe,
     })
     .then(authenticated => {
       if (!authenticated) {
