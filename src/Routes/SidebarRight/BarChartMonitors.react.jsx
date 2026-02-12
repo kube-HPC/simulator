@@ -12,14 +12,11 @@ import { Form } from 'components/common';
 const { Collapsible } = Form;
 
 const Container = styled.div`
-  display: flex;
+
   margin-top: 50px;
 
   height: ${({ $height }) => ($height ? `${($height)+300}px` : '70vh')};
 
-  svg + div {
-    color: #000000;
-  }
 `;
 const PieContainer = styled.div`
   width: 100%;
@@ -29,6 +26,7 @@ const PieContainer = styled.div`
 
 const ResponsiveBarStyle = styled(ResponsiveBar)`
   width: 85%;
+
 `;
 
 const typeName = {
@@ -281,7 +279,7 @@ const BarChartMonitors = ({ metric }) => {
 
   return (
     <>
-      <Header>{typeName[metric]}</Header>
+      <Header  onMouseEnter={() => setTooltipData(null)} >{typeName[metric]}</Header>
       <Container $height={rowPieData} 
       onMouseLeave={() => setTooltipData(null)} 
       onMouseOut={handleLegendMouseLeave} 
@@ -351,7 +349,7 @@ const BarChartMonitors = ({ metric }) => {
 
 
      </Container>
-    <Collapsible title="Total Resource Pie Chart">
+    <Collapsible title="Total Resource Pie Chart" onMouseEnter={() => setTooltipData(null)} >
       <PieContainer>
          <BarChartTotalsPie pieData={pieData} defs={designBar} fill={fillBar} />
       </PieContainer>
