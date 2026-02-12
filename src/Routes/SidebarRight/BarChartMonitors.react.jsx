@@ -282,7 +282,13 @@ const BarChartMonitors = ({ metric }) => {
   return (
     <>
       <Header>{typeName[metric]}</Header>
-      <Container $height={rowPieData} onMouseLeave={() => setTooltipData(null)}>
+      <Container $height={rowPieData} 
+      onMouseLeave={() => setTooltipData(null)} 
+      onMouseOut={handleLegendMouseLeave} 
+      onPointerLeave={handleLegendMouseLeave}
+      onPointerOut={handleLegendMouseLeave}
+    
+      >
         <ResponsiveBarStyle
           data={data}
           keys={legend}
@@ -335,11 +341,16 @@ const BarChartMonitors = ({ metric }) => {
             ),
           ]}
         />
+       
+       
+       
+       
+       {tooltipData && <Tooltip dataTip={tooltipData} />}
 
-        {tooltipData && <Tooltip dataTip={tooltipData} />}
 
-        
-      </Container>
+
+
+     </Container>
     <Collapsible title="Total Resource Pie Chart">
       <PieContainer>
          <BarChartTotalsPie pieData={pieData} defs={designBar} fill={fillBar} />
