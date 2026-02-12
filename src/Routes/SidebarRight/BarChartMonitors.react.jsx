@@ -1,32 +1,30 @@
 import { ResponsiveBar } from '@nivo/bar';
 
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Theme } from 'styles/colors';
 import { useMetric } from 'hooks/graphql';
 import { Header } from './MemoryAndStorage/styles';
 import settingBars from './MemoryAndStorage/settingBars';
 import BarChartTotalsPie from './BarChartTotalsPie.react';
+import { Form } from 'components/common';
+const { Collapsible } = Form;
 
 const Container = styled.div`
   display: flex;
   margin-top: 50px;
 
-  height: 80vh;
+  height: ${({ $height }) => ($height ? `${($height)+300}px` : '70vh')};
 
   svg + div {
     color: #000000;
   }
 `;
-const ContainerResponsivePie = styled.div`
-  position: absolute;
-  top: 55%;
-  right: 7%;
+const PieContainer = styled.div`
+  width: 100%;
+  height: 300px;
 
-  width: 15%;
-  height: 15%;
-  z-index: 10;
 `;
 
 const ResponsiveBarStyle = styled(ResponsiveBar)`
@@ -36,6 +34,7 @@ const ResponsiveBarStyle = styled(ResponsiveBar)`
 const typeName = {
   cpu: 'CPU',
   mem: 'Memory',
+  gpu: 'GPU',
 };
 
 const sumTotalByProperty = (dataArray, sameProp) =>
@@ -108,7 +107,137 @@ const buildPieDataFromTotals = (rows, keys, palette) => {
     .filter(item => item.value > 0);
 };
 
-const BarChartMonitors = ({ metric, ContainerResponsivePieComponent }) => {
+const BarChartLayer = React.memo(
+  ({
+    bars,
+    rest,
+    highlightedBars,
+    fillBar,
+    setTooltipData,
+    handleLegendMouseEnter,
+    handleLegendMouseLeave,
+  }) => {
+    const barsView = useMemo(
+      () => bars.filter(x => x.data.value !== null && x.data.value !== undefined),
+      [bars]
+    );
+
+    const legendItems = useMemo(() => {
+      const seen = new Map();
+      barsView.forEach(bar => {
+        if (bar.data.value && !seen.has(bar.data.id)) {
+          seen.set(bar.data.id, bar);
+        }
+      });
+      return Array.from(seen.values());
+    }, [barsView]);
+
+    return (
+      <>
+        <text
+          key={`textNode${barsView.index}`}
+          transform={`translate(${rest.width - 200},${rest.height / 2}) rotate(-90)`}
+          style={{ fontSize: '17px' }}>
+          Nodes
+        </text>
+        <g key={`gNode${barsView.index}`}>
+          {barsView.map(
+            bar =>
+              bar.data.value && (
+                <g transform={`translate(${bar.x},${bar.y})`} key={bar.key}>
+                  <rect
+                    width={bar.width - 2}
+                    height={bar.height}
+                    fill={getColorMatchId(fillBar, bar.data.id, bar.color)}
+                    strokeWidth={highlightedBars === bar.data.id ? 3 : null}
+                    rx="2"
+                    stroke={
+                      highlightedBars === bar.data.id ? '#8d8d8d' : bar.color
+                    }
+                    onMouseOver={e => {
+                      setTooltipData({
+                        text: `${bar.data.id} - ${bar.data.indexValue} : ${bar.data.value}`,
+                        x: e.clientX,
+                        y: e.clientY,
+                        color: bar.color,
+                      });
+                    }}
+                    onMouseOut={() => {
+                      setTooltipData(null);
+                    }}
+                  />
+
+                  <text
+                    x={bar.width / 2}
+                    y={bar.height / 2}
+                    textAnchor="middle"
+                    dominantBaseline="central"
+                    style={{ fontSize: '13px' }}
+                    onMouseOver={e => {
+                      setTooltipData({
+                        text: `${bar.data.id} - ${bar.data.indexValue} : ${bar.data.value}`,
+                        x: e.clientX,
+                        y: e.clientY,
+                      });
+                    }}
+                    onMouseOut={() => {
+                      setTooltipData(null);
+                    }}>
+                    {bar.data.value}
+                  </text>
+                </g>
+              )
+          )}
+        </g>
+        <g
+          key={`geNode${barsView.index}`}
+          transform={`translate(-70,${rest.innerHeight + 60})`}>
+          {legendItems.map((bar, index) => (
+            <g
+              transform={`translate(${(index % 5) * 270}, ${Math.floor(index / 5) * 50})`}
+              key={bar.data.id}
+              onMouseEnter={e => {
+                handleLegendMouseEnter(bar.data.id);
+                setTooltipData({
+                  text: `${bar.data.id}: ${parseFloat(
+                    sumTotalByProperty(barsView, bar.data.id)
+                  ).toFixed(2)}`,
+                  x: e.clientX,
+                  y: e.clientY,
+                  color: bar.color,
+                });
+              }}
+              onMouseLeave={() => {
+                handleLegendMouseLeave();
+                setTooltipData(null);
+              }}>
+              <rect
+                x="0"
+                y="5"
+                rx="5"
+                fill={getColorMatchId(fillBar, bar.data.id, bar.color)}
+                strokeWidth={highlightedBars === bar.data.id ? 1 : 0}
+                stroke="green"
+                width="30"
+                height="30"
+              />
+              <text textAnchor="start" x="35" y="22" style={{ fontSize: '12px' }}>
+                {bar.data.id} :{' '}
+                <tspan fill="blue" fontWeight="bold">
+                  {parseFloat(
+                    sumTotalByProperty(barsView, bar.data.id)
+                  ).toFixed(2)}
+                </tspan>
+              </text>
+            </g>
+          ))}
+        </g>
+      </>
+    );
+  }
+);
+
+const BarChartMonitors = ({ metric }) => {
   const { data, legend } = useMetric(metric);
 
   const {
@@ -127,26 +256,26 @@ const BarChartMonitors = ({ metric, ContainerResponsivePieComponent }) => {
   const [tooltipData, setTooltipData] = useState(null);
   // const dataBars = useRef([]);
 
-  const pieData = buildPieDataFromTotals(data, legend, Theme.GRAPH_PALETTE);
+  const pieData = useMemo(
+    () => buildPieDataFromTotals(data, legend, Theme.GRAPH_PALETTE),
+    [data, legend]
+  );
+  const rowPieData = useMemo(() => (pieData.length / 5) * 60 + 60, [pieData]);
 
-  const handleLegendMouseEnter = legendItem => {
+  const handleLegendMouseEnter = useCallback(legendItem => {
     // const idToHighlight = legendItem;
     // const barsToHighlight = data.filter(bar => bar.id === idToHighlight);
     setHighlightedBars(legendItem);
-  };
+  }, []);
 
-  const handleLegendMouseLeave = () => {
+  const handleLegendMouseLeave = useCallback(() => {
     setHighlightedBars('');
-  };
-
-  const legendsItemsSave = [];
-  let legendIndex = 0;
-  const PieContainer = ContainerResponsivePieComponent || ContainerResponsivePie;
+  }, []);
 
   return (
     <>
       <Header>{typeName[metric]}</Header>
-      <Container>
+      <Container $height={rowPieData}>
         <ResponsiveBarStyle
           data={data}
           keys={legend}
@@ -154,7 +283,7 @@ const BarChartMonitors = ({ metric, ContainerResponsivePieComponent }) => {
           theme={themePreferencesBar}
           margin={{
             right: 100,
-            bottom: 400,
+            bottom: rowPieData,
             left: 150,
           }}
           padding={0.1}
@@ -186,143 +315,17 @@ const BarChartMonitors = ({ metric, ContainerResponsivePieComponent }) => {
             // 'legends',
             // 'annotations',
 
-            // eslint-disable-next-line react/no-unstable-nested-components
-            ({ bars, ...rest }) => {
-              const barsView = bars.filter(x => x.data.value !== null);
-              return (
-                <>
-                  <text
-                    key={`textNode${barsView.index}`}
-                    transform={`translate(${rest.width - 200},${
-                      rest.height / 2
-                    }) rotate(-90)`}
-                    style={{ fontSize: '17px' }}>
-                    Nodes
-                  </text>
-                  <g key={`gNode${barsView.index}`}>
-                    {barsView &&
-                      barsView.map(
-                        bar =>
-                          bar.data.value && (
-                            <g transform={`translate(${bar.x},${bar.y})`}>
-                              <rect
-                                key={bar.key}
-                                width={bar.width - 2}
-                                height={bar.height}
-                                fill={getColorMatchId(
-                                  fillBar,
-                                  bar.data.id,
-                                  bar.color
-                                )}
-                                strokeWidth={
-                                  highlightedBars === bar.data.id ? 3 : null
-                                }
-                                rx="2"
-                                stroke={
-                                  highlightedBars === bar.data.id
-                                    ? '#8d8d8d'
-                                    : bar.color
-                                }
-                                onMouseOver={e => {
-                                  setTooltipData({
-                                    text: `${bar.data.id} - ${bar.data.indexValue} : ${bar.data.value}`,
-                                    x: e.clientX,
-                                    y: e.clientY,
-                                    color: bar.color,
-                                  }); // Set the tooltip text
-                                }}
-                                onMouseOut={() => {
-                                  setTooltipData(null); // Clear the tooltip text
-                                }}
-                              />
-
-                              <text
-                                x={bar.width / 2}
-                                y={bar.height / 2}
-                                textAnchor="middle"
-                                dominantBaseline="central"
-                                style={{ fontSize: '13px' }}
-                                onMouseOver={e => {
-                                  setTooltipData({
-                                    text: `${bar.data.id} - ${bar.data.indexValue} : ${bar.data.value}`,
-                                    x: e.clientX,
-                                    y: e.clientY,
-                                  }); // Set the tooltip text
-                                }}
-                                onMouseOut={() => {
-                                  setTooltipData(null); // Clear the tooltip text
-                                }}>
-                                {bar.data.value}
-                              </text>
-                            </g>
-                          )
-                      )}
-                  </g>
-                  <g
-                    key={`geNode${barsView.index}`}
-                    transform={`translate(-70,${rest.innerHeight + 60})`}>
-                    {barsView &&
-                      barsView.map(
-                        bar =>
-                          bar.data.value &&
-                          !legendsItemsSave.includes(bar.data.id) &&
-                          legendsItemsSave.push(bar.data.id) && (
-                            <g
-                              transform={`translate(${(legendIndex % 5) * 270}, ${Math.floor(legendIndex / 5) * 50})`}
-                              key={legendIndex++}
-                              onMouseEnter={e => {
-                                handleLegendMouseEnter(bar.data.id);
-
-                                setTooltipData({
-                                  text: `${bar.data.id}: ${parseFloat(
-                                    sumTotalByProperty(barsView, bar.data.id)
-                                  ).toFixed(2)}`,
-                                  x: e.clientX,
-                                  y: e.clientY,
-                                  color: bar.color,
-                                }); // Set the tooltip text
-                              }}
-                              onMouseLeave={() => {
-                                handleLegendMouseLeave();
-                                setTooltipData(null); // Clear the tooltip text
-                              }}>
-                              <rect
-                                x="0"
-                                y="5"
-                                rx="5"
-                                fill={getColorMatchId(
-                                  fillBar,
-                                  bar.data.id,
-                                  bar.color
-                                )}
-                                strokeWidth={
-                                  highlightedBars === bar.data.id ? 1 : 0
-                                }
-                                stroke="green"
-                                width="30"
-                                height="30"
-                                // style="pointer-events: none;"
-                              />
-                              <text
-                                textAnchor="start"
-                                x="35"
-                                y="22"
-                                style={{ fontSize: '12px' }}>
-                                {bar.data.id} :{' '}
-                                <tspan fill="blue" fontWeight="bold">
-                                  {parseFloat(
-                                    sumTotalByProperty(barsView, bar.data.id)
-                                  ).toFixed(2)}
-                                </tspan>
-                              </text>
-                                
-                            </g>
-                          )
-                      )}
-                  </g>
-                </>
-              );
-            },
+            ({ bars, ...rest }) => (
+              <BarChartLayer
+                bars={bars}
+                rest={rest}
+                highlightedBars={highlightedBars}
+                fillBar={fillBar}
+                setTooltipData={setTooltipData}
+                handleLegendMouseEnter={handleLegendMouseEnter}
+                handleLegendMouseLeave={handleLegendMouseLeave}
+              />
+            ),
           ]}
         />
 
@@ -330,9 +333,11 @@ const BarChartMonitors = ({ metric, ContainerResponsivePieComponent }) => {
 
         
       </Container>
+    <Collapsible title="Total Resource Pie Chart">
       <PieContainer>
-        <BarChartTotalsPie pieData={pieData} defs={designBar} fill={fillBar} />
+         <BarChartTotalsPie pieData={pieData} defs={designBar} fill={fillBar} />
       </PieContainer>
+    </Collapsible>
      
     </>
   );
@@ -344,4 +349,4 @@ BarChartMonitors.propTypes = {
 };
 
 
-export default BarChartMonitors;
+export default React.memo(BarChartMonitors);
