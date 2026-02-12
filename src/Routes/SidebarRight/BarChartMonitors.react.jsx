@@ -127,7 +127,8 @@ const BarChartMonitors = ({ metric }) => {
   // const dataBars = useRef([]);
 
   const pieData = buildPieDataFromTotals(data, legend, Theme.GRAPH_PALETTE);
-
+  const rowPieData = pieData.length / 5 * 60 + 60;
+  console.log("rowPieData", rowPieData);
   const handleLegendMouseEnter = legendItem => {
     // const idToHighlight = legendItem;
     // const barsToHighlight = data.filter(bar => bar.id === idToHighlight);
@@ -153,7 +154,7 @@ const BarChartMonitors = ({ metric }) => {
           theme={themePreferencesBar}
           margin={{
             right: 100,
-            bottom: legend.length / 5 * 60,
+            bottom: rowPieData,
             left: 150,
           }}
           padding={0.1}
@@ -187,7 +188,7 @@ const BarChartMonitors = ({ metric }) => {
 
             // eslint-disable-next-line react/no-unstable-nested-components
             ({ bars, ...rest }) => {
-              const barsView = bars.filter(x => x.data.value !== null && x.data.value !== 0 );
+              const barsView = bars.filter(x => x.data.value !== null && x.data.value !== undefined);
               console.log("barsView",barsView);
               return (
                 <>
