@@ -333,7 +333,7 @@ const BarChartMonitors = ({ metric }) => {
 
         
       </Container>
-    <Collapsible title="Total Pie">
+    <Collapsible title="Total Resource Pie Chart">
       <PieContainer>
          <BarChartTotalsPie pieData={pieData} defs={designBar} fill={fillBar} />
       </PieContainer>
