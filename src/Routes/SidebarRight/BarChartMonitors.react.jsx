@@ -12,14 +12,11 @@ import { Form } from 'components/common';
 const { Collapsible } = Form;
 
 const Container = styled.div`
-  display: flex;
+
   margin-top: 50px;
 
   height: ${({ $height }) => ($height ? `${($height)+300}px` : '70vh')};
 
-  svg + div {
-    color: #000000;
-  }
 `;
 const PieContainer = styled.div`
   width: 100%;
@@ -29,6 +26,7 @@ const PieContainer = styled.div`
 
 const ResponsiveBarStyle = styled(ResponsiveBar)`
   width: 85%;
+
 `;
 
 const typeName = {
@@ -208,9 +206,15 @@ const BarChartLayer = React.memo(
                 });
               }}
               onMouseLeave={() => {
-                handleLegendMouseLeave();
                 setTooltipData(null);
-              }}>
+                handleLegendMouseLeave();
+ 
+              }}
+              onMouseOut={() => {
+                setTooltipData(null);
+                handleLegendMouseLeave();
+              }}
+              >
               <rect
                 x="0"
                 y="5"
@@ -260,7 +264,7 @@ const BarChartMonitors = ({ metric }) => {
     () => buildPieDataFromTotals(data, legend, Theme.GRAPH_PALETTE),
     [data, legend]
   );
-  const rowPieData = useMemo(() => (pieData.length / 5) * 60 + 60, [pieData]);
+  const rowPieData = useMemo(() => (pieData.length / 5) * 50 + 70, [pieData]);
 
   const handleLegendMouseEnter = useCallback(legendItem => {
     // const idToHighlight = legendItem;
@@ -270,12 +274,19 @@ const BarChartMonitors = ({ metric }) => {
 
   const handleLegendMouseLeave = useCallback(() => {
     setHighlightedBars('');
+    setTooltipData(null);
   }, []);
 
   return (
     <>
-      <Header>{typeName[metric]}</Header>
-      <Container $height={rowPieData}>
+      <Header  onMouseEnter={() => setTooltipData(null)} >{typeName[metric]}</Header>
+      <Container $height={rowPieData} 
+      onMouseLeave={() => setTooltipData(null)} 
+      onMouseOut={handleLegendMouseLeave} 
+      onPointerLeave={handleLegendMouseLeave}
+      onPointerOut={handleLegendMouseLeave}
+    
+      >
         <ResponsiveBarStyle
           data={data}
           keys={legend}
@@ -328,12 +339,17 @@ const BarChartMonitors = ({ metric }) => {
             ),
           ]}
         />
+       
+       
+       
+       
+       {tooltipData && <Tooltip dataTip={tooltipData} />}
 
-        {tooltipData && <Tooltip dataTip={tooltipData} />}
 
-        
-      </Container>
-    <Collapsible title="Total Resource Pie Chart">
+
+
+     </Container>
+    <Collapsible title="Total Resource Pie Chart" onMouseEnter={() => setTooltipData(null)} >
       <PieContainer>
          <BarChartTotalsPie pieData={pieData} defs={designBar} fill={fillBar} />
       </PieContainer>

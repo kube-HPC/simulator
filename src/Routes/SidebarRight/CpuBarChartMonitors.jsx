@@ -6,7 +6,8 @@ import BarChartMonitors from './BarChartMonitors.react';
 
 const ContainerCPU = styled.div`
  height: 100vh;
- position: relative;
+
+
 `;
 
 const CpuBarChartMonitors = ({metric}) => (
