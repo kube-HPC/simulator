@@ -208,9 +208,15 @@ const BarChartLayer = React.memo(
                 });
               }}
               onMouseLeave={() => {
-                handleLegendMouseLeave();
                 setTooltipData(null);
-              }}>
+                handleLegendMouseLeave();
+ 
+              }}
+              onMouseOut={() => {
+                setTooltipData(null);
+                handleLegendMouseLeave();
+              }}
+              >
               <rect
                 x="0"
                 y="5"
@@ -270,12 +276,13 @@ const BarChartMonitors = ({ metric }) => {
 
   const handleLegendMouseLeave = useCallback(() => {
     setHighlightedBars('');
+    setTooltipData(null);
   }, []);
 
   return (
     <>
       <Header>{typeName[metric]}</Header>
-      <Container $height={rowPieData}>
+      <Container $height={rowPieData} onMouseLeave={() => setTooltipData(null)}>
         <ResponsiveBarStyle
           data={data}
           keys={legend}
