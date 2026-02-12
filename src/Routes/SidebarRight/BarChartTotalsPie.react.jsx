@@ -1,18 +1,43 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { ResponsivePie } from '@nivo/pie';
-import prettyBytes from 'pretty-bytes';
 import { Theme } from 'styles/colors';
 
-const BarChartTotalsPie = ({ pieData, defs, fill }) => (
-  <ResponsivePie
-    data={pieData}
-    margin={{ top: 5, right: 5, bottom: 5, left: 5 }}
-    innerRadius={0.75}
-    padAngle={0.7}
-    cornerRadius={0}
-    valueFormat={prettyBytes}
-    borderWidth={0}
+const BarChartTotalsPie = ({ pieData, defs, fill }) => {
+  const normalizedData = useMemo(() => {
+    const allowedIds = new Set(['free', 'reserved', 'other']);
+    const result = [];
+    let otherValue = 0;
+    let usedValue = 0;
+
+    pieData.forEach((item) => {
+      const id = String(item.id);
+      if (allowedIds.has(id)) {
+        if (id === 'other') {
+          otherValue += item.value;
+        } else {
+          result.push(item);
+        }
+      } else {
+        usedValue += item.value;
+      }
+    });
+
+    result.push({ id: 'other', label: 'other', value: otherValue });
+    result.push({ id: 'used', label: 'used', value: usedValue });
+    return result;
+  }, [pieData]);
+
+  return <ResponsivePie
+    data={normalizedData}
+    margin={{ top: 30, right: 5, bottom: 30, left: 5 }}
+    innerRadius={0.55}
+    padAngle={3}
+    cornerRadius={6}
+    valueFormat={(value) => new Intl.NumberFormat('en-US', {
+      maximumFractionDigits: 2,
+    }).format(value)}
+    borderWidth={0.2}
     enableRadialLabels={false}
     enableSlicesLabels={false}
     animate
@@ -22,9 +47,13 @@ const BarChartTotalsPie = ({ pieData, defs, fill }) => (
     defs={defs}
     fill={fill}
     legends={[]}
-    enableArcLabels={false}
+    enableArcLabels={true}
+    activeOuterRadiusOffset={8}
+   
+     
   />
-);
+
+}
 
 BarChartTotalsPie.propTypes = {
   pieData: PropTypes.arrayOf(

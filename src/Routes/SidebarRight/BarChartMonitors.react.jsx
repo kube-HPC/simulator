@@ -8,25 +8,23 @@ import { useMetric } from 'hooks/graphql';
 import { Header } from './MemoryAndStorage/styles';
 import settingBars from './MemoryAndStorage/settingBars';
 import BarChartTotalsPie from './BarChartTotalsPie.react';
+import { Form } from 'components/common';
+const { Collapsible } = Form;
 
 const Container = styled.div`
   display: flex;
   margin-top: 50px;
 
-  height: 80vh;
+  height: 70vh;
 
   svg + div {
     color: #000000;
   }
 `;
-const ContainerResponsivePie = styled.div`
-  position: absolute;
-  top: 55%;
-  right: 7%;
+const PieContainer = styled.div`
+  width: 100%;
+  height: 300px;
 
-  width: 15%;
-  height: 15%;
-  z-index: 10;
 `;
 
 const ResponsiveBarStyle = styled(ResponsiveBar)`
@@ -36,6 +34,7 @@ const ResponsiveBarStyle = styled(ResponsiveBar)`
 const typeName = {
   cpu: 'CPU',
   mem: 'Memory',
+  gpu: 'GPU',
 };
 
 const sumTotalByProperty = (dataArray, sameProp) =>
@@ -108,7 +107,7 @@ const buildPieDataFromTotals = (rows, keys, palette) => {
     .filter(item => item.value > 0);
 };
 
-const BarChartMonitors = ({ metric, ContainerResponsivePieComponent }) => {
+const BarChartMonitors = ({ metric }) => {
   const { data, legend } = useMetric(metric);
 
   const {
@@ -141,7 +140,7 @@ const BarChartMonitors = ({ metric, ContainerResponsivePieComponent }) => {
 
   const legendsItemsSave = [];
   let legendIndex = 0;
-  const PieContainer = ContainerResponsivePieComponent || ContainerResponsivePie;
+
 
   return (
     <>
@@ -154,7 +153,7 @@ const BarChartMonitors = ({ metric, ContainerResponsivePieComponent }) => {
           theme={themePreferencesBar}
           margin={{
             right: 100,
-            bottom: 400,
+            bottom: legend.length / 5 * 60,
             left: 150,
           }}
           padding={0.1}
@@ -188,7 +187,8 @@ const BarChartMonitors = ({ metric, ContainerResponsivePieComponent }) => {
 
             // eslint-disable-next-line react/no-unstable-nested-components
             ({ bars, ...rest }) => {
-              const barsView = bars.filter(x => x.data.value !== null);
+              const barsView = bars.filter(x => x.data.value !== null && x.data.value !== 0 );
+              console.log("barsView",barsView);
               return (
                 <>
                   <text
@@ -330,9 +330,11 @@ const BarChartMonitors = ({ metric, ContainerResponsivePieComponent }) => {
 
         
       </Container>
+    <Collapsible title="Total Pie">
       <PieContainer>
-        <BarChartTotalsPie pieData={pieData} defs={designBar} fill={fillBar} />
+         <BarChartTotalsPie pieData={pieData} defs={designBar} fill={fillBar} />
       </PieContainer>
+    </Collapsible>
      
     </>
   );
