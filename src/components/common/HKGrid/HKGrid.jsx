@@ -76,6 +76,12 @@ const StyledGridWrapper = styled.div`
   .ag-header-cell-center .ag-header-cell-label {
     justify-content: center;
   }
+
+  .ag-cell-value {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: clip !important;
+  }
 `;
 
 export const HKGrid = ({
@@ -202,7 +208,7 @@ export const HKGrid = ({
               resizable: true,
               suppressMovable: true,
               headerClass: 'break-header',
-            }}
+             }}
             {...props}
           />
         </div>

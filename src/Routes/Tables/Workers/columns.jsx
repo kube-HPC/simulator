@@ -47,14 +47,14 @@ const HotWorker = (_, { workerPaused, hotWorker }) => (
   </>
 );
 
-const PodName = podName => <Ellipsis copyable text={podName} length={65} />;
+const PodName = podName => <Ellipsis copyable text={podName} length={200} />;
 
 const JobId = jobId => {
   const isValidJobId = jobId !== undefined;
   const type = !isValidJobId ? 'warning' : '';
   const text = jobId || 'Not Assigned';
 
-  return <Ellipsis type={type} copyable={isValidJobId} text={text} />;
+  return <Ellipsis type={type} copyable={isValidJobId} text={text}  />;
 };
 
 export const workersTableStats = [
@@ -69,7 +69,10 @@ export const workersTableStats = [
     dataIndex: ['podName'],
     key: 'podName',
     onFilter: (value, record) => record.podName.includes(value),
-    render: PodName,
+    render: podName => ({
+      children: PodName(podName),
+      props: { colSpan: 1 },
+    }),
     sorter: (a, b) => sorter(a.podName, b.podName),
     defaultSortOrder: 'ascend',
   },
@@ -77,12 +80,14 @@ export const workersTableStats = [
     title: 'Worker State',
     dataIndex: ['workerStatus'],
     key: 'workerStatus',
+    onCell: () => ({ colSpan: 1 }),
     render: WorkerState,
   },
   {
     title: 'Job ID',
     dataIndex: ['jobId'],
     key: 'jobId',
+    onCell: () => ({ colSpan: 1 }),
     render: JobId,
   },
 ];
