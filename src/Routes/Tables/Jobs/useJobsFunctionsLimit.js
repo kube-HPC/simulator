@@ -231,7 +231,7 @@ const useJobsFunctionsLimit = () => {
   useEffect(() => {
     if (queryAllJobs?.data) {
       const dsAllJobs = queryAllJobs.data.jobsAggregated.jobs;
-      setDataSource(dsAllJobs);
+ setDataSource(dsAllJobs);
 
       // Update external ID visibility state
       const hasExtId = dsAllJobs.some(x => x.externalId != null);

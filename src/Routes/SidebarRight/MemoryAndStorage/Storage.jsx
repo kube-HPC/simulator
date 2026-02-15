@@ -4,6 +4,8 @@ import prettyBytes from 'pretty-bytes';
 import styled from 'styled-components';
 import { COLOR_STORAGE } from 'styles/colors';
 import { ResponsivePie } from '@nivo/pie';
+import { Form } from 'components/common';
+
 import {
   Metrics,
   MetricHeader,
@@ -12,8 +14,10 @@ import {
   Header,
 } from './styles';
 
+const { Collapsible } = Form;
+
 const PieContainer = styled.div`
-  height: 9em;
+  height: 12em;
   flex: 1;
   svg + div {
     color: #000000;
@@ -30,7 +34,7 @@ const BoxesContainer = styled.div`
 `;
 
 const StorageStyle = styled.div`
-  height: 45%;
+  height: 30%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -68,8 +72,9 @@ const Storage = ({ storage }) => {
   const data = adaptedData({ free, used, freeH, usedH });
 
   return (
+     <Collapsible title="Storage">
     <StorageStyle>
-      <Header>Storage</Header>
+      
       <Metrics>
         <PieContainer>
           <ResponsivePie
@@ -112,6 +117,7 @@ const Storage = ({ storage }) => {
         </BoxesContainer>
       </Metrics>
     </StorageStyle>
+    </Collapsible>
   );
 };
 Storage.propTypes = {
