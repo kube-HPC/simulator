@@ -227,7 +227,7 @@ const BarChartLayer = React.memo(
               />
               <text textAnchor="start" x="35" y="22" style={{ fontSize: '12px' }}>
                 {bar.data.id} :{' '}
-                <tspan fill="blue" fontWeight="bold">
+                <tspan fill="navy" fontWeight="bold">
                   {parseFloat(
                     sumTotalByProperty(barsView, bar.data.id)
                   ).toFixed(2)}
