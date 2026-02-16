@@ -303,6 +303,7 @@ const NodeLogs = ({
                 </Col>
                 <Col span={2}>
                   <Button
+                  title="Search in Kibana"
                     disabled={!linkKibana}
                     onClick={() => window.open(linkKibana)}>
                     <IconKibana />
