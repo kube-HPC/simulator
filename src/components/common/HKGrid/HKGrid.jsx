@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import PropTypes from 'prop-types';
 import { AgGridReact } from 'ag-grid-react';
 import { SettingOutlined, LoadingOutlined } from '@ant-design/icons';
@@ -15,7 +15,6 @@ const ActionChip = styled.div`
   background: ${props => props.theme.Styles.HKGrid.ActionChip || '#e7e7e7'};
   border-radius: 6px;
   cursor: pointer;
- 
 `;
 
 const LoadingOverlay = styled.div`
@@ -39,13 +38,9 @@ const StyledGridWrapper = styled.div`
   ${props =>
     props.$enableRowHoverActions &&
     `
-    .ag-header-cell {
-      background: none !important;
-    }
-
+    .ag-header-cell { background: none !important; }
     .ag-row {
       transition: all 0.3s ease;
-
       .${props.$actionClassName || 'ag-row-actions'} {
         transition: opacity 0.2s ease, width 0.2s ease;
         height: 32px;
@@ -53,7 +48,6 @@ const StyledGridWrapper = styled.div`
         opacity: 0;
         width: 0;
       }
-
       &:hover {
         .${props.$actionClassName || 'ag-row-actions'} {
           transition: opacity 0.1s ease, width 0.1s ease;
@@ -62,29 +56,15 @@ const StyledGridWrapper = styled.div`
         }
       }
     }
-
-    .ag-row:hover {
-      background-color: rgba(0, 0, 0, 0.02);
-    }
+    .ag-row:hover { background-color: rgba(0,0,0,0.02); }
   `}
 
-  .ag-root-wrapper {
-    width: 100%;
-    height: 100%;
-  }
-
-  .ag-header-cell-center .ag-header-cell-label {
-    justify-content: center;
-  }
-
-  .ag-cell-value {
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: clip !important;
-  }
+  .ag-root-wrapper { width: 100%; height: 100%; }
+  .ag-header-cell-center .ag-header-cell-label { justify-content: center; }
+  .ag-cell-value { white-space: nowrap !important; overflow: hidden !important; text-overflow: clip !important; }
 `;
 
-export const HKGrid = ({
+export const HKGrid = forwardRef(({
   rowData,
   columnDefs,
   enableRowHoverActions = false,
@@ -92,49 +72,50 @@ export const HKGrid = ({
   className,
   loading = false,
   ...props
-}) => {
+}, ref) => {
   const gridRef = useRef(null);
   const [columnsState, setColumnsState] = useState([]);
+  const [gridApi, setGridApi] = useState(null); 
 
   const onGridReady = params => {
     gridRef.current = params.api;
+    setGridApi(params.api); 
 
-    const currentColumns =
-      gridRef.current.getAllGridColumns()?.map(col => ({
-        field: col.getColDef().field,
-        headerName: col.getColDef().headerName,
-        visible: col.isVisible(),
-        isPinning: col.getColDef().isPinning,
-      })) || [];
+    const currentColumns = params.api.getAllGridColumns()?.map(col => ({
+      field: col.getColDef().field,
+      headerName: col.getColDef().headerName,
+      visible: col.isVisible(),
+      isPinning: col.getColDef().isPinning,
+    })) || [];
 
     setColumnsState(currentColumns);
   };
 
+  useImperativeHandle(ref, () => ({
+    refreshCells: (params = { force: true }) => {
+      if (gridApi) {
+        gridApi.refreshCells(params);
+      }
+    },
+    getApi: () => gridApi,
+  }));
+
   const toggleColumn = field => {
-    if (!gridRef.current) return;
-
-    const colApi = gridRef.current;
-    const col = colApi.getColumn(field);
-
-    colApi.setColumnsVisible([field], !col.visible);
-
-    setColumnsState(cols =>
-      cols.map(c => (c.field === field ? { ...c, visible: !c.visible } : c))
-    );
+    if (!gridApi) return;
+    const col = gridApi.getColumn(field);
+    gridApi.setColumnsVisible([field], !col.visible);
+    setColumnsState(cols => cols.map(c => c.field === field ? { ...c, visible: !c.visible } : c));
   };
 
   const resetColumns = () => {
-    if (!gridRef.current) return;
-
-    gridRef.current.resetColumnState();
-
-    const resetState = gridRef.current.getAllGridColumns().map(col => ({
+    if (!gridApi) return;
+    gridApi.resetColumnState();
+    const resetState = gridApi.getAllGridColumns().map(col => ({
       field: col.getColDef().field,
       headerName: col.getColDef().headerName,
       visible: col.isVisible(),
       isPinning: col.getColDef().isPinning,
     }));
-
     setColumnsState(resetState);
   };
 
@@ -149,7 +130,8 @@ export const HKGrid = ({
                 checked={col.visible}
                 onChange={() => toggleColumn(col.field)}
                 disabled={col.isPinning}
-                style={col.isPinning ? { color: '#aaa' } : {}}>
+                style={col.isPinning ? { color: '#aaa' } : {}}
+              >
                 {col.headerName}
               </Checkbox>
             </Menu.Item>
@@ -165,36 +147,33 @@ export const HKGrid = ({
 
   const antIcon = <LoadingOutlined style={{ fontSize: 40 }} spin />;
 
+  // Force refresh when rowData 
+  useEffect(() => {
+    if (gridApi) {
+      gridApi.refreshCells({ force: true });
+    }
+  }, [rowData, gridApi]);
+
   return (
     <>
-      <div
-        style={{
-          width: '65px',
-          position: 'absolute',
-          right: '30px',
-          zIndex: 100,
-          marginTop: '4px',
-        }}>
+      <div style={{ width: '65px', position: 'absolute', right: '30px', zIndex: 100, marginTop: '4px' }}>
         <Dropdown overlay={menu} trigger={['click']}>
-          <ActionChip>
-            <SettingOutlined /> Columns
-          </ActionChip>
+          <ActionChip><SettingOutlined /> Columns</ActionChip>
         </Dropdown>
       </div>
 
       <StyledGridWrapper
         className={className}
         $enableRowHoverActions={enableRowHoverActions}
-        $actionClassName={actionClassName}>
+        $actionClassName={actionClassName}
+      >
         {loading && (
           <LoadingOverlay>
             <Spin indicator={antIcon} />
           </LoadingOverlay>
         )}
 
-        <div
-          className="ag-theme-alpine"
-          style={{ height: '100%', width: '100%' }}>
+        <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
           <AgGridReact
             ref={gridRef}
             onGridReady={onGridReady}
@@ -208,14 +187,14 @@ export const HKGrid = ({
               resizable: true,
               suppressMovable: true,
               headerClass: 'break-header',
-             }}
+            }}
             {...props}
           />
         </div>
       </StyledGridWrapper>
     </>
   );
-};
+});
 
 HKGrid.propTypes = {
   rowData: PropTypes.array.isRequired,
