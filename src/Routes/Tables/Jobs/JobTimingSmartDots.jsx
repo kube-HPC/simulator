@@ -1,11 +1,12 @@
-// JobTimingSmartDots.jsx
+// JobTimingSmartDots.jsx - WITH FALLBACK QUEUE CALCULATION
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Tooltip } from 'antd';
 import moment from 'moment';
 
-const QUEUE_THRESHOLD = 750; // 0.75 sec in ms
+const QUEUE_THRESHOLD = 0.75; // 0.75 seconds
+const SEC = 1000; // Matching JobTime constant
 
 const Container = styled.div`
   display: flex;
@@ -43,6 +44,11 @@ const Connector = styled.div`
   align-items: center;
   position: relative;
   cursor: pointer;
+  background: transparent !important;
+
+  &:hover {
+    background: transparent !important;
+  }
 
   &::after {
     content: '';
@@ -73,51 +79,85 @@ const ConnectorLabel = styled.span`
 `;
 
 const StatusBadge = styled.div`
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 3px;
-  background: ${props => props.bg};
-  border: 1px solid ${props => props.border};
-  color: ${props => props.color};
-  height: 20px;
-  min-height: 20px;
-  max-height: 20px;
-  padding: 0 8px;
-  font-size: 10px;
-  font-weight: 700;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0 7px;
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 12px;
+  line-height: 20px;
+  white-space: nowrap;
+  background: #fafafa;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+  opacity: 1;
+  transition: all 0.2s;
+
+  /* Override with custom colors when provided */
+  ${props => props.bg && `background: ${props.bg};`}
+  ${props => props.color && `color: ${props.color};`}
+  ${props => props.border && `border-color: ${props.border};`}
 `;
 
 const JobTimingSmartDots = ({ data }) => {
   const { pipeline, results } = data;
-  const { startTime, activeTime, queueTime: backendQueueTime } = pipeline;
+  const {
+    startTime,
+    activeTime,
+    queueTimeSeconds: backendQueueTimeSeconds,
+  } = pipeline;
+
+  // Get job status from results, not status (status.status is always 'active' for running pipelines)
+  const isJobFinished = ['completed', 'stopped', 'failed', 'crashed'].includes(
+    results?.status
+  );
 
   // State for real-time updates
   const [currentTime, setCurrentTime] = useState(Date.now());
 
-  // Update current time every second for real-time duration
+  // Update current time every 2 seconds (matching JobTime)
   useEffect(() => {
-    // Only set up interval if job is still running
-    if (activeTime && !results?.timestamp) {
+    // Only set up interval if job is still running (not finished and no results timestamp)
+    if (startTime && !results) {
       const interval = setInterval(() => {
         setCurrentTime(Date.now());
-      }, 1000); // Update every second
+      }, 2 * SEC); // Update every 2 seconds (matching JobTime)
 
       return () => clearInterval(interval);
     }
-  }, [activeTime, results?.timestamp]);
+  }, [startTime, results]);
 
   if (!startTime) return <span>---</span>;
 
   const finishTime = results?.timestamp || null;
 
-  const queueTime = backendQueueTime || 0;
-  // Treat as no queue if backend queueTime is less than 750ms
-  const hasNoQueue = queueTime < QUEUE_THRESHOLD;
+  // Calculate queue time: use backend value if available, otherwise calculate client-side
+  let queueTimeSeconds = 0;
+  if (
+    backendQueueTimeSeconds !== null &&
+    backendQueueTimeSeconds !== undefined
+  ) {
+    queueTimeSeconds = backendQueueTimeSeconds;
+  } else if (activeTime && startTime) {
+    queueTimeSeconds = (activeTime - startTime) / SEC;
+  }
 
-  const endTime = finishTime || currentTime; // Use currentTime for real-time updates
+  // Treat as no queue if queueTime is less than 0.75 seconds
+  const hasNoQueue = queueTimeSeconds < QUEUE_THRESHOLD;
+
+  // Match JobTime logic: use results.timeTook for finished jobs, calculate for running
+  const totalTimeTook = results?.timeTook
+    ? results.timeTook * SEC
+    : currentTime - startTime;
+
+  // Use finishTime if job is finished, otherwise use currentTime for live updates
+  const endTime = finishTime || (isJobFinished ? Date.now() : currentTime);
+
   const runningTime = activeTime ? endTime - activeTime : 0;
-  const isRunning = !finishTime && activeTime;
+
+  const isRunning = !!(activeTime && !finishTime && !isJobFinished);
 
   const formatTime = timestamp => moment(timestamp).format('HH:mm:ss');
   const formatFullTime = timestamp =>
@@ -140,6 +180,7 @@ const JobTimingSmartDots = ({ data }) => {
     } else if (hours > 0) {
       parts.push(`${hours}h`);
       if (minutes > 0) parts.push(`${minutes}m`);
+      parts.push(`${seconds}s`);
     } else if (minutes > 0) {
       parts.push(`${minutes}m`);
       parts.push(`${seconds}s`);
@@ -156,14 +197,17 @@ const JobTimingSmartDots = ({ data }) => {
 
   return (
     <Container>
-      {/* Case 1: startTime === activeTime → show only active dot + duration */}
+      {/* Case 1: queueTime < 0.75s → show only active dot + duration */}
       {hasNoQueue ? (
         <>
           <Tooltip
             title={
               <div>
-                <div>▶ Active Time (Started Running)</div>
-                <div>{formatFullTime(activeTime)}</div>
+                <div>
+                  ▶{' '}
+                  {activeTime ? 'Active Time (Started Running)' : 'Start Time'}
+                </div>
+                <div>{formatFullTime(activeTime || startTime)}</div>
               </div>
             }>
             <DotItem>
@@ -172,7 +216,7 @@ const JobTimingSmartDots = ({ data }) => {
                 borderColor="#ffffff"
                 glowColor="rgba(24, 144, 255, 0.3)"
               />
-              <TimeText>{formatTime(activeTime)}</TimeText>
+              <TimeText>{formatTime(activeTime || startTime)}</TimeText>
             </DotItem>
           </Tooltip>
 
@@ -180,29 +224,29 @@ const JobTimingSmartDots = ({ data }) => {
             title={
               <div>
                 <div>{isRunning ? 'Currently Running' : 'Completed'}</div>
-                <div>Active Duration: {formatDuration(runningTime)}</div>
+                <div>
+                  Duration:{' '}
+                  {formatDuration(activeTime ? runningTime : totalTimeTook)}
+                </div>
                 {finishTime && (
                   <>
                     <div style={{ marginTop: 4 }}>
                       Finished: {formatFullTime(finishTime)}
                     </div>
                     <div style={{ marginTop: 4 }}>
-                      Total Time: {formatDuration(finishTime - startTime)}
+                      Total Time: {formatDuration(totalTimeTook)}
                     </div>
                   </>
                 )}
               </div>
             }>
-            <StatusBadge
-              bg={isRunning ? '#e6f7ff' : '#f6ffed'}
-              color={isRunning ? '#1890ff' : '#52c41a'}
-              border={isRunning ? '#91d5ff' : '#b7eb8f'}>
-              {formatDuration(runningTime)}
+            <StatusBadge>
+              {formatDuration(activeTime ? runningTime : totalTimeTook)}
             </StatusBadge>
           </Tooltip>
         </>
       ) : (
-        /* Case 2: startTime !== activeTime → full timeline with queue */
+        /* Case 2: queueTime >= 0.75s → full timeline with queue */
         <>
           {/* Start Time Dot */}
           <Tooltip
@@ -230,13 +274,17 @@ const JobTimingSmartDots = ({ data }) => {
                 title={
                   <div>
                     <div>⏱ Queue Time</div>
-                    <div>Waited {formatDuration(queueTime)} in queue</div>
+                    <div>
+                      Waited {formatDuration(queueTimeSeconds * SEC)} in queue
+                    </div>
                   </div>
                 }>
-                <Connector gradient={queueGradient} hasQueue={queueTime > 0}>
-                  {queueTime > 0 && (
+                <Connector
+                  gradient={queueGradient}
+                  hasQueue={queueTimeSeconds > 0}>
+                  {queueTimeSeconds > 0 && (
                     <ConnectorLabel color={queueColor}>
-                      {formatDuration(queueTime)}
+                      {formatDuration(queueTimeSeconds * SEC)}
                     </ConnectorLabel>
                   )}
                 </Connector>
@@ -248,7 +296,6 @@ const JobTimingSmartDots = ({ data }) => {
                   <div>
                     <div>▶ Active Time (Started Running)</div>
                     <div>{formatFullTime(activeTime)}</div>
-                    <div style={{ marginTop: 4 }}>Pipeline began execution</div>
                   </div>
                 }>
                 <DotItem>
@@ -273,18 +320,13 @@ const JobTimingSmartDots = ({ data }) => {
                           Finished: {formatFullTime(finishTime)}
                         </div>
                         <div style={{ marginTop: 4 }}>
-                          Total Time: {formatDuration(finishTime - startTime)}
+                          Total Time: {formatDuration(totalTimeTook)}
                         </div>
                       </>
                     )}
                   </div>
                 }>
-                <StatusBadge
-                  bg={isRunning ? '#e6f7ff' : '#f6ffed'}
-                  color={isRunning ? '#1890ff' : '#52c41a'}
-                  border={isRunning ? '#91d5ff' : '#b7eb8f'}>
-                  {formatDuration(runningTime)}
-                </StatusBadge>
+                <StatusBadge>{formatDuration(runningTime)}</StatusBadge>
               </Tooltip>
             </>
           )}
@@ -299,9 +341,14 @@ JobTimingSmartDots.propTypes = {
     pipeline: PropTypes.shape({
       startTime: PropTypes.number,
       activeTime: PropTypes.number,
+      queueTimeSeconds: PropTypes.number,
     }).isRequired,
     results: PropTypes.shape({
       timestamp: PropTypes.number,
+      timeTook: PropTypes.number,
+    }),
+    status: PropTypes.shape({
+      status: PropTypes.string,
     }),
   }).isRequired,
 };

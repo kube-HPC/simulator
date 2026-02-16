@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 const { Text } = Typography;
 
 const SEC = 1000;
-const QUEUE_THRESHOLD = 750; // 0.75 sec in ms
+const QUEUE_THRESHOLD = 0.75; // 0.75 seconds
 
 /**
  * @param {object} props
@@ -40,7 +40,7 @@ const JobTime = ({
   results,
   startTime = 0,
   activeTime,
-  queueTime: backendQueueTime,
+  queueTimeSeconds: backendQueueTimeSeconds,
   length = 15,
   style,
 }) => {
@@ -69,8 +69,9 @@ const JobTime = ({
     }
   }, [results]);
 
-  const queueTime = backendQueueTime || 0;
-  const hasSignificantQueue = queueTime >= QUEUE_THRESHOLD;
+  // Backend sends queueTimeSeconds in SECONDS - use directly
+  const queueTimeSeconds = backendQueueTimeSeconds || 0;
+  const hasSignificantQueue = queueTimeSeconds >= QUEUE_THRESHOLD;
 
   const formatDuration = ms => {
     const totalSeconds = Math.floor(ms / 1000);
@@ -100,7 +101,7 @@ const JobTime = ({
         <TooltipRow>
           <TooltipLabel style={{ color: '#ffa940' }}>Queue Time</TooltipLabel>
           <TooltipValue style={{ color: '#ffa940' }}>
-            {formatDuration(queueTime)}
+            {formatDuration(queueTimeSeconds * SEC)}
           </TooltipValue>
         </TooltipRow>
       )}
@@ -123,7 +124,7 @@ JobTime.propTypes = {
   length: PropTypes.number,
   startTime: PropTypes.number,
   activeTime: PropTypes.number,
-  queueTime: PropTypes.number,
+  queueTimeSeconds: PropTypes.number,
   // TODO: detail the props
   /* eslint-disable */
   style: PropTypes.object,

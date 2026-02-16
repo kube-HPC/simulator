@@ -82,7 +82,7 @@ const JOB_QUERY = gql`
           priority
           startTime
           activeTime
-          queueTime
+          queueTimeSeconds
           tags
           types
         }

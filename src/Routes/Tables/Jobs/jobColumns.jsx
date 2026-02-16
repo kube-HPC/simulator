@@ -38,13 +38,13 @@ Name.propTypes = {
 
 const StartTime = ({ data }) => {
   const { pipeline, results } = data;
-  const { startTime, activeTime, queueTime } = pipeline;
+  const { startTime, activeTime, queueTimeSeconds } = pipeline;
 
   return (
     <JobTime
       startTime={startTime}
       activeTime={activeTime}
-      queueTime={queueTime}
+      queueTimeSeconds={queueTimeSeconds}
       results={results}
     />
   );
@@ -54,6 +54,8 @@ StartTime.propTypes = {
   data: PropTypes.shape({
     pipeline: PropTypes.shape({
       startTime: PropTypes.any,
+      activeTime: PropTypes.any,
+      queueTimeSeconds: PropTypes.any,
     }).isRequired,
     results: PropTypes.any,
   }).isRequired,
