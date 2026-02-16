@@ -25,7 +25,6 @@ import {
   Input,
   Col,
   Row,
-  Alert,
   Popover,
 } from 'antd';
 import { FiltersPanel } from 'styles';
@@ -34,7 +33,6 @@ import LogsViewer from 'components/common/LogsViewer';
 import { useLogs } from 'hooks/graphql';
 import { useDebounceCallback } from '@react-hook/debounce';
 import GRAPH_TYPES from './graphUtils/types';
-// import OptionBox from './GraphTab/OptionBox';
 
 const Container = styled.div`
   margin-top: 1em;
@@ -61,24 +59,6 @@ const ErrorMsg = {
   ERROR: 'Algorithm down',
 };
 
-const msgAlertFailedScheduling = (typeText, message) => {
-  const lines = message.split('\n');
-  const [firstLine, ...remainingLines] = lines;
-
-  return (
-    <div>
-      <p>
-        <strong>
-          {typeText} : {firstLine}
-        </strong>
-      </p>
-      {remainingLines?.map(line => (
-        <div>{line}</div>
-      ))}
-    </div>
-  );
-};
-
 const NodeLogs = ({
   node,
   taskDetails,
@@ -88,17 +68,16 @@ const NodeLogs = ({
   sideCarsDetails,
 }) => {
   const [openPopupOverListTasks, setOpenPopupOverListTasks] = useState(false);
-  const { kibanaUrl } = useSelector(selectors.connection);
-  const { structuredPrefix } = useSelector(selectors.connection);
+  const { kibanaUrl, structuredPrefix } = useSelector(selectors.connection);
+
   const [logMode, setLogMode] = useState(logModes.ALGORITHM);
   const [containerNames, setContainerNames] = useState([]);
-
   const [searchWord, setSearchWord] = useState(null);
   const [isLoadLog, setIsLoadLog] = useState(true);
   const [sourceLogs, setSourceLogs] = useState('k8s');
   const [errorMsgImage, setErrorMsgImage] = useState(undefined);
   const [logErrorNode, setLogErrorNode] = useState([]);
-  const [linkKibana, setLinkKibana] = useState();
+
   const [isStatusFailedScheduling] = useState(
     node?.status === GRAPH_TYPES.STATUS.FAILED_SCHEDULING || false
   );
@@ -122,25 +101,27 @@ const NodeLogs = ({
     containerNames,
   });
 
+  /**
+   * sync selected task
+   */
   useEffect(() => {
-    setCurrentTask(taskId);
+    if (currentTask !== taskId) {
+      setCurrentTask(taskId);
+    }
     setIsLoadLog(false);
     setIsStatusFailedSchedulingTask(
       oTask?.status === GRAPH_TYPES.STATUS.FAILED_SCHEDULING || false
     );
-  }, [taskId]);
+  }, [taskId, oTask?.status, currentTask, setCurrentTask]);
 
   useEffect(() => {
-    if (msgPodStatus === podStatus.ALGORUNNER_NO_IMAGE)
+    if (msgPodStatus === podStatus.ALGORUNNER_NO_IMAGE) {
       setErrorMsgImage('Docker image missing');
+    }
   }, [msgPodStatus]);
 
   const optionsSourceLogs = useMemo(() => {
-    let isKubernetesDisabled = false;
-    if (msgPodStatus === podStatus.NOT_EXIST) {
-      isKubernetesDisabled = true;
-      setSourceLogs('es');
-    }
+    const isKubernetesDisabled = msgPodStatus === podStatus.NOT_EXIST;
 
     return [
       { label: 'online', value: 'k8s', disabled: isKubernetesDisabled },
@@ -148,63 +129,46 @@ const NodeLogs = ({
     ];
   }, [msgPodStatus]);
 
-  /* const options = taskDetails.map((task, indexTaskItem) => (
-    <Select.Option key={`task-${task.taskId}`} value={indexTaskItem}>
-      <OptionBox
-        index={indexTaskItem + 1}
-        taskId={task.taskId}
-        status={task.status}
-      />
-    </Select.Option>
-  )); */
+  useEffect(() => {
+    if (msgPodStatus === podStatus.NOT_EXIST) {
+      setSourceLogs('es');
+    }
+  }, [msgPodStatus]);
 
   useEffect(() => {
     const { error, startTime, endTime } = node;
 
-    if (logs.length === 0) {
-      if (error != null) {
-        setLogErrorNode([
-          {
-            level: 'error',
-            timestamp: startTime || endTime || null,
-            message: error,
-          },
-        ]);
-      }
+    if (logs.length === 0 && error != null) {
+      setLogErrorNode([
+        {
+          level: 'error',
+          timestamp: startTime || endTime || null,
+          message: error,
+        },
+      ]);
     }
-  }, [logs, node]);
+  }, [logs.length, node]);
+
+
+  const linkKibana = useMemo(() => {
+    if (!kibanaUrl || !taskId) return '';
+
+    const time = node?.startTime || 'now-1h';
+    const metaPath = `${structuredPrefix}.taskId`;
+    const cTaskId = taskId;
+    const word = searchWord;
+
+    return `${kibanaUrl}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',key:${metaPath},negate:!f,params:(query:'${cTaskId}'),type:phrase),query:(match:(${metaPath}:(query:'${cTaskId}',type:phrase))))),index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',interval:auto,query:(language:lucene${
+      word ? `,query:${word}` : ''
+    }),sort:!(!('@timestamp',desc)))`;
+  }, [kibanaUrl, taskId, node?.startTime, structuredPrefix, searchWord]);
 
   const setWord = useCallback(
     e => {
-      const startTime =
-        node.batch?.length > 0
-          ? node.batch.filter(x => x.taskId === taskId)[0].startTime
-          : node.startTime;
-      const time = startTime
-        ? new Date(new Date(node.startTime) - 20000).toISOString()
-        : new Date(new Date() - 20000).toISOString();
-      const cTaskId = currentTask || taskId;
       const word = e?.target?.value || '';
       setSearchWord(word);
-      let metaPath = 'meta.internal.taskId';
-      if (structuredPrefix) {
-        metaPath = `${structuredPrefix}.${metaPath}`;
-      }
-
-      setLinkKibana(
-        `${kibanaUrl}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',key:${metaPath},negate:!f,params:(query:'${cTaskId}'),type:phrase),query:(match:(${metaPath}:(query:'${cTaskId}',type:phrase))))),index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',interval:auto,query:(language:lucene${
-          word ? `,query:${word}` : ''
-        }),sort:!(!('@timestamp',desc)))`
-      );
     },
-    [
-      currentTask,
-      kibanaUrl,
-      structuredPrefix,
-      node.batch,
-      node.startTime,
-      taskId,
-    ]
+    []
   );
 
   const handleSearchWord = useDebounceCallback(setWord, 1000, false);
@@ -216,7 +180,6 @@ const NodeLogs = ({
 
   const handleChangeSelect = (value, option) => {
     if (option.key === logModes.ALL) {
-      // in all option put all names contener sidecar
       setContainerNames(sideCarsDetails?.map(obj => obj.container.name));
       setLogMode(option.key);
     } else {
@@ -239,39 +202,23 @@ const NodeLogs = ({
       <FiltersPanel>
         <FlexBox justify="start">
           <Typography.Text style={{ marginLeft: '10px' }}>
-            Task ID :{' '}
+            Task ID :
           </Typography.Text>
+
           <FlexBox.Item>
-            <Tooltip
-              placement="topLeft"
-              title={<>Pod Status : {msgPodStatus}</>}>
+            <Tooltip title={<>Pod Status : {msgPodStatus}</>}>
               <Popover
-                /*   autoAdjustOverflow={false}
-                overlayStyle={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                }} */
                 placement="bottomLeft"
                 content={NodeInputOutputTable}
                 trigger="click"
                 open={openPopupOverListTasks}
-                onOpenChange={newOpen => setOpenPopupOverListTasks(newOpen)}>
+                onOpenChange={setOpenPopupOverListTasks}>
                 <Button
                   style={{
-                    display: 'inline-flex',
-                    flexDirection: 'row-reverse',
-                    alignContent: 'left',
-                    flexWrap: 'nowrap',
                     width: '150px',
                     justifyContent:
                       taskDetails.length < 2 ? 'start' : 'space-between',
-                    alignItems: 'left',
                     color: COLOR_TASK_STATUS[oTask.status || node.status],
-                    borderColor: openPopupOverListTasks
-                      ? '#0070ff'
-                      : COLOR_TASK_STATUS[oTask.status || node.status],
                   }}
                   shape="round"
                   icon={taskDetails.length < 2 ? '' : <DownOutlined />}
@@ -280,25 +227,8 @@ const NodeLogs = ({
                 </Button>
               </Popover>
             </Tooltip>
-            {/* <Tooltip
-            
-              placement="topLeft"
-              title={
-                <>
-                  <OptionBox index="Index" taskId="Task ID" />{' '}
-                  <>Pod Status : {msgPodStatus}</>
-                </>
-              }>
-              <SelectStyle
-                disabled={taskDetails.length < 2}
-                value={currentTask}
-                onSelect={indexSelected => {
-                  setCurrentTask(taskDetails[indexSelected].taskId);
-                }}>
-                {options}
-              </SelectStyle>
-              </Tooltip> */}
           </FlexBox.Item>
+
           <FlexBox.Item>
             <CopyToClipboard text={currentTask} onCopy={onCopy}>
               <Tooltip title="Copy Task ID to Clipboard">
@@ -306,9 +236,10 @@ const NodeLogs = ({
               </Tooltip>
             </CopyToClipboard>
           </FlexBox.Item>
+
           <FlexBox.Item>
             <Typography.Text style={{ marginLeft: '10px' }}>
-              Source :{' '}
+              Source :
             </Typography.Text>
 
             <SelectStyle
@@ -316,24 +247,28 @@ const NodeLogs = ({
                 isStatusFailedSchedulingTask || isStatusFailedScheduling
               }
               defaultValue={logModes.ALGORITHM}
-              onChange={handleChangeSelect}>
+              onChange={handleChangeSelect}
+            >
               <Select.Option
                 key={logModes.ALGORITHM}
                 value={logModes.ALGORITHM}>
                 Algorithm
               </Select.Option>
-              <Select.Option key={logModes.INTERNAL} value={logModes.INTERNAL}>
+
+              <Select.Option
+                key={logModes.INTERNAL}
+                value={logModes.INTERNAL}>
                 System
               </Select.Option>
 
-              {sideCarsDetails &&
-                sideCarsDetails?.map(sideCar => (
-                  <Select.Option
-                    key={sideCar.container.name}
-                    value={`${sideCar.container.name}`}>
-                    {sideCar.container.name}
-                  </Select.Option>
-                ))}
+              {sideCarsDetails?.map(sideCar => (
+                <Select.Option
+                  key={sideCar.container.name}
+                  value={sideCar.container.name}>
+                  {sideCar.container.name}
+                </Select.Option>
+              ))}
+
               <Select.Option key={logModes.ALL} value={logModes.ALL}>
                 All
               </Select.Option>
@@ -343,7 +278,7 @@ const NodeLogs = ({
       </FiltersPanel>
 
       <RadioGroupStyle>
-        {!isStatusFailedSchedulingTask ? (
+        {!isStatusFailedSchedulingTask && (
           <Row justify="start" align="middle">
             <Col span={7}>
               <Radio.Group
@@ -354,6 +289,7 @@ const NodeLogs = ({
                 options={optionsSourceLogs}
               />
             </Col>
+
             {sourceLogs === 'es' && (
               <>
                 <Col>
@@ -363,11 +299,12 @@ const NodeLogs = ({
                   />
                 </Col>
                 <Col span={1}>
-                  <LinkOutlined style={{ marginLeft: '7px' }} />
+                  <LinkOutlined style={{ marginLeft: 7 }} />
                 </Col>
                 <Col span={2}>
                   <Button
-                    title="Search in Kibana"
+                  title="Search in Kibana"
+                    disabled={!linkKibana}
                     onClick={() => window.open(linkKibana)}>
                     <IconKibana />
                   </Button>
@@ -375,57 +312,31 @@ const NodeLogs = ({
               </>
             )}
 
-            <Col
-              span={1}
-              style={{
-                flexBasis: 'max-content',
-                marginLeft: 'auto',
-                marginRight: '20px',
-              }}>
+            <Col style={{ marginLeft: 'auto', marginRight: 20 }}>
               <Button
                 disabled={logs.length === 0}
-                title={`download Logs Task ${taskId}`}
                 onClick={() => downloadLogsAsText(`TaskID_${taskId}`)}>
                 <DownloadOutlined />
               </Button>
             </Col>
           </Row>
-        ) : (
-          (node?.warnings?.length > 0 && (
-            <Alert
-              description={msgAlertFailedScheduling(
-                'Warning',
-                node.warnings[0]
-              )}
-              type="warning"
-              style={{ whiteSpace: 'pre-line' }}
-            />
-          )) ||
-          (node?.error && (
-            <Alert
-              description={msgAlertFailedScheduling('Error', node.error)}
-              type="error"
-              style={{ whiteSpace: 'pre-line' }}
-            />
-          )) ||
-          null
         )}
       </RadioGroupStyle>
 
       <Typography.Text type="danger">
-        {'  '}
-        {ErrorMsg[msgPodStatus] && <InfoCircleOutlined />}{' '}
+        {ErrorMsg[msgPodStatus] && <InfoCircleOutlined />}
         {ErrorMsg[msgPodStatus]}
       </Typography.Text>
+
       <Typography.Text type="danger">
-        {'  '}
-        {errorMsgImage && <InfoCircleOutlined />} {errorMsgImage}{' '}
+        {errorMsgImage && <InfoCircleOutlined />}
+        {errorMsgImage}
       </Typography.Text>
 
       {!isStatusFailedSchedulingTask && (
         <Container>
           {isLoadLog ? (
-            <Spin indicator={LoadingOutlined} />
+            <Spin indicator={<LoadingOutlined />} />
           ) : (
             <LogsViewer
               dataSource={logs.length > 0 ? logs : logErrorNode}
@@ -444,23 +355,12 @@ const NodeLogs = ({
 };
 
 NodeLogs.propTypes = {
-  // TODO: detail the props
-  // eslint-disable-next-line
   taskDetails: PropTypes.array.isRequired,
   NodeInputOutputTable: PropTypes.node.isRequired,
-  node: PropTypes.shape({
-    kind: PropTypes.string,
-    nodeName: PropTypes.string,
-    error: PropTypes.string,
-    startTime: PropTypes.number,
-    endTime: PropTypes.number,
-    batch: PropTypes.arrayOf(PropTypes.object),
-    status: PropTypes.string,
-    warnings: PropTypes.arrayOf(PropTypes.string),
-  }).isRequired,
-
+  node: PropTypes.object.isRequired,
   currentTask: PropTypes.string,
   setCurrentTask: PropTypes.func.isRequired,
   sideCarsDetails: PropTypes.arrayOf(PropTypes.object),
 };
+
 export default React.memo(NodeLogs);
