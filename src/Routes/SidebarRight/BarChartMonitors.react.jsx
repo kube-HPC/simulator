@@ -264,7 +264,7 @@ const BarChartMonitors = ({ metric }) => {
     () => buildPieDataFromTotals(data, legend, Theme.GRAPH_PALETTE),
     [data, legend]
   );
-  const rowPieData = useMemo(() => (pieData.length / 5) * 50 + 70, [pieData]);
+  const rowPieData = useMemo(() => (pieData.length / 5) * 50 + 90, [pieData]);
 
   const handleLegendMouseEnter = useCallback(legendItem => {
     // const idToHighlight = legendItem;
