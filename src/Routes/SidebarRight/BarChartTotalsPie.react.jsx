@@ -23,8 +23,12 @@ const BarChartTotalsPie = ({ pieData, defs, fill }) => {
       }
     });
 
-    result.push({ id: 'other', label: 'other', value: otherValue });
-    result.push({ id: 'used', label: 'used', value: usedValue });
+    if(otherValue > 0) {
+     result.push({ id: 'other', label: 'other', value: otherValue });
+    }
+    if(usedValue > 0) {
+     result.push({ id: 'used', label: 'used', value: usedValue });
+    }
     return result;
   }, [pieData]);
 
