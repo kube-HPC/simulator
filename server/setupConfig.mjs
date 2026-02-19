@@ -19,7 +19,7 @@ const parseBool = value => {
 };
 
 export const hkubeSystemVersion = process.env.HKUBE_SYSTEM_VERSION;
-export const kibanaUrl = process.env.KIBANA_URL;
+export const kibanaUrl = process.env.VITE_KIBANA_URL;
 export const structuredPrefix = process.env.ELASTICSEARCH_STRUCTURED_PREFIX;
 export const grafanaUrl = process.env.GRAFANA_URL;
 export const grafanaDashboardUrl = process.env.GRAFANA_URL;
@@ -27,7 +27,6 @@ export const grafanaDashboardUrl = process.env.GRAFANA_URL;
 export const dataSourceIsEnable = process.env.DATA_SOURCE_IS_ENABLE === 'true';
 export const keycloakEnable = process.env.VITE_KEYCLOAK_ENABLE === 'true';
 export const checkIframe = process.env.VITE_CHECK_IFRAME === 'false';
-
 
 export const baseUrl = process.env.HKUBE_BASE_URL
   ? process.env.HKUBE_BASE_URL.replace(/^\//, '')
