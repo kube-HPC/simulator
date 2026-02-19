@@ -26,6 +26,7 @@ import {
   Col,
   Row,
   Popover,
+  Alert,
 } from 'antd';
 import { FiltersPanel } from 'styles';
 import { FlexBox, CopyToClipboard } from 'components/common';
@@ -57,6 +58,24 @@ const onCopy = () =>
 
 const ErrorMsg = {
   ERROR: 'Algorithm down',
+};
+
+const msgAlertFailedScheduling = (typeText, message) => {
+  const lines = message.split('\n');
+  const [firstLine, ...remainingLines] = lines;
+
+  return (
+    <div>
+      <p>
+        <strong>
+          {typeText} : {firstLine}
+        </strong>
+      </p>
+      {remainingLines?.map(line => (
+        <div>{line}</div>
+      ))}
+    </div>
+  );
 };
 
 const NodeLogs = ({
@@ -149,27 +168,41 @@ const NodeLogs = ({
     }
   }, [logs.length, node]);
 
-
   const linkKibana = useMemo(() => {
     if (!kibanaUrl || !taskId) return '';
 
-    const time = node?.startTime || 'now-1h';
-    const metaPath = `${structuredPrefix}.taskId`;
-    const cTaskId = taskId;
-    const word = searchWord;
+    const startTime =
+      node.batch?.length > 0
+        ? node.batch.filter(x => x.taskId === taskId)[0].startTime
+        : node.startTime;
+    const time = startTime
+      ? new Date(new Date(node.startTime) - 20000).toISOString()
+      : new Date(new Date() - 20000).toISOString();
+    const cTaskId = currentTask || taskId;
+    const word = searchWord || '';
+    setSearchWord(word);
+    let metaPath = 'meta.internal.taskId';
+    if (structuredPrefix) {
+      metaPath = `${structuredPrefix}.${metaPath}`;
+    }
 
     return `${kibanaUrl}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',key:${metaPath},negate:!f,params:(query:'${cTaskId}'),type:phrase),query:(match:(${metaPath}:(query:'${cTaskId}',type:phrase))))),index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',interval:auto,query:(language:lucene${
       word ? `,query:${word}` : ''
     }),sort:!(!('@timestamp',desc)))`;
-  }, [kibanaUrl, taskId, node?.startTime, structuredPrefix, searchWord]);
+  }, [
+    kibanaUrl,
+    taskId,
+    node.batch,
+    node.startTime,
+    currentTask,
+    searchWord,
+    structuredPrefix,
+  ]);
 
-  const setWord = useCallback(
-    e => {
-      const word = e?.target?.value || '';
-      setSearchWord(word);
-    },
-    []
-  );
+  const setWord = useCallback(e => {
+    const word = e?.target?.value || '';
+    setSearchWord(word);
+  }, []);
 
   const handleSearchWord = useDebounceCallback(setWord, 1000, false);
 
@@ -247,17 +280,14 @@ const NodeLogs = ({
                 isStatusFailedSchedulingTask || isStatusFailedScheduling
               }
               defaultValue={logModes.ALGORITHM}
-              onChange={handleChangeSelect}
-            >
+              onChange={handleChangeSelect}>
               <Select.Option
                 key={logModes.ALGORITHM}
                 value={logModes.ALGORITHM}>
                 Algorithm
               </Select.Option>
 
-              <Select.Option
-                key={logModes.INTERNAL}
-                value={logModes.INTERNAL}>
+              <Select.Option key={logModes.INTERNAL} value={logModes.INTERNAL}>
                 System
               </Select.Option>
 
@@ -278,7 +308,7 @@ const NodeLogs = ({
       </FiltersPanel>
 
       <RadioGroupStyle>
-        {!isStatusFailedSchedulingTask && (
+        {!isStatusFailedSchedulingTask ? (
           <Row justify="start" align="middle">
             <Col span={7}>
               <Radio.Group
@@ -303,7 +333,7 @@ const NodeLogs = ({
                 </Col>
                 <Col span={2}>
                   <Button
-                  title="Search in Kibana"
+                    title="Search in Kibana"
                     disabled={!linkKibana}
                     onClick={() => window.open(linkKibana)}>
                     <IconKibana />
@@ -320,6 +350,25 @@ const NodeLogs = ({
               </Button>
             </Col>
           </Row>
+        ) : (
+          (node?.warnings?.length > 0 && (
+            <Alert
+              description={msgAlertFailedScheduling(
+                'Warning',
+                node.warnings[0]
+              )}
+              type="warning"
+              style={{ whiteSpace: 'pre-line' }}
+            />
+          )) ||
+          (node?.error && (
+            <Alert
+              description={msgAlertFailedScheduling('Error', node.error)}
+              type="error"
+              style={{ whiteSpace: 'pre-line' }}
+            />
+          )) ||
+          null
         )}
       </RadioGroupStyle>
 
