@@ -16,6 +16,7 @@ import JobStatus from './JobStatus';
 import JobTime from './JobTime';
 import JobTypes from './JobTypes';
 import JobTags from './JobTags';
+import JobTimingSmartDots from './JobTimingSmartDots';
 
 const Id = ({ value }) => (
   <Ellipsis
@@ -37,18 +38,34 @@ Name.propTypes = {
 
 const StartTime = ({ data }) => {
   const { pipeline, results } = data;
-  const { startTime } = pipeline;
+  const { startTime, activeTime, queueTimeSeconds } = pipeline;
 
-  return <JobTime startTime={startTime} results={results} />;
+  return (
+    <JobTime
+      startTime={startTime}
+      activeTime={activeTime}
+      queueTimeSeconds={queueTimeSeconds}
+      results={results}
+    />
+  );
 };
 
 StartTime.propTypes = {
   data: PropTypes.shape({
     pipeline: PropTypes.shape({
       startTime: PropTypes.any,
+      activeTime: PropTypes.any,
+      queueTimeSeconds: PropTypes.any,
     }).isRequired,
     results: PropTypes.any,
   }).isRequired,
+};
+
+// New Timeline using JobTimingSmartDots
+const Timeline = ({ data }) => <JobTimingSmartDots data={data} />;
+
+Timeline.propTypes = {
+  data: PropTypes.object.isRequired,
 };
 
 const Status = ({ data }) => {
@@ -166,8 +183,9 @@ export default [
     headerName: '',
     field: 'auditTrail',
     minWidth: 60,
-    flex: 0.5,
+    flex: 0.2,
     filter: false,
+    sortable: false,
     cellRenderer: Avatar,
     suppressMenu: true,
     cellClass: 'vertical-center-cell',
@@ -184,8 +202,8 @@ export default [
   {
     headerName: 'Job ID',
     field: 'key',
-    flex: 1,
-    sortable: true,
+    flex: 1.1,
+    sortable: false,
     unSortIcon: true,
     cellRenderer: Id,
     cellClass: 'vertical-center-cell',
@@ -195,7 +213,7 @@ export default [
     field: 'pipeline.name',
     minWidth: 120,
     flex: 1.3,
-    sortable: true,
+    sortable: false,
     unSortIcon: true,
     comparator: (a, b) => sorter(a, b),
     cellRenderer: Name,
@@ -208,12 +226,28 @@ export default [
   {
     headerName: 'Start Time',
     field: 'pipeline.startTime',
-    flex: 1.3,
+    flex: 1.4,
+    sortable: true,
+    unSortIcon: true,
+    comparator: (a, b) => new Date(a) - new Date(b),
+    valueGetter: params => params?.data?.pipeline?.startTime || 0,
+    cellRenderer: StartTime,
+    cellClass: 'vertical-center-cell',
+  },
+  {
+    headerName: 'Timeline',
+    field: 'pipeline.activeTime',
+    flex: 1.6,
+    minWidth: 160,
     sortable: true,
     unSortIcon: true,
     comparator: (a, b) => a - b,
-    cellRenderer: StartTime,
+    cellRenderer: Timeline,
     cellClass: 'vertical-center-cell',
+    cellStyle: {
+      paddingTop: '10px',
+      paddingBottom: '10px',
+    },
   },
   {
     headerName: 'Pipeline Type/Tags',
@@ -261,11 +295,12 @@ export default [
   },
   {
     headerName: 'Progress',
-    field: 'progress',
+    field: 'status.data.progress',
     minWidth: 150,
     flex: 2.5,
     sortable: false,
     cellRenderer: Progress,
+    valueGetter: params => params?.data?.status?.data?.progress || 0,
     isPinning: true,
     cellStyle: {
       textAlign: 'center',

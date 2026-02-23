@@ -66,7 +66,7 @@ const JobsTable = () => {
     mergedParams,
     dataSourceGraph,
     debouncedZoomChanged,
-
+    handleBodyScroll,
     isTableLoad,
     onRow,
     columns,
@@ -95,12 +95,12 @@ const JobsTable = () => {
 
   const rowData = useMemo(() => _dataSource || [], [_dataSource]);
 
-  const handleRowClicked = useCallback(
+  const handleRowDoubleClicked = useCallback(
     params => {
       if (onRow) {
         const rowClickHandler = onRow(params.data);
-        if (rowClickHandler && rowClickHandler.onClick) {
-          rowClickHandler.onClick();
+        if (rowClickHandler && rowClickHandler.onDoubleClick) {
+          rowClickHandler.onDoubleClick();
         }
       }
     },
@@ -164,7 +164,7 @@ const JobsTable = () => {
           rowData={rowData}
           columnDefs={columnDefs}
           getRowId={getRowId}
-          onRowClicked={handleRowClicked}
+          onRowDoubleClicked={handleRowDoubleClicked}
           loading={isTableLoad}
           enableRowHoverActions
           actionClassName={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}
@@ -172,6 +172,7 @@ const JobsTable = () => {
           style={gridStyle}
           overlayLoadingTemplate='<span class="ag-overlay-loading-center">Loading...</span>'
           overlayNoRowsTemplate='<span class="ag-overlay-no-rows-center">No results match your search criteria</span>'
+          onBodyScroll={handleBodyScroll}
         />
       </div>
 

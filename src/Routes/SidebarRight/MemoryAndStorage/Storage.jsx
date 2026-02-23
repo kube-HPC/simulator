@@ -4,6 +4,8 @@ import prettyBytes from 'pretty-bytes';
 import styled from 'styled-components';
 import { COLOR_STORAGE } from 'styles/colors';
 import { ResponsivePie } from '@nivo/pie';
+import { Form } from 'components/common';
+
 import {
   Metrics,
   MetricHeader,
@@ -12,8 +14,10 @@ import {
   Header,
 } from './styles';
 
+const { Collapsible } = Form;
+
 const PieContainer = styled.div`
-  height: 9em;
+  height: 12em;
   flex: 1;
   svg + div {
     color: #000000;
@@ -30,7 +34,7 @@ const BoxesContainer = styled.div`
 `;
 
 const StorageStyle = styled.div`
-  height: 45%;
+  height: 30%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -68,50 +72,51 @@ const Storage = ({ storage }) => {
   const data = adaptedData({ free, used, freeH, usedH });
 
   return (
-    <StorageStyle>
-      <Header>Storage</Header>
-      <Metrics>
-        <PieContainer>
-          <ResponsivePie
-            data={data}
-            margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-            innerRadius={0.75}
-            padAngle={0.7}
-            cornerRadius={0}
-            valueFormat={prettyBytes}
-            borderWidth={0}
-            enableRadialLabels={false}
-            enableSlicesLabels={false}
-            animate
-            motionStiffness={90}
-            motionDamping={15}
-            colors={[COLOR_STORAGE.FREE, COLOR_STORAGE.USED]}
-            legends={[]}
-            enableArcLabels={false}
-          />
-        </PieContainer>
-        <BoxesContainer>
-          <MetricContainer>
-            <MetricHeader>Total Capacity</MetricHeader>
-            <MetricValue>{sizeH}</MetricValue>
-          </MetricContainer>
+    <Collapsible title="Storage">
+      <StorageStyle>
+        <Metrics>
+          <PieContainer>
+            <ResponsivePie
+              data={data}
+              margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+              innerRadius={0.75}
+              padAngle={0.7}
+              cornerRadius={0}
+              valueFormat={prettyBytes}
+              borderWidth={0}
+              enableRadialLabels={false}
+              enableSlicesLabels={false}
+              animate
+              motionStiffness={90}
+              motionDamping={15}
+              colors={[COLOR_STORAGE.FREE, COLOR_STORAGE.USED]}
+              legends={[]}
+              enableArcLabels={false}
+            />
+          </PieContainer>
+          <BoxesContainer>
+            <MetricContainer>
+              <MetricHeader>Total Capacity</MetricHeader>
+              <MetricValue>{sizeH}</MetricValue>
+            </MetricContainer>
 
-          <MetricContainer style={{ borderColor: COLOR_STORAGE.FREE }}>
-            <MetricHeader>Free</MetricHeader>
-            <MetricValue>
-              {freeH} ({freeP}%)
-            </MetricValue>
-          </MetricContainer>
+            <MetricContainer style={{ borderColor: COLOR_STORAGE.FREE }}>
+              <MetricHeader>Free</MetricHeader>
+              <MetricValue>
+                {freeH} ({freeP}%)
+              </MetricValue>
+            </MetricContainer>
 
-          <MetricContainer style={{ borderColor: COLOR_STORAGE.USED }}>
-            <MetricHeader>Used</MetricHeader>
-            <MetricValue>
-              {usedH} ({(usedP * 100).toFixed(2)}%)
-            </MetricValue>
-          </MetricContainer>
-        </BoxesContainer>
-      </Metrics>
-    </StorageStyle>
+            <MetricContainer style={{ borderColor: COLOR_STORAGE.USED }}>
+              <MetricHeader>Used</MetricHeader>
+              <MetricValue>
+                {usedH} ({(usedP * 100).toFixed(2)}%)
+              </MetricValue>
+            </MetricContainer>
+          </BoxesContainer>
+        </Metrics>
+      </StorageStyle>
+    </Collapsible>
   );
 };
 Storage.propTypes = {

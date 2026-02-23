@@ -8,7 +8,7 @@ import Icon, {
 } from '@ant-design/icons';
 import { Spin, Table as AntTable } from 'antd';
 import styled from 'styled-components';
-import { useVT } from 'virtualizedtableforantd4';
+// import { useVT } from 'virtualizedtableforantd4';
 
 import { USER_GUIDE } from 'const';
 
@@ -62,8 +62,8 @@ const Table = ({
   isInfinity = false,
   heightScroll = '88vh',
   ...props
-}) => {
-  const [vt] = useVT(
+}) => (
+  /* const [vt] = useVT(
     () => ({
       initTop: 1,
       onScroll: ({ isEnd }) => {
@@ -75,24 +75,21 @@ const Table = ({
       //  debug: true,
     }),
     [dataSource]
-  );
+  ); */
 
-  return (
-    <TableWhite
-      loading={loading}
-      components={isInfinity ? vt : null}
-      scroll={isInfinity ? { y: heightScroll } : {}}
-      // scroll={{ y: 'calc(80vh - 4em)' }}
-      className={USER_GUIDE.TABLE}
-      expandIcon={ExpandIcon}
-      dataSource={dataSource}
-      pagination={false}
-      size="middle"
-      {...props}
-    />
-  );
-};
-
+  <TableWhite
+    loading={loading}
+    //  components={isInfinity ? vt : null}
+    scroll={isInfinity ? { y: heightScroll } : {}}
+    // scroll={{ y: 'calc(80vh - 4em)' }}
+    className={USER_GUIDE.TABLE}
+    expandIcon={ExpandIcon}
+    dataSource={dataSource}
+    pagination={false}
+    size="middle"
+    {...props}
+  />
+);
 Table.propTypes = {
   dataSource: PropTypes.arrayOf(PropTypes.object),
   loading: PropTypes.bool,

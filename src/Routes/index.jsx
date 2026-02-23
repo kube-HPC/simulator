@@ -3,7 +3,7 @@ import { events } from 'utils';
 import { ApolloProvider, useReactiveVar } from '@apollo/client';
 import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
-import { Layout, message, FloatButton, Button } from 'antd';
+import { Layout, message, FloatButton, Button, notification } from 'antd';
 import { ArrowUpOutlined } from '@ant-design/icons';
 import styled, { ThemeProvider } from 'styled-components';
 import { Route, Routes } from 'react-router-dom';
@@ -14,7 +14,7 @@ import { instanceFiltersVar, numberErrorGraphQLVar } from 'cache';
 import useApolloClient from '../graphql/useApolloClient';
 import { Drawer as SiderBarRightDrawer } from './SidebarRight';
 import SidebarLeft from './Base/SidebarLeft';
-import UserGuide from './Base/UserGuide';
+// import UserGuide from './Base/UserGuide';
 import LoadingScreen from './Base/LoadingScreen';
 import Tables from './Tables';
 
@@ -59,7 +59,7 @@ const RoutesNav = () => {
   const {
     apolloClient,
     openNotification,
-    contextHolderNotification,
+    contextHolderModalApollo,
     isNotificationErrorShow,
     setIsNotificationErrorShow,
   } = useApolloClient();
@@ -91,27 +91,39 @@ const RoutesNav = () => {
   }, []);
 
   const [messageApi, contextHolder] = message.useMessage();
-  const handleMessage = msg => {
+  const [notificationApi, contextHolderNotification] =
+    notification.useNotification();
+
+  const handleMessage = (msg, type) => {
     messageApi.open({
-      type: 'info',
+      type: type || 'info',
       content: msg,
       className: 'custom-class',
-      style: {
-        marginTop: '20vh',
-      },
+    });
+  };
+  // eslint-disable-next-line no-shadow
+  const handleMessageNotification = ({ type, message, description }) => {
+    notificationApi[type ?? 'error']({
+      title: message,
+      description: description ? `${message}. ${description}` : message,
     });
   };
 
   useEffect(() => {
     events.on('global_alert_msg', handleMessage);
-    return () => events.off('global_alert_msg', handleMessage);
+    events.on('global_notification_msg', handleMessageNotification);
+    return () => {
+      events.off('global_alert_msg', handleMessage);
+      events.off('global_notification_msg', handleMessageNotification);
+    };
   }, []);
 
   return isDataAvailable ? (
     <ThemeProvider theme={{ ...Theme }}>
       <ApolloProvider client={apolloClient}>
         {contextHolder}
-        <UserGuide />
+        {contextHolderNotification}
+        {/* <UserGuide /> */}
         <LayoutFullHeight>
           <Routes>
             <Route path="/*" element={<SidebarLeft />}>
@@ -128,7 +140,7 @@ const RoutesNav = () => {
 
             <LayoutFullHeight>
               <ContentMargin id="globalContent">
-                {contextHolderNotification}
+                {contextHolderModalApollo}
                 <Tables />
                 <FloatButton.BackTop target={BackToTop}>
                   <Button

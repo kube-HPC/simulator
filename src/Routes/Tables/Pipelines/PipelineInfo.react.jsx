@@ -4,7 +4,7 @@ import { Button, Modal } from 'antd';
 import {
   Card,
   JsonSwitch,
-  MdEditor,
+  MdEditorView,
   Tabs,
   JsonDiffTable,
 } from 'components/common';
@@ -144,7 +144,9 @@ const PipelineInfo = ({ pipeline }) => {
       {
         label: TABS.DESCRIPTION,
         key: TABS.DESCRIPTION,
-        children: <MdEditor value={readme} onChange={setReadme} viewReadOnly />,
+        children: (
+          <MdEditorView value={readme} onChange={setReadme} viewReadOnly />
+        ),
       },
     ],
     [

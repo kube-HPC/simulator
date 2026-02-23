@@ -47,7 +47,13 @@ const useJobsFunctionsLimit = () => {
   const metaMode = useReactiveVar(metaVar);
   const [dataSourceGraph, setDataSourceGraph] = useState([]);
   const [zoomedChangedDate, setZoomedChangedDate] = useState(Date.now());
-  const [defDate] = useState(getDateTimeZoneString(dayjs(dateNow)));
+  const defDate = useMemo(
+    () =>
+      getDateTimeZoneString(
+        dateTimeDefault?.time ? dateTimeDefault.time : dayjs(dateNow)
+      ),
+    [dateTimeDefault?.time]
+  );
   const [isTableLoad, setIsTableLoad] = useState(true);
   const [isGraphLoad, setIsGraphLoad] = useState(true);
   const [limitGetJobs, setLimitGetJobs] = useState(numberLimitJobs);
@@ -107,7 +113,7 @@ const useJobsFunctionsLimit = () => {
       }),
     },
     onCompleted: () => {
-      setChangeDs(!changeDs);
+      setChangeDs(previousState => !previousState);
       setIsGetMore(true);
     },
   });
@@ -238,47 +244,42 @@ const useJobsFunctionsLimit = () => {
     }
   }, [queryAllJobs.data, changeDs]);
 
-  const handleMaxScroll = useCallback(
-    event => {
-      const maxScroll = event.target.scrollHeight - event.target.clientHeight;
-      const currentScroll = event.target.scrollTop;
+  const handleBodyScroll = useCallback(
+    params => {
+      const lastRow = params.api.getLastDisplayedRowIndex();
+      const totalRows = params.api.getDisplayedRowCount();
 
-      if (isGetMore && currentScroll > maxScroll - 10) {
-        setIsTableLoad(true);
-        setTimeout(() => {
-          setIsTableLoad(false);
-        }, 3000);
+      if (isGetMore && lastRow >= totalRows - 1 && !queryAllJobs.loading) {
         setIsGetMore(false);
         onFetchMore();
       }
     },
-    [isGetMore]
+    [isGetMore, queryAllJobs.loading]
   );
 
   useEffect(() => {
-    const tableContent = document.querySelector('#jobsTable .ag-body-viewport');
-    if (tableContent) {
-      tableContent.addEventListener('scroll', handleMaxScroll);
-    }
-
-    return () => {
-      if (tableContent) {
-        tableContent.removeEventListener('scroll', handleMaxScroll);
-      }
-    };
-  }, [handleMaxScroll]);
-
-  useEffect(() => {
     if (firstUpdate.current) {
-      const filter = { ...instanceFilters };
+      const filter = {
+        ...instanceFilters,
+        jobs: {
+          ...instanceFilters.jobs,
+          datesRange: { ...instanceFilters.jobs.datesRange },
+        },
+      };
       if (filter.jobs.datesRange.from === null) {
         filter.jobs.datesRange.from = dateTimeDefault.time;
       }
-      instanceFiltersVar({ ...filter });
+      instanceFiltersVar(filter);
       firstUpdate.current = false;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!firstUpdate.current) {
+      queryAllJobs.refetch().then(() => setIsGetMore(true));
+    }
+  }, [limitGetJobs]);
 
   /**
    * Memoized column definitions with stable references
@@ -317,6 +318,7 @@ const useJobsFunctionsLimit = () => {
     columns: jobColumnsMemo,
     _dataSource,
     setLimitGetJobs,
+    handleBodyScroll,
   };
 };
 

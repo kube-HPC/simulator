@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 // eslint-disable-next-line import/no-cycle
 import { JsonSwitch, Card } from 'components/common';
 import { Table } from 'components';
+import { Modal } from 'antd';
 
 import getVersionsColumns from './getVersionsColumns.react';
 
@@ -28,8 +29,10 @@ const VersionsTable = ({
 }) => {
   const { keycloakEnable } = useSelector(selectors.connection);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [modal, contextHolderModal] = Modal.useModal();
 
   const columns = getVersionsColumns({
+    modal,
     currentVersion,
     onApply,
     onDelete,
@@ -80,18 +83,21 @@ const VersionsTable = ({
     };
   };
   return (
-    <Table
-      rowKey={rowKey}
-      dataSource={dataSource || []}
-      columns={columnsView || []}
-      loading={!dataSource}
-      rowSelection={rowSelection}
-      onRow={onRow}
-      expandable={{
-        expandedRowRender: record => expandedRowRender(record),
-        expandIcon,
-      }}
-    />
+    <>
+      {contextHolderModal}
+      <Table
+        rowKey={rowKey}
+        dataSource={dataSource || []}
+        columns={columnsView || []}
+        loading={!dataSource}
+        rowSelection={rowSelection}
+        onRow={onRow}
+        expandable={{
+          expandedRowRender: record => expandedRowRender(record),
+          expandIcon,
+        }}
+      />
+    </>
   );
 };
 

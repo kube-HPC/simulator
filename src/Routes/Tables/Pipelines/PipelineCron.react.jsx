@@ -10,6 +10,7 @@ import { FlexBox, CronModel } from 'components/common';
 import cronParser from 'cron-parser';
 import cronstrue from 'cronstrue';
 import { notification } from 'utils';
+import { pipelineListVar } from 'cache';
 
 const { Text } = Typography;
 const iconSize = {
@@ -35,6 +36,26 @@ const isPattern = pipeline =>
   pipeline.triggers &&
   pipeline.triggers.cron &&
   !!pipeline.triggers.cron.pattern;
+
+const updatePipelineListVar = (pipelineName, enabled) => {
+  const current = pipelineListVar();
+  pipelineListVar(
+    current.map(p =>
+      p.name === pipelineName
+        ? {
+            ...p,
+            triggers: {
+              ...p.triggers,
+              cron: {
+                ...p.triggers?.cron,
+                enabled,
+              },
+            },
+          }
+        : p
+    )
+  );
+};
 
 const PipelineCron = ({ pipeline }) => {
   const [isModalCronOpen, setIsModalCronOpen] = useState(false);
@@ -83,21 +104,22 @@ const PipelineCron = ({ pipeline }) => {
   }
 
   const { name } = pipeline;
-  const callbackCronStart = () => {
-    setToggleLoading(false);
-    setCronIsEnabled(true);
-  };
-
-  const callbackCronStop = () => {
-    setToggleLoading(false);
-    setCronIsEnabled(false);
-  };
 
   const onToggle = useCallback(() => {
     setToggleLoading(true);
-    cronIsEnabled
-      ? cronStop(name, value, callbackCronStop)
-      : cronStart(name, value, callbackCronStart);
+    if (cronIsEnabled) {
+      cronStop(name, value, () => {
+        setToggleLoading(false);
+        setCronIsEnabled(false);
+        updatePipelineListVar(name, false); // 👈 patch the source of truth
+      });
+    } else {
+      cronStart(name, value, () => {
+        setToggleLoading(false);
+        setCronIsEnabled(true);
+        updatePipelineListVar(name, true); // 👈 patch the source of truth
+      });
+    }
   }, [cronIsEnabled, cronStop, name, value, cronStart]);
 
   const onSave = useCallback(

@@ -1,8 +1,7 @@
 import { Button } from 'antd';
-import { JsonTable, JsonView, Tabs } from 'components/common';
+import { JsonTable, JsonView, Tabs, CopyToClipboard } from 'components/common';
 import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled from 'styled-components';
 import { notification, stringify } from 'utils';
 import GraphPreview from '../../../../Routes/Tables/Jobs/GridView/GraphPreview';

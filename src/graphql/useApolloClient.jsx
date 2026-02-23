@@ -27,7 +27,7 @@ const useApolloClient = () => {
 
   const numberErrorGraphQL = useReactiveVar(numberErrorGraphQLVar);
 
-  const [modal, contextHolder] = Modal.useModal();
+  const [modal, contextHolderModal] = Modal.useModal();
 
   const openNotification = () => {
     modal.error({
@@ -142,7 +142,7 @@ const useApolloClient = () => {
   return {
     apolloClient,
     openNotification,
-    contextHolderNotification: contextHolder,
+    contextHolderModalApollo: contextHolderModal,
     isNotificationErrorShow,
     setIsNotificationErrorShow,
   };

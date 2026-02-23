@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Input, Tooltip, message } from 'antd';
+import { Input, Tooltip } from 'antd';
+import { events } from 'utils';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import useActions from '../../hooks/useActions';
@@ -24,7 +25,7 @@ const VersionNameEdit = ({ record, source }) => {
   if (!record) return null;
 
   const updateVersionNameOnSuccess = () => {
-    message.success(<>version name is update</>);
+    events.emit('global_alert_msg', <>version name is update</>, 'success');
   };
 
   const handleSave = () => {

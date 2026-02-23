@@ -1,8 +1,9 @@
 import React, { memo, useState, useCallback, useRef, useEffect } from 'react';
 import client from 'client';
+
 import { errorsCode } from '@hkube/consts';
 import PropTypes from 'prop-types';
-import { Checkbox, Modal, message } from 'antd';
+import { Checkbox, Modal } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import { addAlgorithmTemplate } from 'config';
 import {
@@ -10,6 +11,7 @@ import {
   transformFieldsToObject,
   transformObjectToArray,
   setTypeVolume,
+  events,
 } from 'utils'; // mergeObjects, tryParseJson
 import { OVERVIEW_TABS } from 'const';
 import { useNavigate } from 'react-router-dom';
@@ -43,6 +45,7 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
   );
   const toggleEditor = () => setEditorIsVisible(prev => !prev);
   const [fileList, setFileList] = useState([]);
+  const [modal, contextHolderModal] = Modal.useModal();
 
   // switch from Form Object to Json
 
@@ -300,17 +303,28 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
       if (
         dataResponse?.messagesCode?.includes(errorsCode.NO_TRIGGER_FOR_BUILD)
       ) {
-        message.warning(
-          'No trigger for build since there was not change in uploaded file.'
+        events.emit(
+          'global_alert_msg',
+          'No trigger for build since there was not change in uploaded file.',
+          'warning'
         );
+
         isMsgApplied = false;
       }
 
       if (isMsgApplied) {
         if (dataResponse?.error?.code === 400) {
-          message.error(dataResponse?.error?.message || 'Something is wrong!');
+          events.emit(
+            'global_alert_msg',
+            dataResponse?.error?.message || 'Something is wrong!',
+            'error'
+          );
         } else {
-          message.success('Algorithm Applied, check Algorithms table');
+          events.emit(
+            'global_alert_msg',
+            'Algorithm Applied, check Algorithms table',
+            'success'
+          );
         }
       }
 
@@ -344,7 +358,7 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
           const { data } = error.response;
 
           if (data.error.details) {
-            Modal.confirm({
+            modal.confirm({
               title: 'WARNING : Version not upgraded',
               content: (
                 <>
@@ -373,12 +387,17 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
               },
             });
           } else {
-            message.error(data?.error?.message || 'Something is wrong!');
+            events.emit(
+              'global_alert_msg',
+              data?.error?.message || 'Something is wrong!',
+              'error'
+            );
+
             setIsSubmitLoading(false);
           }
         });
     },
-    [onAfterSaveAlgorithm, navigate]
+    [modal, onAfterSaveAlgorithm, navigate]
   );
 
   const onWizardSubmit = ({ formData }) => {
@@ -408,8 +427,11 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
       })
       .catch(error => {
         setIsSubmitLoading(false);
-        message.error(
-          error?.response?.data?.error?.message || 'Something is wrong!'
+
+        events.emit(
+          'global_alert_msg',
+          error?.response?.data?.error?.message || 'Something is wrong!',
+          'error'
         );
       });
   };
@@ -421,37 +443,42 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
   }, []);
   // #endregion
 
-  return editorIsVisible ? (
-    <AlgorithmJsonEditor
-      isEdit={isEdit}
-      editorJsonValue={editorJsonValue}
-      setEditorJsonValue={setEditorJsonValue}
-      onWizardSubmit={onWizardSubmit}
-      toggleEditor={switchToForm}
-      setIsCheckForceStopAlgorithms={setIsCheckForceStopAlgorithms}
-      refCheckForceStopAlgorithms={refCheckForceStopAlgorithms}
-      isCheckForceStopAlgorithms={isCheckForceStopAlgorithms}
-      sourceJson={algorithmValue || DEFAULT_EDITOR_VALUE}
-      fileList={fileList}
-      setFileList={setFileList}
-    />
-  ) : (
-    <AddAlgorithmForm
-      onToggle={switchToJson}
-      onSubmit={onWizardSubmit}
-      isEdit={isEdit}
-      keyValueFormObject={keyValueFormObject}
-      setIsSubmitLoading={setIsSubmitLoading}
-      onOverviewAlgorithm={onOverviewAlgorithm}
-      applyAlgorithmVersion={applyAlgorithmVersion}
-      isCheckForceStopAlgorithms={isCheckForceStopAlgorithms}
-      isSubmitLoading={isSubmitLoading}
-      setIsCheckForceStopAlgorithms={setIsCheckForceStopAlgorithms}
-      onAfterSaveAlgorithm={onAfterSaveAlgorithm}
-      refCheckForceStopAlgorithms={refCheckForceStopAlgorithms}
-      fileList={fileList}
-      setFileList={setFileList}
-    />
+  return (
+    <>
+      {contextHolderModal}
+      {editorIsVisible ? (
+        <AlgorithmJsonEditor
+          isEdit={isEdit}
+          editorJsonValue={editorJsonValue}
+          setEditorJsonValue={setEditorJsonValue}
+          onWizardSubmit={onWizardSubmit}
+          toggleEditor={switchToForm}
+          setIsCheckForceStopAlgorithms={setIsCheckForceStopAlgorithms}
+          refCheckForceStopAlgorithms={refCheckForceStopAlgorithms}
+          isCheckForceStopAlgorithms={isCheckForceStopAlgorithms}
+          sourceJson={algorithmValue || DEFAULT_EDITOR_VALUE}
+          fileList={fileList}
+          setFileList={setFileList}
+        />
+      ) : (
+        <AddAlgorithmForm
+          onToggle={switchToJson}
+          onSubmit={onWizardSubmit}
+          isEdit={isEdit}
+          keyValueFormObject={keyValueFormObject}
+          setIsSubmitLoading={setIsSubmitLoading}
+          onOverviewAlgorithm={onOverviewAlgorithm}
+          applyAlgorithmVersion={applyAlgorithmVersion}
+          isCheckForceStopAlgorithms={isCheckForceStopAlgorithms}
+          isSubmitLoading={isSubmitLoading}
+          setIsCheckForceStopAlgorithms={setIsCheckForceStopAlgorithms}
+          onAfterSaveAlgorithm={onAfterSaveAlgorithm}
+          refCheckForceStopAlgorithms={refCheckForceStopAlgorithms}
+          fileList={fileList}
+          setFileList={setFileList}
+        />
+      )}
+    </>
   );
 };
 

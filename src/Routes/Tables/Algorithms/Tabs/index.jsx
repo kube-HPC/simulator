@@ -12,7 +12,7 @@ import Text from 'antd/lib/typography/Text';
 import {
   Card,
   JsonSwitch,
-  MdEditor,
+  MdEditorView,
   Tabs,
   JsonDiffTable,
 } from 'components/common';
@@ -38,6 +38,7 @@ const AlgorithmsTabs = ({ algorithm }) => {
     json1: null,
     json2: null,
   });
+  const [modal, contextHolderModal] = Modal.useModal();
 
   const [isBuildFirstFail] = useState(
     algorithm?.builds?.length > 0 && algorithm?.builds[0]?.status === 'failed'
@@ -52,7 +53,7 @@ const AlgorithmsTabs = ({ algorithm }) => {
     applyVersionCallback
   ) => {
     let isForce = false;
-    Modal.confirm({
+    modal.confirm({
       title: 'WARNING : Version not upgraded',
       content: (
         <>
@@ -97,7 +98,7 @@ const AlgorithmsTabs = ({ algorithm }) => {
 
   const CompareJson = () => {
     if (versionsCompare.length !== 2) {
-      Modal.warning({
+      modal.warning({
         title: 'Please select exactly 2 versions to compare',
       });
       return;
@@ -107,7 +108,7 @@ const AlgorithmsTabs = ({ algorithm }) => {
     let json2 = dataSource.find(item => item.version === versionsCompare[1]);
 
     if (!json1 || !json2) {
-      Modal.error({
+      modal.error({
         title: 'Error finding selected versions',
         content: 'Could not locate both selected versions in dataSource.',
       });
@@ -193,7 +194,9 @@ const AlgorithmsTabs = ({ algorithm }) => {
       {
         label: TABS.DESCRIPTION,
         key: TABS.DESCRIPTION,
-        children: <MdEditor value={readme} onChange={setReadme} viewReadOnly />,
+        children: (
+          <MdEditorView value={readme} onChange={setReadme} viewReadOnly />
+        ),
       },
     ],
     [
@@ -211,6 +214,7 @@ const AlgorithmsTabs = ({ algorithm }) => {
 
   return (
     <>
+      {contextHolderModal}
       <Card isMargin>
         <Tabs
           items={TabsItemsJson}

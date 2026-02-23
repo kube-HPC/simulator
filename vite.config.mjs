@@ -1,10 +1,10 @@
-const { defineConfig, loadEnv } = require('vite');
-const react = require('@vitejs/plugin-react');
-const tsconfigPaths = require('vite-tsconfig-paths').default;
-const monacoEditorPlugin = require('vite-plugin-monaco-editor');
-const path = require('path');
-const svgr = require('@svgr/rollup');
-const buildDashboardConfig = require('./server/dashboardConfig');
+import { defineConfig, loadEnv } from 'vite';
+import react from '@vitejs/plugin-react';
+import tsconfigPaths from 'vite-tsconfig-paths';
+import monacoEditorPlugin from 'vite-plugin-monaco-editor';
+import path from 'path';
+import svgr from '@svgr/rollup';
+import buildDashboardConfig from './server/dashboardConfig.mjs';
 
 /**
  * Utils
@@ -20,7 +20,6 @@ const toBoolean = value => {
 
 /**
  * 🔑 DEV-ONLY runtime endpoint
- * http://localhost:9050/dashboard-config.json
  */
 const dashboardConfigPlugin = {
   name: 'dashboard-config-endpoint',
@@ -34,7 +33,7 @@ const dashboardConfigPlugin = {
   },
 };
 
-module.exports = defineConfig(({ mode }) => {
+export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const isSecure = toBoolean(env.isSecure || process.env.isSecure);
 
@@ -68,18 +67,14 @@ module.exports = defineConfig(({ mode }) => {
     define: {
       global: 'globalThis',
     },
+
     base: './',
-    /**
-     * ⚠️ ORDER MATTERS
-     * dashboardConfigPlugin MUST be first
-     */
+
     plugins: [
       dashboardConfigPlugin,
-
       react({
         include: ['**/*.jsx', '**/*.tsx', '**/*.js', '**/*.ts'],
       }),
-
       svgrPlugin ? svgrPlugin({ include: '**/*.svg' }) : null,
       tsconfigPaths(),
       monacoPlugin ? monacoPlugin({}) : null,
@@ -89,7 +84,7 @@ module.exports = defineConfig(({ mode }) => {
 
     resolve: {
       alias: {
-        src: path.resolve(__dirname, 'src'),
+        src: path.resolve(process.cwd(), 'src'),
       },
     },
 
@@ -105,6 +100,16 @@ module.exports = defineConfig(({ mode }) => {
       sourcemap: true,
       emptyOutDir: true,
       assetInlineLimit: 0,
+
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            react: ['react', 'react-dom'],
+            monaco: ['monaco-editor'],
+            graph: ['react-graph-vis'],
+          },
+        },
+      },
     },
 
     server: {

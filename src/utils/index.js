@@ -10,7 +10,8 @@ export {
 export { events } from './events';
 export { default as mapObjValues } from './mapObjValues';
 export { deleteConfirmAction, stopConfirmAction } from './modal';
-export { default as notification, copyToClipboard } from './notification';
+export { copyToClipboard } from './copyToClipboard';
+export { default as notification } from './notification';
 export { default as selector } from './selector';
 export {
   sorter,

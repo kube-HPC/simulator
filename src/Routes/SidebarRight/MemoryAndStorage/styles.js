@@ -26,6 +26,7 @@ export const Header = styled.h2`
   text-transform: capitalize;
   margin-bottom: 1em;
   border-bottom: 1px solid #ddd;
+  margin-block-start: auto;
 `;
 
 export const MetricHeader = styled.div`

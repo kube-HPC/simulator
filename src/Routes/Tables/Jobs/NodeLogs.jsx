@@ -2,12 +2,10 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled from 'styled-components';
 import { notification } from 'utils';
 import { logModes, podStatus } from '@hkube/consts';
 import { COLOR_TASK_STATUS } from 'styles/colors';
-
 import {
   CopyOutlined,
   LoadingOutlined,
@@ -27,16 +25,15 @@ import {
   Input,
   Col,
   Row,
-  Alert,
   Popover,
+  Alert,
 } from 'antd';
 import { FiltersPanel } from 'styles';
-import { FlexBox } from 'components/common';
+import { FlexBox, CopyToClipboard } from 'components/common';
 import LogsViewer from 'components/common/LogsViewer';
 import { useLogs } from 'hooks/graphql';
 import { useDebounceCallback } from '@react-hook/debounce';
 import GRAPH_TYPES from './graphUtils/types';
-// import OptionBox from './GraphTab/OptionBox';
 
 const Container = styled.div`
   margin-top: 1em;
@@ -90,17 +87,16 @@ const NodeLogs = ({
   sideCarsDetails,
 }) => {
   const [openPopupOverListTasks, setOpenPopupOverListTasks] = useState(false);
-  const { kibanaUrl } = useSelector(selectors.connection);
-  const { structuredPrefix } = useSelector(selectors.connection);
+  const { kibanaUrl, structuredPrefix } = useSelector(selectors.connection);
+
   const [logMode, setLogMode] = useState(logModes.ALGORITHM);
   const [containerNames, setContainerNames] = useState([]);
-
   const [searchWord, setSearchWord] = useState(null);
   const [isLoadLog, setIsLoadLog] = useState(true);
   const [sourceLogs, setSourceLogs] = useState('k8s');
   const [errorMsgImage, setErrorMsgImage] = useState(undefined);
   const [logErrorNode, setLogErrorNode] = useState([]);
-  const [linkKibana, setLinkKibana] = useState();
+
   const [isStatusFailedScheduling] = useState(
     node?.status === GRAPH_TYPES.STATUS.FAILED_SCHEDULING || false
   );
@@ -124,25 +120,27 @@ const NodeLogs = ({
     containerNames,
   });
 
+  /**
+   * sync selected task
+   */
   useEffect(() => {
-    setCurrentTask(taskId);
+    if (currentTask !== taskId) {
+      setCurrentTask(taskId);
+    }
     setIsLoadLog(false);
     setIsStatusFailedSchedulingTask(
       oTask?.status === GRAPH_TYPES.STATUS.FAILED_SCHEDULING || false
     );
-  }, [taskId]);
+  }, [taskId, oTask?.status, currentTask, setCurrentTask]);
 
   useEffect(() => {
-    if (msgPodStatus === podStatus.ALGORUNNER_NO_IMAGE)
+    if (msgPodStatus === podStatus.ALGORUNNER_NO_IMAGE) {
       setErrorMsgImage('Docker image missing');
+    }
   }, [msgPodStatus]);
 
   const optionsSourceLogs = useMemo(() => {
-    let isKubernetesDisabled = false;
-    if (msgPodStatus === podStatus.NOT_EXIST) {
-      isKubernetesDisabled = true;
-      setSourceLogs('es');
-    }
+    const isKubernetesDisabled = msgPodStatus === podStatus.NOT_EXIST;
 
     return [
       { label: 'online', value: 'k8s', disabled: isKubernetesDisabled },
@@ -150,64 +148,61 @@ const NodeLogs = ({
     ];
   }, [msgPodStatus]);
 
-  /* const options = taskDetails.map((task, indexTaskItem) => (
-    <Select.Option key={`task-${task.taskId}`} value={indexTaskItem}>
-      <OptionBox
-        index={indexTaskItem + 1}
-        taskId={task.taskId}
-        status={task.status}
-      />
-    </Select.Option>
-  )); */
+  useEffect(() => {
+    if (msgPodStatus === podStatus.NOT_EXIST) {
+      setSourceLogs('es');
+    }
+  }, [msgPodStatus]);
 
   useEffect(() => {
     const { error, startTime, endTime } = node;
 
-    if (logs.length === 0) {
-      if (error != null) {
-        setLogErrorNode([
-          {
-            level: 'error',
-            timestamp: startTime || endTime || null,
-            message: error,
-          },
-        ]);
-      }
+    if (logs.length === 0 && error != null) {
+      setLogErrorNode([
+        {
+          level: 'error',
+          timestamp: startTime || endTime || null,
+          message: error,
+        },
+      ]);
     }
-  }, [logs, node]);
+  }, [logs.length, node]);
 
-  const setWord = useCallback(
-    e => {
-      const startTime =
-        node.batch?.length > 0
-          ? node.batch.filter(x => x.taskId === taskId)[0].startTime
-          : node.startTime;
-      const time = startTime
-        ? new Date(new Date(node.startTime) - 20000).toISOString()
-        : new Date(new Date() - 20000).toISOString();
-      const cTaskId = currentTask || taskId;
-      const word = e?.target?.value || '';
-      setSearchWord(word);
-      let metaPath = 'meta.internal.taskId';
-      if (structuredPrefix) {
-        metaPath = `${structuredPrefix}.${metaPath}`;
-      }
+  const linkKibana = useMemo(() => {
+    if (!kibanaUrl || !taskId) return '';
 
-      setLinkKibana(
-        `${kibanaUrl}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',key:${metaPath},negate:!f,params:(query:'${cTaskId}'),type:phrase),query:(match:(${metaPath}:(query:'${cTaskId}',type:phrase))))),index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',interval:auto,query:(language:lucene${
-          word ? `,query:${word}` : ''
-        }),sort:!(!('@timestamp',desc)))`
-      );
-    },
-    [
-      currentTask,
-      kibanaUrl,
-      structuredPrefix,
-      node.batch,
-      node.startTime,
-      taskId,
-    ]
-  );
+    const startTime =
+      node.batch?.length > 0
+        ? node.batch.filter(x => x.taskId === taskId)[0].startTime
+        : node.startTime;
+    const time = startTime
+      ? new Date(new Date(node.startTime) - 20000).toISOString()
+      : new Date(new Date() - 20000).toISOString();
+    const cTaskId = currentTask || taskId;
+    const word = searchWord || '';
+    setSearchWord(word);
+    let metaPath = 'meta.internal.taskId';
+    if (structuredPrefix) {
+      metaPath = `${structuredPrefix}.${metaPath}`;
+    }
+
+    return `${kibanaUrl}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',key:${metaPath},negate:!f,params:(query:'${cTaskId}'),type:phrase),query:(match:(${metaPath}:(query:'${cTaskId}',type:phrase))))),index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',interval:auto,query:(language:lucene${
+      word ? `,query:${word}` : ''
+    }),sort:!(!('@timestamp',desc)))`;
+  }, [
+    kibanaUrl,
+    taskId,
+    node.batch,
+    node.startTime,
+    currentTask,
+    searchWord,
+    structuredPrefix,
+  ]);
+
+  const setWord = useCallback(e => {
+    const word = e?.target?.value || '';
+    setSearchWord(word);
+  }, []);
 
   const handleSearchWord = useDebounceCallback(setWord, 1000, false);
 
@@ -218,7 +213,6 @@ const NodeLogs = ({
 
   const handleChangeSelect = (value, option) => {
     if (option.key === logModes.ALL) {
-      // in all option put all names contener sidecar
       setContainerNames(sideCarsDetails?.map(obj => obj.container.name));
       setLogMode(option.key);
     } else {
@@ -241,39 +235,23 @@ const NodeLogs = ({
       <FiltersPanel>
         <FlexBox justify="start">
           <Typography.Text style={{ marginLeft: '10px' }}>
-            Task ID :{' '}
+            Task ID :
           </Typography.Text>
+
           <FlexBox.Item>
-            <Tooltip
-              placement="topLeft"
-              title={<>Pod Status : {msgPodStatus}</>}>
+            <Tooltip title={<>Pod Status : {msgPodStatus}</>}>
               <Popover
-                /*   autoAdjustOverflow={false}
-                overlayStyle={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                }} */
                 placement="bottomLeft"
                 content={NodeInputOutputTable}
                 trigger="click"
                 open={openPopupOverListTasks}
-                onOpenChange={newOpen => setOpenPopupOverListTasks(newOpen)}>
+                onOpenChange={setOpenPopupOverListTasks}>
                 <Button
                   style={{
-                    display: 'inline-flex',
-                    flexDirection: 'row-reverse',
-                    alignContent: 'left',
-                    flexWrap: 'nowrap',
                     width: '150px',
                     justifyContent:
                       taskDetails.length < 2 ? 'start' : 'space-between',
-                    alignItems: 'left',
                     color: COLOR_TASK_STATUS[oTask.status || node.status],
-                    borderColor: openPopupOverListTasks
-                      ? '#0070ff'
-                      : COLOR_TASK_STATUS[oTask.status || node.status],
                   }}
                   shape="round"
                   icon={taskDetails.length < 2 ? '' : <DownOutlined />}
@@ -282,25 +260,8 @@ const NodeLogs = ({
                 </Button>
               </Popover>
             </Tooltip>
-            {/* <Tooltip
-            
-              placement="topLeft"
-              title={
-                <>
-                  <OptionBox index="Index" taskId="Task ID" />{' '}
-                  <>Pod Status : {msgPodStatus}</>
-                </>
-              }>
-              <SelectStyle
-                disabled={taskDetails.length < 2}
-                value={currentTask}
-                onSelect={indexSelected => {
-                  setCurrentTask(taskDetails[indexSelected].taskId);
-                }}>
-                {options}
-              </SelectStyle>
-              </Tooltip> */}
           </FlexBox.Item>
+
           <FlexBox.Item>
             <CopyToClipboard text={currentTask} onCopy={onCopy}>
               <Tooltip title="Copy Task ID to Clipboard">
@@ -308,9 +269,10 @@ const NodeLogs = ({
               </Tooltip>
             </CopyToClipboard>
           </FlexBox.Item>
+
           <FlexBox.Item>
             <Typography.Text style={{ marginLeft: '10px' }}>
-              Source :{' '}
+              Source :
             </Typography.Text>
 
             <SelectStyle
@@ -324,18 +286,19 @@ const NodeLogs = ({
                 value={logModes.ALGORITHM}>
                 Algorithm
               </Select.Option>
+
               <Select.Option key={logModes.INTERNAL} value={logModes.INTERNAL}>
                 System
               </Select.Option>
 
-              {sideCarsDetails &&
-                sideCarsDetails?.map(sideCar => (
-                  <Select.Option
-                    key={sideCar.container.name}
-                    value={`${sideCar.container.name}`}>
-                    {sideCar.container.name}
-                  </Select.Option>
-                ))}
+              {sideCarsDetails?.map(sideCar => (
+                <Select.Option
+                  key={sideCar.container.name}
+                  value={sideCar.container.name}>
+                  {sideCar.container.name}
+                </Select.Option>
+              ))}
+
               <Select.Option key={logModes.ALL} value={logModes.ALL}>
                 All
               </Select.Option>
@@ -356,6 +319,7 @@ const NodeLogs = ({
                 options={optionsSourceLogs}
               />
             </Col>
+
             {sourceLogs === 'es' && (
               <>
                 <Col>
@@ -365,11 +329,12 @@ const NodeLogs = ({
                   />
                 </Col>
                 <Col span={1}>
-                  <LinkOutlined style={{ marginLeft: '7px' }} />
+                  <LinkOutlined style={{ marginLeft: 7 }} />
                 </Col>
                 <Col span={2}>
                   <Button
                     title="Search in Kibana"
+                    disabled={!linkKibana}
                     onClick={() => window.open(linkKibana)}>
                     <IconKibana />
                   </Button>
@@ -377,16 +342,9 @@ const NodeLogs = ({
               </>
             )}
 
-            <Col
-              span={1}
-              style={{
-                flexBasis: 'max-content',
-                marginLeft: 'auto',
-                marginRight: '20px',
-              }}>
+            <Col style={{ marginLeft: 'auto', marginRight: 20 }}>
               <Button
                 disabled={logs.length === 0}
-                title={`download Logs Task ${taskId}`}
                 onClick={() => downloadLogsAsText(`TaskID_${taskId}`)}>
                 <DownloadOutlined />
               </Button>
@@ -415,19 +373,19 @@ const NodeLogs = ({
       </RadioGroupStyle>
 
       <Typography.Text type="danger">
-        {'  '}
-        {ErrorMsg[msgPodStatus] && <InfoCircleOutlined />}{' '}
+        {ErrorMsg[msgPodStatus] && <InfoCircleOutlined />}
         {ErrorMsg[msgPodStatus]}
       </Typography.Text>
+
       <Typography.Text type="danger">
-        {'  '}
-        {errorMsgImage && <InfoCircleOutlined />} {errorMsgImage}{' '}
+        {errorMsgImage && <InfoCircleOutlined />}
+        {errorMsgImage}
       </Typography.Text>
 
       {!isStatusFailedSchedulingTask && (
         <Container>
           {isLoadLog ? (
-            <Spin indicator={LoadingOutlined} />
+            <Spin indicator={<LoadingOutlined />} />
           ) : (
             <LogsViewer
               dataSource={logs.length > 0 ? logs : logErrorNode}
@@ -446,23 +404,12 @@ const NodeLogs = ({
 };
 
 NodeLogs.propTypes = {
-  // TODO: detail the props
-  // eslint-disable-next-line
   taskDetails: PropTypes.array.isRequired,
   NodeInputOutputTable: PropTypes.node.isRequired,
-  node: PropTypes.shape({
-    kind: PropTypes.string,
-    nodeName: PropTypes.string,
-    error: PropTypes.string,
-    startTime: PropTypes.number,
-    endTime: PropTypes.number,
-    batch: PropTypes.arrayOf(PropTypes.object),
-    status: PropTypes.string,
-    warnings: PropTypes.arrayOf(PropTypes.string),
-  }).isRequired,
-
+  node: PropTypes.object.isRequired,
   currentTask: PropTypes.string,
   setCurrentTask: PropTypes.func.isRequired,
   sideCarsDetails: PropTypes.arrayOf(PropTypes.object),
 };
+
 export default React.memo(NodeLogs);

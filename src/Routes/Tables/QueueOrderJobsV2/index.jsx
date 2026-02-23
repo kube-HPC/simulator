@@ -14,8 +14,16 @@ import useQueueOrderJobs from './useQueueOrderJobs';
 // need HOC function to pass hook "useQueueOrderJobs" function to class component
 export const queueOrderJobsHOC = QueueOrderJobsV2 => props => {
   const { orderApi } = useQueueOrderJobs();
+  const [modal, contextHolderModal] = Modal.useModal();
 
-  return <QueueOrderJobsV2 orderApi={orderApi} {...props} />;
+  return (
+    <QueueOrderJobsV2
+      orderApi={orderApi}
+      modal={modal}
+      contextHolderModal={contextHolderModal}
+      {...props}
+    />
+  );
 };
 
 const PAGE_SIZE_TABLE = 30;
@@ -152,7 +160,8 @@ class QueueOrderJobsV2 extends React.Component {
   showPromiseConfirmDelete = async keyDelete => {
     const { filterPreferredVal } = this.state;
     const manyString = filterPreferredVal !== 'JOBID' ? 'items' : 'item';
-    Modal.confirm({
+    const { modal } = this.props;
+    modal.confirm({
       title: `Do you want to move these ${manyString} to Queue list?`,
       icon: <ExclamationCircleOutlined />,
       onOk: async () => {
@@ -471,6 +480,7 @@ class QueueOrderJobsV2 extends React.Component {
   };
 
   render() {
+    const { contextHolderModal } = this.props;
     const {
       dataSourcePreferred,
       dataSourceQueue,
@@ -501,6 +511,7 @@ class QueueOrderJobsV2 extends React.Component {
 
     return (
       <>
+        {contextHolderModal}
         {/* <>
           Version 2 :
           {JSON.stringify({
@@ -584,6 +595,10 @@ QueueOrderJobsV2.propTypes = {
     getStatusPreferred: PropTypes.func,
     getStatusManage: PropTypes.func,
   }).isRequired,
+  modal: PropTypes.shape({
+    confirm: PropTypes.func.isRequired,
+  }).isRequired,
+  contextHolderModal: PropTypes.node.isRequired,
 };
 
 export default queueOrderJobsHOC(QueueOrderJobsV2);

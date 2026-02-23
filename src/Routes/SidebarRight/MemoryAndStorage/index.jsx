@@ -8,14 +8,10 @@ import { Header } from './styles';
 import BarChartMonitors from '../BarChartMonitors.react';
 
 const Root = styled.div`
-  // font-size: 20px;
-  // padding: 0 4ch;
-  height: 95vh;
+  height: 100%;
 `;
 
-const Memory = styled.div`
-  height: 55%;
-`;
+const Memory = styled.div``;
 
 const MemoryAndStorage = () => {
   const { data, legend } = useMetric('mem');
@@ -35,6 +31,7 @@ const MemoryAndStorage = () => {
           image={Empty.PRESENTED_IMAGE_SIMPLE}
         />
       )}
+
       {storage.size ? (
         <Storage storage={storage} />
       ) : (

@@ -85,11 +85,12 @@ const DarkTheme = COMMON_COLOR => {
     filters: { backgroundColor: '#2f306c30', borderColor: '#053054' },
     jobsGraph: {
       mode: 'dark',
-      backgroundBarColor: '#0b426b',
-      borderBarColor: '#147cc2',
-      backgroundBarNodesColor: '#152249',
+      backgroundBarColor: '#405d74',
+      borderBarColor: '#26465c',
+      backgroundBarNodesColor: '#1c325c',
       fontNodeColor: '#00000073',
     },
+    HKGrid: { ActionChip: '#303030', LoadingOverlay: 'rgba(26, 64, 99, 0.8)' },
   };
 
   return {

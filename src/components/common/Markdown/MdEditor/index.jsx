@@ -1,24 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import MdEditorReact from 'react-markdown-editor-lite';
-import MarkdownIt from 'markdown-it';
+import MDEditor from '@uiw/react-md-editor';
 import { readmeTemplate } from 'config';
-import 'react-markdown-editor-lite/lib/index.css';
 
-const parser = new MarkdownIt();
-const configReadOnly = { view: { menu: false, md: false, html: true } };
-const renderHtml = text => parser.render(text);
-const noop = () => {};
-
-const MdEditor = ({
+const MdEditorView = ({
   value: initialValue = readmeTemplate || '',
-  onChange = noop,
+  onChange = () => {},
   viewReadOnly = false,
 }) => {
   const [editorValue, setEditorValue] = useState('');
 
   useEffect(() => {
-    // Apply template fallback for empty/null values
     const finalValue =
       !initialValue || initialValue === 'null' || initialValue.trim() === ''
         ? readmeTemplate
@@ -27,26 +19,26 @@ const MdEditor = ({
     setEditorValue(finalValue);
   }, [initialValue]);
 
-  const handleValueChange = ({ text }) => {
-    setEditorValue(text);
-    onChange(text);
+  const handleChange = val => {
+    setEditorValue(val);
+    onChange(val);
   };
 
   return (
-    <MdEditorReact
-      value={editorValue}
-      onChange={handleValueChange}
-      renderHTML={renderHtml}
-      config={viewReadOnly && configReadOnly}
-    />
+    <div data-color-mode="light" style={{ marginTop: 10 }}>
+      {viewReadOnly ? (
+        <MDEditor.Markdown source={editorValue} />
+      ) : (
+        <MDEditor value={editorValue} onChange={handleChange} height="80vh" />
+      )}
+    </div>
   );
 };
 
-MdEditor.propTypes = {
+MdEditorView.propTypes = {
   value: PropTypes.string,
-  // eslint-disable-next-line
   onChange: PropTypes.func,
   viewReadOnly: PropTypes.bool,
 };
 
-export default MdEditor;
+export default MdEditorView;

@@ -1,3 +1,5 @@
+import * as setupConfig from './setupConfig.mjs';
+
 const {
   monitorBackend,
   board,
@@ -8,8 +10,9 @@ const {
   grafanaDashboardUrl,
   dataSourceIsEnable,
   keycloakEnable,
+  checkIframe,
   baseUrl,
-} = require('./setupConfig');
+} = setupConfig;
 
 const buildDashboardConfig = () => ({
   hkubeSystemVersion,
@@ -19,9 +22,10 @@ const buildDashboardConfig = () => ({
   grafanaDashboardUrl,
   dataSourceIsEnable,
   keycloakEnable,
+  checkIframe,
   baseUrl,
   monitorBackend,
   board,
 });
 
-module.exports = buildDashboardConfig;
+export default buildDashboardConfig;

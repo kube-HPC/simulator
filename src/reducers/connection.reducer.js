@@ -18,6 +18,7 @@ const initialState = {
   grafanaDashboardUrl: null,
   dataSourceIsEnable: null,
   keycloakEnable: null,
+  checkIframe: null,
   hasData: false,
   isSocketConnected: false,
 };

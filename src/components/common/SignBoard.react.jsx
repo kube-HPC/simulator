@@ -128,36 +128,38 @@ const SignBoard = ({
       //  title={title(name)}
       trigger="click"
       styles={{ root: { width: '30vw' } }}>
-      <Form.Item
-        {...restField}
-        name={name}
-        fieldKey={fieldKey}
-        rules={msgRules}
-        initialValue=""
-        onChange={onChange}
-        onClick={setPosition}
-        key={`inputTextItem${indexKey}`}>
-        {type === 'text' ? (
-          <Input
-            ref={inputRef}
-            key={`inputText${indexKey}`}
-            style={{ width }}
-            placeholder={placeholder}
-            autoComplete="off"
-            onKeyUp={setPosition}
-          />
-        ) : (
-          <TextArea
-            ref={inputRef}
-            key={`inputText${indexKey}`}
-            style={{ width }}
-            placeholder={placeholder}
-            onKeyUp={setPosition}
-            rows={row}
-            autoComplete="off"
-          />
-        )}
-      </Form.Item>
+      <span>
+        <Form.Item
+          {...restField}
+          name={name}
+          fieldKey={fieldKey}
+          rules={msgRules}
+          initialValue=""
+          onChange={onChange}
+          onClick={setPosition}
+          key={`inputTextItem${indexKey}`}>
+          {type === 'text' ? (
+            <Input
+              ref={inputRef}
+              key={`inputText${indexKey}`}
+              style={{ width }}
+              placeholder={placeholder}
+              autoComplete="off"
+              onKeyUp={setPosition}
+            />
+          ) : (
+            <TextArea
+              ref={inputRef}
+              key={`inputText${indexKey}`}
+              style={{ width }}
+              placeholder={placeholder}
+              onKeyUp={setPosition}
+              rows={row}
+              autoComplete="off"
+            />
+          )}
+        </Form.Item>
+      </span>
     </Popover>
   );
 };

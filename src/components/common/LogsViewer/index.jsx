@@ -167,13 +167,15 @@ const LogsViewer = ({ dataSource, isBuild = false, id, emptyDescription }) => {
   const listRef = useRef(null);
 
   useEffect(() => {
+    if (!listRef.current) return;
     cache.current.clearAll();
+
     const raf = requestAnimationFrame(() => {
       listRef.current?.recomputeRowHeights();
-      listRef.current?.forceUpdateGrid?.();
     });
+
     return () => cancelAnimationFrame(raf);
-  }, [dataSource, id]);
+  }, [dataSource.length, id]);
 
   const renderRow = useCallback(
     ({ index, key, parent, style }) => (
@@ -186,9 +188,9 @@ const LogsViewer = ({ dataSource, isBuild = false, id, emptyDescription }) => {
         {({ registerChild }) => (
           <div ref={registerChild} style={style}>
             {isBuild ? (
-              <BuildEntry index={index} log={dataSource[index]} style={{}} />
+              <BuildEntry index={index} log={dataSource[index]} />
             ) : (
-              <Entry index={index} log={dataSource[index]} style={{}} />
+              <Entry index={index} log={dataSource[index]} />
             )}
           </div>
         )}
@@ -196,7 +198,6 @@ const LogsViewer = ({ dataSource, isBuild = false, id, emptyDescription }) => {
     ),
     [dataSource, isBuild]
   );
-
   const [first] = dataSource;
   const isValid = isBuild || (first && first.level);
 

@@ -17,6 +17,7 @@ const LinkToEdit = ({ toggleEdit }) => {
   const isEditOrder = useMemo(() => query.get('queueEdit'), [query]);
   const location = useLocation();
   const { ClearQueue } = useActions();
+  const [modal, contextHolderModal] = Modal.useModal();
 
   const nextPath = useMemo(() => {
     if (isEditOrder) {
@@ -30,7 +31,7 @@ const LinkToEdit = ({ toggleEdit }) => {
   const onStop = useCallback(() => ClearQueue(() => {}), [ClearQueue]);
 
   const showClearConfirmation = useCallback(() => {
-    Modal.confirm({
+    modal.confirm({
       title: 'Clear Queue',
       icon: <ExclamationCircleOutlined />,
       content: 'Are you sure you want to clear the entire queue?',
@@ -41,10 +42,11 @@ const LinkToEdit = ({ toggleEdit }) => {
         onStop();
       },
     });
-  }, [onStop]);
+  }, [modal, onStop]);
 
   return (
     <HeaderTitlePreferred>
+      {contextHolderModal}
       <Space>
         <Link to={nextPath}>
           <Button

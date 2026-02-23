@@ -29,14 +29,20 @@ const Initial = ({ style }) => {
     setIsStreamingPipeline,
   } = useWizardContext();
 
-  const { handleRadioClick, nodeNames, kindOverSelect, setKindOverSelect } =
-    useWizardInitial(valuesState, form, setForm, setIsStreamingPipeline);
+  const {
+    handleRadioClick,
+    nodeNames,
+    kindOverSelect,
+    setKindOverSelect,
+    contextHolderModal,
+  } = useWizardInitial(valuesState, form, setForm, setIsStreamingPipeline);
 
   // get list nodes
   const { experiments } = useExperiments();
 
   return (
     <div style={style}>
+      {contextHolderModal}
       <Form.Item
         label="Name"
         name={['name']}
