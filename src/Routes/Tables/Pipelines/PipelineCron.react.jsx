@@ -9,7 +9,7 @@ import { useActions, usePipeline } from 'hooks';
 import { FlexBox, CronModel } from 'components/common';
 import cronParser from 'cron-parser';
 import cronstrue from 'cronstrue';
-import { notification } from 'utils';
+import { notification, events } from 'utils';
 
 const { Text } = Typography;
 const iconSize = {
@@ -82,23 +82,37 @@ const PipelineCron = ({ pipeline }) => {
     // On error `renderToolTip` got default value.
   }
 
+  const updatePipelineData = useCallback(() => {
+    events.emit('update_pipeline_list');
+  }, []);
+
   const { name } = pipeline;
-  const callbackCronStart = () => {
+  const callbackCronStart = useCallback(() => {
     setToggleLoading(false);
     setCronIsEnabled(true);
-  };
+    updatePipelineData();
+  }, [updatePipelineData]);
 
-  const callbackCronStop = () => {
+  const callbackCronStop = useCallback(() => {
     setToggleLoading(false);
     setCronIsEnabled(false);
-  };
+    updatePipelineData();
+  }, [updatePipelineData]);
 
   const onToggle = useCallback(() => {
     setToggleLoading(true);
     cronIsEnabled
       ? cronStop(name, value, callbackCronStop)
       : cronStart(name, value, callbackCronStart);
-  }, [cronIsEnabled, cronStop, name, value, cronStart]);
+  }, [
+    callbackCronStart,
+    callbackCronStop,
+    cronIsEnabled,
+    cronStop,
+    name,
+    value,
+    cronStart,
+  ]);
 
   const onSave = useCallback(
     pattern => {

@@ -7,6 +7,7 @@ import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { PIPELINE_QUERY } from 'graphql/queries';
 import { pipelineListVar, instanceFiltersVar } from 'cache';
+import { events } from 'utils';
 import { Empty } from 'antd';
 import styled from 'styled-components';
 
@@ -34,26 +35,40 @@ const PipelinesTable = () => {
   usePolling(query, 3000);
 
   const onSubmitFilter = useCallback(
-    values => {
-      if (!query.loading && query.data?.pipelines?.list) {
+    (values, pipelines) => {
+      const pipelinesList = pipelines || query.data?.pipelines?.list;
+
+      if (!query.loading && pipelinesList) {
         if (values?.qPipelineName) {
           const searchTerm = values.qPipelineName.toLowerCase().trim();
           pipelineListVar(
-            query.data.pipelines.list.filter(item =>
+            pipelinesList.filter(item =>
               item.name.toLowerCase().includes(searchTerm)
             )
           );
         } else {
-          pipelineListVar(query.data.pipelines.list);
+          pipelineListVar(pipelinesList);
         }
       }
     },
-    [query.loading, query.data]
+    [query.loading, query.data?.pipelines?.list]
   );
+
+  const refreshPipelinesData = useCallback(async () => {
+    const { data } = await query.refetch();
+    onSubmitFilter(instanceFilter.pipelines, data?.pipelines?.list);
+  }, [instanceFilter.pipelines, onSubmitFilter, query]);
 
   useEffect(() => {
     onSubmitFilter(instanceFilter.pipelines);
-  }, [query.data?.pipelines?.pipelinesCount]);
+  }, [instanceFilter.pipelines, onSubmitFilter, query.data?.pipelines?.list]);
+
+  useEffect(() => {
+    events.on('update_pipeline_list', refreshPipelinesData);
+    return () => {
+      events.off('update_pipeline_list', refreshPipelinesData);
+    };
+  }, [refreshPipelinesData]);
 
   const columnDefs = useMemo(() => {
     if (!keycloakEnable) {
