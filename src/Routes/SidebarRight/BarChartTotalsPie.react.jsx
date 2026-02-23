@@ -10,7 +10,7 @@ const BarChartTotalsPie = ({ pieData, defs, fill }) => {
     let otherValue = 0;
     let usedValue = 0;
 
-    pieData.forEach((item) => {
+    pieData.forEach(item => {
       const id = String(item.id);
       if (allowedIds.has(id)) {
         if (id === 'other') {
@@ -23,37 +23,42 @@ const BarChartTotalsPie = ({ pieData, defs, fill }) => {
       }
     });
 
-    result.push({ id: 'other', label: 'other', value: otherValue });
-    result.push({ id: 'used', label: 'used', value: usedValue });
+    if (otherValue > 0) {
+      result.push({ id: 'other', label: 'other', value: otherValue });
+    }
+    if (usedValue > 0) {
+      result.push({ id: 'used', label: 'used', value: usedValue });
+    }
     return result;
   }, [pieData]);
 
-  return <ResponsivePie
-    data={normalizedData}
-    margin={{ top: 30, right: 5, bottom: 30, left: 5 }}
-    innerRadius={0.55}
-    padAngle={3}
-    cornerRadius={6}
-    valueFormat={(value) => new Intl.NumberFormat('en-US', {
-      maximumFractionDigits: 2,
-    }).format(value)}
-    borderWidth={0.2}
-    enableRadialLabels={false}
-    enableSlicesLabels={false}
-    animate
-    motionStiffness={90}
-    motionDamping={15}
-    colors={Theme.GRAPH_PALETTE}
-    defs={defs}
-    fill={fill}
-    legends={[]}
-    enableArcLabels={true}
-    activeOuterRadiusOffset={8}
-   
-     
-  />
-
-}
+  return (
+    <ResponsivePie
+      data={normalizedData}
+      margin={{ top: 30, right: 5, bottom: 30, left: 5 }}
+      innerRadius={0.55}
+      padAngle={3}
+      cornerRadius={6}
+      valueFormat={value =>
+        new Intl.NumberFormat('en-US', {
+          maximumFractionDigits: 2,
+        }).format(value)
+      }
+      borderWidth={0.2}
+      enableRadialLabels={false}
+      enableSlicesLabels={false}
+      animate
+      motionStiffness={90}
+      motionDamping={15}
+      colors={Theme.GRAPH_PALETTE}
+      defs={defs}
+      fill={fill}
+      legends={[]}
+      enableArcLabels
+      activeOuterRadiusOffset={8}
+    />
+  );
+};
 
 BarChartTotalsPie.propTypes = {
   pieData: PropTypes.arrayOf(
