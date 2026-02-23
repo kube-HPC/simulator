@@ -21,7 +21,6 @@ import GraphPreview from './../../Tables/Jobs/GridView/GraphPreview';
 const Form = styled(AntdForm)`
   width: 100%;
   height: 100%;
-  overflow-y: scroll;
 `;
 
 export const Body = styled.div`
