@@ -15,7 +15,7 @@ export const dateTimeDefaultVar = makeVar({
 });
 
 export const pipelineJustStartedVar = makeVar(false);
-
+export const queueClearedVar = makeVar(false);
 export const numberErrorGraphQLVar = makeVar({ error: 0 });
 export const isPinActiveJobVar = makeVar(false);
 export const filterToggeledVar = makeVar(true);
