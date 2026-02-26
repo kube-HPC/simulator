@@ -32,7 +32,7 @@ const OverviewDrawer = () => {
           <TabDrawerText>{DRAWER_TITLES.ALGORITHM_INFO}</TabDrawerText>
         </TabDrawer>
         {activeAlgorithm ? (
-          <AlgorithmsTabs algorithm={activeAlgorithm} />
+          <AlgorithmsTabs algorithm={activeAlgorithm} onClose={setOff} />
         ) : (
           <MissingIdError />
         )}
