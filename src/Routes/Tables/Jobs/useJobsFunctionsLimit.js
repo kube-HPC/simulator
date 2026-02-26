@@ -231,7 +231,7 @@ const useJobsFunctionsLimit = () => {
   useEffect(() => {
     if (queryAllJobs?.data) {
       const dsAllJobs = queryAllJobs.data.jobsAggregated.jobs;
- setDataSource(dsAllJobs);
+      setDataSource(dsAllJobs);
 
       // Update external ID visibility state
       const hasExtId = dsAllJobs.some(x => x.externalId != null);
@@ -244,17 +244,18 @@ const useJobsFunctionsLimit = () => {
     }
   }, [queryAllJobs.data, changeDs]);
 
+  const handleBodyScroll = useCallback(
+    params => {
+      const lastRow = params.api.getLastDisplayedRowIndex();
+      const totalRows = params.api.getDisplayedRowCount();
 
-
-const handleBodyScroll = useCallback((params) => {
-  const lastRow = params.api.getLastDisplayedRowIndex();
-  const totalRows = params.api.getDisplayedRowCount();
-
-  if (isGetMore && lastRow >= totalRows - 1 && !queryAllJobs.loading) {
-    setIsGetMore(false);
-    onFetchMore();
-  }
-}, [isGetMore, queryAllJobs.loading]);
+      if (isGetMore && lastRow >= totalRows - 1 && !queryAllJobs.loading) {
+        setIsGetMore(false);
+        onFetchMore();
+      }
+    },
+    [isGetMore, queryAllJobs.loading]
+  );
 
   useEffect(() => {
     if (firstUpdate.current) {
@@ -275,10 +276,10 @@ const handleBodyScroll = useCallback((params) => {
   }, []);
 
   useEffect(() => {
-  if (!firstUpdate.current) {
-   queryAllJobs.refetch().then(() => setIsGetMore(true));
-  }
-}, [limitGetJobs]);
+    if (!firstUpdate.current) {
+      queryAllJobs.refetch().then(() => setIsGetMore(true));
+    }
+  }, [limitGetJobs]);
 
   /**
    * Memoized column definitions with stable references
@@ -317,7 +318,7 @@ const handleBodyScroll = useCallback((params) => {
     columns: jobColumnsMemo,
     _dataSource,
     setLimitGetJobs,
-    handleBodyScroll
+    handleBodyScroll,
   };
 };
 

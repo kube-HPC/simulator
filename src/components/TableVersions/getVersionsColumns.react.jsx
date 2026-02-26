@@ -175,7 +175,9 @@ const getVersionsColumns = ({
               shape="circle"
               icon={<DeleteOutlined />}
               disabled={isCurrentVersion}
-              onClick={() => deleteConfirmAction(modal, onDelete, record, source)}
+              onClick={() =>
+                deleteConfirmAction(modal, onDelete, record, source)
+              }
             />
           </Tooltip>
         </FlexBox.Item>

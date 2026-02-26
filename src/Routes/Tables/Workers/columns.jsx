@@ -54,7 +54,7 @@ const JobId = jobId => {
   const type = !isValidJobId ? 'warning' : '';
   const text = jobId || 'Not Assigned';
 
-  return <Ellipsis type={type} copyable={isValidJobId} text={text}  />;
+  return <Ellipsis type={type} copyable={isValidJobId} text={text} />;
 };
 
 export const workersTableStats = [

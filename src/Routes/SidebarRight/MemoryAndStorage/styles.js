@@ -9,7 +9,6 @@ export const Metrics = styled.div`
   display: flex;
   overflow: hidden;
   align-items: center;
-  
 `;
 
 export const MetricContainer = styled.div`
@@ -27,8 +26,7 @@ export const Header = styled.h2`
   text-transform: capitalize;
   margin-bottom: 1em;
   border-bottom: 1px solid #ddd;
-  margin-block-start:auto;
-
+  margin-block-start: auto;
 `;
 
 export const MetricHeader = styled.div`

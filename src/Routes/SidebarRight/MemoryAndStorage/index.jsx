@@ -11,9 +11,7 @@ const Root = styled.div`
   height: 100%;
 `;
 
-const Memory = styled.div`
-
-`;
+const Memory = styled.div``;
 
 const MemoryAndStorage = () => {
   const { data, legend } = useMetric('mem');
@@ -33,7 +31,7 @@ const MemoryAndStorage = () => {
           image={Empty.PRESENTED_IMAGE_SIMPLE}
         />
       )}
-       
+
       {storage.size ? (
         <Storage storage={storage} />
       ) : (

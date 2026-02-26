@@ -41,7 +41,11 @@ const ConfigProviderApp = () => {
     if (keycloakEnable && firstKc.current && !KeycloakServices.isLoggedIn()) {
       firstKc.current = false;
 
-      KeycloakServices.initKeycloak(renderApp, renderErrorPreRenderApp, checkIframe);
+      KeycloakServices.initKeycloak(
+        renderApp,
+        renderErrorPreRenderApp,
+        checkIframe
+      );
     }
   }, [keycloakEnable, checkIframe]);
 

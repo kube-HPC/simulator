@@ -72,51 +72,50 @@ const Storage = ({ storage }) => {
   const data = adaptedData({ free, used, freeH, usedH });
 
   return (
-     <Collapsible title="Storage">
-    <StorageStyle>
-      
-      <Metrics>
-        <PieContainer>
-          <ResponsivePie
-            data={data}
-            margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-            innerRadius={0.75}
-            padAngle={0.7}
-            cornerRadius={0}
-            valueFormat={prettyBytes}
-            borderWidth={0}
-            enableRadialLabels={false}
-            enableSlicesLabels={false}
-            animate
-            motionStiffness={90}
-            motionDamping={15}
-            colors={[COLOR_STORAGE.FREE, COLOR_STORAGE.USED]}
-            legends={[]}
-            enableArcLabels={false}
-          />
-        </PieContainer>
-        <BoxesContainer>
-          <MetricContainer>
-            <MetricHeader>Total Capacity</MetricHeader>
-            <MetricValue>{sizeH}</MetricValue>
-          </MetricContainer>
+    <Collapsible title="Storage">
+      <StorageStyle>
+        <Metrics>
+          <PieContainer>
+            <ResponsivePie
+              data={data}
+              margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+              innerRadius={0.75}
+              padAngle={0.7}
+              cornerRadius={0}
+              valueFormat={prettyBytes}
+              borderWidth={0}
+              enableRadialLabels={false}
+              enableSlicesLabels={false}
+              animate
+              motionStiffness={90}
+              motionDamping={15}
+              colors={[COLOR_STORAGE.FREE, COLOR_STORAGE.USED]}
+              legends={[]}
+              enableArcLabels={false}
+            />
+          </PieContainer>
+          <BoxesContainer>
+            <MetricContainer>
+              <MetricHeader>Total Capacity</MetricHeader>
+              <MetricValue>{sizeH}</MetricValue>
+            </MetricContainer>
 
-          <MetricContainer style={{ borderColor: COLOR_STORAGE.FREE }}>
-            <MetricHeader>Free</MetricHeader>
-            <MetricValue>
-              {freeH} ({freeP}%)
-            </MetricValue>
-          </MetricContainer>
+            <MetricContainer style={{ borderColor: COLOR_STORAGE.FREE }}>
+              <MetricHeader>Free</MetricHeader>
+              <MetricValue>
+                {freeH} ({freeP}%)
+              </MetricValue>
+            </MetricContainer>
 
-          <MetricContainer style={{ borderColor: COLOR_STORAGE.USED }}>
-            <MetricHeader>Used</MetricHeader>
-            <MetricValue>
-              {usedH} ({(usedP * 100).toFixed(2)}%)
-            </MetricValue>
-          </MetricContainer>
-        </BoxesContainer>
-      </Metrics>
-    </StorageStyle>
+            <MetricContainer style={{ borderColor: COLOR_STORAGE.USED }}>
+              <MetricHeader>Used</MetricHeader>
+              <MetricValue>
+                {usedH} ({(usedP * 100).toFixed(2)}%)
+              </MetricValue>
+            </MetricContainer>
+          </BoxesContainer>
+        </Metrics>
+      </StorageStyle>
     </Collapsible>
   );
 };

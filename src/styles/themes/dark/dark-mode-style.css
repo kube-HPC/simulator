@@ -191,7 +191,7 @@ input:-internal-autofill-selected {
   color: #d7d7d7 !important;
   border-color: #385e8d !important;
 }
-label[class*="sc-"] {
+label[class*='sc-'] {
   color: #d7d7d7 !important;
   background-color: transparent !important;
 }
@@ -208,7 +208,7 @@ label[class*="sc-"] {
   padding: 6px 10px !important;
 }
 /* Target tooltip container */
-div[style*="z-index: 10"][style*="pointer-events: none"][style*="background: rgb(255, 255, 255)"] {
+div[style*='z-index: 10'][style*='pointer-events: none'][style*='background: rgb(255, 255, 255)'] {
   background: #242c48 !important; /* Match your dropdown color */
   color: #ffffff !important;
   border: 1px solid #586a93 !important;
@@ -288,7 +288,7 @@ div[style*="z-index: 10"][style*="pointer-events: none"][style*="background: rgb
   fill: #40a9ff !important;
   color: #40a9ff !important;
 }
-.ant-menu-title-content span[class*="sc-"] {
+.ant-menu-title-content span[class*='sc-'] {
   color: #d7d7d7 !important;
 }
 .ant-empty-description {
@@ -309,7 +309,7 @@ div[style*="z-index: 10"][style*="pointer-events: none"][style*="background: rgb
 }
 
 /* Active tab */
-.ant-tabs-tab-btn[aria-selected="true"] {
+.ant-tabs-tab-btn[aria-selected='true'] {
   color: #f0a25a !important;
   font-weight: 600 !important;
 }
@@ -345,13 +345,13 @@ svg text {
 svg line {
   stroke: #586a93 !important;
 }
-svg text[text-anchor="middle"] {
+svg text[text-anchor='middle'] {
   fill: #2c3c60 !important;
   font-weight: bold !important;
   font-size: 14px !important;
 }
-svg text[text-anchor="middle"][dominant-baseline="text-before-edge"],
-svg text[text-anchor="middle"][style*="dominant-baseline: central"] {
+svg text[text-anchor='middle'][dominant-baseline='text-before-edge'],
+svg text[text-anchor='middle'][style*='dominant-baseline: central'] {
   fill: #40a9ff !important;
   font-weight: bold !important;
   font-size: 14px !important;

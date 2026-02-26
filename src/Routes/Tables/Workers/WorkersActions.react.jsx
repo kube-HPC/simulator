@@ -17,7 +17,8 @@ const WorkersActions = ({ algorithm = null, stopAllWorkers = [] }) => {
     events.emit(
       'global_alert_msg',
       <>
-Stopping the worker, It may take a few moments for the algorithms to be deleted.
+        Stopping the worker, It may take a few moments for the algorithms to be
+        deleted.
       </>,
       'success'
     );
