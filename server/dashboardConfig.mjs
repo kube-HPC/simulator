@@ -11,6 +11,7 @@ const {
   dataSourceIsEnable,
   keycloakEnable,
   checkIframe,
+  inactiveCheckMs,
   baseUrl,
 } = setupConfig;
 
@@ -23,6 +24,7 @@ const buildDashboardConfig = () => ({
   dataSourceIsEnable,
   keycloakEnable,
   checkIframe,
+  inactiveCheckMs,
   baseUrl,
   monitorBackend,
   board,
