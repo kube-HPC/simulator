@@ -4,66 +4,98 @@ import { useEffect } from 'react';
 import { throttle } from 'lodash';
 import { inactiveModeVar } from 'cache';
 
-const queryArry = [];
-let isTrottle = false;
+const queryMap = new Map();
+let lastActivityTs = Date.now();
 let isPolling = true;
 
-const _throttled = throttle(
-  () => {
-    isTrottle = true;
-  },
-  1800,
-  { trailing: false }
-);
+const INACTIVE_CHECK_MS = 300000; // 5 minutes
+const RESUME_EVENTS = [
+  'mousemove',
+  'mousedown',
+  'keydown',
+  'scroll',
+  'touchstart',
+];
 
-document.addEventListener('mousemove', _throttled);
+const trackActivity = throttle(() => {
+  lastActivityTs = Date.now();
+}, 1000);
+
+const stopAllQueries = () => {
+  queryMap.forEach((_, query) => {
+    query.stopPolling();
+  });
+};
+
+const startAllQueries = () => {
+  queryMap.forEach((interval, query) => {
+    query.startPolling(interval);
+  });
+};
+
+const markActivity = () => {
+  lastActivityTs = Date.now();
+  if (!isPolling) {
+    startAllQueries();
+    isPolling = true;
+    inactiveModeVar(false);
+    RESUME_EVENTS.forEach(eventName => {
+      document.removeEventListener(eventName, markActivity);
+    });
+    document.addEventListener('mousemove', trackActivity, { passive: true });
+  }
+};
+
+document.addEventListener('mousemove', trackActivity, { passive: true });
 
 // reload all data in site
 // eslint-disable-next-line no-unused-vars
 export const forceRefetchAll = (act = 'def') => {
-  queryArry.forEach(query => {
+  queryMap.forEach((_, query) => {
     if (query.refetch) {
       query.refetch();
     }
   });
 };
 
-const trottleCheck = () => {
+const activityCheck = () => {
   setTimeout(() => {
-    if (!isTrottle) {
-      queryArry.forEach(query => {
-        query.stopPolling();
-      });
+    const inactiveForMs = Date.now() - lastActivityTs;
+
+    if (isPolling && inactiveForMs >= INACTIVE_CHECK_MS) {
+      stopAllQueries();
       if (isPolling) {
         inactiveModeVar(true);
         isPolling = false;
-      }
-    } else {
-      isTrottle = false;
-      if (!isPolling) {
-        queryArry.forEach(query => {
-          query.startPolling(3000);
+        document.removeEventListener('mousemove', trackActivity);
+        RESUME_EVENTS.forEach(eventName => {
+          document.addEventListener(eventName, markActivity, { passive: true });
         });
-        isPolling = true;
-        inactiveModeVar(false);
       }
     }
-    trottleCheck();
-  }, 300000); // counter of "Inactive Mode"
+    activityCheck();
+  }, INACTIVE_CHECK_MS); // counter of "Inactive Mode"
 };
 
 const usePolling = (query, interval) => {
   useEffect(() => {
-    queryArry.push(query);
-    query.startPolling(interval);
+    if (!query) return undefined;
+
+    queryMap.set(query, interval);
+
+    if (isPolling) {
+      query.startPolling(interval);
+    }
 
     return () => {
-      queryArry.splice(queryArry.indexOf(query), 1);
-      query.stopPolling();
+      queryMap.delete(query);
+      if (query.stopPolling) {
+        query.stopPolling();
+      }
     };
   }, [query, interval]);
 };
 
-trottleCheck();
+activityCheck();
 
 export default usePolling;

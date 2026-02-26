@@ -133,8 +133,8 @@ const useCounters = () => {
       prevQueueCountRef.current = counters.queue;
 
       if (
-        prevJobsCountRef.current !== null &&
-        counters.jobs > prevJobsCountRef.current &&
+        //  prevJobsCountRef.current !== null &&
+        //  counters.jobs > prevJobsCountRef.current &&
         pipelineJustStarted
       ) {
         events.emit(
