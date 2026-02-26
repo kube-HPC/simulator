@@ -12,6 +12,7 @@ import {
   dateTimeDefaultVar,
   pipelineJustStartedVar,
   metaVar,
+  queueClearedVar,
 } from 'cache';
 
 const ButtonLinkStyle = styled(Button)`
@@ -24,6 +25,7 @@ const useCounters = () => {
   const dateTimeDefault = useReactiveVar(dateTimeDefaultVar);
   const pipelineJustStarted = useReactiveVar(pipelineJustStartedVar);
   const metaMode = useReactiveVar(metaVar);
+  const queueCleared = useReactiveVar(queueClearedVar);
   const prevQueueCountRef = useRef(null);
   const prevJobsCountRef = useRef(null);
 
@@ -115,19 +117,28 @@ const useCounters = () => {
         prevQueueCountRef.current !== null &&
         counters.queue < prevQueueCountRef.current
       ) {
-        const jobsStarted = prevQueueCountRef.current - counters.queue;
-
-        events.emit(
-          'global_alert_msg',
-          <>
-            {jobsStarted} {jobsStarted === 1 ? 'job' : 'jobs'} started from
-            queue, see{' '}
-            <ButtonLinkStyle type="link" onClick={gotoJobsTable}>
-              jobs
-            </ButtonLinkStyle>
-          </>,
-          'success'
-        );
+        if (queueCleared) {
+          const jobsRemoved = prevQueueCountRef.current - counters.queue;
+          events.emit(
+            'global_alert_msg',
+            `${jobsRemoved} ${jobsRemoved === 1 ? 'job' : 'jobs'} removed from queue`,
+            'info'
+          );
+          queueClearedVar(false);
+        } else {
+          const jobsStarted = prevQueueCountRef.current - counters.queue;
+          events.emit(
+            'global_alert_msg',
+            <>
+              {jobsStarted} {jobsStarted === 1 ? 'job' : 'jobs'} started from
+              queue, see{' '}
+              <ButtonLinkStyle type="link" onClick={gotoJobsTable}>
+                jobs
+              </ButtonLinkStyle>
+            </>,
+            'success'
+          );
+        }
       }
 
       prevQueueCountRef.current = counters.queue;
