@@ -8,7 +8,8 @@ const queryMap = new Map();
 let lastActivityTs = Date.now();
 let isPolling = true;
 
-const INACTIVE_CHECK_MS = 300000; // 5 minutes
+const INACTIVE_CHECK_MS =
+  Number(import.meta.env.VITE_INACTIVE_CHECK_MS) || 300000; // 5 minutes
 const RESUME_EVENTS = [
   'mousemove',
   'mousedown',
