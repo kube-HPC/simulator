@@ -21,6 +21,7 @@ const initialState = {
   checkIframe: null,
   hasData: false,
   isSocketConnected: false,
+  inactiveCheckMs: null,
 };
 
 const connection = createSlice({

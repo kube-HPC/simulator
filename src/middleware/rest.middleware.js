@@ -105,6 +105,7 @@ const restMiddleware =
         dataSourceIsEnable,
         keycloakEnable,
         checkIframe,
+        inactiveCheckMs,
       } = action.payload.config;
       SOCKET_URL = setMonitorPath(monitorBackend);
       SOCKET_DATASOURCES_URL = setDatasourcesPath(monitorBackend);
@@ -122,6 +123,7 @@ const restMiddleware =
           dataSourceIsEnable,
           keycloakEnable,
           checkIframe,
+          inactiveCheckMs,
         })
       );
       client.defaults.baseURL = SOCKET_URL;

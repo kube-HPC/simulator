@@ -3,13 +3,16 @@
 import { useEffect } from 'react';
 import { throttle } from 'lodash';
 import { inactiveModeVar } from 'cache';
+import { selectors } from 'reducers';
+import { useSelector } from 'react-redux';
 
 const queryMap = new Map();
 let lastActivityTs = Date.now();
 let isPolling = true;
+let currentInactiveCheckMs = 300000;
+let activityTimeoutId = null;
+let pollingHookInstances = 0;
 
-const INACTIVE_CHECK_MS =
-  Number(import.meta.env.VITE_INACTIVE_CHECK_MS) || 300000; // 5 minutes
 const RESUME_EVENTS = [
   'mousemove',
   'mousedown',
@@ -59,11 +62,11 @@ export const forceRefetchAll = (act = 'def') => {
   });
 };
 
-const activityCheck = () => {
-  setTimeout(() => {
+const activityCheck = (inactiveCheckMs = currentInactiveCheckMs) => {
+  activityTimeoutId = setTimeout(() => {
     const inactiveForMs = Date.now() - lastActivityTs;
 
-    if (isPolling && inactiveForMs >= INACTIVE_CHECK_MS) {
+    if (isPolling && inactiveForMs >= inactiveCheckMs) {
       stopAllQueries();
       if (isPolling) {
         inactiveModeVar(true);
@@ -74,11 +77,40 @@ const activityCheck = () => {
         });
       }
     }
-    activityCheck();
-  }, INACTIVE_CHECK_MS); // counter of "Inactive Mode"
+    activityCheck(currentInactiveCheckMs);
+  }, inactiveCheckMs); // counter of "Inactive Mode"
 };
 
 const usePolling = (query, interval) => {
+  const { inactiveCheckMs } = useSelector(selectors.connection);
+
+  useEffect(() => {
+    pollingHookInstances += 1;
+
+    if (!activityTimeoutId) {
+      activityCheck(currentInactiveCheckMs);
+    }
+
+    return () => {
+      pollingHookInstances -= 1;
+
+      if (pollingHookInstances === 0 && activityTimeoutId) {
+        clearTimeout(activityTimeoutId);
+        activityTimeoutId = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    currentInactiveCheckMs = Number(inactiveCheckMs) || 300000;
+
+    if (activityTimeoutId) {
+      clearTimeout(activityTimeoutId);
+      activityTimeoutId = null;
+      activityCheck(currentInactiveCheckMs);
+    }
+  }, [inactiveCheckMs]);
+
   useEffect(() => {
     if (!query) return undefined;
 
@@ -96,7 +128,5 @@ const usePolling = (query, interval) => {
     };
   }, [query, interval]);
 };
-
-activityCheck();
 
 export default usePolling;
