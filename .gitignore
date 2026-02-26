@@ -15,7 +15,7 @@ build
 .env.development.local
 .env.test.local
 .env.production.local
-.npmrc
+
 npm-debug.log
 .vscode
 .nyc_output
