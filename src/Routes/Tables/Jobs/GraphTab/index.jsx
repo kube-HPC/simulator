@@ -371,8 +371,10 @@ const GraphTab = ({ graph, pipeline }) => {
           }}
         />
         <Popconfirm
-          overlayStyle={{
-            width: '300px',
+          styles={{
+            root: {
+              width: '300px',
+            },
           }}
           title="Warning"
           description="If you change the distace between nodes, nodes layout will reset. 
