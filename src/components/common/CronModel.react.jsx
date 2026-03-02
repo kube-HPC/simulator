@@ -106,9 +106,7 @@ const CronModel = ({
 
         <Cron value={valueCron} setValue={customSetValue} onError={onError} />
 
-        {error?.description && (
-          <Alert message={error.description} type="error" />
-        )}
+        {error?.description && <Alert title={error.description} type="error" />}
       </Modal>
     </>
   );

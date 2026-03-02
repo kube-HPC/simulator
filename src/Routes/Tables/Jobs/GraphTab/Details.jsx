@@ -191,7 +191,7 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug = false }) => {
     ) : node.algorithmVersion ? (
       <Empty />
     ) : (
-      <Alert message="Not have algorithm version" type="error" />
+      <Alert title="Not have algorithm version" type="error" />
     )
   ) : (
     <Empty />
