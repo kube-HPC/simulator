@@ -49,11 +49,11 @@ const DrawerReadMeFile = ({ name = null, type = null, disabled }) => {
         Edit Read Me
       </Button>
       <Drawer
-        width="90vw"
+        size="90vw"
         open={isOpen}
         operation="Read Me File"
         onClose={isChange ? () => setIsOpenConfrim(true) : closeAll}>
-        <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+        <Space orientation="vertical" size="middle" style={{ width: '100%' }}>
           <Modal
             title="Save Before Leave"
             open={isOpenConfrim}

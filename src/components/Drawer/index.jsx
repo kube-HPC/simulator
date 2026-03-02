@@ -45,7 +45,7 @@ const DrawerPadding = styled(AntDrawer)`
 const Drawer = ({
   children,
   bottomContent = undefined,
-  width = '50vm',
+  width = '50vw',
   isOpened = false,
   onClose,
   onDidClose = undefined,
@@ -72,7 +72,7 @@ const Drawer = ({
   return (
     <DrawerPadding
       open={isOpened}
-      width={width}
+      size={width}
       afterOpenChange={handleVisibleChange}
       placement="right"
       closable={false}

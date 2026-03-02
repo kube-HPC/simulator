@@ -117,7 +117,7 @@ const Types = ({ data }) => {
 
       {tags && tags.length > 0 && (
         <>
-          <Divider style={{ height: '24px' }} type="vertical" />
+          <Divider style={{ height: '24px' }} orientation="vertical" />
           <JobTags tags={tags} />
         </>
       )}
