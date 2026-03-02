@@ -96,9 +96,10 @@ const HyperParamsNode = ({ id }) => {
         <AutoComplete
           disabled={pipelinesCollection?.length === 0}
           options={pipelinesCollection}
-          filterOption={(inputValue, option) =>
-            option.value.indexOf(inputValue) !== -1
-          }
+          showSearch={{
+            filterOption: (inputValue, option) =>
+              option.value.indexOf(inputValue) !== -1,
+          }}
         />
       </Field>
 
