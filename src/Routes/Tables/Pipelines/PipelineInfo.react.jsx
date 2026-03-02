@@ -14,7 +14,7 @@ import { useReadme, useVersions } from 'hooks';
 import { VersionsTable, AuditTrailTable } from 'components';
 import usePath, { OVERVIEW_TABS as TABS } from './usePath';
 
-const PipelineInfo = ({ pipeline }) => {
+const PipelineInfo = ({ pipeline, onClose }) => {
   const { name, version } = pipeline;
 
   const {
@@ -28,6 +28,7 @@ const PipelineInfo = ({ pipeline }) => {
     confirmPopupForceVersion: null,
     isFetch: true,
     urlRestData: 'pipelines',
+    onSaveAsSuccess: onClose,
   });
 
   const { tabKey, goTo } = usePath();
