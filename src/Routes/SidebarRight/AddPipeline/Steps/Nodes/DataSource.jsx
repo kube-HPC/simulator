@@ -71,13 +71,13 @@ const DataSourceNode = ({ id }) => {
   return (
     <ctx.Provider value={contextValue}>
       <Field name={['name']} title="DataSource Name">
-        <Select disabled={collection && collection.length === 0}>
-          {collection.map(({ name }) => (
-            <Select.Option key={`nodes.${id}.spec.name_${name}`} value={name}>
-              {name}
-            </Select.Option>
-          ))}
-        </Select>
+        <Select
+          disabled={collection && collection.length === 0}
+          options={collection?.map(({ name }) => ({
+            value: name,
+            label: name,
+          }))}
+        />
       </Field>
 
       <RadioGroup value={mode} onChange={handleChangeMode}>
@@ -92,37 +92,39 @@ const DataSourceNode = ({ id }) => {
 
       {mode === MODES.SNAPSHOT ? (
         <Field name={['snapshot', 'name']} title="Snapshot Name">
-          <Select disabled={disableSnapshot} allowClear>
-            {snapshots?.map(entry => (
-              <Select.Option
-                key={`nodes.${id}.spec.version.${entry.id}`}
-                value={entry.name}>
+          <Select
+            disabled={disableSnapshot}
+            allowClear
+            options={snapshots?.map(entry => ({
+              value: entry.name,
+              label: (
                 <VersionRow
                   key={entry.id}
                   title={entry.name}
                   isLatest={false}
                   isSnapshot={false}
                 />
-              </Select.Option>
-            ))}
-          </Select>
+              ),
+            }))}
+          />
         </Field>
       ) : mode === MODES.VERSION ? (
         <Field name={['dataSource', 'id']} title="Version" skipValidation>
-          <Select disabled={disableVersions} allowClear>
-            {versionsCollection?.versions?.map(entry => (
-              <Select.Option
-                key={`nodes.${id}.spec.version.${entry.id}`}
-                value={entry.id}>
+          <Select
+            disabled={disableVersions}
+            allowClear
+            options={versionsCollection?.versions?.map(entry => ({
+              value: entry.id,
+              label: (
                 <VersionRow
                   key={entry.id}
                   title={entry.id}
                   isLatest={checkLatest(versionsCollection.versions, entry)}
                   isSnapshot={false}
                 />
-              </Select.Option>
-            ))}
-          </Select>
+              ),
+            }))}
+          />
         </Field>
       ) : null}
     </ctx.Provider>

@@ -77,15 +77,13 @@ const StreamingFlows = ({ form, initialState }) => {
       </Form.Item>
       {arrayListFlow.length > 1 && (
         <Form.Item label="Default Flow" name={['streaming', 'defaultFlow']}>
-          <Select style={smallSelectStyle}>
-            {arrayListFlow.map((item, index) => (
-              <Select.Option
-                key={`default-list-flow-${item}`}
-                value={index > 0 ? item : ''}>
-                {item}
-              </Select.Option>
-            ))}
-          </Select>
+          <Select
+            style={smallSelectStyle}
+            options={arrayListFlow.map((item, index) => ({
+              value: index > 0 ? item : '',
+              label: item,
+            }))}
+          />
         </Form.Item>
       )}
     </>

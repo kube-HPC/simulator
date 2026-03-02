@@ -15,16 +15,9 @@ const Triggers = () => {
       <Form.Item label="Pipelines" name={['triggers', 'pipelines']}>
         <Select
           mode="multiple"
-          placeholder="Pick Pipelines to Trigger Current One">
-          {pipelineNames &&
-            pipelineNames.map(item => (
-              <Select.Option
-                key={`pipeline-name-${item.label}`}
-                value={item.value}>
-                {item.label}
-              </Select.Option>
-            ))}
-        </Select>
+          placeholder="Pick Pipelines to Trigger Current One"
+          options={pipelineNames || []}
+        />
       </Form.Item>
     </>
   );
