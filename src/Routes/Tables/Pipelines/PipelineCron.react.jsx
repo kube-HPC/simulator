@@ -174,7 +174,7 @@ const PipelineCron = ({ pipeline }) => {
           disabled={!cronIsEnabled}
           placeholder="Cron Expression"
           enterButton={enterButton}
-          onSearch={onSave}
+          showSearch={{ onSearch: onSave }}
   /> */}
       </Popover>
 

@@ -134,7 +134,7 @@ const AlgorithmActions = ({ record }) => {
       <Space.Compact>
         {isRoleRunOrStop ? (
           <Popover
-            overlayStyle={overlayStyle}
+            styles={{ root: overlayStyle }}
             title="Run Algorithm"
             placement="leftBottom"
             content={popOverContentRun}
@@ -155,7 +155,7 @@ const AlgorithmActions = ({ record }) => {
         )}
         {isRoleRunOrStop ? (
           <Popover
-            overlayStyle={overlayStyle}
+            styles={{ root: overlayStyle }}
             title="Debug Algorithm"
             placement="leftBottom"
             content={popOverContentDebug}

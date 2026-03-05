@@ -146,8 +146,9 @@ const SidebarLeft = () => {
                 style={tagStyle}
                 color={
                   name === 'algorithms' &&
-                  instanceCounter.algorithmsUnscheduledReason > 0 &&
-                  'error'
+                  instanceCounter.algorithmsUnscheduledReason > 0
+                    ? 'error'
+                    : undefined
                 }>
                 {dataCount[name]}
               </Tag>

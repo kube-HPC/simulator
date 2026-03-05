@@ -75,7 +75,7 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug = false }) => {
       <Tooltip title={`Run from node ${node.nodeName}`}>
         <Button
           key="run-node"
-          type="ghost"
+          variant="outlined"
           onClick={onRunNode}
           icon={<PlayCircleOutlined />}
           disabled={isDisabledBtnRunDebug}
@@ -84,7 +84,7 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug = false }) => {
       <Tooltip title={`Debug from node ${node.nodeName}`}>
         <Button
           key="debug-node"
-          type="ghost"
+          variant="outlined"
           onClick={onDebugNode}
           icon={<BugOutlined />}
           disabled={isDisabledBtnRunDebug}
@@ -191,7 +191,7 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug = false }) => {
     ) : node.algorithmVersion ? (
       <Empty />
     ) : (
-      <Alert message="Not have algorithm version" type="error" />
+      <Alert title="Not have algorithm version" type="error" />
     )
   ) : (
     <Empty />

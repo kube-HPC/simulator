@@ -60,12 +60,10 @@ const mainAdvancedOptions = Object.entries(formTemplate.main.options)
   .map(([key]) => key);
 
 const insertAlgorithmOptions = options =>
-  options.map((option, key) => (
-    // eslint-disable-next-line
-    <Select.Option key={key} value={option}>
-      {toUpperCaseFirstLetter(option)}
-    </Select.Option>
-  ));
+  options.map(option => ({
+    value: option,
+    label: toUpperCaseFirstLetter(option),
+  }));
 
 const toReadableBuildType = buildType => {
   let str = toUpperCaseFirstLetter(buildType);
@@ -451,13 +449,12 @@ const AddAlgorithmForm = ({
             name={splitByDot(MAIN.MEMORY.field)}
             label={MAIN.MEMORY.label}
             labelAlign="left">
-            <MemoryField>
-              {MAIN.MEMORY.types.map(valueItem => (
-                <Select.Option key={valueItem} value={valueItem}>
-                  {valueItem}
-                </Select.Option>
-              ))}
-            </MemoryField>
+            <MemoryField
+              options={MAIN.MEMORY.types.map(valueItem => ({
+                value: valueItem,
+                label: valueItem,
+              }))}
+            />
           </Form.Item>
         </Collapsible>
 
@@ -502,13 +499,14 @@ const AddAlgorithmForm = ({
             name={splitByDot(MAIN.RESERVE_MEMORY.field)}
             label={MAIN.RESERVE_MEMORY.label}
             labelAlign="left">
-            <MemoryField min={0} tooltipTitle={MAIN.RESERVE_MEMORY.tooltip}>
-              {MAIN.RESERVE_MEMORY.types.map(valueItem => (
-                <Select.Option key={valueItem} value={valueItem}>
-                  {valueItem}
-                </Select.Option>
-              ))}
-            </MemoryField>
+            <MemoryField
+              min={0}
+              tooltipTitle={MAIN.RESERVE_MEMORY.tooltip}
+              options={MAIN.RESERVE_MEMORY.types.map(valueItem => ({
+                value: valueItem,
+                label: valueItem,
+              }))}
+            />
           </Form.Item>
           <Form.Item
             name={splitByDot(MAIN.WORKERS.field)}
@@ -519,9 +517,11 @@ const AddAlgorithmForm = ({
             name={splitByDot(MAIN.OPTIONS.field)}
             label={MAIN.OPTIONS.label}
             initialValue={mainAdvancedOptions}>
-            <Select mode="tags" placeholder={MAIN.OPTIONS.placeholder}>
-              {insertAlgorithmOptions(MAIN.OPTIONS.types)}
-            </Select>
+            <Select
+              mode="tags"
+              placeholder={MAIN.OPTIONS.placeholder}
+              options={insertAlgorithmOptions(MAIN.OPTIONS.types)}
+            />
           </Form.Item>
         </Collapsible>
       </ContenerForm>

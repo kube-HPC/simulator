@@ -419,7 +419,7 @@ const GraphPreview = ({
             <Alert
               // eslint-disable-next-line react/no-array-index-key
               key={`${key}-${idx}`}
-              message={`error in flow : "${key}": ${message}`}
+              title={`error in flow : "${key}": ${message}`}
               type="error"
               showIcon
               style={{

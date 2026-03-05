@@ -20,7 +20,7 @@ const DownloadFlowinput = ({ keyValue }) => {
         type="link"
         size="small">
         <Alert
-          message="Click here to download flowInput"
+          title="Click here to download flowInput"
           type="info"
           showIcon
         />{' '}

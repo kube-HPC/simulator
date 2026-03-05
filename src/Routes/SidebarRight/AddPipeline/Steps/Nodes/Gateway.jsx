@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Select, Input, InputNumber } from 'antd';
+import { Input, InputNumber } from 'antd';
 
 import useWizardContext from '../../useWizardContext';
 import { Field as RawField } from '../FormUtils';
@@ -52,15 +52,12 @@ const GatewayNode = ({ id }) => {
               ? initialState?.nodes[id]?.spec?.mem
               : '512Mi'
           }>
-          <MemoryField>
-            {memoryTypes.map(value => (
-              <Select.Option
-                value={value}
-                key={`nodes.${id}.memoryTypes.${value}`}>
-                {value}
-              </Select.Option>
-            ))}
-          </MemoryField>
+          <MemoryField
+            options={memoryTypes.map(value => ({
+              value,
+              label: value,
+            }))}
+          />
         </Field>
         <Field name={['cpu']} title="Cpu" initialValue={0.5} skipValidation>
           <InputNumber min={0} />
