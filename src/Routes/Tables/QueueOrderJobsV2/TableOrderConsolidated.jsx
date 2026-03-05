@@ -8,6 +8,7 @@ import { useActions } from 'hooks';
 import { SelectFilterOptions } from './QueueOrderComponents';
 import { TableAllInOneTypeColumns } from './QueueOrderComponents/TableAllInOneTypeColumns';
 import { TableAllInOne, FilterTable } from './OrderStyles';
+import { queueClearedVar } from 'cache';
 
 const BottomPanel = styled.div`
   margin-top: 10px;
@@ -49,6 +50,7 @@ const TableOrderConsolidated = ({
   };
 
   const handelStopAllQueue = useCallback(() => {
+    queueClearedVar(true);
     stopPipeline();
     setStopAllInQueueIsRun(true);
   }, [stopPipeline]);

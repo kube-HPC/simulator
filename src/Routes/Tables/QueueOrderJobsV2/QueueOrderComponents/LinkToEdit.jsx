@@ -11,6 +11,7 @@ import { Link, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useActions } from 'hooks';
 import { HeaderTitlePreferred } from '../OrderStyles';
+import { queueClearedVar } from 'cache';
 
 const LinkToEdit = ({ toggleEdit }) => {
   const query = useQuery();
@@ -28,7 +29,10 @@ const LinkToEdit = ({ toggleEdit }) => {
     return `${location.pathname}?${query.toString()}`;
   }, [location, isEditOrder, query]);
 
-  const onStop = useCallback(() => ClearQueue(() => {}), [ClearQueue]);
+  const onStop = useCallback(() => {
+    queueClearedVar(true);
+    ClearQueue(() => {});
+  }, [ClearQueue]);
 
   const showClearConfirmation = useCallback(() => {
     modal.confirm({

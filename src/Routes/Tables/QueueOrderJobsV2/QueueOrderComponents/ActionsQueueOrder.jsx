@@ -4,6 +4,7 @@ import { USER_GUIDE } from 'const';
 import { useActions, usePipeline } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
+import { queueClearedVar } from 'cache';
 
 const ActionsQueueOrder = ({ job }) => {
   const { jobId } = job;
@@ -14,7 +15,11 @@ const ActionsQueueOrder = ({ job }) => {
     () => rerunPipeline(jobId),
     [rerunPipeline, jobId]
   );
-  const onStop = useCallback(() => stopPipeline(jobId), [stopPipeline, jobId]);
+  const onStop = useCallback(() => {
+    queueClearedVar(true);
+    stopPipeline(jobId);
+  }, [stopPipeline, jobId]);
+
   return (
     <Space.Compact className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
       <Tooltip title="Re-run pipeline">
