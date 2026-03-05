@@ -401,6 +401,7 @@ const BarChartMonitors = ({ metric }) => {
       </Container>
       <Collapsible
         title="Total Resource Pie Chart"
+        defaultExpanded
         onMouseEnter={() => setTooltipData(null)}>
         <PieContainer>
           <BarChartTotalsPie
