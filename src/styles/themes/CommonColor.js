@@ -119,7 +119,7 @@ const COMMON_COLOR = () => {
     [PIPELINE.STALLED]: COLOR.darkGrey,
     [PIPELINE.STOPPED]: COLOR.greenLight2,
     [PIPELINE.PAUSED]: COLOR.yellow,
-    [PIPELINE.RERUN]: COLOR.lightGrey,
+
     default: COLOR.lightGrey,
   });
 
@@ -133,6 +133,7 @@ const COMMON_COLOR = () => {
     [TYPES.SUB_PIPELINE]: COLOR.orangePale,
     [TYPES.TENSORBOARD]: COLOR.greenLight,
     [TYPES.TRIGGER]: COLOR.turquoise,
+    [TYPES.RERUN]: COLOR.lightGrey,
     default: COLOR.lightGrey,
   });
 
