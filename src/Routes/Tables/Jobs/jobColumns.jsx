@@ -233,6 +233,7 @@ export default [
     valueGetter: params => params?.data?.pipeline?.startTime || 0,
     cellRenderer: StartTime,
     cellClass: 'vertical-center-cell',
+    hide: true,
   },
   {
     headerName: 'Timeline',
