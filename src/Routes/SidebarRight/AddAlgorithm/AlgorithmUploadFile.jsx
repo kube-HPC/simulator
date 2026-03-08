@@ -82,7 +82,7 @@ const AlgorithmUploadFile = ({ fileList, setFileList, isEdit }) => {
       {!isEdit && (
         <Alert
           style={marginTop}
-          message={`File ${fileList.length ? 'Uploaded' : 'Required'}`}
+          title={`File ${fileList.length ? 'Uploaded' : 'Required'}`}
           type={fileList.length ? 'info' : 'warning'}
           showIcon
         />

@@ -102,7 +102,7 @@ const AlgorithmRun = ({ onRun, buttonTitle }) => {
       direction="column"
       full
       gutter={[0, 10]}>
-      <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Space orientation="vertical" size="large" style={{ width: '100%' }}>
         <Card size="small">
           <Typography.Text>Algorithm input</Typography.Text>
           <InputsCollection />

@@ -66,7 +66,7 @@ const PipelineCreateBoard = ({ name, nodes }) => {
       </Container>
       <Alert
         type={metrics ? 'info' : 'warning'}
-        message={alertMessage}
+        title={alertMessage}
         showIcon
       />
       <Button type="primary" block size="small" onClick={onRun}>

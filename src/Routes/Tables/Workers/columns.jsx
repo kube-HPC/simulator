@@ -2,7 +2,7 @@
 import { pipelineStatuses as PIPELINE_STATUS } from '@hkube/consts';
 import { FireFilled, PauseCircleTwoTone } from '@ant-design/icons';
 import { Tag, Tooltip, Space } from 'antd';
-import Ellipsis from 'components/common/Ellipsis.react';
+import EllipsisV2 from 'components/common/EllipsisV2.react';
 import { StatusTag as CountTag } from 'components/StatusTag';
 import React, { useCallback } from 'react';
 import { COLOR_TASK_STATUS } from 'styles/colors';
@@ -47,14 +47,14 @@ const HotWorker = (_, { workerPaused, hotWorker }) => (
   </>
 );
 
-const PodName = podName => <Ellipsis copyable text={podName} length={200} />;
+const PodName = podName => <EllipsisV2 copyable text={podName} />;
 
 const JobId = jobId => {
   const isValidJobId = jobId !== undefined;
   const type = !isValidJobId ? 'warning' : '';
   const text = jobId || 'Not Assigned';
 
-  return <Ellipsis type={type} copyable={isValidJobId} text={text}  />;
+  return <EllipsisV2 type={type} copyable={isValidJobId} text={text} />;
 };
 
 export const workersTableStats = [
@@ -75,6 +75,7 @@ export const workersTableStats = [
     }),
     sorter: (a, b) => sorter(a.podName, b.podName),
     defaultSortOrder: 'ascend',
+    width: '50%',
   },
   {
     title: 'Worker State',
@@ -94,7 +95,7 @@ export const workersTableStats = [
 
 const toNum = text => (text && parseInt(text, 10)) || 0;
 
-const Name = name => <Ellipsis text={name} />;
+const Name = name => <EllipsisV2 text={name} />;
 const ReadyCount = text => (
   <CountTag status={PIPELINE_STATUS.PENDING} count={toNum(text)} />
 );
@@ -148,6 +149,7 @@ export const workersColumns = [
     sorter: (a, b) => sorter(a.algorithmName, b.algorithmName),
     defaultSortOrder: 'ascend',
     render: Name,
+    width: '30%',
   },
   {
     title: 'Ready Count',

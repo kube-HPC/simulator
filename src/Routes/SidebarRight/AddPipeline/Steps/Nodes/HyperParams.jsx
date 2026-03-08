@@ -28,6 +28,14 @@ const FlexDiv = styled.div`
 
 const ctx = React.createContext();
 
+const suggestOptions = [
+  { value: 'uniform', label: 'uniform' },
+  { value: 'loguniform', label: 'log uniform' },
+  { value: 'int', label: 'int ' },
+  { value: 'discrete_uniform', label: 'discrete uniform' },
+  { value: 'categorical', label: 'categorical' },
+];
+
 const Field = props => {
   const { rootId } = useContext(ctx);
   return <RawField {...props} rootId={rootId} />;
@@ -96,9 +104,10 @@ const HyperParamsNode = ({ id }) => {
         <AutoComplete
           disabled={pipelinesCollection?.length === 0}
           options={pipelinesCollection}
-          filterOption={(inputValue, option) =>
-            option.value.indexOf(inputValue) !== -1
-          }
+          showSearch={{
+            filterOption: (inputValue, option) =>
+              option.value.indexOf(inputValue) !== -1,
+          }}
         />
       </Field>
 
@@ -157,19 +166,9 @@ const HyperParamsNode = ({ id }) => {
                           style={{ width: '185px' }}
                           onChange={value =>
                             SwitchBySuggest(fields, value, name)
-                          }>
-                          <Select.Option value="uniform">uniform</Select.Option>
-                          <Select.Option value="loguniform">
-                            log uniform
-                          </Select.Option>
-                          <Select.Option value="int">int </Select.Option>
-                          <Select.Option value="discrete_uniform">
-                            discrete uniform
-                          </Select.Option>
-                          <Select.Option value="categorical">
-                            categorical
-                          </Select.Option>
-                        </Select>
+                          }
+                          options={suggestOptions}
+                        />
                       </Form.Item>
                     </Col>
 

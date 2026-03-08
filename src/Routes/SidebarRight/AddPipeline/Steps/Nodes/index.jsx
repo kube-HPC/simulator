@@ -293,8 +293,7 @@ const Nodes = ({ style }) => {
                     return (
                       <NodeSelectRadioButton
                         key={`node-radio-${id}`}
-                        value={id}
-                        data-ara="zzzz">
+                        value={id}>
                         <TagByName
                           $tagColor={NODE_KINDS_COLOR[kindName]}
                           colors={Theme.COLOR}>
@@ -327,17 +326,16 @@ const Nodes = ({ style }) => {
                     margin: 0,
                   }}
                   required={false}>
-                  <FlexBox align="normal">
+                  <FlexBox align="normal" style={{ marginInline: '0px' }}>
                     <TitleNode>
                       {getFieldValue(['nodes', id, 'nodeName']) || `node-${id}`}
                     </TitleNode>
                     {!isRunPipeline && ids.length > 1 ? (
                       <Button
                         icon={<CloseCircleOutlined />}
-                        ghost
+                        variant="outlined"
                         onClick={() => handleDelete(id)}
-                        type="danger"
-                        style={{ height: 'auto' }}>
+                        color="danger">
                         Delete Node
                       </Button>
                     ) : null}

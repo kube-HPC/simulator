@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Select, Input, Divider } from 'antd';
+import { Input, Divider } from 'antd';
 import Controller from './InputParseJson';
 import useWizardContext from '../../useWizardContext';
 import { Field as RawField } from '../FormUtils';
@@ -34,13 +34,12 @@ const OutputNode = ({ id }) => {
             ? initialState?.nodes[id]?.spec?.mem
             : '512Mi'
         }>
-        <MemoryField>
-          {memoryTypes.map(value => (
-            <Select.Option key={value} value={value}>
-              {value}
-            </Select.Option>
-          ))}
-        </MemoryField>
+        <MemoryField
+          options={memoryTypes.map(value => ({
+            value,
+            label: value,
+          }))}
+        />
       </Field>
       <Divider>Inputs</Divider>
       <Controller placeholder="Input" tooltip="Input" nodeIdx={id} isRequired />

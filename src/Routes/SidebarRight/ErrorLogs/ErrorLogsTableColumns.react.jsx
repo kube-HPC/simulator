@@ -19,7 +19,7 @@ const errorLogsTableColumns = [
 
       const { backgroundColor, isLight } = serviceColor;
       return (
-        <Tag color={backgroundColor}>
+        <Tag color={backgroundColor} variant="solid">
           <Ellipsis
             style={{ color: isLight ? 'white' : 'black' }}
             text={SERVICES[serviceName] || serviceName}
