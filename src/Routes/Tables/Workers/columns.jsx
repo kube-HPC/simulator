@@ -27,7 +27,9 @@ const WorkerState = (_, { workerStatus, jobStatus }) => {
   return (
     <>
       <Tag color={COLOR_TASK_STATUS[workerStatus]}>{title}</Tag>
-      <Tag color={COLOR_TASK_STATUS[jobStatus]}>{`Job ${title}`}</Tag>
+      <Tag
+        color={COLOR_TASK_STATUS[jobStatus]}
+        style={{ marginLeft: '2px' }}>{`Job ${title}`}</Tag>
     </>
   );
 };
