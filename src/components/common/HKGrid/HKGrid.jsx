@@ -11,6 +11,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import ColumnsControl from './ColumnsControl';
+import BackToTopButton from './BackToTopButton';
 import { LoadingOverlay, StyledGridWrapper } from './HKGrid.styles';
 
 // Register community modules
@@ -90,6 +91,8 @@ export const HKGrid = forwardRef(
             />
           </div>
         </StyledGridWrapper>
+
+        <BackToTopButton gridApi={gridApi} rowData={rowData} />
       </>
     );
   }

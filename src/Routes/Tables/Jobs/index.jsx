@@ -5,15 +5,11 @@ import styled from 'styled-components';
 import useQueryHook from 'hooks/useQuery';
 import { HKGrid, Card } from 'components/common';
 import { Collapse } from 'react-collapse';
-import { Divider, FloatButton } from 'antd';
+import { Divider } from 'antd';
 import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
 import { USER_GUIDE } from 'const';
-import {
-  ArrowUpOutlined,
-  CaretUpOutlined,
-  CaretDownOutlined,
-} from '@ant-design/icons';
+import { CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
 import useJobsFunctionsLimit from './useJobsFunctionsLimit';
 
 import GridView from './GridView';
@@ -54,8 +50,6 @@ const CaretUpOutlinedCenter = styled(CaretUpOutlined)`
   font-size: 20px;
   margin-top: 18px;
 `;
-
-const BackToTop = () => document.querySelector('#jobsTable .ag-body-viewport');
 
 const JobsTable = () => {
   const { keycloakEnable } = useSelector(selectors.connection);
@@ -176,15 +170,6 @@ const JobsTable = () => {
           onBodyScroll={handleBodyScroll}
         />
       </div>
-
-      <FloatButton.BackTop
-        target={BackToTop}
-        style={{ opacity: '0.7', marginRight: '70px' }}
-        type="primary"
-        shape="circle"
-        size="large"
-        icon={<ArrowUpOutlined />}
-      />
     </JobsWrapper>
   );
 };
