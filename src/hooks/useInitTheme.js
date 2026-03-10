@@ -26,6 +26,18 @@ const getThemeProvider = themeName => {
           },
         },
       };
+    case 'LIGHTSOUT':
+      return {
+        algorithm: darkAlgorithm,
+        token: {
+          colorBgBase: '#0a0f1a',
+          colorTextBase: '#c0c8d8',
+          colorPrimary: '#1a5fa8',
+          colorBgLayout: '#070b14',
+          colorPrimaryBg: '#0d1e38',
+          wireframe: false,
+        },
+      };
     default:
       return { algorithm: defaultAlgorithm };
   }
