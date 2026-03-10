@@ -33,6 +33,7 @@ const RowContainer = styled.div`
     return props.$isDark ? '#1a2332' : colors.background;
   }};
   cursor: pointer;
+  position: relative;
   ${props =>
     props.$isHovered && props.$isDark
       ? 'box-shadow: 0 2px 8px rgba(255, 0, 0, 0.2);'
@@ -333,8 +334,8 @@ const DetailsCard = styled(Card)`
   background: ${props => {
     const colors = getSystemColors(props.$isDark);
     return props.$isDark
-      ? 'linear-gradient(135deg, #1f2d3d 0%, #2a3f54 100%)' // Dark: gradient
-      : colors.cardBackground; // Light: use system color
+      ? 'linear-gradient(135deg, #1f2d3d 0%, #2a3f54 100%)'
+      : colors.cardBackground;
   }};
   border-left: 4px solid ${props => props.$color};
   border: ${props => (props.$isDark ? '2px solid #3d5a7e' : '1px solid')};
@@ -507,6 +508,7 @@ const SpanRow = ({
   searchTerm,
   isChildrenVisible,
   onToggleChildren,
+  rowRef,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isTimelineHovered, setIsTimelineHovered] = useState(false);
@@ -547,6 +549,7 @@ const SpanRow = ({
   return (
     <>
       <RowContainer
+        ref={rowRef}
         $isHovered={isHovered}
         $isDark={isDark}
         onMouseEnter={() => setIsHovered(true)}
@@ -743,6 +746,11 @@ SpanRow.propTypes = {
   searchTerm: PropTypes.string.isRequired,
   isChildrenVisible: PropTypes.bool.isRequired,
   onToggleChildren: PropTypes.func.isRequired,
+  rowRef: PropTypes.func,
+};
+
+SpanRow.defaultProps = {
+  rowRef: null,
 };
 
 export default React.memo(SpanRow);
