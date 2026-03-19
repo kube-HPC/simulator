@@ -10,6 +10,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import IDProvider from 'IDProvider';
 import ColumnsControl from './ColumnsControl';
 import BackToTopButton from './BackToTopButton';
 import { LoadingOverlay, StyledGridWrapper } from './HKGrid.styles';
@@ -59,39 +60,39 @@ export const HKGrid = forwardRef(
     return (
       <>
         <ColumnsControl gridApi={gridApi} />
+        <IDProvider dataTestId="hk-grid">
+          <StyledGridWrapper
+            className={className}
+            $enableRowHoverActions={enableRowHoverActions}
+            $actionClassName={actionClassName}>
+            {loading && (
+              <LoadingOverlay>
+                <Spin indicator={antIcon} />
+              </LoadingOverlay>
+            )}
 
-        <StyledGridWrapper
-          className={className}
-          $enableRowHoverActions={enableRowHoverActions}
-          $actionClassName={actionClassName}>
-          {loading && (
-            <LoadingOverlay>
-              <Spin indicator={antIcon} />
-            </LoadingOverlay>
-          )}
-
-          <div
-            className="ag-theme-alpine"
-            style={{ height: '100%', width: '100%' }}>
-            <AgGridReact
-              ref={gridRef}
-              onGridReady={onGridReady}
-              rowData={rowData}
-              columnDefs={columnDefs}
-              suppressCellFocus
-              animateRows={false}
-              showUnsortIcon
-              defaultColDef={{
-                sortable: true,
-                resizable: true,
-                suppressMovable: true,
-                headerClass: 'break-header',
-              }}
-              {...props}
-            />
-          </div>
-        </StyledGridWrapper>
-
+            <div
+              className="ag-theme-alpine"
+              style={{ height: '100%', width: '100%' }}>
+              <AgGridReact
+                ref={gridRef}
+                onGridReady={onGridReady}
+                rowData={rowData}
+                columnDefs={columnDefs}
+                suppressCellFocus
+                animateRows={false}
+                showUnsortIcon
+                defaultColDef={{
+                  sortable: true,
+                  resizable: true,
+                  suppressMovable: true,
+                  headerClass: 'break-header',
+                }}
+                {...props}
+              />
+            </div>
+          </StyledGridWrapper>
+        </IDProvider>
         <BackToTopButton gridApi={gridApi} rowData={rowData} />
       </>
     );
