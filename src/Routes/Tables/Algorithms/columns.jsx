@@ -106,11 +106,14 @@ const memoryComparator = (a, b) => {
 
     if (str.includes('Gi') || str.includes('G')) {
       return num * 1024 * 1024 * 1024;
-    } else if (str.includes('Mi') || str.includes('M')) {
+    }
+    if (str.includes('Mi') || str.includes('M')) {
       return num * 1024 * 1024;
-    } else if (str.includes('Ki') || str.includes('K')) {
+    }
+    if (str.includes('Ki') || str.includes('K')) {
       return num * 1024;
-    } else if (str.includes('Ti') || str.includes('T')) {
+    }
+    if (str.includes('Ti') || str.includes('T')) {
       return num * 1024 * 1024 * 1024 * 1024;
     }
     return num;

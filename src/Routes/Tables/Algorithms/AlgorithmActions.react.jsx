@@ -1,4 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
+import IDProvider from 'IDProvider';
 import PropTypes from 'prop-types';
 import KeycloakServices from 'keycloak/keycloakServices';
 import { selectors } from 'reducers';
@@ -125,72 +126,80 @@ const AlgorithmActions = ({ record }) => {
   }, []);
 
   return (
-    <div
-      ref={container}
-      role="none"
-      onClick={stopPropagation}
-      onDoubleClick={stopPropagation}>
-      {contextHolderModal}
-      <Space.Compact>
-        {isRoleRunOrStop ? (
-          <Popover
-            styles={{ root: overlayStyle }}
-            title="Run Algorithm"
-            placement="leftBottom"
-            content={popOverContentRun}
-            getPopupContainer={setPopupContainer}
-            mouseLeaveDelay={0.3}
-            mouseEnterDelay={1.3}
-            open={openPopupRun}
-            onOpenChange={handleOpenChange}>
+    <IDProvider dataTestId="algorithm-actions">
+      <div
+        ref={container}
+        role="none"
+        onClick={stopPropagation}
+        onDoubleClick={stopPropagation}>
+        {contextHolderModal}
+        <Space.Compact>
+          {isRoleRunOrStop ? (
+            <Popover
+              styles={{ root: overlayStyle }}
+              title="Run Algorithm"
+              placement="leftBottom"
+              content={popOverContentRun}
+              getPopupContainer={setPopupContainer}
+              mouseLeaveDelay={0.3}
+              mouseEnterDelay={1.3}
+              open={openPopupRun}
+              onOpenChange={handleOpenChange}>
+              <Button
+                icon={<PlayCircleOutlined />}
+                onClick={() => clickOnRunAlg()}
+              />
+            </Popover>
+          ) : (
+            <Tooltip title="No run permission">
+              <Button
+                icon={<PlayCircleOutlined />}
+                disabled={!isRoleRunOrStop}
+              />
+            </Tooltip>
+          )}
+          {isRoleRunOrStop ? (
+            <Popover
+              styles={{ root: overlayStyle }}
+              title="Debug Algorithm"
+              placement="leftBottom"
+              content={popOverContentDebug}
+              getPopupContainer={setPopupContainer}
+              mouseLeaveDelay={0.3}
+              mouseEnterDelay={1.3}
+              open={openPopupRunDebug}
+              onOpenChange={handleOpenChangeDebug}>
+              <Button
+                icon={<BugOutlined />}
+                onClick={() => clickOnRunDebug()}
+              />
+            </Popover>
+          ) : (
+            <Tooltip title="No debug permission">
+              <Button icon={<BugOutlined />} disabled={!isRoleRunOrStop} />
+            </Tooltip>
+          )}
+          <Tooltip title={isRoleEdit ? 'Edit algorithm' : 'No edit permission'}>
             <Button
-              icon={<PlayCircleOutlined />}
-              onClick={() => clickOnRunAlg()}
+              icon={<EditOutlined />}
+              onClick={onEdit}
+              disabled={!isRoleEdit}
             />
-          </Popover>
-        ) : (
-          <Tooltip title="No run permission">
-            <Button icon={<PlayCircleOutlined />} disabled={!isRoleRunOrStop} />
           </Tooltip>
-        )}
-        {isRoleRunOrStop ? (
-          <Popover
-            styles={{ root: overlayStyle }}
-            title="Debug Algorithm"
-            placement="leftBottom"
-            content={popOverContentDebug}
-            getPopupContainer={setPopupContainer}
-            mouseLeaveDelay={0.3}
-            mouseEnterDelay={1.3}
-            open={openPopupRunDebug}
-            onOpenChange={handleOpenChangeDebug}>
-            <Button icon={<BugOutlined />} onClick={() => clickOnRunDebug()} />
-          </Popover>
-        ) : (
-          <Tooltip title="No debug permission">
-            <Button icon={<BugOutlined />} disabled={!isRoleRunOrStop} />
+          <Tooltip
+            title={isRoleDelete ? 'Delete algorithm' : 'No delete permission'}>
+            <Button
+              icon={<DeleteOutlined />}
+              onClick={onClickDelete}
+              disabled={!isRoleDelete}
+            />
           </Tooltip>
-        )}
-        <Tooltip title={isRoleEdit ? 'Edit algorithm' : 'No edit permission'}>
-          <Button
-            icon={<EditOutlined />}
-            onClick={onEdit}
-            disabled={!isRoleEdit}
-          />
-        </Tooltip>
-        <Tooltip
-          title={isRoleDelete ? 'Delete algorithm' : 'No delete permission'}>
-          <Button
-            icon={<DeleteOutlined />}
-            onClick={onClickDelete}
-            disabled={!isRoleDelete}
-          />
-        </Tooltip>
-        <Tooltip title="Show overview">
-          <Button icon={<InfoCircleOutlined />} onClick={onMoreInfo} />
-        </Tooltip>
-      </Space.Compact>
-    </div>
+          <Tooltip title="Show overview">
+            <Button icon={<InfoCircleOutlined />} onClick={onMoreInfo} />
+          </Tooltip>
+        </Space.Compact>
+      </div>
+    </IDProvider>
   );
 };
 

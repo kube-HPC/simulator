@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { animated, useSpring } from 'react-spring';
-
+import IDProvider from 'IDProvider';
 import { useSiteThemeMode } from 'hooks';
 import Icon, { FilterTwoTone } from '@ant-design/icons';
 import { Badge, Tag } from 'antd';
@@ -132,28 +132,30 @@ const SidebarLeft = () => {
 
       items.push({
         label: (
-          <Link to={{ pathname: path, search: location.search }}>
-            <Name>{name}</Name>{' '}
-            <BadgeStyle
-              count={
-                (isFilters && (
-                  <FilterTwoTone size="small" style={{ fontSize: '10px' }} />
-                )) ||
-                null
-              }
-              offset={[-7, 0]}>
-              <Tag
-                style={tagStyle}
-                color={
-                  name === 'algorithms' &&
-                  instanceCounter.algorithmsUnscheduledReason > 0
-                    ? 'error'
-                    : undefined
-                }>
-                {dataCount[name]}
-              </Tag>
-            </BadgeStyle>
-          </Link>
+          <IDProvider dataTestId={`left-sidebar-link-${name}`}>
+            <Link to={{ pathname: path, search: location.search }}>
+              <Name>{name}</Name>{' '}
+              <BadgeStyle
+                count={
+                  (isFilters && (
+                    <FilterTwoTone size="small" style={{ fontSize: '10px' }} />
+                  )) ||
+                  null
+                }
+                offset={[-7, 0]}>
+                <Tag
+                  style={tagStyle}
+                  color={
+                    name === 'algorithms' &&
+                    instanceCounter.algorithmsUnscheduledReason > 0
+                      ? 'error'
+                      : undefined
+                  }>
+                  {dataCount[name]}
+                </Tag>
+              </BadgeStyle>
+            </Link>
+          </IDProvider>
         ),
         key: `left-sidebar-${name}`,
         className: USER_GUIDE.TABLE_SELECT[name],
