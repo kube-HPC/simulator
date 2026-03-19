@@ -4,15 +4,18 @@ import { USER_GUIDE } from 'const';
 import { useActions } from 'hooks';
 import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
+import { events } from 'utils';
 import { queueClearedVar } from 'cache';
 
 const ActionsQueueOrderPipeline = ({ job }) => {
   const { name } = job;
 
   const { stopAllPipeline } = useActions();
+
   const onStop = useCallback(() => {
     queueClearedVar(true);
     stopAllPipeline(name, () => {});
+    events.emit('global_alert_msg', 'Jobs stopped', 'info');
   }, [stopAllPipeline, name]);
 
   return (
@@ -32,7 +35,6 @@ const ActionsQueueOrderPipeline = ({ job }) => {
 };
 
 ActionsQueueOrderPipeline.propTypes = {
-  // eslint-disable-next-line
   job: PropTypes.object.isRequired,
 };
 

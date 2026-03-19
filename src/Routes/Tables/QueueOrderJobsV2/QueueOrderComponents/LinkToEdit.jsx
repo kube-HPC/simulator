@@ -11,7 +11,8 @@ import { Link, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useActions } from 'hooks';
 import { HeaderTitlePreferred } from '../OrderStyles';
-import { queueClearedVar } from 'cache';
+import { instanceCounterVar, queueClearedVar } from 'cache';
+import { events } from 'utils';
 
 const LinkToEdit = ({ toggleEdit }) => {
   const query = useQuery();
@@ -30,8 +31,14 @@ const LinkToEdit = ({ toggleEdit }) => {
   }, [location, isEditOrder, query]);
 
   const onStop = useCallback(() => {
+    const count = instanceCounterVar().queue;
     queueClearedVar(true);
     ClearQueue(() => {});
+    events.emit(
+      'global_alert_msg',
+      `${count} ${count === 1 ? 'job' : 'jobs'} stopped`,
+      'info'
+    );
   }, [ClearQueue]);
 
   const showClearConfirmation = useCallback(() => {
@@ -76,7 +83,6 @@ const LinkToEdit = ({ toggleEdit }) => {
 
 LinkToEdit.propTypes = {
   toggleEdit: PropTypes.func.isRequired,
-  ClearQueue: PropTypes.func.isRequired,
 };
 
 export default LinkToEdit;
