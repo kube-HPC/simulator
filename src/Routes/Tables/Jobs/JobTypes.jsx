@@ -40,6 +40,7 @@ const JobTypes = ({ types = [], fullName = true, isMinimized = false }) => {
         visibleTypes.map(type =>
           fullName ? (
             <CapitalizedTag
+              variant="solid"
               key={type}
               color={Theme.Styles.isTagFill ? COLOR_PIPELINE_TYPES[type] : ''}
               $borderType={type}
@@ -49,7 +50,12 @@ const JobTypes = ({ types = [], fullName = true, isMinimized = false }) => {
           ) : (
             <Tooltip key={type} placement="top" title={toUpper(type)}>
               <CapitalizedTag
-                color={Theme.Styles.isTagFill ? COLOR_PIPELINE_TYPES[type] : ''}
+                variant="solid"
+                color={
+                  Theme.Styles.isTagFill && type
+                    ? COLOR_PIPELINE_TYPES[type]
+                    : ''
+                }
                 $borderType={type}
                 $isMinimized={isMinimized}>
                 {type.slice(0, 2)}

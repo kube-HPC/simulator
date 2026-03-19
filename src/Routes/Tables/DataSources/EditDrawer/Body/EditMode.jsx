@@ -130,7 +130,7 @@ const EditMode = ({
             fileList={[]}
             customRequest={customRequest}>
             <Alert
-              message={
+              title={
                 addedFiles.length
                   ? addedFiles.length === 1
                     ? '1 file to upload'

@@ -12,7 +12,7 @@ import { DRAWER_TITLES } from '../../../const';
 
 const OverviewDrawer = () => {
   const { goTo } = usePath();
-  const { pipeline: record, pipelineId } = useActivePipeline();
+  const { pipeline: record, pipelineId, loading } = useActivePipeline();
   const { setOff, isOn } = useToggle(true);
 
   return (
@@ -22,6 +22,7 @@ const OverviewDrawer = () => {
       onClose={setOff}
       width={DRAWER_SIZE.PIPELINE_INFO}
       title={record?.name ?? pipelineId}
+      loading={loading}
       extra={
         <Button type="primary" onClick={goTo.edit}>
           Edit
@@ -31,7 +32,11 @@ const OverviewDrawer = () => {
         <TabDrawer>
           <TabDrawerText>{DRAWER_TITLES.PIPELINE_INFO}</TabDrawerText>
         </TabDrawer>
-        {record ? <PipelineInfo pipeline={record} /> : <MissingIdError />}
+        {record ? (
+          <PipelineInfo pipeline={record} onClose={setOff} />
+        ) : (
+          <MissingIdError />
+        )}
       </>
     </Drawer>
   );

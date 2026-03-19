@@ -227,7 +227,7 @@ const StreamingFlowKeyValue = ({
               activeKey={activeKey}
               onChange={key => setActiveKey(key)}
               accordion
-              ghost
+              variant="outlined"
             />
 
             {contextHolder}

@@ -94,16 +94,13 @@ const Options = ({ style }) => {
       <Form.Item
         label="Verbosity Level"
         name={['options', 'progressVerbosityLevel']}>
-        <Select style={smallSelectStyle}>
-          {verbosityLevels.map(level => (
-            <Select.Option
-              key={`verbosity-level-${level}`}
-              value={level}
-              style={{ textTransform: 'capitalize' }}>
-              {level}
-            </Select.Option>
-          ))}
-        </Select>
+        <Select
+          style={smallSelectStyle}
+          options={verbosityLevels.map(level => ({
+            value: level,
+            label: <span style={{ textTransform: 'capitalize' }}>{level}</span>,
+          }))}
+        />
       </Form.Item>
       <Form.Item label="Priority" name="priority">
         <InputNumber max={5} min={1} />

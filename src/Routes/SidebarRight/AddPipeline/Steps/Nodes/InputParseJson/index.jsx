@@ -39,11 +39,7 @@ const Controller = ({ node, nodeIdx, isRequired = false }) => {
 
   const isRequiredMsg = () =>
     isRequired && inputValues && !inputValues[0] ? (
-      <Alert
-        type="error"
-        message="You must put in at least one input."
-        banner
-      />
+      <Alert type="error" title="You must put in at least one input." banner />
     ) : (
       ''
     );
