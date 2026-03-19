@@ -20,6 +20,7 @@ import usePath from './usePath';
 const deleteConfirmAction = (modal, action) => {
   modal.confirm({
     title: 'Deleting Algorithm',
+    modalRender: node => <div data-testid="delete-algorithm-modal">{node}</div>,
     content: (
       <>
         Deleting algorithm will{' '}
@@ -126,7 +127,7 @@ const AlgorithmActions = ({ record }) => {
   }, []);
 
   return (
-    <IDProvider dataTestId="algorithm-actions">
+    <IDProvider dataTestId="buttons-actions">
       <div
         ref={container}
         role="none"
