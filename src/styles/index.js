@@ -3,6 +3,7 @@ export { default as BottomPosition } from './BottomPosition.styles';
 export {
   Theme,
   COLOR,
+  Styles,
   COLOR_BOARDS,
   COLOR_LAYOUT,
   COLOR_PIPELINE_STATUS,

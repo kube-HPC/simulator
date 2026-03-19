@@ -81,7 +81,17 @@ const LightTheme = COMMON_COLOR => {
       backgroundBarNodesColor: '#fbfbfb',
       fontNodeColor: '#00000073',
     },
-     HKGrid: { ActionChip: '#e7e7e7', LoadingOverlay: 'rgba(255, 255, 255, 0.8)' },
+    HKGrid: {
+      ActionChip: '#e7e7e7',
+      LoadingOverlay: 'rgba(255, 255, 255, 0.8)',
+    },
+    VersionsTable: {
+      currentRow: '#f0f5ff',
+    },
+    iconColor: COLOR.darkGrey,
+    queueTimeColor: '#fa8c16',
+    tagLightness: 35,
+    tagSaturation: 95,
   };
 
   return {

@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { JsonSwitch, Card } from 'components/common';
 import { Table } from 'components';
 import { Modal } from 'antd';
+import { Styles } from 'styles';
 
 import getVersionsColumns from './getVersionsColumns.react';
 
@@ -77,7 +78,9 @@ const VersionsTable = ({
 
     return {
       style: {
-        backgroundColor: isCurrentVersion ? '#f0f5ff' : undefined,
+        backgroundColor: isCurrentVersion
+          ? Styles.VersionsTable?.currentRow
+          : undefined,
         border: isSelected ? '2px solid #4b99ceff' : undefined,
       },
     };

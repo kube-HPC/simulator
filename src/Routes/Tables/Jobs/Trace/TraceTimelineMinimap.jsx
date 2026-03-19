@@ -2,7 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Space, Tooltip } from 'antd';
-import { ReloadOutlined } from '@ant-design/icons';
+import {
+  ReloadOutlined,
+  HighlightOutlined,
+  FilterOutlined,
+} from '@ant-design/icons';
 import {
   MINIMAP_HEIGHT,
   getCurrentTheme,
@@ -229,11 +233,28 @@ const SelectionBanner = styled.div`
   align-items: center;
 `;
 
-const FilterBadge = styled.span`
+const ModeBadge = styled.span`
   margin-left: 12px;
   padding: 2px 8px;
-  background-color: ${props => (props.$isDark ? '#447fa8ff' : '#ffeaa7')};
-  color: white;
+  background-color: ${props => {
+    if (props.$mode === 'highlight') {
+      return props.$isDark ? '#5c3d0e' : '#fff7e6';
+    }
+    return props.$isDark ? '#447fa8ff' : '#e6f4ff';
+  }};
+  color: ${props => {
+    if (props.$mode === 'highlight') {
+      return props.$isDark ? '#ffa940' : '#d46b08';
+    }
+    return props.$isDark ? '#69c0ff' : '#0958d9';
+  }};
+  border: 1px solid
+    ${props => {
+      if (props.$mode === 'highlight') {
+        return props.$isDark ? '#d46b08' : '#ffd591';
+      }
+      return props.$isDark ? '#3d5a7e' : '#91caff';
+    }};
   border-radius: 3px;
   font-size: 11px;
   font-weight: 600;
@@ -292,7 +313,85 @@ const MinimapButton = styled(Button)`
   }
 `;
 
-const TraceTimelineMinimap = ({ traceData, processes, onSelectionChange }) => {
+// ── NEW: Mode toggle bar below the minimap canvas ──────────────────────────
+const ModeToggleBar = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark ? '#192737' : colors.background;
+  }};
+  border-top: 1px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return props.$isDark ? '#2d4663' : colors.borderLight;
+    }};
+`;
+
+const ModeLabel = styled.span`
+  font-size: 12px;
+  font-weight: 600;
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$isDark ? '#b8bfc7' : colors.textSecondary;
+  }};
+  margin-right: 4px;
+`;
+
+const ModeButton = styled(Button)`
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  background-color: ${props => {
+    if (!props.$active) return props.$isDark ? '#1e3a52' : 'auto';
+    // active highlight
+    if (props.$modeType === 'highlight') {
+      return props.$isDark ? '#5c3d0e' : '#fff7e6';
+    }
+    // active selection
+    return props.$isDark ? '#153450' : '#e6f4ff';
+  }} !important;
+
+  border-color: ${props => {
+    if (!props.$active) return props.$isDark ? '#3d5a7e' : 'auto';
+    if (props.$modeType === 'highlight') {
+      return props.$isDark ? '#d46b08' : '#ffa940';
+    }
+    return props.$isDark ? '#40a9ff' : '#1890ff';
+  }} !important;
+
+  color: ${props => {
+    if (!props.$active) return props.$isDark ? '#b8bfc7' : 'auto';
+    if (props.$modeType === 'highlight') {
+      return props.$isDark ? '#ffa940' : '#d46b08';
+    }
+    return props.$isDark ? '#69c0ff' : '#0958d9';
+  }} !important;
+
+  font-weight: ${props => (props.$active ? '600' : '400')};
+
+  &:hover {
+    background-color: ${props => {
+      if (props.$modeType === 'highlight') {
+        return props.$isDark ? '#6b4710' : '#fff1d6';
+      }
+      return props.$isDark ? '#1a3f5c' : '#dbeeff';
+    }} !important;
+  }
+`;
+// ───────────────────────────────────────────────────────────────────────────
+
+const TraceTimelineMinimap = ({
+  traceData,
+  processes,
+  onSelectionChange,
+  minimapMode,
+  onModeChange,
+}) => {
   const [hoveredPosition, setHoveredPosition] = useState(null);
   const [hoveredSpan, setHoveredSpan] = useState(null);
   const [selection, setSelection] = useState(null);
@@ -315,6 +414,13 @@ const TraceTimelineMinimap = ({ traceData, processes, onSelectionChange }) => {
       window.removeEventListener('storage', checkTheme);
     };
   }, []);
+
+  // Clear the visual selection when mode changes so stale overlays don't linger
+  useEffect(() => {
+    setSelection(null);
+    onSelectionChange(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [minimapMode]);
 
   const { duration, spans } = traceData;
   const colors = getSystemColors(isDark);
@@ -535,6 +641,10 @@ const TraceTimelineMinimap = ({ traceData, processes, onSelectionChange }) => {
     });
   };
 
+  // Human-readable banner label depending on mode
+  const bannerModeLabel =
+    minimapMode === 'highlight' ? 'Highlighting spans' : 'Filtering timeline';
+
   return (
     <MinimapContainer $isDark={isDark}>
       <HeaderSection $isDark={isDark}>
@@ -618,10 +728,40 @@ const TraceTimelineMinimap = ({ traceData, processes, onSelectionChange }) => {
         </MinimapCanvas>
       </MinimapWrapper>
 
+      {/* ── Mode toggle bar ────────────────────────────────────────────── */}
+      <ModeToggleBar $isDark={isDark}>
+        <ModeLabel $isDark={isDark}>Drag selection mode:</ModeLabel>
+        <Tooltip title="All spans stay visible. Matching spans get a highlight band and the list scrolls to the first match.">
+          <ModeButton
+            size="small"
+            $active={minimapMode === 'highlight'}
+            $modeType="highlight"
+            $isDark={isDark}
+            icon={<HighlightOutlined />}
+            onClick={() => onModeChange('highlight')}>
+            Highlight
+          </ModeButton>
+        </Tooltip>
+        <Tooltip title="Only spans inside the selected window are shown.">
+          <ModeButton
+            size="small"
+            $active={minimapMode === 'selection'}
+            $modeType="selection"
+            $isDark={isDark}
+            icon={<FilterOutlined />}
+            onClick={() => onModeChange('selection')}>
+            Selection
+          </ModeButton>
+        </Tooltip>
+      </ModeToggleBar>
+      {/* ────────────────────────────────────────────────────────────────── */}
+
       {selection && (
         <SelectionBanner $isDark={isDark}>
           <span>
-            <strong>Selected:</strong>{' '}
+            <strong>
+              {minimapMode === 'highlight' ? 'Highlighted:' : 'Selected:'}
+            </strong>{' '}
             {formatDuration((selection.start / 100) * duration)} →{' '}
             {formatDuration((selection.end / 100) * duration)}{' '}
             <SecondaryText $isDark={isDark}>
@@ -631,7 +771,9 @@ const TraceTimelineMinimap = ({ traceData, processes, onSelectionChange }) => {
               )}{' '}
               duration)
             </SecondaryText>{' '}
-            <FilterBadge $isDark={isDark}>Filtering timeline view</FilterBadge>
+            <ModeBadge $mode={minimapMode} $isDark={isDark}>
+              {bannerModeLabel}
+            </ModeBadge>
           </span>
           <StyledButton
             size="small"
@@ -639,7 +781,7 @@ const TraceTimelineMinimap = ({ traceData, processes, onSelectionChange }) => {
             icon={<ReloadOutlined />}
             onClick={clearSelection}
             $isDark={isDark}>
-            Clear Filter
+            Clear
           </StyledButton>
         </SelectionBanner>
       )}
@@ -654,6 +796,8 @@ TraceTimelineMinimap.propTypes = {
   }).isRequired,
   processes: PropTypes.object.isRequired,
   onSelectionChange: PropTypes.func.isRequired,
+  minimapMode: PropTypes.oneOf(['highlight', 'selection']).isRequired,
+  onModeChange: PropTypes.func.isRequired,
 };
 
 export default TraceTimelineMinimap;

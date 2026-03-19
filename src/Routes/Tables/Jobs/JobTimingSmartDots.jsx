@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Tooltip } from 'antd';
 import moment from 'moment';
+import { Styles, COLOR } from 'styles';
 
 const QUEUE_THRESHOLD = 0.75; // 0.75 seconds
 const SEC = 1000; // Matching JobTime constant
@@ -25,15 +26,15 @@ const Dot = styled.div`
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: ${props => props.color};
-  border: 2px solid ${props => props.borderColor};
-  box-shadow: 0 0 6px ${props => props.glowColor};
+  background: ${COLOR.blueExtraLight};
+  border: 3px ${COLOR.whiteDark};
+  box-shadow: 0 0 6px ${COLOR.transparentGrey};
 `;
 
 const TimeText = styled.span`
   font-size: 11px;
   font-weight: 600;
-  color: #262626;
+  color: ${Styles.tabDrawerText.color};
 `;
 
 const Connector = styled.div`
@@ -65,10 +66,10 @@ const Connector = styled.div`
 const ConnectorLabel = styled.span`
   position: relative;
   z-index: 1;
-  font-size: 9px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 550;
   color: ${props => props.color};
-  background: white;
+  background: ${Styles.backgroundTheme};
   padding: 1px 4px;
   border-radius: 4px;
   white-space: nowrap;
@@ -85,12 +86,12 @@ const StatusBadge = styled.div`
   box-sizing: border-box;
   margin: 0;
   padding: 0 7px;
-  color: rgba(0, 0, 0, 0.85);
   font-size: 12px;
   line-height: 20px;
   white-space: nowrap;
-  background: #fafafa;
-  border: 1px solid #d9d9d9;
+  background: ${Styles.HKGrid.ActionChip};
+  border: 1px solid ${Styles.tabDrawer.border};
+  color: ${Styles.tabDrawerText.color};
   border-radius: 2px;
   opacity: 1;
   transition: all 0.2s;
@@ -192,8 +193,8 @@ const JobTimingSmartDots = ({ data }) => {
   };
 
   // Unified orange for all queue connectors and labels
-  const queueGradient = 'linear-gradient(90deg, #ffa940 0%, #fa8c16 100%)';
-  const queueColor = '#fa8c16';
+  const queueGradient = `linear-gradient(90deg, ${Styles.queueTimeColor}cc 0%, ${Styles.queueTimeColor} 100%)`;
+  const queueColor = Styles.queueTimeColor;
 
   return (
     <Container>
@@ -211,11 +212,7 @@ const JobTimingSmartDots = ({ data }) => {
               </div>
             }>
             <DotItem>
-              <Dot
-                color="#1890ff"
-                borderColor="#ffffff"
-                glowColor="rgba(24, 144, 255, 0.3)"
-              />
+              <Dot />
               <TimeText>{formatTime(activeTime || startTime)}</TimeText>
             </DotItem>
           </Tooltip>
@@ -258,11 +255,7 @@ const JobTimingSmartDots = ({ data }) => {
               </div>
             }>
             <DotItem>
-              <Dot
-                color="#1890ff"
-                borderColor="#ffffff"
-                glowColor="rgba(24, 144, 255, 0.3)"
-              />
+              <Dot />
               <TimeText>{formatTime(startTime)}</TimeText>
             </DotItem>
           </Tooltip>
@@ -299,11 +292,7 @@ const JobTimingSmartDots = ({ data }) => {
                   </div>
                 }>
                 <DotItem>
-                  <Dot
-                    color="#1890ff"
-                    borderColor="#ffffff"
-                    glowColor="rgba(24, 144, 255, 0.3)"
-                  />
+                  <Dot />
                   <TimeText>{formatTime(activeTime)}</TimeText>
                 </DotItem>
               </Tooltip>
