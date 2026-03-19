@@ -12,6 +12,7 @@ import AuditTrailAvatar from '../../../components/AuditTrailAvatar';
 import AlgorithmActions from './AlgorithmActions.react';
 import AlgorithmBuildStats from './AlgorithmBuildStats.react';
 import LastModified from './LastModified';
+import { COLOR } from 'styles';
 
 const HotWorkers = ({ value }) => <Tag>{value}</Tag>;
 
@@ -20,7 +21,10 @@ const Cpu = ({ value }) =>
     <Tag>{value}</Tag>
   ) : (
     <Tooltip title="No CPU Assigned">
-      <IconNoCpu width={34} />
+      <IconNoCpu
+        width={34}
+        style={{ color: COLOR.whiteDark, fill: COLOR.whiteDark }}
+      />
     </Tooltip>
   );
 
@@ -29,7 +33,7 @@ const Memory = ({ value }) =>
     <Tag>{value}</Tag>
   ) : (
     <Tooltip title="No Memory Specified">
-      <IconNoMem />
+      <IconNoMem style={{ color: COLOR.whiteDark, fill: COLOR.whiteDark }} />
     </Tooltip>
   );
 
@@ -38,7 +42,10 @@ const Gpu = ({ value }) =>
     <Tag>{value}</Tag>
   ) : (
     <Tooltip title="No GPU Assigned">
-      <IconNoGpu width={34} />
+      <IconNoGpu
+        width={34}
+        style={{ color: COLOR.whiteDark, fill: COLOR.whiteDark }}
+      />
     </Tooltip>
   );
 
