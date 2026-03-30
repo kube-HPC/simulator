@@ -5,3 +5,13 @@
 .ant-radio-inner {
   border-color: #a1a1a1;
 }
+/*--------------------------------------------------------- */
+/* AG Grid cell SVG icons — NoCpu, NoGpu, NoMem            */
+/*--------------------------------------------------------- */
+.ag-theme-alpine .ag-cell svg rect {
+  stroke: #555555 !important;
+}
+
+.ag-theme-alpine .ag-cell svg text {
+  fill: #555555 !important;
+}
