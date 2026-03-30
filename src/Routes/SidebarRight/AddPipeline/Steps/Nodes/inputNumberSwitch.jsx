@@ -1,10 +1,17 @@
 import React, { useState, forwardRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { InputNumber, Switch } from 'antd';
+import { InputNumber, Space, Switch } from 'antd';
 import styled from 'styled-components';
 
 const InputNumberStyle = styled(InputNumber)`
   width: 140px;
+`;
+
+const CompactStyle = styled(Space.Compact)`
+  .ant-space-compact-item {
+    align-items: center;
+    display: inline-flex;
+  }
 `;
 
 const InputNumberSwitch = forwardRef(
@@ -41,19 +48,21 @@ const InputNumberSwitch = forwardRef(
     }, [value]);
 
     return (
-      <InputNumberStyle
-        ref={ref}
-        value={numberValue}
-        onChange={handleNumberChange}
-        addonAfter={
+      <CompactStyle>
+        <InputNumberStyle
+          ref={ref}
+          value={numberValue}
+          onChange={handleNumberChange}
+          disabled={!disabled}
+        />
+        <span>
           <Switch
             checked={disabled}
             onChange={handleSwitchChange}
             size="small"
           />
-        }
-        disabled={!disabled}
-      />
+        </span>
+      </CompactStyle>
     );
   }
 );

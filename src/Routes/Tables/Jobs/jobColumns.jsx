@@ -117,7 +117,10 @@ const Types = ({ data }) => {
 
       {tags && tags.length > 0 && (
         <>
-          <Divider style={{ height: '24px' }} type="vertical" />
+          <Divider
+            style={{ height: '24px', marginTop: '15px' }}
+            orientation="vertical"
+          />
           <JobTags tags={tags} />
         </>
       )}
@@ -233,6 +236,7 @@ export default [
     valueGetter: params => params?.data?.pipeline?.startTime || 0,
     cellRenderer: StartTime,
     cellClass: 'vertical-center-cell',
+    hide: true,
   },
   {
     headerName: 'Timeline',
@@ -309,5 +313,6 @@ export default [
     },
     suppressMenu: true,
     headerClass: 'ag-header-cell-center',
+    suppressMovable: true,
   },
 ];

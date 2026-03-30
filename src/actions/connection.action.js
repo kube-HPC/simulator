@@ -31,6 +31,7 @@ export const connectionSetup = ({
   dataSourceIsEnable,
   keycloakEnable,
   checkIframe,
+  inactiveCheckMs,
 }) => ({
   type: actions.CONNECTION_SETUP,
   payload: {
@@ -45,6 +46,7 @@ export const connectionSetup = ({
     dataSourceIsEnable,
     keycloakEnable,
     checkIframe,
+    inactiveCheckMs,
   },
 });
 

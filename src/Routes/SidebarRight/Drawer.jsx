@@ -10,7 +10,6 @@ import AddDataSource from './AddDataSource';
 import ErrorLogsTable from './ErrorLogs';
 import RunRawPipeline from './RunRawPipeline';
 import MemoryAndStorage from './MemoryAndStorage';
-import NodeStatistics from './NodeStatistics.react';
 import CpuBarChartMonitors from './CpuBarChartMonitors';
 import CONTENT_CONFIG from './Content.react';
 import ctx from './ctx';

@@ -211,13 +211,26 @@ const NodeLogs = ({
     setOpenPopupOverListTasks(false);
   }, [currentTask, setWord]);
 
-  const handleChangeSelect = (value, option) => {
-    if (option.key === logModes.ALL) {
+  const optionsLogModes = useMemo(
+    () => [
+      { value: logModes.ALGORITHM, label: 'Algorithm' },
+      { value: logModes.INTERNAL, label: 'System' },
+      ...(sideCarsDetails?.map(sideCar => ({
+        value: sideCar.container.name,
+        label: sideCar.container.name,
+      })) || []),
+      { value: logModes.ALL, label: 'All' },
+    ],
+    [sideCarsDetails]
+  );
+
+  const handleChangeSelect = value => {
+    if (value === logModes.ALL) {
       setContainerNames(sideCarsDetails?.map(obj => obj.container.name));
-      setLogMode(option.key);
+      setLogMode(value);
     } else {
       const sideCarOption = sideCarsDetails?.find(
-        sideCar => option.key === sideCar.container.name
+        sideCar => value === sideCar.container.name
       );
 
       if (sideCarOption) {
@@ -225,7 +238,7 @@ const NodeLogs = ({
         setLogMode(logModes.SIDECAR);
       } else {
         setContainerNames([]);
-        setLogMode(option.key);
+        setLogMode(value);
       }
     }
   };
@@ -280,29 +293,9 @@ const NodeLogs = ({
                 isStatusFailedSchedulingTask || isStatusFailedScheduling
               }
               defaultValue={logModes.ALGORITHM}
-              onChange={handleChangeSelect}>
-              <Select.Option
-                key={logModes.ALGORITHM}
-                value={logModes.ALGORITHM}>
-                Algorithm
-              </Select.Option>
-
-              <Select.Option key={logModes.INTERNAL} value={logModes.INTERNAL}>
-                System
-              </Select.Option>
-
-              {sideCarsDetails?.map(sideCar => (
-                <Select.Option
-                  key={sideCar.container.name}
-                  value={sideCar.container.name}>
-                  {sideCar.container.name}
-                </Select.Option>
-              ))}
-
-              <Select.Option key={logModes.ALL} value={logModes.ALL}>
-                All
-              </Select.Option>
-            </SelectStyle>
+              onChange={handleChangeSelect}
+              options={optionsLogModes}
+            />
           </FlexBox.Item>
         </FlexBox>
       </FiltersPanel>

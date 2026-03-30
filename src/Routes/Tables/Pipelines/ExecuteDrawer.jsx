@@ -32,7 +32,6 @@ const ExecuteDrawer = () => {
     [executePipeline, experimentName]
   );
 
-  if (loading) return 'Loading...';
   return (
     <Drawer
       isOpened={isOn}
@@ -40,7 +39,8 @@ const ExecuteDrawer = () => {
       onClose={setOff}
       width={DRAWER_SIZE.PIPELINE_INFO}
       title={record?.name ?? pipelineId}
-      asFlex>
+      asFlex
+      loading={loading}>
       {record ? (
         <AddPipeline isRunPipeline jsonPipeline={value} />
       ) : (

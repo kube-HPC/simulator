@@ -16,7 +16,7 @@ const EditDrawer = () => {
   const { setOff, isOn } = useToggle(true);
 
   const value = useMemo(() => stringify(pipeline), [pipeline]);
-  if (loading) return 'Loading...';
+
   return (
     <Drawer
       isOpened={isOn}
@@ -25,7 +25,8 @@ const EditDrawer = () => {
       styles={{ body: { padding: '10px' } }}
       width={DRAWER_SIZE.PIPELINE_INFO}
       title={pipeline?.name ?? pipelineId}
-      asFlex>
+      asFlex
+      loading={loading}>
       {pipeline ? (
         <AddPipeline jsonPipeline={value} />
       ) : (

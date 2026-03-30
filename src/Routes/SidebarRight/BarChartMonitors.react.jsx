@@ -32,6 +32,14 @@ const typeName = {
   gpu: 'GPU',
 };
 
+const BarChartLayerContext = React.createContext({
+  highlightedBars: '',
+  fillBar: [],
+  setTooltipData: () => {},
+  handleLegendMouseEnter: () => {},
+  handleLegendMouseLeave: () => {},
+});
+
 const sumTotalByProperty = (dataArray, sameProp) =>
   dataArray.reduce(
     (acc, { data: { id, data } }) =>
@@ -241,6 +249,46 @@ const BarChartLayer = React.memo(
   }
 );
 
+BarChartLayer.propTypes = {
+  bars: PropTypes.arrayOf(PropTypes.object).isRequired,
+  rest: PropTypes.object.isRequired,
+  highlightedBars: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+  fillBar: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setTooltipData: PropTypes.func.isRequired,
+  handleLegendMouseEnter: PropTypes.func.isRequired,
+  handleLegendMouseLeave: PropTypes.func.isRequired,
+};
+
+BarChartLayer.defaultProps = {
+  highlightedBars: '',
+};
+
+const CustomBarsLayer = ({ bars, ...rest }) => (
+  <BarChartLayerContext.Consumer>
+    {({
+      highlightedBars,
+      fillBar,
+      setTooltipData,
+      handleLegendMouseEnter,
+      handleLegendMouseLeave,
+    }) => (
+      <BarChartLayer
+        bars={bars}
+        rest={rest}
+        highlightedBars={highlightedBars}
+        fillBar={fillBar}
+        setTooltipData={setTooltipData}
+        handleLegendMouseEnter={handleLegendMouseEnter}
+        handleLegendMouseLeave={handleLegendMouseLeave}
+      />
+    )}
+  </BarChartLayerContext.Consumer>
+);
+
+CustomBarsLayer.propTypes = {
+  bars: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
+
 const BarChartMonitors = ({ metric }) => {
   const { data, legend } = useMetric(metric);
 
@@ -277,6 +325,23 @@ const BarChartMonitors = ({ metric }) => {
     setTooltipData(null);
   }, []);
 
+  const layerContextValue = useMemo(
+    () => ({
+      highlightedBars,
+      fillBar,
+      setTooltipData,
+      handleLegendMouseEnter,
+      handleLegendMouseLeave,
+    }),
+    [
+      highlightedBars,
+      fillBar,
+      setTooltipData,
+      handleLegendMouseEnter,
+      handleLegendMouseLeave,
+    ]
+  );
+
   return (
     <>
       <Header onMouseEnter={() => setTooltipData(null)}>
@@ -288,63 +353,55 @@ const BarChartMonitors = ({ metric }) => {
         onMouseOut={handleLegendMouseLeave}
         onPointerLeave={handleLegendMouseLeave}
         onPointerOut={handleLegendMouseLeave}>
-        <ResponsiveBarStyle
-          data={data}
-          keys={legend}
-          indexBy="nodes"
-          theme={themePreferencesBar}
-          margin={{
-            right: 100,
-            bottom: rowPieData,
-            left: 150,
-          }}
-          padding={0.1}
-          borderWidth={1}
-          layout="horizontal"
-          colors={Theme.GRAPH_PALETTE}
-          colorBy="id"
-          defs={designBar}
-          fill={fillBar}
-          borderColor={Theme.COLOR.grey}
-          axisBottom={axisBottomBar}
-          axisLeft={axisLeftBar}
-          labelSkipWidth={12}
-          labelSkipHeight={12}
-          animate
-          motionStiffness={165}
-          motionDamping={27}
-          legends={legendsBar}
-          //  labelTextColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
-          // label={d => `${d.id}: ${d.value}`}
-          // Other chart configurations
+        <BarChartLayerContext.Provider value={layerContextValue}>
+          <ResponsiveBarStyle
+            data={data}
+            keys={legend}
+            indexBy="nodes"
+            theme={themePreferencesBar}
+            margin={{
+              right: 100,
+              bottom: rowPieData,
+              left: 150,
+            }}
+            padding={0.1}
+            borderWidth={1}
+            layout="horizontal"
+            colors={Theme.GRAPH_PALETTE}
+            colorBy="id"
+            defs={designBar}
+            fill={fillBar}
+            borderColor={Theme.COLOR.grey}
+            axisBottom={axisBottomBar}
+            axisLeft={axisLeftBar}
+            labelSkipWidth={12}
+            labelSkipHeight={12}
+            animate
+            motionStiffness={165}
+            motionDamping={27}
+            legends={legendsBar}
+            //  labelTextColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
+            // label={d => `${d.id}: ${d.value}`}
+            // Other chart configurations
 
-          layers={[
-            'grid',
-            'axes',
-            // 'bars',
-            //  'totals',
-            'markers',
-            // 'legends',
-            // 'annotations',
-
-            ({ bars, ...rest }) => (
-              <BarChartLayer
-                bars={bars}
-                rest={rest}
-                highlightedBars={highlightedBars}
-                fillBar={fillBar}
-                setTooltipData={setTooltipData}
-                handleLegendMouseEnter={handleLegendMouseEnter}
-                handleLegendMouseLeave={handleLegendMouseLeave}
-              />
-            ),
-          ]}
-        />
+            layers={[
+              'grid',
+              'axes',
+              // 'bars',
+              //  'totals',
+              'markers',
+              // 'legends',
+              // 'annotations',
+              CustomBarsLayer,
+            ]}
+          />
+        </BarChartLayerContext.Provider>
 
         {tooltipData && <Tooltip dataTip={tooltipData} />}
       </Container>
       <Collapsible
         title="Total Resource Pie Chart"
+        defaultExpanded
         onMouseEnter={() => setTooltipData(null)}>
         <PieContainer>
           <BarChartTotalsPie

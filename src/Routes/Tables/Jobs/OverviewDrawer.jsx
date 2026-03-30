@@ -31,6 +31,7 @@ const OverviewDrawer = () => {
   const { setOff, isOn } = useToggle(true);
   const query = useQuery(JOB_BY_ID_QUERY, {
     variables: { jobId },
+    fetchPolicy: 'no-cache',
   });
   usePolling(query, 6000);
   // const item = useSelector(state => selectors.jobs.byId(state, jobId));

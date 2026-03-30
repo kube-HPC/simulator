@@ -27,6 +27,8 @@ export const grafanaDashboardUrl = process.env.GRAFANA_URL;
 export const dataSourceIsEnable = process.env.DATA_SOURCE_IS_ENABLE === 'true';
 export const keycloakEnable = process.env.VITE_KEYCLOAK_ENABLE === 'true';
 export const checkIframe = process.env.VITE_CHECK_IFRAME === 'false';
+export const inactiveCheckMs =
+  Number(process.env.VITE_INACTIVE_CHECK_MS) || 300000;
 
 export const baseUrl = process.env.HKUBE_BASE_URL
   ? process.env.HKUBE_BASE_URL.replace(/^\//, '')

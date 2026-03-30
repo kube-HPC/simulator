@@ -31,9 +31,10 @@ const AlgorithmNode = ({ id }) => {
         <AutoComplete
           disabled={sortedAlgorithms?.length === 0}
           options={sortedAlgorithms}
-          filterOption={(inputValue, option) =>
-            option.value.indexOf(inputValue) !== -1
-          }
+          showSearch={{
+            filterOption: (inputValue, option) =>
+              option.value.indexOf(inputValue) !== -1,
+          }}
         />
       </Field>
       {isStreamingPipeline &&

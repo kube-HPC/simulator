@@ -11,7 +11,9 @@ const JobTags = ({ tags }) => {
     <span>
       {tags.slice(0, numberViewTags).map(tag => (
         <Tooltip key={tag} title={tag}>
-          <Tag color={getColorByName(tag)}>{String(tag).slice(0, 2)}</Tag>
+          <Tag variant="solid" color={getColorByName(tag)}>
+            {String(tag).slice(0, 2)}
+          </Tag>
         </Tooltip>
       ))}
 
