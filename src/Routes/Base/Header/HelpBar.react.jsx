@@ -30,7 +30,11 @@ const HelpBar = () => {
           placement="bottomRight"
           trigger="click">
           <span>
-            <UserAvatar username={KeycloakServices.getUsername()} size={30} />
+            <UserAvatar
+              testId="header-avatar"
+              username={KeycloakServices.getUsername()}
+              size={30}
+            />
           </span>
         </Popover>
       )}
