@@ -12,6 +12,7 @@ import {
   dateTimeDefaultVar,
   pipelineJustStartedVar,
   metaVar,
+  queueClearedVar,
 } from 'cache';
 
 const ButtonLinkStyle = styled(Button)`
@@ -22,6 +23,7 @@ const useCounters = () => {
   const navigate = useNavigate();
   const instanceFilters = useReactiveVar(instanceFiltersVar);
   const dateTimeDefault = useReactiveVar(dateTimeDefaultVar);
+  const queueCleared = useReactiveVar(queueClearedVar);
   const pipelineJustStarted = useReactiveVar(pipelineJustStartedVar);
   const metaMode = useReactiveVar(metaVar);
   const prevQueueCountRef = useRef(null);
@@ -42,7 +44,6 @@ const useCounters = () => {
       },
     };
 
-    // Handle experimentName same as useJobsFunctionsLimit
     if (
       metaMode?.experimentName != null &&
       metaMode?.experimentName !== 'show-all'
@@ -80,10 +81,8 @@ const useCounters = () => {
     navigate('/jobs');
   }, [navigate]);
 
-  //  Pass all filters instead of just datesRange
   const query = useQuery(COUNTERS_QUERY, {
     variables: mergedParams,
-    // pollInterval: 3000,
     notifyOnNetworkStatusChange: true,
     onCompleted: data => {
       const newCounters = {
@@ -99,10 +98,13 @@ const useCounters = () => {
         drivers: data.discovery.pipelineDriver.length,
         workers: data.discovery.worker.length,
       };
+
       setCounters(newCounters);
+
+      // --- queue increased: a new job was added ---
       if (
         prevQueueCountRef.current !== null &&
-        counters.queue > prevQueueCountRef.current
+        newCounters.queue > prevQueueCountRef.current
       ) {
         events.emit(
           'global_alert_msg',
@@ -111,31 +113,42 @@ const useCounters = () => {
         );
       }
 
+      // --- queue decreased ---
       if (
         prevQueueCountRef.current !== null &&
-        counters.queue < prevQueueCountRef.current
+        newCounters.queue < prevQueueCountRef.current
       ) {
-        const jobsStarted = prevQueueCountRef.current - counters.queue;
-
-        events.emit(
-          'global_alert_msg',
-          <>
-            {jobsStarted} {jobsStarted === 1 ? 'job' : 'jobs'} started from
-            queue, see{' '}
-            <ButtonLinkStyle type="link" onClick={gotoJobsTable}>
-              jobs
-            </ButtonLinkStyle>
-          </>,
-          'success'
-        );
+        if (queueCleared) {
+          // manual stop/clear — notification already emitted by the action component
+          // also clear pipelineJustStarted to prevent a false "Pipeline started" message
+          queueClearedVar(false);
+          pipelineJustStartedVar(false);
+        } else {
+          // organic: jobs graduated from queue to running
+          const jobsStarted = prevQueueCountRef.current - newCounters.queue;
+          events.emit(
+            'global_alert_msg',
+            <>
+              {jobsStarted} {jobsStarted === 1 ? 'job' : 'jobs'} started from
+              queue, see{' '}
+              <ButtonLinkStyle type="link" onClick={gotoJobsTable}>
+                jobs
+              </ButtonLinkStyle>
+            </>,
+            'success'
+          );
+        }
       }
 
-      prevQueueCountRef.current = counters.queue;
+      prevQueueCountRef.current = newCounters.queue;
 
+      // --- jobs count increased: pipeline was manually started ---
+      // guard with !queueCleared to prevent false "Pipeline started" during a stop
       if (
-        //  prevJobsCountRef.current !== null &&
-        //  counters.jobs > prevJobsCountRef.current &&
-        pipelineJustStarted
+        prevJobsCountRef.current !== null &&
+        newCounters.jobs > prevJobsCountRef.current &&
+        pipelineJustStarted &&
+        !queueCleared
       ) {
         events.emit(
           'global_alert_msg',
@@ -148,9 +161,10 @@ const useCounters = () => {
           'success'
         );
 
-        pipelineJustStartedVar(false); // reset flag
+        pipelineJustStartedVar(false);
       }
-      prevJobsCountRef.current = counters.jobs;
+
+      prevJobsCountRef.current = newCounters.jobs;
 
       instanceCounterVar({
         ...instanceCounterVar(),
@@ -161,4 +175,5 @@ const useCounters = () => {
 
   usePolling(query, 3000);
 };
+
 export default useCounters;
