@@ -31,7 +31,7 @@ import {
 const { Text } = Typography;
 const Settings = () => {
   const { hkubeSiteUrl } = useSelector(selectors.config);
-  const { toggleTheme, themeName } = useSiteThemeMode();
+  const { setTheme, themeName } = useSiteThemeMode();
 
   const navigate = useNavigate();
 
@@ -61,6 +61,75 @@ const Settings = () => {
     margin: 0px;
   `;
 
+  const LightThemeButton = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+    width: 100%;
+    color: #1677ff;
+    background: #ffffff;
+    border: 2px solid ${({ $active }) => ($active ? '#1677ff' : '#d0e4ff')};
+    box-shadow: ${({ $active }) =>
+      $active ? '0 0 0 2px rgba(22,119,255,0.2)' : 'none'};
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: #1677ff;
+      box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.15);
+    }
+  `;
+
+  const DarkThemeButton = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+    width: 100%;
+    color: #ffffff;
+    background: #182039;
+    border: 2px solid ${({ $active }) => ($active ? '#40a9ff' : '#2e4a7a')};
+    box-shadow: ${({ $active }) =>
+      $active ? '0 0 0 2px rgba(64,169,255,0.25)' : 'none'};
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: #40a9ff;
+      box-shadow: 0 0 0 2px rgba(64, 169, 255, 0.2);
+    }
+  `;
+
+  const LightsOutThemeButton = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 6px;
+    width: 100%;
+    color: #5a6a7a;
+    background: #0a0f1a;
+    border: 2px solid ${({ $active }) => ($active ? '#3a4a5a' : '#1a2030')};
+    box-shadow: ${({ $active }) =>
+      $active ? '0 0 0 2px rgba(58,74,90,0.4)' : 'none'};
+    letter-spacing: 0.03em;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: #3a4a5a;
+      box-shadow: 0 0 0 2px rgba(58, 74, 90, 0.3);
+    }
+  `;
   return (
     <FlexBox.Auto align="left" direction="column" gutter={[10, 10]}>
       <FlexBox.Auto>
@@ -124,20 +193,24 @@ const Settings = () => {
         <DividerStyle />
       </FlexBox.Auto>
 
-      <FlexBox.Auto>
-        <Icons.Hover
-          type={
-            <span
-              title={iconsThemesTitle[themeName.toUpperCase()]}
-              role="img"
-              aria-label="menu-unfold"
-              className="anticon anticon-menu-unfold">
-              {iconsThemes[themeName.toUpperCase()]}
-            </span>
-          }
-          onClick={toggleTheme}
-        />
-        <TextLink onClick={toggleTheme}>Mode Theme</TextLink>
+      <FlexBox.Auto direction="column" gutter={[6, 6]}>
+        <LightThemeButton
+          $active={themeName.toUpperCase() === 'LIGHT'}
+          onClick={() => setTheme('light')}>
+          Light
+        </LightThemeButton>
+
+        <DarkThemeButton
+          $active={themeName.toUpperCase() === 'DARK'}
+          onClick={() => setTheme('dark')}>
+          Dark
+        </DarkThemeButton>
+
+        <LightsOutThemeButton
+          $active={themeName.toUpperCase() === 'LIGHTSOUT'}
+          onClick={() => setTheme('lightsOut')}>
+          Lights Out
+        </LightsOutThemeButton>
       </FlexBox.Auto>
       <SetDefaultTime />
 

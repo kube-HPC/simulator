@@ -8,6 +8,7 @@ import { Ellipsis } from 'components/common';
 import { instanceFiltersVar } from 'cache';
 import PropTypes from 'prop-types';
 import { useReactiveVar } from '@apollo/client';
+import { COLOR, Styles } from 'styles';
 
 import usePathPipeline from './../Pipelines/usePath';
 
@@ -17,6 +18,8 @@ const iconSize = {
   marginLeft: '5px',
   opacity: 0.6,
   cursor: 'pointer',
+  color: Styles.iconColor,
+  fill: Styles.iconColor,
 };
 
 const PipelineNameContainer = styled.div`

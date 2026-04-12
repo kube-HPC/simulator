@@ -12,6 +12,7 @@ import UserAvatar from 'components/UserAvatar';
 import VersionNameEdit from './VersionNameEdit';
 import FlexBox from '../common/FlexBox.react';
 import Ellipsis from '../common/Ellipsis.react';
+import { COLOR } from 'styles';
 
 const { Text } = Typography;
 
@@ -123,8 +124,8 @@ const getVersionsColumns = ({
         {isCurrentVersion && (
           <CheckCircleOutlined
             style={{
-              color: '#333', // Dark grey for the outline and check
-              fontSize: 12, // Optional: adjust size if needed
+              color: COLOR.whiteDark, // ← #7a8898 in LightsOut, visible on all themes
+              fontSize: 12,
             }}
           />
         )}
@@ -175,7 +176,9 @@ const getVersionsColumns = ({
               shape="circle"
               icon={<DeleteOutlined />}
               disabled={isCurrentVersion}
-              onClick={() => deleteConfirmAction(modal, onDelete, record, source)}
+              onClick={() =>
+                deleteConfirmAction(modal, onDelete, record, source)
+              }
             />
           </Tooltip>
         </FlexBox.Item>
@@ -185,7 +188,7 @@ const getVersionsColumns = ({
               type={isCurrentVersion ? 'default' : 'dashed'}
               shape="circle"
               icon={<SaveOutlined />}
-              style={isCurrentVersion ? { borderColor: '#ada4a4ff' } : {}}
+              style={isCurrentVersion ? { borderColor: COLOR.grey } : {}}
               onClick={() => addConfirmAction(modal, onSaveAs, record, source)}
             />
           </Tooltip>
