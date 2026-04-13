@@ -1,6 +1,7 @@
 import React from 'react';
 import { TabDrawerText, TabDrawer } from 'styles';
 import styled from 'styled-components';
+import IDProvider from 'IDProvider';
 // import { useSelector } from 'react-redux';
 // import { selectors } from 'reducers';
 import Drawer from 'components/Drawer';
@@ -37,24 +38,26 @@ const OverviewDrawer = () => {
   // const item = useSelector(state => selectors.jobs.byId(state, jobId));
 
   return (
-    <DrawerOverView
-      isOpened={isOn}
-      onDidClose={goTo.root}
-      onClose={setOff}
-      width={DRAWER_SIZE.JOB_INFO}>
-      <>
-        <TitleDataJob job={query?.data?.job} />
-        <TabDrawer>
-          <TabDrawerText>{DRAWER_TITLES.JOB_INFO}</TabDrawerText>
-        </TabDrawer>
-        {/* item ? <Info job={item} /> : <MissingIdError /> */}
-        {query?.data?.job ? (
-          <Info job={query?.data?.job} />
-        ) : (
-          <MissingIdError />
-        )}
-      </>
-    </DrawerOverView>
+    <IDProvider dataTestId="popup-drawer">
+      <DrawerOverView
+        isOpened={isOn}
+        onDidClose={goTo.root}
+        onClose={setOff}
+        width={DRAWER_SIZE.JOB_INFO}>
+        <>
+          <TitleDataJob job={query?.data?.job} />
+          <TabDrawer>
+            <TabDrawerText>{DRAWER_TITLES.JOB_INFO}</TabDrawerText>
+          </TabDrawer>
+          {/* item ? <Info job={item} /> : <MissingIdError /> */}
+          {query?.data?.job ? (
+            <Info job={query?.data?.job} />
+          ) : (
+            <MissingIdError />
+          )}
+        </>
+      </DrawerOverView>
+    </IDProvider>
   );
 };
 
