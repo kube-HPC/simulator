@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import IDProvider from 'IDProvider';
 import Drawer from 'components/Drawer';
 import { TabDrawerText, TabDrawer } from 'styles';
 import useToggle from 'hooks/useToggle';
@@ -33,23 +34,25 @@ const ExecuteDrawer = () => {
   );
 
   return (
-    <Drawer
-      isOpened={isOn}
-      onDidClose={goTo.root}
-      onClose={setOff}
-      width={DRAWER_SIZE.PIPELINE_INFO}
-      title={record?.name ?? pipelineId}
-      asFlex
-      loading={loading}>
-      {record ? (
-        <AddPipeline isRunPipeline jsonPipeline={value} />
-      ) : (
-        <MissingIdError />
-      )}
-      <TabDrawer>
-        <TabDrawerText>{DRAWER_TITLES.PIPELINE_EXECUTE}</TabDrawerText>
-      </TabDrawer>
-    </Drawer>
+    <IDProvider dataTestId="popup-drawer">
+      <Drawer
+        isOpened={isOn}
+        onDidClose={goTo.root}
+        onClose={setOff}
+        width={DRAWER_SIZE.PIPELINE_INFO}
+        title={record?.name ?? pipelineId}
+        asFlex
+        loading={loading}>
+        {record ? (
+          <AddPipeline isRunPipeline jsonPipeline={value} />
+        ) : (
+          <MissingIdError />
+        )}
+        <TabDrawer>
+          <TabDrawerText>{DRAWER_TITLES.PIPELINE_EXECUTE}</TabDrawerText>
+        </TabDrawer>
+      </Drawer>
+    </IDProvider>
   );
 };
 

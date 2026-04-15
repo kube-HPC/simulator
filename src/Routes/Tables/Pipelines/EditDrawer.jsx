@@ -4,7 +4,7 @@ import { stringify } from 'utils';
 import { DRAWER_SIZE, DRAWER_TITLES } from 'const';
 import Drawer from 'components/Drawer';
 import useToggle from 'hooks/useToggle';
-
+import IDProvider from 'IDProvider';
 import usePath from './usePath';
 import useActivePipeline from './useActivePipeline';
 import AddPipeline from '../../SidebarRight/AddPipeline';
@@ -18,24 +18,26 @@ const EditDrawer = () => {
   const value = useMemo(() => stringify(pipeline), [pipeline]);
 
   return (
-    <Drawer
-      isOpened={isOn}
-      onClose={setOff}
-      onDidClose={goTo.root}
-      styles={{ body: { padding: '10px' } }}
-      width={DRAWER_SIZE.PIPELINE_INFO}
-      title={pipeline?.name ?? pipelineId}
-      asFlex
-      loading={loading}>
-      {pipeline ? (
-        <AddPipeline jsonPipeline={value} />
-      ) : (
-        <p>{pipeline?.name ?? pipelineId} has been deleted</p>
-      )}
-      <TabDrawer style={{ marginLeft: '-10px' }}>
-        <TabDrawerText>{DRAWER_TITLES.EDIT_PIPELINE}</TabDrawerText>
-      </TabDrawer>
-    </Drawer>
+    <IDProvider dataTestId="popup-drawer">
+      <Drawer
+        isOpened={isOn}
+        onClose={setOff}
+        onDidClose={goTo.root}
+        styles={{ body: { padding: '10px' } }}
+        width={DRAWER_SIZE.PIPELINE_INFO}
+        title={pipeline?.name ?? pipelineId}
+        asFlex
+        loading={loading}>
+        {pipeline ? (
+          <AddPipeline jsonPipeline={value} />
+        ) : (
+          <p>{pipeline?.name ?? pipelineId} has been deleted</p>
+        )}
+        <TabDrawer style={{ marginLeft: '-10px' }}>
+          <TabDrawerText>{DRAWER_TITLES.EDIT_PIPELINE}</TabDrawerText>
+        </TabDrawer>
+      </Drawer>
+    </IDProvider>
   );
 };
 

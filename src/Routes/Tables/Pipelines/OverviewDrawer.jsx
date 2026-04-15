@@ -1,6 +1,7 @@
 import React from 'react';
 import Drawer from 'components/Drawer';
 import { Button } from 'antd';
+import IDProvider from 'IDProvider';
 import { TabDrawerText, TabDrawer } from 'styles';
 import useToggle from 'hooks/useToggle';
 import { DRAWER_SIZE } from 'const';
@@ -16,29 +17,31 @@ const OverviewDrawer = () => {
   const { setOff, isOn } = useToggle(true);
 
   return (
-    <Drawer
-      isOpened={isOn}
-      onDidClose={goTo.root}
-      onClose={setOff}
-      width={DRAWER_SIZE.PIPELINE_INFO}
-      title={record?.name ?? pipelineId}
-      loading={loading}
-      extra={
-        <Button type="primary" onClick={goTo.edit}>
-          Edit
-        </Button>
-      }>
-      <>
-        <TabDrawer>
-          <TabDrawerText>{DRAWER_TITLES.PIPELINE_INFO}</TabDrawerText>
-        </TabDrawer>
-        {record ? (
-          <PipelineInfo pipeline={record} onClose={setOff} />
-        ) : (
-          <MissingIdError />
-        )}
-      </>
-    </Drawer>
+    <IDProvider dataTestId="popup-drawer">
+      <Drawer
+        isOpened={isOn}
+        onDidClose={goTo.root}
+        onClose={setOff}
+        width={DRAWER_SIZE.PIPELINE_INFO}
+        title={record?.name ?? pipelineId}
+        loading={loading}
+        extra={
+          <Button type="primary" onClick={goTo.edit}>
+            Edit
+          </Button>
+        }>
+        <>
+          <TabDrawer>
+            <TabDrawerText>{DRAWER_TITLES.PIPELINE_INFO}</TabDrawerText>
+          </TabDrawer>
+          {record ? (
+            <PipelineInfo pipeline={record} onClose={setOff} />
+          ) : (
+            <MissingIdError />
+          )}
+        </>
+      </Drawer>
+    </IDProvider>
   );
 };
 

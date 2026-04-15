@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
+import IDProvider from 'IDProvider';
 import Drawer from 'components/Drawer';
 import { TabDrawerText, TabDrawer } from 'styles';
 import { RIGHT_SIDEBAR_NAMES } from 'const';
@@ -75,25 +76,27 @@ const DashboardDrawer = () => {
 
   // eslint-disable-next-line consistent-return
   return (
-    <ctx.Provider value={contextValue}>
-      <Drawer
-        width={width}
-        isOpened={isOn}
-        onDidClose={handleDidClose}
-        onClose={setOff}
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          overFlow: 'hidden',
-        }}
-        asFlex
-        destroyOnHidden>
-        <TabDrawer>
-          <TabDrawerText>{titleDrawer}</TabDrawerText>
-        </TabDrawer>
-        <Body />
-      </Drawer>
-    </ctx.Provider>
+    <IDProvider dataTestId="popup-drawer">
+      <ctx.Provider value={contextValue}>
+        <Drawer
+          width={width}
+          isOpened={isOn}
+          onDidClose={handleDidClose}
+          onClose={setOff}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            overFlow: 'hidden',
+          }}
+          asFlex
+          destroyOnHidden>
+          <TabDrawer>
+            <TabDrawerText>{titleDrawer}</TabDrawerText>
+          </TabDrawer>
+          <Body />
+        </Drawer>
+      </ctx.Provider>
+    </IDProvider>
   );
 };
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { TabDrawerText, TabDrawer } from 'styles';
+import IDProvider from 'IDProvider';
 import { Button } from 'antd';
 import Drawer from 'components/Drawer';
 import { DRAWER_SIZE } from 'const';
@@ -16,28 +17,30 @@ const OverviewDrawer = () => {
   const { activeAlgorithm, algorithmId } = useActiveAlgorithm();
 
   return (
-    <Drawer
-      isOpened={isOn}
-      onDidClose={goTo.root}
-      onClose={setOff}
-      width={DRAWER_SIZE.ALGORITHM_INFO}
-      title={algorithmId}
-      extra={
-        <Button type="primary" onClick={goTo.edit}>
-          Edit
-        </Button>
-      }>
-      <>
-        <TabDrawer>
-          <TabDrawerText>{DRAWER_TITLES.ALGORITHM_INFO}</TabDrawerText>
-        </TabDrawer>
-        {activeAlgorithm ? (
-          <AlgorithmsTabs algorithm={activeAlgorithm} onClose={setOff} />
-        ) : (
-          <MissingIdError />
-        )}
-      </>
-    </Drawer>
+    <IDProvider dataTestId="popup-drawer">
+      <Drawer
+        isOpened={isOn}
+        onDidClose={goTo.root}
+        onClose={setOff}
+        width={DRAWER_SIZE.ALGORITHM_INFO}
+        title={algorithmId}
+        extra={
+          <Button type="primary" onClick={goTo.edit}>
+            Edit
+          </Button>
+        }>
+        <>
+          <TabDrawer>
+            <TabDrawerText>{DRAWER_TITLES.ALGORITHM_INFO}</TabDrawerText>
+          </TabDrawer>
+          {activeAlgorithm ? (
+            <AlgorithmsTabs algorithm={activeAlgorithm} onClose={setOff} />
+          ) : (
+            <MissingIdError />
+          )}
+        </>
+      </Drawer>
+    </IDProvider>
   );
 };
 

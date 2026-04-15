@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import IDProvider from 'IDProvider';
 import PropTypes from 'prop-types';
 import { Drawer as AntDrawer } from 'antd';
 import styled from 'styled-components';
@@ -70,37 +71,39 @@ const Drawer = ({
   );
 
   return (
-    <DrawerPadding
-      open={isOpened}
-      size={width}
-      afterOpenChange={handleVisibleChange}
-      placement="right"
-      closable={false}
-      onClose={onClose}
-      data-as-flex={asFlex}
-      styles={{
-        body: {
-          ...style,
-          opacity: hasEntered ? 1 : 0,
-        },
-      }}
-      title={title}
-      // eslint-disable-next-line
-      {...props}>
-      {hasEntered ? (
-        <>
-          {children}
-          {bottomContent && (
-            <>
-              <BottomContent.Divider />
-              <BottomContent extra={bottomContent.extra}>
-                {bottomContent.body}
-              </BottomContent>
-            </>
-          )}
-        </>
-      ) : null}
-    </DrawerPadding>
+    <IDProvider dataTestId="popup-drawer">
+      <DrawerPadding
+        open={isOpened}
+        size={width}
+        afterOpenChange={handleVisibleChange}
+        placement="right"
+        closable={false}
+        onClose={onClose}
+        data-as-flex={asFlex}
+        styles={{
+          body: {
+            ...style,
+            opacity: hasEntered ? 1 : 0,
+          },
+        }}
+        title={title}
+        // eslint-disable-next-line
+        {...props}>
+        {hasEntered ? (
+          <>
+            {children}
+            {bottomContent && (
+              <>
+                <BottomContent.Divider />
+                <BottomContent extra={bottomContent.extra}>
+                  {bottomContent.body}
+                </BottomContent>
+              </>
+            )}
+          </>
+        ) : null}
+      </DrawerPadding>
+    </IDProvider>
   );
 };
 

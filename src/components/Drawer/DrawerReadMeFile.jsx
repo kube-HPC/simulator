@@ -1,5 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useState } from 'react';
+import IDProvider from 'IDProvider';
 import { useReadMeFile } from 'hooks';
 import PropTypes from 'prop-types';
 import Drawer from 'components/Drawer';
@@ -48,33 +49,35 @@ const DrawerReadMeFile = ({ name = null, type = null, disabled }) => {
         title="A readme file can be added after the pipeline had been saved">
         Edit Read Me
       </Button>
-      <Drawer
-        size="90vw"
-        open={isOpen}
-        operation="Read Me File"
-        onClose={isChange ? () => setIsOpenConfrim(true) : closeAll}>
-        <Space orientation="vertical" size="middle" style={{ width: '100%' }}>
-          <Modal
-            title="Save Before Leave"
-            open={isOpenConfrim}
-            onOk={saveAndClose}
-            onCancel={() => closeAll()}
-            okText="Yes"
-            cancelText="No">
-            You are about to exit the "Edit Readme" window Would you like to
-            save the changes?
-          </Modal>
-          <Flex justify="start" gap="10px" style={{ marginBottom: '10px' }}>
-            <Button onClick={saveAndClose} type="primary">
-              Apply Markdown
-            </Button>
-            <Button onClick={closeAll} type="primary">
-              Cancel
-            </Button>
-          </Flex>
-          <MdEditorView value={readme} onChange={onChangeReadMe} />
-        </Space>
-      </Drawer>
+      <IDProvider dataTestId="popup-drawer">
+        <Drawer
+          size="90vw"
+          open={isOpen}
+          operation="Read Me File"
+          onClose={isChange ? () => setIsOpenConfrim(true) : closeAll}>
+          <Space orientation="vertical" size="middle" style={{ width: '100%' }}>
+            <Modal
+              title="Save Before Leave"
+              open={isOpenConfrim}
+              onOk={saveAndClose}
+              onCancel={() => closeAll()}
+              okText="Yes"
+              cancelText="No">
+              You are about to exit the "Edit Readme" window Would you like to
+              save the changes?
+            </Modal>
+            <Flex justify="start" gap="10px" style={{ marginBottom: '10px' }}>
+              <Button onClick={saveAndClose} type="primary">
+                Apply Markdown
+              </Button>
+              <Button onClick={closeAll} type="primary">
+                Cancel
+              </Button>
+            </Flex>
+            <MdEditorView value={readme} onChange={onChangeReadMe} />
+          </Space>
+        </Drawer>
+      </IDProvider>
     </>
   );
 };
