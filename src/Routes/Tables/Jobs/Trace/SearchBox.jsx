@@ -6,17 +6,14 @@ import { SearchOutlined, CloseOutlined } from '@ant-design/icons';
 import { getCurrentTheme, getSystemColors } from './traceConstants';
 
 const SearchContainer = styled.div`
-  position: absolute;
-  top: 20px;
-  right: 16px;
   display: flex;
   align-items: center;
   gap: 8px;
-  z-index: 100;
+  flex-shrink: 0;
 `;
 
 const StyledInput = styled(Input)`
-  width: 250px;
+  width: 220px;
   border-radius: 6px;
   border: 2px solid
     ${props => {
