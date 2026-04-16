@@ -147,6 +147,7 @@ const AlgorithmActions = ({ record }) => {
               open={openPopupRun}
               onOpenChange={handleOpenChange}>
               <Button
+                data-testid="run"
                 icon={<PlayCircleOutlined />}
                 onClick={() => clickOnRunAlg()}
               />
@@ -154,6 +155,7 @@ const AlgorithmActions = ({ record }) => {
           ) : (
             <Tooltip title="No run permission">
               <Button
+                data-testid="run"
                 icon={<PlayCircleOutlined />}
                 disabled={!isRoleRunOrStop}
               />
@@ -171,17 +173,23 @@ const AlgorithmActions = ({ record }) => {
               open={openPopupRunDebug}
               onOpenChange={handleOpenChangeDebug}>
               <Button
+                data-testid="debug"
                 icon={<BugOutlined />}
                 onClick={() => clickOnRunDebug()}
               />
             </Popover>
           ) : (
             <Tooltip title="No debug permission">
-              <Button icon={<BugOutlined />} disabled={!isRoleRunOrStop} />
+              <Button
+                data-testid="debug"
+                icon={<BugOutlined />}
+                disabled={!isRoleRunOrStop}
+              />
             </Tooltip>
           )}
           <Tooltip title={isRoleEdit ? 'Edit algorithm' : 'No edit permission'}>
             <Button
+              data-testid="edit"
               icon={<EditOutlined />}
               onClick={onEdit}
               disabled={!isRoleEdit}
@@ -190,13 +198,18 @@ const AlgorithmActions = ({ record }) => {
           <Tooltip
             title={isRoleDelete ? 'Delete algorithm' : 'No delete permission'}>
             <Button
+              data-testid="delete"
               icon={<DeleteOutlined />}
               onClick={onClickDelete}
               disabled={!isRoleDelete}
             />
           </Tooltip>
           <Tooltip title="Show overview">
-            <Button icon={<InfoCircleOutlined />} onClick={onMoreInfo} />
+            <Button
+              data-testid="overview"
+              icon={<InfoCircleOutlined />}
+              onClick={onMoreInfo}
+            />
           </Tooltip>
         </Space.Compact>
       </div>
