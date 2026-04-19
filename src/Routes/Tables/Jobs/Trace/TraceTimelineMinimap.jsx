@@ -313,7 +313,7 @@ const MinimapButton = styled(Button)`
   }
 `;
 
-// ── NEW: Mode toggle bar below the minimap canvas ──────────────────────────
+// Mode toggle bar below the minimap canvas ──────────────────────────
 const ModeToggleBar = styled.div`
   display: flex;
   align-items: center;
@@ -491,11 +491,21 @@ const TraceTimelineMinimap = ({
     setHoveredPosition(percentage);
 
     const hoveredTime = (percentage / 100) * duration;
-    const foundSpan = spans.find(span => {
+
+    //  Use the shortest-duration span that covers the cursor instead
+    // of the first one found. When multiple algorithms share the same name and
+    // overlap in time, the shortest span at the cursor point is the most
+    // specific and visually accurate match — it corresponds to the actual bar
+    // the user is hovering over in the minimap rather than an ancestor that
+    // happens to span the same time region.
+    const foundSpan = spans.reduce((best, span) => {
       const spanStart = span.relativeStartTime;
       const spanEnd = span.relativeStartTime + span.duration;
-      return hoveredTime >= spanStart && hoveredTime <= spanEnd;
-    });
+      if (hoveredTime >= spanStart && hoveredTime <= spanEnd) {
+        if (!best || span.duration < best.duration) return span;
+      }
+      return best;
+    }, null);
 
     if (foundSpan) {
       const process = processes[foundSpan.processID];
@@ -641,7 +651,6 @@ const TraceTimelineMinimap = ({
     });
   };
 
-  // Human-readable banner label depending on mode
   const bannerModeLabel =
     minimapMode === 'highlight' ? 'Highlighting spans' : 'Filtering timeline';
 
