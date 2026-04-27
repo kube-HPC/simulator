@@ -7,7 +7,7 @@ const JOB_QUERY_ACTIVE = gql`
     $algorithmName: String
     $pipelineStatus: String
     $user: String
-    $tag: String
+    $tags: [String]
     $datesRange: Range
     $cursor: String
     $limit: Int
@@ -18,7 +18,7 @@ const JOB_QUERY_ACTIVE = gql`
       algorithmName: $algorithmName
       pipelineStatus: $pipelineStatus
       user: $user
-      tag: $tag
+      tags: $tags
       datesRange: $datesRange
       cursor: $cursor
       limit: $limit
