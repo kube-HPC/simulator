@@ -44,7 +44,7 @@ The dashboard does **not** contain simulator/computation logic itself — it is 
 ┌───────────────────────────────────────────────────────┐
 │                     Browser                           │
 │                                                       │
-│  React 18 + Redux Toolkit + Apollo Client (GraphQL)   │
+│  React 19 + Redux Toolkit + Apollo Client (GraphQL)   │
 │  UI: Ant Design 6 + styled-components + AG Grid       │
 │  Routing: react-router-dom (HashRouter)               │
 │  Auth: Keycloak (optional)                            │
@@ -78,6 +78,30 @@ The dashboard does **not** contain simulator/computation logic itself — it is 
 3. On success, `restMiddleware` intercepts `SOCKET_GET_CONFIG_SUCCESS`, extracts `monitorBackend`, computes backend URL, sets `axios.defaults.baseURL`, and dispatches `connectionSetup(...)` into the Redux `connection` slice.
 4. `config.reducer` stores `backendApiUrl` and sets `hasConfig: true` → the UI renders.
 
+```mermaid
+sequenceDiagram
+    participant App as App (index.jsx)
+    participant Store as Redux Store
+    participant RCM as restConfigMiddleware
+    participant Server as Express / Vite Server
+    participant RM as restMiddleware
+    participant Config as config.reducer
+    participant UI as React UI
+
+    App->>Store: dispatch(initDashboardConfig())
+    Store->>RCM: intercept action
+    RCM->>Server: GET /dashboard-config.json
+    Server-->>RCM: { monitorBackend, ... }
+    RCM->>Store: dispatch(SOCKET_GET_CONFIG_SUCCESS)
+    Store->>RM: intercept SOCKET_GET_CONFIG_SUCCESS
+    RM->>RM: extract monitorBackend, compute backendApiUrl
+    RM->>RM: set axios.defaults.baseURL
+    RM->>Store: dispatch(connectionSetup({ ... }))
+    Store->>Config: update connection slice
+    Config->>Config: set hasConfig = true
+    Config-->>UI: hasConfig === true → render app
+```
+
 #### 2. GraphQL Data Fetching (Primary Path)
 
 1. `Routes/index.jsx` mounts, calls `socketInit()`, and initializes `ApolloProvider` with the dynamically-created Apollo client.
@@ -86,12 +110,95 @@ The dashboard does **not** contain simulator/computation logic itself — it is 
 4. Typical polling intervals: **2–3 seconds** for jobs, **3 seconds** for grid views.
 5. The `usePolling` system includes **inactivity detection**: if no mouse/keyboard/scroll activity for a configurable period (default 5 minutes), all polling stops and an "Inactive Mode" reactive variable is set. Polling resumes on user interaction.
 
+```mermaid
+sequenceDiagram
+    participant Route as Routes/index.jsx
+    participant Apollo as ApolloProvider
+    participant Hook as useQuery Hook (e.g. useJobsGrid)
+    participant UP as usePolling
+    participant QM as queryMap (global)
+    participant GQL as GraphQL Endpoint
+    participant Cache as Apollo Cache
+    participant UI as React UI
+
+    Route->>Route: socketInit()
+    Route->>Apollo: initialize ApolloProvider
+    Apollo->>Hook: mount table page
+    Hook->>Hook: useQuery(QUERY)
+    Hook->>UP: usePolling(query, intervalMs)
+    UP->>QM: register query
+    UP->>Hook: query.startPolling(interval)
+    loop Every 2–3 seconds
+        Hook->>GQL: GraphQL poll request
+        GQL-->>Cache: response data
+        Cache-->>UI: reactive update → rerender
+    end
+```
+
+**Inactivity Pause / Resume:**
+
+```mermaid
+sequenceDiagram
+    participant UP as usePolling
+    participant QM as queryMap (global)
+    participant IV as inactiveVar (reactive)
+    participant Browser as Browser Events
+
+    UP->>UP: start inactivity timer (default 5 min)
+    UP->>QM: register queries via startPolling()
+    Note over UP: user is active, polling runs normally
+
+    UP->>UP: no mouse/keyboard/scroll detected
+    UP->>UP: inactivity timer fires
+    UP->>QM: stopPolling() on all registered queries
+    UP->>IV: set inactiveVar = true (Inactive Mode)
+
+    Browser->>UP: user moves mouse / presses key / scrolls
+    UP->>IV: set inactiveVar = false
+    UP->>QM: startPolling() on all registered queries
+    Note over UP: polling resumes at original intervals
+```
+
 #### 3. REST Mutations (Write Path)
 
 1. User actions (add pipeline, run algorithm, stop job, etc.) dispatch Redux actions with types like `REST_REQ_POST`, `REST_REQ_DELETE`.
 2. `restMiddleware` intercepts these, calls the appropriate axios method against the API server.
 3. On success/failure, it dispatches `_SUCCESS` / `_REJECT` actions with metadata for toast messages.
 4. After any successful POST/PUT/DELETE, `forceRefetchAll()` is called — this iterates over all registered polling queries and triggers an immediate `refetch()`.
+
+```mermaid
+sequenceDiagram
+    participant User as User Action
+    participant Comp as React Component
+    participant Store as Redux Store
+    participant RM as restMiddleware
+    participant MM as messagesMiddleware
+    participant Axios as axios (client.js)
+    participant API as HKube API Server
+    participant FR as forceRefetchAll()
+    participant QM as queryMap (polling)
+    participant UI as React UI
+
+    User->>Comp: click (e.g. stop job)
+    Comp->>Store: dispatch({ type: REST_REQ_DELETE, ... })
+    Store->>RM: intercept REST_REQ_DELETE
+    RM->>Axios: axios.delete(endpoint)
+    Axios->>API: DELETE /api/v1/...
+    alt Success
+        API-->>Axios: 200 OK
+        Axios-->>RM: response
+        RM->>Store: dispatch(ACTION_SUCCESS)
+        Store->>MM: intercept _SUCCESS → show toast
+        RM->>FR: forceRefetchAll()
+        FR->>QM: refetch() all registered queries
+        QM-->>UI: updated data → rerender
+    else Failure
+        API-->>Axios: error
+        Axios-->>RM: error
+        RM->>Store: dispatch(ACTION_REJECT)
+        Store->>MM: intercept _REJECT → show error toast
+    end
+```
 
 #### 4. Redux State (Legacy + Config)
 
@@ -177,6 +284,31 @@ Reducers still listen for `SOCKET_GET_DATA` (originally from WebSocket pushes). 
 - **Max 3 concurrent toast messages** (`message.config({ maxCount: 3 })`). More than 3 causes visual clutter.
 - **Keycloak auth gates destructive actions.** When `keycloakEnable` is true, the Keycloak token is injected in every request and specific UI elements (e.g., audit trail columns) are conditionally shown. Auth bypass must never be introduced.
 - **401 responses trigger a single automatic token refresh.** The axios interceptor retries once with a refreshed token. If refresh fails, the user is logged out. Do not add retry loops.
+
+```mermaid
+sequenceDiagram
+    participant Comp as React Component
+    participant Axios as axios (client.js)
+    participant API as HKube API Server
+    participant KC as Keycloak
+    participant Auth as Auth State
+
+    Comp->>Axios: API request (with token)
+    Axios->>API: request + Authorization header
+    API-->>Axios: 401 Unauthorized
+
+    Axios->>Axios: interceptor catches 401
+    Axios->>KC: refreshToken()
+    alt Refresh succeeds
+        KC-->>Axios: new access token
+        Axios->>API: retry original request (new token)
+        API-->>Axios: 200 OK
+        Axios-->>Comp: response data
+    else Refresh fails
+        KC-->>Axios: refresh error
+        Axios->>Auth: logout user
+    end
+```
 
 ### Things That Must NEVER Be Violated
 
