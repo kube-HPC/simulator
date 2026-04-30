@@ -102,6 +102,7 @@ const HyperParamsNode = ({ id }) => {
     <ctx.Provider value={contextValue}>
       <Field name={['objectivePipeline']} title="Objective Pipeline">
         <AutoComplete
+          data-testid={`add-pipeline-nodes-${id}-hyperparams-objective-pipeline-autocomplete`}
           disabled={pipelinesCollection?.length === 0}
           options={pipelinesCollection}
           showSearch={{
@@ -113,13 +114,17 @@ const HyperParamsNode = ({ id }) => {
 
       <Field overrides={{ name: null }} title="Sampler Grid" skipValidation>
         <Switch
+          data-testid={`add-pipeline-nodes-${id}-hyperparams-sampler-grid-switch`}
           checked={isGridSampler}
           onChange={value => onChangeGridSampler(value)}
         />
       </Field>
 
       <Field name={['numberOfTrials']} title="Number Of Trials" skipValidation>
-        <InputNumber disabled={isGridSampler} />
+        <InputNumber
+          disabled={isGridSampler}
+          data-testid={`add-pipeline-nodes-${id}-hyperparams-number-of-trials-input`}
+        />
       </Field>
 
       <Divider orientation="left">
@@ -140,7 +145,11 @@ const HyperParamsNode = ({ id }) => {
                         label="Name"
                         key={`name_${key}`}
                         initialValue="">
-                        <Input placeholder="Name" style={{ width: '200px' }} />
+                        <Input
+                          placeholder="Name"
+                          style={{ width: '200px' }}
+                          data-testid={`add-pipeline-nodes-${id}-hyperparams-name-${name}`}
+                        />
                       </Form.Item>
                     </Col>
 
@@ -163,6 +172,7 @@ const HyperParamsNode = ({ id }) => {
                         key={`suggest_${key}`}
                         initialValue="uniform">
                         <Select
+                          data-testid={`add-pipeline-nodes-${id}-hyperparams-suggest-${name}`}
                           style={{ width: '185px' }}
                           onChange={value =>
                             SwitchBySuggest(fields, value, name)
@@ -207,7 +217,10 @@ const HyperParamsNode = ({ id }) => {
                                 label="Low"
                                 key={`low_${key}`}
                                 initialValue={-10}>
-                                <InputNumber placeholder="low" />
+                                <InputNumber
+                                  placeholder="low"
+                                  data-testid={`add-pipeline-nodes-${id}-hyperparams-low-${name}`}
+                                />
                               </Form.Item>
                               <Form.Item
                                 {...restField}
@@ -218,7 +231,10 @@ const HyperParamsNode = ({ id }) => {
                                 label="High"
                                 key={`high_${key}`}
                                 initialValue={10}>
-                                <InputNumber placeholder="high" />
+                                <InputNumber
+                                  placeholder="high"
+                                  data-testid={`add-pipeline-nodes-${id}-hyperparams-high-${name}`}
+                                />
                               </Form.Item>
                             </FlexDiv>
                           );
@@ -231,6 +247,7 @@ const HyperParamsNode = ({ id }) => {
               ))}
               <Form.Item>
                 <Button
+                  data-testid={`add-pipeline-nodes-${id}-hyperparams-add-button`}
                   type="dashed"
                   onClick={() => add()}
                   block
@@ -245,6 +262,7 @@ const HyperParamsNode = ({ id }) => {
         <>
           <Form.Item name={['nodes', id, 'spec', 'sampler', 'search_space']}>
             <ControllerKeyValue
+              testIdPrefix={`add-pipeline-nodes-${id}-hyperparams-search-space`}
               onChange={onChangeGridSamplerSearchSpace}
               isValueArray
               placeholderKey="Param Name"
@@ -258,7 +276,10 @@ const HyperParamsNode = ({ id }) => {
             name={['sampler', 'name']}
             initialValue="Grid"
             skipValidation>
-            <Input type="hidden" />
+            <Input
+              type="hidden"
+              data-testid={`add-pipeline-nodes-${id}-hyperparams-sampler-name-hidden-input`}
+            />
           </Field>
         </>
       )}

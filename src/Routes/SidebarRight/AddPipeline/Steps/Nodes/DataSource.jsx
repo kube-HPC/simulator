@@ -72,6 +72,7 @@ const DataSourceNode = ({ id }) => {
     <ctx.Provider value={contextValue}>
       <Field name={['name']} title="DataSource Name">
         <Select
+          data-testid={`add-pipeline-nodes-${id}-datasource-name-select`}
           disabled={collection && collection.length === 0}
           options={collection?.map(({ name }) => ({
             value: name,
@@ -80,7 +81,10 @@ const DataSourceNode = ({ id }) => {
         />
       </Field>
 
-      <RadioGroup value={mode} onChange={handleChangeMode}>
+      <RadioGroup
+        data-testid={`add-pipeline-nodes-${id}-datasource-mode-radio-group`}
+        value={mode}
+        onChange={handleChangeMode}>
         <Radio.Button value={MODES.LATEST}>{MODES.LATEST}</Radio.Button>
         <Radio.Button value={MODES.VERSION} disabled={disableVersions}>
           {MODES.VERSION}
@@ -93,6 +97,7 @@ const DataSourceNode = ({ id }) => {
       {mode === MODES.SNAPSHOT ? (
         <Field name={['snapshot', 'name']} title="Snapshot Name">
           <Select
+            data-testid={`add-pipeline-nodes-${id}-datasource-snapshot-select`}
             disabled={disableSnapshot}
             allowClear
             options={snapshots?.map(entry => ({
@@ -111,6 +116,7 @@ const DataSourceNode = ({ id }) => {
       ) : mode === MODES.VERSION ? (
         <Field name={['dataSource', 'id']} title="Version" skipValidation>
           <Select
+            data-testid={`add-pipeline-nodes-${id}-datasource-version-select`}
             disabled={disableVersions}
             allowClear
             options={versionsCollection?.versions?.map(entry => ({

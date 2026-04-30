@@ -275,11 +275,16 @@ const Nodes = ({ style }) => {
           }}>
           <NodeBrowserContainer>
             <NodeSelectRadioGroup
+              data-testid="add-pipeline-nodes-list-radio-group"
               ref={nodeSelectRadio}
               value={activeNodeId}
               buttonStyle="outline"
               onChange={selectActiveNode}>
-              <Input placeholder="Search Node" onKeyUp={SearchNode} />
+              <Input
+                data-testid="add-pipeline-nodes-search-input"
+                placeholder="Search Node"
+                onKeyUp={SearchNode}
+              />
               <PanelNodesList ref={scrollRef}>
                 {ids.map(id => {
                   const kindName = getFieldValue(['nodes', id, 'kind']);
@@ -308,6 +313,7 @@ const Nodes = ({ style }) => {
               </PanelNodesList>
               {!isRunPipeline && (
                 <AddNodeButton
+                  data-testid="add-pipeline-nodes-add-button"
                   icon={<PlusOutlined />}
                   type="dashed"
                   onClick={handleAddNode}>
@@ -332,6 +338,7 @@ const Nodes = ({ style }) => {
                     </TitleNode>
                     {!isRunPipeline && ids.length > 1 ? (
                       <Button
+                        data-testid={`add-pipeline-node-delete-${id}`}
                         icon={<CloseCircleOutlined />}
                         variant="outlined"
                         onClick={() => handleDelete(id)}
@@ -350,6 +357,7 @@ const Nodes = ({ style }) => {
                         : 'algorithm'
                     }>
                     <Radio.Group
+                      data-testid={`add-pipeline-node-kind-${id}`}
                       buttonStyle="solid"
                       style={{ display: 'flex', alignItems: 'center' }}>
                       <Radio.Button value="algorithm">Algorithm</Radio.Button>
@@ -377,6 +385,7 @@ const Nodes = ({ style }) => {
                   {isStreamingPipeline && (
                     <Field title="Kind">
                       <Radio.Group
+                        data-testid={`add-pipeline-node-state-type-${id}`}
                         defaultValue={() => getDefaultValueStateType(id)}
                         buttonStyle="solid"
                         onChange={e => handleKindChange(e, id)}>
@@ -393,7 +402,9 @@ const Nodes = ({ style }) => {
                       name={['nodes', id, 'stateType']}
                       title="state Type"
                       required>
-                      <Radio.Group buttonStyle="solid">
+                      <Radio.Group
+                        buttonStyle="solid"
+                        data-testid={`add-pipeline-node-hidden-state-type-${id}`}>
                         <Radio.Button value="stateless">stateless</Radio.Button>
                         <Radio.Button value="stateful">stateful</Radio.Button>
                       </Radio.Group>
@@ -410,7 +421,10 @@ const Nodes = ({ style }) => {
                           'Node name has to be shorter than 32 characters',
                       },
                     ]}>
-                    <Input placeholder="Node name" />
+                    <Input
+                      placeholder="Node name"
+                      data-testid={`add-pipeline-node-name-${id}`}
+                    />
                   </Field>
                   <Node
                     id={id}
