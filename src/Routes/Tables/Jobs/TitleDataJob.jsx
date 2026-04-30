@@ -10,6 +10,7 @@ import NodeStats from './NodeStats';
 import JobPriority from './JobPriority';
 import JobStatus from './JobStatus';
 import JobTime from './JobTime';
+import JobTags from './JobTags';
 import JobTypes from './JobTypes';
 
 const TextLink = styled(Typography.Text)`
@@ -103,6 +104,12 @@ const TitleDataJob = ({ job = {} }) => (
         ''}
     </Item>
     <Item> {(job?.pipeline?.types && Types(job?.pipeline?.types)) || ''}</Item>
+    <Item>
+      {job?.pipeline?.tags && job?.pipeline?.tags.length > 0 && (
+        <JobTags tags={job?.pipeline?.tags} />
+      )}
+    </Item>
+
     <Item>
       {(job?.pipeline?.priority && Priority(job?.pipeline?.priority)) || ''}
     </Item>
