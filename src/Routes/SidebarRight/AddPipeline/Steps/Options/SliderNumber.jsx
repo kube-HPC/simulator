@@ -12,7 +12,16 @@ const Container = styled.div`
 `;
 
 const SliderNumber = forwardRef(
-  ({ onChange = () => {}, value: initial = 0, min = 0, name }, ref) => {
+  (
+    {
+      onChange = () => {},
+      value: initial = 0,
+      min = 0,
+      name,
+      testId = undefined,
+    },
+    ref
+  ) => {
     const [value, setValue] = useState(initial);
 
     useEffect(() => {
@@ -26,11 +35,14 @@ const SliderNumber = forwardRef(
           name={name}
           ref={ref}
           style={{ width: '90%' }}>
-          <Slider min={min} />
+          <Slider
+            min={min}
+            data-testid={testId ? `${testId}-slider` : undefined}
+          />
         </Form.Item>
 
         <Form.Item onChange={setValue} name={name}>
-          <InputNumber />
+          <InputNumber data-testid={testId ? `${testId}-input` : undefined} />
         </Form.Item>
       </Container>
     );
@@ -43,6 +55,7 @@ SliderNumber.propTypes = {
   onChange: PropTypes.func,
   value: PropTypes.number,
   min: PropTypes.number,
+  testId: PropTypes.string,
 };
 
 export default SliderNumber;

@@ -16,6 +16,7 @@ const InputField = ({
   tooltip = null,
   idx = undefined,
   onRemove = null,
+  testIdPrefix = undefined,
   ...antFields
 }) => {
   const inputRef = useRef();
@@ -54,6 +55,11 @@ const InputField = ({
   return (
     <RawInputField
       id={antFields.id}
+      dataTestId={
+        testIdPrefix && idx !== undefined
+          ? `${testIdPrefix}-value-${idx}`
+          : undefined
+      }
       tooltip={tooltip}
       hasRemove={hasRemove}
       isValid={isValid}
@@ -89,6 +95,7 @@ InputField.propTypes = {
   id: PropTypes.node,
   onChange: PropTypes.func,
   addonBefore: PropTypes.arrayOf(PropTypes.object),
+  testIdPrefix: PropTypes.string,
 };
 
 export default InputField;

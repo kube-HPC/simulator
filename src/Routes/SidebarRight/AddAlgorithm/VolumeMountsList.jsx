@@ -19,7 +19,10 @@ const ContainerFormItem = styled(Form.Item)`
   }
 `;
 
-const VolumeMountsList = ({ nameList }) => (
+const VolumeMountsList = ({
+  nameList,
+  testIdPrefix = 'add-algorithm-volume-mount',
+}) => (
   <Form.List name={nameList}>
     {(
       fieldsVolumeMounts,
@@ -29,6 +32,7 @@ const VolumeMountsList = ({ nameList }) => (
         {fieldsVolumeMounts.map(({ key, name, ...rest }) => (
           <React.Fragment key={key}>
             <MinusCircleOutlined
+              data-testid={`${testIdPrefix}-remove-${name}`}
               title="delete volumes"
               onClick={() => removeVolumeMounts(name)}
               style={{
@@ -45,14 +49,14 @@ const VolumeMountsList = ({ nameList }) => (
                   label="Volume Mount Name"
                   {...rest}
                   name={[name, 'name']}>
-                  <Input />
+                  <Input data-testid={`${testIdPrefix}-name-${name}`} />
                 </ContainerFormItem>
 
                 <ContainerFormItem
                   label="Mount Path"
                   {...rest}
                   name={[name, 'mountPath']}>
-                  <Input />
+                  <Input data-testid={`${testIdPrefix}-mount-path-${name}`} />
                 </ContainerFormItem>
               </div>
             </FlexItem>
@@ -61,6 +65,7 @@ const VolumeMountsList = ({ nameList }) => (
         ))}
         <Form.Item>
           <Button
+            data-testid={`${testIdPrefix}-add-button`}
             type="dashed"
             onClick={() => addVolumeMounts()}
             block
@@ -82,4 +87,5 @@ VolumeMountsList.propTypes = {
       PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     ),
   ]),
+  testIdPrefix: PropTypes.string,
 };

@@ -56,7 +56,10 @@ const Options = ({ style }) => {
         label="Batch Tolerance"
         labelCol={{}}
         wrapperCol={{ style: { whiteSpace: 'nowrap' } }}>
-        <SliderNumber name={['options', 'batchTolerance']} />
+        <SliderNumber
+          name={['options', 'batchTolerance']}
+          testId="add-pipeline-options-batch-tolerance"
+        />
       </Form.Item>
 
       <FlexBox align="baseline">
@@ -68,6 +71,7 @@ const Options = ({ style }) => {
             <SliderNumber
               min={1}
               name={['options', 'concurrentPipelines', 'amount']}
+              testId="add-pipeline-options-concurrent-amount"
             />
           </Form.Item>
         </Grow>
@@ -77,24 +81,25 @@ const Options = ({ style }) => {
             <Form.Item
               name={['options', 'concurrentPipelines', 'rejectOnFailure']}
               valuePropName="checked">
-              <Checkbox />
+              <Checkbox data-testid="add-pipeline-options-reject-on-failure-checkbox" />
             </Form.Item>
           </FlexBoxCheckBoxStart>
         </FlexBox.Auto>
       </FlexBox>
 
       <Form.Item label="Pipeline TTL" name={['options', 'ttl']}>
-        <InputNumber />
+        <InputNumber data-testid="add-pipeline-options-ttl-input" />
       </Form.Item>
 
       <Form.Item label="Active TTL" name={['options', 'activeTtl']}>
-        <InputNumber />
+        <InputNumber data-testid="add-pipeline-options-active-ttl-input" />
       </Form.Item>
 
       <Form.Item
         label="Verbosity Level"
         name={['options', 'progressVerbosityLevel']}>
         <Select
+          data-testid="add-pipeline-options-verbosity-select"
           style={smallSelectStyle}
           options={verbosityLevels.map(level => ({
             value: level,
@@ -103,7 +108,11 @@ const Options = ({ style }) => {
         />
       </Form.Item>
       <Form.Item label="Priority" name="priority">
-        <InputNumber max={5} min={1} />
+        <InputNumber
+          max={5}
+          min={1}
+          data-testid="add-pipeline-options-priority-input"
+        />
       </Form.Item>
     </div>
   );

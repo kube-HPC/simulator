@@ -62,6 +62,7 @@ const StreamingFlowKeyValue = ({
   valuePlaceholder = '',
   titleKeyboard = '',
   placeholderKey = 'Flow key',
+  testIdPrefix = 'add-pipeline-streaming-flows',
 }) => {
   const { initialState, form, valuesState } = useWizardContext();
   const [modal, contextHolder] = Modal.useModal();
@@ -150,10 +151,14 @@ const StreamingFlowKeyValue = ({
   const genExtraCollapse = (name, fieldKey, remove) => (
     <>
       <Tooltip title="Preview graph flow">
-        <IconNodeIndexOutlined onClick={e => openGraphModal(e, fieldKey)} />
+        <IconNodeIndexOutlined
+          data-testid={`${testIdPrefix}-preview-graph-${name}`}
+          onClick={e => openGraphModal(e, fieldKey)}
+        />
       </Tooltip>
       <Tooltip title="Delete flow">
         <IconDelete
+          data-testid={`${testIdPrefix}-remove-${name}`}
           onClick={e => {
             e.stopPropagation();
             remove(name);
@@ -195,7 +200,10 @@ const StreamingFlowKeyValue = ({
                       },
                     ]}
                     onChange={() => handleChange()}>
-                    <Input placeholder={placeholderKey} />
+                    <Input
+                      placeholder={placeholderKey}
+                      data-testid={`${testIdPrefix}-key-${name}`}
+                    />
                   </Form.Item>
 
                   <SignBoard
@@ -234,6 +242,7 @@ const StreamingFlowKeyValue = ({
 
             <Form.Item>
               <Button
+                data-testid={`${testIdPrefix}-add-button`}
                 type="dashed"
                 onClick={() => {
                   const newKey = `new flow item ${countNewItemFlow.current++}`;
@@ -264,6 +273,7 @@ StreamingFlowKeyValue.propTypes = {
   titleKeyboard: PropTypes.string,
   placeholderKey: PropTypes.string,
   nameRef: PropTypes.arrayOf(PropTypes.string).isRequired,
+  testIdPrefix: PropTypes.string,
 };
 
 export default React.memo(StreamingFlowKeyValue);

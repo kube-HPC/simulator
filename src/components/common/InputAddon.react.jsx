@@ -24,6 +24,7 @@ const InputAddon = forwardRef(
       placeholder = '',
       selectWidth = null,
       value = '',
+      ...rest
     },
     ref
   ) => {
@@ -104,6 +105,7 @@ const InputAddon = forwardRef(
         addonBefore={addonBefore}
         addonAfter={addonAfter}
         placeholder={placeholder}
+        {...rest}
       />
     );
   }
