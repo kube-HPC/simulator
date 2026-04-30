@@ -31,7 +31,12 @@ const marginTop = {
 const inboxStyle = { fontSize: 50, color: COLOR.blueLight };
 const inboxDisplayedStyle = { fontSize: 50, color: COLOR.grey };
 
-const AlgorithmUploadFile = ({ fileList, setFileList, isEdit }) => {
+const AlgorithmUploadFile = ({
+  fileList,
+  setFileList,
+  isEdit,
+  testId = 'add-algorithm-upload',
+}) => {
   const [statsUpload, setStatsUpload] = useState(false);
 
   const setDraggerProps = () => ({
@@ -72,7 +77,9 @@ const AlgorithmUploadFile = ({ fileList, setFileList, isEdit }) => {
   });
 
   return (
-    <Upload.Dragger {...setDraggerProps({ fileList, setFileList })}>
+    <Upload.Dragger
+      data-testid={`${testId}-dragger`}
+      {...setDraggerProps({ fileList, setFileList })}>
       <InboxOutlined style={isEdit ? inboxDisplayedStyle : inboxStyle} />
       <br />
       <Text>Click or drag Algorithm Source code to this area to upload</Text>
@@ -98,4 +105,5 @@ AlgorithmUploadFile.propTypes = {
 
   fileList: PropTypes.arrayOf(PropTypes.object).isRequired,
   setFileList: PropTypes.func.isRequired,
+  testId: PropTypes.string,
 };

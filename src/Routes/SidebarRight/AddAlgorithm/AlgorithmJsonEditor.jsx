@@ -115,6 +115,7 @@ const AlgorithmJsonEditor = ({
       {isCodeProp && (
         <Card>
           <AlgorithmUploadFile
+            testId="add-algorithm-json-code-upload"
             fileList={fileList}
             setFileList={setFileList}
             isEdit={isEdit}
@@ -133,6 +134,7 @@ const AlgorithmJsonEditor = ({
         <RightPanel>
           {isEdit && (
             <Checkbox
+              data-testid="add-algorithm-json-stop-running-checkbox"
               ref={refCheckForceStopAlgorithms}
               checked={isCheckForceStopAlgorithms}
               onClick={e => setIsCheckForceStopAlgorithms(e.target.checked)}>

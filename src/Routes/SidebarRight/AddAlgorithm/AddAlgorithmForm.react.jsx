@@ -388,7 +388,11 @@ const AddAlgorithmForm = ({
           rules={[
             { required: true, message: MAIN.NAME.message, pattern: ALGO_REGEX },
           ]}>
-          <Input disabled={isEdit} placeholder={MAIN.NAME.placeholder} />
+          <Input
+            disabled={isEdit}
+            placeholder={MAIN.NAME.placeholder}
+            data-testid="add-algorithm-main-name-input"
+          />
         </Form.Item>
         <FlexBox align="start">
           <FlexBox.Item span={18}>
@@ -398,6 +402,7 @@ const AddAlgorithmForm = ({
               <Input
                 placeholder={MAIN.DESCRIPTION.placeholder}
                 style={{ marginLeft: '60px' }}
+                data-testid="add-algorithm-main-description-input"
               />
             </Form.Item>
           </FlexBox.Item>
@@ -411,6 +416,7 @@ const AddAlgorithmForm = ({
         </FlexBox>
         <Form.Item label="Source">
           <Radio.Group
+            data-testid="add-algorithm-source-type-radio-group"
             defaultValue={buildType}
             buttonStyle="solid"
             onChange={onBuildTypeChange}>
@@ -422,7 +428,10 @@ const AddAlgorithmForm = ({
           <FlexBox.Item span={12}>
             <Card title="Volumes" variant="default">
               <Form.Item style={{ width: '650px' }}>
-                <VolumeList nameList={['main', 'volumes']} />
+                <VolumeList
+                  nameList={['main', 'volumes']}
+                  testIdPrefix="add-algorithm-main-volumes"
+                />
               </Form.Item>
             </Card>
           </FlexBox.Item>
@@ -432,17 +441,20 @@ const AddAlgorithmForm = ({
               variant="default"
               style={{ marginTop: '20px' }}>
               <Form.Item>
-                <VolumeMountsList nameList={['main', 'volumeMounts']} />
+                <VolumeMountsList
+                  nameList={['main', 'volumeMounts']}
+                  testIdPrefix="add-algorithm-main-volume-mounts"
+                />
               </Form.Item>
             </Card>
           </FlexBox.Item>
         </FlexItemVolumes>
         <Collapsible title={MAIN.DIVIDER.RESOURCES}>
           <Form.Item name={splitByDot(MAIN.CPU.field)} label={MAIN.CPU.label}>
-            <InputNumber min={0.1} />
+            <InputNumber min={0.1} data-testid="add-algorithm-main-cpu-input" />
           </Form.Item>
           <Form.Item name={splitByDot(MAIN.GPU.field)} label={MAIN.GPU.label}>
-            <InputNumber min={0} />
+            <InputNumber min={0} data-testid="add-algorithm-main-gpu-input" />
           </Form.Item>
 
           <Form.Item
@@ -450,6 +462,7 @@ const AddAlgorithmForm = ({
             label={MAIN.MEMORY.label}
             labelAlign="left">
             <MemoryField
+              testId="add-algorithm-main-memory"
               options={MAIN.MEMORY.types.map(valueItem => ({
                 value: valueItem,
                 label: valueItem,
@@ -468,6 +481,7 @@ const AddAlgorithmForm = ({
               label={MAIN.WORKER_ENV.label}
               fieldName={splitByDot(MAIN.WORKER_ENV.field)}
               titleButtoAdd="Add"
+              testIdPrefix="add-algorithm-main-worker-env"
             />
           </Form.Item>
 
@@ -477,6 +491,7 @@ const AddAlgorithmForm = ({
               label={MAIN.ALGORITEM_ENV.label}
               fieldName={splitByDot(MAIN.ALGORITEM_ENV.field)}
               titleButtoAdd="Add"
+              testIdPrefix="add-algorithm-main-algorithm-env"
             />
           </Form.Item>
         </Collapsible>
@@ -489,7 +504,10 @@ const AddAlgorithmForm = ({
           }
           onChange={val => setIsErrorSideCar(val)}
           expanded={isErrorSideCar}>
-          <SideCarForm nameList={splitByDot(MAIN.SIDECAR.field)} />
+          <SideCarForm
+            nameList={splitByDot(MAIN.SIDECAR.field)}
+            testIdPrefix="add-algorithm-main-sidecar"
+          />
         </Collapsible>
         <Collapsible
           title={MAIN.DIVIDER.ADVANCED}
@@ -501,6 +519,7 @@ const AddAlgorithmForm = ({
             labelAlign="left">
             <MemoryField
               min={0}
+              testId="add-algorithm-main-reserve-memory"
               tooltipTitle={MAIN.RESERVE_MEMORY.tooltip}
               options={MAIN.RESERVE_MEMORY.types.map(valueItem => ({
                 value: valueItem,
@@ -511,13 +530,17 @@ const AddAlgorithmForm = ({
           <Form.Item
             name={splitByDot(MAIN.WORKERS.field)}
             label={MAIN.WORKERS.label}>
-            <InputNumber min={0} />
+            <InputNumber
+              min={0}
+              data-testid="add-algorithm-main-workers-input"
+            />
           </Form.Item>
           <Form.Item
             name={splitByDot(MAIN.OPTIONS.field)}
             label={MAIN.OPTIONS.label}
             initialValue={mainAdvancedOptions}>
             <Select
+              data-testid="add-algorithm-main-options-select"
               mode="tags"
               placeholder={MAIN.OPTIONS.placeholder}
               options={insertAlgorithmOptions(MAIN.OPTIONS.types)}
@@ -531,6 +554,7 @@ const AddAlgorithmForm = ({
         <RightPanel>
           {isEdit && (
             <Checkbox
+              data-testid="add-algorithm-stop-running-checkbox"
               ref={refCheckForceStopAlgorithms}
               checked={isCheckForceStopAlgorithms}
               onClick={e => setIsCheckForceStopAlgorithms(e.target.checked)}>

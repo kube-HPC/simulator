@@ -15,6 +15,7 @@ const MemoryField = ({
   tooltipTitle = undefined,
   min = 1,
   iconType = null,
+  testId = undefined,
 }) => {
   const [numberInitial, unitInitial] = parseUnit(value);
   const [numberMem, setNumberMem] = useState(numberInitial);
@@ -52,8 +53,14 @@ const MemoryField = ({
     <Wrapper {...wrapperProps}>
       <Space.Compact>
         {iconType && <Icon type={iconType} />}
-        <InputNumber min={min} value={numberMem} onChange={onNumber} />
+        <InputNumber
+          min={min}
+          value={numberMem}
+          onChange={onNumber}
+          data-testid={testId ? `${testId}-number` : undefined}
+        />
         <Select
+          data-testid={testId ? `${testId}-unit` : undefined}
           style={selectStyle}
           value={unit}
           onChange={onSelect}
@@ -75,6 +82,7 @@ MemoryField.propTypes = {
   options: PropTypes.arrayOf(PropTypes.shape({})),
   onChange: PropTypes.func,
   value: PropTypes.string,
+  testId: PropTypes.string,
   /* eslint-enable */
 };
 
