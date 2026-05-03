@@ -87,8 +87,9 @@ const NodeLogs = ({
   sideCarsDetails,
 }) => {
   const [openPopupOverListTasks, setOpenPopupOverListTasks] = useState(false);
-  const { kibanaUrl, structuredPrefix } = useSelector(selectors.connection);
-
+  const { kibanaUrl, structuredPrefix, kibanaIndex } = useSelector(
+    selectors.connection
+  );
   const [logMode, setLogMode] = useState(logModes.ALGORITHM);
   const [containerNames, setContainerNames] = useState([]);
   const [searchWord, setSearchWord] = useState(null);
@@ -169,7 +170,7 @@ const NodeLogs = ({
   }, [logs.length, node]);
 
   const linkKibana = useMemo(() => {
-    if (!kibanaUrl || !taskId) return '';
+    if (!kibanaUrl || !taskId || !kibanaIndex) return '';
 
     const startTime =
       node.batch?.length > 0
@@ -186,7 +187,7 @@ const NodeLogs = ({
       metaPath = `${structuredPrefix}.${metaPath}`;
     }
 
-    return `${kibanaUrl}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',key:${metaPath},negate:!f,params:(query:'${cTaskId}'),type:phrase),query:(match:(${metaPath}:(query:'${cTaskId}',type:phrase))))),index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',interval:auto,query:(language:lucene${
+    return `${kibanaUrl}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'${kibanaIndex}',key:${metaPath},negate:!f,params:(query:'${cTaskId}'),type:phrase),query:(match:(${metaPath}:(query:'${cTaskId}',type:phrase))))),index:'${kibanaIndex}',interval:auto,query:(language:lucene${
       word ? `,query:${word}` : ''
     }),sort:!(!('@timestamp',desc)))`;
   }, [
@@ -196,6 +197,7 @@ const NodeLogs = ({
     node.startTime,
     currentTask,
     searchWord,
+    kibanaIndex,
     structuredPrefix,
   ]);
 

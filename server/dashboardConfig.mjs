@@ -5,6 +5,7 @@ const {
   board,
   hkubeSystemVersion,
   kibanaUrl,
+  kibanaIndex,
   structuredPrefix,
   grafanaUrl,
   grafanaDashboardUrl,
@@ -18,6 +19,7 @@ const {
 const buildDashboardConfig = () => ({
   hkubeSystemVersion,
   kibanaUrl,
+  kibanaIndex,
   structuredPrefix,
   grafanaUrl,
   grafanaDashboardUrl,
