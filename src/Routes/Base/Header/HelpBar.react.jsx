@@ -22,14 +22,18 @@ const Container = styled(FlexBox.Auto)`
 const WapperServicesStatus = styled.div``;
 
 const HelpBar = () => {
-  const { keycloakEnable } = useSelector(selectors.connection);
-  const { data } = useHealthMonitoring();
+  const { keycloakEnable, healthMonitoringEnabled } = useSelector(
+    selectors.connection
+  );
+  const { data } = useHealthMonitoring(healthMonitoringEnabled);
 
   return (
     <Container className={USER_GUIDE.HEADER.SOCIALS}>
-      <WapperServicesStatus>
-        <ServicesStatus services={data} />
-      </WapperServicesStatus>
+      {healthMonitoringEnabled && (
+        <WapperServicesStatus>
+          <ServicesStatus services={data} />
+        </WapperServicesStatus>
+      )}
       <InactiveModeTag />
 
       <ExperimentPicker />
