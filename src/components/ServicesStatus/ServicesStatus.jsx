@@ -108,7 +108,9 @@ const ServicesStatus = ({
           if (event.key === 'Enter' || event.key === ' ') handleToggle();
         }}>
         <StatusLamp isOk={overallHealthStatus} />
-        <Typography.Text strong>{label}</Typography.Text>
+        <Typography.Text strong style={{ whiteSpace: 'nowrap' }}>
+          {label}
+        </Typography.Text>
       </HeaderRow>
 
       <ServicesList $isOpen={isOpen}>

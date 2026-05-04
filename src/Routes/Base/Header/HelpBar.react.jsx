@@ -20,10 +20,12 @@ const Container = styled(FlexBox.Auto)`
 `;
 
 const WapperServicesStatus = styled.div`
-  overflow-x: hidden;
-  overflow-y: hidden;
-  width: max-content;
+  overflow: hidden;
+  display: flex;
+  justify-content: flex-end;
+  width: fit-content;
   max-width: 50vw;
+  min-width: 0;
   height: 36px;
 `;
 
