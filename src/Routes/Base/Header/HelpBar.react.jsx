@@ -19,7 +19,13 @@ const Container = styled(FlexBox.Auto)`
   position: relative;
 `;
 
-const WapperServicesStatus = styled.div``;
+const WapperServicesStatus = styled.div`
+  overflow-x: hidden;
+  overflow-y: hidden;
+  width: max-content;
+  max-width: 50vw;
+  height: 36px;
+`;
 
 const HelpBar = () => {
   const { keycloakEnable, healthMonitoringEnabled } = useSelector(

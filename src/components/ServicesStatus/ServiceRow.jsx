@@ -35,7 +35,9 @@ const ServiceRow = ({ service }) => {
   const content = (
     <Row>
       <StatusLamp isOk={isOk} />
-      <Typography.Text>{service.serviceName}</Typography.Text>
+      <Typography.Text style={{ whiteSpace: 'nowrap' }}>
+        {service.serviceName}
+      </Typography.Text>
     </Row>
   );
 

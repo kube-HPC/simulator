@@ -18,6 +18,22 @@ const servicesStatusMock = {
           status: true,
           serviceName: 'datasources-service',
         },
+        {
+          status: true,
+          serviceName: 'datasources-service',
+        },
+        {
+          status: true,
+          serviceName: 'datasources-service',
+        },
+        {
+          status: null,
+          serviceName: 'datasources-service',
+        },
+        {
+          status: true,
+          serviceName: 'datasources-service',
+        },
       ],
       overallHealthStatus: true,
     },

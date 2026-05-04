@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 import StatusLamp from './StatusLamp';
 import ServiceRow from './ServiceRow';
+
 import servicesStatusMock from './mockData2';
 
 const isStatusOk = status => status === true || status === 'OK';
