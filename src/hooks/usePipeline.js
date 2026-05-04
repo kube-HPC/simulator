@@ -3,7 +3,7 @@ import { events } from 'utils';
 import client from 'client';
 import successMsg from 'config/schema/success-messages.schema';
 import { useNavigate } from 'react-router-dom';
-import { pipelineJustStartedVar } from 'cache';
+
 import useActions from './useActions';
 
 const usePipeline = () => {
@@ -31,9 +31,15 @@ const usePipeline = () => {
       const objPipeline = JSON.parse(JSON.stringify(objVal));
       delete objPipeline.nodes;
 
-      await client.post(`exec/stored`, objPipeline);
-      pipelineJustStartedVar(true);
-      navigate('/pipelines');
+      await client.post(`exec/stored`, objPipeline).then(res => {
+        events.emit(
+          'global_alert_msg',
+          successMsg(res.data).PIPELINE_START,
+          'success'
+        );
+
+        navigate('/pipelines');
+      });
     } catch (res) {
       const errorMessage =
         res.response?.data?.error?.message || res.message || 'Unknown error';
