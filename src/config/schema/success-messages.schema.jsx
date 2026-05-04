@@ -1,4 +1,5 @@
 import Text from 'antd/lib/typography/Text';
+import { Link } from 'react-router-dom';
 import React from 'react';
 
 const successMsg = payload => ({
@@ -7,7 +8,7 @@ const successMsg = payload => ({
   ALGORITHM_RUN: (
     <>
       Algorithm <Text code>{payload.body && payload.body.name}</Text> started,
-      check <Text strong>Jobs</Text> table.
+      check <Link to="/jobs">Jobs</Link> table.
     </>
   ),
   BUILD_RERUN: 'Build rerun started',
@@ -22,7 +23,11 @@ const successMsg = payload => ({
     </>
   ),
   PIPELINE_DELETE: 'Pipeline deleted',
-  PIPELINE_START: 'Pipeline started, check Jobs table',
+  PIPELINE_START: (
+    <>
+      Pipeline started, check <Link to="/jobs">Jobs</Link> table.
+    </>
+  ),
   PIPELINE_UPDATE: 'Pipeline updated',
   TENSORFLOW_START: 'Board started successfully',
   EXPERIMENT_ADD: (

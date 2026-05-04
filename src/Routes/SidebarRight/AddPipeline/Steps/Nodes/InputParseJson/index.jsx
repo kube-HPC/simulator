@@ -33,17 +33,18 @@ const listAddOn = [
   },
 ];
 
-const Controller = ({ node, nodeIdx, isRequired = false }) => {
+const Controller = ({
+  node,
+  nodeIdx,
+  isRequired = false,
+  testIdPrefix = 'add-pipeline-node-input',
+}) => {
   const { form, isRunPipeline, isStreamingPipeline } = useWizardContext();
   const inputValues = form.getFieldValue(['nodes', nodeIdx, 'input']);
 
   const isRequiredMsg = () =>
     isRequired && inputValues && !inputValues[0] ? (
-      <Alert
-        type="error"
-        message="You must put in at least one input."
-        banner
-      />
+      <Alert type="error" title="You must put in at least one input." banner />
     ) : (
       ''
     );
@@ -62,6 +63,8 @@ const Controller = ({ node, nodeIdx, isRequired = false }) => {
               fieldKey={[fieldKey]}
               validateTrigger={['onChange', 'onBlur']}>
               <InputField
+                testIdPrefix={testIdPrefix}
+                idx={name}
                 valueJson={node?.input ? node?.input[key] : ''}
                 addonBefore={listAddOn}
                 onRemove={
@@ -75,6 +78,7 @@ const Controller = ({ node, nodeIdx, isRequired = false }) => {
           {!isRunPipeline && (
             <Form.Item>
               <Button
+                data-testid={`${testIdPrefix}-add-button`}
                 type="dashed"
                 onClick={() => add()}
                 block
@@ -100,6 +104,7 @@ Controller.propTypes = {
   ]).isRequired,
   nodeIdx: PropTypes.node.isRequired,
   isRequired: PropTypes.bool,
+  testIdPrefix: PropTypes.string,
 };
 
 export default Controller;

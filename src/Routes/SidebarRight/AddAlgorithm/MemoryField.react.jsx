@@ -10,10 +10,12 @@ const selectStyle = { width: '90px' };
 const MemoryField = ({
   onChange,
   children,
+  options = null,
   value,
   tooltipTitle = undefined,
   min = 1,
   iconType = null,
+  testId = undefined,
 }) => {
   const [numberInitial, unitInitial] = parseUnit(value);
   const [numberMem, setNumberMem] = useState(numberInitial);
@@ -24,12 +26,17 @@ const MemoryField = ({
     setUnit(unitInitial);
   }, [numberInitial, unitInitial]);
 
+  const childOptions = React.Children.toArray(children);
+  const optionsList =
+    options || childOptions.map(option => ({ value: option?.props?.value }));
+  const firstOptionValue = optionsList?.[0]?.value;
+
   const onNumber = target => {
     setNumberMem(target);
     if (target !== null && target !== '' && !Number.isNaN(target)) {
       onChange(`${target}${unit}`);
     } else {
-      onChange(`${min}${children[0].props.value}`); // default to min K if invalid input
+      onChange(`${min}${firstOptionValue || ''}`); // default to min K if invalid input
     }
   };
 
@@ -46,9 +53,19 @@ const MemoryField = ({
     <Wrapper {...wrapperProps}>
       <Space.Compact>
         {iconType && <Icon type={iconType} />}
-        <InputNumber min={min} value={numberMem} onChange={onNumber} />
-        <Select style={selectStyle} value={unit} onChange={onSelect}>
-          {children}
+        <InputNumber
+          min={min}
+          value={numberMem}
+          onChange={onNumber}
+          data-testid={testId ? `${testId}-number` : undefined}
+        />
+        <Select
+          data-testid={testId ? `${testId}-unit` : undefined}
+          style={selectStyle}
+          value={unit}
+          onChange={onSelect}
+          options={options}>
+          {!options && children}
         </Select>
       </Space.Compact>
     </Wrapper>
@@ -62,8 +79,10 @@ MemoryField.propTypes = {
   // TODO: detail the props
   /* eslint-disable */
   children: PropTypes.node,
+  options: PropTypes.arrayOf(PropTypes.shape({})),
   onChange: PropTypes.func,
   value: PropTypes.string,
+  testId: PropTypes.string,
   /* eslint-enable */
 };
 

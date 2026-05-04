@@ -1,5 +1,6 @@
 import React, { memo, useCallback, useRef } from 'react';
 import { selectors } from 'reducers';
+import IDProvider from 'IDProvider';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
@@ -85,65 +86,75 @@ const PipelineActions = ({ pipeline, className = '' }) => {
   }, []);
 
   return (
-    <div
-      className={ACTIONS_SELECT}
-      role="none"
-      ref={container}
-      onClick={stopPropagation}
-      onDoubleClick={stopPropagation}>
-      {contextHolderModal}
-      <Space.Compact className={className} style={{ marginTop: '10px' }}>
-        <Popover
-          title={title}
-          content={popOverContent}
-          placement="left"
-          getPopupContainer={setPopupContainer}
-          mouseLeaveDelay={0.5}>
-          {/* This feature has been removed due to lack of customer use
+    <IDProvider dataTestId="buttons-actions">
+      <div
+        className={ACTIONS_SELECT}
+        role="none"
+        ref={container}
+        onClick={stopPropagation}
+        onDoubleClick={stopPropagation}>
+        {contextHolderModal}
+        <Space.Compact className={className} style={{ marginTop: '10px' }}>
+          <Popover
+            title={title}
+            content={popOverContent}
+            placement="left"
+            getPopupContainer={setPopupContainer}
+            mouseLeaveDelay={0.5}>
+            {/* This feature has been removed due to lack of customer use
              <Button className="ant-btn-icon-only">
               <Icon component={IconTensorFlow} />
              </Button> */}
-        </Popover>
+          </Popover>
 
-        <Tooltip title={isRoleDelete ? 'Run pipeline' : 'No Run Permission'}>
-          <Button
-            icon={<PlayCircleOutlined />}
-            onClick={onExecute}
-            disabled={!isRoleRunOrStop}
-          />
-        </Tooltip>
+          <Tooltip title={isRoleDelete ? 'Run pipeline' : 'No Run Permission'}>
+            <Button
+              data-testid="run"
+              icon={<PlayCircleOutlined />}
+              onClick={onExecute}
+              disabled={!isRoleRunOrStop}
+            />
+          </Tooltip>
 
-        <Tooltip title={isRoleEdit ? 'Edit pipeline' : 'No Edit Permission'}>
-          <Button
-            icon={<EditOutlined />}
-            onClick={onUpdate}
-            disabled={!isRoleEdit}
-          />
-        </Tooltip>
-        <Tooltip
-          title={isRoleDelete ? 'Delete pipeline' : 'No Delete Permission'}>
-          <Button
-            icon={<DeleteOutlined />}
-            onClick={onDelete}
-            disabled={!isRoleDelete}
-          />
-        </Tooltip>
+          <Tooltip title={isRoleEdit ? 'Edit pipeline' : 'No Edit Permission'}>
+            <Button
+              data-testid="edit"
+              icon={<EditOutlined />}
+              onClick={onUpdate}
+              disabled={!isRoleEdit}
+            />
+          </Tooltip>
+          <Tooltip
+            title={isRoleDelete ? 'Delete pipeline' : 'No Delete Permission'}>
+            <Button
+              data-testid="delete"
+              icon={<DeleteOutlined />}
+              onClick={onDelete}
+              disabled={!isRoleDelete}
+            />
+          </Tooltip>
 
-        <Tooltip
-          title={
-            isRoleDelete ? 'Stop all jobs of pipeline' : 'No stop permission'
-          }>
-          <Button
-            icon={<StopOutlined />}
-            onClick={onStop}
-            disabled={!isRoleRunOrStop}
-          />
-        </Tooltip>
-        <Tooltip title="Show overview">
-          <Button icon={<InfoCircleOutlined />} onClick={onEdit} />
-        </Tooltip>
-      </Space.Compact>
-    </div>
+          <Tooltip
+            title={
+              isRoleDelete ? 'Stop all jobs of pipeline' : 'No stop permission'
+            }>
+            <Button
+              data-testid="stop"
+              icon={<StopOutlined />}
+              onClick={onStop}
+              disabled={!isRoleRunOrStop}
+            />
+          </Tooltip>
+          <Tooltip title="Show overview">
+            <Button
+              data-testid="overview"
+              icon={<InfoCircleOutlined />}
+              onClick={onEdit}
+            />
+          </Tooltip>
+        </Space.Compact>
+      </div>
+    </IDProvider>
   );
 };
 

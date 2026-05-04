@@ -82,7 +82,11 @@ const CronInput = forwardRef(() => {
       // valuePropName="checked"
 
       noStyle>
-      <Switch onChange={switchOnChange} checked={cronIsEnabled} />
+      <Switch
+        data-testid="add-pipeline-options-triggers-cron-enabled-switch"
+        onChange={switchOnChange}
+        checked={cronIsEnabled}
+      />
     </Form.Item>
   );
   return (
@@ -93,6 +97,7 @@ const CronInput = forwardRef(() => {
           name={['triggers', 'cron', 'pattern']}
           onChange={normalize}>
           <Input
+            data-testid="add-pipeline-options-triggers-cron-pattern-input"
             addonBefore={addonBefore}
             addonAfter={addonAfter}
             suffix={<EditFilled style={iconSize} onClick={openPopupWizard} />}

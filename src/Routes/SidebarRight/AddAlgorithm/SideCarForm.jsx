@@ -22,7 +22,7 @@ const ContainerFormItemTop = styled(Form.Item)`
   }
 `;
 
-const SideCarForm = ({ nameList }) => (
+const SideCarForm = ({ nameList, testIdPrefix = 'add-algorithm-sidecar' }) => (
   <Form.List name={nameList}>
     {(fields, { add, remove }) => (
       <>
@@ -36,6 +36,7 @@ const SideCarForm = ({ nameList }) => (
                 width: '100%',
               }}>
               <MinusCircleOutlined
+                data-testid={`${testIdPrefix}-remove-${name}`}
                 style={{
                   fontSize: '20px',
                   height: '25px',
@@ -59,7 +60,7 @@ const SideCarForm = ({ nameList }) => (
                       'Allowed letters and numbers only (no spaces, _, $%&^...)',
                   },
                 ]}>
-                <Input />
+                <Input data-testid={`${testIdPrefix}-container-name-${name}`} />
               </ContainerFormItemTop>
             </FlexItem>
             <ContainerFormItemTop
@@ -67,7 +68,7 @@ const SideCarForm = ({ nameList }) => (
               {...restField}
               name={[name, 'container', 'image']}
               rules={[{ required: true, message: 'Missing container Image' }]}>
-              <Input />
+              <Input data-testid={`${testIdPrefix}-container-image-${name}`} />
             </ContainerFormItemTop>
             <Row style={{ marginTop: '16px' }}>
               <Col span={12}>
@@ -77,6 +78,7 @@ const SideCarForm = ({ nameList }) => (
                       buttonWidth="395px"
                       fieldName={[name, 'environments']}
                       titleButtoAdd="Add"
+                      testIdPrefix={`${testIdPrefix}-environment-${name}`}
                     />
                   </Form.Item>
                 </Card>
@@ -84,7 +86,10 @@ const SideCarForm = ({ nameList }) => (
               <Col span={12}>
                 <Card title="Volumes Mounts" variant="borderless">
                   <Form.Item>
-                    <VolumeMountsList nameList={[name, 'volumeMounts']} />
+                    <VolumeMountsList
+                      nameList={[name, 'volumeMounts']}
+                      testIdPrefix={`${testIdPrefix}-volume-mounts-${name}`}
+                    />
                   </Form.Item>
                 </Card>
               </Col>
@@ -96,6 +101,7 @@ const SideCarForm = ({ nameList }) => (
 
         <Form.Item>
           <Button
+            data-testid={`${testIdPrefix}-add-button`}
             type="dashed"
             onClick={() => add()}
             block
@@ -117,4 +123,5 @@ SideCarForm.propTypes = {
       PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     ),
   ]).isRequired,
+  testIdPrefix: PropTypes.string,
 };

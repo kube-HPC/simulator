@@ -14,26 +14,24 @@ const SignInputAddOn = ({
       value={state}
       style={{ width: selectWidth }}
       onChange={callback}
-      disabled={isDisabled}>
-      {options.map(option => {
+      disabled={isDisabled}
+      options={options.map(option => {
         if (
           (typeof option === 'object' || typeof option === 'function') &&
           option !== null
         ) {
-          return (
-            <Select.Option key={option.value} value={option.value}>
-              {option.label}
-            </Select.Option>
-          );
+          return {
+            value: option.value,
+            label: option.label,
+          };
         }
 
-        return (
-          <Select.Option key={option} value={option}>
-            {option}
-          </Select.Option>
-        );
+        return {
+          value: option,
+          label: option,
+        };
       })}
-    </Select>
+    />
   ) : (
     state
   );

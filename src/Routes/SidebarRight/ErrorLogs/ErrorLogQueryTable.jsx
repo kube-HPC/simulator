@@ -80,9 +80,11 @@ const ErrorLogQueryTable = ({
         <AutoComplete
           style={{ width: '10vw', marginLeft: '1vw' }}
           options={LogOptions}
-          filterOption={(inputValue, option) =>
-            option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-          }
+          showSearch={{
+            filterOption: (inputValue, option) =>
+              option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
+              -1,
+          }}
           allowClear
           onChange={SubmitForm}
         />

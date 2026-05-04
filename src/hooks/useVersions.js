@@ -26,6 +26,7 @@ const useVersions = ({
   confirmPopupForceVersion,
   isFetch,
   urlRestData,
+  onSaveAsSuccess,
 }) => {
   const [dataSource, setDataSource] = useState(undefined);
 
@@ -98,10 +99,11 @@ const useVersions = ({
             message: `${itemType} "${newName}" created successfully!`,
             type: 'success',
           });
+          onSaveAsSuccess?.();
         })
         .catch(errorNotification);
     },
-    [dataSource, urlRestData]
+    [dataSource, urlRestData, onSaveAsSuccess]
   );
 
   useEffect(() => {

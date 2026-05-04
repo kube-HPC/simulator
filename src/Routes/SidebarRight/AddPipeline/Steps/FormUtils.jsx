@@ -33,37 +33,41 @@ export const Field = ({
   extraRules = [],
   initialValue = null,
   overrides = {},
-}) => (
-  <Form.Item
-    label={title}
-    labelAlign="left"
-    style={
-      small
-        ? smallStyle
-        : { marginTop: '1em', marginBottom: 0, fontWeight: 'normal' }
-    }
-    labelCol={{ span: DEFAULT_SPAN }}
-    wrapperCol={{ span: 24 - DEFAULT_SPAN }}
-    name={rootId ? rootId.concat(name) : name}
-    {...(skipValidation
-      ? { initialValue }
-      : {
-          initialValue,
-          validateTrigger: ['onChange', 'onBlur'],
-          rules: [
-            {
-              required,
-              whitespace: true,
-              type,
-              message: `${title} is required`,
-            },
-            ...extraRules,
-          ],
-        })}
-    {...overrides}>
-    {children}
-  </Form.Item>
-);
+}) => {
+  const path = rootId ? rootId.concat(name) : name;
+
+  return (
+    <Form.Item
+      label={title}
+      labelAlign="left"
+      style={
+        small
+          ? smallStyle
+          : { marginTop: '1em', marginBottom: 0, fontWeight: 'normal' }
+      }
+      labelCol={{ span: DEFAULT_SPAN }}
+      wrapperCol={{ span: 24 - DEFAULT_SPAN }}
+      name={path}
+      {...(skipValidation
+        ? { initialValue }
+        : {
+            initialValue,
+            validateTrigger: ['onChange', 'onBlur'],
+            rules: [
+              {
+                required,
+                whitespace: true,
+                type,
+                message: `${title} is required`,
+              },
+              ...extraRules,
+            ],
+          })}
+      {...overrides}>
+      {children}
+    </Form.Item>
+  );
+};
 
 Field.propTypes = {
   /* eslint-disable */

@@ -29,11 +29,13 @@ const AlgorithmNode = ({ id }) => {
     <ctx.Provider value={contextValue}>
       <Field name={['algorithmName']} title="Algorithm">
         <AutoComplete
+          data-testid={`add-pipeline-nodes-${id}-algorithm-name-autocomplete`}
           disabled={sortedAlgorithms?.length === 0}
           options={sortedAlgorithms}
-          filterOption={(inputValue, option) =>
-            option.value.indexOf(inputValue) !== -1
-          }
+          showSearch={{
+            filterOption: (inputValue, option) =>
+              option.value.indexOf(inputValue) !== -1,
+          }}
         />
       </Field>
       {isStreamingPipeline &&
@@ -50,7 +52,10 @@ const AlgorithmNode = ({ id }) => {
               name={['minStatelessCount']}
               initialValue={0}
               skipValidation>
-              <InputNumber min={0} />
+              <InputNumber
+                min={0}
+                data-testid={`add-pipeline-nodes-${id}-algorithm-min-stateless-count-input`}
+              />
             </Field>
             <Field
               inline={false}
@@ -58,7 +63,9 @@ const AlgorithmNode = ({ id }) => {
               name={['maxStatelessCount']}
               initialValue={null}
               skipValidation>
-              <InputNumberSwitch />
+              <InputNumberSwitch
+                testId={`add-pipeline-nodes-${id}-algorithm-max-stateless-count`}
+              />
             </Field>
           </Collapsible>
         )}
@@ -71,6 +78,7 @@ const AlgorithmNode = ({ id }) => {
         tooltip="Input"
         nodeIdx={id}
         isRequired={false}
+        testIdPrefix={`add-pipeline-node-${id}-input`}
       />
       <Collapsible title="Retry">
         <Field
@@ -78,7 +86,9 @@ const AlgorithmNode = ({ id }) => {
           title="Policy"
           initialValue="OnCrash"
           skipValidation>
-          <Radio.Group buttonStyle="solid">
+          <Radio.Group
+            buttonStyle="solid"
+            data-testid={`add-pipeline-nodes-${id}-algorithm-retry-policy-radio-group`}>
             <Radio.Button value="Never">Never</Radio.Button>
             <Radio.Button value="Always">Always</Radio.Button>
             <Radio.Button value="OnError">OnError</Radio.Button>
@@ -91,7 +101,10 @@ const AlgorithmNode = ({ id }) => {
           name={['retry', 'limit']}
           initialValue={3}
           skipValidation>
-          <InputNumber min={0} />
+          <InputNumber
+            min={0}
+            data-testid={`add-pipeline-nodes-${id}-algorithm-retry-limit-input`}
+          />
         </Field>
       </Collapsible>
       <Collapsible title="Options">
@@ -101,14 +114,19 @@ const AlgorithmNode = ({ id }) => {
             title="Batch Operation"
             skipValidation
             initialValue="indexed">
-            <Radio.Group buttonStyle="solid">
+            <Radio.Group
+              buttonStyle="solid"
+              data-testid={`add-pipeline-nodes-${id}-algorithm-batch-operation-radio-group`}>
               <Radio.Button value="indexed">indexed</Radio.Button>
               <Radio.Button value="cartesian">cartesian</Radio.Button>
             </Radio.Group>
           </Field>
         )}
         <Field title="Node TTL" name={['ttl']} initialValue={0} skipValidation>
-          <InputNumber min={0} />
+          <InputNumber
+            min={0}
+            data-testid={`add-pipeline-nodes-${id}-algorithm-ttl-input`}
+          />
         </Field>
 
         {!isStreamingPipeline && (
@@ -117,7 +135,9 @@ const AlgorithmNode = ({ id }) => {
             title="Include In Pipeline Results"
             name={['includeInResult']}
             skipValidation>
-            <Switch />
+            <Switch
+              data-testid={`add-pipeline-nodes-${id}-algorithm-include-in-result-switch`}
+            />
           </Field>
         )}
 
@@ -127,7 +147,9 @@ const AlgorithmNode = ({ id }) => {
             title="Create A Tensorboard"
             name={['metrics', 'tensorboard']}
             skipValidation>
-            <Switch />
+            <Switch
+              data-testid={`add-pipeline-nodes-${id}-algorithm-tensorboard-switch`}
+            />
           </Field>
         )}
       </Collapsible>

@@ -49,7 +49,11 @@ const Initial = ({ style }) => {
         rules={[{ required: true, message: 'Pipeline name is required' }]}
         required
         hidden={isRunPipeline}>
-        <Input disabled={isEdit} placeholder="Unique Identifier" />
+        <Input
+          disabled={isEdit}
+          placeholder="Unique Identifier"
+          data-testid="add-pipeline-initial-name-input"
+        />
       </Form.Item>
       {!isRunPipeline && (
         <FlexBox align="start">
@@ -61,6 +65,7 @@ const Initial = ({ style }) => {
               <Input
                 placeholder="Pipeline Description"
                 style={{ marginLeft: '34px' }}
+                data-testid="add-pipeline-initial-description-input"
               />
             </Form.Item>
           </FlexBox.Item>
@@ -90,7 +95,7 @@ const Initial = ({ style }) => {
             {isRunPipeline ? (
               valuesState?.kind
             ) : (
-              <Radio.Group>
+              <Radio.Group data-testid="add-pipeline-initial-kind-radio-group">
                 <Radio.Button
                   value="batch"
                   onChange={e => e.preventDefault()}
@@ -125,7 +130,9 @@ const Initial = ({ style }) => {
       {isRunPipeline && (
         <>
           <Form.Item label="Experiments" name={['experimentName']}>
-            <Select style={{ width: '100%' }}>
+            <Select
+              style={{ width: '100%' }}
+              data-testid="add-pipeline-initial-experiments-select">
               {experiments.map(experiment => (
                 <Option key={experiment.name}>{experiment.name}</Option>
               ))}
@@ -134,6 +141,7 @@ const Initial = ({ style }) => {
 
           <Form.Item label="Debugged Nodes" name={['options', 'debugOverride']}>
             <Select
+              data-testid="add-pipeline-initial-debugged-nodes-select"
               mode="multiple"
               allowClear
               style={{ width: '100%' }}
@@ -152,7 +160,10 @@ const Initial = ({ style }) => {
       )}
 
       <Form.Item label="Flow Input" name={['flowInput']}>
-        <ControllerKeyValue nameRef={['flowInput']} />
+        <ControllerKeyValue
+          nameRef={['flowInput']}
+          testIdPrefix="add-pipeline-initial-flow-input"
+        />
       </Form.Item>
     </div>
   );

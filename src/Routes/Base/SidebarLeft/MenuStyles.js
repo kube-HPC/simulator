@@ -49,6 +49,6 @@ export const Name = styled.span`
 `;
 export const BadgeStyle = styled(Badge)`
   margin-top: 9px;
-  right: 16px;
+  right: 22px;
   position: absolute;
 `;

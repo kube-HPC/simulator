@@ -75,7 +75,7 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug = false }) => {
       <Tooltip title={`Run from node ${node.nodeName}`}>
         <Button
           key="run-node"
-          type="ghost"
+          variant="outlined"
           onClick={onRunNode}
           icon={<PlayCircleOutlined />}
           disabled={isDisabledBtnRunDebug}
@@ -84,7 +84,7 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug = false }) => {
       <Tooltip title={`Debug from node ${node.nodeName}`}>
         <Button
           key="debug-node"
-          type="ghost"
+          variant="outlined"
           onClick={onDebugNode}
           icon={<BugOutlined />}
           disabled={isDisabledBtnRunDebug}
@@ -107,57 +107,58 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug = false }) => {
     return {};
   }, [algorithmDetails]);
   const TabsItemsJson = useMemo(
-    () => [
-      {
-        label: 'Logs',
-        key: 'logs-tab',
-        children: (
-          <NodeLogs
-            currentTask={currentTask}
-            setCurrentTask={setCurrentTask}
-            node={node}
-            taskDetails={taskDetails}
-            key={`${node.nodeName}-logs-tab-node-logs`}
-            sideCarsDetails={algorithmDetails?.algorithm?.sideCars || null}
-            NodeInputOutputTable={
-              <NodeInputOutput
-                isShowOneRow={isNodeNotBatchsAndNotStateless}
-                payload={node}
-                algorithm={algorithmDetails}
-                key={`${node.nodeName}-io-details-tab-node-input-output`}
-                setCurrentTask={setCurrentTask}
-                modeSelect
-              />
-            }
-          />
-        ),
-      },
-      {
-        label: 'Algorithm Details',
-        key: 'algorithms-tab',
-        children: (
-          <OverflowContainer key={`${node.nodeName}-algorithms-tab-json"`}>
-            <JsonSwitch
-              obj={algorithmDetailsDataView}
-              jobId={jobId}
-              typeDefaultView="Table"
+    () =>
+      [
+        {
+          label: 'Logs',
+          key: 'logs-tab',
+          children: (
+            <NodeLogs
+              currentTask={currentTask}
+              setCurrentTask={setCurrentTask}
+              node={node}
+              taskDetails={taskDetails}
+              key={`${node.nodeName}-logs-tab-node-logs`}
+              sideCarsDetails={algorithmDetails?.algorithm?.sideCars || null}
+              NodeInputOutputTable={
+                <NodeInputOutput
+                  isShowOneRow={isNodeNotBatchsAndNotStateless}
+                  payload={node}
+                  algorithm={algorithmDetails}
+                  key={`${node.nodeName}-io-details-tab-node-input-output`}
+                  setCurrentTask={setCurrentTask}
+                  modeSelect
+                />
+              }
             />
-          </OverflowContainer>
-        ),
-      },
-      {
-        label: 'Info & Results',
-        key: 'io-details-tab',
-        children: (
-          <NodeInputOutput
-            isShowOneRow={isNodeNotBatchsAndNotStateless}
-            payload={node}
-            algorithm={algorithmDetails}
-            key={`${node.nodeName}-io-details-tab-node-input-output`}
-          />
-        ),
-      },
-    ],
+          ),
+        },
+        algorithmDetails && {
+          label: 'Algorithm Details',
+          key: 'algorithms-tab',
+          children: (
+            <OverflowContainer key={`${node.nodeName}-algorithms-tab-json"`}>
+              <JsonSwitch
+                obj={algorithmDetailsDataView}
+                jobId={jobId}
+                typeDefaultView="Table"
+              />
+            </OverflowContainer>
+          ),
+        },
+        algorithmDetails && {
+          label: 'Info & Results',
+          key: 'io-details-tab',
+          children: (
+            <NodeInputOutput
+              isShowOneRow={isNodeNotBatchsAndNotStateless}
+              payload={node}
+              algorithm={algorithmDetails}
+              key={`${node.nodeName}-io-details-tab-node-input-output`}
+            />
+          ),
+        },
+      ].filter(Boolean),
     [
       currentTask,
       node,
@@ -178,21 +179,15 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug = false }) => {
   }, [node.kind]);
 
   return node ? (
-    algorithmDetails ? (
-      <ContainerTabs>
-        <TabsLog
-          activeKey={selectTabbyKind}
-          onChange={handleTabChange}
-          items={TabsItemsJson}
-          defaultActiveKey={selectTabbyKind}
-          tabBarExtraContent={extra}
-        />
-      </ContainerTabs>
-    ) : node.algorithmVersion ? (
-      <Empty />
-    ) : (
-      <Alert message="Not have algorithm version" type="error" />
-    )
+    <ContainerTabs>
+      <TabsLog
+        activeKey={selectTabbyKind}
+        onChange={handleTabChange}
+        items={TabsItemsJson}
+        defaultActiveKey={selectTabbyKind}
+        tabBarExtraContent={extra}
+      />
+    </ContainerTabs>
   ) : (
     <Empty />
   );

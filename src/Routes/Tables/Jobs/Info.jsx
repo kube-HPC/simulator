@@ -106,7 +106,7 @@ const JobInfo = ({ job }) => {
   return (
     <Tabs
       items={TabsItemsJson}
-      tabPosition="left"
+      tabPlacement="left"
       animated={tabsAnimation}
       activeKey={currentTab}
       tabBarExtraContent={refreshButton}

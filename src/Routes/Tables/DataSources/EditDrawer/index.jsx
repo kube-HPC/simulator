@@ -3,7 +3,7 @@ import { TabDrawerText, TabDrawer } from 'styles';
 import { DRAWER_SIZE, DRAWER_TITLES } from 'const';
 import Drawer from 'components/Drawer';
 import useToggle from 'hooks/useToggle';
-
+import IDProvider from 'IDProvider';
 import { useActiveDataSource } from 'hooks/graphql';
 import usePath from '../usePath';
 
@@ -42,34 +42,35 @@ const EditDrawer = () => {
   if (queryData.error) return `Error! ${queryData.error.message}`;
 
   return (
-    <Drawer
-      isOpened={isOn}
-      onClose={setOff}
-      onDidClose={goTo.root}
-      style={{ display: 'flex', flexDirection: 'column' }}
-      width={DRAWER_SIZE.EDIT_DATASOURCE}>
-      <TabDrawer>
-        <TabDrawerText>{DRAWER_TITLES.EDIT_DATASOURCE}</TabDrawerText>
-      </TabDrawer>
+    <IDProvider dataTestId="popup-drawer">
+      <Drawer
+        isOpened={isOn}
+        onClose={setOff}
+        onDidClose={goTo.root}
+        style={{ display: 'flex', flexDirection: 'column' }}
+        width={DRAWER_SIZE.EDIT_DATASOURCE}>
+        <TabDrawer>
+          <TabDrawerText>{DRAWER_TITLES.EDIT_DATASOURCE}</TabDrawerText>
+        </TabDrawer>
 
-      {Object.keys(activeDataSource).length > 0 && (
-        <>
-          <Header
-            /*  status={status} */
-            /* dataSourceId={dataSourceId} */
-            dataSourceName={activeDataSource?.name}
-            git={activeDataSource?.git}
-            storage={activeDataSource?.storage}
-          />
-          <Body
-            goTo={goTo}
-            mode={mode}
-            snapshotName={snapshotName}
-            dataSource={activeDataSource}
-          />
-        </>
-      )}
-      {/*  isReady ? (
+        {Object.keys(activeDataSource).length > 0 && (
+          <>
+            <Header
+              /*  status={status} */
+              /* dataSourceId={dataSourceId} */
+              dataSourceName={activeDataSource?.name}
+              git={activeDataSource?.git}
+              storage={activeDataSource?.storage}
+            />
+            <Body
+              goTo={goTo}
+              mode={mode}
+              snapshotName={snapshotName}
+              dataSource={activeDataSource}
+            />
+          </>
+        )}
+        {/*  isReady ? (
         <Body goTo={goTo} mode={mode} snapshotName={snapshotName} />
       ) : status === 'FAIL' ? (
         <ErrorPage
@@ -85,7 +86,8 @@ const EditDrawer = () => {
           )}
         </ErrorPage>
           ) : null */}
-    </Drawer>
+      </Drawer>
+    </IDProvider>
   );
 };
 

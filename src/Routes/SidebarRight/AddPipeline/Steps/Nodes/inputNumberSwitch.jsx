@@ -1,10 +1,17 @@
 import React, { useState, forwardRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { InputNumber, Switch } from 'antd';
+import { InputNumber, Space, Switch } from 'antd';
 import styled from 'styled-components';
 
 const InputNumberStyle = styled(InputNumber)`
   width: 140px;
+`;
+
+const CompactStyle = styled(Space.Compact)`
+  .ant-space-compact-item {
+    align-items: center;
+    display: inline-flex;
+  }
 `;
 
 const InputNumberSwitch = forwardRef(
@@ -12,6 +19,7 @@ const InputNumberSwitch = forwardRef(
     {
       onChange = () => {}, // To affect the change you need to write a function onChange
       value = '',
+      testId = undefined,
     },
     ref
   ) => {
@@ -41,19 +49,23 @@ const InputNumberSwitch = forwardRef(
     }, [value]);
 
     return (
-      <InputNumberStyle
-        ref={ref}
-        value={numberValue}
-        onChange={handleNumberChange}
-        addonAfter={
+      <CompactStyle>
+        <InputNumberStyle
+          ref={ref}
+          value={numberValue}
+          onChange={handleNumberChange}
+          disabled={!disabled}
+          data-testid={testId ? `${testId}-input` : undefined}
+        />
+        <span>
           <Switch
+            data-testid={testId ? `${testId}-switch` : undefined}
             checked={disabled}
             onChange={handleSwitchChange}
             size="small"
           />
-        }
-        disabled={!disabled}
-      />
+        </span>
+      </CompactStyle>
     );
   }
 );
@@ -61,6 +73,7 @@ const InputNumberSwitch = forwardRef(
 InputNumberSwitch.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
+  testId: PropTypes.string,
 };
 
 export default InputNumberSwitch;

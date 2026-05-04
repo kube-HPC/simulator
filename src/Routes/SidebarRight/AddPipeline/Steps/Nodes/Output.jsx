@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Select, Input, Divider } from 'antd';
+import { Input, Divider } from 'antd';
 import Controller from './InputParseJson';
 import useWizardContext from '../../useWizardContext';
 import { Field as RawField } from '../FormUtils';
@@ -24,7 +24,10 @@ const OutputNode = ({ id }) => {
   return (
     <ctx.Provider value={contextValue}>
       <Field name={['description']} title="Description" skipValidation>
-        <Input placeholder="Description" />
+        <Input
+          placeholder="Description"
+          data-testid={`add-pipeline-nodes-${id}-output-description-input`}
+        />
       </Field>
       <Field
         name={['mem']}
@@ -34,16 +37,22 @@ const OutputNode = ({ id }) => {
             ? initialState?.nodes[id]?.spec?.mem
             : '512Mi'
         }>
-        <MemoryField>
-          {memoryTypes.map(value => (
-            <Select.Option key={value} value={value}>
-              {value}
-            </Select.Option>
-          ))}
-        </MemoryField>
+        <MemoryField
+          testId={`add-pipeline-nodes-${id}-output-mem`}
+          options={memoryTypes.map(value => ({
+            value,
+            label: value,
+          }))}
+        />
       </Field>
       <Divider>Inputs</Divider>
-      <Controller placeholder="Input" tooltip="Input" nodeIdx={id} isRequired />
+      <Controller
+        placeholder="Input"
+        tooltip="Input"
+        nodeIdx={id}
+        isRequired
+        testIdPrefix={`add-pipeline-node-${id}-input`}
+      />
     </ctx.Provider>
   );
 };

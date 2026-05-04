@@ -7,6 +7,7 @@ import {
   RedoOutlined,
   StopOutlined,
 } from '@ant-design/icons';
+import IDProvider from 'IDProvider';
 import { Button, Tooltip, Space } from 'antd';
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
@@ -75,49 +76,61 @@ const JobActions = ({ job }) => {
   ); */
 
   return (
-    <Space.Compact className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
-      <Tooltip
-        title="Re-run pipeline"
-        mouseEnterDelay="0.5"
-        mouseLeaveDelay="0">
-        <Button icon={<RedoOutlined />} onClick={onReRun} />
-      </Tooltip>
-      <Tooltip title="Stop" mouseEnterDelay="0.5" mouseLeaveDelay="0">
-        <Button
-          type="danger"
-          disabled={isStopDisabled}
-          icon={<StopOutlined />}
-          onClick={onStop}
-        />
-      </Tooltip>
-      <Tooltip
-        title={canPause ? 'Pause' : 'Resume'}
-        mouseEnterDelay="0.5"
-        mouseLeaveDelay="0">
-        <Button
-          disabled={isStopDisabled || isJobStreaming}
-          icon={canPause ? <PauseOutlined /> : <CaretRightOutlined />}
-          onClick={onPause}
-        />
-      </Tooltip>
-      <Tooltip
-        title="Download results"
-        mouseEnterDelay="0.5"
-        mouseLeaveDelay="0">
-        <Button
-          disabled={isDownloadDisabled}
-          icon={<DownloadOutlined />}
-          onClick={() =>
-            fetchDownload(
-              `${socketUrl}/storage/download/pipeline/result/${key}/${downloadNameFile}`
-            )
-          }
-        />
-      </Tooltip>
-      <Tooltip title="Show overview" mouseEnterDelay="0.5" mouseLeaveDelay="0">
-        <Button onClick={onMoreInfo} icon={<InfoCircleOutlined />} />
-      </Tooltip>
-    </Space.Compact>
+    <IDProvider dataTestId="buttons-actions">
+      <Space.Compact className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
+        <Tooltip
+          title="Re-run pipeline"
+          mouseEnterDelay="0.5"
+          mouseLeaveDelay="0">
+          <Button data-testid="run" icon={<RedoOutlined />} onClick={onReRun} />
+        </Tooltip>
+        <Tooltip title="Stop" mouseEnterDelay="0.5" mouseLeaveDelay="0">
+          <Button
+            data-testid="stop"
+            type="danger"
+            disabled={isStopDisabled}
+            icon={<StopOutlined />}
+            onClick={onStop}
+          />
+        </Tooltip>
+        <Tooltip
+          title={canPause ? 'Pause' : 'Resume'}
+          mouseEnterDelay="0.5"
+          mouseLeaveDelay="0">
+          <Button
+            data-testid="pause"
+            disabled={isStopDisabled || isJobStreaming}
+            icon={canPause ? <PauseOutlined /> : <CaretRightOutlined />}
+            onClick={onPause}
+          />
+        </Tooltip>
+        <Tooltip
+          title="Download results"
+          mouseEnterDelay="0.5"
+          mouseLeaveDelay="0">
+          <Button
+            data-testid="download"
+            disabled={isDownloadDisabled}
+            icon={<DownloadOutlined />}
+            onClick={() =>
+              fetchDownload(
+                `${socketUrl}/storage/download/pipeline/result/${key}/${downloadNameFile}`
+              )
+            }
+          />
+        </Tooltip>
+        <Tooltip
+          title="Show overview"
+          mouseEnterDelay="0.5"
+          mouseLeaveDelay="0">
+          <Button
+            data-testid="overview"
+            onClick={onMoreInfo}
+            icon={<InfoCircleOutlined />}
+          />
+        </Tooltip>
+      </Space.Compact>
+    </IDProvider>
   );
 };
 

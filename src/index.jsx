@@ -28,7 +28,7 @@ const ConfigProviderApp = () => {
 
   const { themeProvider } = useInitTheme();
   const { hasConfig } = useSelector(selectors.config);
-  const { keycloakEnable } = useSelector(selectors.connection);
+  const { keycloakEnable, checkIframe } = useSelector(selectors.connection);
 
   const firstKc = useRef(true);
 
@@ -41,9 +41,9 @@ const ConfigProviderApp = () => {
     if (keycloakEnable && firstKc.current && !KeycloakServices.isLoggedIn()) {
       firstKc.current = false;
 
-      KeycloakServices.initKeycloak(renderApp, renderErrorPreRenderApp);
+      KeycloakServices.initKeycloak(renderApp, renderErrorPreRenderApp, checkIframe);
     }
-  }, [keycloakEnable]);
+  }, [keycloakEnable, checkIframe]);
 
   /* -------------------------------
      2) Loading config and Token Refresh

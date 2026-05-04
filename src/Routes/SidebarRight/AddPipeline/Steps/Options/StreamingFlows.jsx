@@ -67,6 +67,7 @@ const StreamingFlows = ({ form, initialState }) => {
 
       <Form.Item label="Flows" name={['streaming', 'flows']}>
         <StreamingFlowKeyValue
+          testIdPrefix="add-pipeline-options-streaming-flows"
           onChange={setListFlow}
           ValuePlaceholder="ex : a >> b >> c"
           isValueSignBoard
@@ -77,15 +78,14 @@ const StreamingFlows = ({ form, initialState }) => {
       </Form.Item>
       {arrayListFlow.length > 1 && (
         <Form.Item label="Default Flow" name={['streaming', 'defaultFlow']}>
-          <Select style={smallSelectStyle}>
-            {arrayListFlow.map((item, index) => (
-              <Select.Option
-                key={`default-list-flow-${item}`}
-                value={index > 0 ? item : ''}>
-                {item}
-              </Select.Option>
-            ))}
-          </Select>
+          <Select
+            data-testid="add-pipeline-options-streaming-default-flow-select"
+            style={smallSelectStyle}
+            options={arrayListFlow.map((item, index) => ({
+              value: index > 0 ? item : '',
+              label: item,
+            }))}
+          />
         </Form.Item>
       )}
     </>

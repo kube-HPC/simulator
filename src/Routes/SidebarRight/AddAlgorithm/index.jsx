@@ -387,7 +387,11 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
               },
             });
           } else {
-            events.emit(data?.error?.message || 'Something is wrong!', 'error');
+            events.emit(
+              'global_alert_msg',
+              data?.error?.message || 'Something is wrong!',
+              'error'
+            );
 
             setIsSubmitLoading(false);
           }
@@ -425,6 +429,7 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
         setIsSubmitLoading(false);
 
         events.emit(
+          'global_alert_msg',
           error?.response?.data?.error?.message || 'Something is wrong!',
           'error'
         );

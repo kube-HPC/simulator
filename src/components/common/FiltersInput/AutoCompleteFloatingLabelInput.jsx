@@ -75,16 +75,20 @@ const AutoCompleteFloatingLabelInput = ({
         style={{ width }}
         value={value}
         defaultActiveFirstOption={false}
-        onSearch={val => {
-          const exactMatch =
-            isExactMatch &&
-            (options.find(opt => opt.value === val) ||
-              val.includes(listIgnoreExactMatch));
+        showSearch={{
+          onSearch: val => {
+            const exactMatch =
+              isExactMatch &&
+              (options.find(opt => opt.value === val) ||
+                val.includes(listIgnoreExactMatch));
 
-          // Submit if exact match OR not requiring exact match OR empty
-          if (exactMatch || !isExactMatch || val === '') {
-            debouncedSubmit(val);
-          }
+            // Submit if exact match OR not requiring exact match OR empty
+            if (exactMatch || !isExactMatch || val === '') {
+              debouncedSubmit(val);
+            }
+          },
+          filterOption: (inputValue, option) =>
+            option.value.toUpperCase().includes(inputValue.toUpperCase()),
         }}
         onSelect={val => {
           Submit(val);
@@ -96,10 +100,7 @@ const AutoCompleteFloatingLabelInput = ({
         }}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
-        onChange={val => onChange?.(val)}
-        filterOption={(inputValue, option) =>
-          option.value.toUpperCase().includes(inputValue.toUpperCase())
-        }>
+        onChange={val => onChange?.(val)}>
         <StyledInput
           {...props}
           suffix={suffix}

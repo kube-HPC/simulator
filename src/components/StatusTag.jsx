@@ -10,8 +10,13 @@ export const StatusTag = ({
   colorMap = COLOR_PIPELINE_STATUS,
   isError = false,
 }) => (
-  <BaseTag key={status} status={status} colorMap={colorMap} isError={isError}>
-    {Number.isInteger(count) ? count : `No Stats`}
+  <BaseTag
+    key={status}
+    status={status}
+    colorMap={colorMap}
+    isError={isError}
+    style={{ margin: '1px' }}>
+    <span>{Number.isInteger(count) ? count : `No Stats`}</span>
   </BaseTag>
 );
 

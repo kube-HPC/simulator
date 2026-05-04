@@ -3,8 +3,7 @@ import { events } from 'utils';
 import { ApolloProvider, useReactiveVar } from '@apollo/client';
 import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
-import { Layout, message, FloatButton, Button, notification } from 'antd';
-import { ArrowUpOutlined } from '@ant-design/icons';
+import { Layout, message, notification } from 'antd';
 import styled, { ThemeProvider } from 'styled-components';
 import { Route, Routes } from 'react-router-dom';
 import { COLOR, COLOR_LAYOUT, Theme } from 'styles';
@@ -45,8 +44,6 @@ message.config({
   duration: 5,
   maxCount: 3,
 });
-
-const BackToTop = () => document.getElementById('globalContent');
 
 const RoutesNav = () => {
   const { grafanaUrl } = useSelector(selectors.connection);
@@ -142,15 +139,6 @@ const RoutesNav = () => {
               <ContentMargin id="globalContent">
                 {contextHolderModalApollo}
                 <Tables />
-                <FloatButton.BackTop target={BackToTop}>
-                  <Button
-                    style={{ opacity: '0.5' }}
-                    type="primary"
-                    shape="circle"
-                    size="large"
-                    icon={<ArrowUpOutlined />}
-                  />
-                </FloatButton.BackTop>
               </ContentMargin>
 
               <RightContainer>

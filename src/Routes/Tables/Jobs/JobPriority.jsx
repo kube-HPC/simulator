@@ -11,6 +11,7 @@ const TagTheme = styled(Tag)`
 const JobPriority = ({ priority = 1 }) => (
   <Tooltip placement="top" title={priority && COLOR_PRIORITY[priority].name}>
     <TagTheme
+      variant="solid"
       color={Theme.Styles.isTagFill ? COLOR_PRIORITY[priority]?.color : ''}
       $priorityColor={priority && COLOR_PRIORITY[priority].color}>
       {priority && COLOR_PRIORITY[priority].name.slice(0, 1)}

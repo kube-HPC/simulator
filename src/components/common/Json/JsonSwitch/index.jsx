@@ -112,7 +112,7 @@ const JsonSwitch = ({
     <ContainerTabs>
       <Tabs
         defaultActiveKey={typeDefaultView}
-        tabPosition={tabPosition}
+        tabPlacement={tabPosition}
         // tabBarExtraContent={extra}
         type="card"
         items={TabsItemsJson}

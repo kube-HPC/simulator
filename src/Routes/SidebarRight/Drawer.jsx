@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
+import IDProvider from 'IDProvider';
 import Drawer from 'components/Drawer';
 import { TabDrawerText, TabDrawer } from 'styles';
 import { RIGHT_SIDEBAR_NAMES } from 'const';
@@ -10,8 +11,7 @@ import AddDataSource from './AddDataSource';
 import ErrorLogsTable from './ErrorLogs';
 import RunRawPipeline from './RunRawPipeline';
 import MemoryAndStorage from './MemoryAndStorage';
-import NodeStatistics from './NodeStatistics.react';
-import BarChartMonitors from './BarChartMonitors.react';
+import CpuBarChartMonitors from './CpuBarChartMonitors';
 import CONTENT_CONFIG from './Content.react';
 import ctx from './ctx';
 import useSubscribe from './useSubscribe';
@@ -29,8 +29,8 @@ const operationSelector = {
   [RIGHT_SIDEBAR_NAMES.ADD_DATASOURCE]: AddDataSource,
   [RIGHT_SIDEBAR_NAMES.ERROR_LOGS]: ErrorLogsTable,
   [RIGHT_SIDEBAR_NAMES.MEMORY]: MemoryAndStorage,
-  [RIGHT_SIDEBAR_NAMES.CPU]: () => <BarChartMonitors metric="cpu" />,
-  [RIGHT_SIDEBAR_NAMES.GPU]: () => <NodeStatistics metric="gpu" />,
+  [RIGHT_SIDEBAR_NAMES.CPU]: () => <CpuBarChartMonitors metric="cpu" />,
+  [RIGHT_SIDEBAR_NAMES.GPU]: () => <CpuBarChartMonitors metric="gpu" />,
 };
 
 const titleSelector = {
@@ -76,25 +76,27 @@ const DashboardDrawer = () => {
 
   // eslint-disable-next-line consistent-return
   return (
-    <ctx.Provider value={contextValue}>
-      <Drawer
-        width={width}
-        isOpened={isOn}
-        onDidClose={handleDidClose}
-        onClose={setOff}
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          overFlow: 'hidden',
-        }}
-        asFlex
-        destroyOnHidden>
-        <TabDrawer>
-          <TabDrawerText>{titleDrawer}</TabDrawerText>
-        </TabDrawer>
-        <Body />
-      </Drawer>
-    </ctx.Provider>
+    <IDProvider dataTestId="popup-drawer">
+      <ctx.Provider value={contextValue}>
+        <Drawer
+          width={width}
+          isOpened={isOn}
+          onDidClose={handleDidClose}
+          onClose={setOff}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            overFlow: 'hidden',
+          }}
+          asFlex
+          destroyOnHidden>
+          <TabDrawer>
+            <TabDrawerText>{titleDrawer}</TabDrawerText>
+          </TabDrawer>
+          <Body />
+        </Drawer>
+      </ctx.Provider>
+    </IDProvider>
   );
 };
 

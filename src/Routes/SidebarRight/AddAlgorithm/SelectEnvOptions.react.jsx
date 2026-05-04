@@ -5,13 +5,16 @@ import addAlgorithmSchema from './schema';
 
 const SelectEnvOptions = forwardRef((props, ref) => (
   // eslint-disable-next-line
-  <Select ref={ref} {...props}>
-    {Object.entries(addAlgorithmSchema.ENV_TYPES).map(([key, value]) => (
-      <Select.Option key={key} value={key}>
-        {toUpperCaseFirstLetter(value)}
-      </Select.Option>
-    ))}
-  </Select>
+  <Select
+    ref={ref}
+    {...props}
+    options={Object.entries(addAlgorithmSchema.ENV_TYPES).map(
+      ([key, value]) => ({
+        value: key,
+        label: toUpperCaseFirstLetter(value),
+      })
+    )}
+  />
 ));
 
 SelectEnvOptions.propTypes = Select.propTypes;

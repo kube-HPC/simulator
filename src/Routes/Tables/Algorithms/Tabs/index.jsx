@@ -23,7 +23,7 @@ import { VersionsTable, AuditTrailTable } from 'components';
 import AlgorithmBuildsTable from './Builds';
 import usePath from './../usePath';
 
-const AlgorithmsTabs = ({ algorithm }) => {
+const AlgorithmsTabs = ({ algorithm, onClose }) => {
   const isFirstRender = useRef(true);
   const { tabKey: activeKey, goTo } = usePath();
   const setActiveKey = useCallback(
@@ -85,6 +85,7 @@ const AlgorithmsTabs = ({ algorithm }) => {
     confirmPopupForceVersion,
     isFetch: true,
     urlRestData: 'algorithms',
+    onSaveAsSuccess: onClose,
   });
 
   const onApplyApplyMarkdown = useCallback(() => {

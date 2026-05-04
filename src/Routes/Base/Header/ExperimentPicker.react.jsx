@@ -131,6 +131,7 @@ const ExperimentPicker = () => {
   }, [
     experimentId,
     experiments,
+    getLazyExperiments,
     onAdd,
     onChange,
     onDescriptionChange,
@@ -156,7 +157,7 @@ const ExperimentPicker = () => {
     ] || COLOR.blueLight;
 
   return (
-    <Popover content={menu} overlayStyle={overflow} placement="bottomRight">
+    <Popover content={menu} styles={{ root: overflow }} placement="bottomRight">
       <BigTag color={tagColor}>{experimentId}</BigTag>
     </Popover>
   );

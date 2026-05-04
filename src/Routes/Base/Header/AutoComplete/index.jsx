@@ -41,10 +41,10 @@ const AutoComplete = ({ className = '' }) => {
     <AutoCompleteLong
       className={className}
       options={tableData}
-      onSearch={handleFilter}
+      showSearch={{ onSearch: handleFilter }}
       onSelect={handleFilter}
       placeholder="Filter Entities 🎉"
-      dropdownMatchSelectWidth
+      popupMatchSelectWidth
       disabled={isDisabled}>
       <Input.Search allowClear />
     </AutoCompleteLong>

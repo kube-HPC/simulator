@@ -20,14 +20,17 @@ export const isJsonString = str => {
   return true;
 };
 
-export const getColorByName = stringInput => {
+export const getColorByName = (
+  stringInput,
+  lightness = 35,
+  saturation = 95
+) => {
   if (stringInput) {
     const stringUniqueHash = [...stringInput].reduce(
       (acc, char) => char.charCodeAt(0) + ((acc << 5) - acc),
       0
     );
-
-    return `hsl(${stringUniqueHash % 360}, 95%, 35%)`;
+    return `hsl(${stringUniqueHash % 360}, ${saturation}%, ${lightness}%)`;
   }
   return '';
 };

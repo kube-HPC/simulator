@@ -2,6 +2,7 @@ import React from 'react';
 import { getColorByName } from 'utils';
 import PropTypes from 'prop-types';
 import { Tag, Tooltip } from 'antd';
+import { Styles } from 'styles';
 
 const numberViewTags = 1;
 
@@ -10,13 +11,21 @@ const JobTags = ({ tags }) => {
   return (
     <span>
       {tags.slice(0, numberViewTags).map(tag => (
-        <Tooltip key={tag} title={tag}>
-          <Tag color={getColorByName(tag)}>{String(tag).slice(0, 2)}</Tag>
+        <Tooltip key={tag} title={`tags: ${tag}`}>
+          <Tag
+            variant="solid"
+            color={getColorByName(
+              tag,
+              Styles.tagLightness,
+              Styles.tagSaturation
+            )}>
+            {String(tag).slice(0, 2)}
+          </Tag>
         </Tooltip>
       ))}
 
       {tags.length > numberViewTags && (
-        <Tooltip title={tags.join(', ')}>
+        <Tooltip title={`tags: ${tags.join(', ')}`}>
           <Tag>...</Tag>
         </Tooltip>
       )}

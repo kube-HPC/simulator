@@ -10,6 +10,8 @@ const {
   grafanaDashboardUrl,
   dataSourceIsEnable,
   keycloakEnable,
+  checkIframe,
+  inactiveCheckMs,
   baseUrl,
 } = setupConfig;
 
@@ -21,6 +23,8 @@ const buildDashboardConfig = () => ({
   grafanaDashboardUrl,
   dataSourceIsEnable,
   keycloakEnable,
+  checkIframe,
+  inactiveCheckMs,
   baseUrl,
   monitorBackend,
   board,

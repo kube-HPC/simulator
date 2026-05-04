@@ -17,7 +17,6 @@ const TagTheme = styled(Tag)`
         ? `border: 1px solid${COLOR.lightGrey}`
         : undefined}
 `;
-const WapperChild = styled.span``;
 
 const BaseTag = ({
   style,
@@ -30,7 +29,11 @@ const BaseTag = ({
 }) => {
   const isFailedSchedulingError =
     isError && status === TASK_STATUS.FAILED_SCHEDULING;
-  const color = isFailedSchedulingError ? colorMap.failed : colorMap[status];
+  const color = isFailedSchedulingError
+    ? colorMap.failed
+    : status
+      ? colorMap[status]
+      : colorMap.default;
   const isBright = [COLOR.lightGrey, COLOR.white].includes(color) || !color;
   const textColor = isBright ? COLOR.transparentBlack : COLOR.white;
 
@@ -39,6 +42,7 @@ const BaseTag = ({
       placement="top"
       title={tooltip || (status && toUpperCaseFirstLetter(status))}>
       <TagTheme
+        variant="solid"
         $textColor={textColor}
         $borderColor={color}
         $isBright={isBright}
@@ -47,7 +51,7 @@ const BaseTag = ({
         icon={
           status === 'active' && isActiveLoader ? <SyncOutlined spin /> : null
         }>
-        <WapperChild>{children}</WapperChild>
+        {children}
       </TagTheme>
     </Tooltip>
   );

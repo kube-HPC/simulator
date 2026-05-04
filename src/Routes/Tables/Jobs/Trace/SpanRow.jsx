@@ -14,7 +14,14 @@ import {
   getServiceColor,
   getContrastTextColor,
 } from './traceUtils';
-import { getCurrentTheme, getSystemColors } from './traceConstants';
+import {
+  getCurrentTheme,
+  getSystemColors,
+  NAME_COL_WIDTH,
+  METRICS_COL_WIDTH,
+  DEPTH_INDENT,
+  MAX_DEPTH_INDENT,
+} from './traceConstants';
 
 const { Title, Text } = Typography;
 
@@ -33,6 +40,7 @@ const RowContainer = styled.div`
     return props.$isDark ? '#1a2332' : colors.background;
   }};
   cursor: pointer;
+  position: relative;
   ${props =>
     props.$isHovered && props.$isDark
       ? 'box-shadow: 0 2px 8px rgba(255, 0, 0, 0.2);'
@@ -44,6 +52,15 @@ const RowContent = styled.div`
   align-items: stretch;
 `;
 
+/*
+ * The name column width is driven by NAME_COL_WIDTH so it always matches the
+ * header (TraceTimeline) and the time-marker alignment (TimelineMarkers).
+ *
+ * Depth indentation is clamped to MAX_DEPTH_INDENT so deeply nested spans
+ * can't squeeze the service tag and operation name into an unreadable sliver.
+ * The column compensates by shrinking its flex-basis by the actual indent so
+ * the total visual width stays constant.
+ */
 const SpanNameWrapper = styled.div`
   background: ${props => {
     const colors = getSystemColors(props.$isDark);
@@ -62,8 +79,23 @@ const SpanNameWrapper = styled.div`
       const colors = getSystemColors(props.$isDark);
       return props.$isDark ? '#3d5a7e' : colors.borderLight;
     }};
-  margin-left: ${props => props.$depth * 20}px;
-  flex: 0 0 250px;
+
+  /*
+   * Clamp indentation: each depth level adds DEPTH_INDENT px up to the cap.
+   * flex-basis shrinks by the same amount so the right edge of this column
+   * stays pinned at NAME_COL_WIDTH from the left side of the row, keeping
+   * the timeline bar perfectly aligned across all nesting levels.
+   */
+  ${props => {
+    const indent = Math.min(props.$depth * DEPTH_INDENT, MAX_DEPTH_INDENT);
+    return `
+      margin-left: ${indent}px;
+      flex: 0 0 ${NAME_COL_WIDTH - indent}px;
+    `;
+  }}
+
+  min-width: 0;
+  overflow: hidden;
 `;
 
 const SpanNameContent = styled.div`
@@ -78,6 +110,7 @@ const ExpandButton = styled(Button)`
   min-width: 22px;
   height: 22px;
   padding: 0;
+  flex-shrink: 0;
   color: ${props => {
     const colors = getSystemColors(props.$isDark);
     return colors.blue;
@@ -97,6 +130,7 @@ const ExpandButton = styled(Button)`
 
 const Spacer = styled.span`
   width: 22px;
+  flex-shrink: 0;
   display: inline-block;
 `;
 
@@ -105,37 +139,33 @@ const SpanInfo = styled.div`
   align-items: center;
   gap: 8px;
   flex: 1;
+  min-width: 0; /* allow children to truncate */
+  overflow: hidden;
 `;
 
 const ServiceTag = styled(Tag)`
   margin: 0;
   font-weight: 600;
+  flex-shrink: 0; /* keep the service badge from shrinking */
 
-  /* Background Color */
-  background-color: ${
-    props => (props.$isDark ? 'transparent' : props.$color) // Dark: transparent, Light: colored
-  };
+  background-color: ${props => (props.$isDark ? 'transparent' : props.$color)};
 
   color: ${props => {
-    if (props.$isDark) {
-      return props.$color; // Dark mode: colored text
-    }
-    // Light mode: calculate contrast color based on background
+    if (props.$isDark) return props.$color;
     return getContrastTextColor(props.$color);
   }};
 
-  /* Border */
-  border: ${
-    props => (props.$isDark ? `2px solid ${props.$color}` : 'none') // Dark: colored border, Light: no border
-  };
+  border: ${props => (props.$isDark ? `2px solid ${props.$color}` : 'none')};
 
-  /* Shadow */
   box-shadow: ${props =>
     props.$isDark ? '0 1px 3px rgba(0, 0, 0, 0.3)' : 'none'};
 `;
 
 const OperationText = styled(Text)`
   font-size: 13px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   color: ${props => {
     const colors = getSystemColors(props.$isDark);
     return props.$isDark ? '#d1d5db' : colors.textSecondary;
@@ -154,6 +184,7 @@ const SpanBarContainer = styled.div`
     return props.$isDark ? '#1a2332' : colors.background;
   }};
   overflow: visible;
+  min-width: 0;
 `;
 
 const SpanBarTrack = styled.div`
@@ -229,7 +260,7 @@ const HoverTooltip = styled.div`
   top: 50%;
   transform: translateY(-50%);
   font-size: 11px;
-  whitespace: nowrap;
+  white-space: nowrap;
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -294,7 +325,8 @@ const SpanTiming = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-width: 140px;
+  width: ${METRICS_COL_WIDTH}px;
+  flex-shrink: 0;
   font-family: monospace;
   font-size: 12px;
   border-left: 1px solid
@@ -302,6 +334,10 @@ const SpanTiming = styled.div`
       const colors = getSystemColors(props.$isDark);
       return props.$isDark ? '#3d5a7e' : colors.border;
     }};
+
+  @media (max-width: 500px) {
+    display: none;
+  }
 `;
 
 const StyledIcon = styled(ClockCircleOutlined)`
@@ -333,8 +369,8 @@ const DetailsCard = styled(Card)`
   background: ${props => {
     const colors = getSystemColors(props.$isDark);
     return props.$isDark
-      ? 'linear-gradient(135deg, #1f2d3d 0%, #2a3f54 100%)' // Dark: gradient
-      : colors.cardBackground; // Light: use system color
+      ? 'linear-gradient(135deg, #1f2d3d 0%, #2a3f54 100%)'
+      : colors.cardBackground;
   }};
   border-left: 4px solid ${props => props.$color};
   border: ${props => (props.$isDark ? '2px solid #3d5a7e' : '1px solid')};
@@ -357,7 +393,9 @@ const DetailsCard = styled(Card)`
 const CardHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-bottom: 16px;
   padding-bottom: 12px;
   border-bottom: 1px solid
@@ -381,7 +419,8 @@ const CardTitle = styled(Title)`
 
 const CardMetadata = styled.div`
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 12px 20px;
   font-size: 14px;
   color: ${props => {
     const colors = getSystemColors(props.$isDark);
@@ -405,12 +444,14 @@ const MetadataTag = styled(Tag)`
 
 const CardContent = styled.div`
   display: flex;
-  gap: 40px;
+  flex-wrap: wrap;
+  gap: 24px;
   align-items: flex-start;
 `;
 
 const Section = styled.div`
   flex: 1;
+  min-width: 200px; /* wrap to next line on very narrow cards */
 `;
 
 const SectionTitle = styled.div`
@@ -453,6 +494,7 @@ const TagValue = styled(Tag)`
   margin: 0;
   font-size: 12px;
   font-family: monospace;
+  word-break: break-all;
   background-color: ${props => (props.$isDark ? '#1e3a52' : 'auto')} !important;
   border: ${props => (props.$isDark ? '1px solid #3d5a7e' : 'auto')} !important;
   color: ${props => (props.$isDark ? '#b8bfc7' : 'auto')} !important;
@@ -507,6 +549,7 @@ const SpanRow = ({
   searchTerm,
   isChildrenVisible,
   onToggleChildren,
+  rowRef,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isTimelineHovered, setIsTimelineHovered] = useState(false);
@@ -547,6 +590,7 @@ const SpanRow = ({
   return (
     <>
       <RowContainer
+        ref={rowRef}
         $isHovered={isHovered}
         $isDark={isDark}
         onMouseEnter={() => setIsHovered(true)}
@@ -743,6 +787,11 @@ SpanRow.propTypes = {
   searchTerm: PropTypes.string.isRequired,
   isChildrenVisible: PropTypes.bool.isRequired,
   onToggleChildren: PropTypes.func.isRequired,
+  rowRef: PropTypes.func,
+};
+
+SpanRow.defaultProps = {
+  rowRef: null,
 };
 
 export default React.memo(SpanRow);

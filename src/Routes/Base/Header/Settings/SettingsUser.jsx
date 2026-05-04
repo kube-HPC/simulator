@@ -4,6 +4,7 @@ import { FlexBox, Icons } from 'components/common';
 import { LogoutOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { Typography } from 'antd';
+import IDProvider from 'IDProvider';
 
 import UserAvatar from '../../../../components/UserAvatar';
 
@@ -22,13 +23,15 @@ const SettingsUser = () => {
         <TextLink>{KeycloakServices.getUsername()}</TextLink>
       </FlexBox.Auto>
 
-      <FlexBox.Auto>
-        <Icons.Hover
-          type={<LogoutOutlined title="logout" />}
-          onClick={logout}
-        />
-        <TextLink onClick={logout}>logout</TextLink>
-      </FlexBox.Auto>
+      <IDProvider dataTestId="link-logout">
+        <FlexBox.Auto>
+          <Icons.Hover
+            type={<LogoutOutlined title="logout" />}
+            onClick={logout}
+          />
+          <TextLink onClick={logout}>logout</TextLink>
+        </FlexBox.Auto>
+      </IDProvider>
     </FlexBox.Auto>
   );
 };

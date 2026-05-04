@@ -12,14 +12,19 @@ import AuditTrailAvatar from '../../../components/AuditTrailAvatar';
 import AlgorithmActions from './AlgorithmActions.react';
 import AlgorithmBuildStats from './AlgorithmBuildStats.react';
 import LastModified from './LastModified';
+import { COLOR } from 'styles';
 
 const HotWorkers = ({ value }) => <Tag>{value}</Tag>;
+
 const Cpu = ({ value }) =>
   value ? (
     <Tag>{value}</Tag>
   ) : (
     <Tooltip title="No CPU Assigned">
-      <IconNoCpu width={34} />
+      <IconNoCpu
+        width={34}
+        style={{ color: COLOR.whiteDark, fill: COLOR.whiteDark }}
+      />
     </Tooltip>
   );
 
@@ -28,7 +33,7 @@ const Memory = ({ value }) =>
     <Tag>{value}</Tag>
   ) : (
     <Tooltip title="No Memory Specified">
-      <IconNoMem />
+      <IconNoMem style={{ color: COLOR.whiteDark, fill: COLOR.whiteDark }} />
     </Tooltip>
   );
 
@@ -37,7 +42,10 @@ const Gpu = ({ value }) =>
     <Tag>{value}</Tag>
   ) : (
     <Tooltip title="No GPU Assigned">
-      <IconNoGpu width={34} />
+      <IconNoGpu
+        width={34}
+        style={{ color: COLOR.whiteDark, fill: COLOR.whiteDark }}
+      />
     </Tooltip>
   );
 
@@ -81,6 +89,70 @@ const Name = ({ value, data }) =>
     </div>
   );
 
+const numericComparator = (a, b) => {
+  if (!a && !b) return 0;
+  if (!a) return 1;
+  if (!b) return -1;
+  return Number(a) - Number(b);
+};
+
+/**
+ * Comparator for memory values with unit parsing (Mi, Gi, Ki, Ti)
+ * Converts all values to bytes for accurate comparison
+ * Null/undefined values are sorted to the end
+ */
+const memoryComparator = (a, b) => {
+  if (!a && !b) return 0;
+  if (!a) return 1;
+  if (!b) return -1;
+
+  const parseMemory = mem => {
+    if (!mem) return 0;
+    const str = String(mem).trim();
+    const num = parseFloat(str);
+
+    if (str.includes('Gi') || str.includes('G')) {
+      return num * 1024 * 1024 * 1024;
+    }
+    if (str.includes('Mi') || str.includes('M')) {
+      return num * 1024 * 1024;
+    }
+    if (str.includes('Ki') || str.includes('K')) {
+      return num * 1024;
+    }
+    if (str.includes('Ti') || str.includes('T')) {
+      return num * 1024 * 1024 * 1024 * 1024;
+    }
+    return num;
+  };
+
+  return parseMemory(a) - parseMemory(b);
+};
+/**
+ * Comparator for build stats sorting
+ * DESC: Prioritizes failed builds (highest count first)
+ * ASC: Prioritizes completed builds (highest count first)
+ */
+const buildStatsComparator = (a, b, isDescending) => {
+  // Handle null/undefined cases
+  if (!a && !b) return 0;
+  if (!a) return 1;
+  if (!b) return -1;
+
+  const aTotal = a.total || 0;
+  const bTotal = b.total || 0;
+
+  // Handle no builds cases
+  if (aTotal === 0 && bTotal === 0) return 0;
+  if (aTotal === 0) return 1;
+  if (bTotal === 0) return -1;
+
+  const aCount = isDescending ? a.failed || 0 : a.completed || 0;
+  const bCount = isDescending ? b.failed || 0 : b.completed || 0;
+
+  return bCount - aCount;
+};
+
 export default [
   {
     headerName: '',
@@ -98,7 +170,7 @@ export default [
     flex: 2,
     sortable: true,
     unSortIcon: true,
-    comparator: (a, b) => sorter(a, b),
+    comparator: sorter,
     cellRenderer: Name,
     isPinning: true,
   },
@@ -107,31 +179,43 @@ export default [
     field: 'algorithmImage',
     flex: 3,
     sortable: true,
-    comparator: (a, b) => sorter(a, b),
+    comparator: sorter,
     cellRenderer: Image,
   },
   {
     headerName: 'Builds Stats',
     flex: 0.7,
+    sortable: true,
+    unSortIcon: true,
     field: 'buildStats',
+    comparator: buildStatsComparator,
     cellRenderer: ({ value }) => <AlgorithmBuildStats builds={value} />,
   },
   {
     headerName: 'CPU',
-    flex: 0.5,
+    flex: 0.6,
     field: 'cpu',
+    sortable: true,
+    unSortIcon: true,
+    comparator: numericComparator,
     cellRenderer: Cpu,
   },
   {
     headerName: 'GPU',
-    flex: 0.5,
+    flex: 0.6,
     field: 'gpu',
+    sortable: true,
+    unSortIcon: true,
+    comparator: numericComparator,
     cellRenderer: Gpu,
   },
   {
     headerName: 'Mem',
     flex: 0.7,
     field: 'mem',
+    sortable: true,
+    unSortIcon: true,
+    comparator: memoryComparator,
     cellRenderer: Memory,
   },
   {
@@ -140,7 +224,7 @@ export default [
     field: 'minHotWorkers',
     sortable: true,
     unSortIcon: true,
-    comparator: (a, b) => sorter(a, b),
+    comparator: sorter,
     cellRenderer: HotWorkers,
   },
   {
@@ -149,7 +233,7 @@ export default [
     field: 'modified',
     sortable: true,
     unSortIcon: true,
-    comparator: (a, b) => sorter(a, b),
+    comparator: sorter,
     cellRenderer: ({ data }) => (
       <LastModified auditTrail={data.auditTrail} modified={data.modified} />
     ),

@@ -90,7 +90,11 @@ const DarkTheme = COMMON_COLOR => {
       backgroundBarNodesColor: '#1c325c',
       fontNodeColor: '#00000073',
     },
-    HKGrid: { ActionChip: '#303030' ,LoadingOverlay: 'rgba(26, 64, 99, 0.8)'},
+    HKGrid: { ActionChip: '#303030', LoadingOverlay: 'rgba(26, 64, 99, 0.8)' },
+    iconColor: COLOR.whiteDark,
+    queueTimeColor: '#fa8c16',
+    tagLightness: 55,
+    tagSaturation: 70,
   };
 
   return {

@@ -69,10 +69,10 @@ const QueryForm = ({
       form.resetFields(['pipelineStatus']);
     }
 
-    if (params && params.tag) {
-      form.setFieldsValue({ tag: params.tag });
+    if (params && params.tags) {
+      form.setFieldsValue({ tags: params.tags });
     } else {
-      form.resetFields(['tag']);
+      form.resetFields(['tags']);
     }
 
     if (keycloakEnable) {
@@ -214,7 +214,7 @@ const QueryForm = ({
         />
       </Form.Item>
 
-      <Form.Item name="tag">
+      <Form.Item name="tags">
         <AutoCompleteFloatingLabelInput
           isExactMatch
           label="Tag Name"
@@ -276,7 +276,7 @@ QueryForm.propTypes = {
     pipelineName: PropTypes.string,
     pipelineStatus: PropTypes.string,
     user: PropTypes.string,
-    tag: PropTypes.oneOfType([
+    tags: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.arrayOf(PropTypes.string),
     ]),

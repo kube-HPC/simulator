@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Select, Input, InputNumber } from 'antd';
+import { Input, InputNumber } from 'antd';
 
 import useWizardContext from '../../useWizardContext';
 import { Field as RawField } from '../FormUtils';
@@ -38,11 +38,17 @@ const GatewayNode = ({ id }) => {
     <>
       <ctx.Provider value={providerValue}>
         <Field name={['name']} title="Name">
-          <Input placeholder="Name Gateway" />
+          <Input
+            placeholder="Name Gateway"
+            data-testid={`add-pipeline-nodes-${id}-gateway-name-input`}
+          />
         </Field>
 
         <Field name={['description']} title="Description" skipValidation>
-          <Input placeholder="Description" />
+          <Input
+            placeholder="Description"
+            data-testid={`add-pipeline-nodes-${id}-gateway-description-input`}
+          />
         </Field>
         <Field
           name={['mem']}
@@ -52,18 +58,19 @@ const GatewayNode = ({ id }) => {
               ? initialState?.nodes[id]?.spec?.mem
               : '512Mi'
           }>
-          <MemoryField>
-            {memoryTypes.map(value => (
-              <Select.Option
-                value={value}
-                key={`nodes.${id}.memoryTypes.${value}`}>
-                {value}
-              </Select.Option>
-            ))}
-          </MemoryField>
+          <MemoryField
+            testId={`add-pipeline-nodes-${id}-gateway-mem`}
+            options={memoryTypes.map(value => ({
+              value,
+              label: value,
+            }))}
+          />
         </Field>
         <Field name={['cpu']} title="Cpu" initialValue={0.5} skipValidation>
-          <InputNumber min={0} />
+          <InputNumber
+            min={0}
+            data-testid={`add-pipeline-nodes-${id}-gateway-cpu-input`}
+          />
         </Field>
       </ctx.Provider>
 

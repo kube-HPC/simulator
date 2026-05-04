@@ -240,7 +240,7 @@ const Wizard = ({
                 <Splitter
                   lazy
                   onResizeEnd={() => setReloadGraphPreview(!reloadGraphPreview)}
-                  layout="vertical"
+                  orientation="vertical"
                   style={{ boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
                   <Splitter.Panel>
                     <ContenerGraph>

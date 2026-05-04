@@ -119,6 +119,8 @@ const COMMON_COLOR = () => {
     [PIPELINE.STALLED]: COLOR.darkGrey,
     [PIPELINE.STOPPED]: COLOR.greenLight2,
     [PIPELINE.PAUSED]: COLOR.yellow,
+
+    default: COLOR.lightGrey,
   });
 
   const COLOR_PIPELINE_TYPES = COLOR => ({
@@ -131,6 +133,8 @@ const COMMON_COLOR = () => {
     [TYPES.SUB_PIPELINE]: COLOR.orangePale,
     [TYPES.TENSORBOARD]: COLOR.greenLight,
     [TYPES.TRIGGER]: COLOR.turquoise,
+    [TYPES.RERUN]: COLOR.lightGrey,
+    default: COLOR.lightGrey,
   });
 
   const NODE_KINDS_COLOR = COLOR => ({
