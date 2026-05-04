@@ -13,7 +13,7 @@ const initialState = {
   boardUrl: null,
   hkubeSystemVersion: null,
   kibanaUrl: null,
-  kibanaIndex: null,
+  ELASTICSEARCH_LOGS_INDEX: null,
   structuredPrefix: null,
   grafanaUrl: null,
   grafanaDashboardUrl: null,
