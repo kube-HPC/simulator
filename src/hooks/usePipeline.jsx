@@ -5,6 +5,12 @@ import successMsg from 'config/schema/success-messages.schema';
 import { useNavigate } from 'react-router-dom';
 import { pipelineJustStartedVar } from 'cache';
 import useActions from './useActions';
+import styled from 'styled-components';
+import { Button } from 'antd';
+
+const ButtonLinkStyle = styled(Button)`
+  padding: 0px;
+`;
 
 const usePipeline = () => {
   const { updateStored } = useActions();
@@ -42,22 +48,30 @@ const usePipeline = () => {
     }
   }, []);
 
-  const rerunPipeline = useCallback(async jobId => {
-    try {
-      const res = await client.post(`/exec/rerun`, { jobId });
+  const rerunPipeline = useCallback(
+    async jobId => {
+      try {
+        const res = await client.post(`/exec/rerun`, { jobId });
+        const gotoJobsTable = () => navigate('/jobs');
 
-      events.emit(
-        'global_alert_msg',
-        successMsg(res.data).PIPELINE_START,
-        'success'
-      );
-    } catch (res) {
-      const errorMessage =
-        res.response?.data?.error?.message || res.message || 'Unknown error';
-
-      events.emit('global_alert_msg', errorMessage, 'error');
-    }
-  }, []);
+        events.emit(
+          'global_alert_msg',
+          <>
+            Pipeline started, see{' '}
+            <ButtonLinkStyle type="link" onClick={gotoJobsTable}>
+              jobs
+            </ButtonLinkStyle>
+          </>,
+          'success'
+        );
+      } catch (res) {
+        const errorMessage =
+          res.response?.data?.error?.message || res.message || 'Unknown error';
+        events.emit('global_alert_msg', errorMessage, 'error');
+      }
+    },
+    [navigate]
+  );
 
   const updatePipeline = useCallback(
     async (data, LOCAL_STORAGE_KEY) => {
