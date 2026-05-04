@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import StatusLamp from './StatusLamp';
 import SubServicesPopover from './SubServicesPopover';
 
+const isStatusOk = status => status === true || status === 'OK';
+
 const Row = styled.div`
   display: inline-flex;
   align-items: center;
@@ -20,20 +22,33 @@ const Row = styled.div`
 `;
 
 const ServiceRow = ({ service }) => {
-  const isOk = useMemo(() => {
-    const subServices = service.services || [];
-    return Boolean(service.status) && subServices.every(item => item.status);
-  }, [service]);
+  const subServices = useMemo(() => service.services || [], [service.services]);
+  const hasSubServices = subServices.length > 0;
+
+  const isOk = useMemo(
+    () =>
+      isStatusOk(service.status) &&
+      subServices.every(item => isStatusOk(item.status)),
+    [service.status, subServices]
+  );
+
+  const content = (
+    <Row>
+      <StatusLamp isOk={isOk} />
+      <Typography.Text>{service.serviceName}</Typography.Text>
+    </Row>
+  );
+
+  if (!hasSubServices) {
+    return content;
+  }
 
   return (
     <Popover
-      content={<SubServicesPopover subServices={service.services} />}
+      content={<SubServicesPopover subServices={subServices} />}
       placement="bottom"
       trigger="hover">
-      <Row>
-        <StatusLamp isOk={isOk} />
-        <Typography.Text>{service.serviceName}</Typography.Text>
-      </Row>
+      {content}
     </Popover>
   );
 };
@@ -41,12 +56,13 @@ const ServiceRow = ({ service }) => {
 ServiceRow.propTypes = {
   service: PropTypes.shape({
     serviceName: PropTypes.string.isRequired,
-    status: PropTypes.bool.isRequired,
+    status: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]).isRequired,
     services: PropTypes.arrayOf(
       PropTypes.shape({
-        subServiceName: PropTypes.string.isRequired,
-        status: PropTypes.bool.isRequired,
-        number: PropTypes.number.isRequired,
+        subServiceName: PropTypes.string,
+        status: PropTypes.oneOfType([PropTypes.bool, PropTypes.string])
+          .isRequired,
+        number: PropTypes.number,
       })
     ),
   }).isRequired,

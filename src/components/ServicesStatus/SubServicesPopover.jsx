@@ -5,6 +5,8 @@ import styled from 'styled-components';
 
 import StatusLamp from './StatusLamp';
 
+const isStatusOk = status => status === true || status === 'OK';
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -32,11 +34,13 @@ const SubServicesPopover = ({ subServices = [] }) => {
 
   return (
     <Wrapper>
-      {subServices.map(item => (
-        <SubRow key={item.subServiceName}>
-          <StatusLamp isOk={item.status} size={8} />
+      {subServices.map((item, index) => (
+        <SubRow key={item.subServiceName || item.serviceName || index}>
+          <StatusLamp isOk={isStatusOk(item.status)} size={8} />
           <Typography.Text>
-            {String(item.status)}, {item.subServiceName} : {item.number}
+            {String(item.status)},{' '}
+            {item.subServiceName || item.serviceName || 'unknown'} :{' '}
+            {item.number ?? '-'}
           </Typography.Text>
         </SubRow>
       ))}
@@ -47,9 +51,10 @@ const SubServicesPopover = ({ subServices = [] }) => {
 SubServicesPopover.propTypes = {
   subServices: PropTypes.arrayOf(
     PropTypes.shape({
-      subServiceName: PropTypes.string.isRequired,
-      status: PropTypes.bool.isRequired,
-      number: PropTypes.number.isRequired,
+      subServiceName: PropTypes.string,
+      status: PropTypes.oneOfType([PropTypes.bool, PropTypes.string])
+        .isRequired,
+      number: PropTypes.number,
     })
   ),
 };

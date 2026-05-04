@@ -5,7 +5,38 @@ import styled from 'styled-components';
 
 import StatusLamp from './StatusLamp';
 import ServiceRow from './ServiceRow';
-import servicesStatusMock from './mockData';
+import servicesStatusMock from './mockData2';
+
+const isStatusOk = status => status === true || status === 'OK';
+
+const getServicesList = servicesPayload => {
+  if (Array.isArray(servicesPayload)) return servicesPayload;
+  if (Array.isArray(servicesPayload?.data?.healthMonitoring?.services)) {
+    return servicesPayload.data.healthMonitoring.services;
+  }
+  if (Array.isArray(servicesPayload?.healthMonitoring?.services)) {
+    return servicesPayload.healthMonitoring.services;
+  }
+  return [];
+};
+
+const getOverallHealthStatus = (servicesPayload, normalizedServices) => {
+  const overallStatus =
+    servicesPayload?.data?.healthMonitoring?.overallHealthStatus ??
+    servicesPayload?.healthMonitoring?.overallHealthStatus;
+
+  if (overallStatus !== undefined && overallStatus !== null) {
+    return isStatusOk(overallStatus);
+  }
+
+  return normalizedServices.every(service => {
+    const subServices = service.services || [];
+    return (
+      isStatusOk(service.status) &&
+      subServices.every(item => isStatusOk(item.status))
+    );
+  });
+};
 
 const Container = styled.div`
   position: relative;
@@ -14,7 +45,6 @@ const Container = styled.div`
   gap: 8px;
   border-radius: 6px;
   border: 1px solid rgba(0, 0, 0, 0.12);
-
 `;
 
 const HeaderRow = styled.div`
@@ -38,27 +68,32 @@ const ServicesList = styled.div`
   display: flex;
   flex-direction: row;
 
-
-
   align-items: flex-start;
   gap: 8px;
   opacity: ${props => (props.$isOpen ? 1 : 0)};
-  transform: ${props =>
-    props.$isOpen ? 'translateX(0)' : 'translateX(8px)'};
+  transform: ${props => (props.$isOpen ? 'translateX(0)' : 'translateX(8px)')};
   pointer-events: ${props => (props.$isOpen ? 'auto' : 'none')};
-  transition: opacity 180ms ease, transform 180ms ease;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
   transform-origin: right top;
 `;
 
-const ServicesStatus = ({ services = servicesStatusMock, label = 'Service metrics' }) => {
+const ServicesStatus = ({
+  services = servicesStatusMock,
+  label = 'Service metrics',
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const isGlobalOk = useMemo(() => {
-    return services.every(service => {
-      const subServices = service.services || [];
-      return service.status && subServices.every(item => item.status);
-    });
-  }, [services]);
+  const normalizedServices = useMemo(
+    () => getServicesList(services),
+    [services]
+  );
+
+  const overallHealthStatus = useMemo(
+    () => getOverallHealthStatus(services, normalizedServices),
+    [services, normalizedServices]
+  );
 
   const handleToggle = () => setIsOpen(prev => !prev);
 
@@ -71,12 +106,12 @@ const ServicesStatus = ({ services = servicesStatusMock, label = 'Service metric
         onKeyDown={event => {
           if (event.key === 'Enter' || event.key === ' ') handleToggle();
         }}>
-        <StatusLamp isOk={isGlobalOk} />
+        <StatusLamp isOk={overallHealthStatus} />
         <Typography.Text strong>{label}</Typography.Text>
       </HeaderRow>
 
       <ServicesList $isOpen={isOpen}>
-        {services.map(service => (
+        {normalizedServices.map(service => (
           <ServiceRow key={service.serviceName} service={service} />
         ))}
       </ServicesList>
@@ -85,19 +120,40 @@ const ServicesStatus = ({ services = servicesStatusMock, label = 'Service metric
 };
 
 ServicesStatus.propTypes = {
-  services: PropTypes.arrayOf(
+  services: PropTypes.oneOfType([
+    PropTypes.arrayOf(
+      PropTypes.shape({
+        serviceName: PropTypes.string.isRequired,
+        status: PropTypes.oneOfType([PropTypes.bool, PropTypes.string])
+          .isRequired,
+        services: PropTypes.arrayOf(
+          PropTypes.shape({
+            subServiceName: PropTypes.string,
+            status: PropTypes.oneOfType([PropTypes.bool, PropTypes.string])
+              .isRequired,
+            number: PropTypes.number,
+          })
+        ),
+      })
+    ),
     PropTypes.shape({
-      serviceName: PropTypes.string.isRequired,
-      status: PropTypes.bool.isRequired,
-      services: PropTypes.arrayOf(
-        PropTypes.shape({
-          subServiceName: PropTypes.string.isRequired,
-          status: PropTypes.bool.isRequired,
-          number: PropTypes.number.isRequired,
-        })
-      ),
-    })
-  ),
+      data: PropTypes.shape({
+        healthMonitoring: PropTypes.shape({
+          services: PropTypes.arrayOf(
+            PropTypes.shape({
+              serviceName: PropTypes.string.isRequired,
+              status: PropTypes.oneOfType([PropTypes.bool, PropTypes.string])
+                .isRequired,
+            })
+          ),
+          overallHealthStatus: PropTypes.oneOfType([
+            PropTypes.bool,
+            PropTypes.string,
+          ]),
+        }),
+      }),
+    }),
+  ]),
   label: PropTypes.string,
 };
 

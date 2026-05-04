@@ -6,6 +6,7 @@ import { MenuOutlined } from '@ant-design/icons';
 import { Popover } from 'antd';
 import { USER_GUIDE } from 'const';
 import { FlexBox, Icons } from 'components/common';
+import { useHealthMonitoring } from 'hooks/graphql';
 import styled from 'styled-components';
 import UserAvatar from '../../../components/UserAvatar';
 import SettingsUser from './Settings/SettingsUser';
@@ -18,12 +19,17 @@ const Container = styled(FlexBox.Auto)`
   position: relative;
 `;
 
+const WapperServicesStatus = styled.div``;
+
 const HelpBar = () => {
   const { keycloakEnable } = useSelector(selectors.connection);
+  const { data } = useHealthMonitoring();
+
   return (
     <Container className={USER_GUIDE.HEADER.SOCIALS}>
-      <ServicesStatus />
-
+      <WapperServicesStatus>
+        <ServicesStatus services={data} />
+      </WapperServicesStatus>
       <InactiveModeTag />
 
       <ExperimentPicker />
