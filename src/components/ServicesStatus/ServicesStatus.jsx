@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import StatusLamp from './StatusLamp';
 import ServiceRow from './ServiceRow';
 
-import servicesStatusMock from './mockData2';
+// import servicesStatusMock from './mockData2';
 
 const isStatusOk = status => status === true || status === 'OK';
 
@@ -42,7 +42,7 @@ const getOverallHealthStatus = (servicesPayload, normalizedServices) => {
 const Container = styled.div`
   position: relative;
   display: inline-flex;
-  flex-direction: row-reverse;
+  flex-direction: row;
   gap: 8px;
   border-radius: 6px;
   border: 1px solid rgba(0, 0, 0, 0.12);
@@ -64,7 +64,7 @@ const HeaderRow = styled.div`
 const ServicesList = styled.div`
   width: max-content;
   position: ${props => (props.$isOpen ? 'static' : 'absolute')};
-  right: calc(100% + 12px);
+  left: calc(100% + 12px);
   top: 0;
   display: flex;
   flex-direction: row;
@@ -72,16 +72,16 @@ const ServicesList = styled.div`
   align-items: flex-start;
   gap: 8px;
   opacity: ${props => (props.$isOpen ? 1 : 0)};
-  transform: ${props => (props.$isOpen ? 'translateX(0)' : 'translateX(8px)')};
+  transform: ${props => (props.$isOpen ? 'translateX(0)' : 'translateX(-8px)')};
   pointer-events: ${props => (props.$isOpen ? 'auto' : 'none')};
   transition:
     opacity 180ms ease,
     transform 180ms ease;
-  transform-origin: right top;
+  transform-origin: left top;
 `;
 
 const ServicesStatus = ({
-  services = servicesStatusMock,
+  services = {}, // servicesStatusMock,
   label = 'Service metrics',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
