@@ -14,6 +14,10 @@ const Wrapper = styled.div`
   gap: 6px;
 `;
 
+const HeaderText = styled(Typography.Text)`
+  display: block;
+`;
+
 const SubRow = styled.div`
   display: flex;
   align-items: center;
@@ -25,17 +29,20 @@ const EmptyText = styled(Typography.Text)`
 
 const SubServicesPopover = ({
   subServices = [],
-
+  serviceName,
   serviceStatus,
 }) => {
   if (!subServices.length) {
     return (
       <Wrapper>
+        <HeaderText strong ellipsis>
+          {serviceName}
+        </HeaderText>
         {serviceStatus !== undefined ? (
           <SubRow>
             <StatusLamp isOk={isStatusOk(serviceStatus)} size={8} />
             <Typography.Text>
-              Status: {serviceStatus ? 'up' : 'down'}
+              Status: {isStatusOk(serviceStatus) ? 'up' : 'down'}
             </Typography.Text>
           </SubRow>
         ) : (
@@ -47,6 +54,9 @@ const SubServicesPopover = ({
 
   return (
     <Wrapper>
+      <HeaderText strong ellipsis>
+        {serviceName}
+      </HeaderText>
       {subServices.map((item, index) => (
         <SubRow key={item.subServiceName || item.serviceName || index}>
           <StatusLamp isOk={isStatusOk(item.status)} size={8} />
@@ -62,6 +72,7 @@ const SubServicesPopover = ({
 };
 
 SubServicesPopover.propTypes = {
+  serviceName: PropTypes.string.isRequired,
   serviceStatus: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
   subServices: PropTypes.arrayOf(
     PropTypes.shape({

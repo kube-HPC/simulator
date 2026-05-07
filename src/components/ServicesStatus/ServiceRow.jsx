@@ -43,7 +43,7 @@ const ServiceRow = ({ service }) => {
     <Row>
       <StatusLamp isOk={isOk} />
       <ServiceName
-        ellipsis={{ tooltip: service.serviceName }}
+        ellipsis
         style={{ maxWidth: SERVICE_ROW_MAX_WIDTH - 34 }}>
         {service.serviceName}
       </ServiceName>
@@ -54,6 +54,7 @@ const ServiceRow = ({ service }) => {
     <Popover
       content={
         <SubServicesPopover
+          serviceName={service.serviceName}
           subServices={subServices}
           serviceStatus={service.status}
         />
