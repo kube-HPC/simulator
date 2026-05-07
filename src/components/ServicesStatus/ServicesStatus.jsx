@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 import StatusLamp from './StatusLamp';
 import ServiceRow from './ServiceRow';
+import ServicesVisibilityControl from './ServicesVisibilityControl';
 
 // import servicesStatusMock from './mockData2';
 
@@ -43,9 +44,16 @@ const Container = styled.div`
   position: relative;
   display: inline-flex;
   flex-direction: row;
+  align-items: flex-start;
   gap: 8px;
   border-radius: 6px;
   border: 1px solid rgba(0, 0, 0, 0.12);
+`;
+
+const ControlsRow = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 `;
 
 const HeaderRow = styled.div`
@@ -100,24 +108,36 @@ const ServicesStatus = ({
 
   return (
     <Container>
-      <HeaderRow
-        role="button"
-        tabIndex={0}
-        onClick={handleToggle}
-        onKeyDown={event => {
-          if (event.key === 'Enter' || event.key === ' ') handleToggle();
-        }}>
-        <StatusLamp isOk={overallHealthStatus} />
-        <Typography.Text strong style={{ whiteSpace: 'nowrap' }}>
-          {label}
-        </Typography.Text>
-      </HeaderRow>
+      <ServicesVisibilityControl services={normalizedServices}>
+        {({ visibleServices, control }) => (
+          <>
+            <ControlsRow>
+              <HeaderRow
+                role="button"
+                tabIndex={0}
+                onClick={handleToggle}
+                onKeyDown={event => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    handleToggle();
+                  }
+                }}>
+                <StatusLamp isOk={overallHealthStatus} />
+                <Typography.Text strong style={{ whiteSpace: 'nowrap' }}>
+                  {label}
+                </Typography.Text>
+              </HeaderRow>
 
-      <ServicesList $isOpen={isOpen}>
-        {normalizedServices.map(service => (
-          <ServiceRow key={service.serviceName} service={service} />
-        ))}
-      </ServicesList>
+              {control}
+            </ControlsRow>
+
+            <ServicesList $isOpen={isOpen}>
+              {visibleServices.map(service => (
+                <ServiceRow key={service.serviceName} service={service} />
+              ))}
+            </ServicesList>
+          </>
+        )}
+      </ServicesVisibilityControl>
     </Container>
   );
 };
