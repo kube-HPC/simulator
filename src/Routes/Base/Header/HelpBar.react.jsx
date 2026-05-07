@@ -19,16 +19,6 @@ const Container = styled(FlexBox.Auto)`
   position: relative;
 `;
 
-const WapperServicesStatus = styled.div`
-  overflow: hidden;
-  display: flex;
-  justify-content: flex-end;
-  width: fit-content;
-  // max-width: 50vw;
-  min-width: 0;
-  height: 36px;
-`;
-
 const HelpBar = () => {
   const { keycloakEnable, healthMonitoringEnabled } = useSelector(
     selectors.connection
@@ -38,9 +28,7 @@ const HelpBar = () => {
   return (
     <Container className={USER_GUIDE.HEADER.SOCIALS}>
       {healthMonitoringEnabled && (
-        <WapperServicesStatus>
-          <ServicesStatus services={data} />
-        </WapperServicesStatus>
+        <ServicesStatus services={data} widthPercent={100} />
       )}
       <InactiveModeTag />
 

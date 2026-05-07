@@ -40,6 +40,15 @@ const getOverallHealthStatus = (servicesPayload, normalizedServices) => {
   });
 };
 
+const WrapperServicesStatus = styled.div`
+  overflow: hidden;
+  display: flex;
+  justify-content: flex-end;
+  width: ${props => `${props.$widthPercent}%`};
+  min-width: 0;
+  height: 36px;
+`;
+
 const Container = styled.div`
   position: relative;
   display: inline-flex;
@@ -91,6 +100,7 @@ const ServicesList = styled.div`
 const ServicesStatus = ({
   services = {}, // servicesStatusMock,
   label = 'Service metrics',
+  widthPercent = 100,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -107,38 +117,40 @@ const ServicesStatus = ({
   const handleToggle = () => setIsOpen(prev => !prev);
 
   return (
-    <Container>
-      <ServicesVisibilityControl services={normalizedServices}>
-        {({ visibleServices, control }) => (
-          <>
-            <ControlsRow>
-              <HeaderRow
-                role="button"
-                tabIndex={0}
-                onClick={handleToggle}
-                onKeyDown={event => {
-                  if (event.key === 'Enter' || event.key === ' ') {
-                    handleToggle();
-                  }
-                }}>
-                <StatusLamp isOk={overallHealthStatus} />
-                <Typography.Text strong style={{ whiteSpace: 'nowrap' }}>
-                  {label}
-                </Typography.Text>
-              </HeaderRow>
+    <WrapperServicesStatus $widthPercent={widthPercent}>
+      <Container>
+        <ServicesVisibilityControl services={normalizedServices}>
+          {({ visibleServices, control }) => (
+            <>
+              <ControlsRow>
+                <HeaderRow
+                  role="button"
+                  tabIndex={0}
+                  onClick={handleToggle}
+                  onKeyDown={event => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      handleToggle();
+                    }
+                  }}>
+                  <StatusLamp isOk={overallHealthStatus} />
+                  <Typography.Text strong style={{ whiteSpace: 'nowrap' }}>
+                    {label}
+                  </Typography.Text>
+                </HeaderRow>
 
-              {control}
-            </ControlsRow>
+                {control}
+              </ControlsRow>
 
-            <ServicesList $isOpen={isOpen}>
-              {visibleServices.map(service => (
-                <ServiceRow key={service.serviceName} service={service} />
-              ))}
-            </ServicesList>
-          </>
-        )}
-      </ServicesVisibilityControl>
-    </Container>
+              <ServicesList $isOpen={isOpen}>
+                {visibleServices.map(service => (
+                  <ServiceRow key={service.serviceName} service={service} />
+                ))}
+              </ServicesList>
+            </>
+          )}
+        </ServicesVisibilityControl>
+      </Container>
+    </WrapperServicesStatus>
   );
 };
 
@@ -178,6 +190,7 @@ ServicesStatus.propTypes = {
     }),
   ]),
   label: PropTypes.string,
+  widthPercent: PropTypes.number,
 };
 
 export default ServicesStatus;
