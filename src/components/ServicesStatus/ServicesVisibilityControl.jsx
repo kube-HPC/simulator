@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { SettingOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Dropdown } from 'antd';
 import styled from 'styled-components';
+import StatusLamp from './StatusLamp';
 
 const VISIBILITY_STORAGE_KEY = 'servicesMatrixVisibility';
 const DEFAULT_VISIBLE_SERVICES = [
@@ -11,6 +12,7 @@ const DEFAULT_VISIBLE_SERVICES = [
   'algorithm-operator',
   'redis',
 ];
+const isStatusOk = status => status === true || status === 'OK';
 
 const isDefaultVisibleService = serviceName =>
   DEFAULT_VISIBLE_SERVICES.includes(serviceName);
@@ -55,6 +57,21 @@ const SettingsButton = styled.button`
   }
 `;
 
+const ServiceOptionLabel = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+`;
+
+const ServiceOptionName = styled.span`
+  white-space: nowrap;
+`;
+
+const StatusMarker = styled(StatusLamp)`
+  margin-right: 0;
+`;
+
 const ServicesVisibilityControl = ({ services, children }) => {
   const [visibilityState, setVisibilityState] = useState(readVisibilityState);
 
@@ -81,6 +98,23 @@ const ServicesVisibilityControl = ({ services, children }) => {
     [services, servicesVisibility]
   );
 
+  const servicesStatus = useMemo(
+    () =>
+      services.reduce((acc, service) => {
+        const { serviceName, status } = service;
+        if (!serviceName || hasOwn(acc, serviceName)) return acc;
+
+        if (status === undefined || status === null) {
+          acc[serviceName] = 'unknown';
+          return acc;
+        }
+
+        acc[serviceName] = isStatusOk(status) ? 'up' : 'down';
+        return acc;
+      }, {}),
+    [services]
+  );
+
   const menuItems = useMemo(
     () => [
       ...Object.keys(servicesVisibility).map(serviceName => ({
@@ -98,7 +132,17 @@ const ServicesVisibilityControl = ({ services, children }) => {
               setVisibilityState(nextState);
               writeVisibilityState(nextState);
             }}>
-            {serviceName}
+            <ServiceOptionLabel>
+              <StatusMarker
+                isOk={
+                  servicesStatus[serviceName] === 'unknown'
+                    ? null
+                    : servicesStatus[serviceName] === 'up'
+                }
+                size={8}
+              />
+              <ServiceOptionName>{serviceName}</ServiceOptionName>
+            </ServiceOptionLabel>
           </Checkbox>
         ),
       })),
@@ -127,7 +171,7 @@ const ServicesVisibilityControl = ({ services, children }) => {
         ),
       },
     ],
-    [servicesVisibility, visibilityState]
+    [servicesStatus, servicesVisibility, visibilityState]
   );
 
   const control = (
@@ -148,6 +192,7 @@ ServicesVisibilityControl.propTypes = {
   services: PropTypes.arrayOf(
     PropTypes.shape({
       serviceName: PropTypes.string,
+      status: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
     })
   ),
   children: PropTypes.func.isRequired,
