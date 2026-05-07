@@ -42,9 +42,7 @@ const ServiceRow = ({ service }) => {
   const content = (
     <Row>
       <StatusLamp isOk={isOk} />
-      <ServiceName
-        ellipsis
-        style={{ maxWidth: SERVICE_ROW_MAX_WIDTH - 34 }}>
+      <ServiceName ellipsis style={{ maxWidth: SERVICE_ROW_MAX_WIDTH - 34 }}>
         {service.serviceName}
       </ServiceName>
     </Row>
