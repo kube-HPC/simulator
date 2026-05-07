@@ -9,6 +9,7 @@ import { PIPELINE_QUERY } from 'graphql/queries';
 import { pipelineListVar, instanceFiltersVar } from 'cache';
 import { Empty } from 'antd';
 import styled from 'styled-components';
+import applyColumnPreferences from 'utils/applyColumnPreferences';
 
 import pipelineColumns from './pipelineColumns';
 
@@ -26,6 +27,9 @@ const GridWrapper = styled.div`
 const PipelinesTable = () => {
   const { keycloakEnable } = useSelector(selectors.connection);
   const { goTo } = usePath();
+  const savedPipelineCols = useSelector(
+    state => selectors.preferences(state).data.tables.pipelines.columns
+  );
 
   const pipelineList = useReactiveVar(pipelineListVar);
   const instanceFilter = useReactiveVar(instanceFiltersVar);
@@ -56,11 +60,9 @@ const PipelinesTable = () => {
   }, [query.data?.pipelines?.pipelinesCount]);
 
   const columnDefs = useMemo(() => {
-    if (!keycloakEnable) {
-      return pipelineColumns.slice(1);
-    }
-    return pipelineColumns;
-  }, [keycloakEnable]);
+    const cols = !keycloakEnable ? pipelineColumns.slice(1) : pipelineColumns;
+    return applyColumnPreferences(cols, savedPipelineCols);
+  }, [keycloakEnable, savedPipelineCols]);
 
   const onRowDoubleClicked = useCallback(
     params => {
@@ -91,6 +93,7 @@ const PipelinesTable = () => {
           <HKGrid
             rowData={pipelineList}
             columnDefs={columnDefs}
+            tableId="pipelines"
             getRowId={params => `pipeline-${params.data.name}`}
             onRowDoubleClicked={onRowDoubleClicked}
           />

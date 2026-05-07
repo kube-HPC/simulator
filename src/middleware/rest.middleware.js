@@ -39,7 +39,11 @@ const _formatError = payload => {
     : payload.message || DEFAULT_ERROR_MSG;
 };
 
-const ignoreActions = [AT.README_GET_ALGORITHM, AT.README_GET_PIPELINE];
+const ignoreActions = [
+  AT.README_GET_ALGORITHM,
+  AT.README_GET_PIPELINE,
+  AT.PREFERENCES_FETCH,
+];
 
 const _ignoreError = actionType => ignoreActions.includes(actionType);
 

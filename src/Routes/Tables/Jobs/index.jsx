@@ -10,6 +10,7 @@ import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
 import { USER_GUIDE } from 'const';
 import { CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
+import applyColumnPreferences from 'utils/applyColumnPreferences';
 import useJobsFunctionsLimit from './useJobsFunctionsLimit';
 
 import GridView from './GridView';
@@ -53,6 +54,9 @@ const CaretUpOutlinedCenter = styled(CaretUpOutlined)`
 
 const JobsTable = () => {
   const { keycloakEnable } = useSelector(selectors.connection);
+  const savedJobsCols = useSelector(
+    state => selectors.preferences(state).data.tables.jobs.columns
+  );
   const {
     zoomedChangedDate,
     filterToggeled,
@@ -76,17 +80,19 @@ const JobsTable = () => {
   const slicedColumnsRef = useRef({ source: null, result: null });
 
   const columnDefs = useMemo(() => {
+    let cols = columns;
     if (!keycloakEnable) {
       // Return cached sliced columns if source hasn't changed
       if (slicedColumnsRef.current.source === columns) {
-        return slicedColumnsRef.current.result;
+        cols = slicedColumnsRef.current.result;
+      } else {
+        const sliced = columns.slice(1);
+        slicedColumnsRef.current = { source: columns, result: sliced };
+        cols = sliced;
       }
-      const sliced = columns.slice(1);
-      slicedColumnsRef.current = { source: columns, result: sliced };
-      return sliced;
     }
-    return columns;
-  }, [columns, keycloakEnable]);
+    return applyColumnPreferences(cols, savedJobsCols);
+  }, [columns, keycloakEnable, savedJobsCols]);
 
   const rowData = useMemo(() => _dataSource || [], [_dataSource]);
 
@@ -155,6 +161,7 @@ const JobsTable = () => {
       <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
         <HKGrid
           id="jobsTable"
+          tableId="jobs"
           className={USER_GUIDE.TABLE}
           rowData={rowData}
           columnDefs={columnDefs}
