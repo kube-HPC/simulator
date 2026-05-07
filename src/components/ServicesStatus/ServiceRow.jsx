@@ -23,7 +23,6 @@ const Row = styled.div`
 
 const ServiceRow = ({ service }) => {
   const subServices = useMemo(() => service.services || [], [service.services]);
-  const hasSubServices = subServices.length > 0;
 
   const isOk = useMemo(
     () =>
@@ -41,13 +40,14 @@ const ServiceRow = ({ service }) => {
     </Row>
   );
 
-  if (!hasSubServices) {
-    return content;
-  }
-
   return (
     <Popover
-      content={<SubServicesPopover subServices={subServices} />}
+      content={
+        <SubServicesPopover
+          subServices={subServices}
+          serviceStatus={service.status}
+        />
+      }
       placement="bottom"
       trigger="hover">
       {content}

@@ -23,11 +23,24 @@ const EmptyText = styled(Typography.Text)`
   color: rgba(0, 0, 0, 0.45);
 `;
 
-const SubServicesPopover = ({ subServices = [] }) => {
+const SubServicesPopover = ({
+  subServices = [],
+
+  serviceStatus,
+}) => {
   if (!subServices.length) {
     return (
       <Wrapper>
-        <EmptyText>No sub services</EmptyText>
+        {serviceStatus !== undefined ? (
+          <SubRow>
+            <StatusLamp isOk={isStatusOk(serviceStatus)} size={8} />
+            <Typography.Text>
+              Status: {serviceStatus ? 'up' : 'down'}
+            </Typography.Text>
+          </SubRow>
+        ) : (
+          <EmptyText>No sub services</EmptyText>
+        )}
       </Wrapper>
     );
   }
@@ -49,6 +62,7 @@ const SubServicesPopover = ({ subServices = [] }) => {
 };
 
 SubServicesPopover.propTypes = {
+  serviceStatus: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
   subServices: PropTypes.arrayOf(
     PropTypes.shape({
       subServiceName: PropTypes.string,
