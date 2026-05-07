@@ -44,7 +44,7 @@ const WrapperServicesStatus = styled.div`
   overflow: hidden;
   display: flex;
   justify-content: flex-end;
-  width: ${props => `${props.$widthPercent}%`};
+  width: ${props => `${props.$widthPercent}px`};
   min-width: 0;
   height: 36px;
 `;
@@ -55,6 +55,7 @@ const Container = styled.div`
   flex-direction: row;
   align-items: flex-start;
   gap: 8px;
+  min-width: 0;
   border-radius: 6px;
   border: 1px solid rgba(0, 0, 0, 0.12);
 `;
@@ -63,6 +64,7 @@ const ControlsRow = styled.div`
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  flex-shrink: 0;
 `;
 
 const HeaderRow = styled.div`
@@ -79,12 +81,15 @@ const HeaderRow = styled.div`
 `;
 
 const ServicesList = styled.div`
-  width: max-content;
+  width: ${props => (props.$isOpen ? 'auto' : 'max-content')};
   position: ${props => (props.$isOpen ? 'static' : 'absolute')};
   left: calc(100% + 12px);
   top: 0;
   display: flex;
   flex-direction: row;
+  flex: ${props => (props.$isOpen ? 1 : 'unset')};
+  min-width: ${props => (props.$isOpen ? 0 : 'unset')};
+  overflow: ${props => (props.$isOpen ? 'hidden' : 'visible')};
 
   align-items: flex-start;
   gap: 8px;

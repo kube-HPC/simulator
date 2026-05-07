@@ -7,6 +7,7 @@ import StatusLamp from './StatusLamp';
 import SubServicesPopover from './SubServicesPopover';
 
 const isStatusOk = status => status === true || status === 'OK';
+const SERVICE_ROW_MAX_WIDTH = 180;
 
 const Row = styled.div`
   display: inline-flex;
@@ -15,10 +16,17 @@ const Row = styled.div`
   border-radius: 6px;
   cursor: default;
   user-select: none;
+  max-width: ${SERVICE_ROW_MAX_WIDTH}px;
+  min-width: 0;
 
   &:hover {
     background: rgba(0, 0, 0, 0.04);
   }
+`;
+
+const ServiceName = styled(Typography.Text)`
+  display: block;
+  min-width: 0;
 `;
 
 const ServiceRow = ({ service }) => {
@@ -34,9 +42,11 @@ const ServiceRow = ({ service }) => {
   const content = (
     <Row>
       <StatusLamp isOk={isOk} />
-      <Typography.Text style={{ whiteSpace: 'nowrap' }}>
+      <ServiceName
+        ellipsis={{ tooltip: service.serviceName }}
+        style={{ maxWidth: SERVICE_ROW_MAX_WIDTH - 34 }}>
         {service.serviceName}
-      </Typography.Text>
+      </ServiceName>
     </Row>
   );
 
