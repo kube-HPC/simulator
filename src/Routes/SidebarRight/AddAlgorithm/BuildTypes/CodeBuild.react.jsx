@@ -20,16 +20,23 @@ const CodeBuild = ({ required, fileList, setFileList, isEdit }) => (
       name={splitByDot(ENVIRONMENT.field)}
       label={ENVIRONMENT.label}
       rules={[{ required, message: ENVIRONMENT.message }]}>
-      <SelectEnvOptions placeholder={ENVIRONMENT.placeholder} />
+      <SelectEnvOptions
+        placeholder={ENVIRONMENT.placeholder}
+        data-testid="add-algorithm-code-environment-select"
+      />
     </Form.Item>
     <Form.Item
       name={splitByDot(ENTRY_POINT.field)}
       label={ENTRY_POINT.label}
       rules={[{ required, message: ENTRY_POINT.message }]}>
-      <Input placeholder={ENTRY_POINT.placeholder} />
+      <Input
+        placeholder={ENTRY_POINT.placeholder}
+        data-testid="add-algorithm-code-entry-point-input"
+      />
     </Form.Item>
     <Form.Item label={BASE_IMAGE.label} name={splitByDot(BASE_IMAGE.field)}>
       <Input
+        data-testid="add-algorithm-code-base-image-input"
         disabled={isEdit && fileList.length === 0}
         placeholder={BASE_IMAGE.placeholder}
       />
@@ -37,6 +44,7 @@ const CodeBuild = ({ required, fileList, setFileList, isEdit }) => (
 
     <Form.Item wrapperCol={null} style={marginTop}>
       <AlgorithmUploadFile
+        testId="add-algorithm-code-upload"
         fileList={fileList}
         setFileList={setFileList}
         isEdit={isEdit}

@@ -24,7 +24,10 @@ const OutputNode = ({ id }) => {
   return (
     <ctx.Provider value={contextValue}>
       <Field name={['description']} title="Description" skipValidation>
-        <Input placeholder="Description" />
+        <Input
+          placeholder="Description"
+          data-testid={`add-pipeline-nodes-${id}-output-description-input`}
+        />
       </Field>
       <Field
         name={['mem']}
@@ -35,6 +38,7 @@ const OutputNode = ({ id }) => {
             : '512Mi'
         }>
         <MemoryField
+          testId={`add-pipeline-nodes-${id}-output-mem`}
           options={memoryTypes.map(value => ({
             value,
             label: value,
@@ -42,7 +46,13 @@ const OutputNode = ({ id }) => {
         />
       </Field>
       <Divider>Inputs</Divider>
-      <Controller placeholder="Input" tooltip="Input" nodeIdx={id} isRequired />
+      <Controller
+        placeholder="Input"
+        tooltip="Input"
+        nodeIdx={id}
+        isRequired
+        testIdPrefix={`add-pipeline-node-${id}-input`}
+      />
     </ctx.Provider>
   );
 };

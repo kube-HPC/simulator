@@ -37,7 +37,7 @@ const useCounters = () => {
       pipelineName: iJobs?.pipelineName || undefined,
       pipelineStatus: iJobs?.pipelineStatus || undefined,
       user: iJobs?.user || undefined,
-      tag: iJobs?.tag || undefined,
+      tags: iJobs?.tags || undefined,
       datesRange: {
         from: iJobs?.datesRange?.from || dateTimeDefault.time,
         to: iJobs?.datesRange?.to || null,

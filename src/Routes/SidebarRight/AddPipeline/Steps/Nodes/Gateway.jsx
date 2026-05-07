@@ -38,11 +38,17 @@ const GatewayNode = ({ id }) => {
     <>
       <ctx.Provider value={providerValue}>
         <Field name={['name']} title="Name">
-          <Input placeholder="Name Gateway" />
+          <Input
+            placeholder="Name Gateway"
+            data-testid={`add-pipeline-nodes-${id}-gateway-name-input`}
+          />
         </Field>
 
         <Field name={['description']} title="Description" skipValidation>
-          <Input placeholder="Description" />
+          <Input
+            placeholder="Description"
+            data-testid={`add-pipeline-nodes-${id}-gateway-description-input`}
+          />
         </Field>
         <Field
           name={['mem']}
@@ -53,6 +59,7 @@ const GatewayNode = ({ id }) => {
               : '512Mi'
           }>
           <MemoryField
+            testId={`add-pipeline-nodes-${id}-gateway-mem`}
             options={memoryTypes.map(value => ({
               value,
               label: value,
@@ -60,7 +67,10 @@ const GatewayNode = ({ id }) => {
           />
         </Field>
         <Field name={['cpu']} title="Cpu" initialValue={0.5} skipValidation>
-          <InputNumber min={0} />
+          <InputNumber
+            min={0}
+            data-testid={`add-pipeline-nodes-${id}-gateway-cpu-input`}
+          />
         </Field>
       </ctx.Provider>
 

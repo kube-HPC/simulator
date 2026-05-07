@@ -21,13 +21,14 @@ const ContainerFormItem = styled(Form.Item)`
   }
 `;
 
-const VolumeList = ({ nameList }) => (
+const VolumeList = ({ nameList, testIdPrefix = 'add-algorithm-volume' }) => (
   <Form.List name={nameList}>
     {(fieldsVolumeList, { add: addVolume, remove: removeVolume }) => (
       <>
         {fieldsVolumeList.map(({ key, name, ...rest }) => (
           <React.Fragment key={key}>
             <MinusCircleOutlined
+              data-testid={`${testIdPrefix}-remove-${name}`}
               title="delete volumes"
               onClick={() => removeVolume(name)}
               style={{
@@ -40,7 +41,7 @@ const VolumeList = ({ nameList }) => (
             <FlexItem>
               <div style={{ width: '100%' }}>
                 <ContainerFormItem label="Name" {...rest} name={[name, 'name']}>
-                  <Input />
+                  <Input data-testid={`${testIdPrefix}-name-${name}`} />
                 </ContainerFormItem>
 
                 <FlexItem>
@@ -48,7 +49,9 @@ const VolumeList = ({ nameList }) => (
                     {...rest}
                     name={[name, 'typeVolume']}
                     initialValue="emptyDir">
-                    <Radio.Group buttonStyle="solid">
+                    <Radio.Group
+                      buttonStyle="solid"
+                      data-testid={`${testIdPrefix}-type-${name}`}>
                       <Radio.Button value="emptyDir">EmptyDir</Radio.Button>
                       <Radio.Button value="persistentVolumeClaim">
                         persistentVolumeClaim (PVC)
@@ -72,7 +75,9 @@ const VolumeList = ({ nameList }) => (
                             label="Value"
                             {...rest}
                             name={[name, 'emptyDir']}>
-                            <Input />
+                            <Input
+                              data-testid={`${testIdPrefix}-value-empty-dir-${name}`}
+                            />
                           </ContainerFormItem>
                         )}
 
@@ -81,7 +86,9 @@ const VolumeList = ({ nameList }) => (
                             label="Value"
                             {...rest}
                             name={[name, 'persistentVolumeClaim', 'claimName']}>
-                            <Input />
+                            <Input
+                              data-testid={`${testIdPrefix}-value-pvc-${name}`}
+                            />
                           </ContainerFormItem>
                         )}
 
@@ -90,7 +97,9 @@ const VolumeList = ({ nameList }) => (
                             label="Value"
                             {...rest}
                             name={[name, 'configMap', 'name']}>
-                            <Input />
+                            <Input
+                              data-testid={`${testIdPrefix}-value-config-map-${name}`}
+                            />
                           </ContainerFormItem>
                         )}
 
@@ -99,7 +108,9 @@ const VolumeList = ({ nameList }) => (
                             label="Value"
                             {...rest}
                             name={[name, 'secret', 'secretName']}>
-                            <Input />
+                            <Input
+                              data-testid={`${testIdPrefix}-value-secret-${name}`}
+                            />
                           </ContainerFormItem>
                         )}
                       </>
@@ -113,6 +124,7 @@ const VolumeList = ({ nameList }) => (
         ))}
         <Form.Item>
           <Button
+            data-testid={`${testIdPrefix}-add-button`}
             type="dashed"
             onClick={() => addVolume()}
             block
@@ -134,4 +146,5 @@ VolumeList.propTypes = {
       PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     ),
   ]),
+  testIdPrefix: PropTypes.string,
 };

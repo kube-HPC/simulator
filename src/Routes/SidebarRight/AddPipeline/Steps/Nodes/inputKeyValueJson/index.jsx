@@ -44,6 +44,7 @@ const ControllerKeyValue = ({
   isValueArray = false,
   placeholderKey = 'Flow key',
   isOpenGraphNodes = false,
+  testIdPrefix = 'add-pipeline-key-value',
 }) => {
   const { initialState, form, valuesState } = useWizardContext();
   const [modal, contextHolder] = Modal.useModal();
@@ -149,7 +150,11 @@ const ControllerKeyValue = ({
                 ]}
                 key={`inputName${key}`}
                 onChange={() => handleChange()}>
-                <Input key={`inputN${key}`} placeholder={placeholderKey} />
+                <Input
+                  key={`inputN${key}`}
+                  placeholder={placeholderKey}
+                  data-testid={`${testIdPrefix}-key-${name}`}
+                />
               </Form.Item>
               {isValueSignBoard ? (
                 <SignBoard
@@ -189,11 +194,13 @@ const ControllerKeyValue = ({
                     placeholder={valuePlaceholder}
                     key={`inputValue${key}`}
                     width={340}
+                    data-testid={`${testIdPrefix}-value-${name}`}
                   />
                 </Form.Item>
               )}
               {isOpenGraphNodes && (
                 <IconNodeIndexOutlined
+                  data-testid={`${testIdPrefix}-preview-graph-${name}`}
                   key={`modelGraph${key}`}
                   onClick={() => {
                     openGraphModal(fieldKey);
@@ -201,6 +208,7 @@ const ControllerKeyValue = ({
                 />
               )}
               <IconDelete
+                data-testid={`${testIdPrefix}-remove-${name}`}
                 key={`remove${key}`}
                 onClick={() => {
                   remove(name);
@@ -212,6 +220,7 @@ const ControllerKeyValue = ({
           {contextHolder}
           <Form.Item>
             <Button
+              data-testid={`${testIdPrefix}-add-button`}
               type="dashed"
               onClick={() => add()}
               block
@@ -238,6 +247,7 @@ ControllerKeyValue.propTypes = {
   placeholderKey: PropTypes.string,
   nameRef: PropTypes.arrayOf(PropTypes.string).isRequired,
   isOpenGraphNodes: PropTypes.bool,
+  testIdPrefix: PropTypes.string,
 };
 
 export default React.memo(ControllerKeyValue);

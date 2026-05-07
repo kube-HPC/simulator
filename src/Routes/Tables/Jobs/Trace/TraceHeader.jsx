@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Card, Tag, Space, Typography } from 'antd';
 import { formatDuration, formatDateTime } from './traceUtils';
 import { getCurrentTheme } from './traceConstants';
+import SearchBox from './SearchBox';
 
 const { Title } = Typography;
 
@@ -19,18 +20,31 @@ const StyledCard = styled(Card)`
     props.$isDark ? '0 2px 8px rgba(0, 0, 0, 0.3)' : 'none'};
 
   .ant-card-body {
-    padding: 20px 16px;
+    padding: 16px;
     background: transparent;
   }
 `;
 
+/*
+ * HeaderContainer is a flex row that holds the metadata on the left and
+ * the search box on the right. flex-wrap lets them stack on narrow screens
+ * instead of overlapping.
+ */
 const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
 `;
 
-const HeaderContent = styled.div``;
+const HeaderContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+`;
 
 const StyledTitle = styled(Title)`
   &.ant-typography {
@@ -42,8 +56,12 @@ const StyledTitle = styled(Title)`
   }
 `;
 
-const StyledSpace = styled(Space)`
-  margin-top: 8px;
+/*
+ * Tags row: Ant Design Space with wrap={true} so the tags reflow to a second
+ * line on narrow screens instead of overflowing the card.
+ */
+const TagsRow = styled(Space)`
+  flex-wrap: wrap;
 `;
 
 const StyledTag = styled(Tag)`
@@ -51,7 +69,6 @@ const StyledTag = styled(Tag)`
 
   background-color: ${props => {
     if (!props.$isDark) return 'auto';
-
     switch (props.color) {
       case 'success':
         return '#173d17ff';
@@ -62,26 +79,15 @@ const StyledTag = styled(Tag)`
       default:
         return '#1e3a52';
     }
-  }} !important; // 👈 !important goes HERE, not inside the return
+  }} !important;
 
   color: ${props => {
     if (!props.$isDark) return 'auto';
-
-    switch (props.color) {
-      case 'success':
-        return '#ffffff';
-      case 'warning':
-        return '#ffffff';
-      case 'error':
-        return '#ffffff';
-      default:
-        return '#ffffff';
-    }
-  }} !important; // 👈 HERE
+    return '#ffffff';
+  }} !important;
 
   border-color: ${props => {
     if (!props.$isDark) return 'auto';
-
     switch (props.color) {
       case 'success':
         return '#52c41a';
@@ -92,25 +98,45 @@ const StyledTag = styled(Tag)`
       default:
         return '#40a9ff';
     }
-  }} !important; // 👈 HERE
+  }} !important;
 
   font-weight: 500;
   box-shadow: ${props =>
     props.$isDark ? '0 1px 3px rgba(0, 0, 0, 0.2)' : 'none'};
 `;
 
-const TraceHeader = ({ traceData }) => {
+/*
+ * SearchWrapper sits on the right of HeaderContainer. On narrow screens
+ * (≤ 550px) it spans the full width so the input isn't tiny.
+ */
+const SearchWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  align-self: center;
+
+  @media (max-width: 550px) {
+    width: 100%;
+
+    /* Let SearchBox's input stretch to fill */
+    & > div {
+      width: 100%;
+    }
+    & input,
+    & .ant-input-affix-wrapper {
+      width: 100% !important;
+    }
+  }
+`;
+
+const TraceHeader = ({ traceData, searchTerm, onSearchChange }) => {
   const [isDark, setIsDark] = useState(getCurrentTheme() === 'DARK');
 
-  // Listen for theme changes
   useEffect(() => {
     const checkTheme = () => {
       setIsDark(getCurrentTheme() === 'DARK');
     };
-
     const interval = setInterval(checkTheme, 500);
     window.addEventListener('storage', checkTheme);
-
     return () => {
       clearInterval(interval);
       window.removeEventListener('storage', checkTheme);
@@ -123,11 +149,12 @@ const TraceHeader = ({ traceData }) => {
   return (
     <StyledCard $isDark={isDark}>
       <HeaderContainer>
+        {/* Left: title + metadata tags */}
         <HeaderContent>
           <StyledTitle level={4} $isDark={isDark}>
             Trace Details
           </StyledTitle>
-          <StyledSpace size={20}>
+          <TagsRow size={[8, 6]} wrap>
             <StyledTag color="default" $isDark={isDark}>
               Start: {formatDateTime(traceData.startTime)}
             </StyledTag>
@@ -143,8 +170,13 @@ const TraceHeader = ({ traceData }) => {
             <StyledTag color="error" $isDark={isDark}>
               Total Spans: {spanCount}
             </StyledTag>
-          </StyledSpace>
+          </TagsRow>
         </HeaderContent>
+
+        {/* Right: search box — inline in the layout, never overlapping */}
+        <SearchWrapper>
+          <SearchBox searchTerm={searchTerm} onSearchChange={onSearchChange} />
+        </SearchWrapper>
       </HeaderContainer>
     </StyledCard>
   );
@@ -157,6 +189,8 @@ TraceHeader.propTypes = {
     startTime: PropTypes.number.isRequired,
     duration: PropTypes.number.isRequired,
   }).isRequired,
+  searchTerm: PropTypes.string.isRequired,
+  onSearchChange: PropTypes.func.isRequired,
 };
 
 export default React.memo(TraceHeader);

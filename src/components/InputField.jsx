@@ -26,6 +26,7 @@ const InputField = ({
   isValid = true,
   tooltip = null,
   id,
+  dataTestId = undefined,
   onChange,
   value,
   placeholder = null,
@@ -36,6 +37,7 @@ const InputField = ({
     <Input
       ref={inputRef}
       id={id}
+      data-testid={dataTestId}
       onChange={onChange}
       defaultValue={value}
       value={value}
@@ -71,6 +73,7 @@ InputField.propTypes = {
   isValid: PropTypes.bool,
   tooltip: PropTypes.string,
   id: PropTypes.node.isRequired,
+  dataTestId: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   value: PropTypes.oneOfType([
     PropTypes.object,

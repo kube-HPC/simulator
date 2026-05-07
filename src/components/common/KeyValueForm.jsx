@@ -3,7 +3,12 @@ import { Form, Input, Button, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
-const KeyValueForm = ({ fieldName, titleButtoAdd, buttonWidth }) => (
+const KeyValueForm = ({
+  fieldName,
+  titleButtoAdd,
+  buttonWidth,
+  testIdPrefix = undefined,
+}) => (
   <Form.List name={fieldName}>
     {(fields, { add, remove }) => (
       <>
@@ -17,20 +22,33 @@ const KeyValueForm = ({ fieldName, titleButtoAdd, buttonWidth }) => (
               name={[name, 'key']}
               fieldKey={[fieldKey, 'key']}
               rules={[{ required: true, message: 'Missing key' }]}>
-              <Input placeholder="Key" />
+              <Input
+                placeholder="Key"
+                data-testid={
+                  testIdPrefix ? `${testIdPrefix}-key-${name}` : undefined
+                }
+              />
             </Form.Item>
             <Form.Item
               {...restField}
               name={[name, 'value']}
               fieldKey={[fieldKey, 'value']}
               rules={[{ required: true, message: 'Missing value' }]}>
-              <Input placeholder="Value" />
+              <Input
+                placeholder="Value"
+                data-testid={
+                  testIdPrefix ? `${testIdPrefix}-value-${name}` : undefined
+                }
+              />
             </Form.Item>
             <MinusCircleOutlined onClick={() => remove(name)} />
           </Space>
         ))}
         <Form.Item>
           <Button
+            data-testid={
+              testIdPrefix ? `${testIdPrefix}-add-button` : undefined
+            }
             style={{ width: buttonWidth ?? '100%' }}
             type="dashed"
             onClick={() => add()}
@@ -53,6 +71,7 @@ KeyValueForm.propTypes = {
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   titleButtoAdd: PropTypes.string,
   buttonWidth: PropTypes.string,
+  testIdPrefix: PropTypes.string,
 };
 
 export default KeyValueForm;

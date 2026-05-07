@@ -40,7 +40,7 @@ export const instanceFiltersVar = makeVar({
     algorithmName: null,
     pipelineStatus: null,
     user: null,
-    tag: null,
+    tags: null,
     datesRange: { from: null, to: null },
   },
   pipelines: {

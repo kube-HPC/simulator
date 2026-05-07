@@ -14,7 +14,10 @@ const ImageBuild = ({ required }) => (
     name={splitByDot(ALGORITHM_IMAGE.field)}
     label={ALGORITHM_IMAGE.label}
     rules={[{ required, message: ALGORITHM_IMAGE.message }]}>
-    <Input placeholder={ALGORITHM_IMAGE.placeholder} />
+    <Input
+      placeholder={ALGORITHM_IMAGE.placeholder}
+      data-testid="add-algorithm-image-algorithm-image-input"
+    />
   </Form.Item>
 );
 

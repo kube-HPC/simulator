@@ -19,6 +19,7 @@ const InputNumberSwitch = forwardRef(
     {
       onChange = () => {}, // To affect the change you need to write a function onChange
       value = '',
+      testId = undefined,
     },
     ref
   ) => {
@@ -54,9 +55,11 @@ const InputNumberSwitch = forwardRef(
           value={numberValue}
           onChange={handleNumberChange}
           disabled={!disabled}
+          data-testid={testId ? `${testId}-input` : undefined}
         />
         <span>
           <Switch
+            data-testid={testId ? `${testId}-switch` : undefined}
             checked={disabled}
             onChange={handleSwitchChange}
             size="small"
@@ -70,6 +73,7 @@ const InputNumberSwitch = forwardRef(
 InputNumberSwitch.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
+  testId: PropTypes.string,
 };
 
 export default InputNumberSwitch;

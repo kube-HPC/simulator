@@ -11,7 +11,7 @@ const JobTags = ({ tags }) => {
   return (
     <span>
       {tags.slice(0, numberViewTags).map(tag => (
-        <Tooltip key={tag} title={tag}>
+        <Tooltip key={tag} title={`tags: ${tag}`}>
           <Tag
             variant="solid"
             color={getColorByName(
@@ -25,7 +25,7 @@ const JobTags = ({ tags }) => {
       ))}
 
       {tags.length > numberViewTags && (
-        <Tooltip title={tags.join(', ')}>
+        <Tooltip title={`tags: ${tags.join(', ')}`}>
           <Tag>...</Tag>
         </Tooltip>
       )}

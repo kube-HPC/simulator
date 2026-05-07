@@ -89,6 +89,17 @@ export const systemColors = getSystemColors(false);
 
 export const MINIMAP_HEIGHT = 100;
 
+// ─── Layout dimension constants ───────────────────────────────────────────────
+// Single source of truth for the three-column layout used by SpanRow,
+// TraceTimeline, and TimelineMarkers. Change these values here and all three
+// components stay perfectly aligned with zero manual syncing.
+export const NAME_COL_WIDTH = 250;
+export const NAME_COL_PADDING = 16; // matches the 16px right-padding in TimelineHeader
+export const METRICS_COL_WIDTH = 140;
+export const DEPTH_INDENT = 20;
+export const MAX_DEPTH_INDENT = 120; // caps at depth 6 effectively
+export const SPAN_LIST_MIN_HEIGHT = 200;
+
 // Helper to detect current theme
 export const getCurrentTheme = () => {
   const storedTheme = localStorage.getItem('hkubeTheme');

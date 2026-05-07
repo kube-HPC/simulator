@@ -14,6 +14,7 @@ const Triggers = () => {
       </Form.Item>
       <Form.Item label="Pipelines" name={['triggers', 'pipelines']}>
         <Select
+          data-testid="add-pipeline-options-triggers-pipelines-select"
           mode="multiple"
           placeholder="Pick Pipelines to Trigger Current One"
           options={pipelineNames || []}

@@ -8,14 +8,23 @@ import React, {
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import TraceHeader from './TraceHeader';
-import SearchBox from './SearchBox';
 import TraceTimeline from './TraceTimeline';
 import TraceTimelineMinimap from './TraceTimelineMinimap';
 import SpanRow from './SpanRow';
 import { getCurrentTheme, getSystemColors } from './traceConstants';
 
+/*
+ * VIEWPORT_OFFSET — height of everything outside ViewerContainer
+ * (top navbar + page padding/margins). Adjust if the app shell changes.
+ */
+const VIEWPORT_OFFSET = 120;
+
 const ViewerContainer = styled.div`
   position: relative;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - ${VIEWPORT_OFFSET}px);
+  min-height: 400px;
   background: ${props => {
     const colors = getSystemColors(props.$isDark);
     return colors.background;
@@ -30,32 +39,30 @@ const ViewerContainer = styled.div`
 `;
 
 const SpanListContainer = styled.div`
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   background: ${props => {
     const colors = getSystemColors(props.$isDark);
     return props.$isDark ? '#1f2937' : colors.background;
   }};
-  max-height: 600px;
-  overflow-y: auto;
   border-bottom: 1px solid
     ${props => {
       const colors = getSystemColors(props.$isDark);
       return colors.border;
     }};
 
-  /* Custom scrollbar */
   &::-webkit-scrollbar {
     width: 10px;
   }
-
   &::-webkit-scrollbar-track {
     background: ${props => (props.$isDark ? '#1f2937' : '#f1f1f1')};
   }
-
   &::-webkit-scrollbar-thumb {
     background: ${props => (props.$isDark ? '#3d5a7e' : '#888')};
     border-radius: 5px;
   }
-
   &::-webkit-scrollbar-thumb:hover {
     background: ${props => (props.$isDark ? '#4a6a92' : '#555')};
   }
@@ -69,18 +76,12 @@ const ModernTraceViewer = ({ data }) => {
   const [minimapMode, setMinimapMode] = useState('highlight');
   const [isDark, setIsDark] = useState(getCurrentTheme() === 'DARK');
 
-  // The inner scrollable span list container
   const spanListRef = useRef(null);
-  // spanID → DOM node for each SpanRow's outer element
   const spanRowRefs = useRef({});
-  // Holds the pending scroll target spanID to execute after render
-  const pendingScrollSpanId = useRef(null);
+  const [pendingScrollSpanId, setPendingScrollSpanId] = useState(null);
 
-  // Listen for theme changes
   useEffect(() => {
-    const checkTheme = () => {
-      setIsDark(getCurrentTheme() === 'DARK');
-    };
+    const checkTheme = () => setIsDark(getCurrentTheme() === 'DARK');
     const interval = setInterval(checkTheme, 500);
     window.addEventListener('storage', checkTheme);
     return () => {
@@ -91,27 +92,18 @@ const ModernTraceViewer = ({ data }) => {
 
   const toggleSpanDetails = spanId => {
     const newExpanded = new Set(expandedSpans);
-    if (newExpanded.has(spanId)) {
-      newExpanded.delete(spanId);
-    } else {
-      newExpanded.add(spanId);
-    }
+    if (newExpanded.has(spanId)) newExpanded.delete(spanId);
+    else newExpanded.add(spanId);
     setExpandedSpans(newExpanded);
   };
 
   const toggleChildrenVisibility = spanId => {
     const newCollapsed = new Set(collapsedChildren);
-    if (newCollapsed.has(spanId)) {
-      newCollapsed.delete(spanId);
-    } else {
-      newCollapsed.add(spanId);
-    }
+    if (newCollapsed.has(spanId)) newCollapsed.delete(spanId);
+    else newCollapsed.add(spanId);
     setCollapsedChildren(newCollapsed);
   };
 
-  // Build the flat ordered hierarchy from the span tree.
-  // In "selection" mode spans outside the window are filtered out.
-  // In "highlight" mode all spans are kept.
   const spanHierarchy = useMemo(() => {
     if (!data || !data.spans) return [];
 
@@ -165,11 +157,13 @@ const ModernTraceViewer = ({ data }) => {
     return hierarchy;
   }, [data, collapsedChildren, selectedTimeRange, minimapMode]);
 
-  // ── Scroll helper ────────────────────────────────────────────────────────
-  // Given a spanId, finds its topmost visible ancestor then scrolls the inner
-  // container so that row lands at the very top of the visible area.
-  // Uses offsetTop accumulated relative to the container (not the page) to
-  // avoid interference from any outer page scroll.
+  // ── Scroll helper ─────────────────────────────────────────────────────────
+  // Resolves the topmost visible ancestor of the target span, then scrolls
+  // the container so that row is vertically centered in the visible area.
+  // Uses getBoundingClientRect() instead of offsetParent walk — immune to
+  // CSS positioning context issues.
+  // Snaps with behavior:'instant' before measuring to cancel any in-flight
+  // smooth scroll and ensure stable layout measurements.
   const scrollToRootOf = useCallback(
     targetSpanId => {
       const container = spanListRef.current;
@@ -206,42 +200,46 @@ const ModernTraceViewer = ({ data }) => {
         spanRowRefs.current[rootId] || spanRowRefs.current[targetSpanId];
       if (!node) return;
 
-      // Accumulate offsetTop relative to the scrollable container, not the
-      // document root — this is immune to outer page scroll position.
-      let offsetTop = 0;
-      let el = node;
-      while (el && el !== container) {
-        offsetTop += el.offsetTop;
-        el = el.offsetParent;
-      }
+      // Cancel any in-flight smooth scroll before measuring so
+      // getBoundingClientRect() returns stable positions
+      container.scrollTo({ top: container.scrollTop, behavior: 'instant' });
 
-      container.scrollTo({ top: Math.max(0, offsetTop), behavior: 'smooth' });
+      const containerRect = container.getBoundingClientRect();
+      const nodeRect = node.getBoundingClientRect();
+
+      const rowTopRelativeToContainer =
+        nodeRect.top - containerRect.top + container.scrollTop;
+
+      const containerHeight = container.clientHeight;
+      const rowHeight = node.offsetHeight;
+      const scrollTarget =
+        rowTopRelativeToContainer - containerHeight / 2 + rowHeight / 2;
+
+      container.scrollTo({
+        top: Math.max(0, scrollTarget),
+        behavior: 'smooth',
+      });
     },
     [spanHierarchy]
   );
 
-  // ── Post-render scroll effect ────────────────────────────────────────────
-  // handleTimeRangeSelection stores the target spanId in pendingScrollSpanId.
-  // This effect runs after every render. If a target is waiting, it consumes
-  // it and fires the scroll inside a requestAnimationFrame so the browser has
-  // fully painted the updated rows before we read their positions.
+  // ── Post-render scroll effect ──────────────────────────────────────────────
+  // Fires only when pendingScrollSpanId state changes, guaranteeing that
+  // spanHierarchy has already settled before we read DOM positions.
   useEffect(() => {
-    if (!pendingScrollSpanId.current) return;
-    const spanId = pendingScrollSpanId.current;
-    pendingScrollSpanId.current = null;
+    if (!pendingScrollSpanId) return;
 
-    requestAnimationFrame(() => {
-      scrollToRootOf(spanId);
+    const frameId = requestAnimationFrame(() => {
+      scrollToRootOf(pendingScrollSpanId);
+      setPendingScrollSpanId(null);
     });
-  });
 
-  // Stable ref-registration callback
+    return () => cancelAnimationFrame(frameId);
+  }, [pendingScrollSpanId, scrollToRootOf]);
+
   const registerSpanRef = useCallback((spanId, node) => {
-    if (node) {
-      spanRowRefs.current[spanId] = node;
-    } else {
-      delete spanRowRefs.current[spanId];
-    }
+    if (node) spanRowRefs.current[spanId] = node;
+    else delete spanRowRefs.current[spanId];
   }, []);
 
   const handleTimeRangeSelection = range => {
@@ -251,24 +249,20 @@ const ModernTraceViewer = ({ data }) => {
 
     const { startTime, endTime } = range;
 
-    // Find the earliest span (by rendered order) that overlaps the range and
-    // store it as the pending scroll target. The post-render effect above will
-    // then resolve its root ancestor and scroll to it.
+    // Find the earliest span (by rendered order) that overlaps the range
     let bestIndex = Infinity;
     let bestSpanId = null;
 
     spanHierarchy.forEach((span, i) => {
       const spanStart = span.relativeStartTime;
-      const spanEnd = span.relativeStartTime + span.duration;
+      const spanEnd = spanStart + span.duration;
       if (spanEnd >= startTime && spanStart <= endTime && i < bestIndex) {
         bestIndex = i;
         bestSpanId = span.spanID;
       }
     });
 
-    if (bestSpanId) {
-      pendingScrollSpanId.current = bestSpanId;
-    }
+    if (bestSpanId) setPendingScrollSpanId(bestSpanId);
   };
 
   const handleModeChange = newMode => {
@@ -278,8 +272,11 @@ const ModernTraceViewer = ({ data }) => {
 
   return (
     <ViewerContainer $isDark={isDark}>
-      <TraceHeader traceData={data} />
-      <SearchBox searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+      <TraceHeader
+        traceData={data}
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+      />
       <TraceTimelineMinimap
         traceData={data}
         processes={data.processes}
