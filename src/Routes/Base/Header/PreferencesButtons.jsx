@@ -41,7 +41,7 @@ const PreferencesButtons = () => {
         onClick={handleSave}
         loading={syncing}
         size="small">
-        Save Preferences
+        Save Table Layout
       </Button>
       <Button
         icon={<UndoOutlined />}

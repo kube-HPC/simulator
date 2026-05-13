@@ -4,6 +4,9 @@ import {
   PREFERENCES_DEFAULTS,
   updatePreferenceLocal,
 } from 'reducers/preferences.reducer';
+import { savePreferences } from 'actions/preferences.action';
+
+const AUTO_SAVE_SECTIONS = new Set(['theme', 'scoopIntervalHours']);
 
 const migrateFromLocalStorage = () => {
   const migrated = {};
@@ -39,7 +42,7 @@ const syncToLocalStorage = (section, value) => {
 };
 
 const preferencesMiddleware =
-  ({ dispatch }) =>
+  ({ dispatch, getState }) =>
   next =>
   action => {
     const result = next(action);
@@ -80,6 +83,19 @@ const preferencesMiddleware =
     if (action.type === updatePreferenceLocal.type) {
       const { section, value } = action.payload;
       syncToLocalStorage(section, value);
+
+      // Auto-save theme and scoop interval to server immediately
+      // Use lastSavedTables so pending column changes aren't persisted
+      if (AUTO_SAVE_SECTIONS.has(section)) {
+        const { data, lastSavedTables } = getState().preferences;
+        dispatch(
+          savePreferences({
+            theme: data.theme,
+            scoopIntervalHours: data.scoopIntervalHours,
+            tables: lastSavedTables,
+          })
+        );
+      }
     }
 
     // On reset success, restore localStorage to defaults

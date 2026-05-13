@@ -6,6 +6,8 @@ import {
   GlobalOutlined,
   GithubOutlined,
   QuestionCircleOutlined,
+  SaveOutlined,
+  UndoOutlined,
 } from '@ant-design/icons';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
@@ -13,7 +15,7 @@ import { useActions, useSiteThemeMode } from 'hooks';
 import { appInfo } from 'config';
 import { ReactComponent as IconSwagger } from 'images/swagger.svg';
 import { selectors } from 'reducers';
-import { Divider, Typography, Image } from 'antd';
+import { Divider, Typography, Image, Button, Modal, Tooltip } from 'antd';
 import { ReactComponent as ApiIcon } from 'images/apiIcon.svg';
 import SetDefaultTime from './SetDefaultTime';
 import { GRAFANA_ICON } from './grafana-icon';
@@ -35,9 +37,10 @@ const Settings = () => {
 
   const navigate = useNavigate();
 
-  const { triggerUserGuide } = useActions();
+  const { triggerUserGuide, savePreferences, resetPreferences } = useActions();
   const { hkubeSystemVersion } = useSelector(selectors.connection);
   const { grafanaUrl } = useSelector(selectors.connection);
+  const { data, syncing } = useSelector(selectors.preferences);
 
   const onGuideClick = useCallback(() => {
     triggerUserGuide();
@@ -213,6 +216,33 @@ const Settings = () => {
         </LightsOutThemeButton>
       </FlexBox.Auto>
       <SetDefaultTime />
+
+      <FlexBox.Auto gutter={[8, 0]} style={{ alignItems: 'center' }}>
+        <Typography.Text strong>Save Preferences</Typography.Text>
+        <Button
+          icon={<SaveOutlined />}
+          onClick={() => savePreferences(data)}
+          loading={syncing}
+          size="small"
+        />
+        <Button
+          icon={<UndoOutlined />}
+          onClick={() =>
+            Modal.confirm({
+              title: 'Reset Preferences?',
+              content:
+                'This will restore all preferences (theme, scoop interval, table columns) to their default values.',
+              okText: 'Reset',
+              okType: 'danger',
+              cancelText: 'Cancel',
+              onOk: () => resetPreferences(),
+            })
+          }
+          loading={syncing}
+          size="small"
+          danger
+        />
+      </FlexBox.Auto>
 
       <FlexBox.Auto>
         <DividerStyle />

@@ -18,6 +18,7 @@ const initialState = {
   loaded: false,
   syncing: false,
   lastHash: null,
+  lastSavedTables: { ...PREFERENCES_DEFAULTS.tables },
 };
 
 const preferences = createSlice({
@@ -61,6 +62,7 @@ const preferences = createSlice({
               },
             };
             state.lastHash = hash;
+            state.lastSavedTables = { ...state.data.tables };
           }
           state.loaded = true;
         }
@@ -73,6 +75,7 @@ const preferences = createSlice({
         (state, { payload }) => {
           state.syncing = false;
           state.lastHash = hashSum(payload);
+          state.lastSavedTables = { ...state.data.tables };
         }
       )
       .addCase(`${actionType.PREFERENCES_SAVE}_REJECT`, state => {
@@ -81,6 +84,7 @@ const preferences = createSlice({
       .addCase(`${actionType.PREFERENCES_RESET}_SUCCESS`, state => {
         state.data = { ...PREFERENCES_DEFAULTS };
         state.lastHash = null;
+        state.lastSavedTables = { ...PREFERENCES_DEFAULTS.tables };
         state.syncing = false;
       })
       .addCase(`${actionType.PREFERENCES_RESET}_PENDING`, state => {
