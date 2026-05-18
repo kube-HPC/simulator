@@ -6,16 +6,17 @@ import styled from 'styled-components';
 import StatusLamp from './StatusLamp';
 
 const VISIBILITY_STORAGE_KEY = 'servicesMatrixVisibility';
-const DEFAULT_VISIBLE_SERVICES = [
+const INITIAL_DEFAULT_SERVICES = [
   'api-server',
   'task-executor',
   'algorithm-operator',
   'redis',
+  'pipeline-driver-queue',
 ];
 const isStatusOk = status => status === true || status === 'OK';
 
 const isDefaultVisibleService = serviceName =>
-  DEFAULT_VISIBLE_SERVICES.includes(serviceName);
+  INITIAL_DEFAULT_SERVICES.includes(serviceName);
 
 const hasOwn = (obj, key) =>
   Object.prototype.hasOwnProperty.call(obj || {}, key);

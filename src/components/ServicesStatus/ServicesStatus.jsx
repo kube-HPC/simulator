@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Typography } from 'antd';
+import { Tooltip, Typography } from 'antd';
 import styled from 'styled-components';
 
 import StatusLamp from './StatusLamp';
@@ -139,7 +139,11 @@ const ServicesStatus = ({
                   }}>
                   <StatusLamp isOk={overallHealthStatus} />
                   <Typography.Text strong style={{ whiteSpace: 'nowrap' }}>
-                    {label}
+                    <Tooltip
+                      title={`click to ${isOpen ? 'collapse' : 'expand'}`}
+                      placement="top">
+                      {label}
+                    </Tooltip>
                   </Typography.Text>
                 </HeaderRow>
 
