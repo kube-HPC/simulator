@@ -52,7 +52,12 @@ const ServiceRow = ({ service }) => {
       </ServiceName>
       <Divider
         orientation="vertical"
-        style={{ marginLeft: '10px', marginRight: '4px' }}
+        size="large"
+        vertical
+        style={{
+          marginLeft: '10px',
+          marginRight: '4px',
+        }}
       />
     </Row>
   );
