@@ -14,6 +14,8 @@ const Tag = styled(AntTag)`
   padding: 12px 24px;
   border-radius: 16px;
   border: solid 1px rgba(0, 0, 0, 0.15);
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 `;
 
 const Content = styled.span`
@@ -24,7 +26,7 @@ const InactiveModeTag = () => {
   const inactiveMode = useReactiveVar(inactiveModeVar);
   return (
     inactiveMode && (
-      <Tag color="green">
+      <Tag>
         <Tooltip title="Reconnecting to Socket...">
           <Content>
             <Typography.Title level={2} style={{ margin: 0, padding: 0 }}>
