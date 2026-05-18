@@ -12,7 +12,12 @@ const SERVICE_ROW_MAX_WIDTH = 180;
 const Row = styled.div`
   display: inline-flex;
   align-items: center;
-  padding: 6px 8px;
+
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 0px;
+  padding-right: 0px;
+
   border-radius: 6px;
   cursor: default;
   user-select: none;
@@ -45,7 +50,10 @@ const ServiceRow = ({ service }) => {
       <ServiceName ellipsis style={{ maxWidth: SERVICE_ROW_MAX_WIDTH - 34 }}>
         {service.serviceName}
       </ServiceName>
-      <Divider orientation="vertical" />
+      <Divider
+        orientation="vertical"
+        style={{ marginLeft: '10px', marginRight: '4px' }}
+      />
     </Row>
   );
 
