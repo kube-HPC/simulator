@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import StatusLamp from './StatusLamp';
 import SubServicesPopover from './SubServicesPopover';
 
-const isStatusOk = status => status === true || status === 'OK';
 const SERVICE_ROW_MAX_WIDTH = 180;
 
 const Row = styled.div`
@@ -36,17 +35,9 @@ const ServiceName = styled(Typography.Text)`
 
 const ServiceRow = ({ service }) => {
   const subServices = useMemo(() => service.services || [], [service.services]);
-
-  const isOk = useMemo(
-    () =>
-      isStatusOk(service.status) &&
-      subServices.every(item => isStatusOk(item.status)),
-    [service.status, subServices]
-  );
-
   const content = (
     <Row style={{ justifyContent: 'space-between' }}>
-      <StatusLamp isOk={isOk} />
+      <StatusLamp status={service.status} />
       <ServiceName ellipsis style={{ maxWidth: SERVICE_ROW_MAX_WIDTH - 34 }}>
         {service.serviceName}
       </ServiceName>

@@ -8,19 +8,21 @@ const Lamp = styled.span`
   border-radius: 50%;
   display: inline-block;
   background-color: ${props => {
-    if (props.$isOk === null) {
+    if (props.$status === null) {
       return '#bfbfbf';
     }
-    return props.$isOk ? '#52c41a' : '#ff4d4f';
+    return props.$status ? '#52c41a' : '#ff4d4f';
   }};
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05) inset;
   margin-right: 8px;
 `;
 
-const StatusLamp = ({ isOk, size = 10 }) => <Lamp $isOk={isOk} $size={size} />;
+const StatusLamp = ({ status, size = 10 }) => (
+  <Lamp $status={status} $size={size} />
+);
 
 StatusLamp.propTypes = {
-  isOk: PropTypes.oneOfType([PropTypes.bool, PropTypes.oneOf([null])]),
+  status: PropTypes.oneOfType([PropTypes.bool, PropTypes.oneOf([null])]),
   size: PropTypes.number,
 };
 
