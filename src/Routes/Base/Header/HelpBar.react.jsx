@@ -6,21 +6,30 @@ import { MenuOutlined } from '@ant-design/icons';
 import { Popover } from 'antd';
 import { USER_GUIDE } from 'const';
 import { FlexBox, Icons } from 'components/common';
+import { useHealthMonitoring } from 'hooks/graphql';
 import styled from 'styled-components';
 import UserAvatar from '../../../components/UserAvatar';
 import SettingsUser from './Settings/SettingsUser';
 import Settings from './Settings/Settings.react';
 import InactiveModeTag from './InactiveMode';
 import ExperimentPicker from './ExperimentPicker.react';
+import ServicesStatus from '../../../components/ServicesStatus/ServicesStatus';
 
 const Container = styled(FlexBox.Auto)`
   position: relative;
 `;
 
 const HelpBar = () => {
-  const { keycloakEnable } = useSelector(selectors.connection);
+  const { keycloakEnable, healthMonitoringEnabled } = useSelector(
+    selectors.connection
+  );
+  const { data } = useHealthMonitoring(healthMonitoringEnabled);
+
   return (
     <Container className={USER_GUIDE.HEADER.SOCIALS}>
+      {healthMonitoringEnabled && (
+        <ServicesStatus services={data} widthPercent={1300} />
+      )}
       <InactiveModeTag />
 
       <ExperimentPicker />

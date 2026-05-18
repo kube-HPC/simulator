@@ -20,6 +20,8 @@ const parseBool = value => {
 
 export const hkubeSystemVersion = process.env.HKUBE_SYSTEM_VERSION;
 export const kibanaUrl = process.env.KIBANA_URL;
+export const healthMonitoringEnabled =
+  process.env.VITE_HEALTH_MONITORING_ENABLED === 'true';
 export const ELASTICSEARCH_LOGS_INDEX = process.env.KIBANA_INDEX;
 export const structuredPrefix = process.env.ELASTICSEARCH_STRUCTURED_PREFIX;
 export const grafanaUrl = process.env.GRAFANA_URL;
