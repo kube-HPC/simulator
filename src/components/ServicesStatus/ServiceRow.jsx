@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Popover, Typography } from 'antd';
+import { Divider, Popover, Typography } from 'antd';
 import styled from 'styled-components';
 
 import StatusLamp from './StatusLamp';
@@ -40,11 +40,12 @@ const ServiceRow = ({ service }) => {
   );
 
   const content = (
-    <Row>
+    <Row style={{ justifyContent: 'space-between' }}>
       <StatusLamp isOk={isOk} />
       <ServiceName ellipsis style={{ maxWidth: SERVICE_ROW_MAX_WIDTH - 34 }}>
         {service.serviceName}
       </ServiceName>
+      <Divider orientation="vertical" />
     </Row>
   );
 
