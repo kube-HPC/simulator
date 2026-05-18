@@ -87,8 +87,13 @@ const NodeLogs = ({
   sideCarsDetails,
 }) => {
   const [openPopupOverListTasks, setOpenPopupOverListTasks] = useState(false);
-  const { kibanaUrl, structuredPrefix } = useSelector(selectors.connection);
-
+  const {
+    kibanaUrl,
+    structuredPrefix,
+    ELASTICSEARCH_LOGS_INDEX: elasticsearchLogsIndexFromStore,
+  } = useSelector(selectors.connection);
+  const ELASTICSEARCH_LOGS_INDEX =
+    elasticsearchLogsIndexFromStore || '37127fd0-9ff3-11ea-b971-21eddb3a470d';
   const [logMode, setLogMode] = useState(logModes.ALGORITHM);
   const [containerNames, setContainerNames] = useState([]);
   const [searchWord, setSearchWord] = useState(null);
@@ -169,7 +174,7 @@ const NodeLogs = ({
   }, [logs.length, node]);
 
   const linkKibana = useMemo(() => {
-    if (!kibanaUrl || !taskId) return '';
+    if (!kibanaUrl || !taskId || !ELASTICSEARCH_LOGS_INDEX) return '';
 
     const startTime =
       node.batch?.length > 0
@@ -186,7 +191,7 @@ const NodeLogs = ({
       metaPath = `${structuredPrefix}.${metaPath}`;
     }
 
-    return `${kibanaUrl}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',key:${metaPath},negate:!f,params:(query:'${cTaskId}'),type:phrase),query:(match:(${metaPath}:(query:'${cTaskId}',type:phrase))))),index:'37127fd0-9ff3-11ea-b971-21eddb3a470d',interval:auto,query:(language:lucene${
+    return `${kibanaUrl}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'${ELASTICSEARCH_LOGS_INDEX}',key:${metaPath},negate:!f,params:(query:'${cTaskId}'),type:phrase),query:(match:(${metaPath}:(query:'${cTaskId}',type:phrase))))),index:'${ELASTICSEARCH_LOGS_INDEX}',interval:auto,query:(language:lucene${
       word ? `,query:${word}` : ''
     }),sort:!(!('@timestamp',desc)))`;
   }, [
@@ -196,6 +201,7 @@ const NodeLogs = ({
     node.startTime,
     currentTask,
     searchWord,
+    ELASTICSEARCH_LOGS_INDEX,
     structuredPrefix,
   ]);
 
