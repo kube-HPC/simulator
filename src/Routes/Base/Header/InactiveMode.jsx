@@ -25,7 +25,6 @@ const BigTag = styled(BaseTag)`
   padding: 12px 24px;
   border-radius: 16px;
   border: solid 1px rgba(0, 0, 0, 0.15);
-
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 `;
 
@@ -48,11 +47,6 @@ const InactiveModeTag = () => {
         <Content>
           {healthMonitoringEnabled ? (
             <Typography.Title level={2} style={{ margin: 0 }}>
-    inactiveMode && (
-      <Tag>
-        <Tooltip title="Reconnecting to Socket...">
-          <Content>
-            <Typography.Title level={2} style={{ margin: 0, padding: 0 }}>
               Inactive Mode <DisconnectOutlined style={{ marginLeft: '1ch' }} />
             </Typography.Title>
           ) : (
