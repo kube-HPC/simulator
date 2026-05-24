@@ -12,16 +12,25 @@ const Row = styled.div`
   display: inline-flex;
   align-items: center;
 
-  padding-top: 6px;
-  padding-bottom: 6px;
   padding-left: 0px;
   padding-right: 0px;
 
-  border-radius: 6px;
   cursor: default;
   user-select: none;
   max-width: ${SERVICE_ROW_MAX_WIDTH}px;
   min-width: 0;
+`;
+const NameLampRow = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding-left: 6px;
+  padding-right: 6px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+
+  border-radius: 6px;
 
   &:hover {
     background: rgba(0, 0, 0, 0.04);
@@ -37,10 +46,12 @@ const ServiceRow = ({ service }) => {
   const subServices = useMemo(() => service.services || [], [service.services]);
   const content = (
     <Row style={{ justifyContent: 'space-between' }}>
-      <StatusLamp status={service.status} />
-      <ServiceName ellipsis style={{ maxWidth: SERVICE_ROW_MAX_WIDTH - 34 }}>
-        {service.serviceName}
-      </ServiceName>
+      <NameLampRow>
+        <StatusLamp status={service.status} />
+        <ServiceName ellipsis style={{ maxWidth: SERVICE_ROW_MAX_WIDTH - 34 }}>
+          {service.serviceName}
+        </ServiceName>
+      </NameLampRow>
       <Divider
         orientation="vertical"
         size="large"
