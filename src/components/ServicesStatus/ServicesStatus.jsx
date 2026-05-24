@@ -137,7 +137,7 @@ const ServicesStatus = ({
                       handleToggle();
                     }
                   }}>
-                  <StatusLamp isOk={overallHealthStatus} />
+                  <StatusLamp status={overallHealthStatus} />
                   <Typography.Text strong style={{ whiteSpace: 'nowrap' }}>
                     <Tooltip
                       title={`click to ${isOpen ? 'collapse' : 'expand'}`}
