@@ -13,7 +13,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   gap: 6px;
-  height: 100%;
+  height: 32px;
 `;
 
 const DotItem = styled.div`
