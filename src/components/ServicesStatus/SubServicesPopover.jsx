@@ -5,8 +5,6 @@ import styled from 'styled-components';
 
 import StatusLamp from './StatusLamp';
 
-const isStatusOk = status => status === true || status === 'OK';
-
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -40,9 +38,9 @@ const SubServicesPopover = ({
         </HeaderText>
         {serviceStatus !== undefined ? (
           <SubRow>
-            <StatusLamp isOk={isStatusOk(serviceStatus)} size={8} />
+            <StatusLamp status={serviceStatus} size={8} />
             <Typography.Text>
-              Status: {isStatusOk(serviceStatus) ? 'up' : 'down'}
+              Status: {serviceStatus ? 'up' : 'down'}
             </Typography.Text>
           </SubRow>
         ) : (
@@ -59,7 +57,7 @@ const SubServicesPopover = ({
       </HeaderText>
       {subServices.map((item, index) => (
         <SubRow key={item.subServiceName || item.serviceName || index}>
-          <StatusLamp isOk={isStatusOk(item.status)} size={8} />
+          <StatusLamp status={item.status} size={8} />
           <Typography.Text>
             {String(item.status)},{' '}
             {item.subServiceName || item.serviceName || 'unknown'} :{' '}

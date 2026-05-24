@@ -135,7 +135,7 @@ const ServicesVisibilityControl = ({ services, children }) => {
             }}>
             <ServiceOptionLabel>
               <StatusMarker
-                isOk={
+                status={
                   servicesStatus[serviceName] === 'unknown'
                     ? null
                     : servicesStatus[serviceName] === 'up'
