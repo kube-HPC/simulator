@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 // import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { BugOutlined, PlayCircleOutlined } from '@ant-design/icons';
-import { Button, Empty, Tooltip, Alert } from 'antd';
+import { Button, Empty, Tooltip } from 'antd';
 import { FlexBox, JsonSwitch } from 'components/common';
 import { useActions } from 'hooks';
 import { useAlgorithmByVersion } from 'hooks/graphql';
