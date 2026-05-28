@@ -18,7 +18,7 @@ import LoadingScreen from './Base/LoadingScreen';
 import Tables from './Tables';
 
 const LayoutFullHeight = styled(Layout)`
-  height: 100vh;
+  height: calc(100vh / var(--app-zoom, 1));
   transition: all 0.5s;
   overflow: hidden;
 `;

@@ -7,6 +7,7 @@ const useAutoZoom = () => {
     const applyZoom = () => {
       const zoom = window.innerWidth / BASE_WIDTH;
       document.documentElement.style.zoom = zoom;
+      document.documentElement.style.setProperty('--app-zoom', zoom);
     };
 
     applyZoom();
