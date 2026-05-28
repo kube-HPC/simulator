@@ -6,12 +6,14 @@ import rootReducer from 'reducers';
 import restConfigMiddleware from 'middleware/restConfig.middleware';
 import restMiddleware from 'middleware/rest.middleware';
 import messagesMiddleware from 'middleware/messages.middleware';
+import preferencesMiddleware from 'middleware/preferences.middleware';
 
 const middleware = [
   // socketMiddleware,
   restConfigMiddleware,
   restMiddleware,
   messagesMiddleware,
+  preferencesMiddleware,
 ];
 
 if (import.meta.env.NODE_ENV === 'development') {

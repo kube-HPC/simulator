@@ -6,6 +6,7 @@ import { USER_GUIDE } from 'const';
 import { COLOR_LAYOUT } from 'styles';
 import { loader } from '@monaco-editor/react';
 import NewButtonSelect from './NewButtonSelect';
+import PreferencesButtons from './PreferencesButtons';
 import HelpBar from './HelpBar.react';
 import TagsFiltersViews from './TagsFiltersViews';
 
@@ -35,6 +36,7 @@ const Header = () => (
   <Container className={USER_GUIDE.WELCOME}>
     <ButtonsContainer>
       <NewButtonSelect />
+      <PreferencesButtons />
 
       <Routes>
         <Route

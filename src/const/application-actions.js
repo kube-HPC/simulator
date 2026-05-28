@@ -66,6 +66,9 @@ const actionTypes = {
   VIEW_TYPE_LOAD_ONCE: `VIEW_TYPE_LOAD_ONCE`,
   VIEW_TYPE_TOGGLE: `VIEW_TYPE_TOGGLE`,
   CONNECTION_SETUP: 'CONNECTION_SETUP',
+  PREFERENCES_FETCH: 'PREFERENCES_FETCH',
+  PREFERENCES_SAVE: 'PREFERENCES_SAVE',
+  PREFERENCES_RESET: 'PREFERENCES_RESET',
 };
 
 const asAsync = action => {
@@ -87,5 +90,8 @@ asAsync(actionTypes.EXPERIMENT_CHANGE);
 asAsync(actionTypes.DATASOURCE_FETCH_ALL);
 asAsync(actionTypes.DATASOURCE_FETCH);
 asAsync(actionTypes.DATASOURCE_CREATE);
+asAsync(actionTypes.PREFERENCES_FETCH);
+asAsync(actionTypes.PREFERENCES_SAVE);
+asAsync(actionTypes.PREFERENCES_RESET);
 
 export default actionTypes;
