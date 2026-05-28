@@ -25,11 +25,18 @@ const LayoutFullHeight = styled(Layout)`
 
 const ContentMargin = styled(Layout.Content)`
   padding: 2px 8px;
+  overflow: auto;
   ::-webkit-scrollbar {
-    width: 1px;
+    width: 2px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
   }
   ::-webkit-scrollbar-thumb {
     border: 1px solid ${COLOR.darkGrey};
+    background-color: ${COLOR_LAYOUT.border};
+    border-radius: 10px;
   }
 `;
 
