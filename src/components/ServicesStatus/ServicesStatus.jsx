@@ -44,7 +44,7 @@ const WrapperServicesStatus = styled.div`
   overflow: hidden;
   display: flex;
   justify-content: flex-end;
-  width: ${props => `${props.$widthPercent}px`};
+  width: ${props => `${props.$widthPercent}vw`};
   min-width: 0;
   height: 36px;
 `;

@@ -18,7 +18,7 @@ loader.config({ monaco });
 
 const Container = styled(FlexBox)`
   padding: 1em 2ch;
-
+flex-wrap: nowrap
   border-bottom: 1px solid ${COLOR_LAYOUT.border};
 `;
 
