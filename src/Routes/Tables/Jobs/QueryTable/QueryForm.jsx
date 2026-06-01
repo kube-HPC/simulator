@@ -196,7 +196,6 @@ const QueryForm = ({
         <AutoCompleteFloatingLabelInput
           isExactMatch
           label="Pipeline Name / Job ID"
-          width="12vw"
           options={pipelineOptions}
           allowClear
           Submit={SubmitForm}
@@ -207,7 +206,6 @@ const QueryForm = ({
         <AutoCompleteFloatingLabelInput
           isExactMatch
           label="Algorithm Name"
-          width="9vw"
           options={algorithmOptions}
           allowClear
           Submit={SubmitForm}
@@ -218,7 +216,7 @@ const QueryForm = ({
         <AutoCompleteFloatingLabelInput
           isExactMatch
           label="Tag Name"
-          width="9vw"
+          width="55%"
           allowClear
           options={tagsOptions}
           Submit={SubmitForm}
@@ -231,7 +229,7 @@ const QueryForm = ({
             // isExactMatch
             // listIgnoreExactMatch={[KeycloakServices.getUsername()]}
             label="User"
-            width="9vw"
+            width="55%"
             options={usersOptions}
             allowClear
             Submit={SubmitForm}
