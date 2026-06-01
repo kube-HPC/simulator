@@ -16,7 +16,6 @@ const Container = styled.div`
   margin-top: 50px;
 
   height: ${({ $height }) => ($height ? `${$height + 300}px` : '70vh')};
-  width: 1500px;
 `;
 const PieContainer = styled.div`
   width: 100%;
