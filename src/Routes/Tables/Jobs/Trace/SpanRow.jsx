@@ -357,13 +357,28 @@ const LogsActions = styled.div`
     }};
 `;
 
-const ActionButton = styled(Button)`
+const ActionIcon = styled.span`
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 28px;
   height: 28px;
-  padding: 0;
+  border-radius: 4px;
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$disabled ? colors.textSecondary : colors.blue;
+  }};
+  opacity: ${props => (props.$disabled ? 0.45 : 1)};
+  cursor: ${props => (props.$disabled ? 'not-allowed' : 'pointer')};
+
+  &:hover {
+    background-color: ${props =>
+      props.$disabled
+        ? 'transparent'
+        : props.$isDark
+          ? 'rgba(64, 169, 255, 0.15)'
+          : 'rgba(48, 127, 230, 0.1)'};
+  }
 `;
 
 const KibanaIconWrap = styled.span`
@@ -744,10 +759,12 @@ const SpanRow = ({
                   ? 'Open logs'
                   : 'TaskId or podName is missing for this step'
               }>
-              <ActionButton
-                size="small"
-                icon={<FileSearchOutlined />}
-                disabled={!canOpenLogs}
+              <ActionIcon
+                role="button"
+                tabIndex={canOpenLogs ? 0 : -1}
+                aria-disabled={!canOpenLogs}
+                $isDark={isDark}
+                $disabled={!canOpenLogs}
                 onClick={event => {
                   event.stopPropagation();
                   if (!canOpenLogs) {
@@ -760,7 +777,24 @@ const SpanRow = ({
                     spanId: span.spanID,
                   });
                 }}
-              />
+                onKeyDown={event => {
+                  if (event.key !== 'Enter' && event.key !== ' ') {
+                    return;
+                  }
+                  event.preventDefault();
+                  event.stopPropagation();
+                  if (!canOpenLogs) {
+                    return;
+                  }
+                  onOpenLogs({
+                    taskId,
+                    podName,
+                    nodeKind,
+                    spanId: span.spanID,
+                  });
+                }}>
+                <FileSearchOutlined />
+              </ActionIcon>
             </Tooltip>
 
             <Tooltip
@@ -769,14 +803,12 @@ const SpanRow = ({
                   ? 'Open in Kibana'
                   : 'Kibana URL or taskId is missing'
               }>
-              <ActionButton
-                size="small"
-                disabled={!canOpenKibana}
-                icon={
-                  <KibanaIconWrap>
-                    <IconKibana />
-                  </KibanaIconWrap>
-                }
+              <ActionIcon
+                role="button"
+                tabIndex={canOpenKibana ? 0 : -1}
+                aria-disabled={!canOpenKibana}
+                $isDark={isDark}
+                $disabled={!canOpenKibana}
                 onClick={event => {
                   event.stopPropagation();
                   if (!canOpenKibana) {
@@ -787,7 +819,24 @@ const SpanRow = ({
                     startTime: span.startTime,
                   });
                 }}
-              />
+                onKeyDown={event => {
+                  if (event.key !== 'Enter' && event.key !== ' ') {
+                    return;
+                  }
+                  event.preventDefault();
+                  event.stopPropagation();
+                  if (!canOpenKibana) {
+                    return;
+                  }
+                  onOpenKibana({
+                    taskId,
+                    startTime: span.startTime,
+                  });
+                }}>
+                <KibanaIconWrap>
+                  <IconKibana />
+                </KibanaIconWrap>
+              </ActionIcon>
             </Tooltip>
           </LogsActions>
         </RowContent>
