@@ -37,7 +37,7 @@ import GRAPH_TYPES from './graphUtils/types';
 
 const Container = styled.div`
   margin-top: 1em;
-  height: 78vh;
+  height: 70%;
   flex: 1 1 0%;
   overflow: visible;
 `;

@@ -355,6 +355,7 @@ const GraphTab = ({ graph, pipeline }) => {
           zIndex: '1',
           alignItems: 'center',
           top: '8px',
+          height: '32px',
         }}>
         <Slider
           disabled={!isSwitchSlider}
