@@ -32,6 +32,7 @@ const ValidContainer = styled(ContainerBase)`
   background-color: ${props => props.theme.Styles.validContainer.background};
   border: 1px solid #858899;
   color: white;
+  border-radius: 10px;
 `;
 
 const InvalidContainer = styled(ContainerBase)`
@@ -177,28 +178,27 @@ const LogsViewer = ({ dataSource, isBuild = false, id, emptyDescription }) => {
     return () => cancelAnimationFrame(raf);
   }, [dataSource.length, id]);
 
-const renderRow = useCallback(
-  ({ index, key, parent, style }) => (
-    <CellMeasurer
-      key={key}
-      cache={cache.current}
-      columnIndex={0}
-      rowIndex={index}
-      parent={parent}
-    >
-      {({ registerChild }) => (
-        <div ref={registerChild} style={style}>
-          {isBuild ? (
-            <BuildEntry index={index} log={dataSource[index]} />
-          ) : (
-            <Entry index={index} log={dataSource[index]} />
-          )}
-        </div>
-      )}
-    </CellMeasurer>
-  ),
-  [dataSource, isBuild]
-);
+  const renderRow = useCallback(
+    ({ index, key, parent, style }) => (
+      <CellMeasurer
+        key={key}
+        cache={cache.current}
+        columnIndex={0}
+        rowIndex={index}
+        parent={parent}>
+        {({ registerChild }) => (
+          <div ref={registerChild} style={style}>
+            {isBuild ? (
+              <BuildEntry index={index} log={dataSource[index]} />
+            ) : (
+              <Entry index={index} log={dataSource[index]} />
+            )}
+          </div>
+        )}
+      </CellMeasurer>
+    ),
+    [dataSource, isBuild]
+  );
   const [first] = dataSource;
   const isValid = isBuild || (first && first.level);
 
