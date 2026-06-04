@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Alert, Modal, Spin } from 'antd';
+import { Alert, Button, Modal, Spin } from 'antd';
 import { logModes } from '@hkube/consts';
 import LogsViewer from 'components/common/LogsViewer';
 import { useLogs } from 'hooks/graphql';
@@ -27,11 +27,15 @@ const TraceLogsModal = ({ open, context, onClose }) => {
 
   return (
     <Modal
-      destroyOnClose
-      width="85vw"
+      destroyOnHidden
+      width="60%"
       open={open}
       onCancel={onClose}
-      onOk={onClose}
+      footer={
+        <Button type="primary" onClick={onClose}>
+          Close
+        </Button>
+      }
       title={`Logs for Task ${taskId || 'N/A'}`}>
       <div style={{ height: MODAL_BODY_HEIGHT }}>
         {query.loading ? (
@@ -44,11 +48,13 @@ const TraceLogsModal = ({ open, context, onClose }) => {
             showIcon
           />
         ) : (
-          <LogsViewer
-            dataSource={logs}
-            id={`${spanId}-${taskId}`}
-            emptyDescription="No logs for this step"
-          />
+          <div style={{ height: '95%' }}>
+            <LogsViewer
+              dataSource={logs}
+              id={`${spanId}-${taskId}`}
+              emptyDescription="No logs for this step"
+            />
+          </div>
         )}
       </div>
     </Modal>
