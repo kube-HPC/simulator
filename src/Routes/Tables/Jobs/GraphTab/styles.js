@@ -5,7 +5,8 @@ export const Card = styled.div`
   padding-top: 2px;
   overflow: auto;
   flex: 1;
-  height: 95vh;
+  height: 100%;
+  min-height: 0;
   -webkit-box-shadow: -7px -8px 2px -4px ${props => props.theme.Styles.line};
   box-shadow: -7px -8px 2px -4px ${props => props.theme.Styles.line};
 `;
@@ -16,8 +17,11 @@ export const GraphContainer = styled.div`
   min-height: 40vh;
   max-height: 80vh;*/
 
+  height: 100%;
+  min-height: 0;
+
   .vis-network {
-    height: 90vh !important;
+    height: 100% !important;
   }
   .vis-tooltip {
     position: absolute;
@@ -60,4 +64,6 @@ export const ButtonsPanel = styled.div`
 
 export const FlexContainer = styled.div`
   display: flex;
+  height: 100%;
+  min-height: 0;
 `;

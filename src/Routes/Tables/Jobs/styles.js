@@ -2,8 +2,23 @@ import { Tabs as AntTabs } from 'antd';
 import styled from 'styled-components';
 
 export const Tabs = styled(AntTabs)`
+  height: 100%;
+  min-height: 0;
+
+  .ant-tabs-content-holder {
+    height: 100%;
+    min-height: 0;
+  }
+
   .ant-tabs-content {
     flex: 1;
+    height: 100%;
+    min-height: 0;
+  }
+
+  .ant-tabs-tabpane {
+    height: 100%;
+    min-height: 0;
   }
 
   display: flex;

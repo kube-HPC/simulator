@@ -13,18 +13,12 @@ import TraceTimelineMinimap from './TraceTimelineMinimap';
 import SpanRow from './SpanRow';
 import { getCurrentTheme, getSystemColors } from './traceConstants';
 
-/*
- * VIEWPORT_OFFSET — height of everything outside ViewerContainer
- * (top navbar + page padding/margins). Adjust if the app shell changes.
- */
-const VIEWPORT_OFFSET = 120;
-
 const ViewerContainer = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - ${VIEWPORT_OFFSET}px);
-  min-height: 400px;
+  height: 100%;
+  min-height: 0;
   background: ${props => {
     const colors = getSystemColors(props.$isDark);
     return colors.background;

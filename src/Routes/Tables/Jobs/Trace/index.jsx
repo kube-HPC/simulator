@@ -21,9 +21,7 @@ const Trace = ({ data }) => {
       {data === null ? (
         <Result status="warning" title="No trace has been found." />
       ) : data ? (
-        <div>
-          <ModernTraceViewer data={data} />
-        </div>
+        <ModernTraceViewer data={data} />
       ) : (
         <CenterDiv>
           <Spin size="large" tip="Fetching Trace Data 🔎..." />
