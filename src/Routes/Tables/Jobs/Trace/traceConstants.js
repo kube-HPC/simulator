@@ -96,6 +96,7 @@ export const MINIMAP_HEIGHT = 100;
 export const NAME_COL_WIDTH = 250;
 export const NAME_COL_PADDING = 16; // matches the 16px right-padding in TimelineHeader
 export const METRICS_COL_WIDTH = 140;
+export const LOGS_COL_WIDTH = 90;
 export const DEPTH_INDENT = 20;
 export const MAX_DEPTH_INDENT = 120; // caps at depth 6 effectively
 export const SPAN_LIST_MIN_HEIGHT = 200;

@@ -33,6 +33,7 @@ import { FlexBox, CopyToClipboard } from 'components/common';
 import LogsViewer from 'components/common/LogsViewer';
 import { useLogs } from 'hooks/graphql';
 import { useDebounceCallback } from '@react-hook/debounce';
+import buildKibanaDiscoverUrl from 'utils/buildKibanaDiscoverUrl';
 import GRAPH_TYPES from './graphUtils/types';
 
 const Container = styled.div`
@@ -180,20 +181,17 @@ const NodeLogs = ({
       node.batch?.length > 0
         ? node.batch.filter(x => x.taskId === taskId)[0].startTime
         : node.startTime;
-    const time = startTime
-      ? new Date(new Date(node.startTime) - 20000).toISOString()
-      : new Date(new Date() - 20000).toISOString();
     const cTaskId = currentTask || taskId;
     const word = searchWord || '';
-    setSearchWord(word);
-    let metaPath = 'meta.internal.taskId';
-    if (structuredPrefix) {
-      metaPath = `${structuredPrefix}.${metaPath}`;
-    }
 
-    return `${kibanaUrl}app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:'${time}',to:now))&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'${ELASTICSEARCH_LOGS_INDEX}',key:${metaPath},negate:!f,params:(query:'${cTaskId}'),type:phrase),query:(match:(${metaPath}:(query:'${cTaskId}',type:phrase))))),index:'${ELASTICSEARCH_LOGS_INDEX}',interval:auto,query:(language:lucene${
-      word ? `,query:${word}` : ''
-    }),sort:!(!('@timestamp',desc)))`;
+    return buildKibanaDiscoverUrl({
+      kibanaUrl,
+      ELASTICSEARCH_LOGS_INDEX,
+      structuredPrefix,
+      taskId: cTaskId,
+      startTime,
+      word,
+    });
   }, [
     kibanaUrl,
     taskId,

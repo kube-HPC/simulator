@@ -6,11 +6,15 @@ import React, {
   useCallback,
 } from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { selectors } from 'reducers';
+import buildKibanaDiscoverUrl from 'utils/buildKibanaDiscoverUrl';
 import TraceHeader from './TraceHeader';
 import TraceTimeline from './TraceTimeline';
 import TraceTimelineMinimap from './TraceTimelineMinimap';
 import SpanRow from './SpanRow';
+import TraceLogsModal from './TraceLogsModal';
 import { getCurrentTheme, getSystemColors } from './traceConstants';
 
 /*
@@ -75,6 +79,15 @@ const ModernTraceViewer = ({ data }) => {
   const [selectedTimeRange, setSelectedTimeRange] = useState(null);
   const [minimapMode, setMinimapMode] = useState('highlight');
   const [isDark, setIsDark] = useState(getCurrentTheme() === 'DARK');
+  const [logsModalContext, setLogsModalContext] = useState(null);
+
+  const {
+    kibanaUrl,
+    structuredPrefix,
+    ELASTICSEARCH_LOGS_INDEX: elasticsearchLogsIndexFromStore,
+  } = useSelector(selectors.connection);
+  const ELASTICSEARCH_LOGS_INDEX =
+    elasticsearchLogsIndexFromStore || '37127fd0-9ff3-11ea-b971-21eddb3a470d';
 
   const spanListRef = useRef(null);
   const spanRowRefs = useRef({});
@@ -227,7 +240,9 @@ const ModernTraceViewer = ({ data }) => {
   // Fires only when pendingScrollSpanId state changes, guaranteeing that
   // spanHierarchy has already settled before we read DOM positions.
   useEffect(() => {
-    if (!pendingScrollSpanId) return;
+    if (!pendingScrollSpanId) {
+      return () => {};
+    }
 
     const frameId = requestAnimationFrame(() => {
       scrollToRootOf(pendingScrollSpanId);
@@ -270,6 +285,31 @@ const ModernTraceViewer = ({ data }) => {
     setMinimapMode(newMode);
   };
 
+  const handleOpenLogs = useCallback(context => {
+    setLogsModalContext(context);
+  }, []);
+
+  const handleCloseLogs = useCallback(() => {
+    setLogsModalContext(null);
+  }, []);
+
+  const handleOpenKibana = useCallback(
+    ({ taskId, startTime }) => {
+      const url = buildKibanaDiscoverUrl({
+        kibanaUrl,
+        ELASTICSEARCH_LOGS_INDEX,
+        structuredPrefix,
+        taskId,
+        startTime,
+      });
+
+      if (url) {
+        window.open(url, '_blank', 'noopener,noreferrer');
+      }
+    },
+    [kibanaUrl, ELASTICSEARCH_LOGS_INDEX, structuredPrefix]
+  );
+
   return (
     <ViewerContainer $isDark={isDark}>
       <TraceHeader
@@ -300,10 +340,20 @@ const ModernTraceViewer = ({ data }) => {
             searchTerm={searchTerm}
             isChildrenVisible={!collapsedChildren.has(span.spanID)}
             onToggleChildren={toggleChildrenVisibility}
+            onOpenLogs={handleOpenLogs}
+            onOpenKibana={handleOpenKibana}
+            isKibanaConfigured={Boolean(kibanaUrl)}
             rowRef={node => registerSpanRef(span.spanID, node)}
           />
         ))}
       </SpanListContainer>
+      {logsModalContext && (
+        <TraceLogsModal
+          open
+          context={logsModalContext}
+          onClose={handleCloseLogs}
+        />
+      )}
     </ViewerContainer>
   );
 };
