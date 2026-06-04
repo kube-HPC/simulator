@@ -175,6 +175,7 @@ const LogsViewer = ({ dataSource, isBuild = false, id, emptyDescription }) => {
       listRef.current?.recomputeRowHeights();
     });
 
+    // eslint-disable-next-line consistent-return
     return () => cancelAnimationFrame(raf);
   }, [dataSource.length, id]);
 
