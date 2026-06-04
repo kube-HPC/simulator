@@ -656,6 +656,7 @@ const SpanRow = ({
     getTagValue(span.tags, ['nodeKind', 'node_kind', 'kind']) || 'algorithm';
   const canOpenLogs = Boolean(taskId && podName);
   const canOpenKibana = Boolean(taskId && isKibanaConfigured);
+  const shouldShowDisabledIcons = depth === 0;
 
   return (
     <>
@@ -753,91 +754,95 @@ const SpanRow = ({
           </SpanTiming>
 
           <LogsActions $isDark={isDark}>
-            <Tooltip
-              title={
-                canOpenLogs
-                  ? 'Open logs'
-                  : 'TaskId or podName is missing for this step'
-              }>
-              <ActionIcon
-                role="button"
-                tabIndex={canOpenLogs ? 0 : -1}
-                aria-disabled={!canOpenLogs}
-                $isDark={isDark}
-                $disabled={!canOpenLogs}
-                onClick={event => {
-                  event.stopPropagation();
-                  if (!canOpenLogs) {
-                    return;
-                  }
-                  onOpenLogs({
-                    taskId,
-                    podName,
-                    nodeKind,
-                    spanId: span.spanID,
-                  });
-                }}
-                onKeyDown={event => {
-                  if (event.key !== 'Enter' && event.key !== ' ') {
-                    return;
-                  }
-                  event.preventDefault();
-                  event.stopPropagation();
-                  if (!canOpenLogs) {
-                    return;
-                  }
-                  onOpenLogs({
-                    taskId,
-                    podName,
-                    nodeKind,
-                    spanId: span.spanID,
-                  });
-                }}>
-                <FileSearchOutlined />
-              </ActionIcon>
-            </Tooltip>
+            {(canOpenLogs || shouldShowDisabledIcons) && (
+              <Tooltip
+                title={
+                  canOpenLogs
+                    ? 'Open logs'
+                    : 'TaskId or podName is missing for this step'
+                }>
+                <ActionIcon
+                  role="button"
+                  tabIndex={canOpenLogs ? 0 : -1}
+                  aria-disabled={!canOpenLogs}
+                  $isDark={isDark}
+                  $disabled={!canOpenLogs}
+                  onClick={event => {
+                    event.stopPropagation();
+                    if (!canOpenLogs) {
+                      return;
+                    }
+                    onOpenLogs({
+                      taskId,
+                      podName,
+                      nodeKind,
+                      spanId: span.spanID,
+                    });
+                  }}
+                  onKeyDown={event => {
+                    if (event.key !== 'Enter' && event.key !== ' ') {
+                      return;
+                    }
+                    event.preventDefault();
+                    event.stopPropagation();
+                    if (!canOpenLogs) {
+                      return;
+                    }
+                    onOpenLogs({
+                      taskId,
+                      podName,
+                      nodeKind,
+                      spanId: span.spanID,
+                    });
+                  }}>
+                  <FileSearchOutlined />
+                </ActionIcon>
+              </Tooltip>
+            )}
 
-            <Tooltip
-              title={
-                canOpenKibana
-                  ? 'Open in Kibana'
-                  : 'Kibana URL or taskId is missing'
-              }>
-              <ActionIcon
-                role="button"
-                tabIndex={canOpenKibana ? 0 : -1}
-                aria-disabled={!canOpenKibana}
-                $isDark={isDark}
-                $disabled={!canOpenKibana}
-                onClick={event => {
-                  event.stopPropagation();
-                  if (!canOpenKibana) {
-                    return;
-                  }
-                  onOpenKibana({
-                    taskId,
-                    startTime: span.startTime,
-                  });
-                }}
-                onKeyDown={event => {
-                  if (event.key !== 'Enter' && event.key !== ' ') {
-                    return;
-                  }
-                  event.preventDefault();
-                  event.stopPropagation();
-                  if (!canOpenKibana) {
-                    return;
-                  }
-                  onOpenKibana({
-                    taskId,
-                    startTime: span.startTime,
-                  });
-                }}>
-                <KibanaIconWrap>
-                  <IconKibana />
-                </KibanaIconWrap>
-              </ActionIcon>
-            </Tooltip>
+            {(canOpenKibana || shouldShowDisabledIcons) && (
+              <Tooltip
+                title={
+                  canOpenKibana
+                    ? 'Open in Kibana'
+                    : 'Kibana URL or taskId is missing'
+                }>
+                <ActionIcon
+                  role="button"
+                  tabIndex={canOpenKibana ? 0 : -1}
+                  aria-disabled={!canOpenKibana}
+                  $isDark={isDark}
+                  $disabled={!canOpenKibana}
+                  onClick={event => {
+                    event.stopPropagation();
+                    if (!canOpenKibana) {
+                      return;
+                    }
+                    onOpenKibana({
+                      taskId,
+                      startTime: span.startTime,
+                    });
+                  }}
+                  onKeyDown={event => {
+                    if (event.key !== 'Enter' && event.key !== ' ') {
+                      return;
+                    }
+                    event.preventDefault();
+                    event.stopPropagation();
+                    if (!canOpenKibana) {
+                      return;
+                    }
+                    onOpenKibana({
+                      taskId,
+                      startTime: span.startTime,
+                    });
+                  }}>
+                  <KibanaIconWrap>
+                    <IconKibana />
+                  </KibanaIconWrap>
+                </ActionIcon>
+              </Tooltip>
+            )}
           </LogsActions>
         </RowContent>
       </RowContainer>
