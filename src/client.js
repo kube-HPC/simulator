@@ -2,6 +2,7 @@ import axios from 'axios';
 import KeycloakServices from 'keycloak/keycloakServices';
 import { events } from 'utils';
 import { forceRefetchAll } from 'graphql/usePolling';
+import { getOrCreateDeviceId } from 'utils/deviceId';
 
 const client = axios.create();
 
@@ -17,7 +18,15 @@ client.interceptors.request.use(
         },
       };
     }
-    return config;
+    // Non-Keycloak mode: attach device ID for user identification
+    const deviceId = getOrCreateDeviceId();
+    return {
+      ...config,
+      headers: {
+        ...config.headers,
+        'X-HKube-User-Id': `device-${deviceId}`,
+      },
+    };
   },
   error => Promise.reject(error)
 );

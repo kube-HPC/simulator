@@ -40,6 +40,8 @@ const successMsg = payload => ({
       Experiment <Text code>{payload.name}</Text> has been removed
     </>
   ),
+  PREFERENCES_SAVE: 'Preferences saved',
+  PREFERENCES_RESET: 'Preferences reset to defaults',
 });
 
 export default successMsg;

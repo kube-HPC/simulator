@@ -55,6 +55,11 @@ import {
   deleteDataSource,
   postVersion as postDataSourceVersion,
 } from './dataSources';
+import {
+  fetchPreferences,
+  savePreferences,
+  resetPreferences,
+} from './preferences.action';
 
 const actions = {
   addExperiment,
@@ -106,6 +111,9 @@ const actions = {
   postDataSourceVersion,
   updateAlgorithmVersionName,
   updatePipelineVersionName,
+  fetchPreferences,
+  savePreferences,
+  resetPreferences,
 };
 
 export default actions;
