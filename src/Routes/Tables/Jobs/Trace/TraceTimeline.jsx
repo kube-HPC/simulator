@@ -9,6 +9,7 @@ import {
   getSystemColors,
   NAME_COL_WIDTH,
   METRICS_COL_WIDTH,
+  LOGS_COL_WIDTH,
 } from './traceConstants';
 
 const TimelineHeader = styled.div`
@@ -64,6 +65,11 @@ const MetricsColumn = styled.div`
   }
 `;
 
+const LogsColumn = styled.div`
+  flex: 0 0 ${LOGS_COL_WIDTH}px;
+  text-align: center;
+`;
+
 const StyledIcon = styled.span`
   color: ${props => {
     const colors = getSystemColors(props.$isDark);
@@ -111,6 +117,7 @@ const TraceTimeline = ({ traceData }) => {
             <span>Duration</span>
           </Space>
         </MetricsColumn>
+        <LogsColumn>Logs</LogsColumn>
       </TimelineHeader>
       <TimelineMarkers duration={duration} />
     </>

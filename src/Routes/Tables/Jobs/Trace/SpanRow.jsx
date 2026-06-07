@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, Tag, Typography, Card, Space } from 'antd';
+import { Button, Tag, Typography, Card, Space, Tooltip } from 'antd';
 import {
   CaretDownOutlined,
   CaretRightOutlined,
   ClockCircleOutlined,
   ApiOutlined,
+  FileSearchOutlined,
 } from '@ant-design/icons';
+import { ReactComponent as IconKibana } from 'images/kibana.svg';
 import {
   formatDuration,
   formatTime,
@@ -19,6 +21,7 @@ import {
   getSystemColors,
   NAME_COL_WIDTH,
   METRICS_COL_WIDTH,
+  LOGS_COL_WIDTH,
   DEPTH_INDENT,
   MAX_DEPTH_INDENT,
 } from './traceConstants';
@@ -340,11 +343,69 @@ const SpanTiming = styled.div`
   }
 `;
 
+const LogsActions = styled.div`
+  width: ${LOGS_COL_WIDTH}px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-left: 1px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return props.$isDark ? '#3d5a7e' : colors.border;
+    }};
+`;
+
+const ActionIcon = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$disabled ? colors.textSecondary : colors.blue;
+  }};
+  opacity: ${props => (props.$disabled ? 0.45 : 1)};
+  cursor: ${props => (props.$disabled ? 'not-allowed' : 'pointer')};
+
+  &:hover {
+    background-color: ${props =>
+      props.$disabled
+        ? 'transparent'
+        : props.$isDark
+          ? 'rgba(64, 169, 255, 0.15)'
+          : 'rgba(48, 127, 230, 0.1)'};
+  }
+`;
+
+const KibanaIconWrap = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+`;
+
+const getTagValue = (tags, keys) => {
+  if (!Array.isArray(tags)) {
+    return '';
+  }
+
+  const tag = tags.find(item => keys.includes(item.key));
+  return tag?.value ? String(tag.value) : '';
+};
+
 const StyledIcon = styled(ClockCircleOutlined)`
   color: ${props => {
     const colors = getSystemColors(props.$isDark);
     return colors.blue;
   }};
+`;
+
+const LogsIcon = styled(FileSearchOutlined)`
+  font-size: 17px;
 `;
 
 const TimingText = styled(Text)`
@@ -550,6 +611,9 @@ const SpanRow = ({
   isChildrenVisible,
   onToggleChildren,
   rowRef,
+  onOpenLogs,
+  onOpenKibana,
+  isKibanaConfigured,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isTimelineHovered, setIsTimelineHovered] = useState(false);
@@ -586,6 +650,16 @@ const SpanRow = ({
     );
 
   if (!matchesSearch) return null;
+
+  const taskId = getTagValue(span.tags, ['taskId', 'task_id', 'taskID']);
+  const podName =
+    getTagValue(span.tags, ['podName', 'pod_name', 'pod', 'hostname']) ||
+    getTagValue(process?.tags, ['podName', 'pod_name', 'pod', 'hostname']);
+  const nodeKind =
+    getTagValue(span.tags, ['nodeKind', 'node_kind', 'kind']) || 'algorithm';
+  const canOpenLogs = Boolean(taskId && podName);
+  const canOpenKibana = Boolean(taskId && isKibanaConfigured);
+  const shouldShowDisabledIcons = depth === 0;
 
   return (
     <>
@@ -681,6 +755,98 @@ const SpanRow = ({
               {formatDuration(span.duration)}
             </DurationText>
           </SpanTiming>
+
+          <LogsActions $isDark={isDark}>
+            {(canOpenLogs || shouldShowDisabledIcons) && (
+              <Tooltip
+                title={
+                  canOpenLogs
+                    ? 'Open logs'
+                    : 'TaskId or podName is missing for this step'
+                }>
+                <ActionIcon
+                  role="button"
+                  tabIndex={canOpenLogs ? 0 : -1}
+                  aria-disabled={!canOpenLogs}
+                  $isDark={isDark}
+                  $disabled={!canOpenLogs}
+                  onClick={event => {
+                    event.stopPropagation();
+                    if (!canOpenLogs) {
+                      return;
+                    }
+                    onOpenLogs({
+                      taskId,
+                      podName,
+                      nodeKind,
+                      spanId: span.spanID,
+                    });
+                  }}
+                  onKeyDown={event => {
+                    if (event.key !== 'Enter' && event.key !== ' ') {
+                      return;
+                    }
+                    event.preventDefault();
+                    event.stopPropagation();
+                    if (!canOpenLogs) {
+                      return;
+                    }
+                    onOpenLogs({
+                      taskId,
+                      podName,
+                      nodeKind,
+                      spanId: span.spanID,
+                    });
+                  }}>
+                  <LogsIcon />
+                </ActionIcon>
+              </Tooltip>
+            )}
+
+            {(canOpenKibana || shouldShowDisabledIcons) && (
+              <Tooltip
+                title={
+                  canOpenKibana
+                    ? 'Open in Kibana'
+                    : 'Kibana URL or taskId is missing'
+                }>
+                <ActionIcon
+                  role="button"
+                  tabIndex={canOpenKibana ? 0 : -1}
+                  aria-disabled={!canOpenKibana}
+                  $isDark={isDark}
+                  $disabled={!canOpenKibana}
+                  onClick={event => {
+                    event.stopPropagation();
+                    if (!canOpenKibana) {
+                      return;
+                    }
+                    onOpenKibana({
+                      taskId,
+                      startTime: span.startTime,
+                    });
+                  }}
+                  onKeyDown={event => {
+                    if (event.key !== 'Enter' && event.key !== ' ') {
+                      return;
+                    }
+                    event.preventDefault();
+                    event.stopPropagation();
+                    if (!canOpenKibana) {
+                      return;
+                    }
+                    onOpenKibana({
+                      taskId,
+                      startTime: span.startTime,
+                    });
+                  }}>
+                  <KibanaIconWrap>
+                    <IconKibana />
+                  </KibanaIconWrap>
+                </ActionIcon>
+              </Tooltip>
+            )}
+          </LogsActions>
         </RowContent>
       </RowContainer>
 
@@ -788,10 +954,16 @@ SpanRow.propTypes = {
   isChildrenVisible: PropTypes.bool.isRequired,
   onToggleChildren: PropTypes.func.isRequired,
   rowRef: PropTypes.func,
+  onOpenLogs: PropTypes.func,
+  onOpenKibana: PropTypes.func,
+  isKibanaConfigured: PropTypes.bool,
 };
 
 SpanRow.defaultProps = {
   rowRef: null,
+  onOpenLogs: () => {},
+  onOpenKibana: () => {},
+  isKibanaConfigured: false,
 };
 
 export default React.memo(SpanRow);
