@@ -15,6 +15,7 @@ import TraceTimeline from './TraceTimeline';
 import TraceTimelineMinimap from './TraceTimelineMinimap';
 import SpanRow from './SpanRow';
 import TraceLogsModal from './TraceLogsModal';
+import { useTraceRowHeight } from './useTraceRowHeight';
 import { getCurrentTheme, getSystemColors } from './traceConstants';
 
 /*
@@ -80,6 +81,7 @@ const ModernTraceViewer = ({ data }) => {
   const [minimapMode, setMinimapMode] = useState('highlight');
   const [isDark, setIsDark] = useState(getCurrentTheme() === 'DARK');
   const [logsModalContext, setLogsModalContext] = useState(null);
+  const { rowHeight, onRowHeightChange } = useTraceRowHeight();
 
   const {
     kibanaUrl,
@@ -224,9 +226,9 @@ const ModernTraceViewer = ({ data }) => {
         nodeRect.top - containerRect.top + container.scrollTop;
 
       const containerHeight = container.clientHeight;
-      const rowHeight = node.offsetHeight;
+      const currentRowHeight = node.offsetHeight;
       const scrollTarget =
-        rowTopRelativeToContainer - containerHeight / 2 + rowHeight / 2;
+        rowTopRelativeToContainer - containerHeight / 2 + currentRowHeight / 2;
 
       container.scrollTo({
         top: Math.max(0, scrollTarget),
@@ -343,6 +345,8 @@ const ModernTraceViewer = ({ data }) => {
             onOpenLogs={handleOpenLogs}
             onOpenKibana={handleOpenKibana}
             isKibanaConfigured={Boolean(kibanaUrl)}
+            rowHeight={rowHeight}
+            onRowHeightChange={onRowHeightChange}
             rowRef={node => registerSpanRef(span.spanID, node)}
           />
         ))}
