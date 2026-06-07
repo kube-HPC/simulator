@@ -23,7 +23,7 @@ const PieContainer = styled.div`
 `;
 
 const ResponsiveBarStyle = styled(ResponsiveBar)`
-  width: 85%;
+  width: 100%;
 `;
 
 const typeName = {

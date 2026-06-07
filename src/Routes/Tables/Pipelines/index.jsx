@@ -19,7 +19,7 @@ import PipelinesQueryTable from './PipelinesQueryTable';
 import usePath from './usePath';
 
 const GridWrapper = styled.div`
-  height: calc(100vh - 155px);
+  height: calc(100vh / var(--app-zoom, 1) - 155px);
   min-height: 500px;
 `;
 

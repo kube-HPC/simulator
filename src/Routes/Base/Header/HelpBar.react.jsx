@@ -27,9 +27,7 @@ const HelpBar = () => {
 
   return (
     <Container className={USER_GUIDE.HEADER.SOCIALS}>
-      {healthMonitoringEnabled && (
-        <ServicesStatus services={data} widthPercent={65} />
-      )}
+      {healthMonitoringEnabled && <ServicesStatus services={data} />}
       <InactiveModeTag />
 
       <ExperimentPicker />

@@ -175,7 +175,10 @@ body{
   line-height: 1.2;      
 }
 
-
+.ant-drawer .ant-drawer-content-wrapper
+{
+max-width: 200vw !important;
+}
 `;
 
 export default GlobalStyle;

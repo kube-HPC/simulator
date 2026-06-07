@@ -10,7 +10,7 @@ import { ConfigProvider } from 'antd';
 import { ReusableProvider } from 'reusable';
 
 import ErrorBoundary from 'components/ErrorBoundary';
-import { useInitTheme } from 'hooks';
+import { useInitTheme, useAutoZoom } from 'hooks';
 import { initDashboardConfig } from 'actions/connection.action';
 import { selectors } from 'reducers';
 
@@ -25,6 +25,7 @@ import KeycloakServices from './keycloak/keycloakServices';
 
 const ConfigProviderApp = () => {
   const dispatch = useDispatch();
+  useAutoZoom();
 
   const { themeProvider } = useInitTheme();
   const { hasConfig } = useSelector(selectors.config);
@@ -41,7 +42,11 @@ const ConfigProviderApp = () => {
     if (keycloakEnable && firstKc.current && !KeycloakServices.isLoggedIn()) {
       firstKc.current = false;
 
-      KeycloakServices.initKeycloak(renderApp, renderErrorPreRenderApp, checkIframe);
+      KeycloakServices.initKeycloak(
+        renderApp,
+        renderErrorPreRenderApp,
+        checkIframe
+      );
     }
   }, [keycloakEnable, checkIframe]);
 
