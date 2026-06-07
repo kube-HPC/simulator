@@ -385,8 +385,7 @@ const KibanaIconWrap = styled.span`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 14px;
-  height: 14px;
+  font-size: 17px;
 `;
 
 const getTagValue = (tags, keys) => {
@@ -403,6 +402,10 @@ const StyledIcon = styled(ClockCircleOutlined)`
     const colors = getSystemColors(props.$isDark);
     return colors.blue;
   }};
+`;
+
+const LogsIcon = styled(FileSearchOutlined)`
+  font-size: 17px;
 `;
 
 const TimingText = styled(Text)`
@@ -795,7 +798,7 @@ const SpanRow = ({
                       spanId: span.spanID,
                     });
                   }}>
-                  <FileSearchOutlined />
+                  <LogsIcon />
                 </ActionIcon>
               </Tooltip>
             )}

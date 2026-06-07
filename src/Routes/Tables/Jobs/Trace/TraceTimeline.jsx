@@ -117,7 +117,7 @@ const TraceTimeline = ({ traceData }) => {
             <span>Duration</span>
           </Space>
         </MetricsColumn>
-        <LogsColumn>LOGS</LogsColumn>
+        <LogsColumn>Logs</LogsColumn>
       </TimelineHeader>
       <TimelineMarkers duration={duration} />
     </>
