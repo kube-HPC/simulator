@@ -218,7 +218,7 @@ const QueryForm = ({
         <AutoCompleteFloatingLabelInput
           isExactMatch
           label="Tag Name"
-          width="9vw"
+          width="50%"
           allowClear
           options={tagsOptions}
           Submit={SubmitForm}
@@ -231,7 +231,7 @@ const QueryForm = ({
             // isExactMatch
             // listIgnoreExactMatch={[KeycloakServices.getUsername()]}
             label="User"
-            width="9vw"
+            width="50%"
             options={usersOptions}
             allowClear
             Submit={SubmitForm}
