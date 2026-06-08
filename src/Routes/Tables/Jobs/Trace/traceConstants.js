@@ -100,6 +100,9 @@ export const LOGS_COL_WIDTH = 90;
 export const DEPTH_INDENT = 20;
 export const MAX_DEPTH_INDENT = 120; // caps at depth 6 effectively
 export const SPAN_LIST_MIN_HEIGHT = 200;
+export const DEFAULT_TRACE_ROW_HEIGHT = 36;
+export const MIN_TRACE_ROW_HEIGHT = 28;
+export const MAX_TRACE_ROW_HEIGHT = 72;
 
 // Helper to detect current theme
 export const getCurrentTheme = () => {
