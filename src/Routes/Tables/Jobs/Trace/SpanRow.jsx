@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, Tag, Typography, Card, Space, Tooltip } from 'antd';
+import { Button, Tag, Typography, Card, Space, Tooltip, Checkbox } from 'antd';
 import {
   CaretDownOutlined,
   CaretRightOutlined,
@@ -19,6 +19,7 @@ import {
 import {
   getCurrentTheme,
   getSystemColors,
+  CHECKBOX_COL_WIDTH,
   NAME_COL_WIDTH,
   METRICS_COL_WIDTH,
   LOGS_COL_WIDTH,
@@ -54,6 +55,18 @@ const RowContainer = styled.div`
 const RowContent = styled.div`
   display: flex;
   align-items: stretch;
+`;
+
+const RootCheckboxCell = styled.div`
+  flex: 0 0 ${CHECKBOX_COL_WIDTH}px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return props.$isDark ? '#3d5a7e' : colors.borderLight;
+    }};
 `;
 
 /*
@@ -627,6 +640,8 @@ const SpanRow = ({
   isKibanaConfigured,
   rowHeight,
   onRowHeightChange,
+  isRootSelected,
+  onRootSelectionChange,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isTimelineHovered, setIsTimelineHovered] = useState(false);
@@ -688,6 +703,19 @@ const SpanRow = ({
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}>
         <RowContent>
+          <RootCheckboxCell $isDark={isDark}>
+            {depth === 0 && (
+              <Checkbox
+                checked={isRootSelected}
+                onClick={event => event.stopPropagation()}
+                onChange={event => {
+                  event.stopPropagation();
+                  onRootSelectionChange(span.spanID, event.target.checked);
+                }}
+              />
+            )}
+          </RootCheckboxCell>
+
           <SpanNameWrapper
             $isHovered={isHovered}
             $depth={depth}
@@ -985,6 +1013,8 @@ SpanRow.propTypes = {
   isKibanaConfigured: PropTypes.bool,
   rowHeight: PropTypes.number.isRequired,
   onRowHeightChange: PropTypes.func.isRequired,
+  isRootSelected: PropTypes.bool,
+  onRootSelectionChange: PropTypes.func,
 };
 
 SpanRow.defaultProps = {
@@ -992,6 +1022,8 @@ SpanRow.defaultProps = {
   onOpenLogs: () => {},
   onOpenKibana: () => {},
   isKibanaConfigured: false,
+  isRootSelected: false,
+  onRootSelectionChange: () => {},
 };
 
 export default React.memo(SpanRow);

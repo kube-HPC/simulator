@@ -95,6 +95,7 @@ export const MINIMAP_HEIGHT = 100;
 // components stay perfectly aligned with zero manual syncing.
 export const NAME_COL_WIDTH = 250;
 export const NAME_COL_PADDING = 16; // matches the 16px right-padding in TimelineHeader
+export const CHECKBOX_COL_WIDTH = 35;
 export const METRICS_COL_WIDTH = 140;
 export const LOGS_COL_WIDTH = 90;
 export const DEPTH_INDENT = 20;

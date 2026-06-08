@@ -6,6 +6,7 @@ import { formatDuration } from './traceUtils';
 import {
   getCurrentTheme,
   getSystemColors,
+  CHECKBOX_COL_WIDTH,
   NAME_COL_WIDTH,
   METRICS_COL_WIDTH,
   LOGS_COL_WIDTH,
@@ -34,6 +35,10 @@ const MarkersContainer = styled.div`
 
 const ServiceSpacer = styled.div`
   flex: 0 0 ${NAME_COL_WIDTH}px;
+`;
+
+const CheckboxSpacer = styled.div`
+  flex: 0 0 ${CHECKBOX_COL_WIDTH}px;
 `;
 
 const TimelineColumn = styled.div`
@@ -92,6 +97,7 @@ const TimelineMarkers = ({ duration }) => {
 
   return (
     <MarkersContainer $isDark={isDark}>
+      <CheckboxSpacer />
       <ServiceSpacer />
       <TimelineColumn>{markers}</TimelineColumn>
       <MetricsSpacer />
