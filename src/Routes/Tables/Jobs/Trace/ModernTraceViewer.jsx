@@ -15,6 +15,7 @@ import TraceTimeline from './TraceTimeline';
 import TraceTimelineMinimap from './TraceTimelineMinimap';
 import SpanRow from './SpanRow';
 import TraceLogsModal from './TraceLogsModal';
+import { useTraceRowHeight } from './useTraceRowHeight';
 import { getCurrentTheme, getSystemColors } from './traceConstants';
 
 /*
@@ -75,11 +76,13 @@ const SpanListContainer = styled.div`
 const ModernTraceViewer = ({ data }) => {
   const [expandedSpans, setExpandedSpans] = useState(new Set());
   const [collapsedChildren, setCollapsedChildren] = useState(new Set());
+  const [selectedRootSpanIds, setSelectedRootSpanIds] = useState(new Set());
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTimeRange, setSelectedTimeRange] = useState(null);
   const [minimapMode, setMinimapMode] = useState('highlight');
   const [isDark, setIsDark] = useState(getCurrentTheme() === 'DARK');
   const [logsModalContext, setLogsModalContext] = useState(null);
+  const { rowHeight, onRowHeightChange } = useTraceRowHeight();
 
   const {
     kibanaUrl,
@@ -170,6 +173,153 @@ const ModernTraceViewer = ({ data }) => {
     return hierarchy;
   }, [data, collapsedChildren, selectedTimeRange, minimapMode]);
 
+  const rootSpanIds = useMemo(
+    () =>
+      spanHierarchy.filter(span => span.depth === 0).map(span => span.spanID),
+    [spanHierarchy]
+  );
+
+  useEffect(() => {
+    setSelectedRootSpanIds(prev => {
+      const visibleRoots = new Set(rootSpanIds);
+      const next = new Set([...prev].filter(id => visibleRoots.has(id)));
+      if (next.size === prev.size) {
+        return prev;
+      }
+      return next;
+    });
+  }, [rootSpanIds]);
+
+  const childrenByParent = useMemo(() => {
+    if (!data?.spans) {
+      return new Map();
+    }
+
+    const map = new Map();
+    data.spans.forEach(span => {
+      span.references?.forEach(ref => {
+        if (ref.refType !== 'CHILD_OF') {
+          return;
+        }
+        if (!map.has(ref.spanID)) {
+          map.set(ref.spanID, []);
+        }
+        map.get(ref.spanID).push(span.spanID);
+      });
+    });
+
+    return map;
+  }, [data]);
+
+  const getDescendantIds = useCallback(
+    rootSpanId => {
+      const descendants = new Set();
+      const stack = [...(childrenByParent.get(rootSpanId) || [])];
+
+      while (stack.length > 0) {
+        const currentId = stack.pop();
+        if (descendants.has(currentId)) {
+          continue;
+        }
+        descendants.add(currentId);
+        const children = childrenByParent.get(currentId) || [];
+        stack.push(...children);
+      }
+
+      return descendants;
+    },
+    [childrenByParent]
+  );
+
+  const allRootsSelected =
+    rootSpanIds.length > 0 && selectedRootSpanIds.size === rootSpanIds.length;
+  const rootsIndeterminate =
+    selectedRootSpanIds.size > 0 &&
+    selectedRootSpanIds.size < rootSpanIds.length;
+  const hasSelection = selectedRootSpanIds.size > 0;
+
+  const shouldExpandSelected = useMemo(
+    () =>
+      [...selectedRootSpanIds].some(rootSpanId =>
+        collapsedChildren.has(rootSpanId)
+      ),
+    [selectedRootSpanIds, collapsedChildren]
+  );
+
+  const handleToggleRootSelection = useCallback((rootSpanId, checked) => {
+    setSelectedRootSpanIds(prev => {
+      const next = new Set(prev);
+      if (checked) {
+        next.add(rootSpanId);
+      } else {
+        next.delete(rootSpanId);
+      }
+      return next;
+    });
+  }, []);
+
+  const handleToggleSelectAllRoots = useCallback(
+    checked => {
+      if (!checked) {
+        setSelectedRootSpanIds(new Set());
+        return;
+      }
+      setSelectedRootSpanIds(new Set(rootSpanIds));
+    },
+    [rootSpanIds]
+  );
+
+  const handleBulkToggleSelectedRoots = useCallback(() => {
+    if (selectedRootSpanIds.size === 0) {
+      return;
+    }
+
+    const selectedRoots = [...selectedRootSpanIds];
+    if (shouldExpandSelected) {
+      setCollapsedChildren(prev => {
+        const next = new Set(prev);
+        selectedRoots.forEach(rootSpanId => {
+          next.delete(rootSpanId);
+          getDescendantIds(rootSpanId).forEach(descendantId => {
+            next.delete(descendantId);
+          });
+        });
+        return next;
+      });
+
+      setExpandedSpans(prev => {
+        const next = new Set(prev);
+        selectedRoots.forEach(rootSpanId => {
+          next.add(rootSpanId);
+          getDescendantIds(rootSpanId).forEach(descendantId => {
+            next.add(descendantId);
+          });
+        });
+        return next;
+      });
+      return;
+    }
+
+    setCollapsedChildren(prev => {
+      const next = new Set(prev);
+      selectedRoots.forEach(rootSpanId => {
+        next.add(rootSpanId);
+      });
+      return next;
+    });
+
+    setExpandedSpans(prev => {
+      const next = new Set(prev);
+      selectedRoots.forEach(rootSpanId => {
+        next.delete(rootSpanId);
+        getDescendantIds(rootSpanId).forEach(descendantId => {
+          next.delete(descendantId);
+        });
+      });
+      return next;
+    });
+  }, [selectedRootSpanIds, shouldExpandSelected, getDescendantIds]);
+
   // ── Scroll helper ─────────────────────────────────────────────────────────
   // Resolves the topmost visible ancestor of the target span, then scrolls
   // the container so that row is vertically centered in the visible area.
@@ -224,9 +374,9 @@ const ModernTraceViewer = ({ data }) => {
         nodeRect.top - containerRect.top + container.scrollTop;
 
       const containerHeight = container.clientHeight;
-      const rowHeight = node.offsetHeight;
+      const currentRowHeight = node.offsetHeight;
       const scrollTarget =
-        rowTopRelativeToContainer - containerHeight / 2 + rowHeight / 2;
+        rowTopRelativeToContainer - containerHeight / 2 + currentRowHeight / 2;
 
       container.scrollTo({
         top: Math.max(0, scrollTarget),
@@ -324,7 +474,15 @@ const ModernTraceViewer = ({ data }) => {
         minimapMode={minimapMode}
         onModeChange={handleModeChange}
       />
-      <TraceTimeline traceData={data} />
+      <TraceTimeline
+        traceData={data}
+        allRootsSelected={allRootsSelected}
+        rootsIndeterminate={rootsIndeterminate}
+        onToggleSelectAll={handleToggleSelectAllRoots}
+        bulkToggleLabel={shouldExpandSelected ? 'Expand' : 'Collapse'}
+        onBulkToggle={handleBulkToggleSelectedRoots}
+        isBulkToggleDisabled={!hasSelection}
+      />
       <SpanListContainer $isDark={isDark} ref={spanListRef}>
         {spanHierarchy.map(span => (
           <SpanRow
@@ -343,7 +501,11 @@ const ModernTraceViewer = ({ data }) => {
             onOpenLogs={handleOpenLogs}
             onOpenKibana={handleOpenKibana}
             isKibanaConfigured={Boolean(kibanaUrl)}
+            rowHeight={rowHeight}
+            onRowHeightChange={onRowHeightChange}
             rowRef={node => registerSpanRef(span.spanID, node)}
+            isRootSelected={selectedRootSpanIds.has(span.spanID)}
+            onRootSelectionChange={handleToggleRootSelection}
           />
         ))}
       </SpanListContainer>

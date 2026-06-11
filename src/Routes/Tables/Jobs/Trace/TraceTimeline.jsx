@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Space } from 'antd';
+import { Space, Checkbox, Button } from 'antd';
 import { ApiOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import TimelineMarkers from './TimelineMarkers';
 import {
   getCurrentTheme,
   getSystemColors,
+  CHECKBOX_COL_WIDTH,
   NAME_COL_WIDTH,
   METRICS_COL_WIDTH,
   LOGS_COL_WIDTH,
@@ -33,6 +34,13 @@ const TimelineHeader = styled.div`
   }};
 `;
 
+const CheckboxColumn = styled.div`
+  flex: 0 0 ${CHECKBOX_COL_WIDTH}px;
+  display: flex;
+  justify-content: center;
+  margin-left: -16px;
+`;
+
 /*
  * Fixed width driven by the shared constant so it always matches SpanRow's
  * name column and TimelineMarkers' left padding.
@@ -47,8 +55,17 @@ const ServiceColumn = styled.div`
 
 const TimelineColumn = styled.div`
   flex: 1;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   min-width: 0;
+`;
+
+const BulkToggleButton = styled(Button)`
+  height: 24px;
+  padding: 0 10px;
+  margin-left: 17px;
 `;
 
 /*
@@ -77,7 +94,15 @@ const StyledIcon = styled.span`
   }};
 `;
 
-const TraceTimeline = ({ traceData }) => {
+const TraceTimeline = ({
+  traceData,
+  allRootsSelected,
+  rootsIndeterminate,
+  onToggleSelectAll,
+  bulkToggleLabel,
+  onBulkToggle,
+  isBulkToggleDisabled,
+}) => {
   const [isDark, setIsDark] = useState(getCurrentTheme() === 'DARK');
 
   useEffect(() => {
@@ -99,11 +124,24 @@ const TraceTimeline = ({ traceData }) => {
   return (
     <>
       <TimelineHeader $isDark={isDark}>
+        <CheckboxColumn>
+          <Checkbox
+            checked={allRootsSelected}
+            indeterminate={rootsIndeterminate}
+            onChange={event => onToggleSelectAll(event.target.checked)}
+          />
+        </CheckboxColumn>
         <ServiceColumn>
           <Space>
             <StyledIcon as={ApiOutlined} $isDark={isDark} />
             Service & Operation
           </Space>
+          <BulkToggleButton
+            size="small"
+            onClick={onBulkToggle}
+            disabled={isBulkToggleDisabled}>
+            {bulkToggleLabel}
+          </BulkToggleButton>
         </ServiceColumn>
         <TimelineColumn>
           <Space>
@@ -128,6 +166,21 @@ TraceTimeline.propTypes = {
   traceData: PropTypes.shape({
     duration: PropTypes.number.isRequired,
   }).isRequired,
+  allRootsSelected: PropTypes.bool,
+  rootsIndeterminate: PropTypes.bool,
+  onToggleSelectAll: PropTypes.func,
+  bulkToggleLabel: PropTypes.string,
+  onBulkToggle: PropTypes.func,
+  isBulkToggleDisabled: PropTypes.bool,
+};
+
+TraceTimeline.defaultProps = {
+  allRootsSelected: false,
+  rootsIndeterminate: false,
+  onToggleSelectAll: () => {},
+  bulkToggleLabel: 'Collapse',
+  onBulkToggle: () => {},
+  isBulkToggleDisabled: true,
 };
 
 export default React.memo(TraceTimeline);

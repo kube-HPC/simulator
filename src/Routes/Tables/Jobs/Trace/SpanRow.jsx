@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, Tag, Typography, Card, Space, Tooltip } from 'antd';
+import { Button, Tag, Typography, Card, Space, Tooltip, Checkbox } from 'antd';
 import {
   CaretDownOutlined,
   CaretRightOutlined,
@@ -19,12 +19,14 @@ import {
 import {
   getCurrentTheme,
   getSystemColors,
+  CHECKBOX_COL_WIDTH,
   NAME_COL_WIDTH,
   METRICS_COL_WIDTH,
   LOGS_COL_WIDTH,
   DEPTH_INDENT,
   MAX_DEPTH_INDENT,
 } from './traceConstants';
+import { useTraceRowResize } from './useTraceRowHeight';
 
 const { Title, Text } = Typography;
 
@@ -55,6 +57,18 @@ const RowContent = styled.div`
   align-items: stretch;
 `;
 
+const RootCheckboxCell = styled.div`
+  flex: 0 0 ${CHECKBOX_COL_WIDTH}px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return props.$isDark ? '#3d5a7e' : colors.borderLight;
+    }};
+`;
+
 /*
  * The name column width is driven by NAME_COL_WIDTH so it always matches the
  * header (TraceTimeline) and the time-marker alignment (TimelineMarkers).
@@ -75,7 +89,7 @@ const SpanNameWrapper = styled.div`
   padding: 8px 12px;
   display: flex;
   align-items: center;
-  min-height: 36px;
+  min-height: ${props => props.$rowHeight}px;
   font-size: 14px;
   border-right: 1px solid
     ${props => {
@@ -178,7 +192,7 @@ const OperationText = styled(Text)`
 const SpanBarContainer = styled.div`
   flex: 1;
   margin: 0 12px;
-  height: 36px;
+  height: ${props => props.$rowHeight}px;
   display: flex;
   align-items: center;
   position: relative;
@@ -192,7 +206,7 @@ const SpanBarContainer = styled.div`
 
 const SpanBarTrack = styled.div`
   width: 100%;
-  height: 24px;
+  height: ${props => Math.max(props.$rowHeight - 12, 14)}px;
   background: ${props => {
     const colors = getSystemColors(props.$isDark);
     return props.$isDark ? '#1a2332' : colors.lightGrey;
@@ -386,6 +400,16 @@ const KibanaIconWrap = styled.span`
   align-items: center;
   justify-content: center;
   font-size: 17px;
+`;
+
+const RowResizeHandle = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 6px;
+  cursor: row-resize;
+  z-index: 5;
 `;
 
 const getTagValue = (tags, keys) => {
@@ -614,6 +638,10 @@ const SpanRow = ({
   onOpenLogs,
   onOpenKibana,
   isKibanaConfigured,
+  rowHeight,
+  onRowHeightChange,
+  isRootSelected,
+  onRootSelectionChange,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isTimelineHovered, setIsTimelineHovered] = useState(false);
@@ -638,6 +666,11 @@ const SpanRow = ({
   const color = getServiceColor(serviceName, isDark);
   const relativeStart = (span.relativeStartTime / totalDuration) * 100;
   const width = Math.max((span.duration / totalDuration) * 100, 0.5);
+
+  const { startRowResize } = useTraceRowResize({
+    rowHeight,
+    onRowHeightChange,
+  });
 
   const matchesSearch =
     !searchTerm ||
@@ -670,9 +703,23 @@ const SpanRow = ({
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}>
         <RowContent>
+          <RootCheckboxCell $isDark={isDark}>
+            {depth === 0 && (
+              <Checkbox
+                checked={isRootSelected}
+                onClick={event => event.stopPropagation()}
+                onChange={event => {
+                  event.stopPropagation();
+                  onRootSelectionChange(span.spanID, event.target.checked);
+                }}
+              />
+            )}
+          </RootCheckboxCell>
+
           <SpanNameWrapper
             $isHovered={isHovered}
             $depth={depth}
+            $rowHeight={rowHeight}
             $isDark={isDark}>
             <SpanNameContent
               onClick={() => onToggle(span.spanID)}
@@ -717,8 +764,9 @@ const SpanRow = ({
           <SpanBarContainer
             onMouseEnter={() => setIsTimelineHovered(true)}
             onMouseLeave={() => setIsTimelineHovered(false)}
+            $rowHeight={rowHeight}
             $isDark={isDark}>
-            <SpanBarTrack $isDark={isDark}>
+            <SpanBarTrack $isDark={isDark} $rowHeight={rowHeight}>
               <SpanBar $left={relativeStart} $width={width} $color={color} />
               <DurationLabel
                 $left={relativeStart}
@@ -848,6 +896,12 @@ const SpanRow = ({
             )}
           </LogsActions>
         </RowContent>
+        <RowResizeHandle
+          role="separator"
+          aria-label="Resize trace rows"
+          aria-orientation="horizontal"
+          onMouseDown={startRowResize}
+        />
       </RowContainer>
 
       {isExpanded && (
@@ -957,6 +1011,10 @@ SpanRow.propTypes = {
   onOpenLogs: PropTypes.func,
   onOpenKibana: PropTypes.func,
   isKibanaConfigured: PropTypes.bool,
+  rowHeight: PropTypes.number.isRequired,
+  onRowHeightChange: PropTypes.func.isRequired,
+  isRootSelected: PropTypes.bool,
+  onRootSelectionChange: PropTypes.func,
 };
 
 SpanRow.defaultProps = {
@@ -964,6 +1022,8 @@ SpanRow.defaultProps = {
   onOpenLogs: () => {},
   onOpenKibana: () => {},
   isKibanaConfigured: false,
+  isRootSelected: false,
+  onRootSelectionChange: () => {},
 };
 
 export default React.memo(SpanRow);
