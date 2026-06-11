@@ -286,6 +286,17 @@ const ModernTraceViewer = ({ data }) => {
         });
         return next;
       });
+
+      setExpandedSpans(prev => {
+        const next = new Set(prev);
+        selectedRoots.forEach(rootSpanId => {
+          next.add(rootSpanId);
+          getDescendantIds(rootSpanId).forEach(descendantId => {
+            next.add(descendantId);
+          });
+        });
+        return next;
+      });
       return;
     }
 
@@ -293,6 +304,17 @@ const ModernTraceViewer = ({ data }) => {
       const next = new Set(prev);
       selectedRoots.forEach(rootSpanId => {
         next.add(rootSpanId);
+      });
+      return next;
+    });
+
+    setExpandedSpans(prev => {
+      const next = new Set(prev);
+      selectedRoots.forEach(rootSpanId => {
+        next.delete(rootSpanId);
+        getDescendantIds(rootSpanId).forEach(descendantId => {
+          next.delete(descendantId);
+        });
       });
       return next;
     });
