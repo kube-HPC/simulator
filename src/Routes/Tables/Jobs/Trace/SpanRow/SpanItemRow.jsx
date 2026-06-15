@@ -60,6 +60,7 @@ const SpanRow = ({
     canOpenKibana,
     shouldShowDisabledIcons,
   } = getSpanActionState({
+    spanTaskId: span.taskId,
     spanTags: span.tags,
     processTags: process?.tags,
     depth,
@@ -123,6 +124,7 @@ SpanRow.propTypes = {
         value: PropTypes.any.isRequired,
       })
     ),
+    taskId: PropTypes.string,
   }).isRequired,
   totalDuration: PropTypes.number.isRequired,
   traceStartTime: PropTypes.number.isRequired,

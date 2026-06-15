@@ -30,12 +30,14 @@ export const matchesSpanSearch = ({
 };
 
 export const getSpanActionState = ({
+  spanTaskId,
   spanTags,
   processTags,
   depth,
   isKibanaConfigured,
 }) => {
-  const taskId = getTagValue(spanTags, ['taskId', 'task_id', 'taskID']);
+  const taskId =
+    spanTaskId || getTagValue(spanTags, ['taskId', 'task_id', 'taskID']);
   const podName =
     getTagValue(spanTags, ['podName', 'pod_name', 'pod', 'hostname']) ||
     getTagValue(processTags, ['podName', 'pod_name', 'pod', 'hostname']);
