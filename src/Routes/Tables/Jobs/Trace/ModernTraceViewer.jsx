@@ -13,7 +13,7 @@ import buildKibanaDiscoverUrl from 'utils/buildKibanaDiscoverUrl';
 import TraceHeader from './TraceHeader';
 import TraceTimeline from './TraceTimeline';
 import TraceTimelineMinimap from './TraceTimelineMinimap';
-import SpanRow from './SpanRow';
+import SpanRow from './SpanRow/SpanItemRow';
 import TraceLogsModal from './TraceLogsModal';
 import { useTraceRowHeight } from './useTraceRowHeight';
 import { getCurrentTheme, getSystemColors } from './traceConstants';
