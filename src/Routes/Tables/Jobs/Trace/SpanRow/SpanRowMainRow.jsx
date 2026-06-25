@@ -4,7 +4,7 @@ import { Space, Tooltip, Checkbox } from 'antd';
 import {
   CaretDownOutlined,
   CaretRightOutlined,
-  ZoomInOutlined,
+  ExpandOutlined,
 } from '@ant-design/icons';
 import { ReactComponent as IconKibana } from 'images/kibana.svg';
 import { formatDuration, formatTime } from '../traceUtils';
@@ -100,7 +100,7 @@ const SpanRowMainRow = ({
                     event.stopPropagation();
                     onZoom(span.spanID);
                   }}>
-                  <ZoomInOutlined />
+                  <ExpandOutlined />
                 </ActionIcon>
               </Tooltip>
             )}

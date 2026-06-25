@@ -5,7 +5,7 @@ import { Space, Checkbox, Button, Tooltip } from 'antd';
 import {
   ApiOutlined,
   ClockCircleOutlined,
-  ZoomInOutlined,
+  ExpandOutlined,
 } from '@ant-design/icons';
 import TimelineMarkers from './TimelineMarkers';
 import {
@@ -151,7 +151,7 @@ const TraceTimeline = ({
                 <ZoomButton
                   type="text"
                   size="small"
-                  icon={<ZoomInOutlined />}
+                  icon={<ExpandOutlined />}
                   onClick={onZoomAll}
                 />
               </Tooltip>
