@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Space, Checkbox, Button } from 'antd';
-import { ApiOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { Space, Checkbox, Button, Tooltip } from 'antd';
+import {
+  ApiOutlined,
+  ClockCircleOutlined,
+  ZoomInOutlined,
+} from '@ant-design/icons';
 import TimelineMarkers from './TimelineMarkers';
 import {
   getCurrentTheme,
   getSystemColors,
+  ZOOM_COL_WIDTH,
   CHECKBOX_COL_WIDTH,
   NAME_COL_WIDTH,
   METRICS_COL_WIDTH,
@@ -38,7 +43,19 @@ const CheckboxColumn = styled.div`
   flex: 0 0 ${CHECKBOX_COL_WIDTH}px;
   display: flex;
   justify-content: center;
+`;
+
+const ZoomColumn = styled.div`
+  flex: 0 0 ${ZOOM_COL_WIDTH}px;
+  display: flex;
+  justify-content: center;
   margin-left: -16px;
+`;
+
+const ZoomButton = styled(Button)`
+  height: 24px;
+  width: 24px;
+  padding: 0;
 `;
 
 /*
@@ -102,6 +119,9 @@ const TraceTimeline = ({
   bulkToggleLabel,
   onBulkToggle,
   isBulkToggleDisabled,
+  onZoomAll,
+  enableZoom = true,
+  showZoomColumn = true,
 }) => {
   const [isDark, setIsDark] = useState(getCurrentTheme() === 'DARK');
 
@@ -124,6 +144,20 @@ const TraceTimeline = ({
   return (
     <>
       <TimelineHeader $isDark={isDark}>
+        {showZoomColumn && (
+          <ZoomColumn>
+            {enableZoom && (
+              <Tooltip title="Open full trace in fullscreen">
+                <ZoomButton
+                  type="text"
+                  size="small"
+                  icon={<ZoomInOutlined />}
+                  onClick={onZoomAll}
+                />
+              </Tooltip>
+            )}
+          </ZoomColumn>
+        )}
         <CheckboxColumn>
           <Checkbox
             checked={allRootsSelected}
@@ -157,7 +191,7 @@ const TraceTimeline = ({
         </MetricsColumn>
         <LogsColumn>Logs</LogsColumn>
       </TimelineHeader>
-      <TimelineMarkers duration={duration} />
+      <TimelineMarkers duration={duration} showZoomColumn={showZoomColumn} />
     </>
   );
 };
@@ -172,6 +206,9 @@ TraceTimeline.propTypes = {
   bulkToggleLabel: PropTypes.string,
   onBulkToggle: PropTypes.func,
   isBulkToggleDisabled: PropTypes.bool,
+  onZoomAll: PropTypes.func,
+  enableZoom: PropTypes.bool,
+  showZoomColumn: PropTypes.bool,
 };
 
 TraceTimeline.defaultProps = {
@@ -181,6 +218,8 @@ TraceTimeline.defaultProps = {
   bulkToggleLabel: 'Collapse',
   onBulkToggle: () => {},
   isBulkToggleDisabled: true,
+  onZoomAll: () => {},
+  showZoomColumn: true,
 };
 
 export default React.memo(TraceTimeline);

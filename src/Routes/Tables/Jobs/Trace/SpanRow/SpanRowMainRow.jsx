@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Space, Tooltip, Checkbox } from 'antd';
-import { CaretDownOutlined, CaretRightOutlined } from '@ant-design/icons';
+import {
+  CaretDownOutlined,
+  CaretRightOutlined,
+  ZoomInOutlined,
+} from '@ant-design/icons';
 import { ReactComponent as IconKibana } from 'images/kibana.svg';
 import { formatDuration, formatTime } from '../traceUtils';
 import {
   RowContainer,
   RowContent,
+  ZoomCell,
   RootCheckboxCell,
   SpanNameWrapper,
   SpanNameContent,
@@ -52,6 +57,9 @@ const SpanRowMainRow = ({
   startRowResize,
   isRootSelected,
   onRootSelectionChange,
+  onZoom = () => {},
+  enableZoom = true,
+  showZoomColumn = true,
   canOpenLogs,
   canOpenKibana,
   shouldShowDisabledIcons,
@@ -72,6 +80,33 @@ const SpanRowMainRow = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}>
       <RowContent>
+        {showZoomColumn && (
+          <ZoomCell $isDark={isDark}>
+            {enableZoom && depth === 0 && (
+              <Tooltip title="Open subtree in fullscreen">
+                <ActionIcon
+                  role="button"
+                  tabIndex={0}
+                  $isDark={isDark}
+                  onClick={event => {
+                    event.stopPropagation();
+                    onZoom(span.spanID);
+                  }}
+                  onKeyDown={event => {
+                    if (event.key !== 'Enter' && event.key !== ' ') {
+                      return;
+                    }
+                    event.preventDefault();
+                    event.stopPropagation();
+                    onZoom(span.spanID);
+                  }}>
+                  <ZoomInOutlined />
+                </ActionIcon>
+              </Tooltip>
+            )}
+          </ZoomCell>
+        )}
+
         <RootCheckboxCell $isDark={isDark}>
           {depth === 0 && (
             <Checkbox
@@ -298,6 +333,9 @@ SpanRowMainRow.propTypes = {
   startRowResize: PropTypes.func.isRequired,
   isRootSelected: PropTypes.bool.isRequired,
   onRootSelectionChange: PropTypes.func.isRequired,
+  onZoom: PropTypes.func,
+  enableZoom: PropTypes.bool,
+  showZoomColumn: PropTypes.bool,
   canOpenLogs: PropTypes.bool.isRequired,
   canOpenKibana: PropTypes.bool.isRequired,
   shouldShowDisabledIcons: PropTypes.bool.isRequired,
@@ -310,6 +348,7 @@ SpanRowMainRow.propTypes = {
 
 SpanRowMainRow.defaultProps = {
   rowRef: null,
+  showZoomColumn: true,
   taskId: '',
   podName: '',
 };

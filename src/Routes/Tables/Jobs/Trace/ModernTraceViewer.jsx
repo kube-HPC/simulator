@@ -15,20 +15,27 @@ import TraceTimeline from './TraceTimeline';
 import TraceTimelineMinimap from './TraceTimelineMinimap';
 import SpanRow from './SpanRow/SpanItemRow';
 import TraceLogsModal from './TraceLogsModal';
+import TraceZoomModal from './TraceZoomModal';
 import { useTraceRowHeight } from './useTraceRowHeight';
 import { getCurrentTheme, getSystemColors } from './traceConstants';
+import { buildSubtreeData } from './traceUtils';
 
 /*
  * VIEWPORT_OFFSET — height of everything outside ViewerContainer
  * (top navbar + page padding/margins). Adjust if the app shell changes.
  */
 const VIEWPORT_OFFSET = 120;
+const VIEWPORT_OFFSET_FULLSCREEN = 180;
 
 const ViewerContainer = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - ${VIEWPORT_OFFSET}px);
+  height: calc(
+    100vh -
+      ${props =>
+        props.$isFullscreen ? VIEWPORT_OFFSET_FULLSCREEN : VIEWPORT_OFFSET}px
+  );
   min-height: 400px;
   background: ${props => {
     const colors = getSystemColors(props.$isDark);
@@ -73,7 +80,14 @@ const SpanListContainer = styled.div`
   }
 `;
 
-const ModernTraceViewer = ({ data }) => {
+const ModernTraceViewer = ({
+  data,
+  enableZoom = true,
+  showHeader = true,
+  showOverview = true,
+  showZoomColumn = true,
+  isFullscreen = false,
+}) => {
   const [expandedSpans, setExpandedSpans] = useState(new Set());
   const [collapsedChildren, setCollapsedChildren] = useState(new Set());
   const [selectedRootSpanIds, setSelectedRootSpanIds] = useState(new Set());
@@ -82,6 +96,7 @@ const ModernTraceViewer = ({ data }) => {
   const [minimapMode, setMinimapMode] = useState('highlight');
   const [isDark, setIsDark] = useState(getCurrentTheme() === 'DARK');
   const [logsModalContext, setLogsModalContext] = useState(null);
+  const [zoomContext, setZoomContext] = useState(null);
   const { rowHeight, onRowHeightChange } = useTraceRowHeight();
 
   const {
@@ -218,12 +233,11 @@ const ModernTraceViewer = ({ data }) => {
 
       while (stack.length > 0) {
         const currentId = stack.pop();
-        if (descendants.has(currentId)) {
-          continue;
+        if (!descendants.has(currentId)) {
+          descendants.add(currentId);
+          const children = childrenByParent.get(currentId) || [];
+          stack.push(...children);
         }
-        descendants.add(currentId);
-        const children = childrenByParent.get(currentId) || [];
-        stack.push(...children);
       }
 
       return descendants;
@@ -443,6 +457,60 @@ const ModernTraceViewer = ({ data }) => {
     setLogsModalContext(null);
   }, []);
 
+  const handleOpenZoom = useCallback(
+    rootSpanId => {
+      if (!enableZoom || !rootSpanId) {
+        return;
+      }
+      setZoomContext({ mode: 'subtree', rootSpanId });
+    },
+    [enableZoom]
+  );
+
+  const handleOpenZoomAll = useCallback(() => {
+    if (!enableZoom) {
+      return;
+    }
+    setZoomContext({ mode: 'all' });
+  }, [enableZoom]);
+
+  const handleCloseZoom = useCallback(() => {
+    setZoomContext(null);
+  }, []);
+
+  const zoomData = useMemo(() => {
+    if (!zoomContext) {
+      return null;
+    }
+    if (zoomContext.mode === 'all') {
+      return data;
+    }
+    return buildSubtreeData(data, zoomContext.rootSpanId);
+  }, [zoomContext, data]);
+
+  const zoomTitle = useMemo(() => {
+    if (!zoomContext) {
+      return 'Trace zoom';
+    }
+
+    if (zoomContext.mode === 'all') {
+      return 'Full trace';
+    }
+
+    const rootSpan = data?.spans?.find(
+      span => span.spanID === zoomContext.rootSpanId
+    );
+    if (!rootSpan) {
+      return 'Trace zoom';
+    }
+
+    const process = data.processes?.[rootSpan.processID];
+    const serviceName = process?.serviceName;
+    return serviceName
+      ? `${serviceName} · ${rootSpan.operationName}`
+      : rootSpan.operationName;
+  }, [zoomContext, data]);
+
   const handleOpenKibana = useCallback(
     ({ taskId, startTime }) => {
       const url = buildKibanaDiscoverUrl({
@@ -461,19 +529,23 @@ const ModernTraceViewer = ({ data }) => {
   );
 
   return (
-    <ViewerContainer $isDark={isDark}>
-      <TraceHeader
-        traceData={data}
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-      />
-      <TraceTimelineMinimap
-        traceData={data}
-        processes={data.processes}
-        onSelectionChange={handleTimeRangeSelection}
-        minimapMode={minimapMode}
-        onModeChange={handleModeChange}
-      />
+    <ViewerContainer $isDark={isDark} $isFullscreen={isFullscreen}>
+      {showHeader && (
+        <TraceHeader
+          traceData={data}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+        />
+      )}
+      {showOverview && (
+        <TraceTimelineMinimap
+          traceData={data}
+          processes={data.processes}
+          onSelectionChange={handleTimeRangeSelection}
+          minimapMode={minimapMode}
+          onModeChange={handleModeChange}
+        />
+      )}
       <TraceTimeline
         traceData={data}
         allRootsSelected={allRootsSelected}
@@ -482,6 +554,9 @@ const ModernTraceViewer = ({ data }) => {
         bulkToggleLabel={shouldExpandSelected ? 'Expand' : 'Collapse'}
         onBulkToggle={handleBulkToggleSelectedRoots}
         isBulkToggleDisabled={!hasSelection}
+        onZoomAll={handleOpenZoomAll}
+        enableZoom={enableZoom}
+        showZoomColumn={showZoomColumn}
       />
       <SpanListContainer $isDark={isDark} ref={spanListRef}>
         {spanHierarchy.map(span => (
@@ -506,6 +581,9 @@ const ModernTraceViewer = ({ data }) => {
             rowRef={node => registerSpanRef(span.spanID, node)}
             isRootSelected={selectedRootSpanIds.has(span.spanID)}
             onRootSelectionChange={handleToggleRootSelection}
+            onZoom={handleOpenZoom}
+            enableZoom={enableZoom}
+            showZoomColumn={showZoomColumn}
           />
         ))}
       </SpanListContainer>
@@ -515,6 +593,18 @@ const ModernTraceViewer = ({ data }) => {
           context={logsModalContext}
           onClose={handleCloseLogs}
         />
+      )}
+      {enableZoom && zoomContext && zoomData && (
+        <TraceZoomModal open title={zoomTitle} onClose={handleCloseZoom}>
+          <ModernTraceViewer
+            data={zoomData}
+            enableZoom={false}
+            showHeader
+            showOverview={false}
+            showZoomColumn={false}
+            isFullscreen
+          />
+        </TraceZoomModal>
       )}
     </ViewerContainer>
   );
@@ -527,6 +617,11 @@ ModernTraceViewer.propTypes = {
     duration: PropTypes.number.isRequired,
     startTime: PropTypes.number.isRequired,
   }).isRequired,
+  enableZoom: PropTypes.bool,
+  showHeader: PropTypes.bool,
+  showOverview: PropTypes.bool,
+  showZoomColumn: PropTypes.bool,
+  isFullscreen: PropTypes.bool,
 };
 
 export default React.memo(ModernTraceViewer);

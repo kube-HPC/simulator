@@ -27,6 +27,9 @@ const SpanRow = ({
   onRowHeightChange,
   isRootSelected,
   onRootSelectionChange,
+  onZoom,
+  enableZoom = true,
+  showZoomColumn = true,
 }) => {
   const isDark = useSpanRowTheme();
 
@@ -87,6 +90,9 @@ const SpanRow = ({
         startRowResize={startRowResize}
         isRootSelected={isRootSelected}
         onRootSelectionChange={onRootSelectionChange}
+        onZoom={onZoom}
+        enableZoom={enableZoom}
+        showZoomColumn={showZoomColumn}
         canOpenLogs={canOpenLogs}
         canOpenKibana={canOpenKibana}
         shouldShowDisabledIcons={shouldShowDisabledIcons}
@@ -144,6 +150,9 @@ SpanRow.propTypes = {
   onRowHeightChange: PropTypes.func.isRequired,
   isRootSelected: PropTypes.bool,
   onRootSelectionChange: PropTypes.func,
+  onZoom: PropTypes.func,
+  enableZoom: PropTypes.bool,
+  showZoomColumn: PropTypes.bool,
 };
 
 SpanRow.defaultProps = {
@@ -153,6 +162,8 @@ SpanRow.defaultProps = {
   isKibanaConfigured: false,
   isRootSelected: false,
   onRootSelectionChange: () => {},
+  onZoom: () => {},
+  showZoomColumn: true,
 };
 
 export default React.memo(SpanRow);

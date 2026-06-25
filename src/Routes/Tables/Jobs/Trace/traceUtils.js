@@ -37,15 +37,16 @@ const generateServiceColor = (serviceName, isDark = false) => {
     const saturation = 70 + (Math.abs(hash >> 8) % 20); // 70-90%
     const lightness = 58 + (Math.abs(hash >> 16) % 17); // 58-75%
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-  } 
-    // Light mode: Softer, pastel colors
-    const saturation = 50 + (Math.abs(hash >> 8) % 30); // 50-80%
-    const lightness = 65 + (Math.abs(hash >> 16) % 20); // 65-85%
-    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-  
+  }
+  // Light mode: Softer, pastel colors
+  const saturation = 50 + (Math.abs(hash >> 8) % 30); // 50-80%
+  const lightness = 65 + (Math.abs(hash >> 16) % 20); // 65-85%
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 };
 export const getContrastTextColor = backgroundColor => {
-  let r; let g; let b;
+  let r;
+  let g;
+  let b;
 
   if (backgroundColor.startsWith('hsl')) {
     // Convert HSL to RGB first (we'll use a simpler approach)
@@ -92,3 +93,60 @@ export const hasError = span =>
       (tag.key === 'error' && tag.value === true) ||
       (tag.key === 'http.status_code' && tag.value >= 400)
   );
+
+export const buildSubtreeData = (data, rootSpanId) => {
+  if (!data?.spans || !rootSpanId) {
+    return data;
+  }
+
+  const rootSpan = data.spans.find(span => span.spanID === rootSpanId);
+  if (!rootSpan) {
+    return data;
+  }
+
+  const childrenByParent = new Map();
+  data.spans.forEach(span => {
+    span.references?.forEach(ref => {
+      if (ref.refType !== 'CHILD_OF') {
+        return;
+      }
+      if (!childrenByParent.has(ref.spanID)) {
+        childrenByParent.set(ref.spanID, []);
+      }
+      childrenByParent.get(ref.spanID).push(span.spanID);
+    });
+  });
+
+  const includedIds = new Set([rootSpanId]);
+  const stack = [rootSpanId];
+
+  while (stack.length > 0) {
+    const currentId = stack.pop();
+    const children = childrenByParent.get(currentId) || [];
+    children.forEach(childId => {
+      if (includedIds.has(childId)) {
+        return;
+      }
+      includedIds.add(childId);
+      stack.push(childId);
+    });
+  }
+
+  const rootRelativeStart = rootSpan.relativeStartTime || 0;
+  const subtreeSpans = data.spans
+    .filter(span => includedIds.has(span.spanID))
+    .map(span => ({
+      ...span,
+      relativeStartTime: Math.max(
+        0,
+        span.relativeStartTime - rootRelativeStart
+      ),
+    }));
+
+  return {
+    ...data,
+    spans: subtreeSpans,
+    startTime: rootSpan.startTime,
+    duration: rootSpan.duration,
+  };
+};

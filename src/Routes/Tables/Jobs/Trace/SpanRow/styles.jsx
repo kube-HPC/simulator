@@ -3,6 +3,7 @@ import { Button, Tag, Typography, Card } from 'antd';
 import { ClockCircleOutlined, FileSearchOutlined } from '@ant-design/icons';
 import {
   getSystemColors,
+  ZOOM_COL_WIDTH,
   CHECKBOX_COL_WIDTH,
   NAME_COL_WIDTH,
   METRICS_COL_WIDTH,
@@ -43,6 +44,18 @@ export const RowContent = styled.div`
 
 export const RootCheckboxCell = styled.div`
   flex: 0 0 ${CHECKBOX_COL_WIDTH}px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return props.$isDark ? '#3d5a7e' : colors.borderLight;
+    }};
+`;
+
+export const ZoomCell = styled.div`
+  flex: 0 0 ${ZOOM_COL_WIDTH}px;
   display: flex;
   align-items: center;
   justify-content: center;
