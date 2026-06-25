@@ -174,11 +174,11 @@ const SpanRowMainRow = ({
         </SpanTiming>
 
         <LogsActions $isDark={isDark}>
-          {(canOpenLogs || shouldShowDisabledIcons) && (
+          {depth === 0 && (canOpenLogs || shouldShowDisabledIcons) && (
             <Tooltip
               title={
                 canOpenLogs
-                  ? 'Open logs'
+                  ? `Open logs (${taskId})`
                   : 'TaskId or podName is missing for this step'
               }>
               <ActionIcon
@@ -220,7 +220,7 @@ const SpanRowMainRow = ({
             </Tooltip>
           )}
 
-          {(canOpenKibana || shouldShowDisabledIcons) && (
+          {depth === 0 && (canOpenKibana || shouldShowDisabledIcons) && (
             <Tooltip
               title={
                 canOpenKibana
