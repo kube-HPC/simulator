@@ -70,7 +70,7 @@ export const SpanNameWrapper = styled.div`
     }
     return props.$isDark ? '#1f2937' : colors.cardBackground;
   }};
-  padding: 8px 12px;
+  padding: 2px 12px;
   display: flex;
   align-items: center;
   min-height: ${props => props.$rowHeight}px;
@@ -186,6 +186,7 @@ export const SpanBarContainer = styled.div`
   }};
   overflow: visible;
   min-width: 0;
+  height: auto;
 `;
 
 export const SpanBarTrack = styled.div`
@@ -322,7 +323,7 @@ export const SpanTiming = styled.div`
     const colors = getSystemColors(props.$isDark);
     return colors.text;
   }};
-  padding: 8px 12px;
+  padding: 2px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
