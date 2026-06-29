@@ -25,7 +25,7 @@ import { buildSubtreeData } from './traceUtils';
  * (top navbar + page padding/margins). Adjust if the app shell changes.
  */
 const VIEWPORT_OFFSET = 120;
-const VIEWPORT_OFFSET_FULLSCREEN = 180;
+const VIEWPORT_OFFSET_FULLSCREEN = 75;
 
 const ViewerContainer = styled.div`
   position: relative;
@@ -87,6 +87,8 @@ const ModernTraceViewer = ({
   showOverview = true,
   showZoomColumn = true,
   isFullscreen = false,
+  jobId,
+  name,
 }) => {
   const [expandedSpans, setExpandedSpans] = useState(new Set());
   const [collapsedChildren, setCollapsedChildren] = useState(new Set());
@@ -532,9 +534,12 @@ const ModernTraceViewer = ({
     <ViewerContainer $isDark={isDark} $isFullscreen={isFullscreen}>
       {showHeader && (
         <TraceHeader
+          jobId={jobId}
+          jobName={name}
           traceData={data}
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
+          isFullscreen={isFullscreen}
         />
       )}
       {showOverview && (
@@ -597,6 +602,8 @@ const ModernTraceViewer = ({
       {enableZoom && zoomContext && zoomData && (
         <TraceZoomModal open title={zoomTitle} onClose={handleCloseZoom}>
           <ModernTraceViewer
+            jobId={jobId}
+            name={name}
             data={zoomData}
             enableZoom={false}
             showHeader
@@ -622,6 +629,8 @@ ModernTraceViewer.propTypes = {
   showOverview: PropTypes.bool,
   showZoomColumn: PropTypes.bool,
   isFullscreen: PropTypes.bool,
+  jobId: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
 };
 
 export default React.memo(ModernTraceViewer);

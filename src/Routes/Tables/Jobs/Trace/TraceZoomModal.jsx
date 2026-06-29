@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Button } from 'antd';
+import { Modal } from 'antd';
 
 const TraceZoomModal = ({ open, title, onClose, children }) => {
   const exitFullscreenIfNeeded = useCallback(async () => {
@@ -46,12 +46,13 @@ const TraceZoomModal = ({ open, title, onClose, children }) => {
     <Modal
       destroyOnHidden
       open={open}
-      title={title}
+      title={`-  ${title}`}
       onCancel={handleClose}
       width="98%"
-      height="90%"
+      height="98%"
       style={{
         top: 10,
+        bottom: 7,
         margin: '0 auto',
         paddingBottom: 0,
       }}
@@ -59,17 +60,21 @@ const TraceZoomModal = ({ open, title, onClose, children }) => {
         content: {
           borderRadius: 0,
           padding: 0,
-          height: '80%',
+          height: '98%',
           display: 'flex',
           flexDirection: 'column',
         },
         header: {
-          margin: 0,
-          padding: '12px 16px',
-          borderRadius: 0,
+          // position: 'absolute',
+          // zIndex: 10,
+          //  marginTop: 15,
+          // marginLeft: 130,
+          // padding: '5px',
+          // borderRadius: 0,
+          display: 'none',
         },
         body: {
-          height: '80%',
+          height: '98%',
           padding: 0,
           flex: 1,
           minHeight: 0,
@@ -77,14 +82,10 @@ const TraceZoomModal = ({ open, title, onClose, children }) => {
         },
         footer: {
           margin: 0,
-          padding: '10px 16px',
+          padding: '0px',
         },
       }}
-      footer={[
-        <Button key="close" type="primary" onClick={handleClose}>
-          Close
-        </Button>,
-      ]}>
+      footer={[]}>
       {children}
     </Modal>
   );
