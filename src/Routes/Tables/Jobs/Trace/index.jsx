@@ -11,7 +11,7 @@ const CenterDiv = styled.div`
   align-items: center;
 `;
 
-const Trace = ({ data }) => {
+const Trace = ({ data, jobId, name }) => {
   // Check if dark mode is active
   const isDarkMode =
     localStorage.getItem('hkubeTheme')?.toUpperCase() === 'DARK';
@@ -22,7 +22,7 @@ const Trace = ({ data }) => {
         <Result status="warning" title="No trace has been found." />
       ) : data ? (
         <div>
-          <ModernTraceViewer data={data} />
+          <ModernTraceViewer data={data} jobId={jobId} name={name} />
         </div>
       ) : (
         <CenterDiv>
@@ -37,6 +37,8 @@ Trace.propTypes = {
   // TODO: detail the props
   // eslint-disable-next-line
   data: PropTypes.object,
+  jobId: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
 };
 
 export default React.memo(Trace);

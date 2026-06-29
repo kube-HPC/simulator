@@ -67,7 +67,7 @@ const JobInfo = ({ job }) => {
       {
         label: OVERVIEW_JOB_TABS.TRACE,
         key: OVERVIEW_JOB_TABS.TRACE,
-        children: <Trace data={traceData} />,
+        children: <Trace data={traceData} jobId={key} name={pipeline.name} />,
       },
       {
         label: OVERVIEW_JOB_TABS.INFO,
