@@ -34,7 +34,7 @@ const OverviewDrawer = () => {
     variables: { jobId },
     fetchPolicy: 'no-cache',
   });
-  usePolling(query, 6000);
+  usePolling(query, 3000);
   // const item = useSelector(state => selectors.jobs.byId(state, jobId));
 
   return (

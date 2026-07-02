@@ -5,7 +5,7 @@ import { useQuery } from '@apollo/client';
 const useStorage = () => {
   const query = useQuery(DISK_SPACE_QUERY);
 
-  usePolling(query, 6000);
+  usePolling(query, 3000);
 
   const storage = query?.data?.diskSpace || [];
 

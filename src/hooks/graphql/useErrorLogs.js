@@ -18,7 +18,7 @@ const initialCounter = Number(
 
 const useErrorLogs = () => {
   const query = useQuery(ERROR_LOG_QUERY);
-  usePolling(query, 12000);
+  usePolling(query, 3000);
   const dataSource = query?.data?.errorLogs || [];
 
   const [lastTimeStamp, setLastTimeStamp] = useState(initialCounter);

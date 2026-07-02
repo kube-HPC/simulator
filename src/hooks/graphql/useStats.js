@@ -5,7 +5,7 @@ import { useQuery } from '@apollo/client';
 const useStats = () => {
   const query = useQuery(NODE_STATISTICS_QUERY);
 
-  usePolling(query, 6000);
+  usePolling(query, 3000);
   const statistics = query?.data?.nodeStatistics || [];
   const [cpu, memory, gpu] = statistics;
 
