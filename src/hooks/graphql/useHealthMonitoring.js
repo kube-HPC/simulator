@@ -4,7 +4,7 @@ import { usePolling } from 'hooks';
 
 const useHealthMonitoring = (enabled = true) => {
   const query = useQuery(HEALTH_MONITORING_QUERY, { skip: !enabled });
-  usePolling(query, 12000);
+  usePolling(query, 3000);
   return query;
 };
 
