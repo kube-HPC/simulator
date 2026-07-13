@@ -11,6 +11,7 @@ import styled from 'styled-components';
 // import { useVT } from 'virtualizedtableforantd4';
 
 import { USER_GUIDE } from 'const';
+import IDProvider from 'IDProvider';
 
 const ExpandIcon = ({ expanded, onExpand, record }) => (
   <Icon
@@ -77,18 +78,20 @@ const Table = ({
     [dataSource]
   ); */
 
-  <TableWhite
-    loading={loading}
-    //  components={isInfinity ? vt : null}
-    scroll={isInfinity ? { y: heightScroll } : {}}
-    // scroll={{ y: 'calc(80vh - 4em)' }}
-    className={USER_GUIDE.TABLE}
-    expandIcon={ExpandIcon}
-    dataSource={dataSource}
-    pagination={false}
-    size="middle"
-    {...props}
-  />
+  <IDProvider dataTestId="tableAntd">
+    <TableWhite
+      loading={loading}
+      //  components={isInfinity ? vt : null}
+      scroll={isInfinity ? { y: heightScroll } : {}}
+      // scroll={{ y: 'calc(80vh - 4em)' }}
+      className={USER_GUIDE.TABLE}
+      expandIcon={ExpandIcon}
+      dataSource={dataSource}
+      pagination={false}
+      size="middle"
+      {...props}
+    />
+  </IDProvider>
 );
 Table.propTypes = {
   dataSource: PropTypes.arrayOf(PropTypes.object),
