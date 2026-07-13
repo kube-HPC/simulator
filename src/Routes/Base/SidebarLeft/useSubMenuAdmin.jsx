@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import IDProvider from 'IDProvider';
 import { Link, useLocation } from 'react-router-dom';
 import Icon, {
   WarningOutlined,
@@ -94,16 +95,18 @@ const useSubMenus = (totalNewWarnings, dataMoreCount) => {
       items.push({
         style: itemSubMenuStyle,
         label: (
-          <Link to={{ pathname: path, search: location.search }}>
-            <Name>{name}</Name>{' '}
-            {count > 0 && (
-              <BadgeStyle offset={[-7, 0]}>
-                <Tag color="" style={tagStyle}>
-                  {count}
-                </Tag>
-              </BadgeStyle>
-            )}
-          </Link>
+          <IDProvider dataTestId={`left-sidebar-link-${name}`}>
+            <Link to={{ pathname: path, search: location.search }}>
+              <Name>{name}</Name>{' '}
+              {count > 0 && (
+                <BadgeStyle offset={[-7, 0]}>
+                  <Tag color="" style={tagStyle}>
+                    {count}
+                  </Tag>
+                </BadgeStyle>
+              )}
+            </Link>
+          </IDProvider>
         ),
         key: `left-sidebar-${name}`,
         className: USER_GUIDE.TABLE_SELECT[name],
@@ -127,16 +130,20 @@ const useSubMenus = (totalNewWarnings, dataMoreCount) => {
       items.push({
         style: itemSubMenuStyle,
         label: (
-          <Link to={{ pathname: path, search: location.search }}>
-            <Name>{name}</Name>{' '}
-            {count > 0 && (
-              <BadgeStyle offset={[-10, 0]}>
-                <Tag color={name === 'Error Log' ? 'red' : ''} style={tagStyle}>
-                  {count}
-                </Tag>
-              </BadgeStyle>
-            )}
-          </Link>
+          <IDProvider dataTestId={`left-sidebar-link-${name}`}>
+            <Link to={{ pathname: path, search: location.search }}>
+              <Name>{name}</Name>{' '}
+              {count > 0 && (
+                <BadgeStyle offset={[-10, 0]}>
+                  <Tag
+                    color={name === 'Error Log' ? 'red' : ''}
+                    style={tagStyle}>
+                    {count}
+                  </Tag>
+                </BadgeStyle>
+              )}
+            </Link>
+          </IDProvider>
         ),
         key: `left-sidebar-${name}`,
         className: USER_GUIDE.TABLE_SELECT[name],

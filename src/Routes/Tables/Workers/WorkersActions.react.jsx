@@ -1,4 +1,5 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import IDProvider from 'IDProvider';
 import PropTypes from 'prop-types';
 import { StopOutlined } from '@ant-design/icons';
 import { events } from 'utils';
@@ -17,7 +18,8 @@ const WorkersActions = ({ algorithm = null, stopAllWorkers = [] }) => {
     events.emit(
       'global_alert_msg',
       <>
-Stopping the worker, It may take a few moments for the algorithms to be deleted.
+        Stopping the worker, It may take a few moments for the algorithms to be
+        deleted.
       </>,
       'success'
     );
@@ -80,20 +82,23 @@ Stopping the worker, It may take a few moments for the algorithms to be deleted.
             onConfirm={handelStop}
             okText="Yes"
             cancelText="No">
-            <Button
-              icon={
-                stopAllWorkers?.length > 0 ? (
-                  ''
-                ) : algorithm ? (
-                  <StopOutlined />
-                ) : (
-                  ''
-                )
-              }
-              loading={stopWorkerIsRun}
-              styles={{ paddingLeft: '10' }}>
-              {stopAllWorkers?.length > 0 ? 'Stop all workers' : ''}
-            </Button>
+            <IDProvider
+              dataTestId={`table-workers-actions-stop-worker${stopAllWorkers?.length > 0 ? '-all' : ''}`}>
+              <Button
+                icon={
+                  stopAllWorkers?.length > 0 ? (
+                    ''
+                  ) : algorithm ? (
+                    <StopOutlined />
+                  ) : (
+                    ''
+                  )
+                }
+                loading={stopWorkerIsRun}
+                styles={{ paddingLeft: '10' }}>
+                {stopAllWorkers?.length > 0 ? 'Stop all workers' : ''}
+              </Button>
+            </IDProvider>
           </Popconfirm>
         </Tooltip>
       </Space.Compact>
