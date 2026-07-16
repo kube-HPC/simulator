@@ -82,23 +82,21 @@ const WorkersActions = ({ algorithm = null, stopAllWorkers = [] }) => {
             onConfirm={handelStop}
             okText="Yes"
             cancelText="No">
-            <IDProvider
-              dataTestId={`table-workers-actions-stop-worker${stopAllWorkers?.length > 0 ? '-all' : ''}`}>
-              <Button
-                icon={
-                  stopAllWorkers?.length > 0 ? (
-                    ''
-                  ) : algorithm ? (
-                    <StopOutlined />
-                  ) : (
-                    ''
-                  )
-                }
-                loading={stopWorkerIsRun}
-                styles={{ paddingLeft: '10' }}>
-                {stopAllWorkers?.length > 0 ? 'Stop all workers' : ''}
-              </Button>
-            </IDProvider>
+            <Button
+              dataTestId={`table-workers-actions-stop-worker${stopAllWorkers?.length > 0 ? '-all' : ''}`}
+              icon={
+                stopAllWorkers?.length > 0 ? (
+                  ''
+                ) : algorithm ? (
+                  <StopOutlined />
+                ) : (
+                  ''
+                )
+              }
+              loading={stopWorkerIsRun}
+              styles={{ paddingLeft: '10' }}>
+              {stopAllWorkers?.length > 0 ? 'Stop all workers' : ''}
+            </Button>
           </Popconfirm>
         </Tooltip>
       </Space.Compact>
