@@ -25,6 +25,7 @@ export { default as useReadMeFile } from './useReadMeFile';
 export { default as useWizardInitial } from './useWizardInitial';
 export { default as useLocalStorageGraphMode } from './useLocalStorageGraphMode';
 export { default as useInitTheme } from './useInitTheme';
+export { default as usePreference } from './usePreference';
 
 export const dataSources = {
   useSnapshots: useDataSourceSnapshots,

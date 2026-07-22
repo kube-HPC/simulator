@@ -6,6 +6,8 @@ import { dateTimeDefaultVar, instanceFiltersVar } from 'cache';
 import { useReactiveVar } from '@apollo/client';
 import dayjs from 'dayjs';
 import { LOCAL_STORAGE_KEYS } from 'const';
+import { useDispatch } from 'react-redux';
+import { updatePreferenceLocal } from 'reducers/preferences.reducer';
 
 const Select = styled(AntSelect)`
   width: 190px;
@@ -35,6 +37,7 @@ const OptionDefaultTime = [
 const SetDefaultTime = () => {
   const dateTimeDefault = useReactiveVar(dateTimeDefaultVar);
   const instanceFilters = useReactiveVar(instanceFiltersVar);
+  const dispatch = useDispatch();
 
   const onChange = useCallback(
     itemSelect => {
@@ -49,8 +52,16 @@ const SetDefaultTime = () => {
       instanceFilters.jobs.datesRange.from = newDefTime;
       instanceFilters.jobs.datesRange.to = null;
       instanceFiltersVar({ ...instanceFilters });
+
+      // Update preferences (local only — saved when user clicks Save Preferences)
+      dispatch(
+        updatePreferenceLocal({
+          section: 'scoopIntervalHours',
+          value: parseInt(itemSelect, 10),
+        })
+      );
     },
-    [instanceFilters]
+    [instanceFilters, dispatch]
   );
 
   return (
