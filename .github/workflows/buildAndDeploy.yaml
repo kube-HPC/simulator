@@ -13,6 +13,9 @@ jobs:
             *dev1*)
               export URL=$DEV1_URL
               ;;
+            *e2e*)
+              export URL=$E2E_URL
+              ;;
             *test*)
               export URL=$TEST_URL
               ;;
@@ -29,6 +32,7 @@ jobs:
           DEPLOY_ENVIRONMENT: '${{ github.event.deployment.environment }}'
           CICD_URL: ${{ vars.CICD_URL }}
           DEV1_URL: ${{ vars.DEV1_URL }}
+          E2E_URL: ${{ vars.E2E_URL }}
           TEST_URL: ${{ vars.TEST_URL }}
       - name: set deployment status to in progress
         id: start_deployment
@@ -87,6 +91,10 @@ jobs:
               CONTEXT=dev1-spot.hkube.org
               URL=$DEV1_URL
               ;;
+            *e2e*)
+              CONTEXT=e2e.hkube.org
+              URL=$E2E_URL
+              ;;
             *test*)
               CONTEXT=test-spot.hkube.org
               URL=$TEST_URL
@@ -110,6 +118,7 @@ jobs:
           DEPLOY_ENVIRONMENT: '${{ github.event.deployment.environment }}'
           CICD_URL: ${{ vars.CICD_URL }}
           DEV1_URL: ${{ vars.DEV1_URL }}
+          E2E_URL: ${{ vars.E2E_URL }}
           TEST_URL: ${{ vars.TEST_URL }}
       - name: Checkout
         uses: actions/checkout@v2
