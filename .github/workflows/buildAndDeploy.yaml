@@ -57,7 +57,12 @@ jobs:
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
       - run: npm ci
       - name: build
-        run: PRIVATE_REGISTRY=docker.io/hkube npm run build
+        run: |
+          # normalize the same way deploy-staging.sh does, so the pushed tag
+          # matches the tag the deploy job looks for
+          export PR_NAME="${PR_NAME,,}"
+          export PR_NAME="${PR_NAME//_/-}"
+          PRIVATE_REGISTRY=docker.io/hkube npm run build
         env:
           TRAVIS_PULL_REQUEST: 'true'
           PR_NAME: ${{ github.event.deployment.payload.prName }}
