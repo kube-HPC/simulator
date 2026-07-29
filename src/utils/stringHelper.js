@@ -30,7 +30,7 @@ export const getColorByName = (
       (acc, char) => char.charCodeAt(0) + ((acc << 5) - acc),
       0
     );
-    return `hsl(${stringUniqueHash % 360}, ${saturation}%, ${lightness}%)`;
+    return `hsl(${((stringUniqueHash % 360) + 360) % 360}, ${saturation}%, ${lightness}%)`;
   }
   return '';
 };
