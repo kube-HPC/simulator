@@ -144,10 +144,47 @@ const addAlgorithmSchema = {
     DIVIDER: {
       ADVANCED: 'Advanced',
       RESOURCES: 'Resources',
+      GPUMANAGER: 'GPU / KAI Scheduler',
+      KAI: 'KAI Scheduler',
+    },
+    RESOURCE_MODE: {
+      field: 'main.resourceMode',
+      label: 'Resource Scheduler',
+      GPU: 'gpu',
+      KAI: 'kai',
     },
     GPU: {
       field: 'main.gpu',
       label: 'GPU Usage',
+    },
+    KAI_OBJECT: {
+      field: 'main.kaiObject',
+      label: 'KAI Configuration',
+      ALLOCATION_TYPE: {
+        field: 'main.kaiObject.allocationType',
+        label: 'Memory Allocation',
+        MEMORY: 'memory',
+        FRACTION: 'fraction',
+      },
+      QUEUE: {
+        field: 'main.kaiObject.queue',
+        label: 'Queue',
+        placeholder: 'Queue name',
+        message:
+          'Queue is required for KAI mode. "default" is the default KAI queue.',
+      },
+      MEMORY: {
+        field: 'main.kaiObject.memory',
+        label: 'Memory Allocation',
+        placeholder: '512Mi',
+        message: 'Memory allocation is required',
+      },
+      FRACTION: {
+        field: 'main.kaiObject.fraction',
+        label: 'Fraction Allocation',
+        placeholder: '0.5',
+        message: 'Fraction allocation is required',
+      },
     },
     MEMORY: {
       field: 'main.mem',
