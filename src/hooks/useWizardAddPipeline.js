@@ -142,6 +142,7 @@ const useWizardAddPipeline = (
       if (isEdit) {
         if (isRunPipeline) {
           runPipeline(
+            // remove only null undefined
             cleanDeep(formattedData, {
               emptyArrays: false,
               emptyObjects: false,
@@ -150,6 +151,7 @@ const useWizardAddPipeline = (
           );
         } else {
           updatePipeline(
+            // remove only null undefined
             cleanDeep(formattedData, {
               emptyArrays: false,
               emptyObjects: false,
@@ -160,6 +162,7 @@ const useWizardAddPipeline = (
         }
       } else {
         addPipeline(
+          // remove only null undefined
           cleanDeep(formattedData, {
             emptyArrays: false,
             emptyObjects: false,
