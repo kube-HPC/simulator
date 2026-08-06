@@ -50,7 +50,7 @@ export const monitorBackend = {
   datasourcesPath:
     process.env.API_SERVER_BACKEND_DATASOURCES_SERVICE_PATH || '',
   schema: process.env.isSecure ? 'https://' : 'http://',
-  hkubeSiteUrl: process.env.REACT_APP_SITEBASEURL || '',
+  hkubeSiteUrl: process.env.VITE_SITEBASEURL || '',
 };
 
 export const board = {
