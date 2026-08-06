@@ -187,7 +187,12 @@ const ControllerKeyValue = ({
                 <Form.Item
                   name={[name, 'value']}
                   fieldKey={[fieldKey, 'value']}
-                  rules={[{ required: true, message: 'Missing value' }]}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Missing value. Use [], {}, or "" instead.',
+                    },
+                  ]}
                   onChange={() => handleChange()}
                   key={`inputValueItem${key}`}>
                   <Input
