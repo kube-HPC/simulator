@@ -145,8 +145,6 @@ const useWizardAddPipeline = (
             // remove only null undefined
             cleanDeep(formattedData, {
               emptyArrays: false,
-              emptyObjects: false,
-              emptyStrings: false,
             })
           );
         } else {
@@ -154,8 +152,6 @@ const useWizardAddPipeline = (
             // remove only null undefined
             cleanDeep(formattedData, {
               emptyArrays: false,
-              emptyObjects: false,
-              emptyStrings: false,
             }),
             LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_ADD_PIPELINE
           );
@@ -165,8 +161,6 @@ const useWizardAddPipeline = (
           // remove only null undefined
           cleanDeep(formattedData, {
             emptyArrays: false,
-            emptyObjects: false,
-            emptyStrings: false,
           }),
           LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_ADD_PIPELINE
         );
