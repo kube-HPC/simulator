@@ -129,3 +129,52 @@ export const setTypeVolume = objVolumes => {
     return acc;
   }, []);
 };
+
+// clean deep remove key by path
+function removeEmptyKeysByPath(obj, cleanKeysSet, currentPath = '') {
+  if (Array.isArray(obj)) {
+    return obj.map((item, index) =>
+      removeEmptyKeysByPath(item, cleanKeysSet, `${currentPath}[${index}]`)
+    );
+  }
+
+  if (obj !== null && typeof obj === 'object') {
+    const result = {};
+
+    Object.entries(obj).forEach(([key, value]) => {
+      const path = currentPath ? `${currentPath}.${key}` : key;
+
+      const cleanedValue = removeEmptyKeysByPath(value, cleanKeysSet, path);
+
+      const isEmpty = value === null || value === undefined || value === '';
+
+      const isEmptyObject =
+        cleanedValue &&
+        typeof cleanedValue === 'object' &&
+        !Array.isArray(cleanedValue) &&
+        Object.keys(cleanedValue).length === 0;
+
+      if (cleanKeysSet.has(path) && (isEmpty || isEmptyObject)) {
+        return;
+      }
+
+      result[key] = cleanedValue;
+    });
+
+    return result;
+  }
+
+  return obj;
+}
+
+export function cleanDeepAdvanced(obj, options = {}) {
+  const { cleanKeys = [], ...cleanDeepOptions } = options;
+
+  if (cleanKeys.length === 0) {
+    return cleanDeep(obj, cleanDeepOptions);
+  }
+
+  const cleanKeysSet = new Set(cleanKeys);
+  const afterKeysClean = removeEmptyKeysByPath(obj, cleanKeysSet);
+  return cleanDeep(afterKeysClean, cleanDeepOptions);
+}

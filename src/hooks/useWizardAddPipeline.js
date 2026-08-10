@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { WIZARD_STATE, LOCAL_STORAGE_KEYS } from 'const';
+import { cleanDeepAdvanced } from 'utils';
 
-import cleanDeep from 'clean-deep';
 /* eslint-disable import/no-cycle */
 import { usePipeline } from 'hooks';
 
@@ -34,6 +34,13 @@ const formats = {
 const formatNode = node => {
   const formatter = formats[node.kind];
   return formatter ? formatter(node) : node;
+};
+
+const cleanOption = {
+  emptyArrays: false,
+  emptyObjects: false,
+  emptyStrings: false,
+  cleanKeys: ['webhooks.progress', 'webhooks.result', 'webhooks'],
 };
 
 const useWizardAddPipeline = (
@@ -143,31 +150,19 @@ const useWizardAddPipeline = (
         if (isRunPipeline) {
           runPipeline(
             // remove only null undefined
-            cleanDeep(formattedData, {
-              emptyArrays: false,
-              emptyObjects: false,
-              emptyStrings: false,
-            })
+            cleanDeepAdvanced(formattedData, cleanOption)
           );
         } else {
           updatePipeline(
             // remove only null undefined
-            cleanDeep(formattedData, {
-              emptyArrays: false,
-              emptyObjects: false,
-              emptyStrings: false,
-            }),
+            cleanDeepAdvanced(formattedData, cleanOption),
             LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_ADD_PIPELINE
           );
         }
       } else {
         addPipeline(
           // remove only null undefined
-          cleanDeep(formattedData, {
-            emptyArrays: false,
-            emptyObjects: false,
-            emptyStrings: false,
-          }),
+          cleanDeepAdvanced(formattedData, cleanOption),
           LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_ADD_PIPELINE
         );
       }
