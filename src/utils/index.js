@@ -34,4 +34,5 @@ export {
   transformObjectToArray,
   setTypeVolume,
   cleanDeepAdvanced,
+  cleanDeepKeepKeys,
 } from './objectManipulation';
