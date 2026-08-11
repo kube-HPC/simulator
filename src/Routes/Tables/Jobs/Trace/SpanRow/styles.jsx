@@ -1,31 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, Tag, Typography, Card, Space } from 'antd';
+import { Button, Tag, Typography, Card } from 'antd';
+import { ClockCircleOutlined, FileSearchOutlined } from '@ant-design/icons';
 import {
-  CaretDownOutlined,
-  CaretRightOutlined,
-  ClockCircleOutlined,
-  ApiOutlined,
-} from '@ant-design/icons';
-import {
-  formatDuration,
-  formatTime,
-  getServiceColor,
-  getContrastTextColor,
-} from './traceUtils';
-import {
-  getCurrentTheme,
   getSystemColors,
+  ZOOM_COL_WIDTH,
+  CHECKBOX_COL_WIDTH,
   NAME_COL_WIDTH,
   METRICS_COL_WIDTH,
+  LOGS_COL_WIDTH,
   DEPTH_INDENT,
   MAX_DEPTH_INDENT,
-} from './traceConstants';
+} from '../traceConstants';
+import { getContrastTextColor } from '../traceUtils';
 
 const { Title, Text } = Typography;
 
-const RowContainer = styled.div`
+export const RowContainer = styled.div`
   border-bottom: 1px solid
     ${props => {
       const colors = getSystemColors(props.$isDark);
@@ -47,9 +37,33 @@ const RowContainer = styled.div`
       : ''}
 `;
 
-const RowContent = styled.div`
+export const RowContent = styled.div`
   display: flex;
   align-items: stretch;
+`;
+
+export const RootCheckboxCell = styled.div`
+  flex: 0 0 ${CHECKBOX_COL_WIDTH}px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return props.$isDark ? '#3d5a7e' : colors.borderLight;
+    }};
+`;
+
+export const ZoomCell = styled.div`
+  flex: 0 0 ${ZOOM_COL_WIDTH}px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return props.$isDark ? '#3d5a7e' : colors.borderLight;
+    }};
 `;
 
 /*
@@ -61,7 +75,7 @@ const RowContent = styled.div`
  * The column compensates by shrinking its flex-basis by the actual indent so
  * the total visual width stays constant.
  */
-const SpanNameWrapper = styled.div`
+export const SpanNameWrapper = styled.div`
   background: ${props => {
     const colors = getSystemColors(props.$isDark);
     if (props.$isHovered) {
@@ -69,10 +83,10 @@ const SpanNameWrapper = styled.div`
     }
     return props.$isDark ? '#1f2937' : colors.cardBackground;
   }};
-  padding: 8px 12px;
+  padding: 2px 12px;
   display: flex;
   align-items: center;
-  min-height: 36px;
+  min-height: ${props => props.$rowHeight}px;
   font-size: 14px;
   border-right: 1px solid
     ${props => {
@@ -98,14 +112,14 @@ const SpanNameWrapper = styled.div`
   overflow: hidden;
 `;
 
-const SpanNameContent = styled.div`
+export const SpanNameContent = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
   cursor: pointer;
 `;
 
-const ExpandButton = styled(Button)`
+export const ExpandButton = styled(Button)`
   margin-right: 8px;
   min-width: 22px;
   height: 22px;
@@ -128,13 +142,13 @@ const ExpandButton = styled(Button)`
   }
 `;
 
-const Spacer = styled.span`
+export const Spacer = styled.span`
   width: 22px;
   flex-shrink: 0;
   display: inline-block;
 `;
 
-const SpanInfo = styled.div`
+export const SpanInfo = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -143,7 +157,7 @@ const SpanInfo = styled.div`
   overflow: hidden;
 `;
 
-const ServiceTag = styled(Tag)`
+export const ServiceTag = styled(Tag)`
   margin: 0;
   font-weight: 600;
   flex-shrink: 0; /* keep the service badge from shrinking */
@@ -161,7 +175,7 @@ const ServiceTag = styled(Tag)`
     props.$isDark ? '0 1px 3px rgba(0, 0, 0, 0.3)' : 'none'};
 `;
 
-const OperationText = styled(Text)`
+export const OperationText = styled(Text)`
   font-size: 13px;
   overflow: hidden;
   white-space: nowrap;
@@ -172,10 +186,10 @@ const OperationText = styled(Text)`
   }};
 `;
 
-const SpanBarContainer = styled.div`
+export const SpanBarContainer = styled.div`
   flex: 1;
   margin: 0 12px;
-  height: 36px;
+  height: ${props => props.$rowHeight}px;
   display: flex;
   align-items: center;
   position: relative;
@@ -185,11 +199,12 @@ const SpanBarContainer = styled.div`
   }};
   overflow: visible;
   min-width: 0;
+  height: auto;
 `;
 
-const SpanBarTrack = styled.div`
+export const SpanBarTrack = styled.div`
   width: 100%;
-  height: 24px;
+  height: ${props => Math.max(props.$rowHeight - 12, 14)}px;
   background: ${props => {
     const colors = getSystemColors(props.$isDark);
     return props.$isDark ? '#1a2332' : colors.lightGrey;
@@ -205,7 +220,7 @@ const SpanBarTrack = styled.div`
     props.$isDark ? 'inset 0 1px 3px rgba(250, 0, 187, 0.2)' : 'none'};
 `;
 
-const SpanBar = styled.div`
+export const SpanBar = styled.div`
   height: 100%;
   position: absolute;
   display: flex;
@@ -221,7 +236,7 @@ const SpanBar = styled.div`
   background-color: ${props => props.$color};
 `;
 
-const DurationLabel = styled.span`
+export const DurationLabel = styled.span`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -255,7 +270,7 @@ const DurationLabel = styled.span`
   }}
 `;
 
-const HoverTooltip = styled.div`
+export const HoverTooltip = styled.div`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -289,7 +304,7 @@ const HoverTooltip = styled.div`
   }}
 `;
 
-const TooltipServiceName = styled.span`
+export const TooltipServiceName = styled.span`
   font-weight: 600;
   color: ${props => {
     const colors = getSystemColors(props.$isDark);
@@ -297,7 +312,7 @@ const TooltipServiceName = styled.span`
   }};
 `;
 
-const TooltipDivider = styled.span`
+export const TooltipDivider = styled.span`
   color: ${props => {
     const colors = getSystemColors(props.$isDark);
     return colors.textSecondary;
@@ -305,14 +320,14 @@ const TooltipDivider = styled.span`
   font-size: 10px;
 `;
 
-const TooltipOperation = styled.span`
+export const TooltipOperation = styled.span`
   color: ${props => {
     const colors = getSystemColors(props.$isDark);
     return colors.textSecondary;
   }};
 `;
 
-const SpanTiming = styled.div`
+export const SpanTiming = styled.div`
   background: ${props => {
     const colors = getSystemColors(props.$isDark);
     return props.$isDark ? '#1f2937' : colors.cardBackground;
@@ -321,7 +336,7 @@ const SpanTiming = styled.div`
     const colors = getSystemColors(props.$isDark);
     return colors.text;
   }};
-  padding: 8px 12px;
+  padding: 2px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -340,14 +355,73 @@ const SpanTiming = styled.div`
   }
 `;
 
-const StyledIcon = styled(ClockCircleOutlined)`
+export const LogsActions = styled.div`
+  width: ${LOGS_COL_WIDTH}px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-left: 1px solid
+    ${props => {
+      const colors = getSystemColors(props.$isDark);
+      return props.$isDark ? '#3d5a7e' : colors.border;
+    }};
+`;
+
+export const ActionIcon = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  color: ${props => {
+    const colors = getSystemColors(props.$isDark);
+    return props.$disabled ? colors.textSecondary : colors.blue;
+  }};
+  opacity: ${props => (props.$disabled ? 0.45 : 1)};
+  cursor: ${props => (props.$disabled ? 'not-allowed' : 'pointer')};
+
+  &:hover {
+    background-color: ${props =>
+      props.$disabled
+        ? 'transparent'
+        : props.$isDark
+          ? 'rgba(64, 169, 255, 0.15)'
+          : 'rgba(48, 127, 230, 0.1)'};
+  }
+`;
+
+export const KibanaIconWrap = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+`;
+
+export const RowResizeHandle = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 6px;
+  cursor: row-resize;
+  z-index: 5;
+`;
+
+export const StyledIcon = styled(ClockCircleOutlined)`
   color: ${props => {
     const colors = getSystemColors(props.$isDark);
     return colors.blue;
   }};
 `;
 
-const TimingText = styled(Text)`
+export const LogsIcon = styled(FileSearchOutlined)`
+  font-size: 17px;
+`;
+
+export const TimingText = styled(Text)`
   color: ${props => {
     const colors = getSystemColors(props.$isDark);
     return props.$isDark ? '#9ca3af' : colors.text;
@@ -355,7 +429,7 @@ const TimingText = styled(Text)`
   font-size: 13px;
 `;
 
-const DurationText = styled(Text)`
+export const DurationText = styled(Text)`
   color: ${props => {
     const colors = getSystemColors(props.$isDark);
     return colors.green;
@@ -364,7 +438,7 @@ const DurationText = styled(Text)`
   font-weight: 700;
 `;
 
-const DetailsCard = styled(Card)`
+export const DetailsCard = styled(Card)`
   margin: 8px 24px 12px 24px;
   background: ${props => {
     const colors = getSystemColors(props.$isDark);
@@ -390,7 +464,7 @@ const DetailsCard = styled(Card)`
   }
 `;
 
-const CardHeader = styled.div`
+export const CardHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -405,7 +479,7 @@ const CardHeader = styled.div`
     }};
 `;
 
-const CardTitle = styled(Title)`
+export const CardTitle = styled(Title)`
   &.ant-typography {
     margin: 0;
     color: ${props => {
@@ -417,7 +491,7 @@ const CardTitle = styled(Title)`
   }
 `;
 
-const CardMetadata = styled.div`
+export const CardMetadata = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 12px 20px;
@@ -428,33 +502,33 @@ const CardMetadata = styled.div`
   }};
 `;
 
-const MetadataLabel = styled.strong`
+export const MetadataLabel = styled.strong`
   color: ${props => {
     const colors = getSystemColors(props.$isDark);
     return colors.text;
   }};
 `;
 
-const MetadataTag = styled(Tag)`
+export const MetadataTag = styled(Tag)`
   background-color: ${props => (props.$isDark ? '#1e3a52' : 'auto')} !important;
   border: ${props => (props.$isDark ? '1px solid #3d5a7e' : 'auto')} !important;
   color: ${props => (props.$isDark ? '#ffffff' : 'auto')} !important;
   font-weight: 500;
 `;
 
-const CardContent = styled.div`
+export const CardContent = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 24px;
   align-items: flex-start;
 `;
 
-const Section = styled.div`
+export const Section = styled.div`
   flex: 1;
   min-width: 200px; /* wrap to next line on very narrow cards */
 `;
 
-const SectionTitle = styled.div`
+export const SectionTitle = styled.div`
   font-size: 15px;
   font-weight: 600;
   margin-bottom: 10px;
@@ -473,7 +547,7 @@ const SectionTitle = styled.div`
   gap: 6px;
 `;
 
-const TagGrid = styled.div`
+export const TagGrid = styled.div`
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 10px 16px;
@@ -481,7 +555,7 @@ const TagGrid = styled.div`
   align-items: baseline;
 `;
 
-const TagKey = styled.div`
+export const TagKey = styled.div`
   font-weight: 500;
   color: ${props => {
     const colors = getSystemColors(props.$isDark);
@@ -490,7 +564,7 @@ const TagKey = styled.div`
   text-align: right;
 `;
 
-const TagValue = styled(Tag)`
+export const TagValue = styled(Tag)`
   margin: 0;
   font-size: 12px;
   font-family: monospace;
@@ -500,7 +574,7 @@ const TagValue = styled(Tag)`
   color: ${props => (props.$isDark ? '#b8bfc7' : 'auto')} !important;
 `;
 
-const CardFooter = styled.div`
+export const CardFooter = styled.div`
   text-align: right;
   margin-top: 16px;
   padding-top: 12px;
@@ -511,7 +585,7 @@ const CardFooter = styled.div`
     }};
 `;
 
-const SpanIdLabel = styled.span`
+export const SpanIdLabel = styled.span`
   font-size: 13px;
   color: ${props => {
     const colors = getSystemColors(props.$isDark);
@@ -521,7 +595,7 @@ const SpanIdLabel = styled.span`
   margin-right: 8px;
 `;
 
-const SpanIdValue = styled(Text)`
+export const SpanIdValue = styled(Text)`
   font-size: 10px;
   font-family: monospace;
   color: ${props => {
@@ -536,262 +610,3 @@ const SpanIdValue = styled(Text)`
   border-radius: 4px;
   border: ${props => (props.$isDark ? '1px solid #2d4663' : 'none')};
 `;
-
-const SpanRow = ({
-  span,
-  totalDuration,
-  traceStartTime,
-  isExpanded,
-  onToggle,
-  hasChildren,
-  depth,
-  processes,
-  searchTerm,
-  isChildrenVisible,
-  onToggleChildren,
-  rowRef,
-}) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isTimelineHovered, setIsTimelineHovered] = useState(false);
-  const [isDark, setIsDark] = useState(getCurrentTheme() === 'DARK');
-
-  useEffect(() => {
-    const checkTheme = () => {
-      setIsDark(getCurrentTheme() === 'DARK');
-    };
-
-    const interval = setInterval(checkTheme, 500);
-    window.addEventListener('storage', checkTheme);
-
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('storage', checkTheme);
-    };
-  }, []);
-
-  const process = processes[span.processID];
-  const serviceName = process?.serviceName || 'unknown';
-  const color = getServiceColor(serviceName, isDark);
-  const relativeStart = (span.relativeStartTime / totalDuration) * 100;
-  const width = Math.max((span.duration / totalDuration) * 100, 0.5);
-
-  const matchesSearch =
-    !searchTerm ||
-    span.operationName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    serviceName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    span.tags?.some(
-      tag =>
-        tag.key.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        String(tag.value).toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-  if (!matchesSearch) return null;
-
-  return (
-    <>
-      <RowContainer
-        ref={rowRef}
-        $isHovered={isHovered}
-        $isDark={isDark}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}>
-        <RowContent>
-          <SpanNameWrapper
-            $isHovered={isHovered}
-            $depth={depth}
-            $isDark={isDark}>
-            <SpanNameContent
-              onClick={() => onToggle(span.spanID)}
-              onKeyDown={e => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  onToggle(span.spanID);
-                }
-              }}
-              role="button"
-              tabIndex={0}>
-              {hasChildren && (
-                <ExpandButton
-                  type="text"
-                  size="small"
-                  icon={
-                    isChildrenVisible ? (
-                      <CaretDownOutlined />
-                    ) : (
-                      <CaretRightOutlined />
-                    )
-                  }
-                  onClick={e => {
-                    e.stopPropagation();
-                    onToggleChildren(span.spanID);
-                  }}
-                  $isDark={isDark}
-                />
-              )}
-              {!hasChildren && <Spacer />}
-
-              <SpanInfo>
-                <ServiceTag $color={color} $isDark={isDark}>
-                  {serviceName}
-                </ServiceTag>
-                <OperationText type="secondary" $isDark={isDark}>
-                  {span.operationName}
-                </OperationText>
-              </SpanInfo>
-            </SpanNameContent>
-          </SpanNameWrapper>
-
-          <SpanBarContainer
-            onMouseEnter={() => setIsTimelineHovered(true)}
-            onMouseLeave={() => setIsTimelineHovered(false)}
-            $isDark={isDark}>
-            <SpanBarTrack $isDark={isDark}>
-              <SpanBar $left={relativeStart} $width={width} $color={color} />
-              <DurationLabel
-                $left={relativeStart}
-                $width={width}
-                $isDark={isDark}>
-                {formatDuration(span.duration)}
-              </DurationLabel>
-
-              {isTimelineHovered && (
-                <HoverTooltip
-                  $left={relativeStart}
-                  $width={width}
-                  $isDark={isDark}>
-                  <TooltipServiceName $isDark={isDark}>
-                    {serviceName}
-                  </TooltipServiceName>
-                  <TooltipDivider $isDark={isDark}>•</TooltipDivider>
-                  <TooltipOperation $isDark={isDark}>
-                    {span.operationName}
-                  </TooltipOperation>
-                </HoverTooltip>
-              )}
-            </SpanBarTrack>
-          </SpanBarContainer>
-
-          <SpanTiming $isDark={isDark}>
-            <Space size={8}>
-              <StyledIcon $isDark={isDark} />
-              <TimingText code $isDark={isDark}>
-                {formatTime(span.startTime, traceStartTime)}
-              </TimingText>
-            </Space>
-            <DurationText strong $isDark={isDark}>
-              {formatDuration(span.duration)}
-            </DurationText>
-          </SpanTiming>
-        </RowContent>
-      </RowContainer>
-
-      {isExpanded && (
-        <DetailsCard size="small" $color={color} $isDark={isDark}>
-          <CardHeader $isDark={isDark}>
-            <CardTitle level={5} $isDark={isDark}>
-              {span.operationName}
-            </CardTitle>
-            <CardMetadata $isDark={isDark}>
-              <span>
-                <MetadataLabel $isDark={isDark}>Service:</MetadataLabel>{' '}
-                <MetadataTag color="blue" $isDark={isDark}>
-                  {serviceName}
-                </MetadataTag>
-              </span>
-              <span>
-                <MetadataLabel $isDark={isDark}>Duration:</MetadataLabel>{' '}
-                <MetadataTag color="orange" $isDark={isDark}>
-                  {formatDuration(span.duration)}
-                </MetadataTag>
-              </span>
-              <span>
-                <MetadataLabel $isDark={isDark}>Start:</MetadataLabel>{' '}
-                <MetadataTag color="cyan" $isDark={isDark}>
-                  {formatTime(span.startTime, traceStartTime)}
-                </MetadataTag>
-              </span>
-            </CardMetadata>
-          </CardHeader>
-
-          <CardContent>
-            {span.tags && span.tags.length > 0 && (
-              <Section>
-                <SectionTitle $isDark={isDark}>
-                  <ApiOutlined />
-                  Tags
-                </SectionTitle>
-                <TagGrid>
-                  {span.tags.map(tag => (
-                    <React.Fragment key={tag.key}>
-                      <TagKey $isDark={isDark}>{tag.key}:</TagKey>
-                      <TagValue color="geekblue" $isDark={isDark}>
-                        {String(tag.value)}
-                      </TagValue>
-                    </React.Fragment>
-                  ))}
-                </TagGrid>
-              </Section>
-            )}
-
-            {process && (
-              <Section>
-                <SectionTitle $isDark={isDark}>
-                  <ApiOutlined />
-                  Process
-                </SectionTitle>
-                <TagGrid>
-                  {process.tags?.map(tag => (
-                    <React.Fragment key={tag.key}>
-                      <TagKey $isDark={isDark}>{tag.key}:</TagKey>
-                      <TagValue color="geekblue" $isDark={isDark}>
-                        {String(tag.value)}
-                      </TagValue>
-                    </React.Fragment>
-                  ))}
-                </TagGrid>
-              </Section>
-            )}
-          </CardContent>
-
-          <CardFooter $isDark={isDark}>
-            <SpanIdLabel $isDark={isDark}>Span ID:</SpanIdLabel>
-            <SpanIdValue $isDark={isDark}>{span.spanID}</SpanIdValue>
-          </CardFooter>
-        </DetailsCard>
-      )}
-    </>
-  );
-};
-
-SpanRow.propTypes = {
-  span: PropTypes.shape({
-    spanID: PropTypes.string.isRequired,
-    processID: PropTypes.string.isRequired,
-    operationName: PropTypes.string.isRequired,
-    relativeStartTime: PropTypes.number.isRequired,
-    duration: PropTypes.number.isRequired,
-    startTime: PropTypes.number.isRequired,
-    tags: PropTypes.arrayOf(
-      PropTypes.shape({
-        key: PropTypes.string.isRequired,
-        value: PropTypes.any.isRequired,
-      })
-    ),
-  }).isRequired,
-  totalDuration: PropTypes.number.isRequired,
-  traceStartTime: PropTypes.number.isRequired,
-  isExpanded: PropTypes.bool.isRequired,
-  onToggle: PropTypes.func.isRequired,
-  hasChildren: PropTypes.bool.isRequired,
-  depth: PropTypes.number.isRequired,
-  processes: PropTypes.object.isRequired,
-  searchTerm: PropTypes.string.isRequired,
-  isChildrenVisible: PropTypes.bool.isRequired,
-  onToggleChildren: PropTypes.func.isRequired,
-  rowRef: PropTypes.func,
-};
-
-SpanRow.defaultProps = {
-  rowRef: null,
-};
-
-export default React.memo(SpanRow);

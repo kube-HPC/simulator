@@ -38,6 +38,7 @@ export { default as DISK_SPACE_QUERY } from './disk-space-query';
 export { default as NODE_STATISTICS_QUERY } from './node-statistics-query';
 export { default as COUNTERS_QUERY } from './counters-query';
 export { default as EXPERIMENTS_QUERY } from './experiments-query';
+export { default as HEALTH_MONITORING_QUERY } from './health-monitoring-query';
 
 export const names = {
   JOB_QUERY: 'JOB_QUERY',
@@ -72,4 +73,5 @@ export const names = {
   NODE_STATISTICS_QUERY: 'NODE_STATISTICS_QUERY',
   COUNTERS_QUERY: 'COUNTERS_QUERY',
   EXPERIMENTS_QUERY: 'EXPERIMENTS_QUERY',
+  HEALTH_MONITORING_QUERY: 'HEALTH_MONITORING_QUERY',
 };

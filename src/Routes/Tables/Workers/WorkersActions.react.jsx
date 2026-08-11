@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { StopOutlined } from '@ant-design/icons';
 import { events } from 'utils';
 import { Button, Tooltip, Popconfirm, Space } from 'antd';
-
+import IDProvider from 'IDProvider';
 import { useActions } from 'hooks';
 import isEqual from 'lodash/isEqual';
 
@@ -17,7 +17,8 @@ const WorkersActions = ({ algorithm = null, stopAllWorkers = [] }) => {
     events.emit(
       'global_alert_msg',
       <>
-Stopping the worker, It may take a few moments for the algorithms to be deleted.
+        Stopping the worker, It may take a few moments for the algorithms to be
+        deleted.
       </>,
       'success'
     );
@@ -61,43 +62,46 @@ Stopping the worker, It may take a few moments for the algorithms to be deleted.
   }, [algorithm, algorithm?.exit]);
 
   return (
-    <div
-      role="none"
-      ref={container}
-      onClick={stopPropagation}
-      onDoubleClick={stopPropagation}>
-      <Space.Compact>
-        <Tooltip
-          title={
-            stopAllWorkers?.length > 0 ? 'Stop all workers' : 'Stop worker'
-          }>
-          <Popconfirm
+    <IDProvider dataTestId="buttons-actions">
+      <div
+        role="none"
+        ref={container}
+        onClick={stopPropagation}
+        onDoubleClick={stopPropagation}>
+        <Space.Compact>
+          <Tooltip
             title={
-              stopAllWorkers?.length > 0
-                ? 'Are you sure you want to stop all workers?'
-                : `Are you sure you want to stop "${algorithm?.algorithmName}" worker ?`
-            }
-            onConfirm={handelStop}
-            okText="Yes"
-            cancelText="No">
-            <Button
-              icon={
-                stopAllWorkers?.length > 0 ? (
-                  ''
-                ) : algorithm ? (
-                  <StopOutlined />
-                ) : (
-                  ''
-                )
+              stopAllWorkers?.length > 0 ? 'Stop all workers' : 'Stop worker'
+            }>
+            <Popconfirm
+              title={
+                stopAllWorkers?.length > 0
+                  ? 'Are you sure you want to stop all workers?'
+                  : `Are you sure you want to stop "${algorithm?.algorithmName}" worker ?`
               }
-              loading={stopWorkerIsRun}
-              styles={{ paddingLeft: '10' }}>
-              {stopAllWorkers?.length > 0 ? 'Stop all workers' : ''}
-            </Button>
-          </Popconfirm>
-        </Tooltip>
-      </Space.Compact>
-    </div>
+              onConfirm={handelStop}
+              okText="Yes"
+              cancelText="No">
+              <Button
+                data-testid={`stop-worker${stopAllWorkers?.length > 0 ? '-all' : ''}`}
+                icon={
+                  stopAllWorkers?.length > 0 ? (
+                    ''
+                  ) : algorithm ? (
+                    <StopOutlined />
+                  ) : (
+                    ''
+                  )
+                }
+                loading={stopWorkerIsRun}
+                styles={{ paddingLeft: '10' }}>
+                {stopAllWorkers?.length > 0 ? 'Stop all workers' : ''}
+              </Button>
+            </Popconfirm>
+          </Tooltip>
+        </Space.Compact>
+      </div>
+    </IDProvider>
   );
 };
 

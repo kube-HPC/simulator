@@ -107,10 +107,17 @@ const useVersions = ({
   );
 
   useEffect(() => {
-    if (isFetch) {
-      fetch();
+    if (!isFetch) {
+      return undefined;
     }
-  }, [nameId, fetch, isFetch]);
+
+    fetch();
+    const intervalId = setInterval(() => {
+      fetch();
+    }, 3000);
+
+    return () => clearInterval(intervalId);
+  }, [fetch, isFetch]);
 
   return {
     dataSource,

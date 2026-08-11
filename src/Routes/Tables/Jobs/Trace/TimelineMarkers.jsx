@@ -6,26 +6,23 @@ import { formatDuration } from './traceUtils';
 import {
   getCurrentTheme,
   getSystemColors,
+  ZOOM_COL_WIDTH,
+  CHECKBOX_COL_WIDTH,
   NAME_COL_WIDTH,
-  NAME_COL_PADDING,
+  METRICS_COL_WIDTH,
+  LOGS_COL_WIDTH,
 } from './traceConstants';
 
 const { Text } = Typography;
 
 /*
- * The left padding must equal the name column width plus the left padding of
- * the TimelineHeader so the time markers sit directly above the timeline bar
- * area — not above the service/operation label column.
- *
- * Previously this was hardcoded to 266px (250 + 16). Now it is derived from
- * the shared constants so a single change in traceConstants keeps everything
- * aligned automatically.
+ * Mirror TraceTimeline's column structure so markers are rendered only inside
+ * the Timeline column width while staying aligned on responsive breakpoints.
  */
 const MarkersContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  padding: 8px ${NAME_COL_PADDING}px;
-  padding-left: ${NAME_COL_WIDTH + NAME_COL_PADDING}px;
+  align-items: center;
+  padding: 8px 16px;
   background: ${props => {
     const colors = getSystemColors(props.$isDark);
     return colors.cardBackground;
@@ -37,13 +34,44 @@ const MarkersContainer = styled.div`
     }};
 `;
 
+const ServiceSpacer = styled.div`
+  flex: 0 0 ${NAME_COL_WIDTH}px;
+`;
+
+const CheckboxSpacer = styled.div`
+  flex: 0 0 ${CHECKBOX_COL_WIDTH}px;
+`;
+
+const ZoomSpacer = styled.div`
+  flex: 0 0 ${ZOOM_COL_WIDTH}px;
+`;
+
+const TimelineColumn = styled.div`
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  min-width: 0;
+`;
+
+const MetricsSpacer = styled.div`
+  flex: 0 0 ${METRICS_COL_WIDTH}px;
+
+  @media (max-width: 500px) {
+    display: none;
+  }
+`;
+
+const LogsSpacer = styled.div`
+  flex: 0 0 ${LOGS_COL_WIDTH}px;
+`;
+
 const MarkerText = styled(Text)`
   font-size: 11px;
   color: ${props => (props.$isDark ? '#b8bfc7' : '#4a4a4a')};
   font-weight: bold;
 `;
 
-const TimelineMarkers = ({ duration }) => {
+const TimelineMarkers = ({ duration, showZoomColumn }) => {
   const [isDark, setIsDark] = useState(getCurrentTheme() === 'DARK');
 
   useEffect(() => {
@@ -72,11 +100,25 @@ const TimelineMarkers = ({ duration }) => {
     );
   }
 
-  return <MarkersContainer $isDark={isDark}>{markers}</MarkersContainer>;
+  return (
+    <MarkersContainer $isDark={isDark}>
+      {showZoomColumn && <ZoomSpacer />}
+      <CheckboxSpacer />
+      <ServiceSpacer />
+      <TimelineColumn>{markers}</TimelineColumn>
+      <MetricsSpacer />
+      <LogsSpacer />
+    </MarkersContainer>
+  );
 };
 
 TimelineMarkers.propTypes = {
   duration: PropTypes.number.isRequired,
+  showZoomColumn: PropTypes.bool,
+};
+
+TimelineMarkers.defaultProps = {
+  showZoomColumn: true,
 };
 
 export default React.memo(TimelineMarkers);

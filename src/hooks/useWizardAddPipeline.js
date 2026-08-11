@@ -141,16 +141,27 @@ const useWizardAddPipeline = (
 
       if (isEdit) {
         if (isRunPipeline) {
-          runPipeline(cleanDeep(formattedData, { emptyArrays: false }));
+          runPipeline(
+            // remove only null undefined
+            cleanDeep(formattedData, {
+              emptyArrays: false,
+            })
+          );
         } else {
           updatePipeline(
-            cleanDeep(formattedData, { emptyArrays: false }),
+            // remove only null undefined
+            cleanDeep(formattedData, {
+              emptyArrays: false,
+            }),
             LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_ADD_PIPELINE
           );
         }
       } else {
         addPipeline(
-          cleanDeep(formattedData, { emptyArrays: false }),
+          // remove only null undefined
+          cleanDeep(formattedData, {
+            emptyArrays: false,
+          }),
           LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_ADD_PIPELINE
         );
       }

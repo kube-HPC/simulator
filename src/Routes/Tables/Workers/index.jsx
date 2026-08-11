@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import IDProvider from 'IDProvider';
 import { Table } from 'components';
 import { Table as TableSum } from 'antd';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
@@ -57,21 +58,23 @@ const renderSummary = pageData => {
 
   return (
     algorithmNames.length > 0 && (
-      <TableSum.Summary fixed>
-        <TableSum.Summary.Row>
-          <TableSum.Summary.Cell>{` `}</TableSum.Summary.Cell>
-          <TableSum.Summary.Cell>{` `}</TableSum.Summary.Cell>
-          <TableSum.Summary.Cell>{totalReadyCount}</TableSum.Summary.Cell>
-          <TableSum.Summary.Cell>{totalWorkingCount}</TableSum.Summary.Cell>
-          <TableSum.Summary.Cell>{totalInitCount}</TableSum.Summary.Cell>
-          <TableSum.Summary.Cell>{totalExitCount}</TableSum.Summary.Cell>
-          <TableSum.Summary.Cell>{totalHotCount}</TableSum.Summary.Cell>
-          <TableSum.Summary.Cell>{totalCount}</TableSum.Summary.Cell>
-          <TableSum.Summary.Cell>
-            <WorkersActions stopAllWorkers={algorithmNames} />
-          </TableSum.Summary.Cell>
-        </TableSum.Summary.Row>
-      </TableSum.Summary>
+      <IDProvider dataTestId="table-workers-summary">
+        <TableSum.Summary fixed>
+          <TableSum.Summary.Row>
+            <TableSum.Summary.Cell>{` `}</TableSum.Summary.Cell>
+            <TableSum.Summary.Cell>{` `}</TableSum.Summary.Cell>
+            <TableSum.Summary.Cell>{totalReadyCount}</TableSum.Summary.Cell>
+            <TableSum.Summary.Cell>{totalWorkingCount}</TableSum.Summary.Cell>
+            <TableSum.Summary.Cell>{totalInitCount}</TableSum.Summary.Cell>
+            <TableSum.Summary.Cell>{totalExitCount}</TableSum.Summary.Cell>
+            <TableSum.Summary.Cell>{totalHotCount}</TableSum.Summary.Cell>
+            <TableSum.Summary.Cell>{totalCount}</TableSum.Summary.Cell>
+            <TableSum.Summary.Cell>
+              <WorkersActions stopAllWorkers={algorithmNames} />
+            </TableSum.Summary.Cell>
+          </TableSum.Summary.Row>
+        </TableSum.Summary>
+      </IDProvider>
     )
   );
 };

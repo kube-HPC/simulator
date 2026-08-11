@@ -17,3 +17,4 @@ export { default as useExperiments } from './useExperiments';
 export { default as useGetLists } from './useGetLists';
 export { default as useLogs } from './useLogs';
 export { default as useLazyLogs } from './useLazyLogs';
+export { default as useHealthMonitoring } from './useHealthMonitoring';

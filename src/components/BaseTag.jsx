@@ -33,7 +33,10 @@ const BaseTag = ({
     ? colorMap.failed
     : status
       ? colorMap[status]
+        ? colorMap[status]
+        : colorMap.default
       : colorMap.default;
+
   const isBright = [COLOR.lightGrey, COLOR.white].includes(color) || !color;
   const textColor = isBright ? COLOR.transparentBlack : COLOR.white;
 

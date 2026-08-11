@@ -166,7 +166,7 @@ const SidebarLeft = () => {
     // Observability menu (for all users)
     items.push({
       label: isOpenMenuObservability ? (
-        'Observability'
+        <span data-testid="left-sidebar-link-observability">Observability</span>
       ) : (
         <Badge
           size="small"
@@ -177,13 +177,14 @@ const SidebarLeft = () => {
         </Badge>
       ),
       key: `observability-link`,
+
       children: menuObservabilityItemsJson,
     });
     // Administration menu admin-only
     if (isAdmin) {
       items.push({
         label: (
-          <span>
+          <span data-testid="left-sidebar-link-administration">
             Administration
             {dataCount.drivers > 0 && (
               <BadgeStyle offset={[-7, 0]}>

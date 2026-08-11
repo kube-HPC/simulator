@@ -128,7 +128,14 @@ const SearchWrapper = styled.div`
   }
 `;
 
-const TraceHeader = ({ traceData, searchTerm, onSearchChange }) => {
+const TraceHeader = ({
+  traceData,
+  searchTerm,
+  onSearchChange,
+  jobId,
+  jobName,
+  isFullscreen = false,
+}) => {
   const [isDark, setIsDark] = useState(getCurrentTheme() === 'DARK');
 
   useEffect(() => {
@@ -152,7 +159,15 @@ const TraceHeader = ({ traceData, searchTerm, onSearchChange }) => {
         {/* Left: title + metadata tags */}
         <HeaderContent>
           <StyledTitle level={4} $isDark={isDark}>
-            Trace Details
+            Trace Details{' '}
+            {isFullscreen ? (
+              <span>
+                - Job: <span style={{ fontWeight: 400 }}>{jobName}</span> Hash:{' '}
+                <span style={{ fontWeight: 400 }}>{jobId}</span>
+              </span>
+            ) : (
+              ''
+            )}
           </StyledTitle>
           <TagsRow size={[8, 6]} wrap>
             <StyledTag color="default" $isDark={isDark}>
@@ -191,6 +206,9 @@ TraceHeader.propTypes = {
   }).isRequired,
   searchTerm: PropTypes.string.isRequired,
   onSearchChange: PropTypes.func.isRequired,
+  jobId: PropTypes.string.isRequired,
+  jobName: PropTypes.string.isRequired,
+  isFullscreen: PropTypes.bool,
 };
 
 export default React.memo(TraceHeader);

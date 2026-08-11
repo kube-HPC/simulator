@@ -10,7 +10,7 @@ import {
   instanceFiltersVar,
   instanceCounterVar,
   dateTimeDefaultVar,
-  pipelineJustStartedVar,
+
   metaVar,
   queueClearedVar,
 } from 'cache';
@@ -24,7 +24,7 @@ const useCounters = () => {
   const instanceFilters = useReactiveVar(instanceFiltersVar);
   const dateTimeDefault = useReactiveVar(dateTimeDefaultVar);
   const queueCleared = useReactiveVar(queueClearedVar);
-  const pipelineJustStarted = useReactiveVar(pipelineJustStartedVar);
+
   const metaMode = useReactiveVar(metaVar);
   const prevQueueCountRef = useRef(null);
   const prevJobsCountRef = useRef(null);
@@ -122,7 +122,7 @@ const useCounters = () => {
           // manual stop/clear — notification already emitted by the action component
           // also clear pipelineJustStarted to prevent a false "Pipeline started" message
           queueClearedVar(false);
-          pipelineJustStartedVar(false);
+  
         } else {
           // organic: jobs graduated from queue to running
           const jobsStarted = prevQueueCountRef.current - newCounters.queue;
@@ -141,29 +141,6 @@ const useCounters = () => {
       }
 
       prevQueueCountRef.current = newCounters.queue;
-
-      // --- jobs count increased: pipeline was manually started ---
-      // guard with !queueCleared to prevent false "Pipeline started" during a stop
-      if (
-        prevJobsCountRef.current !== null &&
-        newCounters.jobs > prevJobsCountRef.current &&
-        pipelineJustStarted &&
-        !queueCleared
-      ) {
-        events.emit(
-          'global_alert_msg',
-          <>
-            Pipeline started, see{' '}
-            <ButtonLinkStyle type="link" onClick={gotoJobsTable}>
-              jobs
-            </ButtonLinkStyle>
-          </>,
-          'success'
-        );
-
-        pipelineJustStartedVar(false);
-      }
-
       prevJobsCountRef.current = newCounters.jobs;
 
       instanceCounterVar({
