@@ -8,11 +8,11 @@ import { Tag, Tooltip, Typography } from 'antd';
 import { sorter } from 'utils/stringHelper';
 import { copyToClipboard } from 'utils';
 import { errorsCode } from '@hkube/consts';
+import { COLOR } from 'styles';
 import AuditTrailAvatar from '../../../components/AuditTrailAvatar';
 import AlgorithmActions from './AlgorithmActions.react';
 import AlgorithmBuildStats from './AlgorithmBuildStats.react';
 import LastModified from './LastModified';
-import { COLOR } from 'styles';
 
 const HotWorkers = ({ value }) => <Tag>{value}</Tag>;
 
