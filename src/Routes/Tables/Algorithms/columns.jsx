@@ -33,7 +33,10 @@ const Memory = ({ value }) =>
     <Tag>{value}</Tag>
   ) : (
     <Tooltip title="No Memory Specified">
-      <IconNoMem style={{ color: COLOR.whiteDark, fill: COLOR.whiteDark }} />
+      <IconNoMem
+        width={34}
+        style={{ color: COLOR.whiteDark, fill: COLOR.whiteDark }}
+      />
     </Tooltip>
   );
 
