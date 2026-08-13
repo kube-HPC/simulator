@@ -20,6 +20,15 @@ const isEmpty = v =>
   v === null ||
   (typeof v === `object` && !Object.entries(v).length);
 const isNotEmpty = ({ value }) => !isEmpty(value);
+
+const hasKaiObject = kaiObject => {
+  if (!kaiObject || typeof kaiObject !== 'object') return false;
+
+  return Object.values(kaiObject).some(value => !isEmpty(value));
+};
+
+const hasGpu = json => Object.prototype.hasOwnProperty.call(json, 'gpu');
+
 const { BUILD_TYPES } = schema;
 const AlgorithmJsonEditor = ({
   isEdit,
@@ -62,6 +71,54 @@ const AlgorithmJsonEditor = ({
 
     const payload = srcJson;
     delete payload.type;
+
+    if (hasGpu(payload) && hasKaiObject(payload.kaiObject)) {
+      notification({
+        message: 'Error',
+        description:
+          'Please keep only one resource type: either gpu or kaiObject.',
+      });
+      return;
+    }
+
+    if (hasKaiObject(payload.kaiObject)) {
+      if (!payload.kaiObject.queue || payload.kaiObject.queue.trim() === '') {
+        notification({
+          message: `Error`,
+          description: `KAI queue is required when kaiObject is provided.`,
+        });
+        return;
+      }
+
+      if (
+        !isEmpty(payload.kaiObject.memory) &&
+        !isEmpty(payload.kaiObject.fraction)
+      ) {
+        notification({
+          message: 'Error',
+          description:
+            'Please keep only one KAI allocation type: either memory or fraction.',
+        });
+        return;
+      }
+
+      if (
+        isEmpty(payload.kaiObject.memory) &&
+        isEmpty(payload.kaiObject.fraction)
+      ) {
+        notification({
+          message: 'Error',
+          description:
+            'Please provide one KAI allocation type: either memory or fraction.',
+        });
+        return;
+      }
+
+      payload.kaiObject.queue = payload.kaiObject.queue.trim();
+      delete payload.gpu;
+    } else if (hasGpu(payload)) {
+      delete payload.kaiObject;
+    }
 
     if (buildTypeSubmit === BUILD_TYPES.GIT.label) {
       const commitObject = _.get(payload, BUILD_TYPES.GIT.COMMIT.field);
