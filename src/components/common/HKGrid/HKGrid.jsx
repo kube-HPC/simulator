@@ -38,15 +38,35 @@ export const HKGrid = forwardRef(
     const gridRef = useRef(null);
     const [gridApi, setGridApi] = useState(null);
     const dispatch = useDispatch();
+    // true while we are programmatically applying column state — suppresses the capture callback
+    const isApplyingRef = useRef(false);
 
     const onGridReady = params => {
       gridRef.current = params.api;
       setGridApi(params.api);
     };
 
+    // Push columnDefs visibility/width into the live grid whenever they change (e.g. after reset)
+    useEffect(() => {
+      if (!gridApi || !columnDefs) return;
+      const state = columnDefs
+        .filter(col => col.field && !col.isPinning)
+        .map(col => ({
+          colId: col.field,
+          hide: col.hide ?? false,
+          ...(col.width != null ? { width: col.width } : {}),
+        }));
+      if (state.length === 0) return;
+      isApplyingRef.current = true;
+      gridApi.applyColumnState({ state });
+      setTimeout(() => {
+        isApplyingRef.current = false;
+      }, 0);
+    }, [columnDefs, gridApi]);
+
     // Capture column visibility and width changes into preferences (local only)
     const handleColumnStateChanged = useCallback(() => {
-      if (!gridApi || !tableId) return;
+      if (isApplyingRef.current || !gridApi || !tableId) return;
       const allCols = gridApi.getAllGridColumns();
       if (!allCols) return;
       const columns = {};

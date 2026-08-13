@@ -69,7 +69,7 @@ const SetDefaultTime = () => {
       <Typography.Text strong>Default Scoop</Typography.Text>
       <Select
         style={{ width: '100px' }}
-        defaultValue={dateTimeDefault.hour || 24}
+        value={dateTimeDefault.hour || 24}
         onChange={onChange}
         options={OptionDefaultTime}
       />

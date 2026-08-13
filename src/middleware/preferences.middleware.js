@@ -1,10 +1,12 @@
 import AT from 'const/application-actions';
 import { LOCAL_STORAGE_KEYS } from 'const';
+import dayjs from 'dayjs';
 import {
   PREFERENCES_DEFAULTS,
   updatePreferenceLocal,
 } from 'reducers/preferences.reducer';
 import { savePreferences } from 'actions/preferences.action';
+import { dateTimeDefaultVar } from 'cache';
 
 const AUTO_SAVE_SECTIONS = new Set(['theme', 'scoopIntervalHours']);
 
@@ -84,21 +86,23 @@ const preferencesMiddleware =
       const { section, value } = action.payload;
       syncToLocalStorage(section, value);
 
-      // Auto-save theme and scoop interval to server immediately
-      // Use lastSavedTables so pending column changes aren't persisted
+      // Auto-save theme and scoop interval; skip until prefs are loaded to avoid
+      // overwriting saved data before fetchPreferences has run.
       if (AUTO_SAVE_SECTIONS.has(section)) {
-        const { data, lastSavedTables } = getState().preferences;
-        dispatch(
-          savePreferences({
-            theme: data.theme,
-            scoopIntervalHours: data.scoopIntervalHours,
-            tables: lastSavedTables,
-          })
-        );
+        const { data, lastSavedTables, loaded } = getState().preferences;
+        if (loaded) {
+          dispatch(
+            savePreferences({
+              theme: data.theme,
+              scoopIntervalHours: data.scoopIntervalHours,
+              tables: lastSavedTables,
+            })
+          );
+        }
       }
     }
 
-    // On reset success, restore localStorage to defaults
+    // On reset success, restore localStorage and reactive vars to defaults
     if (action.type === `${AT.PREFERENCES_RESET}_SUCCESS`) {
       localStorage.setItem(
         LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME,
@@ -108,6 +112,10 @@ const preferencesMiddleware =
         LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_TIME,
         String(PREFERENCES_DEFAULTS.scoopIntervalHours)
       );
+      dateTimeDefaultVar({
+        hour: PREFERENCES_DEFAULTS.scoopIntervalHours,
+        time: dayjs().add(-PREFERENCES_DEFAULTS.scoopIntervalHours, 'hour'),
+      });
     }
 
     return result;
