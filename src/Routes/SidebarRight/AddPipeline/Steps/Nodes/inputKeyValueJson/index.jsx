@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useState, useMemo } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useMemo,
+  useRef,
+} from 'react';
 import { EditableTagGroup, SignBoard } from 'components/common';
 import { Form, Button, Space, Input, Modal } from 'antd';
 import {
@@ -49,6 +55,13 @@ const ControllerKeyValue = ({
   const { initialState, form, valuesState } = useWizardContext();
   const [modal, contextHolder] = Modal.useModal();
   const [value, setValue] = useState(JSON.stringify(_value));
+  const didInitKeyValueRef = useRef(false);
+
+  const formatValueForEditor = rawValue => {
+    if (rawValue === '') return '""';
+    if (typeof rawValue === 'object') return JSON.stringify(rawValue);
+    return rawValue;
+  };
 
   const convertObjectToKeyListKeyValue = () => {
     const valueInitialState = _.get(initialState, [...nameRef]);
@@ -58,10 +71,7 @@ const ControllerKeyValue = ({
       const currentNameField = ['listKeyValue', ...nameRef];
       const resKeyValue = Object.keys(valueInitialState).map(key => ({
         key,
-        value:
-          typeof valueInitialState[key] === 'object'
-            ? JSON.stringify(valueInitialState[key])
-            : valueInitialState[key],
+        value: formatValueForEditor(valueInitialState[key]),
       }));
 
       _.set(resFields, currentNameField, resKeyValue);
@@ -70,8 +80,12 @@ const ControllerKeyValue = ({
   };
 
   useEffect(() => {
+    if (didInitKeyValueRef.current) return;
+    didInitKeyValueRef.current = true;
     // in init update all values from initialState put in all fields list
     convertObjectToKeyListKeyValue();
+    // We intentionally initialize from initialState once to avoid resetting user typing.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -187,7 +201,12 @@ const ControllerKeyValue = ({
                 <Form.Item
                   name={[name, 'value']}
                   fieldKey={[fieldKey, 'value']}
-                  rules={[{ required: true, message: 'Missing value' }]}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Missing value. Use [], {}, or "" instead.',
+                    },
+                  ]}
                   onChange={() => handleChange()}
                   key={`inputValueItem${key}`}>
                   <Input

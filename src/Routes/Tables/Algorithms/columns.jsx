@@ -8,11 +8,11 @@ import { Tag, Tooltip, Typography } from 'antd';
 import { sorter } from 'utils/stringHelper';
 import { copyToClipboard } from 'utils';
 import { errorsCode } from '@hkube/consts';
+import { COLOR } from 'styles';
 import AuditTrailAvatar from '../../../components/AuditTrailAvatar';
 import AlgorithmActions from './AlgorithmActions.react';
 import AlgorithmBuildStats from './AlgorithmBuildStats.react';
 import LastModified from './LastModified';
-import { COLOR } from 'styles';
 
 const HotWorkers = ({ value }) => <Tag>{value}</Tag>;
 
@@ -33,7 +33,10 @@ const Memory = ({ value }) =>
     <Tag>{value}</Tag>
   ) : (
     <Tooltip title="No Memory Specified">
-      <IconNoMem style={{ color: COLOR.whiteDark, fill: COLOR.whiteDark }} />
+      <IconNoMem
+        width={34}
+        style={{ color: COLOR.whiteDark, fill: COLOR.whiteDark }}
+      />
     </Tooltip>
   );
 

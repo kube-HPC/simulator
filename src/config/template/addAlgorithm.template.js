@@ -2,6 +2,7 @@ const addAlgorithmTemplate = {
   name: '',
   cpu: 1,
   gpu: 0,
+  kaiObject: undefined,
   mem: '256Mi',
   minHotWorkers: 0,
   baseImage: '',
