@@ -68,6 +68,10 @@ import {
   reducer as autoCompleteFilter,
   selectors as autoCompleteFilterSelectors,
 } from 'reducers/autoComplete.reducer';
+import {
+  reducer as preferences,
+  selectors as preferencesSelectors,
+} from 'reducers/preferences.reducer';
 
 const store = {
   algorithms,
@@ -87,6 +91,7 @@ const store = {
   config,
   dataSources,
   autoCompleteFilter,
+  preferences,
 };
 
 export default combineReducers(store);
@@ -109,4 +114,5 @@ export const selectors = {
   boards: boardsSelector,
   userGuide: userGuideSelectors,
   autoCompleteFilter: autoCompleteFilterSelectors,
+  preferences: preferencesSelectors,
 };

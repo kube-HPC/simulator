@@ -8,6 +8,7 @@ import { usePolling } from 'hooks';
 import { useQuery, useReactiveVar, makeVar } from '@apollo/client';
 import { instanceFiltersVar } from 'cache';
 import { ALGORITHMS_QUERY } from 'graphql/queries';
+import applyColumnPreferences from 'utils/applyColumnPreferences';
 
 import OverviewDrawer from './OverviewDrawer';
 import usePath from './usePath';
@@ -21,6 +22,9 @@ const AlgorithmsTable = () => {
   const { goTo } = usePath();
   const instanceFilter = useReactiveVar(instanceFiltersVar);
   const { keycloakEnable } = useSelector(selectors.connection);
+  const savedAlgoCols = useSelector(
+    state => selectors.preferences(state).data.tables.algorithms.columns
+  );
 
   const query = useQuery(ALGORITHMS_QUERY, {
     fetchPolicy: 'cache-and-network',
@@ -58,11 +62,9 @@ const AlgorithmsTable = () => {
   }, [instanceFilter.algorithms.qAlgorithmName, algorithmsList]);
 
   const columnDefs = useMemo(() => {
-    if (!keycloakEnable) {
-      return algorithmColumns.slice(1);
-    }
-    return algorithmColumns;
-  }, [keycloakEnable]);
+    const cols = !keycloakEnable ? algorithmColumns.slice(1) : algorithmColumns;
+    return applyColumnPreferences(cols, savedAlgoCols);
+  }, [keycloakEnable, savedAlgoCols]);
 
   if (!algorithmsList.length) return <SkeletonLoader />;
   if (query.error) return `Error! ${query.error.message}`;
@@ -77,6 +79,7 @@ const AlgorithmsTable = () => {
       <HKGrid
         rowData={rowData}
         columnDefs={columnDefs}
+        tableId="algorithms"
         onRowDoubleClicked={({ data }) =>
           goTo.overview({ nextAlgorithmId: data.name })
         }
