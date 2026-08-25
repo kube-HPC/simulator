@@ -70,6 +70,51 @@ spec:
                 configMapKeyRef:
                   name: simulator-configmap
                   key: BOARD_PORT
+            - name: KIBANA_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: simulator-configmap
+                  key: KIBANA_URL
+            - name: GRAFANA_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: simulator-configmap
+                  key: GRAFANA_URL
+            - name: DATA_SOURCE_IS_ENABLE
+              valueFrom:
+                configMapKeyRef:
+                  name: simulator-configmap
+                  key: DATA_SOURCE_IS_ENABLE
+            - name: VITE_SITEBASEURL
+              valueFrom:
+                configMapKeyRef:
+                  name: simulator-configmap
+                  key: VITE_SITEBASEURL
+            - name: ELASTICSEARCH_STRUCTURED_PREFIX
+              valueFrom:
+                configMapKeyRef:
+                  name: simulator-configmap
+                  key: ELASTICSEARCH_STRUCTURED_PREFIX
+            - name: ELASTICSEARCH_LOGS_INDEX
+              valueFrom:
+                configMapKeyRef:
+                  name: simulator-configmap
+                  key: ELASTICSEARCH_LOGS_INDEX
+            - name: VITE_KEYCLOAK_ENABLE
+              valueFrom:
+                configMapKeyRef:
+                  name: simulator-configmap
+                  key: VITE_KEYCLOAK_ENABLE
+            - name: VITE_HEALTH_MONITORING_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: simulator-configmap
+                  key: VITE_HEALTH_MONITORING_ENABLED
+            - name: VITE_INACTIVE_CHECK_MS
+              valueFrom:
+                configMapKeyRef:
+                  name: simulator-configmap
+                  key: VITE_INACTIVE_CHECK_MS
             - name: NAMESPACE
               valueFrom:
                 fieldRef:
@@ -77,7 +122,7 @@ spec:
                   fieldPath: metadata.namespace
             - name: HKUBE_BASE_URL
               value: /hkube/dashboard-${PR_NAME}
-          image: hkube/simulator:${PR_NAME}
+          image: hkube/simulator:${IMAGE_TAG}
           imagePullPolicy: Always
           name: simulator
           ports:

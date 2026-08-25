@@ -13,8 +13,17 @@ jobs:
             *dev1*)
               export URL=$DEV1_URL
               ;;
+            *dev*)
+              export URL=$DEV_URL
+              ;;
+            *e2e*)
+              export URL=$E2E_URL
+              ;;
             *test*)
               export URL=$TEST_URL
+              ;;
+            *cicd-lz*)
+              export URL=$CICD_LZ_URL
               ;;
             *cicd*)
               export URL=$CICD_URL
@@ -28,7 +37,10 @@ jobs:
         env:
           DEPLOY_ENVIRONMENT: '${{ github.event.deployment.environment }}'
           CICD_URL: ${{ vars.CICD_URL }}
+          CICD_LZ_URL: ${{ vars.CICD_LZ_URL }}
           DEV1_URL: ${{ vars.DEV1_URL }}
+          DEV_URL: ${{ vars.DEV_URL }}
+          E2E_URL: ${{ vars.E2E_URL }}
           TEST_URL: ${{ vars.TEST_URL }}
       - name: set deployment status to in progress
         id: start_deployment
@@ -87,9 +99,21 @@ jobs:
               CONTEXT=dev1-spot.hkube.org
               URL=$DEV1_URL
               ;;
+            *dev*)
+              CONTEXT=dev.hkube.org
+              URL=$DEV_URL
+              ;;
+            *e2e*)
+              CONTEXT=e2e.hkube.org
+              URL=$E2E_URL
+              ;;
             *test*)
               CONTEXT=test-spot.hkube.org
               URL=$TEST_URL
+              ;;
+            *cicd-lz*)
+              CONTEXT=cicd-lz.hkube.org
+              URL=$CICD_LZ_URL
               ;;
             *cicd*)
               CONTEXT=cicd-spot.hkube.org
@@ -102,19 +126,21 @@ jobs:
               ;;
           esac
           echo "selected context: $CONTEXT"
-          export KUBECONFIG=/etc/hkube/kube/config
-          kubectl config use-context "$CONTEXT"
           echo KUBECONFIG=/etc/hkube/kube/config >> $GITHUB_ENV
+          echo KUBE_CONTEXT=$CONTEXT >> $GITHUB_ENV
           echo URL=$URL >> $GITHUB_ENV
         env:
           DEPLOY_ENVIRONMENT: '${{ github.event.deployment.environment }}'
           CICD_URL: ${{ vars.CICD_URL }}
+          CICD_LZ_URL: ${{ vars.CICD_LZ_URL }}
           DEV1_URL: ${{ vars.DEV1_URL }}
+          DEV_URL: ${{ vars.DEV_URL }}
+          E2E_URL: ${{ vars.E2E_URL }}
           TEST_URL: ${{ vars.TEST_URL }}
       - name: Checkout
         uses: actions/checkout@v2
       - name: verify kubectl
-        run: kubectl cluster-info
+        run: kubectl --context "$KUBE_CONTEXT" cluster-info
       - name: deploy
         run: ./scripts/deploy-staging.sh
         env:

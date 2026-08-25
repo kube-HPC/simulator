@@ -54,6 +54,7 @@ const { MAIN, BUILD_TYPES } = schema;
 const { Collapsible } = Form;
 // https://github.com/kube-HPC/hkube/blob/master/core/api-server/lib/consts/regex.js
 const ALGO_REGEX = /^[a-z0-9][-a-z0-9\\.]*[a-z0-9]$/;
+const DEFAULT_KAI_QUEUE = 'default';
 
 const mainAdvancedOptions = Object.entries(formTemplate.main.options)
   .filter(([, isAvailable]) => isAvailable)
@@ -94,12 +95,68 @@ const insertRadioButtons = (buildTypes, selectedKey, isEdit) =>
     </Radio.Button>
   ));
 
+const insertResourceModeButtons = resourceModes =>
+  resourceModes.map(mode => (
+    <Radio.Button key={mode.value} value={mode.value}>
+      {mode.label}
+    </Radio.Button>
+  ));
+
 const isEmpty = v =>
   v === undefined ||
   v === `` ||
   v === null ||
   (typeof v === `object` && !Object.entries(v).length);
 const isNotEmpty = ({ value }) => !isEmpty(value);
+
+const hasKaiObject = kaiObject => {
+  if (!kaiObject || typeof kaiObject !== 'object') return false;
+
+  return Object.values(kaiObject).some(value => !isEmpty(value));
+};
+
+const getKaiAllocationType = kaiObject => {
+  if (!kaiObject || typeof kaiObject !== 'object') {
+    return MAIN.KAI_OBJECT.ALLOCATION_TYPE.MEMORY;
+  }
+
+  return !isEmpty(kaiObject.fraction)
+    ? MAIN.KAI_OBJECT.ALLOCATION_TYPE.FRACTION
+    : MAIN.KAI_OBJECT.ALLOCATION_TYPE.MEMORY;
+};
+
+const normalizeKaiObjectFormValues = kaiObject => {
+  if (!kaiObject) {
+    return formTemplate.main.kaiObject;
+  }
+
+  const allocationType =
+    kaiObject.allocationType || getKaiAllocationType(kaiObject);
+
+  return {
+    ...formTemplate.main.kaiObject,
+    ...kaiObject,
+    allocationType,
+    memory:
+      allocationType === MAIN.KAI_OBJECT.ALLOCATION_TYPE.MEMORY
+        ? kaiObject.memory || formTemplate.main.kaiObject.memory
+        : undefined,
+    fraction:
+      allocationType === MAIN.KAI_OBJECT.ALLOCATION_TYPE.FRACTION
+        ? kaiObject.fraction
+        : undefined,
+  };
+};
+
+const getResourceMode = main => {
+  if (main?.resourceMode) {
+    return main.resourceMode;
+  }
+
+  return hasKaiObject(main?.kaiObject)
+    ? MAIN.RESOURCE_MODE.KAI
+    : MAIN.RESOURCE_MODE.GPU;
+};
 
 const getBuildTypes = ({ buildType, ...props }) => {
   const { CODE, IMAGE, GIT } = BUILD_TYPES;
@@ -152,6 +209,20 @@ const AddAlgorithmForm = ({
     (keyValueFormObject && toSelectedBuildType(keyValueFormObject)) ||
       BUILD_TYPES.GIT.field
   );
+  const [resourceMode, setResourceMode] = useState(
+    getResourceMode(keyValueFormObject?.main || formTemplate.main)
+  );
+  const [kaiAllocationType, setKaiAllocationType] = useState(
+    getKaiAllocationType(keyValueFormObject?.main?.kaiObject)
+  );
+
+  const withDefaultKaiQueue = kaiObject => {
+    if (isEdit) return kaiObject;
+
+    return isEmpty(kaiObject?.queue)
+      ? { ...kaiObject, queue: DEFAULT_KAI_QUEUE }
+      : kaiObject;
+  };
 
   useMemo(() => {
     form.setFieldsValue(formTemplate);
@@ -191,15 +262,90 @@ const AddAlgorithmForm = ({
 
       //   setBuildType(toSelectedBuildType(keyValueObject));
 
-      form.setFieldsValue(keyValueFormObject);
+      const normalizedFormValues = {
+        ...keyValueFormObject,
+        main: {
+          ...keyValueFormObject.main,
+          kaiObject: normalizeKaiObjectFormValues(
+            keyValueFormObject.main?.kaiObject
+          ),
+        },
+      };
+
+      form.setFieldsValue(normalizedFormValues);
+      setResourceMode(getResourceMode(keyValueFormObject.main));
+      setKaiAllocationType(
+        getKaiAllocationType(keyValueFormObject.main?.kaiObject)
+      );
     } else {
       // add new algorithm
-      form.setFieldsValue(formTemplate);
+      form.setFieldsValue({
+        ...formTemplate,
+        main: {
+          ...formTemplate.main,
+          kaiObject: withDefaultKaiQueue(formTemplate.main.kaiObject),
+        },
+      });
+      setResourceMode(getResourceMode(formTemplate.main));
+      setKaiAllocationType(getKaiAllocationType(formTemplate.main.kaiObject));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onBuildTypeChange = e => setBuildType(e.target.value);
+
+  const onResourceModeChange = e => {
+    const nextResourceMode = e.target.value;
+    setResourceMode(nextResourceMode);
+
+    if (nextResourceMode === MAIN.RESOURCE_MODE.KAI) {
+      const currentKaiObject = form.getFieldValue(['main', 'kaiObject']);
+      const nextAllocationType =
+        currentKaiObject?.allocationType || kaiAllocationType;
+      const normalizedKaiObject = withDefaultKaiQueue(
+        normalizeKaiObjectFormValues({
+          ...currentKaiObject,
+          allocationType: nextAllocationType,
+        })
+      );
+
+      form.setFieldsValue({
+        main: {
+          gpu: 0,
+          kaiObject: normalizedKaiObject,
+        },
+      });
+      setKaiAllocationType(nextAllocationType);
+      return;
+    }
+
+    form.setFieldsValue({
+      main: {
+        kaiObject: {
+          queue: '',
+          allocationType: MAIN.KAI_OBJECT.ALLOCATION_TYPE.MEMORY,
+          memory: '256Mi',
+          fraction: undefined,
+        },
+      },
+    });
+    setKaiAllocationType(MAIN.KAI_OBJECT.ALLOCATION_TYPE.MEMORY);
+  };
+
+  const onKaiAllocationTypeChange = e => {
+    const nextAllocationType = e.target.value;
+    const currentKaiObject = form.getFieldValue(['main', 'kaiObject']) || {};
+
+    setKaiAllocationType(nextAllocationType);
+    form.setFieldsValue({
+      main: {
+        kaiObject: normalizeKaiObjectFormValues({
+          ...currentKaiObject,
+          allocationType: nextAllocationType,
+        }),
+      },
+    });
+  };
 
   // Injected from Form.create
   const { validateFields } = form;
@@ -259,6 +405,25 @@ const AddAlgorithmForm = ({
         if (commitObject.id === '') {
           delete payload.gitRepository.commit;
         }
+      }
+
+      delete payload.resourceMode;
+
+      if (resourceMode === MAIN.RESOURCE_MODE.KAI) {
+        const { allocationType, ...kaiObject } = formObject.main.kaiObject;
+
+        payload.kaiObject = {
+          queue: kaiObject?.queue?.trim(),
+          ...(allocationType === MAIN.KAI_OBJECT.ALLOCATION_TYPE.FRACTION
+            ? { fraction: kaiObject.fraction }
+            : {
+                memory: kaiObject.memory || formTemplate.main.kaiObject.memory,
+              }),
+        };
+        delete payload.gpu;
+      } else {
+        payload.gpu = formObject.main.gpu;
+        delete payload.kaiObject;
       }
 
       const formData = new FormData();
@@ -453,9 +618,6 @@ const AddAlgorithmForm = ({
           <Form.Item name={splitByDot(MAIN.CPU.field)} label={MAIN.CPU.label}>
             <InputNumber min={0.1} data-testid="add-algorithm-main-cpu-input" />
           </Form.Item>
-          <Form.Item name={splitByDot(MAIN.GPU.field)} label={MAIN.GPU.label}>
-            <InputNumber min={0} data-testid="add-algorithm-main-gpu-input" />
-          </Form.Item>
 
           <Form.Item
             name={splitByDot(MAIN.MEMORY.field)}
@@ -470,7 +632,140 @@ const AddAlgorithmForm = ({
             />
           </Form.Item>
         </Collapsible>
+        <Collapsible
+          title={
+            <>
+              {MAIN.DIVIDER.GPUMANAGER}
+              <HelpSiteLink link="/learn/kai/#what-is-kai-scheduler" />
+            </>
+          }>
+          <Form.Item
+            name={splitByDot(MAIN.RESOURCE_MODE.field)}
+            label={MAIN.RESOURCE_MODE.label}
+            initialValue={resourceMode}>
+            <Radio.Group
+              buttonStyle="solid"
+              data-testid="add-algorithm-main-resource-mode-radio-group"
+              onChange={onResourceModeChange}>
+              {insertResourceModeButtons([
+                {
+                  value: MAIN.RESOURCE_MODE.GPU,
+                  label: 'GPU',
+                },
+                {
+                  value: MAIN.RESOURCE_MODE.KAI,
+                  label: 'KAI',
+                },
+              ])}
+            </Radio.Group>
+          </Form.Item>
 
+          {resourceMode === MAIN.RESOURCE_MODE.GPU && (
+            <Form.Item
+              name={splitByDot(MAIN.GPU.field)}
+              label={MAIN.GPU.label}
+              rules={[{ required: true, message: 'GPU is required' }]}>
+              <InputNumber min={0} data-testid="add-algorithm-main-gpu-input" />
+            </Form.Item>
+          )}
+
+          {resourceMode === MAIN.RESOURCE_MODE.KAI && (
+            <>
+              <Form.Item
+                name={splitByDot(MAIN.KAI_OBJECT.QUEUE.field)}
+                label={MAIN.KAI_OBJECT.QUEUE.label}
+                rules={[
+                  {
+                    required: true,
+                    message: MAIN.KAI_OBJECT.QUEUE.message,
+                  },
+                ]}>
+                <Input
+                  placeholder={MAIN.KAI_OBJECT.QUEUE.placeholder}
+                  data-testid="add-algorithm-main-kai-queue-input"
+                />
+              </Form.Item>
+              <Form.Item
+                label={MAIN.KAI_OBJECT.ALLOCATION_TYPE.label}
+                style={{ marginBottom: 0 }}
+                required>
+                <Form.Item
+                  name={splitByDot(MAIN.KAI_OBJECT.ALLOCATION_TYPE.field)}
+                  initialValue={kaiAllocationType}
+                  style={{
+                    display: 'inline-block',
+                    width: 'calc(20%)',
+                    padding: '0px',
+                    margin: '0px',
+                  }}>
+                  <Radio.Group
+                    buttonStyle="solid"
+                    data-testid="add-algorithm-main-kai-allocation-type-radio-group"
+                    onChange={onKaiAllocationTypeChange}>
+                    {insertResourceModeButtons([
+                      {
+                        value: MAIN.KAI_OBJECT.ALLOCATION_TYPE.MEMORY,
+                        label: 'Memory',
+                      },
+                      {
+                        value: MAIN.KAI_OBJECT.ALLOCATION_TYPE.FRACTION,
+                        label: 'Fraction',
+                      },
+                    ])}
+                  </Radio.Group>
+                </Form.Item>
+
+                {kaiAllocationType ===
+                MAIN.KAI_OBJECT.ALLOCATION_TYPE.MEMORY ? (
+                  <Form.Item
+                    name={splitByDot(MAIN.KAI_OBJECT.MEMORY.field)}
+                    label=""
+                    rules={[
+                      {
+                        required: true,
+                        message: MAIN.KAI_OBJECT.MEMORY.message,
+                      },
+                    ]}
+                    labelAlign="left"
+                    style={{
+                      display: 'inline-block',
+                      width: 'calc(50%)',
+                    }}>
+                    <MemoryField
+                      testId="add-algorithm-main-kai-memory"
+                      options={MAIN.MEMORY.types.map(valueItem => ({
+                        value: valueItem,
+                        label: valueItem,
+                      }))}
+                    />
+                  </Form.Item>
+                ) : (
+                  <Form.Item
+                    name={splitByDot(MAIN.KAI_OBJECT.FRACTION.field)}
+                    label=""
+                    rules={[
+                      {
+                        required: true,
+                        message: MAIN.KAI_OBJECT.FRACTION.message,
+                      },
+                    ]}
+                    style={{
+                      display: 'inline-block',
+                      width: 'calc(60%)',
+                    }}>
+                    <InputNumber
+                      min={0}
+                      max={1}
+                      step={0.1}
+                      placeholder={MAIN.KAI_OBJECT.FRACTION.placeholder}
+                      data-testid="add-algorithm-main-kai-fraction-input"
+                    />
+                  </Form.Item>
+                )}
+              </Form.Item>
+            </>
+          )}
+        </Collapsible>
         <Collapsible
           title="Environment Variable"
           expanded={isErrorEnvironmentVariable}

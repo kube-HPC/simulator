@@ -12,6 +12,7 @@ import {
   transformObjectToArray,
   setTypeVolume,
   events,
+  notification,
 } from 'utils'; // mergeObjects, tryParseJson
 import { OVERVIEW_TABS } from 'const';
 import { useNavigate } from 'react-router-dom';
@@ -23,6 +24,17 @@ import schema from './schema';
 const { MAIN, BUILD_TYPES } = schema;
 
 const DEFAULT_EDITOR_VALUE = stringify(addAlgorithmTemplate);
+
+const hasKaiObject = kaiObject => {
+  if (!kaiObject || typeof kaiObject !== 'object') return false;
+
+  return Object.values(kaiObject).some(
+    value => value !== undefined && value !== null && value !== ''
+  );
+};
+
+const hasGpu = json =>
+  Object.prototype.hasOwnProperty.call(json, 'gpu') && json.gpu !== undefined;
 
 const AddAlgorithm = ({ algorithmValue = undefined }) => {
   // #region  Editor State
@@ -90,7 +102,20 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
     // End External Volumes
 
     objJsonData.cpu = formObj.main.cpu;
-    objJsonData.gpu = formObj.main.gpu;
+    if (formObj.main.resourceMode === MAIN.RESOURCE_MODE.KAI) {
+      const { allocationType, ...kaiObject } = formObj.main.kaiObject;
+
+      objJsonData.kaiObject = {
+        queue: kaiObject?.queue?.trim(),
+        ...(allocationType === MAIN.KAI_OBJECT.ALLOCATION_TYPE.FRACTION
+          ? { fraction: kaiObject.fraction }
+          : { memory: kaiObject.memory }),
+      };
+      delete objJsonData.gpu;
+    } else {
+      objJsonData.gpu = formObj.main.gpu;
+      delete objJsonData.kaiObject;
+    }
     objJsonData.mem = formObj.main.mem;
     objJsonData.minHotWorkers = formObj.main.minHotWorkers;
 
@@ -195,6 +220,16 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
   const switchToForm = () => {
     // switch from JSON Object To Form
     const objJsonData = JSON.parse(editorJsonValue);
+
+    if (hasGpu(objJsonData) && hasKaiObject(objJsonData.kaiObject)) {
+      notification({
+        message: 'Error',
+        description:
+          'Please keep only one resource type: either gpu or kaiObject.',
+      });
+      return;
+    }
+
     const formObj = {};
     formObj.main = {};
 
@@ -224,7 +259,22 @@ const AddAlgorithm = ({ algorithmValue = undefined }) => {
     formObj.main.description = objJsonData.description;
 
     formObj.main.cpu = objJsonData.cpu;
-    formObj.main.gpu = objJsonData.gpu;
+    formObj.main.gpu = hasGpu(objJsonData) ? objJsonData.gpu : 0;
+    formObj.main.kaiObject = hasKaiObject(objJsonData.kaiObject)
+      ? {
+          queue: '',
+          memory: '256Mi',
+          fraction: undefined,
+          ...objJsonData.kaiObject,
+        }
+      : {
+          queue: '',
+          memory: '256Mi',
+          fraction: undefined,
+        };
+    formObj.main.resourceMode = hasKaiObject(objJsonData.kaiObject)
+      ? MAIN.RESOURCE_MODE.KAI
+      : MAIN.RESOURCE_MODE.GPU;
     formObj.main.mem = objJsonData.mem;
     formObj.main.minHotWorkers = objJsonData.minHotWorkers;
     formObj.main.workerEnv =

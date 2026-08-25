@@ -1,9 +1,16 @@
 const addAlgorithmTemplateForm = {
   main: {
     type: 'Code',
+    resourceMode: 'gpu',
     name: '',
     cpu: 1,
     gpu: 0,
+    kaiObject: {
+      queue: '',
+      allocationType: 'memory',
+      memory: '256Mi',
+      fraction: undefined,
+    },
     mem: '256Mi',
     minHotWorkers: 0,
     options: [],

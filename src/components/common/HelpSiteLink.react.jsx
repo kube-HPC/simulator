@@ -1,4 +1,5 @@
 import React from 'react';
+import { Tooltip } from 'antd';
 import { selectors } from 'reducers';
 import { QuestionCircleFilled } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
@@ -14,10 +15,12 @@ const HelpSiteLink = ({ link = '', ...prop }) => {
   const { hkubeSiteUrl } = useSelector(selectors.config);
 
   return (
-    <IconHelpStyle
-      {...prop}
-      onClick={() => window.open(`${hkubeSiteUrl}${link}`)}
-    />
+    <Tooltip title="Click to open help site" placement="top">
+      <IconHelpStyle
+        {...prop}
+        onClick={() => window.open(`${hkubeSiteUrl}${link}`)}
+      />
+    </Tooltip>
   );
 };
 

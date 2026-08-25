@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { WIZARD_STATE, LOCAL_STORAGE_KEYS } from 'const';
+import { cleanDeepKeepKeys } from 'utils';
 
-import cleanDeep from 'clean-deep';
 /* eslint-disable import/no-cycle */
 import { usePipeline } from 'hooks';
 
@@ -34,6 +34,13 @@ const formats = {
 const formatNode = node => {
   const formatter = formats[node.kind];
   return formatter ? formatter(node) : node;
+};
+
+const cleanOption = {
+  emptyArrays: true,
+  emptyObjects: true,
+  emptyStrings: true,
+  keepKeys: ['flowInput.*', 'flowInput'],
 };
 
 const useWizardAddPipeline = (
@@ -139,18 +146,19 @@ const useWizardAddPipeline = (
         formattedData = formData;
       }
 
-      if (isEdit) {
-        if (isRunPipeline) {
-          runPipeline(cleanDeep(formattedData, { emptyArrays: false }));
-        } else {
-          updatePipeline(
-            cleanDeep(formattedData, { emptyArrays: false }),
-            LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_ADD_PIPELINE
-          );
-        }
-      } else {
+      // remove only null/undefined once and reuse across actions
+      const cleanedData = cleanDeepKeepKeys(formattedData, cleanOption);
+
+      if (!isEdit) {
         addPipeline(
-          cleanDeep(formattedData, { emptyArrays: false }),
+          cleanedData,
+          LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_ADD_PIPELINE
+        );
+      } else if (isRunPipeline) {
+        runPipeline(cleanedData);
+      } else {
+        updatePipeline(
+          cleanedData,
           LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_ADD_PIPELINE
         );
       }
