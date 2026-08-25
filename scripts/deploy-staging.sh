@@ -12,5 +12,9 @@ export PR_NAME="${PR_NAME//_/-}"
 echo TAG=$IMAGE_TAG
 echo NAME=$PR_NAME
 envsubst < ${DIR}/staging-template.yaml > /tmp/staging.yaml
-kubectl apply -f /tmp/staging.yaml
-kubectl patch deployment dashboard-${PR_NAME} -p "{\"spec\": {\"template\": {\"metadata\": { \"labels\": {  \"redeploy\": \"$(date +%s)\"}}}}}"
+KUBECTL_CONTEXT_ARGS=()
+if [[ -n "$KUBE_CONTEXT" ]]; then
+  KUBECTL_CONTEXT_ARGS=(--context "$KUBE_CONTEXT")
+fi
+kubectl "${KUBECTL_CONTEXT_ARGS[@]}" apply -f /tmp/staging.yaml
+kubectl "${KUBECTL_CONTEXT_ARGS[@]}" patch deployment dashboard-${PR_NAME} -p "{\"spec\": {\"template\": {\"metadata\": { \"labels\": {  \"redeploy\": \"$(date +%s)\"}}}}}"
