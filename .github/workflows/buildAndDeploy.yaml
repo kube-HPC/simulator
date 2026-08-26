@@ -126,9 +126,8 @@ jobs:
               ;;
           esac
           echo "selected context: $CONTEXT"
-          export KUBECONFIG=/etc/hkube/kube/config
-          kubectl config use-context "$CONTEXT"
           echo KUBECONFIG=/etc/hkube/kube/config >> $GITHUB_ENV
+          echo KUBE_CONTEXT=$CONTEXT >> $GITHUB_ENV
           echo URL=$URL >> $GITHUB_ENV
         env:
           DEPLOY_ENVIRONMENT: '${{ github.event.deployment.environment }}'
@@ -141,7 +140,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: verify kubectl
-        run: kubectl cluster-info
+        run: kubectl --context "$KUBE_CONTEXT" cluster-info
       - name: deploy
         run: ./scripts/deploy-staging.sh
         env:
