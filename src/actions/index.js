@@ -16,6 +16,7 @@ import {
   socketInit,
   setConnectionStatus,
   connectionSetup,
+  keycloakAuthReady,
 } from './connection.action';
 import { open as drawerOpen, toggle as drawerToggle } from './drawer.action';
 import {
@@ -100,6 +101,7 @@ const actions = {
   updateStored,
   setConnectionStatus,
   connectionSetup,
+  keycloakAuthReady,
   fetchDataSources,
   retryFetchDataSources,
   deleteDataSource,

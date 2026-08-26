@@ -51,7 +51,9 @@ message.config({
 });
 
 const RoutesNav = () => {
-  const { grafanaUrl } = useSelector(selectors.connection);
+  const { grafanaUrl, keycloakEnable, keycloakAuthReady } = useSelector(
+    selectors.connection
+  );
   const { hasConfig } = useSelector(selectors.config);
   const { loaded: prefsLoaded } = useSelector(selectors.preferences);
   const { filtersInitCacheItems } = useCacheFilters();
@@ -73,12 +75,24 @@ const RoutesNav = () => {
     setTimeout(() => setIsDataAvailable(true), 2000);
   }, [socketInit]);
 
-  // Fetch user preferences once config is loaded (API base URL is ready)
+  // Fetch user preferences once config is loaded and (when Keycloak is
+  // enabled) the user is actually authenticated, otherwise the request
+  // fires before a token exists and the server returns 401.
   useEffect(() => {
-    if (hasConfig && !prefsLoaded) {
-      fetchPreferences();
+    if (!hasConfig || prefsLoaded) {
+      return;
     }
-  }, [hasConfig, prefsLoaded, fetchPreferences]);
+    if (keycloakEnable && !keycloakAuthReady) {
+      return;
+    }
+    fetchPreferences();
+  }, [
+    hasConfig,
+    keycloakEnable,
+    keycloakAuthReady,
+    prefsLoaded,
+    fetchPreferences,
+  ]);
 
   useEffect(() => {
     if (
