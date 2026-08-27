@@ -2,6 +2,7 @@ import React, {
   useRef,
   useState,
   useEffect,
+  useCallback,
   forwardRef,
   useImperativeHandle,
 } from 'react';
@@ -11,6 +12,8 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import IDProvider from 'IDProvider';
+import { useDispatch } from 'react-redux';
+import { updatePreferenceLocal } from 'reducers/preferences.reducer';
 import ColumnsControl from './ColumnsControl';
 import BackToTopButton from './BackToTopButton';
 import { LoadingOverlay, StyledGridWrapper } from './HKGrid.styles';
@@ -23,6 +26,7 @@ export const HKGrid = forwardRef(
     {
       rowData,
       columnDefs,
+      tableId,
       enableRowHoverActions = false,
       actionClassName,
       className,
@@ -33,11 +37,54 @@ export const HKGrid = forwardRef(
   ) => {
     const gridRef = useRef(null);
     const [gridApi, setGridApi] = useState(null);
+    const dispatch = useDispatch();
+    // true while we are programmatically applying column state — suppresses the capture callback
+    const isApplyingRef = useRef(false);
 
     const onGridReady = params => {
       gridRef.current = params.api;
       setGridApi(params.api);
     };
+
+    // Push columnDefs visibility/width into the live grid whenever they change (e.g. after reset)
+    useEffect(() => {
+      if (!gridApi || !columnDefs) return;
+      const state = columnDefs
+        .filter(col => col.field && !col.isPinning)
+        .map(col => ({
+          colId: col.field,
+          hide: col.hide ?? false,
+          ...(col.width != null ? { width: col.width } : {}),
+        }));
+      if (state.length === 0) return;
+      isApplyingRef.current = true;
+      gridApi.applyColumnState({ state });
+      setTimeout(() => {
+        isApplyingRef.current = false;
+      }, 0);
+    }, [columnDefs, gridApi]);
+
+    // Capture column visibility and width changes into preferences (local only)
+    const handleColumnStateChanged = useCallback(() => {
+      if (isApplyingRef.current || !gridApi || !tableId) return;
+      const allCols = gridApi.getAllGridColumns();
+      if (!allCols) return;
+      const columns = {};
+      allCols.forEach(col => {
+        const def = col.getColDef();
+        if (!def.field || def.isPinning) return;
+        columns[def.field] = {
+          visible: col.isVisible(),
+          width: col.getActualWidth() || null,
+        };
+      });
+      dispatch(
+        updatePreferenceLocal({
+          section: 'tables',
+          value: { [tableId]: { columns } },
+        })
+      );
+    }, [gridApi, tableId, dispatch]);
 
     useImperativeHandle(ref, () => ({
       refreshCells: (params = { force: true }) => {
@@ -59,7 +106,7 @@ export const HKGrid = forwardRef(
 
     return (
       <>
-        <ColumnsControl gridApi={gridApi} />
+        <ColumnsControl gridApi={gridApi} tableId={tableId} />
         <IDProvider dataTestId="hk-grid">
           <StyledGridWrapper
             className={className}
@@ -79,10 +126,11 @@ export const HKGrid = forwardRef(
                 onGridReady={onGridReady}
                 rowData={rowData}
                 columnDefs={columnDefs}
-                enableCellTextSelection
                 suppressCellFocus
                 animateRows={false}
                 showUnsortIcon
+                onColumnVisible={handleColumnStateChanged}
+                onColumnResized={handleColumnStateChanged}
                 defaultColDef={{
                   sortable: true,
                   resizable: true,
@@ -103,6 +151,7 @@ export const HKGrid = forwardRef(
 HKGrid.propTypes = {
   rowData: PropTypes.array.isRequired,
   columnDefs: PropTypes.array.isRequired,
+  tableId: PropTypes.string,
   enableRowHoverActions: PropTypes.bool,
   actionClassName: PropTypes.string,
   className: PropTypes.string,

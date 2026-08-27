@@ -9,7 +9,12 @@ import { Route, Routes } from 'react-router-dom';
 import { COLOR, COLOR_LAYOUT, Theme } from 'styles';
 import { useActions, useCacheFilters } from 'hooks';
 import Header from 'Routes/Base/Header';
-import { instanceFiltersVar, numberErrorGraphQLVar } from 'cache';
+import {
+  instanceFiltersVar,
+  numberErrorGraphQLVar,
+  dateTimeDefaultVar,
+} from 'cache';
+import dayjs from 'dayjs';
 import useApolloClient from '../graphql/useApolloClient';
 import { Drawer as SiderBarRightDrawer } from './SidebarRight';
 import SidebarLeft from './Base/SidebarLeft';
@@ -46,12 +51,16 @@ message.config({
 });
 
 const RoutesNav = () => {
-  const { grafanaUrl } = useSelector(selectors.connection);
+  const { grafanaUrl, keycloakEnable, keycloakAuthReady } = useSelector(
+    selectors.connection
+  );
+  const { hasConfig } = useSelector(selectors.config);
+  const { loaded: prefsLoaded } = useSelector(selectors.preferences);
   const { filtersInitCacheItems } = useCacheFilters();
   const numberErrorGraphQL = useReactiveVar(numberErrorGraphQLVar);
   const [isDataAvailable, setIsDataAvailable] = useState(false);
 
-  const { socketInit } = useActions();
+  const { socketInit, fetchPreferences } = useActions();
 
   const {
     apolloClient,
@@ -65,6 +74,25 @@ const RoutesNav = () => {
     socketInit();
     setTimeout(() => setIsDataAvailable(true), 2000);
   }, [socketInit]);
+
+  // Fetch user preferences once config is loaded and (when Keycloak is
+  // enabled) the user is actually authenticated, otherwise the request
+  // fires before a token exists and the server returns 401.
+  useEffect(() => {
+    if (!hasConfig || prefsLoaded) {
+      return;
+    }
+    if (keycloakEnable && !keycloakAuthReady) {
+      return;
+    }
+    fetchPreferences();
+  }, [
+    hasConfig,
+    keycloakEnable,
+    keycloakAuthReady,
+    prefsLoaded,
+    fetchPreferences,
+  ]);
 
   useEffect(() => {
     if (
