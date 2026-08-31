@@ -1,9 +1,10 @@
 import React from 'react';
 import { ReactComponent as IconMoon } from 'images/moon-icon.svg';
+import { ReactComponent as IconSun } from 'images/sun-icon.svg';
 
 export const iconsThemes = {
   LIGHT: <IconMoon />,
-  LIGHTSOUT: <IconMoon />,
+  LIGHTSOUT: <IconSun />,
 };
 
 export const iconsThemesTitle = {

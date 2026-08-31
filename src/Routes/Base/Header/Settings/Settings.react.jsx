@@ -18,6 +18,11 @@ import { ReactComponent as ApiIcon } from 'images/apiIcon.svg';
 import SetDefaultTime from './SetDefaultTime';
 import { GRAFANA_ICON } from './grafana-icon';
 
+import {
+  iconsThemes,
+  iconsThemesTitle,
+} from '../../../../styles/themes/HelperThemes';
+
 // import LogMode from './LogMode.react';
 // import LogSource from './LogSource.react';
 // import GraphDirection from './GraphDirection.react';
@@ -27,7 +32,7 @@ import { GRAFANA_ICON } from './grafana-icon';
 const { Text } = Typography;
 const Settings = () => {
   const { hkubeSiteUrl } = useSelector(selectors.config);
-  const { setTheme, themeName } = useSiteThemeMode();
+  const { toggleTheme, themeName } = useSiteThemeMode();
 
   const navigate = useNavigate();
 
@@ -166,18 +171,22 @@ const Settings = () => {
         <DividerStyle />
       </FlexBox.Auto>
 
-      <FlexBox.Auto direction="column" gutter={[6, 6]}>
-        <LightThemeButton
-          $active={themeName.toUpperCase() === 'LIGHT'}
-          onClick={() => setTheme('light')}>
-          Light
-        </LightThemeButton>
-
-        <LightsOutThemeButton
-          $active={themeName.toUpperCase() === 'LIGHTSOUT'}
-          onClick={() => setTheme('lightsOut')}>
-          Lights Out
-        </LightsOutThemeButton>
+      <FlexBox.Auto>
+        <Icons.Hover
+          type={
+            <span
+              title={iconsThemesTitle[themeName.toUpperCase()]}
+              role="img"
+              aria-label="menu-unfold"
+              className="anticon anticon-menu-unfold">
+              {iconsThemes[themeName.toUpperCase()]}
+            </span>
+          }
+          onClick={toggleTheme}
+        />
+        <TextLink onClick={toggleTheme}>
+          Switch {themeName.toUpperCase() === 'LIGHT' ? 'Dark' : 'Light'} Mode
+        </TextLink>
       </FlexBox.Auto>
       <SetDefaultTime />
 
