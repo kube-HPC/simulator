@@ -84,29 +84,6 @@ const Settings = () => {
     }
   `;
 
-  const DarkThemeButton = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 6px 12px;
-    border-radius: 6px;
-    width: 100%;
-    color: #ffffff;
-    background: #182039;
-    border: 2px solid ${({ $active }) => ($active ? '#40a9ff' : '#2e4a7a')};
-    box-shadow: ${({ $active }) =>
-      $active ? '0 0 0 2px rgba(64,169,255,0.25)' : 'none'};
-    transition: all 0.2s ease;
-
-    &:hover {
-      border-color: #40a9ff;
-      box-shadow: 0 0 0 2px rgba(64, 169, 255, 0.2);
-    }
-  `;
-
   const LightsOutThemeButton = styled.div`
     display: flex;
     align-items: center;
@@ -199,12 +176,6 @@ const Settings = () => {
           onClick={() => setTheme('light')}>
           Light
         </LightThemeButton>
-
-        <DarkThemeButton
-          $active={themeName.toUpperCase() === 'DARK'}
-          onClick={() => setTheme('dark')}>
-          Dark
-        </DarkThemeButton>
 
         <LightsOutThemeButton
           $active={themeName.toUpperCase() === 'LIGHTSOUT'}

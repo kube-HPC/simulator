@@ -13,8 +13,8 @@ const CenterDiv = styled.div`
 
 const Trace = ({ data, jobId, name }) => {
   // Check if dark mode is active
-  const isDarkMode =
-    localStorage.getItem('hkubeTheme')?.toUpperCase() === 'DARK';
+  const currentTheme = localStorage.getItem('hkubeTheme')?.toUpperCase();
+  const isDarkMode = currentTheme === 'DARK' || currentTheme === 'LIGHTSOUT';
 
   return (
     <div className={isDarkMode ? 'trace-dark-mode' : 'trace-light-mode'}>

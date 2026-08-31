@@ -12,14 +12,11 @@ switch (
 ) {
   case 'LIGHT':
     break;
-  case 'DARK':
-    break;
   case 'LIGHTSOUT':
     break;
   default:
 }
 
-const DarkThemeStyle = React.lazy(() => import('./dark/DarkThemeStyle.styles'));
 const LightThemeStyle = React.lazy(
   () => import('./light/LightThemeStyle.styles.jsx')
 );
@@ -29,7 +26,6 @@ const LightsOutThemeStyle = React.lazy(
 
 const LazyThemeStyle = {
   LIGHT: <LightThemeStyle />,
-  DARK: <DarkThemeStyle />,
   LIGHTSOUT: <LightsOutThemeStyle />,
 };
 
