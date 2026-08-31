@@ -108,10 +108,8 @@ export const MAX_TRACE_ROW_HEIGHT = 72;
 
 // Helper to detect current theme
 export const getCurrentTheme = () => {
-  const storedTheme = localStorage.getItem('hkubeTheme')?.toUpperCase();
-  return storedTheme === 'DARK' || storedTheme === 'LIGHTSOUT'
-    ? 'DARK'
-    : 'LIGHT';
+  const storedTheme = localStorage.getItem('hkubeTheme');
+  return storedTheme?.toUpperCase() === 'DARK' ? 'DARK' : 'LIGHT';
 };
 
 // Get colors based on current theme

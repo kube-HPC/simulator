@@ -21,10 +21,6 @@ import { GRAFANA_ICON } from './grafana-icon';
 // import LogMode from './LogMode.react';
 // import LogSource from './LogSource.react';
 // import GraphDirection from './GraphDirection.react';
-import {
-  iconsThemes,
-  iconsThemesTitle,
-} from '../../../../styles/themes/HelperThemes';
 
 // import TypesSelect from './TypesSelect.react';
 
