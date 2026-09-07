@@ -14,7 +14,6 @@ const KeycloakConfig = {
 
 const _kc = new Keycloak(KeycloakConfig);
 const initKeycloak = (appToRender, renderError, checkIframe) => {
-
   _kc
     .init({
       onLoad: 'login-required',
@@ -41,7 +40,7 @@ const getToken = () => _kc.token;
 const isLoggedIn = () => !!_kc.token;
 
 const updateToken = (minSecValidity, successCallback) =>
-  _kc.updateToken(minSecValidity).then(successCallback).catch(doLogin);
+  _kc.updateToken(minSecValidity).then(successCallback);
 
 const getUsername = () => _kc.tokenParsed?.preferred_username;
 
