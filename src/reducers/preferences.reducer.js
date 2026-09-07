@@ -75,7 +75,10 @@ const preferences = createSlice({
         (state, { payload }) => {
           state.syncing = false;
           state.lastHash = hashSum(payload);
-          state.lastSavedTables = { ...state.data.tables };
+          // Use what was actually confirmed saved, not current (possibly newer, unsaved) local state
+          state.lastSavedTables = {
+            ...(payload.tables ?? state.lastSavedTables),
+          };
         }
       )
       .addCase(`${actionType.PREFERENCES_SAVE}_REJECT`, state => {
