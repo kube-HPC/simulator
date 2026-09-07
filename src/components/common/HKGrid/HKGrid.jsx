@@ -126,6 +126,7 @@ export const HKGrid = forwardRef(
                 onGridReady={onGridReady}
                 rowData={rowData}
                 columnDefs={columnDefs}
+                enableCellTextSelection
                 suppressCellFocus
                 animateRows={false}
                 showUnsortIcon
