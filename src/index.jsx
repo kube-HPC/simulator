@@ -18,9 +18,6 @@ import GlobalThemes from './styles/themes/GlobalThemes';
 import Root from './Routes';
 import store from './store';
 import KeycloakServices from './keycloak/keycloakServices';
-// TODO(sim-delete): remove this import. Part of the "request without token" experiment.
-// TEMP(sim): reproduction of the "no token -> kicked to login" problem. Remove when done.
-import SimulateNoTokenButton from './components/dev/SimulateNoTokenButton';
 
 /* ----------------------------------------------------------
    MAIN CONFIG-PROVIDER APP
@@ -87,9 +84,6 @@ const ConfigProviderApp = () => {
           <ErrorBoundary>
             <GlobalThemes />
             <Root />
-            {/* TODO(sim-delete): remove this button. Part of the "request without token" experiment. */}
-            {/* TEMP(sim): remove together with the simulation files */}
-            <SimulateNoTokenButton />
           </ErrorBoundary>
         </ReusableProvider>
       </HashRouter>
