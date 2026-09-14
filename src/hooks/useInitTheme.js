@@ -10,22 +10,6 @@ const getThemeProvider = themeName => {
         algorithm: defaultAlgorithm,
         token: { padding: 10 },
       };
-    case 'DARK':
-      return {
-        algorithm: darkAlgorithm,
-        token: {
-          colorBgBase: '#182039',
-          colorTextBase: '#c5c5c5',
-          colorInfo: '#180d31',
-          colorPrimary: '#2e6fca',
-          wireframe: false,
-          colorBgLayout: '#180d31',
-          colorPrimaryBg: '#252f58',
-          components: {
-            Table: { padding: 30 },
-          },
-        },
-      };
     case 'LIGHTSOUT':
       return {
         algorithm: darkAlgorithm,

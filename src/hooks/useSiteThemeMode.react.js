@@ -40,11 +40,13 @@ const useSiteThemeMode = () => {
     [navigate, themeName, dispatch]
   );
 
-  // toggle switch between dark and light
+  // toggle switch between lights out and light
   const toggleTheme = () => {
     const cTheme = getTheme();
     setTheme(
-      cTheme === THEMES_NAMES.DARK ? THEMES_NAMES.LIGHT : THEMES_NAMES.DARK
+      cTheme === THEMES_NAMES.LIGHTSOUT
+        ? THEMES_NAMES.LIGHT
+        : THEMES_NAMES.LIGHTSOUT
     );
   };
 
