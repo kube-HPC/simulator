@@ -11,7 +11,10 @@ import { ReusableProvider } from 'reusable';
 
 import ErrorBoundary from 'components/ErrorBoundary';
 import { useInitTheme } from 'hooks';
-import { initDashboardConfig } from 'actions/connection.action';
+import {
+  initDashboardConfig,
+  keycloakAuthReady,
+} from 'actions/connection.action';
 import { selectors } from 'reducers';
 
 import GlobalThemes from './styles/themes/GlobalThemes';
@@ -38,12 +41,26 @@ const ConfigProviderApp = () => {
      keycloak initialization
   -------------------------------- */
   useEffect(() => {
-    if (keycloakEnable && firstKc.current && !KeycloakServices.isLoggedIn()) {
+    if (!keycloakEnable) return;
+
+    if (KeycloakServices.isLoggedIn()) {
+      dispatch(keycloakAuthReady());
+      return;
+    }
+
+    if (firstKc.current) {
       firstKc.current = false;
 
-      KeycloakServices.initKeycloak(renderApp, renderErrorPreRenderApp, checkIframe);
+      KeycloakServices.initKeycloak(
+        () => {
+          dispatch(keycloakAuthReady());
+          renderApp();
+        },
+        renderErrorPreRenderApp,
+        checkIframe
+      );
     }
-  }, [keycloakEnable, checkIframe]);
+  }, [keycloakEnable, checkIframe, dispatch]);
 
   /* -------------------------------
      2) Loading config and Token Refresh

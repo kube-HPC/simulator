@@ -39,7 +39,11 @@ const _formatError = payload => {
     : payload.message || DEFAULT_ERROR_MSG;
 };
 
-const ignoreActions = [AT.README_GET_ALGORITHM, AT.README_GET_PIPELINE];
+const ignoreActions = [
+  AT.README_GET_ALGORITHM,
+  AT.README_GET_PIPELINE,
+  AT.PREFERENCES_FETCH,
+];
 
 const _ignoreError = actionType => ignoreActions.includes(actionType);
 
@@ -100,6 +104,7 @@ const restMiddleware =
         hkubeSystemVersion,
         kibanaUrl,
         healthMonitoringEnabled,
+        ELASTICSEARCH_LOGS_INDEX,
         structuredPrefix,
         grafanaUrl,
         grafanaDashboardUrl,
@@ -119,6 +124,7 @@ const restMiddleware =
           hkubeSystemVersion,
           kibanaUrl,
           healthMonitoringEnabled,
+          ELASTICSEARCH_LOGS_INDEX,
           structuredPrefix,
           grafanaUrl,
           grafanaDashboardUrl,
@@ -162,7 +168,7 @@ const restMiddleware =
 
           forceRefetchAll();
         })
-        .catch(err => reject(dispatch, err.response.data.error, action));
+        .catch(err => reject(dispatch, err?.response?.data?.error, action));
     } else if (action.type === AT.REST_REQ_POST_FORM) {
       client
         .post(action.payload.url, action.payload.formData)
@@ -170,7 +176,7 @@ const restMiddleware =
           success(dispatch, res.data, action);
           forceRefetchAll();
         })
-        .catch(err => reject(dispatch, err.response.data.error, action));
+        .catch(err => reject(dispatch, err?.response?.data?.error, action));
     } else if (action.type === AT.REST_REQ_PUT) {
       client
         .put(action.payload.url, action.payload.body)
@@ -179,7 +185,7 @@ const restMiddleware =
 
           forceRefetchAll();
         })
-        .catch(err => reject(dispatch, err.response.data.error, action));
+        .catch(err => reject(dispatch, err?.response?.data?.error, action));
     } else if (action.type === AT.REST_REQ_DELETE) {
       client
         .delete(action.payload.url, { data: action.payload.body })

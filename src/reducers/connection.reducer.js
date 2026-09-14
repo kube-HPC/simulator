@@ -24,6 +24,7 @@ const initialState = {
   hasData: false,
   isSocketConnected: false,
   inactiveCheckMs: null,
+  keycloakAuthReady: false,
 };
 
 const connection = createSlice({
@@ -44,6 +45,10 @@ const connection = createSlice({
         ...state,
         isSocketConnected: true,
         hasData: true,
+      }))
+      .addCase(actionType.KEYCLOAK_AUTH_READY, state => ({
+        ...state,
+        keycloakAuthReady: true,
       }));
   },
 });

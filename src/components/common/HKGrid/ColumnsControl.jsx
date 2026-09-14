@@ -2,6 +2,8 @@ import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { SettingOutlined } from '@ant-design/icons';
 import { Dropdown, Checkbox, Button } from 'antd';
+import { useDispatch } from 'react-redux';
+import { updatePreferenceLocal } from 'reducers/preferences.reducer';
 import { ActionChip, ColumnsControlWrapper } from './HKGrid.styles';
 
 const getColumnsState = api =>
@@ -12,8 +14,9 @@ const getColumnsState = api =>
     isPinning: col.getColDef().isPinning,
   })) || [];
 
-const ColumnsControl = ({ gridApi }) => {
+const ColumnsControl = ({ gridApi, tableId }) => {
   const [columnsState, setColumnsState] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!gridApi) return () => {};
@@ -50,7 +53,16 @@ const ColumnsControl = ({ gridApi }) => {
     if (!gridApi) return;
     gridApi.resetColumnState();
     setColumnsState(getColumnsState(gridApi));
-  }, [gridApi]);
+    // Clear saved column preferences for this table
+    if (tableId) {
+      dispatch(
+        updatePreferenceLocal({
+          section: 'tables',
+          value: { [tableId]: { columns: {} } },
+        })
+      );
+    }
+  }, [gridApi, tableId, dispatch]);
 
   const menuItems = useMemo(
     () => [
@@ -103,6 +115,7 @@ const ColumnsControl = ({ gridApi }) => {
 
 ColumnsControl.propTypes = {
   gridApi: PropTypes.object,
+  tableId: PropTypes.string,
 };
 
 export default ColumnsControl;
