@@ -58,3 +58,7 @@ export const setConnectionStatus = ({ isSocketConnected }) => ({
   type: actions.CONNECTION_STATUS_CHANGE,
   payload: { isSocketConnected },
 });
+
+export const keycloakAuthReady = () => ({
+  type: actions.KEYCLOAK_AUTH_READY,
+});

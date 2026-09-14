@@ -16,6 +16,7 @@ import {
   socketInit,
   setConnectionStatus,
   connectionSetup,
+  keycloakAuthReady,
 } from './connection.action';
 import { open as drawerOpen, toggle as drawerToggle } from './drawer.action';
 import {
@@ -55,6 +56,11 @@ import {
   deleteDataSource,
   postVersion as postDataSourceVersion,
 } from './dataSources';
+import {
+  fetchPreferences,
+  savePreferences,
+  resetPreferences,
+} from './preferences.action';
 
 const actions = {
   addExperiment,
@@ -95,6 +101,7 @@ const actions = {
   updateStored,
   setConnectionStatus,
   connectionSetup,
+  keycloakAuthReady,
   fetchDataSources,
   retryFetchDataSources,
   deleteDataSource,
@@ -106,6 +113,9 @@ const actions = {
   postDataSourceVersion,
   updateAlgorithmVersionName,
   updatePipelineVersionName,
+  fetchPreferences,
+  savePreferences,
+  resetPreferences,
 };
 
 export default actions;
