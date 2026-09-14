@@ -7,6 +7,12 @@ const client = axios.create();
 
 client.interceptors.request.use(
   config => {
+    // TODO(sim-delete): remove this skipAuth block. Part of the "request without token" experiment.
+    // TEMP(sim): allow firing a request without a token to reproduce the
+    // "no token -> kicked to login" problem. Remove together with the simulation utility.
+    if (config.skipAuth) {
+      return config;
+    }
     const token = KeycloakServices.getToken();
     if (token) {
       return {
@@ -56,7 +62,11 @@ client.interceptors.response.use(
         return client(originalRequest);
       } catch (refreshError) {
         console.error('Failed to refresh token', refreshError);
-        KeycloakServices.doLogout();
+        events.emit(
+          'global_alert_msg',
+          'The request failed due to authorization problems. Please try again or re-login.',
+          'error'
+        );
         return Promise.reject(refreshError);
       }
     }
