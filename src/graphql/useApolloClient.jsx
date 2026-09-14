@@ -106,7 +106,11 @@ const useApolloClient = () => {
           .then(() => operation.retry())
           .catch(error => {
             console.error('Failed to refresh token', error);
-            KeycloakServices.doLogout();
+            events.emit(
+              'global_alert_msg',
+              'The request failed due to authorization problems. Please try again or re-login.',
+              'error'
+            );
             // openNotification();
           });
       }
