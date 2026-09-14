@@ -1,7 +1,5 @@
 import { LOCAL_STORAGE_KEYS } from 'const';
 import { theme } from 'antd';
-import { useSelector } from 'react-redux';
-import { selectors } from 'reducers';
 
 const getThemeProvider = themeName => {
   const { defaultAlgorithm, darkAlgorithm } = theme;
@@ -63,10 +61,9 @@ const getThemeProvider = themeName => {
 };
 
 const useInitTheme = () => {
-  const { data, loaded } = useSelector(selectors.preferences);
-  const themeName =
-    (loaded && data.theme) ||
-    localStorage.getItem(LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME);
+  const themeName = localStorage.getItem(
+    LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME
+  );
   return { themeProvider: getThemeProvider(themeName) };
 };
 

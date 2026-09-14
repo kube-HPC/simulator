@@ -77,10 +77,6 @@ const preferencesMiddleware =
             'scoopIntervalHours',
             serverPrefs.scoopIntervalHours
           );
-          dateTimeDefaultVar({
-            hour: serverPrefs.scoopIntervalHours,
-            time: dayjs().add(-serverPrefs.scoopIntervalHours, 'hour'),
-          });
         }
       }
     }
