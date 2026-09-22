@@ -42,7 +42,7 @@ const ButtonDropdown = React.memo(
         onButtonClick(isButtonOn === false ? selected.label : '');
       } else {
         setIsButtonOn(prev => !prev);
-        console.info(`click left button : ${selected.label}`);
+        console.info(` click left button : ${selected.label}`);
       }
     };
 
