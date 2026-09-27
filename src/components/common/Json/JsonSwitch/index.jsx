@@ -59,7 +59,7 @@ const JsonSwitch = ({
         label: TABS.TABLE,
         key: TABS.TABLE,
         children: (
-          <Wrapper>
+          <Wrapper data-testid="json-obj-table-view">
             <JsonTable
               obj={obj}
               jobId={jobId}

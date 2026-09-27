@@ -12,17 +12,19 @@ const ReactJsonViewStyle = styled(ReactJsonView)`
 `;
 
 const JsonView = props => (
-  <ReactJsonViewStyle
-    theme={Theme.Styles.reactJsonView.theme}
-    iconStyle="triangle"
-    name={false}
-    displayDataTypes={false}
-    displayObjectSize={false}
-    collapsed="2"
-    indentWidth="4"
-    enableClipboard={false}
-    {...props}
-  />
+  <div data-testid="react-json-view">
+    <ReactJsonViewStyle
+      theme={Theme.Styles.reactJsonView.theme}
+      iconStyle="triangle"
+      name={false}
+      displayDataTypes={false}
+      displayObjectSize={false}
+      collapsed="2"
+      indentWidth="4"
+      enableClipboard={false}
+      {...props}
+    />
+  </div>
 );
 
 /** @param {ReactJsonViewProps & { jsonObject: Object }} props */
