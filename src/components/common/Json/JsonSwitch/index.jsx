@@ -56,7 +56,7 @@ const JsonSwitch = ({
   const TabsItemsJson = useMemo(
     () => [
       {
-        label: TABS.TABLE,
+        label: <span data-testid="json-switch-tab-table">{TABS.TABLE}</span>,
         key: TABS.TABLE,
         children: (
           <Wrapper data-testid="json-obj-table-view">
@@ -70,7 +70,7 @@ const JsonSwitch = ({
         ),
       },
       {
-        label: TABS.JSON,
+        label: <span data-testid="json-switch-tab-json">{TABS.JSON}</span>,
         key: TABS.JSON,
         children: (
           <>
@@ -95,7 +95,7 @@ const JsonSwitch = ({
 
   if (isGraph) {
     TabsItemsJson.unshift({
-      label: TABS.GRAPH,
+      label: <span data-testid="json-switch-tab-graph">{TABS.GRAPH}</span>,
       key: TABS.GRAPH,
       children: (
         <GraphPreview

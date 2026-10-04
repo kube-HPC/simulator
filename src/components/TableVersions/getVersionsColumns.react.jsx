@@ -9,10 +9,11 @@ import { Button, Tooltip, Typography, Tag, Input } from 'antd';
 import dayjs from 'dayjs';
 import { sorter } from 'utils/stringHelper';
 import UserAvatar from 'components/UserAvatar';
+import IDProvider from 'IDProvider';
+import { COLOR } from 'styles';
 import VersionNameEdit from './VersionNameEdit';
 import FlexBox from '../common/FlexBox.react';
 import Ellipsis from '../common/Ellipsis.react';
-import { COLOR } from 'styles';
 
 const { Text } = Typography;
 
@@ -153,15 +154,17 @@ const getVersionsColumns = ({
                 ? 'Cannot update current version'
                 : 'Update to current version'
             }>
-            <Button
-              type="dashed"
-              shape="circle"
-              icon={<CheckOutlined />}
-              disabled={isCurrentVersion}
-              onClick={() =>
-                currentConfirmAction(modal, onApply, record, source)
-              }
-            />
+            <IDProvider dataTestId="update-current-version">
+              <Button
+                type="dashed"
+                shape="circle"
+                icon={<CheckOutlined />}
+                disabled={isCurrentVersion}
+                onClick={() =>
+                  currentConfirmAction(modal, onApply, record, source)
+                }
+              />
+            </IDProvider>
           </Tooltip>
         </FlexBox.Item>
         <FlexBox.Item>
@@ -171,26 +174,32 @@ const getVersionsColumns = ({
                 ? 'Cannot delete current version'
                 : 'Remove version'
             }>
-            <Button
-              type="dashed"
-              shape="circle"
-              icon={<DeleteOutlined />}
-              disabled={isCurrentVersion}
-              onClick={() =>
-                deleteConfirmAction(modal, onDelete, record, source)
-              }
-            />
+            <IDProvider dataTestId="delete-current-version">
+              <Button
+                type="dashed"
+                shape="circle"
+                icon={<DeleteOutlined />}
+                disabled={isCurrentVersion}
+                onClick={() =>
+                  deleteConfirmAction(modal, onDelete, record, source)
+                }
+              />
+            </IDProvider>
           </Tooltip>
         </FlexBox.Item>
         <FlexBox.Item>
           <Tooltip title={saveTooltip}>
-            <Button
-              type={isCurrentVersion ? 'default' : 'dashed'}
-              shape="circle"
-              icon={<SaveOutlined />}
-              style={isCurrentVersion ? { borderColor: COLOR.grey } : {}}
-              onClick={() => addConfirmAction(modal, onSaveAs, record, source)}
-            />
+            <IDProvider dataTestId="save-current-version">
+              <Button
+                type={isCurrentVersion ? 'default' : 'dashed'}
+                shape="circle"
+                icon={<SaveOutlined />}
+                style={isCurrentVersion ? { borderColor: COLOR.grey } : {}}
+                onClick={() =>
+                  addConfirmAction(modal, onSaveAs, record, source)
+                }
+              />
+            </IDProvider>
           </Tooltip>
         </FlexBox.Item>
       </FlexBox>

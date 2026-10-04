@@ -50,9 +50,15 @@ const VersionsTable = ({
 
   const expandIcon = ({ expanded, onExpand, record }) =>
     expanded ? (
-      <DownOutlined onClick={e => onExpand(record, e)} />
+      <DownOutlined
+        data-testid="versions-table-expandable"
+        onClick={e => onExpand(record, e)}
+      />
     ) : (
-      <RightOutlined onClick={e => onExpand(record, e)} />
+      <RightOutlined
+        data-testid="versions-table-expandable"
+        onClick={e => onExpand(record, e)}
+      />
     );
 
   const onSelectChange = (newSelectedRowKeys, selectedRows) => {
