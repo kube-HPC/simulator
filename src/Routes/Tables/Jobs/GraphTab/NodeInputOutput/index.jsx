@@ -133,9 +133,15 @@ const NodeInputOutput = ({
 
   const expandIcon = ({ expanded, onExpand, record }) =>
     expanded ? (
-      <DownOutlined onClick={e => onExpand(record, e)} />
+      <DownOutlined
+        onClick={e => onExpand(record, e)}
+        data-testid="versions-table-expandable"
+      />
     ) : (
-      <RightOutlined onClick={e => onExpand(record, e)} />
+      <RightOutlined
+        onClick={e => onExpand(record, e)}
+        data-testid="versions-table-expandable"
+      />
     );
 
   return (

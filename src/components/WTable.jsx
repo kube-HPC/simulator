@@ -12,7 +12,13 @@ import { USER_GUIDE } from 'const';
 
 const ExpandIcon = ({ expanded, onExpand, record }) => (
   <Icon
-    type={expanded ? <DownOutlined /> : <RightOutlined />}
+    type={
+      expanded ? (
+        <DownOutlined data-testid="versions-table-expandable" />
+      ) : (
+        <RightOutlined data-testid="versions-table-expandable" />
+      )
+    }
     onClick={e => onExpand(record, e)}
   />
 );
