@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Table } from 'antd';
+import { Typography } from 'antd';
+import { Table } from 'components';
 
 const { Text } = Typography;
 
