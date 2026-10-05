@@ -82,10 +82,14 @@ const PipelineInfo = ({ pipeline, onClose }) => {
       )
     ) : tabKey === TABS.VERSIONS ? (
       <>
-        <Button onClick={fetch} icon={<RedoOutlined />}>
+        <Button
+          data-testid="versions-refresh-button"
+          onClick={fetch}
+          icon={<RedoOutlined />}>
           Refresh
         </Button>{' '}
         <Button
+          data-testid="versions-compare-button"
           disabled={versionsCompare.length !== 2}
           onClick={CompareJson}
           icon={<IconCompare style={{ width: '14px' }} />}>
