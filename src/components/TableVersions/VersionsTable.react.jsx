@@ -72,7 +72,11 @@ const VersionsTable = ({
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
+    getTitleCheckboxProps: () => ({
+      'data-testid': 'versions-table-checkbox-all',
+    }),
     getCheckboxProps: record => ({
+      'data-testid': `versions-table-checkbox`,
       disabled:
         selectedRowKeys.length >= 2 &&
         !selectedRowKeys.includes(record.version),

@@ -133,10 +133,14 @@ const AlgorithmsTabs = ({ algorithm, onClose }) => {
       )
     ) : activeKey === TABS.VERSIONS ? (
       <>
-        <Button onClick={fetch} icon={<RedoOutlined />}>
+        <Button
+          data-testid="algorithm-versions-refresh-button"
+          onClick={fetch}
+          icon={<RedoOutlined />}>
           Refresh
         </Button>{' '}
         <Button
+          data-testid="algorithm-versions-compare-button"
           disabled={versionsCompare.length !== 2}
           onClick={CompareJson}
           icon={<IconCompare style={{ width: '14px' }} />}>
