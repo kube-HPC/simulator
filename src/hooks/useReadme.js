@@ -16,13 +16,25 @@ const TYPES = {
 
 const URL = ({ type, name }) => `/readme/${type}/${name}`;
 
+// Strip raw HTML (script/iframe/event handlers/javascript: URIs) from
+// externally fetched README markdown before it reaches the markdown
+// renderers, which may otherwise execute embedded HTML (CWE-79).
+const sanitizeReadme = readme => {
+  if (typeof readme !== 'string') return readme;
+  return readme
+    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+    .replace(/<iframe[\s\S]*?>[\s\S]*?<\/iframe>/gi, '')
+    .replace(/\son\w+\s*=\s*(".*?"|'.*?'|[^\s>]+)/gi, '')
+    .replace(/(href|src)\s*=\s*(["'])\s*javascript:.*?\2/gi, '$1=$2#$2');
+};
+
 const fetch =
   ({ type }) =>
   ({ name, callback }) =>
     client
       .get(URL({ type, name }))
       .then(({ data: { readme } }) => {
-        callback(readme);
+        callback(sanitizeReadme(readme));
       })
       .catch(err => {
         console.warn('readme fetch error:', err);
@@ -41,7 +53,7 @@ const asyncFetch =
       const {
         data: { readme },
       } = await client.get(URL({ type, name }));
-      return readme;
+      return sanitizeReadme(readme);
     } catch (err) {
       console.warn('async readme fetch error:', err);
       return null;
