@@ -119,6 +119,7 @@ const COMMON_COLOR = () => {
     [PIPELINE.STALLED]: COLOR.darkGrey,
     [PIPELINE.STOPPED]: COLOR.greenLight2,
     [PIPELINE.PAUSED]: COLOR.yellow,
+    creating: COLOR.yellow,
 
     default: COLOR.lightGrey,
   });
