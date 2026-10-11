@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { InputNumber, Switch, Radio, AutoComplete } from 'antd';
+import { InputNumber, Switch, Radio, AutoComplete, Tag } from 'antd';
 import { Form as CommonForm } from 'components/common';
 import { useGetLists } from 'hooks/graphql';
 import InputNumberSwitch from './inputNumberSwitch';
@@ -25,6 +25,14 @@ const AlgorithmNode = ({ id }) => {
 
   const contextValue = useMemo(() => ({ rootId }), [rootId]);
 
+  const algorithmName = valuesState?.nodes[id]?.algorithmName;
+  const selectedAlgorithm = sortedAlgorithms?.find(
+    algorithm => algorithm.value === algorithmName
+  );
+  const algorithmStateType = selectedAlgorithm
+    ? selectedAlgorithm.stateType || 'stateless'
+    : null;
+
   return (
     <ctx.Provider value={contextValue}>
       <Field name={['algorithmName']} title="Algorithm">
@@ -38,37 +46,49 @@ const AlgorithmNode = ({ id }) => {
           }}
         />
       </Field>
-      {isStreamingPipeline &&
-        valuesState?.nodes[id]?.stateType === 'stateless' && (
-          <Collapsible
-            title="Stateless Counts"
-            defaultExpanded={
-              valuesState?.nodes[id].minStatelessCount > 0 ||
-              valuesState?.nodes[id].maxStatelessCount > 0
-            }>
-            <Field
-              inline={false}
-              title="Min"
-              name={['minStatelessCount']}
-              initialValue={0}
-              skipValidation>
-              <InputNumber
-                min={0}
-                data-testid={`add-pipeline-nodes-${id}-algorithm-min-stateless-count-input`}
-              />
-            </Field>
-            <Field
-              inline={false}
-              title="Max"
-              name={['maxStatelessCount']}
-              initialValue={null}
-              skipValidation>
-              <InputNumberSwitch
-                testId={`add-pipeline-nodes-${id}-algorithm-max-stateless-count`}
-              />
-            </Field>
-          </Collapsible>
-        )}
+      {isStreamingPipeline && algorithmStateType && (
+        <RawField
+          title="State Type"
+          skipValidation
+          overrides={{
+            tooltip:
+              'Taken from the algorithm. Change it in the algorithm configuration',
+          }}>
+          <Tag data-testid={`add-pipeline-nodes-${id}-algorithm-state-type`}>
+            {algorithmStateType}
+          </Tag>
+        </RawField>
+      )}
+      {isStreamingPipeline && algorithmStateType === 'stateless' && (
+        <Collapsible
+          title="Stateless Counts"
+          defaultExpanded={
+            valuesState?.nodes[id].minStatelessCount > 0 ||
+            valuesState?.nodes[id].maxStatelessCount > 0
+          }>
+          <Field
+            inline={false}
+            title="Min"
+            name={['minStatelessCount']}
+            initialValue={0}
+            skipValidation>
+            <InputNumber
+              min={0}
+              data-testid={`add-pipeline-nodes-${id}-algorithm-min-stateless-count-input`}
+            />
+          </Field>
+          <Field
+            inline={false}
+            title="Max"
+            name={['maxStatelessCount']}
+            initialValue={null}
+            skipValidation>
+            <InputNumberSwitch
+              testId={`add-pipeline-nodes-${id}-algorithm-max-stateless-count`}
+            />
+          </Field>
+        </Collapsible>
+      )}
 
       <Divider>Inputs</Divider>
 
