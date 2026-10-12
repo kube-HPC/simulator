@@ -70,7 +70,15 @@ const preferencesMiddleware =
       } else {
         // Sync server values to localStorage for offline fallback
         if (serverPrefs.theme) {
+          const currentTheme = localStorage.getItem(
+            LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME
+          );
           syncToLocalStorage('theme', serverPrefs.theme);
+          // Theme styles are read from localStorage at startup, so a reload is needed to apply it
+          if (currentTheme !== serverPrefs.theme) {
+            window.location.reload();
+            return result;
+          }
         }
         if (serverPrefs.scoopIntervalHours) {
           syncToLocalStorage(
