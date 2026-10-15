@@ -165,16 +165,20 @@ const SidebarLeft = () => {
 
     // Observability menu (for all users)
     items.push({
-      label: isOpenMenuObservability ? (
-        <span data-testid="left-sidebar-link-observability">Observability</span>
-      ) : (
-        <Badge
-          size="small"
-          count={totalNewWarnings}
-          color="red"
-          offset={[43, 6]}>
-          Observability
-        </Badge>
+      label: (
+        <span data-testid="left-sidebar-link-observability">
+          {isOpenMenuObservability ? (
+            'Observability'
+          ) : (
+            <Badge
+              size="small"
+              count={totalNewWarnings}
+              color="red"
+              offset={[43, 6]}>
+              Observability
+            </Badge>
+          )}
+        </span>
       ),
       key: `observability-link`,
 
