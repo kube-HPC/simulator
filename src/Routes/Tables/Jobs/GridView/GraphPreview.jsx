@@ -19,6 +19,7 @@ import {
   LoadingOutlined,
 } from '@ant-design/icons';
 import { useLocalStorageGraphMode } from 'hooks';
+import { useGetLists } from 'hooks/graphql';
 import client from 'client';
 import { generateStyles, formatEdge, formatNode } from '../graphUtils';
 
@@ -135,14 +136,27 @@ const GraphPreview = ({
     });
   }, []);
 
-  const normalizedPipeline = useMemo(
-    () =>
+  const { algorithms } = useGetLists();
+
+  // pipeline definitions don't carry stateType; resolve it like the api-server does at run time
+  const normalizedPipeline = useMemo(() => {
+    const isStream = pipeline?.kind === 'stream';
+    const resolveStateType = node => {
+      if (!isStream) return node.stateType;
+      if (node.kind === 'gateway') return 'stateful';
+      const algorithm = algorithms?.find(a => a.value === node.algorithmName);
+      return algorithm?.stateType || 'stateless';
+    };
+    return (
       pipeline.nodes?.reduce(
-        (acc, item) => ({ ...acc, [item.nodeName]: item }),
+        (acc, item) => ({
+          ...acc,
+          [item.nodeName]: { ...item, stateType: resolveStateType(item) },
+        }),
         {}
-      ) || {},
-    [pipeline]
-  );
+      ) || {}
+    );
+  }, [pipeline, algorithms]);
 
   const adaptedGraph = useMemo(() => {
     const graphStructure = {

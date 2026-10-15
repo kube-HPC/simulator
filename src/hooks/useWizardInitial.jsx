@@ -87,16 +87,6 @@ const useWizardInitial = (
     [nodesToStringLastAnd]
   );
 
-  const hasNonNullStateType = useCallback(nodes => {
-    for (let i = 0; i < nodes.length; i++) {
-      const node = nodes[i];
-      if (node.stateType !== null && node.stateType !== undefined) {
-        return true;
-      }
-    }
-    return false;
-  }, []);
-
   const msgByKind = useCallback(
     kindValue => {
       const schemaObjectForm = form.getFieldsValue();
@@ -128,31 +118,20 @@ const useWizardInitial = (
           Object.keys(schemaObjectForm?.streaming?.flows).length > 0) ||
         false;
 
-      const msgbatch2 = hasNonNullStateType(schemaObjectForm.nodes);
-
-      if (msgbatch1 || msgbatch2) {
+      if (msgbatch1) {
         return (
           <Typography.Text>
-            {msgbatch1 && (
-              <p>
-                - By converting the pipeline to batch, you will lose the
-                streaming flows you defined.
-              </p>
-            )}
-            {msgbatch2 && (
-              <p>
-                - You set some of the nodes to stateless or stateful, there is
-                no meaning for that in a batch pipeline. You will lose any
-                information related to these kinds.
-              </p>
-            )}
+            <p>
+              - By converting the pipeline to batch, you will lose the streaming
+              flows you defined.
+            </p>
             <p>Do you wish to proceed?</p>
           </Typography.Text>
         );
       }
       return null;
     },
-    [form, hasNonNullStateType, hasSpecialInput, checkNodesToMsg]
+    [form, hasSpecialInput, checkNodesToMsg]
   );
 
   const handleRadioClick = useCallback(
