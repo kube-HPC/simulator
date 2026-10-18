@@ -59,7 +59,7 @@ const preferencesMiddleware =
         storedTheme:
           localStorage.getItem(LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME) ??
           '(not set)',
-        reloadGuard: sessionStorage.getItem(THEME_RELOAD_FLAG) === 'true',
+        reloadTarget: sessionStorage.getItem(THEME_RELOAD_FLAG) ?? '(not set)',
       });
       if (!serverPrefs || Object.keys(serverPrefs).length === 0) {
         const migrated = migrateFromLocalStorage();
@@ -84,27 +84,22 @@ const preferencesMiddleware =
           );
           syncToLocalStorage('theme', serverPrefs.theme);
           // Theme styles are read from localStorage at startup, so a reload is needed to apply it
-          if (currentTheme === serverPrefs.theme) {
-            if (sessionStorage.getItem(THEME_RELOAD_FLAG)) {
-              console.info(
-                '[preferences] theme matches server; clearing reload guard'
+          const reloadTarget = sessionStorage.getItem(THEME_RELOAD_FLAG);
+          if (currentTheme !== serverPrefs.theme) {
+            if (reloadTarget !== serverPrefs.theme) {
+              console.warn(
+                '[preferences] theme mismatch; reloading once to apply server theme',
+                {
+                  storedTheme: currentTheme ?? '(not set)',
+                  serverTheme: serverPrefs.theme,
+                }
               );
-              sessionStorage.removeItem(THEME_RELOAD_FLAG);
+              sessionStorage.setItem(THEME_RELOAD_FLAG, serverPrefs.theme);
+              window.location.reload();
+              return result;
             }
-          } else if (!sessionStorage.getItem(THEME_RELOAD_FLAG)) {
-            console.warn(
-              '[preferences] theme mismatch; reloading once to apply server theme',
-              {
-                storedTheme: currentTheme ?? '(not set)',
-                serverTheme: serverPrefs.theme,
-              }
-            );
-            sessionStorage.setItem(THEME_RELOAD_FLAG, 'true');
-            window.location.reload();
-            return result;
-          } else {
             console.error(
-              '[preferences] theme mismatch remains; reload skipped because guard is set',
+              '[preferences] theme mismatch remains; reload skipped because this target was already applied',
               {
                 storedTheme: currentTheme ?? '(not set)',
                 serverTheme: serverPrefs.theme,
@@ -125,6 +120,9 @@ const preferencesMiddleware =
     if (action.type === updatePreferenceLocal.type) {
       const { section, value, reloadAfterSave } = action.payload;
       syncToLocalStorage(section, value);
+      if (section === 'theme' && reloadAfterSave) {
+        sessionStorage.removeItem(THEME_RELOAD_FLAG);
+      }
 
       // Auto-save theme and scoop interval; skip until prefs are loaded to avoid
       // overwriting saved data before fetchPreferences has run.
@@ -156,6 +154,10 @@ const preferencesMiddleware =
       const savedTheme = action.payload?.theme ?? currentTheme;
       if (savedTheme === expectedTheme && currentTheme === expectedTheme) {
         sessionStorage.removeItem(THEME_RELOAD_AFTER_SAVE_FLAG);
+        sessionStorage.setItem(THEME_RELOAD_FLAG, expectedTheme);
+        console.info('[preferences] saved theme; reloading to apply', {
+          theme: expectedTheme,
+        });
         window.location.reload();
       }
     }
@@ -180,6 +182,10 @@ const preferencesMiddleware =
       dateTimeDefaultVar({
         hour: PREFERENCES_DEFAULTS.scoopIntervalHours,
         time: dayjs().add(-PREFERENCES_DEFAULTS.scoopIntervalHours, 'hour'),
+      });
+      console.warn('[page-reload] preferences reset completed', {
+        targetTheme: PREFERENCES_DEFAULTS.theme,
+        href: window.location.href,
       });
       window.location.reload();
     }

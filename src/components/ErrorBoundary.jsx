@@ -22,7 +22,12 @@ const CollapseFull = styled(Collapse)`
 const { Paragraph, Text } = Typography;
 const { Panel } = Collapse;
 
-const reloadPage = () => window.location.reload();
+const reloadPage = () => {
+  console.warn('[page-reload] requested from ErrorBoundary refresh button', {
+    href: window.location.href,
+  });
+  window.location.reload();
+};
 const openGithub = () =>
   window.open('https://github.com/kube-HPC/hkube/issues');
 
