@@ -10,6 +10,7 @@ import { dateTimeDefaultVar } from 'cache';
 
 const AUTO_SAVE_SECTIONS = new Set(['theme', 'scoopIntervalHours']);
 const THEME_RELOAD_FLAG = 'hkubePreferencesThemeReload';
+const THEME_RELOAD_AFTER_SAVE_FLAG = 'hkubeThemeReloadAfterSave';
 
 const migrateFromLocalStorage = () => {
   const migrated = {};
@@ -122,7 +123,7 @@ const preferencesMiddleware =
 
     // On local preference updates, sync to localStorage as fallback
     if (action.type === updatePreferenceLocal.type) {
-      const { section, value } = action.payload;
+      const { section, value, reloadAfterSave } = action.payload;
       syncToLocalStorage(section, value);
 
       // Auto-save theme and scoop interval; skip until prefs are loaded to avoid
@@ -130,6 +131,9 @@ const preferencesMiddleware =
       if (AUTO_SAVE_SECTIONS.has(section)) {
         const { data, lastSavedTables, loaded } = getState().preferences;
         if (loaded) {
+          if (section === 'theme' && reloadAfterSave) {
+            sessionStorage.setItem(THEME_RELOAD_AFTER_SAVE_FLAG, value);
+          }
           dispatch(
             savePreferences({
               theme: data.theme,
@@ -139,6 +143,28 @@ const preferencesMiddleware =
           );
         }
       }
+    }
+
+    if (
+      action.type === `${AT.PREFERENCES_SAVE}_SUCCESS` &&
+      sessionStorage.getItem(THEME_RELOAD_AFTER_SAVE_FLAG)
+    ) {
+      const currentTheme = getState().preferences.data.theme;
+      const expectedTheme = sessionStorage.getItem(
+        THEME_RELOAD_AFTER_SAVE_FLAG
+      );
+      const savedTheme = action.payload?.theme ?? currentTheme;
+      if (savedTheme === expectedTheme && currentTheme === expectedTheme) {
+        sessionStorage.removeItem(THEME_RELOAD_AFTER_SAVE_FLAG);
+        window.location.reload();
+      }
+    }
+
+    if (
+      action.type === `${AT.PREFERENCES_SAVE}_REJECT` &&
+      sessionStorage.getItem(THEME_RELOAD_AFTER_SAVE_FLAG)
+    ) {
+      sessionStorage.removeItem(THEME_RELOAD_AFTER_SAVE_FLAG);
     }
 
     // On reset success, restore localStorage and reactive vars to defaults

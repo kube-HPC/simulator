@@ -1,13 +1,11 @@
-import { useCallback, useState, useRef } from 'react';
+import { useCallback, useState } from 'react';
 import { THEMES_NAMES, LOCAL_STORAGE_KEYS } from 'const';
 import { useDispatch } from 'react-redux';
 import { updatePreferenceLocal } from 'reducers/preferences.reducer';
 
 import { createStore } from 'reusable';
-import { useNavigate } from 'react-router';
 
 const useSiteThemeMode = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   // get state theme from user local storage
@@ -20,7 +18,6 @@ const useSiteThemeMode = () => {
 
   // set if is state dark mode
   const [themeName, setThemeName] = useState(getTheme());
-  const refContainer = useRef(0);
 
   const setTheme = useCallback(
     nameTheme => {
@@ -29,15 +26,15 @@ const useSiteThemeMode = () => {
         nameTheme
       );
       setThemeName(nameTheme);
-      // Update preferences (local only — saved when user clicks Save Preferences)
-      dispatch(updatePreferenceLocal({ section: 'theme', value: nameTheme }));
-      // reloads the page after change theme.
-      if (refContainer.current > 0) navigate(0);
-      else {
-        refContainer.current = 1;
-      }
+      dispatch(
+        updatePreferenceLocal({
+          section: 'theme',
+          value: nameTheme,
+          reloadAfterSave: true,
+        })
+      );
     },
-    [navigate, dispatch]
+    [dispatch]
   );
 
   // toggle switch between lights out and light
