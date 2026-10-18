@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { BugOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { Button, Empty, Tooltip } from 'antd';
+import IDProvider from 'IDProvider';
 import { FlexBox, JsonSwitch } from 'components/common';
 import { useActions } from 'hooks';
 import { useAlgorithmByVersion } from 'hooks/graphql';
@@ -73,22 +74,26 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug = false }) => {
   const extra = node ? (
     <FlexBox.Auto>
       <Tooltip title={`Run from node ${node.nodeName}`}>
-        <Button
-          key="run-node"
-          variant="outlined"
-          onClick={onRunNode}
-          icon={<PlayCircleOutlined />}
-          disabled={isDisabledBtnRunDebug}
-        />
+        <IDProvider dataTestId="jobs-run-node" testIdSuffix={node.nodeName}>
+          <Button
+            key="run-node"
+            variant="outlined"
+            onClick={onRunNode}
+            icon={<PlayCircleOutlined />}
+            disabled={isDisabledBtnRunDebug}
+          />
+        </IDProvider>
       </Tooltip>
       <Tooltip title={`Debug from node ${node.nodeName}`}>
-        <Button
-          key="debug-node"
-          variant="outlined"
-          onClick={onDebugNode}
-          icon={<BugOutlined />}
-          disabled={isDisabledBtnRunDebug}
-        />
+        <IDProvider dataTestId="jobs-debug-node" testIdSuffix={node.nodeName}>
+          <Button
+            key="debug-node"
+            variant="outlined"
+            onClick={onDebugNode}
+            icon={<BugOutlined />}
+            disabled={isDisabledBtnRunDebug}
+          />
+        </IDProvider>
       </Tooltip>
     </FlexBox.Auto>
   ) : null;
@@ -180,13 +185,15 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug = false }) => {
 
   return node ? (
     <ContainerTabs>
-      <TabsLog
-        activeKey={selectTabbyKind}
-        onChange={handleTabChange}
-        items={TabsItemsJson}
-        defaultActiveKey={selectTabbyKind}
-        tabBarExtraContent={extra}
-      />
+      <IDProvider dataTestId="jobs-node-details-tabs">
+        <TabsLog
+          activeKey={selectTabbyKind}
+          onChange={handleTabChange}
+          items={TabsItemsJson}
+          defaultActiveKey={selectTabbyKind}
+          tabBarExtraContent={extra}
+        />
+      </IDProvider>
     </ContainerTabs>
   ) : (
     <Empty />

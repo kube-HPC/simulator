@@ -1,4 +1,5 @@
 import React from 'react';
+import IDProvider from 'IDProvider';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Flex, Typography, Image } from 'antd';
@@ -32,31 +33,34 @@ const Id = _job => {
     <Flex>
       <Typography.Text>{jobID}</Typography.Text>
 
-      <TextLink
-        disabled={grafanaUrl === undefined}
-        onClick={grafanaUrl !== undefined ? openUrl(grafanaUrlFull) : null}>
-        <Image
-          title={
-            grafanaUrl !== undefined
-              ? 'Grafana Steaming Edges dashboard'
-              : 'No url Grafana'
-          }
+      <IDProvider dataTestId="jobs-open-grafana-dashboard">
+        <TextLink
           disabled={grafanaUrl === undefined}
-          preview={false}
-          style={
-            grafanaUrl !== undefined
-              ? {
-                  width: '15px',
-                  cursor: 'pointer',
-                }
-              : {
-                  width: '15px',
-                  filter: 'grayscale(100%)',
-                }
-          }
-          src={GRAFANA_ICON}
-        />
-      </TextLink>
+          onClick={grafanaUrl !== undefined ? openUrl(grafanaUrlFull) : null}
+        >
+          <Image
+            title={
+              grafanaUrl !== undefined
+                ? 'Grafana Steaming Edges dashboard'
+                : 'No url Grafana'
+            }
+            disabled={grafanaUrl === undefined}
+            preview={false}
+            style={
+              grafanaUrl !== undefined
+                ? {
+                    width: '15px',
+                    cursor: 'pointer',
+                  }
+                : {
+                    width: '15px',
+                    filter: 'grayscale(100%)',
+                  }
+            }
+            src={GRAFANA_ICON}
+          />
+        </TextLink>
+      </IDProvider>
     </Flex>
   );
 };

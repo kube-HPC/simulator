@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import IDProvider from 'IDProvider';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Space, Tooltip } from 'antd';
@@ -597,7 +598,8 @@ const TraceTimelineMinimap = ({
           $height={laneHeight}
           $showBorder={serviceIndex < serviceNames.length - 1}
           $isDark={isDark}
-          $borderColor={colors.borderLight}>
+          $borderColor={colors.borderLight}
+        >
           {laneHeight > 15 && (
             <ServiceLabel $isDark={isDark}>{serviceName}</ServiceLabel>
           )}
@@ -660,22 +662,28 @@ const TraceTimelineMinimap = ({
         <HeaderTitle $isDark={isDark}>Timeline Overview</HeaderTitle>
         <Space size="small">
           <Tooltip title="Service Lanes">
-            <MinimapButton
-              size="small"
-              type={viewMode === 'service-lanes' ? 'primary' : 'default'}
-              onClick={() => setViewMode('service-lanes')}
-              $isDark={isDark}>
-              Services
-            </MinimapButton>
+            <IDProvider dataTestId="jobs-trace-minimap-service-lanes">
+              <MinimapButton
+                size="small"
+                type={viewMode === 'service-lanes' ? 'primary' : 'default'}
+                onClick={() => setViewMode('service-lanes')}
+                $isDark={isDark}
+              >
+                Services
+              </MinimapButton>
+            </IDProvider>
           </Tooltip>
           <Tooltip title="Depth Lanes">
-            <MinimapButton
-              size="small"
-              type={viewMode === 'depth-lanes' ? 'primary' : 'default'}
-              onClick={() => setViewMode('depth-lanes')}
-              $isDark={isDark}>
-              Depth
-            </MinimapButton>
+            <IDProvider dataTestId="jobs-trace-minimap-depth-lanes">
+              <MinimapButton
+                size="small"
+                type={viewMode === 'depth-lanes' ? 'primary' : 'default'}
+                onClick={() => setViewMode('depth-lanes')}
+                $isDark={isDark}
+              >
+                Depth
+              </MinimapButton>
+            </IDProvider>
           </Tooltip>
         </Space>
       </HeaderSection>
@@ -687,80 +695,90 @@ const TraceTimelineMinimap = ({
       </TimeMarkersContainer>
 
       <MinimapWrapper $isDark={isDark}>
-        <MinimapCanvas
-          ref={containerRef}
-          onMouseMove={handleMouseMove}
-          onMouseDown={handleMouseDown}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseLeave}
-          role="button"
-          tabIndex={0}
-          aria-label="Timeline minimap - drag to select time range"
-          onKeyDown={e => {
-            if (e.key === 'Escape' && selection) {
-              clearSelection();
-            }
-          }}
-          $isDark={isDark}>
-          {viewMode === 'service-lanes' && renderServiceLanesView()}
-          {viewMode === 'depth-lanes' && renderDepthLanesView()}
+        <IDProvider dataTestId="jobs-trace-minimap-canvas">
+          <MinimapCanvas
+            ref={containerRef}
+            onMouseMove={handleMouseMove}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
+            role="button"
+            tabIndex={0}
+            aria-label="Timeline minimap - drag to select time range"
+            onKeyDown={e => {
+              if (e.key === 'Escape' && selection) {
+                clearSelection();
+              }
+            }}
+            $isDark={isDark}
+          >
+            {viewMode === 'service-lanes' && renderServiceLanesView()}
+            {viewMode === 'depth-lanes' && renderDepthLanesView()}
 
-          {selection && (
-            <SelectionOverlay
-              $left={selection.start}
-              $width={selection.end - selection.start}
-              $isDark={isDark}
-            />
-          )}
+            {selection && (
+              <SelectionOverlay
+                $left={selection.start}
+                $width={selection.end - selection.start}
+                $isDark={isDark}
+              />
+            )}
 
-          {hoveredPosition !== null && !isDragging && (
-            <>
-              <HoverLine $left={hoveredPosition} $isDark={isDark} />
-              {hoveredSpan && (
-                <HoverTooltip
-                  $left={Math.min(hoveredPosition, 85)}
-                  $alignRight={hoveredPosition > 85}
-                  $isDark={isDark}>
-                  <TooltipServiceName $isDark={isDark}>
-                    {hoveredSpan.serviceName}
-                  </TooltipServiceName>
-                  <TooltipOperation>
-                    {hoveredSpan.operationName}
-                  </TooltipOperation>
-                  <TooltipDuration $isDark={isDark}>
-                    {formatDuration(hoveredSpan.duration)}
-                  </TooltipDuration>
-                </HoverTooltip>
-              )}
-            </>
-          )}
-        </MinimapCanvas>
+            {hoveredPosition !== null && !isDragging && (
+              <>
+                <HoverLine $left={hoveredPosition} $isDark={isDark} />
+                {hoveredSpan && (
+                  <HoverTooltip
+                    $left={Math.min(hoveredPosition, 85)}
+                    $alignRight={hoveredPosition > 85}
+                    $isDark={isDark}
+                  >
+                    <TooltipServiceName $isDark={isDark}>
+                      {hoveredSpan.serviceName}
+                    </TooltipServiceName>
+                    <TooltipOperation>
+                      {hoveredSpan.operationName}
+                    </TooltipOperation>
+                    <TooltipDuration $isDark={isDark}>
+                      {formatDuration(hoveredSpan.duration)}
+                    </TooltipDuration>
+                  </HoverTooltip>
+                )}
+              </>
+            )}
+          </MinimapCanvas>
+        </IDProvider>
       </MinimapWrapper>
 
       {/* ── Mode toggle bar ────────────────────────────────────────────── */}
       <ModeToggleBar $isDark={isDark}>
         <ModeLabel $isDark={isDark}>Drag selection mode:</ModeLabel>
         <Tooltip title="All spans stay visible. Matching spans get a highlight band and the list scrolls to the first match.">
-          <ModeButton
-            size="small"
-            $active={minimapMode === 'highlight'}
-            $modeType="highlight"
-            $isDark={isDark}
-            icon={<HighlightOutlined />}
-            onClick={() => onModeChange('highlight')}>
-            Highlight
-          </ModeButton>
+          <IDProvider dataTestId="jobs-trace-minimap-highlight-mode">
+            <ModeButton
+              size="small"
+              $active={minimapMode === 'highlight'}
+              $modeType="highlight"
+              $isDark={isDark}
+              icon={<HighlightOutlined />}
+              onClick={() => onModeChange('highlight')}
+            >
+              Highlight
+            </ModeButton>
+          </IDProvider>
         </Tooltip>
         <Tooltip title="Only spans inside the selected window are shown.">
-          <ModeButton
-            size="small"
-            $active={minimapMode === 'selection'}
-            $modeType="selection"
-            $isDark={isDark}
-            icon={<FilterOutlined />}
-            onClick={() => onModeChange('selection')}>
-            Selection
-          </ModeButton>
+          <IDProvider dataTestId="jobs-trace-minimap-selection-mode">
+            <ModeButton
+              size="small"
+              $active={minimapMode === 'selection'}
+              $modeType="selection"
+              $isDark={isDark}
+              icon={<FilterOutlined />}
+              onClick={() => onModeChange('selection')}
+            >
+              Selection
+            </ModeButton>
+          </IDProvider>
         </Tooltip>
       </ModeToggleBar>
       {/* ────────────────────────────────────────────────────────────────── */}
@@ -784,14 +802,17 @@ const TraceTimelineMinimap = ({
               {bannerModeLabel}
             </ModeBadge>
           </span>
-          <StyledButton
-            size="small"
-            danger
-            icon={<ReloadOutlined />}
-            onClick={clearSelection}
-            $isDark={isDark}>
-            Clear
-          </StyledButton>
+          <IDProvider dataTestId="jobs-trace-minimap-clear-selection">
+            <StyledButton
+              size="small"
+              danger
+              icon={<ReloadOutlined />}
+              onClick={clearSelection}
+              $isDark={isDark}
+            >
+              Clear
+            </StyledButton>
+          </IDProvider>
         </SelectionBanner>
       )}
     </MinimapContainer>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import IDProvider from 'IDProvider';
 import PropTypes from 'prop-types';
 import { Space, Tooltip, Checkbox } from 'antd';
 import {
@@ -78,30 +79,37 @@ const SpanRowMainRow = ({
       $isHovered={isHovered}
       $isDark={isDark}
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}>
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <RowContent>
         {showZoomColumn && (
           <ZoomCell $isDark={isDark}>
             {enableZoom && depth === 0 && (
               <Tooltip title="Open subtree in fullscreen">
-                <ActionIcon
-                  role="button"
-                  tabIndex={0}
-                  $isDark={isDark}
-                  onClick={event => {
-                    event.stopPropagation();
-                    onZoom(span.spanID);
-                  }}
-                  onKeyDown={event => {
-                    if (event.key !== 'Enter' && event.key !== ' ') {
-                      return;
-                    }
-                    event.preventDefault();
-                    event.stopPropagation();
-                    onZoom(span.spanID);
-                  }}>
-                  <ExpandOutlined />
-                </ActionIcon>
+                <IDProvider
+                  dataTestId="jobs-trace-zoom-span"
+                  testIdSuffix={span.spanID}
+                >
+                  <ActionIcon
+                    role="button"
+                    tabIndex={0}
+                    $isDark={isDark}
+                    onClick={event => {
+                      event.stopPropagation();
+                      onZoom(span.spanID);
+                    }}
+                    onKeyDown={event => {
+                      if (event.key !== 'Enter' && event.key !== ' ') {
+                        return;
+                      }
+                      event.preventDefault();
+                      event.stopPropagation();
+                      onZoom(span.spanID);
+                    }}
+                  >
+                    <ExpandOutlined />
+                  </ActionIcon>
+                </IDProvider>
               </Tooltip>
             )}
           </ZoomCell>
@@ -109,14 +117,19 @@ const SpanRowMainRow = ({
 
         <RootCheckboxCell $isDark={isDark}>
           {depth === 0 && (
-            <Checkbox
-              checked={isRootSelected}
-              onClick={event => event.stopPropagation()}
-              onChange={event => {
-                event.stopPropagation();
-                onRootSelectionChange(span.spanID, event.target.checked);
-              }}
-            />
+            <IDProvider
+              dataTestId="jobs-trace-select-root"
+              testIdSuffix={span.spanID}
+            >
+              <Checkbox
+                checked={isRootSelected}
+                onClick={event => event.stopPropagation()}
+                onChange={event => {
+                  event.stopPropagation();
+                  onRootSelectionChange(span.spanID, event.target.checked);
+                }}
+              />
+            </IDProvider>
           )}
         </RootCheckboxCell>
 
@@ -124,58 +137,72 @@ const SpanRowMainRow = ({
           $isHovered={isHovered}
           $depth={depth}
           $rowHeight={rowHeight}
-          $isDark={isDark}>
-          <SpanNameContent
-            onClick={() => onToggle(span.spanID)}
-            onKeyDown={event => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                onToggle(span.spanID);
-              }
-            }}
-            role="button"
-            tabIndex={0}>
-            {hasChildren && (
-              <ExpandButton
-                type="text"
-                size="small"
-                icon={
-                  isChildrenVisible ? (
-                    <CaretDownOutlined />
-                  ) : (
-                    <CaretRightOutlined />
-                  )
+          $isDark={isDark}
+        >
+          <IDProvider
+            dataTestId="jobs-trace-span-details"
+            testIdSuffix={span.spanID}
+          >
+            <SpanNameContent
+              onClick={() => onToggle(span.spanID)}
+              onKeyDown={event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  onToggle(span.spanID);
                 }
-                onClick={event => {
-                  event.stopPropagation();
-                  onToggleChildren(span.spanID);
-                }}
-                $isDark={isDark}
-              />
-            )}
-            {!hasChildren && <Spacer />}
+              }}
+              role="button"
+              tabIndex={0}
+            >
+              {hasChildren && (
+                <IDProvider
+                  dataTestId="jobs-trace-toggle-span-children"
+                  testIdSuffix={span.spanID}
+                >
+                  <ExpandButton
+                    type="text"
+                    size="small"
+                    icon={
+                      isChildrenVisible ? (
+                        <CaretDownOutlined />
+                      ) : (
+                        <CaretRightOutlined />
+                      )
+                    }
+                    onClick={event => {
+                      event.stopPropagation();
+                      onToggleChildren(span.spanID);
+                    }}
+                    $isDark={isDark}
+                  />
+                </IDProvider>
+              )}
+              {!hasChildren && <Spacer />}
 
-            <SpanInfo>
-              <ServiceTag $color={color} $isDark={isDark}>
-                {serviceName}
-              </ServiceTag>
-              <OperationText type="secondary" $isDark={isDark}>
-                {span.operationName}
-              </OperationText>
-            </SpanInfo>
-          </SpanNameContent>
+              <SpanInfo>
+                <ServiceTag $color={color} $isDark={isDark}>
+                  {serviceName}
+                </ServiceTag>
+                <OperationText type="secondary" $isDark={isDark}>
+                  {span.operationName}
+                </OperationText>
+              </SpanInfo>
+            </SpanNameContent>
+          </IDProvider>
         </SpanNameWrapper>
 
         <SpanBarContainer
           onMouseEnter={() => setIsTimelineHovered(true)}
           onMouseLeave={() => setIsTimelineHovered(false)}
           $rowHeight={rowHeight}
-          $isDark={isDark}>
+          $isDark={isDark}
+        >
           <SpanBarTrack $isDark={isDark} $rowHeight={rowHeight}>
             <SpanBar $left={relativeStart} $width={width} $color={color} />
             <DurationLabel
               $left={relativeStart}
               $width={width}
-              $isDark={isDark}>
+              $isDark={isDark}
+            >
               {formatDuration(span.duration)}
             </DurationLabel>
 
@@ -183,7 +210,8 @@ const SpanRowMainRow = ({
               <HoverTooltip
                 $left={relativeStart}
                 $width={width}
-                $isDark={isDark}>
+                $isDark={isDark}
+              >
                 <TooltipServiceName $isDark={isDark}>
                   {serviceName}
                 </TooltipServiceName>
@@ -215,43 +243,50 @@ const SpanRowMainRow = ({
                 canOpenLogs
                   ? `Open logs (${taskId})`
                   : 'TaskId or podName is missing for this step'
-              }>
-              <ActionIcon
-                role="button"
-                tabIndex={canOpenLogs ? 0 : -1}
-                aria-disabled={!canOpenLogs}
-                $isDark={isDark}
-                $disabled={!canOpenLogs}
-                onClick={event => {
-                  event.stopPropagation();
-                  if (!canOpenLogs) {
-                    return;
-                  }
-                  onOpenLogs({
-                    taskId,
-                    podName,
-                    nodeKind,
-                    spanId: span.spanID,
-                  });
-                }}
-                onKeyDown={event => {
-                  if (event.key !== 'Enter' && event.key !== ' ') {
-                    return;
-                  }
-                  event.preventDefault();
-                  event.stopPropagation();
-                  if (!canOpenLogs) {
-                    return;
-                  }
-                  onOpenLogs({
-                    taskId,
-                    podName,
-                    nodeKind,
-                    spanId: span.spanID,
-                  });
-                }}>
-                <LogsIcon />
-              </ActionIcon>
+              }
+            >
+              <IDProvider
+                dataTestId="jobs-trace-open-span-logs"
+                testIdSuffix={span.spanID}
+              >
+                <ActionIcon
+                  role="button"
+                  tabIndex={canOpenLogs ? 0 : -1}
+                  aria-disabled={!canOpenLogs}
+                  $isDark={isDark}
+                  $disabled={!canOpenLogs}
+                  onClick={event => {
+                    event.stopPropagation();
+                    if (!canOpenLogs) {
+                      return;
+                    }
+                    onOpenLogs({
+                      taskId,
+                      podName,
+                      nodeKind,
+                      spanId: span.spanID,
+                    });
+                  }}
+                  onKeyDown={event => {
+                    if (event.key !== 'Enter' && event.key !== ' ') {
+                      return;
+                    }
+                    event.preventDefault();
+                    event.stopPropagation();
+                    if (!canOpenLogs) {
+                      return;
+                    }
+                    onOpenLogs({
+                      taskId,
+                      podName,
+                      nodeKind,
+                      spanId: span.spanID,
+                    });
+                  }}
+                >
+                  <LogsIcon />
+                </ActionIcon>
+              </IDProvider>
             </Tooltip>
           )}
 
@@ -261,41 +296,48 @@ const SpanRowMainRow = ({
                 canOpenKibana
                   ? 'Open in Kibana'
                   : 'Kibana URL or taskId is missing'
-              }>
-              <ActionIcon
-                role="button"
-                tabIndex={canOpenKibana ? 0 : -1}
-                aria-disabled={!canOpenKibana}
-                $isDark={isDark}
-                $disabled={!canOpenKibana}
-                onClick={event => {
-                  event.stopPropagation();
-                  if (!canOpenKibana) {
-                    return;
-                  }
-                  onOpenKibana({
-                    taskId,
-                    startTime: span.startTime,
-                  });
-                }}
-                onKeyDown={event => {
-                  if (event.key !== 'Enter' && event.key !== ' ') {
-                    return;
-                  }
-                  event.preventDefault();
-                  event.stopPropagation();
-                  if (!canOpenKibana) {
-                    return;
-                  }
-                  onOpenKibana({
-                    taskId,
-                    startTime: span.startTime,
-                  });
-                }}>
-                <KibanaIconWrap>
-                  <IconKibana />
-                </KibanaIconWrap>
-              </ActionIcon>
+              }
+            >
+              <IDProvider
+                dataTestId="jobs-trace-open-span-kibana"
+                testIdSuffix={span.spanID}
+              >
+                <ActionIcon
+                  role="button"
+                  tabIndex={canOpenKibana ? 0 : -1}
+                  aria-disabled={!canOpenKibana}
+                  $isDark={isDark}
+                  $disabled={!canOpenKibana}
+                  onClick={event => {
+                    event.stopPropagation();
+                    if (!canOpenKibana) {
+                      return;
+                    }
+                    onOpenKibana({
+                      taskId,
+                      startTime: span.startTime,
+                    });
+                  }}
+                  onKeyDown={event => {
+                    if (event.key !== 'Enter' && event.key !== ' ') {
+                      return;
+                    }
+                    event.preventDefault();
+                    event.stopPropagation();
+                    if (!canOpenKibana) {
+                      return;
+                    }
+                    onOpenKibana({
+                      taskId,
+                      startTime: span.startTime,
+                    });
+                  }}
+                >
+                  <KibanaIconWrap>
+                    <IconKibana />
+                  </KibanaIconWrap>
+                </ActionIcon>
+              </IDProvider>
             </Tooltip>
           )}
         </LogsActions>

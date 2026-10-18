@@ -1,4 +1,5 @@
 import React from 'react';
+import IDProvider from 'IDProvider';
 import PropTypes from 'prop-types';
 import { Alert, Button, Modal, Spin } from 'antd';
 import { logModes } from '@hkube/consts';
@@ -26,38 +27,45 @@ const TraceLogsModal = ({ open, context, onClose }) => {
   });
 
   return (
-    <Modal
-      destroyOnHidden
-      width="60%"
-      open={open}
-      onCancel={onClose}
-      footer={
-        <Button type="primary" onClick={onClose}>
-          Close
-        </Button>
-      }
-      title={`Logs for Task ${taskId || 'N/A'}`}>
-      <div style={{ height: MODAL_BODY_HEIGHT }}>
-        {query.loading ? (
-          <Spin tip="Loading logs..." />
-        ) : query.error ? (
-          <Alert
-            type="error"
-            message="Failed to load logs"
-            description={query.error.message}
-            showIcon
-          />
-        ) : (
-          <div style={{ height: '95%' }}>
-            <LogsViewer
-              dataSource={logs}
-              id={`${spanId}-${taskId}`}
-              emptyDescription="No logs for this step"
-            />
+    <IDProvider dataTestId="jobs-trace-logs-modal">
+      <Modal
+        destroyOnHidden
+        width="60%"
+        open={open}
+        onCancel={onClose}
+        footer={
+          <IDProvider dataTestId="jobs-trace-logs-close">
+            <Button type="primary" onClick={onClose}>
+              Close
+            </Button>
+          </IDProvider>
+        }
+        title={`Logs for Task ${taskId || 'N/A'}`}
+      >
+        <IDProvider dataTestId="jobs-trace-logs-viewer">
+          <div style={{ height: MODAL_BODY_HEIGHT }}>
+            {query.loading ? (
+              <Spin tip="Loading logs..." />
+            ) : query.error ? (
+              <Alert
+                type="error"
+                message="Failed to load logs"
+                description={query.error.message}
+                showIcon
+              />
+            ) : (
+              <div style={{ height: '95%' }}>
+                <LogsViewer
+                  dataSource={logs}
+                  id={`${spanId}-${taskId}`}
+                  emptyDescription="No logs for this step"
+                />
+              </div>
+            )}
           </div>
-        )}
-      </div>
-    </Modal>
+        </IDProvider>
+      </Modal>
+    </IDProvider>
   );
 };
 

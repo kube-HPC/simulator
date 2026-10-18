@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import dayjs from 'dayjs';
 import { Form, Tooltip } from 'antd';
+import IDProvider from 'IDProvider';
 import { UserOutlined } from '@ant-design/icons';
 import KeycloakServices from 'keycloak/keycloakServices';
 import PropTypes from 'prop-types';
@@ -183,7 +184,8 @@ const QueryForm = ({
       form={form}
       size="medium"
       onFinish={onFinish}
-      spacearound={0}>
+      spacearound={0}
+    >
       <Form.Item label="Time" name="time">
         <RangePickerNow
           isDisabled={isPinActiveJobs}
@@ -241,10 +243,12 @@ const QueryForm = ({
             Submit={SubmitForm}
             suffix={
               <Tooltip title="Click To Filter Yor User">
-                <UserOutlined
-                  style={{ color: 'rgba(0,0,0,.45)' }}
-                  onClick={FilterByMyUserName}
-                />
+                <IDProvider dataTestId="jobs-filter-by-current-user">
+                  <UserOutlined
+                    style={{ color: 'rgba(0,0,0,.45)' }}
+                    onClick={FilterByMyUserName}
+                  />
+                </IDProvider>
               </Tooltip>
             }
           />
