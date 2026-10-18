@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import IDProvider from 'IDProvider';
 import { taskStatuses as TASK_STATUS } from '@hkube/consts';
 import { removeNullUndefinedCleanDeep } from 'utils';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -133,15 +134,19 @@ const NodeInputOutput = ({
 
   const expandIcon = ({ expanded, onExpand, record }) =>
     expanded ? (
-      <DownOutlined
-        onClick={e => onExpand(record, e)}
-        data-testid="versions-table-expandable"
-      />
+      <IDProvider
+        dataTestId="jobs-collapse-task-details"
+        testIdSuffix={record.taskId}
+      >
+        <DownOutlined onClick={e => onExpand(record, e)} />
+      </IDProvider>
     ) : (
-      <RightOutlined
-        onClick={e => onExpand(record, e)}
-        data-testid="versions-table-expandable"
-      />
+      <IDProvider
+        dataTestId="jobs-expand-task-details"
+        testIdSuffix={record.taskId}
+      >
+        <RightOutlined onClick={e => onExpand(record, e)} />
+      </IDProvider>
     );
 
   return (

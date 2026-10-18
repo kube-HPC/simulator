@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import IDProvider from 'IDProvider';
 import styled from 'styled-components';
 import { ReactComponent as FilterOutlined } from 'images/filter-filtering-icon.svg';
 import { ReactComponent as IconAddPipeline } from 'images/forward-arrow-icon.svg';
@@ -8,7 +9,7 @@ import { Ellipsis } from 'components/common';
 import { instanceFiltersVar } from 'cache';
 import PropTypes from 'prop-types';
 import { useReactiveVar } from '@apollo/client';
-import { COLOR, Styles } from 'styles';
+import { Styles } from 'styles';
 
 import usePathPipeline from './../Pipelines/usePath';
 
@@ -36,6 +37,11 @@ const IconsContainer = styled.div`
   justify-content: flex-end;
 `;
 
+const SpanIcons = styled.span`
+  display: inline-flex;
+  align-items: center;
+`;
+
 const PipelineNameActions = ({ pipeline }) => {
   const { goTo: goToPipeline } = usePathPipeline();
   const instanceFilters = useReactiveVar(instanceFiltersVar);
@@ -45,7 +51,7 @@ const PipelineNameActions = ({ pipeline }) => {
       ...instanceFilters,
       jobs: {
         ...instanceFilters.jobs,
-        pipelineName: pipelineName,
+        pipelineName,
       },
     });
   };
@@ -65,14 +71,24 @@ const PipelineNameActions = ({ pipeline }) => {
       <IconsContainer className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
         {pipeline.pipeline.types.includes('stored') && (
           <Tooltip title={`edit pipeline ${pipeline.pipeline.name}`}>
-            <IconAddPipeline style={iconSize} onClick={editByPipelineID} />
+            <IDProvider
+              dataTestId={`editPipelineOutlined-${pipeline.pipeline.name}`}>
+              <SpanIcons>
+                <IconAddPipeline style={iconSize} onClick={editByPipelineID} />
+              </SpanIcons>
+            </IDProvider>
           </Tooltip>
         )}
         <Tooltip title={`filter jobs by pipeline ${pipeline.pipeline.name}`}>
-          <FilterOutlined
-            style={iconSize}
-            onClick={() => filterByPipeline(pipeline.pipeline.name)}
-          />
+          <IDProvider
+            dataTestId={`filterJobsByPipeline-${pipeline.pipeline.name}`}>
+            <SpanIcons>
+              <FilterOutlined
+                style={iconSize}
+                onClick={() => filterByPipeline(pipeline.pipeline.name)}
+              />
+            </SpanIcons>
+          </IDProvider>
         </Tooltip>
       </IconsContainer>
     </PipelineNameContainer>

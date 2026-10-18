@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { RedoOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
+import IDProvider from 'IDProvider';
 import { JsonSwitch } from 'components/common';
 import { useTraceData } from 'hooks';
 import { OVERVIEW_JOB_TABS } from 'const';
@@ -46,9 +47,11 @@ const JobInfo = ({ job }) => {
   );
 
   const refreshButton = currentTab === OVERVIEW_JOB_TABS.TRACE && (
-    <Button onClick={fetchJobTrace} icon={<RedoOutlined />}>
-      Refresh
-    </Button>
+    <IDProvider dataTestId="jobs-trace-refresh">
+      <Button onClick={fetchJobTrace} icon={<RedoOutlined />}>
+        Refresh
+      </Button>
+    </IDProvider>
   );
 
   useEffect(() => {
@@ -104,14 +107,16 @@ const JobInfo = ({ job }) => {
   );
 
   return (
-    <Tabs
-      items={TabsItemsJson}
-      tabPlacement="left"
-      animated={tabsAnimation}
-      activeKey={currentTab}
-      tabBarExtraContent={refreshButton}
-      onChange={setCurrentTab}
-    />
+    <IDProvider dataTestId="jobs-overview-tabs">
+      <Tabs
+        items={TabsItemsJson}
+        tabPlacement="left"
+        animated={tabsAnimation}
+        activeKey={currentTab}
+        tabBarExtraContent={refreshButton}
+        onChange={setCurrentTab}
+      />
+    </IDProvider>
   );
 };
 

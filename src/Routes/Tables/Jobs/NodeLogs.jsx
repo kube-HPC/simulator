@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import IDProvider from 'IDProvider';
 import { useSelector } from 'react-redux';
 import { selectors } from 'reducers';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -262,19 +263,23 @@ const NodeLogs = ({
                 content={NodeInputOutputTable}
                 trigger="click"
                 open={openPopupOverListTasks}
-                onOpenChange={setOpenPopupOverListTasks}>
-                <Button
-                  style={{
-                    width: '150px',
-                    justifyContent:
-                      taskDetails.length < 2 ? 'start' : 'space-between',
-                    color: COLOR_TASK_STATUS[oTask.status || node.status],
-                  }}
-                  shape="round"
-                  icon={taskDetails.length < 2 ? '' : <DownOutlined />}
-                  disabled={taskDetails.length < 2}>
-                  {currentTask || 'Select an item'}
-                </Button>
+                onOpenChange={setOpenPopupOverListTasks}
+              >
+                <IDProvider dataTestId="jobs-log-task-selector">
+                  <Button
+                    style={{
+                      width: '150px',
+                      justifyContent:
+                        taskDetails.length < 2 ? 'start' : 'space-between',
+                      color: COLOR_TASK_STATUS[oTask.status || node.status],
+                    }}
+                    shape="round"
+                    icon={taskDetails.length < 2 ? '' : <DownOutlined />}
+                    disabled={taskDetails.length < 2}
+                  >
+                    {currentTask || 'Select an item'}
+                  </Button>
+                </IDProvider>
               </Popover>
             </Tooltip>
           </FlexBox.Item>
@@ -282,7 +287,9 @@ const NodeLogs = ({
           <FlexBox.Item>
             <CopyToClipboard text={currentTask} onCopy={onCopy}>
               <Tooltip title="Copy Task ID to Clipboard">
-                <Button icon={<CopyOutlined />} />
+                <IDProvider dataTestId="jobs-copy-log-task-id">
+                  <Button icon={<CopyOutlined />} />
+                </IDProvider>
               </Tooltip>
             </CopyToClipboard>
           </FlexBox.Item>
@@ -292,14 +299,16 @@ const NodeLogs = ({
               Source :
             </Typography.Text>
 
-            <SelectStyle
-              disabled={
-                isStatusFailedSchedulingTask || isStatusFailedScheduling
-              }
-              defaultValue={logModes.ALGORITHM}
-              onChange={handleChangeSelect}
-              options={optionsLogModes}
-            />
+            <IDProvider dataTestId="jobs-log-source-selector">
+              <SelectStyle
+                disabled={
+                  isStatusFailedSchedulingTask || isStatusFailedScheduling
+                }
+                defaultValue={logModes.ALGORITHM}
+                onChange={handleChangeSelect}
+                options={optionsLogModes}
+              />
+            </IDProvider>
           </FlexBox.Item>
         </FlexBox>
       </FiltersPanel>
@@ -308,43 +317,53 @@ const NodeLogs = ({
         {!isStatusFailedSchedulingTask ? (
           <Row justify="start" align="middle">
             <Col span={7}>
-              <Radio.Group
-                value={sourceLogs}
-                onChange={e => setSourceLogs(e.target.value)}
-                optionType="button"
-                buttonStyle="solid"
-                options={optionsSourceLogs}
-              />
+              <IDProvider dataTestId="jobs-log-storage-source">
+                <Radio.Group
+                  value={sourceLogs}
+                  onChange={e => setSourceLogs(e.target.value)}
+                  optionType="button"
+                  buttonStyle="solid"
+                  options={optionsSourceLogs}
+                />
+              </IDProvider>
             </Col>
 
             {sourceLogs === 'es' && (
               <>
                 <Col>
-                  <Input
-                    placeholder="Search Logs"
-                    onChange={handleSearchWord}
-                  />
+                  <IDProvider dataTestId="jobs-search-logs">
+                    <Input
+                      placeholder="Search Logs"
+                      onChange={handleSearchWord}
+                    />
+                  </IDProvider>
                 </Col>
                 <Col span={1}>
                   <LinkOutlined style={{ marginLeft: 7 }} />
                 </Col>
                 <Col span={2}>
-                  <Button
-                    title="Search in Kibana"
-                    disabled={!linkKibana}
-                    onClick={() => window.open(linkKibana)}>
-                    <IconKibana />
-                  </Button>
+                  <IDProvider dataTestId="jobs-search-logs-in-kibana">
+                    <Button
+                      title="Search in Kibana"
+                      disabled={!linkKibana}
+                      onClick={() => window.open(linkKibana)}
+                    >
+                      <IconKibana />
+                    </Button>
+                  </IDProvider>
                 </Col>
               </>
             )}
 
             <Col style={{ marginLeft: 'auto', marginRight: 20 }}>
-              <Button
-                disabled={logs.length === 0}
-                onClick={() => downloadLogsAsText(`TaskID_${taskId}`)}>
-                <DownloadOutlined />
-              </Button>
+              <IDProvider dataTestId="jobs-download-logs">
+                <Button
+                  disabled={logs.length === 0}
+                  onClick={() => downloadLogsAsText(`TaskID_${taskId}`)}
+                >
+                  <DownloadOutlined />
+                </Button>
+              </IDProvider>
             </Col>
           </Row>
         ) : (
@@ -380,21 +399,23 @@ const NodeLogs = ({
       </Typography.Text>
 
       {!isStatusFailedSchedulingTask && (
-        <Container>
-          {isLoadLog ? (
-            <Spin indicator={<LoadingOutlined />} />
-          ) : (
-            <LogsViewer
-              dataSource={logs.length > 0 ? logs : logErrorNode}
-              id={node?.nodeName ?? ''}
-              emptyDescription={
-                logMode === logModes.ALGORITHM
-                  ? 'No algorithm logs'
-                  : 'No system logs'
-              }
-            />
-          )}
-        </Container>
+        <IDProvider dataTestId="jobs-logs-viewer">
+          <Container>
+            {isLoadLog ? (
+              <Spin indicator={<LoadingOutlined />} />
+            ) : (
+              <LogsViewer
+                dataSource={logs.length > 0 ? logs : logErrorNode}
+                id={node?.nodeName ?? ''}
+                emptyDescription={
+                  logMode === logModes.ALGORITHM
+                    ? 'No algorithm logs'
+                    : 'No system logs'
+                }
+              />
+            )}
+          </Container>
+        </IDProvider>
       )}
     </>
   );

@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import dayjs from 'dayjs';
 import { Form, Tooltip } from 'antd';
+import IDProvider from 'IDProvider';
 import { UserOutlined } from '@ant-design/icons';
 import KeycloakServices from 'keycloak/keycloakServices';
 import PropTypes from 'prop-types';
@@ -183,7 +184,8 @@ const QueryForm = ({
       form={form}
       size="medium"
       onFinish={onFinish}
-      spacearound={0}>
+      spacearound={0}
+    >
       <Form.Item label="Time" name="time">
         <RangePickerNow
           isDisabled={isPinActiveJobs}
@@ -194,6 +196,7 @@ const QueryForm = ({
 
       <Form.Item name="pipelineName">
         <AutoCompleteFloatingLabelInput
+          testId="pipelineName"
           isExactMatch
           label="Pipeline Name / Job ID"
           width="12vw"
@@ -205,6 +208,7 @@ const QueryForm = ({
 
       <Form.Item name="algorithmName">
         <AutoCompleteFloatingLabelInput
+          testId="algorithmName"
           isExactMatch
           label="Algorithm Name"
           width="9vw"
@@ -216,6 +220,7 @@ const QueryForm = ({
 
       <Form.Item name="tags">
         <AutoCompleteFloatingLabelInput
+          testId="tags"
           isExactMatch
           label="Tag Name"
           width="9vw"
@@ -228,6 +233,7 @@ const QueryForm = ({
       {keycloakEnable && (
         <Form.Item name="user">
           <AutoCompleteFloatingLabelInput
+            testId="user"
             // isExactMatch
             // listIgnoreExactMatch={[KeycloakServices.getUsername()]}
             label="User"
@@ -237,10 +243,12 @@ const QueryForm = ({
             Submit={SubmitForm}
             suffix={
               <Tooltip title="Click To Filter Yor User">
-                <UserOutlined
-                  style={{ color: 'rgba(0,0,0,.45)' }}
-                  onClick={FilterByMyUserName}
-                />
+                <IDProvider dataTestId="jobs-filter-by-current-user">
+                  <UserOutlined
+                    style={{ color: 'rgba(0,0,0,.45)' }}
+                    onClick={FilterByMyUserName}
+                  />
+                </IDProvider>
               </Tooltip>
             }
           />
@@ -249,6 +257,7 @@ const QueryForm = ({
 
       <Form.Item name="pipelineStatus">
         <ButtonDropdown
+          testId="pipelineStatus"
           defaultLabel="active"
           options={pipelineStatusOptions}
           onButtonClick={onPinPipelineStatus}

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { DownOutlined, CloseCircleFilled } from '@ant-design/icons';
 import { Dropdown } from 'antd';
 import styled from 'styled-components';
+import IDProvider from 'IDProvider';
 
 const DropdownButtonStyle = styled(Dropdown.Button)`
   & > button {
@@ -32,7 +33,7 @@ const DropdownButtonStyle = styled(Dropdown.Button)`
 `;
 
 const ButtonDropdown = React.memo(
-  ({ options, defaultLabel, onButtonClick }) => {
+  ({ options, defaultLabel, onButtonClick, testId }) => {
     const [isButtonOn, setIsButtonOn] = useState(false);
     const [selected, setSelected] = useState(options[0]);
 
@@ -75,23 +76,26 @@ const ButtonDropdown = React.memo(
     }, [defaultLabel, options]);
 
     return (
-      <DropdownButtonStyle
-        icon={<DownOutlined />}
-        menu={menuProps}
-        onClick={handleButtonClick}
-        $bgColor={selected.color}
-        $isOn={isButtonOn}
-        type={isButtonOn ? '' : 'dashed'}>
-        {selected.label}
-        {isButtonOn ? (
-          <CloseCircleFilled style={{ fontSize: '12px', color: '#bbbbbb' }} />
-        ) : null}
-      </DropdownButtonStyle>
+      <IDProvider dataTestId={`buttonDropdown-${testId}`}>
+        <DropdownButtonStyle
+          icon={<DownOutlined />}
+          menu={menuProps}
+          onClick={handleButtonClick}
+          $bgColor={selected.color}
+          $isOn={isButtonOn}
+          type={isButtonOn ? '' : 'dashed'}>
+          {selected.label}
+          {isButtonOn ? (
+            <CloseCircleFilled style={{ fontSize: '12px', color: '#bbbbbb' }} />
+          ) : null}
+        </DropdownButtonStyle>
+      </IDProvider>
     );
   }
 );
 
 ButtonDropdown.propTypes = {
+  testId: PropTypes.string,
   options: PropTypes.arrayOf(
     PropTypes.shape({
       key: PropTypes.string.isRequired,

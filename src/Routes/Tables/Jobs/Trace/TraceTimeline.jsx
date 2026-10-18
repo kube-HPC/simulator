@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import IDProvider from 'IDProvider';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Space, Checkbox, Button, Tooltip } from 'antd';
@@ -148,34 +149,41 @@ const TraceTimeline = ({
           <ZoomColumn>
             {enableZoom && (
               <Tooltip title="Open full trace in fullscreen">
-                <ZoomButton
-                  type="text"
-                  size="small"
-                  icon={<ExpandOutlined />}
-                  onClick={onZoomAll}
-                />
+                <IDProvider dataTestId="jobs-trace-zoom-all">
+                  <ZoomButton
+                    type="text"
+                    size="small"
+                    icon={<ExpandOutlined />}
+                    onClick={onZoomAll}
+                  />
+                </IDProvider>
               </Tooltip>
             )}
           </ZoomColumn>
         )}
         <CheckboxColumn>
-          <Checkbox
-            checked={allRootsSelected}
-            indeterminate={rootsIndeterminate}
-            onChange={event => onToggleSelectAll(event.target.checked)}
-          />
+          <IDProvider dataTestId="jobs-trace-select-all-roots">
+            <Checkbox
+              checked={allRootsSelected}
+              indeterminate={rootsIndeterminate}
+              onChange={event => onToggleSelectAll(event.target.checked)}
+            />
+          </IDProvider>
         </CheckboxColumn>
         <ServiceColumn>
           <Space>
             <StyledIcon as={ApiOutlined} $isDark={isDark} />
             Service & Operation
           </Space>
-          <BulkToggleButton
-            size="small"
-            onClick={onBulkToggle}
-            disabled={isBulkToggleDisabled}>
-            {bulkToggleLabel}
-          </BulkToggleButton>
+          <IDProvider dataTestId="jobs-trace-toggle-all-spans">
+            <BulkToggleButton
+              size="small"
+              onClick={onBulkToggle}
+              disabled={isBulkToggleDisabled}
+            >
+              {bulkToggleLabel}
+            </BulkToggleButton>
+          </IDProvider>
         </ServiceColumn>
         <TimelineColumn>
           <Space>

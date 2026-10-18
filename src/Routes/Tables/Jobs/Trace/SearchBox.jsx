@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import IDProvider from 'IDProvider';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Input, Button, Tooltip } from 'antd';
@@ -96,23 +97,27 @@ const SearchBox = ({ searchTerm, onSearchChange }) => {
 
   return (
     <SearchContainer>
-      <StyledInput
-        placeholder="Search spans..."
-        value={searchTerm}
-        onChange={e => onSearchChange(e.target.value)}
-        prefix={<SearchOutlined />}
-        size="middle"
-        $isDark={isDark}
-      />
+      <IDProvider dataTestId="jobs-trace-search">
+        <StyledInput
+          placeholder="Search spans..."
+          value={searchTerm}
+          onChange={e => onSearchChange(e.target.value)}
+          prefix={<SearchOutlined />}
+          size="middle"
+          $isDark={isDark}
+        />
+      </IDProvider>
       {searchTerm && (
         <Tooltip title="Clear search">
-          <Button
-            type="primary"
-            danger
-            size="small"
-            icon={<CloseOutlined />}
-            onClick={clearSearch}
-          />
+          <IDProvider dataTestId="jobs-trace-clear-search">
+            <Button
+              type="primary"
+              danger
+              size="small"
+              icon={<CloseOutlined />}
+              onClick={clearSearch}
+            />
+          </IDProvider>
         </Tooltip>
       )}
     </SearchContainer>

@@ -6,6 +6,7 @@ import useQueryHook from 'hooks/useQuery';
 import { HKGrid, Card } from 'components/common';
 import { Collapse } from 'react-collapse';
 import { Divider } from 'antd';
+import IDProvider from 'IDProvider';
 import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
 import { USER_GUIDE } from 'const';
@@ -136,10 +137,12 @@ const JobsTable = () => {
       />
 
       {!filterToggeled && (
-        <CaretDownOutlinedCenter
-          title="Open Graph"
-          onClick={() => toggleCollapseGraph(true)}
-        />
+        <IDProvider dataTestId="jobs-open-graph">
+          <CaretDownOutlinedCenter
+            title="Open Graph"
+            onClick={() => toggleCollapseGraph(true)}
+          />
+        </IDProvider>
       )}
 
       <Collapse isOpened={filterToggeled || false}>
@@ -149,10 +152,12 @@ const JobsTable = () => {
               dataSource={dataSourceGraph}
               onZoom={debouncedZoomChanged}
             />
-            <CaretUpOutlinedCenter
-              title="Close Graph"
-              onClick={() => toggleCollapseGraph(false)}
-            />
+            <IDProvider dataTestId="jobs-close-graph">
+              <CaretUpOutlinedCenter
+                title="Close Graph"
+                onClick={() => toggleCollapseGraph(false)}
+              />
+            </IDProvider>
             <Divider />
           </>
         )}

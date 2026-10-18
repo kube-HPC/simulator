@@ -7,6 +7,7 @@ import React, {
   useRef,
 } from 'react';
 import PropTypes from 'prop-types';
+import IDProvider from 'IDProvider';
 import styled from 'styled-components';
 import { Empty, Slider, Button, Switch, Popconfirm, Spin } from 'antd';
 import { useDebounceCallback } from '@react-hook/debounce';
@@ -355,21 +356,24 @@ const GraphTab = ({ graph, pipeline }) => {
           zIndex: '1',
           alignItems: 'center',
           top: '8px',
-        }}>
-        <Slider
-          disabled={!isSwitchSlider}
-          tooltip={{
-            formatter: value =>
-              `Space between nodes:  ${calculatePercentage(value, 70, 200)}%`,
-          }}
-          onChange={onChangeSliderDebounce}
-          defaultValue={nodeSpacing.current}
-          min={70}
-          max={200}
-          style={{
-            width: '300px',
-          }}
-        />
+        }}
+      >
+        <IDProvider dataTestId="jobs-graph-node-spacing">
+          <Slider
+            disabled={!isSwitchSlider}
+            tooltip={{
+              formatter: value =>
+                `Space between nodes:  ${calculatePercentage(value, 70, 200)}%`,
+            }}
+            onChange={onChangeSliderDebounce}
+            defaultValue={nodeSpacing.current}
+            min={70}
+            max={200}
+            style={{
+              width: '300px',
+            }}
+          />
+        </IDProvider>
         <Popconfirm
           styles={{
             root: {
@@ -382,8 +386,11 @@ const GraphTab = ({ graph, pipeline }) => {
           onConfirm={() => onChangeSwitchSlider(true)}
           okText="Yes"
           cancelText="No"
-          disabled={isSwitchSlider}>
-          <Switch checked={isSwitchSlider} size="small" />
+          disabled={isSwitchSlider}
+        >
+          <IDProvider dataTestId="jobs-graph-node-spacing-toggle">
+            <Switch checked={isSwitchSlider} size="small" />
+          </IDProvider>
         </Popconfirm>
       </FlexContainer>
 
@@ -392,21 +399,30 @@ const GraphTab = ({ graph, pipeline }) => {
           pointerEvents: `all`,
           maxWidth: `100%`,
           flex: '1',
-        }}>
+        }}
+      >
         <ButtonsPanel>
-          <Button
-            onClick={handleSelectDirection}
-            icon={
-              graphDirection !== GRAPH_DIRECTION.LeftToRight ? (
-                <DoubleRightOutlined rotate={90} />
-              ) : (
-                <DoubleRightOutlined />
-              )
-            }
-          />
-          <Button onClick={handleZoomNodeSelected} icon={<AimOutlined />} />
-          <Button onClick={handleZoomIn} icon={<ZoomInOutlined />} />
-          <Button onClick={handleZoomOut} icon={<ZoomOutOutlined />} />
+          <IDProvider dataTestId="jobs-graph-toggle-direction">
+            <Button
+              onClick={handleSelectDirection}
+              icon={
+                graphDirection !== GRAPH_DIRECTION.LeftToRight ? (
+                  <DoubleRightOutlined rotate={90} />
+                ) : (
+                  <DoubleRightOutlined />
+                )
+              }
+            />
+          </IDProvider>
+          <IDProvider dataTestId="jobs-graph-zoom-to-selection">
+            <Button onClick={handleZoomNodeSelected} icon={<AimOutlined />} />
+          </IDProvider>
+          <IDProvider dataTestId="jobs-graph-zoom-in">
+            <Button onClick={handleZoomIn} icon={<ZoomInOutlined />} />
+          </IDProvider>
+          <IDProvider dataTestId="jobs-graph-zoom-out">
+            <Button onClick={handleZoomOut} icon={<ZoomOutOutlined />} />
+          </IDProvider>
         </ButtonsPanel>
         {isValidGraph ? (
           showGraph ? (

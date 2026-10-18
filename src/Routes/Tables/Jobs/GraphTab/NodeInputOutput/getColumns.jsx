@@ -1,6 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { useMemo } from 'react';
+import IDProvider from 'IDProvider';
 import dayjs from 'dayjs';
 import { Ellipsis } from 'components/common';
 import PropTypes from 'prop-types';
@@ -48,7 +49,8 @@ export const TitleStatus = (
                   : TASK_STATUS.FAILED_SCHEDULING
               }
               colorMap={COLOR_TASK_STATUS}
-              title={TASK_STATUS[keyStatus.toUpperCase()]}>
+              title={TASK_STATUS[keyStatus.toUpperCase()]}
+            >
               {record[keyStatus]}
             </BaseTag>
           )
@@ -102,21 +104,26 @@ const Results = ({ record, url = null, algorithmName = '' }) => {
 
   return (
     <Tooltip placement="top" title="Download Results">
-      <Button
-        type="default"
-        disabled={!record.output}
-        shape="circle"
-        icon={<DownloadOutlined />}
-        onClick={() =>
-          fetchDownload(
-            `${url ?? ''}/storage/download/custom/${
-              record.output && record.output.path
-            }?ext=${record.downloadFileExt || ''}&namefile=${
-              downloadNameFile || ''
-            }`
-          )
-        }
-      />
+      <IDProvider
+        dataTestId="jobs-download-node-results"
+        testIdSuffix={record.taskId}
+      >
+        <Button
+          type="default"
+          disabled={!record.output}
+          shape="circle"
+          icon={<DownloadOutlined />}
+          onClick={() =>
+            fetchDownload(
+              `${url ?? ''}/storage/download/custom/${
+                record.output && record.output.path
+              }?ext=${record.downloadFileExt || ''}&namefile=${
+                downloadNameFile || ''
+              }`
+            )
+          }
+        />
+      </IDProvider>
     </Tooltip>
   );
 };

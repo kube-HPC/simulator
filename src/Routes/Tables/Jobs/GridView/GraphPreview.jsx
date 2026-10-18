@@ -7,6 +7,7 @@ import React, {
   useRef,
 } from 'react';
 import PropTypes from 'prop-types';
+import IDProvider from 'IDProvider';
 import styled from 'styled-components';
 import { Alert, Button, Spin } from 'antd';
 
@@ -396,9 +397,15 @@ const GraphPreview = ({
       )}
       <GraphContainer>
         <ButtonsPanel>
-          <Button onClick={handleZoomNodeSelected} icon={<AimOutlined />} />
-          <Button onClick={handleZoomIn} icon={<ZoomInOutlined />} />
-          <Button onClick={handleZoomOut} icon={<ZoomOutOutlined />} />
+          <IDProvider dataTestId="jobs-graph-preview-zoom-to-selection">
+            <Button onClick={handleZoomNodeSelected} icon={<AimOutlined />} />
+          </IDProvider>
+          <IDProvider dataTestId="jobs-graph-preview-zoom-in">
+            <Button onClick={handleZoomIn} icon={<ZoomInOutlined />} />
+          </IDProvider>
+          <IDProvider dataTestId="jobs-graph-preview-zoom-out">
+            <Button onClick={handleZoomOut} icon={<ZoomOutOutlined />} />
+          </IDProvider>
         </ButtonsPanel>
 
         {showGraph && (

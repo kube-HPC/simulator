@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { Select } from 'antd';
+import IDProvider from 'IDProvider';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { TitleStatus } from './getColumns';
@@ -93,15 +94,17 @@ const DropDownNodes = ({ nodes, selectNode, setSelectNode }) => {
 
   return (
     <BgStyle>
-      <DropdownStyle
-        onChange={onClickSelectNode}
-        value={selectNode[0]}
-        showSearch
-        options={items}
-        filterOption={filterOption}
-        listHeight={700}
-        virtual={false}
-      />
+      <IDProvider dataTestId="jobs-node-selector">
+        <DropdownStyle
+          onChange={onClickSelectNode}
+          value={selectNode[0]}
+          showSearch
+          options={items}
+          filterOption={filterOption}
+          listHeight={700}
+          virtual={false}
+        />
+      </IDProvider>
     </BgStyle>
   );
 };
