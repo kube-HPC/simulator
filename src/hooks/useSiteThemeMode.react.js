@@ -28,7 +28,7 @@ const useSiteThemeMode = () => {
         LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME,
         nameTheme
       );
-      setThemeName(themeName);
+      setThemeName(nameTheme);
       // Update preferences (local only — saved when user clicks Save Preferences)
       dispatch(updatePreferenceLocal({ section: 'theme', value: nameTheme }));
       // reloads the page after change theme.
@@ -37,7 +37,7 @@ const useSiteThemeMode = () => {
         refContainer.current = 1;
       }
     },
-    [navigate, themeName, dispatch]
+    [navigate, dispatch]
   );
 
   // toggle switch between lights out and light

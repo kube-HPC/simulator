@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Result, Spin } from 'antd';
 import styled from 'styled-components';
 import ModernTraceViewer from './ModernTraceViewer';
+import { getCurrentTheme } from './traceConstants';
 
 const CenterDiv = styled.div`
   height: 200px;
@@ -13,8 +14,7 @@ const CenterDiv = styled.div`
 
 const Trace = ({ data, jobId, name }) => {
   // Check if dark mode is active
-  const isDarkMode =
-    localStorage.getItem('hkubeTheme')?.toUpperCase() === 'DARK';
+  const isDarkMode = getCurrentTheme() === 'DARK';
 
   return (
     <div className={isDarkMode ? 'trace-dark-mode' : 'trace-light-mode'}>

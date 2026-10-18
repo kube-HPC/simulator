@@ -155,6 +155,7 @@ const preferencesMiddleware =
         hour: PREFERENCES_DEFAULTS.scoopIntervalHours,
         time: dayjs().add(-PREFERENCES_DEFAULTS.scoopIntervalHours, 'hour'),
       });
+      window.location.reload();
     }
 
     return result;
