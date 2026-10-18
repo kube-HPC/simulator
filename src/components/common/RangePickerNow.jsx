@@ -99,6 +99,7 @@ const RangePickerNow = ({
   return (
     <>
       <DatePicker
+        data-testid="job-filter-date-picker-from"
         value={
           value?.datesRange?.from?.isValid()
             ? value?.datesRange?.from
@@ -130,6 +131,7 @@ const RangePickerNow = ({
       <ArrowRightOutlined style={{ padding: '2px', fontSize: '12px' }} />
 
       <DatePicker
+        data-testid="job-filter-date-picker-to"
         value={value?.datesRange?.to?.isValid() ? value?.datesRange?.to : null}
         style={{ width: '160px' }}
         format={DateFormat}

@@ -194,6 +194,7 @@ const QueryForm = ({
 
       <Form.Item name="pipelineName">
         <AutoCompleteFloatingLabelInput
+          testId="pipelineName"
           isExactMatch
           label="Pipeline Name / Job ID"
           width="12vw"
@@ -205,6 +206,7 @@ const QueryForm = ({
 
       <Form.Item name="algorithmName">
         <AutoCompleteFloatingLabelInput
+          testId="algorithmName"
           isExactMatch
           label="Algorithm Name"
           width="9vw"
@@ -216,6 +218,7 @@ const QueryForm = ({
 
       <Form.Item name="tags">
         <AutoCompleteFloatingLabelInput
+          testId="tags"
           isExactMatch
           label="Tag Name"
           width="9vw"
@@ -228,6 +231,7 @@ const QueryForm = ({
       {keycloakEnable && (
         <Form.Item name="user">
           <AutoCompleteFloatingLabelInput
+            testId="user"
             // isExactMatch
             // listIgnoreExactMatch={[KeycloakServices.getUsername()]}
             label="User"
@@ -249,6 +253,7 @@ const QueryForm = ({
 
       <Form.Item name="pipelineStatus">
         <ButtonDropdown
+          testId="pipelineStatus"
           defaultLabel="active"
           options={pipelineStatusOptions}
           onButtonClick={onPinPipelineStatus}

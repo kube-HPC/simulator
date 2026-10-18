@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { AutoComplete, Input } from 'antd';
 import styled from 'styled-components';
 import debounce from 'lodash.debounce';
+import IDProvider from 'IDProvider';
 
 const Container = styled.div`
   position: relative;
@@ -46,6 +47,7 @@ const StyledInput = styled(Input)`
 `;
 
 const AutoCompleteFloatingLabelInput = ({
+  testId = '',
   label,
   Submit,
   value,
@@ -56,6 +58,7 @@ const AutoCompleteFloatingLabelInput = ({
   options = [],
   isExactMatch = false,
   listIgnoreExactMatch = [], // eslint-disable-line no-unused-vars
+
   ...props
 }) => {
   const [focused, setFocused] = useState(false);
@@ -70,6 +73,7 @@ const AutoCompleteFloatingLabelInput = ({
       <Label $focused={focused} $hasValue={!!value}>
         {label}
       </Label>
+
       <AutoComplete
         options={options}
         style={{ width }}
@@ -101,17 +105,20 @@ const AutoCompleteFloatingLabelInput = ({
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         onChange={val => onChange?.(val)}>
-        <StyledInput
-          {...props}
-          suffix={suffix}
-          style={{ borderRadius: '50px' }}
-        />
+        <IDProvider dataTestId={`autoComplete-${testId}`}>
+          <StyledInput
+            {...props}
+            suffix={suffix}
+            style={{ borderRadius: '50px' }}
+          />
+        </IDProvider>
       </AutoComplete>
     </Container>
   );
 };
 
 AutoCompleteFloatingLabelInput.propTypes = {
+  testId: PropTypes.string,
   label: PropTypes.string.isRequired,
   Submit: PropTypes.func.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
