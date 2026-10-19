@@ -1,4 +1,6 @@
 // Trace colors based on Theme
+import { LOCAL_STORAGE_KEYS, THEMES_NAMES } from 'const';
+
 export const getSystemColors = (isDark = false) => {
   if (isDark) {
     return {
@@ -108,8 +110,12 @@ export const MAX_TRACE_ROW_HEIGHT = 72;
 
 // Helper to detect current theme
 export const getCurrentTheme = () => {
-  const storedTheme = localStorage.getItem('hkubeTheme');
-  return storedTheme?.toUpperCase() === 'DARK' ? 'DARK' : 'LIGHT';
+  const storedTheme = localStorage.getItem(
+    LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME
+  );
+  return storedTheme?.toLowerCase() === THEMES_NAMES.LIGHTSOUT.toLowerCase()
+    ? 'DARK'
+    : 'LIGHT';
 };
 
 // Get colors based on current theme

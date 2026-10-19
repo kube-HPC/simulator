@@ -17,9 +17,12 @@ const Body = () => {
 
   useEffect(() => {
     if (href.indexOf('experiment=') === -1) {
-      window.location.replace(
-        `${window.location.origin}${window.location.pathname}#/jobs?&experiment=${experimentName ?? 'main'}`
-      );
+      const targetUrl = `${window.location.origin}${window.location.pathname}#/jobs?&experiment=${experimentName ?? 'main'}`;
+      console.warn('[page-navigation] adding missing experiment parameter', {
+        from: href,
+        to: targetUrl,
+      });
+      window.location.replace(targetUrl);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
