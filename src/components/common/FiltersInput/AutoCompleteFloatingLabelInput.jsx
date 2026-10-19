@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { AutoComplete, Input } from 'antd';
 import styled from 'styled-components';
 import debounce from 'lodash.debounce';
-import IDProvider from 'IDProvider';
 
 const Container = styled.div`
   position: relative;
@@ -105,13 +104,12 @@ const AutoCompleteFloatingLabelInput = ({
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         onChange={val => onChange?.(val)}>
-        <IDProvider dataTestId={`autoComplete-${testId}`}>
-          <StyledInput
-            {...props}
-            suffix={suffix}
-            style={{ borderRadius: '50px' }}
-          />
-        </IDProvider>
+        <StyledInput
+          {...props}
+          data-testid={`autoComplete-${testId}`}
+          suffix={suffix}
+          style={{ borderRadius: '50px' }}
+        />
       </AutoComplete>
     </Container>
   );
