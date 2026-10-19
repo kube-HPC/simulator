@@ -8,6 +8,14 @@ import dayjs from 'dayjs';
 
 const DateFormat = 'YYYY-MM-DD HH:mm';
 
+const renderStartCalendar = panel => (
+  <div data-testid="job-filter-date-picker-from-calendar">{panel}</div>
+);
+
+const renderEndCalendar = panel => (
+  <div data-testid="job-filter-date-picker-to-calendar">{panel}</div>
+);
+
 const RangePickerNow = ({
   onChange,
   value = undefined,
@@ -100,6 +108,7 @@ const RangePickerNow = ({
     <>
       <DatePicker
         data-testid="job-filter-date-picker-from"
+        panelRender={renderStartCalendar}
         value={
           value?.datesRange?.from?.isValid()
             ? value?.datesRange?.from
@@ -132,6 +141,7 @@ const RangePickerNow = ({
 
       <DatePicker
         data-testid="job-filter-date-picker-to"
+        panelRender={renderEndCalendar}
         value={value?.datesRange?.to?.isValid() ? value?.datesRange?.to : null}
         style={{ width: '160px' }}
         format={DateFormat}
