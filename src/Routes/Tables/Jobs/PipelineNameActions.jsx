@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react';
-import IDProvider from 'IDProvider';
 import styled from 'styled-components';
 import { ReactComponent as FilterOutlined } from 'images/filter-filtering-icon.svg';
 import { ReactComponent as IconAddPipeline } from 'images/forward-arrow-icon.svg';
@@ -37,11 +36,6 @@ const IconsContainer = styled.div`
   justify-content: flex-end;
 `;
 
-const SpanIcons = styled.span`
-  display: inline-flex;
-  align-items: center;
-`;
-
 const PipelineNameActions = ({ pipeline }) => {
   const { goTo: goToPipeline } = usePathPipeline();
   const instanceFilters = useReactiveVar(instanceFiltersVar);
@@ -71,24 +65,19 @@ const PipelineNameActions = ({ pipeline }) => {
       <IconsContainer className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
         {pipeline.pipeline.types.includes('stored') && (
           <Tooltip title={`edit pipeline ${pipeline.pipeline.name}`}>
-            <IDProvider
-              dataTestId={`editPipelineOutlined-${pipeline.pipeline.name}`}>
-              <SpanIcons>
-                <IconAddPipeline style={iconSize} onClick={editByPipelineID} />
-              </SpanIcons>
-            </IDProvider>
+            <IconAddPipeline
+              data-testid="pipeline-name-edit"
+              style={iconSize}
+              onClick={editByPipelineID}
+            />
           </Tooltip>
         )}
         <Tooltip title={`filter jobs by pipeline ${pipeline.pipeline.name}`}>
-          <IDProvider
-            dataTestId={`filterJobsByPipeline-${pipeline.pipeline.name}`}>
-            <SpanIcons>
-              <FilterOutlined
-                style={iconSize}
-                onClick={() => filterByPipeline(pipeline.pipeline.name)}
-              />
-            </SpanIcons>
-          </IDProvider>
+          <FilterOutlined
+            data-testid="pipeline-name-filter"
+            style={iconSize}
+            onClick={() => filterByPipeline(pipeline.pipeline.name)}
+          />
         </Tooltip>
       </IconsContainer>
     </PipelineNameContainer>
