@@ -9,13 +9,13 @@ const listAddOn = [
   {
     value: '@',
     label: '(@)Output of',
-    placeholder: '<Node name> Or <Node name>.<attribute> Or flowinput.<prop>',
+    placeholder: '<Node Name> Or <Node Name>.<attribute> Or flowinput.<prop>',
     rules: ['node', 'flowinput'],
   },
   {
     value: '#@',
     label: '(#@)Multi output of',
-    placeholder: '<Node name>.<attribute> Or flowinput.<prop>',
+    placeholder: '<Node Name>.<attribute> Or flowinput.<prop>',
     rules: ['node', 'flowinput'],
   },
   {

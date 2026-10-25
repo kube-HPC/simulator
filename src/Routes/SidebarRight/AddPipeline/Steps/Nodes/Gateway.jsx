@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Input, InputNumber } from 'antd';
 
@@ -20,14 +20,7 @@ const Field = props => {
 };
 
 const GatewayNode = ({ id }) => {
-  const { form, initialState } = useWizardContext();
-
-  useEffect(() => {
-    const nodes = form.getFieldValue(['nodes']);
-    nodes[id].stateType = 'stateful';
-
-    form.setFieldsValue({ nodes: [...nodes] });
-  }, [form, id]);
+  const { initialState } = useWizardContext();
 
   const providerValue = useMemo(
     () => ({ rootId: ['nodes', id, 'spec'] }),
@@ -35,56 +28,43 @@ const GatewayNode = ({ id }) => {
   );
 
   return (
-    <>
-      <ctx.Provider value={providerValue}>
-        <Field name={['name']} title="Name">
-          <Input
-            placeholder="Name Gateway"
-            data-testid={`add-pipeline-nodes-${id}-gateway-name-input`}
-          />
-        </Field>
+    <ctx.Provider value={providerValue}>
+      <Field name={['name']} title="Name">
+        <Input
+          placeholder="Name Gateway"
+          data-testid={`add-pipeline-nodes-${id}-gateway-name-input`}
+        />
+      </Field>
 
-        <Field name={['description']} title="Description" skipValidation>
-          <Input
-            placeholder="Description"
-            data-testid={`add-pipeline-nodes-${id}-gateway-description-input`}
-          />
-        </Field>
-        <Field
-          name={['mem']}
-          title="Mem"
-          initialValue={
-            initialState?.nodes[id]?.spec?.mem
-              ? initialState?.nodes[id]?.spec?.mem
-              : '512Mi'
-          }>
-          <MemoryField
-            testId={`add-pipeline-nodes-${id}-gateway-mem`}
-            options={memoryTypes.map(value => ({
-              value,
-              label: value,
-            }))}
-          />
-        </Field>
-        <Field name={['cpu']} title="Cpu" initialValue={0.5} skipValidation>
-          <InputNumber
-            min={0}
-            data-testid={`add-pipeline-nodes-${id}-gateway-cpu-input`}
-          />
-        </Field>
-      </ctx.Provider>
-
-      {/*  <ctx.Provider value={{ rootId: ['nodes', id] }}>
-        <Field name={['stateType2']} title="State Type" skipValidation>
-          <Radio.Group buttonStyle="solid">
-            <Radio.Button value="stateless" disabled>
-              stateless
-            </Radio.Button>
-            <Radio.Button value="stateful">stateful</Radio.Button>
-          </Radio.Group>
-        </Field>
-            </ctx.Provider> */}
-    </>
+      <Field name={['description']} title="Description" skipValidation>
+        <Input
+          placeholder="Description"
+          data-testid={`add-pipeline-nodes-${id}-gateway-description-input`}
+        />
+      </Field>
+      <Field
+        name={['mem']}
+        title="Mem"
+        initialValue={
+          initialState?.nodes[id]?.spec?.mem
+            ? initialState?.nodes[id]?.spec?.mem
+            : '512Mi'
+        }>
+        <MemoryField
+          testId={`add-pipeline-nodes-${id}-gateway-mem`}
+          options={memoryTypes.map(value => ({
+            value,
+            label: value,
+          }))}
+        />
+      </Field>
+      <Field name={['cpu']} title="Cpu" initialValue={0.5} skipValidation>
+        <InputNumber
+          min={0}
+          data-testid={`add-pipeline-nodes-${id}-gateway-cpu-input`}
+        />
+      </Field>
+    </ctx.Provider>
   );
 };
 GatewayNode.propTypes = {
