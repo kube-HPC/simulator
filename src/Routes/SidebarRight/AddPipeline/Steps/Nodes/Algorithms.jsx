@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { InputNumber, Switch, Radio, AutoComplete, Tag } from 'antd';
+import { Form, InputNumber, Switch, Radio, AutoComplete, Tag } from 'antd';
 import { Form as CommonForm } from 'components/common';
 import { useGetLists } from 'hooks/graphql';
 import InputNumberSwitch from './inputNumberSwitch';
@@ -19,13 +19,16 @@ const Field = props => {
 };
 
 const AlgorithmNode = ({ id }) => {
-  const { isStreamingPipeline, valuesState } = useWizardContext();
+  const { isStreamingPipeline, valuesState, form } = useWizardContext();
   const { algorithms: sortedAlgorithms } = useGetLists();
   const rootId = useMemo(() => ['nodes', id], [id]);
 
   const contextValue = useMemo(() => ({ rootId }), [rootId]);
 
-  const algorithmName = valuesState?.nodes[id]?.algorithmName;
+  // valuesState drops fields of unmounted components (e.g. after switching kind to gateway and back),
+  // so read the node from the form store directly
+  const node = Form.useWatch(rootId, { form, preserve: true });
+  const algorithmName = node?.algorithmName;
   const selectedAlgorithm = sortedAlgorithms?.find(
     algorithm => algorithm.value === algorithmName
   );
@@ -63,8 +66,7 @@ const AlgorithmNode = ({ id }) => {
         <Collapsible
           title="Stateless Counts"
           defaultExpanded={
-            valuesState?.nodes[id].minStatelessCount > 0 ||
-            valuesState?.nodes[id].maxStatelessCount > 0
+            node?.minStatelessCount > 0 || node?.maxStatelessCount > 0
           }>
           <Field
             inline={false}

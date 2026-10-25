@@ -361,18 +361,18 @@ const Nodes = ({ style }) => {
                     </Radio.Group>
                   </FormItemLabelWrapper>
                   <Field
-                    title="Node name"
+                    title="Node Name"
                     name={['nodeName']}
                     rootId={['nodes', id]}
                     extraRules={[
                       {
                         max: 32,
                         message:
-                          'Node name has to be shorter than 32 characters',
+                          'Node Name has to be shorter than 32 characters',
                       },
                     ]}>
                     <Input
-                      placeholder="Node name"
+                      placeholder="Node Name"
                       data-testid={`add-pipeline-node-name-${id}`}
                     />
                   </Field>
