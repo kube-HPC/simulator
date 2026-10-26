@@ -1,6 +1,6 @@
 import { Editor } from '@monaco-editor/react'; // Import Editor instead of ControlledEditor
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { AutoSizer } from 'react-virtualized';
 import { useSiteThemeMode } from 'hooks';
 
@@ -19,9 +19,6 @@ const JsonEditor = ({
     }
     return 'vs'; // Monaco's built-in light theme (default)
   };
-  const [value, setValue] = useState(controlledValue);
-  const handleEditorChange = _value => setValue(_value);
-
   const handleEditorDidMount = (editor, monaco) => {
     const ref = innerRef;
     ref.current = editor;
@@ -32,14 +29,6 @@ const JsonEditor = ({
     });
   };
 
-  useEffect(() => {
-    onChange(value);
-  }, [onChange, value]);
-
-  useEffect(() => {
-    setValue(controlledValue);
-  }, [controlledValue]);
-
   return (
     <AutoSizer>
       {({ width, height }) => (
@@ -49,8 +38,8 @@ const JsonEditor = ({
           width={width}
           height={height}
           language="json"
-          value={value}
-          onChange={handleEditorChange}
+          value={controlledValue}
+          onChange={onChange}
           onMount={handleEditorDidMount}
         />
       )}
