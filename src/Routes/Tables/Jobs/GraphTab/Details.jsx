@@ -74,7 +74,7 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug = false }) => {
   const extra = node ? (
     <FlexBox.Auto>
       <Tooltip title={`Run from node ${node.nodeName}`}>
-        <IDProvider dataTestId="jobs-run-node" testIdSuffix={node.nodeName}>
+        <IDProvider dataTestId="jobs-run-node">
           <Button
             key="run-node"
             variant="outlined"
@@ -85,7 +85,7 @@ const Details = ({ node, jobId, isDisabledBtnRunDebug = false }) => {
         </IDProvider>
       </Tooltip>
       <Tooltip title={`Debug from node ${node.nodeName}`}>
-        <IDProvider dataTestId="jobs-debug-node" testIdSuffix={node.nodeName}>
+        <IDProvider dataTestId="jobs-debug-node">
           <Button
             key="debug-node"
             variant="outlined"
