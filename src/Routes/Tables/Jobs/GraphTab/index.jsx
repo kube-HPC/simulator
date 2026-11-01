@@ -316,12 +316,23 @@ const GraphTab = ({ graph, pipeline }) => {
 
       nodeSpacing.current = sliderSelect;
 
-      graphCalculations();
-      setTimeout(() => {
-        graphCalculations();
-      }, 1);
+      const network = graphRef.current?.Network;
+      if (network) {
+        const adaptedGraphData = adaptedGraph();
+        network.setOptions(graphOptions());
+        network.once('afterDrawing', () => {
+          nodePos.current = { nodesPostions: network.getPositions() };
+          isHierarchical.current = false;
+        });
+        network.setData(adaptedGraphData);
+      }
     },
-    [deleteLocationNodes, graphCalculations, namePipelineToSave]
+    [
+      adaptedGraph,
+      deleteLocationNodes,
+      graphOptions,
+      namePipelineToSave,
+    ]
   );
   const onChangeSliderDebounce = useDebounceCallback(
     onChangeSlider,
@@ -337,8 +348,20 @@ const GraphTab = ({ graph, pipeline }) => {
   }, [graph.timestamp, graphCalculations]);
 
   const onChangeSwitchSlider = val => {
+    if (val) {
+      onChangeSlider(nodeSpacing.current);
+      setIsSwitchSlider(true);
+      return;
+    }
+
     deleteLocationNodes(namePipelineToSave);
-    setIsSwitchSlider(val);
+    setIsSwitchSlider(false);
+  };
+
+  const handleSwitchSliderChange = checked => {
+    if (!checked) {
+      onChangeSwitchSlider(false);
+    }
   };
 
   useEffect(() => {
@@ -388,9 +411,12 @@ const GraphTab = ({ graph, pipeline }) => {
           cancelText="No"
           disabled={isSwitchSlider}
         >
-          <IDProvider dataTestId="jobs-graph-node-spacing-toggle">
-            <Switch checked={isSwitchSlider} size="small" />
-          </IDProvider>
+          <Switch
+            checked={isSwitchSlider}
+            onChange={handleSwitchSliderChange}
+            data-testid="jobs-graph-node-spacing-toggle"
+            size="small"
+          />
         </Popconfirm>
       </FlexContainer>
 
