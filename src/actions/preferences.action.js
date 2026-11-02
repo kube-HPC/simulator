@@ -25,15 +25,17 @@ export const fetchPreferences = () => (dispatch, getState) => {
   });
 };
 
-export const savePreferences = body => (dispatch, getState) => {
+export const savePreferences = (body, onSuccess) => (dispatch, getState) => {
   if (getState().connection.keycloakEnable !== true) {
     localStorage.setItem(LOCAL_STORAGE_KEYS.PREFERENCES, JSON.stringify(body));
     dispatch({ type: `${AT.PREFERENCES_SAVE}_SUCCESS`, payload: body });
+    onSuccess?.();
     return;
   }
   dispatch({
     type: AT.REST_REQ_PUT,
     payload: { url: '/preferences', body, actionType: AT.PREFERENCES_SAVE },
+    meta: { onSuccess },
   });
 };
 

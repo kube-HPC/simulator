@@ -12,9 +12,7 @@ import Header from 'Routes/Base/Header';
 import {
   instanceFiltersVar,
   numberErrorGraphQLVar,
-  dateTimeDefaultVar,
 } from 'cache';
-import dayjs from 'dayjs';
 import useApolloClient from '../graphql/useApolloClient';
 import { Drawer as SiderBarRightDrawer } from './SidebarRight';
 import SidebarLeft from './Base/SidebarLeft';
@@ -59,6 +57,7 @@ const RoutesNav = () => {
   const { filtersInitCacheItems } = useCacheFilters();
   const numberErrorGraphQL = useReactiveVar(numberErrorGraphQLVar);
   const [isDataAvailable, setIsDataAvailable] = useState(false);
+  const [showLoadingScreen, setShowLoadingScreen] = useState(false);
 
   const { socketInit, fetchPreferences } = useActions();
 
@@ -74,6 +73,16 @@ const RoutesNav = () => {
     socketInit();
     setTimeout(() => setIsDataAvailable(true), 2000);
   }, [socketInit]);
+
+  useEffect(() => {
+    if (!prefsLoaded) {
+      setShowLoadingScreen(false);
+      return undefined;
+    }
+
+    const timeout = setTimeout(() => setShowLoadingScreen(true), 500);
+    return () => clearTimeout(timeout);
+  }, [prefsLoaded]);
 
   // Fetch user preferences once config is loaded and (when Keycloak is
   // enabled) the user is actually authenticated, otherwise the request
@@ -143,6 +152,10 @@ const RoutesNav = () => {
     };
   }, []);
 
+  if (!prefsLoaded) {
+    return null;
+  }
+
   return isDataAvailable ? (
     <ThemeProvider theme={{ ...Theme }}>
       <ApolloProvider client={apolloClient}>
@@ -185,7 +198,7 @@ const RoutesNav = () => {
     </ThemeProvider>
   ) : (
     <ThemeProvider theme={{ ...Theme }}>
-      <LoadingScreen />
+      {showLoadingScreen && <LoadingScreen />}
     </ThemeProvider>
   );
 };
