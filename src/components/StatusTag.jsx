@@ -1,24 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { COLOR_PIPELINE_STATUS } from 'styles/colors';
+import { useTheme } from 'styled-components';
 
 import BaseTag from './BaseTag';
 
 export const StatusTag = ({
   status = null,
   count = null,
-  colorMap = COLOR_PIPELINE_STATUS,
+  colorMap,
   isError = false,
-}) => (
-  <BaseTag
-    key={status}
-    status={status}
-    colorMap={colorMap}
-    isError={isError}
-    style={{ margin: '1px' }}>
-    <span>{Number.isInteger(count) ? count : `No Stats`}</span>
-  </BaseTag>
-);
+}) => {
+  const theme = useTheme();
+
+  return (
+    <BaseTag
+      key={status}
+      status={status}
+      colorMap={colorMap || theme.COLOR_PIPELINE_STATUS}
+      isError={isError}
+      style={{ margin: '1px' }}>
+      <span>{Number.isInteger(count) ? count : `No Stats`}</span>
+    </BaseTag>
+  );
+};
 
 StatusTag.propTypes = {
   status: PropTypes.string,

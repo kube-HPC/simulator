@@ -4,17 +4,14 @@ import { ApolloProvider, useReactiveVar } from '@apollo/client';
 import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
 import { Layout, message, notification } from 'antd';
-import styled, { ThemeProvider } from 'styled-components';
+import styled from 'styled-components';
 import { Route, Routes } from 'react-router-dom';
-import { COLOR, COLOR_LAYOUT, Theme } from 'styles';
 import { useActions, useCacheFilters } from 'hooks';
 import Header from 'Routes/Base/Header';
 import {
   instanceFiltersVar,
   numberErrorGraphQLVar,
-  dateTimeDefaultVar,
 } from 'cache';
-import dayjs from 'dayjs';
 import useApolloClient from '../graphql/useApolloClient';
 import { Drawer as SiderBarRightDrawer } from './SidebarRight';
 import SidebarLeft from './Base/SidebarLeft';
@@ -34,7 +31,7 @@ const ContentMargin = styled(Layout.Content)`
     width: 1px;
   }
   ::-webkit-scrollbar-thumb {
-    border: 1px solid ${COLOR.darkGrey};
+    border: 1px solid ${({ theme }) => theme.COLOR.darkGrey};
   }
 `;
 
@@ -42,7 +39,7 @@ const RightContainer = styled.aside`
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  border-left: 1px solid ${COLOR_LAYOUT.border};
+  border-left: 1px solid ${({ theme }) => theme.COLOR_LAYOUT.border};
 `;
 
 message.config({
@@ -144,49 +141,45 @@ const RoutesNav = () => {
   }, []);
 
   return isDataAvailable ? (
-    <ThemeProvider theme={{ ...Theme }}>
-      <ApolloProvider client={apolloClient}>
-        {contextHolder}
-        {contextHolderNotification}
-        {/* <UserGuide /> */}
-        <LayoutFullHeight>
+    <ApolloProvider client={apolloClient}>
+      {contextHolder}
+      {contextHolderNotification}
+      {/* <UserGuide /> */}
+      <LayoutFullHeight>
+        <Routes>
+          <Route path="/*" element={<SidebarLeft />}>
+            <Route path=":pageName" element={<> </>} />
+          </Route>
+        </Routes>
+
+        <Layout>
           <Routes>
-            <Route path="/*" element={<SidebarLeft />}>
+            <Route path="/*" element={<Header />}>
               <Route path=":pageName" element={<> </>} />
             </Route>
           </Routes>
 
-          <Layout>
-            <Routes>
-              <Route path="/*" element={<Header />}>
-                <Route path=":pageName" element={<> </>} />
-              </Route>
-            </Routes>
+          <LayoutFullHeight>
+            <ContentMargin id="globalContent">
+              {contextHolderModalApollo}
+              <Tables />
+            </ContentMargin>
 
-            <LayoutFullHeight>
-              <ContentMargin id="globalContent">
-                {contextHolderModalApollo}
-                <Tables />
-              </ContentMargin>
-
-              <RightContainer>
-                <Routes>
-                  <Route
-                    path="/:root/:panelType"
-                    element={<SiderBarRightDrawer />}
-                  />
-                  <Route path="*" element={<> </>} />
-                </Routes>
-              </RightContainer>
-            </LayoutFullHeight>
-          </Layout>
-        </LayoutFullHeight>
-      </ApolloProvider>
-    </ThemeProvider>
+            <RightContainer>
+              <Routes>
+                <Route
+                  path="/:root/:panelType"
+                  element={<SiderBarRightDrawer />}
+                />
+                <Route path="*" element={<> </>} />
+              </Routes>
+            </RightContainer>
+          </LayoutFullHeight>
+        </Layout>
+      </LayoutFullHeight>
+    </ApolloProvider>
   ) : (
-    <ThemeProvider theme={{ ...Theme }}>
-      <LoadingScreen />
-    </ThemeProvider>
+    <LoadingScreen />
   );
 };
 

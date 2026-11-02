@@ -1,4 +1,3 @@
-import { LOCAL_STORAGE_KEYS } from 'const';
 import { theme } from 'antd';
 
 const getThemeProvider = themeName => {
@@ -44,11 +43,8 @@ const getThemeProvider = themeName => {
   }
 };
 
-const useInitTheme = () => {
-  const themeName = localStorage.getItem(
-    LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME
-  );
-  return { themeProvider: getThemeProvider(themeName) };
-};
+const useInitTheme = themeName => ({
+  themeProvider: getThemeProvider(themeName),
+});
 
 export default useInitTheme;

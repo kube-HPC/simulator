@@ -1,52 +1,34 @@
-import React, { useEffect, useState, startTransition } from 'react';
+import React, { useLayoutEffect } from 'react';
 import { useSiteThemeMode } from 'hooks';
 import { GlobalStyle } from 'styles';
 import { useLocation } from 'react-router-dom';
-import { LOCAL_STORAGE_KEYS } from 'const';
-
-// create in began styles antd by theme name
-switch (
-  localStorage
-    .getItem(LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME)
-    ?.toUpperCase()
-) {
-  case 'LIGHT':
-    break;
-  case 'LIGHTSOUT':
-    break;
-  default:
-}
-
-const LightThemeStyle = React.lazy(
-  () => import('./light/LightThemeStyle.styles.jsx')
-);
-const LightsOutThemeStyle = React.lazy(
-  () => import('./lightsOut/LightsOutThemeStyle.styles.jsx')
-);
-
-const LazyThemeStyle = {
-  LIGHT: <LightThemeStyle />,
-  LIGHTSOUT: <LightsOutThemeStyle />,
-};
+// Vite's inline CSS import keeps only the active theme's overrides in the DOM.
+// eslint-disable-next-line import/no-unresolved
+import lightThemeStyles from './light/light-mode-style.css?inline';
+// eslint-disable-next-line import/no-unresolved
+import lightsOutThemeStyles from './lightsOut/lights-out-style.css?inline';
 
 const GlobalThemes = () => {
-  const { setTheme, themeName } = useSiteThemeMode();
+  const { themeName } = useSiteThemeMode();
   const location = useLocation();
-  const [isThemeReady, setIsThemeReady] = useState(false);
 
-  useEffect(() => {
-    startTransition(() => {
-      setTheme(themeName);
-      setIsThemeReady(true); // Indicate that theme is loaded
-    });
-  }, []);
+  useLayoutEffect(() => {
+    const styleId = 'hkube-theme-overrides';
+    let styleElement = document.getElementById(styleId);
 
-  return (
-    <>
-      <GlobalStyle location={location} />
-      {isThemeReady && LazyThemeStyle[themeName.toUpperCase()]}
-    </>
-  );
+    if (!styleElement) {
+      styleElement = document.createElement('style');
+      styleElement.id = styleId;
+      document.head.appendChild(styleElement);
+    }
+
+    styleElement.textContent =
+      themeName.toUpperCase() === 'LIGHTSOUT'
+        ? lightsOutThemeStyles
+        : lightThemeStyles;
+  }, [themeName]);
+
+  return <GlobalStyle location={location} />;
 };
 
 export default GlobalThemes;

@@ -1,59 +1,41 @@
-import { useCallback, useState, useRef } from 'react';
-import { THEMES_NAMES, LOCAL_STORAGE_KEYS } from 'const';
-import { useDispatch } from 'react-redux';
+import { useCallback } from 'react';
+import { THEMES_NAMES, normalizeThemeName } from 'const';
+import { useDispatch, useSelector } from 'react-redux';
 import { updatePreferenceLocal } from 'reducers/preferences.reducer';
+import { selectors } from 'reducers';
 
 import { createStore } from 'reusable';
-import { useNavigate } from 'react-router';
 
 const useSiteThemeMode = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  // get state theme from user local storage
-  const getTheme = () => {
-    const themeName = localStorage.getItem(
-      LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME
-    );
-    return themeName != null ? themeName : 'light';
-  };
-
-  // set if is state dark mode
-  const [themeName, setThemeName] = useState(getTheme());
-  const refContainer = useRef(0);
+  const themeName = useSelector(
+    state => selectors.preferences(state).data.theme
+  );
 
   const setTheme = useCallback(
     nameTheme => {
-      localStorage.setItem(
-        LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME,
-        nameTheme
+      dispatch(
+        updatePreferenceLocal({
+          section: 'theme',
+          value: normalizeThemeName(nameTheme),
+        })
       );
-      setThemeName(themeName);
-      // Update preferences (local only — saved when user clicks Save Preferences)
-      dispatch(updatePreferenceLocal({ section: 'theme', value: nameTheme }));
-      // reloads the page after change theme.
-      if (refContainer.current > 0) navigate(0);
-      else {
-        refContainer.current = 1;
-      }
     },
-    [navigate, themeName, dispatch]
+    [dispatch]
   );
 
-  // toggle switch between lights out and light
-  const toggleTheme = () => {
-    const cTheme = getTheme();
+  const toggleTheme = useCallback(() => {
     setTheme(
-      cTheme === THEMES_NAMES.LIGHTSOUT
+      normalizeThemeName(themeName) === THEMES_NAMES.LIGHTSOUT
         ? THEMES_NAMES.LIGHT
         : THEMES_NAMES.LIGHTSOUT
     );
-  };
+  }, [setTheme, themeName]);
 
   return {
     toggleTheme,
     setTheme,
-    themeName,
+    themeName: normalizeThemeName(themeName),
   };
 };
 

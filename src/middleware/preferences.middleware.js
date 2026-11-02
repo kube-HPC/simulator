@@ -1,5 +1,5 @@
 import AT from 'const/application-actions';
-import { LOCAL_STORAGE_KEYS } from 'const';
+import { LOCAL_STORAGE_KEYS, normalizeThemeName } from 'const';
 import dayjs from 'dayjs';
 import {
   PREFERENCES_DEFAULTS,
@@ -33,7 +33,10 @@ const migrateFromLocalStorage = () => {
 
 const syncToLocalStorage = (section, value) => {
   if (section === 'theme') {
-    localStorage.setItem(LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME, value);
+    localStorage.setItem(
+      LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME,
+      normalizeThemeName(value)
+    );
   }
   if (section === 'scoopIntervalHours') {
     localStorage.setItem(

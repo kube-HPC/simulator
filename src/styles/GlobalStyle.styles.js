@@ -1,5 +1,4 @@
 import { createGlobalStyle } from 'styled-components';
-import { COLOR_LAYOUT, COLOR } from 'styles/colors';
 
 const GlobalStyle = createGlobalStyle`
 body{
@@ -30,7 +29,7 @@ body{
 
 
 .ant-layout-sider-light .ant-layout-sider-trigger {
-  border-right: 1px solid ${COLOR_LAYOUT.border};
+  border-right: 1px solid ${({ theme }) => theme.COLOR_LAYOUT.border};
 }
 
 .ant-table-fixed-header .ant-table-scroll .ant-table-header {
@@ -55,8 +54,8 @@ body{
   }
 
   ::-webkit-scrollbar-thumb {
-    border: 1px solid ${COLOR.grey};
-    background-color: ${COLOR_LAYOUT.border};
+    border: 1px solid ${({ theme }) => theme.COLOR.grey};
+    background-color: ${({ theme }) => theme.COLOR_LAYOUT.border};
     border-radius: 10px;
   }
   
@@ -72,8 +71,8 @@ body{
 }
 
 ::-webkit-scrollbar-thumb {
-  border: 1px solid ${COLOR.grey};
-  background-color: ${COLOR_LAYOUT.border};
+  border: 1px solid ${({ theme }) => theme.COLOR.grey};
+  background-color: ${({ theme }) => theme.COLOR_LAYOUT.border};
   border-radius: 10px;
 }
 

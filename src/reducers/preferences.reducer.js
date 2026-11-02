@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
-import { actionType } from 'const';
+import { actionType, normalizeThemeName } from 'const';
 import hashSum from 'hash-sum';
 
 export const PREFERENCES_DEFAULTS = {
@@ -27,7 +27,8 @@ const preferences = createSlice({
   reducers: {
     updatePreferenceLocal(state, { payload: { section, value } }) {
       if (section === 'theme' || section === 'scoopIntervalHours') {
-        state.data[section] = value;
+        state.data[section] =
+          section === 'theme' ? normalizeThemeName(value) : value;
       } else {
         state.data[section] = { ...state.data[section], ...value };
       }
@@ -46,7 +47,9 @@ const preferences = createSlice({
           const hash = hashSum(serverPrefs);
           if (hash !== state.lastHash && Object.keys(serverPrefs).length > 0) {
             state.data = {
-              theme: serverPrefs.theme ?? PREFERENCES_DEFAULTS.theme,
+              theme: normalizeThemeName(
+                serverPrefs.theme ?? PREFERENCES_DEFAULTS.theme
+              ),
               scoopIntervalHours:
                 serverPrefs.scoopIntervalHours ??
                 PREFERENCES_DEFAULTS.scoopIntervalHours,

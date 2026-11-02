@@ -14,6 +14,7 @@ import { isPinActiveJobVar } from 'cache';
 
 import { selectors } from 'reducers';
 import { useSelector } from 'react-redux';
+import { useSiteThemeMode } from 'hooks';
 import AutoCompleteFloatingLabelInput from 'components/common/FiltersInput/AutoCompleteFloatingLabelInput';
 import ButtonDropdown from 'components/common/FiltersInput/ButtonDropdown';
 
@@ -27,6 +28,7 @@ const QueryForm = ({
   const prevUsersRef = useRef([]);
   const isPinActiveJobs = useReactiveVar(isPinActiveJobVar);
   const { keycloakEnable } = useSelector(selectors.connection);
+  const { themeName } = useSiteThemeMode();
 
   const SubmitForm = () => {
     //  setLoadingJobs(true);
@@ -172,7 +174,9 @@ const QueryForm = ({
       label: status,
       color: COLOR_PIPELINE_STATUS[status],
     }));
-  }, []);
+    // Theme colors are mutated in place, so the theme name triggers recomputation.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [themeName]);
 
   // useEffect(() => {
   //  setTimeout(setLoadingJobs(false), 3000);

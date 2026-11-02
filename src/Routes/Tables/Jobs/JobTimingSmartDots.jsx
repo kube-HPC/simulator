@@ -1,10 +1,9 @@
 // JobTimingSmartDots.jsx - WITH FALLBACK QUEUE CALCULATION
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import PropTypes from 'prop-types';
 import { Tooltip } from 'antd';
 import moment from 'moment';
-import { Styles, COLOR } from 'styles';
 
 const QUEUE_THRESHOLD = 0.75; // 0.75 seconds
 const SEC = 1000; // Matching JobTime constant
@@ -26,15 +25,15 @@ const Dot = styled.div`
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: ${COLOR.blueExtraLight};
-  border: 3px ${COLOR.whiteDark};
-  box-shadow: 0 0 6px ${COLOR.transparentGrey};
+  background: ${({ theme }) => theme.COLOR.blueExtraLight};
+  border: 3px ${({ theme }) => theme.COLOR.whiteDark};
+  box-shadow: 0 0 6px ${({ theme }) => theme.COLOR.transparentGrey};
 `;
 
 const TimeText = styled.span`
   font-size: 11px;
   font-weight: 600;
-  color: ${Styles.tabDrawerText.color};
+  color: ${({ theme }) => theme.Styles.tabDrawerText.color};
 `;
 
 const Connector = styled.div`
@@ -69,7 +68,7 @@ const ConnectorLabel = styled.span`
   font-size: 11px;
   font-weight: 550;
   color: ${props => props.color};
-  background: ${Styles.backgroundTheme};
+  background: ${({ theme }) => theme.Styles.backgroundTheme};
   padding: 1px 4px;
   border-radius: 4px;
   white-space: nowrap;
@@ -89,9 +88,9 @@ const StatusBadge = styled.div`
   font-size: 12px;
   line-height: 20px;
   white-space: nowrap;
-  background: ${Styles.HKGrid.ActionChip};
-  border: 1px solid ${Styles.tabDrawer.border};
-  color: ${Styles.tabDrawerText.color};
+  background: ${({ theme }) => theme.Styles.HKGrid.ActionChip};
+  border: 1px solid ${({ theme }) => theme.Styles.tabDrawer.border};
+  color: ${({ theme }) => theme.Styles.tabDrawerText.color};
   border-radius: 2px;
   opacity: 1;
   transition: all 0.2s;
@@ -103,6 +102,7 @@ const StatusBadge = styled.div`
 `;
 
 const JobTimingSmartDots = ({ data }) => {
+  const theme = useTheme();
   const { pipeline, results } = data;
   const {
     startTime,
@@ -193,8 +193,8 @@ const JobTimingSmartDots = ({ data }) => {
   };
 
   // Unified orange for all queue connectors and labels
-  const queueGradient = `linear-gradient(90deg, ${Styles.queueTimeColor}cc 0%, ${Styles.queueTimeColor} 100%)`;
-  const queueColor = Styles.queueTimeColor;
+  const queueGradient = `linear-gradient(90deg, ${theme.Styles.queueTimeColor}cc 0%, ${theme.Styles.queueTimeColor} 100%)`;
+  const queueColor = theme.Styles.queueTimeColor;
 
   return (
     <Container>

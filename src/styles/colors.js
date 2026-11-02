@@ -1,15 +1,46 @@
-import { LOCAL_STORAGE_KEYS } from 'const';
+import { LOCAL_STORAGE_KEYS, normalizeThemeName } from 'const';
 import ThemeCreator from './themes/ThemeCreator';
 
-const themeName =
-  localStorage.getItem(LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME) !== null &&
-  localStorage.getItem(LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME) !==
-    'undefined'
-    ? localStorage
-        .getItem(LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME)
-        .toUpperCase()
-    : 'LIGHT';
-export const Theme = ThemeCreator(themeName);
+const syncThemeObject = (target, source) => {
+  Object.keys(target).forEach(key => {
+    if (!(key in source)) {
+      Reflect.deleteProperty(target, key);
+    }
+  });
+
+  Object.keys(source).forEach(key => {
+    const targetValue = target[key];
+    const sourceValue = source[key];
+
+    if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
+      targetValue.splice(0, targetValue.length, ...sourceValue);
+    } else if (
+      targetValue &&
+      sourceValue &&
+      typeof targetValue === 'object' &&
+      typeof sourceValue === 'object' &&
+      !Array.isArray(targetValue) &&
+      !Array.isArray(sourceValue)
+    ) {
+      syncThemeObject(targetValue, sourceValue);
+    } else {
+      Object.assign(target, { [key]: sourceValue });
+    }
+  });
+};
+
+const initialThemeName = normalizeThemeName(
+  localStorage.getItem(LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME)
+);
+export const Theme = ThemeCreator(initialThemeName.toUpperCase());
+
+export const applyTheme = themeName => {
+  syncThemeObject(
+    Theme,
+    ThemeCreator(normalizeThemeName(themeName).toUpperCase())
+  );
+  return Theme;
+};
 
 export const {
   COLOR,

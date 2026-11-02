@@ -2,8 +2,7 @@ import { Tag, Tooltip } from 'antd';
 import { FlexBox } from 'components/common';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styled from 'styled-components';
-import { COLOR_PIPELINE_TYPES, Theme } from 'styles';
+import styled, { useTheme } from 'styled-components';
 import { toUpperCaseFirstLetter as toUpper } from 'utils';
 
 const Overflow = styled(FlexBox.Auto)`
@@ -32,6 +31,7 @@ const DotTag = styled(Tag)`
 
 const numberViewTypes = 1;
 const JobTypes = ({ types = [], fullName = true, isMinimized = false }) => {
+  const theme = useTheme();
   const visibleTypes = isMinimized ? types.slice(0, 1) : types;
 
   return (
@@ -42,7 +42,9 @@ const JobTypes = ({ types = [], fullName = true, isMinimized = false }) => {
             <CapitalizedTag
               variant="solid"
               key={type}
-              color={Theme.Styles.isTagFill ? COLOR_PIPELINE_TYPES[type] : ''}
+              color={
+                theme.Styles.isTagFill ? theme.COLOR_PIPELINE_TYPES[type] : ''
+              }
               $borderType={type}
               $isMinimized={false}>
               {type}
@@ -52,8 +54,8 @@ const JobTypes = ({ types = [], fullName = true, isMinimized = false }) => {
               <CapitalizedTag
                 variant="solid"
                 color={
-                  Theme.Styles.isTagFill && type
-                    ? COLOR_PIPELINE_TYPES[type]
+                  theme.Styles.isTagFill && type
+                    ? theme.COLOR_PIPELINE_TYPES[type]
                     : ''
                 }
                 $borderType={type}

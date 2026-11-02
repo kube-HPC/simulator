@@ -2,9 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { SyncOutlined } from '@ant-design/icons';
 import { Tag, Tooltip } from 'antd';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { taskStatuses as TASK_STATUS } from '@hkube/consts';
-import { COLOR_PIPELINE_STATUS, COLOR, Theme } from 'styles/colors';
 import { toUpperCaseFirstLetter } from 'utils/stringHelper';
 
 const TagTheme = styled(Tag)`
@@ -14,7 +13,7 @@ const TagTheme = styled(Tag)`
     !props.theme.Styles.isTagFill
       ? `border: 1px solid ${props.$borderColor};background-color:${props.$borderColor}22`
       : props.$isBright
-        ? `border: 1px solid${COLOR.lightGrey}`
+        ? `border: 1px solid${props.theme.COLOR.lightGrey}`
         : undefined}
 `;
 
@@ -22,23 +21,28 @@ const BaseTag = ({
   style,
   status = null,
   children = null,
-  colorMap = COLOR_PIPELINE_STATUS,
+  colorMap,
   tooltip = null,
   isActiveLoader = true,
   isError = false,
 }) => {
+  const theme = useTheme();
+  const activeColorMap = colorMap || theme.COLOR_PIPELINE_STATUS;
   const isFailedSchedulingError =
     isError && status === TASK_STATUS.FAILED_SCHEDULING;
   const color = isFailedSchedulingError
-    ? colorMap.failed
+    ? activeColorMap.failed
     : status
-      ? colorMap[status]
-        ? colorMap[status]
-        : colorMap.default
-      : colorMap.default;
+      ? activeColorMap[status]
+        ? activeColorMap[status]
+        : activeColorMap.default
+      : activeColorMap.default;
 
-  const isBright = [COLOR.lightGrey, COLOR.white].includes(color) || !color;
-  const textColor = isBright ? COLOR.transparentBlack : COLOR.white;
+  const isBright =
+    [theme.COLOR.lightGrey, theme.COLOR.white].includes(color) || !color;
+  const textColor = isBright
+    ? theme.COLOR.transparentBlack
+    : theme.COLOR.white;
 
   return (
     <Tooltip
@@ -49,7 +53,7 @@ const BaseTag = ({
         $textColor={textColor}
         $borderColor={color}
         $isBright={isBright}
-        color={Theme.Styles?.isTagFill ? color : ''} // color is prop of Tag ANTD
+        color={theme.Styles?.isTagFill ? color : ''} // color is prop of Tag ANTD
         style={{ ...style }}
         icon={
           status === 'active' && isActiveLoader ? <SyncOutlined spin /> : null

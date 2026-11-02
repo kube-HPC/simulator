@@ -2,11 +2,12 @@
 import 'core-js/features/array';
 import './assets/collapseTransition.css';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
+import { ThemeProvider } from 'styled-components';
 import { ReusableProvider } from 'reusable';
 
 import ErrorBoundary from 'components/ErrorBoundary';
@@ -16,6 +17,8 @@ import {
   keycloakAuthReady,
 } from 'actions/connection.action';
 import { selectors } from 'reducers';
+import { normalizeThemeName } from 'const';
+import { Theme, applyTheme } from 'styles/colors';
 
 import GlobalThemes from './styles/themes/GlobalThemes';
 import Root from './Routes';
@@ -29,9 +32,25 @@ import KeycloakServices from './keycloak/keycloakServices';
 const ConfigProviderApp = () => {
   const dispatch = useDispatch();
 
-  const { themeProvider } = useInitTheme();
+  const { data: preferences } = useSelector(selectors.preferences);
+  const themeName = normalizeThemeName(preferences.theme);
+  const { themeProvider } = useInitTheme(themeName);
   const { hasConfig } = useSelector(selectors.config);
   const { keycloakEnable, checkIframe } = useSelector(selectors.connection);
+  const [styledTheme, setStyledTheme] = useState(() => ({
+    ...applyTheme(themeName),
+  }));
+  const appliedThemeName = useRef(themeName);
+
+  useLayoutEffect(() => {
+    if (appliedThemeName.current === themeName) {
+      return;
+    }
+
+    applyTheme(themeName);
+    appliedThemeName.current = themeName;
+    setStyledTheme({ ...Theme });
+  }, [themeName]);
 
   const firstKc = useRef(true);
 
@@ -92,14 +111,16 @@ const ConfigProviderApp = () => {
 
   return (
     <ConfigProvider theme={themeProvider}>
-      <HashRouter>
-        <ReusableProvider>
-          <ErrorBoundary>
-            <GlobalThemes />
-            <Root />
-          </ErrorBoundary>
-        </ReusableProvider>
-      </HashRouter>
+      <ThemeProvider theme={styledTheme}>
+        <HashRouter>
+          <ReusableProvider>
+            <ErrorBoundary>
+              <GlobalThemes />
+              <Root />
+            </ErrorBoundary>
+          </ReusableProvider>
+        </HashRouter>
+      </ThemeProvider>
     </ConfigProvider>
   );
 };
