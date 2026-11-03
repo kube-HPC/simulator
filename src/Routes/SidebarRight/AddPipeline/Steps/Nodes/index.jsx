@@ -183,27 +183,6 @@ const Nodes = ({ style }) => {
 
   const [activeNodeId, setActiveNodeId] = useState(ids[0]);
 
-  const handleKindChange = (e, id) => {
-    const kindValue = e.target.value;
-    const nodesArr = getFieldValue(['nodes']);
-
-    if (kindValue !== 'gateway') {
-      nodesArr[id].kind = 'algorithm';
-      nodesArr[id].stateType = kindValue;
-    } else {
-      nodesArr[id].kind = 'gateway';
-      nodesArr[id].stateType = 'stateful';
-    }
-
-    setFieldsValue({ nodes: nodesArr });
-    setForm();
-  };
-
-  const getDefaultValueStateType = id => {
-    const nodesArr = getFieldValue(['nodes']);
-    return nodesArr[id].stateType;
-  };
-
   const selectActiveNode = useCallback(
     e => {
       setActiveNodeId(e.target.value);
@@ -348,7 +327,6 @@ const Nodes = ({ style }) => {
                     ) : null}
                   </FlexBox>
                   <FormItemLabelWrapper
-                    style={isStreamingPipeline ? { display: 'none' } : {}}
                     label="Kind"
                     name={['nodes', id, 'kind']}
                     initialValue={
@@ -362,7 +340,7 @@ const Nodes = ({ style }) => {
                       style={{ display: 'flex', alignItems: 'center' }}>
                       <Radio.Button value="algorithm">Algorithm</Radio.Button>
 
-                      {dataSourceIsEnable && (
+                      {dataSourceIsEnable && !isStreamingPipeline && (
                         <Radio.Button value="dataSource">
                           DataSource
                         </Radio.Button>
@@ -382,47 +360,19 @@ const Nodes = ({ style }) => {
                       )}
                     </Radio.Group>
                   </FormItemLabelWrapper>
-                  {isStreamingPipeline && (
-                    <Field title="Kind">
-                      <Radio.Group
-                        data-testid={`add-pipeline-node-state-type-${id}`}
-                        defaultValue={() => getDefaultValueStateType(id)}
-                        buttonStyle="solid"
-                        onChange={e => handleKindChange(e, id)}>
-                        <Radio.Button value="stateless">stateless</Radio.Button>
-                        <Radio.Button value="stateful">stateful</Radio.Button>
-                        <Radio.Button value="gateway">gateway</Radio.Button>
-                      </Radio.Group>
-                    </Field>
-                  )}
-
-                  {isStreamingPipeline && (
-                    <Field
-                      overrides={{ style: { display: 'none' } }}
-                      name={['nodes', id, 'stateType']}
-                      title="state Type"
-                      required>
-                      <Radio.Group
-                        buttonStyle="solid"
-                        data-testid={`add-pipeline-node-hidden-state-type-${id}`}>
-                        <Radio.Button value="stateless">stateless</Radio.Button>
-                        <Radio.Button value="stateful">stateful</Radio.Button>
-                      </Radio.Group>
-                    </Field>
-                  )}
                   <Field
-                    title="Node name"
+                    title="Node Name"
                     name={['nodeName']}
                     rootId={['nodes', id]}
                     extraRules={[
                       {
                         max: 32,
                         message:
-                          'Node name has to be shorter than 32 characters',
+                          'Node Name has to be shorter than 32 characters',
                       },
                     ]}>
                     <Input
-                      placeholder="Node name"
+                      placeholder="Node Name"
                       data-testid={`add-pipeline-node-name-${id}`}
                     />
                   </Field>

@@ -5,6 +5,7 @@ const ALGORITHM_AND_PIPELINE_NAMES = gql`
     algorithms {
       list {
         name
+        stateType
       }
     }
     pipelines {

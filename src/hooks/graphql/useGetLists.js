@@ -11,6 +11,7 @@ const useGetLists = () => {
         ?.map(algorithm => ({
           value: algorithm.name,
           label: algorithm.name,
+          stateType: algorithm.stateType,
         }))
         .sort((a, b) => (a.label > b.label ? 1 : -1)),
     [query?.data?.algorithms.list]

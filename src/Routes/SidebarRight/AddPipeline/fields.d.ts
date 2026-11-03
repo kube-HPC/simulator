@@ -25,7 +25,6 @@ export type AlgorithmNode = Node & {
     limit: number;
   };
   batchOperation: 'indexed' | 'cartesian';
-  stateType: 'stateless' | 'stateful';
 };
 
 export type PipelineDescriptor = {
