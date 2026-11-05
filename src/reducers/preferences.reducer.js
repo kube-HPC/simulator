@@ -67,6 +67,9 @@ const preferences = createSlice({
           state.loaded = true;
         }
       )
+      .addCase(`${actionType.PREFERENCES_FETCH}_REJECT`, state => {
+        state.loaded = true;
+      })
       .addCase(`${actionType.PREFERENCES_SAVE}_PENDING`, state => {
         state.syncing = true;
       })

@@ -9,6 +9,21 @@ import { savePreferences } from 'actions/preferences.action';
 import { dateTimeDefaultVar } from 'cache';
 
 const AUTO_SAVE_SECTIONS = new Set(['theme', 'scoopIntervalHours']);
+let pendingThemeSave = null;
+
+const normalizeTheme = theme => {
+  const normalizedTheme = String(theme ?? '')
+    .replace(/[-_\s]/g, '')
+    .toUpperCase();
+
+  if (normalizedTheme === 'LIGHTSOUT') {
+    return 'lightsOut';
+  }
+  if (normalizedTheme === 'LIGHT') {
+    return 'light';
+  }
+  return theme;
+};
 
 const migrateFromLocalStorage = () => {
   const migrated = {};
@@ -70,7 +85,18 @@ const preferencesMiddleware =
       } else {
         // Sync server values to localStorage for offline fallback
         if (serverPrefs.theme) {
-          syncToLocalStorage('theme', serverPrefs.theme);
+          const currentTheme = localStorage.getItem(
+            LOCAL_STORAGE_KEYS.LOCAL_STORAGE_KEY_THEME
+          );
+          const serverTheme = normalizeTheme(serverPrefs.theme);
+          syncToLocalStorage('theme', serverTheme);
+          const themeChanged =
+            currentTheme === null
+              ? serverTheme !== PREFERENCES_DEFAULTS.theme
+              : currentTheme !== serverTheme;
+          if (themeChanged && !pendingThemeSave) {
+            window.location.reload();
+          }
         }
         if (serverPrefs.scoopIntervalHours) {
           syncToLocalStorage(
@@ -78,6 +104,15 @@ const preferencesMiddleware =
             serverPrefs.scoopIntervalHours
           );
         }
+      }
+
+      if (pendingThemeSave) {
+        const { value, onSuccess } = pendingThemeSave;
+        pendingThemeSave = null;
+        dispatch({
+          ...updatePreferenceLocal({ section: 'theme', value }),
+          meta: { onSuccess },
+        });
       }
     }
 
@@ -92,12 +127,17 @@ const preferencesMiddleware =
         const { data, lastSavedTables, loaded } = getState().preferences;
         if (loaded) {
           dispatch(
-            savePreferences({
-              theme: data.theme,
-              scoopIntervalHours: data.scoopIntervalHours,
-              tables: lastSavedTables,
-            })
+            savePreferences(
+              {
+                theme: data.theme,
+                scoopIntervalHours: data.scoopIntervalHours,
+                tables: lastSavedTables,
+              },
+              action.meta?.onSuccess
+            )
           );
+        } else if (section === 'theme' && action.meta?.onSuccess) {
+          pendingThemeSave = { value, onSuccess: action.meta.onSuccess };
         }
       }
     }

@@ -30,13 +30,12 @@ const LazyThemeStyle = {
 };
 
 const GlobalThemes = () => {
-  const { setTheme, themeName } = useSiteThemeMode();
+  const { themeName } = useSiteThemeMode();
   const location = useLocation();
   const [isThemeReady, setIsThemeReady] = useState(false);
 
   useEffect(() => {
     startTransition(() => {
-      setTheme(themeName);
       setIsThemeReady(true); // Indicate that theme is loaded
     });
   }, []);

@@ -17,6 +17,7 @@ const initKeycloak = (appToRender, renderError, checkIframe) => {
   _kc
     .init({
       onLoad: 'login-required',
+      responseMode: 'query',
       checkLoginIframe: checkIframe,
     })
     .then(authenticated => {
