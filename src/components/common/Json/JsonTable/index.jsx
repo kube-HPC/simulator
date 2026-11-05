@@ -45,7 +45,11 @@ const ItemByValueType = ({
   if (name?.toLowerCase() === 'flowinput') {
     return (
       <>
-        <Button onClick={handleDownload}>Download</Button>
+        <Button
+          onClick={handleDownload}
+          data-testid={`json-table-value-${parentId}`}>
+          Download
+        </Button>
         <DownloadLink href={downloadHref} />
       </>
     );
@@ -59,9 +63,15 @@ const ItemByValueType = ({
           Object.entries(obj).map(([key, value]) => (
             <Descriptions.Item
               key={`ItemByValueType.Descriptions.Item:: description-${key} parentId:${parentId}`}
-              label={<Text strong>{key}</Text>}>
+              label={
+                <Text strong data-testid={`json-table-key-${parentId}.${key}`}>
+                  {key}
+                </Text>
+              }>
               {isObject(value) && isEmptyObject(value) ? (
-                <Tag>{EMPTY}</Tag>
+                <Tag data-testid={`json-table-value-${parentId}.${key}`}>
+                  {EMPTY}
+                </Tag>
               ) : (
                 <ItemByValueType
                   obj={value}
@@ -105,15 +115,20 @@ const ItemByValueType = ({
             type: notification.TYPES.SUCCESS,
           })
         }>
-        <Tag color={COLOR_TASK_STATUS.active}>
+        <Tag
+          color={COLOR_TASK_STATUS.active}
+          data-testid={`json-table-value-${parentId}`}>
           <CopyOutlined />{' '}
           {`ws://${window.location.host}/${obj.replace(firstSlash, '')}`}
         </Tag>
       </CopyToClipboard>
     );
   }
-  if (obj === null) return EMPTY;
-  return String(obj);
+  return (
+    <span data-testid={`json-table-value-${parentId}`}>
+      {obj === null ? EMPTY : String(obj)}
+    </span>
+  );
 };
 
 ItemByValueType.propTypes = {
@@ -136,15 +151,19 @@ const JsonTable = ({ obj, vertical = false, jobId = null, ...props }) => {
         Object.entries(obj).map(([key, value]) => (
           <Descriptions.Item
             key={`JsonTable.Descriptions.Item:: description:${key} level: 1`}
-            label={<Text strong>{key}</Text>}>
+            label={
+              <Text strong data-testid={`json-table-key-${key}`}>
+                {key}
+              </Text>
+            }>
             {isObject(value) && isEmptyObject(value) ? (
-              <Tag>{EMPTY}</Tag>
+              <Tag data-testid={`json-table-value-${key}`}>{EMPTY}</Tag>
             ) : (
               <ItemByValueType
                 obj={value}
                 vertical={vertical}
                 name={key}
-                parentId="root"
+                parentId={key}
                 jobId={jobId}
               />
             )}
