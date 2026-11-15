@@ -12,14 +12,20 @@ export const QueryCount = ({
   const counter = useSelector(selectorsData);
   return (
     <>
-      {!isShow && <TitleTable>{nameCount}</TitleTable>}
+      {!isShow && (
+        <TitleTable data-testid={`${nameCount.toLowerCase()}-count`}>
+          {nameCount}
+        </TitleTable>
+      )}
       {isShow && (
         <BadgeCount
           overflowCount={9999}
           count={counter}
           status={status}
           size="large">
-          <TitleTable>{nameCount}</TitleTable>
+          <TitleTable data-testid={`${nameCount.toLowerCase()}-count`}>
+            {nameCount}
+          </TitleTable>
         </BadgeCount>
       )}
     </>

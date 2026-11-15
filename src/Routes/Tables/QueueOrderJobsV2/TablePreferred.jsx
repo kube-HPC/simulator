@@ -38,13 +38,22 @@ class TablePreferred extends React.Component {
           this.props;
 
         const manyString = filterPreferredVal !== 'JOBID' ? 'items' : 'item';
+        const rowId = record.jobId || record.name || record.key;
         return dataSourcePreferred.length >= 1 ? (
           <Popconfirm
             title={`Do you want to move these ${manyString} to Queue list?`}
+            okButtonProps={{
+              'data-testid': `preferred-move-confirm-${rowId}`,
+            }}
+            cancelButtonProps={{
+              'data-testid': `preferred-move-cancel-${rowId}`,
+            }}
             onConfirm={() => handleDelete(record.key)}>
-            <Tooltip title="Move To Queue List" placement="top">
-              <DeleteOutlined />
-            </Tooltip>
+            <span data-testid={`preferred-move-to-queue-${rowId}`}>
+              <Tooltip title="Move To Queue List" placement="top">
+                <DeleteOutlined />
+              </Tooltip>
+            </span>
           </Popconfirm>
         ) : null;
       },
@@ -78,7 +87,15 @@ class TablePreferred extends React.Component {
     const index = dataSourcePreferred.findIndex(
       x => x?.index === restProps['data-row-key']
     );
-    return <SortableItem index={index} {...restProps} />;
+    const row = dataSourcePreferred[index];
+    const rowId = row?.jobId || row?.name || restProps['data-row-key'];
+    return (
+      <SortableItem
+        index={index}
+        {...restProps}
+        data-testid={`preferred-row-${rowId}`}
+      />
+    );
   };
 
   paintDragLocation = (event, record, isDrag) => {
@@ -118,6 +135,7 @@ class TablePreferred extends React.Component {
     } = this.props;
     return (
       <ContainerArea
+        data-testid="preferred-table-section"
         onMouseEnter={() => {
           handleOnHoverTable(TypeTable.PREFERRED);
         }}
@@ -136,9 +154,11 @@ class TablePreferred extends React.Component {
           <SelectFilterOptions
             onSelect={filterPreferred}
             filterVal={filterPreferredVal}
+            testId="preferred-filter"
           />
         </FilterTable>
         <TableItem
+          data-testid="preferred-table"
           loading={isLoadData}
           pagination={
             filterPreferredVal !== TypeFilter.JOBID.toLocaleUpperCase()

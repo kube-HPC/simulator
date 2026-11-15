@@ -8,6 +8,7 @@ const SelectFilterOptions = forwardRef((props, ref) => (
   // eslint-disable-next-line
   <SelectGroupBy
     ref={ref}
+    data-testid={props.testId}
     onChange={e => props.onSelect(e)}
     options={Object.entries(TypeFilter).map(([key, value]) => ({
       value: key,
@@ -22,6 +23,7 @@ const SelectFilterOptions = forwardRef((props, ref) => (
 SelectFilterOptions.propTypes = {
   onSelect: PropTypes.func.isRequired,
   filterVal: PropTypes.string.isRequired,
+  testId: PropTypes.string.isRequired,
 };
 
 export default SelectFilterOptions;

@@ -54,7 +54,15 @@ class TableQueue extends React.Component {
     const index = dataSourceQueue?.findIndex(
       x => x?.index === restProps['data-row-key']
     );
-    return <SortableItem index={index} {...restProps} />;
+    const row = dataSourceQueue[index];
+    const rowId = row?.jobId || row?.name || restProps['data-row-key'];
+    return (
+      <SortableItem
+        index={index}
+        {...restProps}
+        data-testid={`queue-row-${rowId}`}
+      />
+    );
   };
 
   render() {
@@ -75,6 +83,7 @@ class TableQueue extends React.Component {
 
     return (
       <ContainerArea
+        data-testid="queue-table-section"
         $isDirectionColumn={viewTableColumnOrRow}
         onDragEnter={() => {
           handleOnHoverTable(TypeTable.QUEUE);
@@ -97,6 +106,7 @@ class TableQueue extends React.Component {
           <SelectFilterOptions
             onSelect={filterQueue}
             filterVal={filterQueueVal}
+            testId="queue-filter"
           />
         </FilterTable>
 
@@ -107,6 +117,7 @@ class TableQueue extends React.Component {
         </DeleteOverTable>
 
         <TableItem
+          data-testid="queue-table"
           locale={{
             emptyText: (
               <Empty

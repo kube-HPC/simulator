@@ -10,9 +10,9 @@ import useQuery from 'hooks/useQuery';
 import { Link, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useActions } from 'hooks';
-import { HeaderTitlePreferred } from '../OrderStyles';
-import { instanceCounterVar, queueClearedVar } from 'cache';
 import { events } from 'utils';
+import { instanceCounterVar, queueClearedVar } from 'cache';
+import { HeaderTitlePreferred } from '../OrderStyles';
 
 const LinkToEdit = ({ toggleEdit }) => {
   const query = useQuery();
@@ -48,6 +48,8 @@ const LinkToEdit = ({ toggleEdit }) => {
       content: 'Are you sure you want to clear the entire queue?',
       okText: 'Yes, Clear Queue',
       okType: 'danger',
+      okButtonProps: { 'data-testid': 'queue-clear-confirm' },
+      cancelButtonProps: { 'data-testid': 'queue-clear-cancel' },
       cancelText: 'Cancel',
       onOk() {
         onStop();
@@ -61,6 +63,7 @@ const LinkToEdit = ({ toggleEdit }) => {
       <Space>
         <Link to={nextPath}>
           <Button
+            data-testid="queue-edit-toggle"
             onClick={() => toggleEdit()}
             type="primary"
             icon={!isEditOrder ? <EditOutlined /> : <ArrowLeftOutlined />}
@@ -69,6 +72,7 @@ const LinkToEdit = ({ toggleEdit }) => {
           </Button>
         </Link>
         <Button
+          data-testid="queue-clear-button"
           onClick={showClearConfirmation}
           type="default"
           icon={<ClearOutlined />}

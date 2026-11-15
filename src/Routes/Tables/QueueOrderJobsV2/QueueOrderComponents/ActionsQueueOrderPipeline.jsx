@@ -22,12 +22,21 @@ const ActionsQueueOrderPipeline = ({ job }) => {
     <Space.Compact className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
       <Popconfirm
         title="Are you sure you want to stop?"
+        okButtonProps={{
+          'data-testid': `queue-pipeline-stop-confirm-${name}`,
+        }}
+        cancelButtonProps={{
+          'data-testid': `queue-pipeline-stop-cancel-${name}`,
+        }}
         onConfirm={onStop}
         okText="Yes"
         cancelText="No"
         placement="top">
         <Tooltip title="stop">
-          <Button icon={<StopOutlined />} />
+          <Button
+            data-testid={`queue-pipeline-stop-${name}`}
+            icon={<StopOutlined />}
+          />
         </Tooltip>
       </Popconfirm>
     </Space.Compact>
