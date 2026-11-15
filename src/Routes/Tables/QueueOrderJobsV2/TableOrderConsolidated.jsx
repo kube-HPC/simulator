@@ -2,13 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { StopOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Popconfirm } from 'antd';
+import { queueClearedVar } from 'cache';
 import PropTypes from 'prop-types';
 import { useActions } from 'hooks';
 // import { useVT } from 'virtualizedtableforantd4';
 import { SelectFilterOptions } from './QueueOrderComponents';
 import { TableAllInOneTypeColumns } from './QueueOrderComponents/TableAllInOneTypeColumns';
 import { TableAllInOne, FilterTable } from './OrderStyles';
-import { queueClearedVar } from 'cache';
 
 const BottomPanel = styled.div`
   margin-top: 10px;
@@ -70,15 +70,20 @@ const TableOrderConsolidated = ({
         <SelectFilterOptions
           onSelect={onSelectFilter}
           filterVal={filterTableAllInOneVal}
+          testId="queue-all-filter"
         />
       </FilterTable>
 
       <TableAllInOne
+        data-testid="queue-all-table"
         className="TableAllInOne"
         pagination={false}
         dataSource={dataSourceAllJobs}
         columns={TableAllInOneTypeColumns[filterTableAllInOneVal]}
         rowKey={record => `${record.key}_${record.typeElement}`}
+        onRow={record => ({
+          'data-testid': `queue-all-row-${record.jobId || record.name}`,
+        })}
         scroll={{ y: '80vh' }}
         loading={isLoading}
         //  components={vt}

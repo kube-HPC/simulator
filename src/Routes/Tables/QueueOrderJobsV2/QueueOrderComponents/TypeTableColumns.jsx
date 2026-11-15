@@ -8,7 +8,11 @@ export const TypeTableColumns = {
       dataIndex: ['sort'],
       width: 30,
       className: 'drag-visible',
-      render: () => <DragHandle />,
+      render: (_, record) => (
+        <DragHandle
+          testId={`queue-drag-handle-${record.jobId || record.name}`}
+        />
+      ),
     },
     {
       title: 'jobID',
@@ -38,7 +42,11 @@ export const TypeTableColumns = {
       dataIndex: ['sort'],
       width: 30,
       className: 'drag-visible',
-      render: () => <DragHandle />,
+      render: (_, record) => (
+        <DragHandle
+          testId={`queue-drag-handle-${record.jobId || record.name}`}
+        />
+      ),
     },
     {
       title: 'Pipeline Name',
@@ -56,7 +64,11 @@ export const TypeTableColumns = {
       dataIndex: ['sort'],
       width: 30,
       className: 'drag-visible',
-      render: () => <DragHandle />,
+      render: (_, record) => (
+        <DragHandle
+          testId={`queue-drag-handle-${record.jobId || record.name}`}
+        />
+      ),
     },
     {
       title: 'Tags',

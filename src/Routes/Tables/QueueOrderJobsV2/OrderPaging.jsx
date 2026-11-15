@@ -43,18 +43,21 @@ class OrderPaging extends React.PureComponent {
       <PagingContainer>
         <NumberJobs>({HasPrev} jobs)</NumberJobs>
         <Button
+          data-testid={`${TypeTable}-paging-first`}
           type="text"
           disabled={!HasPrev > 0}
           onClick={() => pageGoToView(TypeTable, 'begin')}
           icon={<StepBackwardOutlined />}
         />
         <Button
+          data-testid={`${TypeTable}-paging-previous`}
           type="text"
           disabled={!HasPrev > 0}
           onClick={() => pageGoToView(TypeTable, 'previous')}
           icon={<LeftOutlined />}
         />
         <InputNumber
+          data-testid={`${TypeTable}-paging-size`}
           min={2}
           max={100}
           defaultValue={numberRowToView}
@@ -62,12 +65,14 @@ class OrderPaging extends React.PureComponent {
         />
 
         <Button
+          data-testid={`${TypeTable}-paging-next`}
           type="text"
           disabled={!HasNext > 0}
           onClick={() => pageGoToView(TypeTable, 'next')}
           icon={<RightOutlined />}
         />
         <Button
+          data-testid={`${TypeTable}-paging-last`}
           type="text"
           disabled={!HasNext > 0}
           onClick={() => pageGoToView(TypeTable, 'end')}

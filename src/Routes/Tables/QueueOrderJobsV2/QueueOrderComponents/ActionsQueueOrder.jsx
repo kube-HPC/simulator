@@ -27,16 +27,25 @@ const ActionsQueueOrder = ({ job }) => {
   return (
     <Space.Compact className={USER_GUIDE.TABLE_JOB.ACTIONS_SELECT}>
       <Tooltip title="Re-run pipeline">
-        <Button icon={<RedoOutlined />} onClick={onReRun} />
+        <Button
+          data-testid={`queue-job-rerun-${jobId}`}
+          icon={<RedoOutlined />}
+          onClick={onReRun}
+        />
       </Tooltip>
       <Popconfirm
         title="Are you sure you want to stop?"
+        okButtonProps={{ 'data-testid': `queue-job-stop-confirm-${jobId}` }}
+        cancelButtonProps={{ 'data-testid': `queue-job-stop-cancel-${jobId}` }}
         onConfirm={onStop}
         okText="Yes"
         cancelText="No"
         placement="top">
         <Tooltip title="stop">
-          <Button icon={<StopOutlined />} />
+          <Button
+            data-testid={`queue-job-stop-${jobId}`}
+            icon={<StopOutlined />}
+          />
         </Tooltip>
       </Popconfirm>
     </Space.Compact>
