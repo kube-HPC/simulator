@@ -106,6 +106,7 @@ const getColumns = ({ cancelBuild, rerunBuild, currentTime }) => [
         ![PIPELINE_STATUS.COMPLETED, PIPELINE_STATUS.STOPPED].includes(status);
       return showCancel ? (
         <Button
+          data-testid="cancel-build-button"
           type="danger"
           shape="circle"
           icon={<CloseOutlined />}
@@ -113,6 +114,7 @@ const getColumns = ({ cancelBuild, rerunBuild, currentTime }) => [
         />
       ) : (
         <Button
+          data-testid="rerun-build-button"
           type="default"
           shape="circle"
           icon={<RedoOutlined />}
