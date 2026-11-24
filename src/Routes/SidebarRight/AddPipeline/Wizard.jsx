@@ -91,7 +91,6 @@ const Wizard = ({
   const [isStreamingPipeline, setIsStreamingPipeline] = useState(
     initialState.kind === 'stream'
   );
-  const [pageLoaded, setPageLoaded] = useState(false);
   const [initStepNames] = useState(
     isRunPipeline ? RunPipelineStepNames : stepNames
   );
@@ -158,14 +157,6 @@ const Wizard = ({
     if (!currentKind) {
       resetKind(undefined);
     }
-
-    // Ensure valuesState is synchronized with initial form state
-    const currentFormValues = form.getFieldsValue();
-    if (currentFormValues && Object.keys(currentFormValues).length > 0) {
-      setValuesState(currentFormValues);
-    }
-
-    setPageLoaded(true);
   }, []);
 
   useLayoutEffect(() => {
@@ -235,50 +226,48 @@ const Wizard = ({
           </Splitter.Panel>
 
           <Splitter.Panel>
-            {pageLoaded && (
-              <ContenerJsonGraph>
-                <Splitter
-                  lazy
-                  onResizeEnd={() => setReloadGraphPreview(!reloadGraphPreview)}
-                  orientation="vertical"
-                  style={{ boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
-                  <Splitter.Panel>
-                    <ContenerGraph>
-                      {valuesState &&
-                      valuesState.nodes &&
-                      valuesState.nodes.length > 0 ? (
-                        <GraphPreview
-                          pipeline={valuesState}
-                          isBuildAllFlows={isStreamingPipeline}
-                          isMinified
-                          clickNode={selectNodeFromGraph}
-                          reload={reloadGraphPreview}
-                        />
-                      ) : (
-                        <div style={{ padding: '20px', color: '#999' }}>
-                          {!valuesState
-                            ? 'Loading pipeline data...'
-                            : !valuesState.nodes
-                              ? 'No nodes defined...'
-                              : 'Waiting for pipeline data...'}
-                        </div>
-                      )}
-                    </ContenerGraph>
-                  </Splitter.Panel>
-                  <Splitter.Panel>
-                    <ContenerJsonButton>
-                      <ButtonSticky onClick={handleToggle}>
-                        Text editor
-                      </ButtonSticky>
-                      <JsonView
-                        src={getFormattedFormValues()}
-                        collapsed={undefined}
+            <ContenerJsonGraph>
+              <Splitter
+                lazy
+                onResizeEnd={() => setReloadGraphPreview(!reloadGraphPreview)}
+                orientation="vertical"
+                style={{ boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
+                <Splitter.Panel>
+                  <ContenerGraph>
+                    {valuesState &&
+                    valuesState.nodes &&
+                    valuesState.nodes.length > 0 ? (
+                      <GraphPreview
+                        pipeline={valuesState}
+                        isBuildAllFlows={isStreamingPipeline}
+                        isMinified
+                        clickNode={selectNodeFromGraph}
+                        reload={reloadGraphPreview}
                       />
-                    </ContenerJsonButton>
-                  </Splitter.Panel>
-                </Splitter>
-              </ContenerJsonGraph>
-            )}
+                    ) : (
+                      <div style={{ padding: '20px', color: '#999' }}>
+                        {!valuesState
+                          ? 'Loading pipeline data...'
+                          : !valuesState.nodes
+                            ? 'No nodes defined...'
+                            : 'Waiting for pipeline data...'}
+                      </div>
+                    )}
+                  </ContenerGraph>
+                </Splitter.Panel>
+                <Splitter.Panel>
+                  <ContenerJsonButton>
+                    <ButtonSticky onClick={handleToggle}>
+                      Text editor
+                    </ButtonSticky>
+                    <JsonView
+                      src={getFormattedFormValues()}
+                      collapsed={undefined}
+                    />
+                  </ContenerJsonButton>
+                </Splitter.Panel>
+              </Splitter>
+            </ContenerJsonGraph>
           </Splitter.Panel>
         </Splitter>
       </Body>
