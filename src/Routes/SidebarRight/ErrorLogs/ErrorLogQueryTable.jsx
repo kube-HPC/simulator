@@ -78,6 +78,7 @@ const ErrorLogQueryTable = ({
     <FiltersForms layout="inline" form={form} size="medium" onFinish={onFinish}>
       <Form.Item label="Search" name="qSearch">
         <AutoComplete
+          data-testid="service-name-search"
           style={{ width: '10vw', marginLeft: '1vw' }}
           options={LogOptions}
           showSearch={{
@@ -92,6 +93,7 @@ const ErrorLogQueryTable = ({
 
       <Form.Item label="Time" name="qErrorLogTime">
         <RangePicker
+          data-testid="error-log-time-range-picker"
           style={{ width: '16vw', marginLeft: '1vw' }}
           showTime={{ format: 'HH:mm' }}
           format={DateFormat}
